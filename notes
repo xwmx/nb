@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+###############################################################################
+# notes - a bask script
+#
+# Get bask:
+#   https://github.com/alphabetum/bask
+#
+# Add this script and the bask program to your $PATH.
+#
+# For usage information, run:
+#   notes help
+###############################################################################
+
+source "$(which bask)"
+
+desc "hi" <<EOM
+Usage:
+  $_ME hi
+
+Description:
+  Print a greeting.
+EOM
+hi() {
+  echo ">> Hi from notes!"
+}
+
+write() {
+  # `notes write "note content"`
+  # cat <<HEREDOC >> notefile.txt
+  # # 00-00-00-datetimestamp
+  # "$@"
+  # HEREDOC
+  printf "TODO: implement write()\n"
+}
+
+_init
