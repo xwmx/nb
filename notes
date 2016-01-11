@@ -115,7 +115,7 @@ Usage:
   $_ME add [<note>]
   list [--excerpt [<length>]]
   edit <filename>
-  search <query> )
+  search <query>
   $_ME -h | --help | help
   $_ME --version
 
