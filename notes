@@ -44,4 +44,16 @@ add() {
   fi
 }
 
+########################################################################## list
+desc "list" <<EOM
+Usage:
+  $_ME list
+
+Description:
+  List all notes.
+EOM
+list() {
+  ls -1 "$NOTES_DIR/"
+}
+
 _init
