@@ -415,17 +415,8 @@ _notes() {
   _debug printf "_notes() >> start\n"
 
   case "$_SUBCOMMAND" in
-    "add")
-      _add "${_ARGUMENTS[1]:-}"
-      ;;
-    "edit")
-      _edit "${_ARGUMENTS[1]:-}"
-      ;;
-    "list")
-      _list "${_ARGUMENTS[@]:1}"
-      ;;
-    "search")
-      _search "${_ARGUMENTS[1]:-}"
+    add|edit|list|search)
+      "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     "help")
       _print_help
