@@ -112,21 +112,24 @@ _print_help() {
 |_| |_|\___/ \__\___||___/
 
 Usage:
-  $_ME ( add [<note>] | list [--excerpt] | edit <filename> | search <query> )
+  $_ME add [<note>]
+  list [--excerpt [<length>]]
+  edit <filename>
+  search <query> )
   $_ME -h | --help | help
   $_ME --version
 
 Subcommands:
   add      Add a new note.
-  list     List all notes.
+  list     List all notes. Optionally, an excerpt of each note can be printed.
   edit     Edit a note.
   search   Search notes.
   help     Display this help information.
 
 Options:
-  --excerpt  Print an excerpt from each note.
-  -h --help  Display this help information.
-  --version  Display version information.
+  --excerpt <length>  Print an excerpt from each note [default: 3].
+  -h --help           Display this help information.
+  --version           Display version information.
 HEREDOC
 }
 
@@ -358,11 +361,21 @@ _edit() {
 
 ########################################################################## list
 _list() {
+  _debug printf "_list() \$1: %s\n" "${1:-}"
+  _debug printf "_list() \$2: %s\n" "${2:-}"
+  _debug printf "_list() \$3: %s\n" "${3:-}"
+
   local _print_excerpt=0
+  local _excerpt_length=3
   if [[ "${1:-}" = "--excerpt" ]]
   then
     _print_excerpt=1
+    if [[ -n "${2:-}" ]]
+    then
+      _excerpt_length="${2}"
+    fi
   fi
+  _debug printf "_list() \$_excerpt_length: %s\n" "${_excerpt_length:-}"
 
   for _fullpath in "${NOTES_DIR}"/*
   do
@@ -379,7 +392,7 @@ _list() {
       printf -v line '%*s' "$_basename_length"
       echo ${line// /-}
 
-      head -3 "$_fullpath"
+      head -"${_excerpt_length}" "${_fullpath}"
 
       printf "\n"
     fi
@@ -409,7 +422,7 @@ _notes() {
       _edit "${_ARGUMENTS[1]:-}"
       ;;
     "list")
-      _list "${_ARGUMENTS[1]:-}"
+      _list "${_ARGUMENTS[@]:1}"
       ;;
     "search")
       _search "${_ARGUMENTS[1]:-}"
