@@ -112,7 +112,7 @@ _print_help() {
 |_| |_|\___/ \__\___||___/
 
 Usage:
-  $_ME ( add [<note>] | list | edit <filename> | search <query> )
+  $_ME ( add [<note>] | list [--excerpt] | edit <filename> | search <query> )
   $_ME -h | --help | help
   $_ME --version
 
@@ -124,6 +124,7 @@ Subcommands:
   help     Display this help information.
 
 Options:
+  --excerpt  Print an excerpt from each note.
   -h --help  Display this help information.
   --version  Display version information.
 HEREDOC
@@ -357,7 +358,32 @@ _edit() {
 
 ########################################################################## list
 _list() {
-  ls -1 "$NOTES_DIR/"
+  local _print_excerpt=0
+  if [[ "${1:-}" = "--excerpt" ]]
+  then
+    _print_excerpt=1
+  fi
+
+  for _fullpath in "${NOTES_DIR}"/*
+  do
+    local _basename
+    _basename="$(basename "${_fullpath}")"
+    printf "%s\n" "${_basename}"
+
+    if ((_print_excerpt))
+    then
+      # Print a line. More information:
+      # http://wiki.bash-hackers.org/commands/builtin/printf
+      local _basename_length=0
+      _basename_length=${#_basename}
+      printf -v line '%*s' "$_basename_length"
+      echo ${line// /-}
+
+      head -3 "$_fullpath"
+
+      printf "\n"
+    fi
+  done
 }
 
 ######################################################################## search
@@ -383,7 +409,7 @@ _notes() {
       _edit "${_ARGUMENTS[1]:-}"
       ;;
     "list")
-      _list
+      _list "${_ARGUMENTS[1]:-}"
       ;;
     "search")
       _search "${_ARGUMENTS[1]:-}"
