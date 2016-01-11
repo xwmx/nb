@@ -45,6 +45,24 @@ add() {
 }
 
 ########################################################################## list
+desc "edit" <<EOM
+Usage:
+  $_ME edit <filename>
+
+Description:
+  Edit a note.
+EOM
+edit() {
+  if [[ -z "${1:-}" ]]
+  then
+    $_ME help edit
+    return 1
+  else
+    "$EDITOR" "${NOTES_DIR}/${1}"
+  fi
+}
+
+########################################################################## list
 desc "list" <<EOM
 Usage:
   $_ME list
