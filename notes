@@ -1,21 +1,324 @@
 #!/usr/bin/env bash
+#              _
+#  _ __   ___ | |_ ___  ___
+# | '_ \ / _ \| __/ _ \/ __|
+# | | | | (_) | ||  __/\__ \
+# |_| |_|\___/ \__\___||___/
+#
+# Based on Bash Boilerplate: https://github.com/alphabetum/bash-boilerplate
+#
+# Copyright (c) 2015 William Melody • hi@williammelody.com
+
 ###############################################################################
-# notes - a bask script
-#
-# Get bask:
-#   https://github.com/alphabetum/bask
-#
-# Add this script and the bask program to your $PATH.
-#
-# For usage information, run:
-#   notes help
+# Strict Mode
 ###############################################################################
 
-source "$(which bask)"
+set -o nounset
+set -o errexit
+set -o pipefail
+IFS=$'\n\t'
+
+###############################################################################
+# Environment
+###############################################################################
+
+_VERSION="0.0.0-alpha"
+
+# $_ME
+#
+# Set to the program's basename.
+_ME=$(basename "$0")
+
+###############################################################################
+# Debug
+###############################################################################
+
+# _debug()
+#
+# Usage:
+#   _debug printf "Debug info. Variable: %s\n" "$0"
+#
+# A simple function for executing a specified command if the `$_USE_DEBUG`
+# variable has been set. The command is expected to print a message and
+# should typically be either `echo`, `printf`, or `cat`.
+__DEBUG_COUNTER=0
+_debug() {
+  if [[ "${_USE_DEBUG:-"0"}" -eq 1 ]]
+  then
+    __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
+    # Prefix debug message with "bug (U+1F41B)"
+    printf "🐛  %s " "${__DEBUG_COUNTER}"
+    "$@"
+    printf "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\n"
+  fi
+}
+# debug()
+#
+# Usage:
+#   debug "Debug info. Variable: $0"
+#
+# Print the specified message if the `$_USE_DEBUG` variable has been set.
+#
+# This is a shortcut for the _debug() function that simply echos the message.
+debug() {
+  _debug echo "$@"
+}
+
+###############################################################################
+# Die
+###############################################################################
+
+# _die()
+#
+# Usage:
+#   _die printf "Error message. Variable: %s\n" "$0"
+#
+# A simple function for exiting with an error after executing the specified
+# command. The command is expected to print a message and should typically
+# be either `echo`, `printf`, or `cat`.
+_die() {
+  # Prefix die message with "cross mark (U+274C)", often displayed as a red x.
+  printf "❌  "
+  "$@" 1>&2
+  exit 1
+}
+# die()
+#
+# Usage:
+#   die "Error message. Variable: $0"
+#
+# Exit with an error and print the specified message.
+#
+# This is a shortcut for the _die() function that simply echos the message.
+die() {
+  _die echo "$@"
+}
+
+###############################################################################
+# Help
+###############################################################################
+
+# _print_help()
+#
+# Usage: _print_help
+#
+# Print the program help information.
+_print_help() {
+  cat <<HEREDOC
+             _
+ _ __   ___ | |_ ___  ___
+| '_ \ / _ \| __/ _ \/ __|
+| | | | (_) | ||  __/\__ \\
+|_| |_|\___/ \__\___||___/
+
+Usage:
+  $_ME ( add [<note>] | list | edit <filename> | search <query> )
+  $_ME -h | --help | help
+  $_ME --version
+
+Subcommands:
+  add      Add a new note.
+  list     List all notes.
+  edit     Edit a note.
+  search   Search notes.
+  help     Display this help information.
+
+Options:
+  -h --help  Display this help information.
+  --version  Display version information.
+HEREDOC
+}
+
+###############################################################################
+# Helpers
+###############################################################################
+
+# _interactive_input()
+#
+# Usage:
+#   _interactive_input
+#
+# Returns:
+#   0  If the current input is interactive (eg, a shell).
+#   1  If the current input is stdin / piped input.
+_interactive_input() {
+  [[ -t 0 ]]
+}
+
+###############################################################################
+# Version
+###############################################################################
+
+# _print_version()
+#
+# Usage: _print_version
+#
+# Print the value of $_VERSION.
+_print_version() {
+  printf "%s\n" "$_VERSION"
+}
+
+###############################################################################
+# Options
+###############################################################################
+
+# Steps:
+#
+# 1. set expected short options in `optstring` at beginning of the "Normalize
+#    Options" section,
+# 2. parse options in while loop in the "Parse Options" section.
+
+# Normalize Options ###########################################################
+
+# Source:
+#   https://github.com/e36freak/templates/blob/master/options
+
+# The first loop, even though it uses 'optstring', will NOT check if an
+# option that takes a required argument has the argument provided. That must
+# be done within the second loop and case statement, yourself. Its purpose
+# is solely to determine that -oARG is split into -o ARG, and not -o -A -R -G.
+
+# Set short options -----------------------------------------------------------
+
+# option string, for short options.
+#
+# Very much like getopts, expected short options should be appended to the
+# string here. Any option followed by a ':' takes a required argument.
+optstring=h
+
+# Normalize -------------------------------------------------------------------
+
+# iterate over options, breaking -ab into -a -b and --foo=bar into --foo bar
+# also turns -- into --endopts to avoid issues with things like '-o-', the '-'
+# should not indicate the end of options, but be an invalid option (or the
+# argument to the option, such as wget -qO-)
+unset options
+# while the number of arguments is greater than 0
+while (($#))
+do
+  case $1 in
+    # if option is of type -ab
+    -[!-]?*)
+      # loop over each character starting with the second
+      for ((i=1; i<${#1}; i++))
+      do
+        # extract 1 character from position 'i'
+        c=${1:i:1}
+        # add current char to options
+        options+=("-$c")
+
+        # if option takes a required argument, and it's not the last char
+        # make the rest of the string its argument
+        if [[ $optstring = *"$c:"* && ${1:i+1} ]]
+        then
+          options+=("${1:i+1}")
+          break
+        fi
+      done
+      ;;
+    # if option is of type --foo=bar, split on first '='
+    --?*=*)
+      options+=("${1%%=*}" "${1#*=}")
+      ;;
+    # end of options, stop breaking them up
+    --)
+      options+=(--endopts)
+      shift
+      options+=("$@")
+      break
+      ;;
+    # otherwise, nothing special
+    *)
+      options+=("$1")
+      ;;
+  esac
+
+  shift
+done
+# set new positional parameters to altered options. Set default to blank.
+set -- "${options[@]:-}"
+unset options
+
+# Parse Options ###############################################################
+
+# Initialize program option variables.
+_PRINT_HELP=0
+_PRINT_VERSION=0
+_USE_DEBUG=0
+
+# Initialize additional expected option variables.
+_SUBCOMMAND=
+_ARGUMENTS=("$0")
+
+# _require_argument()
+#
+# Usage:
+#  _require_argument "$opt" "$_value_variable"
+#
+# Checks if an value has been set to the expected variable and, if not, prints
+# and error message and exits with status 1.
+_require_argument() {
+  local option="$1"
+  local value="$2"
+
+  if [[ -z "$value" ]]
+  then
+    _die printf "Option requires an argument: %s\n" "$option"
+  fi
+}
+# getopts and getopts have inconsistent behavior, so using a simple home-brewed
+# while loop. This isn't perfectly compliant with POSIX, but it's close enough
+# and this appears to be a widely used approach.
+#
+# More info:
+#   http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
+#   http://stackoverflow.com/a/14203146
+#   http://stackoverflow.com/a/7948533
+while [ $# -gt 0 ]
+do
+  opt="$1"
+  shift
+  case "$opt" in
+    -h|--help)
+      _PRINT_HELP=1
+      ;;
+    --debug)
+      _USE_DEBUG=1
+      ;;
+    --version)
+      _PRINT_VERSION=1
+      ;;
+    add|list|edit|search|help)
+      if [[ -z "${_SUBCOMMAND:-}" ]]
+      then
+        _SUBCOMMAND="$opt"
+      else
+        _ARGUMENTS+=("$opt")
+      fi
+      ;;
+    --endopts)
+      # Terminate option parsing.
+      break
+      ;;
+    *)
+      _ARGUMENTS+=("$opt")
+      ;;
+  esac
+done
+
+# Set `$_SUBCOMMAND` if it's still blank.
+if [[ -z "${_SUBCOMMAND:-}" ]]
+then
+  _SUBCOMMAND="help"
+fi
+
+_debug printf "\$_SUBCOMMAND: %s\n" "$_SUBCOMMAND"
+_debug printf "\$_ARGUMENTS: %s\n" "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # Setup
 ###############################################################################
+
 export NOTES_DIR="${HOME}/.notes"
 
 if [[ ! -e "${NOTES_DIR}" ]]
@@ -23,15 +326,12 @@ then # `$NOTES_DIR` doesn't exist.
   mkdir -p "${NOTES_DIR}"
 fi
 
-########################################################################### add
-desc "add" <<EOM
-Usage:
-  $_ME add
+###############################################################################
+# Program Functions
+###############################################################################
 
-Description:
-  Write a new note.
-EOM
-add() {
+########################################################################### add
+_add() {
   # Assign filename with unicode timestamp.
   local _filename
   _filename="${NOTES_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
@@ -44,18 +344,11 @@ add() {
   fi
 }
 
-########################################################################## list
-desc "edit" <<EOM
-Usage:
-  $_ME edit <filename>
-
-Description:
-  Edit a note.
-EOM
-edit() {
+########################################################################## edit
+_edit() {
   if [[ -z "${1:-}" ]]
   then
-    $_ME help edit
+    $_ME help
     return 1
   else
     "$EDITOR" "${NOTES_DIR}/${1}"
@@ -63,15 +356,58 @@ edit() {
 }
 
 ########################################################################## list
-desc "list" <<EOM
-Usage:
-  $_ME list
-
-Description:
-  List all notes.
-EOM
-list() {
+_list() {
   ls -1 "$NOTES_DIR/"
 }
 
-_init
+######################################################################## search
+_search() {
+  if [[ -z "${1:-}" ]]
+  then
+    $_ME help
+    return 1
+  else
+    ack "${@}" "${NOTES_DIR}"
+  fi
+}
+
+# _notes ######################################################################
+_notes() {
+  _debug printf "_notes() >> start\n"
+
+  case "$_SUBCOMMAND" in
+    "add")
+      _add "${_ARGUMENTS[1]:-}"
+      ;;
+    "edit")
+      _edit "${_ARGUMENTS[1]:-}"
+      ;;
+    "list")
+      _list
+      ;;
+    "search")
+      _search "${_ARGUMENTS[1]:-}"
+      ;;
+    "help")
+      _print_help
+      ;;
+  esac
+}
+
+###############################################################################
+# Main
+###############################################################################
+
+_main() {
+  if (("$_PRINT_HELP"))
+  then
+    _print_help
+  elif (("$_PRINT_VERSION"))
+  then
+    _print_version
+  else
+    _notes "${_ARGUMENTS[@]:-}"
+  fi
+}
+
+_main "$@"
