@@ -13,24 +13,35 @@
 
 source "$(which bask)"
 
-desc "hi" <<EOM
+###############################################################################
+# Setup
+###############################################################################
+export NOTES_DIR="${HOME}/.notes"
+
+if [[ ! -e "${NOTES_DIR}" ]]
+then # `$NOTES_DIR` doesn't exist.
+  mkdir -p "${NOTES_DIR}"
+fi
+
+########################################################################### add
+desc "add" <<EOM
 Usage:
-  $_ME hi
+  $_ME add
 
 Description:
-  Print a greeting.
+  Write a new note.
 EOM
-hi() {
-  echo ">> Hi from notes!"
-}
+add() {
+  # Assign filename with unicode timestamp.
+  local _filename
+  _filename="${NOTES_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
 
-write() {
-  # `notes write "note content"`
-  # cat <<HEREDOC >> notefile.txt
-  # # 00-00-00-datetimestamp
-  # "$@"
-  # HEREDOC
-  printf "TODO: implement write()\n"
+  if _interactive_input
+  then
+    echo "$*" >> "${_filename}"
+  else
+    cat >> "${_filename}"
+  fi
 }
 
 _init
