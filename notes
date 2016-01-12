@@ -357,7 +357,11 @@ _add() {
 
   if _interactive_input
   then
-    echo "$*" >> "${_filename}"
+    if [[ -z "${*}" ]]
+    then
+      _die printf "Usage: %s add [<note>]\n" "${_ME}"
+    fi
+    printf "%s\n" "${*}" >> "${_filename}"
   else
     cat >> "${_filename}"
   fi
