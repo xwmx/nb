@@ -328,15 +328,30 @@ export NOTES_DIR="${HOME}/.notes"
 if [[ ! -e "${NOTES_DIR}" ]]
 then # `$NOTES_DIR` doesn't exist.
   mkdir -p "${NOTES_DIR}"
+  cd "${NOTES_DIR}" && git init
 fi
 
 ###############################################################################
 # Program Functions
 ###############################################################################
 
+_git_checkpoint() {
+  local _message="${1:-}"
+  if [[ -z "${_message}" ]]
+  then
+    _die printf "Usage: _git_checkpoint <message>\n"
+    return 1
+  fi
+
+  cd "${NOTES_DIR}" || return 1
+  git add --all && git commit -a -m "${_message}"
+}
+
 ########################################################################### add
 _add() {
   # Assign filename with unicode timestamp.
+  local _basename
+  _basename="$(date -u "+%Y%m%d%H%M%S").md"
   local _filename
   _filename="${NOTES_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
 
@@ -346,17 +361,20 @@ _add() {
   else
     cat >> "${_filename}"
   fi
+  _git_checkpoint "Add: ${_basename}"
 }
 
 ########################################################################## edit
 _edit() {
-  if [[ -z "${1:-}" ]]
+  local _basename="${1:-}"
+  if [[ -z "${_basename}" ]]
   then
     $_ME help
     return 1
   else
-    "$EDITOR" "${NOTES_DIR}/${1}"
+    "$EDITOR" "${NOTES_DIR}/${_basename}"
   fi
+  _git_checkpoint "Edit: ${_basename}"
 }
 
 ########################################################################## list
@@ -378,7 +396,7 @@ _list() {
   _debug printf "_list() \$_excerpt_length: %s\n" "${_excerpt_length:-}"
 
   local _filenames=
-  _filenames="$(ls -A "${NOTES_DIR}")"
+  _filenames="$(ls "${NOTES_DIR}")"
 
   if [[ -z "${_filenames}" ]]
   then
