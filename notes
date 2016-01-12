@@ -486,6 +486,14 @@ _edit() {
 # Usage:
 #   _init [<repository URL>]
 _init() {
+  if [[ -e "${NOTES_DIR}" ]]
+  then
+    _die printf "%s already exists.\n" "${NOTES_DIR}"
+  elif [[ -e "${NOTES_DATA_DIR}" ]]
+  then
+    _die printf "%s already exists.\n" "${NOTES_DATA_DIR}"
+  fi
+
   local _repo_url="${1:-}"
   if [[ -n "${_repo_url}" ]]
   then
