@@ -118,6 +118,7 @@ Usage:
   $_ME init [<remote url>]
   $_ME list [--excerpt [<length>]]
   $_ME search <query>
+  $_ME show ( <index> | <filename> )
   $_ME sync
   $_ME -h | --help | help
   $_ME --version
@@ -130,6 +131,7 @@ Subcommands:
   init     Initialize the local notes repository.
   list     List all notes. Optionally, an excerpt of each note can be printed.
   search   Search notes.
+  show     Show a note.
   sync     Sync notes with the remote repository.
 
 Options:
@@ -282,7 +284,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|delete|edit|help|init|list|search|sync)
+    add|delete|edit|help|init|list|search|show|sync)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -574,6 +576,45 @@ _search() {
   fi
 }
 
+# show ########################################################################
+
+# _show()
+#
+# Usage:
+#   _show <selection>
+_show() {
+  local _selection="${1:-}"
+  local _basename=
+
+  _debug printf "_show() \$_selection: %s\n" "${_selection}"
+
+  if [[ -z "${_selection}" ]]
+  then # <selection> is blank.
+    $_ME help
+    return 1
+  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
+  then # <selection> is a filename.
+    _basename="${_selection}"
+    "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
+  then # <selection> is an id.
+    local _filenames=($(ls "${NOTES_DATA_DIR}"))
+
+    _debug printf "_show() \$_filenames[*]: %s\n" "${_filenames[*]}"
+
+    _basename="${_filenames[${_selection}]:-}"
+
+    if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+    then # _basename is assigned and a note exists with that name.
+      "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+    else
+      _die printf "Selection not found.\n"
+    fi
+  else
+    _die printf "Selection not found.\n"
+  fi
+}
+
 # sync ########################################################################
 
 # _sync()
@@ -600,7 +641,7 @@ _notes() {
     init)
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    add|delete|edit|list|search|sync)
+    add|delete|edit|list|search|show|sync)
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
