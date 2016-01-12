@@ -361,7 +361,7 @@ _add() {
   else
     cat >> "${_filename}"
   fi
-  _git_checkpoint "Add: ${_basename}"
+  _git_checkpoint "[NOTES] Add: ${_basename}"
 }
 
 ########################################################################## edit
@@ -374,7 +374,7 @@ _edit() {
   else
     "$EDITOR" "${NOTES_DIR}/${_basename}"
   fi
-  _git_checkpoint "Edit: ${_basename}"
+  _git_checkpoint "[NOTES] Edit: ${_basename}"
 }
 
 ########################################################################## list
