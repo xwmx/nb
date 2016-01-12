@@ -116,6 +116,7 @@ Usage:
   $_ME list [--excerpt [<length>]]
   $_ME edit ( <index> | <filename> )
   $_ME search <query>
+  $_ME sync
   $_ME -h | --help | help
   $_ME --version
 
@@ -124,6 +125,7 @@ Subcommands:
   list     List all notes. Optionally, an excerpt of each note can be printed.
   edit     Edit a note.
   search   Search notes.
+  sync     Sync notes with the remote repository.
   help     Display this help information.
 
 Options:
@@ -276,7 +278,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|list|edit|search|help)
+    add|list|edit|search|sync|help)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -496,6 +498,17 @@ _search() {
   fi
 }
 
+# sync ########################################################################
+
+# _sync()
+#
+# Usage:
+#   _sync
+_sync() {
+  cd "${NOTES_DIR}" || _die printf "_synd(): cd failed.\n"
+  git fetch && git rebase origin/master && git push
+}
+
 ###############################################################################
 # _notes()
 ###############################################################################
@@ -508,7 +521,7 @@ _notes() {
   _debug printf "_notes() >> start\n"
 
   case "$_SUBCOMMAND" in
-    add|edit|list|search)
+    add|edit|list|search|sync)
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     "help")

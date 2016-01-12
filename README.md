@@ -14,6 +14,7 @@ Usage:
   notes list [--excerpt [<length>]]
   notes edit ( <index> | <filename> )
   notes search <query>
+  notes sync
   notes -h | --help | help
   notes --version
 
@@ -22,6 +23,7 @@ Subcommands:
   list     List all notes. Optionally, an excerpt of each note can be printed.
   edit     Edit a note.
   search   Search notes.
+  sync     Sync notes with the remote repository.
   help     Display this help information.
 
 Options:
