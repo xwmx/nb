@@ -10,12 +10,12 @@
 
 ```
 Usage:
-  $_ME add [<note>]
-  $_ME list [--excerpt [<length>]]
-  $_ME edit ( <index> | <filename> )
-  $_ME search <query>
-  $_ME -h | --help | help
-  $_ME --version
+  notes add [<note>]
+  notes list [--excerpt [<length>]]
+  notes edit ( <index> | <filename> )
+  notes search <query>
+  notes -h | --help | help
+  notes --version
 
 Subcommands:
   add      Add a new note.
