@@ -10,6 +10,7 @@
 
 ```
 Usage:
+  notes init [<remote url>]
   notes add [<note>]
   notes list [--excerpt [<length>]]
   notes edit ( <index> | <filename> )
@@ -19,6 +20,7 @@ Usage:
   notes --version
 
 Subcommands:
+  init     Initialize the local notes repository.
   add      Add a new note.
   list     List all notes. Optionally, an excerpt of each note can be printed.
   edit     Edit a note.

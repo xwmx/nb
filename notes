@@ -112,6 +112,7 @@ _print_help() {
 |_| |_|\___/ \__\___||___/
 
 Usage:
+  $_ME init [<remote url>]
   $_ME add [<note>]
   $_ME list [--excerpt [<length>]]
   $_ME edit ( <index> | <filename> )
@@ -121,6 +122,7 @@ Usage:
   $_ME --version
 
 Subcommands:
+  init     Initialize the local notes repository.
   add      Add a new note.
   list     List all notes. Optionally, an excerpt of each note can be printed.
   edit     Edit a note.
@@ -278,7 +280,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|list|edit|search|sync|help)
+    add|list|edit|init|search|sync|help)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -310,13 +312,6 @@ _debug printf "\$_ARGUMENTS: %s\n" "${_ARGUMENTS[*]:-}"
 ###############################################################################
 
 export NOTES_DIR="${HOME}/.notes"
-
-if [[ ! -e "${NOTES_DIR}" ]]
-then # `$NOTES_DIR` doesn't exist.
-  mkdir -p "${NOTES_DIR}"
-  cd "${NOTES_DIR}" && git init
-fi
-
 
 ###############################################################################
 # Helpers
@@ -430,6 +425,23 @@ _edit() {
 
 # list ########################################################################
 
+# _init()
+#
+# Usage:
+#   _init [<repository URL>]
+_init() {
+  local _repo_url="${1:-}"
+  if [[ -n "${_repo_url}" ]]
+  then
+    git clone "${_repo_url}" "${NOTES_DIR}"
+  else
+    mkdir -p "${NOTES_DIR}"
+    cd "${NOTES_DIR}" && git init
+  fi
+}
+
+# list ########################################################################
+
 # _list()
 #
 # Usage:
@@ -521,7 +533,17 @@ _notes() {
   _debug printf "_notes() >> start\n"
 
   case "$_SUBCOMMAND" in
+    init)
+      "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
+      ;;
     add|edit|list|search|sync)
+      if [[ ! -e "${NOTES_DIR}" ]]
+      then # `$NOTES_DIR` doesn't exist.
+        _die cat <<HEREDOC
+$NOTES_DIR doesn't exist. Use \`$_ME init\` to get started.
+Usage: $_ME init [<remote url>]
+HEREDOC
+      fi
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     "help")
