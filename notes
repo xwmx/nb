@@ -113,9 +113,9 @@ _print_help() {
 
 Usage:
   $_ME add [<note>]
-  list [--excerpt [<length>]]
-  edit ( <index> | <filename> )
-  search <query>
+  $_ME list [--excerpt [<length>]]
+  $_ME edit ( <index> | <filename> )
+  $_ME search <query>
   $_ME -h | --help | help
   $_ME --version
 
