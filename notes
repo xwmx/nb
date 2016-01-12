@@ -313,7 +313,10 @@ _debug printf "\$_ARGUMENTS: %s\n" "${_ARGUMENTS[*]:-}"
 # Setup
 ###############################################################################
 
-export NOTES_DIR="${HOME}/.notes"
+# `$NOTES_DIR`
+#
+# Default: `$HOME/.notes`
+export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
 
 ###############################################################################
 # Helpers
