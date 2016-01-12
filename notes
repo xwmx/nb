@@ -114,7 +114,7 @@ _print_help() {
 Usage:
   $_ME add [<note>]
   list [--excerpt [<length>]]
-  edit <filename>
+  edit ( <index> | <filename> )
   search <query>
   $_ME -h | --help | help
   $_ME --version
@@ -387,17 +387,43 @@ _add() {
 # _edit()
 #
 # Usage:
-#   _edit <filename>
+#   _edit <selection>
 _edit() {
-  local _basename="${1:-}"
-  if [[ -z "${_basename}" ]]
+  local _selection="${1:-}"
+  local _basename=
+
+  _debug printf "_edit() \$_selection: %s\n" "${_selection}"
+
+  if [[ -z "${_selection}" ]]
   then
     $_ME help
     return 1
-  else
+  elif [[ -e "${NOTES_DIR}/${_selection}" ]]
+  then
+    _basename="${_selection}"
     "$EDITOR" "${NOTES_DIR}/${_basename}"
+  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
+  then
+    local _filenames=($(ls "${NOTES_DIR}"))
+
+    _debug printf "_edit() \$_filenames[*]: %s\n" "${_filenames[*]}"
+
+    _basename="${_filenames[${_selection}]:-}"
+
+    if [[ -n "$_basename" ]]
+    then
+      "$EDITOR" "${NOTES_DIR}/${_basename}"
+    else
+      _die printf "Selection not found.\n"
+    fi
+  else
+    _die printf "Selection not found.\n"
   fi
-  _git_checkpoint "[NOTES] Edit: ${_basename}"
+
+  if [[ -n "${_basename}" ]]
+  then
+    _git_checkpoint "[NOTES] Edit: ${_basename}"
+  fi
 }
 
 # list ########################################################################
@@ -430,23 +456,26 @@ _list() {
   then
     return 1
   else
+    local _counter=0
     for _basename in $_filenames
     do
-      printf "%s\n" "${_basename}"
+      local _file_list_item="[${_counter}] ${_basename}"
+      printf "%s\n" "${_file_list_item}"
 
       if ((_print_excerpt))
       then
         # Print a line. More information:
         # http://wiki.bash-hackers.org/commands/builtin/printf
-        local _basename_length=0
-        _basename_length=${#_basename}
-        printf -v line '%*s' "$_basename_length"
+        local _file_list_item_length=0
+        _file_list_item_length=${#_file_list_item}
+        printf -v line '%*s' "$_file_list_item_length"
         echo "${line// /-}"
 
        head -"${_excerpt_length}" "${NOTES_DIR}/${_basename}"
 
         printf "\n"
       fi
+      _counter=$((_counter+1))
     done
   fi
 }
