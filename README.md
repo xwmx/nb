@@ -14,6 +14,7 @@ Usage:
   notes add [<note>]
   notes list [--excerpt [<length>]]
   notes edit ( <index> | <filename> )
+  notes delete ( <index> | <filename> )
   notes search <query>
   notes sync
   notes -h | --help | help
@@ -24,6 +25,7 @@ Subcommands:
   add      Add a new note.
   list     List all notes. Optionally, an excerpt of each note can be printed.
   edit     Edit a note.
+  delete   Delete a note.
   search   Search notes.
   sync     Sync notes with the remote repository.
   help     Display this help information.
