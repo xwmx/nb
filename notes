@@ -134,22 +134,6 @@ HEREDOC
 }
 
 ###############################################################################
-# Helpers
-###############################################################################
-
-# _interactive_input()
-#
-# Usage:
-#   _interactive_input
-#
-# Returns:
-#   0  If the current input is interactive (eg, a shell).
-#   1  If the current input is stdin / piped input.
-_interactive_input() {
-  [[ -t 0 ]]
-}
-
-###############################################################################
 # Version
 ###############################################################################
 
@@ -331,10 +315,30 @@ then # `$NOTES_DIR` doesn't exist.
   cd "${NOTES_DIR}" && git init
 fi
 
+
 ###############################################################################
-# Program Functions
+# Helpers
 ###############################################################################
 
+# _interactive_input()
+#
+# Usage:
+#   _interactive_input
+#
+# Returns:
+#   0  If the current input is interactive (eg, a shell).
+#   1  If the current input is stdin / piped input.
+_interactive_input() {
+  [[ -t 0 ]]
+}
+
+# _git_checkpoint()
+#
+# Usage:
+#   _git_checkpoint <commit message>
+#
+# Description:
+#   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
   local _message="${1:-}"
   if [[ -z "${_message}" ]]
@@ -347,7 +351,17 @@ _git_checkpoint() {
   git add --all && git commit -a -m "${_message}"
 }
 
-########################################################################### add
+###############################################################################
+# Subcommands
+###############################################################################
+
+# add #########################################################################
+
+# _add()
+#
+# Usage:
+#   _add <content>
+#   echo <content> | _add
 _add() {
   # Assign filename with unicode timestamp.
   local _basename
@@ -368,7 +382,12 @@ _add() {
   _git_checkpoint "[NOTES] Add: ${_basename}"
 }
 
-########################################################################## edit
+# edit ########################################################################
+
+# _edit()
+#
+# Usage:
+#   _edit <filename>
 _edit() {
   local _basename="${1:-}"
   if [[ -z "${_basename}" ]]
@@ -381,7 +400,12 @@ _edit() {
   _git_checkpoint "[NOTES] Edit: ${_basename}"
 }
 
-########################################################################## list
+# list ########################################################################
+
+# _list()
+#
+# Usage:
+#   _list [--excerpt [<lines>]]
 _list() {
   _debug printf "_list() \$1: %s\n" "${1:-}"
   _debug printf "_list() \$2: %s\n" "${2:-}"
@@ -427,7 +451,12 @@ _list() {
   fi
 }
 
-######################################################################## search
+# search ######################################################################
+
+# _search()
+#
+# Usage:
+#   _search <query>
 _search() {
   if [[ -z "${1:-}" ]]
   then
@@ -438,7 +467,14 @@ _search() {
   fi
 }
 
-# _notes ######################################################################
+###############################################################################
+# _notes()
+###############################################################################
+
+# _notes()
+#
+# Description:
+#   Call the appropriate subcommand.
 _notes() {
   _debug printf "_notes() >> start\n"
 
