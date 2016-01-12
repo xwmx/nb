@@ -379,13 +379,13 @@ _add() {
   _filename="${NOTES_DATA_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
 
   if _interactive_input
-  then
+  then # terminal input.
     if [[ -z "${*}" ]]
-    then
+    then # argument array is blank.
       _die printf "Usage: %s add [<note>]\n" "${_ME}"
     fi
     printf "%s\n" "${*}" >> "${_filename}"
-  else
+  else # piped input.
     cat >> "${_filename}"
   fi
   _git_checkpoint "[NOTES] Add: ${_basename}"
@@ -404,16 +404,16 @@ _delete() {
   _debug printf "_delete() \$_selection: %s\n" "${_selection}"
 
   if [[ -z "${_selection}" ]]
-  then
+  then  # <selection> is blank.
     $_ME help
     return 1
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
-  then
+  then # <selection> is a filename.
     _basename="${_selection}"
     cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
     git rm "${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
-  then
+  then # <selection> is an id.
     local _filenames=($(ls "${NOTES_DATA_DIR}"))
 
     _debug printf "_delete() \$_filenames[*]: %s\n" "${_filenames[*]}"
@@ -421,7 +421,7 @@ _delete() {
     _basename="${_filenames[${_selection}]:-}"
 
     if [[ -n "$_basename" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
-    then
+    then # _basename is assigned and a note exists with that name.
       cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
       git rm "${_basename}"
     else
@@ -450,15 +450,15 @@ _edit() {
   _debug printf "_edit() \$_selection: %s\n" "${_selection}"
 
   if [[ -z "${_selection}" ]]
-  then
+  then # <selection> is blank.
     $_ME help
     return 1
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
-  then
+  then # <selection> is a filename.
     _basename="${_selection}"
     "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
-  then
+  then # <selection> is an id.
     local _filenames=($(ls "${NOTES_DATA_DIR}"))
 
     _debug printf "_edit() \$_filenames[*]: %s\n" "${_filenames[*]}"
@@ -466,7 +466,7 @@ _edit() {
     _basename="${_filenames[${_selection}]:-}"
 
     if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
-    then
+    then # _basename is assigned and a note exists with that name.
       "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
     else
       _die printf "Selection not found.\n"
