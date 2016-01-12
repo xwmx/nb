@@ -377,26 +377,32 @@ _list() {
   fi
   _debug printf "_list() \$_excerpt_length: %s\n" "${_excerpt_length:-}"
 
-  for _fullpath in "${NOTES_DIR}"/*
-  do
-    local _basename
-    _basename="$(basename "${_fullpath}")"
-    printf "%s\n" "${_basename}"
+  local _filenames=
+  _filenames="$(ls -A "${NOTES_DIR}")"
 
-    if ((_print_excerpt))
-    then
-      # Print a line. More information:
-      # http://wiki.bash-hackers.org/commands/builtin/printf
-      local _basename_length=0
-      _basename_length=${#_basename}
-      printf -v line '%*s' "$_basename_length"
-      echo ${line// /-}
+  if [[ -z "${_filenames}" ]]
+  then
+    return 1
+  else
+    for _basename in $_filenames
+    do
+      printf "%s\n" "${_basename}"
 
-      head -"${_excerpt_length}" "${_fullpath}"
+      if ((_print_excerpt))
+      then
+        # Print a line. More information:
+        # http://wiki.bash-hackers.org/commands/builtin/printf
+        local _basename_length=0
+        _basename_length=${#_basename}
+        printf -v line '%*s' "$_basename_length"
+        echo "${line// /-}"
 
-      printf "\n"
-    fi
-  done
+       head -"${_excerpt_length}" "${NOTES_DIR}/${_basename}"
+
+        printf "\n"
+      fi
+    done
+  fi
 }
 
 ######################################################################## search
