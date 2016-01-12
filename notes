@@ -318,6 +318,11 @@ _debug printf "\$_ARGUMENTS: %s\n" "${_ARGUMENTS[*]:-}"
 # Default: `$HOME/.notes`
 export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
 
+# `$NOTES_DATA_DIR`
+#
+# Default: `$NOTES_DIR/data`
+export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/data}"
+
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -349,7 +354,7 @@ _git_checkpoint() {
     return 1
   fi
 
-  cd "${NOTES_DIR}" || return 1
+  cd "${NOTES_DATA_DIR}" || return 1
   git add --all && git commit -a -m "${_message}"
 }
 
@@ -369,7 +374,7 @@ _add() {
   local _basename
   _basename="$(date -u "+%Y%m%d%H%M%S").md"
   local _filename
-  _filename="${NOTES_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
+  _filename="${NOTES_DATA_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
 
   if _interactive_input
   then
@@ -400,22 +405,22 @@ _delete() {
   then
     $_ME help
     return 1
-  elif [[ -e "${NOTES_DIR}/${_selection}" ]]
+  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then
     _basename="${_selection}"
-    cd "${NOTES_DIR}" || _die printf "_delete() \`cd\` failed.\n"
+    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
     git rm "${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then
-    local _filenames=($(ls "${NOTES_DIR}"))
+    local _filenames=($(ls "${NOTES_DATA_DIR}"))
 
     _debug printf "_delete() \$_filenames[*]: %s\n" "${_filenames[*]}"
 
     _basename="${_filenames[${_selection}]:-}"
 
-    if [[ -n "$_basename" ]] && [[ -e "${NOTES_DIR}/${_basename}" ]]
+    if [[ -n "$_basename" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then
-      cd "${NOTES_DIR}" || _die printf "_delete() \`cd\` failed.\n"
+      cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
       git rm "${_basename}"
     else
       _die printf "Selection not found.\n"
@@ -446,13 +451,13 @@ _edit() {
   then
     $_ME help
     return 1
-  elif [[ -e "${NOTES_DIR}/${_selection}" ]]
+  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then
     _basename="${_selection}"
-    "$EDITOR" "${NOTES_DIR}/${_basename}"
+    "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then
-    local _filenames=($(ls "${NOTES_DIR}"))
+    local _filenames=($(ls "${NOTES_DATA_DIR}"))
 
     _debug printf "_edit() \$_filenames[*]: %s\n" "${_filenames[*]}"
 
@@ -460,7 +465,7 @@ _edit() {
 
     if [[ -n "$_basename" ]]
     then
-      "$EDITOR" "${NOTES_DIR}/${_basename}"
+      "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
     else
       _die printf "Selection not found.\n"
     fi
@@ -484,10 +489,10 @@ _init() {
   local _repo_url="${1:-}"
   if [[ -n "${_repo_url}" ]]
   then
-    git clone "${_repo_url}" "${NOTES_DIR}"
+    git clone "${_repo_url}" "${NOTES_DATA_DIR}"
   else
-    mkdir -p "${NOTES_DIR}"
-    cd "${NOTES_DIR}" && git init
+    mkdir -p "${NOTES_DATA_DIR}"
+    cd "${NOTES_DATA_DIR}" && git init
   fi
 }
 
@@ -515,7 +520,7 @@ _list() {
   _debug printf "_list() \$_excerpt_length: %s\n" "${_excerpt_length:-}"
 
   local _filenames=
-  _filenames="$(ls "${NOTES_DIR}")"
+  _filenames="$(ls "${NOTES_DATA_DIR}")"
 
   if [[ -z "${_filenames}" ]]
   then
@@ -536,7 +541,7 @@ _list() {
         printf -v line '%*s' "$_file_list_item_length"
         echo "${line// /-}"
 
-       head -"${_excerpt_length}" "${NOTES_DIR}/${_basename}"
+       head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
 
         printf "\n"
       fi
@@ -557,7 +562,7 @@ _search() {
     $_ME help
     return 1
   else
-    ack "${@}" "${NOTES_DIR}"
+    ack "${@}" "${NOTES_DATA_DIR}"
   fi
 }
 
@@ -568,7 +573,7 @@ _search() {
 # Usage:
 #   _sync
 _sync() {
-  cd "${NOTES_DIR}" || _die printf "_synd(): cd failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "_synd(): cd failed.\n"
   git fetch && git rebase origin/master && git push
 }
 
@@ -588,10 +593,10 @@ _notes() {
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     add|delete|edit|list|search|sync)
-      if [[ ! -e "${NOTES_DIR}" ]]
-      then # `$NOTES_DIR` doesn't exist.
+      if [[ ! -e "${NOTES_DATA_DIR}" ]]
+      then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
-$NOTES_DIR doesn't exist. Use \`$_ME init\` to get started.
+$NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
