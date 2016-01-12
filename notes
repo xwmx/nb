@@ -465,7 +465,7 @@ _edit() {
 
     _basename="${_filenames[${_selection}]:-}"
 
-    if [[ -n "$_basename" ]]
+    if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then
       "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
     else
