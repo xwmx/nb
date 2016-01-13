@@ -376,6 +376,20 @@ _git_checkpoint() {
   fi
 }
 
+# _git_required()
+#
+# Usage:
+#   _git_required
+#
+# Description:
+#   Exit with `_die` if `git` isn't found.
+_git_required() {
+  if ! hash "git" 2>/dev/null
+  then
+    _die printf "\`git\` is required, but wasn't found.\n"
+  fi
+}
+
 ###############################################################################
 # Subcommands
 ###############################################################################
@@ -704,9 +718,11 @@ _notes() {
 
   case "$_SUBCOMMAND" in
     init)
+      _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     add|delete|edit|env|list|log|ls|search|show|sync)
+      _git_required
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
