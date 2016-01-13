@@ -16,6 +16,7 @@ Usage:
   notes init [<remote url>]
   notes list [--excerpt [<length>]]
   notes search <query>
+  notes show ( <index> | <filename> )
   notes sync
   notes -h | --help | help
   notes --version
@@ -28,6 +29,7 @@ Subcommands:
   init     Initialize the local notes repository.
   list     List all notes. Optionally, an excerpt of each note can be printed.
   search   Search notes.
+  show     Show a note.
   sync     Sync notes with the remote repository.
 
 Options:
