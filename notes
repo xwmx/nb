@@ -582,7 +582,11 @@ _list() {
     local _counter=0
     for _basename in $_filenames
     do
-      local _file_list_item="[${_counter}] ${_basename}"
+      # Set counter color to yellow.
+      local _counter_item
+      _counter_item="[$(tput setaf 3)${_counter}$(tput sgr0)]"
+
+      local _file_list_item="${_counter_item} ${_basename}"
       printf "%s\n" "${_file_list_item}"
 
       if ((_print_excerpt))
