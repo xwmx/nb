@@ -33,7 +33,7 @@ Subcommands:
   help     Display this help information.
   init     Initialize the local notes repository.
   list     List all notes. Optionally, an excerpt of each note can be printed.
-  log      Display git history using \`tig\` (if available) or \`git log\`.
+  log      Display git history using `tig` (if available) or `git log`.
   search   Search notes.
   show     Show a note.
   sync     Sync notes with the remote repository.
