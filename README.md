@@ -18,7 +18,7 @@ Usage:
   notes delete ( <index> | <filename> )
   notes edit ( <index> | <filename> )
   notes init [<remote url>]
-  notes list [--excerpt [<length>]]
+  notes list list [-e | --excerpt [<length>]]
   notes log
   notes search <query>
   notes show ( <index> | <filename> )
@@ -39,7 +39,8 @@ Subcommands:
   sync     Sync notes with the remote repository.
 
 Options:
-  --excerpt <length>  Print an excerpt from each note [default: 3].
-  -h --help           Display this help information.
-  --version           Display version information.
+  -e --excerpt [<length>]  Print an excerpt from each note with an optional
+                           length in number of lines [default: 3].
+  -h --help                Display this help information.
+  --version                Display version information.
 ```

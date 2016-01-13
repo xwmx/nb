@@ -116,7 +116,7 @@ Usage:
   $_ME delete ( <index> | <filename> )
   $_ME edit ( <index> | <filename> )
   $_ME init [<remote url>]
-  $_ME list [--excerpt [<length>]]
+  $_ME list [-e | --excerpt [<length>]]
   $_ME log
   $_ME search <query>
   $_ME show ( <index> | <filename> )
@@ -137,9 +137,10 @@ Subcommands:
   sync     Sync notes with the remote repository.
 
 Options:
-  --excerpt <length>  Print an excerpt from each note [default: 3].
-  -h --help           Display this help information.
-  --version           Display version information.
+  -e --excerpt [<length>]  Print an excerpt from each note with an optional
+                           length in number of lines [default: 3].
+  -h --help                Display this help information.
+  --version                Display version information.
 HEREDOC
 }
 
@@ -532,7 +533,7 @@ _list() {
 
   local _print_excerpt=0
   local _excerpt_length=3
-  if [[ "${1:-}" = "--excerpt" ]]
+  if [[ "${1:-}" = "--excerpt" ]] || [[ "${1:-}" = "-e" ]]
   then
     _print_excerpt=1
     if [[ -n "${2:-}" ]]
