@@ -379,7 +379,7 @@ _add() {
   local _basename
   _basename="$(date -u "+%Y%m%d%H%M%S").md"
   local _filename
-  _filename="${NOTES_DATA_DIR}/$(date -u "+%Y%m%d%H%M%S").md"
+  _filename="${NOTES_DATA_DIR}/${_basename}"
 
   if _interactive_input
   then # terminal input.
