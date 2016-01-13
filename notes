@@ -328,6 +328,14 @@ export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
 # Default: `$NOTES_DIR/data`
 export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/data}"
 
+# `$NOTES_AUTO_SYNC`
+#
+# Default: 0
+#
+# When set to '1', each `_git_checkpoint()` call will automativally run
+# `$_ME sync`.
+export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-0}"
+
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -361,6 +369,11 @@ _git_checkpoint() {
 
   cd "${NOTES_DATA_DIR}" || return 1
   git add --all && git commit -a -m "${_message}"
+
+  if ((NOTES_AUTO_SYNC))
+  then
+    $_ME sync
+  fi
 }
 
 ###############################################################################
@@ -494,6 +507,7 @@ _edit() {
 _env() {
   printf "NOTES_DIR=%s\n" "$NOTES_DIR"
   printf "NOTES_DATA_DIR=%s\n" "$NOTES_DATA_DIR"
+  printf "NOTES_AUTO_SYNC=%s\n" "$NOTES_AUTO_SYNC"
 }
 
 # list ########################################################################
