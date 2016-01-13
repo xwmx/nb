@@ -666,9 +666,33 @@ _search() {
 # Usage:
 #   _show <selection>
 _show() {
-  local _selection="${1:-}"
-  local _basename=
+  _debug printf "_show() \$0: %s\n" "${0:-}"
+  _debug printf "_show() \$1: %s\n" "${1:-}"
+  _debug printf "_show() \$2: %s\n" "${2:-}"
 
+  local -a _arguments=("${@:1}")
+  local _selection=
+  local _basename=
+  local _render=0
+
+  _debug printf "_show() \$_arguments[*]: %s\n" "${_arguments[*]:-}"
+
+  for _arg in "${_arguments[@]:-}"
+  do
+    case "${_arg}" in
+      --render)
+        _render=1
+        ;;
+      *)
+        if [[ -z "${_selection}" ]]
+        then
+          _selection="${_arg}"
+        fi
+        ;;
+    esac
+  done
+
+  _debug printf "_show() \$_render: %s\n" "${_render}"
   _debug printf "_show() \$_selection: %s\n" "${_selection}"
 
   if [[ -z "${_selection}" ]]
@@ -689,7 +713,16 @@ _show() {
 
     if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then # _basename is assigned and a note exists with that name.
-      "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+      if ((_render)) && hash "pandoc" 2>/dev/null && hash "lynx" 2>/dev/null
+      then
+        pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
+        # w3m:
+        # pandoc "${NOTES_DATA_DIR}/${_basename}" \
+        #   | w3m -dump -T text/html \
+        #   | "${PAGER}"
+      else
+        "${PAGER}" "${NOTES_DATA_DIR}/${_basename}"
+      fi
     else
       _die printf "Selection not found.\n"
     fi
