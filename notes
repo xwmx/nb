@@ -565,7 +565,10 @@ _list() {
         printf -v line '%*s' "$_file_list_item_length"
         echo "${line// /-}"
 
-       head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
+        if [[ "${_excerpt_length}" =~ ^[1-9] ]]
+        then # first character is a non-zero digit, as required by `head`.
+          head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
+        fi
 
         printf "\n"
       fi
