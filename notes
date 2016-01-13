@@ -117,6 +117,7 @@ Usage:
   $_ME edit ( <index> | <filename> )
   $_ME init [<remote url>]
   $_ME list [--excerpt [<length>]]
+  $_ME log
   $_ME search <query>
   $_ME show ( <index> | <filename> )
   $_ME sync
@@ -130,6 +131,7 @@ Subcommands:
   help     Display this help information.
   init     Initialize the local notes repository.
   list     List all notes. Optionally, an excerpt of each note can be printed.
+  log      Display git history using \`tig\` (if available) or \`git log\`.
   search   Search notes.
   show     Show a note.
   sync     Sync notes with the remote repository.
@@ -284,7 +286,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|delete|edit|help|init|list|search|show|sync)
+    add|delete|edit|help|init|list|log|search|show|sync)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -560,6 +562,22 @@ _list() {
   fi
 }
 
+# log #########################################################################
+
+# _log()
+#
+# Usage:
+#   _log
+_log() {
+  cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
+  if hash "tig" 2>/dev/null
+  then #  tig (https://github.com/jonas/tig) is present.
+    tig --all
+  else
+    git log
+  fi
+}
+
 # search ######################################################################
 
 # _search()
@@ -641,7 +659,7 @@ _notes() {
     init)
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    add|delete|edit|list|search|show|sync)
+    add|delete|edit|list|log|search|show|sync)
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
