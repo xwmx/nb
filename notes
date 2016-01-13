@@ -385,9 +385,10 @@ _add() {
   then # terminal input.
     if [[ -z "${*}" ]]
     then # argument array is blank.
-      _die printf "Usage: %s add [<note>]\n" "${_ME}"
+      "${EDITOR}" "${_filename}"
+    else
+      printf "%s\n" "${*}" >> "${_filename}"
     fi
-    printf "%s\n" "${*}" >> "${_filename}"
   else # piped input.
     cat >> "${_filename}"
   fi
