@@ -418,7 +418,7 @@ _delete() {
     git rm "${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
-    local _filenames=($(ls "${NOTES_DATA_DIR}"))
+    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
 
     _debug printf "_delete() \$_filenames[*]: %s\n" "${_filenames[*]}"
 
@@ -463,7 +463,7 @@ _edit() {
     "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
-    local _filenames=($(ls "${NOTES_DATA_DIR}"))
+    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
 
     _debug printf "_edit() \$_filenames[*]: %s\n" "${_filenames[*]}"
 
@@ -545,7 +545,7 @@ _list() {
   _debug printf "_list() \$_excerpt_length: %s\n" "${_excerpt_length:-}"
 
   local _filenames=
-  _filenames="$(ls "${NOTES_DATA_DIR}")"
+  _filenames="$(ls -r "${NOTES_DATA_DIR}")"
 
   if [[ -z "${_filenames}" ]]
   then
@@ -639,7 +639,7 @@ _show() {
     "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
-    local _filenames=($(ls "${NOTES_DATA_DIR}"))
+    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
 
     _debug printf "_show() \$_filenames[*]: %s\n" "${_filenames[*]}"
 
