@@ -286,7 +286,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|delete|edit|help|init|list|log|search|show|sync)
+    add|delete|edit|env|help|init|list|log|search|show|sync)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -483,6 +483,17 @@ _edit() {
   fi
 }
 
+# env #############################################@###########################
+
+# _env()
+#
+# Usage:
+#   _env
+_env() {
+  printf "NOTES_DIR=%s\n" "$NOTES_DIR"
+  printf "NOTES_DATA_DIR=%s\n" "$NOTES_DATA_DIR"
+}
+
 # list ########################################################################
 
 # _init()
@@ -659,7 +670,7 @@ _notes() {
     init)
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    add|delete|edit|list|log|search|show|sync)
+    add|delete|edit|env|list|log|search|show|sync)
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
