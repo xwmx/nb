@@ -340,6 +340,20 @@ export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-0}"
 # Helpers
 ###############################################################################
 
+# _command_exists()
+#
+# Usage:
+#   _command_exists "possible_command_name"
+#
+# Takes a potential command name as an argument and returns whether a command
+# exists with that name.
+#
+# For information on why `hash` is used here, see:
+# http://stackoverflow.com/a/677212
+_command_exists() {
+  hash "$1" 2>/dev/null
+}
+
 # _interactive_input()
 #
 # Usage:
@@ -384,7 +398,7 @@ _git_checkpoint() {
 # Description:
 #   Exit with `_die` if `git` isn't found.
 _git_required() {
-  if ! hash "git" 2>/dev/null
+  if ! _command_exists "git"
   then
     _die printf "\`git\` is required, but wasn't found.\n"
   fi
@@ -618,7 +632,7 @@ _list() {
 #   _log
 _log() {
   cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
-  if hash "tig" 2>/dev/null
+  if _command_exists "tig"
   then #  tig (https://github.com/jonas/tig) is present.
     tig --all
   else
@@ -648,7 +662,7 @@ _search() {
     $_ME help
     return 1
   else
-    if hash "ack" 2>/dev/null
+    if _command_exists "ack"
     then # ack is available.
       ack "${@}" "${NOTES_DATA_DIR}"
     else # fall back to POSIX grep.
@@ -713,7 +727,7 @@ _show() {
 
     if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then # _basename is assigned and a note exists with that name.
-      if ((_render)) && hash "pandoc" 2>/dev/null && hash "lynx" 2>/dev/null
+      if ((_render)) && _command_exists "pandoc" && _command_exists "lynx"
       then
         pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
         # w3m:
