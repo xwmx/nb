@@ -599,8 +599,11 @@ _list() {
       # Set counter color to yellow.
       local _counter_item
       _counter_item="[$(tput setaf 3)${_counter}$(tput sgr0)]"
+      # Maintain a raw version of the counter.
+      local _raw_counter_item="[${_counter}]"
 
       local _file_list_item="${_counter_item} ${_basename}"
+      local _raw_file_list_item="${_raw_counter_item} ${_basename}"
       printf "%s\n" "${_file_list_item}"
 
       if ((_print_excerpt))
@@ -608,7 +611,9 @@ _list() {
         # Print a line. More information:
         # http://wiki.bash-hackers.org/commands/builtin/printf
         local _file_list_item_length=0
-        _file_list_item_length=${#_file_list_item}
+        # Use length from `$_raw_file_list_item` because `$_file_list_item`'s
+        # `tput` calls increase the measured length.
+        _file_list_item_length=${#_raw_file_list_item}
         printf -v line '%*s' "$_file_list_item_length"
         echo "${line// /-}"
 
