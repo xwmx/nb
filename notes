@@ -597,26 +597,28 @@ _list() {
     local _counter=0
     for _basename in $_filenames
     do
-      # Set counter color to yellow.
-      local _counter_item
-      _counter_item="[$(tput setaf 3)${_counter}$(tput sgr0)]"
-      # Maintain a raw version of the counter.
-      local _raw_counter_item="[${_counter}]"
+      # NOTE: Plain version serves as the reference version and can be used
+      # for length calculations.
+      local _counter_item="[${_counter}]"
+      local _counter_item_color
+      _counter_item_color="[$(tput setaf 3)${_counter}$(tput sgr0)]"
 
-      local _file_list_item="${_counter_item} ${_basename}"
-      local _raw_file_list_item="${_raw_counter_item} ${_basename}"
-      printf "%s\n" "${_file_list_item}"
+      local _list_item="${_counter_item} ${_basename}"
+      local _list_item_color="${_counter_item_color} ${_basename}"
+      printf "%s\n" "${_list_item_color}"
 
       if ((_print_excerpt))
       then
         # Print a line. More information:
         # http://wiki.bash-hackers.org/commands/builtin/printf
-        local _file_list_item_length=0
-        # Use length from `$_raw_file_list_item` because `$_file_list_item`'s
-        # `tput` calls increase the measured length.
-        _file_list_item_length=${#_raw_file_list_item}
-        printf -v line '%*s' "$_file_list_item_length"
-        echo "${line// /-}"
+        {
+          local _list_item_length=0
+          # Use length from `$_list_item` because `$_list_item_color`'s
+          # `tput` calls increase the measured length.
+          _list_item_length=${#_list_item}
+          printf -v line '%*s' "$_list_item_length"
+          echo "${line// /-}"
+        }
 
         if [[ "${_excerpt_length}" =~ ^[1-9] ]]
         then # first character is a non-zero digit, as required by `head`.
