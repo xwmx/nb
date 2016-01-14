@@ -24,7 +24,7 @@ Usage:
   notes show (<index> | <filename>) [--dump]
   notes sync
   notes -h | --help | help
-  notes --version
+  notes --version | version
 
 Subcommands:
   add      Add a new note.
@@ -37,6 +37,7 @@ Subcommands:
   search   Search notes.
   show     Show a note.
   sync     Sync notes with the remote repository.
+  version  Display version information.
 
 Options:
   --dump                 Print to standard output.

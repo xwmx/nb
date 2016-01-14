@@ -107,58 +107,6 @@ die() {
 }
 
 ###############################################################################
-# Help
-###############################################################################
-
-# _print_help()
-#
-# Usage: _print_help
-#
-# Print the program help information.
-_print_help() {
-  cat <<HEREDOC
-             _
- _ __   ___ | |_ ___  ___
-| '_ \ / _ \| __/ _ \/ __|
-| | | | (_) | ||  __/\__ \\
-|_| |_|\___/ \__\___||___/
-
-Usage:
-  $_ME add [<note>]
-  $_ME delete (<index> | <filename>)
-  $_ME edit (<index> | <filename>)
-  $_ME init [<remote url>]
-  $_ME list ([-e | --excerpt [<length>]] | [--noindex])
-  $_ME log
-  $_ME search <query>
-  $_ME show (<index> | <filename>) [--dump]
-  $_ME sync
-  $_ME -h | --help | help
-  $_ME --version
-
-Subcommands:
-  add      Add a new note.
-  delete   Delete a note.
-  edit     Edit a note.
-  help     Display this help information.
-  init     Initialize the local notes repository.
-  list     List all notes. Optionally, an excerpt of each note can be printed.
-  log      Display git history using \`tig\` (if available) or \`git log\`.
-  search   Search notes.
-  show     Show a note.
-  sync     Sync notes with the remote repository.
-
-Options:
-  --dump                 Print to standard output.
-  -e --excerpt <length>  Print an excerpt from each note with an optional
-                         length in number of lines [default: 3].
-  -h --help              Display this help information.
-  --noindex              Don't print the index number for each listing.
-  --version              Display version information.
-HEREDOC
-}
-
-###############################################################################
 # Version
 ###############################################################################
 
@@ -301,7 +249,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|delete|edit|env|git|help|init|list|log|ls|search|show|sync)
+    add|delete|edit|env|git|help|init|list|log|ls|search|show|sync|version)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -586,6 +534,57 @@ _git() {
   git "${@}"
 }
 
+# help ########################################################################
+
+# _help()
+#
+# Usage: _help
+#
+# Print the program help information.
+_help() {
+  cat <<HEREDOC
+             _
+ _ __   ___ | |_ ___  ___
+| '_ \ / _ \| __/ _ \/ __|
+| | | | (_) | ||  __/\__ \\
+|_| |_|\___/ \__\___||___/
+
+Usage:
+  $_ME add [<note>]
+  $_ME delete (<index> | <filename>)
+  $_ME edit (<index> | <filename>)
+  $_ME init [<remote url>]
+  $_ME list ([-e | --excerpt [<length>]] | [--noindex])
+  $_ME log
+  $_ME search <query>
+  $_ME show (<index> | <filename>) [--dump]
+  $_ME sync
+  $_ME -h | --help | help
+  $_ME --version | version
+
+Subcommands:
+  add      Add a new note.
+  delete   Delete a note.
+  edit     Edit a note.
+  help     Display this help information.
+  init     Initialize the local notes repository.
+  list     List all notes. Optionally, an excerpt of each note can be printed.
+  log      Display git history using \`tig\` (if available) or \`git log\`.
+  search   Search notes.
+  show     Show a note.
+  sync     Sync notes with the remote repository.
+  version  Display version information.
+
+Options:
+  --dump                 Print to standard output.
+  -e --excerpt <length>  Print an excerpt from each note with an optional
+                         length in number of lines [default: 3].
+  -h --help              Display this help information.
+  --noindex              Don't print the index number for each listing.
+  --version              Display version information.
+HEREDOC
+}
+
 # init ########################################################################
 
 # _init()
@@ -844,6 +843,18 @@ _sync() {
   git fetch && git rebase origin/master && git push
 }
 
+# version ####################################################################
+
+# _version()
+#
+# Usage:
+#   _version
+#
+# Print the value of $_VERSION.
+_version() {
+  printf "%s\n" "$_VERSION"
+}
+
 ###############################################################################
 # _notes()
 ###############################################################################
@@ -860,7 +871,10 @@ _notes() {
       _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    add|delete|edit|env|git|list|log|ls|search|show|sync)
+    help|version)
+      "_${_SUBCOMMAND}"
+      ;;
+    *)
       _git_required
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
@@ -870,9 +884,6 @@ Usage: $_ME init [<remote url>]
 HEREDOC
       fi
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
-      ;;
-    "help")
-      _print_help
       ;;
   esac
 }
@@ -884,10 +895,10 @@ HEREDOC
 _main() {
   if (("$_PRINT_HELP"))
   then
-    _print_help
+    _help
   elif (("$_PRINT_VERSION"))
   then
-    _print_version
+    _version
   else
     _notes "${_ARGUMENTS[@]:-}"
   fi
