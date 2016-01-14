@@ -433,7 +433,7 @@ _git_required() {
 _highlight_syntax_if_available() {
   if hash "pygmentize" 2>/dev/null &&
     pygmentize -l markdown &>/dev/null /dev/null
-  then
+  then # pygments and the markdown lexer are installed.
     pygmentize -l markdown
   else
     cat
