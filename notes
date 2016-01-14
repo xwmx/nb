@@ -417,6 +417,23 @@ _git_required() {
   fi
 }
 
+# _pygments_markdown_available()
+#
+# Usage:
+#   _pygments_markdown_available
+#
+# Returns:
+#   0  If pygments and pygments-markdown-lexer are available.
+#   1  If not.
+#
+# References:
+#   http://pygments.org/
+#   https://github.com/jhermann/pygments-markdown-lexer
+_pygments_markdown_available() {
+  hash "pygmentize" 2>/dev/null &&
+    pygmentize -l markdown &>/dev/null /dev/null
+}
+
 ###############################################################################
 # Subcommands
 ###############################################################################
@@ -634,7 +651,13 @@ _list() {
 
         if [[ "${_excerpt_length}" =~ ^[1-9] ]]
         then # first character is a non-zero digit, as required by `head`.
-          head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
+          head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}" \
+            | if _pygments_markdown_available
+              then
+                pygmentize -l markdown
+              else
+                cat
+              fi
         fi
 
         printf "\n"
@@ -773,9 +796,22 @@ _show() {
     else # default
       if ((_dump))
       then # `notes show --dump`
-        cat "${NOTES_DATA_DIR}/${_basename}"
+        if _pygments_markdown_available
+        then
+          cat "${NOTES_DATA_DIR}/${_basename}" \
+            | pygmentize -l markdown
+        else
+          cat "${NOTES_DATA_DIR}/${_basename}"
+        fi
       else # `notes show`
-        "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+        if _pygments_markdown_available
+        then
+          cat "${NOTES_DATA_DIR}/${_basename}" \
+            | pygmentize -l markdown \
+            | "$PAGER"
+        else
+          "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+        fi
       fi
     fi
   else # _basename is not assigned or no note exists with that name.
