@@ -18,7 +18,7 @@ Usage:
   notes delete ( <index> | <filename> )
   notes edit ( <index> | <filename> )
   notes init [<remote url>]
-  notes list [-e | --excerpt [<length>]]
+  notes list ( [-e | --excerpt [<length>]] | [--noindex] )
   notes log
   notes search <query>
   notes show ( <index> | <filename> ) [--dump]
@@ -43,5 +43,6 @@ Options:
   -e --excerpt [<length>]  Print an excerpt from each note with an optional
                            length in number of lines [default: 3].
   -h --help                Display this help information.
+  --noindex                Don't print the index number for each listing.
   --version                Display version information.
 ```
