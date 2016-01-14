@@ -15,13 +15,13 @@ A simple, portable, command line note-taking and syncing tool that stores data i
 ```
 Usage:
   notes add [<note>]
-  notes delete ( <index> | <filename> )
-  notes edit ( <index> | <filename> )
+  notes delete (<index> | <filename>)
+  notes edit (<index> | <filename>)
   notes init [<remote url>]
-  notes list ( [-e | --excerpt [<length>]] | [--noindex] )
+  notes list ([-e | --excerpt [<length>]] | [--noindex])
   notes log
   notes search <query>
-  notes show ( <index> | <filename> ) [--dump]
+  notes show (<index> | <filename>) [--dump]
   notes sync
   notes -h | --help | help
   notes --version
@@ -39,10 +39,10 @@ Subcommands:
   sync     Sync notes with the remote repository.
 
 Options:
-  --dump                   Print to standard output.
-  -e --excerpt [<length>]  Print an excerpt from each note with an optional
-                           length in number of lines [default: 3].
-  -h --help                Display this help information.
-  --noindex                Don't print the index number for each listing.
-  --version                Display version information.
+  --dump                 Print to standard output.
+  -e --excerpt <length>  Print an excerpt from each note with an optional
+                         length in number of lines [default: 3].
+  -h --help              Display this help information.
+  --noindex              Don't print the index number for each listing.
+  --version              Display version information.
 ```

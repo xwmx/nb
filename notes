@@ -125,13 +125,13 @@ _print_help() {
 
 Usage:
   $_ME add [<note>]
-  $_ME delete ( <index> | <filename> )
-  $_ME edit ( <index> | <filename> )
+  $_ME delete (<index> | <filename>)
+  $_ME edit (<index> | <filename>)
   $_ME init [<remote url>]
-  $_ME list ( [-e | --excerpt [<length>]] | [--noindex] )
+  $_ME list ([-e | --excerpt [<length>]] | [--noindex])
   $_ME log
   $_ME search <query>
-  $_ME show ( <index> | <filename> ) [--dump]
+  $_ME show (<index> | <filename>) [--dump]
   $_ME sync
   $_ME -h | --help | help
   $_ME --version
@@ -149,12 +149,12 @@ Subcommands:
   sync     Sync notes with the remote repository.
 
 Options:
-  --dump                   Print to standard output.
-  -e --excerpt [<length>]  Print an excerpt from each note with an optional
-                           length in number of lines [default: 3].
-  -h --help                Display this help information.
-  --noindex                Don't print the index number for each listing.
-  --version                Display version information.
+  --dump                 Print to standard output.
+  -e --excerpt <length>  Print an excerpt from each note with an optional
+                         length in number of lines [default: 3].
+  -h --help              Display this help information.
+  --noindex              Don't print the index number for each listing.
+  --version              Display version information.
 HEREDOC
 }
 
