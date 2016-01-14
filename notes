@@ -300,7 +300,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|delete|edit|env|help|init|list|log|ls|search|show|sync)
+    add|delete|edit|env|git|help|init|list|log|ls|search|show|sync)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -574,6 +574,17 @@ _env() {
   printf "NOTES_AUTO_SYNC=%s\n" "$NOTES_AUTO_SYNC"
 }
 
+# git #############################################@###########################
+
+# _git()
+#
+# Usage:
+#   _git <arguments>
+_git() {
+  cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\n"
+  git "${@}"
+}
+
 # init ########################################################################
 
 # _init()
@@ -837,7 +848,7 @@ _notes() {
       _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    add|delete|edit|env|list|log|ls|search|show|sync)
+    add|delete|edit|env|git|list|log|ls|search|show|sync)
       _git_required
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
