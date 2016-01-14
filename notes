@@ -737,19 +737,30 @@ _show() {
   # Display file.
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
-    if ((_render)) && _command_exists "pandoc" && _command_exists "lynx"
-    then
+    if ((_render)) &&
+       ((_dump))   &&
+       _command_exists "pandoc" &&
+       _command_exists "w3m"
+    then # `notes show --render --dump` with `pandoc` and `w3m` available.
+      pandoc "${NOTES_DATA_DIR}/${_basename}" \
+        | w3m -dump -T text/html
+    elif ((_render)) &&
+         _command_exists "pandoc" &&
+         _command_exists "lynx"
+    then # `notes show --render` with `pandoc` and `lynx` available.
       pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
-    elif ((_render)) && _command_exists "pandoc" && _command_exists "w3m"
-    then
+    elif ((_render)) &&
+         _command_exists "pandoc" &&
+         _command_exists "w3m"
+    then # `notes show --render` with `pandoc` and `w3m` available.
       pandoc "${NOTES_DATA_DIR}/${_basename}" \
         | w3m -dump -T text/html \
         | "${PAGER}"
     else # default
       if ((_dump))
-      then
+      then # `notes show --dump`
         cat "${NOTES_DATA_DIR}/${_basename}"
-      else
+      else # `notes show`
         "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
       fi
     fi
