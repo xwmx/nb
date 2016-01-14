@@ -119,7 +119,7 @@ Usage:
   $_ME list [-e | --excerpt [<length>]]
   $_ME log
   $_ME search <query>
-  $_ME show ( <index> | <filename> )
+  $_ME show ( <index> | <filename> ) [--dump]
   $_ME sync
   $_ME -h | --help | help
   $_ME --version
@@ -137,6 +137,7 @@ Subcommands:
   sync     Sync notes with the remote repository.
 
 Options:
+  --dump                   Print to standard output.
   -e --excerpt [<length>]  Print an excerpt from each note with an optional
                            length in number of lines [default: 3].
   -h --help                Display this help information.
@@ -693,12 +694,16 @@ _show() {
   local _selection=
   local _basename=
   local _render=0
+  local _dump=0
 
   _debug printf "_show() \$_arguments[*]: %s\n" "${_arguments[*]:-}"
 
   for _arg in "${_arguments[@]:-}"
   do
     case "${_arg}" in
+      --dump)
+        _dump=1
+        ;;
       --render)
         _render=1
         ;;
@@ -721,7 +726,12 @@ _show() {
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then # <selection> is a filename.
     _basename="${_selection}"
-    "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+    if ((_dump))
+    then
+      cat "${NOTES_DATA_DIR}/${_basename}"
+    else
+      "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+    fi
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
     local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
@@ -741,7 +751,12 @@ _show() {
           | w3m -dump -T text/html \
           | "${PAGER}"
       else
-        "${PAGER}" "${NOTES_DATA_DIR}/${_basename}"
+        if ((_dump))
+        then
+          cat "${NOTES_DATA_DIR}/${_basename}"
+        else
+          "$PAGER" "${NOTES_DATA_DIR}/${_basename}"
+        fi
       fi
     else
       _die printf "Selection not found.\n"
