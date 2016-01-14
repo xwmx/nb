@@ -735,10 +735,11 @@ _show() {
       if ((_render)) && _command_exists "pandoc" && _command_exists "lynx"
       then
         pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
-        # w3m:
-        # pandoc "${NOTES_DATA_DIR}/${_basename}" \
-        #   | w3m -dump -T text/html \
-        #   | "${PAGER}"
+      elif ((_render)) && _command_exists "pandoc" && _command_exists "w3m"
+      then
+        pandoc "${NOTES_DATA_DIR}/${_basename}" \
+          | w3m -dump -T text/html \
+          | "${PAGER}"
       else
         "${PAGER}" "${NOTES_DATA_DIR}/${_basename}"
       fi
