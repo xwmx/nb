@@ -18,7 +18,7 @@ Usage:
   notes delete ( <index> | <filename> )
   notes edit ( <index> | <filename> )
   notes init [<remote url>]
-  notes list list [-e | --excerpt [<length>]]
+  notes list [-e | --excerpt [<length>]]
   notes log
   notes search <query>
   notes show ( <index> | <filename> ) [--dump]
