@@ -828,7 +828,7 @@ _show() {
 # Usage:
 #   _sync
 _sync() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_synd(): cd failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "_sync() \`cd\` failed.\n"
   git fetch && git rebase origin/master && git push
 }
 
