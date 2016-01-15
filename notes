@@ -542,6 +542,7 @@ Usage:
   $_ME edit (<index> | <filename>)
   $_ME init [<remote url>]
   $_ME list ([-e | --excerpt [<length>]] | [--noindex])
+  $_ME ls
   $_ME log
   $_ME search <query>
   $_ME show (<index> | <filename>) [--dump]
@@ -556,6 +557,7 @@ Subcommands:
   help     Display this help information.
   init     Initialize the local notes repository.
   list     List all notes. Optionally, an excerpt of each note can be printed.
+  ls       List with an excerpt. This is an alias for \`$_ME list -e\`.
   log      Display git history using \`tig\` (if available) or \`git log\`.
   search   Search notes.
   show     Show a note.

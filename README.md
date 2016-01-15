@@ -19,6 +19,7 @@ Usage:
   notes edit (<index> | <filename>)
   notes init [<remote url>]
   notes list ([-e | --excerpt [<length>]] | [--noindex])
+  notes ls
   notes log
   notes search <query>
   notes show (<index> | <filename>) [--dump]
@@ -33,6 +34,7 @@ Subcommands:
   help     Display this help information.
   init     Initialize the local notes repository.
   list     List all notes. Optionally, an excerpt of each note can be printed.
+  ls       List with an excerpt. This is an alias for `notes list -e`.
   log      Display git history using `tig` (if available) or `git log`.
   search   Search notes.
   show     Show a note.
