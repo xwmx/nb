@@ -631,7 +631,15 @@ _list() {
   _filenames="$(ls -r "${NOTES_DATA_DIR}")"
 
   if [[ -z "${_filenames}" ]]
-  then
+  then # no files in `$DATA_DIR`
+cat <<HEREDOC
+0 notes.
+
+Add a note:
+  $_ME add
+Usage information:
+  $_ME help
+HEREDOC
     return 1
   else
     local _counter=0
