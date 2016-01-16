@@ -545,7 +545,7 @@ Usage:
   $_ME ls
   $_ME log
   $_ME search <query>
-  $_ME show (<index> | <filename>) [--dump]
+  $_ME show (<index> | <filename>) ([--dump] | [--path])
   $_ME sync
   $_ME -h | --help | help
   $_ME --version | version
@@ -570,6 +570,7 @@ Options:
                          length in number of lines [default: 3].
   -h --help              Display this help information.
   --noindex              Don't print the index number for each listing.
+  --path                 Print the absolute path to the note file.
   --version              Display version information.
 HEREDOC
 }
@@ -752,6 +753,7 @@ _show() {
   local _basename=
   local _render=0
   local _dump=0
+  local _path=0
 
   _debug printf "_show() \$_arguments[*]: %s\n" "${_arguments[*]:-}"
 
@@ -760,6 +762,9 @@ _show() {
     case "${_arg}" in
       --dump)
         _dump=1
+        ;;
+      --path)
+        _path=1
         ;;
       --render)
         _render=1
@@ -794,7 +799,10 @@ _show() {
   # Display file.
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
-    if ((_render)) &&
+    if ((_path))
+    then # `notes show --path`
+      printf "%s/%s\n" "${NOTES_DATA_DIR}" "${_basename}"
+    elif ((_render)) &&
        ((_dump))   &&
        _command_exists "pandoc" &&
        _command_exists "w3m"

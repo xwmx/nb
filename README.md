@@ -22,7 +22,7 @@ Usage:
   notes ls
   notes log
   notes search <query>
-  notes show (<index> | <filename>) [--dump]
+  notes show (<index> | <filename>) ([--dump] | [--path])
   notes sync
   notes -h | --help | help
   notes --version | version
@@ -47,5 +47,6 @@ Options:
                          length in number of lines [default: 3].
   -h --help              Display this help information.
   --noindex              Don't print the index number for each listing.
+  --path                 Print the absolute path to the note file.
   --version              Display version information.
 ```
