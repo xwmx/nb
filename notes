@@ -260,8 +260,8 @@ then
   _SUBCOMMAND="help"
 fi
 
-_debug printf "\$_SUBCOMMAND: %s\n" "$_SUBCOMMAND"
-_debug printf "\$_ARGUMENTS: %s\n" "${_ARGUMENTS[*]:-}"
+_debug printf "\$_SUBCOMMAND: '%s'\n" "$_SUBCOMMAND"
+_debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # Setup
@@ -418,7 +418,7 @@ _delete() {
   local _selection="${1:-}"
   local _basename=
 
-  _debug printf "_delete() \$_selection: %s\n" "${_selection}"
+  _debug printf "_delete() \$_selection: '%s'\n" "${_selection}"
 
   if [[ -z "${_selection}" ]]
   then  # <selection> is blank.
@@ -433,7 +433,7 @@ _delete() {
   then # <selection> is an id.
     local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
 
-    _debug printf "_delete() \$_filenames[*]: %s\n" "${_filenames[*]}"
+    _debug printf "_delete() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
 
     _basename="${_filenames[${_selection}]:-}"
 
@@ -478,7 +478,7 @@ _edit() {
   then # <selection> is an id.
     local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
 
-    _debug printf "_edit() \$_filenames[*]: %s\n" "${_filenames[*]}"
+    _debug printf "_edit() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
 
     _basename="${_filenames[${_selection}]:-}"
 
@@ -607,9 +607,9 @@ _init() {
 # Usage:
 #   _list [--excerpt [<lines>]]
 _list() {
-  _debug printf "_list() \$1: %s\n" "${1:-}"
-  _debug printf "_list() \$2: %s\n" "${2:-}"
-  _debug printf "_list() \$3: %s\n" "${3:-}"
+  _debug printf "_list() \$1: '%s'\n" "${1:-}"
+  _debug printf "_list() \$2: '%s'\n" "${2:-}"
+  _debug printf "_list() \$3: '%s'\n" "${3:-}"
 
   local _print_excerpt=0
   local _excerpt_length=3
@@ -626,7 +626,8 @@ _list() {
     _noindex=1
   fi
 
-  _debug printf "_list() \$_excerpt_length: %s\n" "${_excerpt_length:-}"
+  _debug printf "_list() \$_print_excerpt: '%s'\n" "${_print_excerpt:-}"
+  _debug printf "_list() \$_excerpt_length: '%s'\n" "${_excerpt_length:-}"
 
   local _filenames=
   _filenames="$(ls -r "${NOTES_DATA_DIR}")"
@@ -744,9 +745,9 @@ _search() {
 # Usage:
 #   _show <selection>
 _show() {
-  _debug printf "_show() \$0: %s\n" "${0:-}"
-  _debug printf "_show() \$1: %s\n" "${1:-}"
-  _debug printf "_show() \$2: %s\n" "${2:-}"
+  _debug printf "_show() \$0: '%s'\n" "${0:-}"
+  _debug printf "_show() \$1: '%s'\n" "${1:-}"
+  _debug printf "_show() \$2: '%s'\n" "${2:-}"
 
   local -a _arguments=("${@:1}")
   local _selection=
@@ -755,7 +756,7 @@ _show() {
   local _dump=0
   local _path=0
 
-  _debug printf "_show() \$_arguments[*]: %s\n" "${_arguments[*]:-}"
+  _debug printf "_show() \$_arguments[*]: '%s'\n" "${_arguments[*]:-}"
 
   for _arg in "${_arguments[@]:-}"
   do
@@ -778,8 +779,8 @@ _show() {
     esac
   done
 
-  _debug printf "_show() \$_render: %s\n" "${_render}"
-  _debug printf "_show() \$_selection: %s\n" "${_selection}"
+  _debug printf "_show() \$_render: '%s'\n" "${_render}"
+  _debug printf "_show() \$_selection: '%s'\n" "${_selection}"
 
   # Determine file basename for the provided <selection>.
   if [[ -z "${_selection}" ]]
@@ -792,7 +793,7 @@ _show() {
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
     local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
-    _debug printf "_show() \$_filenames[*]: %s\n" "${_filenames[*]}"
+    _debug printf "_show() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
     _basename="${_filenames[${_selection}]:-}"
   fi
 
@@ -870,6 +871,7 @@ _version() {
 #   Call the appropriate subcommand.
 _notes() {
   _debug printf "_notes() >> start\n"
+  _debug printf "_notes() \${_ARGUMENTS[@]:1}: '%s'\n" "${_ARGUMENTS[@]:1}"
 
   case "$_SUBCOMMAND" in
     init)
