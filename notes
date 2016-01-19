@@ -614,17 +614,31 @@ _list() {
   local _print_excerpt=0
   local _excerpt_length=3
   local _noindex=0
-  if [[ "${1:-}" = "--excerpt" ]] || [[ "${1:-}" = "-e" ]]
-  then
-    _print_excerpt=1
-    if [[ -n "${2:-}" ]]
-    then
-      _excerpt_length="${2}"
-    fi
-  elif [[ "${1:-}" = "--noindex" ]]
-  then
-    _noindex=1
-  fi
+
+  _debug printf "_list() \$@: '%s'\n" "${@:-}"
+
+  while (($#))
+  do
+    local _arg="${1:-}"
+    local _val="${2:-}"
+    case "$_arg" in
+      -e|--excerpt)
+        _print_excerpt=1
+        if [[ -n "${_val:-}" ]] && [[ ! "${_val:-}" =~ ^- ]]
+        then
+          _excerpt_length="${_val:-}"
+          shift
+        fi
+        ;;
+      --noindex)
+        _noindex=1
+        ;;
+      *)
+        _debug printf "_list() *: '%s'\n" "${_arg:-}"
+        ;;
+    esac
+    shift
+  done
 
   _debug printf "_list() \$_print_excerpt: '%s'\n" "${_print_excerpt:-}"
   _debug printf "_list() \$_excerpt_length: '%s'\n" "${_excerpt_length:-}"
