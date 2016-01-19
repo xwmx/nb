@@ -617,14 +617,26 @@ _list() {
 
   _debug printf "_list() \$@: '%s'\n" "${@:-}"
 
+  # Parse function options.
   while (($#))
   do
+    # __option_value_is_present()
+    #
+    # Usage:
+    #   __option_value_is_present "${variable}"
+    #
+    # Returns:
+    #   0  The argument is blank or matches as an option flag.
+    #   1  The argument is present and does not match an option flag.
+    __option_value_is_present() {
+      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+    }
     local _arg="${1:-}"
     local _val="${2:-}"
     case "$_arg" in
       -e|--excerpt)
         _print_excerpt=1
-        if [[ -n "${_val:-}" ]] && [[ ! "${_val:-}" =~ ^- ]]
+        if __option_value_is_present "${_val:-}"
         then
           _excerpt_length="${_val:-}"
           shift
