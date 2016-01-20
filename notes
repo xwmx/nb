@@ -29,6 +29,13 @@ _VERSION="0.0.0-alpha"
 # Set to the program's basename.
 _ME=$(basename "$0")
 
+# extglob
+#
+# Enable extended pattern matching operators.
+#
+# https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
+shopt -s extglob
+
 ###############################################################################
 # .notesrc
 ###############################################################################
@@ -198,6 +205,56 @@ _USE_DEBUG=0
 _SUBCOMMAND=
 _ARGUMENTS=("$0")
 
+# _join()
+#
+# Usage:
+#   _join <separator> <array>
+#
+# Examples:
+#   _join , a "b c" d     => a,b c,d
+#   _join / var local tmp => var/local/tmp
+#   _join , "${FOO[@]}"   => a,b,c
+#
+# More Information:
+#   http://stackoverflow.com/a/17841619
+_join() {
+  local IFS="$1"
+  shift
+  printf "%s\n" "$*"
+}
+
+# $_SUBCOMMANDS
+#
+# All available subcommands.
+_SUBCOMMANDS=(
+  add
+  delete
+  edit
+  env
+  git
+  help
+  init
+  list
+  log
+  ls
+  search
+  show
+  status
+  sync
+  version
+)
+
+# $_SUBCOMMANDS_PATTERN
+#
+# The contents of the `$_SUBCOMMANDS` array, joined with '|', with the
+# `@(<pattern list>)` pattern matching operator, which matches one of the
+# given patterns. This operator is enabled using `shopt -s extglob`.
+#
+# More information:
+# http://stackoverflow.com/a/13254908
+# https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
+_SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
+
 # _require_argument()
 #
 # Usage:
@@ -236,7 +293,7 @@ do
     --version)
       _PRINT_VERSION=1
       ;;
-    add|delete|edit|env|git|help|init|list|log|ls|search|show|status|sync|version)
+    $_SUBCOMMANDS_PATTERN)
       if [[ -z "${_SUBCOMMAND:-}" ]]
       then
         _SUBCOMMAND="$opt"
@@ -260,6 +317,8 @@ then
   _SUBCOMMAND="help"
 fi
 
+_debug printf "\$_SUBCOMMANDS[*]: '%s'\n" "${_SUBCOMMANDS[*]}"
+_debug printf "\$_SUBCOMMANDS_PATTERN: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\$_SUBCOMMAND: '%s'\n" "$_SUBCOMMAND"
 _debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
 
