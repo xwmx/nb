@@ -114,6 +114,137 @@ die() {
 }
 
 ###############################################################################
+# Setup
+###############################################################################
+
+# `$NOTES_DIR`
+#
+# Default: `$HOME/.notes`
+export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
+
+# `$NOTES_DATA_DIR`
+#
+# Default: `$NOTES_DIR/data`
+export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/data}"
+
+# `$NOTES_AUTO_SYNC`
+#
+# Default: 0
+#
+# When set to '1', each `_git_checkpoint()` call will automativally run
+# `$_ME sync`.
+export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-0}"
+
+###############################################################################
+# Helpers
+###############################################################################
+
+# _command_exists()
+#
+# Usage:
+#   _command_exists "possible_command_name"
+#
+# Takes a potential command name as an argument and returns whether a command
+# exists with that name.
+#
+# For information on why `hash` is used here, see:
+# http://stackoverflow.com/a/677212
+_command_exists() {
+  hash "$1" 2>/dev/null
+}
+
+# _git_checkpoint()
+#
+# Usage:
+#   _git_checkpoint <commit message>
+#
+# Description:
+#   Commit all files in the repository with the provided commit message.
+_git_checkpoint() {
+  local _message="${1:-}"
+  if [[ -z "${_message}" ]]
+  then
+    _die printf "Usage: _git_checkpoint <message>\n"
+    return 1
+  fi
+
+  cd "${NOTES_DATA_DIR}" || return 1
+  git add --all && git commit -a -m "${_message}"
+
+  if ((NOTES_AUTO_SYNC))
+  then
+    $_ME sync
+  fi
+}
+
+# _git_required()
+#
+# Usage:
+#   _git_required
+#
+# Description:
+#   Exit with `_die` if `git` isn't found.
+_git_required() {
+  if ! _command_exists "git"
+  then
+    _die printf "\`git\` is required, but wasn't found.\n"
+  fi
+}
+
+# _highlight_syntax_if_available()
+#
+# Usage:
+#   _highlight_syntax_if_available
+#
+# Description:
+#   If Pygments and pygments-markdown-lexer are available, use them to
+#   highlight markdown syntax. When they are not available, just pipe through
+#   `cat`.
+#
+# References:
+#   http://pygments.org/
+#   https://github.com/jhermann/pygments-markdown-lexer
+_highlight_syntax_if_available() {
+  if hash "pygmentize" 2>/dev/null &&
+    pygmentize -l markdown &>/dev/null /dev/null
+  then # pygments and the markdown lexer are installed.
+    pygmentize -l markdown
+  else
+    cat
+  fi
+}
+
+# _interactive_input()
+#
+# Usage:
+#   _interactive_input
+#
+# Returns:
+#   0  If the current input is interactive (eg, a shell).
+#   1  If the current input is stdin / piped input.
+_interactive_input() {
+  [[ -t 0 ]]
+}
+
+# _join()
+#
+# Usage:
+#   _join <separator> <array>
+#
+# Examples:
+#   _join , a "b c" d     => a,b c,d
+#   _join / var local tmp => var/local/tmp
+#   _join , "${FOO[@]}"   => a,b,c
+#
+# More Information:
+#   http://stackoverflow.com/a/17841619
+_join() {
+  local IFS="$1"
+  shift
+  printf "%s\n" "$*"
+}
+
+###############################################################################
 # Options
 ###############################################################################
 
@@ -204,24 +335,6 @@ _USE_DEBUG=0
 # Initialize additional expected option variables.
 _SUBCOMMAND=
 _ARGUMENTS=("$0")
-
-# _join()
-#
-# Usage:
-#   _join <separator> <array>
-#
-# Examples:
-#   _join , a "b c" d     => a,b c,d
-#   _join / var local tmp => var/local/tmp
-#   _join , "${FOO[@]}"   => a,b,c
-#
-# More Information:
-#   http://stackoverflow.com/a/17841619
-_join() {
-  local IFS="$1"
-  shift
-  printf "%s\n" "$*"
-}
 
 # $_SUBCOMMANDS
 #
@@ -321,119 +434,6 @@ _debug printf "\$_SUBCOMMANDS[*]: '%s'\n" "${_SUBCOMMANDS[*]}"
 _debug printf "\$_SUBCOMMANDS_PATTERN: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\$_SUBCOMMAND: '%s'\n" "$_SUBCOMMAND"
 _debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
-
-###############################################################################
-# Setup
-###############################################################################
-
-# `$NOTES_DIR`
-#
-# Default: `$HOME/.notes`
-export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
-
-# `$NOTES_DATA_DIR`
-#
-# Default: `$NOTES_DIR/data`
-export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/data}"
-
-# `$NOTES_AUTO_SYNC`
-#
-# Default: 0
-#
-# When set to '1', each `_git_checkpoint()` call will automativally run
-# `$_ME sync`.
-export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-0}"
-
-###############################################################################
-# Helpers
-###############################################################################
-
-# _command_exists()
-#
-# Usage:
-#   _command_exists "possible_command_name"
-#
-# Takes a potential command name as an argument and returns whether a command
-# exists with that name.
-#
-# For information on why `hash` is used here, see:
-# http://stackoverflow.com/a/677212
-_command_exists() {
-  hash "$1" 2>/dev/null
-}
-
-# _interactive_input()
-#
-# Usage:
-#   _interactive_input
-#
-# Returns:
-#   0  If the current input is interactive (eg, a shell).
-#   1  If the current input is stdin / piped input.
-_interactive_input() {
-  [[ -t 0 ]]
-}
-
-# _git_checkpoint()
-#
-# Usage:
-#   _git_checkpoint <commit message>
-#
-# Description:
-#   Commit all files in the repository with the provided commit message.
-_git_checkpoint() {
-  local _message="${1:-}"
-  if [[ -z "${_message}" ]]
-  then
-    _die printf "Usage: _git_checkpoint <message>\n"
-    return 1
-  fi
-
-  cd "${NOTES_DATA_DIR}" || return 1
-  git add --all && git commit -a -m "${_message}"
-
-  if ((NOTES_AUTO_SYNC))
-  then
-    $_ME sync
-  fi
-}
-
-# _git_required()
-#
-# Usage:
-#   _git_required
-#
-# Description:
-#   Exit with `_die` if `git` isn't found.
-_git_required() {
-  if ! _command_exists "git"
-  then
-    _die printf "\`git\` is required, but wasn't found.\n"
-  fi
-}
-
-# _highlight_syntax_if_available()
-#
-# Usage:
-#   _highlight_syntax_if_available
-#
-# Description:
-#   If Pygments and pygments-markdown-lexer are available, use them to
-#   highlight markdown syntax. When they are not available, just pipe through
-#   `cat`.
-#
-# References:
-#   http://pygments.org/
-#   https://github.com/jhermann/pygments-markdown-lexer
-_highlight_syntax_if_available() {
-  if hash "pygmentize" 2>/dev/null &&
-    pygmentize -l markdown &>/dev/null /dev/null
-  then # pygments and the markdown lexer are installed.
-    pygmentize -l markdown
-  else
-    cat
-  fi
-}
 
 ###############################################################################
 # Subcommands
