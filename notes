@@ -969,7 +969,7 @@ _search() {
         # Use `[${_i}]` to avoid additional length from `tput` calls.
         _print_line "[${_i}] ${_filename}"
 
-        _hit="$(printf "${_line}" | cut -d: -f 2-)"
+        _hit="$(printf "%s\n" "${_line}" | cut -d: -f 2-)"
         printf "%s\n\n" "${_hit}"
       fi
     done
