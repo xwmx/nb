@@ -740,7 +740,7 @@ Usage:
   $_ME ls
   $_ME log
   $_ME search <query> [--path]
-  $_ME show (<index> | <filename>) ([--dump] | [--path])
+  $_ME show (<index> | <filename> [--index]) ([--dump] | [--path])
   $_ME sync
   $_ME -h | --help | help
   $_ME --version | version
@@ -764,6 +764,7 @@ Options:
   -e --excerpt <length>  Print an excerpt from each note with an optional
                          length in number of lines [default: 3].
   -h --help              Display this help information.
+  --index                Print the note index.
   --noindex              Don't print the index number for each listing.
   --path                 Print the absolute path to the note file.
   --version              Display version information.
@@ -1033,6 +1034,7 @@ _show() {
   local _render=0
   local _dump=0
   local _path=0
+  local _print_index=0
 
   _debug printf "_show() \$_arguments[*]: '%s'\n" "${_arguments[*]:-}"
 
@@ -1044,6 +1046,9 @@ _show() {
         ;;
       --path)
         _path=1
+        ;;
+      --index)
+        _print_index=1
         ;;
       --render)
         _render=1
@@ -1081,6 +1086,11 @@ _show() {
     if ((_path))
     then # `notes show --path`
       printf "%s/%s\n" "${NOTES_DATA_DIR}" "${_basename}"
+    elif ((_print_index))
+    then
+      # local _index
+      local _index="$(_get_index "${_basename}" "$(notes list --noindex)")"
+      printf "%s\n" "${_index}"
     elif ((_render)) &&
          ((_dump))   &&
          _command_exists "pandoc" &&
