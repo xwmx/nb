@@ -702,7 +702,7 @@ Usage:
   $_ME list ([-e | --excerpt [<length>]] | [--noindex])
   $_ME ls
   $_ME log
-  $_ME search <query>
+  $_ME search <query> [--path]
   $_ME show (<index> | <filename>) ([--dump] | [--path])
   $_ME sync
   $_ME -h | --help | help
@@ -897,7 +897,26 @@ _ls() {
 # Usage:
 #   _search <query>
 _search() {
-  if [[ -z "${1:-}" ]]
+  local _arguments=("${@:1}")
+  local _query=
+  local _print_paths=0
+
+  for _arg in "${_arguments[@]:-}"
+  do
+    case "${_arg}" in
+      --path)
+        _print_paths=1
+        ;;
+      *)
+        if [[ -z "${_query}" ]]
+        then
+          _query="${_arg}"
+        fi
+        ;;
+    esac
+  done
+
+  if [[ -z "${_query:-}" ]]
   then
     $_ME help
     return 1
@@ -905,12 +924,9 @@ _search() {
     local _files=
     _files=($($_ME list --noindex))
 
-    _debug printf "_search() \${_files[*]}: %s\n" "${_files[*]}"
-
-
     if _command_exists "ack"
     then # ack is available.
-      ack "${@}" "${NOTES_DATA_DIR}" \
+      ack "${_query}" "${NOTES_DATA_DIR}" \
         --ignore-case \
         --noheading \
         --color-lineno='bold green' \
@@ -918,7 +934,7 @@ _search() {
     else # fall back to POSIX grep.
       # Add /dev/null so file path is printed even if there is only one
       # matching file. Reference: http://stackoverflow.com/a/15432718
-      grep --ignore-case -n "${@}" "${NOTES_DATA_DIR}"/* /dev/null
+      grep --ignore-case -n "${_query}" "${NOTES_DATA_DIR}"/* /dev/null
     fi | while read -r _line
     do
       local _path=
@@ -933,23 +949,29 @@ _search() {
           | cut -d: -f 1 \
           | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
       )"
-      _filename="$(basename "${_path}")"
 
-      # Add index prefix to filename, using the index in the overall file
-      # listing.
-      for _i in "${!_files[@]}"
-      do
-        if [[ "${_files[$_i]}" == "${_filename}" ]]
-        then
-          _indexed_filename="[$(tput setaf 3)${_i}$(tput sgr0)] ${_filename}"
-        fi
-      done
-      printf "%s\n" "${_indexed_filename}"
-      # Use `[${_i}]` to avoid additional length from `tput` calls.
-      _print_line "[${_i}] ${_filename}"
+      if ((_print_paths))
+      then
+        printf "%s\n" "${_path}"
+      else
+        _filename="$(basename "${_path}")"
 
-      _hit="$(printf "${_line}" | cut -d: -f 2-)"
-      printf "%s\n\n" "${_hit}"
+        # Add index prefix to filename, using the index in the overall file
+        # listing.
+        for _i in "${!_files[@]}"
+        do
+          if [[ "${_files[$_i]}" == "${_filename}" ]]
+          then
+            _indexed_filename="[$(tput setaf 3)${_i}$(tput sgr0)] ${_filename}"
+          fi
+        done
+        printf "%s\n" "${_indexed_filename}"
+        # Use `[${_i}]` to avoid additional length from `tput` calls.
+        _print_line "[${_i}] ${_filename}"
+
+        _hit="$(printf "${_line}" | cut -d: -f 2-)"
+        printf "%s\n\n" "${_hit}"
+      fi
     done
   fi
 }
