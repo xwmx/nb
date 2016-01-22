@@ -177,6 +177,18 @@ _git_checkpoint() {
   fi
 }
 
+# _git_is_dirty()
+#
+# Usage:
+#   _git_is_dirty
+#
+# Returns:
+#   0  If there are uncommitted changes in the `NOTES_DATA_DIR` repository.
+#   1  If the `$NOTES_DATA_DIR` repository is clean.
+_git_is_dirty() {
+  [[ -n "$(git status --porcelain)" ]]
+}
+
 # _git_required()
 #
 # Usage:
@@ -984,6 +996,12 @@ _notes() {
 $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
+      fi
+      if ((NOTES_AUTO_SYNC)) &&
+         [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|show|search ]] &&
+         _git_is_dirty
+      then
+        $_ME sync
       fi
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
