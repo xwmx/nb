@@ -893,14 +893,53 @@ _search() {
     $_ME help
     return 1
   else
+    local _files=
+    _files=($($_ME list --noindex))
+
+    _debug printf "_search() \${_files[*]}: %s\n" "${_files[*]}"
+
+
     if _command_exists "ack"
     then # ack is available.
-      ack "${@}" "${NOTES_DATA_DIR}"
+      ack "${@}" "${NOTES_DATA_DIR}" \
+        --noheading \
+        --color-lineno='bold green' \
+        --color-match='black on_blue'
     else # fall back to POSIX grep.
       # Add /dev/null so file path is printed even if there is only one
       # matching file. Reference: http://stackoverflow.com/a/15432718
       grep -n "${@}" "${NOTES_DATA_DIR}"/* /dev/null
-    fi
+    fi | while read -r _line
+    do
+      local _path=
+      local _filename=
+      local _indexed_filename=
+      local _hit=
+
+      # Use `sed` to remove color from output.
+      # http://unix.stackexchange.com/a/140255
+      _path="$(
+        printf "%s\n" "${_line}" \
+          | cut -d: -f 1 \
+          | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
+      )"
+      _filename="$(basename "${_path}")"
+
+      # Add index prefix to filename, using the index in the overall file
+      # listing.
+      for _i in "${!_files[@]}"
+      do
+        if [[ "${_files[$_i]}" == "${_filename}" ]]
+        then
+          _indexed_filename="[$(tput setaf 3)${_i}$(tput sgr0)] ${_filename}"
+        fi
+      done
+
+      _hit="$(printf "${_line}" | cut -d: -f 2-)"
+
+      printf "%s\n" "${_indexed_filename}"
+      printf "%s\n" "${_hit}"
+    done
   fi
 }
 
