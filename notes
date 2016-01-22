@@ -283,6 +283,24 @@ _join() {
   printf "%s\n" "$*"
 }
 
+# _print_line()
+#
+# Usage:
+#   _print_line <text>
+#
+# Description:
+#   Print a line of dashes the length of <text>.
+#
+# More information:
+#   http://wiki.bash-hackers.org/commands/builtin/printf
+_print_line() {
+  local _text="${1:-}"
+  local _text_length=0
+  _text_length=${#_text}
+  printf -v line '%*s' "$_text_length"
+  echo "${line// /-}"
+}
+
 # _spinner()
 #
 # Usage:
@@ -831,16 +849,7 @@ HEREDOC
 
       if ((_print_excerpt))
       then
-        # Print a line. More information:
-        # http://wiki.bash-hackers.org/commands/builtin/printf
-        {
-          local _list_item_length=0
-          # Use length from `$_list_item` because `$_list_item_color`'s
-          # `tput` calls increase the measured length.
-          _list_item_length=${#_list_item}
-          printf -v line '%*s' "$_list_item_length"
-          echo "${line// /-}"
-        }
+        _print_line "${_list_item}"
 
         if [[ "${_excerpt_length}" =~ ^[1-9] ]]
         then # first character is a non-zero digit, as required by `head`.
@@ -934,11 +943,12 @@ _search() {
           _indexed_filename="[$(tput setaf 3)${_i}$(tput sgr0)] ${_filename}"
         fi
       done
+      printf "%s\n" "${_indexed_filename}"
+      # Use `[${_i}]` to avoid additional length from `tput` calls.
+      _print_line "[${_i}] ${_filename}"
 
       _hit="$(printf "${_line}" | cut -d: -f 2-)"
-
-      printf "%s\n" "${_indexed_filename}"
-      printf "%s\n" "${_hit}"
+      printf "%s\n\n" "${_hit}"
     done
   fi
 }
