@@ -169,11 +169,11 @@ _git_checkpoint() {
   fi
 
   cd "${NOTES_DATA_DIR}" || return 1
-  git add --all && git commit -a -m "${_message}"
+  (git add --all && git commit -a -m "${_message}" &) &>/dev/null
 
   if ((NOTES_AUTO_SYNC))
   then
-    $_ME sync
+    ($_ME sync &) &>/dev/null
   fi
 }
 
