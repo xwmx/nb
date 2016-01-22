@@ -911,13 +911,14 @@ _search() {
     if _command_exists "ack"
     then # ack is available.
       ack "${@}" "${NOTES_DATA_DIR}" \
+        --ignore-case \
         --noheading \
         --color-lineno='bold green' \
         --color-match='black on_blue'
     else # fall back to POSIX grep.
       # Add /dev/null so file path is printed even if there is only one
       # matching file. Reference: http://stackoverflow.com/a/15432718
-      grep -n "${@}" "${NOTES_DATA_DIR}"/* /dev/null
+      grep --ignore-case -n "${@}" "${NOTES_DATA_DIR}"/* /dev/null
     fi | while read -r _line
     do
       local _path=
