@@ -168,12 +168,12 @@ _git_checkpoint() {
     return 1
   fi
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${NOTES_DATA_DIR}" || _die printf "_git_checkpoint() \`cd\` failed.\n"
   (git add --all && git commit -a -m "${_message}" &) &>/dev/null
 
   if ((NOTES_AUTO_SYNC))
   then
-    ($_ME sync &) &>/dev/null
+    (git fetch && git rebase origin/master && git push &) &>/dev/null
   fi
 }
 
@@ -941,8 +941,7 @@ _status() {
 # Usage:
 #   _sync
 _sync() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_sync() \`cd\` failed.\n"
-  git fetch && git rebase origin/master && git push
+  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit.")
 }
 
 # version ####################################################################
