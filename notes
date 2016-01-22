@@ -153,6 +153,43 @@ _command_exists() {
   hash "$1" 2>/dev/null
 }
 
+# _get_index()
+#
+# Usage:
+#   _get_index <item> <list>
+#
+# Description:
+#   Print the index of <item> in <list>
+#
+# Returns:
+#   0  <item> is found in <list>.
+#   1  <item> is not found in <list>.
+_get_index() {
+  _debug printf "_get_index() \${1}: '%s'\n" "${1:-}"
+  _debug printf "_get_index() \${@:2}: '%s'\n" "${@:2}"
+
+  local _filename="${1:-}"
+  local -a _files=(${@:2})
+
+  _debug printf "_get_index() \${_files[@]}: '%s'\n" "${_files[@]}"
+
+  if [[ -z "${_filename}" ]] || [[ -z "${_files}" ]]
+  then
+    _die printf "Usage: _get_index <item> <list>"
+  fi
+
+  for _i in "${!_files[@]}"
+  do
+    _debug printf "_get_index() \${_files[$_i]} : '%s'\n" "${_files[$_i]}"
+    if [[ "${_files[$_i]}" == "${_filename}" ]]
+    then
+      printf "%s\n" "${_i}"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # _git_checkpoint()
 #
 # Usage:
@@ -940,6 +977,7 @@ _search() {
     do
       local _path=
       local _filename=
+      local _index=
       local _indexed_filename=
       local _hit=
 
@@ -959,22 +997,14 @@ _search() {
         fi
       else
         _filename="$(basename "${_path}")"
-
-        # Add index prefix to filename, using the index in the overall file
-        # listing.
-        for _i in "${!_files[@]}"
-        do
-          if [[ "${_files[$_i]}" == "${_filename}" ]]
-          then
-            _indexed_filename="[$(tput setaf 3)${_i}$(tput sgr0)] ${_filename}"
-          fi
-        done
+        _index="$(_get_index "${_filename}" "${_files[@]}")"
+        _indexed_filename="[$(tput setaf 3)${_index}$(tput sgr0)] ${_filename}"
 
         if [[ "${_last_path}" != "${_path}" ]]
         then # match is in a different file than the last match
           printf "%s\n" "${_indexed_filename}"
           # Use `[${_i}]` to avoid additional length from `tput` calls.
-          _print_line "[${_i}] ${_filename}"
+          _print_line "[${_index}] ${_filename}"
         fi
 
         _hit="$(printf "%s\n" "${_line}" | cut -d: -f 2-)"
