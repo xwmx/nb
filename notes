@@ -1152,10 +1152,14 @@ Usage: $_ME init [<remote url>]
 HEREDOC
       fi
       if ((NOTES_AUTO_SYNC)) &&
-         [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|show|search ]] &&
-         _git_is_dirty
+         [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|show|search ]]
       then
-        $_ME sync
+        if _git_is_dirty
+        then
+          $_ME sync
+        else
+          ($_ME sync &>/dev/null) &
+        fi
       fi
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
