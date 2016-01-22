@@ -21,7 +21,7 @@ Usage:
   notes list ([-e | --excerpt [<length>]] | [--noindex])
   notes ls
   notes log
-  notes search <query>
+  notes search <query> [--path]
   notes show (<index> | <filename>) ([--dump] | [--path])
   notes sync
   notes -h | --help | help
