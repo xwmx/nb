@@ -291,6 +291,17 @@ _join() {
 # Description:
 #   Display an ascii spinner while <pid> is running.
 #
+# Example Usage:
+#   ```
+#   _spinner_example() {
+#     printf "Working..."
+#     (sleep 1) &
+#     _spinner $!
+#     printf "Done!\n"
+#   }
+#   (_spinner_example)
+#   ```
+#
 # More Information:
 #   http://fitnr.com/showing-a-bash-spinner.html
 _spinner() {
