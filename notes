@@ -162,6 +162,7 @@ _command_exists() {
 #   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
   _git_checkpoint_commit() {
+    [[ -z "${1:-}" ]] && _die printf "Usage: _git_checkpoint_commit <message>"
     git add --all && git commit -a -m "${1}"
   }
   _git_checkpoint_sync() {
@@ -169,7 +170,7 @@ _git_checkpoint() {
   }
 
   local _message="${1:-}"
-  local _foreground=0
+  local _show_spinner=0
 
   if [[ -z "${_message}" ]]
   then
@@ -177,28 +178,28 @@ _git_checkpoint() {
     return 1
   fi
 
-  if [[ -n "${2:-}" ]] && [[ "${2}" == "--foreground" ]]
+  if [[ -n "${2:-}" ]] && [[ "${2}" == "--spinner" ]]
   then
-    _foreground=1
+    _show_spinner=1
   fi
 
   cd "${NOTES_DATA_DIR}" || _die printf "_git_checkpoint() \`cd\` failed.\n"
 
-  if ((_foreground))
-  then
-    _git_checkpoint_commit "${_message}" &>/dev/null
-  else
-    (_git_checkpoint_commit "${_message}" &) &>/dev/null
-  fi
-
   if ((NOTES_AUTO_SYNC))
   then
-    if ((_foreground))
-    then
+    (
+      _git_checkpoint_commit "${_message}" &>/dev/null &&
       _git_checkpoint_sync &>/dev/null
-    else
-      (_git_checkpoint_sync &) &>/dev/null
-    fi
+    ) &
+  else
+    (
+      _git_checkpoint_commit "${_message}" &>/dev/null
+    ) &
+  fi
+
+  if ((_show_spinner))
+  then
+    _spinner $!
   fi
 }
 
@@ -280,6 +281,37 @@ _join() {
   local IFS="$1"
   shift
   printf "%s\n" "$*"
+}
+
+# _spinner()
+#
+# Usage:
+#   _spinner <pid>
+#
+# Description:
+#   Display an ascii spinner while <pid> is running.
+#
+# More Information:
+#   http://fitnr.com/showing-a-bash-spinner.html
+_spinner() {
+    local _pid="${1:-}"
+    local _delay=0.75
+    local _spin_string='|/-\'
+
+    if [[ -z "${_pid}" ]]
+    then
+      _die printf "Usage: _spinner <pid>\n"
+    fi
+
+    while [[ "$(ps a | awk '{print $1}' | grep ${_pid})" ]]
+    do
+      local _temp="${_spin_string#?}"
+      printf " [%c]  " "$_spin_string"
+      _spin_string="$_temp${_spin_string%"$_temp"}"
+      sleep $_delay
+      printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
 }
 
 ###############################################################################
@@ -980,8 +1012,8 @@ _status() {
 #   _sync
 _sync() {
   printf "Syncing..."
-  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit." --foreground) &&
-    printf "Done!\n" ||
+  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit." --spinner) &&
+    printf "Done!\n---------------\n" ||
     printf "Syncing failed!\n"
 }
 
