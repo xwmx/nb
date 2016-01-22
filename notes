@@ -161,19 +161,44 @@ _command_exists() {
 # Description:
 #   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
+  _git_checkpoint_commit() {
+    git add --all && git commit -a -m "${1}"
+  }
+  _git_checkpoint_sync() {
+    git fetch && git rebase origin/master && git push
+  }
+
   local _message="${1:-}"
+  local _foreground=0
+
   if [[ -z "${_message}" ]]
   then
     _die printf "Usage: _git_checkpoint <message>\n"
     return 1
   fi
 
+  if [[ -n "${2:-}" ]] && [[ "${2}" == "--foreground" ]]
+  then
+    _foreground=1
+  fi
+
   cd "${NOTES_DATA_DIR}" || _die printf "_git_checkpoint() \`cd\` failed.\n"
-  (git add --all && git commit -a -m "${_message}" &) &>/dev/null
+
+  if ((_foreground))
+  then
+    _git_checkpoint_commit "${_message}" &>/dev/null
+  else
+    (_git_checkpoint_commit "${_message}" &) &>/dev/null
+  fi
 
   if ((NOTES_AUTO_SYNC))
   then
-    (git fetch && git rebase origin/master && git push &) &>/dev/null
+    if ((_foreground))
+    then
+      _git_checkpoint_sync &>/dev/null
+    else
+      (_git_checkpoint_sync &) &>/dev/null
+    fi
   fi
 }
 
@@ -186,6 +211,7 @@ _git_checkpoint() {
 #   0  If there are uncommitted changes in the `NOTES_DATA_DIR` repository.
 #   1  If the `$NOTES_DATA_DIR` repository is clean.
 _git_is_dirty() {
+  cd "${NOTES_DATA_DIR}" || _die printf "_git_is_dirty() \`cd\` failed.\n"
   [[ -n "$(git status --porcelain)" ]]
 }
 
@@ -953,7 +979,10 @@ _status() {
 # Usage:
 #   _sync
 _sync() {
-  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit.")
+  printf "Syncing..."
+  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit." --foreground) &&
+    printf "Done!\n" ||
+    printf "Syncing failed!\n"
 }
 
 # version ####################################################################
