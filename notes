@@ -954,7 +954,7 @@ _search() {
       if ((_print_paths))
       then
         if [[ "${_last_path}" != "${_path}" ]]
-        then # match is in the same file as the last match
+        then # match is in a different file than the last match
           printf "%s\n" "${_path}"
         fi
       else
@@ -971,7 +971,7 @@ _search() {
         done
 
         if [[ "${_last_path}" != "${_path}" ]]
-        then # match is in the same file as the last match
+        then # match is in a different file than the last match
           printf "%s\n" "${_indexed_filename}"
           # Use `[${_i}]` to avoid additional length from `tput` calls.
           _print_line "[${_i}] ${_filename}"
