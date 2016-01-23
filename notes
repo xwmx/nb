@@ -173,7 +173,7 @@ _get_index() {
 
   _debug printf "_get_index() \${_files[@]}: '%s'\n" "${_files[@]}"
 
-  if [[ -z "${_filename}" ]] || [[ -z "${_files}" ]]
+  if [[ -z "${_filename}" ]] || [[ -z "${_files[*]}" ]]
   then
     _die printf "Usage: _get_index <item> <list>"
   fi
