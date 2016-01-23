@@ -8,7 +8,9 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-A simple, portable, command line note-taking and syncing tool that stores data in markdown files automatically versioned with git.
+A simple, portable, command line note-taking and syncing tool that stores data in markdown files versioned with git.
+
+`notes` uses git in the background to automatically record changes and sync with a remote repository, if one has been configured. Optional dependencies can be installed to enable enhanced rendering, display, and searching functionality.
 
 #### Dependencies
 
