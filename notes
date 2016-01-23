@@ -696,7 +696,7 @@ _delete() {
 
   if [[ -z "${_selection}" ]]
   then  # <selection> is blank.
-    $_ME help
+    $_ME help "delete"
     return 1
   elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
   then # <selection> is a full path.
@@ -740,7 +740,7 @@ _edit() {
 
   if [[ -z "${_selection}" ]]
   then # <selection> is blank.
-    $_ME help
+    $_ME help "edit"
     return 1
   elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
   then # <selection> is a full path.
@@ -1080,7 +1080,7 @@ _search() {
 
   if [[ -z "${_query:-}" ]]
   then
-    $_ME help
+    $_ME help "search"
     return 1
   else
     local _files=
@@ -1213,7 +1213,7 @@ _show() {
   # Determine file basename for the provided <selection>.
   if [[ -z "${_selection}" ]]
   then # <selection> is blank.
-    $_ME help
+    $_ME help "show"
     return 1
   elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
   then # <selection> is a full path.
