@@ -21,6 +21,7 @@ A simple, portable, command line note-taking and syncing tool that stores data i
 
 ##### Optional
 
+- [Ack](http://beyondgrep.com/)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 - [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
