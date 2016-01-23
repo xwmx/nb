@@ -1234,8 +1234,8 @@ _show() {
       printf "%s/%s\n" "${NOTES_DATA_DIR}" "${_basename}"
     elif ((_print_index))
     then
-      # local _index
-      local _index="$(_get_index "${_basename}" "$(notes list --noindex)")"
+      local _index
+      _index="$(_get_index "${_basename}" "$(notes list --noindex)")"
       printf "%s\n" "${_index}"
     elif ((_render)) &&
          ((_dump))   &&
