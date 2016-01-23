@@ -10,6 +10,21 @@
 
 A simple, portable, command line note-taking and syncing tool that stores data in markdown files automatically versioned with git.
 
+#### Dependencies
+
+##### Required
+
+- [Bash](https://www.gnu.org/software/bash/)
+- [Git](https://git-scm.com/)
+
+##### Optional
+
+- [Pandoc](http://pandoc.org/)
+- [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
+- [w3m](https://en.wikipedia.org/wiki/W3m)
+- [Pygments](http://pygments.org/)
+- [Pygments Markdown Lexer](https://github.com/jhermann/pygments-markdown-lexer)
+
 ## Usage
 
 ```
