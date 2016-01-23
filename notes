@@ -622,35 +622,23 @@ _delete() {
   elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
   then # <selection> is a full path.
     _basename="$(basename "${_selection}")"
-    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
-    git rm "${_basename}"
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then # <selection> is a filename.
     _basename="${_selection}"
-    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
-    git rm "${_basename}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
     local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
-
     _debug printf "_delete() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
-
     _basename="${_filenames[${_selection}]:-}"
-
-    if [[ -n "$_basename" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
-    then # _basename is assigned and a note exists with that name.
-      cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
-      git rm "${_basename}"
-    else
-      _die printf "Selection not found.\n"
-    fi
-  else
-    _die printf "Selection not found.\n"
   fi
 
-  if [[ -n "${_basename}" ]]
-  then
+  if [[ -n "$_basename" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  then # `$_basename` is assigned and a note exists with that name.
+    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
+    git rm "${_basename}"
     _git_checkpoint "[NOTES] Delete: ${_basename}"
+  else
+    _die printf "Selection not found.\n"
   fi
 }
 
