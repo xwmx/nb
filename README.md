@@ -15,38 +15,237 @@ A simple, portable, command line note-taking and syncing tool that stores data i
 ```
 Usage:
   notes add [<note>]
-  notes delete (<index> | <filename>)
-  notes edit (<index> | <filename>)
-  notes init [<remote url>]
-  notes list ([-e | --excerpt [<length>]] | [--noindex])
-  notes ls
+  notes delete (<index> | <filename> | <path>)
+  notes edit (<index> | <filename> | <path>)
+  notes init [<remote-url>]
+  notes list ([(-e | --excerpt) [<length>]] | [--noindex])
   notes log
+  notes ls [<excerpt length>]
   notes search <query> [--path]
-  notes show (<index> | <filename>) ([--dump] | [--path])
+  notes show (<index> | <filename> | <path>)
+  notes show <selection> ([--index] | [--path] | [---render]) [--dump]
   notes sync
-  notes -h | --help | help
+  notes -h | --help | help [<subcommand>]
   notes --version | version
+
+Help:
+  notes help [<subcommand>]
 
 Subcommands:
   add      Add a new note.
   delete   Delete a note.
   edit     Edit a note.
+  env      Print program environment variables.
   help     Display this help information.
-  init     Initialize the local notes repository.
-  list     List all notes. Optionally, an excerpt of each note can be printed.
+  init     Initialize the local git repository.
+  list     List all notes.
+  log      Display git history.
   ls       List with an excerpt. This is an alias for `notes list -e`.
-  log      Display git history using `tig` (if available) or `git log`.
   search   Search notes.
   show     Show a note.
+  status   Run `git status` in `$NOTES_DATA_DIR`.
   sync     Sync notes with the remote repository.
   version  Display version information.
 
-Options:
-  --dump                 Print to standard output.
-  -e --excerpt <length>  Print an excerpt from each note with an optional
-                         length in number of lines [default: 3].
+Program Options:
   -h --help              Display this help information.
-  --noindex              Don't print the index number for each listing.
-  --path                 Print the absolute path to the note file.
   --version              Display version information.
+```
+
+### Subcommands
+
+#### `add`
+
+```
+Usage:
+  notes add [<note>]
+
+Description:
+  Create a new Markdown-formatted note. Any arguments passed to `add` are
+  written to the note file. When no arguments are passed, a new note file is
+  opened with `$EDITOR`.
+```
+
+#### `delete`
+
+```
+Usage:
+  notes delete <index>
+  notes delete <filename>
+  notes delete <path>
+
+Description:
+  Delete a note.
+```
+
+#### `edit`
+
+```
+Usage:
+  notes edit <index>
+  notes edit <filename>
+  notes edit <path>
+
+Description:
+  Open the specified note in `$EDITOR`.
+```
+
+#### `env`
+
+```
+Usage:
+  notes env
+
+Description:
+  Print program environment variables.
+```
+
+#### `git`
+
+```
+Usage:
+  notes git <arguments>
+
+Description:
+  Alias for `git`, with commands run in `$NOTES_DATA_DIR`.
+```
+
+#### `help`
+
+```
+Usage:
+  notes help [<subcommand>]
+
+Description:
+  Print the program help information. When a subcommand name is passed, the
+  print the help information for the subcommand.
+```
+
+#### `init`
+
+```
+Usage:
+  notes init [<remote-url>]
+
+Description:
+  Initialize the local git repository.
+```
+
+#### `list`
+
+```
+Usage:
+  notes list ([(-e | --excerpt) [<length>]] | [--noindex]
+
+Options:
+  -e --excerpt  Print an excerpt <length> lines long under each note's
+                filename [default: 3].
+  --noindex     Don't print an index next to each note's filename.
+
+Description:
+  List all notes.
+
+  If Pygments [1] and the Markdown lexer [2] are installed, excerpts are
+  printed with syntax highlighting.
+
+  1. http://pygments.org/
+  2. https://github.com/jhermann/pygments-markdown-lexer
+
+Examples:
+  notes list
+  notes list -e 10
+  notes list --excerpt --noindex
+```
+
+#### `log`
+
+```
+Usage:
+  notes log
+
+Description:
+  Display git history using `tig` [1] (if available) or `git log`.
+
+  1. https://github.com/jonas/tig
+```
+
+#### `ls`
+
+```
+Usage:
+  notes ls [<excerpt length>]
+
+Description:
+  List with an excerpt. This is an alias for `notes list -e`.
+```
+
+#### `search`
+
+```
+Usage:
+  notes search <query> [--path]
+
+Options:
+  --path  Print the full path for each file with query matches.
+
+Description:
+  Search notes using `ack` [1] (if available) or `grep`.
+
+  1. http://beyondgrep.com/
+```
+
+#### `show`
+
+```
+Usage:
+  notes show (<index> | <filename> | <path>)
+  notes show <selection> ([--index] | [--path] | [---render]) [--dump]
+
+Options:
+  --dump    Print to standard output.
+  --index   Print the index number of the note file.
+  --path    Print the full path of the note file.
+  --render  Use `pandoc` [1] to render the file to HTML and display with
+            `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
+            available, the file contents are printed, highlighted with
+            Pygments [4] and the Markdown lexer [5] if they are available.
+
+            1. http://pandoc.org/
+            2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+            3. https://en.wikipedia.org/wiki/W3m
+            4. http://pygments.org/
+            5. https://github.com/jhermann/pygments-markdown-lexer
+
+Description:
+  Show a note.
+```
+
+#### `status`
+
+```
+Usage:
+  notes status
+
+Description:
+  Run `git status` in `$NOTES_DATA_DIR`.
+```
+
+#### `sync`
+
+```
+Usage:
+  notes sync
+
+Description:
+  Sync local notes with the remote repository.
+```
+
+#### `version`
+
+```
+Usage:
+  notes version
+
+Description:
+  Display version information.
 ```

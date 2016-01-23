@@ -381,6 +381,69 @@ _spinner() {
 }
 
 ###############################################################################
+# desc
+###############################################################################
+
+# desc()
+#
+# Usage:
+#   desc command "description"
+#
+# Create a description for a specified command name. The command description
+# text can be passed as the second argument or as standard input.
+#
+# To make the description text available to other functions, desc() assigns the
+# text to a variable with the format $_desc_function_name
+#
+# NOTE:
+#
+# The `read` form of assignment is used for a balance of ease of
+# implementation and simplicity. There is an alternative assignment form
+# that could be used here:
+#
+# var="$(cat <<'EOM'
+# some message
+# EOM
+# )
+#
+# However, this form appears to require trailing space after backslases to
+# preserve newlines, which is unexpected. Using `read` simply requires
+# escaping backslashes, which is more common.
+desc() {
+  set +e
+  [[ -z $1 ]] && _die printf "desc: No command name specified.\n"
+  if [[ -n ${2:-} ]]
+  then
+    read -d '' "_desc_$1" <<EOM
+$2
+EOM
+    _debug printf "desc() set with argument: _desc_%s\n" "$1"
+  else
+    read -d '' "_desc_$1"
+    _debug printf "desc() set with pipe: _desc_%s\n" "$1"
+  fi
+  set -e
+}
+
+# _print_desc()
+#
+# Usage:
+#   _print_desc <command>
+#
+# Prints the description for a given command, provided the description has been
+# set using the desc() function.
+_print_desc() {
+  local _method_name="${1:-}"
+  local var="_desc_${_method_name}"
+  if [[ -n ${!var:-} ]]
+  then
+    printf "%s\n" "${!var}"
+  else
+    printf "No additional information for \`%s\`\n" "${_method_name}"
+  fi
+}
+
+###############################################################################
 # Options
 ###############################################################################
 
@@ -577,11 +640,15 @@ _debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
 
 # add #########################################################################
 
-# _add()
-#
-# Usage:
-#   _add <content>
-#   echo <content> | _add
+desc "add" <<HEREDOC
+Usage:
+  $_ME add [<note>]
+
+Description:
+  Create a new Markdown-formatted note. Any arguments passed to \`add\` are
+  written to the note file. When no arguments are passed, a new note file is
+  opened with \`\$EDITOR\`, currently set to '$EDITOR'.
+HEREDOC
 _add() {
   # Assign filename with unicode timestamp.
   local _basename
@@ -605,10 +672,15 @@ _add() {
 
 # delete ######################################################################
 
-# _delete()
-#
-# Usage:
-#   _delete <selection>
+desc "delete" <<HEREDOC
+Usage:
+  $_ME delete <index>
+  $_ME delete <filename>
+  $_ME delete <path>
+
+Description:
+  Delete a note.
+HEREDOC
 _delete() {
   local _selection="${1:-}"
   local _basename=
@@ -644,10 +716,15 @@ _delete() {
 
 # edit ########################################################################
 
-# _edit()
-#
-# Usage:
-#   _edit <selection>
+desc "edit" <<HEREDOC
+Usage:
+  $_ME edit <index>
+  $_ME edit <filename>
+  $_ME edit <path>
+
+Description:
+  Open the specified note in \`\$EDITOR\`, currently set to '$EDITOR'.
+HEREDOC
 _edit() {
   local _selection="${1:-}"
   local _basename=
@@ -682,10 +759,13 @@ _edit() {
 
 # env #############################################@###########################
 
-# _env()
-#
-# Usage:
-#   _env
+desc "env" <<HEREDOC
+Usage:
+  $_ME env
+
+Description:
+  Print program environment variables.
+HEREDOC
 _env() {
   printf "NOTES_DIR=%s\n" "$NOTES_DIR"
   printf "NOTES_DATA_DIR=%s\n" "$NOTES_DATA_DIR"
@@ -694,10 +774,13 @@ _env() {
 
 # git #############################################@###########################
 
-# _git()
-#
-# Usage:
-#   _git <arguments>
+desc "git" <<HEREDOC
+Usage:
+  $_ME git <arguments>
+
+Description:
+  Alias for \`git\`, with commands run in \`\$NOTES_DATA_DIR\`.
+HEREDOC
 _git() {
   cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\n"
   git "${@}"
@@ -705,13 +788,18 @@ _git() {
 
 # help ########################################################################
 
-# _help()
-#
-# Usage: _help
-#
-# Print the program help information.
+desc "help" <<HEREDOC
+Usage:
+  $_ME help [<subcommand>]
+
+Description:
+  Print the program help information. When a subcommand name is passed, the
+  print the help information for the subcommand.
+HEREDOC
 _help() {
-  cat <<HEREDOC
+  if [[ -z "${1:-}" ]]
+  then
+    cat <<HEREDOC
              _
  _ __   ___ | |_ ___  ___
 | '_ \ / _ \| __/ _ \/ __|
@@ -722,48 +810,54 @@ Usage:
   $_ME add [<note>]
   $_ME delete (<index> | <filename> | <path>)
   $_ME edit (<index> | <filename> | <path>)
-  $_ME init [<remote url>]
-  $_ME list ([-e | --excerpt [<length>]] | [--noindex])
-  $_ME ls
+  $_ME init [<remote-url>]
+  $_ME list ([(-e | --excerpt) [<length>]] | [--noindex])
   $_ME log
+  $_ME ls [<excerpt length>]
   $_ME search <query> [--path]
-  $_ME show (<index> | (<filename> | <path>) [--index]) ([--dump] | [--path])
+  $_ME show (<index> | <filename> | <path>)
+  $_ME show <selection> ([--index] | [--path] | [---render]) [--dump]
   $_ME sync
-  $_ME -h | --help | help
+  $_ME -h | --help | help [<subcommand>]
   $_ME --version | version
+
+Help:
+  $_ME help [<subcommand>]
 
 Subcommands:
   add      Add a new note.
   delete   Delete a note.
   edit     Edit a note.
+  env      Print program environment variables.
   help     Display this help information.
-  init     Initialize the local notes repository.
-  list     List all notes. Optionally, an excerpt of each note can be printed.
+  init     Initialize the local git repository.
+  list     List all notes.
+  log      Display git history.
   ls       List with an excerpt. This is an alias for \`$_ME list -e\`.
-  log      Display git history using \`tig\` (if available) or \`git log\`.
   search   Search notes.
   show     Show a note.
+  status   Run \`git status\` in \`\$NOTES_DATA_DIR\`.
   sync     Sync notes with the remote repository.
   version  Display version information.
 
-Options:
-  --dump                 Print to standard output.
-  -e --excerpt <length>  Print an excerpt from each note with an optional
-                         length in number of lines [default: 3].
+Program Options:
   -h --help              Display this help information.
-  --index                Print the note index.
-  --noindex              Don't print the index number for each listing.
-  --path                 Print the absolute path to the note file.
   --version              Display version information.
 HEREDOC
+  else
+    _print_desc "${@}"
+  fi
 }
 
 # init ########################################################################
 
-# _init()
-#
-# Usage:
-#   _init [<repository URL>]
+desc "init" <<HEREDOC
+Usage:
+  $_ME init [<remote-url>]
+
+Description:
+  Initialize the local git repository.
+HEREDOC
 _init() {
   if [[ -e "${NOTES_DIR}" ]]
   then
@@ -785,10 +879,29 @@ _init() {
 
 # list ########################################################################
 
-# _list()
-#
-# Usage:
-#   _list [--excerpt [<lines>]]
+desc "list" <<HEREDOC
+Usage:
+  $_ME list ([(-e | --excerpt) [<length>]] | [--noindex]
+
+Options:
+  -e --excerpt  Print an excerpt <length> lines long under each note's
+                filename [default: 3].
+  --noindex     Don't print an index next to each note's filename.
+
+Description:
+  List all notes.
+
+  If Pygments [1] and the Markdown lexer [2] are installed, excerpts are
+  printed with syntax highlighting.
+
+  1. http://pygments.org/
+  2. https://github.com/jhermann/pygments-markdown-lexer
+
+Examples:
+  $_ME list
+  $_ME list -e 10
+  $_ME list --excerpt --noindex
+HEREDOC
 _list() {
   _debug printf "_list() \$1: '%s'\n" "${1:-}"
   _debug printf "_list() \$2: '%s'\n" "${2:-}"
@@ -891,14 +1004,19 @@ HEREDOC
 
 # log #########################################################################
 
-# _log()
-#
-# Usage:
-#   _log
+desc "log" <<HEREDOC
+Usage:
+  $_ME log
+
+Description:
+  Display git history using \`tig\` [1] (if available) or \`git log\`.
+
+  1. https://github.com/jonas/tig
+HEREDOC
 _log() {
   cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
   if _command_exists "tig"
-  then #  tig (https://github.com/jonas/tig) is present.
+  then #  tig <https://github.com/jonas/tig> is present.
     tig --all
   else
     git log
@@ -907,20 +1025,31 @@ _log() {
 
 # ls ##########################################################################
 
-# _ls()
-#
-# Usage:
-#   _ls [<excerpt length>]
+desc "ls" <<HEREDOC
+Usage:
+  $_ME ls [<excerpt length>]
+
+Description:
+  List with an excerpt. This is an alias for \`$_ME list -e\`.
+HEREDOC
 _ls() {
   $_ME list --excerpt "${1:-}"
 }
 
 # search ######################################################################
 
-# _search()
-#
-# Usage:
-#   _search <query>
+desc "search" <<HEREDOC
+Usage:
+  $_ME search <query> [--path]
+
+Options:
+  --path  Print the full path for each file with query matches.
+
+Description:
+  Search notes using \`ack\` [1] (if available) or \`grep\`.
+
+  1. http://beyondgrep.com/
+HEREDOC
 _search() {
   local _arguments=("${@:1}")
   local _query=
@@ -1006,10 +1135,29 @@ _search() {
 
 # show ########################################################################
 
-# _show()
-#
-# Usage:
-#   _show <selection>
+desc "show" <<HEREDOC
+Usage:
+  $_ME show (<index> | <filename> | <path>)
+  $_ME show <selection> ([--index] | [--path] | [---render]) [--dump]
+
+Options:
+  --dump    Print to standard output.
+  --index   Print the index number of the note file.
+  --path    Print the full path of the note file.
+  --render  Use \`pandoc\` [1] to render the file to HTML and display with
+            \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is not
+            available, the file contents are printed, highlighted with
+            Pygments [4] and the Markdown lexer [5] if they are available.
+
+            1. http://pandoc.org/
+            2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+            3. https://en.wikipedia.org/wiki/W3m
+            4. http://pygments.org/
+            5. https://github.com/jhermann/pygments-markdown-lexer
+
+Description:
+  Show a note.
+HEREDOC
 _show() {
   _debug printf "_show() \$0: '%s'\n" "${0:-}"
   _debug printf "_show() \$1: '%s'\n" "${1:-}"
@@ -1083,18 +1231,18 @@ _show() {
       printf "%s\n" "${_index}"
     elif ((_render)) &&
          ((_dump))   &&
-         _command_exists "pandoc" &&
+         _command_exists "panddoc" &&
          _command_exists "w3m"
     then # `notes show --render --dump` with `pandoc` and `w3m` available.
       pandoc "${NOTES_DATA_DIR}/${_basename}" \
         | w3m -dump -T text/html
     elif ((_render)) &&
-         _command_exists "pandoc" &&
+         _command_exists "padndoc" &&
          _command_exists "lynx"
     then # `notes show --render` with `pandoc` and `lynx` available.
       pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
     elif ((_render)) &&
-         _command_exists "pandoc" &&
+         _command_exists "padndoc" &&
          _command_exists "w3m"
     then # `notes show --render` with `pandoc` and `w3m` available.
       pandoc "${NOTES_DATA_DIR}/${_basename}" \
@@ -1118,10 +1266,13 @@ _show() {
 
 # status ######################################################################
 
-# _status()
-#
-# Usage:
-#   _status
+desc "status" <<HEREDOC
+Usage:
+  $_ME status
+
+Description:
+  Run \`git status\` in \`\$NOTES_DATA_DIR\`.
+HEREDOC
 _status() {
   cd "${NOTES_DATA_DIR}" || _die printf "_status() \`cd\` failed.\n"
   git status
@@ -1129,10 +1280,13 @@ _status() {
 
 # sync ########################################################################
 
-# _sync()
-#
-# Usage:
-#   _sync
+desc "sync" <<HEREDOC
+Usage:
+  $_ME sync
+
+Description:
+  Sync local notes with the remote repository.
+HEREDOC
 _sync() {
   printf "Syncing..."
   (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit." --spinner) &&
@@ -1142,12 +1296,13 @@ _sync() {
 
 # version ####################################################################
 
-# _version()
-#
-# Usage:
-#   _version
-#
-# Print the value of $_VERSION.
+desc "version" <<HEREDOC
+Usage:
+  $_ME version
+
+Description:
+  Display version information.
+HEREDOC
 _version() {
   printf "%s\n" "$_VERSION"
 }
@@ -1170,7 +1325,7 @@ _notes() {
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     help|version)
-      "_${_SUBCOMMAND}"
+      "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     *)
       _git_required
