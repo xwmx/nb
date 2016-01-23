@@ -1299,7 +1299,7 @@ Description:
 HEREDOC
 _sync() {
   printf "Syncing..."
-  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync commit." --spinner) &&
+  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner) &&
     printf "Done!\n---------------\n" ||
     printf "Syncing failed!\n"
 }
