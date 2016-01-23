@@ -19,11 +19,12 @@ A simple, portable, command line note-taking and syncing tool that stores data i
 
 ##### Optional
 
-- [Pandoc](http://pandoc.org/)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
-- [w3m](https://en.wikipedia.org/wiki/W3m)
+- [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
 - [Pygments Markdown Lexer](https://github.com/jhermann/pygments-markdown-lexer)
+- [tig](https://github.com/jonas/tig)
+- [w3m](https://en.wikipedia.org/wiki/W3m)
 
 ## Usage
 
