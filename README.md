@@ -80,6 +80,11 @@ Description:
   Create a new Markdown-formatted note. Any arguments passed to `add` are
   written to the note file. When no arguments are passed, a new note file is
   opened with `$EDITOR`.
+
+Examples:
+  notes add
+  notes add "Note content."
+  echo "Note content." | notes add
 ```
 
 #### `delete`
