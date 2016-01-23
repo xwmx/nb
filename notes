@@ -225,8 +225,10 @@ _git_checkpoint() {
   if ((NOTES_AUTO_SYNC))
   then
     (
-      _git_checkpoint_commit "${_message}" &>/dev/null &&
-      _git_checkpoint_sync &>/dev/null
+      if _git_is_dirty
+      then
+        _git_checkpoint_commit "${_message}" &>/dev/null
+      fi && _git_checkpoint_sync &>/dev/null
     ) &
   else
     (
