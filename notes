@@ -1368,7 +1368,7 @@ HEREDOC
 _main() {
   if (("$_PRINT_HELP"))
   then
-    _help
+    [[ "${_SUBCOMMAND:-}" == "help" ]] && _help || _help "${_SUBCOMMAND:-}"
   elif (("$_PRINT_VERSION"))
   then
     _version
