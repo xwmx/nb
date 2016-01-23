@@ -619,6 +619,11 @@ _delete() {
   then  # <selection> is blank.
     $_ME help
     return 1
+  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
+  then # <selection> is a full path.
+    _basename="$(basename "${_selection}")"
+    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
+    git rm "${_basename}"
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then # <selection> is a filename.
     _basename="${_selection}"
@@ -665,6 +670,10 @@ _edit() {
   then # <selection> is blank.
     $_ME help
     return 1
+  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
+  then # <selection> is a full path.
+    _basename="$(basename "${_selection}")"
+    "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then # <selection> is a filename.
     _basename="${_selection}"
@@ -733,14 +742,14 @@ _help() {
 
 Usage:
   $_ME add [<note>]
-  $_ME delete (<index> | <filename>)
-  $_ME edit (<index> | <filename>)
+  $_ME delete (<index> | <filename> | <path>)
+  $_ME edit (<index> | <filename> | <path>)
   $_ME init [<remote url>]
   $_ME list ([-e | --excerpt [<length>]] | [--noindex])
   $_ME ls
   $_ME log
   $_ME search <query> [--path]
-  $_ME show (<index> | <filename> [--index]) ([--dump] | [--path])
+  $_ME show (<index> | (<filename> | <path>) [--index]) ([--dump] | [--path])
   $_ME sync
   $_ME -h | --help | help
   $_ME --version | version
@@ -1070,6 +1079,9 @@ _show() {
   then # <selection> is blank.
     $_ME help
     return 1
+  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
+  then # <selection> is a full path.
+    _basename="$(basename "${_selection}")"
   elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
   then # <selection> is a filename.
     _basename="${_selection}"
