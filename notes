@@ -416,13 +416,13 @@ desc() {
   [[ -z $1 ]] && _die printf "desc: No command name specified.\n"
   if [[ -n ${2:-} ]]
   then
-    read -d '' "_desc_$1" <<EOM
+    read -d '' "_${_ME}_desc_${1}" <<EOM
 $2
 EOM
-    _debug printf "desc() set with argument: _desc_%s\n" "$1"
+    _debug printf "desc() set with argument: \$_%s_desc_%s\n" "${_ME}" "${1}"
   else
-    read -d '' "_desc_$1"
-    _debug printf "desc() set with pipe: _desc_%s\n" "$1"
+    read -d '' "_${_ME}_desc_${1}"
+    _debug printf "desc() set with pipe: \$_%s_desc_%s\n" "${_ME}" "${1}"
   fi
   set -e
 }
@@ -436,7 +436,7 @@ EOM
 # set using the desc() function.
 _print_desc() {
   local _method_name="${1:-}"
-  local var="_desc_${_method_name}"
+  local var="_${_ME}_desc_${_method_name}"
   if [[ -n ${!var:-} ]]
   then
     printf "%s\n" "${!var}"
