@@ -223,17 +223,20 @@ Options:
   --path    Print the full path of the note file.
   --render  Use `pandoc` [1] to render the file to HTML and display with
             `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
-            available, the file contents are printed, highlighted with
-            Pygments [4] and the Markdown lexer [5] if they are available.
+            available, `--render` is ignored.
 
             1. http://pandoc.org/
             2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
             3. https://en.wikipedia.org/wiki/W3m
-            4. http://pygments.org/
-            5. https://github.com/jhermann/pygments-markdown-lexer
 
 Description:
   Show a note.
+
+  If Pygments [1] and the Markdown lexer [2] are installed, the note file is
+  displayed with syntax highlighting.
+
+  1. http://pygments.org/
+  2. https://github.com/jhermann/pygments-markdown-lexer
 ```
 
 #### `status`
