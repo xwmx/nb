@@ -1371,8 +1371,8 @@ HEREDOC
 #   _main "$@"
 #
 # Describe:
-#   Primary entry point for the program logic. Call this method at the end of
-#   the script after everything has been defined.
+#   Primary entry point for the program logic. Call this function at the end
+#   of the script after everything has been defined.
 _main() {
   if (("$_PRINT_HELP"))
   then
