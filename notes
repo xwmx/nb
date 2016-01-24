@@ -1362,9 +1362,17 @@ HEREDOC
 }
 
 ###############################################################################
-# Main
+# _main()
 ###############################################################################
 
+# _main()
+#
+# Usage:
+#   _main "$@"
+#
+# Describe:
+#   Primary entry point for the program logic. Call this method at the end of
+#   the script after everything has been defined.
 _main() {
   if (("$_PRINT_HELP"))
   then
