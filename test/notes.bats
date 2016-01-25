@@ -2,12 +2,12 @@
 
 load test_helper
 
-@test "When no arguments are passed exit with status 0." {
+@test "\`notes\` with no arguments exits with status 0." {
   run "$_NOTES"
   [ "$status" -eq 0 ]
 }
 
-@test "When no arguments are passed print default help." {
+@test "\`notes\` with no arguments prints default help." {
   run "$_NOTES"
   _expected="\
              _
