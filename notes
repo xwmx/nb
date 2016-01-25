@@ -1043,7 +1043,7 @@ Description:
   List with an excerpt. This is an alias for \`$_ME list -e\`.
 HEREDOC
 _ls() {
-  $_ME list --excerpt "${1:-}"
+  _list --excerpt "${1:-}"
 }
 
 # search ######################################################################
