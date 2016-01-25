@@ -43,9 +43,10 @@ shopt -s extglob
 # .notesrc
 #
 # If a `.notesrc` file exists in `$HOME`, source it.
-if [[ -e "$HOME/.notesrc" ]]
+export NOTESRC_PATH="${NOTESRC_PATH:-${HOME}/.notesrc}"
+if [[ -e "${NOTESRC_PATH}" ]]
 then
-  source "$HOME/.notesrc"
+  source "${NOTESRC_PATH}"
 fi
 
 ###############################################################################

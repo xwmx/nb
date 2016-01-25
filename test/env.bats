@@ -33,10 +33,6 @@ load test_helper
 }
 
 @test "\`env\` should print \`\$NOTES_AUTO_SYNC\` with a value of 0" {
-  # TODO: This test is being skipped because the wrong value is being read
-  # from ~/.notesrc. Remove this when a custom ~/.notesrc location can be
-  # specified.
-  skip
   run "$_NOTES" env
   [[ "${lines[2]}" =~ 0$ ]]
 }
