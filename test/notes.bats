@@ -2,9 +2,18 @@
 
 load test_helper
 
-@test "when no arguments are passed print help" {
+@test "When no arguments are passed exit with status 0." {
   run "$_NOTES"
   [ "$status" -eq 0 ]
-  [ "${lines[0]}" = '             _'              ]
-  [ "${lines[1]}" = ' _ __   ___ | |_ ___  ___'   ]
+}
+
+@test "When no arguments are passed print default help." {
+  run "$_NOTES"
+  _expected="\
+             _
+ _ __   ___ | |_ ___  ___
+| '_ \ / _ \| __/ _ \/ __|
+| | | | (_) | ||  __/\__ \\
+|_| |_|\___/ \__\___||___/"
+  [[ "$(IFS=$'\n'; echo "${lines[*]:0:5}")" == "$_expected" ]]
 }
