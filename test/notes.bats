@@ -1,7 +1,12 @@
 #!/usr/bin/env bats
 
+# `$_NOTES`
+#
+# The location of the `notes` script being tested.
+export _NOTES="${BATS_TEST_DIRNAME}/../notes"
+
 @test "when no arguments are passed print help" {
-  run notes
+  run "$_NOTES"
   [ "$status" -eq 0 ] \
     && $(echo "$output" | grep 'notes help \[<subcommand>\]' -q)
 }
