@@ -779,6 +779,7 @@ _env() {
   printf "NOTES_DIR=%s\n" "$NOTES_DIR"
   printf "NOTES_DATA_DIR=%s\n" "$NOTES_DATA_DIR"
   printf "NOTES_AUTO_SYNC=%s\n" "$NOTES_AUTO_SYNC"
+  printf "NOTESRC_PATH=%s\n" "$NOTESRC_PATH"
 }
 
 # git #############################################@###########################

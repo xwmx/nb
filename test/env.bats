@@ -36,3 +36,13 @@ load test_helper
   run "$_NOTES" env
   [[ "${lines[2]}" =~ 0$ ]]
 }
+
+@test "\`env\` should print \`\$NOTESRC_PATH\`" {
+  run "$_NOTES" env
+  [[ "${lines[3]}" =~ NOTESRC_PATH ]]
+}
+
+@test "\`env\` should print \`\$NOTESRC_PATH\` assigned to tmp/.notesrc" {
+  run "$_NOTES" env
+  [[ "${lines[3]}" =~ tmp/.notesrc ]]
+}
