@@ -1,3 +1,11 @@
+###############################################################################
+# test_helper.bash
+#
+# Test helper for Bats: Bash Automated Testing System.
+#
+# https://github.com/sstephenson/bats
+###############################################################################
+
 setup() {
   # `$_NOTES`
   #
