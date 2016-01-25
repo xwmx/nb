@@ -1335,7 +1335,7 @@ _notes() {
       _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    help|version)
+    env|help|version)
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     *)
