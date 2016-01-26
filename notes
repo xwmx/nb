@@ -574,15 +574,15 @@ _SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
 # _require_argument()
 #
 # Usage:
-#  _require_argument "$opt" "$_value_variable"
+#   _require_argument <option> <argument>
 #
-# Checks if an value has been set to the expected variable and, if not, prints
-# and error message and exits with status 1.
+# If <argument> is blank or another option, print an error message and  exit
+# with status 1.
 _require_argument() {
   local option="$1"
   local value="$2"
 
-  if [[ -z "$value" ]]
+  if [[ -z "$value" ]] || [[ "$value" =~ ^- ]]
   then
     _die printf "Option requires an argument: %s\n" "$option"
   fi
