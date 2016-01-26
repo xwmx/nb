@@ -38,6 +38,7 @@ load test_helper
 }
 
 @test "\`init\` with argument creates a clone in \`\$NOTES_DATA_DIR\`." {
+  _setup_remote_repo
   run "$_NOTES" init "$_GIT_REMOTE_URL"
   [[ -d "${NOTES_DATA_DIR}/.git" ]]
   _origin="$(cd "${NOTES_DATA_DIR}" && git config --get remote.origin.url)"

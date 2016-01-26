@@ -18,7 +18,8 @@ setup() {
   export NOTES_DATA_DIR="${NOTES_DIR}/data"
   export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
 
-  export _GIT_REMOTE_URL="file://${BATS_TEST_DIRNAME}/../"
+  export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
+  export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
   if [[ ! "${NOTES_DIR}"      =~ ^/tmp/notes_test ]] ||
      [[ ! "${NOTES_DATA_DIR}" =~ ^/tmp/notes_test ]] ||
@@ -54,4 +55,25 @@ _compare() {
   local _actual="${2:-}"
   printf "expected:\n%s\n" "${_expected}"
   printf "actual:\n%s\n" "${_actual}"
+}
+
+# _setup_remote_repo()
+#
+# Usage:
+#   _setup_remote_repo
+#
+# Description:
+#   Initialize and add initial commit to a git repository at
+#   `$_GIT_REMOTE_URL`.
+_setup_remote_repo() {
+  if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
+     [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/notes_test ]]
+  then
+    mkdir "${_GIT_REMOTE_PATH}"    \
+      && cd "${_GIT_REMOTE_PATH}"  \
+      && git init       \
+      && touch '.keep'  \
+      && git add --all  \
+      && git commit -a -m "Initial commit."
+  fi
 }
