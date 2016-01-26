@@ -18,6 +18,8 @@ setup() {
   export NOTES_DATA_DIR="${NOTES_DIR}/data"
   export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
 
+  export _GIT_REMOTE_URL="file://${BATS_TEST_DIRNAME}/../"
+
   if [[ ! "${NOTES_DIR}"      =~ ^/tmp/notes_test ]] ||
      [[ ! "${NOTES_DATA_DIR}" =~ ^/tmp/notes_test ]] ||
      [[ ! "${NOTESRC_PATH}"   =~ ^/tmp/notes_test ]]
