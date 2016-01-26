@@ -18,6 +18,17 @@ load test_helper
   [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
 }
 
+@test "\`add\` with no arguments creates git commit." {
+  run "$_NOTES" init
+  run "$_NOTES" add
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
+}
+
 @test "\`add\` with argument exits with status 0." {
   run "$_NOTES" init
   run "$_NOTES" add "# Content"
@@ -34,6 +45,17 @@ load test_helper
   [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
 }
 
+@test "\`add\` with no arguments creates git commit." {
+  run "$_NOTES" init
+  run "$_NOTES" add "# Content"
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
+}
+
 @test "\`add\` with piped content exits with status 0." {
   run "$_NOTES" init
   run bash -c 'echo "# Piped" | "$_NOTES" add'
@@ -48,6 +70,17 @@ load test_helper
   _files=("$(ls "${NOTES_DATA_DIR}/")")
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
+}
+
+@test "\`add\` with no arguments creates git commit." {
+  run "$_NOTES" init
+  run bash -c 'echo "# Piped" | "$_NOTES" add'
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
 @test "\`help add\` returns usage information." {
