@@ -22,6 +22,8 @@ setup() {
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
+  export EDITOR="${BATS_TEST_DIRNAME}/fixtures/mock_editor"
+
   if [[ ! "${NOTES_DIR}"      =~ ^/tmp/notes_test ]] ||
      [[ ! "${NOTES_DATA_DIR}" =~ ^/tmp/notes_test ]] ||
      [[ ! "${NOTESRC_PATH}"   =~ ^/tmp/notes_test ]]

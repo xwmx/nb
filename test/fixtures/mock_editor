@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# _mock_editor()
+#
+# Usage:
+#   _mock_editor <filename>
+#
+# Description:
+#   Save a string as the only content in a new file named <filename>.
+_mock_editor() {
+  _filename="${1:-}"
+  if [[ -z "$_filename" ]]
+  then
+    printf "Usage: _mock_editor <filename>\n"
+    return 1
+  fi
+  if [[ -e "${_filename}" ]]
+  then
+    printf "Already exists: %s\n" "${_filename}"
+  fi
+  printf "# mock_editor %s\n" "${_filename%.*}" > "${_filename}"
+}
+
+_mock_editor "$@"

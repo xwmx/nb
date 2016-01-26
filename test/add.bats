@@ -1,0 +1,59 @@
+#!/usr/bin/env bats
+
+load test_helper
+
+@test "\`add\` with no arguments exits with status 0." {
+  run "$_NOTES" init
+  run "$_NOTES" add
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`add\` with no arguments creates a new note file using \`\$EDITOR\`." {
+  run "$_NOTES" init
+  run "$_NOTES" add
+  _files=("$(ls "${NOTES_DATA_DIR}/")")
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
+}
+
+@test "\`add\` with argument exits with status 0." {
+  run "$_NOTES" init
+  run "$_NOTES" add "# Content"
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`add\` with argument creates a new note file." {
+  run "$_NOTES" init
+  run "$_NOTES" add  "# Content"
+  _files=("$(ls "${NOTES_DATA_DIR}/")")
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
+}
+
+@test "\`add\` with piped content exits with status 0." {
+  run "$_NOTES" init
+  run bash -c 'echo "# Piped" | "$_NOTES" add'
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`add\` with piped content creates a new note file." {
+  run "$_NOTES" init
+  run bash -c 'echo "# Piped" | "$_NOTES" add'
+  _files=("$(ls "${NOTES_DATA_DIR}/")")
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
+}
+
+@test "\`help add\` returns usage information." {
+  run "$_NOTES" help add
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes add [<note>]" ]]
+}
