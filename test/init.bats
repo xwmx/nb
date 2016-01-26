@@ -21,11 +21,6 @@ load test_helper
   [[ $status -eq 1 ]]
 }
 
-@test "\`init\` creates a directory at \$NOTES_DIR." {
-  run "$_NOTES" init
-  [[ -e "${NOTES_DIR}" ]]
-}
-
 @test "\`init\` creates \`\$NOTES_DIR\` and \`\$NOTES_DATA_DIR\` directories." {
   run "$_NOTES" init
   [[ -d "${NOTES_DIR}" ]]
