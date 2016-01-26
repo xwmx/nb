@@ -12,17 +12,26 @@ setup() {
   # The location of the `notes` script being tested.
   export _NOTES="${BATS_TEST_DIRNAME}/../notes"
 
-  export NOTES_DIR="${BATS_TEST_DIRNAME}/tmp/.notes"
+  export _TMP_DIR="$(mktemp -d /tmp/notes_test.XXXXXX)" || exit 1
+
+  export NOTES_DIR="${_TMP_DIR}/.notes"
   export NOTES_DATA_DIR="${NOTES_DIR}/data"
-  export NOTESRC_PATH="${BATS_TEST_DIRNAME}/tmp/.notesrc"
+  export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
+
+  if [[ ! "${NOTES_DIR}"      =~ ^/tmp/notes_test ]] ||
+     [[ ! "${NOTES_DATA_DIR}" =~ ^/tmp/notes_test ]] ||
+     [[ ! "${NOTESRC_PATH}"   =~ ^/tmp/notes_test ]]
+  then
+    exit 1
+  fi
 }
 
 teardown() {
-  if [[ -n "${NOTES_DIR:-}" ]] &&
-     [[ -e "${NOTES_DIR}"   ]] &&
-     [[ "${NOTES_DIR}" =~ tmp/.notes$ ]]
+  if [[ -n "${_TMP_DIR:-}" ]] &&
+     [[ -e "${_TMP_DIR}"   ]] &&
+     [[ "${_TMP_DIR}" =~ ^/tmp/notes_test ]]
   then
-    rm -rf "${NOTES_DIR}"
+    rm -rf "${_TMP_DIR:-/tmp/notes_test._TMP_DIR}"
   fi
 }
 
