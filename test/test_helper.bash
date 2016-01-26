@@ -13,7 +13,17 @@ setup() {
   export _NOTES="${BATS_TEST_DIRNAME}/../notes"
 
   export NOTES_DIR="${BATS_TEST_DIRNAME}/tmp/.notes"
+  export NOTES_DATA_DIR="${NOTES_DIR}/data"
   export NOTESRC_PATH="${BATS_TEST_DIRNAME}/tmp/.notesrc"
+}
+
+teardown() {
+  if [[ -n "${NOTES_DIR:-}" ]] &&
+     [[ -e "${NOTES_DIR}"   ]] &&
+     [[ "${NOTES_DIR}" =~ tmp/.notes$ ]]
+  then
+    rm -rf "${NOTES_DIR}"
+  fi
 }
 
 ###############################################################################
