@@ -42,6 +42,6 @@ load test_helper
   run "$_NOTES" init "$_GIT_REMOTE_URL"
   [[ -d "${NOTES_DATA_DIR}/.git" ]]
   _origin="$(cd "${NOTES_DATA_DIR}" && git config --get remote.origin.url)"
-  _compare "file:///" "$_origin"
-  [[ "$_origin" =~  "file:///" ]]
+  _compare "$_GIT_REMOTE_URL" "$_origin"
+  [[ "$_origin" =~  "$_GIT_REMOTE_URL" ]]
 }
