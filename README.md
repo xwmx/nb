@@ -10,7 +10,7 @@
 
 A simple, portable, command line note-taking and syncing tool that stores data in markdown files versioned with git.
 
-`notes` uses git in the background to automatically record changes and sync with a remote repository, if one has been configured. Optional dependencies can be installed to enable enhanced rendering, display, and searching functionality.
+With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor you have set in the `$EDITOR` environment variable. `notes` uses git in the background to automatically record changes and sync with a remote repository, if one has been configured. Optional dependencies can be installed to enable enhanced rendering, display, and searching functionality, but everything still works great without them.
 
 #### Dependencies
 
