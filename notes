@@ -925,9 +925,9 @@ Description:
   Initialize the local git repository.
 HEREDOC
 _init() {
-  if [[ -e "${NOTES_DIR}" ]]
+  if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
-    _die printf "%s already exists.\n" "${NOTES_DIR}"
+    _die printf "%s already exists and is not a directory.\n" "${NOTES_DIR}"
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
     _die printf "%s already exists.\n" "${NOTES_DATA_DIR}"

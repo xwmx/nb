@@ -9,8 +9,8 @@ load test_helper
   [[ $status -eq 0 ]]
 }
 
-@test "\`init\` exits with status 1 when \$NOTES_DIR exists." {
-  mkdir -p "${NOTES_DIR}"
+@test "\`init\` exits with status 1 when \$NOTES_DIR exists as a file." {
+  touch "${NOTES_DIR}"
   [[ -e "${NOTES_DIR}" ]]
   run "$_NOTES" init
   [[ $status -eq 1 ]]
