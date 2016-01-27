@@ -15,7 +15,7 @@ load test_helper
 @test "\`add\` with no arguments creates a new note file using \`\$EDITOR\`." {
   run "$_NOTES" init
   run "$_NOTES" add
-  _files=("$(ls "${NOTES_DATA_DIR}/")")
+  _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
 }
@@ -44,7 +44,7 @@ load test_helper
 @test "\`add\` with argument creates a new note file." {
   run "$_NOTES" init
   run "$_NOTES" add  "# Content"
-  _files=("$(ls "${NOTES_DATA_DIR}/")")
+  _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
 }
@@ -73,7 +73,7 @@ load test_helper
 @test "\`add\` with piped content creates a new note file." {
   run "$_NOTES" init
   run bash -c 'echo "# Piped" | "$_NOTES" add'
-  _files=("$(ls "${NOTES_DATA_DIR}/")")
+  _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
 }

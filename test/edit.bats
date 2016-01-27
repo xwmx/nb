@@ -8,7 +8,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit
@@ -21,7 +21,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
@@ -35,7 +35,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit
@@ -52,7 +52,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit
@@ -68,7 +68,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit "$_filename"
@@ -81,7 +81,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
@@ -95,7 +95,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit "$_filename"
@@ -114,7 +114,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit 0
@@ -127,7 +127,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
@@ -141,7 +141,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit 0
@@ -160,7 +160,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit "${NOTES_DATA_DIR}/${_filename}"
@@ -173,7 +173,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
@@ -187,7 +187,7 @@ load test_helper
   {
     run "$_NOTES" init
     run "$_NOTES" add
-    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
   run "$_NOTES" edit "${NOTES_DATA_DIR}/${_filename}"
