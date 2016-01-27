@@ -404,7 +404,12 @@ _join() {
 # Description:
 #   List note files with default sorting.
 _list_notes_files() {
-  ls -r "${NOTES_DATA_DIR}"
+  # Relevant `ls` options:
+  # -t  Sort by time modified (most recently modified first) before sorting
+  #     the operands by lexicographical order
+  # -r  Reverse the order of the sort to get reverse order or the oldest
+  #     entries first (or largest files last, combined with sort by size
+  ls -t "${NOTES_DATA_DIR}"
 }
 
 # _print_line()
