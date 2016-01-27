@@ -216,7 +216,7 @@ _get_selection_basename() {
     _basename="${_selection}"
   elif [[ "${_selection}" =~ ^[0-9]+$ ]]
   then # <selection> is an id.
-    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
+    local _filenames=($(_list_notes_files))
     _debug printf \
       "_get_selection_basename() \$_filenames[*]: '%s'\n" \
       "${_filenames[*]}"
@@ -225,7 +225,7 @@ _get_selection_basename() {
     local _title
     local _filenames
 
-    _filenames=($(ls -r "${NOTES_DATA_DIR}"))
+    _filenames=($(_list_notes_files))
     for _file in ${_filenames[@]}
     do
       _title="$(_get_title "${_file}")"
@@ -394,6 +394,17 @@ _join() {
   local IFS="$1"
   shift
   printf "%s\n" "$*"
+}
+
+# _list_notes_files()
+#
+# Usage:
+#   _list_notes_files
+#
+# Description:
+#   List note files with default sorting.
+_list_notes_files() {
+  ls -r "${NOTES_DATA_DIR}"
 }
 
 # _print_line()
@@ -1056,7 +1067,7 @@ _list() {
   _debug printf "_list() \$_excerpt_length: '%s'\n" "${_excerpt_length:-}"
 
   local _filenames=
-  _filenames="$(ls -r "${NOTES_DATA_DIR}")"
+  _filenames="$(_list_notes_files)"
 
   if [[ -z "${_filenames}" ]]
   then # no files in `$NOTES_DATA_DIR`
