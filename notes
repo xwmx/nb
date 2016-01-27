@@ -932,7 +932,35 @@ _init() {
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
     _die printf "%s already exists.\n" "${NOTES_DATA_DIR}"
+  elif [[ -e "${NOTESRC_PATH}" ]]
+  then
+    _die printf "%s already exists.\n" "${NOTESRC_PATH}"
   fi
+
+  cat <<HEREDOC >> "${NOTESRC_PATH}"
+###############################################################################
+# .notesrc
+#
+# Configuration file for notes
+#
+# https://github.com/alphabetum/notes
+###############################################################################
+
+# $NOTES_AUTO_SYNC
+#
+# Default: 0
+#
+# When set to '1', operations that trigger a git commit like \`add\`, \`edit\`,
+# and \`delete\` will also sync to the remote git repository.
+# export NOTES_AUTO_SYNC=0
+
+# $NOTES_DIR
+#
+# Default: "$HOME/.notes"
+#
+# The location of the notes directory that contains the data repository.
+# export NOTES_DIR="$HOME/.notes"
+HEREDOC
 
   local _repo_url="${1:-}"
   if [[ -n "${_repo_url}" ]]
