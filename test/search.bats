@@ -52,10 +52,9 @@ HEREDOC
   [[ -z "$output" ]]
 }
 
-# `search <one match>` ########################################################
+# `search <one match> [--path]` ###############################################
 
 @test "\`search <one match>\` exits with status 0 and prints output." {
-  skip
   {
     _setup_search
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -70,7 +69,21 @@ HEREDOC
   [[ "${lines[2]}" =~ idyl ]]
 }
 
-# `search <multiple matches>` #################################################
+@test "\`search <one match> --path\` exits with status 0 and prints path." {
+  {
+    _setup_search
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" search 'idyl' --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
+  [[ "${#lines[@]}" -eq 1 ]]
+}
+
+# `search <multiple matches> [--path]` ########################################
 
 @test "\`search <multiple matches>\` exits with status 0 and prints output." {
   {
@@ -91,4 +104,21 @@ HEREDOC
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
+}
+
+@test "\`search <multiple matches> --path\` exits with 0 and prints paths." {
+  {
+    _setup_search
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" search 'sweetish' --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${lines[0]}: '%s'\n" "${lines[0]}"
+
+  [[ $status -eq 0 ]]
+  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
+  [[ "${lines[1]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
+  [[ "${#lines[@]}" -eq 2 ]]
 }
