@@ -200,6 +200,55 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 }
 
+# <title> #####################################################################
+
+@test "\`edit\` with <title> argument exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" edit "${_title}"
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`edit\` with <title> argument updates note file." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
+
+  run "$_NOTES" edit "${_title}"
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+}
+
+@test "\`edit\` with <title> argument creates git commit." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" edit "${_title}"
+
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Edit') ]]
+}
+
 # help ########################################################################
 
 @test "\`help edit\` exits with status 0." {

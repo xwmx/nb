@@ -200,6 +200,55 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
+# <title> #####################################################################
+
+@test "\`delete\` with <title> argument exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" delete "${_title}"
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`delete\` with <title> argument deletes note file." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+
+  run "$_NOTES" delete "${_title}"
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+}
+
+@test "\`delete\` with <title> argument creates git commit." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" delete "${_title}"
+
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
 # help ########################################################################
 
 @test "\`help delete\` exits with status 0." {

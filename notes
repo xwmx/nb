@@ -220,6 +220,27 @@ _get_selection_basename() {
       "_get_selection_basename() \$_filenames[*]: '%s'\n" \
       "${_filenames[*]}"
     _basename="${_filenames[${_selection}]:-}"
+  else # <selection> might be a title.
+    local _title
+    local _filenames
+
+    _filenames=($(ls -r "${NOTES_DATA_DIR}"))
+    for _file in ${_filenames[@]}
+    do
+      _title="$(head -1 "${NOTES_DATA_DIR}/${_file}")"
+      if [[ "${_title}" =~ ^#\  ]]
+      then # first line starts with an H1
+        _title="$(printf "%s\n" "${_title}" | sed 's/^\# //')"
+      else # first line is not an H1
+        continue
+      fi
+
+      if [[ "${_title}" == "${_selection}" ]]
+      then
+        _basename="${_file}"
+        break
+      fi
+    done
   fi
   printf "%s\n" "${_basename}"
 }
@@ -719,6 +740,7 @@ Usage:
   $_ME delete <index>
   $_ME delete <filename>
   $_ME delete <path>
+  $_ME delete <title>
 
 Description:
   Delete a note.
@@ -754,6 +776,7 @@ Usage:
   $_ME edit <index>
   $_ME edit <filename>
   $_ME edit <path>
+  $_ME edit <title>
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to '$EDITOR'.
@@ -833,14 +856,14 @@ _help() {
 
 Usage:
   $_ME add [<note>]
-  $_ME delete (<index> | <filename> | <path>)
-  $_ME edit (<index> | <filename> | <path>)
+  $_ME delete (<index> | <filename> | <path> | <title>)
+  $_ME edit (<index> | <filename> | <path> | <title>)
   $_ME init [<remote-url>]
   $_ME list ([(-e | --excerpt) [<length>]] | [--noindex])
   $_ME log
   $_ME ls [<excerpt length>]
   $_ME search <query> [--path]
-  $_ME show (<index> | <filename> | <path>)
+  $_ME show (<index> | <filename> | <path> | <title>)
   $_ME show <selection> ([--index] | [--path] | [---render]) [--dump]
   $_ME sync
   $_ME -h | --help | help [<subcommand>]
@@ -1162,7 +1185,7 @@ _search() {
 
 desc "show" <<HEREDOC
 Usage:
-  $_ME show (<index> | <filename> | <path>)
+  $_ME show (<index> | <filename> | <path> | <title>)
   $_ME show <selection> ([--index] | [--path] | [---render]) [--dump]
 
 Options:

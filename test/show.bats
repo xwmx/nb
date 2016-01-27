@@ -41,7 +41,7 @@ load test_helper
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path>)" ]]
+  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
 }
 
 # `notes show --dump` #########################################################
@@ -84,7 +84,7 @@ load test_helper
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path>)" ]]
+  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
 }
 
 # `notes show <filename> --dump` ##############################################
@@ -166,6 +166,36 @@ load test_helper
   }
 
   run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --dump
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" =~ mock_editor ]]
+}
+
+# `notes show <title> --dump` #################################################
+
+@test "\`show <title> --dump\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" show "${_title}" --dump
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <path> --dump\` dumps note file." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" show "${_title}" --dump
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "$output" =~ mock_editor ]]
@@ -255,6 +285,36 @@ load test_helper
   [[ "$output" == "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
+# `notes show <title> --path` #################################################
+
+@test "\`show <title> --path\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" show "${_title}" --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <title> --path\` prints note file path." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" show "${_title}" --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "${NOTES_DATA_DIR}/${_filename}" ]]
+}
+
 # `notes show <filename> --index` ##############################################
 
 @test "\`show <filename> --index\` exits with status 0." {
@@ -339,6 +399,36 @@ load test_helper
   [[ "$output" == "0" ]]
 }
 
+# `notes show <title> --index` ################################################
+
+@test "\`show <title> --index\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <title> --index\` prints the note file index." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "0" ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
@@ -351,5 +441,5 @@ load test_helper
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path>)" ]]
+  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
 }

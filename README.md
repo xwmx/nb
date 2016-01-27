@@ -34,14 +34,14 @@ A simple, portable, command line note-taking and syncing tool that stores data i
 ```
 Usage:
   notes add [<note>]
-  notes delete (<index> | <filename> | <path>)
-  notes edit (<index> | <filename> | <path>)
+  notes delete (<index> | <filename> | <path> | <title>)
+  notes edit (<index> | <filename> | <path> | <title>)
   notes init [<remote-url>]
   notes list ([(-e | --excerpt) [<length>]] | [--noindex])
   notes log
   notes ls [<excerpt length>]
   notes search <query> [--path]
-  notes show (<index> | <filename> | <path>)
+  notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump]
   notes sync
   notes -h | --help | help [<subcommand>]
@@ -97,6 +97,7 @@ Usage:
   notes delete <index>
   notes delete <filename>
   notes delete <path>
+  notes delete <title>
 
 Description:
   Delete a note.
@@ -109,6 +110,7 @@ Usage:
   notes edit <index>
   notes edit <filename>
   notes edit <path>
+  notes edit <title>
 
 Description:
   Open the specified note in `$EDITOR`.
@@ -222,7 +224,7 @@ Description:
 
 ```
 Usage:
-  notes show (<index> | <filename> | <path>)
+  notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump]
 
 Options:
