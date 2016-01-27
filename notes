@@ -932,12 +932,11 @@ _init() {
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
     _die printf "%s already exists.\n" "${NOTES_DATA_DIR}"
-  elif [[ -e "${NOTESRC_PATH}" ]]
-  then
-    _die printf "%s already exists.\n" "${NOTESRC_PATH}"
   fi
 
-  cat <<HEREDOC >> "${NOTESRC_PATH}"
+  if [[ ! -e "${NOTESRC_PATH}" ]]
+  then
+    cat <<HEREDOC > "${NOTESRC_PATH}"
 ###############################################################################
 # .notesrc
 #
@@ -961,6 +960,7 @@ _init() {
 # The location of the notes directory that contains the data repository.
 # export NOTES_DIR="$HOME/.notes"
 HEREDOC
+  fi
 
   local _repo_url="${1:-}"
   if [[ -n "${_repo_url}" ]]

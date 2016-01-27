@@ -29,15 +29,6 @@ load test_helper
   [[ $status -eq 1 ]]
 }
 
-@test "\`init\` exits with status 1 when \$NOTESRC_PATH\` exists." {
-  touch "${NOTESRC_PATH}"
-  [[ -e "${NOTESRC_PATH}" ]]
-  run "$_NOTES" init
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  [[ $status -eq 1 ]]
-}
-
 @test "\`init\` creates \`\$NOTES_DIR\` and \`\$NOTES_DATA_DIR\` directories." {
   run "$_NOTES" init
   printf "\$status: %s\n" "$status"
@@ -51,6 +42,15 @@ load test_helper
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ -d "${NOTES_DATA_DIR}/.git" ]]
+}
+
+@test "\`init\` exits with status 0 when \$NOTESRC_PATH\` exists." {
+  touch "${NOTESRC_PATH}"
+  [[ -e "${NOTESRC_PATH}" ]]
+  run "$_NOTES" init
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
 }
 
 @test "\`init\` creates a .notesrc file at \`\$NOTESRC_PATH\`." {
