@@ -974,8 +974,8 @@ _list() {
 
   local _print_excerpt=0
   local _excerpt_length=3
-  local _noindex=0
-  local _nocolor=0
+  local _no_index=0
+  local _no_color=0
   local _list_titles=0
 
   _debug printf "_list() \$@: '%s'\n" "${@:-}"
@@ -1005,11 +1005,11 @@ _list() {
           shift
         fi
         ;;
-      --noindex)
-        _noindex=1
+      --noindex|--no-index)
+        _no_index=1
         ;;
-      --nocolor)
-        _nocolor=1
+      --nocolor|--no-color)
+        _no_color=1
         ;;
       --titles)
         _list_titles=1
@@ -1069,11 +1069,11 @@ HEREDOC
       local _list_item="${_counter_item}${_spaces}${_list_item_id}"
       local _list_item_color="${_counter_item_color}${_spaces}${_list_item_id}"
 
-      if ((_noindex))
+      if ((_no_index))
       then
         printf "%s\n" "${_list_item_id}"
       else
-        if ((_nocolor))
+        if ((_no_color))
         then
           printf "%s\n" "${_list_item}"
         else
