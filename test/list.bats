@@ -169,8 +169,9 @@ HEREDOC
 
 # `notes list (--titles)` #####################################################
 
-_setup_list_excerpt() {
-  "$_NOTES" init
+@test "\`list --titles\` exits with 0 and displays a list of titles." {
+  {
+    "$_NOTES" init
     cat <<HEREDOC | "$_NOTES" add
 # one
 line two
@@ -191,11 +192,6 @@ line two
 line three
 line four
 HEREDOC
-}
-
-@test "\`list --titles\` exits with 0 and displays a list of titles." {
-  {
-    _setup_list_excerpt
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
