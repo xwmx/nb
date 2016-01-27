@@ -210,3 +210,18 @@ HEREDOC
   [[ "${lines[1]}" =~ line\ two$  ]] && [[ "${lines[1]}" =~ 1 ]]
   [[ "${lines[2]}" =~ one$        ]] && [[ "${lines[2]}" =~ 2 ]]
 }
+
+# help ########################################################################
+
+@test "\`help list\` exits with status 0." {
+  run "$_NOTES" help list
+  [[ $status -eq 0 ]]
+}
+
+@test "\`help list\` prints help information." {
+  run "$_NOTES" help list
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--noindex]" ]]
+}

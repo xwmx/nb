@@ -876,7 +876,7 @@ Usage:
   $_ME delete (<index> | <filename> | <path> | <title>)
   $_ME edit (<index> | <filename> | <path> | <title>)
   $_ME init [<remote-url>]
-  $_ME list ([(-e | --excerpt) [<length>]] | [--noindex])
+  $_ME list [(-e | --excerpt) [<length>]] [--noindex]
   $_ME log
   $_ME ls [<excerpt length>]
   $_ME search <query> [--path]
@@ -946,7 +946,7 @@ _init() {
 
 desc "list" <<HEREDOC
 Usage:
-  $_ME list ([(-e | --excerpt) [<length>]] | [--noindex]
+  $_ME list [(-e | --excerpt) [<length>]] [--noindex]
 
 Options:
   -e --excerpt  Print an excerpt <length> lines long under each note's
