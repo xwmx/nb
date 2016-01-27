@@ -187,7 +187,7 @@ load test_helper
   [[ $status -eq 0 ]]
 }
 
-@test "\`show <path> --dump\` dumps note file." {
+@test "\`show <title> --dump\` dumps note file." {
   {
     run "$_NOTES" init
     run "$_NOTES" add
