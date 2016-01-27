@@ -197,10 +197,11 @@ _get_index() {
 #   _get_selection_basename <index>
 #   _get_selection_basename <filename>
 #   _get_selection_basename <path>
+#   _get_selection_basename <title>
 #
 # Description:
 #   Determine the basename of the file in `$NOTES_DATA_DIR` that is identified
-#   by the given <index>, <filename>, or <path>.
+#   by the given <index>, <filename>, <path>, or <title>.
 _get_selection_basename() {
   local _basename=
   local _selection="${1:-}"
