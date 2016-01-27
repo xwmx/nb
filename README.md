@@ -278,3 +278,29 @@ Usage:
 Description:
   Display version information.
 ```
+
+## Configuration
+
+`notes` is configured using environment variables, which can be set in `~/.notesrc`.
+
+#### `$NOTES_AUTO_SYNC`
+
+Default: `0`
+
+When set to '1', operations that trigger a git commit like `add`, `edit`, and `delete` will automatically sync changes to the remote git repository in the background.
+
+Example:
+
+```bash
+export NOTES_AUTO_SYNC=1
+```
+
+#### `$NOTES_DIR`
+
+Default: `~/.notes`
+
+The location of the notes directory that contains the data repository. For example, to store your notes in Dropbox, you could use:
+
+```bash
+export NOTES_DIR="~/Dropbox/Notes"
+```
