@@ -409,8 +409,8 @@ _print_line() {
   local _text="${1:-}"
   local _text_length=0
   _text_length=${#_text}
-  printf -v line '%*s' "$_text_length"
-  echo "${line// /-}"
+  printf -v _line '%*s' "$_text_length"
+  printf "%s\n" "${_line// /-}"
 }
 
 # _spinner()
