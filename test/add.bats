@@ -49,7 +49,7 @@ load test_helper
   [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
 }
 
-@test "\`add\` with no arguments creates git commit." {
+@test "\`add\` with argument creates git commit." {
   run "$_NOTES" init
   run "$_NOTES" add "# Content"
   cd "${NOTES_DATA_DIR}" || return 1
@@ -78,7 +78,7 @@ load test_helper
   [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
 }
 
-@test "\`add\` with no arguments creates git commit." {
+@test "\`add\` with piped content creates git commit." {
   run "$_NOTES" init
   run bash -c 'echo "# Piped" | "$_NOTES" add'
   cd "${NOTES_DATA_DIR}" || return 1
