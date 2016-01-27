@@ -975,6 +975,7 @@ _list() {
   local _print_excerpt=0
   local _excerpt_length=3
   local _noindex=0
+  local _list_titles=0
 
   _debug printf "_list() \$@: '%s'\n" "${@:-}"
 
@@ -1005,6 +1006,9 @@ _list() {
         ;;
       --noindex)
         _noindex=1
+        ;;
+      --titles)
+        _list_titles=1
         ;;
       *)
         _debug printf "_list() *: '%s'\n" "${_arg:-}"
@@ -1039,13 +1043,25 @@ HEREDOC
       local _counter_item="[${_counter}]"
       local _counter_item_color
       _counter_item_color="[$(tput setaf 3)${_counter}$(tput sgr0)]"
+      _counter=$((_counter+1))
 
-      local _list_item="${_counter_item} ${_basename}"
-      local _list_item_color="${_counter_item_color} ${_basename}"
+      local _list_item_id="${_basename}"
+      local _maybe_title
+      if ((_list_titles))
+      then
+        _maybe_title="$(_get_title "${_basename}")"
+        if [[ -n "${_maybe_title}" ]]
+        then # note file has title.
+          _list_item_id="${_maybe_title}"
+        fi
+      fi
+
+      local _list_item="${_counter_item} ${_list_item_id}"
+      local _list_item_color="${_counter_item_color} ${_list_item_id}"
 
       if ((_noindex))
       then
-        printf "%s\n" "${_basename}"
+        printf "%s\n" "${_list_item_id}"
       else
         printf "%s\n" "${_list_item_color}"
       fi
@@ -1062,7 +1078,6 @@ HEREDOC
 
         printf "\n"
       fi
-      _counter=$((_counter+1))
     done
   fi
 }

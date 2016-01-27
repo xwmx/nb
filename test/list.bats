@@ -141,3 +141,47 @@ HEREDOC
 
   [[ "${#lines[@]}" -eq 12 ]]
 }
+
+# `notes list (--titles)` #####################################################
+
+_setup_list_excerpt() {
+  "$_NOTES" init
+    cat <<HEREDOC | "$_NOTES" add
+# one
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    cat <<HEREDOC | "$_NOTES" add
+line one
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    cat <<HEREDOC | "$_NOTES" add
+# three
+line two
+line three
+line four
+HEREDOC
+}
+
+@test "\`list --titles\` exits with 0 and displays a list of titles." {
+  {
+    _setup_list_excerpt
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list --titles
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ three$      ]] && [[ "${lines[0]}" =~ 0 ]]
+  [[ "${lines[1]}" =~ line\ two$  ]] && [[ "${lines[1]}" =~ 1 ]]
+  [[ "${lines[2]}" =~ one$        ]] && [[ "${lines[2]}" =~ 2 ]]
+}
