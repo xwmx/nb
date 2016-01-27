@@ -923,7 +923,8 @@ Usage:
   $_ME init [<remote-url>]
 
 Description:
-  Initialize the local git repository.
+  Initialize the local data directory and generate a ~/.notesrc configruation
+  file if it doesn't exist.
 HEREDOC
 _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]

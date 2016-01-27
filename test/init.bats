@@ -75,3 +75,18 @@ load test_helper
   _compare "$_GIT_REMOTE_URL" "$_origin"
   [[ "$_origin" =~  "$_GIT_REMOTE_URL" ]]
 }
+
+# help ########################################################################
+
+@test "\`help init\` exits with status 0." {
+  run "$_NOTES" help init
+  [[ $status -eq 0 ]]
+}
+
+@test "\`help init\` prints help information." {
+  run "$_NOTES" help init
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes init [<remote-url>]" ]]
+}
