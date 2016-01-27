@@ -52,6 +52,31 @@ load test_helper
   [[ "${lines[2]}" == "${_files[0]}" ]]
 }
 
+# `notes list --nocolor` ######################################################
+
+@test "\`list --nocolor\` exits with 0 and lists files in reverse order." {
+  {
+    "$_NOTES" init
+    "$_NOTES" add "# one"
+    sleep 1
+    "$_NOTES" add "# two"
+    sleep 1
+    "$_NOTES" add "# three"
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list --nocolor
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  _compare "'[0]  ${_files[2]}'" "'${lines[0]}'"
+
+  [[ "${lines[0]}" == "[0]  ${_files[2]}" ]]
+  [[ "${lines[1]}" == "[1]  ${_files[1]}" ]]
+  [[ "${lines[2]}" == "[2]  ${_files[0]}" ]]
+}
+
 # `notes list (-e | --excerpt)` ###############################################
 
 _setup_list_excerpt() {
