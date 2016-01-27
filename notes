@@ -408,6 +408,7 @@ _join() {
 _print_line() {
   local _text="${1:-}"
   local _text_length=0
+  local _line=
   _text_length=${#_text}
   printf -v _line '%*s' "${_text_length}"
   printf "%s\n" "${_line// /-}"
