@@ -167,7 +167,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 12 ]]
 }
 
-# `notes list (--titles)` #####################################################
+# `notes list --titles` #######################################################
 
 @test "\`list --titles\` exits with 0 and displays a list of titles." {
   {
