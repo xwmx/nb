@@ -1058,7 +1058,7 @@ HEREDOC
 
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
-      local _number=0
+      local _spaces_length=0
       _spaces_length=$(expr 5 - ${#_counter_item})
       printf -v _spaces '%*s' "${_spaces_length}"
 
