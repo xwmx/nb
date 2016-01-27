@@ -54,29 +54,33 @@ load test_helper
 
 # `notes list -e` #############################################################
 
-@test "\`list -e\` exits with 0 and displays 5 line list items." {
-  {
-    "$_NOTES" init
-     cat <<HEREDOC | "$_NOTES" add
+_setup_list_excerpt() {
+  "$_NOTES" init
+    cat <<HEREDOC | "$_NOTES" add
 # one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-     cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "$_NOTES" add
 # two
 line two
 line three
 line four
 HEREDOC
     sleep 1
-     cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "$_NOTES" add
 # three
 line two
 line three
 line four
 HEREDOC
+}
+
+@test "\`list -e\` exits with 0 and displays 5 line list items." {
+  {
+    _setup_list_excerpt
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -92,27 +96,7 @@ HEREDOC
 
 @test "\`list -e 2\` exits with 0 and displays 4 line list items." {
   {
-    "$_NOTES" init
-     cat <<HEREDOC | "$_NOTES" add
-# one
-line two
-line three
-line four
-HEREDOC
-    sleep 1
-     cat <<HEREDOC | "$_NOTES" add
-# two
-line two
-line three
-line four
-HEREDOC
-    sleep 1
-     cat <<HEREDOC | "$_NOTES" add
-# three
-line two
-line three
-line four
-HEREDOC
+    _setup_list_excerpt
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -130,27 +114,7 @@ HEREDOC
 
 @test "\`list --excerpt\` exits with 0 and displays 5 line list items." {
   {
-    "$_NOTES" init
-     cat <<HEREDOC | "$_NOTES" add
-# one
-line two
-line three
-line four
-HEREDOC
-    sleep 1
-     cat <<HEREDOC | "$_NOTES" add
-# two
-line two
-line three
-line four
-HEREDOC
-    sleep 1
-     cat <<HEREDOC | "$_NOTES" add
-# three
-line two
-line three
-line four
-HEREDOC
+    _setup_list_excerpt
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -166,27 +130,7 @@ HEREDOC
 
 @test "\`list --excerpt 2\` exits with 0 and displays 4 line list items." {
   {
-    "$_NOTES" init
-     cat <<HEREDOC | "$_NOTES" add
-# one
-line two
-line three
-line four
-HEREDOC
-    sleep 1
-     cat <<HEREDOC | "$_NOTES" add
-# two
-line two
-line three
-line four
-HEREDOC
-    sleep 1
-     cat <<HEREDOC | "$_NOTES" add
-# three
-line two
-line three
-line four
-HEREDOC
+    _setup_list_excerpt
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
