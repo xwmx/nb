@@ -227,15 +227,10 @@ _get_selection_basename() {
     _filenames=($(ls -r "${NOTES_DATA_DIR}"))
     for _file in ${_filenames[@]}
     do
-      _title="$(head -1 "${NOTES_DATA_DIR}/${_file}")"
-      if [[ "${_title}" =~ ^#\  ]]
-      then # first line starts with an H1
-        _title="$(printf "%s\n" "${_title}" | sed 's/^\# //')"
-      else # first line is not an H1
-        continue
-      fi
+      _title="$(_get_title "${_file}")"
 
-      if [[ "${_title}" == "${_selection}" ]]
+      if [[ -n "${_title}" ]] &&
+         [[ "${_title}" == "${_selection}" ]]
       then
         _basename="${_file}"
         break
@@ -243,6 +238,28 @@ _get_selection_basename() {
     done
   fi
   printf "%s\n" "${_basename}"
+}
+
+# _get_title()
+#
+# Usage:
+#   _get_title <basename>
+#
+# Description:
+#   Print the title, if present, of the note with the given basename.
+_get_title() {
+  local _basename="${1:-}"
+  local _title=
+  if [[ -z "${_basename}" ]]
+  then
+    _die printf "Usage: _get_title <basename>\n"
+  fi
+  _maybe_title="$(head -1 "${NOTES_DATA_DIR}/${_basename}")"
+  if [[ "${_maybe_title}" =~ ^#\  ]]
+  then # first line starts with an H1
+    _title="$(printf "%s\n" "${_maybe_title}" | sed 's/^\# //')"
+  fi
+  printf "%s\n" "${_title}"
 }
 
 # _git_checkpoint()
