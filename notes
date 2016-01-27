@@ -1082,15 +1082,10 @@ HEREDOC
         fi
       fi
 
-      if ((_print_excerpt))
-      then
+      if ((_print_excerpt)) && [[ "${_excerpt_length}" =~ ^[1-9] ]]
+      then # excerpt is specified with a non-zero digit, as required by `head`.
         _print_line "${_list_item}"
-
-        if [[ "${_excerpt_length}" =~ ^[1-9] ]]
-        then # first character is a non-zero digit, as required by `head`.
-          head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
-        fi
-
+        head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
         printf "\n"
       fi
     done

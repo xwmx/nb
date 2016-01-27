@@ -135,6 +135,22 @@ HEREDOC
   [[ "${#lines[@]}" -eq 12 ]]
 }
 
+@test "\`list -e 0\` exits with 0 and displays 1 line list items." {
+  {
+    _setup_list_excerpt
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list -e 0
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 3 ]]
+}
+
 @test "\`list --excerpt\` exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
@@ -165,6 +181,22 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 12 ]]
+}
+
+@test "\`list --excerpt 0\` exits with 0 and displays 1 line list items." {
+  {
+    _setup_list_excerpt
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list --excerpt 0
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 3 ]]
 }
 
 # `notes list --titles` #######################################################
