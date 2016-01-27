@@ -2,7 +2,7 @@
 
 load test_helper
 
-# no argument
+# no argument #################################################################
 
 @test "\`edit\` with no argument exits with status 1." {
   {
@@ -62,7 +62,7 @@ load test_helper
   [[ "${lines[1]}" == "  notes edit <index>" ]]
 }
 
-# <filename>
+# <filename> ##################################################################
 
 @test "\`edit\` with <filename> argument exits with status 0." {
   {
@@ -108,7 +108,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 }
 
-# <index>
+# <index> #####################################################################
 
 @test "\`edit\` with <index> argument exits with status 0." {
   {
@@ -154,7 +154,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 }
 
-# <path>
+# <path> ######################################################################
 
 @test "\`edit\` with <path> argument exits with status 0." {
   {
@@ -200,7 +200,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 }
 
-# help
+# help ########################################################################
 
 @test "\`help edit\` exits with status 0." {
   run "$_NOTES" help edit

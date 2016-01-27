@@ -2,7 +2,7 @@
 
 load test_helper
 
-# no argument
+# no argument #################################################################
 
 @test "\`delete\` with no argument exits with status 1." {
   {
@@ -62,7 +62,7 @@ load test_helper
   [[ "${lines[1]}" == "  notes delete <index>" ]]
 }
 
-# <filename>
+# <filename> ##################################################################
 
 @test "\`delete\` with <filename> argument exits with status 0." {
   {
@@ -108,7 +108,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
-# <index>
+# <index> #####################################################################
 
 @test "\`delete\` with <index> argument exits with status 0." {
   {
@@ -154,7 +154,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
-# <path>
+# <path> ######################################################################
 
 @test "\`delete\` with <path> argument exits with status 0." {
   {
@@ -200,7 +200,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
-# help
+# help ########################################################################
 
 @test "\`help delete\` exits with status 0." {
   run "$_NOTES" help delete

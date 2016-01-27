@@ -2,6 +2,8 @@
 
 load test_helper
 
+# no argument #################################################################
+
 @test "\`add\` with no arguments exits with status 0." {
   run "$_NOTES" init
   run "$_NOTES" add
@@ -28,6 +30,8 @@ load test_helper
   done
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
+
+# argument ####################################################################
 
 @test "\`add\` with argument exits with status 0." {
   run "$_NOTES" init
@@ -56,6 +60,8 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
+# piped #######################################################################
+
 @test "\`add\` with piped content exits with status 0." {
   run "$_NOTES" init
   run bash -c 'echo "# Piped" | "$_NOTES" add'
@@ -82,6 +88,8 @@ load test_helper
   done
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
+
+# help ########################################################################
 
 @test "\`help add\` returns usage information." {
   run "$_NOTES" help add
