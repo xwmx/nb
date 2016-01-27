@@ -22,7 +22,7 @@ HEREDOC
 
 # `search` ####################################################################
 
-@test "\`search\` with no argument exits with status 1." {
+@test "\`search\` exits with status 1 and prints help information." {
   {
     _setup_search
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -31,44 +31,23 @@ HEREDOC
   run "$_NOTES" search
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
+
   [[ $status -eq 1 ]]
-}
-
-@test "\`search\` with no argument prints help information." {
-  {
-    _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "$_NOTES" search
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes search <query> [--path]" ]]
 }
 
-# `search <query with no matches>` ############################################
+# `search <no match>` #########################################################
 
-@test "\`search <query with no matches>\` exits with status 1." {
+@test "\`search <no match>\` exits with status 1 and does not print output." {
   {
     _setup_search
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search 'query with no matches'
+  run "$_NOTES" search 'no match'
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ $status -eq 1 ]]
-}
-
-@test "\`search <query with no matches>\` does not print output." {
-  {
-    _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "$_NOTES" search 'query with no matches'
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
   [[ -z "$output" ]]
 }
