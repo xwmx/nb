@@ -52,7 +52,7 @@ load test_helper
   [[ "${lines[2]}" == "${_files[0]}" ]]
 }
 
-# `notes list -e` #############################################################
+# `notes list (-e | --excerpt)` ###############################################
 
 _setup_list_excerpt() {
   "$_NOTES" init
@@ -109,8 +109,6 @@ HEREDOC
 
   [[ "${#lines[@]}" -eq 12 ]]
 }
-
-# `notes list --excerpt` ######################################################
 
 @test "\`list --excerpt\` exits with 0 and displays 5 line list items." {
   {
