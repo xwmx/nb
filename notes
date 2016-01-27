@@ -191,6 +191,39 @@ _get_index() {
   return 1
 }
 
+# _get_selection_basename()
+#
+# Usage:
+#   _get_selection_basename <index>
+#   _get_selection_basename <filename>
+#   _get_selection_basename <path>
+#
+# Description:
+#   Determine the basename of the file in `$NOTES_DATA_DIR` that is identified
+#   by the given <index>, <filename>, or <path>.
+_get_selection_basename() {
+  local _basename=
+  local _selection="${1:-}"
+  if [[ -z "${_selection}" ]]
+  then  # <selection> is blank.
+    _basename=
+  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
+  then # <selection> is a full path.
+    _basename="$(basename "${_selection}")"
+  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
+  then # <selection> is a filename.
+    _basename="${_selection}"
+  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
+  then # <selection> is an id.
+    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
+    _debug printf \
+      "_get_selection_basename() \$_filenames[*]: '%s'\n" \
+      "${_filenames[*]}"
+    _basename="${_filenames[${_selection}]:-}"
+  fi
+  printf "%s\n" "${_basename}"
+}
+
 # _git_checkpoint()
 #
 # Usage:
@@ -696,22 +729,13 @@ _delete() {
 
   _debug printf "_delete() \$_selection: '%s'\n" "${_selection}"
 
-  if [[ -z "${_selection}" ]]
-  then  # <selection> is blank.
+  _basename="$(_get_selection_basename "${_selection}")"
+  if [[ -z "${_basename}" ]]
+  then
     $_ME help "delete"
     return 1
-  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
-  then # <selection> is a full path.
-    _basename="$(basename "${_selection}")"
-  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
-  then # <selection> is a filename.
-    _basename="${_selection}"
-  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
-  then # <selection> is an id.
-    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
-    _debug printf "_delete() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
-    _basename="${_filenames[${_selection}]:-}"
   fi
+  _debug printf "_delete() \$_basename: '%s'\n" "${_basename}"
 
   if [[ -n "$_basename" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
@@ -740,22 +764,13 @@ _edit() {
 
   _debug printf "_edit() \$_selection: %s\n" "${_selection}"
 
-  if [[ -z "${_selection}" ]]
-  then # <selection> is blank.
+  _basename="$(_get_selection_basename "${_selection}")"
+  if [[ -z "${_basename}" ]]
+  then
     $_ME help "edit"
     return 1
-  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
-  then # <selection> is a full path.
-    _basename="$(basename "${_selection}")"
-  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
-  then # <selection> is a filename.
-    _basename="${_selection}"
-  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
-  then # <selection> is an id.
-    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
-    _debug printf "_edit() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
-    _basename="${_filenames[${_selection}]:-}"
   fi
+  _debug printf "_edit() \$_basename: '%s'\n" "${_basename}"
 
   if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
@@ -1213,23 +1228,13 @@ _show() {
   _debug printf "_show() \$_render: '%s'\n" "${_render}"
   _debug printf "_show() \$_selection: '%s'\n" "${_selection}"
 
-  # Determine file basename for the provided <selection>.
-  if [[ -z "${_selection}" ]]
-  then # <selection> is blank.
+  _basename="$(_get_selection_basename "${_selection}")"
+  if [[ -z "${_basename}" ]]
+  then
     $_ME help "show"
     return 1
-  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
-  then # <selection> is a full path.
-    _basename="$(basename "${_selection}")"
-  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
-  then # <selection> is a filename.
-    _basename="${_selection}"
-  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
-  then # <selection> is an id.
-    local _filenames=($(ls -r "${NOTES_DATA_DIR}"))
-    _debug printf "_show() \$_filenames[*]: '%s'\n" "${_filenames[*]}"
-    _basename="${_filenames[${_selection}]:-}"
   fi
+  _debug printf "_show() \$_basename: '%s'\n" "${_basename}"
 
   # Display file.
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
