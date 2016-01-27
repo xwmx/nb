@@ -255,6 +255,90 @@ load test_helper
   [[ "$output" == "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
+# `notes show <filename> --index` ##############################################
+
+@test "\`show <filename> --index\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "$_filename" --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <filename> --index\` prints note file index." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "$_filename" --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "0" ]]
+}
+
+# `notes show <index> --index` #################################################
+
+@test "\`show <index> --index\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show 0 --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <index> --index\` prints note file index." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show 0 --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "0" ]]
+}
+
+# `notes show <path> --index` #################################################
+
+@test "\`show <path> --index\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <path> --index\` prints the note file index." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --index
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "0" ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
