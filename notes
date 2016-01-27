@@ -409,7 +409,7 @@ _print_line() {
   local _text="${1:-}"
   local _text_length=0
   _text_length=${#_text}
-  printf -v _line '%*s' "$_text_length"
+  printf -v _line '%*s' "${_text_length}"
   printf "%s\n" "${_line// /-}"
 }
 
@@ -447,8 +447,8 @@ _spinner() {
   while [[ "$(ps a | awk '{print $1}' | grep ${_pid})" ]]
   do
     local _temp="${_spin_string#?}"
-    printf " [%c]  " "$_spin_string"
-    _spin_string="$_temp${_spin_string%"$_temp"}"
+    printf " [%c]  " "${_spin_string}"
+    _spin_string="${_temp}${_spin_string%${_temp}}"
     sleep $_delay
     printf "\b\b\b\b\b\b"
   done
