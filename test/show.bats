@@ -171,6 +171,90 @@ load test_helper
   [[ "$output" =~ mock_editor ]]
 }
 
+# `notes show <filename> --path` ##############################################
+
+@test "\`show <filename> --path\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "$_filename" --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <filename> --path\` prints note file path." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "$_filename" --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "${NOTES_DATA_DIR}/${_filename}" ]]
+}
+
+# `notes show <index> --path` #################################################
+
+@test "\`show <index> --path\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show 0 --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <index> --path\` prints note file path." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show 0 --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "${NOTES_DATA_DIR}/${_filename}" ]]
+}
+
+# `notes show <path> --path` #################################################
+
+@test "\`show <path> --path\` exits with status 0." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+}
+
+@test "\`show <path> --path\` dumps note file." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add
+    _files=("$(ls "${NOTES_DATA_DIR}/")") && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show "${NOTES_DATA_DIR}/${_filename}" --path
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "$output" == "${NOTES_DATA_DIR}/${_filename}" ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
