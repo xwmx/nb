@@ -122,3 +122,18 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
   [[ "${#lines[@]}" -eq 2 ]]
 }
+
+# help ########################################################################
+
+@test "\`help search\` exits with status 0." {
+  run "$_NOTES" help search
+  [[ $status -eq 0 ]]
+}
+
+@test "\`help search\` prints help information." {
+  run "$_NOTES" help search
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes search <query> [--path]" ]]
+}
