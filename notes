@@ -1120,10 +1120,17 @@ Usage:
   $_ME ls [<excerpt length>]
 
 Description:
-  List with an excerpt. This is an alias for \`$_ME list -e\`.
+  List with magic. By default, this is an alias for \`$_ME list -e 1\`. when
+  \`<excerpt length>\` is '0', it calls \`$_ME list --titles\`.
 HEREDOC
 _ls() {
-  _list --excerpt "${1:-}"
+  local _length="${1:-1}"
+  if ((_length))
+  then
+    _list --excerpt "${_length}"
+  else
+    _list --titles
+  fi
 }
 
 # search ######################################################################
