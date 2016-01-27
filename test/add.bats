@@ -91,6 +91,11 @@ load test_helper
 
 # help ########################################################################
 
+@test "\`help add\` exits with status 0." {
+  run "$_NOTES" help add
+  [[ $status -eq 0 ]]
+}
+
 @test "\`help add\` returns usage information." {
   run "$_NOTES" help add
   printf "\$status: %s\n" "$status"
