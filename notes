@@ -1057,11 +1057,10 @@ HEREDOC
       fi
 
       # Use calculated number of spaces for nicer formatting.
-      # via: http://stackoverflow.com/q/5349718
       local _spaces=''
       local _number=0
-      _number=$(expr 5 - ${#_counter_item})
-      _spaces="$(seq -s ' ' ${_number} | tr -d '[:digit:]')"
+      _spaces_length=$(expr 5 - ${#_counter_item})
+      printf -v _spaces '%*s' "${_spaces_length}"
 
       local _list_item="${_counter_item}${_spaces}${_list_item_id}"
       local _list_item_color="${_counter_item_color}${_spaces}${_list_item_id}"
