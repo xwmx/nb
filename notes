@@ -1568,12 +1568,18 @@ HEREDOC
         then
           if ((NOTES_AUTO_SYNC))
           then
+            _debug \
+              printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\n"
             $_ME sync
           else
+            _debug \
+              printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\n"
             _git_checkpoint "[NOTES] Commit" --spinner
           fi
         elif ((NOTES_AUTO_SYNC))
         then
+          _debug \
+            printf "_notes(): ! _git_index_is_dirty\n"
           ($_ME sync &>/dev/null) &
         fi
       fi
