@@ -355,6 +355,22 @@ _git_required() {
   fi
 }
 
+# _highlight()
+#
+# Usage:
+#   _highlight <string>
+#
+# Description:
+#   Use `tput` to highlight the given string.
+_highlight() {
+  local _input="${1:-}"
+  if [[ -z "${_input}" ]]
+  then
+    _die printf "Usage: _highlight <string>"
+  fi
+  printf "$(tput setaf 3)%s$(tput sgr0)\n" "${_input}"
+}
+
 # _highlight_syntax_if_available()
 #
 # Usage:
@@ -1123,7 +1139,7 @@ HEREDOC
       # for length calculations.
       local _counter_item="[${_counter}]"
       local _counter_item_color
-      _counter_item_color="[$(tput setaf 3)${_counter}$(tput sgr0)]"
+      _counter_item_color="[$(_highlight "${_counter}")]"
       _counter=$((_counter+1))
 
       local _list_item_id="${_basename}"
@@ -1256,7 +1272,7 @@ _repo() {
           if [[ -n "${_current}" ]] &&
              [[ "${_current}" == "${_item}" ]]
           then # it's the current repository.
-            printf "$(tput setaf 3)%s$(tput sgr0)\n" "${_item}"
+            printf "%s\n" "$(_highlight "${_item}")"
           else
             printf "%s\n" "${_item}"
           fi
@@ -1368,7 +1384,7 @@ _search() {
       else
         _filename="$(basename "${_path}")"
         _index="$(_get_index "${_filename}" "${_files[@]}")"
-        _indexed_filename="[$(tput setaf 3)${_index}$(tput sgr0)] ${_filename}"
+        _indexed_filename="[$(_highlight "${_index}")] ${_filename}"
 
         if [[ "${_last_path}" != "${_path}" ]]
         then # match is in a different file than the last match
