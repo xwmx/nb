@@ -24,7 +24,7 @@ _setup_use() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[1]}" == "  notes repo" ]]
+  [[ "${lines[1]}" == "  notes use <name>" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
 
   run "$_NOTES" env
@@ -60,15 +60,15 @@ _setup_use() {
 
 # help ########################################################################
 
-@test "\`help ls\` exits with status 0." {
+@test "\`help use\` exits with status 0." {
   run "$_NOTES" help use
   [[ $status -eq 0 ]]
 }
 
-@test "\`help ls\` prints help information." {
+@test "\`help use\` prints help information." {
   run "$_NOTES" help use
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage ]]
   [[ "${lines[1]}" == "  notes use <name>" ]]
 }

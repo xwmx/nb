@@ -1551,7 +1551,7 @@ _use() {
   local _name="${1:-}"
   if [[ -z "${_name}" ]]
   then
-    _die "${_ME}" help repo
+    _die "${_ME}" help use
   fi
   _repo use "${_name}"
 }
