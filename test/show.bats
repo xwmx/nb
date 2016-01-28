@@ -27,7 +27,7 @@ load test_helper
   run "$_NOTES" show
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  skip "TODO: Determine how to test for `\$PAGER`."
+  skip "TODO: Determine how to test for \`\$PAGER\`."
 }
 
 @test "\`show\` with no argument prints help information." {
