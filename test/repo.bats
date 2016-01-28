@@ -55,7 +55,7 @@ _setup_repos() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  [[ "${lines[1]}" == "  notes repo add <name> [<remote-url>]" ]]
+  [[ "${lines[1]}" == "  notes repo" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
 }
 
@@ -84,10 +84,29 @@ _setup_repos() {
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "'Added: example'" "'$output'"
 
-  [[ "$output" == "Added: example" ]]
+  # [[ "$output" == "Added: example" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
+}
+
+@test "\`repo add <name> <remote-url>\` exits with 0 and adds a respository." {
+  {
+    _setup_repos
+    _setup_remote_repo
+  }
+
+  run "$_NOTES" repo add example "$_GIT_REMOTE_URL"
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\$_GIT_REMOTE_URL: '%s'\n" "$_GIT_REMOTE_URL"
+  [[ $status -eq 0 ]]
+
+  [[ "${lines[1]}" == "Added: example" ]]
+  [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
+  [[ -d "${NOTES_DIR}/example/.git" ]]
+  _origin="$(cd "${NOTES_DIR}/example" && git config --get remote.origin.url)"
+  _compare "$_GIT_REMOTE_URL" "$_origin"
+  [[ "$_origin" =~  "$_GIT_REMOTE_URL" ]]
 }
 
 # `notes repo list` ###########################################################
@@ -121,7 +140,7 @@ one"
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[1]}" == "  notes repo add <name> [<remote-url>]" ]]
+  [[ "${lines[1]}" == "  notes repo" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
 
   run "$_NOTES" env
@@ -167,5 +186,5 @@ one"
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes repo add <name> [<remote-url>]" ]]
+  [[ "${lines[1]}" == "  notes repo" ]]
 }
