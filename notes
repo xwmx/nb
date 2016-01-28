@@ -645,7 +645,6 @@ _ARGUMENTS=("$0")
 # All available subcommands.
 _SUBCOMMANDS=(
   add
-  data
   delete
   edit
   env
@@ -655,6 +654,7 @@ _SUBCOMMANDS=(
   list
   log
   ls
+  repo
   search
   show
   status
@@ -779,66 +779,6 @@ _add() {
     cat >> "${_filename}"
   fi
   _git_checkpoint "[NOTES] Add: ${_basename}"
-}
-
-# data ########################################################################
-
-desc "data" <<HEREDOC
-Usage:
-  $_ME data add <name> [<remote-url>]
-  $_ME data current
-  $_ME data list
-  $_ME data use <name>
-HEREDOC
-_data() {
-  local _subcommand="${1:-}"
-  local _name="${2:-}"
-  case "${_subcommand}" in
-    add)
-      if [[ -z "${_name}" ]]
-      then
-        _die "${_ME}" help data
-      fi
-
-      if [[ -e "${NOTES_DIR}/${_name}" ]]
-      then
-        _die printf "Already exists: ${_name}"
-      fi
-
-      local _repo_url="${3:-}"
-      if [[ -n "${_repo_url}" ]]
-      then
-        git clone "${_repo_url}" "${NOTES_DIR}/${_name}" &>/dev/null
-        printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
-      else
-        mkdir -p "${NOTES_DIR}/${_name}"
-        cd "${NOTES_DIR}/${_name}" && git init &>/dev/null
-      fi
-      printf "Added: %s\n" "${_name}"
-      ;;
-    current)
-      basename "${NOTES_DATA_DIR}"
-      ;;
-    list)
-      local _files=($(ls -1 "${NOTES_DIR}"))
-      for _item in "${_files[@]}"
-      do
-        if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
-        then # it's a git repository.
-          printf "%s\n" "${_item}"
-        fi
-      done
-      ;;
-    use)
-      if [[ -z "${_name}" ]]
-      then
-        _die "${_ME}" help data
-      fi
-
-      printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
-      printf "Now using %s\n" "${_name}"
-      ;;
-  esac
 }
 
 # delete ######################################################################
@@ -1267,6 +1207,67 @@ _ls() {
   fi
 }
 
+
+# repo ########################################################################
+
+desc "repo" <<HEREDOC
+Usage:
+  $_ME repo add <name> [<remote-url>]
+  $_ME repo current
+  $_ME repo list
+  $_ME repo use <name>
+HEREDOC
+_repo() {
+  local _subcommand="${1:-}"
+  local _name="${2:-}"
+  case "${_subcommand}" in
+    add)
+      if [[ -z "${_name}" ]]
+      then
+        _die "${_ME}" help repo
+      fi
+
+      if [[ -e "${NOTES_DIR}/${_name}" ]]
+      then
+        _die printf "Already exists: ${_name}"
+      fi
+
+      local _repo_url="${3:-}"
+      if [[ -n "${_repo_url}" ]]
+      then
+        git clone "${_repo_url}" "${NOTES_DIR}/${_name}" &>/dev/null
+        printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
+      else
+        mkdir -p "${NOTES_DIR}/${_name}"
+        cd "${NOTES_DIR}/${_name}" && git init &>/dev/null
+      fi
+      printf "Added: %s\n" "${_name}"
+      ;;
+    current)
+      basename "${NOTES_DATA_DIR}"
+      ;;
+    list)
+      local _files=($(ls -1 "${NOTES_DIR}"))
+      for _item in "${_files[@]}"
+      do
+        if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
+        then # it's a git repository.
+          printf "%s\n" "${_item}"
+        fi
+      done
+      ;;
+    use)
+      if [[ -z "${_name}" ]]
+      then
+        _die "${_ME}" help repo
+      fi
+
+      printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
+      printf "Now using %s\n" "${_name}"
+      ;;
+  esac
+}
+
 # search ######################################################################
 
 desc "search" <<HEREDOC
@@ -1561,7 +1562,7 @@ Usage: $_ME init [<remote url>]
 HEREDOC
       fi
       if ((NOTES_AUTO_SYNC)) &&
-         [[ "${_SUBCOMMAND}" =~ add|data|delete|edit|list|ls|show|search ]]
+         [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|repo|show|search ]]
       then
         if _git_index_is_dirty
         then
