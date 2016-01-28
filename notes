@@ -1252,7 +1252,14 @@ _repo() {
       do
         if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
         then # it's a git repository.
-          printf "%s\n" "${_item}"
+          local _current="$(cat "${NOTES_DIR}/.current")"
+          if [[ -n "${_current}" ]] &&
+             [[ "${_current}" == "${_item}" ]]
+          then # it's the current repository.
+            printf "$(tput setaf 3)%s$(tput sgr0)\n" "${_item}"
+          else
+            printf "%s\n" "${_item}"
+          fi
         fi
       done
       ;;

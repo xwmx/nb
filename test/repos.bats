@@ -24,7 +24,7 @@ _setup_repos() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  _expected="data
+  _expected="$(tput setaf 3)data$(tput sgr0)
 one"
   [[ "$output" == "$_expected" ]]
 }
