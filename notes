@@ -1180,7 +1180,7 @@ HEREDOC
 _log() {
   cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
   if _command_exists "tig"
-  then #  tig <https://github.com/jonas/tig> is present.
+  then # tig <https://github.com/jonas/tig> is present.
     tig --all
   else
     git log
