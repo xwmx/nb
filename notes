@@ -1198,8 +1198,9 @@ Description:
   \`<excerpt length>\` is '0', it calls \`$_ME list --titles\`.
 HEREDOC
 _ls() {
-  local _length="${1:-1}"
-  if ((_length))
+  local _length="${1:-}"
+  if [[ -n "${_length:-}"       ]]  &&
+     [[ "${_length}" =~ ^[1-9]  ]]
   then
     _list --excerpt "${_length}"
   else
