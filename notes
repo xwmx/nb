@@ -1099,7 +1099,7 @@ _list() {
 
   if [[ -z "${_filenames}" ]]
   then # no files in `$NOTES_DATA_DIR`
-cat <<HEREDOC
+    cat <<HEREDOC
 0 notes.
 
 Add a note:
