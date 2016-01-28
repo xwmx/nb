@@ -151,7 +151,7 @@ one"
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
 }
 
-@test "\`repo add <name>\` exits with 0 and sets <name> in .current." {
+@test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
   {
     _setup_repos
   }

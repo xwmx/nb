@@ -659,6 +659,7 @@ _SUBCOMMANDS=(
   show
   status
   sync
+  use
   version
 )
 
@@ -1217,6 +1218,7 @@ Usage:
   $_ME repo list
   $_ME repo use <name>
 HEREDOC
+# TODO: Add description.
 _repo() {
   local _subcommand="${1:-}"
   local _name="${2:-}"
@@ -1519,6 +1521,22 @@ _sync() {
     printf "Syncing failed!\n"
 }
 
+# use #########################################################################
+
+desc "use" <<HEREDOC
+Usage:
+  $_ME use <name>
+HEREDOC
+# TODO: Add description.
+_use() {
+  local _name="${1:-}"
+  if [[ -z "${_name}" ]]
+  then
+    _die "${_ME}" help repo
+  fi
+  _repo use "${_name}"
+}
+
 # version ####################################################################
 
 desc "version" <<HEREDOC
@@ -1562,7 +1580,7 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|repo|show|search ]]
+      if [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|repo|show|search|use ]]
       then
         if _git_index_is_dirty
         then
