@@ -8,9 +8,11 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-A simple, portable, command line note-taking and syncing tool that stores data in markdown files versioned with git.
+A simple, portable, command line note-taking and syncing tool that stores data in Markdown files versioned with git.
 
 With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor you have set in the `$EDITOR` environment variable. `notes` uses git in the background to automatically record changes and sync with a remote repository, if one has been configured. Optional dependencies can be installed to enable enhanced rendering, display, and searching functionality, but everything still works great without them.
+
+`notes` files are normal [Markdown](https://daringfireball.net/projects/markdown/) files that can be edited with any application. If the files are modified using a different program, `notes` will automatically commit all of the changes the next time it runs. As a result, `notes` can be configured to save the data files in a directory used by a general purpose syncing utility like Dropbox so they can be edited on any device with apps that support Dropbox and Markdown or plain text.
 
 #### Dependencies
 
