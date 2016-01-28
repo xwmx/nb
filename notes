@@ -993,12 +993,13 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  $_ME list [(-e | --excerpt) [<length>]] [--noindex]
+  $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n [<limit>]]
 
 Options:
-  -e --excerpt  Print an excerpt <length> lines long under each note's
-                filename [default: 3].
-  --noindex     Don't print an index next to each note's filename.
+  -e --excerpt <length>  Print an excerpt <length> lines long under each
+                         note's filename [default: 3].
+  --noindex              Don't print an index next to each note's filename.
+  -n <limit>             The maximum number of notes to list.
 
 Description:
   List all notes.
@@ -1024,6 +1025,7 @@ _list() {
   local _no_index=0
   local _no_color=0
   local _list_titles=0
+  local _limit
 
   _debug printf "_list() \$@: '%s'\n" "${@:-}"
 
@@ -1058,6 +1060,13 @@ _list() {
       --nocolor|--no-color)
         _no_color=1
         ;;
+      -n)
+        if __option_value_is_present "${_val:-}"
+        then
+          _limit="${_val:-}"
+          shift
+        fi
+        ;;
       --titles)
         _list_titles=1
         ;;
@@ -1089,6 +1098,11 @@ HEREDOC
     local _counter=0
     for _basename in $_filenames
     do
+      if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
+      then # the limit has been reached.
+        break
+      fi
+
       # NOTE: Plain version serves as the reference version and can be used
       # for length calculations.
       local _counter_item="[${_counter}]"

@@ -199,6 +199,64 @@ HEREDOC
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
+# `notes list -n <limit>` #####################################################
+
+_setup_list_limit() {
+  "$_NOTES" init
+    cat <<HEREDOC | "$_NOTES" add
+# one
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    cat <<HEREDOC | "$_NOTES" add
+# two
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    cat <<HEREDOC | "$_NOTES" add
+# three
+line two
+line three
+line four
+HEREDOC
+}
+
+@test "\`list -n\` exits with 0 and displays full list." {
+  {
+    _setup_list_limit
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list -n
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 3 ]]
+}
+
+@test "\`list -n 2\` exits with 0 and displays list with 2 items." {
+  {
+    _setup_list_limit
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list -n 2
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 2 ]]
+}
+
 # `notes list --titles` #######################################################
 
 @test "\`list --titles\` exits with 0 and displays a list of titles." {
@@ -251,5 +309,5 @@ HEREDOC
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--noindex]" ]]
+  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n [<limit>]]" ]]
 }

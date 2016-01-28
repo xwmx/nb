@@ -161,12 +161,13 @@ Description:
 
 ```
 Usage:
-  notes list ([(-e | --excerpt) [<length>]] | [--noindex]
+  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n [<limit>]]
 
 Options:
-  -e --excerpt  Print an excerpt <length> lines long under each note's
-                filename [default: 3].
-  --noindex     Don't print an index next to each note's filename.
+  -e --excerpt <length>  Print an excerpt <length> lines long under each
+                         note's filename [default: 3].
+  --noindex              Don't print an index next to each note's filename.
+  -n <limit>             The maximum number of notes to list.
 
 Description:
   List all notes.
