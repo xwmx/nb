@@ -11,6 +11,37 @@ _setup_repos() {
   cd "${NOTES_DIR}"
 }
 
+# `notes repo` ################################################################
+
+@test "\`repo\` exits with 0 and lists current default repository." {
+  {
+    _setup_repos
+  }
+
+  run "$_NOTES" repo
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" == "data" ]]
+}
+
+@test "\`repo current\` exits with 0 and lists current repository." {
+  {
+    _setup_repos
+    printf "%s\n" "one" > "${NOTES_DIR}/.current"
+  }
+
+  run "$_NOTES" repo
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" == "one" ]]
+}
+
 # `notes repo add <name>` #####################################################
 
 @test "\`repo add\` exits with 1 and prints error message." {
@@ -57,37 +88,6 @@ _setup_repos() {
 
   [[ "$output" == "Added: example" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
-}
-
-# `notes repo current` ########################################################
-
-@test "\`repo current\` exits with 0 and lists current default repository." {
-  {
-    _setup_repos
-  }
-
-  run "$_NOTES" repo current
-  [[ $status -eq 0 ]]
-
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-
-  [[ "$output" == "data" ]]
-}
-
-@test "\`repo current\` exits with 0 and lists current repository." {
-  {
-    _setup_repos
-    printf "%s\n" "one" > "${NOTES_DIR}/.current"
-  }
-
-  run "$_NOTES" repo current
-  [[ $status -eq 0 ]]
-
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-
-  [[ "$output" == "one" ]]
 }
 
 # `notes repo list` ###########################################################

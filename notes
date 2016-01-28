@@ -1243,9 +1243,6 @@ _repo() {
       fi
       printf "Added: %s\n" "${_name}"
       ;;
-    current)
-      basename "${NOTES_DATA_DIR}"
-      ;;
     list)
       local _files=($(ls -1 "${NOTES_DIR}"))
       for _item in "${_files[@]}"
@@ -1264,6 +1261,9 @@ _repo() {
 
       printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
       printf "Now using %s\n" "${_name}"
+      ;;
+    *)
+      basename "${NOTES_DATA_DIR}"
       ;;
   esac
 }
