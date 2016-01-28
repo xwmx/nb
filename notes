@@ -1542,6 +1542,7 @@ _version() {
 _notes() {
   _debug printf "_notes() >> start\n"
   _debug printf "_notes() \${_ARGUMENTS[@]:1}: '%s'\n" "${_ARGUMENTS[@]:1}"
+  _debug printf "_notes() \${_SUBCOMMAND}: '%s'\n" "${_SUBCOMMAND}"
 
   case "$_SUBCOMMAND" in
     init)
@@ -1560,13 +1561,18 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if ((NOTES_AUTO_SYNC)) &&
-         [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|repo|show|search ]]
+      if [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|repo|show|search ]]
       then
         if _git_index_is_dirty
         then
-          $_ME sync
-        else
+          if ((NOTES_AUTO_SYNC))
+          then
+            $_ME sync
+          else
+            _git_checkpoint "[NOTES] Commit" --spinner
+          fi
+        elif ((NOTES_AUTO_SYNC))
+        then
           ($_ME sync &>/dev/null) &
         fi
       fi
