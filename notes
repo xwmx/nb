@@ -1211,8 +1211,8 @@ _ls() {
 
 desc "repo" <<HEREDOC
 Usage:
+  $_ME repo
   $_ME repo add <name> [<remote-url>]
-  $_ME repo current
   $_ME repo list
   $_ME repo use <name>
 HEREDOC
