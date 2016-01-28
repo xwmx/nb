@@ -62,6 +62,21 @@ load test_helper
   [[ "${lines[1]}" == "  notes edit <index>" ]]
 }
 
+# <selector> ##################################################################
+
+@test "\`edit <selector>\` with empty repo exits with 1 and prints help." {
+  {
+    run "$_NOTES" init
+  }
+
+  run "$_NOTES" edit 0
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 1 ]]
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes edit <index>" ]]
+}
+
 # <filename> ##################################################################
 
 @test "\`edit\` with <filename> argument exits with status 0." {

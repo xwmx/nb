@@ -231,14 +231,14 @@ _get_selection_basename() {
     local _filenames=($(_list_notes_files))
     _debug printf \
       "_get_selection_basename() \$_filenames[*]: '%s'\n" \
-      "${_filenames[*]}"
+      "${_filenames[*]:-}"
     _basename="${_filenames[${_selection}]:-}"
   else # <selection> might be a title.
     local _title
     local _filenames
 
     _filenames=($(_list_notes_files))
-    for _file in ${_filenames[@]}
+    for _file in ${_filenames[@]:-}
     do
       _title="$(_get_title "${_file}")"
 

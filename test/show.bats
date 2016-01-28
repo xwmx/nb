@@ -87,6 +87,21 @@ load test_helper
   [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
 }
 
+# <selector> ##################################################################
+
+@test "\`show <selector>\` with empty repo exits with 1 and prints help." {
+  {
+    run "$_NOTES" init
+  }
+
+  run "$_NOTES" show 0
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 1 ]]
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
+}
+
 # `notes show <filename> --dump` ##############################################
 
 @test "\`show <filename> --dump\` exits with status 0." {

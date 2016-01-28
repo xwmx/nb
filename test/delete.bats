@@ -62,6 +62,21 @@ load test_helper
   [[ "${lines[1]}" == "  notes delete <index>" ]]
 }
 
+# <selector> ##################################################################
+
+@test "\`delete <selector>\` with empty repo exits with 1 and prints help." {
+  {
+    run "$_NOTES" init
+  }
+
+  run "$_NOTES" delete 0
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 1 ]]
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" == "  notes delete <index>" ]]
+}
+
 # <filename> ##################################################################
 
 @test "\`delete\` with <filename> argument exits with status 0." {
