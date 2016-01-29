@@ -1700,12 +1700,7 @@ HEREDOC
 _main() {
   if (("$_PRINT_HELP"))
   then
-    if [[ -n "${_SUBCOMMAND:-}" ]]
-    then
-      _help "${_SUBCOMMAND:-}"
-    else
-      _help
-    fi
+    [[ -n "${_SUBCOMMAND:-}" ]] && _help "${_SUBCOMMAND:-}" || _help
   elif (("$_PRINT_VERSION"))
   then
     _version
