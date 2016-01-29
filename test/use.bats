@@ -45,9 +45,9 @@ _setup_use() {
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "'Added: example'" "'$output'"
+  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'$output'"
 
-  [[ "$output" == "Now using one" ]]
+  [[ "$output" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
   run "$_NOTES" env

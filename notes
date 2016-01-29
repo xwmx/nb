@@ -1286,7 +1286,7 @@ _repo() {
       fi
 
       printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
-      printf "Now using %s\n" "${_name}"
+      printf "Now using %s.\n" "$( _highlight "${_name}")"
       ;;
     *)
       basename "${NOTES_DATA_DIR}"
