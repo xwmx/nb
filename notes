@@ -970,6 +970,7 @@ _help() {
 |_| |_|\___/ \__\___||___/
 
 Usage:
+  $_ME
   $_ME add [<note>]
   $_ME delete (<index> | <filename> | <path> | <title>)
   $_ME edit (<index> | <filename> | <path> | <title>)

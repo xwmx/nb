@@ -35,6 +35,7 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 
 ```
 Usage:
+  notes
   notes add [<note>]
   notes delete (<index> | <filename> | <path> | <title>)
   notes edit (<index> | <filename> | <path> | <title>)
