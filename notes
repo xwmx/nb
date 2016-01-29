@@ -357,6 +357,59 @@ _git_required() {
   fi
 }
 
+# _git_should_autosync()
+#
+# Usage:
+#   _git_should_autosync
+#
+# Returns:
+#   0  If an autosync should be triggered.
+#   1  If not.
+_git_should_autosync() {
+  local _last_fetch_timestamp
+  local _current_timestamp
+
+  if ! ((NOTES_AUTO_SYNC))
+  then # autosync not enabled.
+    return 1
+  fi
+
+  cd "${NOTES_DATA_DIR}" || _die printf "\`cd\` failed.\n"
+  if ! git config --get remote.origin.url &>/dev/null
+  then # there is no remote configured.
+    return 1
+  fi
+
+  if [[ ! -e "${NOTES_DATA_DIR}/.git/FETCH_HEAD" ]]
+  then # no previous fetches, but has an origin and autosync is enabled.
+    return 0
+  fi
+
+  if stat -c &>/dev/null
+  then # GNU
+    _last_fetch_timestamp="$(stat -c %Y .git/FETCH_HEAD)"
+  elif gstat -c &>/dev/null
+  then # GNU prefixed
+    _last_fetch_timestamp="$(gstat -c %Y .git/FETCH_HEAD)"
+  else
+    _last_fetch_timestamp="$(stat -f '%m' .git/FETCH_HEAD)"
+  fi
+  _current_timestamp="$(date +%s)"
+
+  _diff="$(expr ${_current_timestamp} - ${_last_fetch_timestamp})"
+  _debug printf \
+    "_git_should_sync() \$_last_fetch_timestamp: %s\n" \
+    "${_last_fetch_timestamp}"
+  _debug printf \
+    "_git_should_sync() \$_current_timestamp: %s\n" \
+    "${_current_timestamp}"
+  _debug printf \
+    "_git_should_sync() \$_diff: %s\n" \
+    "${_diff}"
+
+  [[ "$_diff" -gt 300 ]]
+}
+
 # _highlight()
 #
 # Usage:
@@ -1663,7 +1716,7 @@ HEREDOC
       then
         if _git_index_is_dirty
         then
-          if ((NOTES_AUTO_SYNC))
+          if _git_should_autosync
           then
             _debug \
               printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\n"
@@ -1673,7 +1726,7 @@ HEREDOC
               printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\n"
             _git_checkpoint "[NOTES] Commit" --spinner
           fi
-        elif ((NOTES_AUTO_SYNC))
+        elif _git_should_autosync
         then
           _debug \
             printf "_notes(): ! _git_index_is_dirty\n"
