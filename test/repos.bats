@@ -7,6 +7,7 @@ _setup_repos() {
   mkdir -p "${NOTES_DIR}/one"
   cd "${NOTES_DIR}/one"
   git init
+  git remote add origin "${_GIT_REMOTE_URL}"
   mkdir -p "${NOTES_DIR}/two"
   cd "${NOTES_DIR}"
 }
@@ -25,7 +26,7 @@ _setup_repos() {
   printf "\$output: '%s'\n" "$output"
 
   _expected="$(tput setaf 3)data$(tput sgr0)
-one"
+one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
 

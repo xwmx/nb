@@ -1271,12 +1271,25 @@ _repo() {
         if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
         then # it's a git repository.
           local _current="$(cat "${NOTES_DIR}/.current")"
+          local _formatted_name
+          local _origin_url
+
           if [[ -n "${_current}" ]] &&
              [[ "${_current}" == "${_item}" ]]
           then # it's the current repository.
-            printf "%s\n" "$(_highlight "${_item}")"
+            _formatted_name="$(_highlight "${_item}")"
           else
-            printf "%s\n" "${_item}"
+            _formatted_name="${_item}"
+          fi
+
+          cd "${NOTES_DIR}/${_item}" || _die printf "_repo() \`cd\` failed."
+          _origin_url="$(git config --get remote.origin.url || echo '')"
+
+          if [[ -n "${_origin_url}" ]]
+          then
+            printf "%s\n" "${_formatted_name}	(${_origin_url})"
+          else
+            printf "%s\n" "${_formatted_name}"
           fi
         fi
       done
