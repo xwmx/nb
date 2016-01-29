@@ -1304,7 +1304,7 @@ _repo() {
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
     then
-      _die printf "Already exists: ${_name}"
+      _die printf "Already exists: ${_name}\n"
     fi
 
     local _repo_url="${2:-}"
