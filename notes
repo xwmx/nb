@@ -1369,8 +1369,13 @@ _repo() {
         _die "${_ME}" help repo
       fi
 
-      printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
-      printf "Now using %s.\n" "$( _highlight "${_name}")"
+      if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
+      then
+        printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
+        printf "Now using %s.\n" "$( _highlight "${_name}")"
+      else
+        _die printf "Not found: ${_name}\n"
+      fi
       ;;
     *)
       basename "${NOTES_DATA_DIR}"

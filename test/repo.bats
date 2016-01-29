@@ -152,6 +152,28 @@ one	(${_GIT_REMOTE_URL})"
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
 }
 
+@test "\`repo use <invalid>\` exits with 1 and prints error message." {
+  {
+    _setup_repos
+  }
+
+  run "$_NOTES" repo use not-a-repo
+  [[ $status -eq 1 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
+  [[ "${lines[0]}" == "❌  Not found: not-a-repo" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
+
+  run "$_NOTES" env
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/data'" "'${lines[1]}'"
+
+  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
+}
+
 @test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
   {
     _setup_repos
