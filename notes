@@ -752,7 +752,7 @@ done
 # Set `$_SUBCOMMAND` if it's still blank.
 if [[ -z "${_SUBCOMMAND:-}" ]]
 then
-  _SUBCOMMAND="help"
+  _SUBCOMMAND="ls"
 fi
 
 _debug printf "\$_SUBCOMMANDS[*]: '%s'\n" "${_SUBCOMMANDS[*]}"
