@@ -749,12 +749,6 @@ do
   esac
 done
 
-# Set `$_SUBCOMMAND` if it's still blank.
-if [[ -z "${_SUBCOMMAND:-}" ]]
-then
-  _SUBCOMMAND="ls"
-fi
-
 _debug printf "\$_SUBCOMMANDS[*]: '%s'\n" "${_SUBCOMMANDS[*]}"
 _debug printf "\$_SUBCOMMANDS_PATTERN: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\$_SUBCOMMAND: '%s'\n" "$_SUBCOMMAND"
@@ -978,10 +972,14 @@ HEREDOC
 _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
-    _die printf "%s already exists and is not a directory.\n" "${NOTES_DIR}"
+    _die \
+      printf "\`init\`: %s already exists and is not a directory.\n"
+      "${NOTES_DIR}"
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
-    _die printf "%s already exists.\n" "${NOTES_DATA_DIR}"
+    _die \
+      printf "\`init\`: %s already exists.\n" \
+      "${NOTES_DATA_DIR}"
   fi
 
   if [[ ! -e "${NOTESRC_PATH}" ]]
@@ -1630,6 +1628,12 @@ _notes() {
   _debug printf "_notes() \${_ARGUMENTS[@]:1}: '%s'\n" "${_ARGUMENTS[@]:1}"
   _debug printf "_notes() \${_SUBCOMMAND}: '%s'\n" "${_SUBCOMMAND}"
 
+  # Set `$_SUBCOMMAND` if it's still blank.
+  if [[ -z "${_SUBCOMMAND:-}" ]]
+  then
+    _SUBCOMMAND="ls"
+  fi
+
   case "$_SUBCOMMAND" in
     init)
       _git_required
@@ -1640,6 +1644,14 @@ _notes() {
       ;;
     *)
       _git_required
+
+      # Call `_init()` if configuration hasn't been initialized.
+      if [[ ! -e "${NOTES_DIR}" ]] && [[ ! -e "${NOTESRC_PATH}" ]]
+      then
+        _git_required
+        _init &>/dev/null
+      fi
+
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
@@ -1688,7 +1700,12 @@ HEREDOC
 _main() {
   if (("$_PRINT_HELP"))
   then
-    [[ "${_SUBCOMMAND:-}" == "help" ]] && _help || _help "${_SUBCOMMAND:-}"
+    if [[ -n "${_SUBCOMMAND:-}" ]]
+    then
+      _help "${_SUBCOMMAND:-}"
+    else
+      _help
+    fi
   elif (("$_PRINT_VERSION"))
   then
     _version

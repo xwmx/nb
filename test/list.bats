@@ -2,6 +2,24 @@
 
 load test_helper
 
+# `notes list` (empty) ########################################################
+
+@test "\`list\` (empty) exits with 1 and lists files." {
+  run "$_NOTES" list
+  [[ $status -eq 1 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  _expected="0 notes.
+
+Add a note:
+  notes add
+Usage information:
+  notes help"
+  [[ "${_expected}" == "$output" ]]
+}
+
 # `notes list` ################################################################
 
 @test "\`list\` exits with 0 and lists files in reverse order." {
