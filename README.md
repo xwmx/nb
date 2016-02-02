@@ -308,3 +308,7 @@ The location of the notes directory that contains the data repository. For examp
 ```bash
 export NOTES_DIR="~/Dropbox/Notes"
 ```
+
+## Testing
+
+To run the test suite, install [Bats](https://github.com/sstephenson/bats) and run `bats test` in the project root directory.
