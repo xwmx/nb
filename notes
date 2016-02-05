@@ -1739,6 +1739,7 @@ HEREDOC
           ($_ME sync &>/dev/null) &
         fi
       fi
+
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
   esac
