@@ -238,7 +238,7 @@ _get_selection_basename() {
     local _filenames
 
     _filenames=($(_list_notes_files))
-    for _file in ${_filenames[@]:-}
+    for _file in "${_filenames[@]:-}"
     do
       _title="$(_get_title "${_file}")"
 
