@@ -1328,7 +1328,8 @@ _repo() {
     do
       if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
       then # it's a git repository.
-        local _current="$(cat "${NOTES_DIR}/.current")"
+        local _current
+        _current="$(cat "${NOTES_DIR}/.current")"
         local _formatted_name
         local _origin_url
 
