@@ -1172,10 +1172,13 @@ _list() {
   _debug printf "_list() \$_print_excerpt: '%s'\n" "${_print_excerpt:-}"
   _debug printf "_list() \$_excerpt_length: '%s'\n" "${_excerpt_length:-}"
 
-  local _filenames=
-  _filenames="$(_list_notes_files)"
+  local _filenames
+  _filenames=($(_list_notes_files))
+  _filenames_count="${#_filenames[@]:-}"
 
-  if [[ -z "${_filenames}" ]]
+  _debug printf "list() \${_filenames_count}: '%s'\n" "${_filenames_count[@]}"
+
+  if [[ "${_filenames_count}" -eq 0 ]]
   then # no files in `$NOTES_DATA_DIR`
     cat <<HEREDOC
 0 notes.
@@ -1188,10 +1191,17 @@ HEREDOC
     return 1
   else
     local _counter=0
-    for _basename in $_filenames
+    for _basename in "${_filenames[@]}"
     do
       if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
       then # the limit has been reached.
+
+        _debug printf "list() \${#_limit}: '%s'\n" "${#_limit}"
+        _debug printf "list() \${#_counter}: '%s'\n" "${#_counter}"
+
+        local _difference
+        _difference="$(expr ${_filenames_count} - ${_counter})"
+        printf "%s omitted. %s total.\n" "${_difference}" "${_filenames_count}"
         break
       fi
 
@@ -1296,7 +1306,7 @@ _ls() {
       return 1
     fi
   else
-    _list --titles -n "15" "${@}"
+    _list --titles "${@}"
   fi
 }
 

@@ -272,7 +272,9 @@ HEREDOC
   printf "\$output: '%s'\n" "$output"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+
+  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
 }
 
 # `notes list --titles` #######################################################

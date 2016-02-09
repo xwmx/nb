@@ -96,9 +96,10 @@ HEREDOC
   printf "\$output: '%s'\n" "$output"
   _compare "${lines[0]}" "three"
 
+  [[ "${#lines[@]}" -eq 2 ]]
+
   [[ "${lines[0]}" =~ three ]]
-  [[ ! "${lines[1]}" =~ two   ]]
-  [[ ! "${lines[2]}" =~ one   ]]
+  [[ "${lines[1]}" == "2 omitted. 3 total." ]]
 }
 
 @test "\`ls 2\` exits with 0 and lists 2 files." {
@@ -114,9 +115,11 @@ HEREDOC
   printf "\$output: '%s'\n" "$output"
   _compare "${lines[0]}" "three"
 
+  [[ "${#lines[@]}" -eq 3 ]]
+
   [[ "${lines[0]}" =~ three ]]
   [[ "${lines[1]}" =~ two   ]]
-  [[ ! "${lines[2]}" =~ one   ]]
+  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
 }
 
 @test "\`ls 3\` exits with 0 and lists 3 files." {
@@ -131,6 +134,8 @@ HEREDOC
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   _compare "${lines[0]}" "three"
+
+  [[ "${#lines[@]}" -eq 3 ]]
 
   [[ "${lines[0]}" =~ three ]]
   [[ "${lines[1]}" =~ two   ]]
