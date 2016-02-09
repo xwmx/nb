@@ -47,15 +47,15 @@ HEREDOC
   [[ "${lines[2]}" =~ one   ]]
 }
 
-# `notes ls [<excerpt length>]` ###############################################
+# `notes ls -e [<excerpt length>]` ############################################
 
-@test "\`ls <[[:digits:]]>\` exits with 0 and displays excerpts." {
+@test "\`ls -e <excerpt length>\` exits with 0 and displays excerpts." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls 5
+  run "$_NOTES" ls -e 5
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -65,33 +65,31 @@ HEREDOC
   [[ "${#lines[@]}" -eq 18 ]]
 }
 
-@test "\`ls <[[:alpha:]]>\` exits with 0 and lists files as \`ls\`." {
+# `notes ls <number>` #########################################################
+
+@test "\`ls 0\` exits with 1 and lists 0 files." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls x
-  [[ $status -eq 0 ]]
+  run "$_NOTES" ls 0
+  [[ $status -eq 1 ]]
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   _compare "${lines[0]}" "three"
 
-  [[ "${lines[0]}" =~ three ]]
-  [[ "${lines[1]}" =~ two   ]]
-  [[ "${lines[2]}" =~ one   ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
-# `notes ls -n <number>` ######################################################
-
-@test "\`ls -n 1\` exits with 0 and lists 1 file." {
+@test "\`ls 1\` exits with 0 and lists 1 file." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 1
+  run "$_NOTES" ls 1
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -103,13 +101,13 @@ HEREDOC
   [[ ! "${lines[2]}" =~ one   ]]
 }
 
-@test "\`ls -n 2\` exits with 0 and lists 2 files." {
+@test "\`ls 2\` exits with 0 and lists 2 files." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 2
+  run "$_NOTES" ls 2
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -121,13 +119,13 @@ HEREDOC
   [[ ! "${lines[2]}" =~ one   ]]
 }
 
-@test "\`ls -n 3\` exits with 0 and lists 3 files." {
+@test "\`ls 3\` exits with 0 and lists 3 files." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 3
+  run "$_NOTES" ls 3
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -137,4 +135,20 @@ HEREDOC
   [[ "${lines[0]}" =~ three ]]
   [[ "${lines[1]}" =~ two   ]]
   [[ "${lines[2]}" =~ one   ]]
+}
+
+@test "\`ls <[[:alpha:]]>\` exits with 1 and lists 0 files." {
+  {
+    _setup_ls
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" ls x
+  [[ $status -eq 1 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  _compare "${lines[0]}" "three"
+
+  [[ "${#lines[@]}" -eq 0 ]]
 }

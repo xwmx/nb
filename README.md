@@ -42,7 +42,7 @@ Usage:
   notes init [<remote-url>]
   notes list ([(-e | --excerpt) [<length>]] | [--noindex])
   notes log
-  notes ls [<excerpt length>]
+  notes ls [<number>] [<list options>]
   notes search <query> [--path]
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump]
@@ -203,10 +203,15 @@ Description:
 
 ```
 Usage:
-  notes ls [<excerpt length>]
+  notes ls [<number>] [<list options>]
 
 Description:
-  List with an excerpt. This is an alias for `notes list -e`.
+  List with magic. By default, this is an alias for
+
+    notes list --titles -n 15
+
+  When <number> is present, output is truncated to <number> lines. Any
+  additional options are passed through to `notes list`.
 ```
 
 #### `search`

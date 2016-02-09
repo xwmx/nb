@@ -983,7 +983,7 @@ Usage:
   $_ME init [<remote-url>]
   $_ME list [(-e | --excerpt) [<length>]] [--noindex]
   $_ME log
-  $_ME ls [<excerpt length>] [<list options>]
+  $_ME ls [<number>] [<list options>]
   $_ME search <query> [--path]
   $_ME show (<index> | <filename> | <path> | <title>)
   $_ME show <selection> ([--index] | [--path] | [---render]) [--dump]
@@ -1269,26 +1269,34 @@ _log() {
 
 desc "ls" <<HEREDOC
 Usage:
-  $_ME ls [<excerpt length>] [<list options>]
+  $_ME ls [<number>] [<list options>]
 
 Description:
-  List with magic. By default, this is an alias for \`$_ME list -e 1\`. when
-  \`<excerpt length>\` is '0', it calls \`$_ME list --titles\`.
+  List with magic. By default, this is an alias for
+
+    $_ME list --titles -n 15
+
+  When <number> is present, output is truncated to <number> lines. Any
+  additional options are passed through to \`$_ME list\`.
 HEREDOC
 _ls() {
   _debug printf "_ls() \$@: '%s'\n" "${@:-}"
 
   if [[ -n "${1:-}" ]] && [[ ! "${1}" =~ ^- ]]
   then
-    local _length="${1:-}"
+    local _number="${1}"
   fi
 
-  if [[ -n "${_length:-}"       ]]  &&
-     [[ "${_length}" =~ ^[1-9]  ]]
+  if [[ -n "${_number:-}" ]]
   then
-    _list --excerpt "${_length}" "${@:2}"
+    if [[ "${_number}" =~ ^[1-9] ]]
+    then
+      _list --titles -n "${_number}" "${@:2}"
+    else
+      return 1
+    fi
   else
-    _list --titles "${@}"
+    _list --titles -n "15" "${@}"
   fi
 }
 
