@@ -35,12 +35,12 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 
 ```
 Usage:
-  notes
+  notes [<number>] [<list options>]
   notes add [<note>]
   notes delete (<index> | <filename> | <path> | <title>)
   notes edit (<index> | <filename> | <path> | <title>)
   notes init [<remote-url>]
-  notes list ([(-e | --excerpt) [<length>]] | [--noindex])
+  notes list [(-e | --excerpt) [<length>]] [--noindex]
   notes log
   notes ls [<number>] [<list options>]
   notes search <query> [--path]
@@ -54,20 +54,21 @@ Help:
   notes help [<subcommand>]
 
 Subcommands:
-  add      Add a new note.
-  delete   Delete a note.
-  edit     Edit a note.
-  env      Print program environment variables.
-  help     Display this help information.
-  init     Initialize the local git repository.
-  list     List all notes.
-  log      Display git history.
-  ls       List with an excerpt. This is an alias for `notes list -e`.
-  search   Search notes.
-  show     Show a note.
-  status   Run `git status` in `$NOTES_DATA_DIR`.
-  sync     Sync notes with the remote repository.
-  version  Display version information.
+  (default)  List notes. This is an alias for `notes ls`.
+  add        Add a new note.
+  delete     Delete a note.
+  edit       Edit a note.
+  env        Print program environment variables.
+  help       Display this help information.
+  init       Initialize the local git repository.
+  list       List all notes.
+  log        Display git history.
+  ls         List with an excerpt. This is an alias for `notes list -e`.
+  search     Search notes.
+  show       Show a note.
+  status     Run `git status` in `$NOTES_DATA_DIR`.
+  sync       Sync notes with the remote repository.
+  version    Display version information.
 
 Program Options:
   -h --help              Display this help information.
