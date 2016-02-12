@@ -722,6 +722,7 @@ _ARGUMENTS=("$0")
 # All available subcommands.
 _SUBCOMMANDS=(
   add
+  count
   delete
   edit
   env
@@ -854,6 +855,19 @@ _add() {
   _git_checkpoint "[NOTES] Add: ${_basename}"
 }
 
+# count #######################################################################
+
+desc "count" <<HEREDOC
+Usage:
+  $_ME count
+
+Description:
+  Print the number of notes files in the current repository.
+HEREDOC
+_count() {
+  _list_notes_files | wc -l
+}
+
 # delete ######################################################################
 
 desc "delete" <<HEREDOC
@@ -978,6 +992,7 @@ _help() {
 Usage:
   $_ME [<number>] [<list options>]
   $_ME add [<note>]
+  $_ME count
   $_ME delete (<index> | <filename> | <path> | <title>)
   $_ME edit (<index> | <filename> | <path> | <title>)
   $_ME init [<remote-url>]
@@ -997,6 +1012,7 @@ Help:
 Subcommands:
   (default)  List notes. This is an alias for \`$_ME ls\`.
   add        Add a new note.
+  count      Print the number of notes.
   delete     Delete a note.
   edit       Edit a note.
   env        Print program environment variables.
@@ -1750,7 +1766,7 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if [[ "${_SUBCOMMAND}" =~ add|delete|edit|list|ls|repo|repos|show|search|use ]]
+      if [[ "${_SUBCOMMAND}" =~ add|count|delete|edit|list|ls|repo|repos|show|search|use ]]
       then
         if _git_index_is_dirty
         then

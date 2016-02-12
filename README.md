@@ -37,6 +37,7 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 Usage:
   notes [<number>] [<list options>]
   notes add [<note>]
+  notes count
   notes delete (<index> | <filename> | <path> | <title>)
   notes edit (<index> | <filename> | <path> | <title>)
   notes init [<remote-url>]
@@ -56,6 +57,7 @@ Help:
 Subcommands:
   (default)  List notes. This is an alias for `notes ls`.
   add        Add a new note.
+  count      Print the number of notes.
   delete     Delete a note.
   edit       Edit a note.
   env        Print program environment variables.
@@ -92,6 +94,16 @@ Examples:
   notes add
   notes add "Note content."
   echo "Note content." | notes add
+```
+
+#### `count`
+
+```
+Usage:
+  notes count
+
+Description:
+  Print the number of notes files in the current repository.
 ```
 
 #### `delete`
