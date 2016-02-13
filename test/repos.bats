@@ -30,6 +30,22 @@ one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
 
+@test "\`repos --names\` exits with 0 and lists repository names." {
+  {
+    _setup_repos
+  }
+
+  run "$_NOTES" repos --names
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  _expected="data
+one"
+  [[ "$output" == "$_expected" ]]
+}
+
 # help ########################################################################
 
 @test "\`help repos\` exits with status 0." {
@@ -42,5 +58,5 @@ one	(${_GIT_REMOTE_URL})"
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes repos" ]]
+  [[ "${lines[1]}" == "  notes repos [--names]" ]]
 }

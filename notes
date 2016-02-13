@@ -1375,7 +1375,7 @@ desc "repo" <<HEREDOC
 Usage:
   $_ME repo
   $_ME repo add <name> [<remote-url>]
-  $_ME repo list
+  $_ME repo list [--names]
   $_ME repo use <name>
 HEREDOC
 # TODO: Add description.
@@ -1410,34 +1410,45 @@ _repo() {
   # _repo_list()
   #
   # Usage:
-  #   _repo_list
+  #   _repo_list [--names]
   _repo_list() {
+    local _only_names=0
+    if [[ "${1:-}" == "--names" ]]
+    then
+      _only_names=1
+    fi
+
     local _files=($(ls -1 "${NOTES_DIR}"))
     for _item in "${_files[@]}"
     do
       if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
       then # it's a git repository.
-        local _current
-        _current="$(cat "${NOTES_DIR}/.current")"
-        local _formatted_name
-        local _origin_url
-
-        if [[ -n "${_current}" ]] &&
-           [[ "${_current}" == "${_item}" ]]
-        then # it's the current repository.
-          _formatted_name="$(_highlight "${_item}")"
-        else
-          _formatted_name="${_item}"
-        fi
-
-        cd "${NOTES_DIR}/${_item}" || _die printf "_repo() \`cd\` failed."
-        _origin_url="$(git config --get remote.origin.url || echo '')"
-
-        if [[ -n "${_origin_url}" ]]
+        if ((_only_names))
         then
-          printf "%s\n" "${_formatted_name}	(${_origin_url})"
+          printf "%s\n" "${_item}"
         else
-          printf "%s\n" "${_formatted_name}"
+          local _current
+          _current="$(cat "${NOTES_DIR}/.current")"
+          local _formatted_name
+          local _origin_url
+
+          if [[ -n "${_current}" ]] &&
+             [[ "${_current}" == "${_item}" ]]
+          then # it's the current repository.
+            _formatted_name="$(_highlight "${_item}")"
+          else
+            _formatted_name="${_item}"
+          fi
+
+          cd "${NOTES_DIR}/${_item}" || _die printf "_repo() \`cd\` failed."
+          _origin_url="$(git config --get remote.origin.url || echo '')"
+
+          if [[ -n "${_origin_url}" ]]
+          then
+            printf "%s\n" "${_formatted_name}	(${_origin_url})"
+          else
+            printf "%s\n" "${_formatted_name}"
+          fi
         fi
       fi
     done
@@ -1451,7 +1462,7 @@ _repo() {
       _repo_add "${_name:-}" "${3:-}"
       ;;
     list)
-      _repo_list
+      _repo_list "${2:-}"
       ;;
     use)
       if [[ -z "${_name}" ]]
@@ -1478,11 +1489,11 @@ _scope() { _repo "${@}"; }
 
 desc "repos" <<HEREDOC
 Usage:
-  $_ME repos
+  $_ME repos [--names]
 HEREDOC
 # TODO: Add description.
 _repos() {
-  _repo list
+  _repo list "${@}"
 }
 _scopes() { _repos "${@}"; }
 

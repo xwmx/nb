@@ -128,6 +128,23 @@ one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
 
+@test "\`repo list --names\` exits with 0 and lists repository names." {
+  {
+    _setup_repos
+  }
+
+  run "$_NOTES" repo list --names
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  _expected="data
+one"
+  [[ "$output" == "$_expected" ]]
+}
+
+
 # `notes repo use <name>` #####################################################
 
 @test "\`repo use\` exits with 1 and prints error message." {
