@@ -40,6 +40,21 @@ _setup_scope() {
 
   [[ "$output" =~ "two" ]]
 }
+
+@test "\`notes one:invalid\` exits with 0 and scoped \`ls\` output." {
+  {
+    _setup_scope &>/dev/null
+  }
+
+  run "$_NOTES" one:invalid
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "${lines[0]}" =~ "first" ]]
+}
+
 # `notes <name>:` #########################################################
 
 @test "\`notes one:\` exits with 0 and scoped \`ls\` output." {

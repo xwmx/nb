@@ -754,6 +754,27 @@ _SUBCOMMANDS=(
 # https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
 _SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
 
+_debug printf "\$_SUBCOMMANDS_PATTERN: %s\n" "${_SUBCOMMANDS_PATTERN}"
+
+# _is_valid_subcommand()
+#
+# Usage:
+#   _is_valid_subcommand <name>
+#
+# Returns:
+#   0  If the given <name> is a valid subcommand name.
+#   1  If not.
+_is_valid_subcommand() {
+  case "${1:-}" in
+    ${_SUBCOMMANDS_PATTERN})
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 # _require_argument()
 #
 # Usage:
@@ -780,9 +801,9 @@ _require_argument() {
 #   http://stackoverflow.com/a/7948533
 while [ $# -gt 0 ]
 do
-  opt="$1"
+  opt="${1}"
   shift
-  case "$opt" in
+  case "${opt}" in
     -h|--help)
       _PRINT_HELP=1
       ;;
@@ -793,28 +814,23 @@ do
       _PRINT_VERSION=1
       ;;
     *:*)
-      _parts=($(printf "%s\n" "${opt}" | tr ":" "\n"))
+      __parts=($(printf "%s\n" "${opt}" | tr ":" "\n"))
       if [[ -z "${_SCOPE:-}"       ]] &&
          [[ -z "${_SUBCOMMAND:-}"  ]] &&
-         [[ "${#_parts[@]}" -gt 0  ]]
+         [[ "${#__parts[@]}" -gt 0  ]]
       then
-        if [[ -d "${NOTES_DIR}/${_parts[0]}" ]]
+        if [[ -d "${NOTES_DIR}/${__parts[0]}" ]]
         then
-          _SCOPE="${_parts[0]}"
-          _SUBCOMMAND="${_parts[1]:-}"
+          _SCOPE="${__parts[0]}"
+          if _is_valid_subcommand "${__parts[1]:-}"
+          then
+            _SUBCOMMAND="${__parts[1]:-}"
+          fi
         else
-          _die printf "Repository not found: %s\n" "${_parts[0]}"
+          _die printf "Repository not found: %s\n" "${__parts[0]}"
         fi
       else
-        _ARGUMENTS+=("$opt")
-      fi
-      ;;
-    $_SUBCOMMANDS_PATTERN)
-      if [[ -z "${_SUBCOMMAND:-}" ]]
-      then
-        _SUBCOMMAND="$opt"
-      else
-        _ARGUMENTS+=("$opt")
+        _ARGUMENTS+=("${opt}")
       fi
       ;;
     --endopts)
@@ -822,14 +838,19 @@ do
       break
       ;;
     *)
-      _ARGUMENTS+=("$opt")
+      if [[ -z "${_SUBCOMMAND:-}" ]] && _is_valid_subcommand "${opt}"
+      then
+        _SUBCOMMAND="${opt}"
+      else
+        _ARGUMENTS+=("${opt}")
+      fi
       ;;
   esac
 done
 
 _debug printf "\$_SUBCOMMANDS[*]: '%s'\n" "${_SUBCOMMANDS[*]}"
 _debug printf "\$_SUBCOMMANDS_PATTERN: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
-_debug printf "\$_SUBCOMMAND: '%s'\n" "$_SUBCOMMAND"
+_debug printf "\$_SUBCOMMAND: '%s'\n" "${_SUBCOMMAND}"
 _debug printf "\$_SCOPE: '%s'\n" "${_SCOPE}"
 _debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
 
