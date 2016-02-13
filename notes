@@ -735,6 +735,8 @@ _SUBCOMMANDS=(
   ls
   repo
   repos
+  scope
+  scopes
   search
   show
   status
@@ -1470,6 +1472,7 @@ _repo() {
       ;;
   esac
 }
+_scope() { _repo "${@}"; }
 
 # repos #######################################################################
 
@@ -1481,6 +1484,7 @@ HEREDOC
 _repos() {
   _repo list
 }
+_scopes() { _repos "${@}"; }
 
 # search ######################################################################
 
@@ -1811,7 +1815,7 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if [[ "${_SUBCOMMAND}" =~ add|count|delete|edit|list|ls|repo|repos|show|search|use ]]
+      if [[ "${_SUBCOMMAND}" =~ add|count|delete|edit|list|ls|repo|repos|scope|scopes|show|search|use ]]
       then
         if _git_index_is_dirty
         then
