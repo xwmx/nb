@@ -1653,7 +1653,7 @@ HEREDOC
 #
 # Very much like getopts, expected short options should be appended to the
 # string here. Any option followed by a ':' takes a required argument.
-optstring=h
+optstring='h'
 
 # Normalize -------------------------------------------------------------------
 
@@ -1665,20 +1665,20 @@ unset options
 # while the number of arguments is greater than 0
 while (($#))
 do
-  case $1 in
+  case "${1}" in
     # if option is of type -ab
     -[!-]?*)
       # loop over each character starting with the second
       for ((i=1; i<${#1}; i++))
       do
         # extract 1 character from position 'i'
-        c=${1:i:1}
+        c="${1:i:1}"
         # add current char to options
-        options+=("-$c")
+        options+=("-${c}")
 
         # if option takes a required argument, and it's not the last char
         # make the rest of the string its argument
-        if [[ $optstring = *"$c:"* && ${1:i+1} ]]
+        if [[ "${optstring}" = *"${c}:"* && "${1:i+1}" ]]
         then
           options+=("${1:i+1}")
           break
@@ -1693,12 +1693,12 @@ do
     --)
       options+=(--endopts)
       shift
-      options+=("$@")
+      options+=("${@}")
       break
       ;;
     # otherwise, nothing special
     *)
-      options+=("$1")
+      options+=("${1}")
       ;;
   esac
 
@@ -1718,7 +1718,7 @@ _USE_DEBUG=0
 # Initialize additional expected option variables.
 _SUBCOMMAND=
 _SCOPE=
-_ARGUMENTS=("$0")
+_ARGUMENTS=("${0}")
 
 # $_SUBCOMMANDS
 #
@@ -1787,12 +1787,12 @@ _is_valid_subcommand() {
 # If <argument> is blank or another option, print an error message and  exit
 # with status 1.
 _require_argument() {
-  local option="$1"
-  local value="$2"
+  local _option="${1:-}"
+  local _value="${2:-}"
 
-  if [[ -z "$value" ]] || [[ "$value" =~ ^- ]]
+  if [[ -z "${_value}" ]] || [[ "${_value}" =~ ^- ]]
   then
-    _die printf "Option requires an argument: %s\n" "$option"
+    _die printf "Option requires an argument: %s\n" "${_option}"
   fi
 }
 
@@ -1804,11 +1804,11 @@ _require_argument() {
 #   http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
 #   http://stackoverflow.com/a/14203146
 #   http://stackoverflow.com/a/7948533
-while [[ "${#}" -gt 0 ]]
+while (($#))
 do
-  opt="${1}"
+  __opt="${1}"
   shift
-  case "${opt}" in
+  case "${__opt}" in
     -h|--help)
       _PRINT_HELP=1
       ;;
@@ -1819,7 +1819,7 @@ do
       _PRINT_VERSION=1
       ;;
     *:*)
-      __parts=($(printf "%s\n" "${opt}" | tr ":" "\n"))
+      __parts=($(printf "%s\n" "${__opt}" | tr ":" "\n"))
       if [[ -z "${_SCOPE:-}"       ]] &&
          [[ -z "${_SUBCOMMAND:-}"  ]] &&
          [[ "${#__parts[@]}" -gt 0  ]]
@@ -1835,7 +1835,7 @@ do
           _die printf "Notebook not found: %s\n" "${__parts[0]}"
         fi
       else
-        _ARGUMENTS+=("${opt}")
+        _ARGUMENTS+=("${__opt}")
       fi
       ;;
     --endopts)
@@ -1843,11 +1843,11 @@ do
       break
       ;;
     *)
-      if [[ -z "${_SUBCOMMAND:-}" ]] && _is_valid_subcommand "${opt}"
+      if [[ -z "${_SUBCOMMAND:-}" ]] && _is_valid_subcommand "${__opt}"
       then
-        _SUBCOMMAND="${opt}"
+        _SUBCOMMAND="${__opt}"
       else
-        _ARGUMENTS+=("${opt}")
+        _ARGUMENTS+=("${__opt}")
       fi
       ;;
   esac
