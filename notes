@@ -1883,7 +1883,7 @@ _debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
 _main() {
   if (("$_PRINT_HELP"))
   then
-    [[ -n "${_SUBCOMMAND:-}" ]] && _help "${_SUBCOMMAND:-}" || _help
+    _help "${_SUBCOMMAND:-}"
   elif (("$_PRINT_VERSION"))
   then
     _version
