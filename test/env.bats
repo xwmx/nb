@@ -24,7 +24,7 @@ load test_helper
 
 @test "\`env\` prints \`\$NOTES_DATA_DIR\` assigned to tmp/.notes/data." {
   run "$_NOTES" env
-  [[ "${lines[1]}" =~ $_TMP_DIR/.notes/data ]]
+  [[ "${lines[1]}" =~ $_TMP_DIR/.notes/home ]]
 }
 
 @test "\`env\` prints \`\$NOTES_AUTO_SYNC\`." {

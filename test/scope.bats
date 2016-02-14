@@ -7,7 +7,7 @@ _setup_scope() {
   "$_NOTES" notebook add one
   "$_NOTES" use one
   "$_NOTES" add "# first"
-  "$_NOTES" use data
+  "$_NOTES" use home
   "$_NOTES" notebook add two
 }
 

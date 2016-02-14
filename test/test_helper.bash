@@ -16,7 +16,7 @@ setup() {
   _TMP_DIR="$(mktemp -d /tmp/notes_test.XXXXXX)" || exit 1
 
   export NOTES_DIR="${_TMP_DIR}/.notes"
-  export NOTES_DATA_DIR="${NOTES_DIR}/data"
+  export NOTES_DATA_DIR="${NOTES_DIR}/home"
   export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
 
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"

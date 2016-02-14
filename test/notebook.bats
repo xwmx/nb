@@ -25,7 +25,7 @@ _setup_notebooks() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  [[ "$output" == "data" ]]
+  [[ "$output" == "home" ]]
 }
 
 @test "\`notebook current\` exits with 0 and prints the current notebook name." {
@@ -123,7 +123,7 @@ _setup_notebooks() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  _expected="$(tput setaf 3)data$(tput sgr0)
+  _expected="$(tput setaf 3)home$(tput sgr0)
 one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
@@ -139,7 +139,7 @@ one	(${_GIT_REMOTE_URL})"
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  _expected="data
+  _expected="home
 one"
   [[ "$output" == "$_expected" ]]
 }
@@ -159,14 +159,14 @@ one"
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
   [[ "${lines[1]}" == "  notes notebook" ]]
-  [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "$_NOTES" env
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/data'" "'${lines[1]}'"
+  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/home'" "'${lines[1]}'"
 
-  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
+  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/home" ]]
 }
 
 @test "\`notebook use <invalid>\` exits with 1 and prints error message." {
@@ -181,14 +181,14 @@ one"
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
   [[ "${lines[0]}" == "❌  Not found: not-a-notebook" ]]
-  [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "$_NOTES" env
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/data'" "'${lines[1]}'"
+  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/home'" "'${lines[1]}'"
 
-  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
+  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/home" ]]
 }
 
 @test "\`notebook use <name>\` exits with 0 and sets <name> in .current." {

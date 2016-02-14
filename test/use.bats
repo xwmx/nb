@@ -25,14 +25,14 @@ _setup_use() {
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
   [[ "${lines[1]}" == "  notes use <name>" ]]
-  [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "$_NOTES" env
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/data'" "'${lines[1]}'"
+  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/home'" "'${lines[1]}'"
 
-  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
+  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/home" ]]
 }
 
 @test "\`use <invalid>\` exits with 1 and prints error message." {
@@ -47,14 +47,14 @@ _setup_use() {
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
   [[ "${lines[0]}" == "❌  Not found: not-a-repo" ]]
-  [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "$_NOTES" env
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/data'" "'${lines[1]}'"
+  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/home'" "'${lines[1]}'"
 
-  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
+  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/home" ]]
 }
 
 @test "\`repo use <name>\` exits with 0 and sets <name> in .current." {

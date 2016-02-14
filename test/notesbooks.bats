@@ -25,7 +25,7 @@ _setup_notebooks() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  _expected="$(tput setaf 3)data$(tput sgr0)
+  _expected="$(tput setaf 3)home$(tput sgr0)
 one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
@@ -41,7 +41,7 @@ one	(${_GIT_REMOTE_URL})"
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  _expected="data
+  _expected="home
 one"
   [[ "$output" == "$_expected" ]]
 }

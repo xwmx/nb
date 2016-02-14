@@ -131,8 +131,8 @@ export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
 
 # `$NOTES_DATA_DIR`
 #
-# Default: `$NOTES_DIR/data`
-export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/data}"
+# Default: `$NOTES_DIR/home`
+export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/home}"
 _set_notes_data_dir() {
   if [[ -e "${NOTES_DIR}/.current" ]]
   then
@@ -906,7 +906,7 @@ HEREDOC
     mkdir -p "${NOTES_DATA_DIR}"
     cd "${NOTES_DATA_DIR}" && git init
   fi
-  printf "data\n" > "${NOTES_DIR}/.current"
+  printf "home\n" > "${NOTES_DIR}/.current"
 }
 
 # list ########################################################################
