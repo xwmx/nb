@@ -42,7 +42,7 @@ Usage:
   notes edit (<index> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--noindex]
+  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]]
   notes ls [<number>] [<list options>]
   notes search <query> [--path]
   notes show (<index> | <filename> | <path> | <title>)
@@ -190,7 +190,7 @@ Description:
 
 ```
 Usage:
-  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n [<limit>]]
+  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each

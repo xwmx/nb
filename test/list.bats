@@ -317,6 +317,45 @@ HEREDOC
   [[ "${lines[2]}" =~ one$        ]] && [[ "${lines[2]}" =~ 2 ]]
 }
 
+# `notes list <selection>` ####################################################
+
+@test "\`list <selection>\` exits with 0 and displays the selection." {
+  {
+    "$_NOTES" init
+    cat <<HEREDOC | "$_NOTES" add
+# one
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    cat <<HEREDOC | "$_NOTES" add
+# two
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    cat <<HEREDOC | "$_NOTES" add
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "$_NOTES" list 1
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 1 ]]
+  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[0]}" =~ ${_files[1]} ]]
+}
+
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
@@ -329,5 +368,5 @@ HEREDOC
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n [<limit>]]" ]]
+  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]" ]]
 }

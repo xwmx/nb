@@ -808,7 +808,7 @@ Usage:
   $_ME edit (<index> | <filename> | <path> | <title>)
   $_ME history [<selection>]
   $_ME init [<remote-url>]
-  $_ME list [(-e | --excerpt) [<length>]] [--noindex]
+  $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   $_ME ls [<number>] [<list options>]
   $_ME search <query> [--path]
   $_ME show (<index> | <filename> | <path> | <title>)
@@ -949,7 +949,7 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n [<limit>]]
+  $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
@@ -982,6 +982,7 @@ _list() {
   local _no_color=0
   local _list_titles=0
   local _limit
+  local _selection
 
   _debug printf "_list() \$@: '%s'\n" "${@:-}"
 
@@ -1028,6 +1029,7 @@ _list() {
         ;;
       *)
         _debug printf "_list() *: '%s'\n" "${_arg:-}"
+        _selection="${_arg:-}"
         ;;
     esac
     shift
@@ -1037,8 +1039,15 @@ _list() {
   _debug printf "_list() \$_excerpt_length: '%s'\n" "${_excerpt_length:-}"
 
   local _filenames
-  _filenames=($(_list_notes_files))
-  _filenames_count="${#_filenames[@]:-}"
+  if [[ -n "${_selection:-}" ]]
+  then
+    local _basename=
+    _basename="$(_get_selection_basename "${_selection}")"
+    _filenames=("${_basename}")
+  else
+    _filenames=($(_list_notes_files))
+  fi
+  local _filenames_count="${#_filenames[@]:-}"
 
   _debug printf "list() \${_filenames_count}: '%s'\n" "${_filenames_count[@]}"
 
