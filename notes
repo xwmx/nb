@@ -1284,8 +1284,13 @@ HEREDOC
 
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
-      local _spaces_length=0
-      _spaces_length=$(expr 5 - ${#_counter_item})
+      local _spaces_length=1
+
+      # Avoid error when `expr 5 - 5` returns `1`.
+      if [[ "${_counter}" -le 100 ]]
+      then
+        _spaces_length=$(expr 5 - ${#_counter_item})
+      fi
       printf -v _spaces '%*s' "${_spaces_length}"
 
       local _list_item="${_counter_item}${_spaces}${_list_item_id}"
