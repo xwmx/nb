@@ -40,7 +40,7 @@ Usage:
   notes count
   notes delete (<index> | <filename> | <path> | <title>)
   notes edit (<index> | <filename> | <path> | <title>)
-  notes history
+  notes history [<selection>]
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--noindex]
   notes ls [<number>] [<list options>]
@@ -62,7 +62,7 @@ Subcommands:
   edit       Edit a note.
   env        Print program environment variables.
   help       Display this help information.
-  history    Display git history.
+  history    Display git history for the current notebook or a note.
   init       Initialize the local git repository.
   list       List all notes.
   ls         List with an excerpt. This is an alias for `notes list -e`.
@@ -167,10 +167,11 @@ Description:
 
 ```
 Usage:
-  notes history
+  notes history [<selection>]
 
 Description:
-  Display git history using `tig` [1] (if available) or `git log`.
+  Display git history using `tig` [1] (if available) or `git log`. When a
+  <selection> is specified, the history for that note is displayed.
 
   1. https://github.com/jonas/tig
 ```
