@@ -835,7 +835,7 @@ Subcommands:
   search     Search notes.
   show       Show a note.
   status     Run \`git status\` in \`\$NOTES_DATA_DIR\`.
-  sync       Sync local notebook  with the remote repository.
+  sync       Sync local notebook with the remote repository.
   version    Display version information.
 
 Program Options:
