@@ -893,6 +893,13 @@ Description:
   Initialize the local data directory and generate a ~/.notesrc configruation
   file if it doesn't exist.
 HEREDOC
+# shellcheck disable=SC2120
+#
+# Shellcheck earning message: "foo references arguments, but none are ever
+# passed."
+#
+# `_init()` is primarily called in `_notes()` dynamically, and shellcheck only
+# knows about the an explicit call that doesn't pass arguments.
 _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
