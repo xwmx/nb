@@ -544,7 +544,7 @@ _print_line() {
 _spinner() {
   local _pid="${1:-}"
   local _delay=0.75
-  local _spin_string='|/-\'
+  local _spin_string="|/-\\"
 
   if [[ -z "${_pid}" ]]
   then
