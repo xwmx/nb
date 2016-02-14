@@ -435,7 +435,7 @@ _highlight() {
 # _highlight_syntax_if_available()
 #
 # Usage:
-#   _highlight_syntax_if_available
+#   _highlight_syntax_if_available [<path>]
 #
 # Description:
 #   If Pygments and pygments-markdown-lexer are available, use them to
@@ -449,9 +449,9 @@ _highlight_syntax_if_available() {
   if hash "pygmentize" 2>/dev/null &&
     pygmentize -l markdown &>/dev/null /dev/null
   then # pygments and the markdown lexer are installed.
-    pygmentize -l markdown
+    pygmentize -l markdown "${@}"
   else
-    cat
+    cat "${@}"
   fi
 }
 
@@ -1490,11 +1490,9 @@ _show() {
     else # default
       if ((_dump))
       then # `notes show --dump`
-        cat "${NOTES_DATA_DIR}/${_basename}" \
-          | _highlight_syntax_if_available
+        _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"
       else # `notes show`
-        cat "${NOTES_DATA_DIR}/${_basename}" \
-          | _highlight_syntax_if_available \
+        _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}" \
           | "$PAGER"
       fi
     fi
