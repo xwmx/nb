@@ -596,12 +596,12 @@ desc() {
   [[ -z $1 ]] && _die printf "desc: No command name specified.\n"
   if [[ -n ${2:-} ]]
   then
-    read -d '' "_${_ME}_desc_${1}" <<EOM
+    read -r -d '' "_${_ME}_desc_${1}" <<EOM
 $2
 EOM
     _debug printf "desc() set with argument: \$_%s_desc_%s\n" "${_ME}" "${1}"
   else
-    read -d '' "_${_ME}_desc_${1}"
+    read -r -d '' "_${_ME}_desc_${1}"
     _debug printf "desc() set with pipe: \$_%s_desc_%s\n" "${_ME}" "${1}"
   fi
   set -e
