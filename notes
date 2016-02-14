@@ -806,9 +806,9 @@ Usage:
   $_ME count
   $_ME delete (<index> | <filename> | <path> | <title>)
   $_ME edit (<index> | <filename> | <path> | <title>)
+  $_ME history
   $_ME init [<remote-url>]
   $_ME list [(-e | --excerpt) [<length>]] [--noindex]
-  $_ME log
   $_ME ls [<number>] [<list options>]
   $_ME search <query> [--path]
   $_ME show (<index> | <filename> | <path> | <title>)
@@ -828,9 +828,9 @@ Subcommands:
   edit       Edit a note.
   env        Print program environment variables.
   help       Display this help information.
+  history    Display git history.
   init       Initialize the first notebook.
   list       List all notes.
-  log        Display git history.
   ls         List with an excerpt. This is an alias for \`$_ME list -e\`.
   search     Search notes.
   show       Show a note.
@@ -844,6 +844,27 @@ Program Options:
 HEREDOC
   else
     _print_desc "${@}"
+  fi
+}
+
+# history #####################################################################
+
+desc "history" <<HEREDOC
+Usage:
+  $_ME history
+
+Description:
+  Display git history using \`tig\` [1] (if available) or \`git log\`.
+
+  1. https://github.com/jonas/tig
+HEREDOC
+_history() {
+  cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
+  if _command_exists "tig"
+  then # tig <https://github.com/jonas/tig> is present.
+    tig --all
+  else
+    git log
   fi
 }
 
@@ -1083,27 +1104,6 @@ HEREDOC
         printf "\n"
       fi
     done
-  fi
-}
-
-# log #########################################################################
-
-desc "log" <<HEREDOC
-Usage:
-  $_ME log
-
-Description:
-  Display git history using \`tig\` [1] (if available) or \`git log\`.
-
-  1. https://github.com/jonas/tig
-HEREDOC
-_log() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
-  if _command_exists "tig"
-  then # tig <https://github.com/jonas/tig> is present.
-    tig --all
-  else
-    git log
   fi
 }
 
@@ -1731,9 +1731,9 @@ _SUBCOMMANDS=(
   env
   git
   help
+  history
   init
   list
-  log
   ls
   nb
   nbs

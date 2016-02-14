@@ -40,9 +40,9 @@ Usage:
   notes count
   notes delete (<index> | <filename> | <path> | <title>)
   notes edit (<index> | <filename> | <path> | <title>)
+  notes history
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--noindex]
-  notes log
   notes ls [<number>] [<list options>]
   notes search <query> [--path]
   notes show (<index> | <filename> | <path> | <title>)
@@ -62,9 +62,9 @@ Subcommands:
   edit       Edit a note.
   env        Print program environment variables.
   help       Display this help information.
+  history    Display git history.
   init       Initialize the local git repository.
   list       List all notes.
-  log        Display git history.
   ls         List with an excerpt. This is an alias for `notes list -e`.
   search     Search notes.
   show       Show a note.
@@ -163,6 +163,18 @@ Description:
   print the help information for the subcommand.
 ```
 
+#### `history`
+
+```
+Usage:
+  notes history
+
+Description:
+  Display git history using `tig` [1] (if available) or `git log`.
+
+  1. https://github.com/jonas/tig
+```
+
 #### `init`
 
 ```
@@ -198,18 +210,6 @@ Examples:
   notes list
   notes list -e 10
   notes list --excerpt --noindex
-```
-
-#### `log`
-
-```
-Usage:
-  notes log
-
-Description:
-  Display git history using `tig` [1] (if available) or `git log`.
-
-  1. https://github.com/jonas/tig
 ```
 
 #### `ls`
