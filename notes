@@ -551,7 +551,7 @@ _spinner() {
     _die printf "Usage: _spinner <pid>\n"
   fi
 
-  while [[ "$(ps a | awk '{print $1}' | grep ${_pid})" ]]
+  while ps a | awk '{print $1}' | grep -q "${_pid}"
   do
     local _temp="${_spin_string#?}"
     printf " [%c]  " "${_spin_string}"
