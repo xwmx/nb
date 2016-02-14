@@ -65,31 +65,32 @@ HEREDOC
   [[ "${#lines[@]}" -eq 18 ]]
 }
 
-# `notes ls <number>` #########################################################
+# `notes ls -n <number>` ######################################################
 
-@test "\`ls 0\` exits with 1 and lists 0 files." {
+@test "\`ls -n 0\` exits with 0 and lists 0 files." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls 0
-  [[ $status -eq 1 ]]
+  run "$_NOTES" ls -n 0
+  [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
-  _compare "${lines[0]}" "three"
 
-  [[ "${#lines[@]}" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 1 ]]
+
+  [[ "${lines[0]}" == "3 omitted. 3 total." ]]
 }
 
-@test "\`ls 1\` exits with 0 and lists 1 file." {
+@test "\`ls -n 1\` exits with 0 and lists 1 file." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls 1
+  run "$_NOTES" ls -n 1
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -102,13 +103,13 @@ HEREDOC
   [[ "${lines[1]}" == "2 omitted. 3 total." ]]
 }
 
-@test "\`ls 2\` exits with 0 and lists 2 files." {
+@test "\`ls -n 2\` exits with 0 and lists 2 files." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls 2
+  run "$_NOTES" ls -n 2
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -122,13 +123,13 @@ HEREDOC
   [[ "${lines[2]}" == "1 omitted. 3 total." ]]
 }
 
-@test "\`ls 3\` exits with 0 and lists 3 files." {
+@test "\`ls -n 3\` exits with 0 and lists 3 files." {
   {
     _setup_ls
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls 3
+  run "$_NOTES" ls -n 3
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -140,20 +141,4 @@ HEREDOC
   [[ "${lines[0]}" =~ three ]]
   [[ "${lines[1]}" =~ two   ]]
   [[ "${lines[2]}" =~ one   ]]
-}
-
-@test "\`ls <[[:alpha:]]>\` exits with 1 and lists 0 files." {
-  {
-    _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
-  }
-
-  run "$_NOTES" ls x
-  [[ $status -eq 1 ]]
-
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  _compare "${lines[0]}" "three"
-
-  [[ "${#lines[@]}" -eq 0 ]]
 }

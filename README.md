@@ -43,7 +43,7 @@ Usage:
   notes history [<selection>]
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]]
-  notes ls [<number>] [<list options>]
+  notes ls [<list options>]
   notes search <query> [--path]
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump]
@@ -65,7 +65,7 @@ Subcommands:
   history    Display git history for the current notebook or a note.
   init       Initialize the local git repository.
   list       List all notes.
-  ls         List with an excerpt. This is an alias for `notes list -e`.
+  ls         Shortcut for `list --titles`.
   search     Search notes.
   show       Show a note.
   status     Run `git status` in `$NOTES_DATA_DIR`.
@@ -217,15 +217,10 @@ Examples:
 
 ```
 Usage:
-  notes ls [<number>] [<list options>]
+  notes ls [<list options>]
 
 Description:
-  List with magic. By default, this is an alias for
-
-    notes list --titles -n 15
-
-  When <number> is present, output is truncated to <number> lines. Any
-  additional options are passed through to `notes list`.
+  Shortcut for `list --titles`. Any options are passed through to `list`.
 ```
 
 #### `search`
