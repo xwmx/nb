@@ -2,7 +2,7 @@
 
 load test_helper
 
-_setup_repos() {
+_setup_notebooks() {
   "$_NOTES" init
   mkdir -p "${NOTES_DIR}/one"
   cd "${NOTES_DIR}/one"
@@ -12,14 +12,14 @@ _setup_repos() {
   cd "${NOTES_DIR}"
 }
 
-# `notes repos` ###########################################################
+# `notes notebooks` ###########################################################
 
-@test "\`repos\` exits with 0 and lists repositories." {
+@test "\`notebooks\` exits with 0 and lists notebooks." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repos
+  run "$_NOTES" notebooks
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -30,12 +30,12 @@ one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
 
-@test "\`repos --names\` exits with 0 and lists repository names." {
+@test "\`notebooks --names\` exits with 0 and lists notebook names." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repos --names
+  run "$_NOTES" notebooks --names
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -48,15 +48,15 @@ one"
 
 # help ########################################################################
 
-@test "\`help repos\` exits with status 0." {
-  run "$_NOTES" help repos
+@test "\`help notebooks\` exits with status 0." {
+  run "$_NOTES" help notebooks
   [[ $status -eq 0 ]]
 }
 
-@test "\`help repos\` prints help information." {
-  run "$_NOTES" help repos
+@test "\`help notebooks\` prints help information." {
+  run "$_NOTES" help notebooks
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes repos [--names]" ]]
+  [[ "${lines[1]}" == "  notes notebooks [--names]" ]]
 }

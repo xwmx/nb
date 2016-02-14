@@ -733,10 +733,10 @@ _SUBCOMMANDS=(
   list
   log
   ls
-  repo
-  repos
-  scope
-  scopes
+  nb
+  nbs
+  notebook
+  notebooks
   search
   show
   status
@@ -829,7 +829,7 @@ do
             _SUBCOMMAND="${__parts[1]:-}"
           fi
         else
-          _die printf "Repository not found: %s\n" "${__parts[0]}"
+          _die printf "Notebook not found: %s\n" "${__parts[0]}"
         fi
       else
         _ARGUMENTS+=("${opt}")
@@ -904,7 +904,7 @@ Usage:
   $_ME count
 
 Description:
-  Print the number of notes files in the current repository.
+  Print the number of notes files in the current notebook.
 HEREDOC
 _count() {
   _list_notes_files | wc -l
@@ -1059,14 +1059,14 @@ Subcommands:
   edit       Edit a note.
   env        Print program environment variables.
   help       Display this help information.
-  init       Initialize the local git repository.
+  init       Initialize the first notebook.
   list       List all notes.
   log        Display git history.
   ls         List with an excerpt. This is an alias for \`$_ME list -e\`.
   search     Search notes.
   show       Show a note.
   status     Run \`git status\` in \`\$NOTES_DATA_DIR\`.
-  sync       Sync notes with the remote repository.
+  sync       Sync local notebook  with the remote repository.
   version    Display version information.
 
 Program Options:
@@ -1124,7 +1124,7 @@ _init() {
 #
 # Default: "$HOME/.notes"
 #
-# The location of the notes directory that contains the data repository.
+# The location of the notes directory that contains the notebooks.
 # export NOTES_DIR="$HOME/.notes"
 HEREDOC
   fi
@@ -1369,26 +1369,26 @@ _ls() {
   fi
 }
 
-# repo ########################################################################
+# notebook ####################################################################
 
-desc "repo" <<HEREDOC
+desc "notebook" <<HEREDOC
 Usage:
-  $_ME repo
-  $_ME repo add <name> [<remote-url>]
-  $_ME repo list [--names]
-  $_ME repo use <name>
+  $_ME notebook
+  $_ME notebook add <name> [<remote-url>]
+  $_ME notebook list [--names]
+  $_ME notebook use <name>
 HEREDOC
 # TODO: Add description.
-_repo() {
-  # _repo_add()
+_notebook() {
+  # _notebook_add()
   #
   # Usage:
-  #   _repo_add <name> [<remote_url>]
-  _repo_add() {
+  #   _notebook_add <name> [<remote_url>]
+  _notebook_add() {
     local _name="${1:-}"
     if [[ -z "${_name}" ]]
     then
-      _die "${_ME}" help repo
+      _die "${_ME}" help notebook
     fi
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
@@ -1407,11 +1407,11 @@ _repo() {
     fi
     printf "Added: %s\n" "${_name}"
   }
-  # _repo_list()
+  # _notebook_list()
   #
   # Usage:
-  #   _repo_list [--names]
-  _repo_list() {
+  #   _notebook_list [--names]
+  _notebook_list() {
     local _only_names=0
     if [[ "${1:-}" == "--names" ]]
     then
@@ -1440,7 +1440,8 @@ _repo() {
             _formatted_name="${_item}"
           fi
 
-          cd "${NOTES_DIR}/${_item}" || _die printf "_repo() \`cd\` failed."
+          cd "${NOTES_DIR}/${_item}" || \
+            _die printf "_notebook() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
 
           if [[ -n "${_origin_url}" ]]
@@ -1459,15 +1460,15 @@ _repo() {
 
   case "${_subcommand}" in
     add)
-      _repo_add "${_name:-}" "${3:-}"
+      _notebook_add "${_name:-}" "${3:-}"
       ;;
     list)
-      _repo_list "${2:-}"
+      _notebook_list "${2:-}"
       ;;
     use)
       if [[ -z "${_name}" ]]
       then
-        _die "${_ME}" help repo
+        _die "${_ME}" help notebook
       fi
 
       if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
@@ -1483,19 +1484,19 @@ _repo() {
       ;;
   esac
 }
-_scope() { _repo "${@}"; }
+_nb() { _notebook "${@}"; }
 
-# repos #######################################################################
+# notebooks ###################################################################
 
-desc "repos" <<HEREDOC
+desc "notebooks" <<HEREDOC
 Usage:
-  $_ME repos [--names]
+  $_ME notebooks [--names]
 HEREDOC
 # TODO: Add description.
-_repos() {
-  _repo list "${@}"
+_notebooks() {
+  _notebook list "${@}"
 }
-_scopes() { _repos "${@}"; }
+_nbs() { _notebooks "${@}"; }
 
 # search ######################################################################
 
@@ -1739,7 +1740,7 @@ Usage:
   $_ME sync
 
 Description:
-  Sync local notes with the remote repository.
+  Sync local notebook with the remote repository.
 HEREDOC
 _sync() {
   printf "Syncing..."
@@ -1761,7 +1762,7 @@ _use() {
   then
     _die "${_ME}" help use
   fi
-  _repo use "${_name}"
+  _notebook use "${_name}"
 }
 
 # version ####################################################################
@@ -1826,7 +1827,7 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if [[ "${_SUBCOMMAND}" =~ add|count|delete|edit|list|ls|repo|repos|scope|scopes|show|search|use ]]
+      if [[ "${_SUBCOMMAND}" =~ add|count|delete|edit|list|ls|nb|nbs|notebook|notebooks|show|search|use ]]
       then
         if _git_index_is_dirty
         then

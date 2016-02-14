@@ -2,7 +2,7 @@
 
 load test_helper
 
-_setup_repos() {
+_setup_notebooks() {
   "$_NOTES" init
   mkdir -p "${NOTES_DIR}/one"
   cd "${NOTES_DIR}/one"
@@ -12,14 +12,14 @@ _setup_repos() {
   cd "${NOTES_DIR}"
 }
 
-# `notes repo` ################################################################
+# `notes notebook` ############################################################
 
-@test "\`repo\` exits with 0 and lists current default repository." {
+@test "\`notebook\` exits with 0 and prints the current notebook name." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo
+  run "$_NOTES" notebook
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -28,13 +28,13 @@ _setup_repos() {
   [[ "$output" == "data" ]]
 }
 
-@test "\`repo current\` exits with 0 and lists current repository." {
+@test "\`notebook current\` exits with 0 and prints the current notebook name." {
   {
-    _setup_repos
+    _setup_notebooks
     printf "%s\n" "one" > "${NOTES_DIR}/.current"
   }
 
-  run "$_NOTES" repo
+  run "$_NOTES" notebook
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -43,29 +43,29 @@ _setup_repos() {
   [[ "$output" == "one" ]]
 }
 
-# `notes repo add <name>` #####################################################
+# `notes notebook add <name>` #################################################
 
-@test "\`repo add\` exits with 1 and prints error message." {
+@test "\`notebook add\` exits with 1 and prints error message." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo add
+  run "$_NOTES" notebook add
   [[ $status -eq 1 ]]
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
 
-  [[ "${lines[1]}" == "  notes repo" ]]
+  [[ "${lines[1]}" == "  notes notebook" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
 }
 
-@test "\`repo add <existing>\` exits with 1 and prints error message." {
+@test "\`notebook add <existing>\` exits with 1 and prints error message." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo add one
+  run "$_NOTES" notebook add one
   [[ $status -eq 1 ]]
 
   printf "\$status: %s\n" "$status"
@@ -75,12 +75,12 @@ _setup_repos() {
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
 }
 
-@test "\`repo add <name>\` exits with 0 and adds a respository." {
+@test "\`notebook add <name>\` exits with 0 and adds a notebook." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo add example
+  run "$_NOTES" notebook add example
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -90,13 +90,13 @@ _setup_repos() {
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
 }
 
-@test "\`repo add <name> <remote-url>\` exits with 0 and adds a respository." {
+@test "\`notebook add <name> <remote-url>\` exits with 0 and adds a notebook." {
   {
-    _setup_repos
+    _setup_notebooks
     _setup_remote_repo
   }
 
-  run "$_NOTES" repo add example "$_GIT_REMOTE_URL"
+  run "$_NOTES" notebook add example "$_GIT_REMOTE_URL"
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   printf "\$_GIT_REMOTE_URL: '%s'\n" "$_GIT_REMOTE_URL"
@@ -110,14 +110,14 @@ _setup_repos() {
   [[ "$_origin" =~  "$_GIT_REMOTE_URL" ]]
 }
 
-# `notes repo list` ###########################################################
+# `notes notebook list` #######################################################
 
-@test "\`repo list\` exits with 0 and lists repositories." {
+@test "\`notebook list\` exits with 0 and prints all notebook names." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo list
+  run "$_NOTES" notebook list
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -128,12 +128,12 @@ one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
 
-@test "\`repo list --names\` exits with 0 and lists repository names." {
+@test "\`notebook list --names\` exits with 0 and prints all notebook names." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo list --names
+  run "$_NOTES" notebook list --names
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -145,20 +145,20 @@ one"
 }
 
 
-# `notes repo use <name>` #####################################################
+# `notes notebook use <name>` #################################################
 
-@test "\`repo use\` exits with 1 and prints error message." {
+@test "\`notebook use\` exits with 1 and prints error message." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo use
+  run "$_NOTES" notebook use
   [[ $status -eq 1 ]]
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[1]}" == "  notes repo" ]]
+  [[ "${lines[1]}" == "  notes notebook" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
 
   run "$_NOTES" env
@@ -169,18 +169,18 @@ one"
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
 }
 
-@test "\`repo use <invalid>\` exits with 1 and prints error message." {
+@test "\`notebook use <invalid>\` exits with 1 and prints error message." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo use not-a-repo
+  run "$_NOTES" notebook use not-a-notebook
   [[ $status -eq 1 ]]
 
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[0]}" == "❌  Not found: not-a-repo" ]]
+  [[ "${lines[0]}" == "❌  Not found: not-a-notebook" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "data" ]]
 
   run "$_NOTES" env
@@ -191,12 +191,12 @@ one"
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/data" ]]
 }
 
-@test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
+@test "\`notebook use <name>\` exits with 0 and sets <name> in .current." {
   {
-    _setup_repos
+    _setup_notebooks
   }
 
-  run "$_NOTES" repo use one
+  run "$_NOTES" notebook use one
   [[ $status -eq 0 ]]
 
   printf "\$status: %s\n" "$status"
@@ -217,14 +217,14 @@ one"
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
-  run "$_NOTES" help repo
+  run "$_NOTES" help notebook
   [[ $status -eq 0 ]]
 }
 
 @test "\`help list\` prints help information." {
-  run "$_NOTES" help repo
+  run "$_NOTES" help notebook
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes repo" ]]
+  [[ "${lines[1]}" == "  notes notebook" ]]
 }
