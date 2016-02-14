@@ -402,7 +402,7 @@ _git_should_autosync() {
   fi
   _current_timestamp="$(date +%s)"
 
-  _diff="$(expr ${_current_timestamp} - ${_last_fetch_timestamp})"
+  _diff=$((_current_timestamp-_last_fetch_timestamp))
   _debug printf \
     "_git_should_sync() \$_last_fetch_timestamp: %s\n" \
     "${_last_fetch_timestamp}"
@@ -1072,7 +1072,7 @@ HEREDOC
         _debug printf "list() \${#_counter}: '%s'\n" "${#_counter}"
 
         local _difference
-        _difference="$(expr ${_filenames_count} - ${_counter})"
+        _difference=$((_filenames_count-_counter))
         printf "%s omitted. %s total.\n" "${_difference}" "${_filenames_count}"
         break
       fi
@@ -1106,10 +1106,10 @@ HEREDOC
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
       local _spaces_length=1
-      # Avoid error when `expr 5 - 5` returns `1`.
+      # Avoid error when `$((5-5))` returns `1`.
       if [[ "${_counter}" -le 100 ]]
       then
-        _spaces_length=$(expr 5 - ${#_counter_item})
+        _spaces_length=$((5-${#_counter_item}))
       fi
       printf -v _spaces '%*s' "${_spaces_length}"
 
