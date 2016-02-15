@@ -112,3 +112,19 @@ _setup_scope() {
 
   [[ "${lines[0]}" =~ "Notebook not found: invalid" ]]
 }
+
+# `notes show <notebook>:<identifier>` ########################################
+
+@test "\`notes show one:first --dump\` exits with 0 and prints scoped file content." {
+  {
+    _setup_scope &>/dev/null
+  }
+
+  run "$_NOTES" show one:first --dump
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" =~ "first" ]]
+}

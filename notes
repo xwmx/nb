@@ -223,40 +223,107 @@ _get_index() {
 _get_selection_basename() {
   local _basename=
   local _selection="${1:-}"
+  local _identifier=
   if [[ -z "${_selection}" ]]
   then  # <selection> is blank.
     _basename=
-  elif [[ -e "${_selection}" ]] && [[ "${_selection}" =~ $NOTES_DATA_DIR ]]
-  then # <selection> is a full path.
-    _basename="$(basename "${_selection}")"
-  elif [[ -e "${NOTES_DATA_DIR}/${_selection}" ]]
-  then # <selection> is a filename.
-    _basename="${_selection}"
-  elif [[ "${_selection}" =~ ^[0-9]+$ ]]
-  then # <selection> is an id.
-    local _filenames=($(_list_notes_files))
-    _debug printf \
-      "_get_selection_basename() \$_filenames[*]: '%s'\n" \
-      "${_filenames[*]:-}"
-    _basename="${_filenames[${_selection}]:-}"
-  else # <selection> might be a title.
-    local _title
-    local _filenames
+  else
 
-    _filenames=($(_list_notes_files))
-    for _file in "${_filenames[@]:-}"
-    do
-      _title="$(_get_title "${_file}")"
+    NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+    _identifier="$(_get_selection_identifier "${_selection}")"
 
-      if [[ -n "${_title}" ]] &&
-         [[ "${_title}" == "${_selection}" ]]
-      then
-        _basename="${_file}"
-        break
-      fi
-    done
+    if [[ -e "${_identifier}" ]] && [[ "${_identifier}" =~ $NOTES_DATA_DIR ]]
+    then # <selection> is a full path.
+      _basename="$(basename "${_identifier}")"
+    elif [[ -e "${NOTES_DATA_DIR}/${_identifier}" ]]
+    then # <selection> is a filename.
+      _basename="${_identifier}"
+    elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
+    then # <selection> is an id.
+      local _filenames=($(_list_notes_files))
+      _debug printf \
+        "_get_selection_basename() \$_filenames[*]: '%s'\n" \
+        "${_filenames[*]:-}"
+      _basename="${_filenames[${_identifier}]:-}"
+    else # <selection> might be a title.
+      local _title
+      local _filenames
+
+      _filenames=($(_list_notes_files))
+      for _file in "${_filenames[@]:-}"
+      do
+        _title="$(_get_title "${_file}")"
+
+        if [[ -n "${_title}" ]] &&
+           [[ "${_title}" == "${_identifier}" ]]
+        then
+          _basename="${_file}"
+          break
+        fi
+      done
+    fi
   fi
+
   printf "%s\n" "${_basename}"
+}
+
+# _get_selection_data_dir()
+#
+# Usage:
+#   _get_selection_data_dir <selection>
+#
+# Description:
+#   Given <selection>, print the notebook portion, if present.
+_get_selection_data_dir() {
+  local _parts=()
+  _parts=($(_get_selection_parts "${1:-}"))
+  if [[ "${#_parts[@]}" -gt 1 ]]
+  then
+    printf "%s\n" "${NOTES_DIR}/${_parts[0]}"
+  else
+    printf "%s\n" "${NOTES_DATA_DIR}"
+  fi
+}
+
+# _get_selection_identifier()
+#
+# Usage:
+#   _get_selection_identifier <selection>
+#
+# Description:
+#   Given <selection>, print the identifier portion.
+_get_selection_identifier() {
+  local _parts=()
+  _parts=($(_get_selection_parts "${1:-}"))
+  if [[ "${#_parts[@]}" -gt 1 ]]
+  then
+    printf "%s\n" "${_parts[1]:-}"
+  else
+    printf "%s\n" "${_parts[0]:-}"
+  fi
+}
+
+# _get_selection_parts()
+#
+# Usage:
+#   _get_selection_parts <selection>
+#
+# Description:
+#   Given <selection>, split on first colon.
+_get_selection_parts() {
+  local _identifier
+  local _data_dir
+
+  _data_dir=$(printf "%s\n" "${1:-}" | cut -f 1 -d ":")
+
+  if [[ "${1:-}" =~ ':'       ]] &&
+     [[ -e "${NOTES_DIR}/${_data_dir}/.git" ]]
+  then
+    _identifier=$(printf "%s\n" "${1:-}" | cut -f 2- -d ":")
+    printf "%s\n%s\n" "${_data_dir}" "${_identifier}"
+  else
+    printf "%s\n" "${1:-}"
+  fi
 }
 
 # _get_title()
@@ -698,6 +765,7 @@ _delete() {
   _debug printf "_delete() \$_selection: '%s'\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
     $_ME help "delete"
@@ -734,6 +802,7 @@ _edit() {
   _debug printf "_edit() \$_selection: %s\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
     $_ME help "edit"
@@ -873,6 +942,7 @@ _history() {
 
   local _basename=
   _basename="$(_get_selection_basename "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
   _debug printf "_history() \$_basename: '%s'\n" "${_basename}"
 
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
@@ -1042,6 +1112,7 @@ _list() {
   if [[ -n "${_selection:-}" ]]
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
+    NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
   fi
 
   local _filenames
@@ -1450,6 +1521,7 @@ _show() {
   _debug printf "_show() \$_selection: '%s'\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
     $_ME help "show"
