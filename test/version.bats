@@ -10,7 +10,8 @@ load test_helper
 @test "\`notes version\` prints a version number." {
   run "$_NOTES" --version
   printf "'%s'" "$output"
-  echo "$output" | grep -q '\d\+\.\d\+\.\d\+'
+  echo "$output" \
+    | grep -q '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+'
 }
 
 @test "\`notes --version\` returns with 0 status." {
@@ -21,5 +22,6 @@ load test_helper
 @test "\`notes --version\` prints a version number." {
   run "$_NOTES" --version
   printf "'%s'" "$output"
-  echo "$output" | grep -q '\d\+\.\d\+\.\d\+'
+  echo "$output" \
+    | grep -q '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+'
 }
