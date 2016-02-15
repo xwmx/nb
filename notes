@@ -1394,7 +1394,7 @@ _search() {
     return 1
   else
     local _files=
-    _files=($($_ME list --noindex))
+    _files=($(_list --noindex))
 
     if _command_exists "ack"
     then # ack is available.
