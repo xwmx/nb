@@ -229,7 +229,7 @@ _get_selection_basename() {
     _basename=
   else
 
-    NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+    NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
     _identifier="$(_get_selection_identifier "${_selection}")"
 
     if [[ -e "${_identifier}" ]] && [[ "${_identifier}" =~ $NOTES_DATA_DIR ]]
@@ -267,14 +267,14 @@ _get_selection_basename() {
   printf "%s\n" "${_basename}"
 }
 
-# _get_selection_data_dir()
+# _get_selection_notebook()
 #
 # Usage:
-#   _get_selection_data_dir <selection>
+#   _get_selection_notebook <selection>
 #
 # Description:
 #   Given <selection>, print the notebook portion, if present.
-_get_selection_data_dir() {
+_get_selection_notebook() {
   local _parts=()
   _parts=($(_get_selection_parts "${1:-}"))
   if [[ "${#_parts[@]}" -gt 1 ]]
@@ -765,7 +765,7 @@ _delete() {
   _debug printf "_delete() \$_selection: '%s'\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
-  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
     $_ME help "delete"
@@ -802,7 +802,7 @@ _edit() {
   _debug printf "_edit() \$_selection: %s\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
-  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
     $_ME help "edit"
@@ -942,7 +942,7 @@ _history() {
 
   local _basename=
   _basename="$(_get_selection_basename "${_selection}")"
-  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   _debug printf "_history() \$_basename: '%s'\n" "${_basename}"
 
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
@@ -1112,7 +1112,7 @@ _list() {
   if [[ -n "${_selection:-}" ]]
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
-    NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+    NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   fi
 
   local _filenames
@@ -1521,7 +1521,7 @@ _show() {
   _debug printf "_show() \$_selection: '%s'\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
-  NOTES_DATA_DIR="$(_get_selection_data_dir "${_selection}")"
+  NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
     $_ME help "show"
