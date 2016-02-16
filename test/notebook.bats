@@ -128,6 +128,36 @@ one	(${_GIT_REMOTE_URL})"
   [[ "$output" == "$_expected" ]]
 }
 
+@test "\`notebook list <name>\` exits with 0 and prints the given notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "$_NOTES" notebook list one
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  _expected="one	(${_GIT_REMOTE_URL})"
+  [[ "$output" == "$_expected" ]]
+}
+
+@test "\`notebook list <name> --names\` exits with 0 and prints the given notebook name." {
+  {
+    _setup_notebooks
+  }
+
+  run "$_NOTES" notebook list home --names
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  _expected="home"
+  [[ "$output" == "$_expected" ]]
+}
+
 @test "\`notebook list --names\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks

@@ -1230,7 +1230,7 @@ desc "notebook" <<HEREDOC
 Usage:
   $_ME notebook
   $_ME notebook add <name> [<remote-url>]
-  $_ME notebook list [--names]
+  $_ME notebook list [<name>] [--names]
   $_ME notebook rename <old-name> <new-name>
   $_ME notebook use <name>
 HEREDOC
@@ -1266,15 +1266,34 @@ _notebook() {
   # _notebook_list()
   #
   # Usage:
-  #   _notebook_list [--names]
+  #   _notebook_list [<name>] [--names]
   _notebook_list() {
+    local _files=()
     local _only_names=0
-    if [[ "${1:-}" == "--names" ]]
+
+    _debug printf "_notebook_list() \$@: '%s'\n" "${@:-}"
+    _debug printf "_notebook_list() \${@:1}: '%s'\n" "${@:1}"
+
+    for _arg in "${@:1}"
+    do
+      case "${_arg}" in
+        --names)
+          _only_names=1
+          ;;
+        *)
+          _files+=("${_arg}")
+          ;;
+      esac
+    done
+
+    if [[ -z "${_files[*]:-}" ]]
     then
-      _only_names=1
+      _files=($(ls -1 "${NOTES_DIR}"))
     fi
 
-    local _files=($(ls -1 "${NOTES_DIR}"))
+    _debug printf "_notebook_list() \$_only_names: '%s'\n" "${_only_names:-}"
+    _debug printf "_notebook_list() \${_files[*]}: '%s'\n" "${_files[*]:-}"
+
     for _item in "${_files[@]}"
     do
       if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
@@ -1347,7 +1366,7 @@ _notebook() {
       _notebook_add "${_name:-}" "${3:-}"
       ;;
     list)
-      _notebook_list "${2:-}"
+      _notebook_list "${@:2}"
       ;;
     rename)
       _notebook_rename "${_name:-}" "${3:-}"
