@@ -42,8 +42,13 @@ Usage:
   notes edit (<index> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]]
+  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   notes ls [<list options>]
+  notes notebook
+  notes notebook add <name> [<remote-url>]
+  notes notebook list [<name>] [--names]
+  notes notebook rename <old-name> <new-name>
+  notes notebook use <name>
   notes search <query> [--path]
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump]
@@ -63,13 +68,14 @@ Subcommands:
   env        Print program environment variables.
   help       Display this help information.
   history    Display git history for the current notebook or a note.
-  init       Initialize the local git repository.
+  init       Initialize the first notebook.
   list       List all notes.
   ls         Shortcut for `list --titles`.
+  notebook   Manage notebooks.
   search     Search notes.
   show       Show a note.
   status     Run `git status` in `$NOTES_DATA_DIR`.
-  sync       Sync notes with the remote repository.
+  sync       Sync local notebook with the remote repository.
   version    Display version information.
 
 Program Options:

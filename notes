@@ -879,6 +879,11 @@ Usage:
   $_ME init [<remote-url>]
   $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   $_ME ls [<list options>]
+  $_ME notebook
+  $_ME notebook add <name> [<remote-url>]
+  $_ME notebook list [<name>] [--names]
+  $_ME notebook rename <old-name> <new-name>
+  $_ME notebook use <name>
   $_ME search <query> [--path]
   $_ME show (<index> | <filename> | <path> | <title>)
   $_ME show <selection> ([--index] | [--path] | [---render]) [--dump]
@@ -901,6 +906,7 @@ Subcommands:
   init       Initialize the first notebook.
   list       List all notes.
   ls         Shortcut for \`list --titles\`.
+  notebook   Manage notebooks.
   search     Search notes.
   show       Show a note.
   status     Run \`git status\` in \`\$NOTES_DATA_DIR\`.
