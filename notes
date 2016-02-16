@@ -1231,6 +1231,7 @@ Usage:
   $_ME notebook
   $_ME notebook add <name> [<remote-url>]
   $_ME notebook list [--names]
+  $_ME notebook rename <old-name> <new-name>
   $_ME notebook use <name>
 HEREDOC
 # TODO: Add description.
@@ -1309,6 +1310,34 @@ _notebook() {
       fi
     done
   }
+  # _notebook_rename()
+  #
+  # Usage:
+  #   _notebook_rename <old> <new>
+  _notebook_rename() {
+    local _old="${1:-}"
+    local _new="${2:-}"
+
+    if [[ -z "${_old}" ]] || [[ -z "${_old}" ]]
+    then
+      _die "${_ME}" help notebook
+    elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
+    then
+      _die printf "'${_old}' is not a valid notebook name.\n"
+    elif [[ -e "${NOTES_DIR}/${_new}" ]]
+    then
+      _die printf "A notebook named '${_new}' already exists.\n"
+    fi
+
+    mv "${NOTES_DIR}/${_old}" "${NOTES_DIR}/${_new}"
+
+    if [[ "$(cat "${NOTES_DIR}/.current")" == "${_old}" ]]
+    then
+      printf "%s\n" "${_new}" > "${NOTES_DIR}/.current"
+    fi
+
+    printf "'%s' is now named '%s'\n" "${_old}" "${_new}"
+  }
 
   local _subcommand="${1:-}"
   local _name="${2:-}"
@@ -1319,6 +1348,9 @@ _notebook() {
       ;;
     list)
       _notebook_list "${2:-}"
+      ;;
+    rename)
+      _notebook_rename "${_name:-}" "${3:-}"
       ;;
     use)
       if [[ -z "${_name}" ]]

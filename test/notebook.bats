@@ -144,6 +144,80 @@ one"
   [[ "$output" == "$_expected" ]]
 }
 
+# `notes notebook rename` #####################################################
+
+@test "\`notebook rename <valid-old> <valid-new>\` exits with 0 and renames notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "$_NOTES" notebook rename "one" "new-name"
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" == "'one' is now named 'new-name'" ]]
+  [[ -e "${NOTES_DIR}/new-name/.git" ]]
+  [[ ! -e "${NOTES_DIR}/one" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+}
+
+@test "\`notebook rename home <valid-new>\` exits with 0,  renames notebook, and updates .current." {
+  {
+    _setup_notebooks
+  }
+
+  run "$_NOTES" notebook rename "home" "new-name"
+  [[ $status -eq 0 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" =~ "'home' is now named 'new-name'" ]]
+  [[ -e "${NOTES_DIR}/new-name/.git" ]]
+  [[ ! -e "${NOTES_DIR}/home" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "new-name" ]]
+}
+
+@test "\`notebook rename <invalid-old> <valid-new>\` exits with 1 and does not rename notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "$_NOTES" notebook rename "invalid" "new-name"
+  [[ $status -eq 1 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" =~ "'invalid' is not a valid notebook name." ]]
+  [[ ! -e "${NOTES_DIR}/new-name/.git" ]]
+  [[ -e "${NOTES_DIR}/one/.git" ]]
+  [[ -e "${NOTES_DIR}/two" ]]
+  [[ ! -e "${NOTES_DIR}/two/.git" ]]
+  [[ -e "${NOTES_DIR}/home/.git" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+}
+
+@test "\`notebook rename <valid-old> <invalid-new>\` exits with 1 and does not rename notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "$_NOTES" notebook rename "one" "two"
+  [[ $status -eq 1 ]]
+
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+
+  [[ "$output" =~ "A notebook named 'two' already exists." ]]
+  [[ -e "${NOTES_DIR}/one/.git" ]]
+  [[ -e "${NOTES_DIR}/two" ]]
+  [[ ! -e "${NOTES_DIR}/two/.git" ]]
+  [[ -e "${NOTES_DIR}/home/.git" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+}
 
 # `notes notebook use <name>` #################################################
 
