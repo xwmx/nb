@@ -1396,7 +1396,8 @@ _notebook() {
       ;;
   esac
 }
-_nb() { _notebook "${@}"; }
+_nb()   { _notebook "${@}"; }
+_book() { _notebook "${@}"; }
 
 # notebooks ###################################################################
 
@@ -1408,7 +1409,8 @@ HEREDOC
 _notebooks() {
   _notebook list "${@}"
 }
-_nbs() { _notebooks "${@}"; }
+_nbs()    { _notebooks "${@}"; }
+_books()  { _notebooks "${@}"; }
 
 # search ######################################################################
 
@@ -1748,7 +1750,7 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if [[ "${_SUBCOMMAND}" =~ add|count|delete|edit|list|ls|nb|nbs|notebook|notebooks|show|search|use ]]
+      if [[ "${_SUBCOMMAND}" =~ add|book|books|count|delete|edit|list|ls|nb|nbs|notebook|notebooks|show|search|use ]]
       then
         if _git_index_is_dirty
         then
@@ -1873,6 +1875,8 @@ _ARGUMENTS=("${0}")
 # All available subcommands.
 _SUBCOMMANDS=(
   add
+  book
+  books
   count
   delete
   edit
