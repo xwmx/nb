@@ -46,10 +46,39 @@ load test_helper
 
 # `notes show --dump` #########################################################
 
+@test "\`show --dump\` with argument exits with 0 and prints note with highlighting." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add "# Example"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show 0 --dump
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+  [[ ! "${lines[0]}" =~ "# Example" ]]
+  [[ "${lines[0]}" =~ "Example" ]]
+}
+
+@test "\`show --dump --raw\` with argument exits with 0 and prints note without highlighting." {
+  {
+    run "$_NOTES" init
+    run "$_NOTES" add "# Example"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "$_NOTES" show 0 --dump --raw
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  [[ $status -eq 0 ]]
+  [[ "${lines[0]}" =~ "# Example" ]]
+}
+
 @test "\`show --dump\` with no argument exits with status 1." {
   {
     run "$_NOTES" init
-    run "$_NOTES" add
+    run "$_NOTES" add "# Example"
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
@@ -62,7 +91,7 @@ load test_helper
 @test "\`show --dump\` with no argument does not dump the note file." {
   {
     run "$_NOTES" init
-    run "$_NOTES" add
+    run "$_NOTES" add "# Example"
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -76,7 +105,7 @@ load test_helper
 @test "\`show --dump\` with no argument prints help information." {
   {
     run "$_NOTES" init
-    run "$_NOTES" add
+    run "$_NOTES" add "# Example"
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 

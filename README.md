@@ -51,7 +51,7 @@ Usage:
   notes notebook use <name>
   notes search <query> [--path]
   notes show (<index> | <filename> | <path> | <title>)
-  notes show <selection> ([--index] | [--path] | [---render]) [--dump]
+  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
   notes sync
   notes -h | --help | help [<subcommand>]
   notes --version | version
@@ -249,12 +249,13 @@ Description:
 ```
 Usage:
   notes show (<index> | <filename> | <path> | <title>)
-  notes show <selection> ([--index] | [--path] | [---render]) [--dump]
+  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
 
 Options:
   --dump    Print to standard output.
   --index   Print the index number of the note file.
   --path    Print the full path of the note file.
+  --raw     When used with `--dump`, the note is printed without highlighting.
   --render  Use `pandoc` [1] to render the file to HTML and display with
             `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
             available, `--render` is ignored.
