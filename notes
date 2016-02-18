@@ -1750,7 +1750,28 @@ $NOTES_DATA_DIR doesn't exist. Use \`$_ME init\` to get started.
 Usage: $_ME init [<remote url>]
 HEREDOC
       fi
-      if [[ "${_SUBCOMMAND}" =~ add|book|books|count|delete|edit|list|ls|nb|nbs|notebook|notebooks|show|search|use ]]
+
+      local _core_subcommands=(
+        add
+        book
+        books
+        count
+        delete
+        edit
+        list
+        ls
+        nb
+        nbs
+        notebook
+        notebooks
+        show
+        search
+        use
+      )
+      local _core_subcommand_pattern
+      _core_subcommand_pattern="@($(_join '|' "${_core_subcommands[@]}"))"
+
+      if [[ "${_SUBCOMMAND}" =~ ${_core_subcommand_pattern} ]]
       then
         if _git_index_is_dirty
         then
