@@ -49,7 +49,7 @@ Usage:
   notes notebook list [<name>] [--names]
   notes notebook rename <old-name> <new-name>
   notes notebook use <name>
-  notes search <query> [--path]
+  notes search <query> [--all] [--path]
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
   notes sync
@@ -233,9 +233,10 @@ Description:
 
 ```
 Usage:
-  notes search <query> [--path]
+  notes search <query> [--all] [--path]
 
 Options:
+  --all   Search all notebooks.
   --path  Print the full path for each file with query matches.
 
 Description:
