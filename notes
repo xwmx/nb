@@ -930,7 +930,7 @@ Usage:
   $_ME notebook list [<name>] [--names]
   $_ME notebook rename <old-name> <new-name>
   $_ME notebook use <name>
-  $_ME search <query> [--all] [--path]
+  $_ME search <query> [-a | --all] [--path]
   $_ME show (<index> | <filename> | <path> | <title>)
   $_ME show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
   $_ME sync
@@ -1469,11 +1469,11 @@ _books()  { _notebooks "${@}"; }
 
 desc "search" <<HEREDOC
 Usage:
-  $_ME search <query> [--all] [--path]
+  $_ME search <query> [-a | --all] [--path]
 
 Options:
-  --all   Search all notebooks.
-  --path  Print the full path for each file with query matches.
+  -a --all  Search all notebooks.
+  --path    Print the full path for each file with query matches.
 
 Description:
   Search notes using \`ack\` [1] (if available) or \`grep\`.
@@ -1490,7 +1490,7 @@ _search() {
   for _arg in "${_arguments[@]:-}"
   do
     case "${_arg}" in
-      --all)
+      -a|--all)
         _all=1
         ;;
       --path)

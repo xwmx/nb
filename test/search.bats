@@ -34,7 +34,7 @@ HEREDOC
 
   [[ $status -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes search <query> [--all] [--path]" ]]
+  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--path]" ]]
 }
 
 # `search <no match>` #########################################################
@@ -158,6 +158,30 @@ _search_all_setup() {
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
+@test "\`search <query> -a\` exits with status 0 and prints output." {
+  {
+    _search_all_setup &>/dev/null
+  }
+
+  run "$_NOTES" search 'sweetish' -a
+  printf "\$status: %s\n" "$status"
+  printf "\$output: '%s'\n" "$output"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ $status -eq 0 ]]
+  [[ "${lines[0]}" =~ home:1 ]]
+  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[2]}" =~ sweetish ]]
+  [[ "${lines[3]}" =~ home:0 ]]
+  [[ "${lines[3]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[4]}" =~ -*-$ ]]
+  [[ "${lines[5]}" =~ sweetish ]]
+  [[ "${lines[6]}" =~ one:0 ]]
+  [[ "${lines[6]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${#lines[@]}" -eq 9 ]]
+}
+
 @test "\`search <no matching query> --all\` exits with status 1 and not output." {
   {
     _search_all_setup  &>/dev/null
@@ -215,5 +239,5 @@ _search_all_setup() {
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes search <query> [--all] [--path]" ]]
+  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--path]" ]]
 }
