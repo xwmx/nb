@@ -154,6 +154,14 @@ _set_notes_data_dir
 # `$_ME sync`.
 export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-0}"
 
+
+# `$NOTES_DEFAULT_TYPE`
+#
+# Default: 'md'
+#
+# Permitted Values: 'md' 'org'
+export NOTES_DEFAULT_TYPE="${NOTES_DEFAULT_TYPE:-md}"
+
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -715,7 +723,7 @@ HEREDOC
 _add() {
   # Assign filename with unicode timestamp.
   local _basename
-  _basename="$(date -u "+%Y%m%d%H%M%S").md"
+  _basename="$(date -u "+%Y%m%d%H%M%S").${NOTES_DEFAULT_TYPE}"
   local _filename
   _filename="${NOTES_DATA_DIR}/${_basename}"
 
