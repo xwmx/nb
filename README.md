@@ -36,7 +36,7 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 ```
 Usage:
   notes [<number>] [<list options>]
-  notes add [<note>]
+  notes add [<note>] [--type <type>]
   notes count
   notes delete (<index> | <filename> | <path> | <title>)
   notes edit (<index> | <filename> | <path> | <title>)
@@ -89,12 +89,15 @@ Program Options:
 
 ```
 Usage:
-  notes add [<note>]
+  notes add [<note>] [--type <type>]
+
+Options:
+  --type  The file extension for the note file type [default: 'md'].
 
 Description:
-  Create a new Markdown-formatted note. Any arguments passed to `add` are
-  written to the note file. When no arguments are passed, a new note file is
-  opened with `$EDITOR`.
+  Create a new note. Any arguments passed to `add` are written to the note
+  file. When no arguments are passed, a new note file is opened with
+  `$EDITOR`, currently set to 'vim'.
 
 Examples:
   notes add

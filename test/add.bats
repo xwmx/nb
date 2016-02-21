@@ -60,6 +60,28 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
+@test "\`add --type org\` with argument creates a new .org note file." {
+  run "$_NOTES" init
+  run "$_NOTES" add  "* Content" --type org
+
+  [[ $status -eq 0 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '* Content' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "${_files[0]}" =~ org$ ]]
+}
+
+@test "\`add --type ''\` with argument exits with 1." {
+  run "$_NOTES" init
+  run "$_NOTES" add  "* Content" --type
+
+  [[ $status -eq 1 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 0 ]]
+}
+
 # piped #######################################################################
 
 @test "\`add\` with piped content exits with status 0." {
@@ -89,6 +111,28 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
+@test "\`add --type org\` with piped content creates a new .org note file." {
+  run "$_NOTES" init
+  run bash -c 'echo "# Piped" | "$_NOTES" add --type org'
+
+  [[ $status -eq 0 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "${_files[0]}" =~ org$ ]]
+}
+
+@test "\`add --type ''\` with piped content exits with 1." {
+  run "$_NOTES" init
+  run bash -c 'echo "# Piped" | "$_NOTES" add --type'
+
+  [[ $status -eq 1 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 0 ]]
+}
+
 # help ########################################################################
 
 @test "\`help add\` exits with status 0." {
@@ -101,5 +145,5 @@ load test_helper
   printf "\$status: %s\n" "$status"
   printf "\$output: '%s'\n" "$output"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes add [<note>]" ]]
+  [[ "${lines[1]}" == "  notes add [<note>] [--type <type>]" ]]
 }

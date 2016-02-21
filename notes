@@ -708,12 +708,15 @@ _print_desc() {
 
 desc "add" <<HEREDOC
 Usage:
-  $_ME add [<note>]
+  $_ME add [<note>] [--type <type>]
+
+Options:
+  --type  The file extension for the note file type [default: 'md'].
 
 Description:
-  Create a new Markdown-formatted note. Any arguments passed to \`add\` are
-  written to the note file. When no arguments are passed, a new note file is
-  opened with \`\$EDITOR\`, currently set to '$EDITOR'.
+  Create a new note. Any arguments passed to \`add\` are written to the note
+  file. When no arguments are passed, a new note file is opened with
+  \`\$EDITOR\`, currently set to '$EDITOR'.
 
 Examples:
   notes add
@@ -721,19 +724,55 @@ Examples:
   echo "Note content." | notes add
 HEREDOC
 _add() {
+  local _file_type="${NOTES_DEFAULT_TYPE}"
+  local _arguments=()
+
+  # Parse function options.
+  while (($#))
+  do
+    # __option_value_is_present()
+    #
+    # Usage:
+    #   __option_value_is_present "${variable}"
+    #
+    # Returns:
+    #   0  The argument is blank or matches as an option flag.
+    #   1  The argument is present and does not match an option flag.
+    __option_value_is_present() {
+      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+    }
+    local _arg="${1:-}"
+    local _val="${2:-}"
+    case "$_arg" in
+      -t|--type)
+        if __option_value_is_present "${_val:-}"
+        then
+          _file_type="${_val:-}"
+          shift
+        else
+          _die "${_ME}" help add
+        fi
+        ;;
+      *)
+        _arguments+=("${_arg:-}")
+        ;;
+    esac
+    shift
+  done
+
   # Assign filename with unicode timestamp.
   local _basename
-  _basename="$(date -u "+%Y%m%d%H%M%S").${NOTES_DEFAULT_TYPE}"
+  _basename="$(date -u "+%Y%m%d%H%M%S").${_file_type}"
   local _filename
   _filename="${NOTES_DATA_DIR}/${_basename}"
 
   if _interactive_input
   then # terminal input.
-    if [[ -z "${*}" ]]
+    if [[ -z "${_arguments[*]:-}" ]]
     then # argument array is blank.
       eval "${EDITOR}" "${_filename}"
     else
-      printf "%s\n" "${*}" >> "${_filename}"
+      printf "%s\n" "${_arguments[*]:-}" >> "${_filename}"
     fi
   else # piped input.
     cat >> "${_filename}"
@@ -879,7 +918,7 @@ _help() {
 
 Usage:
   $_ME [<number>] [<list options>]
-  $_ME add [<note>]
+  $_ME add [<note>] [--type <type>]
   $_ME count
   $_ME delete (<index> | <filename> | <path> | <title>)
   $_ME edit (<index> | <filename> | <path> | <title>)
