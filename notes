@@ -933,7 +933,7 @@ Usage:
   $_ME search <query> [-a | --all] [--path]
   $_ME show (<index> | <filename> | <path> | <title>)
   $_ME show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
-  $_ME sync
+  $_ME sync [-a|--all]
   $_ME -h | --help | help [<subcommand>]
   $_ME --version | version
 
@@ -1766,15 +1766,37 @@ _status() {
 
 desc "sync" <<HEREDOC
 Usage:
-  $_ME sync
+  $_ME sync [-a|--all]
+
+Options:
+  -a --all  Sync all notebooks.
 
 Description:
-  Sync local notebook with the remote repository.
+  Sync the current local notebook with the remote repository.
 HEREDOC
 _sync() {
-  printf "Syncing..."
-  (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner) &&
-    printf "Done!\n---------------\n" ||
+  local _notebooks
+
+  _debug printf "_sync() \$*: '%s'\n" "${*}"
+
+  if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
+  then
+    _debug printf "_sync() -a|--all\n"
+    _notebooks=($($_ME notebooks --names))
+  else
+    _notebooks=($(_notebook))
+  fi
+
+  _debug printf "_sync() \${_notebooks[*]}: '%s'\n" "${_notebooks[*]:-}"
+
+  printf "Syncing: "
+  for __notebook in "${_notebooks[@]:-}"
+  do
+    printf "%s..." "${__notebook}"
+    NOTES_DATA_DIR="${NOTES_DIR}/${__notebook}"
+    (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner)
+  done &&
+    printf "Done!\n" ||
     printf "Syncing failed!\n"
 }
 
@@ -1832,7 +1854,7 @@ _notes() {
   fi
 
   case "$_SUBCOMMAND" in
-    init)
+    init|sync)
       _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;

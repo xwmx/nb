@@ -52,7 +52,7 @@ Usage:
   notes search <query> [-a | --all] [--path]
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
-  notes sync
+  notes sync [-a|--all]
   notes -h | --help | help [<subcommand>]
   notes --version | version
 
@@ -292,10 +292,13 @@ Description:
 
 ```
 Usage:
-  notes sync
+  $_ME sync [-a|--all]
+
+Options:
+  -a --all  Sync all notebooks.
 
 Description:
-  Sync local notes with the remote repository.
+  Sync the current local notebook with the remote repository.
 ```
 
 #### `version`
