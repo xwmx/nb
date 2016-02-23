@@ -32,9 +32,9 @@ load test_helper
   [[ "${lines[2]}" =~ NOTES_AUTO_SYNC ]]
 }
 
-@test "\`env\` prints \`\$NOTES_AUTO_SYNC\` with a value of 0." {
+@test "\`env\` prints \`\$NOTES_AUTO_SYNC\` with a value of 1." {
   run "$_NOTES" env
-  [[ "${lines[2]}" =~ 0$ ]]
+  [[ "${lines[2]}" =~ 1$ ]]
 }
 
 @test "\`env\` prints \`\$NOTESRC_PATH\`." {
