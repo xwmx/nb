@@ -148,11 +148,11 @@ _set_notes_data_dir
 
 # `$NOTES_AUTO_SYNC`
 #
-# Default: 0
+# Default: 1
 #
 # When set to '1', each `_git_checkpoint()` call will automativally run
-# `$_ME sync`.
-export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-0}"
+# `$_ME sync`. To disable this behavior, set the value to '0'.
+export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-1}"
 
 # `$NOTES_DEFAULT_EXTENSION`
 #
@@ -1041,10 +1041,13 @@ _init() {
 
 # $NOTES_AUTO_SYNC
 #
-# Default: 0
+# Default: 1
 #
-# When set to '1', operations that trigger a git commit like \`add\`, \`edit\`,
-# and \`delete\` will also sync to the remote git repository.
+# By default, operations that trigger a git commit like `add`, `edit`,
+# and `delete` will also sync notebook changes to the remote repository, if
+# one is set.
+#
+# To disable this behavior, uncomment the following line.
 # export NOTES_AUTO_SYNC=0
 
 # $NOTES_DIR

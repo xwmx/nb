@@ -314,14 +314,20 @@ Description:
 
 #### `$NOTES_AUTO_SYNC`
 
-Default: `0`
+$NOTES_AUTO_SYNC
 
-When set to '1', operations that trigger a git commit like `add`, `edit`, and `delete` will automatically sync changes to the remote git repository in the background.
+Default: 1
+
+By default, operations that trigger a git commit like `add`, `edit`,
+and `delete` will also sync notebook changes to the remote repository, if
+one is set.
+
+To disable this behavior, set the value to '0'.
 
 Example:
 
 ```bash
-export NOTES_AUTO_SYNC=1
+export NOTES_AUTO_SYNC=0
 ```
 
 #### `$NOTES_DIR`
