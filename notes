@@ -27,7 +27,7 @@ _VERSION="0.0.0-alpha"
 # $_ME
 #
 # Set to the program's basename.
-_ME=$(basename "$0")
+_ME=$(basename "${0}")
 
 # extglob
 #
@@ -74,7 +74,7 @@ _debug() {
     __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
     # Prefix debug message with "bug (U+1F41B)"
     printf "🐛  %s " "${__DEBUG_COUNTER}"
-    "$@"
+    "${@}"
     printf "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\n"
   fi
 }
@@ -87,7 +87,7 @@ _debug() {
 #
 # This is a shortcut for the _debug() function that simply echos the message.
 debug() {
-  _debug echo "$@"
+  _debug echo "${@}"
 }
 
 ###############################################################################
@@ -105,7 +105,7 @@ debug() {
 _die() {
   # Prefix die message with "cross mark (U+274C)", often displayed as a red x.
   printf "❌  "
-  "$@" 1>&2
+  "${@}" 1>&2
   exit 1
 }
 # die()
@@ -117,7 +117,7 @@ _die() {
 #
 # This is a shortcut for the _die() function that simply echos the message.
 die() {
-  _die echo "$@"
+  _die echo "${@}"
 }
 
 ###############################################################################
@@ -176,7 +176,7 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 # For information on why `hash` is used here, see:
 # http://stackoverflow.com/a/677212
 _command_exists() {
-  hash "$1" 2>/dev/null
+  hash "${1}" 2>/dev/null
 }
 
 # _get_index()
@@ -206,8 +206,8 @@ _get_index() {
 
   for _i in "${!_files[@]}"
   do
-    # _debug printf "_get_index() \${_files[$_i]} : '%s'\n" "${_files[$_i]}"
-    if [[ "${_files[$_i]}" == "${_filename}" ]]
+    # _debug printf "_get_index() \${_files[${_i}]} : '%s'\n" "${_files[${_i}]}"
+    if [[ "${_files[${_i}]}" == "${_filename}" ]]
     then
       printf "%s\n" "${_i}"
       return 0
@@ -239,7 +239,8 @@ _get_selection_basename() {
     NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
     _identifier="$(_get_selection_identifier "${_selection}")"
 
-    if [[ -e "${_identifier}" ]] && [[ "${_identifier}" =~ $NOTES_DATA_DIR ]]
+    if [[ -e "${_identifier}" ]] &&
+       [[ "${_identifier}" =~ ${NOTES_DATA_DIR} ]]
     then # <selection> is a full path.
       _basename="$(basename "${_identifier}")"
     elif [[ -e "${NOTES_DATA_DIR}/${_identifier}" ]]
@@ -249,7 +250,7 @@ _get_selection_basename() {
     then # <selection> is an id.
       local _filenames=($(_list_notes_files))
       _debug printf \
-        "_get_selection_basename() \$_filenames[*]: '%s'\n" \
+        "_get_selection_basename() \${_filenames[*]:-}: '%s'\n" \
         "${_filenames[*]:-}"
       _basename="${_filenames[${_identifier}]:-}"
     else # <selection> might be a title.
@@ -405,7 +406,7 @@ _git_checkpoint() {
 
   if ((_show_spinner))
   then
-    _spinner $!
+    _spinner ${!}
   fi
 }
 
@@ -478,16 +479,16 @@ _git_should_autosync() {
 
   _diff=$((_current_timestamp-_last_fetch_timestamp))
   _debug printf \
-    "_git_should_sync() \$_last_fetch_timestamp: %s\n" \
+    "_git_should_sync() \${_last_fetch_timestamp}: %s\n" \
     "${_last_fetch_timestamp}"
   _debug printf \
-    "_git_should_sync() \$_current_timestamp: %s\n" \
+    "_git_should_sync() \${_current_timestamp}: %s\n" \
     "${_current_timestamp}"
   _debug printf \
-    "_git_should_sync() \$_diff: %s\n" \
+    "_git_should_sync() \${_diff}: %s\n" \
     "${_diff}"
 
-  [[ "$_diff" -gt 300 ]]
+  [[ "${_diff}" -gt 300 ]]
 }
 
 # _highlight()
@@ -554,9 +555,9 @@ _interactive_input() {
 # More Information:
 #   http://stackoverflow.com/a/17841619
 _join() {
-  local IFS="$1"
+  local IFS="${1}"
   shift
-  printf "%s\n" "$*"
+  printf "%s\n" "${*}"
 }
 
 # _list_notes_files()
@@ -667,16 +668,16 @@ _spinner() {
 # escaping backslashes, which is more common.
 desc() {
   set +e
-  [[ -z $1 ]] && _die printf "desc: No command name specified.\n"
-  if [[ -n ${2:-} ]]
+  [[ -z "${1}" ]] && _die printf "desc: No command name specified.\n"
+  if [[ -n "${2:-}" ]]
   then
     read -r -d '' "_${_ME}_desc_${1}" <<EOM
-$2
+${2}
 EOM
-    _debug printf "desc() set with argument: \$_%s_desc_%s\n" "${_ME}" "${1}"
+    _debug printf "desc() set with argument: \${_%s_desc_%s}\n" "${_ME}" "${1}"
   else
     read -r -d '' "_${_ME}_desc_${1}"
-    _debug printf "desc() set with pipe: \$_%s_desc_%s\n" "${_ME}" "${1}"
+    _debug printf "desc() set with pipe: \${_%s_desc_%s}\n" "${_ME}" "${1}"
   fi
   set -e
 }
@@ -691,7 +692,7 @@ EOM
 _print_desc() {
   local _method_name="${1:-}"
   local var="_${_ME}_desc_${_method_name}"
-  if [[ -n ${!var:-} ]]
+  if [[ -n "${!var:-}" ]]
   then
     printf "%s\n" "${!var}"
   else
@@ -707,7 +708,7 @@ _print_desc() {
 
 desc "add" <<HEREDOC
 Usage:
-  $_ME add [<note>] [--type <type>]
+  ${_ME} add [<note>] [--type <type>]
 
 Options:
   --type  The file extension for the note file type [default: 'md'].
@@ -715,7 +716,7 @@ Options:
 Description:
   Create a new note. Any arguments passed to \`add\` are written to the note
   file. When no arguments are passed, a new note file is opened with
-  \`\$EDITOR\`, currently set to '$EDITOR'.
+  \`\$EDITOR\`, currently set to '${EDITOR}'.
 
 Examples:
   notes add
@@ -727,7 +728,7 @@ _add() {
   local _arguments=()
 
   # Parse function options.
-  while (($#))
+  while ((${#}))
   do
     # __option_value_is_present()
     #
@@ -742,7 +743,7 @@ _add() {
     }
     local _arg="${1:-}"
     local _val="${2:-}"
-    case "$_arg" in
+    case "${_arg}" in
       -t|--type)
         if __option_value_is_present "${_val:-}"
         then
@@ -783,7 +784,7 @@ _add() {
 
 desc "count" <<HEREDOC
 Usage:
-  $_ME count
+  ${_ME} count
 
 Description:
   Print the number of notes files in the current notebook.
@@ -796,10 +797,10 @@ _count() {
 
 desc "delete" <<HEREDOC
 Usage:
-  $_ME delete <index>
-  $_ME delete <filename>
-  $_ME delete <path>
-  $_ME delete <title>
+  ${_ME} delete <index>
+  ${_ME} delete <filename>
+  ${_ME} delete <path>
+  ${_ME} delete <title>
 
 Description:
   Delete a note.
@@ -808,18 +809,18 @@ _delete() {
   local _selection="${1:-}"
   local _basename=
 
-  _debug printf "_delete() \$_selection: '%s'\n" "${_selection}"
+  _debug printf "_delete() \${_selection}: '%s'\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
-    $_ME help "delete"
+    ${_ME} help "delete"
     return 1
   fi
-  _debug printf "_delete() \$_basename: '%s'\n" "${_basename}"
+  _debug printf "_delete() \${_basename}: '%s'\n" "${_basename}"
 
-  if [[ -n "$_basename" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
     cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
     git rm "${_basename}"
@@ -833,32 +834,32 @@ _delete() {
 
 desc "edit" <<HEREDOC
 Usage:
-  $_ME edit <index>
-  $_ME edit <filename>
-  $_ME edit <path>
-  $_ME edit <title>
+  ${_ME} edit <index>
+  ${_ME} edit <filename>
+  ${_ME} edit <path>
+  ${_ME} edit <title>
 
 Description:
-  Open the specified note in \`\$EDITOR\`, currently set to '$EDITOR'.
+  Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'.
 HEREDOC
 _edit() {
   local _selection="${1:-}"
   local _basename=
 
-  _debug printf "_edit() \$_selection: %s\n" "${_selection}"
+  _debug printf "_edit() \${_selection}: %s\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
   if [[ -z "${_basename}" ]]
   then
-    $_ME help "edit"
+    ${_ME} help "edit"
     return 1
   fi
-  _debug printf "_edit() \$_basename: '%s'\n" "${_basename}"
+  _debug printf "_edit() \${_basename}: '%s'\n" "${_basename}"
 
-  if [[ -n "$_basename" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
-    eval "$EDITOR" "${NOTES_DATA_DIR}/${_basename}"
+    eval "${EDITOR}" "${NOTES_DATA_DIR}/${_basename}"
     _git_checkpoint "[NOTES] Edit: ${_basename}"
   else
     _die printf "Selection not found.\n"
@@ -869,7 +870,7 @@ _edit() {
 
 desc "env" <<HEREDOC
 Usage:
-  $_ME env
+  ${_ME} env
 
 Description:
   Print program environment variables.
@@ -885,7 +886,7 @@ _env() {
 
 desc "git" <<HEREDOC
 Usage:
-  $_ME git <arguments>
+  ${_ME} git <arguments>
 
 Description:
   Alias for \`git\`, with commands run in \`\$NOTES_DATA_DIR\`.
@@ -899,7 +900,7 @@ _git() {
 
 desc "help" <<HEREDOC
 Usage:
-  $_ME help [<subcommand>]
+  ${_ME} help [<subcommand>]
 
 Description:
   Print the program help information. When a subcommand name is passed, the
@@ -916,32 +917,32 @@ _help() {
 |_| |_|\___/ \__\___||___/
 
 Usage:
-  $_ME [<number>] [<list options>]
-  $_ME add [<note>] [--type <type>]
-  $_ME count
-  $_ME delete (<index> | <filename> | <path> | <title>)
-  $_ME edit (<index> | <filename> | <path> | <title>)
-  $_ME history [<selection>]
-  $_ME init [<remote-url>]
-  $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
-  $_ME ls [<list options>]
-  $_ME notebook
-  $_ME notebook add <name> [<remote-url>]
-  $_ME notebook list [<name>] [--names]
-  $_ME notebook rename <old-name> <new-name>
-  $_ME notebook use <name>
-  $_ME search <query> [-a | --all] [--path]
-  $_ME show (<index> | <filename> | <path> | <title>)
-  $_ME show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
-  $_ME sync [-a|--all]
-  $_ME -h | --help | help [<subcommand>]
-  $_ME --version | version
+  ${_ME} [<number>] [<list options>]
+  ${_ME} add [<note>] [--type <type>]
+  ${_ME} count
+  ${_ME} delete (<index> | <filename> | <path> | <title>)
+  ${_ME} edit (<index> | <filename> | <path> | <title>)
+  ${_ME} history [<selection>]
+  ${_ME} init [<remote-url>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
+  ${_ME} ls [<list options>]
+  ${_ME} notebook
+  ${_ME} notebook add <name> [<remote-url>]
+  ${_ME} notebook list [<name>] [--names]
+  ${_ME} notebook rename <old-name> <new-name>
+  ${_ME} notebook use <name>
+  ${_ME} search <query> [-a | --all] [--path]
+  ${_ME} show (<index> | <filename> | <path> | <title>)
+  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
+  ${_ME} sync [-a|--all]
+  ${_ME} -h | --help | help [<subcommand>]
+  ${_ME} --version | version
 
 Help:
-  $_ME help [<subcommand>]
+  ${_ME} help [<subcommand>]
 
 Subcommands:
-  (default)  List notes. This is an alias for \`$_ME ls\`.
+  (default)  List notes. This is an alias for \`${_ME} ls\`.
   add        Add a new note.
   count      Print the number of notes.
   delete     Delete a note.
@@ -972,7 +973,7 @@ HEREDOC
 
 desc "history" <<HEREDOC
 Usage:
-  $_ME history [<selection>]
+  ${_ME} history [<selection>]
 
 Description:
   Display git history using \`tig\` [1] (if available) or \`git log\`. When a
@@ -990,12 +991,12 @@ _history() {
   fi
 
   local _selection="${1:-}"
-  _debug printf "_history() \$_selection: '%s'\n" "${_selection}"
+  _debug printf "_history() \${_selection}: '%s'\n" "${_selection}"
 
   local _basename=
   _basename="$(_get_selection_basename "${_selection}")"
   NOTES_DATA_DIR="$(_get_selection_notebook "${_selection}")"
-  _debug printf "_history() \$_basename: '%s'\n" "${_basename}"
+  _debug printf "_history() \${_basename}: '%s'\n" "${_basename}"
 
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
@@ -1009,7 +1010,7 @@ _history() {
 
 desc "init" <<HEREDOC
 Usage:
-  $_ME init [<remote-url>]
+  ${_ME} init [<remote-url>]
 
 Description:
   Initialize the local data directory and generate a ~/.notesrc configruation
@@ -1081,7 +1082,7 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  $_ME list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
@@ -1099,14 +1100,14 @@ Description:
   2. https://github.com/jhermann/pygments-markdown-lexer
 
 Examples:
-  $_ME list
-  $_ME list -e 10
-  $_ME list --excerpt --noindex
+  ${_ME} list
+  ${_ME} list -e 10
+  ${_ME} list --excerpt --noindex
 HEREDOC
 _list() {
-  _debug printf "_list() \$1: '%s'\n" "${1:-}"
-  _debug printf "_list() \$2: '%s'\n" "${2:-}"
-  _debug printf "_list() \$3: '%s'\n" "${3:-}"
+  _debug printf "_list() \${1:-}: '%s'\n" "${1:-}"
+  _debug printf "_list() \${2:-}: '%s'\n" "${2:-}"
+  _debug printf "_list() \${3:-}: '%s'\n" "${3:-}"
 
   local _print_excerpt=0
   local _excerpt_length=3
@@ -1116,7 +1117,7 @@ _list() {
   local _limit
   local _selection
 
-  _debug printf "_list() \$@: '%s'\n" "${@:-}"
+  _debug printf "_list() \${@:-}: '%s'\n" "${@:-}"
 
   # Parse function options.
   while ((${#}))
@@ -1134,7 +1135,7 @@ _list() {
     }
     local _arg="${1:-}"
     local _val="${2:-}"
-    case "$_arg" in
+    case "${_arg}" in
       -e|--excerpt)
         _print_excerpt=1
         if __option_value_is_present "${_val:-}"
@@ -1275,7 +1276,7 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  $_ME ls [<list options>]
+  ${_ME} ls [<list options>]
 
 Description:
   Shortcut for \`list --titles\`. Any options are passed through to \`list\`.
@@ -1744,7 +1745,7 @@ _show() {
         fi
       else # `notes show`
         _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}" \
-          | "$PAGER"
+          | "${PAGER}"
       fi
     fi
   else # _basename is not assigned or no note exists with that name.
@@ -1770,7 +1771,7 @@ _status() {
 
 desc "sync" <<HEREDOC
 Usage:
-  $_ME sync [-a|--all]
+  ${_ME} sync [-a|--all]
 
 Options:
   -a --all  Sync all notebooks.
@@ -1781,17 +1782,17 @@ HEREDOC
 _sync() {
   local _notebooks
 
-  _debug printf "_sync() \$*: '%s'\n" "${*}"
+  _debug printf "_sync() \${*}: '%s'\n" "${*}"
 
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\n"
-    _notebooks=($($_ME notebooks --names))
+    _notebooks=($(${_ME} notebooks --names))
   else
     _notebooks=($(_notebook))
   fi
 
-  _debug printf "_sync() \${_notebooks[*]}: '%s'\n" "${_notebooks[*]:-}"
+  _debug printf "_sync() \${_notebooks[*]:-}: '%s'\n" "${_notebooks[*]:-}"
 
   printf "Syncing: "
   for __notebook in "${_notebooks[@]:-}"
@@ -1808,7 +1809,7 @@ _sync() {
 
 desc "use" <<HEREDOC
 Usage:
-  $_ME use <name>
+  ${_ME} use <name>
 HEREDOC
 # TODO: Add description.
 _use() {
@@ -1824,13 +1825,13 @@ _use() {
 
 desc "version" <<HEREDOC
 Usage:
-  $_ME version
+  ${_ME} version
 
 Description:
   Display version information.
 HEREDOC
 _version() {
-  printf "%s\n" "$_VERSION"
+  printf "%s\n" "${_VERSION}"
 }
 
 ###############################################################################
@@ -1857,7 +1858,7 @@ _notes() {
     NOTES_DATA_DIR="${NOTES_DIR}/${_SCOPE}"
   fi
 
-  case "$_SUBCOMMAND" in
+  case "${_SUBCOMMAND}" in
     init|sync)
       _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
@@ -1878,8 +1879,8 @@ _notes() {
       if [[ ! -e "${NOTES_DATA_DIR}" ]]
       then # `$NOTES_DATA_DIR` doesn't exist.
         _die cat <<HEREDOC
-${NOTES_DATA_DIR} doesn't exist. Use \`$_ME init\` to get started.
-Usage: $_ME init [<remote url>]
+${NOTES_DATA_DIR} doesn't exist. Use \`${_ME} init\` to get started.
+Usage: ${_ME} init [<remote url>]
 HEREDOC
       fi
 
@@ -1911,7 +1912,7 @@ HEREDOC
           then
             _debug \
               printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\n"
-            $_ME sync
+            ${_ME} sync
           else
             _debug \
               printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\n"
@@ -1921,7 +1922,7 @@ HEREDOC
         then
           _debug \
             printf "_notes(): ! _git_index_is_dirty\n"
-          ($_ME sync &>/dev/null) &
+          (${_ME} sync &>/dev/null) &
         fi
       fi
 
@@ -1966,7 +1967,7 @@ optstring='h'
 # argument to the option, such as wget -qO-)
 unset options
 # while the number of arguments is greater than 0
-while (($#))
+while ((${#}))
 do
   case "${1}" in
     # if option is of type -ab
@@ -2063,7 +2064,7 @@ _SUBCOMMANDS=(
 # https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
 _SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
 
-_debug printf "\$_SUBCOMMANDS_PATTERN: %s\n" "${_SUBCOMMANDS_PATTERN}"
+_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\n" "${_SUBCOMMANDS_PATTERN}"
 
 # _is_valid_subcommand()
 #
@@ -2109,7 +2110,7 @@ _require_argument() {
 #   http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
 #   http://stackoverflow.com/a/14203146
 #   http://stackoverflow.com/a/7948533
-while (($#))
+while ((${#}))
 do
   __opt="${1}"
   shift
@@ -2158,11 +2159,11 @@ do
   esac
 done
 
-_debug printf "\$_SUBCOMMANDS[*]: '%s'\n" "${_SUBCOMMANDS[*]}"
-_debug printf "\$_SUBCOMMANDS_PATTERN: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
-_debug printf "\$_SUBCOMMAND: '%s'\n" "${_SUBCOMMAND}"
-_debug printf "\$_SCOPE: '%s'\n" "${_SCOPE}"
-_debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
+_debug printf "\${_SUBCOMMANDS[*]}: '%s'\n" "${_SUBCOMMANDS[*]}"
+_debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
+_debug printf "\${_SUBCOMMAND}: '%s'\n" "${_SUBCOMMAND}"
+_debug printf "\${_SCOPE}: '%s'\n" "${_SCOPE}"
+_debug printf "\${_ARGUMENTS[*:-]}: '%s'\n" "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # _main()
@@ -2177,10 +2178,10 @@ _debug printf "\$_ARGUMENTS: '%s'\n" "${_ARGUMENTS[*]:-}"
 #   Primary entry point for the program logic. Call this function at the end
 #   of the script after everything has been defined.
 _main() {
-  if (("$_PRINT_HELP"))
+  if (("${_PRINT_HELP}"))
   then
     _help "${_SUBCOMMAND:-}"
-  elif (("$_PRINT_VERSION"))
+  elif (("${_PRINT_VERSION}"))
   then
     _version
   else
@@ -2188,4 +2189,4 @@ _main() {
   fi
 }
 
-_main "$@"
+_main "${@}"

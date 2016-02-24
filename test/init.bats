@@ -5,19 +5,19 @@ load test_helper
 # `notes init` ################################################################
 
 @test "\`init\` exits with status 0." {
-  run "$_NOTES" init
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" init
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${status} -eq 0 ]]
 }
 
 @test "\`init\` exits with status 1 when \`\$NOTES_DIR\` exists as a file." {
   touch "${NOTES_DIR}"
   [[ -e "${NOTES_DIR}" ]]
-  run "$_NOTES" init
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" init
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${status} -eq 1 ]]
 }
 
 @test "\`init\` exits with status 1 when \`\$NOTES_DATA_DIR\` exists." {

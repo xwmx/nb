@@ -5,11 +5,11 @@ load test_helper
 # `notes list` (empty) ########################################################
 
 @test "\`list\` (empty) exits with 1 and lists files." {
-  run "$_NOTES" list
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" list
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   _expected="0 notes.
 
@@ -17,27 +17,27 @@ Add a note:
   notes add
 Usage information:
   notes help"
-  [[ "${_expected}" == "$output" ]]
+  [[ "${_expected}" == "${output}" ]]
 }
 
 # `notes list` ################################################################
 
 @test "\`list\` exits with 0 and lists files in reverse order." {
   {
-    "$_NOTES" init
-    "$_NOTES" add "# one"
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
     sleep 1
-    "$_NOTES" add "# two"
+    "${_NOTES}" add "# two"
     sleep 1
-    "$_NOTES" add "# three"
+    "${_NOTES}" add "# three"
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[0]}" =~ ${_files[2]} ]]
@@ -49,20 +49,20 @@ Usage information:
 
 @test "\`list --noindex\` exits with 0 and lists files in reverse order." {
   {
-    "$_NOTES" init
-    "$_NOTES" add "# one"
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
     sleep 1
-    "$_NOTES" add "# two"
+    "${_NOTES}" add "# two"
     sleep 1
-    "$_NOTES" add "# three"
+    "${_NOTES}" add "# three"
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list --noindex
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list --noindex
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "'${_files[2]}'" "'${lines[0]}'"
 
   [[ "${lines[0]}" == "${_files[2]}" ]]
@@ -74,20 +74,20 @@ Usage information:
 
 @test "\`list --nocolor\` exits with 0 and lists files in reverse order." {
   {
-    "$_NOTES" init
-    "$_NOTES" add "# one"
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
     sleep 1
-    "$_NOTES" add "# two"
+    "${_NOTES}" add "# two"
     sleep 1
-    "$_NOTES" add "# three"
+    "${_NOTES}" add "# three"
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list --nocolor
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list --nocolor
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "'[0]  ${_files[2]}'" "'${lines[0]}'"
 
   [[ "${lines[0]}" == "[0]  ${_files[2]}" ]]
@@ -98,22 +98,22 @@ Usage information:
 # `notes list (-e | --excerpt)` ###############################################
 
 _setup_list_excerpt() {
-  "$_NOTES" init
-    cat <<HEREDOC | "$_NOTES" add
+  "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add
 # one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # two
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # three
 line two
 line three
@@ -127,11 +127,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list -e
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list -e
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 15 ]]
@@ -143,11 +143,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list -e 2
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list -e 2
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 12 ]]
@@ -159,11 +159,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list -e 0
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list -e 0
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
@@ -175,11 +175,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list --excerpt
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list --excerpt
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 15 ]]
@@ -191,11 +191,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list --excerpt 2
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list --excerpt 2
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 12 ]]
@@ -207,11 +207,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list --excerpt 0
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list --excerpt 0
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
@@ -220,22 +220,22 @@ HEREDOC
 # `notes list -n <limit>` #####################################################
 
 _setup_list_limit() {
-  "$_NOTES" init
-    cat <<HEREDOC | "$_NOTES" add
+  "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add
 # one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # two
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # three
 line two
 line three
@@ -249,11 +249,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list -n
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list -n
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
@@ -265,11 +265,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list -n 2
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list -n 2
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
@@ -281,22 +281,22 @@ HEREDOC
 
 @test "\`list --titles\` exits with 0 and displays a list of titles." {
   {
-    "$_NOTES" init
-    cat <<HEREDOC | "$_NOTES" add
+    "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add
 # one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 line one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # three
 line two
 line three
@@ -305,11 +305,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list --titles
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list --titles
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${lines[0]}" =~ three$      ]] && [[ "${lines[0]}" =~ 0 ]]
@@ -321,22 +321,22 @@ HEREDOC
 
 @test "\`list <selection>\` exits with 0 and displays the selection." {
   {
-    "$_NOTES" init
-    cat <<HEREDOC | "$_NOTES" add
+    "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add
 # one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # two
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # three
 line two
 line three
@@ -345,11 +345,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" list 1
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" list 1
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 1 ]]
@@ -361,14 +361,14 @@ HEREDOC
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
-  run "$_NOTES" help list
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" help list
+  [[ ${status} -eq 0 ]]
 }
 
 @test "\`help list\` prints help information." {
-  run "$_NOTES" help list
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" help list
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]" ]]
 }

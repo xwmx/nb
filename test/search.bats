@@ -3,18 +3,18 @@
 load test_helper
 
 _setup_search() {
-  "$_NOTES" init &>/dev/null
-    cat <<HEREDOC | "$_NOTES" add
+  "${_NOTES}" init &>/dev/null
+    cat <<HEREDOC | "${_NOTES}" add
 # one
 idyl
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # two
 sweetish
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # three
 sweetish
 HEREDOC
@@ -28,11 +28,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ $status -eq 1 ]]
+  [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--path]" ]]
 }
@@ -45,11 +45,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search 'no match'
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  [[ $status -eq 1 ]]
-  [[ -z "$output" ]]
+  run "${_NOTES}" search 'no match'
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ -z "${output}" ]]
 }
 
 # `search <one match> [--path]` ###############################################
@@ -60,12 +60,12 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search 'idyl'
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'idyl'
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[0]}: '%s'\n" "${lines[0]}"
 
-  [[ $status -eq 0 ]]
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ idyl ]]
@@ -77,10 +77,10 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search 'idyl' --path
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" search 'idyl' --path
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
   [[ "${#lines[@]}" -eq 1 ]]
 }
@@ -93,12 +93,12 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search 'sweetish'
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'sweetish'
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[3]}: '%s'\n" "${lines[3]}"
 
-  [[ $status -eq 0 ]]
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
@@ -114,12 +114,12 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "$_NOTES" search 'sweetish' --path
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'sweetish' --path
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[0]}: '%s'\n" "${lines[0]}"
 
-  [[ $status -eq 0 ]]
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
   [[ "${lines[1]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
   [[ "${#lines[@]}" -eq 2 ]]
@@ -129,9 +129,9 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
-  "$_NOTES" notebook add one
-  "$_NOTES" use one
-  "$_NOTES" add "# sweetish"
+  "${_NOTES}" notebook add one
+  "${_NOTES}" use one
+  "${_NOTES}" add "# sweetish"
 }
 
 @test "\`search <query> --all\` exits with status 0 and prints output." {
@@ -139,12 +139,12 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
   }
 
-  run "$_NOTES" search 'sweetish' --all
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'sweetish' --all
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
-  [[ $status -eq 0 ]]
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:1 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
@@ -163,12 +163,12 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
   }
 
-  run "$_NOTES" search 'sweetish' -a
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'sweetish' -a
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
-  [[ $status -eq 0 ]]
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:1 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
@@ -187,12 +187,12 @@ _search_all_setup() {
     _search_all_setup  &>/dev/null
   }
 
-  run "$_NOTES" search 'no match' --all
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'no match' --all
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[3]}: '%s'\n" "${lines[3]}"
 
-  [[ $status -eq 1 ]]
+  [[ ${status} -eq 1 ]]
   [[ -z "${output}" ]]
 }
 
@@ -201,12 +201,12 @@ _search_all_setup() {
     _search_all_setup  &>/dev/null
   }
 
-  run "$_NOTES" search 'sweetish' --all --path
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'sweetish' --all --path
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[0]}: '%s'\n" "${lines[0]}"
 
-  [[ $status -eq 0 ]]
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ ${_NOTES_DIR}/home/20[0-9]+\.md$ ]]
   [[ "${lines[1]}" =~ ${_NOTES_DIR}/home/20[0-9]+\.md$ ]]
   [[ "${lines[2]}" =~ ${_NOTES_DIR}/one/20[0-9]+\.md$ ]]
@@ -218,26 +218,26 @@ _search_all_setup() {
     _search_all_setup  &>/dev/null
   }
 
-  run "$_NOTES" search 'no match' --all --path
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" search 'no match' --all --path
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[0]}: '%s'\n" "${lines[0]}"
 
-  [[ $status -eq 1 ]]
+  [[ ${status} -eq 1 ]]
   [[ -z "${output}" ]]
 }
 
 # help ########################################################################
 
 @test "\`help search\` exits with status 0." {
-  run "$_NOTES" help search
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" help search
+  [[ ${status} -eq 0 ]]
 }
 
 @test "\`help search\` prints help information." {
-  run "$_NOTES" help search
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" help search
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--path]" ]]
 }

@@ -11,28 +11,28 @@ _HELP_HEADER="\
 export _HELP_HEADER
 
 @test "\`help\` with no arguments exits with status 0." {
-  run "$_NOTES" help
-  [ "$status" -eq 0 ]
+  run "${_NOTES}" help
+  [ "${status}" -eq 0 ]
 }
 
 @test "\`help\` with no arguments prints default help." {
-  run "$_NOTES" help
+  run "${_NOTES}" help
   _compare "${_HELP_HEADER}" "$(IFS=$'\n'; echo "${lines[*]:0:11}")"
-  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "$_HELP_HEADER" ]]
+  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
 }
 
 @test "\`notes -h\` prints default help." {
-  run "$_NOTES" -h
-  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "$_HELP_HEADER" ]]
+  run "${_NOTES}" -h
+  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
 }
 
 @test "\`notes --help\` prints default help." {
-  run "$_NOTES" --help
-  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "$_HELP_HEADER" ]]
+  run "${_NOTES}" --help
+  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
 }
 
 @test "\`notes help help\` prints \`help\` subcommand usage." {
-  run "$_NOTES" help help
+  run "${_NOTES}" help help
   _expected="$(
     cat <<HEREDOC
 Usage:
@@ -44,5 +44,5 @@ Description:
 HEREDOC
   )"
   _compare "${_expected}" "${output}"
-  [[ "$output" == "$_expected" ]]
+  [[ "${output}" == "${_expected}" ]]
 }

@@ -6,8 +6,8 @@ load test_helper
 
 @test "\`notes\` (pre-init) exits with status 1 and prints \`ls\` ouput." {
   {
-    printf "\$NOTES_DIR: %s\n" "${NOTES_DIR}"
-    printf "\$NOTESRC_PATH: %s\n" "${NOTESRC_PATH}"
+    printf "\${NOTES_DIR}: %s\n" "${NOTES_DIR}"
+    printf "\${NOTESRC_PATH}: %s\n" "${NOTESRC_PATH}"
     if [[ "${NOTES_DIR}" =~ /tmp/notes_test ]] &&
        [[ -e "${NOTES_DIR}" ]]
     then
@@ -22,60 +22,60 @@ load test_helper
     fi
   }
 
-  run "$_NOTES"
-  [[ "$status" -eq 1 ]]
+  run "${_NOTES}"
+  [[ "${status}" -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _expected="0 notes.
 
 Add a note:
   notes add
 Usage information:
   notes help"
-  _compare "${_expected}" "$output"
-  [[ "${_expected}" == "$output" ]]
+  _compare "${_expected}" "${output}"
+  [[ "${_expected}" == "${output}" ]]
 }
 
 # `notes` (empty repo) ########################################################
 
 @test "\`notes\` with empty repo exits with status 1 and \`ls\` output." {
-  run "$_NOTES"
-  [[ "$status" -eq 1 ]]
+  run "${_NOTES}"
+  [[ "${status}" -eq 1 ]]
 }
 
 @test "\`notes\` with an empty repo prints error." {
-  run "$_NOTES"
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _expected="0 notes.
 
 Add a note:
   notes add
 Usage information:
   notes help"
-  _compare "${_expected}" "$output"
-  [[ "${_expected}" == "$output" ]]
+  _compare "${_expected}" "${output}"
+  [[ "${_expected}" == "${output}" ]]
 }
 
 # `notes` (non-empty repo) ####################################################
 
 @test "\`notes\` with a non-empty repo exits with 0 and prints list." {
   {
-    "$_NOTES" add "# one"
+    "${_NOTES}" add "# one"
     sleep 1
-    "$_NOTES" add "# two"
+    "${_NOTES}" add "# two"
     sleep 1
-    "$_NOTES" add "# three"
+    "${_NOTES}" add "# three"
     _files=($(ls -t "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES"
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "${_files[*]}" "${lines[*]}"
 
-  [[ "$status" -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
   [[ "${lines[0]}" =~ three ]]
   [[ "${lines[1]}" =~ two   ]]
   [[ "${lines[2]}" =~ one   ]]

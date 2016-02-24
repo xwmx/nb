@@ -3,7 +3,7 @@
 load test_helper
 
 _setup_notebooks() {
-  "$_NOTES" init
+  "${_NOTES}" init
   mkdir -p "${NOTES_DIR}/one"
   cd "${NOTES_DIR}/one"
   git init
@@ -19,13 +19,13 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" == "home" ]]
+  [[ "${output}" == "home" ]]
 }
 
 @test "\`notebook current\` exits with 0 and prints the current notebook name." {
@@ -34,13 +34,13 @@ _setup_notebooks() {
     printf "%s\n" "one" > "${NOTES_DIR}/.current"
   }
 
-  run "$_NOTES" notebook
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" == "one" ]]
+  [[ "${output}" == "one" ]]
 }
 
 # `notes notebook add <name>` #################################################
@@ -50,11 +50,11 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook add
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" notebook add
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[1]}" == "  notes notebook" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
@@ -65,11 +65,11 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook add one
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" notebook add one
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[0]}" =~ Already\ exists ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
@@ -80,13 +80,13 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook add example
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook add example
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  # [[ "$output" == "Added: example" ]]
+  # [[ "${output}" == "Added: example" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
 }
 
@@ -96,18 +96,18 @@ _setup_notebooks() {
     _setup_remote_repo
   }
 
-  run "$_NOTES" notebook add example "$_GIT_REMOTE_URL"
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  printf "\$_GIT_REMOTE_URL: '%s'\n" "$_GIT_REMOTE_URL"
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook add example "${_GIT_REMOTE_URL}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  printf "\${_GIT_REMOTE_URL}: '%s'\n" "${_GIT_REMOTE_URL}"
+  [[ ${status} -eq 0 ]]
 
   [[ "${lines[1]}" == "Added: example" ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
   [[ -d "${NOTES_DIR}/example/.git" ]]
   _origin="$(cd "${NOTES_DIR}/example" && git config --get remote.origin.url)"
-  _compare "$_GIT_REMOTE_URL" "$_origin"
-  [[ "$_origin" =~  "$_GIT_REMOTE_URL" ]]
+  _compare "${_GIT_REMOTE_URL}" "${_origin}"
+  [[ "${_origin}" =~  "${_GIT_REMOTE_URL}" ]]
 }
 
 # `notes notebook list` #######################################################
@@ -117,15 +117,15 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook list
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook list
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   _expected="$(tput setaf 3)home$(tput sgr0)
 one	(${_GIT_REMOTE_URL})"
-  [[ "$output" == "$_expected" ]]
+  [[ "${output}" == "${_expected}" ]]
 }
 
 @test "\`notebook list <name>\` exits with 0 and prints the given notebook." {
@@ -133,14 +133,14 @@ one	(${_GIT_REMOTE_URL})"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook list one
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook list one
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   _expected="one	(${_GIT_REMOTE_URL})"
-  [[ "$output" == "$_expected" ]]
+  [[ "${output}" == "${_expected}" ]]
 }
 
 @test "\`notebook list <name> --names\` exits with 0 and prints the given notebook name." {
@@ -148,14 +148,14 @@ one	(${_GIT_REMOTE_URL})"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook list home --names
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook list home --names
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   _expected="home"
-  [[ "$output" == "$_expected" ]]
+  [[ "${output}" == "${_expected}" ]]
 }
 
 @test "\`notebook list --names\` exits with 0 and prints all notebook names." {
@@ -163,15 +163,15 @@ one	(${_GIT_REMOTE_URL})"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook list --names
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook list --names
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   _expected="home
 one"
-  [[ "$output" == "$_expected" ]]
+  [[ "${output}" == "${_expected}" ]]
 }
 
 # `notes notebook rename` #####################################################
@@ -181,13 +181,13 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook rename "one" "new-name"
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook rename "one" "new-name"
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" == "'one' is now named 'new-name'" ]]
+  [[ "${output}" == "'one' is now named 'new-name'" ]]
   [[ -e "${NOTES_DIR}/new-name/.git" ]]
   [[ ! -e "${NOTES_DIR}/one" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
@@ -198,13 +198,13 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook rename "home" "new-name"
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook rename "home" "new-name"
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" =~ "'home' is now named 'new-name'" ]]
+  [[ "${output}" =~ "'home' is now named 'new-name'" ]]
   [[ -e "${NOTES_DIR}/new-name/.git" ]]
   [[ ! -e "${NOTES_DIR}/home" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "new-name" ]]
@@ -215,13 +215,13 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook rename "invalid" "new-name"
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" notebook rename "invalid" "new-name"
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" =~ "'invalid' is not a valid notebook name." ]]
+  [[ "${output}" =~ "'invalid' is not a valid notebook name." ]]
   [[ ! -e "${NOTES_DIR}/new-name/.git" ]]
   [[ -e "${NOTES_DIR}/one/.git" ]]
   [[ -e "${NOTES_DIR}/two" ]]
@@ -235,13 +235,13 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook rename "one" "two"
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" notebook rename "one" "two"
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" =~ "A notebook named 'two' already exists." ]]
+  [[ "${output}" =~ "A notebook named 'two' already exists." ]]
   [[ -e "${NOTES_DIR}/one/.git" ]]
   [[ -e "${NOTES_DIR}/two" ]]
   [[ ! -e "${NOTES_DIR}/two/.git" ]]
@@ -256,18 +256,18 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook use
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" notebook use
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
   [[ "${lines[1]}" == "  notes notebook" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
-  run "$_NOTES" env
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" env
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "'NOTES_DATA_DIR=${NOTES_DIR}/home'" "'${lines[1]}'"
 
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/home" ]]
@@ -278,18 +278,18 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook use not-a-notebook
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" notebook use not-a-notebook
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf ".current: %s\n" "$(cat "${NOTES_DIR}/.current")"
   [[ "${lines[0]}" == "❌  Not found: not-a-notebook" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
-  run "$_NOTES" env
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" env
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "'NOTES_DATA_DIR=${NOTES_DIR}/home'" "'${lines[1]}'"
 
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/home" ]]
@@ -300,19 +300,19 @@ one"
     _setup_notebooks
   }
 
-  run "$_NOTES" notebook use one
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" notebook use one
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
-  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'$output'"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'${output}'"
 
-  [[ "$output" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
+  [[ "${output}" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
-  run "$_NOTES" env
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" env
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "'NOTES_DATA_DIR=${NOTES_DIR}/one'" "'${lines[1]}'"
 
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/one" ]]
@@ -321,14 +321,14 @@ one"
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
-  run "$_NOTES" help notebook
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" help notebook
+  [[ ${status} -eq 0 ]]
 }
 
 @test "\`help list\` prints help information." {
-  run "$_NOTES" help notebook
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  run "${_NOTES}" help notebook
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes notebook" ]]
 }

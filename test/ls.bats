@@ -4,22 +4,22 @@ load test_helper
 
 
 _setup_ls() {
-  "$_NOTES" init
-    cat <<HEREDOC | "$_NOTES" add
+  "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add
 # one
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # two
 line two
 line three
 line four
 HEREDOC
     sleep 1
-    cat <<HEREDOC | "$_NOTES" add
+    cat <<HEREDOC | "${_NOTES}" add
 # three
 line two
 line three
@@ -35,11 +35,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" ls
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${lines[0]}" =~ three ]]
@@ -55,11 +55,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -e 5
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" ls -e 5
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 18 ]]
@@ -73,11 +73,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 0
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" ls -n 0
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${#lines[@]}" -eq 1 ]]
 
@@ -90,11 +90,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 1
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" ls -n 1
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 2 ]]
@@ -109,11 +109,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 2
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" ls -n 2
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 3 ]]
@@ -129,11 +129,11 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "$_NOTES" ls -n 3
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" ls -n 3
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 3 ]]

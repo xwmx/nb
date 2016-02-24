@@ -3,12 +3,12 @@
 load test_helper
 
 _setup_scope() {
-  "$_NOTES" init
-  "$_NOTES" notebook add one
-  "$_NOTES" use one
-  "$_NOTES" add "# first"
-  "$_NOTES" use home
-  "$_NOTES" notebook add two
+  "${_NOTES}" init
+  "${_NOTES}" notebook add one
+  "${_NOTES}" use one
+  "${_NOTES}" add "# first"
+  "${_NOTES}" use home
+  "${_NOTES}" notebook add two
 }
 
 # `notes <name>:notebook` #####################################################
@@ -18,13 +18,13 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" one:notebook
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" one:notebook
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" =~ "one" ]]
+  [[ "${output}" =~ "one" ]]
 }
 
 @test "\`notes two:notebook\` exits with 0 and scoped \`notebook\` output." {
@@ -32,13 +32,13 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" two:notebook
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" two:notebook
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" =~ "two" ]]
+  [[ "${output}" =~ "two" ]]
 }
 
 @test "\`notes one:invalid\` exits with 0 and scoped \`ls\` output." {
@@ -46,11 +46,11 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" one:invalid
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" one:invalid
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[0]}" =~ "first" ]]
 }
@@ -62,11 +62,11 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" one:
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" one:
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[0]}" =~ "first" ]]
 }
@@ -76,11 +76,11 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" one: --no-index
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" one: --no-index
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[0]}" == "first" ]]
 }
@@ -90,11 +90,11 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" two:
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" two:
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[0]}" =~ "0 notes." ]]
 }
@@ -104,11 +104,11 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" invalid:
-  [[ $status -eq 1 ]]
+  run "${_NOTES}" invalid:
+  [[ ${status} -eq 1 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
   [[ "${lines[0]}" =~ "Notebook not found: invalid" ]]
 }
@@ -120,11 +120,11 @@ _setup_scope() {
     _setup_scope &>/dev/null
   }
 
-  run "$_NOTES" show one:first --dump
-  [[ $status -eq 0 ]]
+  run "${_NOTES}" show one:first --dump
+  [[ ${status} -eq 0 ]]
 
-  printf "\$status: %s\n" "$status"
-  printf "\$output: '%s'\n" "$output"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
 
-  [[ "$output" =~ "first" ]]
+  [[ "${output}" =~ "first" ]]
 }
