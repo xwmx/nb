@@ -204,12 +204,12 @@ _get_index() {
     _die printf "Usage: _get_index <item> <list>"
   fi
 
-  for _i in "${!_files[@]}"
+  for __i in "${!_files[@]}"
   do
     # _debug printf "_get_index() \${_files[${_i}]} : '%s'\n" "${_files[${_i}]}"
-    if [[ "${_files[${_i}]}" == "${_filename}" ]]
+    if [[ "${_files[${__i}]}" == "${_filename}" ]]
     then
-      printf "%s\n" "${_i}"
+      printf "%s\n" "${__i}"
       return 0
     fi
   done
@@ -258,14 +258,14 @@ _get_selection_basename() {
       local _filenames
 
       _filenames=($(_list_notes_files))
-      for _file in "${_filenames[@]:-}"
+      for __file in "${_filenames[@]:-}"
       do
-        _title="$(_get_title "${_file}")"
+        _title="$(_get_title "${__file}")"
 
         if [[ -n "${_title}" ]] &&
            [[ "${_title}" == "${_identifier}" ]]
         then
-          _basename="${_file}"
+          _basename="${__file}"
           break
         fi
       done
@@ -1206,7 +1206,7 @@ HEREDOC
     return 1
   else
     local _counter=0
-    for _basename in "${_filenames[@]}"
+    for __basename in "${_filenames[@]}"
     do
       if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
       then # the limit has been reached.
@@ -1230,16 +1230,16 @@ HEREDOC
       # If a valid <selection> has been specified, skip the rest of the loop
       # unless the <selection> basename matches the current one.
       if [[ -n "${_selection_basename}" ]] &&
-         [[ "${_basename}" != "${_selection_basename}" ]]
+         [[ "${__basename}" != "${_selection_basename}" ]]
       then
         continue
       fi
 
-      local _list_item_id="${_basename}"
+      local _list_item_id="${__basename}"
       local _maybe_title
       if ((_list_titles))
       then
-        _maybe_title="$(_get_title "${_basename}")"
+        _maybe_title="$(_get_title "${__basename}")"
         if [[ -n "${_maybe_title}" ]]
         then # note file has title.
           _list_item_id="${_maybe_title}"
@@ -1274,7 +1274,7 @@ HEREDOC
       if ((_print_excerpt)) && [[ "${_excerpt_length}" =~ ^[1-9] ]]
       then # excerpt is specified with a non-zero digit, as required by `head`.
         _print_line "${_list_item}"
-        head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${_basename}"
+        head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${__basename}"
         printf "\n"
       fi
     done
@@ -1346,14 +1346,14 @@ _notebook() {
     _debug printf "_notebook_list() \${@:-}: '%s'\n" "${@:-}"
     _debug printf "_notebook_list() \${@:1}: '%s'\n" "${@:1}"
 
-    for _arg in "${@:1}"
+    for __arg in "${@:1}"
     do
-      case "${_arg}" in
+      case "${__arg}" in
         --names)
           _only_names=1
           ;;
         *)
-          _files+=("${_arg}")
+          _files+=("${__arg}")
           ;;
       esac
     done
@@ -1370,13 +1370,13 @@ _notebook() {
       "_notebook_list() \${_files[*]}: '%s'\n" \
       "${_files[*]:-}"
 
-    for _item in "${_files[@]}"
+    for __item in "${_files[@]}"
     do
-      if [[ -e "${NOTES_DIR}/${_item}/.git" ]]
+      if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
         if ((_only_names))
         then
-          printf "%s\n" "${_item}"
+          printf "%s\n" "${__item}"
         else
           local _current
           _current="$(cat "${NOTES_DIR}/.current")"
@@ -1384,14 +1384,14 @@ _notebook() {
           local _origin_url
 
           if [[ -n "${_current}" ]] &&
-             [[ "${_current}" == "${_item}" ]]
+             [[ "${_current}" == "${__item}" ]]
           then # it's the current repository.
-            _formatted_name="$(_highlight "${_item}")"
+            _formatted_name="$(_highlight "${__item}")"
           else
-            _formatted_name="${_item}"
+            _formatted_name="${__item}"
           fi
 
-          cd "${NOTES_DIR}/${_item}" || \
+          cd "${NOTES_DIR}/${__item}" || \
             _die printf "_notebook() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
 
@@ -1504,9 +1504,9 @@ _search() {
   local _print_paths=0
   local _last_path=
 
-  for _arg in "${_arguments[@]:-}"
+  for __arg in "${_arguments[@]:-}"
   do
-    case "${_arg}" in
+    case "${__arg}" in
       -a|--all)
         _all=1
         ;;
@@ -1516,7 +1516,7 @@ _search() {
       *)
         if [[ -z "${_query}" ]]
         then
-          _query="${_arg}"
+          _query="${__arg}"
         fi
         ;;
     esac
@@ -1540,17 +1540,17 @@ _search() {
       "_search() \${_target_notebooks[*]}: '%s'\n" \
       "${_target_notebooks[*]}"
 
-    for _scope in "${_target_notebooks[@]:-}"
+    for __scope in "${_target_notebooks[@]:-}"
     do
       local _files=
-      _files=($(${_ME} "${_scope}:list" --noindex || printf ''))
+      _files=($(${_ME} "${__scope}:list" --noindex || printf ''))
 
-      _debug printf "_search() \${_scope}: '%s'\n" "${_scope}"
+      _debug printf "_search() \${__scope}: '%s'\n" "${__scope}"
       # _debug printf "_search() \${_files[*]}: '%s'\n" "${_files[*]}"
 
       if _command_exists "ack"
       then # ack is available.
-        ack "${_query}" "${NOTES_DIR}/${_scope}" \
+        ack "${_query}" "${NOTES_DIR}/${__scope}" \
           --ignore-case \
           --noheading \
           --color-lineno='bold green' \
@@ -1561,7 +1561,7 @@ _search() {
         # matching file. Reference: http://stackoverflow.com/a/15432718
         grep \
           --ignore-case \
-          -n "${_query}" "${NOTES_DIR}/${_scope}"/* /dev/null \
+          -n "${_query}" "${NOTES_DIR}/${__scope}"/* /dev/null \
             || return 0 # Don't fail out within a single scope.
       fi | while read -r _line
       do
@@ -1594,8 +1594,8 @@ _search() {
 
           if ((_all))
           then
-            _indexed_filename_color="[$(_highlight "${_scope}:${_index}")] ${_filename}"
-            _indexed_filename="[${_scope}:${_index}] ${_filename}"
+            _indexed_filename_color="[$(_highlight "${__scope}:${_index}")] ${_filename}"
+            _indexed_filename="[${__scope}:${_index}] ${_filename}"
           else
             _indexed_filename_color="[$(_highlight "${_index}")] ${_filename}"
             _indexed_filename="[${_index}] ${_filename}"
@@ -1674,9 +1674,9 @@ _show() {
 
   _debug printf "_show() \${_arguments[*]:-}: '%s'\n" "${_arguments[*]:-}"
 
-  for _arg in "${_arguments[@]:-}"
+  for __arg in "${_arguments[@]:-}"
   do
-    case "${_arg}" in
+    case "${__arg}" in
       --dump)
         _dump=1
         ;;
@@ -1695,7 +1695,7 @@ _show() {
       *)
         if [[ -z "${_selection}" ]]
         then
-          _selection="${_arg}"
+          _selection="${__arg}"
         fi
         ;;
     esac
