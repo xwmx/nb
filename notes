@@ -658,9 +658,9 @@ _spinner() {
 # implementation and simplicity. There is an alternative assignment form
 # that could be used here:
 #
-# var="$(cat <<'EOM'
+# var="$(cat <<'HEREDOC'
 # some message
-# EOM
+# HEREDOC
 # )
 #
 # However, this form appears to require trailing space after backslases to
@@ -671,9 +671,9 @@ desc() {
   [[ -z "${1}" ]] && _die printf "desc: No command name specified.\n"
   if [[ -n "${2:-}" ]]
   then
-    read -r -d '' "_${_ME}_desc_${1}" <<EOM
+    read -r -d '' "_${_ME}_desc_${1}" <<HEREDOC
 ${2}
-EOM
+HEREDOC
     _debug printf "desc() set with argument: \${_%s_desc_%s}\n" "${_ME}" "${1}"
   else
     read -r -d '' "_${_ME}_desc_${1}"
