@@ -644,13 +644,16 @@ _spinner() {
 # desc()
 #
 # Usage:
-#   desc command "description"
+#   desc <name> <description>
+#   desc <name> <<HEREDOC
+# <description>
+# HEREDOC
 #
-# Create a description for a specified command name. The command description
-# text can be passed as the second argument or as standard input.
+# Create a description for a specified command or function <name>. The
+# <description> text can be passed as the second argument or as standard input.
 #
-# To make the description text available to other functions, desc() assigns the
-# text to a variable with the format $_desc_function_name
+# To make the <description> text available to other functions, `desc()` assigns
+# the text to a variable with the format `$_<program>_desc_<name>`.
 #
 # NOTE:
 #
@@ -668,16 +671,22 @@ _spinner() {
 # escaping backslashes, which is more common.
 desc() {
   set +e
-  [[ -z "${1}" ]] && _die printf "desc: No command name specified.\n"
+  [[ -z "${1:-}" ]] && _die printf "desc(): No command name specified.\n"
   if [[ -n "${2:-}" ]]
-  then
+  then # argument is present
     read -r -d '' "_${_ME}_desc_${1}" <<HEREDOC
 ${2}
 HEREDOC
-    _debug printf "desc() set with argument: \${_%s_desc_%s}\n" "${_ME}" "${1}"
-  else
+
+    _debug printf \
+      "desc() set with argument: \${_%s_desc_%s}\n" \
+      "${_ME}" "${1}"
+  else # no argument is present, so assume piped input
     read -r -d '' "_${_ME}_desc_${1}"
-    _debug printf "desc() set with pipe: \${_%s_desc_%s}\n" "${_ME}" "${1}"
+
+    _debug printf \
+      "desc() set with pipe: \${_%s_desc_%s}\n" \
+      "${_ME}" "${1}"
   fi
   set -e
 }
@@ -688,7 +697,7 @@ HEREDOC
 #   _print_desc <command>
 #
 # Prints the description for a given command, provided the description has been
-# set using the desc() function.
+# set using the `desc()` function.
 _print_desc() {
   local _method_name="${1:-}"
   local _desc_var="_${_ME}_desc_${_method_name}"
