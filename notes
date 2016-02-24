@@ -691,10 +691,10 @@ HEREDOC
 # set using the desc() function.
 _print_desc() {
   local _method_name="${1:-}"
-  local var="_${_ME}_desc_${_method_name}"
-  if [[ -n "${!var:-}" ]]
+  local _desc_var="_${_ME}_desc_${_method_name}"
+  if [[ -n "${!_desc_var:-}" ]]
   then
-    printf "%s\n" "${!var}"
+    printf "%s\n" "${!_desc_var}"
   else
     printf "No additional information for \`%s\`\n" "${_method_name}"
   fi
