@@ -60,6 +60,8 @@ load test_helper
   printf "\$output: '%s'\n" "$output"
   [[ -e "${NOTESRC_PATH}" ]]
   cat "${NOTESRC_PATH}" | grep -q 'Configuration file for notes'
+  printf "%s\n" "$(cat "${NOTESRC_PATH}")"
+  cat "${NOTESRC_PATH}" | grep -q '\$NOTES_AUTO_SYNC'
 }
 
 # `notes init <remote-url>` ###################################################
