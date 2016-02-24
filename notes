@@ -645,15 +645,32 @@ _spinner() {
 #
 # Usage:
 #   desc <name> <description>
-#   desc <name> <<HEREDOC
-# <description>
+#   desc --get <name>
+#
+# Options:
+#   --get  Print the description for <name> if one has been set.
+#
+# Examples:
+# ```
+#   desc "list" <<HEREDOC
+# Usage:
+#   ${_ME} list
+#
+# Description:
+#   List items.
 # HEREDOC
 #
-# Create a description for a specified command or function <name>. The
+# desc --get "list"
+# ```
+#
+# Set or print a description for a specified command or function <name>. The
 # <description> text can be passed as the second argument or as standard input.
 #
 # To make the <description> text available to other functions, `desc()` assigns
-# the text to a variable with the format `$_<program>_desc_<name>`.
+# the text to a variable with the format `$___desc_<name>`.
+#
+# When the `--get` option is used, the description for <name> is printed, if
+# one has been set.
 #
 # NOTE:
 #
@@ -672,41 +689,35 @@ _spinner() {
 desc() {
   set +e
   [[ -z "${1:-}" ]] && _die printf "desc(): No command name specified.\n"
-  if [[ -n "${2:-}" ]]
-  then # argument is present
-    read -r -d '' "_${_ME}_desc_${1}" <<HEREDOC
+
+  if [[ "${1}" == "--get" ]]
+  then # get ------------------------------------------------------------------
+    [[ -z "${2:-}" ]] && _die printf "desc(): No command name specified.\n"
+
+    local _name="${2:-}"
+    local _desc_var="___desc_${_name}"
+
+    if [[ -n "${!_desc_var:-}" ]]
+    then
+      printf "%s\n" "${!_desc_var}"
+    else
+      printf "No additional information for \`%s\`\n" "${_name}"
+    fi
+  else # set ------------------------------------------------------------------
+    if [[ -n "${2:-}" ]]
+    then # argument is present
+      read -r -d '' "___desc_${1}" <<HEREDOC
 ${2}
 HEREDOC
 
-    _debug printf \
-      "desc() set with argument: \${_%s_desc_%s}\n" \
-      "${_ME}" "${1}"
-  else # no argument is present, so assume piped input
-    read -r -d '' "_${_ME}_desc_${1}"
+      _debug printf "desc() set with argument: \${___desc_%s}\n" "${1}"
+    else # no argument is present, so assume piped input
+      read -r -d '' "___desc_${1}"
 
-    _debug printf \
-      "desc() set with pipe: \${_%s_desc_%s}\n" \
-      "${_ME}" "${1}"
+      _debug printf "desc() set with pipe: \${___desc_%s}\n" "${1}"
+    fi
   fi
   set -e
-}
-
-# _print_desc()
-#
-# Usage:
-#   _print_desc <command>
-#
-# Prints the description for a given command, provided the description has been
-# set using the `desc()` function.
-_print_desc() {
-  local _method_name="${1:-}"
-  local _desc_var="_${_ME}_desc_${_method_name}"
-  if [[ -n "${!_desc_var:-}" ]]
-  then
-    printf "%s\n" "${!_desc_var}"
-  else
-    printf "No additional information for \`%s\`\n" "${_method_name}"
-  fi
 }
 
 ###############################################################################
@@ -974,7 +985,7 @@ Program Options:
   --version              Display version information.
 HEREDOC
   else
-    _print_desc "${@}"
+    desc --get "${@}"
   fi
 }
 
