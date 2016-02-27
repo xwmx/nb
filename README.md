@@ -324,8 +324,6 @@ Description:
 
 #### `$NOTES_AUTO_SYNC`
 
-$NOTES_AUTO_SYNC
-
 Default: 1
 
 By default, operations that trigger a git commit like `add`, `edit`,
