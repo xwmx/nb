@@ -324,7 +324,7 @@ Description:
 
 #### `$NOTES_AUTO_SYNC`
 
-Default: 1
+Default: `1`
 
 By default, operations that trigger a git commit like `add`, `edit`,
 and `delete` will also sync notebook changes to the remote repository, if
