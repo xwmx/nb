@@ -77,6 +77,27 @@ load test_helper
   [[ "${lines[1]}" == "  notes delete <index>" ]]
 }
 
+# $SCOPE ######################################################################
+
+@test "\`delete <scope>:<selector>\` with <filename> argument prints scoped output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" notebook add "one"
+    run "${_NOTES}" use "one"
+    run "${_NOTES}" add
+    _filename=$(notes list -n 1 --no-index | head -1)
+    echo "\${_filename:-}: ${_filename:-}"
+    run "${_NOTES}" use "home"
+  }
+  [[ -n "${_filename}" ]]
+  [[ -e "${NOTES_DIR}/one/${_filename}" ]]
+
+  run "${_NOTES}" delete one:"${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Deleted\ one ]]
+}
+
 # <filename> ##################################################################
 
 @test "\`delete\` with <filename> argument exits with status 0." {
@@ -121,6 +142,20 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
+@test "\`delete\` with <filename> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+
+  run "${_NOTES}" delete "${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Deleted ]]
 }
 
 # <index> #####################################################################
@@ -169,6 +204,20 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
+@test "\`delete\` with <index> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+
+  run "${_NOTES}" delete 0
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Deleted ]]
+}
+
 # <path> ######################################################################
 
 @test "\`delete\` with <path> argument exits with status 0." {
@@ -213,6 +262,20 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
+@test "\`delete\` with <path> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+
+  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Deleted ]]
 }
 
 # <title> #####################################################################
@@ -262,6 +325,20 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
+@test "\`delete\` with <title> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "${_NOTES}" delete "${_title}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Deleted ]]
 }
 
 # help ########################################################################
