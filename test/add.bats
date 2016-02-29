@@ -120,7 +120,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
-@test "\`add\` with piped content creates git commit." {
+@test "\`add\` with piped content prints output." {
   run "${_NOTES}" init
   run bash -c 'echo "# Piped" | "${_NOTES}" add'
   printf "\${status}: %s\n" "${status}"
