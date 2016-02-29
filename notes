@@ -784,18 +784,28 @@ _add() {
   local _basename
   _basename="$(date -u "+%Y%m%d%H%M%S").${_file_type}"
   local _filename
-  _filename="${NOTES_DATA_DIR}/${_basename}"
+  _file_path="${NOTES_DATA_DIR}/${_basename}"
 
   if _interactive_input
   then # terminal input.
     if [[ -z "${_arguments[*]:-}" ]]
     then # argument array is blank.
-      eval "${EDITOR}" "${_filename}"
+      eval "${EDITOR}" "${_file_path}"
     else
-      printf "%s\n" "${_arguments[*]:-}" >> "${_filename}"
+      printf "%s\n" "${_arguments[*]:-}" >> "${_file_path}"
     fi
   else # piped input.
-    cat >> "${_filename}"
+    cat >> "${_file_path}"
+  fi
+
+  if [[ -e "${_file_path}" ]]
+  then
+    if [[ -n "${_SCOPE}" ]]
+    then
+      printf "Added %s:%s\n" "${_SCOPE}" "$(_list 0)"
+    else
+      printf "Added %s\n" "$(_list 0)"
+    fi
   fi
   _git_checkpoint "[NOTES] Add: ${_basename}"
 }

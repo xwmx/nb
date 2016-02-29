@@ -60,6 +60,15 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
+@test "\`add\` with argument prints output." {
+  run "${_NOTES}" init
+  run "${_NOTES}" add  "# Content"
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${output} =~ Added ]]
+}
+
 @test "\`add --type org\` with argument creates a new .org note file." {
   run "${_NOTES}" init
   run "${_NOTES}" add  "* Content" --type org
@@ -109,6 +118,14 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Add') ]]
+}
+
+@test "\`add\` with piped content creates git commit." {
+  run "${_NOTES}" init
+  run bash -c 'echo "# Piped" | "${_NOTES}" add'
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${output} =~ Added ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {
