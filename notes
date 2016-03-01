@@ -800,11 +800,18 @@ _add() {
 
   if [[ -e "${_file_path}" ]]
   then
-    if [[ -n "${_SCOPE}" ]]
+    local _title
+    _title="$(_get_title "${_basename}")"
+    if [[ -n "${_title}" ]]
     then
-      printf "Added %s:%s\n" "${_SCOPE}" "$(_list 0)"
+      printf "Added %s:%s '%s'\n" \
+        "${_SCOPE}" \
+        "${_basename}" \
+        "$(_get_title "${_basename}")"
     else
-      printf "Added %s\n" "$(_list 0)"
+      printf "Added %s:%s\n" \
+        "${_SCOPE}" \
+        "${_basename}"
     fi
   fi
   _git_checkpoint "[NOTES] Add: ${_basename}"
@@ -858,12 +865,9 @@ _delete() {
 
     if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then
-      if [[ -n "${_SCOPE}" ]]
-      then
-        printf "Deleted %s:%s\n" "${_SCOPE}" "${_basename}"
-      else
-        printf "Deleted %s\n" "${_basename}"
-      fi
+      printf "Deleted %s:%s\n" \
+        "${_SCOPE}" \
+        "${_basename}"
     fi
   else
     _die printf "Selection not found.\n"
@@ -1897,6 +1901,8 @@ _notes() {
   if [[ -n "${_SCOPE}" ]]
   then
     NOTES_DATA_DIR="${NOTES_DIR}/${_SCOPE}"
+  else
+    _SCOPE="$(basename "${NOTES_DATA_DIR}")"
   fi
 
   case "${_SUBCOMMAND}" in

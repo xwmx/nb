@@ -66,7 +66,7 @@ load test_helper
   _files=($(ls "${NOTES_DATA_DIR}/"))
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ ${output} =~ Added ]]
+  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
 }
 
 @test "\`add --type org\` with argument creates a new .org note file." {
@@ -125,7 +125,7 @@ load test_helper
   run bash -c 'echo "# Piped" | "${_NOTES}" add'
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ ${output} =~ Added ]]
+  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {

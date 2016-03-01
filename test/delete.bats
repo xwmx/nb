@@ -95,7 +95,7 @@ load test_helper
   run "${_NOTES}" delete one:"${_filename}"
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ "${output}" =~ Deleted\ one ]]
+  [[ "${output}" =~ Deleted\ one:[A-Za-z0-9]+.md ]]
 }
 
 # <filename> ##################################################################
@@ -155,7 +155,7 @@ load test_helper
   run "${_NOTES}" delete "${_filename}"
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ "${output}" =~ Deleted ]]
+  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <index> #####################################################################
@@ -215,7 +215,7 @@ load test_helper
   run "${_NOTES}" delete 0
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ "${output}" =~ Deleted ]]
+  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -275,7 +275,7 @@ load test_helper
   run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}"
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ "${output}" =~ Deleted ]]
+  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
@@ -338,7 +338,7 @@ load test_helper
   run "${_NOTES}" delete "${_title}"
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  [[ "${output}" =~ Deleted ]]
+  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
 }
 
 # help ########################################################################
