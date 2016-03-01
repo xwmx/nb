@@ -42,9 +42,9 @@ HEREDOC
   printf "\${output}: '%s'\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ "${lines[0]}" =~ three ]]
-  [[ "${lines[1]}" =~ two   ]]
-  [[ "${lines[2]}" =~ one   ]]
+  [[ "${lines[1]}" =~ three ]]
+  [[ "${lines[2]}" =~ two   ]]
+  [[ "${lines[3]}" =~ one   ]]
 }
 
 # `notes ls -e [<excerpt length>]` ############################################

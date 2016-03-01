@@ -27,7 +27,9 @@ load test_helper
 
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  _expected="0 notes.
+  _expected="\
+# home:
+0 notes.
 
 Add a note:
   notes add
@@ -48,7 +50,9 @@ Usage information:
   run "${_NOTES}"
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  _expected="0 notes.
+  _expected="\
+# home:
+0 notes.
 
 Add a note:
   notes add
@@ -76,7 +80,7 @@ Usage information:
   _compare "${_files[*]}" "${lines[*]}"
 
   [[ "${status}" -eq 0 ]]
-  [[ "${lines[0]}" =~ three ]]
-  [[ "${lines[1]}" =~ two   ]]
-  [[ "${lines[2]}" =~ one   ]]
+  [[ "${lines[1]}" =~ three ]]
+  [[ "${lines[2]}" =~ two   ]]
+  [[ "${lines[3]}" =~ one   ]]
 }
