@@ -836,6 +836,19 @@ _add() {
   _git_checkpoint "[NOTES] Add: ${_basename}"
 }
 
+# commands ####################################################################
+
+desc "commands" <<HEREDOC
+Usage:
+  ${_ME} commands
+
+Description:
+  List available commands.
+HEREDOC
+_commands() {
+  printf "%s\n" "${_SUBCOMMANDS[*]}"
+}
+
 # count #######################################################################
 
 desc "count" <<HEREDOC
@@ -1962,7 +1975,7 @@ _notes() {
       _git_required
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
-    env|help|version)
+    commands|env|help|version)
       "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
       ;;
     *)
@@ -2130,6 +2143,7 @@ _SUBCOMMANDS=(
   add
   book
   books
+  commands
   count
   delete
   edit
