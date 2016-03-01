@@ -1039,30 +1039,6 @@ Usage:
 
 Help:
   ${_ME} help [<subcommand>]
-
-Subcommands:
-  (default)  List notes. This is an alias for \`${_ME} ls\`.
-  add        Add a new note.
-  count      Print the number of notes.
-  delete     Delete a note.
-  edit       Edit a note.
-  env        Print program environment variables.
-  help       Display this help information.
-  history    Display git history for the current notebook or a note.
-  init       Initialize the first notebook.
-  list       List all notes.
-  ls         Shortcut for \`list --titles\`.
-  notebook   Print current notebook name.
-  notebooks  Manage notebooks.
-  search     Search notes.
-  show       Show a note.
-  status     Run \`git status\` in \`\$NOTES_DATA_DIR\`.
-  sync       Sync local notebook with the remote repository.
-  version    Display version information.
-
-Program Options:
-  -h --help              Display this help information.
-  --version              Display version information.
 HEREDOC
   else
     desc --get "${@}"
