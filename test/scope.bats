@@ -4,11 +4,11 @@ load test_helper
 
 _setup_scope() {
   "${_NOTES}" init
-  "${_NOTES}" notebook add one
+  "${_NOTES}" notebooks add one
   "${_NOTES}" use one
   "${_NOTES}" add "# first"
   "${_NOTES}" use home
-  "${_NOTES}" notebook add two
+  "${_NOTES}" notebooks add two
 }
 
 # `notes <name>:notebook` #####################################################

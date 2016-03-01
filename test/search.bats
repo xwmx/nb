@@ -129,7 +129,7 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
-  "${_NOTES}" notebook add one
+  "${_NOTES}" notebooks add one
   "${_NOTES}" use one
   "${_NOTES}" add "# sweetish"
 }

@@ -1012,10 +1012,11 @@ Usage:
   ${_ME} list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   ${_ME} ls [<list options>]
   ${_ME} notebook
-  ${_ME} notebook add <name> [<remote-url>]
-  ${_ME} notebook list [<name>] [--names]
-  ${_ME} notebook rename <old-name> <new-name>
-  ${_ME} notebook use <name>
+  ${_ME} notebooks [<name>] [--names]
+  ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks current
+  ${_ME} notebooks rename <old-name> <new-name>
+  ${_ME} notebooks use <name>
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} show (<index> | <filename> | <path> | <title>)
   ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
@@ -1038,7 +1039,8 @@ Subcommands:
   init       Initialize the first notebook.
   list       List all notes.
   ls         Shortcut for \`list --titles\`.
-  notebook   Manage notebooks.
+  notebook   Print current notebook name.
+  notebooks  Manage notebooks.
   search     Search notes.
   show       Show a note.
   status     Run \`git status\` in \`\$NOTES_DATA_DIR\`.
@@ -1382,22 +1384,37 @@ _ls() {
 desc "notebook" <<HEREDOC
 Usage:
   ${_ME} notebook
-  ${_ME} notebook add <name> [<remote-url>]
-  ${_ME} notebook list [<name>] [--names]
-  ${_ME} notebook rename <old-name> <new-name>
-  ${_ME} notebook use <name>
 HEREDOC
 # TODO: Add description.
 _notebook() {
-  # _notebook_add()
+  _notebooks current
+}
+desc "nb" "$(_help 'notebook')"
+_nb()    { _notebook "${@}"; }
+desc "book" "$(_help 'notebook')"
+_book()  { _notebook "${@}"; }
+
+# notebooks ###################################################################
+
+desc "notebooks" <<HEREDOC
+Usage:
+  ${_ME} notebooks [<name>] [--names]
+  ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks current
+  ${_ME} notebooks rename <old-name> <new-name>
+  ${_ME} notebooks use <name>
+HEREDOC
+# TODO: Add description.
+_notebooks() {
+  # _notebooks_add()
   #
   # Usage:
-  #   _notebook_add <name> [<remote_url>]
-  _notebook_add() {
+  #   _notebooks_add <name> [<remote_url>]
+  _notebooks_add() {
     local _name="${1:-}"
     if [[ -z "${_name}" ]]
     then
-      _die "${_ME}" help notebook
+      _die "${_ME}" help notebooks
     fi
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
@@ -1416,16 +1433,16 @@ _notebook() {
     fi
     printf "Added: %s\n" "${_name}"
   }
-  # _notebook_list()
+  # _notebooks_list()
   #
   # Usage:
-  #   _notebook_list [<name>] [--names]
-  _notebook_list() {
+  #   _notebooks_list [<name>] [--names]
+  _notebooks_list() {
     local _files=()
     local _only_names=0
 
-    _debug printf "_notebook_list() \${@:-}: '%s'\n" "${@:-}"
-    _debug printf "_notebook_list() \${@:1}: '%s'\n" "${@:1}"
+    _debug printf "_notebooks_list() \${@:-}: '%s'\n" "${@:-}"
+    _debug printf "_notebooks_list() \${@:1}: '%s'\n" "${@:1}"
 
     for __arg in "${@:1}"
     do
@@ -1445,10 +1462,10 @@ _notebook() {
     fi
 
     _debug printf \
-      "_notebook_list() \${_only_names:-}: '%s'\n" \
+      "_notebooks_list() \${_only_names:-}: '%s'\n" \
       "${_only_names:-}"
     _debug printf \
-      "_notebook_list() \${_files[*]}: '%s'\n" \
+      "_notebooks_list() \${_files[*]}: '%s'\n" \
       "${_files[*]:-}"
 
     for __item in "${_files[@]}"
@@ -1473,7 +1490,7 @@ _notebook() {
           fi
 
           cd "${NOTES_DIR}/${__item}" || \
-            _die printf "_notebook() \`cd\` failed."
+            _die printf "_notebooks() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
 
           if [[ -n "${_origin_url}" ]]
@@ -1486,17 +1503,17 @@ _notebook() {
       fi
     done
   }
-  # _notebook_rename()
+  # _notebooks_rename()
   #
   # Usage:
-  #   _notebook_rename <old> <new>
-  _notebook_rename() {
+  #   _notebooks_rename <old> <new>
+  _notebooks_rename() {
     local _old="${1:-}"
     local _new="${2:-}"
 
     if [[ -z "${_old}" ]] || [[ -z "${_old}" ]]
     then
-      _die "${_ME}" help notebook
+      _die "${_ME}" help notebooks
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
     then
       _die printf "'${_old}' is not a valid notebook name.\n"
@@ -1520,18 +1537,18 @@ _notebook() {
 
   case "${_subcommand}" in
     add)
-      _notebook_add "${_name:-}" "${3:-}"
+      _notebooks_add "${_name:-}" "${3:-}"
       ;;
-    list)
-      _notebook_list "${@:2}"
+    current)
+      basename "${NOTES_DATA_DIR}"
       ;;
     rename)
-      _notebook_rename "${_name:-}" "${3:-}"
+      _notebooks_rename "${_name:-}" "${3:-}"
       ;;
     use)
       if [[ -z "${_name}" ]]
       then
-        _die "${_ME}" help notebook
+        _die "${_ME}" help notebooks
       fi
 
       if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
@@ -1543,25 +1560,14 @@ _notebook() {
       fi
       ;;
     *)
-      basename "${NOTES_DATA_DIR}"
+      _notebooks_list "${@:1}"
       ;;
   esac
 }
-_nb()   { _notebook "${@}"; }
-_book() { _notebook "${@}"; }
-
-# notebooks ###################################################################
-
-desc "notebooks" <<HEREDOC
-Usage:
-  ${_ME} notebooks [--names]
-HEREDOC
-# TODO: Add description.
-_notebooks() {
-  _notebook list "${@}"
-}
-_nbs()    { _notebooks "${@}"; }
-_books()  { _notebooks "${@}"; }
+desc "nbs" "$(_help 'notebooks')"
+_nbs()   { _notebooks "${@}"; }
+desc "books" "$(_help 'notebooks')"
+_books() { _notebooks "${@}"; }
 
 # search ######################################################################
 
@@ -1909,7 +1915,7 @@ _use() {
   then
     _die "${_ME}" help use
   fi
-  _notebook use "${_name}"
+  _notebooks use "${_name}"
 }
 
 # version ####################################################################

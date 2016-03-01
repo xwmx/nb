@@ -82,7 +82,7 @@ load test_helper
 @test "\`edit <scope>:<selector>\` with <filename> argument prints scoped output." {
   {
     run "${_NOTES}" init
-    run "${_NOTES}" notebook add "one"
+    run "${_NOTES}" notebooks add "one"
     run "${_NOTES}" use "one"
     run "${_NOTES}" add
     _filename=$(notes list -n 1 --no-index | head -1)
