@@ -52,10 +52,11 @@ Usage:
   notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   notes ls [<list options>]
   notes notebook
-  notes notebook add <name> [<remote-url>]
-  notes notebook list [<name>] [--names]
-  notes notebook rename <old-name> <new-name>
-  notes notebook use <name>
+  notes notebooks [<name>] [--names]
+  notes notebooks add <name> [<remote-url>]
+  notes notebooks current
+  notes notebooks rename <old-name> <new-name>
+  notes notebooks use <name>
   notes search <query> [-a | --all] [--path]
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
@@ -78,7 +79,8 @@ Subcommands:
   init       Initialize the first notebook.
   list       List all notes.
   ls         Shortcut for `list --titles`.
-  notebook   Manage notebooks.
+  notebook   Print current notebook name.
+  notebooks  Manage notebooks.
   search     Search notes.
   show       Show a note.
   status     Run `git status` in `$NOTES_DATA_DIR`.
