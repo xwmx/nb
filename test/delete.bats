@@ -77,7 +77,7 @@ load test_helper
   [[ "${lines[1]}" == "  notes delete <index>" ]]
 }
 
-# $SCOPE ######################################################################
+# <scope>:<selector> ##########################################################
 
 @test "\`delete <scope>:<selector>\` with <filename> argument prints scoped output." {
   {

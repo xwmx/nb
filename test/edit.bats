@@ -77,6 +77,43 @@ load test_helper
   [[ "${lines[1]}" == "  notes edit <index>" ]]
 }
 
+# <scope>:<selector> ##########################################################
+
+@test "\`edit <scope>:<selector>\` with <filename> argument prints scoped output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" notebook add "one"
+    run "${_NOTES}" use "one"
+    run "${_NOTES}" add
+    _filename=$(notes list -n 1 --no-index | head -1)
+    echo "\${_filename:-}: ${_filename:-}"
+    run "${_NOTES}" use "home"
+  }
+  [[ -n "${_filename}" ]]
+  [[ -e "${NOTES_DIR}/one/${_filename}" ]]
+
+  run "${_NOTES}" edit one:"${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Updated\ one:[A-Za-z0-9]+.md ]]
+}
+
+# <selector> (no changes) #####################################################
+
+@test "\`edit\` with no changes does not print outpout." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run export EDITOR="cat" && "${_NOTES}" edit "${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ -z ${output} ]]
+}
+
 # <filename> ##################################################################
 
 @test "\`edit\` with <filename> argument exits with status 0." {
@@ -121,6 +158,19 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
+}
+
+@test "\`edit\` with <filename> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" edit "${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <index> #####################################################################
@@ -169,6 +219,19 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 }
 
+@test "\`edit\` with <index> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" edit 0
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+}
+
 # <path> ######################################################################
 
 @test "\`edit\` with <path> argument exits with status 0." {
@@ -213,6 +276,19 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
+}
+
+@test "\`edit\` with <path> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
@@ -262,6 +338,20 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
+}
+
+@test "\`edit\` with <title> argument prints output." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "${_NOTES}" edit "${_title}"
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
 # help ########################################################################
