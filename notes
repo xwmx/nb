@@ -1524,7 +1524,7 @@ _notebooks() {
     local _old="${1:-}"
     local _new="${2:-}"
 
-    if [[ -z "${_old}" ]] || [[ -z "${_old}" ]]
+    if [[ -z "${_old}" ]] || [[ -z "${_new}" ]]
     then
       _die "${_ME}" help notebooks
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
