@@ -1401,7 +1401,11 @@ _ls() {
   if [[ -z "${*:1}" ]]
   then
     _notebooks --names | tr '\n' ' ' && printf "\n"
+    # Use control characters to disable wrapping for long lines.
+    # Source: http://superuser.com/a/189068
+    printf '\033[?7l'
     _print_line "$(_notebooks --names --no-color | tr '\n' ' ' && printf "\n")"
+    printf '\033[?7h'
   fi
   _list --titles "${@}"
 
