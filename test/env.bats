@@ -46,3 +46,13 @@ load test_helper
   run "${_NOTES}" env
   [[ "${lines[3]}" =~ ${_TMP_DIR}/.notesrc ]]
 }
+
+@test "\`env\` prints \`\$EDITOR\`." {
+  run "${_NOTES}" env
+  [[ "${lines[4]}" =~ EDITOR ]]
+}
+
+@test "\`env\` prints \`\$EDITOR\` assigned to 'mock_editor'." {
+  run "${_NOTES}" env
+  [[ "${lines[4]}" =~ mock_editor ]]
+}
