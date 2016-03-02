@@ -439,20 +439,20 @@ _git_required() {
   fi
 
   local _git_name
-  _git_name="$(git config user.name)"
+  _git_name="$(git config user.name || printf '')"
   local _git_email
-  _git_email="$(git config user.email)"
+  _git_email="$(git config user.email || printf '')"
 
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
   then
-    printf "git configuration incomplete. Run:\n"
+    printf "git configuration incomplete. To set your name and email, run:\n"
     if [[ -z "${_git_name}" ]]
     then
-      printf "git config --global user.name \"Your Name\""
+      printf "git config --global user.name \"Your Name\"\n"
     fi
     if [[ -z "${_git_email}" ]]
     then
-      printf "git config --global user.email \"you@example.com\""
+      printf "git config --global user.email \"you@example.com\"\n"
     fi
     return 1
   fi
