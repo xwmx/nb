@@ -1362,7 +1362,8 @@ _ls() {
 
   if [[ -z "${*:1}" ]]
   then
-    printf "# %s:\n" "${_SCOPE}"
+    _notebooks --names | tr '\n' ' ' && printf "\n"
+    _print_line "$(_notebooks --names --no-color | tr '\n' ' ' && printf "\n")"
   fi
   _list --titles "${@}"
 

@@ -52,7 +52,7 @@ _setup_scope() {
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
 
-  [[ "${lines[1]}" =~ "first" ]]
+  [[ "${lines[2]}" =~ "first" ]]
 }
 
 # `notes <name>:` #########################################################
@@ -68,7 +68,7 @@ _setup_scope() {
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
 
-  [[ "${lines[1]}" =~ "first" ]]
+  [[ "${lines[2]}" =~ "first" ]]
 }
 
 @test "\`notes one: --no-index\` exits with 0 and scoped \`ls\` output." {
@@ -82,7 +82,7 @@ _setup_scope() {
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
 
-  [[ "${lines[0]}" == "first" ]]
+  [[ "${lines[0]}" = "first" ]]
 }
 
 @test "\`notes two:\` exits with 1 and scoped \`ls\` output." {
@@ -96,7 +96,7 @@ _setup_scope() {
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
 
-  [[ "${lines[1]}" =~ "0 notes." ]]
+  [[ "${lines[2]}" =~ "0 notes." ]]
 }
 
 @test "\`notes invalid:\` exits with 1 and prints error." {

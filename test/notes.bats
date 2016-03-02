@@ -27,16 +27,13 @@ load test_helper
 
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  _expected="\
-# home:
-0 notes.
 
-Add a note:
-  notes add
-Usage information:
-  notes help"
-  _compare "${_expected}" "${output}"
-  [[ "${_expected}" == "${output}" ]]
+  [[ "${lines[1]}" == "-----" ]]
+  [[ "${lines[2]}" == "0 notes." ]]
+  [[ "${lines[3]}" == "Add a note:" ]]
+  [[ "${lines[4]}" == "  notes add" ]]
+  [[ "${lines[5]}" == "Usage information:" ]]
+  [[ "${lines[6]}" == "  notes help" ]]
 }
 
 # `notes` (empty repo) ########################################################
@@ -50,16 +47,13 @@ Usage information:
   run "${_NOTES}"
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
-  _expected="\
-# home:
-0 notes.
 
-Add a note:
-  notes add
-Usage information:
-  notes help"
-  _compare "${_expected}" "${output}"
-  [[ "${_expected}" == "${output}" ]]
+  [[ "${lines[1]}" == "-----" ]]
+  [[ "${lines[2]}" == "0 notes." ]]
+  [[ "${lines[3]}" == "Add a note:" ]]
+  [[ "${lines[4]}" == "  notes add" ]]
+  [[ "${lines[5]}" == "Usage information:" ]]
+  [[ "${lines[6]}" == "  notes help" ]]
 }
 
 # `notes` (non-empty repo) ####################################################
@@ -80,7 +74,7 @@ Usage information:
   _compare "${_files[*]}" "${lines[*]}"
 
   [[ "${status}" -eq 0 ]]
-  [[ "${lines[1]}" =~ three ]]
-  [[ "${lines[2]}" =~ two   ]]
-  [[ "${lines[3]}" =~ one   ]]
+  [[ "${lines[2]}" =~ three ]]
+  [[ "${lines[3]}" =~ two   ]]
+  [[ "${lines[4]}" =~ one   ]]
 }
