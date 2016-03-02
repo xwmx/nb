@@ -1022,7 +1022,7 @@ Usage:
   ${_ME} edit (<index> | <filename> | <path> | <title>)
   ${_ME} history [<selection>]
   ${_ME} init [<remote-url>]
-  ${_ME} list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
   ${_ME} ls [<list options>]
   ${_ME} notebook
   ${_ME} notebooks [<name>] [--names] [--no-color]
@@ -1158,12 +1158,12 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
-  --noindex              Don't print an index next to each note's filename.
+  --no-index             Don't print an index next to each note's filename.
   -n <limit>             The maximum number of notes to list.
 
 Description:
@@ -1178,7 +1178,7 @@ Description:
 Examples:
   ${_ME} list
   ${_ME} list -e 10
-  ${_ME} list --excerpt --noindex
+  ${_ME} list --excerpt --no-index
 HEREDOC
 _list() {
   _debug printf "_list() \${1:-}: '%s'\n" "${1:-}"
@@ -1624,7 +1624,7 @@ _search() {
     for __scope in "${_target_notebooks[@]:-}"
     do
       local _files=
-      _files=($(${_ME} "${__scope}:list" --noindex || printf ''))
+      _files=($(${_ME} "${__scope}:list" --no-index || printf ''))
 
       _debug printf "_search() \${__scope}: '%s'\n" "${__scope}"
       # _debug printf "_search() \${_files[*]}: '%s'\n" "${_files[*]}"
@@ -1804,7 +1804,7 @@ _show() {
     elif ((_print_index))
     then
       local _index
-      _index="$(_get_index "${_basename}" "$(notes list --noindex)")"
+      _index="$(_get_index "${_basename}" "$(notes list --no-index)")"
       printf "%s\n" "${_index}"
     elif ((_render)) &&
          ((_dump))   &&

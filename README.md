@@ -49,7 +49,7 @@ Usage:
   notes edit (<index> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
+  notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
   notes ls [<list options>]
   notes notebook
   notes notebooks [<name>] [--names] [--no-color]
@@ -208,12 +208,12 @@ Description:
 
 ```
 Usage:
-  notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
+  notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
-  --noindex              Don't print an index next to each note's filename.
+  --no-index             Don't print an index next to each note's filename.
   -n <limit>             The maximum number of notes to list.
 
 Description:
@@ -228,7 +228,7 @@ Description:
 Examples:
   notes list
   notes list -e 10
-  notes list --excerpt --noindex
+  notes list --excerpt --no-index
 ```
 
 #### `ls`
