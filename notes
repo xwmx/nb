@@ -1105,6 +1105,22 @@ _init() {
       "${NOTES_DATA_DIR}"
   fi
 
+  cat <<HEREDOC
+Welcome to
+             _
+ _ __   ___ | |_ ___  ___
+| '_ \ / _ \| __/ _ \/ __|
+| | | | (_) | ||  __/\__ \\
+|_| |_|\___/ \__\___||___/
+
+Initializing...
+HEREDOC
+  if [[ ! -e "${NOTES_DIR}" ]]
+  then
+    mkdir -p "${NOTES_DIR}"
+    printf "Created %s\n" "${NOTES_DIR}"
+  fi
+
   if [[ ! -e "${NOTESRC_PATH}" ]]
   then
     cat <<HEREDOC > "${NOTESRC_PATH}"
@@ -1141,6 +1157,7 @@ _init() {
 # Example Values: 'md' 'org'
 # export NOTES_DEFAULT_EXTENSION="\${NOTES_DEFAULT_EXTENSION:-md}"
 HEREDOC
+    printf "Created %s\n" "${NOTESRC_PATH}"
   fi
 
   local _repo_url="${1:-}"
@@ -1149,9 +1166,11 @@ HEREDOC
     git clone "${_repo_url}" "${NOTES_DATA_DIR}"
   else
     mkdir -p "${NOTES_DATA_DIR}"
-    cd "${NOTES_DATA_DIR}" && git init
+    cd "${NOTES_DATA_DIR}" && git init 1>/dev/null
   fi
   printf "home\n" > "${NOTES_DIR}/.current"
+
+  printf "Created 'home' notebook\n"
 }
 
 # list ########################################################################
@@ -1963,18 +1982,14 @@ _notes() {
       _git_required
 
       # Call `_init()` if configuration hasn't been initialized.
-      if [[ ! -e "${NOTES_DIR}" ]] && [[ ! -e "${NOTESRC_PATH}" ]]
+      if [[ ! -e "${NOTES_DIR}"       ]] &&
+         [[ ! -e "${NOTESRC_PATH}"    ]] ||
+         [[ ! -e "${NOTES_DATA_DIR}"  ]]
       then
         _git_required
-        _init '' &>/dev/null
-      fi
-
-      if [[ ! -e "${NOTES_DATA_DIR}" ]]
-      then # `$NOTES_DATA_DIR` doesn't exist.
-        _die cat <<HEREDOC
-${NOTES_DATA_DIR} doesn't exist. Use \`${_ME} init\` to get started.
-Usage: ${_ME} init [<remote url>]
-HEREDOC
+        _init "${_ARGUMENTS[@]:1}"
+        _ls || true # returns 0 due to empty repository.
+        return 0
       fi
 
       local _core_subcommands=(

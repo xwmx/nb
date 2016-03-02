@@ -5,6 +5,7 @@ load test_helper
 # `notes list` (empty) ########################################################
 
 @test "\`list\` (empty) exits with 1 and lists files." {
+  run "${_NOTES}" init
   run "${_NOTES}" list
   [[ ${status} -eq 1 ]]
 
