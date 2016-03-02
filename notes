@@ -437,6 +437,25 @@ _git_required() {
   then
     _die printf "\`git\` is required, but wasn't found.\n"
   fi
+
+  local _git_name
+  _git_name="$(git config user.name)"
+  local _git_email
+  _git_email="$(git config user.email)"
+
+  if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
+  then
+    printf "git configuration incomplete. Run:\n"
+    if [[ -z "${_git_name}" ]]
+    then
+      printf "git config --global user.name \"Your Name\""
+    fi
+    if [[ -z "${_git_email}" ]]
+    then
+      printf "git config --global user.email \"you@example.com\""
+    fi
+    return 1
+  fi
 }
 
 # _git_should_autosync()
