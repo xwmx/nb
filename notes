@@ -1025,7 +1025,7 @@ Usage:
   ${_ME} list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   ${_ME} ls [<list options>]
   ${_ME} notebook
-  ${_ME} notebooks [<name>] [--names]
+  ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
@@ -1387,7 +1387,7 @@ _book()  { _notebook "${@}"; }
 
 desc "notebooks" <<HEREDOC
 Usage:
-  ${_ME} notebooks [<name>] [--names]
+  ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
@@ -1428,6 +1428,7 @@ _notebooks() {
   #   _notebooks_list [<name>] [--names]
   _notebooks_list() {
     local _files=()
+    local _no_color=0
     local _only_names=0
 
     _debug printf "_notebooks_list() \${@:-}: '%s'\n" "${@:-}"
@@ -1438,6 +1439,9 @@ _notebooks() {
       case "${__arg}" in
         --names)
           _only_names=1
+          ;;
+        --nocolor|--no-color)
+          _no_color=1
           ;;
         *)
           _files+=("${__arg}")
@@ -1461,33 +1465,33 @@ _notebooks() {
     do
       if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
-        if ((_only_names))
-        then
-          printf "%s\n" "${__item}"
+        local _current
+        _current="$(cat "${NOTES_DIR}/.current")"
+        local _formatted_name
+        local _origin_url
+
+        if [[ -n "${_current}" ]] &&
+           [[ "${_current}" == "${__item}" ]] &&
+           ! ((_no_color))
+        then # it's the current repository.
+          _formatted_name="$(_highlight "${__item}")"
         else
-          local _current
-          _current="$(cat "${NOTES_DIR}/.current")"
-          local _formatted_name
-          local _origin_url
+          _formatted_name="${__item}"
+        fi
 
-          if [[ -n "${_current}" ]] &&
-             [[ "${_current}" == "${__item}" ]]
-          then # it's the current repository.
-            _formatted_name="$(_highlight "${__item}")"
-          else
-            _formatted_name="${__item}"
-          fi
-
+        local _origin_url
+        if ! ((_only_names))
+        then
           cd "${NOTES_DIR}/${__item}" || \
             _die printf "_notebooks() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
+        fi
 
-          if [[ -n "${_origin_url}" ]]
-          then
-            printf "%s\n" "${_formatted_name}	(${_origin_url})"
-          else
-            printf "%s\n" "${_formatted_name}"
-          fi
+        if [[ -n "${_origin_url:-}" ]]
+        then
+          printf "%s\n" "${_formatted_name}	(${_origin_url})"
+        else
+          printf "%s\n" "${_formatted_name}"
         fi
       fi
     done
@@ -1607,7 +1611,7 @@ _search() {
 
     if ((_all))
     then
-      _target_notebooks=($(${_ME} notebooks --names))
+      _target_notebooks=($(${_ME} notebooks --names --no-color))
     else
       _target_notebooks=($(_notebook))
     fi

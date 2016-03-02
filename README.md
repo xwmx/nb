@@ -52,7 +52,7 @@ Usage:
   notes list [(-e | --excerpt) [<length>]] [--noindex] [-n <limit>] [<selection>]
   notes ls [<list options>]
   notes notebook
-  notes notebooks [<name>] [--names]
+  notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
