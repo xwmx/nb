@@ -1467,7 +1467,7 @@ _notebooks() {
       if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
         local _current
-        _current="$(cat "${NOTES_DIR}/.current")"
+        _current="$(_notebooks current)"
         local _formatted_name
         local _origin_url
 
