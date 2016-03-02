@@ -2,7 +2,7 @@ _notes_subcommands() {
   local _commands
   _commands=($(notes commands))
   local _notebooks
-  _notebooks=($(notes notebooks --names))
+  _notebooks=($(notes notebooks --names --no-color))
   local _completions
   _completions=(${_commands[@]})
 
