@@ -1405,8 +1405,11 @@ _ls() {
     # Use control characters to disable wrapping for long lines.
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
-    _print_line "$(_notebooks --names --no-color | tr '\n' ' ' && printf "\n")"
+    _print_line "$(
+      _notebooks --names --no-color | tr '\n' ' ' | sed 's/.$//'
+    )" | tr -d '\n'
     printf '\033[?7h'
+    printf '\n'
   fi
   _list --titles "${@}"
 

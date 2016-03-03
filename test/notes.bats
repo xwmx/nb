@@ -55,7 +55,7 @@ load test_helper
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
 
-  [[ "${lines[1]}" == "-----" ]]
+  [[ "${lines[1]}" =~ ---- ]]
   [[ "${lines[2]}" == "0 notes." ]]
   [[ "${lines[3]}" == "Add a note:" ]]
   [[ "${lines[4]}" == "  notes add" ]]
