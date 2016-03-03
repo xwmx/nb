@@ -1,12 +1,6 @@
 # notes
 
-```
-             _
- _ __   ___ | |_ ___  ___
-| '_ \ / _ \| __/ _ \/ __|
-| | | | (_) | ||  __/\__ \
-|_| |_|\___/ \__\___||___/
-```
+![](https://raw.githubusercontent.com/alphabetum/notes/master/docs/assets/screenshot.png)
 
 A command line note-taking and syncing tool that stores data in Markdown files versioned with git.
 
