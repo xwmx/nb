@@ -1052,7 +1052,7 @@ Usage:
   ${_ME} notebooks use <name>
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} show (<index> | <filename> | <path> | <title>)
-  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
+  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
   ${_ME} sync [-a|--all]
   ${_ME} -h | --help | help [<subcommand>]
   ${_ME} --version | version
@@ -1761,16 +1761,16 @@ _search() {
 desc "show" <<HEREDOC
 Usage:
   ${_ME} show (<index> | <filename> | <path> | <title>)
-  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
+  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
 
 Options:
-  --dump    Print to standard output.
-  --index   Print the index number of the note file.
-  --path    Print the full path of the note file.
-  --raw     When used with \`--dump\`, the note is printed without highlighting.
-  --render  Use \`pandoc\` [1] to render the file to HTML and display with
-            \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is not
-            available, \`--render\` is ignored.
+  --dump      Print to standard output.
+  --index     Print the index number of the note file.
+  --path      Print the full path of the note file.
+  --no-color  When used with \`--dump\`, print the note without highlighting.
+  --render    Use \`pandoc\` [1] to render the file to HTML and display with
+              \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is not
+              available, \`--render\` is ignored.
 
             1. http://pandoc.org/
             2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
@@ -1797,7 +1797,7 @@ _show() {
   local _dump=0
   local _print_path=0
   local _print_index=0
-  local _print_raw=0
+  local _print_no_color=0
 
   _debug printf "_show() \${_arguments[*]:-}: '%s'\n" "${_arguments[*]:-}"
 
@@ -1813,8 +1813,8 @@ _show() {
       --index)
         _print_index=1
         ;;
-      --raw)
-        _print_raw=1
+      --raw|--no-color|--nocolor)
+        _print_no_color=1
         ;;
       --render)
         _render=1
@@ -1873,9 +1873,9 @@ _show() {
         | "${PAGER}"
     else # default
       if ((_dump))
-      then # `notes show --dump [--raw]`
-        if ((_print_raw))
-        then # `notes show --dump --raw`
+      then # `notes show --dump [--no-color]`
+        if ((_print_no_color))
+        then # `notes show --dump --no-color`
           cat "${NOTES_DATA_DIR}/${_basename}"
         else # `notes show --dump`
           _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"

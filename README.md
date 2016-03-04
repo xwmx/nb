@@ -59,7 +59,7 @@ Usage:
   notes notebooks use <name>
   notes search <query> [-a | --all] [--path]
   notes show (<index> | <filename> | <path> | <title>)
-  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
+  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
   notes sync [-a|--all]
   notes -h | --help | help [<subcommand>]
   notes --version | version
@@ -262,16 +262,16 @@ Description:
 ```
 Usage:
   notes show (<index> | <filename> | <path> | <title>)
-  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--raw]]
+  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
 
 Options:
-  --dump    Print to standard output.
-  --index   Print the index number of the note file.
-  --path    Print the full path of the note file.
-  --raw     When used with `--dump`, the note is printed without highlighting.
-  --render  Use `pandoc` [1] to render the file to HTML and display with
-            `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
-            available, `--render` is ignored.
+  --dump      Print to standard output.
+  --index     Print the index number of the note file.
+  --path      Print the full path of the note file.
+  --no-color  When used with `--dump`, print the note without highlighting.
+  --render    Use `pandoc` [1] to render the file to HTML and display with
+              `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
+              available, `--render` is ignored.
 
             1. http://pandoc.org/
             2. https://en.wikipedia.org/wiki/Lynx_(web_browser)

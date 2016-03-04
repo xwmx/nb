@@ -61,14 +61,14 @@ load test_helper
   [[ "${lines[0]}" =~ "Example" ]]
 }
 
-@test "\`show --dump --raw\` with argument exits with 0 and prints note without highlighting." {
+@test "\`show --dump --no-color\` with argument exits with 0 and prints note without highlighting." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Example"
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --dump --raw
+  run "${_NOTES}" show 0 --dump --no-color
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 0 ]]
