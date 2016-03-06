@@ -1924,7 +1924,7 @@ _sync() {
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\n"
-    _notebooks=($(${_ME} notebooks --names))
+    _notebooks=($(${_ME} notebooks --names --no-color))
   else
     _notebooks=($(_notebook))
   fi
