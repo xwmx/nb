@@ -845,7 +845,7 @@ _add() {
       printf "Added %s:%s '%s'\n" \
         "${_SCOPE}" \
         "${_basename}" \
-        "$(_get_title "${_basename}")"
+        "${_title}"
     else
       printf "Added %s:%s\n" \
         "${_SCOPE}" \
@@ -1011,7 +1011,7 @@ _edit() {
         printf "Updated %s:%s '%s'\n" \
           "${_SCOPE}" \
           "${_basename}" \
-          "$(_get_title "${_basename}")"
+          "${_title}"
       else
         printf "Updated %s:%s\n" \
           "${_SCOPE}" \
