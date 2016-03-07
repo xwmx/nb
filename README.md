@@ -45,7 +45,7 @@ Usage:
   notes [<number>] [<list options>]
   notes add [<note>] [--type <type>]
   notes count
-  notes delete (<index> | <filename> | <path> | <title>)
+  notes delete (<index> | <filename> | <path> | <title>) [--force]
   notes edit (<index> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
@@ -128,7 +128,10 @@ Description:
 
 ```
 Usage:
-  notes delete (<index> | <filename> | <path> | <title>)
+  notes delete (<index> | <filename> | <path> | <title>) [--force]
+
+Options:
+  --force  Skip the confirmation prompt.
 
 Description:
   Delete a note.

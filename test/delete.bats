@@ -11,7 +11,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete
+  run "${_NOTES}" delete --foce
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -25,7 +25,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete
+  run "${_NOTES}" delete --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -38,7 +38,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete
+  run "${_NOTES}" delete --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -55,11 +55,11 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete
+  run "${_NOTES}" delete --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>) [--force]" ]]
 }
 
 # <selector> ##################################################################
@@ -69,12 +69,28 @@ load test_helper
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" delete 0
+  run "${_NOTES}" delete 0 --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>) [--force]" ]]
+}
+
+@test "\`delete <selector> (no force)\` returns 0 and deletes note." {
+  skip "Determine how to test interactive prompt."
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+
+  run "${_NOTES}" delete "${_filename}" --force
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -92,7 +108,7 @@ load test_helper
   [[ -n "${_filename}" ]]
   [[ -e "${NOTES_DIR}/one/${_filename}" ]]
 
-  run "${_NOTES}" delete one:"${_filename}"
+  run "${_NOTES}" delete one:"${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${output}" =~ Deleted\ one:[A-Za-z0-9]+.md ]]
@@ -107,7 +123,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete "${_filename}"
+  run "${_NOTES}" delete "${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -121,7 +137,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete "${_filename}"
+  run "${_NOTES}" delete "${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -134,7 +150,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete "${_filename}"
+  run "${_NOTES}" delete "${_filename}" --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -152,7 +168,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete "${_filename}"
+  run "${_NOTES}" delete "${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
@@ -167,7 +183,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete 0
+  run "${_NOTES}" delete 0 --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -181,7 +197,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete 0
+  run "${_NOTES}" delete 0 --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -194,7 +210,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete 0
+  run "${_NOTES}" delete 0 --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -212,7 +228,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete 0
+  run "${_NOTES}" delete 0 --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
@@ -227,7 +243,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}"
+  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -241,7 +257,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}"
+  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -254,7 +270,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}"
+  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}" --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -272,7 +288,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}"
+  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
@@ -288,7 +304,7 @@ load test_helper
   }
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" delete "${_title}"
+  run "${_NOTES}" delete "${_title}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -303,7 +319,7 @@ load test_helper
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete "${_title}"
+  run "${_NOTES}" delete "${_title}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -317,7 +333,7 @@ load test_helper
   }
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" delete "${_title}"
+  run "${_NOTES}" delete "${_title}" --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -335,7 +351,7 @@ load test_helper
   }
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" delete "${_title}"
+  run "${_NOTES}" delete "${_title}" --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
@@ -353,5 +369,5 @@ load test_helper
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>) [--force]" ]]
 }

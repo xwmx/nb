@@ -885,25 +885,73 @@ _count() {
 
 desc "delete" <<HEREDOC
 Usage:
-  ${_ME} delete (<index> | <filename> | <path> | <title>)
+  ${_ME} delete (<index> | <filename> | <path> | <title>) [--force]
+
+Options:
+  --force  Skip the confirmation prompt.
 
 Description:
   Delete a note.
 HEREDOC
 _delete() {
-  local _selection="${1:-}"
+  local _selection=
   local _basename=
+  local _force=0
+  local _title
+  local _note_info_line
+
+  for __arg in "${@:1}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      *)
+        if [[ -z "${_selection}" ]]
+        then
+          _selection=("${__arg}")
+        fi
+        ;;
+    esac
+  done
 
   _debug printf "_delete() \${_selection}: '%s'\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
+
   if [[ -z "${_basename}" ]]
   then
     ${_ME} help "delete"
     return 1
   fi
   _debug printf "_delete() \${_basename}: '%s'\n" "${_basename}"
+
+  _title="$(_get_title "${_basename}")"
+  if [[ -n "${_title}" ]]
+  then
+    _note_info_line="${_SCOPE}:${_basename} '${_title}'"
+  else
+    _note_info_line="${_SCOPE}:${_basename}"
+  fi
+
+  if ! ((_force))
+  then
+    printf "Deleting %s\n" "${_note_info_line}"
+    while true
+    do
+      read -p "Are you sure you want to proceed? [y/N] " __yn
+      case ${__yn} in
+        [Yy]* )
+          break
+          ;;
+        * )
+          printf "Exiting...\n"
+          exit 0
+          ;;
+      esac
+    done
+  fi
 
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
@@ -913,9 +961,7 @@ _delete() {
 
     if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then
-      printf "Deleted %s:%s\n" \
-        "${_SCOPE}" \
-        "${_basename}"
+      printf "Deleted %s\n" "${_note_info_line}"
     fi
   else
     _die printf "Selection not found.\n"
@@ -1032,7 +1078,7 @@ Usage:
   ${_ME} [<number>] [<list options>]
   ${_ME} add [<note>] [--type <type>]
   ${_ME} count
-  ${_ME} delete (<index> | <filename> | <path> | <title>)
+  ${_ME} delete (<index> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<index> | <filename> | <path> | <title>)
   ${_ME} history [<selection>]
   ${_ME} init [<remote-url>]
