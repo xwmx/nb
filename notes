@@ -942,10 +942,10 @@ _delete() {
     do
       read -p "Are you sure you want to proceed? [y/N] " __yn
       case ${__yn} in
-        [Yy]* )
+        [Yy]*)
           break
           ;;
-        * )
+        *)
           printf "Exiting...\n"
           exit 0
           ;;
