@@ -128,10 +128,7 @@ Description:
 
 ```
 Usage:
-  notes delete <index>
-  notes delete <filename>
-  notes delete <path>
-  notes delete <title>
+  notes delete (<index> | <filename> | <path> | <title>)
 
 Description:
   Delete a note.
@@ -141,10 +138,7 @@ Description:
 
 ```
 Usage:
-  notes edit <index>
-  notes edit <filename>
-  notes edit <path>
-  notes edit <title>
+  notes edit (<index> | <filename> | <path> | <title>)
 
 Description:
   Open the specified note in `$EDITOR`.

@@ -885,10 +885,7 @@ _count() {
 
 desc "delete" <<HEREDOC
 Usage:
-  ${_ME} delete <index>
-  ${_ME} delete <filename>
-  ${_ME} delete <path>
-  ${_ME} delete <title>
+  ${_ME} delete (<index> | <filename> | <path> | <title>)
 
 Description:
   Delete a note.
@@ -929,10 +926,7 @@ _delete() {
 
 desc "edit" <<HEREDOC
 Usage:
-  ${_ME} edit <index>
-  ${_ME} edit <filename>
-  ${_ME} edit <path>
-  ${_ME} edit <title>
+  ${_ME} edit (<index> | <filename> | <path> | <title>)
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'.

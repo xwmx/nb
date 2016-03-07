@@ -59,7 +59,7 @@ load test_helper
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit <index>" ]]
+  [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
 }
 
 # <selector> ##################################################################
@@ -74,7 +74,7 @@ load test_helper
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit <index>" ]]
+  [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -366,5 +366,5 @@ load test_helper
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit <index>" ]]
+  [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
 }
