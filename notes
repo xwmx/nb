@@ -909,7 +909,7 @@ _delete() {
       *)
         if [[ -z "${_selection}" ]]
         then
-          _selection=("${__arg}")
+          _selection="${__arg}"
         fi
         ;;
     esac
