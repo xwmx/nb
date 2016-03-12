@@ -51,7 +51,7 @@ Usage:
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
   notes ls [<list options>]
-  notes notebook
+  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
@@ -252,6 +252,16 @@ Description:
   Search notes using `ack` [1] (if available) or `grep`.
 
   1. http://beyondgrep.com/
+```
+
+#### `move`
+
+```
+Usage:
+  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>
+
+Description:
+  Move the specified note to <notebook>.
 ```
 
 #### `show`

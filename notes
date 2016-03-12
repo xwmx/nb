@@ -1084,6 +1084,7 @@ Usage:
   ${_ME} init [<remote-url>]
   ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
   ${_ME} ls [<list options>]
+  ${_ME} move (<index> | <filename> | <path> | <title>) [--force] <notebook>
   ${_ME} notebook
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
@@ -1453,6 +1454,112 @@ _ls() {
   fi
   _list --titles "${@}"
 
+}
+
+# move ########################################################################
+
+desc "move" <<HEREDOC
+Usage:
+  ${_ME} move (<index> | <filename> | <path> | <title>) [--force] <notebook>
+
+Description:
+  Move the specified note to <notebook>.
+HEREDOC
+_move() {
+  local _selection=
+  local _target_notebook=
+  local _basename=
+  local _force=0
+  local _title=
+  local _source_info_line=
+  local _target_info_line=
+
+  for __arg in "${@:1}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      *)
+        if [[ -z "${_selection}" ]]
+        then
+          _selection="${__arg}"
+        elif [[ -z "${_target_notebook}" ]]
+        then
+          _target_notebook="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  _debug printf "_move() \${_selection}: '%s'\n" "${_selection}"
+  _debug printf "_move() \${_target_notebook}: '%s'\n" "${_target_notebook}"
+
+  if [[ "${_target_notebook}" =~ :$ ]]
+  then
+    _target_notebook="$(printf "%s\n" "${_target_notebook}" | tr -d ':')"
+  fi
+  _debug printf "_move() \${_target_notebook}: '%s'\n" "${_target_notebook}"
+
+  _basename="$(_get_selection_basename "${_selection}")"
+  _set_selection_notebook "${_selection}"
+
+  if [[ -z "${_basename}" ]] ||
+     [[ ! -e "${NOTES_DIR}/${_target_notebook}/.git" ]]
+  then
+    ${_ME} help "move"
+    return 1
+  elif [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  then
+    _die printf "Not Found: %s:%s\n" "${_SCOPE}" "${_basename}"
+  elif [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
+  then
+    _die printf "Already exists: %s:%s\n" "${_SCOPE}" "${_basename}"
+  fi
+
+  _debug printf "_move() \${_basename}: '%s'\n" "${_basename}"
+
+  _title="$(_get_title "${_basename}")"
+  if [[ -n "${_title}" ]]
+  then
+    _source_info_line="${_SCOPE}:${_basename} '${_title}'"
+    _target_info_line="${_target_notebook}:${_basename} '${_title}'"
+  else
+    _source_info_line="${_SCOPE}:${_basename}"
+    _target_info_line="${_SCOPE}:${_target_notebook}"
+  fi
+
+  if ! ((_force))
+  then
+    printf "Moving %s to '%s'\n"  \
+      "${_source_info_line}"    \
+      "${_target_notebook}"
+    while true
+    do
+      read -p "Are you sure you want to proceed? [y/N] " __yn
+      case ${__yn} in
+        [Yy]*)
+          break
+          ;;
+        *)
+          printf "Exiting...\n"
+          exit 0
+          ;;
+      esac
+    done
+  fi
+
+  cat "${NOTES_DATA_DIR}/${_basename}" \
+    | "${_ME}" "${_target_notebook}:add" 1> /dev/null
+
+  "${_ME}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
+
+  if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  then
+    printf "Moved to '%s':'%s'\n"  \
+      "${_target_notebook}"        \
+      "${_basename}"
+  fi
 }
 
 # notebook ####################################################################
@@ -2068,6 +2175,7 @@ _notes() {
         edit
         list
         ls
+        move
         nb
         nbs
         notebook
@@ -2217,6 +2325,7 @@ _SUBCOMMANDS=(
   init
   list
   ls
+  move
   nb
   nbs
   notebook

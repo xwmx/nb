@@ -10,5 +10,5 @@ load test_helper
 @test "\`commands\` prints subcommands." {
   run "${_NOTES}" commands
   [[ "${lines[0]}" =~ add ]]
-  [[ "${lines[23]}" =~ version ]]
+  [[ "${lines[24]}" =~ version ]]
 }
