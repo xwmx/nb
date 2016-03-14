@@ -338,23 +338,34 @@ _get_selection_parts() {
 # _get_title()
 #
 # Usage:
-#   _get_title <basename>
+#   _get_title <basename> [<scope>]
 #
 # Description:
-#   Print the title, if present, of the note with the given basename.
+#   Print the title, if present, of the note with the given basename in
+#   `$NOTES_DATA_DIR` or <scope>.
 _get_title() {
   local _basename="${1:-}"
+  local _scope="${2:-}"
+  local _data_dir="${NOTES_DATA_DIR}"
   local _title=
+
+  if [[ -n "${_scope}" ]]
+  then
+    _data_dir="${NOTES_DIR}/${_scope}"
+  fi
+
   if [[ -z "${_basename}" ]]
   then
     _die printf "Usage: _get_title <basename>\n"
+  elif [[ -e "${_data_dir}/${_basename}" ]]
+  then
+    _maybe_title="$(head -1 "${_data_dir}/${_basename}")"
+    if [[ "${_maybe_title}" =~ ^#\  ]]
+    then # first line starts with an H1
+      _title="$(printf "%s\n" "${_maybe_title}" | sed 's/^\# //')"
+    fi
+    printf "%s\n" "${_title}"
   fi
-  _maybe_title="$(head -1 "${NOTES_DATA_DIR}/${_basename}")"
-  if [[ "${_maybe_title}" =~ ^#\  ]]
-  then # first line starts with an H1
-    _title="$(printf "%s\n" "${_maybe_title}" | sed 's/^\# //')"
-  fi
-  printf "%s\n" "${_title}"
 }
 
 # _git_checkpoint()
@@ -1842,6 +1853,8 @@ _search() {
         local _path=
         local _filename=
         local _index=
+        local _title
+        local _file_info=
         # Define `_indexed_filename` with and without color to have a version
         # without the additional length from `tput` calls.
         local _indexed_filename=
@@ -1865,14 +1878,22 @@ _search() {
         else
           _filename="$(basename "${_path}")"
           _index="$(_get_index "${_filename}" "${_files[@]}")"
+          _title="$(_get_title "${_filename}" "${__scope}")"
+
+          if [[ -n "${_title}" ]]
+          then
+            _file_info="${_filename} '${_title}'"
+          else
+            _file_info="${_filename}"
+          fi
 
           if ((_all))
           then
-            _indexed_filename_color="[$(_highlight "${__scope}:${_index}")] ${_filename}"
-            _indexed_filename="[${__scope}:${_index}] ${_filename}"
+            _indexed_filename_color="[$(_highlight "${__scope}:${_index}")] ${_file_info}"
+            _indexed_filename="[${__scope}:${_index}] ${_file_info}"
           else
-            _indexed_filename_color="[$(_highlight "${_index}")] ${_filename}"
-            _indexed_filename="[${_index}] ${_filename}"
+            _indexed_filename_color="[$(_highlight "${_index}")] ${_file_info}"
+            _indexed_filename="[${_index}] ${_file_info}"
           fi
 
           # printf "_search() \${_index}: '%s'\n" "${_index}"
@@ -1881,8 +1902,10 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
+            printf '\033[?7l'
             printf "%s\n" "${_indexed_filename_color}"
             _print_line "${_indexed_filename}"
+            printf '\033[?7h'
           fi
 
           _hit="$(printf "%s\n" "${_line}" | cut -d: -f 2-)"

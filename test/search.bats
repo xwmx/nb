@@ -66,7 +66,7 @@ HEREDOC
   printf "\${lines[0]}: '%s'\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'one\' ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ idyl ]]
 }
@@ -99,10 +99,10 @@ HEREDOC
   printf "\${lines[3]}: '%s'\n" "${lines[3]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\' ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
-  [[ "${lines[3]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\' ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
@@ -146,15 +146,15 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:1 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\'$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:0 ]]
-  [[ "${lines[3]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\'$ ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:0 ]]
-  [[ "${lines[6]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[6]}" =~ 20[0-9]+\.md\ \'sweetish\'$ ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
@@ -170,15 +170,15 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:1 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\'$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:0 ]]
-  [[ "${lines[3]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\'$ ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:0 ]]
-  [[ "${lines[6]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[6]}" =~ 20[0-9]+\.md\ \'sweetish\'$ ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
