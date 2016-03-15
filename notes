@@ -1337,12 +1337,18 @@ _list() {
 
   _debug printf "_list() \${_print_excerpt}: '%s'\n" "${_print_excerpt:-}"
   _debug printf "_list() \${_excerpt_length}: '%s'\n" "${_excerpt_length:-}"
+  _debug printf "_list() \${_selection}: '%s'\n" "${_selection:-}"
 
   local _selection_basename=
   if [[ -n "${_selection:-}" ]]
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
     _set_selection_notebook "${_selection}"
+
+    if [[ -z "${_selection_basename}" ]]
+    then
+      _die printf "Not found: %s\n" "${_selection}"
+    fi
   fi
 
   local _filenames

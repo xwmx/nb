@@ -359,6 +359,30 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_files[1]} ]]
 }
 
+@test "\`list <invalid-selection>\` exits with 1 and displays a message." {
+  {
+    "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add
+# one
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "${_NOTES}" list invalid
+  [[ ${status} -eq 1 ]]
+
+  printf "\${status}: %s\n" "${status}"
+  printf "\${output}: '%s'\n" "${output}"
+  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 1 ]]
+  [[ "${lines[0]}" =~ Not\ found:\ invalid$ ]]
+}
+
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
