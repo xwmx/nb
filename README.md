@@ -38,6 +38,22 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 - [tig](https://github.com/jonas/tig)
 - [w3m](https://en.wikipedia.org/wiki/W3m)
 
+### Installation
+
+#### Homebrew
+
+To install with [Homebrew](http://brew.sh/):
+
+    brew install alphabetum/taps/notes
+
+#### Manual
+
+To install manually, simply add the `notes` script to your `$PATH`. If
+you already have a `~/bin` directory, you can use the following command:
+
+    curl -L https://raw.github.com/alphabetum/notes/master/notes \
+      -o ~/bin/notes && chmod +x ~/bin/notes
+
 ## Usage
 
 ```
