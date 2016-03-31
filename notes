@@ -1773,6 +1773,94 @@ _nbs()   { _notebooks "${@}"; }
 desc "books" "$(_help 'notebooks')"
 _books() { _notebooks "${@}"; }
 
+# rename ######################################################################
+
+desc "rename" <<HEREDOC
+Usage:
+  ${_ME} rename (<index> | <filename> | <path> | <title>) (<name> | --reset)
+
+Options:
+  --reset  Reset the filename to the timestamp at which it was last updated.
+
+Description:
+  Set the filename to <name> for the specified note file.
+HEREDOC
+_rename() {
+  local _reset=0
+  local _selection=
+  local _target_name=
+
+  for __arg in "${@:1}"
+  do
+    case "${__arg}" in
+      --reset)
+        _reset=1
+        ;;
+      *)
+        if [[ -z "${_selection}" ]]
+        then
+          _selection="${__arg}"
+        elif [[ -z "${_target_name}" ]]
+        then
+          _target_name="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  local _source_basename
+  _source_basename="$(_get_selection_basename "${_selection}")"
+  _set_selection_notebook "${_selection}"
+  local _source_path="${NOTES_DATA_DIR}/${_source_basename}"
+
+  if [[ -z "${_source_basename}" ]]
+  then
+    ${_ME} help "rename"
+    return 1
+  fi
+  _debug printf "_rename() \${_source_basename}: '%s'\n" \
+    "${_source_basename}"
+
+  if ((_reset))
+  then
+    local _file_type="${NOTES_DEFAULT_EXTENSION}"
+    local _timestamp
+
+    if stat -c &>/dev/null
+    then # GNU
+      _timestamp="$(stat -c %Y "${_source_path}")"
+    elif gstat -c &>/dev/null
+    then # GNU prefixed
+      _timestamp="$(gstat -c %Y "${_source_path}")"
+    else
+      _timestamp="$(stat -f '%m' "${_source_path}")"
+    fi
+
+    # Assign filename with unicode timestamp.
+    local _target_basename
+    _target_basename="$(date -r ${_timestamp} -u "+%Y%m%d%H%M%S").${_file_type}"
+    local _destination_path="${NOTES_DATA_DIR}/${_target_basename}"
+
+    mv "${_source_path}" "${_destination_path}" \
+      && _git_checkpoint \
+        "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
+    printf "%s renamed to %s" \
+      "${_source_basename}"   \
+       "${_target_basename}."
+  elif [[ -n "${_target_name}" ]]
+  then
+    mv "${_source_path}" "${NOTES_DATA_DIR}/${_target_name}" \
+      && _git_checkpoint \
+        "[NOTES] Rename: ${_source_basename} to ${_target_name}"
+    printf "%s renamed to %s" \
+      "${_source_basename}"   \
+      "${_target_name}"
+  else
+    ${_ME} help "rename"
+    return 1
+  fi
+}
+
 # search ######################################################################
 
 desc "search" <<HEREDOC
@@ -2209,6 +2297,7 @@ _notes() {
         nbs
         notebook
         notebooks
+        rename
         show
         search
         use
@@ -2359,6 +2448,7 @@ _SUBCOMMANDS=(
   nbs
   notebook
   notebooks
+  rename
   search
   show
   status

@@ -16,7 +16,7 @@ _setup_move() {
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move --foce
+  run "${_NOTES}" move --force
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   [[ ${status} -eq 1 ]]
