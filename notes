@@ -1469,7 +1469,7 @@ _ls() {
     printf '\033[?7h'
     printf '\n'
   fi
-  _list --titles "${@}"
+  _list --titles "${@:-}"
 
 }
 
