@@ -18,7 +18,7 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 
 ##### Required
 
-- [Bash](https://www.gnu.org/software/bash/)
+- [Bash 4.3+](https://www.gnu.org/software/bash/)
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as
   - [Emacs](https://www.gnu.org/software/emacs/),
