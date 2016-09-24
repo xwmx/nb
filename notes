@@ -1351,9 +1351,9 @@ _list() {
     fi
   fi
 
-  local _filenames
+  local _filenames=()
   _filenames=($(_list_notes_files))
-  local _filenames_count="${#_filenames[@]:-}"
+  local _filenames_count="${#_filenames[@]}"
 
   _debug printf "list() \${_filenames_count}: '%s'\n" "${_filenames_count[@]}"
 
