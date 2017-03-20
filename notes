@@ -1927,7 +1927,19 @@ _search() {
       _debug printf "_search() \${__scope}: '%s'\n" "${__scope}"
       # _debug printf "_search() \${_files[*]}: '%s'\n" "${_files[*]}"
 
-      if _command_exists "ack"
+      if _command_exists "ag"
+      then
+        # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
+        # Determine how to test without relying on ordering.
+        ag \
+          --ignore-case \
+          --noheading \
+          --color \
+          --color-line-number '32' \
+          --color-match '1;35' \
+          "${_query}" "${NOTES_DIR}/${__scope}" \
+            || return 0 # Don't fail out within a single scope.
+      elif _command_exists "ack"
       then # ack is available.
         ack "${_query}" "${NOTES_DIR}/${__scope}" \
           --ignore-case \
@@ -1963,7 +1975,12 @@ _search() {
             | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
         )"
 
-        if ((_print_paths))
+        if [[ -z "${_line}" ]]
+        then
+          # Print nothing, skipping the blank line in `ag` output with
+          # multiple matches.
+          :
+        elif ((_print_paths))
         then
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
