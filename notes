@@ -1872,9 +1872,10 @@ Options:
   --path    Print the full path for each file with query matches.
 
 Description:
-  Search notes using \`ack\` [1] (if available) or \`grep\`.
-
-  1. http://beyondgrep.com/
+  Search notes. Uses the first available tool in the following list:
+    1. \`ag\`    <https://github.com/ggreer/the_silver_searcher>
+    2. \`ack\`   <http://beyondgrep.com/>
+    3. \`grep\`  <https://en.wikipedia.org/wiki/Grep>
 HEREDOC
 _search() {
   local _all=0
