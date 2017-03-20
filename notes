@@ -1965,7 +1965,7 @@ _search() {
         # without the additional length from `tput` calls.
         local _indexed_filename=
         local _indexed_filename_color=
-        local _hit=
+        local _content_line_with_hit=
 
         # Use `sed` to remove color from output.
         # http://unix.stackexchange.com/a/140255
@@ -2019,8 +2019,8 @@ _search() {
             printf '\033[?7h'
           fi
 
-          _hit="$(printf "%s\n" "${_line}" | cut -d: -f 2-)"
-          printf "%s\n\n" "${_hit}"
+          _content_line_with_hit="$(printf "%s\n" "${_line}" | cut -d: -f 2-)"
+          printf "%s\n\n" "${_content_line_with_hit}"
         fi
 
         _last_path="${_path}"
