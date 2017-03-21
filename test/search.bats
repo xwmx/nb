@@ -4,17 +4,17 @@ load test_helper
 
 _setup_search() {
   "${_NOTES}" init &>/dev/null
-    cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add
 # one
 idyl
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+  sleep 1
+  cat <<HEREDOC | "${_NOTES}" add
 # two
 sweetish
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+  sleep 1
+  cat <<HEREDOC | "${_NOTES}" add
 # three
 sweetish
 HEREDOC

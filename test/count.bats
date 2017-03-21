@@ -5,21 +5,21 @@ load test_helper
 
 _setup_count() {
   "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add
 # one
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+  sleep 1
+  cat <<HEREDOC | "${_NOTES}" add
 # two
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+  sleep 1
+  cat <<HEREDOC | "${_NOTES}" add
 # three
 line two
 line three
