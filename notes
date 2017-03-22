@@ -1902,6 +1902,7 @@ _search() {
   local _query=
   local _print_paths=0
   local _last_path=
+  local _use_grep=0
 
   for __arg in "${_arguments[@]:-}"
   do
@@ -1911,6 +1912,11 @@ _search() {
         ;;
       --path)
         _print_paths=1
+        ;;
+      --use-grep)
+        # The `--use-grep` option bypasses other search tools. Intended to be
+        # used primarily for testing.
+        _use_grep=1
         ;;
       *)
         if [[ -z "${_query}" ]]
@@ -1947,7 +1953,7 @@ _search() {
       _debug printf "_search() \${__scope}: '%s'\n" "${__scope}"
       # _debug printf "_search() \${_files[*]}: '%s'\n" "${_files[*]}"
 
-      if _command_exists "ag"
+      if _command_exists "ag" && ! ((_use_grep))
       then
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
@@ -1959,7 +1965,7 @@ _search() {
           --color-match '1;35' \
           "${_query}" "${NOTES_DIR}/${__scope}" \
             || return 0 # Don't fail out within a single scope.
-      elif _command_exists "ack"
+      elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
         ack "${_query}" "${NOTES_DIR}/${__scope}" \
           --ignore-case \

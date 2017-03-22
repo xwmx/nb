@@ -93,7 +93,7 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'sweetish'
+  run "${_NOTES}" search 'sweetish' --use-grep
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[3]}: '%s'\n" "${lines[3]}"
@@ -114,7 +114,7 @@ HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'sweetish' --path
+  run "${_NOTES}" search 'sweetish' --path --use-grep
   printf "\${status}: %s\n" "${status}"
   printf "\${output}: '%s'\n" "${output}"
   printf "\${lines[0]}: '%s'\n" "${lines[0]}"
