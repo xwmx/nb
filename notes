@@ -190,10 +190,10 @@ _get_hash() {
   local _hash
   if _command_exists "md5sum"
   then
-    _hash="$(md5sum ${1:-} | awk '{ print $1 }')"
+    _hash="$(md5sum "${1:-}" | awk '{ print $1 }')"
   elif _command_exists "md5"
   then
-    _hash="$(md5 -q ${1:-})"
+    _hash="$(md5 -q "${1:-}")"
   fi
   printf "%s\n" "${_hash}"
 }
