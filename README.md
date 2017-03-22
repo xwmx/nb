@@ -34,7 +34,6 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 - [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
-- [Pygments Markdown Lexer](https://github.com/jhermann/pygments-markdown-lexer)
 - [tig](https://github.com/jonas/tig)
 - [w3m](https://en.wikipedia.org/wiki/W3m)
 
@@ -232,11 +231,8 @@ Options:
 Description:
   List all notes.
 
-  If Pygments [1] and the Markdown lexer [2] are installed, excerpts are
-  printed with syntax highlighting.
-
-  1. http://pygments.org/
-  2. https://github.com/jhermann/pygments-markdown-lexer
+  If Pygments <http://pygments.org/> is installed, excerpts are printed with
+  syntax highlighting.
 
 Examples:
   notes list
@@ -304,11 +300,8 @@ Options:
 Description:
   Show a note.
 
-  If Pygments [1] and the Markdown lexer [2] are installed, the note file is
-  displayed with syntax highlighting.
-
-  1. http://pygments.org/
-  2. https://github.com/jhermann/pygments-markdown-lexer
+  If Pygments <http://pygments.org/> is installed, excerpts are printed with
+  syntax highlighting.
 ```
 
 #### `status`

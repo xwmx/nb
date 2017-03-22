@@ -544,18 +544,15 @@ _highlight() {
 #   _highlight_syntax_if_available [<path>]
 #
 # Description:
-#   If Pygments and pygments-markdown-lexer are available, use them to
-#   highlight markdown syntax. When they are not available, just pipe through
-#   `cat`.
+#   If Pygments is available, use it to highlight markdown syntax. When it is
+#   not available, just pipe through `cat`.
 #
 # References:
 #   http://pygments.org/
-#   https://github.com/jhermann/pygments-markdown-lexer
 _highlight_syntax_if_available() {
-  if hash "pygmentize" 2>/dev/null &&
-    pygmentize -l markdown &>/dev/null /dev/null
-  then # pygments and the markdown lexer are installed.
-    pygmentize -l markdown "${@}"
+  if hash "pygmentize" 2>/dev/null
+  then # pygments is installed.
+    pygmentize -l md "${@}"
   else
     cat "${@}"
   fi
@@ -1260,11 +1257,8 @@ Options:
 Description:
   List all notes.
 
-  If Pygments [1] and the Markdown lexer [2] are installed, excerpts are
-  printed with syntax highlighting.
-
-  1. http://pygments.org/
-  2. https://github.com/jhermann/pygments-markdown-lexer
+  If Pygments <http://pygments.org/> is installed, excerpts are printed with
+  syntax highlighting.
 
 Examples:
   ${_ME} list
@@ -2061,11 +2055,8 @@ Options:
 Description:
   Show a note.
 
-  If Pygments [1] and the Markdown lexer [2] are installed, the note file is
-  displayed with syntax highlighting.
-
-  1. http://pygments.org/
-  2. https://github.com/jhermann/pygments-markdown-lexer
+  If Pygments <http://pygments.org/> is installed, excerpts are printed with
+  syntax highlighting.
 HEREDOC
 _show() {
   _debug printf "_show() \${0:-}: '%s'\n" "${0:-}"
