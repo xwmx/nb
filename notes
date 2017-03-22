@@ -1941,7 +1941,7 @@ _search() {
 
     for __scope in "${_target_notebooks[@]:-}"
     do
-      local _files=
+      local _files=()
       _files=($(${_ME} "${__scope}:list" --no-index || printf ''))
 
       _debug printf "_search() \${__scope}: '%s'\n" "${__scope}"
