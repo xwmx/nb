@@ -570,22 +570,47 @@ _interactive_input() {
   [[ -t 0 ]]
 }
 
+# _contains()
+#
+# Usage:
+#   _contains "$item" "${list[*]}"
+#
+# Returns:
+#   0  If the item is included in the list.
+#   1  If not.
+_contains() {
+  local _test_list=(${*:2})
+  for __test_element in "${_test_list[@]:-}"
+  do
+    _debug printf "_contains() \${__test_element}: %s\n" "${__test_element}"
+    if [[ "${__test_element}" == "${1}" ]]
+    then
+      _debug printf "_contains() match: %s\n" "${1}"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # _join()
 #
 # Usage:
-#   _join <separator> <array>
+#   _join "," a b c
+#   _join "${an_array[@]}"
 #
-# Examples:
-#   _join , a "b c" d     => a,b c,d
-#   _join / var local tmp => var/local/tmp
-#   _join , "${FOO[@]}"   => a,b,c
-#
-# More Information:
-#   http://stackoverflow.com/a/17841619
+# Returns:
+#   The list or array of items joined into a string with elements divided by
+#   the optional separator if one is provided.
 _join() {
-  local IFS="${1}"
-  shift
-  printf "%s\n" "${*}"
+  local _separator
+  local _target_array
+  local _dirty
+  local _clean
+  _separator="${1}"
+  _target_array=(${@:2})
+  _dirty="$(printf "${_separator}%s"  "${_target_array[@]}")"
+  _clean="${_dirty:${#_separator}}"
+  printf "%s" "${_clean}"
 }
 
 # _list_notes_files()
