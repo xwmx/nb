@@ -121,7 +121,7 @@ Options:
 Description:
   Create a new note. Any arguments passed to `add` are written to the note
   file. When no arguments are passed, a new note file is opened with
-  `$EDITOR`, currently set to 'vim'.
+  `$EDITOR`.
 
 Examples:
   notes add
@@ -318,7 +318,7 @@ Description:
 
 ```
 Usage:
-  $_ME sync [-a|--all]
+  notes sync [-a|--all]
 
 Options:
   -a --all  Sync all notebooks.
@@ -365,6 +365,32 @@ The location of the notes directory that contains the data repository. For examp
 
 ```bash
 export NOTES_DIR="~/Dropbox/Notes"
+```
+
+#### `$NOTES_DEFAULT_EXTENSION`
+
+Default: `md`
+
+The default extension to use for notes files. Change to `org` for Emacs Org mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you prefer.
+
+Example Values: `md`, `org`, `txt`, `rst`
+
+Example:
+```bash
+export NOTES_DEFAULT_EXTENSION="\${NOTES_DEFAULT_EXTENSION:-md}"
+```
+
+#### `$EDITOR`
+
+Default: inherits the global `$EDITOR` value.
+
+Reassign `$EDITOR` to use a specific editor with `notes`, overriding the global `$EDITOR` setting.
+
+Example Values: `vim`, `emacs`, `subl`, `atom`, `code`, `macdown`
+
+Example:
+```bash
+export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
 ```
 
 ## Testing
