@@ -161,6 +161,7 @@ _search_all_setup() {
 @test "\`search <query> -a\` exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
+    sleep 1 # Give setup time to complete to avoid errors.
   }
 
   run "${_NOTES}" search 'sweetish' -a
