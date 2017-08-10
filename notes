@@ -1190,7 +1190,7 @@ _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
     _die \
-      printf "\`init\`: %s already exists and is not a directory.\n"
+      printf "\`init\`: %s already exists and is not a directory.\n" \
       "${NOTES_DIR}"
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
