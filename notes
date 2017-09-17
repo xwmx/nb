@@ -121,6 +121,25 @@ die() {
 }
 
 ###############################################################################
+# Version Check
+###############################################################################
+
+export __MIN_SUPPORTED_BASH_VERSION="4.3"
+
+export __BASH_VERSION
+__BASH_VERSION="$(
+  bash --version | grep "bash" | cut -f 4 -d " " | cut -f 1,2 -d "."
+)"
+if (($(echo "${__MIN_SUPPORTED_BASH_VERSION} > ${__BASH_VERSION}" | bc -l)))
+then
+  _die printf "\
+Bash upgrade required. Bash %s is the minimum supported version, but the
+version currently in use is %s.\n" \
+  "${__MIN_SUPPORTED_BASH_VERSION}" \
+  "${__BASH_VERSION}"
+fi
+
+###############################################################################
 # Setup
 ###############################################################################
 
