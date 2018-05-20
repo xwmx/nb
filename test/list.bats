@@ -9,8 +9,8 @@ load test_helper
   run "${_NOTES}" list
   [[ ${status} -eq 1 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   _expected="0 notes.
 
@@ -37,8 +37,8 @@ Usage information:
   run "${_NOTES}" list
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[0]}" =~ ${_files[2]} ]]
@@ -62,8 +62,8 @@ Usage information:
   run "${_NOTES}" list --no-index
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "'${_files[2]}'" "'${lines[0]}'"
 
   [[ "${lines[0]}" == "${_files[2]}" ]]
@@ -87,8 +87,8 @@ Usage information:
   run "${_NOTES}" list --no-color
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "'[0]  ${_files[2]}'" "'${lines[0]}'"
 
   [[ "${lines[0]}" == "[0]  ${_files[2]}" ]]
@@ -131,9 +131,9 @@ HEREDOC
   run "${_NOTES}" list -e
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 15 ]]
 }
@@ -147,9 +147,9 @@ HEREDOC
   run "${_NOTES}" list -e 2
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 12 ]]
 }
@@ -163,9 +163,9 @@ HEREDOC
   run "${_NOTES}" list -e 0
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
 }
@@ -179,9 +179,9 @@ HEREDOC
   run "${_NOTES}" list --excerpt
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 15 ]]
 }
@@ -195,9 +195,9 @@ HEREDOC
   run "${_NOTES}" list --excerpt 2
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 12 ]]
 }
@@ -211,9 +211,9 @@ HEREDOC
   run "${_NOTES}" list --excerpt 0
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
 }
@@ -253,9 +253,9 @@ HEREDOC
   run "${_NOTES}" list -n
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
 }
@@ -269,9 +269,9 @@ HEREDOC
   run "${_NOTES}" list -n 2
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
 
@@ -309,9 +309,9 @@ HEREDOC
   run "${_NOTES}" list --titles
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${lines[0]}" =~ three$      ]] && [[ "${lines[0]}" =~ 0 ]]
   [[ "${lines[1]}" =~ line\ two$  ]] && [[ "${lines[1]}" =~ 1 ]]
@@ -349,9 +349,9 @@ HEREDOC
   run "${_NOTES}" list 1
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 1 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
@@ -375,9 +375,9 @@ HEREDOC
   run "${_NOTES}" list invalid
   [[ ${status} -eq 1 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 1 ]]
   [[ "${lines[0]}" =~ Not\ found:\ invalid$ ]]
@@ -392,8 +392,8 @@ HEREDOC
 
 @test "\`help list\` prints help information." {
   run "${_NOTES}" help list
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]" ]]
 }

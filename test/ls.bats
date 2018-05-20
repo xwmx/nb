@@ -38,8 +38,8 @@ HEREDOC
   run "${_NOTES}" ls
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${lines[1]}" =~ ----    ]]
@@ -59,9 +59,9 @@ HEREDOC
   run "${_NOTES}" ls -e 5
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
-  printf "\${#lines[@]}: '%s'\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 18 ]]
 }
@@ -77,8 +77,8 @@ HEREDOC
   run "${_NOTES}" ls -n 0
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${#lines[@]}" -eq 1 ]]
 
@@ -94,8 +94,8 @@ HEREDOC
   run "${_NOTES}" ls -n 1
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 2 ]]
@@ -113,8 +113,8 @@ HEREDOC
   run "${_NOTES}" ls -n 2
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 3 ]]
@@ -133,8 +133,8 @@ HEREDOC
   run "${_NOTES}" ls -n 3
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 3 ]]

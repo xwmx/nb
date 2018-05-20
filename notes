@@ -62,7 +62,7 @@ fi
 # _debug()
 #
 # Usage:
-#   _debug printf "Debug info. Variable: %s\n" "$0"
+#   _debug printf "Debug info. Variable: %s\\n" "$0"
 #
 # A simple function for executing a specified command if the `$_USE_DEBUG`
 # variable has been set. The command is expected to print a message and
@@ -75,7 +75,7 @@ _debug() {
     # Prefix debug message with "bug (U+1F41B)"
     printf "🐛  %s " "${__DEBUG_COUNTER}"
     "${@}"
-    printf "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\n"
+    printf "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
   fi
 }
 # debug()
@@ -97,7 +97,7 @@ debug() {
 # _die()
 #
 # Usage:
-#   _die printf "Error message. Variable: %s\n" "$0"
+#   _die printf "Error message. Variable: %s\\n" "$0"
 #
 # A simple function for exiting with an error after executing the specified
 # command. The command is expected to print a message and should typically
@@ -134,7 +134,7 @@ if (($(echo "${__MIN_SUPPORTED_BASH_VERSION} > ${__BASH_VERSION}" | bc -l)))
 then
   _die printf "\
 Bash upgrade required. Bash %s is the minimum supported version, but the
-version currently in use is %s.\n" \
+version currently in use is %s.\\n" \
   "${__MIN_SUPPORTED_BASH_VERSION}" \
   "${__BASH_VERSION}"
 fi
@@ -214,7 +214,7 @@ _get_hash() {
   then
     _hash="$(md5 -q "${1:-}")"
   fi
-  printf "%s\n" "${_hash}"
+  printf "%s\\n" "${_hash}"
 }
 
 # _get_index()
@@ -229,13 +229,13 @@ _get_hash() {
 #   0  <item> is found in <list>.
 #   1  <item> is not found in <list>.
 _get_index() {
-  # _debug printf "_get_index() \${1}: '%s'\n" "${1:-}"
-  # _debug printf "_get_index() \${@:2}: '%s'\n" "${@:2}"
+  # _debug printf "_get_index() \${1}: '%s'\\n" "${1:-}"
+  # _debug printf "_get_index() \${@:2}: '%s'\\n" "${@:2}"
 
   local _filename="${1:-}"
   local -a _files=(${@:2})
 
-  # _debug printf "_get_index() \${_files[@]}: '%s'\n" "${_files[@]}"
+  # _debug printf "_get_index() \${_files[@]}: '%s'\\n" "${_files[@]}"
 
   if [[ -z "${_filename}" ]] || [[ -z "${_files[*]}" ]]
   then
@@ -244,10 +244,10 @@ _get_index() {
 
   for __i in "${!_files[@]}"
   do
-    # _debug printf "_get_index() \${_files[${_i}]} : '%s'\n" "${_files[${_i}]}"
+    # _debug printf "_get_index() \${_files[${_i}]} : '%s'\\n" "${_files[${_i}]}"
     if [[ "${_files[${__i}]}" == "${_filename}" ]]
     then
-      printf "%s\n" "${__i}"
+      printf "%s\\n" "${__i}"
       return 0
     fi
   done
@@ -288,7 +288,7 @@ _get_selection_basename() {
     then # <selection> is an id.
       local _filenames=($(_list_notes_files))
       _debug printf \
-        "_get_selection_basename() \${_filenames[*]:-}: '%s'\n" \
+        "_get_selection_basename() \${_filenames[*]:-}: '%s'\\n" \
         "${_filenames[*]:-}"
       _basename="${_filenames[${_identifier}]:-}"
     else # <selection> might be a title.
@@ -310,7 +310,7 @@ _get_selection_basename() {
     fi
   fi
 
-  printf "%s\n" "${_basename}"
+  printf "%s\\n" "${_basename}"
 }
 
 # _get_selection_identifier()
@@ -325,9 +325,9 @@ _get_selection_identifier() {
   _parts=($(_get_selection_parts "${1:-}"))
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
-    printf "%s\n" "${_parts[1]:-}"
+    printf "%s\\n" "${_parts[1]:-}"
   else
-    printf "%s\n" "${_parts[0]:-}"
+    printf "%s\\n" "${_parts[0]:-}"
   fi
 }
 
@@ -342,15 +342,15 @@ _get_selection_parts() {
   local _identifier
   local _data_dir
 
-  _data_dir=$(printf "%s\n" "${1:-}" | cut -f 1 -d ":")
+  _data_dir=$(printf "%s\\n" "${1:-}" | cut -f 1 -d ":")
 
   if [[ "${1:-}" =~ ':'       ]] &&
      [[ -e "${NOTES_DIR}/${_data_dir}/.git" ]]
   then
-    _identifier=$(printf "%s\n" "${1:-}" | cut -f 2- -d ":")
-    printf "%s\n%s\n" "${_data_dir}" "${_identifier}"
+    _identifier=$(printf "%s\\n" "${1:-}" | cut -f 2- -d ":")
+    printf "%s\\n%s\\n" "${_data_dir}" "${_identifier}"
   else
-    printf "%s\n" "${1:-}"
+    printf "%s\\n" "${1:-}"
   fi
 }
 
@@ -375,15 +375,15 @@ _get_title() {
 
   if [[ -z "${_basename}" ]]
   then
-    _die printf "Usage: _get_title <basename>\n"
+    _die printf "Usage: _get_title <basename>\\n"
   elif [[ -e "${_data_dir}/${_basename}" ]]
   then
     _maybe_title="$(head -1 "${_data_dir}/${_basename}")"
     if [[ "${_maybe_title}" =~ ^#\  ]]
     then # first line starts with an H1
-      _title="$(printf "%s\n" "${_maybe_title}" | sed 's/^\# //')"
+      _title="$(printf "%s\\n" "${_maybe_title}" | sed 's/^\# //')"
     fi
-    printf "%s\n" "${_title}"
+    printf "%s\\n" "${_title}"
   fi
 }
 
@@ -408,7 +408,7 @@ _git_checkpoint() {
 
   if [[ -z "${_message}" ]]
   then
-    _die printf "Usage: _git_checkpoint <message>\n"
+    _die printf "Usage: _git_checkpoint <message>\\n"
     return 1
   fi
 
@@ -417,7 +417,7 @@ _git_checkpoint() {
     _show_spinner=1
   fi
 
-  cd "${NOTES_DATA_DIR}" || _die printf "_git_checkpoint() \`cd\` failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "_git_checkpoint() \`cd\` failed.\\n"
 
   if ((NOTES_AUTO_SYNC))
   then
@@ -451,7 +451,7 @@ _git_checkpoint() {
 #   1  If the `$NOTES_DATA_DIR` repository is clean.
 _git_index_is_dirty() {
   cd "${NOTES_DATA_DIR}" \
-    || _die printf "_git_index_is_dirty() \`cd\` failed.\n"
+    || _die printf "_git_index_is_dirty() \`cd\` failed.\\n"
   [[ -n "$(git status --porcelain)" ]]
 }
 
@@ -465,7 +465,7 @@ _git_index_is_dirty() {
 _git_required() {
   if ! _command_exists "git"
   then
-    _die printf "\`git\` is required, but wasn't found.\n"
+    _die printf "\`git\` is required, but wasn't found.\\n"
   fi
 
   local _git_name
@@ -475,14 +475,14 @@ _git_required() {
 
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
   then
-    printf "git configuration incomplete. To set your name and email, run:\n"
+    printf "git configuration incomplete. To set your name and email, run:\\n"
     if [[ -z "${_git_name}" ]]
     then
-      printf "git config --global user.name \"Your Name\"\n"
+      printf "git config --global user.name \"Your Name\"\\n"
     fi
     if [[ -z "${_git_email}" ]]
     then
-      printf "git config --global user.email \"you@example.com\"\n"
+      printf "git config --global user.email \"you@example.com\"\\n"
     fi
     return 1
   fi
@@ -505,7 +505,7 @@ _git_should_autosync() {
     return 1
   fi
 
-  cd "${NOTES_DATA_DIR}" || _die printf "\`cd\` failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "\`cd\` failed.\\n"
   if ! git config --get remote.origin.url &>/dev/null
   then # there is no remote configured.
     return 1
@@ -529,13 +529,13 @@ _git_should_autosync() {
 
   _diff=$((_current_timestamp-_last_fetch_timestamp))
   _debug printf \
-    "_git_should_sync() \${_last_fetch_timestamp}: %s\n" \
+    "_git_should_sync() \${_last_fetch_timestamp}: %s\\n" \
     "${_last_fetch_timestamp}"
   _debug printf \
-    "_git_should_sync() \${_current_timestamp}: %s\n" \
+    "_git_should_sync() \${_current_timestamp}: %s\\n" \
     "${_current_timestamp}"
   _debug printf \
-    "_git_should_sync() \${_diff}: %s\n" \
+    "_git_should_sync() \${_diff}: %s\\n" \
     "${_diff}"
 
   [[ "${_diff}" -gt 300 ]]
@@ -554,7 +554,7 @@ _highlight() {
   then
     _die printf "Usage: _highlight <string>"
   fi
-  printf "$(tput setaf 3)%s$(tput sgr0)\n" "${_input}"
+  printf "$(tput setaf 3)%s$(tput sgr0)\\n" "${_input}"
 }
 
 # _highlight_syntax_if_available()
@@ -601,10 +601,10 @@ _contains() {
   local _test_list=(${*:2})
   for __test_element in "${_test_list[@]:-}"
   do
-    _debug printf "_contains() \${__test_element}: %s\n" "${__test_element}"
+    _debug printf "_contains() \${__test_element}: %s\\n" "${__test_element}"
     if [[ "${__test_element}" == "${1}" ]]
     then
-      _debug printf "_contains() match: %s\n" "${1}"
+      _debug printf "_contains() match: %s\\n" "${1}"
       return 0
     fi
   done
@@ -664,7 +664,7 @@ _print_line() {
   local _line=
   _text_length=${#_text}
   printf -v _line '%*s' "${_text_length}"
-  printf "%s\n" "${_line// /-}"
+  printf "%s\\n" "${_line// /-}"
 }
 
 # _set_selection_notebook()
@@ -699,7 +699,7 @@ _set_selection_notebook() {
 #     printf "Working..."
 #     (sleep 1) &
 #     _spinner $!
-#     printf "Done!\n"
+#     printf "Done!\\n"
 #   }
 #   (_spinner_example)
 #   ```
@@ -713,7 +713,7 @@ _spinner() {
 
   if [[ -z "${_pid}" ]]
   then
-    _die printf "Usage: _spinner <pid>\n"
+    _die printf "Usage: _spinner <pid>\\n"
   fi
 
   while ps a | awk '{print $1}' | grep -q "${_pid}"
@@ -778,20 +778,20 @@ _spinner() {
 # escaping backslashes, which is more common.
 desc() {
   set +e
-  [[ -z "${1:-}" ]] && _die printf "desc(): No command name specified.\n"
+  [[ -z "${1:-}" ]] && _die printf "desc(): No command name specified.\\n"
 
   if [[ "${1}" == "--get" ]]
   then # get ------------------------------------------------------------------
-    [[ -z "${2:-}" ]] && _die printf "desc(): No command name specified.\n"
+    [[ -z "${2:-}" ]] && _die printf "desc(): No command name specified.\\n"
 
     local _name="${2:-}"
     local _desc_var="___desc_${_name}"
 
     if [[ -n "${!_desc_var:-}" ]]
     then
-      printf "%s\n" "${!_desc_var}"
+      printf "%s\\n" "${!_desc_var}"
     else
-      printf "No additional information for \`%s\`\n" "${_name}"
+      printf "No additional information for \`%s\`\\n" "${_name}"
     fi
   else # set ------------------------------------------------------------------
     if [[ -n "${2:-}" ]]
@@ -800,11 +800,11 @@ desc() {
 ${2}
 HEREDOC
 
-      _debug printf "desc() set with argument: \${___desc_%s}\n" "${1}"
+      _debug printf "desc() set with argument: \${___desc_%s}\\n" "${1}"
     else # no argument is present, so assume piped input
       read -r -d '' "___desc_${1}"
 
-      _debug printf "desc() set with pipe: \${___desc_%s}\n" "${1}"
+      _debug printf "desc() set with pipe: \${___desc_%s}\\n" "${1}"
     fi
   fi
   set -e
@@ -882,7 +882,7 @@ _add() {
     then # argument array is blank.
       eval "${EDITOR}" "${_file_path}"
     else
-      printf "%s\n" "${_arguments[*]:-}" >> "${_file_path}"
+      printf "%s\\n" "${_arguments[*]:-}" >> "${_file_path}"
     fi
   else # piped input.
     cat >> "${_file_path}"
@@ -894,12 +894,12 @@ _add() {
     _title="$(_get_title "${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added %s:%s '%s'\n" \
+      printf "Added %s:%s '%s'\\n" \
         "${_SCOPE}" \
         "${_basename}" \
         "${_title}"
     else
-      printf "Added %s:%s\n" \
+      printf "Added %s:%s\\n" \
         "${_SCOPE}" \
         "${_basename}"
     fi
@@ -917,7 +917,7 @@ Description:
   List available commands.
 HEREDOC
 _commands() {
-  printf "%s\n" "${_SUBCOMMANDS[*]}"
+  printf "%s\\n" "${_SUBCOMMANDS[*]}"
 }
 
 # count #######################################################################
@@ -967,7 +967,7 @@ _delete() {
     esac
   done
 
-  _debug printf "_delete() \${_selection}: '%s'\n" "${_selection}"
+  _debug printf "_delete() \${_selection}: '%s'\\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
@@ -977,7 +977,7 @@ _delete() {
     ${_ME} help "delete"
     return 1
   fi
-  _debug printf "_delete() \${_basename}: '%s'\n" "${_basename}"
+  _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
 
   _title="$(_get_title "${_basename}")"
   if [[ -n "${_title}" ]]
@@ -989,7 +989,7 @@ _delete() {
 
   if ! ((_force))
   then
-    printf "Deleting %s\n" "${_note_info_line}"
+    printf "Deleting %s\\n" "${_note_info_line}"
     while true
     do
       read -p "Are you sure you want to proceed? [y/N] " __yn
@@ -998,7 +998,7 @@ _delete() {
           break
           ;;
         *)
-          printf "Exiting...\n"
+          printf "Exiting...\\n"
           exit 0
           ;;
       esac
@@ -1007,16 +1007,16 @@ _delete() {
 
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
-    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\n"
+    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\\n"
     git rm "${_basename}" 1>/dev/null
     _git_checkpoint "[NOTES] Delete: ${_basename}"
 
     if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then
-      printf "Deleted %s\n" "${_note_info_line}"
+      printf "Deleted %s\\n" "${_note_info_line}"
     fi
   else
-    _die printf "Selection not found.\n"
+    _die printf "Selection not found.\\n"
   fi
 }
 
@@ -1033,7 +1033,7 @@ _edit() {
   local _selection="${1:-}"
   local _basename=
 
-  _debug printf "_edit() \${_selection}: %s\n" "${_selection}"
+  _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
@@ -1042,7 +1042,7 @@ _edit() {
     ${_ME} help "edit"
     return 1
   fi
-  _debug printf "_edit() \${_basename}: '%s'\n" "${_basename}"
+  _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename}"
 
   if [[ -n "${_basename}" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
@@ -1060,18 +1060,18 @@ _edit() {
       _title="$(_get_title "${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated %s:%s '%s'\n" \
+        printf "Updated %s:%s '%s'\\n" \
           "${_SCOPE}" \
           "${_basename}" \
           "${_title}"
       else
-        printf "Updated %s:%s\n" \
+        printf "Updated %s:%s\\n" \
           "${_SCOPE}" \
           "${_basename}"
       fi
     fi
   else
-    _die printf "Selection not found.\n"
+    _die printf "Selection not found.\\n"
   fi
 }
 
@@ -1085,11 +1085,11 @@ Description:
   Print program environment variables.
 HEREDOC
 _env() {
-  printf "NOTES_DIR=%s\n" "${NOTES_DIR}"
-  printf "NOTES_DATA_DIR=%s\n" "${NOTES_DATA_DIR}"
-  printf "NOTES_AUTO_SYNC=%s\n" "${NOTES_AUTO_SYNC}"
-  printf "NOTESRC_PATH=%s\n" "${NOTESRC_PATH}"
-  printf "EDITOR=%s\n" "${EDITOR}"
+  printf "NOTES_DIR=%s\\n" "${NOTES_DIR}"
+  printf "NOTES_DATA_DIR=%s\\n" "${NOTES_DATA_DIR}"
+  printf "NOTES_AUTO_SYNC=%s\\n" "${NOTES_AUTO_SYNC}"
+  printf "NOTESRC_PATH=%s\\n" "${NOTESRC_PATH}"
+  printf "EDITOR=%s\\n" "${EDITOR}"
 }
 
 # git #############################################@###########################
@@ -1102,7 +1102,7 @@ Description:
   Alias for \`git\`, with commands run in \`\$NOTES_DATA_DIR\`.
 HEREDOC
 _git() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\\n"
   git "${@}"
 }
 
@@ -1171,7 +1171,7 @@ Description:
   1. https://github.com/jonas/tig
 HEREDOC
 _history() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\\n"
 
   local _log_command="git log"
   if _command_exists "tig"
@@ -1180,12 +1180,12 @@ _history() {
   fi
 
   local _selection="${1:-}"
-  _debug printf "_history() \${_selection}: '%s'\n" "${_selection}"
+  _debug printf "_history() \${_selection}: '%s'\\n" "${_selection}"
 
   local _basename=
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
-  _debug printf "_history() \${_basename}: '%s'\n" "${_basename}"
+  _debug printf "_history() \${_basename}: '%s'\\n" "${_basename}"
 
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
@@ -1209,12 +1209,12 @@ _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
     _die \
-      printf "\`init\`: %s already exists and is not a directory.\n" \
+      printf "\`init\`: %s already exists and is not a directory.\\n" \
       "${NOTES_DIR}"
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
     _die \
-      printf "\`init\`: %s already exists.\n" \
+      printf "\`init\`: %s already exists.\\n" \
       "${NOTES_DATA_DIR}"
   fi
 
@@ -1231,7 +1231,7 @@ HEREDOC
   if [[ ! -e "${NOTES_DIR}" ]]
   then
     mkdir -p "${NOTES_DIR}"
-    printf "Created %s\n" "${NOTES_DIR}"
+    printf "Created %s\\n" "${NOTES_DIR}"
   fi
 
   if [[ ! -e "${NOTESRC_PATH}" ]]
@@ -1284,7 +1284,7 @@ HEREDOC
 # Example Values: 'vim' 'emacs' 'subl' 'atom' 'code' 'macdown'
 # export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
 HEREDOC
-    printf "Created %s\n" "${NOTESRC_PATH}"
+    printf "Created %s\\n" "${NOTESRC_PATH}"
   fi
 
   local _repo_url="${1:-}"
@@ -1295,9 +1295,9 @@ HEREDOC
     mkdir -p "${NOTES_DATA_DIR}"
     cd "${NOTES_DATA_DIR}" && git init 1>/dev/null
   fi
-  printf "home\n" > "${NOTES_DIR}/.current"
+  printf "home\\n" > "${NOTES_DIR}/.current"
 
-  printf "Created 'home' notebook\n"
+  printf "Created 'home' notebook\\n"
 }
 
 # list ########################################################################
@@ -1324,9 +1324,9 @@ Examples:
   ${_ME} list --excerpt --no-index
 HEREDOC
 _list() {
-  _debug printf "_list() \${1:-}: '%s'\n" "${1:-}"
-  _debug printf "_list() \${2:-}: '%s'\n" "${2:-}"
-  _debug printf "_list() \${3:-}: '%s'\n" "${3:-}"
+  _debug printf "_list() \${1:-}: '%s'\\n" "${1:-}"
+  _debug printf "_list() \${2:-}: '%s'\\n" "${2:-}"
+  _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
 
   local _print_excerpt=0
   local _excerpt_length=3
@@ -1336,7 +1336,7 @@ _list() {
   local _limit
   local _selection
 
-  _debug printf "_list() \${@:-}: '%s'\n" "${@:-}"
+  _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
   # Parse function options.
   while ((${#}))
@@ -1380,16 +1380,16 @@ _list() {
         _list_titles=1
         ;;
       *)
-        _debug printf "_list() *: '%s'\n" "${_arg:-}"
+        _debug printf "_list() *: '%s'\\n" "${_arg:-}"
         _selection="${_arg:-}"
         ;;
     esac
     shift
   done
 
-  _debug printf "_list() \${_print_excerpt}: '%s'\n" "${_print_excerpt:-}"
-  _debug printf "_list() \${_excerpt_length}: '%s'\n" "${_excerpt_length:-}"
-  _debug printf "_list() \${_selection}: '%s'\n" "${_selection:-}"
+  _debug printf "_list() \${_print_excerpt}: '%s'\\n" "${_print_excerpt:-}"
+  _debug printf "_list() \${_excerpt_length}: '%s'\\n" "${_excerpt_length:-}"
+  _debug printf "_list() \${_selection}: '%s'\\n" "${_selection:-}"
 
   local _selection_basename=
   if [[ -n "${_selection:-}" ]]
@@ -1399,7 +1399,7 @@ _list() {
 
     if [[ -z "${_selection_basename}" ]]
     then
-      _die printf "Not found: %s\n" "${_selection}"
+      _die printf "Not found: %s\\n" "${_selection}"
     fi
   fi
 
@@ -1407,7 +1407,7 @@ _list() {
   _filenames=($(_list_notes_files))
   local _filenames_count="${#_filenames[@]}"
 
-  _debug printf "list() \${_filenames_count}: '%s'\n" "${_filenames_count[@]}"
+  _debug printf "list() \${_filenames_count}: '%s'\\n" "${_filenames_count[@]}"
 
   if [[ "${_filenames_count}" -eq 0 ]]
   then # no files in `$NOTES_DATA_DIR`
@@ -1427,12 +1427,12 @@ HEREDOC
       if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
       then # the limit has been reached.
 
-        _debug printf "list() \${#_limit}: '%s'\n" "${#_limit}"
-        _debug printf "list() \${#_counter}: '%s'\n" "${#_counter}"
+        _debug printf "list() \${#_limit}: '%s'\\n" "${#_limit}"
+        _debug printf "list() \${#_counter}: '%s'\\n" "${#_counter}"
 
         local _difference
         _difference=$((_filenames_count-_counter))
-        printf "%s omitted. %s total.\n" "${_difference}" "${_filenames_count}"
+        printf "%s omitted. %s total.\\n" "${_difference}" "${_filenames_count}"
         break
       fi
 
@@ -1477,13 +1477,13 @@ HEREDOC
 
       if ((_no_index))
       then
-        printf "%s\n" "${_list_item_id}"
+        printf "%s\\n" "${_list_item_id}"
       else
         if ((_no_color))
         then
-          printf "%s\n" "${_list_item}"
+          printf "%s\\n" "${_list_item}"
         else
-          printf "%s\n" "${_list_item_color}"
+          printf "%s\\n" "${_list_item_color}"
         fi
       fi
 
@@ -1491,7 +1491,7 @@ HEREDOC
       then # excerpt is specified with a non-zero digit, as required by `head`.
         _print_line "${_list_item}"
         head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${__basename}"
-        printf "\n"
+        printf "\\n"
       fi
     done
   fi
@@ -1507,11 +1507,11 @@ Description:
   Shortcut for \`list --titles\`. Any options are passed through to \`list\`.
 HEREDOC
 _ls() {
-  _debug printf "_ls() \${@:-}: '%s'\n" "${@:-}"
+  _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
 
   if [[ -z "${*:1}" ]]
   then
-    _notebooks --names | tr '\n' ' ' && printf "\n"
+    _notebooks --names | tr '\n' ' ' && printf "\\n"
     # Use control characters to disable wrapping for long lines.
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
@@ -1561,14 +1561,14 @@ _move() {
     esac
   done
 
-  _debug printf "_move() \${_selection}: '%s'\n" "${_selection}"
-  _debug printf "_move() \${_target_notebook}: '%s'\n" "${_target_notebook}"
+  _debug printf "_move() \${_selection}: '%s'\\n" "${_selection}"
+  _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
 
   if [[ "${_target_notebook}" =~ :$ ]]
   then
-    _target_notebook="$(printf "%s\n" "${_target_notebook}" | tr -d ':')"
+    _target_notebook="$(printf "%s\\n" "${_target_notebook}" | tr -d ':')"
   fi
-  _debug printf "_move() \${_target_notebook}: '%s'\n" "${_target_notebook}"
+  _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
@@ -1580,13 +1580,13 @@ _move() {
     return 1
   elif [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then
-    _die printf "Not Found: %s:%s\n" "${_SCOPE}" "${_basename}"
+    _die printf "Not Found: %s:%s\\n" "${_SCOPE}" "${_basename}"
   elif [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
   then
-    _die printf "Already exists: %s:%s\n" "${_SCOPE}" "${_basename}"
+    _die printf "Already exists: %s:%s\\n" "${_SCOPE}" "${_basename}"
   fi
 
-  _debug printf "_move() \${_basename}: '%s'\n" "${_basename}"
+  _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
 
   _title="$(_get_title "${_basename}")"
   if [[ -n "${_title}" ]]
@@ -1600,7 +1600,7 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving %s to '%s'\n"  \
+    printf "Moving %s to '%s'\\n"  \
       "${_source_info_line}"    \
       "${_target_notebook}"
     while true
@@ -1611,7 +1611,7 @@ _move() {
           break
           ;;
         *)
-          printf "Exiting...\n"
+          printf "Exiting...\\n"
           exit 0
           ;;
       esac
@@ -1625,7 +1625,7 @@ _move() {
 
   if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then
-    printf "Moved to '%s':'%s'\n"  \
+    printf "Moved to '%s':'%s'\\n"  \
       "${_target_notebook}"        \
       "${_basename}"
   fi
@@ -1671,19 +1671,19 @@ _notebooks() {
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
     then
-      _die printf "Already exists: ${_name}\n"
+      _die printf "Already exists: ${_name}\\n"
     fi
 
     local _repo_url="${2:-}"
     if [[ -n "${_repo_url}" ]]
     then
       git clone "${_repo_url}" "${NOTES_DIR}/${_name}"
-      printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
+      printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
     else
       mkdir -p "${NOTES_DIR}/${_name}"
       cd "${NOTES_DIR}/${_name}" && git init
     fi
-    printf "Added: %s\n" "${_name}"
+    printf "Added: %s\\n" "${_name}"
   }
   # _notebooks_list()
   #
@@ -1694,8 +1694,8 @@ _notebooks() {
     local _no_color=0
     local _only_names=0
 
-    _debug printf "_notebooks_list() \${@:-}: '%s'\n" "${@:-}"
-    _debug printf "_notebooks_list() \${@:1}: '%s'\n" "${@:1}"
+    _debug printf "_notebooks_list() \${@:-}: '%s'\\n" "${@:-}"
+    _debug printf "_notebooks_list() \${@:1}: '%s'\\n" "${@:1}"
 
     for __arg in "${@:1}"
     do
@@ -1718,10 +1718,10 @@ _notebooks() {
     fi
 
     _debug printf \
-      "_notebooks_list() \${_only_names:-}: '%s'\n" \
+      "_notebooks_list() \${_only_names:-}: '%s'\\n" \
       "${_only_names:-}"
     _debug printf \
-      "_notebooks_list() \${_files[*]}: '%s'\n" \
+      "_notebooks_list() \${_files[*]}: '%s'\\n" \
       "${_files[*]:-}"
 
     for __item in "${_files[@]}"
@@ -1752,9 +1752,9 @@ _notebooks() {
 
         if [[ -n "${_origin_url:-}" ]]
         then
-          printf "%s\n" "${_formatted_name}	(${_origin_url})"
+          printf "%s\\n" "${_formatted_name}	(${_origin_url})"
         else
-          printf "%s\n" "${_formatted_name}"
+          printf "%s\\n" "${_formatted_name}"
         fi
       fi
     done
@@ -1772,20 +1772,20 @@ _notebooks() {
       _die "${_ME}" help notebooks
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
     then
-      _die printf "'${_old}' is not a valid notebook name.\n"
+      _die printf "'${_old}' is not a valid notebook name.\\n"
     elif [[ -e "${NOTES_DIR}/${_new}" ]]
     then
-      _die printf "A notebook named '${_new}' already exists.\n"
+      _die printf "A notebook named '${_new}' already exists.\\n"
     fi
 
     mv "${NOTES_DIR}/${_old}" "${NOTES_DIR}/${_new}"
 
     if [[ "$(cat "${NOTES_DIR}/.current")" == "${_old}" ]]
     then
-      printf "%s\n" "${_new}" > "${NOTES_DIR}/.current"
+      printf "%s\\n" "${_new}" > "${NOTES_DIR}/.current"
     fi
 
-    printf "'%s' is now named '%s'\n" "${_old}" "${_new}"
+    printf "'%s' is now named '%s'\\n" "${_old}" "${_new}"
   }
 
   local _subcommand="${1:-}"
@@ -1809,10 +1809,10 @@ _notebooks() {
 
       if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
       then
-        printf "%s\n" "${_name}" > "${NOTES_DIR}/.current"
-        printf "Now using %s.\n" "$( _highlight "${_name}")"
+        printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
+        printf "Now using %s.\\n" "$( _highlight "${_name}")"
       else
-        _die printf "Not found: ${_name}\n"
+        _die printf "Not found: ${_name}\\n"
       fi
       ;;
     *)
@@ -1870,7 +1870,7 @@ _rename() {
     ${_ME} help "rename"
     return 1
   fi
-  _debug printf "_rename() \${_source_basename}: '%s'\n" \
+  _debug printf "_rename() \${_source_basename}: '%s'\\n" \
     "${_source_basename}"
 
   if ((_reset))
@@ -1975,7 +1975,7 @@ _search() {
     fi
 
     _debug printf \
-      "_search() \${_target_notebooks[*]}: '%s'\n" \
+      "_search() \${_target_notebooks[*]}: '%s'\\n" \
       "${_target_notebooks[*]}"
 
     for __scope in "${_target_notebooks[@]:-}"
@@ -1983,8 +1983,8 @@ _search() {
       local _files=()
       _files=($(${_ME} "${__scope}:list" --no-index || printf ''))
 
-      _debug printf "_search() \${__scope}: '%s'\n" "${__scope}"
-      # _debug printf "_search() \${_files[*]}: '%s'\n" "${_files[*]}"
+      _debug printf "_search() \${__scope}: '%s'\\n" "${__scope}"
+      # _debug printf "_search() \${_files[*]}: '%s'\\n" "${_files[*]}"
 
       if _command_exists "ag" && ! ((_use_grep))
       then
@@ -2029,7 +2029,7 @@ _search() {
         # Use `sed` to remove color from output.
         # http://unix.stackexchange.com/a/140255
         _path="$(
-          printf "%s\n" "${_line}" \
+          printf "%s\\n" "${_line}" \
             | cut -d: -f 1 \
             | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
         )"
@@ -2043,7 +2043,7 @@ _search() {
         then
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            printf "%s\n" "${_path}"
+            printf "%s\\n" "${_path}"
           fi
         else
           _filename="$(basename "${_path}")"
@@ -2066,20 +2066,20 @@ _search() {
             _indexed_filename="[${_index}] ${_file_info}"
           fi
 
-          # printf "_search() \${_index}: '%s'\n" "${_index}"
-          # printf "_search() \${_last_path}: '%s'\n" "${_last_path}"
-          # printf "_search() \${_path}: '%s'\n" "${_path}"
+          # printf "_search() \${_index}: '%s'\\n" "${_index}"
+          # printf "_search() \${_last_path}: '%s'\\n" "${_last_path}"
+          # printf "_search() \${_path}: '%s'\\n" "${_path}"
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
             printf '\033[?7l'
-            printf "%s\n" "${_indexed_filename_color}"
+            printf "%s\\n" "${_indexed_filename_color}"
             _print_line "${_indexed_filename}"
             printf '\033[?7h'
           fi
 
-          _content_line_with_hit="$(printf "%s\n" "${_line}" | cut -d: -f 2-)"
-          printf "%s\n\n" "${_content_line_with_hit}"
+          _content_line_with_hit="$(printf "%s\\n" "${_line}" | cut -d: -f 2-)"
+          printf "%s\\n\\n" "${_content_line_with_hit}"
         fi
 
         _last_path="${_path}"
@@ -2087,7 +2087,7 @@ _search() {
     done | if read -r _line
     then # output is present
       # Print the test line then `cat` the rest.
-      printf "%s\n" "${_line}"
+      printf "%s\\n" "${_line}"
       cat
       return 0
     else
@@ -2123,9 +2123,9 @@ Description:
   syntax highlighting.
 HEREDOC
 _show() {
-  _debug printf "_show() \${0:-}: '%s'\n" "${0:-}"
-  _debug printf "_show() \${1:-}: '%s'\n" "${1:-}"
-  _debug printf "_show() \${2:-}: '%s'\n" "${2:-}"
+  _debug printf "_show() \${0:-}: '%s'\\n" "${0:-}"
+  _debug printf "_show() \${1:-}: '%s'\\n" "${1:-}"
+  _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
   local -a _arguments=("${@:1}")
   local _selection=
@@ -2136,7 +2136,7 @@ _show() {
   local _print_index=0
   local _print_no_color=0
 
-  _debug printf "_show() \${_arguments[*]:-}: '%s'\n" "${_arguments[*]:-}"
+  _debug printf "_show() \${_arguments[*]:-}: '%s'\\n" "${_arguments[*]:-}"
 
   for __arg in "${_arguments[@]:-}"
   do
@@ -2165,8 +2165,8 @@ _show() {
     esac
   done
 
-  _debug printf "_show() \${_render}: '%s'\n" "${_render}"
-  _debug printf "_show() \${_selection}: '%s'\n" "${_selection}"
+  _debug printf "_show() \${_render}: '%s'\\n" "${_render}"
+  _debug printf "_show() \${_selection}: '%s'\\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
@@ -2176,19 +2176,19 @@ _show() {
     ${_ME} help "show"
     return 1
   fi
-  _debug printf "_show() \${_basename}: '%s'\n" "${_basename}"
+  _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
 
   # Display file.
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
     if ((_print_path))
     then # `notes show --path`
-      printf "%s/%s\n" "${NOTES_DATA_DIR}" "${_basename}"
+      printf "%s/%s\\n" "${NOTES_DATA_DIR}" "${_basename}"
     elif ((_print_index))
     then
       local _index
       _index="$(_get_index "${_basename}" "$(notes list --no-index)")"
-      printf "%s\n" "${_index}"
+      printf "%s\\n" "${_index}"
     elif ((_render)) &&
          ((_dump))   &&
          _command_exists "pandoc" &&
@@ -2223,7 +2223,7 @@ _show() {
       fi
     fi
   else # _basename is not assigned or no note exists with that name.
-    _die printf "Selection not found.\n"
+    _die printf "Selection not found.\\n"
   fi
 }
 
@@ -2237,7 +2237,7 @@ Description:
   Run \`git status\` in \`\$NOTES_DATA_DIR\`.
 HEREDOC
 _status() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_status() \`cd\` failed.\n"
+  cd "${NOTES_DATA_DIR}" || _die printf "_status() \`cd\` failed.\\n"
   git status
 }
 
@@ -2256,17 +2256,17 @@ HEREDOC
 _sync() {
   local _notebooks
 
-  _debug printf "_sync() \${*}: '%s'\n" "${*}"
+  _debug printf "_sync() \${*}: '%s'\\n" "${*}"
 
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
-    _debug printf "_sync() -a|--all\n"
+    _debug printf "_sync() -a|--all\\n"
     _notebooks=($(${_ME} notebooks --names --no-color))
   else
     _notebooks=($(_notebook))
   fi
 
-  _debug printf "_sync() \${_notebooks[*]:-}: '%s'\n" "${_notebooks[*]:-}"
+  _debug printf "_sync() \${_notebooks[*]:-}: '%s'\\n" "${_notebooks[*]:-}"
 
   printf "Syncing: "
   for __notebook in "${_notebooks[@]:-}"
@@ -2275,8 +2275,8 @@ _sync() {
     NOTES_DATA_DIR="${NOTES_DIR}/${__notebook}"
     (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner)
   done &&
-    printf "Done!\n" ||
-    printf "Syncing failed!\n"
+    printf "Done!\\n" ||
+    printf "Syncing failed!\\n"
 }
 
 # use #########################################################################
@@ -2305,7 +2305,7 @@ Description:
   Display version information.
 HEREDOC
 _version() {
-  printf "%s\n" "${_VERSION}"
+  printf "%s\\n" "${_VERSION}"
 }
 
 ###############################################################################
@@ -2317,9 +2317,9 @@ _version() {
 # Description:
 #   Call the appropriate subcommand.
 _notes() {
-  _debug printf "_notes() >> start\n"
-  _debug printf "_notes() \${_ARGUMENTS[@]:1}: '%s'\n" "${_ARGUMENTS[@]:1}"
-  _debug printf "_notes() \${_SUBCOMMAND}: '%s'\n" "${_SUBCOMMAND}"
+  _debug printf "_notes() >> start\\n"
+  _debug printf "_notes() \${_ARGUMENTS[@]:1}: '%s'\\n" "${_ARGUMENTS[@]:1}"
+  _debug printf "_notes() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
 
   # Set `$_SUBCOMMAND` if it's still blank.
   if [[ -z "${_SUBCOMMAND:-}" ]]
@@ -2385,17 +2385,17 @@ _notes() {
           if _git_should_autosync
           then
             _debug \
-              printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\n"
+              printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\\n"
             ${_ME} sync
           else
             _debug \
-              printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\n"
+              printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\\n"
             _git_checkpoint "[NOTES] Commit" --spinner
           fi
         elif _git_should_autosync
         then
           _debug \
-            printf "_notes(): ! _git_index_is_dirty\n"
+            printf "_notes(): ! _git_index_is_dirty\\n"
           (${_ME} sync &>/dev/null) &
         fi
       fi
@@ -2541,7 +2541,7 @@ _SUBCOMMANDS=(
 # https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
 _SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
 
-_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\n" "${_SUBCOMMANDS_PATTERN}"
+_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n" "${_SUBCOMMANDS_PATTERN}"
 
 # _is_valid_subcommand()
 #
@@ -2575,7 +2575,7 @@ _require_argument() {
 
   if [[ -z "${_value}" ]] || [[ "${_value}" =~ ^- ]]
   then
-    _die printf "Option requires an argument: %s\n" "${_option}"
+    _die printf "Option requires an argument: %s\\n" "${_option}"
   fi
 }
 
@@ -2602,7 +2602,7 @@ do
       _PRINT_VERSION=1
       ;;
     *:*)
-      __parts=($(printf "%s\n" "${__opt}" | tr ":" "\n"))
+      __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
       if [[ -z "${_SCOPE:-}"       ]] &&
          [[ -z "${_SUBCOMMAND:-}"  ]] &&
          [[ "${#__parts[@]}" -gt 0  ]]
@@ -2615,7 +2615,7 @@ do
             _SUBCOMMAND="${__parts[1]:-}"
           fi
         else
-          _die printf "Notebook not found: %s\n" "${__parts[0]}"
+          _die printf "Notebook not found: %s\\n" "${__parts[0]}"
         fi
       else
         _ARGUMENTS+=("${__opt}")
@@ -2636,11 +2636,11 @@ do
   esac
 done
 
-_debug printf "\${_SUBCOMMANDS[*]}: '%s'\n" "${_SUBCOMMANDS[*]}"
-_debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\n" "${_SUBCOMMANDS_PATTERN}"
-_debug printf "\${_SUBCOMMAND}: '%s'\n" "${_SUBCOMMAND}"
-_debug printf "\${_SCOPE}: '%s'\n" "${_SCOPE}"
-_debug printf "\${_ARGUMENTS[*:-]}: '%s'\n" "${_ARGUMENTS[*]:-}"
+_debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n" "${_SUBCOMMANDS[*]}"
+_debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\\n" "${_SUBCOMMANDS_PATTERN}"
+_debug printf "\${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
+_debug printf "\${_SCOPE}: '%s'\\n" "${_SCOPE}"
+_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # _main()

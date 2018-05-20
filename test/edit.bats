@@ -12,8 +12,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
 }
 
@@ -26,8 +26,8 @@ load test_helper
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
   run "${_NOTES}" edit
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_original}" ]]
 }
 
@@ -56,8 +56,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
 }
@@ -70,8 +70,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit 0
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
@@ -93,8 +93,8 @@ load test_helper
   [[ -e "${NOTES_DIR}/one/${_filename}" ]]
 
   run "${_NOTES}" edit one:"${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ one:[A-Za-z0-9]+.md ]]
 }
 
@@ -108,8 +108,8 @@ load test_helper
   }
 
   run export EDITOR="cat" && "${_NOTES}" edit "${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ -z ${output} ]]
 }
@@ -124,8 +124,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit "${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -138,8 +138,8 @@ load test_helper
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
   run "${_NOTES}" edit "${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
 }
 
@@ -168,8 +168,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit "${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -183,8 +183,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit 0
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -197,8 +197,8 @@ load test_helper
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
   run "${_NOTES}" edit 0
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
 }
 
@@ -227,8 +227,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit 0
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -242,8 +242,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -256,8 +256,8 @@ load test_helper
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
   run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
 }
 
@@ -286,8 +286,8 @@ load test_helper
   }
 
   run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -302,8 +302,8 @@ load test_helper
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" edit "${_title}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -317,8 +317,8 @@ load test_helper
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
   run "${_NOTES}" edit "${_title}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
 }
 
@@ -349,8 +349,8 @@ load test_helper
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" edit "${_title}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -363,8 +363,8 @@ load test_helper
 
 @test "\`help edit\` prints help information." {
   run "${_NOTES}" help edit
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
 }

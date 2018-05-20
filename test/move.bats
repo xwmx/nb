@@ -17,8 +17,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
 }
 
@@ -30,8 +30,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
@@ -58,8 +58,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }
@@ -72,8 +72,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move 0 "destination"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
@@ -86,8 +86,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move "invalid" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
@@ -100,8 +100,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move 0 "invalid" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
@@ -116,8 +116,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move "${_filename}" "destination"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
@@ -138,8 +138,8 @@ _setup_move() {
   [[ -e "${NOTES_DIR}/one/${_filename}" ]]
 
   run "${_NOTES}" move one:"${_filename}" "home" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \'home\':\'[A-Za-z0-9]+.md\' ]]
 }
 
@@ -152,8 +152,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move "${_filename}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -165,8 +165,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move "${_filename}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
@@ -194,8 +194,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move "${_filename}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
 }
 
@@ -208,8 +208,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move 0 "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -221,8 +221,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move 0 "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
@@ -250,8 +250,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move 0 "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
 }
 
@@ -264,8 +264,8 @@ _setup_move() {
   }
 
   run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -277,8 +277,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
@@ -306,8 +306,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
 }
 
@@ -321,8 +321,8 @@ _setup_move() {
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" move "${_title}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -335,8 +335,8 @@ _setup_move() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" move "${_title}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
@@ -365,8 +365,8 @@ _setup_move() {
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" move "${_title}" "destination" --force
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
 }
 
@@ -379,8 +379,8 @@ _setup_move() {
 
 @test "\`help move\` prints help information." {
   run "${_NOTES}" help move
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }

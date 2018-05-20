@@ -7,8 +7,8 @@ load test_helper
 @test "\`add\` with no arguments exits with status 0." {
   run "${_NOTES}" init
   run "${_NOTES}" add
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -36,8 +36,8 @@ load test_helper
 @test "\`add\` with argument exits with status 0." {
   run "${_NOTES}" init
   run "${_NOTES}" add "# Content"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -64,8 +64,8 @@ load test_helper
   run "${_NOTES}" init
   run "${_NOTES}" add  "# Content"
   _files=($(ls "${NOTES_DATA_DIR}/"))
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -96,8 +96,8 @@ load test_helper
 @test "\`add\` with piped content exits with status 0." {
   run "${_NOTES}" init
   run bash -c 'echo "# Piped" | "${_NOTES}" add'
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -123,8 +123,8 @@ load test_helper
 @test "\`add\` with piped content prints output." {
   run "${_NOTES}" init
   run bash -c 'echo "# Piped" | "${_NOTES}" add'
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -159,8 +159,8 @@ load test_helper
 
 @test "\`help add\` returns usage information." {
   run "${_NOTES}" help add
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes add [<note>] [--type <type>]" ]]
 }

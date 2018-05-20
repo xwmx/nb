@@ -37,8 +37,8 @@ HEREDOC
   run "${_NOTES}" count
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "3"
 
   [[ "${lines[0]}" -eq 3 ]]
@@ -53,8 +53,8 @@ HEREDOC
 
 @test "\`help count\` prints help information." {
   run "${_NOTES}" help count
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes count" ]]
 }

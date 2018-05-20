@@ -13,8 +13,8 @@ _setup_rename() {
   _setup_rename
 
   run "${_NOTES}" rename
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
 }
 
@@ -23,8 +23,8 @@ _setup_rename() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" rename
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
@@ -45,8 +45,8 @@ _setup_rename() {
   _setup_rename
 
   run "${_NOTES}" rename
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" =~ "  notes rename" ]]
 }
@@ -61,8 +61,8 @@ _setup_rename() {
   }
 
   run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -75,8 +75,8 @@ _setup_rename() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}"  ]]
   [[ -e "${NOTES_DATA_DIR}/EXAMPLE.org"    ]]
 }
@@ -107,8 +107,8 @@ _setup_rename() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ [A-Za-z0-9]+.md\ renamed\ to\ EXAMPLE.org ]]
 }
 
@@ -124,8 +124,8 @@ _setup_rename() {
   }
 
   run "${_NOTES}" rename "${_filename}" --reset
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
@@ -140,8 +140,8 @@ _setup_rename() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" rename "${_filename}" --reset
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}"  ]]
   [[ $(notes list -n 1 --no-index | head -1) =~  [A-Za-z0-9]+.md ]]
 }
@@ -176,8 +176,8 @@ _setup_rename() {
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
   run "${_NOTES}" rename "${_filename}" --reset
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ test.md\ renamed\ to\ [A-Za-z0-9]+.md ]]
 }
 
@@ -190,8 +190,8 @@ _setup_rename() {
 
 @test "\`help rename\` prints help information." {
   run "${_NOTES}" help rename
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes rename (<index> | <filename> | <path> | <title>) (<name> | --reset)" ]]
 }

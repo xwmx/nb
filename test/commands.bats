@@ -9,7 +9,7 @@ load test_helper
 
 @test "\`commands\` prints subcommands." {
   run "${_NOTES}" commands
-  printf "\${lines[*]}: %s\n" "${lines[*]}"
+  printf "\${lines[*]}: %s\\n" "${lines[*]}"
   [[ "${lines[0]}" =~ add ]]
   [[ "${lines[25]}" =~ version ]]
 }

@@ -6,8 +6,8 @@ load test_helper
 
 @test "\`notes\` (pre-init) exits with status 0 and prints \`ls\` ouput." {
   {
-    printf "\${NOTES_DIR}: %s\n" "${NOTES_DIR}"
-    printf "\${NOTESRC_PATH}: %s\n" "${NOTESRC_PATH}"
+    printf "\${NOTES_DIR}: %s\\n" "${NOTES_DIR}"
+    printf "\${NOTESRC_PATH}: %s\\n" "${NOTESRC_PATH}"
     if [[ "${NOTES_DIR}" =~ /tmp/notes_test ]] &&
        [[ -e "${NOTES_DIR}" ]]
     then
@@ -24,8 +24,8 @@ load test_helper
 
   run "${_NOTES}"
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${status}" -eq 0 ]]
 
   [[ "${lines[6]}" == "Initializing..." ]]
@@ -44,16 +44,16 @@ load test_helper
 @test "\`notes\` with empty repo exits with status 1 and \`ls\` output." {
   run "${_NOTES}" init
   run "${_NOTES}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${status}" -eq 1 ]]
 }
 
 @test "\`notes\` with an empty repo prints error." {
   run "${_NOTES}" init
   run "${_NOTES}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[1]}" =~ ---- ]]
   [[ "${lines[2]}" == "0 notes." ]]
@@ -77,8 +77,8 @@ load test_helper
   }
 
   run "${_NOTES}"
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[*]}" "${lines[*]}"
 
   [[ "${status}" -eq 0 ]]

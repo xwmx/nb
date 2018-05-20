@@ -21,8 +21,8 @@ _setup_scope() {
   run "${_NOTES}" one:notebook
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${output}" =~ "one" ]]
 }
@@ -35,8 +35,8 @@ _setup_scope() {
   run "${_NOTES}" two:notebook
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${output}" =~ "two" ]]
 }
@@ -49,8 +49,8 @@ _setup_scope() {
   run "${_NOTES}" one:invalid
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[2]}" =~ "first" ]]
 }
@@ -65,8 +65,8 @@ _setup_scope() {
   run "${_NOTES}" one:
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[2]}" =~ "first" ]]
 }
@@ -79,8 +79,8 @@ _setup_scope() {
   run "${_NOTES}" one: --no-index
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" = "first" ]]
 }
@@ -93,8 +93,8 @@ _setup_scope() {
   run "${_NOTES}" two:
   [[ ${status} -eq 1 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[2]}" =~ "0 notes." ]]
 }
@@ -107,8 +107,8 @@ _setup_scope() {
   run "${_NOTES}" invalid:
   [[ ${status} -eq 1 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ "Notebook not found: invalid" ]]
 }
@@ -123,8 +123,8 @@ _setup_scope() {
   run "${_NOTES}" show one:first --dump
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${output}" =~ "first" ]]
 }

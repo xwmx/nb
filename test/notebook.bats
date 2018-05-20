@@ -22,8 +22,8 @@ _setup_notebook() {
   run "${_NOTES}" notebook
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${output}" == "home" ]]
 }
@@ -37,8 +37,8 @@ _setup_notebook() {
 
 @test "\`help notebook\` prints help information." {
   run "${_NOTES}" help notebook
-  printf "\${status}: %s\n" "${status}"
-  printf "\${output}: '%s'\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes notebook" ]]
 }
