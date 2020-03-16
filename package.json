@@ -1,0 +1,28 @@
+{
+  "name": "notes.sh",
+  "version": "1.0.6",
+  "description": "A git-backed, syncable, searchable command line note-taking tool in a single portable script.",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "bats test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alphabetum/notes.git"
+  },
+  "keywords": [
+    "notes",
+    "bash",
+    "shell",
+    "productivity"
+  ],
+  "author": "William Melody",
+  "license": "GPL-2.0-only",
+  "bugs": {
+    "url": "https://github.com/alphabetum/notes/issues"
+  },
+  "homepage": "https://github.com/alphabetum/notes#readme"
+}
