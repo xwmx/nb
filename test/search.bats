@@ -140,7 +140,7 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
   }
 
-  run "${_NOTES}" search 'sweetish' --all
+  run "${_NOTES}" search 'sweetish' --all --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -165,7 +165,7 @@ _search_all_setup() {
     sleep 1 # Give setup time to complete to avoid errors.
   }
 
-  run "${_NOTES}" search 'sweetish' -a
+  run "${_NOTES}" search 'sweetish' -a --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
