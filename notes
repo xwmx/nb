@@ -1890,7 +1890,7 @@ _rename() {
 
     # Assign filename with unicode timestamp.
     local _target_basename
-    _target_basename="$(date -r ${_timestamp} -u "+%Y%m%d%H%M%S").${_file_type}"
+    _target_basename="$(date -r "${_timestamp}" -u "+%Y%m%d%H%M%S").${_file_type}"
     local _destination_path="${NOTES_DATA_DIR}/${_target_basename}"
 
     mv "${_source_path}" "${_destination_path}" \
