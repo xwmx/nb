@@ -27,5 +27,6 @@
   "bugs": {
     "url": "https://github.com/alphabetum/notes/issues"
   },
-  "homepage": "https://github.com/alphabetum/notes#readme"
+  "homepage": "https://github.com/alphabetum/notes#readme",
+  "dependencies": {}
 }
