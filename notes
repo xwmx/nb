@@ -1542,7 +1542,8 @@ _move() {
   local _force=0
   local _title=
   local _source_info_line=
-  local _target_info_line=
+  # TODO: Remove $_target_info_line if unused.
+  # local _target_info_line=
 
   for __arg in "${@:1}"
   do
@@ -1593,10 +1594,10 @@ _move() {
   if [[ -n "${_title}" ]]
   then
     _source_info_line="${_SCOPE}:${_basename} '${_title}'"
-    _target_info_line="${_target_notebook}:${_basename} '${_title}'"
+    # _target_info_line="${_target_notebook}:${_basename} '${_title}'"
   else
     _source_info_line="${_SCOPE}:${_basename}"
-    _target_info_line="${_SCOPE}:${_target_notebook}"
+    # _target_info_line="${_SCOPE}:${_target_notebook}"
   fi
 
   if ! ((_force))
