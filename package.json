@@ -6,6 +6,9 @@
     "doc": "docs",
     "test": "test"
   },
+  "bin": {
+    "notes": "./notes"
+  },
   "scripts": {
     "test": "bats test"
   },
