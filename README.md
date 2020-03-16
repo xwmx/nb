@@ -45,25 +45,31 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 
 To install with [Homebrew](http://brew.sh/):
 
-    brew install alphabetum/taps/notes
+```bash
+brew install alphabetum/taps/notes
+```
 
 #### npm
 
 To install with [npm](https://www.npmjs.com/package/notes.sh):
 
-    npm install --global notes.sh
+```bash
+npm install --global notes.sh
+```
 
 #### Manual
 
 To install manually, simply add the `notes` script to your `$PATH`. If
 you already have a `~/bin` directory, you can use the following command:
 
-    curl -L https://raw.github.com/alphabetum/notes/master/notes \
-      -o ~/bin/notes && chmod +x ~/bin/notes
+```bash
+curl -L https://raw.github.com/alphabetum/notes/master/notes \
+  -o ~/bin/notes && chmod +x ~/bin/notes
+```
 
 ## Usage
 
-```
+```text
 Usage:
   notes [<number>] [<list options>]
   notes add [<note>] [--type <type>]
@@ -119,7 +125,7 @@ Program Options:
 
 #### `add`
 
-```
+```text
 Usage:
   notes add [<note>] [--type <type>]
 
@@ -139,7 +145,7 @@ Examples:
 
 #### `count`
 
-```
+```text
 Usage:
   notes count
 
@@ -149,7 +155,7 @@ Description:
 
 #### `delete`
 
-```
+```text
 Usage:
   notes delete (<index> | <filename> | <path> | <title>) [--force]
 
@@ -162,7 +168,7 @@ Description:
 
 #### `edit`
 
-```
+```text
 Usage:
   notes edit (<index> | <filename> | <path> | <title>)
 
@@ -172,7 +178,7 @@ Description:
 
 #### `env`
 
-```
+```text
 Usage:
   notes env
 
@@ -182,7 +188,7 @@ Description:
 
 #### `git`
 
-```
+```text
 Usage:
   notes git <arguments>
 
@@ -192,7 +198,7 @@ Description:
 
 #### `help`
 
-```
+```text
 Usage:
   notes help [<subcommand>]
 
@@ -203,7 +209,7 @@ Description:
 
 #### `history`
 
-```
+```text
 Usage:
   notes history [<selection>]
 
@@ -216,7 +222,7 @@ Description:
 
 #### `init`
 
-```
+```text
 Usage:
   notes init [<remote-url>]
 
@@ -226,7 +232,7 @@ Description:
 
 #### `list`
 
-```
+```text
 Usage:
   notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
 
@@ -250,7 +256,7 @@ Examples:
 
 #### `ls`
 
-```
+```text
 Usage:
   notes ls [<list options>]
 
@@ -260,7 +266,7 @@ Description:
 
 #### `search`
 
-```
+```text
 Usage:
   notes search <query> [-a | --all] [--path]
 
@@ -277,7 +283,7 @@ Description:
 
 #### `move`
 
-```
+```text
 Usage:
   notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>
 
@@ -287,7 +293,7 @@ Description:
 
 #### `show`
 
-```
+```text
 Usage:
   notes show (<index> | <filename> | <path> | <title>)
   notes show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
@@ -314,7 +320,7 @@ Description:
 
 #### `status`
 
-```
+```text
 Usage:
   notes status
 
@@ -324,7 +330,7 @@ Description:
 
 #### `sync`
 
-```
+```text
 Usage:
   notes sync [-a|--all]
 
@@ -337,7 +343,7 @@ Description:
 
 #### `version`
 
-```
+```text
 Usage:
   notes version
 
