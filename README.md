@@ -47,6 +47,12 @@ To install with [Homebrew](http://brew.sh/):
 
     brew install alphabetum/taps/notes
 
+#### npm
+
+To install with [npm](https://www.npmjs.com/package/notes.sh):
+
+    npm install --global notes.sh
+
 #### Manual
 
 To install manually, simply add the `notes` script to your `$PATH`. If
