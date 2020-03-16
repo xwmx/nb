@@ -2010,10 +2010,12 @@ _search() {
       else # fall back to POSIX grep.
         # Add /dev/null so file path is printed even if there is only one
         # matching file. Reference: http://stackoverflow.com/a/15432718
+        set +f
         grep \
           --ignore-case \
           -n "${_query}" "${NOTES_DIR}/${__scope}"/* /dev/null \
             || return 0 # Don't fail out within a single scope.
+        set -f
       fi | while read -r _line
       do
         local _path=
