@@ -20,7 +20,11 @@
     "notes",
     "bash",
     "shell",
-    "productivity"
+    "productivity",
+    "cli",
+    "terminal",
+    "command-line",
+    "prompt"
   ],
   "author": "William Melody",
   "license": "GPL-2.0-only",
