@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alphabetum/notes.git"
+    "url": "git+https://github.com/xwmx/notes.git"
   },
   "keywords": [
     "notes",
@@ -29,8 +29,8 @@
   "author": "William Melody",
   "license": "GPL-2.0-only",
   "bugs": {
-    "url": "https://github.com/alphabetum/notes/issues"
+    "url": "https://github.com/xwmx/notes/issues"
   },
-  "homepage": "https://github.com/alphabetum/notes#readme",
+  "homepage": "https://github.com/xwmx/notes#readme",
   "dependencies": {}
 }

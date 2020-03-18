@@ -359,7 +359,7 @@ Vagrant.configure("2") do |config|
   # config.vm.provision "shell", path: "./local-script.sh"
 
   $initialize_application_script = <<-HEREDOC
-git clone https://github.com/alphabetum/dotfiles.git "${HOME}/.bindle" && \
+git clone https://github.com/xwmx/dotfiles.git "${HOME}/.bindle" && \
 "${HOME}/.bindle/script/bootstrap/linux"
 HEREDOC
   config.vm.provision "shell",

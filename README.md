@@ -47,7 +47,7 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 To install with [Homebrew](http://brew.sh/):
 
 ```bash
-brew install alphabetum/taps/notes
+brew install xwmx/taps/notes
 ```
 
 #### npm
@@ -64,7 +64,7 @@ To install manually, simply add the `notes` script to your `$PATH`. If
 you already have a `~/bin` directory, you can use the following command:
 
 ```bash
-curl -L https://raw.github.com/alphabetum/notes/master/notes \
+curl -L https://raw.github.com/xwmx/notes/master/notes \
   -o ~/bin/notes && chmod +x ~/bin/notes
 ```
 

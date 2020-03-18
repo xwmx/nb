@@ -5,7 +5,7 @@
 # | | | | (_) | ||  __/\__ \
 # |_| |_|\___/ \__\___||___/
 #
-# Based on Bash Boilerplate: https://github.com/alphabetum/bash-boilerplate
+# Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
 # Copyright (c) 2015 William Melody • hi@williammelody.com
 
@@ -1243,7 +1243,7 @@ HEREDOC
 #
 # Configuration file for notes
 #
-# https://github.com/alphabetum/notes
+# https://github.com/xwmx/notes
 ###############################################################################
 
 # \$NOTES_AUTO_SYNC
