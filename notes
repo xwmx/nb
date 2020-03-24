@@ -1132,6 +1132,8 @@ _help() {
 | | | | (_) | ||  __/\__ \\
 |_| |_|\___/ \__\___||___/
 
+A git-backed, syncable, searchable command line note-taking tool.
+
 Usage:
   ${_ME} [<number>] [<list options>]
   ${_ME} add [<note>] [--type <type>]
@@ -1249,7 +1251,8 @@ HEREDOC
 ###############################################################################
 # .notesrc
 #
-# Configuration file for notes
+# Configuration file for notes, a git-backed, syncable, searchable command line
+# note-taking tool.
 #
 # https://github.com/xwmx/notes
 ###############################################################################
