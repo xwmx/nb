@@ -8,11 +8,25 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-A command line note-taking and syncing tool that stores data in Markdown files versioned with git.
+A command line note-taking and syncing tool that stores data as Markdown,
+Emacs Org mode, and other text file formats versioned with git.
 
-With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor you have set in the `$EDITOR` environment variable. `notes` uses git in the background to automatically record changes and sync with a remote repository, if one has been configured. Optional dependencies can be installed to enable enhanced rendering, display, and searching functionality, but everything still works great without them.
+With `notes`, you can add and edit notes using Vim/GVim/MacVim, Emacs, VS Code,
+or whatever editor you have set in the `$EDITOR` environment variable.
+`notes` uses git in the background to automatically record changes and sync
+with a remote repository, if one has been configured. Optional dependencies
+can be installed to enable enhanced rendering, display, and searching
+functionality, but everything still works great without them.
 
-`notes` files are normal [Markdown](https://daringfireball.net/projects/markdown/) files that can be edited with any application. If the files are modified using a different program, `notes` will automatically commit all of the changes the next time it runs. As a result, `notes` can be configured to save the data files in a directory used by a general purpose syncing utility like Dropbox so they can be edited on any device with apps that support Dropbox and Markdown or plain text.
+`notes` works with text files in any markup format. By default, `notes` files
+are normal [Markdown](https://daringfireball.net/projects/markdown/) files that
+can be edited with any text editor. If the files are modified using a different
+program, `notes` will automatically commit all of the changes the next time it
+runs.
+
+`notes` can be configured to save the data files in a directory used
+by a general purpose syncing utility like Dropbox so they can be edited on
+any device with apps that support Dropbox and Markdown or plain text.
 
 #### Dependencies
 
@@ -23,15 +37,17 @@ With `notes`, you can add and edit notes using Vim, Emacs, or whatever editor yo
 - A text editor with command line support, such as
   - [Vim](http://www.vim.org/),
   - [Emacs](https://www.gnu.org/software/emacs/),
-  - [nano](https://en.wikipedia.org/wiki/GNU_nano),
-  - [Sublime Text](https://www.sublimetext.com/),
   - [VS Code](https://code.visualstudio.com/),
+  - [Sublime Text](https://www.sublimetext.com/),
   - [Atom](https://atom.io/),
+  - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [or many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
 
 ##### Optional
 
-`notes` leverages standard command line tools and works great in any Bash environment. `notes` also checks the environment for some additional optional tools and uses them to enhance the experience whenever they are available.
+`notes` leverages standard command line tools and works great in any Bash
+environment. `notes` also checks the environment for some additional optional
+tools and uses them to enhance the experience whenever they are available.
 
 - [Ack](http://beyondgrep.com/)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
@@ -354,7 +370,8 @@ Description:
 
 ## Configuration
 
-`notes` is configured using environment variables, which can be set in `~/.notesrc`.
+`notes` is configured using environment variables, which can be set in
+`~/.notesrc`.
 
 #### `$NOTES_AUTO_SYNC`
 
@@ -376,7 +393,8 @@ export NOTES_AUTO_SYNC=0
 
 Default: `~/.notes`
 
-The location of the notes directory that contains the data repository. For example, to store your notes in Dropbox, you could use:
+The location of the notes directory that contains the data repository. For
+example, to store your notes in Dropbox, you could use:
 
 ```bash
 export NOTES_DIR="~/Dropbox/Notes"
@@ -386,7 +404,9 @@ export NOTES_DIR="~/Dropbox/Notes"
 
 Default: `md`
 
-The default extension to use for notes files. Change to `org` for Emacs Org mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you prefer.
+The default extension to use for notes files. Change to `org` for Emacs Org
+mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you
+prefer.
 
 Example Values: `md`, `org`, `txt`, `rst`
 
@@ -399,7 +419,8 @@ export NOTES_DEFAULT_EXTENSION="org"
 
 Default: inherits the global `$EDITOR` value.
 
-Reassign `$EDITOR` to use a specific editor with `notes`, overriding the global `$EDITOR` setting.
+Reassign `$EDITOR` to use a specific editor with `notes`, overriding the
+global `$EDITOR` setting.
 
 Example Values: `vim`, `emacs`, `subl`, `atom`, `code`, `macdown`
 
@@ -410,4 +431,5 @@ export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
 
 ## Testing
 
-To run the test suite, install [Bats](https://github.com/sstephenson/bats) and run `bats test` in the project root directory.
+To run the test suite, install [Bats](https://github.com/sstephenson/bats) and
+run `bats test` in the project root directory.
