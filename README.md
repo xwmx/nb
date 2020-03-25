@@ -24,7 +24,8 @@ can be edited with any text editor.
 
 `notes` can be configured to save the data files in a directory used
 by a general purpose syncing utility like Dropbox so they can be edited on
-any device with apps that support Dropbox and Markdown or plain text.
+any device with apps that support Dropbox and Markdown, plain text, or
+your preferred markup format.
 
 #### Dependencies
 
