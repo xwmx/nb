@@ -20,9 +20,7 @@ functionality, but everything still works great without them.
 
 `notes` works with text files in any markup format. By default, `notes` files
 are normal [Markdown](https://daringfireball.net/projects/markdown/) files that
-can be edited with any text editor. If the files are modified using a different
-program, `notes` will automatically commit all of the changes the next time it
-runs.
+can be edited with any text editor.
 
 `notes` can be configured to save the data files in a directory used
 by a general purpose syncing utility like Dropbox so they can be edited on
