@@ -392,7 +392,7 @@ Example Values: `md`, `org`, `txt`, `rst`
 
 Example:
 ```bash
-export NOTES_DEFAULT_EXTENSION="\${NOTES_DEFAULT_EXTENSION:-md}"
+export NOTES_DEFAULT_EXTENSION="org"
 ```
 
 #### `$EDITOR`

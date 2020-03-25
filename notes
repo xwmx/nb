@@ -1284,7 +1284,7 @@ HEREDOC
 # you prefer.
 
 # Example Values: 'md' 'org' 'txt' 'rst'
-# export NOTES_DEFAULT_EXTENSION="\${NOTES_DEFAULT_EXTENSION:-md}"
+# export NOTES_DEFAULT_EXTENSION="org"
 
 # \$EDITOR
 #
