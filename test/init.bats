@@ -44,6 +44,13 @@ load test_helper
   [[ -d "${NOTES_DATA_DIR}/.git" ]]
 }
 
+@test "\`init\` creates an .index \`\$NOTES_DATA_DIR\`." {
+  run "${_NOTES}" init
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+}
+
 @test "\`init\` exits with status 0 when \$NOTESRC_PATH\` exists." {
   touch "${NOTESRC_PATH}"
   [[ -e "${NOTESRC_PATH}" ]]
@@ -62,6 +69,18 @@ load test_helper
   cat "${NOTESRC_PATH}" | grep -q 'Configuration file for notes'
   printf "%s\\n" "$(cat "${NOTESRC_PATH}")"
   cat "${NOTESRC_PATH}" | grep -q '\$NOTES_AUTO_SYNC'
+}
+
+@test "\`init\` creates git commit." {
+  run "${_NOTES}" init
+
+  cd "${NOTES_DATA_DIR}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Initialize') ]]
 }
 
 # `notes init <remote-url>` ###################################################

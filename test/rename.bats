@@ -98,6 +98,23 @@ _setup_rename() {
   [[ $(git log | grep '\[NOTES\] Rename') ]]
 }
 
+@test "\`rename\` with <filename> argument updates index." {
+  {
+    _setup_rename
+    _filename=$(notes list -n 1 --no-index | head -1)
+    echo "\${_filename:-}: ${_filename:-}"
+  }
+
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
+
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ "$(notes index get 'EXAMPLE.org')" == '1' ]]
+}
+
 @test "\`rename\` with <filename> argument prints output." {
   {
     _setup_rename
@@ -163,6 +180,23 @@ _setup_rename() {
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Rename') ]]
+}
+
+@test "\`rename --reset\` with <filename> argument updates index." {
+  {
+    _setup_rename
+    _filename=$(notes list -n 1 --no-index | head -1)
+    echo "\${_filename:-}: ${_filename:-}"
+  }
+
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
+
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 }
 
 @test "\`rename --reset\` with <filename> argument prints output." {

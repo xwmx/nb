@@ -207,7 +207,7 @@ _setup_move() {
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move 0 "destination" --force
+  run "${_NOTES}" move 1 "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -220,7 +220,7 @@ _setup_move() {
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" move 0 "destination" --force
+  run "${_NOTES}" move 1 "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -232,7 +232,7 @@ _setup_move() {
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move 0 "destination" --force
+  run "${_NOTES}" move 1 "destination" --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -249,7 +249,7 @@ _setup_move() {
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" move 0 "destination" --force
+  run "${_NOTES}" move 1 "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]

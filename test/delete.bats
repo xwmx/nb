@@ -69,7 +69,7 @@ load test_helper
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" delete 0 --force
+  run "${_NOTES}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -160,6 +160,23 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
+@test "\`delete\` with <filename> argument removes from index." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" delete "${_filename}" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\$(ls \"\${NOTES_DATA_DIR}\"): '%s'\\n" "$(ls "${NOTES_DATA_DIR}")"
+  printf "\$(cat \"\${NOTES_DATA_DIR}/.index\"): '%s'\\n" "$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+}
+
 @test "\`delete\` with <filename> argument prints output." {
   {
     run "${_NOTES}" init
@@ -183,7 +200,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete 0 --force
+  run "${_NOTES}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -197,7 +214,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete 0 --force
+  run "${_NOTES}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -210,7 +227,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" delete 0 --force
+  run "${_NOTES}" delete 1 --force
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -218,6 +235,23 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
+@test "\`delete\` with <index> argument removes from index." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" delete 1 --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\$(ls \"\${NOTES_DATA_DIR}\"): '%s'\\n" "$(ls "${NOTES_DATA_DIR}")"
+  printf "\$(cat \"\${NOTES_DATA_DIR}/.index\"): '%s'\\n" "$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 }
 
 @test "\`delete\` with <index> argument prints output." {
@@ -228,7 +262,7 @@ load test_helper
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" delete 0 --force
+  run "${_NOTES}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
@@ -278,6 +312,23 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
+@test "\`delete\` with <path> argument removes from index." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\$(ls \"\${NOTES_DATA_DIR}\"): '%s'\\n" "$(ls "${NOTES_DATA_DIR}")"
+  printf "\$(cat \"\${NOTES_DATA_DIR}/.index\"): '%s'\\n" "$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 }
 
 @test "\`delete\` with <path> argument prints output." {
@@ -341,6 +392,24 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
+}
+
+@test "\`delete\` with <title> argument removes from index." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+
+  run "${_NOTES}" delete "${_title}" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\$(ls \"\${NOTES_DATA_DIR}\"): '%s'\\n" "$(ls "${NOTES_DATA_DIR}")"
+  printf "\$(cat \"\${NOTES_DATA_DIR}/.index\"): '%s'\\n" "$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 }
 
 @test "\`delete\` with <title> argument prints output." {

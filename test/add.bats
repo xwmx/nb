@@ -60,6 +60,15 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 }
 
+@test "\`add\` with argument content adds to index." {
+  run "${_NOTES}" init
+  run "${_NOTES}" add "# Content"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+}
+
 @test "\`add\` with argument prints output." {
   run "${_NOTES}" init
   run "${_NOTES}" add  "# Content"
@@ -126,6 +135,15 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
+}
+
+@test "\`add\` with piped content adds to index." {
+  run "${_NOTES}" init
+  run bash -c 'echo "# Piped" | "${_NOTES}" add'
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {

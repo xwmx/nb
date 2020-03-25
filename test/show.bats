@@ -53,7 +53,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --dump
+  run "${_NOTES}" show 1 --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -68,7 +68,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --dump --no-color
+  run "${_NOTES}" show 1 --dump --no-color
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -123,7 +123,7 @@ load test_helper
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" show 0
+  run "${_NOTES}" show 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -168,7 +168,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --dump
+  run "${_NOTES}" show 1 --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -181,7 +181,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --dump
+  run "${_NOTES}" show 1 --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ mock_editor ]]
@@ -282,7 +282,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --path
+  run "${_NOTES}" show 1 --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -295,7 +295,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --path
+  run "${_NOTES}" show 1 --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -396,7 +396,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --index
+  run "${_NOTES}" show 1 --index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -409,7 +409,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 0 --index
+  run "${_NOTES}" show 1 --index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" == "0" ]]

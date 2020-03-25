@@ -187,6 +187,28 @@ one"
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
 }
 
+@test "\`notebooks add <name>\` creates git commit." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NOTES}" notebooks add example
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\$(ls -la \"${NOTES_DIR}/example/\"): '%s'\\n" \
+    "$(ls -la "${NOTES_DIR}/example/")"
+
+  cd "${NOTES_DIR}/example" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Initialize') ]]
+}
+
 @test "\`notebooks add <name> <remote-url>\` exits with 0 and adds a notebook." {
   {
     _setup_notebooks

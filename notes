@@ -42,6 +42,22 @@ _ME=$(basename "${0}")
 # https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
 shopt -s extglob
 
+# $_SED_I_COMMAND
+#
+# `sed -i` takes an extension on macOS, but that extension can cause errors in
+# GNU `sed`.
+#
+# NOTE: To use this command, call it with `"${_SED_I_COMMAND[@]}"`
+#
+# https://stackoverflow.com/q/43171648
+# http://stackoverflow.com/a/16746032
+if sed --help >/dev/null 2>&1
+then # GNU
+  export _SED_I_COMMAND=(sed -i)
+else # macOS
+  export _SED_I_COMMAND=(sed -i '')
+fi
+
 ###############################################################################
 # .notesrc
 ###############################################################################
@@ -292,11 +308,7 @@ _get_selection_basename() {
       _basename="${_identifier}"
     elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
     then # <selection> is an id.
-      local _filenames=($(_list_notes_files))
-      _debug printf \
-        "_get_selection_basename() \${_filenames[*]:-}: '%s'\\n" \
-        "${_filenames[*]:-}"
-      _basename="${_filenames[${_identifier}]:-}"
+      _basename="$(_index at "${_identifier}")"
     else # <selection> might be a title.
       local _title
       local _filenames
@@ -396,13 +408,17 @@ _get_title() {
 # _git_checkpoint()
 #
 # Usage:
-#   _git_checkpoint <commit message>
+#   _git_checkpoint <commit message> [<target-directory>]
 #
 # Description:
 #   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
   _git_checkpoint_commit() {
     [[ -z "${1:-}" ]] && _die printf "Usage: _git_checkpoint_commit <message>"
+    _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" \
+      "$(ls -la)"
+
+
     git add --all && git commit -a -m "${1}"
   }
   _git_checkpoint_sync() {
@@ -410,7 +426,15 @@ _git_checkpoint() {
   }
 
   local _message="${1:-}"
+  local _target_directory="${2:-}"
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${NOTES_DATA_DIR}"
+  fi
   local _show_spinner=0
+
+  _debug printf "_git_checkpoint() \${_target_directory}: '%s'\n" \
+    "${_target_directory}"
 
   if [[ -z "${_message}" ]]
   then
@@ -423,14 +447,17 @@ _git_checkpoint() {
     _show_spinner=1
   fi
 
-  cd "${NOTES_DATA_DIR}" || _die printf "_git_checkpoint() \`cd\` failed.\\n"
+  cd "${_target_directory}" || _die printf "_git_checkpoint() \`cd\` failed.\\n"
+
+  _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" \
+    "$(ls -la)"
 
   if ((NOTES_AUTO_SYNC))
   then
     (
       # Only sync when the index is dirty to avoid fetching from and pushing
       # to origin.
-      if _git_index_is_dirty
+      if _git_index_is_dirty "${_target_directory}"
       then
         _git_checkpoint_commit "${_message}" &>/dev/null
       fi && _git_checkpoint_sync &>/dev/null
@@ -450,13 +477,20 @@ _git_checkpoint() {
 # _git_index_is_dirty()
 #
 # Usage:
-#   _git_index_is_dirty
+#   _git_index_is_dirty [<target-directory>
 #
 # Returns:
-#   0  If there are uncommitted changes in the `NOTES_DATA_DIR` repository.
+#   0  If there are uncommitted changes in `NOTES_DATA_DIR` or
+#      <target-directory>.
 #   1  If the `$NOTES_DATA_DIR` repository is clean.
 _git_index_is_dirty() {
-  cd "${NOTES_DATA_DIR}" \
+  local _target_directory="${1:-}"
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${NOTES_DATA_DIR}"
+  fi
+
+  cd "${_target_directory}" \
     || _die printf "_git_index_is_dirty() \`cd\` failed.\\n"
   [[ -n "$(git status --porcelain)" ]]
 }
@@ -896,6 +930,8 @@ _add() {
 
   if [[ -e "${_file_path}" ]]
   then
+    _index add "${_basename}"
+
     local _title
     _title="$(_get_title "${_basename}")"
     if [[ -n "${_title}" ]]
@@ -976,6 +1012,8 @@ _delete() {
   _debug printf "_delete() \${_selection}: '%s'\\n" "${_selection}"
 
   _basename="$(_get_selection_basename "${_selection}")"
+  _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
+
   _set_selection_notebook "${_selection}"
 
   if [[ -z "${_basename}" ]]
@@ -1015,10 +1053,11 @@ _delete() {
   then # `$_basename` is assigned and a note exists with that name.
     cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\\n"
     git rm "${_basename}" 1>/dev/null
-    _git_checkpoint "[NOTES] Delete: ${_basename}"
 
     if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
     then
+      _index delete "${_basename}"
+      _git_checkpoint "[NOTES] Delete: ${_basename}"
       printf "Deleted %s\\n" "${_note_info_line}"
     fi
   else
@@ -1206,6 +1245,152 @@ _history() {
   fi
 }
 
+# index #######################################################################
+
+desc "index" <<HEREDOC
+Usage:
+  ${_ME} index add <filename>
+  ${_ME} index at <index>
+  ${_ME} index delete <filename>
+  ${_ME} index get <filename>
+  ${_ME} index rebuld
+  ${_ME} index update <existing-filename> <new-filename>
+  ${_ME} index verfiy
+
+Subcommands:
+  add     Add <filename> to the index.
+  at      Print the filename at the specified <index>.
+  delete  Delete <filename> from the index.
+  rebuild Rebuild the index.
+  update  Overwrite the <existing-filename> entry with <new-filename>
+  verify  Verify that the index matches the notebook contents.
+HEREDOC
+_index() {
+  local _subcommand="${1:-}"
+  local _index_path="${NOTES_DATA_DIR}/.index"
+
+  if [[ ! -e "${_index_path}" ]] && \
+     [[ ! "${_subcommand}" == "rebuild" ]]
+  then
+    _index rebuild
+  fi
+
+  case "${_subcommand}" in
+    add)
+      local _basename="${2:-}"
+      if [[ -z "${_basename}" ]]
+      then
+        "${_ME}" help index
+        return 1
+      fi
+      if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+      then
+        _die printf "File not found: %s\n" "${_basename}"
+      fi
+
+      if ! grep -q "${_basename}" "${_index_path}"
+      then
+        _debug printf "_index() add \$_basename: %s\n" "${_basename}"
+        printf "%s\n" "${_basename}" >> "${_index_path}"
+      fi
+      ;;
+    at)
+      local _index_number="${2:-}"
+      if [[ -z "${_index_number}" ]]
+      then
+        "${_ME}" help index
+        return 1
+      fi
+
+      local _basename
+      _basename="$(sed "${_index_number}q;d" "${_index_path}")"
+
+      if [[ -z "${_basename}" ]]
+      then
+        return 1
+      else
+        printf "%s\n" "${_basename}"
+      fi
+      ;;
+    delete)
+      local _basename="${2:-}"
+      if [[ -z "${_basename}" ]]
+      then
+        "${_ME}" help index
+        return 1
+      fi
+
+      if grep -q "^${_basename}$" "${_index_path}"
+      then
+        "${_SED_I_COMMAND[@]}" -e "s/${_basename}//g" "${_index_path}"
+      else
+        return 1
+      fi
+      ;;
+    get)
+      local _basename="${2:-}"
+      if [[ -z "${_basename}" ]]
+      then
+        "${_ME}" help index
+        return 1
+      fi
+
+      grep -n "${_basename}" "${_index_path}" | cut -f1 -d:
+      ;;
+    rebuild)
+      _debug printf "_index() rebuild\n"
+      _debug printf \
+        "_index() rebuild: \`ls "\${NOTES_DATA_DIR}"\`: '%s'\n" \
+        "$(ls "${NOTES_DATA_DIR}")"
+      ls "${NOTES_DATA_DIR}" > "${_index_path}" && \
+        _git_checkpoint "[NOTES] Rebuild Index"
+      ;;
+    show)
+      cat "${_index_path}"
+      ;;
+    update)
+      local _old_basename="${2:-}"
+      local _new_basename="${3:-}"
+      if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
+      then
+        "${_ME}" help index
+        return 1
+      fi
+
+      if grep -q "^${_old_basename}$" "${_index_path}"
+      then
+        "${_SED_I_COMMAND[@]}" \
+          -e "s/${_old_basename}/${_new_basename}/g" "${_index_path}"
+      else
+        return 1
+      fi
+      ;;
+    verify)
+      _index_list=($(<"${_index_path}"))
+      _file_list=($(ls "${NOTES_DATA_DIR}"))
+      _errors=0
+
+      for __item in "${_index_list[@]}"
+      do
+        _contains "${__item}" "${_file_list[@]}" || _errors=1
+      done
+      for __item in "${_file_list[@]}"
+      do
+        _contains "${__item}" "${_index_list[@]}" || _errors=1
+      done
+
+      if ((_errors))
+      then
+        printf "Index corrupted. To fix, run:\n  %s index rebuild\n" "${_ME}"
+        return 1
+      fi
+      ;;
+    *)
+      :
+      ;;
+  esac
+}
+
 # init ########################################################################
 
 desc "init" <<HEREDOC
@@ -1305,7 +1490,10 @@ HEREDOC
     git clone "${_repo_url}" "${NOTES_DATA_DIR}"
   else
     mkdir -p "${NOTES_DATA_DIR}"
-    cd "${NOTES_DATA_DIR}" && git init 1>/dev/null
+    cd "${NOTES_DATA_DIR}" \
+      && git init 1>/dev/null \
+      && touch "${NOTES_DATA_DIR}/.index" \
+      && _git_checkpoint "[NOTES] Initialize"
   fi
   printf "home\\n" > "${NOTES_DIR}/.current"
 
@@ -1450,9 +1638,15 @@ HEREDOC
 
       # NOTE: Plain version serves as the reference version and can be used
       # for length calculations.
-      local _counter_item="[${_counter}]"
-      local _counter_item_color
-      _counter_item_color="[$(_highlight "${_counter}")]"
+      local _item_index_number
+      _item_index_number="$(_index get "${__basename}")"
+
+      local _index_item
+      local _index_item="[${_item_index_number}]"
+
+      local _index_item_color
+      _index_item_color="[$(_highlight "${_item_index_number}")]"
+
       _counter=$((_counter+1))
 
       # If a valid <selection> has been specified, skip the rest of the loop
@@ -1480,12 +1674,12 @@ HEREDOC
       # Avoid error when `$((5-5))` returns `1`.
       if [[ "${_counter}" -le 100 ]]
       then
-        _spaces_length=$((5-${#_counter_item}))
+        _spaces_length=$((5-${#_index_item}))
       fi
       printf -v _spaces '%*s' "${_spaces_length}"
 
-      local _list_item="${_counter_item}${_spaces}${_list_item_id}"
-      local _list_item_color="${_counter_item_color}${_spaces}${_list_item_id}"
+      local _list_item="${_index_item}${_spaces}${_list_item_id}"
+      local _list_item_color="${_index_item_color}${_spaces}${_list_item_id}"
 
       if ((_no_index))
       then
@@ -1694,7 +1888,10 @@ _notebooks() {
       printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
     else
       mkdir -p "${NOTES_DIR}/${_name}"
-      cd "${NOTES_DIR}/${_name}" && git init
+      cd "${NOTES_DIR}/${_name}" \
+        && git init 1>/dev/null \
+        && touch "${NOTES_DIR}/${_name}/.index" \
+        && _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
   }
@@ -1907,17 +2104,19 @@ _rename() {
     local _destination_path="${NOTES_DATA_DIR}/${_target_basename}"
 
     mv "${_source_path}" "${_destination_path}" \
+      && _index update "${_source_basename}" "${_target_basename}" \
       && _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
-    printf "%s renamed to %s" \
+    printf "%s renamed to %s\n" \
       "${_source_basename}"   \
        "${_target_basename}."
   elif [[ -n "${_target_name}" ]]
   then
     mv "${_source_path}" "${NOTES_DATA_DIR}/${_target_name}" \
+      && _index update "${_source_basename}" "${_target_name}" \
       && _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_name}"
-    printf "%s renamed to %s" \
+    printf "%s renamed to %s\n" \
       "${_source_basename}"   \
       "${_target_name}"
   else
@@ -2528,6 +2727,7 @@ _SUBCOMMANDS=(
   git
   help
   history
+  index
   init
   list
   ls

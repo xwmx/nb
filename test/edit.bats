@@ -69,7 +69,7 @@ load test_helper
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" edit 0
+  run "${_NOTES}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -182,7 +182,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit 0
+  run "${_NOTES}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -196,7 +196,7 @@ load test_helper
   }
   _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
 
-  run "${_NOTES}" edit 0
+  run "${_NOTES}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
@@ -209,7 +209,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit 0
+  run "${_NOTES}" edit 1
 
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -226,7 +226,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit 0
+  run "${_NOTES}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]

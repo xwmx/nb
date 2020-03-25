@@ -91,9 +91,9 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'[0]  ${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" == "[0]  ${_files[2]}" ]]
-  [[ "${lines[1]}" == "[1]  ${_files[1]}" ]]
-  [[ "${lines[2]}" == "[2]  ${_files[0]}" ]]
+  [[ "${lines[0]}" == "[3]  ${_files[2]}" ]]
+  [[ "${lines[1]}" == "[2]  ${_files[1]}" ]]
+  [[ "${lines[2]}" == "[1]  ${_files[0]}" ]]
 }
 
 # `notes list (-e | --excerpt)` ###############################################
@@ -313,9 +313,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ three$      ]] && [[ "${lines[0]}" =~ 0 ]]
-  [[ "${lines[1]}" =~ line\ two$  ]] && [[ "${lines[1]}" =~ 1 ]]
-  [[ "${lines[2]}" =~ one$        ]] && [[ "${lines[2]}" =~ 2 ]]
+  [[ "${lines[0]}" =~ three$          ]] && [[ "${lines[0]}" =~ 3 ]]
+  [[ "${lines[1]}" =~ 20[0-9]+\.md$   ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[2]}" =~ one$            ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
 # `notes list <selection>` ####################################################
@@ -356,7 +356,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 1 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
   [[ "${lines[0]}" =~ [*1*] ]]
-  [[ "${lines[0]}" =~ ${_files[1]} ]]
+  [[ "${lines[0]}" =~ ${_files[0]} ]]
 }
 
 @test "\`list <invalid-selection>\` exits with 1 and displays a message." {
