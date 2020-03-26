@@ -114,9 +114,9 @@ notes ls
 # [1] 20200101000000.md
 ```
 
-Notes are listed with each id and filename. If the note file has a
-Markdown title on the first line (e.g., `# Example Title`) , the
-title will be displayed instead of the filename:
+Notes are listed with each id and filename. If the note has a Markdown title
+on the first line (e.g., `# Example Title`) , the title will be displayed
+instead of the filename:
 
 ```bash
 notes ls
@@ -127,7 +127,7 @@ notes ls
 # [1] Example Title
 ```
 
-Pass an id, filename, or markdown title to view the listing for that item:
+Pass an id, filename, or markdown title to view the listing for that note:
 
 ```bash
 notes ls Todos
@@ -137,7 +137,7 @@ notes ls 1
 # [1] Example Title
 ```
 
-To view excerpts of files, use the `--excerpt` or `-e` option:
+To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
 notes ls 1 --excerpt
@@ -148,11 +148,10 @@ notes ls 1 --excerpt
 # This is an example excerpt.
 ```
 
-For more information on the options for listing files and excerpts, run
+For more information on the options for listing notes and excerpts, run
 `notes help ls` and `notes help list`.
 
-You can edit a file using its id, filename, or markdown title, if the
-note contains one:
+You can edit a note using its id, filename, or markdown title:
 
 ```bash
 # edit note by id
@@ -197,16 +196,16 @@ colon before the command name:
 notes example-notebook:edit 5
 ```
 
-Files can also be moved between notebooks:
+Notes can also be moved between notebooks:
 
 ```bash
 # move note 3 from home to example-notebook
 notes move 3 example-notebook
 ```
 
-Whenever a file is added, changed, or removed, `notes` automatically commits
+Whenever a note is added, changed, or removed, `notes` automatically commits
 the change to git transparently in the background. You can view the history of
-the notebook or an individual file with:
+the notebook or an individual note with:
 
 ```bash
 # show history for current notebook
