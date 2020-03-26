@@ -185,10 +185,10 @@ the change to git transparently in the background. You can view the history of
 the notebook or an individual file with:
 
 ```bash
-# notebook history
+# show history for current notebook
 notes history
 
-# file history
+# show history for note 4
 notes history 4
 ```
 
