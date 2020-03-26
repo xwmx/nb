@@ -140,7 +140,7 @@ notes ls 1
 To view excerpts of files, use the `--excerpt` or `-e` option:
 
 ```bash
-notes list 1 --excerpt
+notes ls 1 --excerpt
 # [1]  Example Title
 # ---------
 # # Example Title
@@ -149,7 +149,7 @@ notes list 1 --excerpt
 ```
 
 For more information on the options for listing files and excerpts, run
-`notes help list`.
+`notes help ls` and `notes help list`.
 
 You can edit a file using its id, filename, or markdown title, if the
 note contains one:
