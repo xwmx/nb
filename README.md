@@ -103,9 +103,6 @@ notes add
 notes add "This is a note."
 ```
 
-To configure the text editor to use with `notes`, see
-[Configuration: $EDITOR](https://github.com/xwmx/notes#editor) below.
-
 To list your notes and notebooks:
 
 ```bash
