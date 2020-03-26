@@ -220,6 +220,26 @@ _command_exists() {
   hash "${1}" 2>/dev/null
 }
 
+# _edit_file()
+#
+# Usage:
+#   _edit_file <file>
+#
+# Description:
+#   Open the file in $EDITOR.
+_edit_file() {
+  cd "${NOTES_DATA_DIR}" && \
+    if [[ "${EDITOR}" == "mvim" ]] || [[ "${EDITOR}" == "gvim" ]]
+    then
+      "${EDITOR}" -f "${_basename}"
+    elif [[ "${EDITOR}" == "code" ]]
+    then
+      "${EDITOR}" --wait "${_basename}"
+    else
+      "${EDITOR}" "${_basename}"
+    fi
+}
+
 # _get_hash()
 #
 # Usage:
@@ -955,7 +975,7 @@ _add() {
   then # terminal input.
     if [[ -z "${_arguments[*]:-}" ]]
     then # argument array is blank.
-      eval "${EDITOR}" "${_file_path}"
+      _edit_file "${_file_path}"
     else
       printf "%s\\n" "${_arguments[*]:-}" >> "${_file_path}"
     fi
@@ -1129,10 +1149,13 @@ _edit() {
     local _before
     _before="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
 
-    eval "${EDITOR}" "${NOTES_DATA_DIR}/${_basename}"
-    _git_checkpoint "[NOTES] Edit: ${_basename}"
+
+    _edit_file "${NOTES_DATA_DIR}/${_basename}" \
+      && _git_checkpoint "[NOTES] Edit: ${_basename}"
 
     _after="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
+    _debug printf "_edit() \${_before}: %s\\n" "${_before}"
+    _debug printf "_edit() \${_after}: %s\\n" "${_after}"
 
     if [[ "${_before}" != "${_after}" ]]
     then
