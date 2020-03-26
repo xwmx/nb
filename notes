@@ -675,17 +675,24 @@ _join() {
 # _list_notes_files()
 #
 # Usage:
-#   _list_notes_files
+#   _list_notes_files [<flag>]
 #
 # Description:
 #   List note files with default sorting.
 _list_notes_files() {
   # Relevant `ls` options:
+  # --  Default sort order.
   # -t  Sort by time modified (most recently modified first) before sorting
   #     the operands by lexicographical order
   # -r  Reverse the order of the sort to get reverse order or the oldest
   #     entries first (or largest files last, combined with sort by size
-  ls -t "${NOTES_DATA_DIR}"
+  local _flag="${1:-}"
+  if [[ -z "${_flag:-}" ]]
+  then
+    _flag="-t"
+  fi
+
+  ls "${_flag}" "${NOTES_DATA_DIR}"
 }
 
 # _print_line()
@@ -1517,12 +1524,15 @@ HEREDOC
 desc "list" <<HEREDOC
 Usage:
   ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
+  ${_ME} list [--sort] [--reverse]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-index             Don't print an index next to each note's filename.
   -n <limit>             The maximum number of notes to list.
+  --sort                 Order notes by name.
+  --reverse              Reverse note list order.
 
 Description:
   List all notes.
@@ -1547,6 +1557,8 @@ _list() {
   local _list_titles=0
   local _limit
   local _selection
+  local _sort=0
+  local _reverse=0
 
   _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
@@ -1591,6 +1603,12 @@ _list() {
       --titles)
         _list_titles=1
         ;;
+      --sort)
+        _sort=1
+        ;;
+      --reverse)
+        _reverse=1
+        ;;
       *)
         _debug printf "_list() *: '%s'\\n" "${_arg:-}"
         _selection="${_arg:-}"
@@ -1602,6 +1620,7 @@ _list() {
   _debug printf "_list() \${_print_excerpt}: '%s'\\n" "${_print_excerpt:-}"
   _debug printf "_list() \${_excerpt_length}: '%s'\\n" "${_excerpt_length:-}"
   _debug printf "_list() \${_selection}: '%s'\\n" "${_selection:-}"
+  _debug printf "_list() \${_sort}: '%s'\\n" "${_sort:-}"
 
   local _selection_basename=
   if [[ -n "${_selection:-}" ]]
@@ -1616,7 +1635,15 @@ _list() {
   fi
 
   local _filenames=()
-  _filenames=($(_list_notes_files))
+  if ((_reverse))
+  then
+    _filenames=($(_list_notes_files -r))
+  elif ((_sort))
+  then
+    _filenames=($(_list_notes_files --))
+  else
+    _filenames=($(_list_notes_files))
+  fi
   local _filenames_count="${#_filenames[@]}"
 
   _debug printf "list() \${_filenames_count}: '%s'\\n" "${_filenames_count[@]}"
