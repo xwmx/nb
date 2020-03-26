@@ -79,44 +79,85 @@ load test_helper
   [[ -z "${lines[1]}" ]]
 }
 
-# at ##########################################################################
+# get_basename ################################################################
 
-@test "\`index at\` with valid index prints the filename for an index." {
+@test "\`index get_basename\` with valid index prints the filename for an index." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "# one"
   }
 
-  run "${_NOTES}" index at 1
+  run "${_NOTES}" index get_basename 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
 }
 
-@test "\`index at\` with invalid index prints nothing." {
+@test "\`index get_basename\` with invalid index prints nothing." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "# one"
   }
 
-  run "${_NOTES}" index at 12345
+  run "${_NOTES}" index get_basename 12345
   [[ ${status} -eq 1 ]]
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 }
 
-@test "\`index at\` with no argument returns 1 and prints help." {
+@test "\`index get_basename\` with no argument returns 1 and prints help." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "# one"
   }
 
-  run "${_NOTES}" index at
+  run "${_NOTES}" index get_basename
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
+}
+
+# get_id #########################################################################
+
+@test "\`index get_id <filename>\` deletes an item from the index." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+  }
+
+  run "${_NOTES}" index get_id "$(ls ${NOTES_DATA_DIR})"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "1" ]]
+}
+
+@test "\`index get_id\` with no argument returns 1 and prints help." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+  }
+
+  run "${_NOTES}" index get_id
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${lines[0]}" == "Usage:" ]]
+}
+
+@test "\`index delete <filename>\` with non-entry returns 1." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+  }
+
+  run "${_NOTES}" index delete 'not-an-entry'
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" == "" ]]
 }
 
 # delete ######################################################################
@@ -157,47 +198,6 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-}
-
-# get #########################################################################
-
-@test "\`index get <filename>\` deletes an item from the index." {
-  {
-    "${_NOTES}" init
-    "${_NOTES}" add "# one"
-  }
-
-  run "${_NOTES}" index get "$(ls ${NOTES_DATA_DIR})"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "1" ]]
-}
-
-@test "\`index get\` with no argument returns 1 and prints help." {
-  {
-    "${_NOTES}" init
-    "${_NOTES}" add "# one"
-  }
-
-  run "${_NOTES}" index get
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
-}
-
-@test "\`index delete <filename>\` with non-entry returns 1." {
-  {
-    "${_NOTES}" init
-    "${_NOTES}" add "# one"
-  }
-
-  run "${_NOTES}" index delete 'not-an-entry'
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-  [[ "${output}" == "" ]]
 }
 
 # rebuild #####################################################################

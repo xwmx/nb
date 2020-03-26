@@ -308,7 +308,7 @@ _get_selection_basename() {
       _basename="${_identifier}"
     elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
     then # <selection> is an id.
-      _basename="$(_index at "${_identifier}")"
+      _basename="$(_index get_basename "${_identifier}")"
     else # <selection> might be a title.
       local _title
       local _filenames
@@ -1286,20 +1286,21 @@ _history() {
 desc "index" <<HEREDOC
 Usage:
   ${_ME} index add <filename>
-  ${_ME} index at <index>
   ${_ME} index delete <filename>
-  ${_ME} index get <filename>
+  ${_ME} index get_basename <id>
+  ${_ME} index get_id <filename>
   ${_ME} index rebuld
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verfiy
 
 Subcommands:
-  add     Add <filename> to the index.
-  at      Print the filename at the specified <index>.
-  delete  Delete <filename> from the index.
-  rebuild Rebuild the index.
-  update  Overwrite the <existing-filename> entry with <new-filename>
-  verify  Verify that the index matches the notebook contents.
+  add           Add <filename> to the index.
+  delete        Delete <filename> from the index.
+  get_basename  Print the filename / basename at the specified <id>.
+  get_id        Get the id for <filename>.
+  rebuild       Rebuild the index.
+  update        Overwrite the <existing-filename> entry with <new-filename>.
+  verify        Verify that the index matches the notebook contents.
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
@@ -1330,7 +1331,22 @@ _index() {
         printf "%s\n" "${_basename}" >> "${_index_path}"
       fi
       ;;
-    at)
+    delete)
+      local _basename="${2:-}"
+      if [[ -z "${_basename}" ]]
+      then
+        "${_ME}" help index
+        return 1
+      fi
+
+      if grep -q "^${_basename}$" "${_index_path}"
+      then
+        "${_SED_I_COMMAND[@]}" -e "s/${_basename}//g" "${_index_path}"
+      else
+        return 1
+      fi
+      ;;
+    get_basename)
       local _index_number="${2:-}"
       if [[ -z "${_index_number}" ]]
       then
@@ -1348,22 +1364,7 @@ _index() {
         printf "%s\n" "${_basename}"
       fi
       ;;
-    delete)
-      local _basename="${2:-}"
-      if [[ -z "${_basename}" ]]
-      then
-        "${_ME}" help index
-        return 1
-      fi
-
-      if grep -q "^${_basename}$" "${_index_path}"
-      then
-        "${_SED_I_COMMAND[@]}" -e "s/${_basename}//g" "${_index_path}"
-      else
-        return 1
-      fi
-      ;;
-    get)
+    get_id)
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
@@ -1695,7 +1696,7 @@ HEREDOC
       # NOTE: Plain version serves as the reference version and can be used
       # for length calculations.
       local _item_index_number
-      _item_index_number="$(_index get "${__basename}")"
+      _item_index_number="$(_index get_id "${__basename}")"
 
       local _index_item
       local _index_item="[${_item_index_number}]"
