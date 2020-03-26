@@ -188,7 +188,7 @@ Switch to a notebook:
 notes use example-notebook
 ```
 
-If you are in one notebook and you can to perform a command in a
+If you are in one notebook and you want to perform a command in a
 different notebook without switching to it, add the notebook name with a
 colon before the command name:
 
