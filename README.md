@@ -232,8 +232,7 @@ For more commands and options, run `notes help`.
 
 ```text
 Usage:
-  notes [<list options>]
-  notes [(<id> | <filename> | <path> | <title>)] [<list options>]
+  notes [<id> | <filename> | <path> | <title>] [<list options>]
   notes add [<note>] [--type <type>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
