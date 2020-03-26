@@ -41,7 +41,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }
 
 # `notes show --dump` #########################################################
@@ -113,7 +113,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }
 
 # <selector> ##################################################################
@@ -128,7 +128,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }
 
 # `notes show <filename> --dump` ##############################################
@@ -485,5 +485,5 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }

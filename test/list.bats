@@ -395,5 +395,5 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]" ]]
+  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]" ]]
 }
