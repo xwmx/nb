@@ -1384,7 +1384,7 @@ _index() {
     rebuild)
       _debug printf "_index() rebuild\n"
       _debug printf \
-        "_index() rebuild: \`ls "\${NOTES_DATA_DIR}"\`: '%s'\n" \
+        "_index() rebuild: \`ls \${NOTES_DATA_DIR}\`: '%s'\n" \
         "$(ls "${NOTES_DATA_DIR}")"
       ls "${NOTES_DATA_DIR}" > "${_index_path}" && \
         _git_checkpoint "[NOTES] Rebuild Index"
