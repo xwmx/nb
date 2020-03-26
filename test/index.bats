@@ -303,7 +303,11 @@ load test_helper
     "${_NOTES}" init
     "${_NOTES}" add "# one"
     "${_NOTES}" add "# two"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls ${NOTES_DATA_DIR})" ]]
+    printf \
+      "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
+      "$(cat "${NOTES_DATA_DIR}/.index")"
+    printf "\$(ls -r \${NOTES_DATA_DIR}): '%s'\\n" "$(ls -r ${NOTES_DATA_DIR})"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls -r ${NOTES_DATA_DIR})" ]]
   }
 
   run "${_NOTES}" index verify
