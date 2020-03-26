@@ -85,6 +85,112 @@ curl -L https://raw.github.com/xwmx/notes/master/notes \
 
 ## Usage
 
+To get started, simply run:
+
+```bash
+notes
+```
+
+This will set up your initial 'home' notebook where notes will be stored.
+
+To add a note:
+
+```bash
+# create a new note in your terminal's text editor
+notes add
+
+# create a new note containing "This is a note."
+notes add "This is a note."
+```
+
+To configure the text editor to use with `notes`, see
+[Configuration: $EDITOR](https://github.com/xwmx/notes#editor) below.
+
+To list your notes and notebooks:
+
+```bash
+notes ls
+```
+
+You can edit a file using its id, filename, or markdown title, if the
+note contains one:
+
+```bash
+# edit note by id
+notes edit 3
+
+# edit note by filename
+notes edit example.md
+
+# edit note by title
+notes edit 'A Document Title'
+```
+
+Deleting notes works the same:
+
+```bash
+# delete note by id
+notes delete 3
+```
+
+You can create additional notebooks, each of which has its own version history.
+
+Create a new notebook:
+
+```bash
+# add a notebook named example-notebook
+notes notebooks add example-notebook
+```
+
+Switch to a notebook:
+
+```bash
+# switch to example-notebook
+notes use example-notebook
+```
+
+If you are in one notebook and you can to perform a command in a
+different notebook without switching to it, add the notebook name with a
+colon before the command name:
+
+```bash
+# edit note 5 in example-notebook
+notes example-notebook:edit 5
+```
+
+Files can also be moved between notebooks:
+
+```bash
+# move note 3 from home to example-notebook
+notes move 3 example-notebook
+```
+
+Whenever a file is added, changed, or removed, `notes` automatically commits
+the change to git transparently in the background. You can view the history of
+the notebook or an individual file with:
+
+```bash
+# notebook history
+notes history
+
+# file history
+notes history 4
+```
+
+Search your notes:
+
+```bash
+# search current notebook for 'a query'
+notes search 'a query'
+
+# search all notebooks for 'a query'
+notes search -a 'a query'
+```
+
+For more commands and options, run `notes help`.
+
+### Help
+
 ```text
 Usage:
   notes [<number>] [<list options>]
