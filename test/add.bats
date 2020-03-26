@@ -24,6 +24,7 @@ load test_helper
   run "${_NOTES}" init
   run "${_NOTES}" add
   cd "${NOTES_DATA_DIR}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
