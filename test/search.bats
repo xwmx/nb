@@ -146,15 +146,15 @@ _search_all_setup() {
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ home:1 ]]
+  [[ "${lines[0]}" =~ home:2 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\'$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
-  [[ "${lines[3]}" =~ home:0 ]]
+  [[ "${lines[3]}" =~ home:3 ]]
   [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\'$ ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
-  [[ "${lines[6]}" =~ one:0 ]]
+  [[ "${lines[6]}" =~ one:1 ]]
   [[ "${lines[6]}" =~ 20[0-9]+\.md\ \'sweetish\'$ ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
@@ -171,15 +171,15 @@ _search_all_setup() {
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ home:1 ]]
+  [[ "${lines[0]}" =~ home:2 ]]
   [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\'$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
-  [[ "${lines[3]}" =~ home:0 ]]
+  [[ "${lines[3]}" =~ home:3 ]]
   [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\'$ ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
-  [[ "${lines[6]}" =~ one:0 ]]
+  [[ "${lines[6]}" =~ one:1 ]]
   [[ "${lines[6]}" =~ 20[0-9]+\.md\ \'sweetish\'$ ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }

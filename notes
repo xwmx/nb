@@ -2275,9 +2275,6 @@ _search() {
       local _files=()
       _files=($(${_ME} "${__scope}:list" --no-index || printf ''))
 
-      _debug printf "_search() \${__scope}: '%s'\\n" "${__scope}"
-      # _debug printf "_search() \${_files[*]}: '%s'\\n" "${_files[*]}"
-
       if _command_exists "ag" && ! ((_use_grep))
       then
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
@@ -2311,7 +2308,7 @@ _search() {
       do
         local _path=
         local _filename=
-        local _index=
+        local _id=
         local _title
         local _file_info=
         # Define `_indexed_filename` with and without color to have a version
@@ -2341,7 +2338,8 @@ _search() {
           fi
         else
           _filename="$(basename "${_path}")"
-          _index="$(_get_index "${_filename}" "${_files[@]}")"
+
+          _id="$("${_ME}" "${__scope}:index" get_id "${_filename}")"
           _title="$(_get_title "${_filename}" "${__scope}")"
 
           if [[ -n "${_title}" ]]
@@ -2353,16 +2351,12 @@ _search() {
 
           if ((_all))
           then
-            _indexed_filename_color="[$(_highlight "${__scope}:${_index}")] ${_file_info}"
-            _indexed_filename="[${__scope}:${_index}] ${_file_info}"
+            _indexed_filename_color="[$(_highlight "${__scope}:${_id}")] ${_file_info}"
+            _indexed_filename="[${__scope}:${_id}] ${_file_info}"
           else
-            _indexed_filename_color="[$(_highlight "${_index}")] ${_file_info}"
-            _indexed_filename="[${_index}] ${_file_info}"
+            _indexed_filename_color="[$(_highlight "${_id}")] ${_file_info}"
+            _indexed_filename="[${_id}] ${_file_info}"
           fi
-
-          # printf "_search() \${_index}: '%s'\\n" "${_index}"
-          # printf "_search() \${_last_path}: '%s'\\n" "${_last_path}"
-          # printf "_search() \${_path}: '%s'\\n" "${_path}"
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
