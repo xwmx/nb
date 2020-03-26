@@ -675,7 +675,7 @@ _join() {
 # _list_notes_files()
 #
 # Usage:
-#   _list_notes_files [<flag>]
+#   _list_notes_files [--sort] [--reverse]
 #
 # Description:
 #   List note files with default sorting.
@@ -686,13 +686,29 @@ _list_notes_files() {
   #     the operands by lexicographical order
   # -r  Reverse the order of the sort to get reverse order or the oldest
   #     entries first (or largest files last, combined with sort by size
-  local _flag="${1:-}"
-  if [[ -z "${_flag:-}" ]]
-  then
-    _flag="-t"
-  fi
 
-  ls "${_flag}" "${NOTES_DATA_DIR}"
+  if [[ "${1:-}" == "--sort" ]]
+  then
+    local _index_file
+    local _index_file="$(cat "${NOTES_DATA_DIR}/.index")"
+    local _filenames=()
+    for __line in "${_index_file[@]}"
+    do
+      if [[ -n "${__line}" ]]
+      then
+        _filenames+="${__line}"
+      fi
+    done
+
+    if [[ "${2:-}" == "--reverse" ]]
+    then
+      printf "%s\n" "${_filenames[@]}" | sort -r
+    else
+      printf "%s\n" "${_filenames[@]}"
+    fi
+  else
+    ls -t "${NOTES_DATA_DIR}"
+  fi
 }
 
 # _print_line()
@@ -1637,10 +1653,10 @@ _list() {
   local _filenames=()
   if ((_reverse))
   then
-    _filenames=($(_list_notes_files -r))
+    _filenames=($(_list_notes_files --sort --reverse))
   elif ((_sort))
   then
-    _filenames=($(_list_notes_files --))
+    _filenames=($(_list_notes_files --sort))
   else
     _filenames=($(_list_notes_files))
   fi
