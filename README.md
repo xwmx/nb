@@ -259,8 +259,8 @@ Options:
                          note's filename [default: 3].
   --no-index             Don't print an index next to each note's filename.
   -n <limit>             The maximum number of notes to list.
-  --sort                 Order notes by name.
-  --reverse              Reverse note list order.
+  -s --sort              Order notes by index.
+  -r --reverse           Order notes by index descending.
 
 Description:
   List all notes.
