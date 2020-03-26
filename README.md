@@ -114,7 +114,7 @@ notes ls
 # [1] 20200101000000.md
 ```
 
-`notes` lists notes with each id and filename. If the note file has a
+Notes are listed with each id and filename. If the note file has a
 Markdown title on the first line (e.g., `# Example Title`) , the
 title will be displayed instead of the filename:
 
@@ -126,6 +126,30 @@ notes ls
 # [2] Links
 # [1] Example Title
 ```
+
+Pass an id, filename, or markdown title to view the listing for that item:
+
+```bash
+notes ls Todos
+# [3] Todos
+
+notes ls 1
+# [1] Example Title
+```
+
+To view excerpts of files, use the `--excerpt` or `-e` option:
+
+```bash
+notes list 1 --excerpt
+# [1]  Example Title
+# ---------
+# # Example Title
+#
+# This is an example excerpt.
+```
+
+For more information on the options for listing files and excerpts, run
+`notes help list`.
 
 You can edit a file using its id, filename, or markdown title, if the
 note contains one:
