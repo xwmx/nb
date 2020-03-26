@@ -243,7 +243,8 @@ Usage:
   notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
              [-s | --sort] [-r | --reverse] [<selection>]
   notes ls [<list options>]
-  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
+  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
+  notes notebook
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
