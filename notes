@@ -1295,6 +1295,7 @@ Usage:
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
   ${_ME} index rebuld
+  ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verfiy
 
@@ -1304,6 +1305,7 @@ Subcommands:
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   rebuild       Rebuild the index.
+  show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
   verify        Verify that the index matches the notebook contents.
 
