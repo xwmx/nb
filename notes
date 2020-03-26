@@ -1221,8 +1221,8 @@ Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
   ${_ME} history [<selection>]
   ${_ME} init [<remote-url>]
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
-  ${_ME} list [-s | --sort] [-r | --reverse]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
+             [-s | --sort] [-r | --reverse] [<selection>]
   ${_ME} ls [<list options>]
   ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
   ${_ME} notebook
@@ -1232,8 +1232,8 @@ Usage:
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
   ${_ME} search <query> [-a | --all] [--path]
-  ${_ME} show (<id> | <filename> | <path> | <title>)
-  ${_ME} show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
+             [--dump [--no-color]]
   ${_ME} sync [-a|--all]
   ${_ME} -h | --help | help [<subcommand>]
   ${_ME} --version | version
@@ -1551,8 +1551,8 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
-  ${_ME} list [-s | --sort] [-r | --reverse]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
+             [-s | --sort] [-r | --reverse] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
@@ -2376,8 +2376,8 @@ _search() {
 
 desc "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>)
-  ${_ME} show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
+             [--dump [--no-color]]
 
 Options:
   --dump      Print to standard output.

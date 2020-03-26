@@ -240,8 +240,8 @@ Usage:
   notes edit (<id> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
-  notes list [-s | --sort] [-r | --reverse]
+  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
+             [-s | --sort] [-r | --reverse] [<selection>]
   notes ls [<list options>]
   notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
   notes notebooks [<name>] [--names] [--no-color]
@@ -250,8 +250,8 @@ Usage:
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
   notes search <query> [-a | --all] [--path]
-  notes show (<id> | <filename> | <path> | <title>)
-  notes show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
+  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
+             [--dump [--no-color]]
   notes sync [-a|--all]
   notes -h | --help | help [<subcommand>]
   notes --version | version
@@ -397,8 +397,8 @@ Description:
 
 ```text
 Usage:
-  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
-  notes list [-s | --sort] [-r | --reverse]
+  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
+             [-s | --sort] [-r | --reverse] [<selection>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
@@ -462,8 +462,8 @@ Description:
 
 ```text
 Usage:
-  notes show (<id> | <filename> | <path> | <title>)
-  notes show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
+  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
+             [--dump [--no-color]]
 
 Options:
   --dump      Print to standard output.
