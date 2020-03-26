@@ -112,7 +112,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ "$(notes index get 'EXAMPLE.org')" == '1' ]]
+  [[ "$(notes index get_id 'EXAMPLE.org')" == '1' ]]
 }
 
 @test "\`rename\` with <filename> argument prints output." {
