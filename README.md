@@ -211,22 +211,22 @@ Usage:
   notes [<number>] [<list options>]
   notes add [<note>] [--type <type>]
   notes count
-  notes delete (<index> | <filename> | <path> | <title>) [--force]
-  notes edit (<index> | <filename> | <path> | <title>)
+  notes delete (<id> | <filename> | <path> | <title>) [--force]
+  notes edit (<id> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
+  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
   notes list [-s | --sort] [-r | --reverse]
   notes ls [<list options>]
-  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
+  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
   notes search <query> [-a | --all] [--path]
-  notes show (<index> | <filename> | <path> | <title>)
-  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
+  notes show (<id> | <filename> | <path> | <title>)
+  notes show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
   notes sync [-a|--all]
   notes -h | --help | help [<subcommand>]
   notes --version | version
@@ -295,7 +295,7 @@ Description:
 
 ```text
 Usage:
-  notes delete (<index> | <filename> | <path> | <title>) [--force]
+  notes delete (<id> | <filename> | <path> | <title>) [--force]
 
 Options:
   --force  Skip the confirmation prompt.
@@ -308,7 +308,7 @@ Description:
 
 ```text
 Usage:
-  notes edit (<index> | <filename> | <path> | <title>)
+  notes edit (<id> | <filename> | <path> | <title>)
 
 Description:
   Open the specified note in `$EDITOR`.
@@ -372,16 +372,16 @@ Description:
 
 ```text
 Usage:
-  notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
+  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
   notes list [-s | --sort] [-r | --reverse]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
-  --no-index             Don't print an index next to each note's filename.
+  --no-id                Don't print the id next to each note's filename.
   -n <limit>             The maximum number of notes to list.
-  -s --sort              Order notes by index.
-  -r --reverse           Order notes by index descending.
+  -s --sort              Order notes by id.
+  -r --reverse           Order notes by id descending.
 
 Description:
   List all notes.
@@ -392,7 +392,7 @@ Description:
 Examples:
   notes list
   notes list -e 10
-  notes list --excerpt --no-index
+  notes list --excerpt --no-id
 ```
 
 #### `ls`
@@ -426,7 +426,7 @@ Description:
 
 ```text
 Usage:
-  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>
+  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
 
 Description:
   Move the specified note to <notebook>.
@@ -436,12 +436,12 @@ Description:
 
 ```text
 Usage:
-  notes show (<index> | <filename> | <path> | <title>)
-  notes show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
+  notes show (<id> | <filename> | <path> | <title>)
+  notes show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
 
 Options:
   --dump      Print to standard output.
-  --index     Print the index number of the note file.
+  --id        Print the id number of the note file.
   --path      Print the full path of the note file.
   --no-color  When used with `--dump`, print the note without highlighting.
   --render    Use `pandoc` [1] to render the file to HTML and display with

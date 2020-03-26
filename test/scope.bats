@@ -71,12 +71,12 @@ _setup_scope() {
   [[ "${lines[2]}" =~ "first" ]]
 }
 
-@test "\`notes one: --no-index\` exits with 0 and scoped \`ls\` output." {
+@test "\`notes one: --no-id\` exits with 0 and scoped \`ls\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" one: --no-index
+  run "${_NOTES}" one: --no-id
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"

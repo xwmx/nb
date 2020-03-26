@@ -280,14 +280,14 @@ _get_hash() {
 # _get_selection_basename()
 #
 # Usage:
-#   _get_selection_basename <index>
+#   _get_selection_basename <id>
 #   _get_selection_basename <filename>
 #   _get_selection_basename <path>
 #   _get_selection_basename <title>
 #
 # Description:
 #   Determine the basename of the file in `$NOTES_DATA_DIR` that is identified
-#   by the given <index>, <filename>, <path>, or <title>.
+#   by the given <id>, <filename>, <path>, or <title>.
 _get_selection_basename() {
   local _basename=
   local _selection="${1:-}"
@@ -1015,7 +1015,7 @@ _count() {
 
 desc "delete" <<HEREDOC
 Usage:
-  ${_ME} delete (<index> | <filename> | <path> | <title>) [--force]
+  ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
 
 Options:
   --force  Skip the confirmation prompt.
@@ -1105,7 +1105,7 @@ _delete() {
 
 desc "edit" <<HEREDOC
 Usage:
-  ${_ME} edit (<index> | <filename> | <path> | <title>)
+  ${_ME} edit (<id> | <filename> | <path> | <title>)
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'.
@@ -1216,14 +1216,14 @@ Usage:
   ${_ME} [<number>] [<list options>]
   ${_ME} add [<note>] [--type <type>]
   ${_ME} count
-  ${_ME} delete (<index> | <filename> | <path> | <title>) [--force]
-  ${_ME} edit (<index> | <filename> | <path> | <title>)
+  ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
+  ${_ME} edit (<id> | <filename> | <path> | <title>)
   ${_ME} history [<selection>]
   ${_ME} init [<remote-url>]
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
   ${_ME} list [-s | --sort] [-r | --reverse]
   ${_ME} ls [<list options>]
-  ${_ME} move (<index> | <filename> | <path> | <title>) [--force] <notebook>
+  ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
   ${_ME} notebook
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
@@ -1231,8 +1231,8 @@ Usage:
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
   ${_ME} search <query> [-a | --all] [--path]
-  ${_ME} show (<index> | <filename> | <path> | <title>)
-  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>)
+  ${_ME} show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
   ${_ME} sync [-a|--all]
   ${_ME} -h | --help | help [<subcommand>]
   ${_ME} --version | version
@@ -1354,15 +1354,15 @@ _index() {
       fi
       ;;
     get_basename)
-      local _index_number="${2:-}"
-      if [[ -z "${_index_number}" ]]
+      local _id_number="${2:-}"
+      if [[ -z "${_id_number}" ]]
       then
         "${_ME}" help index
         return 1
       fi
 
       local _basename
-      _basename="$(sed "${_index_number}q;d" "${_index_path}")"
+      _basename="$(sed "${_id_number}q;d" "${_index_path}")"
 
       if [[ -z "${_basename}" ]]
       then
@@ -1548,16 +1548,16 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
   ${_ME} list [-s | --sort] [-r | --reverse]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
-  --no-index             Don't print an index next to each note's filename.
+  --no-id                Don't print the id next to each note's filename.
   -n <limit>             The maximum number of notes to list.
-  -s --sort              Order notes by index.
-  -r --reverse           Order notes by index descending.
+  -s --sort              Order notes by id.
+  -r --reverse           Order notes by id descending.
 
 Description:
   List all notes.
@@ -1568,7 +1568,7 @@ Description:
 Examples:
   ${_ME} list
   ${_ME} list -e 10
-  ${_ME} list --excerpt --no-index
+  ${_ME} list --excerpt --no-id
 HEREDOC
 _list() {
   _debug printf "_list() \${1:-}: '%s'\\n" "${1:-}"
@@ -1577,7 +1577,7 @@ _list() {
 
   local _print_excerpt=0
   local _excerpt_length=3
-  local _no_index=0
+  local _no_id=0
   local _no_color=0
   local _list_titles=0
   local _limit
@@ -1612,8 +1612,8 @@ _list() {
           shift
         fi
         ;;
-      --noindex|--no-index)
-        _no_index=1
+      --no-id|--noid|--noindex|--no-index)
+        _no_id=1
         ;;
       --nocolor|--no-color)
         _no_color=1
@@ -1702,14 +1702,14 @@ HEREDOC
 
       # NOTE: Plain version serves as the reference version and can be used
       # for length calculations.
-      local _item_index_number
-      _item_index_number="$(_index get_id "${__basename}")"
+      local _item_id_number
+      _item_id_number="$(_index get_id "${__basename}")"
 
-      local _index_item
-      local _index_item="[${_item_index_number}]"
+      local _id_item
+      local _id_item="[${_item_id_number}]"
 
-      local _index_item_color
-      _index_item_color="[$(_highlight "${_item_index_number}")]"
+      local _id_item_color
+      _id_item_color="[$(_highlight "${_item_id_number}")]"
 
       _counter=$((_counter+1))
 
@@ -1738,14 +1738,14 @@ HEREDOC
       # Avoid error when `$((5-5))` returns `1`.
       if [[ "${_counter}" -le 100 ]]
       then
-        _spaces_length=$((5-${#_index_item}))
+        _spaces_length=$((5-${#_id_item}))
       fi
       printf -v _spaces '%*s' "${_spaces_length}"
 
-      local _list_item="${_index_item}${_spaces}${_list_item_id}"
-      local _list_item_color="${_index_item_color}${_spaces}${_list_item_id}"
+      local _list_item="${_id_item}${_spaces}${_list_item_id}"
+      local _list_item_color="${_id_item_color}${_spaces}${_list_item_id}"
 
-      if ((_no_index))
+      if ((_no_id))
       then
         printf "%s\\n" "${_list_item_id}"
       else
@@ -1799,7 +1799,7 @@ _ls() {
 
 desc "move" <<HEREDOC
 Usage:
-  ${_ME} move (<index> | <filename> | <path> | <title>) [--force] <notebook>
+  ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
 
 Description:
   Move the specified note to <notebook>.
@@ -2103,7 +2103,7 @@ _books() { _notebooks "${@}"; }
 
 desc "rename" <<HEREDOC
 Usage:
-  ${_ME} rename (<index> | <filename> | <path> | <title>) (<name> | --reset)
+  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
 
 Options:
   --reset  Reset the filename to the timestamp at which it was last updated.
@@ -2257,7 +2257,7 @@ _search() {
     for __scope in "${_target_notebooks[@]:-}"
     do
       local _files=()
-      _files=($(${_ME} "${__scope}:list" --no-index || printf ''))
+      _files=($(${_ME} "${__scope}:list" --no-id || printf ''))
 
       if _command_exists "ag" && ! ((_use_grep))
       then
@@ -2295,10 +2295,10 @@ _search() {
         local _id=
         local _title
         local _file_info=
-        # Define `_indexed_filename` with and without color to have a version
+        # Define `_id_filename` with and without color to have a version
         # without the additional length from `tput` calls.
-        local _indexed_filename=
-        local _indexed_filename_color=
+        local _id_filename=
+        local _id_filename_color=
         local _content_line_with_hit=
 
         # Use `sed` to remove color from output.
@@ -2335,18 +2335,18 @@ _search() {
 
           if ((_all))
           then
-            _indexed_filename_color="[$(_highlight "${__scope}:${_id}")] ${_file_info}"
-            _indexed_filename="[${__scope}:${_id}] ${_file_info}"
+            _id_filename_color="[$(_highlight "${__scope}:${_id}")] ${_file_info}"
+            _id_filename="[${__scope}:${_id}] ${_file_info}"
           else
-            _indexed_filename_color="[$(_highlight "${_id}")] ${_file_info}"
-            _indexed_filename="[${_id}] ${_file_info}"
+            _id_filename_color="[$(_highlight "${_id}")] ${_file_info}"
+            _id_filename="[${_id}] ${_file_info}"
           fi
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
             printf '\033[?7l'
-            printf "%s\\n" "${_indexed_filename_color}"
-            _print_line "${_indexed_filename}"
+            printf "%s\\n" "${_id_filename_color}"
+            _print_line "${_id_filename}"
             printf '\033[?7h'
           fi
 
@@ -2372,12 +2372,12 @@ _search() {
 
 desc "show" <<HEREDOC
 Usage:
-  ${_ME} show (<index> | <filename> | <path> | <title>)
-  ${_ME} show <selection> ([--index] | [--path] | [---render]) [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>)
+  ${_ME} show <selection> ([--id] | [--path] | [---render]) [--dump [--no-color]]
 
 Options:
   --dump      Print to standard output.
-  --index     Print the index number of the note file.
+  --id        Print the id number of the note file.
   --path      Print the full path of the note file.
   --no-color  When used with \`--dump\`, print the note without highlighting.
   --render    Use \`pandoc\` [1] to render the file to HTML and display with
@@ -2405,7 +2405,7 @@ _show() {
   local _render=0
   local _dump=0
   local _print_path=0
-  local _print_index=0
+  local _print_id=0
   local _print_no_color=0
 
   _debug printf "_show() \${_arguments[*]:-}: '%s'\\n" "${_arguments[*]:-}"
@@ -2419,8 +2419,8 @@ _show() {
       --path)
         _print_path=1
         ;;
-      --index)
-        _print_index=1
+      --id|--index)
+        _print_id=1
         ;;
       --raw|--no-color|--nocolor)
         _print_no_color=1
@@ -2456,7 +2456,7 @@ _show() {
     if ((_print_path))
     then # `notes show --path`
       printf "%s/%s\\n" "${NOTES_DATA_DIR}" "${_basename}"
-    elif ((_print_index))
+    elif ((_print_id))
     then
       local _id
       _id="$(_index get_id "${_basename}")"

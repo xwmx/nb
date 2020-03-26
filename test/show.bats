@@ -41,7 +41,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
 }
 
 # `notes show --dump` #########################################################
@@ -113,7 +113,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
 }
 
 # <selector> ##################################################################
@@ -128,7 +128,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
 }
 
 # `notes show <filename> --dump` ##############################################
@@ -159,9 +159,9 @@ load test_helper
   [[ "${output}" =~ mock_editor ]]
 }
 
-# `notes show <index> --dump` #################################################
+# `notes show <id> --dump` ####################################################
 
-@test "\`show <index> --dump\` exits with status 0." {
+@test "\`show <id> --dump\` exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -174,7 +174,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`show <index> --dump\` dumps note file." {
+@test "\`show <id> --dump\` dumps note file." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -273,9 +273,9 @@ load test_helper
   [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
-# `notes show <index> --path` #################################################
+# `notes show <id> --path` ####################################################
 
-@test "\`show <index> --path\` exits with status 0." {
+@test "\`show <id> --path\` exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -288,7 +288,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`show <index> --path\` prints note file path." {
+@test "\`show <id> --path\` prints note file path." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -359,93 +359,93 @@ load test_helper
   [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
-# `notes show <filename> --index` ##############################################
+# `notes show <filename> --id` ################################################
 
-@test "\`show <filename> --index\` exits with status 0." {
+@test "\`show <filename> --id\` exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_filename}" --index
+  run "${_NOTES}" show "${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`show <filename> --index\` prints note file index." {
+@test "\`show <filename> --id\` prints note file id." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_filename}" --index
+  run "${_NOTES}" show "${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" == "1" ]]
 }
 
-# `notes show <index> --index` #################################################
+# `notes show <id> --id` ######################################################
 
-@test "\`show <index> --index\` exits with status 0." {
+@test "\`show <id> --id\` exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --index
+  run "${_NOTES}" show 1 --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`show <index> --index\` prints note file index." {
+@test "\`show <id> --id\` prints note file id." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --index
+  run "${_NOTES}" show 1 --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" == "1" ]]
 }
 
-# `notes show <path> --index` #################################################
+# `notes show <path> --id` ####################################################
 
-@test "\`show <path> --index\` exits with status 0." {
+@test "\`show <path> --id\` exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --index
+  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`show <path> --index\` prints the note file index." {
+@test "\`show <path> --id\` prints the note file id." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --index
+  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" == "1" ]]
 }
 
-# `notes show <title> --index` ################################################
+# `notes show <title> --id` ###################################################
 
-@test "\`show <title> --index\` exits with status 0." {
+@test "\`show <title> --id\` exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -453,13 +453,13 @@ load test_helper
   }
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --index
+  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`show <title> --index\` prints the note file index." {
+@test "\`show <title> --id\` prints the note file id." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -467,7 +467,7 @@ load test_helper
   }
   _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --index
+  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" == "1" ]]
@@ -485,5 +485,5 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>)" ]]
 }

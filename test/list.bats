@@ -46,9 +46,9 @@ Usage information:
   [[ "${lines[2]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[2]}" =~ ${_files[0]} ]]
 }
 
-# `notes list --no-index` #####################################################
+# `notes list --no-id` ########################################################
 
-@test "\`list --no-index\` exits with 0 and lists files in reverse order." {
+@test "\`list --no-id\` exits with 0 and lists files in reverse order." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "# one"
@@ -59,7 +59,7 @@ Usage information:
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
-  run "${_NOTES}" list --no-index
+  run "${_NOTES}" list --no-id
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -395,5 +395,5 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]" ]]
+  [[ "${lines[1]}" == "  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]" ]]
 }

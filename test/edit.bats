@@ -59,7 +59,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
 }
 
 # <selector> ##################################################################
@@ -74,7 +74,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -85,7 +85,7 @@ load test_helper
     run "${_NOTES}" notebooks add "one"
     run "${_NOTES}" use "one"
     run "${_NOTES}" add
-    _filename=$(notes list -n 1 --no-index | head -1)
+    _filename=$(notes list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
     run "${_NOTES}" use "home"
   }
@@ -173,9 +173,9 @@ load test_helper
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
-# <index> #####################################################################
+# <id> ########################################################################
 
-@test "\`edit\` with <index> argument exits with status 0." {
+@test "\`edit\` with <id> argument exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -188,7 +188,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`edit\` with <index> argument updates note file." {
+@test "\`edit\` with <id> argument updates note file." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -202,7 +202,7 @@ load test_helper
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
 }
 
-@test "\`edit\` with <index> argument creates git commit." {
+@test "\`edit\` with <id> argument creates git commit." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -219,7 +219,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 }
 
-@test "\`edit\` with <index> argument prints output." {
+@test "\`edit\` with <id> argument prints output." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -366,5 +366,5 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit (<index> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
 }

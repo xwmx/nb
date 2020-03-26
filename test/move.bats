@@ -61,7 +61,7 @@ _setup_move() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }
 
 # <selector> ##################################################################
@@ -76,7 +76,7 @@ _setup_move() {
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }
 
 @test "\`move <invalid> <notebook>\` exits with 1 and prints help." {
@@ -90,7 +90,7 @@ _setup_move() {
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }
 
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
@@ -104,7 +104,7 @@ _setup_move() {
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }
 
 @test "\`move <selector> <notebook> (no force)\` returns 0 and moves note." {
@@ -130,7 +130,7 @@ _setup_move() {
     run "${_NOTES}" notebooks add "one"
     run "${_NOTES}" use "one"
     run "${_NOTES}" add
-    _filename=$(notes list -n 1 --no-index | head -1)
+    _filename=$(notes list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
     run "${_NOTES}" use "home"
   }
@@ -199,9 +199,9 @@ _setup_move() {
   [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
 }
 
-# <index> #####################################################################
+# <id> ########################################################################
 
-@test "\`move\` with <index> argument exits with status 0." {
+@test "\`move\` with <id> argument exits with status 0." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -213,7 +213,7 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`move\` with <index> argument moves note file." {
+@test "\`move\` with <id> argument moves note file." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -226,7 +226,7 @@ _setup_move() {
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
-@test "\`move\` with <index> argument creates git commit." {
+@test "\`move\` with <id> argument creates git commit." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -242,7 +242,7 @@ _setup_move() {
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
-@test "\`move\` with <index> argument prints output." {
+@test "\`move\` with <id> argument prints output." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -382,5 +382,5 @@ _setup_move() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
 }

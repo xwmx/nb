@@ -59,7 +59,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>) [--force]" ]]
+  [[ "${lines[1]}" == "  notes delete (<id> | <filename> | <path> | <title>) [--force]" ]]
 }
 
 # <selector> ##################################################################
@@ -74,7 +74,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>) [--force]" ]]
+  [[ "${lines[1]}" == "  notes delete (<id> | <filename> | <path> | <title>) [--force]" ]]
 }
 
 @test "\`delete <selector> (no force)\` returns 0 and deletes note." {
@@ -101,7 +101,7 @@ load test_helper
     run "${_NOTES}" notebooks add "one"
     run "${_NOTES}" use "one"
     run "${_NOTES}" add
-    _filename=$(notes list -n 1 --no-index | head -1)
+    _filename=$(notes list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
     run "${_NOTES}" use "home"
   }
@@ -191,9 +191,9 @@ load test_helper
   [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
 }
 
-# <index> #####################################################################
+# <id> ########################################################################
 
-@test "\`delete\` with <index> argument exits with status 0." {
+@test "\`delete\` with <id> argument exits with status 0." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -206,7 +206,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`delete\` with <index> argument deletes note file." {
+@test "\`delete\` with <id> argument deletes note file." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -220,7 +220,7 @@ load test_helper
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
 }
 
-@test "\`delete\` with <index> argument creates git commit." {
+@test "\`delete\` with <id> argument creates git commit." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -237,7 +237,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 }
 
-@test "\`delete\` with <index> argument removes from index." {
+@test "\`delete\` with <id> argument removes from index." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -254,7 +254,7 @@ load test_helper
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 }
 
-@test "\`delete\` with <index> argument prints output." {
+@test "\`delete\` with <id> argument prints output." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -438,5 +438,5 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<index> | <filename> | <path> | <title>) [--force]" ]]
+  [[ "${lines[1]}" == "  notes delete (<id> | <filename> | <path> | <title>) [--force]" ]]
 }
