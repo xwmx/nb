@@ -107,6 +107,24 @@ To list your notes and notebooks:
 
 ```bash
 notes ls
+# home
+# ---------------------
+# [3] 20200101000002.md
+# [2] 20200101000001.md
+# [1] 20200101000000.md
+```
+
+`notes` lists notes with each id and filename. If the note file has a
+Markdown title on the first line (e.g., `# Example Title`) , the
+title will be displayed instead of the filename:
+
+```bash
+notes ls
+# home
+# ---------------------
+# [3] Todos
+# [2] Links
+# [1] Example Title
 ```
 
 You can edit a file using its id, filename, or markdown title, if the
