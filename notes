@@ -1213,7 +1213,8 @@ _help() {
 A git-backed, syncable, searchable command line note-taking tool.
 
 Usage:
-  ${_ME} [<number>] [<list options>]
+  ${_ME} [<list options>]
+  ${_ME} [(<id> | <filename> | <path> | <title>)] [<list options>]
   ${_ME} add [<note>] [--type <type>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
