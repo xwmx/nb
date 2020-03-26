@@ -1287,6 +1287,9 @@ Subcommands:
   rebuild       Rebuild the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
   verify        Verify that the index matches the notebook contents.
+
+Description:
+  Manage the index for the current notebook.
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
