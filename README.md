@@ -96,7 +96,7 @@ This will set up your initial 'home' notebook where notes will be stored.
 To add a note:
 
 ```bash
-# create a new note in your terminal's text editor
+# create a new note in your text editor
 notes add
 
 # create a new note containing "This is a note."
