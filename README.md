@@ -533,9 +533,13 @@ global `$EDITOR` setting.
 
 Example Values: `vim`, `emacs`, `subl`, `atom`, `code`, `macdown`
 
-Example:
+Examples:
 ```bash
+# Set to emacsclient
 export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
+
+# Set to VS Code
+export EDITOR="code"
 ```
 
 ## Testing

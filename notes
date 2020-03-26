@@ -1523,7 +1523,7 @@ HEREDOC
 # global \`\$EDITOR\` setting.
 #
 # Example Values: 'vim' 'emacs' 'subl' 'atom' 'code' 'macdown'
-# export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
+# export EDITOR="code"
 HEREDOC
     printf "Created %s\\n" "${NOTESRC_PATH}"
   fi
