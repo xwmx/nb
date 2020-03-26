@@ -240,7 +240,7 @@ Usage:
   notes edit (<id> | <filename> | <path> | <title>)
   notes history [<selection>]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
+  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
   notes list [-s | --sort] [-r | --reverse]
   notes ls [<list options>]
   notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
@@ -397,7 +397,7 @@ Description:
 
 ```text
 Usage:
-  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
+  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
   notes list [-s | --sort] [-r | --reverse]
 
 Options:
@@ -407,6 +407,7 @@ Options:
   -n <limit>             The maximum number of notes to list.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
+  --titles               Show title instead of filename when present.
 
 Description:
   List all notes.

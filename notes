@@ -1221,7 +1221,7 @@ Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
   ${_ME} history [<selection>]
   ${_ME} init [<remote-url>]
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
   ${_ME} list [-s | --sort] [-r | --reverse]
   ${_ME} ls [<list options>]
   ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
@@ -1551,7 +1551,7 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [<selection>]
+  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles] [<selection>]
   ${_ME} list [-s | --sort] [-r | --reverse]
 
 Options:
@@ -1561,6 +1561,7 @@ Options:
   -n <limit>             The maximum number of notes to list.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
+  --titles               Show title instead of filename when present.
 
 Description:
   List all notes.
