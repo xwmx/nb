@@ -259,43 +259,6 @@ _get_hash() {
   printf "%s\\n" "${_hash}"
 }
 
-# _get_index()
-#
-# Usage:
-#   _get_index <item> <list>
-#
-# Description:
-#   Print the index of <item> in <list>
-#
-# Returns:
-#   0  <item> is found in <list>.
-#   1  <item> is not found in <list>.
-_get_index() {
-  # _debug printf "_get_index() \${1}: '%s'\\n" "${1:-}"
-  # _debug printf "_get_index() \${@:2}: '%s'\\n" "${@:2}"
-
-  local _filename="${1:-}"
-  local -a _files=(${@:2})
-
-  # _debug printf "_get_index() \${_files[@]}: '%s'\\n" "${_files[@]}"
-
-  if [[ -z "${_filename}" ]] || [[ -z "${_files[*]}" ]]
-  then
-    _die printf "Usage: _get_index <item> <list>"
-  fi
-
-  for __i in "${!_files[@]}"
-  do
-    # _debug printf "_get_index() \${_files[${_i}]} : '%s'\\n" "${_files[${_i}]}"
-    if [[ "${_files[${__i}]}" == "${_filename}" ]]
-    then
-      printf "%s\\n" "${__i}"
-      return 0
-    fi
-  done
-  return 1
-}
-
 # _get_selection_basename()
 #
 # Usage:
@@ -2474,9 +2437,9 @@ _show() {
       printf "%s/%s\\n" "${NOTES_DATA_DIR}" "${_basename}"
     elif ((_print_index))
     then
-      local _index
-      _index="$(_get_index "${_basename}" "$(notes list --no-index)")"
-      printf "%s\\n" "${_index}"
+      local _id
+      _id="$(_index get_id "${_basename}")"
+      printf "%s\\n" "${_id}"
     elif ((_render)) &&
          ((_dump))   &&
          _command_exists "pandoc" &&

@@ -384,7 +384,7 @@ load test_helper
   run "${_NOTES}" show "${_filename}" --index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" == "0" ]]
+  [[ "${output}" == "1" ]]
 }
 
 # `notes show <index> --index` #################################################
@@ -412,7 +412,7 @@ load test_helper
   run "${_NOTES}" show 1 --index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" == "0" ]]
+  [[ "${output}" == "1" ]]
 }
 
 # `notes show <path> --index` #################################################
@@ -440,7 +440,7 @@ load test_helper
   run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" == "0" ]]
+  [[ "${output}" == "1" ]]
 }
 
 # `notes show <title> --index` ################################################
@@ -470,7 +470,7 @@ load test_helper
   run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" == "0" ]]
+  [[ "${output}" == "1" ]]
 }
 
 # help ########################################################################
