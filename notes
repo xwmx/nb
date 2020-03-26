@@ -1217,6 +1217,7 @@ Usage:
   ${_ME} history [<selection>]
   ${_ME} init [<remote-url>]
   ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
+  ${_ME} list [-s | --sort] [-r | --reverse]
   ${_ME} ls [<list options>]
   ${_ME} move (<index> | <filename> | <path> | <title>) [--force] <notebook>
   ${_ME} notebook
@@ -1540,15 +1541,15 @@ HEREDOC
 desc "list" <<HEREDOC
 Usage:
   ${_ME} list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
-  ${_ME} list [--sort] [--reverse]
+  ${_ME} list [-s | --sort] [-r | --reverse]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-index             Don't print an index next to each note's filename.
   -n <limit>             The maximum number of notes to list.
-  --sort                 Order notes by index.
-  --reverse              Order notes by index descending.
+  -s --sort              Order notes by index.
+  -r --reverse           Order notes by index descending.
 
 Description:
   List all notes.
@@ -1619,10 +1620,10 @@ _list() {
       --titles)
         _list_titles=1
         ;;
-      --sort)
+      -s|--sort)
         _sort=1
         ;;
-      --reverse)
+      -r|--reverse)
         _reverse=1
         ;;
       *)

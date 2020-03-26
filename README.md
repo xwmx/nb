@@ -95,7 +95,7 @@ Usage:
   notes history [<selection>]
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
-  notes list [--sort] [--reverse]
+  notes list [-s | --sort] [-r | --reverse]
   notes ls [<list options>]
   notes move (<index> | <filename> | <path> | <title>) [--force] <notebook>  notes notebook
   notes notebooks [<name>] [--names] [--no-color]
@@ -252,7 +252,7 @@ Description:
 ```text
 Usage:
   notes list [(-e | --excerpt) [<length>]] [--no-index] [-n <limit>] [<selection>]
-  notes list [--sort] [--reverse]
+  notes list [-s | --sort] [-r | --reverse]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
