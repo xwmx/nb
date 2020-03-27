@@ -1885,6 +1885,9 @@ _ls() {
     local _notebook_names_hi
     _notebook_names_hi=($(_notebooks --names))
 
+    local _line_number=0
+    local _padding=
+
     local _test_line=
     local _line_raw=
     local _line_hi=
@@ -1905,12 +1908,14 @@ _ls() {
       then # wrap to next line
         # Use the existing value of $_line_[highlighted|raw] without the current
         # name.
+        _centered=1
         _padding="$(
           _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\n"
         _output_raw="${_output_raw}${_padding}${_line_raw}\n"
+        _line_number=$((_line_number + 1))
 
         # Start the line for the next iteration using the current name..
         _test_line="${_notebook_names_raw[i]}"
@@ -1929,12 +1934,17 @@ _ls() {
 
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
+        if ((_line_number))
+        then
+          _centered=1
+        fi
         _padding="$(
           _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\n"
         _output_raw="${_output_raw}${_padding}${_line_raw}\n"
+        _line_number=$((_line_number + 1))
       fi
     done
     printf "%b" "${_output_hi}"
