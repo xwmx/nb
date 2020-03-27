@@ -1821,15 +1821,15 @@ _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
 
   local _args=()
-  local _aligned=0
+  local _centered=0
   local _auto_align=0
   local _plain=0
 
   for __arg in "${@:1}"
   do
     case "${__arg}" in
-      --align)
-        _aligned=1
+      --centered)
+        _centered=1
         ;;
       --auto-align)
         _auto_align=1
@@ -1863,10 +1863,10 @@ _ls() {
       local _padding_line="${1:-}"
       local _padding_line_length="${#_padding_line}"
       local _padding_columns="${2:-}"
-      local _padding_aligned="${3:-}"
+      local _padding_centered="${3:-}"
 
       local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-      if ((_padding_aligned)) && ((_padding_amount))
+      if ((_padding_centered)) && ((_padding_amount))
       then
         printf "%-${_padding_amount}s" " "
       fi
@@ -1912,11 +1912,11 @@ _ls() {
       then # wrap to next line
         # Use the existing value of $_line_[highlighted|raw] without the current
         # name.
-        if ((_auto_align)) || ((_aligned))
+        if ((_auto_align)) || ((_centered))
         then
-          _aligned=1
+          _centered=1
           _padding="$(
-            _print_padding "${_line_raw}" "${_columns}" "${_aligned}"
+            _print_padding "${_line_raw}" "${_columns}" "${_centered}"
           )"
         fi
 
@@ -1941,12 +1941,12 @@ _ls() {
 
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
-        if ((_line_number)) && ((_auto_align)) || ((_aligned))
+        if ((_line_number)) && ((_auto_align)) || ((_centered))
         then
-          _aligned=1
+          _centered=1
         fi
         _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_aligned}"
+          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\n"
@@ -1959,7 +1959,7 @@ _ls() {
     # Use control characters to disable wrapping for long lines.
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
-    if ((_aligned))
+    if ((_centered))
     then # print full-width line.
       _print_line "$(printf "%-${_columns}s" '.')"
     else # print line the length of the first line.
