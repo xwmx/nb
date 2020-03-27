@@ -2696,8 +2696,13 @@ _show() {
           _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"
         fi
       else # `notes show`
-        _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}" \
-          | "${PAGER}"
+        if [[ -n "${PAGER}" ]]
+        then
+          _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}" \
+            | "${PAGER}"
+        else
+          _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"
+        fi
       fi
     fi
   else # _basename is not assigned or no note exists with that name.
