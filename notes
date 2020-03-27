@@ -1821,13 +1821,13 @@ _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
 
   local _args=()
-  local _fancy=0
+  local _centered=0
 
   for __arg in "${@:1}"
   do
     case "${__arg}" in
-      --fancy)
-        _fancy=1
+      --centered)
+        _centered=1
         ;;
       *)
         _args+=("${__arg}")
@@ -1855,10 +1855,10 @@ _ls() {
       local _padding_line="${1:-}"
       local _padding_line_length="${#_padding_line}"
       local _padding_columns="${2:-}"
-      local _fancy="${3:-}"
+      local _centered="${3:-}"
 
       local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-      if ((_fancy)) && ((_padding_amount))
+      if ((_centered)) && ((_padding_amount))
       then
         printf "%-${_padding_amount}s" " "
       fi
@@ -1866,7 +1866,7 @@ _ls() {
 
 
     local _separator=
-    if ((_fancy))
+    if ((_centered))
     then
       _separator=" ·"
     fi
@@ -1902,7 +1902,7 @@ _ls() {
         # Use the existing value of $_line_[highlighted|raw] without the current
         # name.
         _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_fancy}"
+          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\n"
@@ -1926,7 +1926,7 @@ _ls() {
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
         _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_fancy}"
+          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\n"
