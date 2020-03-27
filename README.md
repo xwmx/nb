@@ -103,10 +103,10 @@ notes add
 notes add "This is a note."
 ```
 
-To list your notes and notebooks:
+To list your notes and notebooks, run `notes` with no arguments:
 
 ```bash
-notes ls
+notes
 # home
 # ---------------------
 # [3] 20200101000002.md
@@ -119,7 +119,7 @@ on the first line (e.g., `# Example Title`) , the title will be displayed
 instead of the filename:
 
 ```bash
-notes ls
+notes
 # home
 # ---------------------
 # [3] Todos
@@ -130,17 +130,17 @@ notes ls
 Pass an id, filename, or markdown title to view the listing for that note:
 
 ```bash
-notes ls Todos
+notes Todos
 # [3] Todos
 
-notes ls 1
+notes 1
 # [1] Example Title
 ```
 
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
-notes ls 1 --excerpt
+notes 1 --excerpt
 # [1]  Example Title
 # ---------
 # # Example Title
@@ -148,8 +148,9 @@ notes ls 1 --excerpt
 # This is an example excerpt.
 ```
 
-For more information on the options for listing notes and excerpts, run
-`notes help ls` and `notes help list`.
+`notes` is an alias for `notes ls`, and both commands respond to the same
+arguments as `notes list`. For more information about options for listing
+notes, run `notes help list`.
 
 You can edit a note using its id, filename, or markdown title:
 
