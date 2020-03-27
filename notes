@@ -1096,7 +1096,7 @@ _delete() {
     printf "Deleting %s\\n" "${_note_info_line}"
     while true
     do
-      read -p "Are you sure you want to proceed? [y/N] " __yn
+      read -r -p "Are you sure you want to proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -1916,7 +1916,7 @@ _move() {
       "${_target_notebook}"
     while true
     do
-      read -p "Are you sure you want to proceed? [y/N] " __yn
+      read -r -p "Are you sure you want to proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
