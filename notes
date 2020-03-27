@@ -1822,7 +1822,7 @@ _ls() {
 
   local _args=()
   local _centered=0
-  local _justified=0
+  local _hybrid=0
   local _plain=0
 
   for __arg in "${@:1}"
@@ -1831,8 +1831,8 @@ _ls() {
       --centered)
         _centered=1
         ;;
-      --justified)
-        _justified=1
+      --hybrid)
+        _hybrid=1
         ;;
        --plain)
         _plain=1
@@ -1912,7 +1912,7 @@ _ls() {
       then # wrap to next line
         # Use the existing value of $_line_[highlighted|raw] without the current
         # name.
-        if ! ((_justified))
+        if ((_hybrid)) || ((_centered))
         then
           _centered=1
           _padding="$(
@@ -1941,7 +1941,7 @@ _ls() {
 
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
-        if ((_line_number)) && ! ((_justified))
+        if ((_line_number)) && ((_hybrid)) || ((_centered))
         then
           _centered=1
         fi
