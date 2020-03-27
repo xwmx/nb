@@ -655,6 +655,7 @@ _highlight_syntax_if_available() {
     local _extension="${_basename##*.}"
 
     # Markdown highlighting is better with explicit 'md' lexer.
+    # shellcheck disable=SC2015
     [[ ! "${_extension}" == "md" ]] && \
       pygmentize -O style=pastie "${@}" 2>/dev/null || \
       pygmentize -l md -O style=pastie "${@}"
