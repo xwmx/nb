@@ -5,6 +5,11 @@
 # https://github.com/koalaman/shellcheck/wiki/Ignore
 ###############################################################################
 
+# DIsable SC2002
+#
+# https://github.com/koalaman/shellcheck/wiki/SC2002
+disable=SC2002
+
 # Disable SC2183
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2183
