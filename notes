@@ -1842,7 +1842,9 @@ _ls() {
     _notebook_names_highlighted=($(_notebooks --names))
 
     local _test_line=
+    local _line_raw=
     local _line_highlighted=
+    local _output_raw=
     local _output_highlighted=
 
 
@@ -1852,30 +1854,35 @@ _ls() {
       then # first item in line
         _test_line="${_notebook_names[i]}"
       else
-        _test_line="${_test_line} ${_notebook_names[i]}"
+        _test_line="${_test_line} · ${_notebook_names[i]}"
       fi
 
       if [[ "${#_test_line}" -gt "${_columns}" ]]
       then # wrap to next line
-        # Use the existing value of $_line_highlighted without the current
+        # Use the existing value of $_line_[highlighted|raw] without the current
         # name.
         _output_highlighted="${_output_highlighted}${_line_highlighted}\n"
+        _output_raw="${_output_raw}${_line_raw}\n"
 
         # Start the line for the next iteration using the current name..
         _test_line="${_notebook_names[i]}"
         _line_highlighted="${_notebook_names_highlighted[i]}"
+        _line_raw="${_notebook_names[i]}"
       else # add to line
         if [[ -z "${_line_highlighted}" ]]
         then # first item in highlighted line
           _line_highlighted="${_notebook_names_highlighted[i]}"
+          _line_raw="${_notebook_names[i]}"
         else
-          _line_highlighted="${_line_highlighted} ${_notebook_names_highlighted[i]}"
+          _line_highlighted="${_line_highlighted} · ${_notebook_names_highlighted[i]}"
+          _line_raw="${_line_raw} · ${_notebook_names[i]}"
         fi
       fi
 
       if [[ "${#_notebook_names[@]}" == $((i+1)) ]]
       then # end of list
         _output_highlighted="${_output_highlighted}${_line_highlighted}\n"
+        _output_raw="${_output_raw}${_line_raw}\n"
       fi
     done
     printf "%b" "${_output_highlighted}"
@@ -1884,7 +1891,8 @@ _ls() {
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
     _print_line "$(
-      _notebooks --names --no-color | tr '\n' ' ' | sed 's/.$//'
+      # $_output_raw generates a line 2 characters too long. TODO: Review
+      printf "%s" "${_output_raw}" | sed 's/..$//'
     )" | tr -d '\n'
     printf '\033[?7h'
     printf '\n'
