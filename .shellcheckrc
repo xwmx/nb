@@ -10,6 +10,15 @@
 # https://github.com/koalaman/shellcheck/wiki/SC2183
 disable=SC2183
 
+# Disable SC2120
+#
+# This is being triggered on `_ls`, which is passed arguments in `_notes()`.
+# This is likely being triggered because `_ls` is called separately explicitly
+# without arguments.
+#
+# https://github.com/koalaman/shellcheck/wiki/SC2120
+disable=SC2120
+
 # Disable SC2206 and SC2207
 #
 # `IFS` and `noglob` are set.
