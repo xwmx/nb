@@ -1834,7 +1834,7 @@ _ls() {
       --auto-align)
         _auto_align=1
         ;;
-       --plain)
+      --plain)
         _plain=1
         ;;
       *)
