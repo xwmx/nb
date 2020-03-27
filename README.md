@@ -192,8 +192,16 @@ different notebook without switching to it, add the notebook name with a
 colon before the command name:
 
 ```bash
-# edit note 5 in example-notebook
-notes example-notebook:edit 5
+# show note 5 in example-notebook
+notes example-notebook:show 5
+```
+
+You can similarly set the notebook name as a modifier to the id, filename, or
+title:
+
+```bash
+# edit note 12 in example-notebook
+notes edit example-notebook:12
 ```
 
 Notes can also be moved between notebooks:
