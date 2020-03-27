@@ -253,13 +253,18 @@ _command_exists() {
 #   _edit_file <file>
 #
 # Description:
-#   Open the file in $EDITOR.
+#   Open the file in $EDITOR. Use the `-f` option in vim and `--wait` option in
+#   other GUI editors to wait until the file is closed in the editor before
+#   continuing.
 _edit_file() {
   cd "${NOTES_DATA_DIR}" && \
-    if [[ "${EDITOR}" == "mvim" ]] || [[ "${EDITOR}" == "gvim" ]]
+    if [[ "${EDITOR}" =~ mvim ]] || \
+       [[ "${EDITOR}" =~ gvim ]]
     then
       "${EDITOR}" -f "${_basename}"
-    elif [[ "${EDITOR}" == "code" ]]
+    elif [[ "${EDITOR}" =~ code ]] || \
+         [[ "${EDITOR}" =~ mate ]] || \
+         [[ "${EDITOR}" =~ subl ]]
     then
       "${EDITOR}" --wait "${_basename}"
     else
