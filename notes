@@ -1821,10 +1821,78 @@ _ls() {
 
   if [[ -z "${*:1}" ]]
   then
-    _notebooks --names \
-      | tr '\n' ' ' \
-      | fold -s "-w$(($(tput cols)+7))" \
-      && printf "\\n"
+    # Build word-wrapping notebook line. `fold` doesn't account for
+    # highlighting.
+    #
+    # Naive version:
+    #
+    # _notebooks --names \
+    #   | tr '\n' ' ' \
+    #   | fold -s "-w$(tput cols)" \
+    #   && printf "\n"
+
+    local _columns
+    _columns="$(tput cols)"
+    # _debug printf "_ls() \${_columns}: '%s'\\n" "${_columns}"
+
+    local _notebook_names
+    _notebook_names=($(_notebooks --names --no-color))
+    # _debug printf "_ls() \${_notebook_names[*]}: '%s'\\n" \
+    #   "${_notebook_names[*]}"
+    local _notebooks_count="${#_notebook_names[@]}"
+
+    local _notebook_names_highlighted
+    _notebook_names_highlighted=($(_notebooks --names))
+
+    local _test_line=
+    local _line_highlighted=
+    local _output_highlighted=
+
+
+    for ((i=0;i < "${_notebooks_count}"; i++))
+    do
+      # _debug printf "_ls() \${i}: '%s'\\n" "${i}"
+      # _debug printf "_ls() \${#_notebook_names[@]}: '%s'\\n" \
+      #   "${#_notebook_names[@]}"
+      # _debug printf "_ls() \${_notebook_names[i]}: '%s'\\n" \
+      #   "${_notebook_names[i]}"
+
+      if [[ -z "${_test_line}" ]]
+      then # first item in line
+        _test_line="${_notebook_names[i]}"
+      else
+        _test_line="${_test_line} ${_notebook_names[i]}"
+      fi
+
+      # _debug printf "_ls() \${_test_line}: '%s'\\n" "${_test_line}"
+      # _debug printf "_ls() \${#_test_line}: '%s'\\n" "${#_test_line}"
+      # _debug printf "_ls() \$_columns: '%s'\\n" "$_columns"
+
+      if [[ "${#_test_line}" -gt "${_columns}" ]]
+      then # wrap to next line
+        # Use the existing value of $_line_highlighted without the current
+        # name.
+        _output_highlighted="${_output_highlighted}${_line_highlighted}\n"
+
+        # Start the line for the next iteration using the current name..
+        _test_line="${_notebook_names[i]}"
+        _line_highlighted="${_notebook_names_highlighted[i]}"
+      else # add to line
+        if [[ -z "${_line_highlighted}" ]]
+        then # first item in highlighted line
+          _line_highlighted="${_notebook_names_highlighted[i]}"
+        else
+          _line_highlighted="${_line_highlighted} ${_notebook_names_highlighted[i]}"
+        fi
+      fi
+
+      if [[ "${#_notebook_names[@]}" == $((i+1)) ]]
+      then # end of list
+        _output_highlighted="${_output_highlighted}${_line_highlighted}\n"
+      fi
+    done
+    printf "%b" "${_output_highlighted}"
+
     # Use control characters to disable wrapping for long lines.
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
@@ -1834,8 +1902,8 @@ _ls() {
     printf '\033[?7h'
     printf '\n'
   fi
-  _list --titles "${@:-}"
 
+  _list --titles "${@:-}"
 }
 
 # move ########################################################################
