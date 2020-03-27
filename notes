@@ -2453,7 +2453,7 @@ Options:
 Description:
   Show a note.
 
-  If Pygments <http://pygments.org/> is installed, excerpts are printed with
+  If Pygments <http://pygments.org/> is installed, notes are printed with
   syntax highlighting.
 HEREDOC
 _show() {
