@@ -2696,7 +2696,7 @@ _show() {
           _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"
         fi
       else # `notes show`
-        if [[ -n "${PAGER}" ]]
+        if [[ -n "${PAGER:-}" ]]
         then
           _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}" \
             | "${PAGER}"
