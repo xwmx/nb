@@ -247,6 +247,28 @@ _command_exists() {
   hash "${1}" 2>/dev/null
 }
 
+# _contains()
+#
+# Usage:
+#   _contains "$item" "${list[*]}"
+#
+# Returns:
+#   0  If the item is included in the list.
+#   1  If not.
+_contains() {
+  local _test_list=(${*:2})
+  for __test_element in "${_test_list[@]:-}"
+  do
+    _debug printf "_contains() \${__test_element}: %s\\n" "${__test_element}"
+    if [[ "${__test_element}" == "${1}" ]]
+    then
+      _debug printf "_contains() match: %s\\n" "${1}"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # _edit_file()
 #
 # Usage:
@@ -642,28 +664,6 @@ _highlight_syntax_if_available() {
 #   1  If the current input is stdin / piped input.
 _interactive_input() {
   [[ -t 0 ]]
-}
-
-# _contains()
-#
-# Usage:
-#   _contains "$item" "${list[*]}"
-#
-# Returns:
-#   0  If the item is included in the list.
-#   1  If not.
-_contains() {
-  local _test_list=(${*:2})
-  for __test_element in "${_test_list[@]:-}"
-  do
-    _debug printf "_contains() \${__test_element}: %s\\n" "${__test_element}"
-    if [[ "${__test_element}" == "${1}" ]]
-    then
-      _debug printf "_contains() match: %s\\n" "${1}"
-      return 0
-    fi
-  done
-  return 1
 }
 
 # _join()
