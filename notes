@@ -84,7 +84,16 @@ fi
 # Set default $EDITOR if one has not been set.
 if [[ -z "${EDITOR:-}" ]]
 then
-  if hash "nano" 2>/dev/null
+  if hash "code" 2>/dev/null
+  then
+    export EDITOR="code"
+  elif hash "subl" 2>/dev/null
+  then
+    export EDITOR="subl"
+  elif hash "mate" 2>/dev/null
+  then
+    export EDITOR="mate"
+  elif hash "nano" 2>/dev/null
   then
     export EDITOR="nano"
   elif hash "vi" 2>/dev/null
