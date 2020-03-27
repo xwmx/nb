@@ -1821,7 +1821,7 @@ _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
 
   local _args=()
-  local _auto_align=0
+  local _auto_align=1 # auto-align by default.
   local _centered=0
   local _justified=0
   local _plain=0
