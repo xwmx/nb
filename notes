@@ -1820,7 +1820,22 @@ HEREDOC
 _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
 
-  if [[ -z "${*:1}" ]] || [[ "${1:-}" == "--fancy" ]]
+  local _args=()
+  local _fancy=0
+
+  for __arg in "${@:1}"
+  do
+    case "${__arg}" in
+      --fancy)
+        _fancy=1
+        ;;
+      *)
+        _args+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if [[ -z "${_args[*]}" ]]
   then
     # Build word-wrapping notebook line. `fold` doesn't account for
     # highlighting.
@@ -1849,12 +1864,7 @@ _ls() {
       fi
     }
 
-    local _fancy=0
-    if [[ "${1:-}" == "--fancy" ]]
-    then
-      _fancy=1
-      shift
-    fi
+
     local _separator=
     if ((_fancy))
     then
@@ -1936,7 +1946,7 @@ _ls() {
     printf '\n'
   fi
 
-  _list --titles "${@:-}"
+  _list --titles "${_args[@]}"
 }
 
 # move ########################################################################
