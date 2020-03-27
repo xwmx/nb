@@ -422,9 +422,6 @@ Options:
 Description:
   List all notes.
 
-  If Pygments <http://pygments.org/> is installed, excerpts are printed with
-  syntax highlighting.
-
 Examples:
   notes list
   notes list -e 10
@@ -532,7 +529,7 @@ Options:
 Description:
   Show a note.
 
-  If Pygments <http://pygments.org/> is installed, excerpts are printed with
+  If Pygments <http://pygments.org/> is installed, notes are printed with
   syntax highlighting.
 ```
 

@@ -1605,9 +1605,6 @@ Options:
 Description:
   List all notes.
 
-  If Pygments <http://pygments.org/> is installed, excerpts are printed with
-  syntax highlighting.
-
 Examples:
   ${_ME} list
   ${_ME} list -e 10
