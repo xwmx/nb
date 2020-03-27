@@ -705,7 +705,7 @@ _list_notes_files() {
   if [[ "${1:-}" == "--sort" ]]
   then
     local _index_file
-    local _index_file="$(cat "${NOTES_DATA_DIR}/.index")"
+    _index_file="$(cat "${NOTES_DATA_DIR}/.index")"
     local _filenames=()
     for __line in "${_index_file[@]}"
     do
