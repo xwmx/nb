@@ -711,7 +711,7 @@ _list_notes_files() {
     do
       if [[ -n "${__line}" ]]
       then
-        _filenames+="${__line}"
+        _filenames+=("${__line}")
       fi
     done
 
