@@ -1821,7 +1821,10 @@ _ls() {
 
   if [[ -z "${*:1}" ]]
   then
-    _notebooks --names | tr '\n' ' ' && printf "\\n"
+    _notebooks --names \
+      | tr '\n' ' ' \
+      | fold -s "-w$(($(tput cols)+7))" \
+      && printf "\\n"
     # Use control characters to disable wrapping for long lines.
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
