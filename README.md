@@ -8,24 +8,23 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-A command line note-taking and syncing tool that stores data as Markdown,
-Emacs Org mode, and other text file formats versioned with git.
+`notes` is a command line note-taking, document management, versioning, and
+syncing tool that works with files in
+[Markdown](https://daringfireball.net/projects/markdown/),
+[Emacs Org mode](https://orgmode.org/), and any other text-based format.
 
-With `notes`, you can add and edit notes using Vim/GVim/MacVim, Emacs, VS Code,
-or whatever editor you have set in the `$EDITOR` environment variable.
-`notes` uses git in the background to automatically record changes and sync
-with a remote repository, if one has been configured. Optional dependencies
-can be installed to enable enhanced rendering, display, and searching
-functionality, but everything still works great without them.
+With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
+Text, and any other text editor you prefer. `notes` uses git in the background
+to automatically record changes and sync with a remote repository, if one has
+been configured. `notes` works out of the box on any system with modern
+[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) and
+[Git](https://git-scm.com/). [Optional dependencies](#optional) can be
+installed to enable enhanced rendering, display, and searching functionality,
+but everything still works great without them.
 
-`notes` works with text files in any markup format. By default, `notes` files
-are normal [Markdown](https://daringfireball.net/projects/markdown/) files that
-can be edited with any text editor.
-
-`notes` can be configured to save the data files in a directory used
-by a general purpose syncing utility like Dropbox so they can be edited on
-any device with apps that support Dropbox and Markdown, plain text, or
-your preferred markup format.
+`notes` can also be configured to save notes in a location used by a general
+purpose syncing utility like Dropbox so notes can be edited in other apps on
+any device.
 
 #### Dependencies
 
@@ -103,6 +102,14 @@ notes add
 notes add "This is a note."
 ```
 
+`notes add` with no arguments will open the new, blank note in your
+environment's preferred text editor. You can change your editor using the
+[`$EDITOR`](https://askubuntu.com/questions/432524) variable in your
+environment or [`~/.notesrc`](#configuration) configuration file.
+
+`notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
+files by default. To change the file type, see `notes help add`
+
 To list your notes and notebooks, run `notes` with no arguments:
 
 ```bash
@@ -114,9 +121,11 @@ notes
 # [1] 20200101000000.md
 ```
 
-Notes are listed with each id and filename. If the note has a Markdown title
-on the first line (e.g., `# Example Title`) , the title will be displayed
-instead of the filename:
+Notebooks are listed above the line, with the current notebook highlighted.
+
+Notes from the current notebook are listed with each id and filename. If the
+note has a Markdown title on the first line (e.g., `# Example Title`) , the
+title will be displayed instead of the filename:
 
 ```bash
 notes
@@ -148,7 +157,7 @@ notes 1 --excerpt
 # This is an example excerpt.
 ```
 
-`notes` is an alias for `notes ls`, and both commands respond to the same
+`notes` is a shortcut for `notes ls`, and both commands respond to the same
 arguments as `notes list`. For more information about options for listing
 notes, run `notes help list`.
 
@@ -208,9 +217,11 @@ notes edit example-notebook:12
 Notes can also be moved between notebooks:
 
 ```bash
-# move note 3 from home to example-notebook
+# move note 3 from the current notebook to example-notebook
 notes move 3 example-notebook
 ```
+
+For more information about working with notebooks, run `notes help notebooks`
 
 Whenever a note is added, changed, or removed, `notes` automatically commits
 the change to git transparently in the background. You can view the history of
@@ -269,7 +280,7 @@ Help:
   notes help [<subcommand>]
 
 Subcommands:
-  (default)  List notes. This is an alias for `notes ls`.
+  (default)  List notes and notebooks. This is an alias for `notes ls`.
   add        Add a new note.
   count      Print the number of notes.
   delete     Delete a note.
@@ -278,8 +289,8 @@ Subcommands:
   help       Display this help information.
   history    Display git history for the current notebook or a note.
   init       Initialize the first notebook.
-  list       List all notes.
-  ls         Shortcut for `list --titles`.
+  list       List notes in the current notebook.
+  ls         List notebooks and notes in the current notebook.
   move       Move a note to a different notebook.
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
@@ -310,6 +321,10 @@ Description:
   Create a new note. Any arguments passed to `add` are written to the note
   file. When no arguments are passed, a new note file is opened with
   `$EDITOR`.
+
+  `notes` creates Markdown files by default. To create a note with a different
+  file type, use the `--type` option. To change the default file type, set the
+  `$NOTES_DEFAULT_EXTENSION` variable in the ~/.notesrc configuration file.
 
 Examples:
   notes add
@@ -421,12 +436,13 @@ Options:
   --titles               Show title instead of filename when present.
 
 Description:
-  List all notes.
+  List notes in the current notebook.
 
 Examples:
-  notes list
-  notes list -e 10
-  notes list --excerpt --no-id
+  ${_ME} list
+  ${_ME} list example.md -e 10
+  ${_ME} list --excerpt --no-id
+  ${_ME} list --titles --reverse
 ```
 
 #### `ls`
@@ -436,7 +452,8 @@ Usage:
   notes ls [<list options>]
 
 Description:
-  Shortcut for `list --titles`. Any options are passed through to `list`.
+  List notebooks and notes in the current notebook. Options are passed through
+  to `list`. For more information, see `notes help list`.
 ```
 
 #### `move`

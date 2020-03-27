@@ -916,6 +916,10 @@ Description:
   file. When no arguments are passed, a new note file is opened with
   \`\$EDITOR\`, currently set to '${EDITOR}'.
 
+  \`notes\` creates Markdown files by default. To create a note with a different
+  file type, use the \`--type\` option. To change the default file type, set the
+  \`\$NOTES_DEFAULT_EXTENSION\` variable in the ~/.notesrc configuration file.
+
 Examples:
   notes add
   notes add "Note content."
@@ -1604,12 +1608,13 @@ Options:
   --titles               Show title instead of filename when present.
 
 Description:
-  List all notes.
+  List notes in the current notebook.
 
 Examples:
   ${_ME} list
-  ${_ME} list -e 10
+  ${_ME} list example.md -e 10
   ${_ME} list --excerpt --no-id
+  ${_ME} list --titles --reverse
 HEREDOC
 _list() {
   _debug printf "_list() \${1:-}: '%s'\\n" "${1:-}"
@@ -1815,7 +1820,8 @@ Usage:
   ${_ME} ls [<list options>]
 
 Description:
-  Shortcut for \`list --titles\`. Any options are passed through to \`list\`.
+  List notebooks and notes in the current notebook. Options are passed through
+  to \`list\`. For more information, see \`notes help list\`.
 HEREDOC
 _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
