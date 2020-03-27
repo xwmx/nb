@@ -514,7 +514,7 @@ _git_checkpoint() {
 # _git_index_is_dirty()
 #
 # Usage:
-#   _git_index_is_dirty [<target-directory>
+#   _git_index_is_dirty [<target-directory>]
 #
 # Returns:
 #   0  If there are uncommitted changes in `NOTES_DATA_DIR` or
