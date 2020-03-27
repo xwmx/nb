@@ -1951,7 +1951,6 @@ Usage:
 Description:
   Print the current notebook name.
 HEREDOC
-# TODO: Add description.
 _notebook() {
   if [[ "${1:-}" == "open" ]]
   then
@@ -1982,7 +1981,6 @@ Subcommands:
   rename     Rename a notebook.
   use        Switch to a notebook.
 HEREDOC
-# TODO: Add description.
 _notebooks() {
   # _notebooks_add()
   #
@@ -2627,7 +2625,6 @@ Usage:
 Description:
   Switch to the specified notebook. Shortcut for \`notes notebooks use\`.
 HEREDOC
-# TODO: Add description.
 _use() {
   local _name="${1:-}"
   if [[ -z "${_name}" ]]
