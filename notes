@@ -1833,12 +1833,9 @@ _ls() {
 
     local _columns
     _columns="$(tput cols)"
-    # _debug printf "_ls() \${_columns}: '%s'\\n" "${_columns}"
 
     local _notebook_names
     _notebook_names=($(_notebooks --names --no-color))
-    # _debug printf "_ls() \${_notebook_names[*]}: '%s'\\n" \
-    #   "${_notebook_names[*]}"
     local _notebooks_count="${#_notebook_names[@]}"
 
     local _notebook_names_highlighted
@@ -1851,22 +1848,12 @@ _ls() {
 
     for ((i=0;i < "${_notebooks_count}"; i++))
     do
-      # _debug printf "_ls() \${i}: '%s'\\n" "${i}"
-      # _debug printf "_ls() \${#_notebook_names[@]}: '%s'\\n" \
-      #   "${#_notebook_names[@]}"
-      # _debug printf "_ls() \${_notebook_names[i]}: '%s'\\n" \
-      #   "${_notebook_names[i]}"
-
       if [[ -z "${_test_line}" ]]
       then # first item in line
         _test_line="${_notebook_names[i]}"
       else
         _test_line="${_test_line} ${_notebook_names[i]}"
       fi
-
-      # _debug printf "_ls() \${_test_line}: '%s'\\n" "${_test_line}"
-      # _debug printf "_ls() \${#_test_line}: '%s'\\n" "${#_test_line}"
-      # _debug printf "_ls() \$_columns: '%s'\\n" "$_columns"
 
       if [[ "${#_test_line}" -gt "${_columns}" ]]
       then # wrap to next line
