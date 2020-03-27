@@ -2531,16 +2531,16 @@ _show() {
         | w3m -dump -T text/html
     elif ((_render)) &&
          _command_exists "pandoc" &&
-         _command_exists "lynx"
-    then # `notes show --render` with `pandoc` and `lynx` available.
-      pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
-    elif ((_render)) &&
-         _command_exists "pandoc" &&
          _command_exists "w3m"
     then # `notes show --render` with `pandoc` and `w3m` available.
       pandoc "${NOTES_DATA_DIR}/${_basename}" \
         | w3m -dump -T text/html \
         | "${PAGER}"
+    elif ((_render)) &&
+         _command_exists "pandoc" &&
+         _command_exists "lynx"
+    then # `notes show --render` with `pandoc` and `lynx` available.
+      pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
     else # default
       if ((_dump))
       then # `notes show --dump [--no-color]`
