@@ -1858,15 +1858,15 @@ _ls() {
     # _print_paddding()
     #
     # Usage:
-    #   _print_padding <line> <columns> <fancy>
+    #   _print_padding <line> <columns> <aligned>
     _print_padding() {
       local _padding_line="${1:-}"
       local _padding_line_length="${#_padding_line}"
       local _padding_columns="${2:-}"
-      local _aligned="${3:-}"
+      local _padding_aligned="${3:-}"
 
       local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-      if ((_aligned)) && ((_padding_amount))
+      if ((_padding_aligned)) && ((_padding_amount))
       then
         printf "%-${_padding_amount}s" " "
       fi
