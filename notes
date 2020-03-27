@@ -2481,7 +2481,7 @@ _show() {
       --raw|--no-color|--nocolor)
         _print_no_color=1
         ;;
-      --render)
+      --render|-r)
         _render=1
         ;;
       *)
