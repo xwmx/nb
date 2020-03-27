@@ -653,12 +653,11 @@ _highlight_syntax_if_available() {
     _basename="$(basename "${_path}")"
 
     local _extension="${_basename##*.}"
-    if [[ -z "${_extension}" ]] || ! pygmentize -L | grep -q "\* ${_extension}"
-    then
-      _extension="md"
-    fi
 
-    pygmentize -l "${_extension}" -O style=pastie "${@}"
+    # Markdown highlighting is better with explicit 'md' lexer.
+    [[ ! "${_extension}" == "md" ]] && \
+      pygmentize -O style=pastie "${@}" 2>/dev/null || \
+      pygmentize -l md -O style=pastie "${@}"
   else
     cat "${@}"
   fi
