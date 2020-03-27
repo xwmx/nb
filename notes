@@ -1264,6 +1264,7 @@ Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   ${_ME} sync [-a|--all]
+  ${_ME} use <notebook>
   ${_ME} -h | --help | help [<subcommand>]
   ${_ME} --version | version
 
@@ -1946,6 +1947,9 @@ _move() {
 desc "notebook" <<HEREDOC
 Usage:
   ${_ME} notebook
+
+Description:
+  Print the current notebook name.
 HEREDOC
 # TODO: Add description.
 _notebook() {
@@ -1965,6 +1969,13 @@ Usage:
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
+
+Subcommands:
+  (default)  List notebooks.
+  add        Create a new notebook.
+  current    Print the current notebook name.
+  rename     Rename a notebook.
+  use        Switch to a notebook.
 HEREDOC
 # TODO: Add description.
 _notebooks() {
@@ -2550,7 +2561,7 @@ Usage:
   ${_ME} status
 
 Description:
-  Run \`git status\` in \`\$NOTES_DATA_DIR\`.
+  Run \`git status\` in the current notebook.
 HEREDOC
 _status() {
   cd "${NOTES_DATA_DIR}" || _die printf "_status() \`cd\` failed.\\n"
@@ -2599,7 +2610,10 @@ _sync() {
 
 desc "use" <<HEREDOC
 Usage:
-  ${_ME} use <name>
+  ${_ME} use <notebook>
+
+Description:
+  Switch to the specified notebook. Shortcut for \`notes notebooks use\`.
 HEREDOC
 # TODO: Add description.
 _use() {

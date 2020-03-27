@@ -252,6 +252,7 @@ Usage:
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   notes sync [-a|--all]
+  notes use <notebook>
   notes -h | --help | help [<subcommand>]
   notes --version | version
 
@@ -270,12 +271,14 @@ Subcommands:
   init       Initialize the first notebook.
   list       List all notes.
   ls         Shortcut for `list --titles`.
+  move       Move a note to a different notebook.
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
   search     Search notes.
   show       Show a note.
-  status     Run `git status` in `$NOTES_DATA_DIR`.
+  status     Run `git status` in the current notebook.
   sync       Sync local notebook with the remote repository.
+  use        Switch to a notebook.
   version    Display version information.
 
 Program Options:
@@ -430,6 +433,57 @@ Description:
   Shortcut for `list --titles`. Any options are passed through to `list`.
 ```
 
+#### `move`
+
+```text
+Usage:
+  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
+
+Description:
+  Move the specified note to <notebook>.
+```
+
+#### `notebook`
+
+```text
+Usage:
+  notes notebook
+
+Description:
+  Print the current notebook name.
+```
+
+#### `notebooks`
+
+```text
+Usage:
+  notes notebooks [<name>] [--names] [--no-color]
+  notes notebooks add <name> [<remote-url>]
+  notes notebooks current
+  notes notebooks rename <old-name> <new-name>
+  notes notebooks use <name>
+
+Subcommands:
+  (default)  List notebooks.
+  add        Create a new notebook.
+  current    Print the current notebook name.
+  rename     Rename a notebook.
+  use        Switch to a notebook.
+```
+
+#### `rename`
+
+```text
+Usage:
+  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
+
+Options:
+  --reset  Reset the filename to the timestamp at which it was last updated.
+
+Description:
+  Set the filename to <name> for the specified note file.
+```
+
 #### `search`
 
 ```text
@@ -445,16 +499,6 @@ Description:
     1. `ag`    <https://github.com/ggreer/the_silver_searcher>
     2. `ack`   <http://beyondgrep.com/>
     3. `grep`  <https://en.wikipedia.org/wiki/Grep>
-```
-
-#### `move`
-
-```text
-Usage:
-  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
-
-Description:
-  Move the specified note to <notebook>.
 ```
 
 #### `show`
@@ -491,7 +535,7 @@ Usage:
   notes status
 
 Description:
-  Run `git status` in `$NOTES_DATA_DIR`.
+  Run `git status` the current notebook.
 ```
 
 #### `sync`
@@ -505,6 +549,16 @@ Options:
 
 Description:
   Sync the current local notebook with the remote repository.
+```
+
+#### `use`
+
+```text
+Usage:
+  notes use <notebook>
+
+Description:
+  Switch to the specified notebook. Shortcut for `notes notebooks use`.
 ```
 
 #### `version`

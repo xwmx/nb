@@ -24,7 +24,7 @@ _setup_use() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[1]}" == "  notes use <name>" ]]
+  [[ "${lines[1]}" == "  notes use <notebook>" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "${_NOTES}" env
@@ -92,5 +92,5 @@ _setup_use() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" =~ Usage ]]
-  [[ "${lines[1]}" == "  notes use <name>" ]]
+  [[ "${lines[1]}" == "  notes use <notebook>" ]]
 }
