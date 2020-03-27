@@ -127,8 +127,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[0]}" == "Note not found." ]]
 }
 
 # `notes show <filename> --dump` ##############################################

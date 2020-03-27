@@ -64,7 +64,7 @@ load test_helper
 
 # <selector> ##################################################################
 
-@test "\`delete <selector>\` with empty repo exits with 1 and prints help." {
+@test "\`delete <selector>\` with empty repo exits with 1 and prints message." {
   {
     run "${_NOTES}" init
   }
@@ -73,8 +73,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<id> | <filename> | <path> | <title>) [--force]" ]]
+  [[ "${lines[0]}" == "Note not found." ]]
 }
 
 @test "\`delete <selector> (no force)\` returns 0 and deletes note." {

@@ -1046,9 +1046,19 @@ _delete() {
   done
 
   _debug printf "_delete() \${_selection}: '%s'\\n" "${_selection}"
+  if [[ -z "${_selection:-}" ]]
+  then
+    ${_ME} help "delete"
+    return 1
+  fi
 
   _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
+  if [[ -z "${_basename}" ]]
+  then
+    printf "Note not found.\n"
+    return 1
+  fi
 
   _set_selection_notebook "${_selection}"
 
@@ -1115,15 +1125,21 @@ _edit() {
   local _basename=
 
   _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
-
-  _basename="$(_get_selection_basename "${_selection}")"
-  _set_selection_notebook "${_selection}"
-  if [[ -z "${_basename}" ]]
+  if [[ -z "${_selection:-}" ]]
   then
     ${_ME} help "edit"
     return 1
   fi
+
+  _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename}"
+  if [[ -z "${_basename}" ]]
+  then
+    printf "Note not found.\n"
+    return 1
+  fi
+
+  _set_selection_notebook "${_selection}"
 
   if [[ -n "${_basename}" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
@@ -1837,6 +1853,11 @@ _move() {
 
   _debug printf "_move() \${_selection}: '%s'\\n" "${_selection}"
   _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
+  if [[ -z "${_selection:-}" ]] || [[ -z "${_target_notebook:-}" ]]
+  then
+    ${_ME} help "move"
+    return 1
+  fi
 
   if [[ "${_target_notebook}" =~ :$ ]]
   then
@@ -1845,6 +1866,7 @@ _move() {
   _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
 
   _basename="$(_get_selection_basename "${_selection}")"
+
   _set_selection_notebook "${_selection}"
 
   if [[ -z "${_basename}" ]] ||
@@ -2442,16 +2464,21 @@ _show() {
 
   _debug printf "_show() \${_render}: '%s'\\n" "${_render}"
   _debug printf "_show() \${_selection}: '%s'\\n" "${_selection}"
-
-  _basename="$(_get_selection_basename "${_selection}")"
-  _set_selection_notebook "${_selection}"
-
-  if [[ -z "${_basename}" ]]
+  if [[ -z "${_selection:-}" ]]
   then
     ${_ME} help "show"
     return 1
   fi
+
+  _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
+  if [[ -z "${_basename}" ]]
+  then
+    printf "Note not found.\n"
+    return 1
+  fi
+
+  _set_selection_notebook "${_selection}"
 
   # Display file.
   if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]

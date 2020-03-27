@@ -64,7 +64,7 @@ load test_helper
 
 # <selector> ##################################################################
 
-@test "\`edit <selector>\` with empty repo exits with 1 and prints help." {
+@test "\`edit <selector>\` with empty repo exits with 1 and prints message." {
   {
     run "${_NOTES}" init
   }
@@ -73,8 +73,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[0]}" == "Note not found." ]]
 }
 
 # <scope>:<selector> ##########################################################
