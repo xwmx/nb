@@ -1953,7 +1953,12 @@ Description:
 HEREDOC
 # TODO: Add description.
 _notebook() {
-  _notebooks current
+  if [[ "${1:-}" == "open" ]]
+  then
+    open "${NOTES_DATA_DIR}"
+  else
+    _notebooks current
+  fi
 }
 desc "nb" "$(_help 'notebook')"
 _nb()    { _notebook "${@}"; }
