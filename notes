@@ -1942,10 +1942,15 @@ _ls() {
     # Use control characters to disable wrapping for long lines.
     # Source: http://superuser.com/a/189068
     printf '\033[?7l'
-    _print_line "$(
-      # $_output_raw generates a line 2 characters too long. TODO: Review
-      printf "%s" "${_output_raw}" | sed 's/..$//'
-    )" | tr -d '\n'
+    if ((_centered))
+    then # print full-width line.
+      _print_line "$(printf "%-${_columns}s" '.')"
+    else # print line the length of the first line.
+      _print_line "$(
+        # $_output_raw generates a line 2 characters too long. TODO: Review
+        printf "%s" "${_output_raw}" | sed 's/..$//'
+      )" | tr -d '\n'
+    fi
     printf '\033[?7h'
     printf '\n'
   fi
