@@ -373,6 +373,29 @@ one"
   [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/one" ]]
 }
 
+@test "\`notebooks use <name>:\` exits with 0 and sets <name> in .current." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NOTES}" notebooks use one:
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'${output}'"
+
+  [[ "${output}" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
+
+  run "${_NOTES}" env
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "'NOTES_DATA_DIR=${NOTES_DIR}/one'" "'${lines[1]}'"
+
+  [[ "${lines[1]}" == "NOTES_DATA_DIR=${NOTES_DIR}/one" ]]
+}
+
 # help ########################################################################
 
 @test "\`help notebooks\` exits with status 0." {

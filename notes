@@ -2131,6 +2131,13 @@ _notebooks() {
         _die "${_ME}" help notebooks
       fi
 
+      # Autocomplete can result in a trailing colon on the notebook name, so
+      # remove it if present.
+      if [[ "${_name}" =~ :$ ]]
+      then
+        _name=$(printf "%s\\n" "${_name}" | cut -f 1 -d ":")
+      fi
+
       if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
       then
         printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
