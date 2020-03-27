@@ -1822,12 +1822,16 @@ _ls() {
 
   local _args=()
   local _centered=0
+  local _separated=0
 
   for __arg in "${@:1}"
   do
     case "${__arg}" in
       --centered)
         _centered=1
+        ;;
+       --separator)
+        _separated=1
         ;;
       *)
         _args+=("${__arg}")
@@ -1866,7 +1870,7 @@ _ls() {
 
 
     local _separator=
-    if ((_centered))
+    if ((_separated))
     then
       _separator=" ·"
     fi
