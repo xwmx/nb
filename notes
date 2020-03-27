@@ -648,7 +648,7 @@ _highlight() {
 _highlight_syntax_if_available() {
   if hash "pygmentize" 2>/dev/null
   then # pygments is installed.
-    pygmentize -l md "${@}"
+    pygmentize -l md -O style=pastie "${@}"
   else
     cat "${@}"
   fi
