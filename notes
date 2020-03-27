@@ -1821,18 +1821,22 @@ _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
 
   local _args=()
-  local _centered=0
   local _auto_align=0
+  local _centered=0
+  local _justified=0
   local _plain=0
 
   for __arg in "${@:1}"
   do
     case "${__arg}" in
+      --auto-align)
+        _auto_align=1
+        ;;
       --centered)
         _centered=1
         ;;
-      --auto-align)
-        _auto_align=1
+      --justified)
+        _justified=1
         ;;
       --plain)
         _plain=1
@@ -1912,7 +1916,7 @@ _ls() {
       then # wrap to next line
         # Use the existing value of $_line_[highlighted|raw] without the current
         # name.
-        if ((_auto_align)) || ((_centered))
+        if ((_auto_align)) || ((_centered)) && ! ((_justified))
         then
           _centered=1
           _padding="$(
@@ -1941,7 +1945,8 @@ _ls() {
 
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
-        if ((_line_number)) && ((_auto_align)) || ((_centered))
+        if ((_line_number)) && ! ((_justified)) && \
+           ((_auto_align)) || ((_centered))
         then
           _centered=1
         fi
@@ -1961,7 +1966,7 @@ _ls() {
     printf '\033[?7l'
     if ((_centered))
     then # print full-width line.
-      _print_line "$(printf "%-${_columns}s" '.')"
+      _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
     else # print line the length of the first line.
       _print_line "$(
         # $_output_raw generates a line 2 characters too long. TODO: Review
