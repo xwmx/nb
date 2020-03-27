@@ -358,7 +358,7 @@ Usage:
   notes git <arguments>
 
 Description:
-  Alias for `git`, with commands run in `$NOTES_DATA_DIR`.
+  Alias for `git`, with commands run in the current notebook.
 ```
 
 #### `help`
