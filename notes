@@ -922,9 +922,10 @@ Description:
   file. When no arguments are passed, a new note file is opened with
   \`\$EDITOR\`, currently set to '${EDITOR}'.
 
-  \`notes\` creates Markdown files by default. To create a note with a different
-  file type, use the \`--type\` option. To change the default file type, set the
-  \`\$NOTES_DEFAULT_EXTENSION\` variable in the ~/.notesrc configuration file.
+  \`notes\` creates Markdown files by default. To create a note with a
+  different file type, use the \`--type\` option. To change the default file
+  type, use \`notes settings\` to set the \`\$NOTES_DEFAULT_EXTENSION\` variable
+  in your ~/.notesrc configuration file.
 
 Examples:
   notes add

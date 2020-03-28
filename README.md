@@ -109,7 +109,7 @@ notes add "This is a note."
 `notes add` with no arguments will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
 [`$EDITOR`](https://askubuntu.com/questions/432524) variable in your
-environment or [`~/.notesrc`](#configuration) configuration file.
+environment or [`notes settings`](#configuration).
 
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`
@@ -328,9 +328,10 @@ Description:
   file. When no arguments are passed, a new note file is opened with
   `$EDITOR`.
 
-  `notes` creates Markdown files by default. To create a note with a different
-  file type, use the `--type` option. To change the default file type, set the
-  `$NOTES_DEFAULT_EXTENSION` variable in the ~/.notesrc configuration file.
+  `notes` creates Markdown files by default. To create a note with a
+  different file type, use the `--type` option. To change the default file
+  type, use `notes settings` to set the `$NOTES_DEFAULT_EXTENSION` variable
+  in your ~/.notesrc configuration file.
 
 Examples:
   notes add
@@ -618,6 +619,12 @@ Description:
 
 `notes` is configured using environment variables, which can be set in
 `~/.notesrc`.
+
+Open your `~/.notesrc` configuration file in your editor:
+
+```bash
+notes settings
+```
 
 #### `$NOTES_AUTO_SYNC`
 
