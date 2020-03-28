@@ -28,7 +28,12 @@
     "note-taking",
     "vim",
     "emacs",
-    "vscode"
+    "vscode",
+    "document-management",
+    "git",
+    "versioning",
+    "syncing",
+    "sync"
   ],
   "author": "William Melody",
   "license": "GPL-2.0-only",
