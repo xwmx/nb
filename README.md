@@ -26,6 +26,13 @@ In addition to syncing with git, `notes` can be configured to save notes
 in a location used by a general purpose syncing utility like Dropbox so notes
 can be edited in other apps on any device.
 
+`notes` is intended to work essentially forever and have as lightweight of a
+footprint as possible. The entire program is a single Bash script that can be
+copied anywhere and should continue working as long as Bash and standard
+Linux / Unix environments exist. Since `notes` files are normal text files
+stored in git, you can easily switch to any other tool or just manage your
+notes manually in your shell or GUI file browser.
+
 #### Dependencies
 
 ##### Required
