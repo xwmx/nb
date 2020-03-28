@@ -617,8 +617,8 @@ Description:
 
 ## Configuration
 
-`notes` is configured using environment variables, which can be set in
-`~/.notesrc`.
+`notes` is configured using environment variables set in the `.notesrc` file
+in your home directory.
 
 Open your `~/.notesrc` configuration file in your editor:
 
