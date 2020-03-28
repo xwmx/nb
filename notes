@@ -1322,7 +1322,7 @@ Usage:
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
-  ${_ME} index rebuld
+  ${_ME} index rebuild
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verfiy
