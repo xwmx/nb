@@ -50,9 +50,11 @@ optional tools and uses them to enhance the experience whenever they are
 available.
 
 - [Ack](http://beyondgrep.com/)
+- [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 - [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
+- [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
 - [tig](https://github.com/jonas/tig)
 - [w3m](https://en.wikipedia.org/wiki/W3m)
 
