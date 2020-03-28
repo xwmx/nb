@@ -273,6 +273,7 @@ Usage:
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
   notes search <query> [-a | --all] [--path]
+  notes settings
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   notes sync [-a|--all]
@@ -299,6 +300,7 @@ Subcommands:
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
   search     Search notes.
+  settings   Edit configuration settings.
   show       Show a note.
   status     Run `git status` in the current notebook.
   sync       Sync local notebook with the remote repository.
@@ -554,6 +556,19 @@ Description:
 
   If Pygments <http://pygments.org/> is installed, notes are printed with
   syntax highlighting.
+```
+
+#### `settings`
+
+```text
+Usage:
+  notes settings
+
+Description:
+  Open the ~/.notesrc configuration file in `$EDITOR`.
+
+  For more information about .notesrc, visit:
+  https://github.com/xwmx/notes#configuration
 ```
 
 #### `status`
