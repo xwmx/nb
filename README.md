@@ -22,9 +22,9 @@ system. [Optional dependencies](#optional) can be installed to enhance
 rendering, display, and searching functionality, but everything still works
 great without them.
 
-`notes` can also be configured to save notes in a location used by a general
-purpose syncing utility like Dropbox so notes can be edited in other apps on
-any device.
+In addition to syncing with git, `notes` can be configured to save notes
+in a location used by a general purpose syncing utility like Dropbox so notes
+can be edited in other apps on any device.
 
 #### Dependencies
 
@@ -32,12 +32,13 @@ any device.
 
 - [Bash 4.3+](https://www.gnu.org/software/bash/)
 - [Git](https://git-scm.com/)
-- A text editor with command line support, such as
+- A text editor with command line support, such as:
   - [Vim](http://www.vim.org/),
   - [Emacs](https://www.gnu.org/software/emacs/),
-  - [VS Code](https://code.visualstudio.com/),
+  - [Visual Studio Code](https://code.visualstudio.com/),
   - [Sublime Text](https://www.sublimetext.com/),
   - [Atom](https://atom.io/),
+  - [TextMate](https://macromates.com/),
   - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [or many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
 
