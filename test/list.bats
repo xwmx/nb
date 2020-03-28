@@ -379,8 +379,8 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 1 ]]
-  [[ "${lines[0]}" =~ Not\ found:\ invalid$ ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" =~ Note\ not\ found:\ invalid$ ]]
 }
 
 # help ########################################################################
