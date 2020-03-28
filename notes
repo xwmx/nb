@@ -2470,9 +2470,6 @@ _search() {
 
     for __scope in "${_target_notebooks[@]:-}"
     do
-      local _files=()
-      _files=($(${_ME} "${__scope}:list" --no-id || printf ''))
-
       if _command_exists "rg" && ! ((_use_grep))
       then
         rg \
