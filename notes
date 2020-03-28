@@ -2616,8 +2616,6 @@ _settings() {
 }
 desc "config" "$(_help 'settings')"
 _config()    { _settings "${@}"; }
-desc "configuration" "$(_help 'settings')"
-_configuration()    { _settings "${@}"; }
 
 # show ########################################################################
 
@@ -3040,6 +3038,7 @@ _SUBCOMMANDS=(
   book
   books
   commands
+  config
   count
   delete
   edit
