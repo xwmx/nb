@@ -89,11 +89,11 @@ Usage information:
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'[0]  ${_files[2]}'" "'${lines[0]}'"
+  _compare "'[3] ${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" == "[3]  ${_files[2]}" ]]
-  [[ "${lines[1]}" == "[2]  ${_files[1]}" ]]
-  [[ "${lines[2]}" == "[1]  ${_files[0]}" ]]
+  [[ "${lines[0]}" == "[3] ${_files[2]}" ]]
+  [[ "${lines[1]}" == "[2] ${_files[1]}" ]]
+  [[ "${lines[2]}" == "[1] ${_files[0]}" ]]
 }
 
 # `notes list (-e | --excerpt)` ###############################################

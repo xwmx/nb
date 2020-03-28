@@ -1757,8 +1757,6 @@ HEREDOC
       local _id_item_color
       _id_item_color="[$(_highlight "${_item_id_number}")]"
 
-      _counter=$((_counter+1))
-
       # If a valid <selection> has been specified, skip the rest of the loop
       # unless the <selection> basename matches the current one.
       if [[ -n "${_selection_basename}" ]] &&
@@ -1781,11 +1779,7 @@ HEREDOC
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
       local _spaces_length=1
-      # Avoid error when `$((5-5))` returns `1`.
-      if [[ "${_counter}" -le 100 ]]
-      then
-        _spaces_length=$((5-${#_id_item}))
-      fi
+      _spaces_length=$(( ${#_filenames_count} + 3 - ${#_id_item} ))
       printf -v _spaces '%*s' "${_spaces_length}"
 
       local _list_item="${_id_item}${_spaces}${_list_item_id}"
@@ -1809,6 +1803,8 @@ HEREDOC
         head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${__basename}"
         printf "\\n"
       fi
+
+      _counter=$((_counter+1))
     done
   fi
 }
