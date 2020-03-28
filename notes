@@ -2812,7 +2812,7 @@ HEREDOC
   then
     cat <<'HEREDOC'
 Installed with Homebrew. To update, run:
-  brew update xwmx/taps/notes
+  brew upgrade xwmx/taps/notes
 HEREDOC
   else
     _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
