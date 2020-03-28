@@ -17,8 +17,8 @@ With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` uses
 [Git](https://git-scm.com/) in the background to automatically record changes
 and sync with a remote repository, if one has been configured. `notes` works
-great on any modern [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-system. [Optional dependencies](#optional) can be installed to enhance
+great in any [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
+environment. [Optional dependencies](#optional) can be installed to enhance
 rendering, display, and searching functionality, but everything still works
 great without them.
 
@@ -30,7 +30,7 @@ can be edited in other apps on any device.
 
 ##### Required
 
-- [Bash 4.3+](https://www.gnu.org/software/bash/)
+- [Bash](https://www.gnu.org/software/bash/)
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
   - [Vim](http://www.vim.org/),
@@ -44,10 +44,9 @@ can be edited in other apps on any device.
 
 ##### Optional
 
-`notes` leverages standard command line tools and works great in any modern
-Bash environment. `notes` also checks the environment for some additional
-optional tools and uses them to enhance the experience whenever they are
-available.
+`notes` leverages standard command line tools and works in any Bash
+environment. `notes` also checks the environment for some additional optional
+tools and uses them to enhance the experience whenever they are available.
 
 - [Ack](http://beyondgrep.com/)
 - [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)

@@ -170,25 +170,6 @@ die() {
 }
 
 ###############################################################################
-# Version Check
-###############################################################################
-
-export __MIN_SUPPORTED_BASH_VERSION="4.3"
-
-export __BASH_VERSION
-__BASH_VERSION="$(
-  bash --version | grep "bash" | cut -f 4 -d " " | cut -f 1,2 -d "."
-)"
-if (($(echo "${__MIN_SUPPORTED_BASH_VERSION} > ${__BASH_VERSION}" | bc -l)))
-then
-  _die printf "\
-Bash upgrade required. Bash %s is the minimum supported version, but the
-version currently in use is %s.\\n" \
-  "${__MIN_SUPPORTED_BASH_VERSION}" \
-  "${__BASH_VERSION}"
-fi
-
-###############################################################################
 # Setup
 ###############################################################################
 
@@ -692,15 +673,9 @@ _interactive_input() {
 #   The list or array of items joined into a string with elements divided by
 #   the optional separator if one is provided.
 _join() {
-  local _separator
-  local _target_array
-  local _dirty
-  local _clean
-  _separator="${1}"
-  _target_array=(${@:2})
-  _dirty="$(printf "${_separator}%s"  "${_target_array[@]}")"
-  _clean="${_dirty:${#_separator}}"
-  printf "%s" "${_clean}"
+  local IFS="$1"
+  shift
+  printf "%s\n" "$*"
 }
 
 # _list_notes_files()
@@ -1065,7 +1040,7 @@ _delete() {
   local _title
   local _note_info_line
 
-  for __arg in "${@:1}"
+  for __arg in "${@:-}"
   do
     case "${__arg}" in
       --force)
@@ -1471,11 +1446,11 @@ _index() {
 
       for __item in "${_index_list[@]}"
       do
-        _contains "${__item}" "${_file_list[@]}" || _errors=1
+        _contains "${__item}" "${_file_list[*]}" || _errors=1
       done
       for __item in "${_file_list[@]}"
       do
-        _contains "${__item}" "${_index_list[@]}" || _errors=1
+        _contains "${__item}" "${_index_list[*]}" || _errors=1
       done
 
       if ((_errors))
@@ -1839,7 +1814,7 @@ _ls() {
   local _justified=0
   local _plain=0
 
-  for __arg in "${@:1}"
+  for __arg in "${@:-}"
   do
     case "${__arg}" in
       --auto-align)
@@ -1860,8 +1835,10 @@ _ls() {
     esac
   done
 
+  _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
+
   {
-    if [[ -z "${_args[*]}" ]]
+    if [[ -z "${_args[*]:-}" ]]
     then
       # Build word-wrapping notebook line. `fold` doesn't account for
       # highlighting.
@@ -1991,7 +1968,7 @@ _ls() {
       printf '\n'
     fi
 
-    _list --titles "${_args[@]}"
+    _list --titles "${_args[@]:-}"
   } | if hash "less" 2>/dev/null
       then
         less -X -F
@@ -2017,7 +1994,7 @@ _move() {
   local _title=
   local _source_info_line=
 
-  for __arg in "${@:1}"
+  for __arg in "${@:-}"
   do
     case "${__arg}" in
       --force)
@@ -2189,9 +2166,8 @@ _notebooks() {
     local _only_names=0
 
     _debug printf "_notebooks_list() \${@:-}: '%s'\\n" "${@:-}"
-    _debug printf "_notebooks_list() \${@:1}: '%s'\\n" "${@:1}"
 
-    for __arg in "${@:1}"
+    for __arg in "${@:-}"
     do
       case "${__arg}" in
         --names)
@@ -2317,7 +2293,7 @@ _notebooks() {
       fi
       ;;
     *)
-      _notebooks_list "${@:1}"
+      _notebooks_list "${@}"
       ;;
   esac
 }
@@ -2343,7 +2319,7 @@ _rename() {
   local _selection=
   local _target_name=
 
-  for __arg in "${@:1}"
+  for __arg in "${@:-}"
   do
     case "${__arg}" in
       --reset)
@@ -2435,7 +2411,7 @@ Description:
 HEREDOC
 _search() {
   local _all=0
-  local _arguments=("${@:1}")
+  local _arguments=("${@}")
   local _query=
   local _print_paths=0
   local _last_path=
@@ -2652,7 +2628,7 @@ _show() {
   _debug printf "_show() \${1:-}: '%s'\\n" "${1:-}"
   _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
-  local -a _arguments=("${@:1}")
+  local -a _arguments=("${@}")
   local _selection=
   local _basename=
   local _render=0
@@ -2854,7 +2830,7 @@ _version() {
 #   Call the appropriate subcommand.
 _notes() {
   _debug printf "_notes() >> start\\n"
-  _debug printf "_notes() \${_ARGUMENTS[@]:1}: '%s'\\n" "${_ARGUMENTS[@]:1}"
+  _debug printf "_notes() \${@}: '%s'\\n" "${@}"
   _debug printf "_notes() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
 
   # Set `$_SUBCOMMAND` if it's still blank.
@@ -2873,10 +2849,10 @@ _notes() {
   case "${_SUBCOMMAND}" in
     init|sync)
       _git_required
-      "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
+      "_${_SUBCOMMAND}" "${@}"
       ;;
     commands|env|help|version)
-      "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
+      "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
       _git_required
@@ -2887,7 +2863,7 @@ _notes() {
          [[ ! -e "${NOTES_DATA_DIR}"  ]]
       then
         _git_required
-        _init "${_ARGUMENTS[@]:1}"
+        _init "${@}"
         _ls || true # returns 0 due to empty repository.
         return 0
       fi
@@ -2936,7 +2912,7 @@ _notes() {
         fi
       fi
 
-      "_${_SUBCOMMAND}" "${_ARGUMENTS[@]:1}"
+      "_${_SUBCOMMAND}" "${@}"
       ;;
   esac
 }
@@ -3032,7 +3008,7 @@ _USE_DEBUG=0
 # Initialize additional expected option variables.
 _SUBCOMMAND=
 _SCOPE=
-_ARGUMENTS=("${0}")
+_ARGUMENTS=()
 
 # $_SUBCOMMANDS
 #
