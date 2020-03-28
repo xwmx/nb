@@ -14,13 +14,13 @@ syncing tool that works with files in
 [Emacs Org mode](https://orgmode.org/), and any other text-based format.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
-Text, and any other text editor you prefer. `notes` uses git in the background
-to automatically record changes and sync with a remote repository, if one has
-been configured. `notes` works out of the box on any system with modern
-[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) and
-[Git](https://git-scm.com/). [Optional dependencies](#optional) can be
-installed to enable enhanced rendering, display, and searching functionality,
-but everything still works great without them.
+Text, and any other text editor you prefer. `notes` uses
+[Git](https://git-scm.com/) in the background to automatically record changes
+and sync with a remote repository, if one has been configured. `notes` works
+great on any modern [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
+system. [Optional dependencies](#optional) can be installed to enhance
+rendering, display, and searching functionality, but everything still works
+great without them.
 
 `notes` can also be configured to save notes in a location used by a general
 purpose syncing utility like Dropbox so notes can be edited in other apps on
@@ -43,9 +43,10 @@ any device.
 
 ##### Optional
 
-`notes` leverages standard command line tools and works great in any Bash
-environment. `notes` also checks the environment for some additional optional
-tools and uses them to enhance the experience whenever they are available.
+`notes` leverages standard command line tools and works great in any modern
+Bash environment. `notes` also checks the environment for some additional
+optional tools and uses them to enhance the experience whenever they are
+available.
 
 - [Ack](http://beyondgrep.com/)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
