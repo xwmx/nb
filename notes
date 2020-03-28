@@ -1849,137 +1849,144 @@ _ls() {
     esac
   done
 
-  if [[ -z "${_args[*]}" ]]
-  then
-    # Build word-wrapping notebook line. `fold` doesn't account for
-    # highlighting.
-    #
-    # Naive version:
-    #
-    # _notebooks --names \
-    #   | tr '\n' ' ' \
-    #   | fold -s "-w$(tput cols)" \
-    #   && printf "\n"
-
-    # _print_paddding()
-    #
-    # Usage:
-    #   _print_padding <line> <columns> <aligned>
-    _print_padding() {
-      local _padding_line="${1:-}"
-      local _padding_line_length="${#_padding_line}"
-      local _padding_columns="${2:-}"
-      local _padding_centered="${3:-}"
-
-      local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-      if ((_padding_centered)) && ((_padding_amount))
-      then
-        printf "%-${_padding_amount}s" " "
-      fi
-    }
-
-
-    local _separator=
-    if ! ((_plain))
+  {
+    if [[ -z "${_args[*]}" ]]
     then
-      _separator=" ·"
-    fi
+      # Build word-wrapping notebook line. `fold` doesn't account for
+      # highlighting.
+      #
+      # Naive version:
+      #
+      # _notebooks --names \
+      #   | tr '\n' ' ' \
+      #   | fold -s "-w$(tput cols)" \
+      #   && printf "\n"
 
-    local _columns
-    _columns="$(tput cols)"
+      # _print_paddding()
+      #
+      # Usage:
+      #   _print_padding <line> <columns> <aligned>
+      _print_padding() {
+        local _padding_line="${1:-}"
+        local _padding_line_length="${#_padding_line}"
+        local _padding_columns="${2:-}"
+        local _padding_centered="${3:-}"
 
-    local _notebook_names_raw
-    _notebook_names_raw=($(_notebooks --names --no-color))
-    local _notebooks_count="${#_notebook_names_raw[@]}"
-
-    local _notebook_names_hi
-    _notebook_names_hi=($(_notebooks --names))
-
-    local _line_number=0
-    local _padding=
-
-    local _test_line=
-    local _line_raw=
-    local _line_hi=
-    local _output_raw=
-    local _output_hi=
+        local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
+        if ((_padding_centered)) && ((_padding_amount))
+        then
+          printf "%-${_padding_amount}s" " "
+        fi
+      }
 
 
-    for ((i=0;i < "${_notebooks_count}"; i++))
-    do
-      if [[ -z "${_test_line}" ]]
-      then # first item in line
-        _test_line="${_notebook_names_raw[i]}"
-      else
-        _test_line="${_test_line}${_separator} ${_notebook_names_raw[i]}"
+      local _separator=
+      if ! ((_plain))
+      then
+        _separator=" ·"
       fi
 
-      if [[ "${#_test_line}" -gt "${_columns}" ]]
-      then # wrap to next line
-        # Use the existing value of $_line_[highlighted|raw] without the current
-        # name.
-        if ((_auto_align)) || ((_centered)) && ! ((_justified))
-        then
-          _centered=1
+      local _columns
+      _columns="$(tput cols)"
+
+      local _notebook_names_raw
+      _notebook_names_raw=($(_notebooks --names --no-color))
+      local _notebooks_count="${#_notebook_names_raw[@]}"
+
+      local _notebook_names_hi
+      _notebook_names_hi=($(_notebooks --names))
+
+      local _line_number=0
+      local _padding=
+
+      local _test_line=
+      local _line_raw=
+      local _line_hi=
+      local _output_raw=
+      local _output_hi=
+
+
+      for ((i=0;i < "${_notebooks_count}"; i++))
+      do
+        if [[ -z "${_test_line}" ]]
+        then # first item in line
+          _test_line="${_notebook_names_raw[i]}"
+        else
+          _test_line="${_test_line}${_separator} ${_notebook_names_raw[i]}"
+        fi
+
+        if [[ "${#_test_line}" -gt "${_columns}" ]]
+        then # wrap to next line
+          # Use the existing value of $_line_[highlighted|raw] without the current
+          # name.
+          if ((_auto_align)) || ((_centered)) && ! ((_justified))
+          then
+            _centered=1
+            _padding="$(
+              _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+            )"
+          fi
+
+          _output_hi="${_output_hi}${_padding}${_line_hi}\n"
+          _output_raw="${_output_raw}${_padding}${_line_raw}\n"
+          _line_number=$((_line_number + 1))
+
+          # Start the line for the next iteration using the current name..
+          _test_line="${_notebook_names_raw[i]}"
+          _line_hi="${_notebook_names_hi[i]}"
+          _line_raw="${_notebook_names_raw[i]}"
+        else # add to line
+          if [[ -z "${_line_hi}" ]]
+          then # first item in highlighted line
+            _line_hi="${_notebook_names_hi[i]}"
+            _line_raw="${_notebook_names_raw[i]}"
+          else
+            _line_hi="${_line_hi}${_separator} ${_notebook_names_hi[i]}"
+            _line_raw="${_line_raw}${_separator} ${_notebook_names_raw[i]}"
+          fi
+        fi
+
+        if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
+        then # end of list
+          if ((_line_number)) && ! ((_justified)) && \
+             ((_auto_align)) || ((_centered))
+          then
+            _centered=1
+          fi
           _padding="$(
             _print_padding "${_line_raw}" "${_columns}" "${_centered}"
           )"
-        fi
 
-        _output_hi="${_output_hi}${_padding}${_line_hi}\n"
-        _output_raw="${_output_raw}${_padding}${_line_raw}\n"
-        _line_number=$((_line_number + 1))
-
-        # Start the line for the next iteration using the current name..
-        _test_line="${_notebook_names_raw[i]}"
-        _line_hi="${_notebook_names_hi[i]}"
-        _line_raw="${_notebook_names_raw[i]}"
-      else # add to line
-        if [[ -z "${_line_hi}" ]]
-        then # first item in highlighted line
-          _line_hi="${_notebook_names_hi[i]}"
-          _line_raw="${_notebook_names_raw[i]}"
-        else
-          _line_hi="${_line_hi}${_separator} ${_notebook_names_hi[i]}"
-          _line_raw="${_line_raw}${_separator} ${_notebook_names_raw[i]}"
+          _output_hi="${_output_hi}${_padding}${_line_hi}\n"
+          _output_raw="${_output_raw}${_padding}${_line_raw}\n"
+          _line_number=$((_line_number + 1))
         fi
+      done
+      printf "%b" "${_output_hi}"
+
+      # Use control characters to disable wrapping for long lines.
+      # Source: http://superuser.com/a/189068
+      printf '\033[?7l'
+      if ((_centered))
+      then # print full-width line.
+        _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+      else # print line the length of the first line.
+        _print_line "$(
+          # $_output_raw generates a line 2 characters too long. TODO: Review
+          printf "%s" "${_output_raw}" | sed 's/..$//'
+        )" | tr -d '\n'
       fi
-
-      if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
-      then # end of list
-        if ((_line_number)) && ! ((_justified)) && \
-           ((_auto_align)) || ((_centered))
-        then
-          _centered=1
-        fi
-        _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
-        )"
-
-        _output_hi="${_output_hi}${_padding}${_line_hi}\n"
-        _output_raw="${_output_raw}${_padding}${_line_raw}\n"
-        _line_number=$((_line_number + 1))
-      fi
-    done
-    printf "%b" "${_output_hi}"
-
-    # Use control characters to disable wrapping for long lines.
-    # Source: http://superuser.com/a/189068
-    printf '\033[?7l'
-    if ((_centered))
-    then # print full-width line.
-      _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-    else # print line the length of the first line.
-      _print_line "$(
-        # $_output_raw generates a line 2 characters too long. TODO: Review
-        printf "%s" "${_output_raw}" | sed 's/..$//'
-      )" | tr -d '\n'
+      printf '\033[?7h'
+      printf '\n'
     fi
-    printf '\033[?7h'
-    printf '\n'
-  fi
 
-  _list --titles "${_args[@]}"
+    _list --titles "${_args[@]}"
+  } | if hash "less" 2>/dev/null
+      then
+        less -X -F
+      else
+        cat
+      fi
 }
 
 # move ########################################################################
