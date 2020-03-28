@@ -521,9 +521,10 @@ Options:
 
 Description:
   Search notes. Uses the first available tool in the following list:
-    1. `ag`    <https://github.com/ggreer/the_silver_searcher>
-    2. `ack`   <http://beyondgrep.com/>
-    3. `grep`  <https://en.wikipedia.org/wiki/Grep>
+    1. `rg`    <https://github.com/BurntSushi/ripgrep>
+    2. `ag`    <https://github.com/ggreer/the_silver_searcher>
+    3. `ack`   <http://beyondgrep.com/>
+    4. `grep`  <https://en.wikipedia.org/wiki/Grep>
 ```
 
 #### `show`

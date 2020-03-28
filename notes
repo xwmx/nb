@@ -2414,9 +2414,10 @@ Options:
 
 Description:
   Search notes. Uses the first available tool in the following list:
-    1. \`ag\`    <https://github.com/ggreer/the_silver_searcher>
-    2. \`ack\`   <http://beyondgrep.com/>
-    3. \`grep\`  <https://en.wikipedia.org/wiki/Grep>
+    1. \`rg\`    <https://github.com/BurntSushi/ripgrep>
+    2. \`ag\`    <https://github.com/ggreer/the_silver_searcher>
+    3. \`ack\`   <http://beyondgrep.com/>
+    4. \`grep\`  <https://en.wikipedia.org/wiki/Grep>
 HEREDOC
 _search() {
   local _all=0
@@ -2472,7 +2473,16 @@ _search() {
       local _files=()
       _files=($(${_ME} "${__scope}:list" --no-id || printf ''))
 
-      if _command_exists "ag" && ! ((_use_grep))
+      if _command_exists "rg" && ! ((_use_grep))
+      then
+        rg \
+          --ignore-case \
+          --no-heading \
+          --color always \
+          --line-number \
+          "${_query}" "${NOTES_DIR}/${__scope}" \
+            || return 0 # Don't fail out within a single scope.
+      elif _command_exists "ag" && ! ((_use_grep))
       then
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
