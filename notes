@@ -2789,6 +2789,62 @@ _sync() {
     printf "Syncing failed!\\n"
 }
 
+# update ######################################################################
+
+desc "update" <<HEREDOC
+Usage:
+  ${_ME} update
+
+Description:
+  Update ${_ME} to the latest version.
+HEREDOC
+_update() {
+  if hash npm 2>/dev/null \
+     && npm list | grep -q notes.sh \
+     && [[ "${BASH_SOURCE[0]}" =~ \/node\/|\/node_modules\/ ]]
+  then # installed with npm
+    cat <<'HEREDOC'
+Installed with npm. To update, run:
+  npm update -g notes.sh
+HEREDOC
+  elif [[ "${OSTYPE}" =~ ^darwin ]] \
+       && [[ "$(realpath "${BASH_SOURCE[0]}")" =~ Cellar ]]
+  then
+    cat <<'HEREDOC'
+Installed with Homebrew. To update, run:
+  brew update xwmx/taps/notes
+HEREDOC
+  else
+    _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
+    _temp_file="$(mktemp)"
+
+    curl -s "${_notes_url}" -o "${_temp_file}"
+
+    if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${BASH_SOURCE[0]}")" ]]
+    then
+      while true
+      do
+        read -r -p "Updating \`${_ME}\` in place. Are you sure you want to proceed? [y/N] " __yn
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+
+      cat  "${_temp_file}" > "${BASH_SOURCE[0]}"
+      printf "%s updated to the latest version.\n" "${_ME}"
+    else
+      printf "Already at the latest version.\n"
+    fi
+  fi
+}
+
 # use #########################################################################
 
 desc "use" <<HEREDOC
@@ -3041,6 +3097,7 @@ _SUBCOMMANDS=(
   show
   status
   sync
+  update
   use
   version
 )
