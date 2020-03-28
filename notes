@@ -1206,24 +1206,107 @@ _env() {
 
 desc "export" <<HEREDOC
 Usage:
-  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--convert]
+  ${_ME} export (<id> | <filename> | <path> | <title>) <path>
+                [--convert [<pandoc options>...]]
 
 Options:
-  --convert   Use \`pandoc\` [1] to convert the note from its current format
+  --convert   Use \`pandoc\` to convert the note from its current format
               to the format of the output file indicated by the file extension
-              in \`<path>\`. Example:
+              in \`<path>\`. Any additional arguments are passed directly
+              to \`pandoc\`. See the \`pandoc\` help information for available
+              options.
 
-                # Convert Markdown note to HTML
-                notes export example.md ~/sites/example/index.html
 
-            1. http://pandoc.org/
+  1. http://pandoc.org/
 
 Description:
   Export a file.
+
+Examples:
+  # Export an Emacs Org mode note
+  ${_ME} export example.org /path/to/example.org
+
+  # Export a Markdown note and convert to standalone HTML
+  ${_ME} export example.md /path/to/example.html --convert --standalone
+
+  # Export a Markdown note and convert to Microsoft Office .docx
+  ${_ME} export example.md /path/to/example.docx --convert --standalone
+
 HEREDOC
 _export() {
-  # TODO
-  :
+  local _args=()
+  local _convert=0
+  local _selection=
+  local _target_path=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --convert)
+        _convert=1
+        ;;
+      *)
+        if [[ -z "${_selection:-}" ]]
+        then
+          _selection="${__arg}"
+        elif [[ -z "${_target_path:-}" ]]
+        then
+          _target_path="${__arg}"
+        else
+          _args+=("${__arg}")
+        fi
+        ;;
+    esac
+  done
+
+  if [[ -z "${_selection:-}" ]] || [[ -z "${_target_path:-}" ]]
+  then
+    ${_ME} help "export"
+    return 1
+  fi
+  _debug printf "_export() \${_selection}: %s\\n" "${_selection}"
+
+  local _basename
+  _basename="$(_get_selection_basename "${_selection}")"
+
+  if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  then
+    printf "Note not found: %s\n" "${_selection}"
+    return 1
+  fi
+
+  if [[ -e "${target_path:-}" ]]
+  then
+    if ! ((_force))
+    then
+      printf "File exists at '%s'\\n"  \
+        "${target_path}"
+      while true
+      do
+        read -r -p "Overwrite existing file? [y/N] " __yn
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+    fi
+  fi
+
+
+  if ((_convert))
+  then
+    pandoc \
+      -o "${_target_path}" \
+      --standalone \
+      "${NOTES_DATA_DIR}/${_basename}"
+  else
+    cp "${NOTES_DATA_DIR}/${_basename}" "${_target_path}"
+  fi
 }
 
 # git #########################################################################
@@ -3130,10 +3213,12 @@ _SUBCOMMANDS=(
   count
   delete
   edit
+  export
   env
   git
   help
   history
+  import
   index
   init
   list
