@@ -1202,6 +1202,30 @@ _env() {
   printf "EDITOR=%s\\n" "${EDITOR}"
 }
 
+# export ######################################################################
+
+desc "export" <<HEREDOC
+Usage:
+  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--convert]
+
+Options:
+  --convert   Use \`pandoc\` [1] to convert the note from its current format
+              to the format of the output file indicated by the file extension
+              in \`<path>\`. Example:
+
+                # Convert Markdown note to HTML
+                notes export example.md ~/sites/example/index.html
+
+            1. http://pandoc.org/
+
+Description:
+  Export a file.
+HEREDOC
+_export() {
+  # TODO
+  :
+}
+
 # git #########################################################################
 
 desc "git" <<HEREDOC
@@ -1311,6 +1335,27 @@ _history() {
   else
     eval "${_log_command}"
   fi
+}
+
+# import ######################################################################
+
+desc "import" <<HEREDOC
+Usage:
+  ${_ME} import copy <path>
+  ${_ME} import download <url>
+  ${_ME} import move <path>
+
+Subcommands:
+  copy      Copy the file at <path> into the current notebook.
+  download  Download the file at <url> into the current notebook.
+  move      Copy the file at <path> into the current notebook.
+
+Description:
+  Copy, move, or download a file into the current notebook.
+HEREDOC
+_import() {
+  # TODO
+  :
 }
 
 # index #######################################################################
