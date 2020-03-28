@@ -1321,6 +1321,7 @@ Usage:
   ${_ME} index delete <filename>
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
+  ${_ME} index get_max_id
   ${_ME} index rebuld
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
@@ -1331,6 +1332,7 @@ Subcommands:
   delete        Delete <filename> from the index.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
+  get_max_id    Get the maximum id for the notebook.
   rebuild       Rebuild the index.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
@@ -1410,6 +1412,9 @@ _index() {
       fi
 
       grep -n "${_basename}" "${_index_path}" | cut -f1 -d:
+      ;;
+    get_max_id)
+      wc -l < "${_index_path}" | tr -d '[:space:]'
       ;;
     rebuild)
       _debug printf "_index() rebuild\n"
@@ -1765,7 +1770,9 @@ HEREDOC
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
       local _spaces_length=1
-      _spaces_length=$(( ${#_filenames_count} + 3 - ${#_id_item} ))
+      local _max_id
+      _max_id="$(_index get_max_id)"
+      _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
       printf -v _spaces '%*s' "${_spaces_length}"
 
       local _list_item="${_id_item}${_spaces}${_list_item_id}"
