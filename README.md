@@ -26,13 +26,13 @@ In addition to syncing with git, `notes` can be configured to save notes
 in a location used by a general purpose syncing utility like Dropbox so notes
 can be edited in other apps on any device.
 
-`notes` is intended to work essentially forever and has as lightweight of a
-footprint as possible while still providing a full-featured experience. The
-entire program is a single Bash script that can be copied anywhere and should
-continue working as long as Bash and standard Linux / Unix environments exist.
-Since `notes` files are normal text files stored in git, you can easily switch
-to any other tool or just manage your notes manually in your shell or GUI file
-browser.
+`notes` is intended to work essentially forever and is as lightweight as
+possible while still providing a full-featured experience. The entire program
+is a single Bash script that can be copied anywhere and should continue
+working as long as Bash and standard Linux / Unix environments exist.
+Since `notes` files are normal text files stored in git, you can easily
+switch to any other tool or just manage your notes manually in your shell or
+GUI file browser.
 
 #### Dependencies
 
@@ -230,6 +230,14 @@ Notes can also be moved between notebooks:
 ```bash
 # move note 3 from the current notebook to example-notebook
 notes move 3 example-notebook
+```
+
+When you have an existing `notes` notebook in a git repository, simply
+pass the URL to `notes notebooks add` and `notes` will clone your
+existing notebook and start syncing changes automatically:
+
+```bash
+notes notebooks add Example https://github.com/example/example.git
 ```
 
 For more information about working with notebooks, run `notes help notebooks`
