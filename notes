@@ -1438,6 +1438,7 @@ Usage:
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
   ${_ME} open
+  ${_ME} remote [remove | set <url> [--force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} settings
@@ -2660,6 +2661,148 @@ _open() {
   fi
 }
 
+# remote ######################################################################
+
+desc "remote" <<HEREDOC
+Usage:
+  ${_ME} remote
+  ${_ME} remote remove
+  ${_ME} remote set <url> [--force]
+
+Subcommands:
+  (default)  Print the remote URL for the notebook.
+  remove     Remove the remote URL from the notebook.
+  set        Set the remote URL for the notebook.
+
+Description:
+  Get, set, and remove the remote repository URL for the current notebook.
+HEREDOC
+_remote() {
+  local _existing_url=
+  local _force=0
+  local _remote_exists=0
+  local _subcommand=
+  local _url=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      *)
+        if [[ -z "${_subcommand}" ]]
+        then
+          _subcommand="${__arg}"
+        elif [[ "${_subcommand}" == "set" ]] &&
+             [[ -z "${_url}" ]]
+        then
+          _url="${__arg}"
+        fi
+        ;;
+    esac
+  done
+  _debug printf "_remote() \${_subcommand}: '%s'\\n" "${_subcommand}"
+  _debug printf "_remote() \${_url}: '%s'\\n" "${_url}"
+
+  cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\\n"
+
+  if [[ "$(git remote get-url origin 2>/dev/null)" ]]
+  then
+    _remote_exists=1
+    _existing_url="$(git remote get-url origin)"
+  fi
+
+  _debug printf "_remote() \${_remote_exists}: '%s'\\n" "${_remote_exists}"
+  _debug printf "_remote() \${_existing_url}: '%s'\\n" "${_existing_url}"
+
+  case "${_subcommand}" in
+    remove)
+      if ((_remote_exists))
+      then
+        if ! ((_force))
+        then
+          while true
+          do
+            printf "Removing remote '%s'\n" \
+              "${_existing_url}"
+            read -r -p "Do you want to proceed? [y/N] " __yn
+            case ${__yn} in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting...\\n"
+                exit 0
+                ;;
+            esac
+          done
+        fi
+
+        git remote rm origin &&
+          printf "Removed remote '%s'\n" "${_existing_url}" &&
+          return 0
+      else
+        printf "No remote configured.\n"
+        return 1
+      fi
+      ;;
+    set)
+      if [[ -z "${_url}" ]]
+      then
+        "${_ME}" help remote
+        return 1
+      fi
+
+      if ((_remote_exists))
+      then
+        if [[ "${_existing_url}" == "${_url}" ]]
+        then
+          printf "Remote already set to '%s'\n" "${_url}"
+          return 1
+        fi
+
+        if ! ((_force))
+        then
+          while true
+          do
+            printf "Updating remote from '%s' to '%s'\n" \
+              "${_existing_url}" "${_url}"
+            read -r -p "Do you want to proceed? [y/N] " __yn
+            case ${__yn} in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting...\\n"
+                exit 0
+                ;;
+            esac
+          done
+        fi
+
+        git remote set-url origin "${_url}" &&
+          printf "Remote set to '%s'\n" "${_url}" &&
+          return 0
+      else
+        git remote add origin "${_url}"  &&
+          printf "Remote set to '%s'\n" "${_url}" &&
+          return 0
+      fi
+      ;;
+    *)
+      if ((_remote_exists))
+      then
+        git remote get-url origin &&
+        return 0
+      else
+        printf "No remote configured.\n"
+        return 0
+      fi
+      ;;
+  esac
+}
+
 # rename ######################################################################
 
 desc "rename" <<HEREDOC
@@ -3452,6 +3595,7 @@ _SUBCOMMANDS=(
   notebook
   notebooks
   open
+  remote
   rename
   search
   settings

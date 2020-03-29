@@ -305,6 +305,7 @@ Usage:
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
   notes open
+  notes remote [remove | set <url> [--force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
   notes settings
@@ -337,6 +338,7 @@ Subcommands:
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
   open       Open the current notebook in your file browser or explorer.
+  remote     Get, set, and remove the remote URL for the notebook.
   rename     Set the filename to <name> for the specified note file.
   search     Search notes.
   settings   Edit configuration settings.
@@ -609,6 +611,23 @@ Usage:
 
 Description:
   Open the current notebook in your file browser, explorer, or finder.
+```
+
+#### `remote`
+
+```
+Usage:
+  notes remote
+  notes remote remove
+  notes remote set <url> [--force]
+
+Subcommands:
+  (default)  Print the remote URL for the notebook.
+  remove     Remove the remote URL from the notebook.
+  set        Set the remote URL for the notebook.
+
+Description:
+  Get, set, and remove the remote repository URL for the current notebook.
 ```
 
 #### `rename`
