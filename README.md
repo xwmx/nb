@@ -318,8 +318,10 @@ Subcommands:
   delete     Delete a note.
   edit       Edit a note.
   env        Print program environment variables.
+  export     Export a note to different formats.
   help       Display this help information.
   history    Display git history for the current notebook or a note.
+  import     Import a file into the current notebook.
   init       Initialize the first notebook.
   list       List notes in the current notebook.
   ls         List notebooks and notes in the current notebook.
