@@ -1312,7 +1312,12 @@ _export() {
   then
     if _command_exists 'pandoc'
     then
-      pandoc "${NOTES_DATA_DIR}/${_basename}" "${_args[@]:-}"
+      if [[ -n "${_args[*]:-}" ]]
+      then
+        pandoc "${NOTES_DATA_DIR}/${_basename}" "${_args[@]:-}"
+      else
+        pandoc "${NOTES_DATA_DIR}/${_basename}"
+      fi
     else
       printf "Pandoc required. http://pandoc.org/\n"
       return 1
