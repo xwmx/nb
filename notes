@@ -1228,16 +1228,17 @@ desc "export" <<HEREDOC
 Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
                 [<pandoc options>...]
-  ${_ME} export convert (<id> | <filename> | <path> | <title>)
+  ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
                 [<pandoc options>...]
 
 Options:
   --force    Skip the confirmation prompt when overwriting an existing file.
 
 Subcommands:
-  (default)  Export a file to <path>. Convert the note using \`pandoc\` to
-             the file extension in <path>.
-  convert    Export the file to standard output or a file using \`pandoc\`.
+  (default)  Export a file to <path>. If <path> has a different extension from
+             the source note, convert the note using \`pandoc\`.
+  pandoc     Export the file to standard output or a file using \`pandoc\`.
+             \`export pandoc\` prints to standard output by default.
 
 Description:
   Export a file from the notebook.
@@ -1261,7 +1262,7 @@ Examples:
 HEREDOC
 _export() {
   local _args=()
-  local _convert=0
+  local _pandoc_only=0
   local _force=0
   local _selection=
   local _target_path=
@@ -1269,8 +1270,8 @@ _export() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      convert)
-        _convert=1
+      pandoc)
+        _pandoc_only=1
         ;;
       --force)
         _force=1
@@ -1279,7 +1280,7 @@ _export() {
         if [[ -z "${_selection:-}" ]]
         then
           _selection="${__arg}"
-        elif ! ((_convert)) && [[ -z "${_target_path:-}" ]]
+        elif ! ((_pandoc_only)) && [[ -z "${_target_path:-}" ]]
         then
           _target_path="${__arg}"
         else
@@ -1307,7 +1308,7 @@ _export() {
   fi
   _debug printf "_export() \${_basename}: %s\\n" "${_basename}"
 
-  if ((_convert))
+  if ((_pandoc_only))
   then
     if _command_exists 'pandoc'
     then
