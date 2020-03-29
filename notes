@@ -267,18 +267,27 @@ _edit_file() {
   fi
 
   cd "${NOTES_DATA_DIR}" &&
-    if [[ "${EDITOR}" =~ mvim ]] ||
-       [[ "${EDITOR}" =~ gvim ]]
+    if ! _file_is_text "${_file_path}"
     then
-      "${EDITOR}" -f "${_file_path}"
-    elif [[ "${EDITOR}" =~ code ]] ||
-         [[ "${EDITOR}" =~ mate ]] ||
-         [[ "${EDITOR}" =~ subl ]]
-    then
-      "${EDITOR}" --wait "${_file_path}"
-    else
-      "${EDITOR}" "${_file_path}"
-    fi
+      if _command_exists "xdg-open"
+      then
+        xdg-open "${_file_path}"
+      elif [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        open "${_file_path}"
+      fi
+    fi || if [[ "${EDITOR}" =~ mvim ]] ||
+             [[ "${EDITOR}" =~ gvim ]]
+          then
+            "${EDITOR}" -f "${_file_path}"
+          elif [[ "${EDITOR}" =~ code ]] ||
+               [[ "${EDITOR}" =~ mate ]] ||
+               [[ "${EDITOR}" =~ subl ]]
+          then
+            "${EDITOR}" --wait "${_file_path}"
+          else
+            "${EDITOR}" "${_file_path}"
+          fi
 }
 
 # _file_is_text()
@@ -690,7 +699,6 @@ _highlight_syntax_if_available() {
     local _extension="${_basename##*.}"
 
     # Markdown highlighting is better with explicit 'md' lexer.
-    # shellcheck disable=SC2015
     [[ ! "${_extension}" == "md" ]] &&
       pygmentize -O style=pastie "${@}" 2>/dev/null ||
       pygmentize -l md -O style=pastie "${@}"
