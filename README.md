@@ -16,14 +16,14 @@ text-based formats like
 work with files in any format.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
-Text, and any other text editor you prefer. `notes` uses
-[Git](https://git-scm.com/) in the background to automatically record changes
-and sync with a remote repository, if one has been configured. `notes` works
+Text, and any other text editor you prefer. `notes` works
 great in any [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-environment. [Optional dependencies](#optional) can be installed to enhance
+environment, and [optional dependencies](#optional) can be installed to enhance
 rendering, display, and searching functionality, but everything still works
 great without them.
 
+`notes` uses [Git](https://git-scm.com/) in the background to automatically
+record changes and sync with a remote repository, if one has been configured.
 In addition to syncing with git, `notes` can be configured to save notes
 in a location used by a general purpose syncing utility like Dropbox so notes
 can be edited in other apps on any device.
