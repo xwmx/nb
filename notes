@@ -2279,15 +2279,15 @@ _ls() {
 
           # Start the line for the next iteration using the current name..
           _test_line="${_notebook_names_raw[i]}"
-          _line_hi="${_notebook_names_hi[i]}"
+          _line_hi="${_notebook_names_hi[i]:-}"
           _line_raw="${_notebook_names_raw[i]}"
         else # add to line
           if [[ -z "${_line_hi}" ]]
           then # first item in highlighted line
-            _line_hi="${_notebook_names_hi[i]}"
+            _line_hi="${_notebook_names_hi[i]:-}"
             _line_raw="${_notebook_names_raw[i]}"
           else
-            _line_hi="${_line_hi}${_separator} ${_notebook_names_hi[i]}"
+            _line_hi="${_line_hi}${_separator} ${_notebook_names_hi[i]:-}"
             _line_raw="${_line_raw}${_separator} ${_notebook_names_raw[i]}"
           fi
         fi
