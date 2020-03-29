@@ -2813,7 +2813,7 @@ Options:
   --reset  Reset the filename to the timestamp at which it was last updated.
 
 Description:
-  Set the filename to <name> for the specified note file.
+  Rename a note. Set the filename to <name> for the specified note file.
 HEREDOC
 _rename() {
   local _reset=0

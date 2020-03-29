@@ -339,7 +339,7 @@ Subcommands:
   notebooks  Manage notebooks.
   open       Open the notebook directory in your file browser or explorer.
   remote     Get, set, and remove the remote URL for the notebook.
-  rename     Set the filename to <name> for the specified note file.
+  rename     Rename a note.
   search     Search notes.
   settings   Edit configuration settings.
   show       Show a note.
@@ -640,7 +640,7 @@ Options:
   --reset  Reset the filename to the timestamp at which it was last updated.
 
 Description:
-  Set the filename to <name> for the specified note file.
+  Rename a note. Set the filename to <name> for the specified note file.
 ```
 
 #### `search`
