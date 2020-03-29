@@ -540,10 +540,10 @@ Description:
   List notes in the current notebook.
 
 Examples:
-  ${_ME} list
-  ${_ME} list example.md -e 10
-  ${_ME} list --excerpt --no-id
-  ${_ME} list --titles --reverse
+  notes list
+  notes list example.md -e 10
+  notes list --excerpt --no-id
+  notes list --titles --reverse
 ```
 
 #### `ls`
