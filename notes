@@ -506,13 +506,32 @@ _git_checkpoint() {
     git fetch && git rebase origin/master && git push
   }
 
-  local _message="${1:-}"
-  local _target_directory="${2:-}"
+  local _message=
+  local _show_spinner=0
+  local _target_directory=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --spinner)
+        _show_spinner=1
+        ;;
+      *)
+        if [[ -z "${_message}" ]]
+        then
+          _message="${__arg}"
+        elif [[ -z "${_target_directory}" ]]
+        then
+          _target_directory="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
   if [[ -z "${_target_directory}" ]]
   then
     _target_directory="${NOTES_DATA_DIR}"
   fi
-  local _show_spinner=0
 
   _debug printf "_git_checkpoint() \${_target_directory}: '%s'\n" \
     "${_target_directory}"
@@ -3466,7 +3485,11 @@ _notes() {
         use
       )
       local _core_subcommand_pattern
-      _core_subcommand_pattern="@($(_join '|' "${_core_subcommands[@]}"))"
+      _core_subcommand_pattern="$(_join '|' "${_core_subcommands[@]}")"
+
+      _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
+      _debug printf "\${_core_subcommand_pattern}: %s\\n" "${_core_subcommand_pattern}"
+
 
       if [[ "${_SUBCOMMAND}" =~ ${_core_subcommand_pattern} ]]
       then
