@@ -1436,6 +1436,7 @@ Usage:
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
+  ${_ME} open
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} settings
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
@@ -2422,6 +2423,8 @@ _move() {
 desc "notebook" <<HEREDOC
 Usage:
   ${_ME} notebook
+  ${_ME} notebook git
+  ${_ME} notebook open
 
 Description:
   Print the current notebook name.
@@ -2632,6 +2635,28 @@ desc "nbs" "$(_help 'notebooks')"
 _nbs()   { _notebooks "${@}"; }
 desc "books" "$(_help 'notebooks')"
 _books() { _notebooks "${@}"; }
+
+# open ########################################################################
+
+desc "open" <<HEREDOC
+Usage:
+  ${_ME} open
+
+Description:
+  Open the current notebook in your file browser, explorer, or finder.
+HEREDOC
+_open() {
+  if _command_exists "xdg-open"
+  then
+    xdg-open "${NOTES_DATA_DIR}"
+  elif _command_exists "open"
+  then
+    open "${NOTES_DATA_DIR}"
+  else
+    printf "notes doesn't know how to open directories on your system.\n"
+    return 1
+  fi
+}
 
 # rename ######################################################################
 
@@ -3424,6 +3449,7 @@ _SUBCOMMANDS=(
   nbs
   notebook
   notebooks
+  open
   rename
   search
   settings

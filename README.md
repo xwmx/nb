@@ -303,6 +303,7 @@ Usage:
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
+  notes open
   notes search <query> [-a | --all] [--path]
   notes settings
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
@@ -332,6 +333,7 @@ Subcommands:
   move       Move a note to a different notebook.
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
+  open       Open the current notebook in your file browser or explorer.
   search     Search notes.
   settings   Edit configuration settings.
   show       Show a note.
@@ -593,6 +595,16 @@ Subcommands:
   current    Print the current notebook name.
   rename     Rename a notebook.
   use        Switch to a notebook.
+```
+
+#### `open`
+
+```text
+Usage:
+  notes open
+
+Description:
+  Open the current notebook in your file browser, explorer, or finder.
 ```
 
 #### `rename`
