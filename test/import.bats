@@ -29,10 +29,15 @@ load test_helper
 
 @test "\`import\` with valid <path> argument creates a new note file." {
   run "${_NOTES}" init
+
   run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# Example Title' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "${lines[0]}" =~ "Imported" ]]
 }
 
 @test "\`import\` with valid <path> argument creates git commit." {
@@ -51,15 +56,24 @@ load test_helper
 
 @test "\`import\` with valid <url> argument creates a new note file." {
   run "${_NOTES}" init
+
   run "${_NOTES}" import "http://example.net"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep 'Example' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "${output}" =~ "Imported" ]]
 }
 
 @test "\`import\` with valid <url> argument creates git commit." {
   run "${_NOTES}" init
+
   run "${_NOTES}" import "http://example.net"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   cd "${NOTES_DATA_DIR}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
@@ -67,6 +81,7 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Import') ]]
+  [[ $(git log | grep 'Source') ]]
 }
 
 # help ########################################################################
