@@ -2426,8 +2426,6 @@ _move() {
 desc "notebook" <<HEREDOC
 Usage:
   ${_ME} notebook
-  ${_ME} notebook git
-  ${_ME} notebook open
 
 Description:
   Print the current notebook name.
