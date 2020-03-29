@@ -28,10 +28,6 @@ record changes and sync with a remote repository, if one has been configured.
 purpose syncing utility like Dropbox so notes can be edited in other apps on
 any device.
 
-`notes` is intended to be lightweight. Since notes files are normal text files
-stored in git, you can easily switch to any other tool or just manage your
-notes manually in your shell or file browser.
-
 #### Dependencies
 
 ##### Required
