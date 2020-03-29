@@ -444,7 +444,7 @@ Examples:
   notes export example.org /path/to/example.org
 
   # Export a Markdown note to HTML and print to standard output
-  notes export example.md --from=markdown_strict
+  notes export pandoc example.md --from=markdown_strict
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   notes export example.md /path/to/example.doc
