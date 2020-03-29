@@ -274,7 +274,7 @@ The formats are determined by the file extensions:
 notes export example.md /path/to/example.docx
 
 # Export a note titled 'Movies' to an HTML web page.
-notes export 'Movies' /path/to/example.html
+notes export Movies /path/to/example.html
 ```
 
 For more commands and options, run `notes help`.
