@@ -290,6 +290,7 @@ Usage:
   notes edit (<id> | <filename> | <path> | <title>)
   notes export (<id> | <filename> | <path> | <title>) <path> [--force]
                [<pandoc options>...]
+  notes git <git options>...
   notes history [<selection>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
@@ -325,6 +326,7 @@ Subcommands:
   edit       Edit a note.
   env        Print program environment variables.
   export     Export a note to different formats.
+  git        Alias for `git`, with commands run in the current notebook.
   help       Display this help information.
   history    Display git history for the current notebook or a note.
   import     Import a file into the current notebook.
@@ -462,7 +464,7 @@ Examples:
 
 ```text
 Usage:
-  notes git <arguments>
+  notes git <git options>...
 
 Description:
   Alias for `git`, with commands run in the current notebook.

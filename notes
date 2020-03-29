@@ -1383,7 +1383,7 @@ _export() {
 
 desc "git" <<HEREDOC
 Usage:
-  ${_ME} git <arguments>
+  ${_ME} git <git options>...
 
 Description:
   Alias for \`git\`, with commands run in the current notebook.
@@ -1423,6 +1423,7 @@ Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
                [<pandoc options>...]
+  ${_ME} git <git options>...
   ${_ME} history [<selection>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
