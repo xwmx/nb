@@ -326,7 +326,7 @@ Subcommands:
   delete     Delete a note.
   edit       Edit a note.
   env        Print program environment variables.
-  export     Export a note to different formats.
+  export     Export a note to a variety of different formats.
   git        Alias for `git`, with commands run in the current notebook.
   help       Display this help information.
   history    Display git history for the current notebook or a note.
