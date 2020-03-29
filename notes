@@ -266,13 +266,13 @@ _edit_file() {
     return 1
   fi
 
-  cd "${NOTES_DATA_DIR}" && \
-    if [[ "${EDITOR}" =~ mvim ]] || \
+  cd "${NOTES_DATA_DIR}" &&
+    if [[ "${EDITOR}" =~ mvim ]] ||
        [[ "${EDITOR}" =~ gvim ]]
     then
       "${EDITOR}" -f "${_file_path}"
-    elif [[ "${EDITOR}" =~ code ]] || \
-         [[ "${EDITOR}" =~ mate ]] || \
+    elif [[ "${EDITOR}" =~ code ]] ||
+         [[ "${EDITOR}" =~ mate ]] ||
          [[ "${EDITOR}" =~ subl ]]
     then
       "${EDITOR}" --wait "${_file_path}"
@@ -547,8 +547,8 @@ _git_index_is_dirty() {
     _target_directory="${NOTES_DATA_DIR}"
   fi
 
-  cd "${_target_directory}" \
-    || _die printf "_git_index_is_dirty() \`cd\` failed.\\n"
+  cd "${_target_directory}" ||
+    _die printf "_git_index_is_dirty() \`cd\` failed.\\n"
   [[ -n "$(git status --porcelain)" ]]
 }
 
@@ -676,8 +676,8 @@ _highlight_syntax_if_available() {
 
     # Markdown highlighting is better with explicit 'md' lexer.
     # shellcheck disable=SC2015
-    [[ ! "${_extension}" == "md" ]] && \
-      pygmentize -O style=pastie "${@}" 2>/dev/null || \
+    [[ ! "${_extension}" == "md" ]] &&
+      pygmentize -O style=pastie "${@}" 2>/dev/null ||
       pygmentize -l md -O style=pastie "${@}"
   else
     cat "${@}"
@@ -1669,7 +1669,7 @@ _index() {
   local _subcommand="${1:-}"
   local _index_path="${NOTES_DATA_DIR}/.index"
 
-  if [[ ! -e "${_index_path}" ]] && \
+  if [[ ! -e "${_index_path}" ]] &&
      [[ ! "${_subcommand}" == "rebuild" ]]
   then
     _index rebuild
@@ -1745,7 +1745,7 @@ _index() {
       _debug printf \
         "_index() rebuild: \`ls \${NOTES_DATA_DIR}\`: '%s'\n" \
         "$(ls "${NOTES_DATA_DIR}")"
-      ls "${NOTES_DATA_DIR}" > "${_index_path}" && \
+      ls "${NOTES_DATA_DIR}" > "${_index_path}" &&
         _git_checkpoint "[NOTES] Rebuild Index"
       ;;
     show)
@@ -1893,10 +1893,10 @@ HEREDOC
     git clone "${_repo_url}" "${NOTES_DATA_DIR}"
   else
     mkdir -p "${NOTES_DATA_DIR}"
-    cd "${NOTES_DATA_DIR}" \
-      && git init 1>/dev/null \
-      && touch "${NOTES_DATA_DIR}/.index" \
-      && _git_checkpoint "[NOTES] Initialize"
+    cd "${NOTES_DATA_DIR}" &&
+      git init 1>/dev/null &&
+      touch "${NOTES_DATA_DIR}/.index" &&
+      _git_checkpoint "[NOTES] Initialize"
   fi
   printf "home\\n" > "${NOTES_DIR}/.current"
 
@@ -2267,7 +2267,7 @@ _ls() {
 
         if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
         then # end of list
-          if ((_line_number)) && ! ((_justified)) && \
+          if ((_line_number)) && ! ((_justified)) &&
              ((_auto_align)) || ((_centered))
           then
             _centered=1
@@ -2480,10 +2480,10 @@ _notebooks() {
       printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
     else
       mkdir -p "${NOTES_DIR}/${_name}"
-      cd "${NOTES_DIR}/${_name}" \
-        && git init 1>/dev/null \
-        && touch "${NOTES_DIR}/${_name}/.index" \
-        && _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
+      cd "${NOTES_DIR}/${_name}" &&
+        git init 1>/dev/null &&
+        touch "${NOTES_DIR}/${_name}/.index" &&
+        _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
   }
@@ -2546,7 +2546,7 @@ _notebooks() {
         local _origin_url
         if ! ((_only_names))
         then
-          cd "${NOTES_DIR}/${__item}" || \
+          cd "${NOTES_DIR}/${__item}" ||
             _die printf "_notebooks() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
         fi
@@ -2701,18 +2701,18 @@ _rename() {
     _target_basename="$(date -r "${_timestamp}" -u "+%Y%m%d%H%M%S").${_file_type}"
     local _destination_path="${NOTES_DATA_DIR}/${_target_basename}"
 
-    mv "${_source_path}" "${_destination_path}" \
-      && _index update "${_source_basename}" "${_target_basename}" \
-      && _git_checkpoint \
+    mv "${_source_path}" "${_destination_path}" &&
+      _index update "${_source_basename}" "${_target_basename}" &&
+      _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
     printf "%s renamed to %s\n" \
       "${_source_basename}"   \
        "${_target_basename}."
   elif [[ -n "${_target_name}" ]]
   then
-    mv "${_source_path}" "${NOTES_DATA_DIR}/${_target_name}" \
-      && _index update "${_source_basename}" "${_target_name}" \
-      && _git_checkpoint \
+    mv "${_source_path}" "${NOTES_DATA_DIR}/${_target_name}" &&
+      _index update "${_source_basename}" "${_target_name}" &&
+      _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_name}"
     printf "%s renamed to %s\n" \
       "${_source_basename}"   \
@@ -3130,16 +3130,16 @@ Description:
   Update ${_ME} to the latest version.
 HEREDOC
 _update() {
-  if hash npm 2>/dev/null \
-     && npm list | grep -q notes.sh \
-     && [[ "${BASH_SOURCE[0]}" =~ \/node\/|\/node_modules\/ ]]
+  if hash npm 2>/dev/null &&
+     npm list | grep -q notes.sh &&
+     [[ "${BASH_SOURCE[0]}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
     cat <<'HEREDOC'
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
-  elif [[ "${OSTYPE}" =~ ^darwin ]] \
-       && [[ "$(realpath "${BASH_SOURCE[0]}")" =~ Cellar ]]
+  elif [[ "${OSTYPE}" =~ ^darwin ]] &&
+       [[ "$(realpath "${BASH_SOURCE[0]}")" =~ Cellar ]]
   then
     cat <<'HEREDOC'
 Installed with Homebrew. To update, run:
@@ -3508,8 +3508,8 @@ do
       ;;
     *:*)
       __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
-      if [[ -z "${_SCOPE:-}"       ]] &&
-         [[ -z "${_SUBCOMMAND:-}"  ]] &&
+      if [[ -z "${_SCOPE:-}"        ]] &&
+         [[ -z "${_SUBCOMMAND:-}"   ]] &&
          [[ "${#__parts[@]}" -gt 0  ]]
       then
         if [[ -d "${NOTES_DIR}/${__parts[0]}" ]]
