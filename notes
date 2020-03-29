@@ -978,7 +978,7 @@ _add() {
   done
 
   local _basename
-  _basename="$(_get_unique_basename "${_file_type}")"
+  _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
 
   _file_path="${NOTES_DATA_DIR}/${_basename}"
 
