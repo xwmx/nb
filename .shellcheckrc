@@ -14,7 +14,7 @@ disable=SC2002
 #
 # This is used in some places as intended.
 # https://github.com/koalaman/shellcheck/wiki/SC2015
-diable=SC2015
+disable=SC2015
 
 # Disable SC2183
 #
