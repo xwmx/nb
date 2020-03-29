@@ -266,28 +266,32 @@ _edit_file() {
     return 1
   fi
 
-  cd "${NOTES_DATA_DIR}" &&
-    if ! _file_is_text "${_file_path}"
+  cd "${NOTES_DATA_DIR}" || return 1
+
+  if ! _file_is_text "${_file_path}"
+  then
+    if _command_exists "xdg-open"
     then
-      if _command_exists "xdg-open"
-      then
-        xdg-open "${_file_path}"
-      elif [[ "${OSTYPE}" =~ ^darwin ]]
-      then
-        open "${_file_path}"
-      fi
-    fi || if [[ "${EDITOR}" =~ mvim ]] ||
-             [[ "${EDITOR}" =~ gvim ]]
-          then
-            "${EDITOR}" -f "${_file_path}"
-          elif [[ "${EDITOR}" =~ code ]] ||
-               [[ "${EDITOR}" =~ mate ]] ||
-               [[ "${EDITOR}" =~ subl ]]
-          then
-            "${EDITOR}" --wait "${_file_path}"
-          else
-            "${EDITOR}" "${_file_path}"
-          fi
+      xdg-open "${_file_path}" && return 0
+    elif [[ "${OSTYPE}" =~ ^darwin ]]
+    then
+      open "${_file_path}" && return 0
+    fi
+  fi
+
+  if [[ "${EDITOR}" =~ mvim ]] ||
+     [[ "${EDITOR}" =~ gvim ]]
+  then
+    "${EDITOR}" -f "${_file_path}"
+  elif [[ "${EDITOR}" =~ code ]] ||
+       [[ "${EDITOR}" =~ mate ]] ||
+       [[ "${EDITOR}" =~ subl ]]
+  then
+    echo 2
+    "${EDITOR}" --wait "${_file_path}"
+  else
+    "${EDITOR}" "${_file_path}"
+  fi
 }
 
 # _file_is_text()
