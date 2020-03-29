@@ -8,33 +8,29 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-`notes` is a command line note-taking, document management, versioning, and
-syncing tool in a single portable script. `notes` works best with notes in
-text-based formats like
+`notes` is a full-featured command line note-taking, document management,
+versioning, and syncing tool in a single portable script. `notes`
+creates notes in text-based formats like
 [Markdown](https://daringfireball.net/projects/markdown/) and
-[Emacs Org mode](https://orgmode.org/), and can also be used to organize and
+[Emacs Org mode](https://orgmode.org/), and can also organize and
 work with files in any format.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
-Text, and any other text editor you prefer. `notes` works
-great in any [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-environment, and [optional dependencies](#optional) can be installed to enhance
+Text, and any other text editor you prefer. `notes` works great in any
+[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) environment.
+[Optional dependencies](#optional) can be installed to enhance
 rendering, display, and searching functionality, but everything still works
 great without them.
 
 `notes` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync with a remote repository, if one has been configured.
-In addition to syncing with git, `notes` can be configured to save notes
-in a location used by a general purpose syncing utility like Dropbox so notes
-can be edited in other apps on any device.
+`notes` can also be configured to save notes in a location used by a general
+purpose syncing utility like Dropbox so notes can be edited in other apps on
+any device.
 
-`notes` is intended to work essentially forever and is as lightweight as
-possible while still providing a full-featured experience. The entire program
-is a single Bash script that can be copied anywhere and should continue
-working as long as Bash and standard Linux / Unix environments exist.
-Since `notes` files are normal text files stored in git, you can easily
-switch to any other tool or just manage your notes manually in your shell or
-GUI file browser.
+`notes` is intended to be lightweight. Since notes files are normal text files
+stored in git, you can easily switch to any other tool or just manage your
+notes manually in your shell or file browser.
 
 #### Dependencies
 
