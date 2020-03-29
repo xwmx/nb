@@ -327,7 +327,7 @@ Subcommands:
   edit       Edit a note.
   env        Print program environment variables.
   export     Export a note to a variety of different formats.
-  git        Alias for `git`, with commands run in the current notebook.
+  git        Alias for `git` within the current notebook.
   help       Display this help information.
   history    Display git history for the current notebook or a note.
   import     Import a file into the current notebook.
@@ -337,7 +337,7 @@ Subcommands:
   move       Move a note to a different notebook.
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
-  open       Open the current notebook in your file browser or explorer.
+  open       Open the notebook directory in your file browser or explorer.
   remote     Get, set, and remove the remote URL for the notebook.
   rename     Set the filename to <name> for the specified note file.
   search     Search notes.
@@ -469,7 +469,7 @@ Usage:
   notes git <git options>...
 
 Description:
-  Alias for `git`, with commands run in the current notebook.
+  Alias for `git` within the current notebook.
 ```
 
 #### `help`
@@ -610,7 +610,7 @@ Usage:
   notes open
 
 Description:
-  Open the current notebook in your file browser, explorer, or finder.
+  Open the notebook directory in your file browser, explorer, or finder.
 ```
 
 #### `remote`

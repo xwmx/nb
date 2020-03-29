@@ -1386,7 +1386,7 @@ Usage:
   ${_ME} git <git options>...
 
 Description:
-  Alias for \`git\`, with commands run in the current notebook.
+  Alias for \`git\` within the current notebook.
 HEREDOC
 _git() {
   cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\\n"
@@ -2646,7 +2646,7 @@ Usage:
   ${_ME} open
 
 Description:
-  Open the current notebook in your file browser, explorer, or finder.
+  Open the notebook directory in your file browser, explorer, or finder.
 HEREDOC
 _open() {
   if _command_exists "xdg-open"
