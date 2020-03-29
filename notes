@@ -1195,6 +1195,9 @@ Usage:
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'.
+
+  Non-text files will be opened in your system's preferred app or program for
+  that file type.
 HEREDOC
 _edit() {
   local _selection="${1:-}"
@@ -3163,7 +3166,9 @@ Options:
             3. https://en.wikipedia.org/wiki/W3m
 
 Description:
-  Show a note.
+  Show a note. Notes in text file formats can be rendered or dumped to
+  standard output. Non-text files will be opened in your system's preferred
+  app or program for that file type.
 
   If Pygments <http://pygments.org/> is installed, notes are printed with
   syntax highlighting.
