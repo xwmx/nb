@@ -10,6 +10,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
+  [[ "${lines[0]}" == "Usage:" ]]
 }
 
 @test "\`import\` with no arguments does not create git commit." {
@@ -70,12 +71,12 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help add\` returns usage information." {
-  run "${_NOTES}" help add
+@test "\`help import\` returns usage information." {
+  run "${_NOTES}" help import
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes add [<note>] [--type <type>]" ]]
+  [[ "${lines[1]}" == "  notes import (<path> | <url>)" ]]
 }
 

@@ -1346,7 +1346,11 @@ _export() {
       fi
     fi
 
-    if _command_exists 'pandoc'
+    _source_file_type="${_basename##*.}"
+    _target_file_type="${_target_path##*.}"
+
+    if _command_exists 'pandoc' &&
+       [[ "${_source_file_type}" != "${_target_file_type}" ]]
     then
       _debug printf "_export() \${_args}: %s\\n" "${_args[*]:-}"
       if [[ -n "${_args[*]:-}" ]]
