@@ -304,6 +304,7 @@ Usage:
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
   notes open
+  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
   notes settings
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
@@ -334,6 +335,7 @@ Subcommands:
   notebook   Print current notebook name.
   notebooks  Manage notebooks.
   open       Open the current notebook in your file browser or explorer.
+  rename     Set the filename to <name> for the specified note file.
   search     Search notes.
   settings   Edit configuration settings.
   show       Show a note.

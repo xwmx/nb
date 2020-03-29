@@ -1437,6 +1437,7 @@ Usage:
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
   ${_ME} open
+  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} settings
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
