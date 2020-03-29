@@ -281,6 +281,18 @@ _edit_file() {
     fi
 }
 
+# _file_is_text()
+#
+# Usage:
+#   _file_is_text <path>
+#
+# Returns:
+#   1  If file is text.
+#   0  if not.
+_file_is_text() {
+  [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+}
+
 # _get_hash()
 #
 # Usage:
@@ -420,12 +432,15 @@ _get_title() {
     _die printf "Usage: _get_title <basename>\\n"
   elif [[ -e "${_data_dir}/${_basename}" ]]
   then
-    _maybe_title="$(head -1 "${_data_dir}/${_basename}")"
-    if [[ "${_maybe_title}" =~ ^#\  ]]
-    then # first line starts with an H1
-      _title="$(printf "%s\\n" "${_maybe_title}" | sed 's/^\# //')"
+    if _file_is_text "${_data_dir}/${_basename}"
+    then
+      _maybe_title="$(head -1 "${_data_dir}/${_basename}")"
+      if [[ "${_maybe_title}" =~ ^#\  ]]
+      then # first line starts with an H1
+        _title="$(printf "%s\\n" "${_maybe_title}" | sed 's/^\# //')"
+      fi
+      printf "%s\\n" "${_title}"
     fi
-    printf "%s\\n" "${_title}"
   fi
 }
 
