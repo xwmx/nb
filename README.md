@@ -264,13 +264,17 @@ notes search 'a query'
 notes search -a 'a query'
 ```
 
-You can import and export notes. If you have Pandoc installed, notes can
+You can also import and export notes. If you have Pandoc installed, notes can
 be exported to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
+The formats are determined by the file extensions:
 
 ```bash
 # Export a Markdown note to a .docx Microsoft Office Word document
 notes export example.md /path/to/example.docx
+
+# Export a note titled 'Movies' to an HTML web page.
+notes export 'Movies' /path/to/example.html
 ```
 
 For more commands and options, run `notes help`.
