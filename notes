@@ -1348,11 +1348,20 @@ _export() {
 
     if _command_exists 'pandoc'
     then
-      pandoc \
-        -o "${_target_path}" \
-        ${_args[@]:-} \
-        --standalone \
-        "${NOTES_DATA_DIR}/${_basename}"
+      _debug printf "_export() \${_args}: %s\\n" "${_args[*]:-}"
+      if [[ -n "${_args[*]:-}" ]]
+      then
+        pandoc \
+          -o "${_target_path}" \
+          --standalone \
+          "${NOTES_DATA_DIR}/${_basename}" \
+          "${_args[@]:-}"
+      else
+        pandoc \
+          -o "${_target_path}" \
+          --standalone \
+          "${NOTES_DATA_DIR}/${_basename}"
+      fi
     else
       cp "${NOTES_DATA_DIR}/${_basename}" "${_target_path}"
     fi &&
