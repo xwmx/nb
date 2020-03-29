@@ -9,7 +9,11 @@
 ```
 
 `notes` is a command line note-taking, document management, versioning, and
-syncing tool in a single portable script.
+syncing tool in a single portable script. `notes` works best with notes in
+text-based formats like
+[Markdown](https://daringfireball.net/projects/markdown/) and
+[Emacs Org mode](https://orgmode.org/), and can also be used to organize and
+work with files in any format.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` uses
@@ -19,11 +23,6 @@ great in any [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 environment. [Optional dependencies](#optional) can be installed to enhance
 rendering, display, and searching functionality, but everything still works
 great without them.
-
-`notes` works best with notes in text-based formats like
-[Markdown](https://daringfireball.net/projects/markdown/) and
-[Emacs Org mode](https://orgmode.org/), and can also be used to organize and
-work with files in any format.
 
 In addition to syncing with git, `notes` can be configured to save notes
 in a location used by a general purpose syncing utility like Dropbox so notes
