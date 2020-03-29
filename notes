@@ -1227,9 +1227,9 @@ _env() {
 desc "export" <<HEREDOC
 Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
-                [<pandoc options>...]
+               [<pandoc options>...]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
-                [<pandoc options>...]
+               [<pandoc options>...]
 
 Options:
   --force    Skip the confirmation prompt when overwriting an existing file.
@@ -1416,7 +1416,10 @@ Usage:
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
+  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
+               [<pandoc options>...]
   ${_ME} history [<selection>]
+  ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
   ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
              [-s | --sort] [-r | --reverse] [<selection>]

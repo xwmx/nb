@@ -264,6 +264,15 @@ notes search 'a query'
 notes search -a 'a query'
 ```
 
+You can import and export notes. If you have Pandoc installed, notes can
+be exported to any of the
+[formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
+
+```bash
+# Export a Markdown note to a .docx Microsoft Office Word document
+notes export example.md /path/to/example.docx
+```
+
 For more commands and options, run `notes help`.
 
 ### Help
@@ -275,7 +284,10 @@ Usage:
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
+  notes export (<id> | <filename> | <path> | <title>) <path> [--force]
+               [<pandoc options>...]
   notes history [<selection>]
+  notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
              [-s | --sort] [-r | --reverse] [<selection>]
@@ -397,6 +409,45 @@ Description:
   Print program environment variables.
 ```
 
+#### `export`
+
+```text
+Usage:
+  notes export (<id> | <filename> | <path> | <title>) <path> [--force]
+               [<pandoc options>...]
+  notes export pandoc (<id> | <filename> | <path> | <title>)
+               [<pandoc options>...]
+
+Options:
+  --force    Skip the confirmation prompt when overwriting an existing file.
+
+Subcommands:
+  (default)  Export a file to <path>. If <path> has a different extension from
+             the source note, convert the note using `pandoc`.
+  pandoc     Export the file to standard output or a file using `pandoc`.
+             `export pandoc` prints to standard output by default.
+
+Description:
+  Export a file from the notebook.
+
+  If Pandoc [1] is available, convert the note from its current format
+  to the format of the output file as indicated by the file extension
+  in <path>. Any additional arguments are passed directly to Pandoc.
+  See the Pandoc help information for available options.
+
+  1. http://pandoc.org/
+
+Examples:
+  # Export an Emacs Org mode note
+  notes export example.org /path/to/example.org
+
+  # Export a Markdown note to HTML and print to standard output
+  notes export example.md --from=markdown_strict
+
+  # Export a Markdown note to a .docx Microsoft Office Word document
+  notes export example.md /path/to/example.doc
+```
+
 #### `git`
 
 ```text
@@ -429,6 +480,28 @@ Description:
   <selection> is specified, the history for that note is displayed.
 
   1. https://github.com/jonas/tig
+```
+
+#### `import`
+
+```text
+Usage:
+  notes import (<path> | <url>)
+  notes import copy <path>
+  notes import download <url> [--convert]
+  notes import move <path>
+
+Options:
+  --convert    Convert HTML content to Markdown.
+
+Subcommands:
+  (default) Copy or download the file in <path> or <url>.
+  copy      Copy the file at <path> into the current notebook.
+  download  Download the file at <url> into the current notebook.
+  move      Copy the file at <path> into the current notebook.
+
+Description:
+  Copy, move, or download a file into the current notebook.
 ```
 
 #### `init`
