@@ -321,7 +321,12 @@ _file_is_archive() {
 #   1  If file is text.
 #   0  if not.
 _file_is_text() {
-  [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
+  # Avoid calling `file` for better performance.
+  [[ "${_file_type}" =~ ^html|latex|md|markdown|org|rst|textile|txt$ ]] ||
+    [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
 }
 
 # _get_hash()
