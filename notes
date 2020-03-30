@@ -294,7 +294,6 @@ Can't edit archives. Export archive to expand and inspect contents.\n"
        [[ "${EDITOR}" =~ mate ]] ||
        [[ "${EDITOR}" =~ subl ]]
   then
-    echo 2
     "${EDITOR}" --wait "${_file_path}"
   else
     "${EDITOR}" "${_file_path}"
