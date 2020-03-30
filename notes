@@ -268,6 +268,13 @@ _edit_file() {
 
   cd "${NOTES_DATA_DIR}" || return 1
 
+  if _file_is_archive "${_file_path}"
+  then
+    printf "\
+Can't edit archives. Export archive to expand and inspect contents.\n"
+    exit 1
+  fi
+
   if ! _file_is_text "${_file_path}"
   then
     if _command_exists "xdg-open"
@@ -292,6 +299,18 @@ _edit_file() {
   else
     "${EDITOR}" "${_file_path}"
   fi
+}
+
+# _file_is_archive()
+#
+# Usage:
+#   _file_is_archive <path>
+#
+# Returns:
+#   1  If file is an archive.
+#   0  if not.
+_file_is_archive() {
+  [[ "$(file "${1:-}")" =~ archive|compressed ]]
 }
 
 # _file_is_text()
@@ -3233,6 +3252,13 @@ _show() {
   fi
 
   _set_selection_notebook "${_selection}"
+
+  if _file_is_archive "${NOTES_DATA_DIR}/${_basename}"
+  then
+    printf "\
+Can't show archives. Export archive to expand and inspect contents.\n"
+    exit 1
+  fi
 
   if ! _file_is_text "${NOTES_DATA_DIR}/${_basename}"
   then
