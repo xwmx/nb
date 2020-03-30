@@ -2981,6 +2981,8 @@ Description:
     2. \`ag\`    <https://github.com/ggreer/the_silver_searcher>
     3. \`ack\`   <http://beyondgrep.com/>
     4. \`grep\`  <https://en.wikipedia.org/wiki/Grep>
+
+Alias: \`q\`
 HEREDOC
 _search() {
   local _all=0
@@ -3150,6 +3152,8 @@ _search() {
     fi
   fi
 }
+desc "q" "$(_help 'search')"
+_q() {  _search "${@}"; }
 
 # settings ####################################################################
 
@@ -3533,6 +3537,7 @@ _notes() {
         nbs
         notebook
         notebooks
+        q
         rename
         s
         show
@@ -3693,6 +3698,7 @@ _SUBCOMMANDS=(
   notebook
   notebooks
   open
+  q
   remote
   rename
   s
@@ -3704,6 +3710,7 @@ _SUBCOMMANDS=(
   update
   use
   version
+  ?
 )
 
 # $_SUBCOMMANDS_PATTERN

@@ -660,6 +660,8 @@ Description:
     2. `ag`    <https://github.com/ggreer/the_silver_searcher>
     3. `ack`   <http://beyondgrep.com/>
     4. `grep`  <https://en.wikipedia.org/wiki/Grep>
+
+Alias: `q`
 ```
 
 #### `show`
