@@ -1343,6 +1343,8 @@ _edit() {
     _die printf "Selection not found.\\n"
   fi
 }
+desc "e" "$(_help 'edit')"
+_e() { _edit "${@}"; }
 
 # env #########################################################################
 
@@ -3513,6 +3515,7 @@ _notes() {
         add
         count
         delete
+        e
         edit
         list
         ls
@@ -3662,6 +3665,7 @@ _SUBCOMMANDS=(
   config
   count
   delete
+  e
   edit
   export
   env
