@@ -2488,6 +2488,8 @@ _move() {
       "${_basename}"
   fi
 }
+desc "mv" "$(_help 'move')"
+_mv()    { _move "${@}"; }
 
 # notebook ####################################################################
 
@@ -3513,6 +3515,7 @@ _notes() {
         list
         ls
         move
+        mv
         nb
         nbs
         notebook
@@ -3669,6 +3672,7 @@ _SUBCOMMANDS=(
   list
   ls
   move
+  mv
   nb
   nbs
   notebook
