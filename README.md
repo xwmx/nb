@@ -774,7 +774,7 @@ export NOTES_AUTO_SYNC=0
 
 Default: `~/.notes`
 
-The location of the notes directory that contains the data repository. For
+The location of the notes directory that contains the notebooks. For
 example, to store your notes in Dropbox, you could use:
 
 ```bash
