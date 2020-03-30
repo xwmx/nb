@@ -3196,6 +3196,8 @@ Description:
 
   If Pygments <http://pygments.org/> is installed, notes are printed with
   syntax highlighting.
+
+Alias: \`s\`
 HEREDOC
 _show() {
   _debug printf "_show() \${0:-}: '%s'\\n" "${0:-}"
@@ -3328,6 +3330,8 @@ Can't show archives. Export archive to expand and inspect contents.\n"
     _die printf "Selection not found.\\n"
   fi
 }
+desc "s" "$(_help 'show')"
+_s() { _show "${@}"; }
 
 # status ######################################################################
 
@@ -3530,6 +3534,7 @@ _notes() {
         notebook
         notebooks
         rename
+        s
         show
         search
         use
@@ -3690,6 +3695,7 @@ _SUBCOMMANDS=(
   open
   remote
   rename
+  s
   search
   settings
   show

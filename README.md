@@ -689,6 +689,8 @@ Description:
 
   If Pygments <http://pygments.org/> is installed, notes are printed with
   syntax highlighting.
+
+Alias: `s`
 ```
 
 #### `settings`
