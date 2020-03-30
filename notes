@@ -2115,6 +2115,9 @@ HEREDOC
     return 1
   else
     local _counter=0
+    local _max_id
+    _max_id="$(_index get_max_id)"
+
     for __basename in "${_filenames[@]}"
     do
       if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
@@ -2162,8 +2165,6 @@ HEREDOC
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
       local _spaces_length=1
-      local _max_id
-      _max_id="$(_index get_max_id)"
       _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
       printf -v _spaces '%*s' "${_spaces_length}"
 
