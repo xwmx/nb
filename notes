@@ -2138,7 +2138,7 @@ HEREDOC
       _item_id_number="$(_index get_id "${__basename}")"
 
       local _id_item
-      local _id_item="[${_item_id_number}]"
+      _id_item="[${_item_id_number}]"
 
       local _id_item_color
       _id_item_color="[$(_highlight "${_item_id_number}")]"
