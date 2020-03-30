@@ -2507,8 +2507,6 @@ _notebook() {
 }
 desc "nb" "$(_help 'notebook')"
 _nb()    { _notebook "${@}"; }
-desc "book" "$(_help 'notebook')"
-_book()  { _notebook "${@}"; }
 
 # notebooks ###################################################################
 
@@ -2701,8 +2699,6 @@ _notebooks() {
 }
 desc "nbs" "$(_help 'notebooks')"
 _nbs()   { _notebooks "${@}"; }
-desc "books" "$(_help 'notebooks')"
-_books() { _notebooks "${@}"; }
 
 # open ########################################################################
 
@@ -3512,8 +3508,6 @@ _notes() {
 
       local _core_subcommands=(
         add
-        book
-        books
         count
         delete
         edit
@@ -3661,8 +3655,6 @@ _ARGUMENTS=()
 # All available subcommands.
 _SUBCOMMANDS=(
   add
-  book
-  books
   commands
   config
   count
