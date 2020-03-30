@@ -521,7 +521,6 @@ _git_checkpoint() {
     _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" \
       "$(ls -la)"
 
-
     git add --all && git commit -a -m "${1}"
   }
   _git_checkpoint_sync() {
@@ -1243,7 +1242,6 @@ _edit() {
     local _before
     _before="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
 
-
     _edit_file "${NOTES_DATA_DIR}/${_basename}" \
       && _git_checkpoint "[NOTES] Edit: ${_basename}"
 
@@ -1614,7 +1612,6 @@ _import() {
     fi
     printf "%s\n" "${_target_basename}"
   }
-
 
   local _basename=
   local _convert=0
@@ -2269,7 +2266,6 @@ _ls() {
         fi
       }
 
-
       local _separator=
       if ! ((_plain))
       then
@@ -2294,7 +2290,6 @@ _ls() {
       local _line_hi=
       local _output_raw=
       local _output_hi=
-
 
       for ((i=0;i < "${_notebooks_count}"; i++))
       do
@@ -3140,7 +3135,6 @@ _search() {
   fi
 }
 
-
 # settings ####################################################################
 
 desc "settings" <<HEREDOC
@@ -3418,7 +3412,6 @@ HEREDOC
         esac
       done
 
-
       cat  "${_temp_file}" > "${BASH_SOURCE[0]}"
       printf "%s updated to the latest version.\n" "${_ME}"
     else
@@ -3528,7 +3521,6 @@ _notes() {
 
       _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
       _debug printf "\${_core_subcommand_pattern}: %s\\n" "${_core_subcommand_pattern}"
-
 
       if [[ "${_SUBCOMMAND}" =~ ${_core_subcommand_pattern} ]]
       then
