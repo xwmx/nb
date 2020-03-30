@@ -2086,7 +2086,7 @@ _list() {
     then
       printf "Note not found: %s\\n" "${_selection}"
       printf "Help & Usage Info:\n"
-      printf "  notes help"
+      printf "  notes help\\n"
       return 1
     fi
   fi
