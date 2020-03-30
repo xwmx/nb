@@ -1933,7 +1933,7 @@ HEREDOC
 #
 # Default: "\$HOME/.notes"
 #
-# The location of the notes directory that contains the notebooks.
+# The location of the directory that contains the notebooks.
 # export NOTES_DIR="\$HOME/.notes"
 
 # \$NOTES_DEFAULT_EXTENSION
