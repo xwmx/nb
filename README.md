@@ -408,6 +408,8 @@ Description:
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
+
+Alias: `e`
 ```
 
 #### `env`
@@ -570,6 +572,8 @@ Usage:
 
 Description:
   Move the specified note to <notebook>.
+
+Alias: `mv`
 ```
 
 #### `notebook`
