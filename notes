@@ -3710,7 +3710,6 @@ _SUBCOMMANDS=(
   update
   use
   version
-  ?
 )
 
 # $_SUBCOMMANDS_PATTERN
