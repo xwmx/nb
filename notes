@@ -314,7 +314,7 @@ Can't edit archives. Export archive to expand and inspect contents.\n"
 #   1  If file is an archive.
 #   0  if not.
 _file_is_archive() {
-  [[ "$(file "${1:-}")" =~ archive|compressed ]]
+  [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
 
 # _file_is_text()
