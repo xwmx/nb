@@ -1,6 +1,6 @@
 {
   "name": "notes.sh",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "description": "A git-backed, syncable, searchable command line note-taking tool in a single portable script.",
   "directories": {
     "doc": "docs",
