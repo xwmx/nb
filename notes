@@ -2037,9 +2037,11 @@ _index() {
       fi
       ;;
     verify)
+      local _index_list
       _index_list=($(<"${_index_path}"))
+      local _file_list
       _file_list=($(ls "${NOTES_DATA_DIR}"))
-      _errors=0
+      local _errors=0
 
       for __item in "${_index_list[@]}"
       do
