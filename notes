@@ -1968,8 +1968,20 @@ _index() {
         _git_checkpoint "[NOTES] Rebuild Index"
       ;;
     reconcile)
+      local _index_list
       _index_list=($(<"${_index_path}"))
+
+      local _file_list
       _file_list=($(ls "${NOTES_DATA_DIR}"))
+
+      local _tmp_file
+      _tmp_file=$(mktemp /tmp/notes-index.XXXXXX)
+
+      # Remove duplicates
+      awk '!seen[$0]++' "${_index_path}" > "${_tmp_file}"
+      cat "${_tmp_file}" > "${_index_path}"
+      rm "${_tmp_file}"
+
 
       for __item in "${_index_list[@]}"
       do
