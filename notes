@@ -1927,7 +1927,8 @@ _index() {
 
       if ((_errors))
       then
-        printf "Index corrupted. To fix, run:\n  %s index rebuild\n" "${_ME}"
+        printf "Index corrupted. To fix, run:\n  %s index reconcile\n" \
+          "${_ME}"
         return 1
       fi
       ;;
