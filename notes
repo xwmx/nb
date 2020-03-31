@@ -1016,7 +1016,8 @@ A git-backed, syncable, searchable command line note-taking tool.
 
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]
-  ${_ME} add [<note>] [--type <type>]
+  ${_ME} add [<filename> | <content>] [-c | --content <content>]
+            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1067,27 +1068,47 @@ HEREDOC
 
 desc "add" <<HEREDOC
 Usage:
-  ${_ME} add [<note>] [--type <type>]
+  ${_ME} add [<filename> | <content>] [-c | --content <content>]
+            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
 
 Options:
-  --type  The file extension for the note file type [default: 'md'].
+  -c | --content   <content>    The content for the new note.
+  -f | --filename  <filename>   The filename for the new note.
+  -t | --title     <title>      The title for a new note. If \`--title\` is
+                                present, the filename will be derived from the
+                                title, unless \`--filename\` is specified.
+  --type           <type>       The file type for the new note, as a file
+                                extension.
 
 Description:
-  Create a new note. Any arguments passed to \`add\` are written to the note
-  file. When no arguments are passed, a new note file is opened with
-  \`\$EDITOR\`, currently set to '${EDITOR}'.
+  Create a new note.
+
+  If no arguments are passed, a new blank note file is opened with
+  \`\$EDITOR\`, currently set to '${EDITOR}', unless the \`-c | --content\`
+  option is specified. If a non-option argument is passed, \`notes\` will
+  treat it as a <filename≥ if a file extension is found. If no file extension
+  is found, \`notes\` will treat the string as <content> and will create a new
+  note without opening the editor.
 
   \`notes\` creates Markdown files by default. To create a note with a
-  different file type, use the \`--type\` option. To change the default file
-  type, use \`notes settings\` to set the \`\$NOTES_DEFAULT_EXTENSION\` variable
-  in your ~/.notesrc configuration file.
+  different file type, use the extension in the filename or use the \`--type\`
+  option. To change the default file type, use \`notes settings\` to set the
+  \`\$NOTES_DEFAULT_EXTENSION\` variable in your ~/.notesrc configuration file,
+  which you can edit with \`notes settings\`.
 
 Examples:
   notes add
+  nores add example.md
   notes add "Note content."
+  notes add example.md --title "Example Title" --content "Example content."
   echo "Note content." | notes add
 HEREDOC
 _add() {
+  local _basename=
+  local _content=
+  local _filename=
+  local _maybe_filename_or_content=
+  local _title=
   local _file_type="${NOTES_DEFAULT_EXTENSION}"
   local _arguments=()
 
@@ -1107,8 +1128,39 @@ _add() {
     }
     local _arg="${1:-}"
     local _val="${2:-}"
+
     case "${_arg}" in
-      -t|--type)
+      -c|--content)
+        if __option_value_is_present "${_val:-}"
+        then
+          _content="${_val:-}"
+          shift
+        else
+          _help add
+          return 1
+        fi
+        ;;
+      -f|--filename)
+        if __option_value_is_present "${_val:-}"
+        then
+          _filename="${_val:-}"
+          shift
+        else
+          _help add
+          return 1
+        fi
+        ;;
+      -t|--title)
+        if __option_value_is_present "${_val:-}"
+        then
+          _title="${_val:-}"
+          shift
+        else
+          _help add
+          return 1
+        fi
+        ;;
+      --type)
         if __option_value_is_present "${_val:-}"
         then
           _file_type="${_val:-}"
@@ -1119,24 +1171,58 @@ _add() {
         fi
         ;;
       *)
-        _arguments+=("${_arg:-}")
+        if [[ -z "${_maybe_filename_or_title:-}" ]]
+        then
+          _maybe_filename_or_content="${_arg:-}"
+        else
+          _arguments+=("${_arg:-}")
+        fi
         ;;
     esac
+
     shift
   done
 
-  local _basename
-  _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
+  local _maybe_filename_or_content_extension="${_maybe_filename_or_content##*\.}"
+  if [[ -n "${_maybe_filename_or_content:-}" ]]
+  then
+    if [[ "${_maybe_filename_or_content:-}" =~ \.[A-Za-z0-9]+$ ]] &&
+       [[ -n "${_maybe_filename_or_content_extension:-}" ]]
+    then
+      _filename="${_maybe_filename_or_content}"
+    else
+      _content="${_maybe_filename_or_content}"
+    fi
+  fi
+
+  if [[ -n "${_filename:-}" ]]
+  then
+    _basename="$(_get_unique_basename "${_filename:-}")"
+  elif [[ -n "${_title:-}" ]]
+  then
+    _filename="$(printf "%s" "${_title}" | tr '[:space:]' '_')"
+    _basename="$(_get_unique_basename "${_filename}.${_file_type}")"
+  else
+    _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
+  fi
 
   _file_path="${NOTES_DATA_DIR}/${_basename}"
 
+  if [[ -n "${_title}" ]]
+  then
+    printf "%s\\n\\n" "# ${_title}" >> "${_file_path}"
+  fi
+
+  if [[ -n "${_content}" ]]
+  then
+    printf "%s\\n" "${_content}" >> "${_file_path}"
+  fi
+
   if _interactive_input
   then # terminal input.
-    if [[ -z "${_arguments[*]:-}" ]]
-    then # argument array is blank.
+    if [[ -z "${_content:-}" ]]
+    then
       _edit_file "${_file_path}"
-    else
-      printf "%s\\n" "${_arguments[*]:-}" >> "${_file_path}"
     fi
   else # piped input.
     cat >> "${_file_path}"

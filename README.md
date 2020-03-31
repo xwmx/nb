@@ -103,6 +103,9 @@ To add a note:
 # create a new note in your text editor
 notes add
 
+# create a new note with the file name 'example.md'
+notes add example.md
+
 # create a new note containing "This is a note."
 notes add "This is a note."
 ```
@@ -278,7 +281,8 @@ For more commands and options, run `notes help`.
 ```text
 Usage:
   notes [<id> | <filename> | <path> | <title>] [<list options>]
-  notes add [<note>] [--type <type>]
+  notes add [<filename> | <content>] [-c | --content <content>]
+            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -353,24 +357,38 @@ Program Options:
 
 ```text
 Usage:
-  notes add [<note>] [--type <type>]
+  notes add [<filename> | <content>] [-c | --content <content>]
+            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
 
 Options:
-  --type  The file extension for the note file type [default: 'md'].
+  -c | --content   <content>    The content for the new note.
+  -f | --filename  <filename>   The filename for the new note.
+  -t | --title     <title>      The title for a new note. If `--title` is
+                                present, the filename will be derived from the
+                                title, unless `--filename` is specified.
+  --type           <type>       The file type for the new note, as a file
+                                extension.
 
 Description:
-  Create a new note. Any arguments passed to `add` are written to the note
-  file. When no arguments are passed, a new note file is opened with
-  `$EDITOR`.
+  Create a new note.
+
+  If no arguments are passed, a new blank note file is opened with
+  `$EDITOR`, unless the `-c | --content` option is specified. If a non-option
+  argument is passed, `notes` will treat it as a <filename≥ if a file extension
+  is found. If no file extension is found, `notes` will treat the string as
+  <content> and will create a new note without opening the editor.
 
   `notes` creates Markdown files by default. To create a note with a
-  different file type, use the `--type` option. To change the default file
-  type, use `notes settings` to set the `$NOTES_DEFAULT_EXTENSION` variable
-  in your ~/.notesrc configuration file.
+  different file type, use the extension in the filename or use the `--type`
+  option. To change the default file type, use `notes settings` to set the
+  `$NOTES_DEFAULT_EXTENSION` variable in your ~/.notesrc configuration file,
+  which you can edit with `notes settings`.
 
 Examples:
   notes add
+  nores add example.md
   notes add "Note content."
+  notes add example.md --title "Example Title" --content "Example content."
   echo "Note content." | notes add
 ```
 
