@@ -1222,7 +1222,7 @@ _delete() {
   _debug printf "_delete() \${_selection}: '%s'\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    ${_ME} help "delete"
+    "${_MY_PATH}" help "delete"
     return 1
   fi
 
@@ -1238,7 +1238,7 @@ _delete() {
 
   if [[ -z "${_basename}" ]]
   then
-    ${_ME} help "delete"
+    "${_MY_PATH}" help "delete"
     return 1
   fi
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
@@ -1308,7 +1308,7 @@ _edit() {
   _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    ${_ME} help "edit"
+    "${_MY_PATH}" help "edit"
     return 1
   fi
 
@@ -1444,7 +1444,7 @@ _export() {
 
   if [[ -z "${_selection:-}" ]]
   then
-    ${_ME} help "export"
+    "${_MY_PATH}" help "export"
     return 1
   fi
   _debug printf "_export() \${_selection}: %s\\n" "${_selection}"
@@ -1477,7 +1477,7 @@ _export() {
   else
     if [[ -z "${_target_path:-}" ]]
     then
-      ${_ME} help "export"
+      "${_MY_PATH}" help "export"
       return 1
     fi
     _debug printf "_export() \${target_path}: %s\\n" "${_target_path}"
@@ -2436,7 +2436,7 @@ _move() {
   _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
   if [[ -z "${_selection:-}" ]] || [[ -z "${_target_notebook:-}" ]]
   then
-    ${_ME} help "move"
+    "${_MY_PATH}" help "move"
     return 1
   fi
 
@@ -2453,7 +2453,7 @@ _move() {
   if [[ -z "${_basename}" ]] ||
      [[ ! -e "${NOTES_DIR}/${_target_notebook}/.git" ]]
   then
-    ${_ME} help "move"
+    "${_MY_PATH}" help "move"
     return 1
   elif [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then
@@ -2926,7 +2926,7 @@ _rename() {
 
   if [[ -z "${_source_basename}" ]]
   then
-    ${_ME} help "rename"
+    "${_MY_PATH}" help "rename"
     return 1
   fi
   _debug printf "_rename() \${_source_basename}: '%s'\\n" \
@@ -2969,7 +2969,7 @@ _rename() {
       "${_source_basename}"   \
       "${_target_name}"
   else
-    ${_ME} help "rename"
+    "${_MY_PATH}" help "rename"
     return 1
   fi
 }
@@ -3026,14 +3026,14 @@ _search() {
 
   if [[ -z "${_query:-}" ]]
   then
-    ${_ME} help "search"
+    "${_MY_PATH}" help "search"
     return 1
   else
     local _target_notebooks=()
 
     if ((_all))
     then
-      _target_notebooks=($(${_ME} notebooks --names --no-color))
+      _target_notebooks=($("${_MY_PATH}" notebooks --names --no-color))
     else
       _target_notebooks=($(_notebook))
     fi
@@ -3259,7 +3259,7 @@ _show() {
   _debug printf "_show() \${_selection}: '%s'\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    ${_ME} help "show"
+    "${_MY_PATH}" help "show"
     return 1
   fi
 
@@ -3380,7 +3380,7 @@ _sync() {
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\\n"
-    _notebooks=($(${_ME} notebooks --names --no-color))
+    _notebooks=($("${_MY_PATH}" notebooks --names --no-color))
   else
     _notebooks=($(_notebook))
   fi
@@ -3568,7 +3568,7 @@ _notes() {
           then
             _debug \
               printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\\n"
-            ${_ME} sync
+            "${_MY_PATH}" sync
           else
             _debug \
               printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\\n"
@@ -3578,7 +3578,7 @@ _notes() {
         then
           _debug \
             printf "_notes(): ! _git_index_is_dirty\\n"
-          (${_ME} sync &>/dev/null) &
+          ("${_MY_PATH}" sync &>/dev/null) &
         fi
       fi
 
