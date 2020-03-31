@@ -806,10 +806,15 @@ _interactive_input() {
 # Returns:
 #   The list or array of items joined into a string with elements divided by
 #   the optional separator if one is provided.
+#
+# More information:
+#   https://stackoverflow.com/a/17841619
 _join() {
-  local IFS="$1"
+  local _delimiter="${1}"
   shift
-  printf "%s\n" "$*"
+  printf "%s" "${1}"
+  shift
+  printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
 }
 
 # _list_notes_files()
@@ -3756,7 +3761,7 @@ _notes() {
         use
       )
       local _core_subcommand_pattern
-      _core_subcommand_pattern="$(_join '|' "${_core_subcommands[@]}")"
+      _core_subcommand_pattern="^$(_join '$|^' "${_core_subcommands[@]}")$"
 
       _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
       _debug printf "\${_core_subcommand_pattern}: %s\\n" "${_core_subcommand_pattern}"
@@ -3936,7 +3941,7 @@ _SUBCOMMANDS=(
 # More information:
 # http://stackoverflow.com/a/13254908
 # https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
-_SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
+_SUBCOMMANDS_PATTERN="@(^$(_join '|' "${_SUBCOMMANDS[@]}")$)"
 
 _debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n" "${_SUBCOMMANDS_PATTERN}"
 
