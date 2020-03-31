@@ -1996,20 +1996,31 @@ _index() {
         _git_checkpoint "[NOTES] Rebuild Index"
       ;;
     reconcile)
+      _index_reconcile_remove_duplicates() {
+        local _reconcle_index_path="${1:-}"
+        [[ -z "${_reconcle_index_path:-}" ]] && return 1
+
+        local _tmp_file
+        _tmp_file=$(mktemp /tmp/notes-index.XXXXXX)
+        exec 3> "${_tmp_file}"
+        exec 4< "${_tmp_file}"
+        rm "${_tmp_file}"
+
+        # Remove duplicates
+        awk '!seen[$0]++' "${_reconcle_index_path}" >&3
+        cat <&4 > "${_reconcle_index_path}"
+
+        exec 3>&-
+        exec 4<&-
+      }
+
       local _index_list
       _index_list=($(<"${_index_path}"))
 
       local _file_list
       _file_list=($(ls "${NOTES_DATA_DIR}"))
 
-      local _tmp_file
-      _tmp_file=$(mktemp /tmp/notes-index.XXXXXX)
-
-      # Remove duplicates
-      awk '!seen[$0]++' "${_index_path}" > "${_tmp_file}"
-      cat "${_tmp_file}" > "${_index_path}"
-      rm "${_tmp_file}"
-
+      _index_reconcile_remove_duplicates "${_index_path}"
 
       for __item in "${_index_list[@]}"
       do
