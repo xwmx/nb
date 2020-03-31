@@ -46,7 +46,7 @@ _setup_use() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[0]}" == "❌  Not found: not-a-repo" ]]
+  [[ "${lines[0]}" == "Not found: not-a-repo" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "${_NOTES}" env
