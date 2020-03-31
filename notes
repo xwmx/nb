@@ -1109,7 +1109,8 @@ _add() {
           _file_type="${_val:-}"
           shift
         else
-          _die "${_MY_PATH}" help add
+          _help add
+          return 1
         fi
         ;;
       *)
@@ -1222,7 +1223,7 @@ _delete() {
   _debug printf "_delete() \${_selection}: '%s'\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    "${_MY_PATH}" help "delete"
+    _help "delete"
     return 1
   fi
 
@@ -1238,7 +1239,7 @@ _delete() {
 
   if [[ -z "${_basename}" ]]
   then
-    "${_MY_PATH}" help "delete"
+    _help "delete"
     return 1
   fi
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
@@ -1281,7 +1282,8 @@ _delete() {
       printf "Deleted %s\\n" "${_note_info_line}"
     fi
   else
-    _die printf "Selection not found.\\n"
+    printf "Selection not found.\\n"
+    return 1
   fi
 }
 desc "d" "$(_help 'delete')"
@@ -1308,7 +1310,7 @@ _edit() {
   _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    "${_MY_PATH}" help "edit"
+    _help "edit"
     return 1
   fi
 
@@ -1351,7 +1353,8 @@ _edit() {
       fi
     fi
   else
-    _die printf "Selection not found.\\n"
+    printf "Selection not found.\\n"
+    return 1
   fi
 }
 desc "e" "$(_help 'edit')"
@@ -1444,7 +1447,7 @@ _export() {
 
   if [[ -z "${_selection:-}" ]]
   then
-    "${_MY_PATH}" help "export"
+    _help "export"
     return 1
   fi
   _debug printf "_export() \${_selection}: %s\\n" "${_selection}"
@@ -1477,7 +1480,7 @@ _export() {
   else
     if [[ -z "${_target_path:-}" ]]
     then
-      "${_MY_PATH}" help "export"
+      _help "export"
       return 1
     fi
     _debug printf "_export() \${target_path}: %s\\n" "${_target_path}"
@@ -1611,7 +1614,7 @@ _import() {
   _import_validate_path() {
     if [[ -z "${1:-}" ]]
     then
-      "${_MY_PATH}" help import
+      _help import
       return 1
     elif [[ ! -e "${1:-}" ]]
     then
@@ -1719,7 +1722,7 @@ ${_url}
       printf "Imported '%s' to '%s'\n" "${_path}" "${_basename}"
       ;;
     *)
-      "${_MY_PATH}" help import
+      _help import
       return 1
       ;;
   esac
@@ -1768,12 +1771,13 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        "${_MY_PATH}" help index
+        _help index
         return 1
       fi
       if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
       then
-        _die printf "File not found: %s\n" "${_basename}"
+        printf "File not found: %s\n" "${_basename}"
+        return 1
       fi
 
       if ! grep -q "${_basename}" "${_index_path}"
@@ -1786,7 +1790,7 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        "${_MY_PATH}" help index
+        _help index
         return 1
       fi
 
@@ -1801,7 +1805,7 @@ _index() {
       local _id_number="${2:-}"
       if [[ -z "${_id_number}" ]]
       then
-        "${_MY_PATH}" help index
+        _help index
         return 1
       fi
 
@@ -1819,7 +1823,7 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        "${_MY_PATH}" help index
+        _help index
         return 1
       fi
 
@@ -1844,7 +1848,7 @@ _index() {
       local _new_basename="${3:-}"
       if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
       then
-        "${_MY_PATH}" help index
+        _help index
         return 1
       fi
 
@@ -1895,14 +1899,14 @@ HEREDOC
 _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
-    _die \
-      printf "\`init\`: %s already exists and is not a directory.\\n" \
+    printf "\`init\`: %s already exists and is not a directory.\\n" \
       "${NOTES_DIR}"
+    return 1
   elif [[ -e "${NOTES_DATA_DIR}" ]]
   then
-    _die \
-      printf "\`init\`: %s already exists.\\n" \
+    printf "\`init\`: %s already exists.\\n" \
       "${NOTES_DATA_DIR}"
+    return 1
   fi
 
   cat <<HEREDOC
@@ -2436,7 +2440,7 @@ _move() {
   _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
   if [[ -z "${_selection:-}" ]] || [[ -z "${_target_notebook:-}" ]]
   then
-    "${_MY_PATH}" help "move"
+    _help "move"
     return 1
   fi
 
@@ -2453,14 +2457,16 @@ _move() {
   if [[ -z "${_basename}" ]] ||
      [[ ! -e "${NOTES_DIR}/${_target_notebook}/.git" ]]
   then
-    "${_MY_PATH}" help "move"
+    _help "move"
     return 1
   elif [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then
-    _die printf "Not Found: %s:%s\\n" "${_SCOPE}" "${_basename}"
+    printf "Not Found: %s:%s\\n" "${_SCOPE}" "${_basename}"
+    return 1
   elif [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
   then
-    _die printf "Already exists: %s:%s\\n" "${_SCOPE}" "${_basename}"
+    printf "Already exists: %s:%s\\n" "${_SCOPE}" "${_basename}"
+    return 1
   fi
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
@@ -2554,12 +2560,14 @@ _notebooks() {
     local _name="${1:-}"
     if [[ -z "${_name}" ]]
     then
-      _die "${_MY_PATH}" help notebooks
+      _help notebooks
+      return 1
     fi
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
     then
-      _die printf "Already exists: ${_name}\\n"
+      printf "Already exists: ${_name}\\n"
+      return 1
     fi
 
     local _repo_url="${2:-}"
@@ -2659,13 +2667,16 @@ _notebooks() {
 
     if [[ -z "${_old}" ]] || [[ -z "${_new}" ]]
     then
-      _die "${_MY_PATH}" help notebooks
+      _help notebooks
+      return 1
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
     then
-      _die printf "'${_old}' is not a valid notebook name.\\n"
+      printf "'${_old}' is not a valid notebook name.\\n"
+      return 1
     elif [[ -e "${NOTES_DIR}/${_new}" ]]
     then
-      _die printf "A notebook named '${_new}' already exists.\\n"
+      printf "A notebook named '${_new}' already exists.\\n"
+      return 1
     fi
 
     mv "${NOTES_DIR}/${_old}" "${NOTES_DIR}/${_new}"
@@ -2694,7 +2705,8 @@ _notebooks() {
     use)
       if [[ -z "${_name}" ]]
       then
-        _die "${_MY_PATH}" help notebooks
+        _help notebooks
+        return 1
       fi
 
       # Autocomplete can result in a trailing colon on the notebook name, so
@@ -2709,7 +2721,8 @@ _notebooks() {
         printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
         printf "Now using %s.\\n" "$( _highlight "${_name}")"
       else
-        _die printf "Not found: ${_name}\\n"
+        printf "Not found: ${_name}\\n"
+        return 1
       fi
       ;;
     *)
@@ -2831,7 +2844,7 @@ _remote() {
     set)
       if [[ -z "${_url}" ]]
       then
-        "${_MY_PATH}" help remote
+        _help remote
         return 1
       fi
 
@@ -2926,7 +2939,7 @@ _rename() {
 
   if [[ -z "${_source_basename}" ]]
   then
-    "${_MY_PATH}" help "rename"
+    _help "rename"
     return 1
   fi
   _debug printf "_rename() \${_source_basename}: '%s'\\n" \
@@ -2969,7 +2982,7 @@ _rename() {
       "${_source_basename}"   \
       "${_target_name}"
   else
-    "${_MY_PATH}" help "rename"
+    _help "rename"
     return 1
   fi
 }
@@ -3026,7 +3039,7 @@ _search() {
 
   if [[ -z "${_query:-}" ]]
   then
-    "${_MY_PATH}" help "search"
+    _help "search"
     return 1
   else
     local _target_notebooks=()
@@ -3259,7 +3272,7 @@ _show() {
   _debug printf "_show() \${_selection}: '%s'\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    "${_MY_PATH}" help "show"
+    _help "show"
     return 1
   fi
 
@@ -3340,7 +3353,8 @@ Can't show archives. Export archive to expand and inspect contents.\n"
       fi
     fi
   else # _basename is not assigned or no note exists with that name.
-    _die printf "Selection not found.\\n"
+    printf "Selection not found.\\n"
+    return 1
   fi
 }
 desc "s" "$(_help 'show')"
@@ -3466,7 +3480,8 @@ _use() {
   local _name="${1:-}"
   if [[ -z "${_name}" ]]
   then
-    _die "${_MY_PATH}" help use
+    _help use
+    return 1
   fi
   _notebooks use "${_name}"
 }
@@ -3808,7 +3823,8 @@ do
             _SUBCOMMAND="${__parts[1]:-}"
           fi
         else
-          _die printf "Notebook not found: %s\\n" "${__parts[0]}"
+          printf "Notebook not found: %s\\n" "${__parts[0]}"
+          exit 1
         fi
       else
         _ARGUMENTS+=("${__opt}")

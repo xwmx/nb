@@ -339,7 +339,7 @@ one"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[0]}" == "❌  Not found: not-a-notebook" ]]
+  [[ "${lines[0]}" == "Not found: not-a-notebook" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "${_NOTES}" env
