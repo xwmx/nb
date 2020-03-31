@@ -283,7 +283,7 @@ Can't edit encrypted files. Export file and decrypt to edit.\n"
   if _file_is_archive "${_file_path}"
   then
     printf "\
-Can't edit archives. Export archive to expand and inspect contents.\n"
+Can't edit archives. Export archive and expand to edit.\n"
     exit 1
   fi
 
