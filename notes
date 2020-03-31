@@ -2022,14 +2022,14 @@ _index() {
 
       _index_reconcile_remove_duplicates "${_index_path}"
 
-      for __item in "${_index_list[@]}"
+      for __item in "${_index_list[@]:-}"
       do
-        _contains "${__item}" "${_file_list[*]}" || _index delete "${__item}"
+        _contains "${__item}" "${_file_list[*]:-}" || _index delete "${__item}"
       done
 
-      for __item in "${_file_list[@]}"
+      for __item in "${_file_list[@]:-}"
       do
-        _contains "${__item}" "${_index_list[*]}" || _index add "${__item}"
+        _contains "${__item}" "${_index_list[*]:-}" || _index add "${__item}"
       done
       ;;
     show)
@@ -2059,13 +2059,13 @@ _index() {
       _file_list=($(ls "${NOTES_DATA_DIR}"))
       local _errors=0
 
-      for __item in "${_index_list[@]}"
+      for __item in "${_index_list[@]:-}"
       do
-        _contains "${__item}" "${_file_list[*]}" || _errors=1
+        _contains "${__item}" "${_file_list[*]:-}" || _errors=1
       done
-      for __item in "${_file_list[@]}"
+      for __item in "${_file_list[@]:-}"
       do
-        _contains "${__item}" "${_index_list[*]}" || _errors=1
+        _contains "${__item}" "${_index_list[*]:-}" || _errors=1
       done
 
       if ((_errors))
