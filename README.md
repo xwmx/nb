@@ -390,6 +390,8 @@ Examples:
   notes add "Note content."
   notes add example.md --title "Example Title" --content "Example content."
   echo "Note content." | notes add
+
+Alias: `a`
 ```
 
 #### `count`

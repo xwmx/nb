@@ -1102,6 +1102,8 @@ Examples:
   notes add "Note content."
   notes add example.md --title "Example Title" --content "Example content."
   echo "Note content." | notes add
+
+Alias: \`a\`
 HEREDOC
 _add() {
   local _basename=
@@ -1248,6 +1250,8 @@ _add() {
   fi
   _git_checkpoint "[NOTES] Add: ${_basename}"
 }
+desc "a" "$(_help 'add')"
+_a() { _add "${@}"; }
 
 # commands ####################################################################
 
@@ -3686,6 +3690,7 @@ _notes() {
       fi
 
       local _core_subcommands=(
+        a
         add
         count
         d
@@ -3839,6 +3844,7 @@ _ARGUMENTS=()
 #
 # All available subcommands.
 _SUBCOMMANDS=(
+  a
   add
   commands
   config
