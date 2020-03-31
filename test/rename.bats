@@ -56,7 +56,7 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument exits with status 0." {
   {
     _setup_rename
-    _filename=$(notes list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
 
@@ -69,7 +69,7 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument renames note file." {
   {
     _setup_rename
-    _filename=$(notes list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -84,7 +84,7 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument creates git commit." {
   {
     _setup_rename
-    _filename=$(notes list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
 
@@ -101,7 +101,7 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument updates index." {
   {
     _setup_rename
-    _filename=$(notes list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
 
@@ -112,13 +112,13 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ "$(notes index get_id 'EXAMPLE.org')" == '1' ]]
+  [[ "$("${_NOTES}" index get_id 'EXAMPLE.org')" == '1' ]]
 }
 
 @test "\`rename\` with <filename> argument prints output." {
   {
     _setup_rename
-    _filename=$(notes list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
@@ -134,7 +134,7 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument exits with status 0." {
   {
     _setup_rename
-    _original=$(notes list -n 1 --no-id | head -1)
+    _original=$("${_NOTES}" list -n 1 --no-id | head -1)
     _filename="test.md"
     "${_NOTES}" rename "${_original}" "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"
@@ -149,7 +149,7 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument renames note file." {
   {
     _setup_rename
-    _original=$(notes list -n 1 --no-id | head -1)
+    _original=$("${_NOTES}" list -n 1 --no-id | head -1)
     _filename="test.md"
     "${_NOTES}" rename "${_original}" "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"
@@ -160,13 +160,13 @@ _setup_rename() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}"  ]]
-  [[ $(notes list -n 1 --no-id | head -1) =~  [A-Za-z0-9]+.md ]]
+  [[ $("${_NOTES}" list -n 1 --no-id | head -1) =~  [A-Za-z0-9]+.md ]]
 }
 
 @test "\`rename --reset\` with <filename> argument creates git commit." {
   {
     _setup_rename
-    _original=$(notes list -n 1 --no-id | head -1)
+    _original=$("${_NOTES}" list -n 1 --no-id | head -1)
     _filename="test.md"
     "${_NOTES}" rename "${_original}" "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"
@@ -185,7 +185,7 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument updates index." {
   {
     _setup_rename
-    _filename=$(notes list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
 
@@ -202,7 +202,7 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument prints output." {
   {
     _setup_rename
-    _original=$(notes list -n 1 --no-id | head -1)
+    _original=$("${_NOTES}" list -n 1 --no-id | head -1)
     _filename="test.md"
     "${_NOTES}" rename "${_original}" "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"
