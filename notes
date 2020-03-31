@@ -1743,6 +1743,7 @@ Usage:
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
   ${_ME} index rebuild
+  ${_ME} index reconcile
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verfiy
@@ -1754,6 +1755,7 @@ Subcommands:
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the notebook.
   rebuild       Rebuild the index.
+  reconcile     Update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
   verify        Verify that the index matches the notebook contents.
@@ -1807,6 +1809,11 @@ _index() {
       fi
       ;;
     get_basename)
+      # Usage: _index_get_basename <id> <index path>
+      _index_get_basename() {
+        sed "${_id_number}q;d" "${_index_path}"
+      }
+
       local _id_number="${2:-}"
       if [[ -z "${_id_number}" ]]
       then
@@ -1815,7 +1822,13 @@ _index() {
       fi
 
       local _basename
-      _basename="$(sed "${_id_number}q;d" "${_index_path}")"
+      _basename="$(_index_get_basename "${_id_number}" "${_index_path}")"
+
+      if [[ -z "${_basename}" ]]
+      then
+        _index reconcile &&
+          _basename="$(_index_get_basename "${_id_number}" "${_index_path}")"
+      fi
 
       if [[ -z "${_basename}" ]]
       then
@@ -1825,6 +1838,11 @@ _index() {
       fi
       ;;
     get_id)
+      # Usage: _index_get_id <basename> <index path>
+      _index_get_id() {
+        grep -n "${1:-}" "${2:-}" | cut -f1 -d:
+      }
+
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
@@ -1832,7 +1850,21 @@ _index() {
         return 1
       fi
 
-      grep -n "${_basename}" "${_index_path}" | cut -f1 -d:
+      local _id
+      _id="$(_index_get_id "${_basename}" "${_index_path}")"
+
+      if [[ -z "${_id}" ]]
+      then
+        _index reconcile &&
+          _id="$(_index_get_id "${_basename}" "${_index_path}")"
+      fi
+
+      if [[ -z "${_id}" ]]
+      then
+        return 1
+      else
+        printf "%s\n" "${_id}"
+      fi
       ;;
     get_max_id)
       wc -l < "${_index_path}" | tr -d '[:space:]'
@@ -1844,6 +1876,20 @@ _index() {
         "$(ls "${NOTES_DATA_DIR}")"
       ls "${NOTES_DATA_DIR}" > "${_index_path}" &&
         _git_checkpoint "[NOTES] Rebuild Index"
+      ;;
+    reconcile)
+      _index_list=($(<"${_index_path}"))
+      _file_list=($(ls "${NOTES_DATA_DIR}"))
+
+      for __item in "${_index_list[@]}"
+      do
+        _contains "${__item}" "${_file_list[*]}" || _index remove "${__item}"
+      done
+
+      for __item in "${_file_list[@]}"
+      do
+        _contains "${__item}" "${_index_list[*]}" || _index add "${__item}"
+      done
       ;;
     show)
       cat "${_index_path}"
@@ -3584,6 +3630,8 @@ _notes() {
       then
         if _git_index_is_dirty
         then
+          _index reconcile
+
           if _git_should_autosync
           then
             _debug \
