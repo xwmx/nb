@@ -33,7 +33,12 @@ _VERSION="2.5.6"
 # $_ME
 #
 # Set to the program's basename.
-_ME=$(basename "${0}")
+_ME="$(basename "${0}")"
+
+# $_MY_PATH
+#
+# Set to the programs full path.
+_MY_PATH="$(cd "$(dirname "$0")"; pwd)/$(basename "${0}")"
 
 # extglob
 #
@@ -1104,7 +1109,7 @@ _add() {
           _file_type="${_val:-}"
           shift
         else
-          _die "${_ME}" help add
+          _die "${_MY_PATH}" help add
         fi
         ;;
       *)
@@ -1602,7 +1607,7 @@ _import() {
   _import_validate_path() {
     if [[ -z "${1:-}" ]]
     then
-      "${_ME}" help import
+      "${_MY_PATH}" help import
       return 1
     elif [[ ! -e "${1:-}" ]]
     then
@@ -1710,7 +1715,7 @@ ${_url}
       printf "Imported '%s' to '%s'\n" "${_path}" "${_basename}"
       ;;
     *)
-      "${_ME}" help import
+      "${_MY_PATH}" help import
       return 1
       ;;
   esac
@@ -1759,7 +1764,7 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        "${_ME}" help index
+        "${_MY_PATH}" help index
         return 1
       fi
       if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
@@ -1777,7 +1782,7 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        "${_ME}" help index
+        "${_MY_PATH}" help index
         return 1
       fi
 
@@ -1792,7 +1797,7 @@ _index() {
       local _id_number="${2:-}"
       if [[ -z "${_id_number}" ]]
       then
-        "${_ME}" help index
+        "${_MY_PATH}" help index
         return 1
       fi
 
@@ -1810,7 +1815,7 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        "${_ME}" help index
+        "${_MY_PATH}" help index
         return 1
       fi
 
@@ -1835,7 +1840,7 @@ _index() {
       local _new_basename="${3:-}"
       if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
       then
-        "${_ME}" help index
+        "${_MY_PATH}" help index
         return 1
       fi
 
@@ -2485,9 +2490,9 @@ _move() {
   fi
 
   cat "${NOTES_DATA_DIR}/${_basename}" \
-    | "${_ME}" "${_target_notebook}:add" 1> /dev/null
+    | "${_MY_PATH}" "${_target_notebook}:add" 1> /dev/null
 
-  "${_ME}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
+  "${_MY_PATH}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
 
   if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then
@@ -2545,7 +2550,7 @@ _notebooks() {
     local _name="${1:-}"
     if [[ -z "${_name}" ]]
     then
-      _die "${_ME}" help notebooks
+      _die "${_MY_PATH}" help notebooks
     fi
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
@@ -2650,7 +2655,7 @@ _notebooks() {
 
     if [[ -z "${_old}" ]] || [[ -z "${_new}" ]]
     then
-      _die "${_ME}" help notebooks
+      _die "${_MY_PATH}" help notebooks
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
     then
       _die printf "'${_old}' is not a valid notebook name.\\n"
@@ -2685,7 +2690,7 @@ _notebooks() {
     use)
       if [[ -z "${_name}" ]]
       then
-        _die "${_ME}" help notebooks
+        _die "${_MY_PATH}" help notebooks
       fi
 
       # Autocomplete can result in a trailing colon on the notebook name, so
@@ -2822,7 +2827,7 @@ _remote() {
     set)
       if [[ -z "${_url}" ]]
       then
-        "${_ME}" help remote
+        "${_MY_PATH}" help remote
         return 1
       fi
 
@@ -3108,7 +3113,7 @@ _search() {
         else
           _filename="$(basename "${_path}")"
 
-          _id="$("${_ME}" "${__scope}:index" get_id "${_filename}")"
+          _id="$("${_MY_PATH}" "${__scope}:index" get_id "${_filename}")"
           _title="$(_get_title "${_filename}" "${__scope}")"
 
           if [[ -n "${_title}" ]]
@@ -3457,7 +3462,7 @@ _use() {
   local _name="${1:-}"
   if [[ -z "${_name}" ]]
   then
-    _die "${_ME}" help use
+    _die "${_MY_PATH}" help use
   fi
   _notebooks use "${_name}"
 }
