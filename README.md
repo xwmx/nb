@@ -395,6 +395,8 @@ Options:
 
 Description:
   Delete a note.
+
+Alias: `d`
 ```
 
 #### `edit`

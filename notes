@@ -1194,6 +1194,8 @@ Options:
 
 Description:
   Delete a note.
+
+Alias: \`d\`
 HEREDOC
 _delete() {
   local _selection=
@@ -1282,6 +1284,8 @@ _delete() {
     _die printf "Selection not found.\\n"
   fi
 }
+desc "d" "$(_help 'delete')"
+_d() { _delete "${@}"; }
 
 # edit ########################################################################
 
@@ -3531,6 +3535,7 @@ _notes() {
       local _core_subcommands=(
         add
         count
+        d
         delete
         e
         edit
@@ -3683,6 +3688,7 @@ _SUBCOMMANDS=(
   commands
   config
   count
+  d
   delete
   e
   edit
