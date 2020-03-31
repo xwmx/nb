@@ -237,6 +237,83 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Rebuild Index') ]]
 }
 
+# reconcile ###################################################################
+
+@test "\`index reconcile\` does not modify a valid index." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+    "${_NOTES}" add "# two"
+    printf \
+      "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
+      "$(cat "${NOTES_DATA_DIR}/.index")"
+    printf "\$(ls -r \${NOTES_DATA_DIR}): '%s'\\n" "$(ls -r ${NOTES_DATA_DIR})"
+    _existing_index="$(cat "${NOTES_DATA_DIR}/.index")"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls -r ${NOTES_DATA_DIR})" ]]
+  }
+
+  run "${_NOTES}" index reconcile
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NOTES}" index verify
+  [[ ${status} -eq 0 ]]
+}
+
+@test "\`index reconcile\` updates when file has been deleted." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+    "${_NOTES}" add "# two"
+    printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+  }
+
+  run "${_NOTES}" index reconcile
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NOTES_DATA_DIR}/.index"
+  [[ ${status} -eq 0 ]]
+  [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ not-a-file ]]
+  "${_NOTES}" index verify
+}
+
+@test "\`index reconcile\` updates when file has been added." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+    "${_NOTES}" add "# two"
+    echo "# Example" > "${NOTES_DATA_DIR}/example.md"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+  }
+
+  run "${_NOTES}" index reconcile
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NOTES_DATA_DIR}/.index"
+  [[ ${status} -eq 0 ]]
+  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ example.md ]]
+  "${_NOTES}" index verify
+}
+
+@test "\`index reconcile\` updates when files have been added and deleted." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "# one"
+    "${_NOTES}" add "# two"
+    printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
+    echo "# Example" > "${NOTES_DATA_DIR}/example.md"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+  }
+
+  run "${_NOTES}" index reconcile
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NOTES_DATA_DIR}/.index"
+  [[ ${status} -eq 0 ]]
+  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ example.md ]]
+  "${_NOTES}" index verify
+}
+
 # show ########################################################################
 
 @test "\`index show\` prints index." {
@@ -302,12 +379,13 @@ load test_helper
   {
     "${_NOTES}" init
     "${_NOTES}" add "# one"
+    sleep 1
     "${_NOTES}" add "# two"
     printf \
       "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
       "$(cat "${NOTES_DATA_DIR}/.index")"
-    printf "\$(ls -r \${NOTES_DATA_DIR}): '%s'\\n" "$(ls -r ${NOTES_DATA_DIR})"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls -r ${NOTES_DATA_DIR})" ]]
+    printf "\$(ls \${NOTES_DATA_DIR}): '%s'\\n" "$(ls ${NOTES_DATA_DIR})"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls ${NOTES_DATA_DIR})" ]]
   }
 
   run "${_NOTES}" index verify
@@ -316,7 +394,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`index verify\` returns 1 with an valid index." {
+@test "\`index verify\` returns 1 with an invalid index." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "# one"

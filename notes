@@ -1883,7 +1883,7 @@ _index() {
 
       for __item in "${_index_list[@]}"
       do
-        _contains "${__item}" "${_file_list[*]}" || _index remove "${__item}"
+        _contains "${__item}" "${_file_list[*]}" || _index delete "${__item}"
       done
 
       for __item in "${_file_list[@]}"
