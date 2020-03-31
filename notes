@@ -3128,6 +3128,12 @@ _rename() {
        "${_target_basename}."
   elif [[ -n "${_target_name}" ]]
   then
+    if [[ -e "${NOTES_DATA_DIR}/${_target_name}" ]]
+    then
+      printf "File already exists: '%s'\n" "${_target_name}"
+      return 1
+    fi
+
     mv "${_source_path}" "${NOTES_DATA_DIR}/${_target_name}" &&
       _index update "${_source_basename}" "${_target_name}" &&
       _git_checkpoint \

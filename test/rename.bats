@@ -129,6 +129,21 @@ _setup_rename() {
   [[ "${output}" =~ [A-Za-z0-9]+.md\ renamed\ to\ EXAMPLE.org ]]
 }
 
+@test "\`rename\` with existing <filename> exits with status 1." {
+  {
+    _setup_rename
+    run "${_NOTES}" add "EXAMPLE.org"
+    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
+    echo "\${_filename:-}: ${_filename:-}"
+  }
+
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ 'File already exists' ]]
+}
+
 # <filename> --reset ##########################################################
 
 @test "\`rename --reset\` with <filename> argument exits with status 0." {
