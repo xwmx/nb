@@ -1029,7 +1029,7 @@ Usage:
   ${_ME} init [<remote-url>]
   ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
              [-s | --sort] [-r | --reverse] [<selection>]
-  ${_ME} ls [<list options>]
+  ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
   ${_ME} notebook
   ${_ME} notebooks [<name>] [--names] [--no-color]
@@ -2365,7 +2365,7 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [<list options>]
+  ${_ME} ls [<list options>...]
 
 Description:
   List notebooks and notes in the current notebook. Options are passed through

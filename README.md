@@ -294,7 +294,7 @@ Usage:
   notes init [<remote-url>]
   notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
              [-s | --sort] [-r | --reverse] [<selection>]
-  notes ls [<list options>]
+  notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
   notes notebook
   notes notebooks [<name>] [--names] [--no-color]
@@ -579,7 +579,7 @@ Examples:
 
 ```text
 Usage:
-  notes ls [<list options>]
+  notes ls [<list options>...]
 
 Description:
   List notebooks and notes in the current notebook. Options are passed through
