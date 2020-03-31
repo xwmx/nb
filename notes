@@ -1905,7 +1905,7 @@ _index() {
         return 1
       fi
 
-      if ! grep -q "${_basename}" "${_index_path}"
+      if ! grep -q "^${_basename}$" "${_index_path}"
       then
         _debug printf "_index() add \$_basename: %s\n" "${_basename}"
         printf "%s\n" "${_basename}" >> "${_index_path}"
