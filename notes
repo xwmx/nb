@@ -1754,7 +1754,7 @@ Subcommands:
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the notebook.
-  rebuild       Rebuild the index.
+  rebuild       Rebuild the index. Some ids might change.
   reconcile     Update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
