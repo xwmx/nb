@@ -1930,7 +1930,7 @@ _index() {
     get_id)
       # Usage: _index_get_id <basename> <index path>
       _index_get_id() {
-        grep -n "${1:-}" "${2:-}" | cut -f1 -d:
+        grep -n "^${1:-}$" "${2:-}" | cut -f1 -d:
       }
 
       local _basename="${2:-}"
