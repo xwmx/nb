@@ -317,6 +317,22 @@ _file_is_archive() {
   [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
 
+# _file_is_encrypted()
+#
+# Usage:
+#   _file_is_encrypted <path>
+#
+# Returns:
+#   1  If file is encrypted.
+#   0  if not.
+_file_is_encrypted() {
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
+  [[ "${_file_type}" == "enc" ]] ||
+    [[ "$(file "${1:-}" | cut -d: -f2)" =~ encrypted|openssl ]]
+}
+
 # _file_is_text()
 #
 # Usage:
