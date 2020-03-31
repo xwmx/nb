@@ -273,6 +273,13 @@ _edit_file() {
 
   cd "${NOTES_DATA_DIR}" || return 1
 
+  if _file_is_encrypted "${_file_path}"
+  then
+    printf "\
+Can't edit encrypted files. Export file and decrypt to edit.\n"
+    exit 1
+  fi
+
   if _file_is_archive "${_file_path}"
   then
     printf "\
