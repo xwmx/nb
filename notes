@@ -534,7 +534,12 @@ _git_checkpoint() {
     git add --all && git commit -a -m "${1}"
   }
   _git_checkpoint_sync() {
-    git fetch && git rebase origin/master && git push
+    if git show-branch remotes/origin/master > /dev/null 2>&1
+    then
+      git fetch && git rebase origin/master && git push
+    else
+      git push
+    fi
   }
 
   local _message=
@@ -3046,7 +3051,7 @@ _search() {
 
     if ((_all))
     then
-      _target_notebooks=($("${_MY_PATH}" notebooks --names --no-color))
+      _target_notebooks=($(_notebooks --names --no-color))
     else
       _target_notebooks=($(_notebook))
     fi
@@ -3394,7 +3399,7 @@ _sync() {
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\\n"
-    _notebooks=($("${_MY_PATH}" notebooks --names --no-color))
+    _notebooks=($(_notebooks --names --no-color))
   else
     _notebooks=($(_notebook))
   fi
