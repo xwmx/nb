@@ -103,7 +103,7 @@ To add a note:
 # create a new note in your text editor
 notes add
 
-# create a new note with the file name 'example.md'
+# create a new note with the filename 'example.md'
 notes add example.md
 
 # create a new note containing "This is a note."
