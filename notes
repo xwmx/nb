@@ -2617,7 +2617,7 @@ _notebooks() {
 
     if [[ -e "${NOTES_DIR}/${_name}" ]]
     then
-      printf "Already exists: ${_name}\\n"
+      printf "Already exists: %s\\n" "${_name}"
       return 1
     fi
 
@@ -2722,11 +2722,11 @@ _notebooks() {
       return 1
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
     then
-      printf "'${_old}' is not a valid notebook name.\\n"
+      printf "'%s' is not a valid notebook name.\\n" "${_old}"
       return 1
     elif [[ -e "${NOTES_DIR}/${_new}" ]]
     then
-      printf "A notebook named '${_new}' already exists.\\n"
+      printf "A notebook named '%s' already exists.\\n" "${_new}"
       return 1
     fi
 
@@ -2772,7 +2772,7 @@ _notebooks() {
         printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
         printf "Now using %s.\\n" "$( _highlight "${_name}")"
       else
-        printf "Not found: ${_name}\\n"
+        printf "Not found: %s\\n" "${_name}"
         return 1
       fi
       ;;
