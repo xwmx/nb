@@ -4,20 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`edit\` with no argument exits with status 1." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-}
-
-@test "\`edit\` with no argument does not edit the note file." {
+@test "\`edit\` with no argument exits and prints help." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -28,36 +15,22 @@ load test_helper
   run "${_NOTES}" edit
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1
+  [[ ${status} -eq 1 ]]
+
+  # Does not update note file
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_original}" ]]
-}
 
-@test "\`edit\` with no argument does not create git commit." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit
-
+  # Does not create git commit
   cd "${NOTES_DATA_DIR}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
+  if [[ -n "$(git status --porcelain)" ]]
+  then
     sleep 1
-  done
+  fi
   [[ ! $(git log | grep '\[NOTES\] Edit') ]]
-}
 
-@test "\`edit\` with no argument prints help information." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Prints help information
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
 }
@@ -115,7 +88,7 @@ load test_helper
 
 # <filename> ##################################################################
 
-@test "\`edit\` with <filename> argument exits with status 0." {
+@test "\`edit\` with <filename> argument edits properly without errors." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -125,56 +98,28 @@ load test_helper
   run "${_NOTES}" edit "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+# Returns status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`edit\` with <filename> argument updates note file." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
-
-  run "${_NOTES}" edit "${_filename}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Updates note file
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
-}
 
-@test "\`edit\` with <filename> argument creates git commit." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit "${_filename}"
-
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
-}
 
-@test "\`edit\` with <filename> argument prints output." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit "${_filename}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Prints output
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
 
-@test "\`edit\` with <id> argument exits with status 0." {
+@test "\`edit\` with <id> argument edits properly without errors." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -184,56 +129,28 @@ load test_helper
   run "${_NOTES}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`edit\` with <id> argument updates note file." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
-
-  run "${_NOTES}" edit 1
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Updates note file
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
-}
 
-@test "\`edit\` with <id> argument creates git commit." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit 1
-
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
-}
 
-@test "\`edit\` with <id> argument prints output." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit 1
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Prints output
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
 
-@test "\`edit\` with <path> argument exits with status 0." {
+@test "\`edit\` with <path> argument edits properly without errors." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -243,56 +160,29 @@ load test_helper
   run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`edit\` with <path> argument updates note file." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
-
-  run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Updates note file
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
-}
 
-@test "\`edit\` with <path> argument creates git commit." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
-
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
-}
 
-@test "\`edit\` with <path> argument prints output." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Prints output
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+
 }
 
 # <title> #####################################################################
 
-@test "\`edit\` with <title> argument exits with status 0." {
+@test "\`edit\` with <title> argument edits properly without errors." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
@@ -303,59 +193,28 @@ load test_helper
   run "${_NOTES}" edit "${_title}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`edit\` with <title> argument updates note file." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-  _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
-
-  run "${_NOTES}" edit "${_title}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Updates note file
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
-}
 
-@test "\`edit\` with <title> argument creates git commit." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-
-  run "${_NOTES}" edit "${_title}"
-
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Edit') ]]
-}
 
-@test "\`edit\` with <title> argument prints output." {
-  {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-
-  run "${_NOTES}" edit "${_title}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Prints output
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
 # encrypted ###################################################################
 
-@test "\`edit\` with encrypted file passes." {
+@test "\`edit\` with encrypted file edits properly without errors." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Content" --encrypt --password=example
@@ -387,15 +246,11 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help edit\` exits with status 0." {
-  run "${_NOTES}" help edit
-  [[ ${status} -eq 0 ]]
-}
-
-@test "\`help edit\` prints help information." {
+@test "\`help edit\` exits with status 0 and prints help information." {
   run "${_NOTES}" help edit
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
 }
