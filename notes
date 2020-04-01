@@ -969,6 +969,18 @@ _list_notes_files() {
   fi
 }
 
+# __option_value_is_present()
+#
+# Usage:
+#   __option_value_is_present "${variable}"
+#
+# Returns:
+#   0  The argument is blank or matches as an option flag.
+#   1  The argument is present and does not match an option flag.
+__option_value_is_present() {
+  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+}
+
 # _print_line()
 #
 # Usage:
@@ -1260,17 +1272,6 @@ _add() {
   # Parse function options.
   while ((${#}))
   do
-    # __option_value_is_present()
-    #
-    # Usage:
-    #   __option_value_is_present "${variable}"
-    #
-    # Returns:
-    #   0  The argument is blank or matches as an option flag.
-    #   1  The argument is present and does not match an option flag.
-    __option_value_is_present() {
-      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
-    }
     local _arg="${1:-}"
     local _val="${2:-}"
 
@@ -1600,17 +1601,6 @@ _edit() {
   # Parse function options.
   while ((${#}))
   do
-    # __option_value_is_present()
-    #
-    # Usage:
-    #   __option_value_is_present "${variable}"
-    #
-    # Returns:
-    #   0  The argument is blank or matches as an option flag.
-    #   1  The argument is present and does not match an option flag.
-    __option_value_is_present() {
-      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
-    }
     local _arg="${1:-}"
     local _val="${2:-}"
 
@@ -2489,19 +2479,9 @@ _list() {
   # Parse function options.
   while ((${#}))
   do
-    # __option_value_is_present()
-    #
-    # Usage:
-    #   __option_value_is_present "${variable}"
-    #
-    # Returns:
-    #   0  The argument is blank or matches as an option flag.
-    #   1  The argument is present and does not match an option flag.
-    __option_value_is_present() {
-      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
-    }
     local _arg="${1:-}"
     local _val="${2:-}"
+
     case "${_arg}" in
       -e|--excerpt)
         _print_excerpt=1
@@ -3705,17 +3685,6 @@ _show() {
   # Parse function options.
   while ((${#}))
   do
-    # __option_value_is_present()
-    #
-    # Usage:
-    #   __option_value_is_present "${variable}"
-    #
-    # Returns:
-    #   0  The argument is blank or matches as an option flag.
-    #   1  The argument is present and does not match an option flag.
-    __option_value_is_present() {
-      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
-    }
     local _arg="${1:-}"
     local _val="${2:-}"
 
