@@ -1490,11 +1490,11 @@ Description:
 Alias: \`d\`
 HEREDOC
 _delete() {
-  local _selection=
   local _basename=
   local _force=0
-  local _title
   local _note_info_line
+  local _selection=
+  local _title
 
   for __arg in "${@:-}"
   do
@@ -1595,8 +1595,8 @@ Description:
 Alias: \`e\`
 HEREDOC
 _edit() {
-  local _selection="${1:-}"
   local _basename=
+  local _selection="${1:-}"
 
   # Parse function options.
   while ((${#}))
@@ -1767,8 +1767,8 @@ Examples:
 HEREDOC
 _export() {
   local _args=()
-  local _pandoc_only=0
   local _force=0
+  local _pandoc_only=0
   local _selection=
   local _target_path=
 
@@ -2464,15 +2464,15 @@ _list() {
   _debug printf "_list() \${2:-}: '%s'\\n" "${2:-}"
   _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
 
-  local _print_excerpt=0
   local _excerpt_length=3
-  local _no_id=0
-  local _no_color=0
-  local _list_titles=0
+  local _print_excerpt=0
   local _limit
+  local _list_titles=0
+  local _no_color=0
+  local _no_id=0
+  local _reverse=0
   local _selection
   local _sort=0
-  local _reverse=0
 
   _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
@@ -2849,12 +2849,12 @@ Description:
 Alias: \`mv\`
 HEREDOC
 _move() {
-  local _selection=
-  local _target_notebook=
   local _basename=
   local _force=0
-  local _title=
+  local _selection=
   local _source_info_line=
+  local _target_notebook=
+  local _title=
 
   for __arg in "${@:-}"
   do
@@ -3453,9 +3453,9 @@ HEREDOC
 _search() {
   local _all=0
   local _arguments=("${@}")
+  local _last_path=
   local _query=
   local _print_paths=0
-  local _last_path=
   local _use_grep=0
 
   for __arg in "${_arguments[@]:-}"
@@ -3674,13 +3674,13 @@ _show() {
   _debug printf "_show() \${1:-}: '%s'\\n" "${1:-}"
   _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
-  local _selection=
-  local _render=0
   local _dump=0
   local _password
-  local _print_path=0
   local _print_id=0
   local _print_no_color=0
+  local _print_path=0
+  local _render=0
+  local _selection=
 
   # Parse function options.
   while ((${#}))
@@ -3727,6 +3727,7 @@ _show() {
 
   _debug printf "_show() \${_render}: '%s'\\n" "${_render}"
   _debug printf "_show() \${_selection}: '%s'\\n" "${_selection}"
+
   if [[ -z "${_selection:-}" ]]
   then
     _help "show"
