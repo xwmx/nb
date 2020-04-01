@@ -449,7 +449,8 @@ _file_is_encrypted() {
   local _file_type="${_file_path##*.}"
 
   [[ "${_file_type}" == "enc" ]] ||
-    [[ "$(file "${1:-}" | cut -d: -f2)" =~ encrypted|openssl ]]
+    [[ "$(dd bs=1 count=6 if="${_file_path}" 2>/dev/null)" == 'Salted'  ]] ||
+    [[ "$(file "${_file_path:-}" | cut -d: -f2)" =~ encrypted|openssl ]]
 }
 
 # _file_is_text()
@@ -2589,15 +2590,24 @@ HEREDOC
 
       if ((_no_id))
       then
-        printf "%s\\n" "${_list_item_id}"
+        printf "%s" "${_list_item_id}"
       else
         if ((_no_color))
         then
-          printf "%s\\n" "${_list_item}"
+          printf "%s" "${_list_item}"
         else
-          printf "%s\\n" "${_list_item_color}"
+          printf "%s" "${_list_item_color}"
         fi
       fi
+
+      # TODO: This is slow. Look for ways to speed up.
+      # if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
+      # then
+      #   printf " 🔒"
+      # fi
+
+      # End of line.
+      printf "\\n"
 
       if ((_print_excerpt)) && [[ "${_excerpt_length}" =~ ^[1-9] ]]
       then # excerpt is specified with a non-zero digit, as required by `head`.
