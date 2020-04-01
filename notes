@@ -265,9 +265,16 @@ _contains() {
 # _decrypt_file
 #
 # Usage:
-#   _decrypt_file <path>
+#   _decrypt_file <path> <password>
 _decrypt_file() {
   local _encrypted_path="${1:-}"
+  local _password="${2:-}"
+
+  if [[ -z "${_password}" ]]
+  then
+    printf "Password required.\n"
+    return 1
+  fi
 
   if [[ -z "${_encrypted_path}" ]]
   then
@@ -277,15 +284,29 @@ _decrypt_file() {
   local _basename
   _basename="$(basename "${_encrypted_path}")"
 
+  local _unencrypted_basename
+  _unencrypted_basename="$(printf "%s" "${_basename}" | sed 's/.enc$//')"
+
   local _unencrypted_path
-  _unencrypted_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_basename%.*}"
+  _unencrypted_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_unencrypted_basename}"
 
   if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
   then
-    gpg --output "${_unencrypted_path}" --decrypt "${_encrypted_path}"
+    printf "%s\n" "${_password}" \
+      | gpg \
+        --batch \
+        --passphrase-fd 0 \
+        --output "${_unencrypted_path}" \
+        --decrypt "${_encrypted_path}"
   elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
   then
     openssl enc -d -aes-256-cbc -in "${_encrypted_path}" -out "${_unencrypted_path}"
+  fi
+
+  if [[ ! -e "${_unencrypted_path}" ]]
+  then
+    printf "Decryption error.\n"
+    return 1
   fi
 
   printf "%s\n" "${_unencrypted_path}"
@@ -351,29 +372,46 @@ Can't edit archives. Export archive and expand to edit.\n"
 # _encrypt_file
 #
 # Usage:
-#   _encrypt_file <decrypted path> <encrypted path>
+#   _encrypt_file <decrypted path> <encrypted path> <password>
 _encrypt_file() {
   local _decrypted_path="${1:-}"
   local _encrypted_path="${2:-}"
-  local _tool="gpg"
+  local _password="${3:-}"
 
-  if [[ -z "${_decrypted_path}" ]] || [[ -z "${_encrypted_path}" ]]
+  if [[ -z "${_password}" ]]
   then
+    printf "Password required.\n"
+    return 1
+  fi
+
+  if [[ -z "${_decrypted_path}" ]] ||
+     [[ -z "${_encrypted_path}" ]]
+  then
+    printf "Encrypted and decripted paths required.\n"
     return 1
   fi
 
   if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
   then
-    gpg \
-      --output "${_encrypted_path}" \
-      --symmetric \
-      --cipher-algo AES256 \
-      "${_decrypted_path}"
-  elif [[ "${_tool}" == "openssl" ]]
+    printf "%s\n" "${_password}" \
+      | gpg \
+        --batch \
+        --passphrase-fd 0 \
+        --output "${_encrypted_path}" \
+        --symmetric \
+        --cipher-algo AES256 \
+        "${_decrypted_path}"
+  elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
   then
     openssl enc -aes-256-cbc \
       -in "${_decrypted_path}" \
       -out "${_encrypted_path}"
+  fi
+
+  if [[ ! -e "${_encrypted_path}" ]]
+  then
+    printf "Encryption error.\n"
+    return 1
   fi
 }
 
@@ -1305,33 +1343,50 @@ _add() {
     _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
   fi
 
-  _file_path="${NOTES_DATA_DIR}/${_basename}"
+  _target_path="${NOTES_DATA_DIR}/${_basename}"
+
+  if ((_encrypt))
+  then
+    local _password
+    printf "Password: "
+    read -r -s _password
+    printf "\\n" # print newline to stop `read`.
+
+    if [[ -z "${_password:-}" ]]
+    then
+      printf "Password required.\n"
+      return 1
+    fi
+
+    _target_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_basename}"
+  fi
 
   if [[ -n "${_title}" ]]
   then
-    printf "%s\\n\\n" "# ${_title}" >> "${_file_path}"
+    printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
   fi
 
   if [[ -n "${_content}" ]]
   then
-    printf "%s\\n" "${_content}" >> "${_file_path}"
+    printf "%s\\n" "${_content}" >> "${_target_path}"
   fi
 
   if _interactive_input
   then # terminal input.
     if [[ -z "${_content:-}" ]]
     then
-      _edit_file "${_file_path}"
+      _edit_file "${_target_path}"
     fi
   else # piped input.
-    cat >> "${_file_path}"
+    cat >> "${_target_path}"
   fi
 
   if ((_encrypt))
   then
-    local _decrypted_path="${_file_path}"
-    local _encrypted_path="${_file_path}.enc"
-    _encrypt_file "${_decrypted_path}" "${_encrypted_path}"
+    local _decrypted_path="${_target_path}"
+    local _encrypted_path="${NOTES_DATA_DIR}/${_basename}.enc"
+
+    _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
 
     if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
     then
@@ -1339,10 +1394,14 @@ _add() {
     fi
 
     _basename="${_basename}.enc"
-    _file_path="${_file_path}.enc"
+    _target_path="${_encrypted_path}"
   fi
 
-  if [[ -e "${_file_path}" ]]
+  _debug printf \
+    "_add() \`\${_target_path}\`: '%s'\n" \
+    "${_target_path:-}"
+
+  if [[ -e "${_target_path}" ]]
   then
     _index add "${_basename}"
 
@@ -1359,8 +1418,8 @@ _add() {
         "${_SCOPE}" \
         "${_basename}"
     fi
-  fi
-  _git_checkpoint "[NOTES] Add: ${_basename}"
+  fi &&
+    _git_checkpoint "[NOTES] Add: ${_basename}"
 }
 desc "a" "$(_help 'add')"
 _a() { _add "${@}"; }
@@ -1543,19 +1602,25 @@ _edit() {
       local _encrypted_path
       _encrypted_path="${_target_file}"
 
+      # Request password without displaying it
+      local _password
+      printf "Password: "
+      read -r -s _password
+      printf "\\n" # print newline to stop `read`.
+
       local _decrypted_path
-      _decrypted_path="$(_decrypt_file "${_target_file}")"
+      _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"
 
       _target_file="${_decrypted_path}"
     fi
 
     _edit_file "${_target_file}"
 
-    if [[ -n "${_encrypted_path:-}" ]] && [[ -n "${_decrypted_path}" ]]
+    if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
     then
       local _temp_encrypted_path="${_decrypted_path}.tmp"
       mv "${_encrypted_path}" "${_temp_encrypted_path}"
-      _encrypt_file "${_decrypted_path}" "${_encrypted_path}"
+      _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
       rm "${_temp_encrypted_path}" && rm "${_decrypted_path}"
     fi
 
@@ -2019,6 +2084,8 @@ _index() {
       ;;
     delete)
       local _basename="${2:-}"
+      _debug printf "_index() delete \${_basename}: '%s'\n" "${_basename}"
+
       if [[ -z "${_basename}" ]]
       then
         _help index
@@ -2128,14 +2195,29 @@ _index() {
 
       _index_reconcile_remove_duplicates "${_index_path}"
 
+      _debug printf \
+        "_index() reconcile: \`\${_index_list[*]}\`: '%s'\n" \
+        "${_index_list[*]:-}"
+      _debug printf \
+        "_index() reconcile: \`\${_file_list[*]}\`: '%s'\n" \
+        "${_file_list[*]:-}"
+
       for __item in "${_index_list[@]:-}"
       do
-        _contains "${__item}" "${_file_list[*]:-}" || _index delete "${__item}"
+        if [[ -n "${__item}" ]]
+        then
+          _contains "${__item}" "${_file_list[*]:-}" ||
+            _index delete "${__item}"
+        fi
       done
 
       for __item in "${_file_list[@]:-}"
       do
-        _contains "${__item}" "${_index_list[*]:-}" || _index add "${__item}"
+        if [[ -n "${__item}" ]]
+        then
+          _contains "${__item}" "${_index_list[*]:-}" ||
+            _index add "${__item}"
+        fi
       done
       ;;
     show)
@@ -3600,8 +3682,14 @@ _show() {
     local _encrypted_path
     _encrypted_path="${_target_path}"
 
+    # Request password without displaying it
+    local _password
+    printf "Password: "
+    read -r -s _password
+    printf "\\n" # print newline to stop `read`.
+
     local _decrypted_path
-    _decrypted_path="$(_decrypt_file "${_target_path}")"
+    _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
     _target_path="${_decrypted_path}"
   fi
