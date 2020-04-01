@@ -3487,10 +3487,17 @@ _show() {
 
   _set_selection_notebook "${_selection}"
 
+  if _file_is_encrypted "${NOTES_DATA_DIR}/${_basename}"
+  then
+    printf "\
+Can't show encrypted files. Export file and decrypt to edit.\n"
+    exit 1
+  fi
+
   if _file_is_archive "${NOTES_DATA_DIR}/${_basename}"
   then
     printf "\
-Can't show archives. Export archive to expand and inspect contents.\n"
+Can't show archives. Export archive and expand to edit.\n"
     exit 1
   fi
 
