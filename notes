@@ -448,9 +448,27 @@ _file_is_encrypted() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
+  # `file` with 'soft' test is slow, so avoid calling it.
   [[ "${_file_type}" == "enc" ]] ||
-    [[ "$(dd bs=1 count=6 if="${_file_path}" 2>/dev/null)" == 'Salted'  ]] ||
-    [[ "$(file "${_file_path:-}" | cut -d: -f2)" =~ encrypted|openssl ]]
+    [[ ! "$(file "${1:-}" \
+            -b --mime-type \
+            --exclude=apptype \
+            --exclude=encoding \
+            --exclude=tokens \
+            --exclude=cdf \
+            --exclude=compress \
+            --exclude=elf \
+            --exclude=soft \
+            --exclude=tar)" =~ ^text ]] &&
+    # [[ "$(dd bs=1 count=6 if="${_file_path}" 2>/dev/null)" == 'Salted'  ]] ||
+    [[ "$(file "${_file_path:-}" \
+            --exclude=apptype \
+            --exclude=encoding \
+            --exclude=tokens \
+            --exclude=cdf \
+            --exclude=compress \
+            --exclude=elf \
+            --exclude=tar)" =~ encrypted|openssl ]]
 }
 
 # _file_is_text()
@@ -2636,10 +2654,10 @@ HEREDOC
       fi
 
       # TODO: This is slow. Look for ways to speed up.
-      # if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
-      # then
-      #   printf " 🔒"
-      # fi
+      if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
+      then
+        printf " 🔒"
+      fi
 
       # End of line.
       printf "\\n"
