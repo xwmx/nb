@@ -1308,7 +1308,6 @@ _add() {
           return 1
         fi
         ;;
-
       -t|--title)
         if __option_value_is_present "${_val:-}"
         then
@@ -1598,6 +1597,45 @@ _edit() {
   local _selection="${1:-}"
   local _basename=
 
+  # Parse function options.
+  while ((${#}))
+  do
+    # __option_value_is_present()
+    #
+    # Usage:
+    #   __option_value_is_present "${variable}"
+    #
+    # Returns:
+    #   0  The argument is blank or matches as an option flag.
+    #   1  The argument is present and does not match an option flag.
+    __option_value_is_present() {
+      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+    }
+    local _arg="${1:-}"
+    local _val="${2:-}"
+
+    case "${_arg}" in
+      --password)
+        if __option_value_is_present "${_val:-}"
+        then
+          _password="${_val:-}"
+          shift
+        else
+          _help edit
+          return 1
+        fi
+        ;;
+      *)
+        if [[ -z "${_selection:-}" ]]
+        then
+          _selection="${_arg:-}"
+        fi
+        ;;
+    esac
+
+    shift
+  done
+
   _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
@@ -1627,11 +1665,14 @@ _edit() {
       local _encrypted_path
       _encrypted_path="${_target_file}"
 
-      # Request password without displaying it
-      local _password
-      printf "Password: "
-      read -r -s _password
-      printf "\\n" # print newline to stop `read`.
+      if [[ -z "${_password}" ]]
+      then
+        # Request password without displaying it
+        local _password
+        printf "Password: "
+        read -r -s _password
+        printf "\\n" # print newline to stop `read`.
+      fi
 
       local _decrypted_path
       _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"

@@ -353,6 +353,38 @@ load test_helper
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
+# encrypted ###################################################################
+
+@test "\`edit\` with encrypted file passes." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add "# Content" --encrypt --password=example
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" edit 1 --password=example
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+
+  # Updates file
+  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+
+  # Creates git commit
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Edit') ]]
+
+  # Prints output
+  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+
+  # Deletes temp files.
+  [[ ! "$(ls /tmp/notes*)" ]]
+}
+
 # help ########################################################################
 
 @test "\`help edit\` exits with status 0." {
