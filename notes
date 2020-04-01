@@ -1188,7 +1188,8 @@ A git-backed, syncable, searchable command line note-taking tool.
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]
   ${_ME} add [<filename> | <content>] [-c | --content <content>]
-            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
+            [-e | --encrypt] [-f | --filename <filename>]
+            [-t | --title <title>] [--type <type>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1240,10 +1241,12 @@ HEREDOC
 desc "add" <<HEREDOC
 Usage:
   ${_ME} add [<filename> | <content>] [-c | --content <content>]
-            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
+            [-e | --encrypt] [-f | --filename <filename>]
+            [-t | --title <title>] [--type <type>]
 
 Options:
   -c | --content   <content>    The content for the new note.
+  -e | --encrypt                Encrypt the note with a password.
   -f | --filename  <filename>   The filename for the new note.
   -t | --title     <title>      The title for a new note. If \`--title\` is
                                 present, the filename will be derived from the

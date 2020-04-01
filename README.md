@@ -9,8 +9,8 @@
 ```
 
 `notes` is a full-featured command line note-taking, document management,
-versioning, and syncing tool in a single portable script. `notes`
-creates notes in text-based formats like
+versioning, conversion, encryption, and syncing tool in a single portable
+script. `notes` creates notes in text-based formats like
 [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), and can also organize and
 work with files in any format.
@@ -108,6 +108,9 @@ notes add example.md
 
 # create a new note containing "This is a note."
 notes add "This is a note."
+
+# creare a new encrypted note
+notes add "# Secret Document" --encrypt
 ```
 
 `notes add` with no arguments will open the new, blank note in your
@@ -282,7 +285,8 @@ For more commands and options, run `notes help`.
 Usage:
   notes [<id> | <filename> | <path> | <title>] [<list options>]
   notes add [<filename> | <content>] [-c | --content <content>]
-            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
+            [-e | --encrypt] [-f | --filename <filename>]
+            [-t | --title <title>] [--type <type>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -358,10 +362,12 @@ Program Options:
 ```text
 Usage:
   notes add [<filename> | <content>] [-c | --content <content>]
-            [-f | --filename <filename>] [-t | --title <title>] [--type <type>]
+            [-e | --encrypt] [-f | --filename <filename>]
+            [-t | --title <title>] [--type <type>]
 
 Options:
   -c | --content   <content>    The content for the new note.
+  -e | --encrypt                Encrypt the note with a password.
   -f | --filename  <filename>   The filename for the new note.
   -t | --title     <title>      The title for a new note. If `--title` is
                                 present, the filename will be derived from the
