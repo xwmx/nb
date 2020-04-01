@@ -212,9 +212,34 @@ load test_helper
   [[ "${_files[0]}" =~ org$ ]]
 }
 
-@test "\`add --type ''\` with argument exits with 1." {
+@test "\`add --type ''\` without argument exits with 1." {
   run "${_NOTES}" init
   run "${_NOTES}" add  "* Content" --type
+
+  [[ ${status} -eq 1 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 0 ]]
+}
+
+# --encrypt option ############################################################
+
+@test "\`add --encrypt\` with content argument creates a new .enc note file." {
+  run "${_NOTES}" init
+  run "${_NOTES}" add  "* Content" --encrypt --password=example
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${_files[0]}" =~ enc$ ]]
+}
+
+# --password option ###########################################################
+
+@test "\`add --password\` without argument exits with 1." {
+  run "${_NOTES}" init
+  run "${_NOTES}" add  "* Content" --encrypt --password
 
   [[ ${status} -eq 1 ]]
 

@@ -1255,6 +1255,7 @@ _add() {
   local _title=
   local _file_type="${NOTES_DEFAULT_EXTENSION}"
   local _arguments=()
+  local _password
 
   # Parse function options.
   while ((${#}))
@@ -1297,6 +1298,17 @@ _add() {
           return 1
         fi
         ;;
+      --password)
+        if __option_value_is_present "${_val:-}"
+        then
+          _password="${_val:-}"
+          shift
+        else
+          _help add
+          return 1
+        fi
+        ;;
+
       -t|--title)
         if __option_value_is_present "${_val:-}"
         then
@@ -1357,15 +1369,18 @@ _add() {
 
   if ((_encrypt))
   then
-    local _password
-    printf "Password: "
-    read -r -s _password
-    printf "\\n" # print newline to stop `read`.
-
-    if [[ -z "${_password:-}" ]]
+    if [[ -z "${_password}" ]]
     then
-      printf "Password required.\n"
-      return 1
+      local _password
+      printf "Password: "
+      read -r -s _password
+      printf "\\n" # print newline to stop `read`.
+
+      if [[ -z "${_password:-}" ]]
+      then
+        printf "Password required.\n"
+        return 1
+      fi
     fi
 
     _target_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_basename}"
