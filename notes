@@ -3688,6 +3688,12 @@ _show() {
     read -r -s _password
     printf "\\n" # print newline to stop `read`.
 
+    if [[ -z "${_password}" ]]
+    then
+      printf "Password required.\n"
+      return 1
+    fi
+
     local _decrypted_path
     _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
