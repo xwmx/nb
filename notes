@@ -3952,7 +3952,7 @@ _SUBCOMMANDS=(
 # More information:
 # http://stackoverflow.com/a/13254908
 # https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
-_SUBCOMMANDS_PATTERN="@(^$(_join '|' "${_SUBCOMMANDS[@]}")$)"
+_SUBCOMMANDS_PATTERN="@($(_join '|' "${_SUBCOMMANDS[@]}"))"
 
 _debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n" "${_SUBCOMMANDS_PATTERN}"
 
