@@ -1267,7 +1267,7 @@ _add() {
   local _title=
   local _file_type="${NOTES_DEFAULT_EXTENSION}"
   local _arguments=()
-  local _password
+  local _password=
 
   # Parse function options.
   while ((${#}))
@@ -1371,7 +1371,6 @@ _add() {
   then
     if [[ -z "${_password}" ]]
     then
-      local _password
       printf "Password: "
       read -r -s _password
       printf "\\n" # print newline to stop `read`.
@@ -1596,6 +1595,7 @@ Alias: \`e\`
 HEREDOC
 _edit() {
   local _basename=
+  local _password=
   local _selection="${1:-}"
 
   # Parse function options.
@@ -1658,7 +1658,6 @@ _edit() {
       if [[ -z "${_password}" ]]
       then
         # Request password without displaying it
-        local _password
         printf "Password: "
         read -r -s _password
         printf "\\n" # print newline to stop `read`.
@@ -3675,7 +3674,7 @@ _show() {
   _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
   local _dump=0
-  local _password
+  local _password=
   local _print_id=0
   local _print_no_color=0
   local _print_path=0
@@ -3754,7 +3753,6 @@ _show() {
     if [[ -z "${_password}" ]]
     then
       # Request password without displaying it
-      local _password
       printf "Password: "
       read -r -s _password
       printf "\\n" # print newline to stop `read`.
