@@ -290,21 +290,30 @@ _decrypt_file() {
   local _unencrypted_path
   _unencrypted_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_unencrypted_basename}"
 
-  if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
+  local _file_command_response="$(file "${_encrypted_path}")"
+
+  if [[ "${_file_command_response}" =~ GPG ]]
   then
-    printf "%s\n" "${_password}" \
-      | gpg \
-        --batch \
-        --passphrase-fd 0 \
-        --output "${_unencrypted_path}" \
-        --decrypt "${_encrypted_path}"
-  elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
+    if _command_exists "gpg"
+    then
+      printf "%s\\n" "${_password}" \
+        | gpg \
+          --batch \
+          --passphrase-fd 0 \
+          --output "${_unencrypted_path}" \
+          --decrypt "${_encrypted_path}"
+    else
+      printf "\
+This note was encrypted with GPG, but the GPG command was not found.\n"
+      return 1
+    fi
+  elif [[ "${_file_command_response}" =~ openssl ]]
   then
     openssl enc -d -aes-256-cbc \
       -in "${_encrypted_path}" -out "${_unencrypted_path}" \
-      -pass file:<(printf "%s\n" "${_password}")
+      -pass file:<(printf "%s\\n" "${_password}")
   else
-    printf "\$NOTES_ENCRYPTION_TOOL must be set to either 'gpg' or 'openssl'."
+    printf "Unable to decrypt file.\\n"
     return 1
   fi
 
