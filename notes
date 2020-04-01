@@ -217,10 +217,10 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 
 # `$NOTES_ENCRYPTION_TOOL`
 #
-# Default: 'gpg'
+# Default: 'openssl'
 #
 # Supported Values: 'gpg' 'openssl'
-export NOTES_ENCRYPTION_TOOL="gpg"
+export NOTES_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL:-openssl}"
 
 ###############################################################################
 # Helpers
@@ -300,7 +300,12 @@ _decrypt_file() {
         --decrypt "${_encrypted_path}"
   elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
   then
-    openssl enc -d -aes-256-cbc -in "${_encrypted_path}" -out "${_unencrypted_path}"
+    openssl enc -d -aes-256-cbc \
+      -in "${_encrypted_path}" -out "${_unencrypted_path}" \
+      -pass file:<(printf "%s\n" "${_password}")
+  else
+    printf "\$NOTES_ENCRYPTION_TOOL must be set to either 'gpg' or 'openssl'."
+    return 1
   fi
 
   if [[ ! -e "${_unencrypted_path}" ]]
@@ -405,7 +410,11 @@ _encrypt_file() {
   then
     openssl enc -aes-256-cbc \
       -in "${_decrypted_path}" \
-      -out "${_encrypted_path}"
+      -out "${_encrypted_path}" \
+      -pass file:<(printf "%s\n" "${_password}")
+  else
+    printf "\$NOTES_ENCRYPTION_TOOL must be set to either 'gpg' or 'openssl'."
+    return 1
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
