@@ -3672,6 +3672,11 @@ HEREDOC
     else
       printf "Already at the latest version.\n"
     fi
+
+    if [[ -n "${_temp_file}" ]]
+    then
+      rm "${_temp_file}"
+    fi
   fi
 }
 
