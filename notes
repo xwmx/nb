@@ -3691,10 +3691,9 @@ _show() {
     printf "Note not found.\n"
     return 1
   fi
+  _set_selection_notebook "${_selection}"
 
   local _target_path="${NOTES_DATA_DIR}/${_basename}"
-
-  _set_selection_notebook "${_selection}"
 
   if _file_is_encrypted "${_target_path}"
   then
