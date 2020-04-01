@@ -290,7 +290,8 @@ _decrypt_file() {
   local _unencrypted_path
   _unencrypted_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_unencrypted_basename}"
 
-  local _file_command_response="$(file "${_encrypted_path}")"
+  local _file_command_response
+  _file_command_response="$(file "${_encrypted_path}")"
 
   if [[ "${_file_command_response}" =~ GPG ]]
   then
