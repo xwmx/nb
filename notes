@@ -215,6 +215,13 @@ export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-1}"
 # Example Values: 'md' 'org'
 export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 
+# `$NOTES_ENCRYPTION_TOOL`
+#
+# Default: 'gpg'
+#
+# Supported Values: 'gpg' 'openssl'
+export NOTES_ENCRYPTION_TOOL="gpg"
+
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -253,6 +260,35 @@ _contains() {
     fi
   done
   return 1
+}
+
+# _decrypt_file
+#
+# Usage:
+#   _decrypt_file <path>
+_decrypt_file() {
+  local _encrypted_path="${1:-}"
+
+  if [[ -z "${_encrypted_path}" ]]
+  then
+    return 1
+  fi
+
+  local _basename
+  _basename="$(basename "${_encrypted_path}")"
+
+  local _unencrypted_path
+  _unencrypted_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_basename%.*}"
+
+  if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
+  then
+    gpg --output "${_unencrypted_path}" --decrypt "${_encrypted_path}"
+  elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
+  then
+    openssl enc -d -aes-256-cbc -in "${_encrypted_path}" -out "${_unencrypted_path}"
+  fi
+
+  printf "%s\n" "${_unencrypted_path}"
 }
 
 # _edit_file()
@@ -309,6 +345,35 @@ Can't edit archives. Export archive and expand to edit.\n"
     "${EDITOR}" --wait "${_file_path}"
   else
     "${EDITOR}" "${_file_path}"
+  fi
+}
+
+# _encrypt_file
+#
+# Usage:
+#   _encrypt_file <decrypted path> <encrypted path>
+_encrypt_file() {
+  local _decrypted_path="${1:-}"
+  local _encrypted_path="${2:-}"
+  local _tool="gpg"
+
+  if [[ -z "${_decrypted_path}" ]] || [[ -z "${_encrypted_path}" ]]
+  then
+    return 1
+  fi
+
+  if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
+  then
+    gpg \
+      --output "${_encrypted_path}" \
+      --symmetric \
+      --cipher-algo AES256 \
+      "${_decrypted_path}"
+  elif [[ "${_tool}" == "openssl" ]]
+  then
+    openssl enc -aes-256-cbc \
+      -in "${_decrypted_path}" \
+      -out "${_encrypted_path}"
   fi
 }
 
@@ -1136,6 +1201,7 @@ HEREDOC
 _add() {
   local _basename=
   local _content=
+  local _encrypt=0
   local _filename=
   local _maybe_filename_or_content=
   local _title=
@@ -1169,6 +1235,9 @@ _add() {
           _help add
           return 1
         fi
+        ;;
+      -e|--encrypt)
+        _encrypt=1
         ;;
       -f|--filename)
         if __option_value_is_present "${_val:-}"
@@ -1256,6 +1325,21 @@ _add() {
     fi
   else # piped input.
     cat >> "${_file_path}"
+  fi
+
+  if ((_encrypt))
+  then
+    local _decrypted_path="${_file_path}"
+    local _encrypted_path="${_file_path}.enc"
+    _encrypt_file "${_decrypted_path}" "${_encrypted_path}"
+
+    if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
+    then
+      rm "${_decrypted_path}"
+    fi
+
+    _basename="${_basename}.enc"
+    _file_path="${_file_path}.enc"
   fi
 
   if [[ -e "${_file_path}" ]]
@@ -1449,11 +1533,33 @@ _edit() {
 
   if [[ -n "${_basename}" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
+    local _target_file="${NOTES_DATA_DIR}/${_basename}"
+
     local _before
     _before="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
 
-    _edit_file "${NOTES_DATA_DIR}/${_basename}" \
-      && _git_checkpoint "[NOTES] Edit: ${_basename}"
+    if _file_is_encrypted "${_target_file}"
+    then
+      local _encrypted_path
+      _encrypted_path="${_target_file}"
+
+      local _decrypted_path
+      _decrypted_path="$(_decrypt_file "${_target_file}")"
+
+      _target_file="${_decrypted_path}"
+    fi
+
+    _edit_file "${_target_file}"
+
+    if [[ -n "${_encrypted_path:-}" ]] && [[ -n "${_decrypted_path}" ]]
+    then
+      local _temp_encrypted_path="${_decrypted_path}.tmp"
+      mv "${_encrypted_path}" "${_temp_encrypted_path}"
+      _encrypt_file "${_decrypted_path}" "${_encrypted_path}"
+      rm "${_temp_encrypted_path}" && rm "${_decrypted_path}"
+    fi
+
+    _git_checkpoint "[NOTES] Edit: ${_basename}"
 
     _after="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
     _debug printf "_edit() \${_before}: %s\\n" "${_before}"
@@ -3433,7 +3539,6 @@ _show() {
 
   local -a _arguments=("${@}")
   local _selection=
-  local _basename=
   local _render=0
   local _dump=0
   local _print_path=0
@@ -3477,6 +3582,7 @@ _show() {
     return 1
   fi
 
+  local _basename
   _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
@@ -3485,35 +3591,41 @@ _show() {
     return 1
   fi
 
+  local _target_path="${NOTES_DATA_DIR}/${_basename}"
+
   _set_selection_notebook "${_selection}"
 
-  if _file_is_encrypted "${NOTES_DATA_DIR}/${_basename}"
+  if _file_is_encrypted "${_target_path}"
   then
-    printf "\
-Can't show encrypted files. Export file and decrypt to edit.\n"
-    exit 1
+    local _encrypted_path
+    _encrypted_path="${_target_path}"
+
+    local _decrypted_path
+    _decrypted_path="$(_decrypt_file "${_target_path}")"
+
+    _target_path="${_decrypted_path}"
   fi
 
-  if _file_is_archive "${NOTES_DATA_DIR}/${_basename}"
+  if _file_is_archive "${_target_path}"
   then
     printf "\
 Can't show archives. Export archive and expand to edit.\n"
     exit 1
   fi
 
-  if ! _file_is_text "${NOTES_DATA_DIR}/${_basename}"
+  if ! _file_is_text "${_target_path}"
   then
     if _command_exists "xdg-open"
     then
-      xdg-open "${NOTES_DATA_DIR}/${_basename}" && return 0
+      xdg-open "${_target_path}" && return 0
     elif [[ "${OSTYPE}" =~ ^darwin ]]
     then
-      open "${NOTES_DATA_DIR}/${_basename}" && return 0
+      open "${_target_path}" && return 0
     fi
   fi
 
   # Display file.
-  if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] && [[ -e "${_target_path}" ]]
   then # _basename is assigned and a note exists with that name.
     if ((_print_path))
     then # `notes show --path`
@@ -3528,41 +3640,46 @@ Can't show archives. Export archive and expand to edit.\n"
          _command_exists "pandoc" &&
          _command_exists "w3m"
     then # `notes show --render --dump` with `pandoc` and `w3m` available.
-      pandoc "${NOTES_DATA_DIR}/${_basename}" \
+      pandoc "${_target_path}" \
         | w3m -dump -T text/html
     elif ((_render)) &&
          _command_exists "pandoc" &&
          _command_exists "w3m"
     then # `notes show --render` with `pandoc` and `w3m` available.
-      pandoc "${NOTES_DATA_DIR}/${_basename}" \
+      pandoc "${_target_path}" \
         | w3m -T text/html
     elif ((_render)) &&
          _command_exists "pandoc" &&
          _command_exists "lynx"
     then # `notes show --render` with `pandoc` and `lynx` available.
-      pandoc "${NOTES_DATA_DIR}/${_basename}" | lynx -stdin
+      pandoc "${_target_path}" | lynx -stdin
     else # default
       if ((_dump))
       then # `notes show --dump [--no-color]`
         if ((_print_no_color))
         then # `notes show --dump --no-color`
-          cat "${NOTES_DATA_DIR}/${_basename}"
+          cat "${_target_path}"
         else # `notes show --dump`
-          _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"
+          _highlight_syntax_if_available "${_target_path}"
         fi
       else # `notes show`
         if [[ -n "${PAGER:-}" ]]
         then
-          _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}" \
+          _highlight_syntax_if_available "${_target_path}" \
             | "${PAGER}"
         else
-          _highlight_syntax_if_available "${NOTES_DATA_DIR}/${_basename}"
+          _highlight_syntax_if_available "${_target_path}"
         fi
       fi
     fi
   else # _basename is not assigned or no note exists with that name.
     printf "Selection not found.\\n"
     return 1
+  fi
+
+  if [[ -n "${_decrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
+  then
+    rm "${_decrypted_path}"
   fi
 }
 desc "s" "$(_help 'show')"
