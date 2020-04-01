@@ -4,25 +4,21 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`add\` with no arguments exits with status 0." {
+@test "\`add\` with no arguments creates new note file created with $EDITOR." {
   run "${_NOTES}" init
   run "${_NOTES}" add
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-}
 
-@test "\`add\` with no arguments creates a new note file using \`\$EDITOR\`." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates a new note file with $EDITOR
   _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
-}
 
-@test "\`add\` with no arguments creates git commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
@@ -30,54 +26,38 @@ load test_helper
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Add') ]]
+
 }
 
 # <content> argument ##########################################################
 
-@test "\`add\` with content argument exits with 0, creates new note, prints output." {
+@test "\`add\` with content argument creates new note without errors." {
   run "${_NOTES}" init
   run "${_NOTES}" add "# Content"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  # Returns status 0
   [[ ${status} -eq 0 ]]
 
+  # Creates new note file with content
   _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
 
-  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
-}
-
-@test "\`add\` with content argument content creates git commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add "# Content"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Add') ]]
-}
 
-@test "\`add\` with content argument content adds to index." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add "# Content"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Adds to index
   [[ -e "${NOTES_DATA_DIR}/.index" ]]
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
-}
 
-@test "\`add\` with argument prints output." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add  "# Content"
-  _files=($(ls "${NOTES_DATA_DIR}/"))
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Prints output
   [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
 }
 
@@ -253,48 +233,34 @@ load test_helper
 
 # piped #######################################################################
 
-@test "\`add\` with piped content exits with status 0." {
+@test "\`add\` with piped content creates new note without errors." {
   run "${_NOTES}" init
   run bash -c 'echo "# Piped" | "${_NOTES}" add'
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-}
 
-@test "\`add\` with piped content creates a new note file." {
-  run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add'
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file
   _files=($(ls "${NOTES_DATA_DIR}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
-}
 
-@test "\`add\` with piped content creates git commit." {
-  run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add'
+  # Creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Add') ]]
-}
 
-@test "\`add\` with piped content prints output." {
-  run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add'
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
-}
-
-@test "\`add\` with piped content adds to index." {
-  run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add'
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # Adds to index
   [[ -e "${NOTES_DATA_DIR}/.index" ]]
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {
