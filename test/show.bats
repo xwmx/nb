@@ -292,6 +292,29 @@ load test_helper
   [[ "${output}" == "1" ]]
 }
 
+# encrypted ###################################################################
+
+@test "\`show\` with encrypted file show properly without errors." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add "# Content" --encrypt --password=example
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" show 1 --password=example --dump
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Prints file content
+  [[ "${output}" =~ Content ]]
+
+  # Deletes temp files.
+  [[ ! "$(ls /tmp/notes*)" ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {

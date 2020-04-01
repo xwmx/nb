@@ -3694,19 +3694,32 @@ _show() {
   _debug printf "_show() \${1:-}: '%s'\\n" "${1:-}"
   _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
-  local -a _arguments=("${@}")
   local _selection=
   local _render=0
   local _dump=0
+  local _password
   local _print_path=0
   local _print_id=0
   local _print_no_color=0
 
-  _debug printf "_show() \${_arguments[*]:-}: '%s'\\n" "${_arguments[*]:-}"
-
-  for __arg in "${_arguments[@]:-}"
+  # Parse function options.
+  while ((${#}))
   do
-    case "${__arg}" in
+    # __option_value_is_present()
+    #
+    # Usage:
+    #   __option_value_is_present "${variable}"
+    #
+    # Returns:
+    #   0  The argument is blank or matches as an option flag.
+    #   1  The argument is present and does not match an option flag.
+    __option_value_is_present() {
+      [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+    }
+    local _arg="${1:-}"
+    local _val="${2:-}"
+
+    case "${_arg}" in
       --dump)
         _dump=1
         ;;
@@ -3716,6 +3729,16 @@ _show() {
       --id|--index)
         _print_id=1
         ;;
+      --password)
+        if __option_value_is_present "${_val:-}"
+        then
+          _password="${_val:-}"
+          shift
+        else
+          _help edit
+          return 1
+        fi
+        ;;
       --raw|--no-color|--nocolor)
         _print_no_color=1
         ;;
@@ -3723,12 +3746,14 @@ _show() {
         _render=1
         ;;
       *)
-        if [[ -z "${_selection}" ]]
+        if [[ -z "${_selection:-}" ]]
         then
-          _selection="${__arg}"
+          _selection="${_arg}"
         fi
         ;;
     esac
+
+    shift
   done
 
   _debug printf "_show() \${_render}: '%s'\\n" "${_render}"
@@ -3756,11 +3781,14 @@ _show() {
     local _encrypted_path
     _encrypted_path="${_target_path}"
 
-    # Request password without displaying it
-    local _password
-    printf "Password: "
-    read -r -s _password
-    printf "\\n" # print newline to stop `read`.
+    if [[ -z "${_password}" ]]
+    then
+      # Request password without displaying it
+      local _password
+      printf "Password: "
+      read -r -s _password
+      printf "\\n" # print newline to stop `read`.
+    fi
 
     if [[ -z "${_password}" ]]
     then
