@@ -4379,13 +4379,23 @@ do
   shift
   case "${__opt}" in
     -h|--help)
-      _PRINT_HELP=1
+      if [[ "${_SUBCOMMAND}" == "git" ]]
+      then
+        _ARGUMENTS+=("${__opt}")
+      else
+        _PRINT_HELP=1
+      fi
       ;;
     --debug)
       _USE_DEBUG=1
       ;;
     --version)
-      _PRINT_VERSION=1
+      if [[ "${_SUBCOMMAND}" == "git" ]]
+      then
+        _ARGUMENTS+=("${__opt}")
+      else
+        _PRINT_VERSION=1
+      fi
       ;;
     *:*)
       __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
