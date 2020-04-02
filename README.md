@@ -111,7 +111,7 @@ notes add example.md
 # create a new note containing "This is a note."
 notes add "This is a note."
 
-# creare a new encrypted note
+# creare a new password-protected, encrypted note
 notes add "# Secret Document" --encrypt
 ```
 
@@ -163,8 +163,8 @@ To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
 notes 1 --excerpt
-# [1]  Example Title
-# ---------
+# [1] Example Title
+# -----------------
 # # Example Title
 #
 # This is an example excerpt.
