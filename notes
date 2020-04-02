@@ -2203,7 +2203,7 @@ _index() {
     get_basename)
       # Usage: _index_get_basename <id> <index path>
       _index_get_basename() {
-        sed "${_id_number}q;d" "${_index_path}"
+        sed "${1:-}q;d" "${2:-}"
       }
 
       local _id_number="${2:-}"
