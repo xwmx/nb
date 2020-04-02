@@ -312,7 +312,8 @@ This note was encrypted with GPG, but the GPG command was not found.\n"
   then
     openssl enc -d -aes-256-cbc \
       -in "${_encrypted_path}" -out "${_unencrypted_path}" \
-      -pass file:<(printf "%s\\n" "${_password}")
+      -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
+      rm "${_unencrypted_path}"
   else
     printf "Unable to decrypt file.\\n"
     return 1
@@ -320,7 +321,7 @@ This note was encrypted with GPG, but the GPG command was not found.\n"
 
   if [[ ! -e "${_unencrypted_path}" ]]
   then
-    printf "Decryption error.\n"
+    printf "Decryption error.\n" 1>&2
     return 1
   fi
 
@@ -1404,7 +1405,7 @@ _add() {
     if [[ -z "${_password}" ]]
     then
       printf "Password: "
-      read -r -s _password
+      read -r -s _password </dev/tty
       printf "\\n" # print newline to stop `read`.
 
       if [[ -z "${_password:-}" ]]
@@ -1696,7 +1697,7 @@ _edit() {
       then
         # Request password without displaying it
         printf "Password: "
-        read -r -s _password
+        read -r -s _password </dev/tty
         printf "\\n" # print newline to stop `read`.
       fi
 
@@ -3799,7 +3800,7 @@ _show() {
     then
       # Request password without displaying it
       printf "Password: "
-      read -r -s _password
+      read -r -s _password </dev/tty
       printf "\\n" # print newline to stop `read`.
     fi
 
