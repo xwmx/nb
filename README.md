@@ -12,8 +12,10 @@
 versioning, conversion, encryption, and syncing tool in a single portable
 script. `notes` creates notes in text-based formats like
 [Markdown](https://daringfireball.net/projects/markdown/) and
-[Emacs Org mode](https://orgmode.org/), and can also organize and
-work with files in any format.
+[Emacs Org mode](https://orgmode.org/), can organize and
+work with files in any format, and can export notes into many
+document formats. `notes` also supports private, password-protected encrypted
+notes to protect sensitive information.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` works great in any
@@ -379,16 +381,18 @@ Description:
   Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, unless the `-c | --content` option is specified. If a non-option
-  argument is passed, `notes` will treat it as a <filename≥ if a file extension
-  is found. If no file extension is found, `notes` will treat the string as
+  `$EDITOR`, currently set to 'code'. If a non-option argument is
+  passed, `notes` will treat it as a <filename≥ if a file extension is found.
+  If no file extension is found, `notes` will treat the string as
   <content> and will create a new note without opening the editor.
+  `notes add` can also create a new note with piped content.
 
   `notes` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the `--type`
-  option. To change the default file type, use `notes settings` to set the
-  `$NOTES_DEFAULT_EXTENSION` variable in your ~/.notesrc configuration file,
-  which you can edit with `notes settings`.
+  option. To change the default file type, use `notes settings`.
+
+  When the `--encrypt` option is specified, `notes` will encrypt the
+  note with AES-256.
 
 Examples:
   notes add
@@ -432,10 +436,15 @@ Usage:
   notes edit (<id> | <filename> | <path> | <title>)
 
 Description:
-  Open the specified note in `$EDITOR`.
+  Open the specified note in `$EDITOR`. Any data piped to `notes edit` will be
+  appended to the file.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
+
+Example:
+  notes edit 1
+  echo "Content to append." | noted edit 1
 
 Alias: `e`
 ```
