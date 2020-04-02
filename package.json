@@ -33,7 +33,8 @@
     "git",
     "versioning",
     "syncing",
-    "sync"
+    "sync",
+    "encryption"
   ],
   "author": "William Melody",
   "license": "GPL-2.0-only",
