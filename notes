@@ -3549,6 +3549,8 @@ _search() {
       if _command_exists "rg" && ! ((_use_grep))
       then
         rg \
+          --hidden \
+          --iglob '!.git' \
           --ignore-case \
           --no-heading \
           --color always \
@@ -3560,6 +3562,7 @@ _search() {
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
         ag \
+          --hidden \
           --ignore-case \
           --noheading \
           --color \
@@ -3581,16 +3584,21 @@ _search() {
         set +f
         grep \
           --ignore-case \
-          -n "${_query}" "${NOTES_DIR}/${__scope}"/* /dev/null \
+          --exclude '.git' \
+          -n "${_query}" \
+          "${NOTES_DIR}/${__scope}"/* "${NOTES_DIR}/${__scope}"/.[^.]* /dev/null \
             || return 0 # Don't fail out within a single scope.
         set -f
       fi | while read -r _line
       do
         local _path=
         local _filename=
+        local _filename_color=
+        local _filename_hit=0
         local _id=
-        local _title
+        local _title=
         local _file_info=
+        local _file_info_color=
         # Define `_id_filename` with and without color to have a version
         # without the additional length from `tput` calls.
         local _id_filename=
@@ -3618,6 +3626,18 @@ _search() {
           fi
         else
           _filename="$(basename "${_path}")"
+          _filename_color="${_filename}"
+
+          # Use '.index' to match filenames.
+          if [[ -n "${_filename:-}" ]] && [[ "${_filename:-}" == ".index" ]]
+          then
+            _filename_hit=1
+            _filename_color="$(printf "%s\\n" "${_line}" | cut -d: -f 3-)"
+            _filename="$(
+              printf "%s\\n" "${_filename_color}" \
+                | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
+            )"
+          fi
 
           _id="$("${_MY_PATH}" "${__scope}:index" get_id "${_filename}")"
           _title="$(_get_title "${_filename}" "${__scope}")"
@@ -3625,17 +3645,19 @@ _search() {
           if [[ -n "${_title}" ]]
           then
             _file_info="${_filename} '${_title}'"
+            _file_info_color="${_filename_color} '${_title}'"
           else
             _file_info="${_filename}"
+            _file_info_color="${_filename_color}"
           fi
 
           if ((_all))
           then
-            _id_filename_color="[$(_highlight "${__scope}:${_id}")] ${_file_info}"
             _id_filename="[${__scope}:${_id}] ${_file_info}"
+            _id_filename_color="[$(_highlight "${__scope}:${_id}")] ${_file_info_color}"
           else
-            _id_filename_color="[$(_highlight "${_id}")] ${_file_info}"
             _id_filename="[${_id}] ${_file_info}"
+            _id_filename_color="[$(_highlight "${_id}")] ${_file_info_color}"
           fi
 
           if [[ "${_last_path}" != "${_path}" ]]
@@ -3646,7 +3668,13 @@ _search() {
             printf '\033[?7h'
           fi
 
-          _content_line_with_hit="$(printf "%s\\n" "${_line}" | cut -d: -f 2-)"
+          if ((_filename_hit))
+          then
+            _content_line_with_hit="Filename Match: $(printf "%s\\n" "${_line}" | cut -d: -f 3-)"
+          else
+            _content_line_with_hit="$(printf "%s\\n" "${_line}" | cut -d: -f 2-)"
+          fi
+
           printf "%s\\n\\n" "${_content_line_with_hit}"
         fi
 
