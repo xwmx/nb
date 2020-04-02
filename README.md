@@ -776,6 +776,8 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `notes notebooks use`.
+
+Alias: `u`
 ```
 
 #### `version`

@@ -4043,6 +4043,8 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for \`notes notebooks use\`.
+
+Alias: \`u\`
 HEREDOC
 _use() {
   local _name="${1:-}"
@@ -4053,6 +4055,8 @@ _use() {
   fi
   _notebooks use "${_name}"
 }
+desc "u" "$(_help 'use')"
+_u() { _use "${@}"; }
 
 # version ####################################################################
 
@@ -4137,6 +4141,7 @@ _notes() {
         show
         search
         use
+        u
       )
       local _core_subcommand_pattern
       _core_subcommand_pattern="^$(_join '$|^' "${_core_subcommands[@]}")$"
@@ -4307,6 +4312,7 @@ _SUBCOMMANDS=(
   sync
   update
   use
+  u
   version
 )
 
