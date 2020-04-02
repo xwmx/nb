@@ -1268,17 +1268,18 @@ Description:
   Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
-  \`\$EDITOR\`, currently set to '${EDITOR}', unless the \`-c | --content\`
-  option is specified. If a non-option argument is passed, \`notes\` will
-  treat it as a <filename≥ if a file extension is found. If no file extension
-  is found, \`notes\` will treat the string as <content> and will create a new
-  note without opening the editor.
+  \`\$EDITOR\`, currently set to '${EDITOR}'. If a non-option argument is
+  passed, \`notes\` will treat it as a <filename≥ if a file extension is found.
+  If no file extension is found, \`notes\` will treat the string as
+  <content> and will create a new note without opening the editor.
+  \`notes add\` can also create a new note with piped content.
 
   \`notes\` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the \`--type\`
-  option. To change the default file type, use \`notes settings\` to set the
-  \`\$NOTES_DEFAULT_EXTENSION\` variable in your ~/.notesrc configuration file,
-  which you can edit with \`notes settings\`.
+  option. To change the default file type, use \`notes settings\`.
+
+  When the \`--encrypt\` option is specified, \`notes\` will encrypt the
+  note with AES-256.
 
 Examples:
   notes add
@@ -1617,10 +1618,15 @@ Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
 
 Description:
-  Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'.
+  Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'. Any
+  data piped to \`notes edit\` will be appended to the file.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
+
+Example:
+  notes edit 1
+  echo "Content to append." | noted edit 1
 
 Alias: \`e\`
 HEREDOC
@@ -1700,7 +1706,15 @@ _edit() {
       _target_file="${_decrypted_path}"
     fi
 
-    _edit_file "${_target_file}"
+    if _interactive_input
+    then # terminal input.
+      if [[ -z "${_content:-}" ]]
+      then
+        _edit_file "${_target_file}"
+      fi
+    else # piped input.
+      cat >> "${_target_file}"
+    fi
 
     if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
     then

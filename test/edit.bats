@@ -212,6 +212,40 @@ load test_helper
   [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
 }
 
+# piped #######################################################################
+
+@test "\`edit\` with piped content edits properly without errors." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add "# Example"
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run bash -c "echo '## Piped' | ${_NOTES} edit 1"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+  [[ $(grep '# Example' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '## Piped' "${NOTES_DATA_DIR}"/*) ]]
+
+  # Creates git commit
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Edit') ]]
+
+  # Prints output
+  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+}
+
 # encrypted ###################################################################
 
 @test "\`edit\` with encrypted file edits properly without errors." {
