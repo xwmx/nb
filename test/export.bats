@@ -51,7 +51,7 @@ load test_helper
     run "${_NOTES}" add "# Export Example"
   }
 
-  run "${_NOTES}" pandoc export 1
+  run "${_NOTES}" export pandoc 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -64,7 +64,7 @@ load test_helper
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" pandoc export 100
+  run "${_NOTES}" export pandoc 100
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
