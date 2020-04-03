@@ -8,21 +8,21 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-`notes` is a full-featured command line note-taking, document management,
-versioning, conversion, encryption, and syncing tool in a single portable
-script. `notes` creates notes in text-based formats like
-[Markdown](https://daringfireball.net/projects/markdown/) and
+`notes` is a full-featured command line note-taking and document management
+tool with encryption, advanced search, [Git](https://git-scm.com/)-backed
+versioning and syncing, [Pandoc](http://pandoc.org/)-backed conversion, and
+more in a single portable script. `notes` creates notes in text-based formats
+like [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
-work with files in any format, and can export notes into many
-document formats. `notes` also supports private, password-protected encrypted
-notes to protect sensitive information.
+work with files in any format, and can export notes to many document formats.
+`notes` can also create private, password-protected encrypted notes to protect
+sensitive information.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` works great in any
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) environment.
-[Optional dependencies](#optional) can be installed to enhance
-rendering, display, and searching functionality, but everything still works
-great without them.
+[Optional dependencies](#optional) can be installed to enhance functionality,
+but `notes` still works great without them.
 
 `notes` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync with a remote repository, if one has been configured.
@@ -256,14 +256,21 @@ notes history
 notes history 4
 ```
 
-Search your notes:
+Use `notes search` to search your notes, with support for regular
+expressions:
 
 ```bash
-# search current notebook for 'a query'
-notes search 'a query'
+# search current notebook for 'example query'
+notes search 'example query'
 
-# search all notebooks for 'a query'
-notes search -a 'a query'
+# search all notebooks for 'example query'
+notes search 'example query' --all
+
+# search notes for "Example" OR "Sample"
+notes search 'Example|Sample'
+
+# search with a regular expression for Markdown notes titled "Example"
+notes search '^# Example'
 ```
 
 You can also import and export notes. If you have Pandoc installed, notes can

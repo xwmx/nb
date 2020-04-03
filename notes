@@ -5,7 +5,8 @@
 # | | | | (_) | ||  __/\__ \
 # |_| |_|\___/ \__\___||___/
 #
-# A git-backed, syncable, searchable command line note-taking tool in a single
+# A full-featured command line note-taking and document management tool with
+# encryption, advanced search, Git-backed syncing, and more in a single
 # portable script.
 #
 # https://github.com/xwmx/notes
