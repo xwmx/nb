@@ -293,9 +293,9 @@ For more commands and options, run `notes help`.
 ```text
 Usage:
   notes [<id> | <filename> | <path> | <title>] [<list options>]
-  notes add [<filename> | <content>] [-c | --content <content>]
-            [-e | --encrypt] [-f | --filename <filename>]
-            [-t | --title <title>] [--type <type>]
+  notes add [<filename> | <content>] [(-c | --content) <content>]
+            [-e | --encrypt] [(-f | --filename) <filename>]
+            [(-t | --title) <title>] [--type <type>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -375,14 +375,14 @@ Usage:
             [-t | --title <title>] [--type <type>]
 
 Options:
-  -c | --content   <content>    The content for the new note.
-  -e | --encrypt                Encrypt the note with a password.
-  -f | --filename  <filename>   The filename for the new note.
-  -t | --title     <title>      The title for a new note. If `--title` is
-                                present, the filename will be derived from the
-                                title, unless `--filename` is specified.
-  --type           <type>       The file type for the new note, as a file
-                                extension.
+  -c --content   <content>    The content for the new note.
+  -e --encrypt                Encrypt the note with a password.
+  -f --filename  <filename>   The filename for the new note.
+  -t --title     <title>      The title for a new note. If `--title` is
+                              present, the filename will be derived from the
+                              title, unless `--filename` is specified.
+  --type         <type>       The file type for the new note, as a file
+                              extension.
 
 Description:
   Create a new note.
