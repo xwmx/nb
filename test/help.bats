@@ -39,10 +39,10 @@ Usage:
   notes help [<subcommand>]
 
 Description:
-  Print the program help information. When a subcommand name is passed, the
-  print the help information for the subcommand.
+  Print the program help information. When a subcommand name is passed, print
+  the help information for the subcommand.
 HEREDOC
   )"
-  _compare "${_expected}" "${output}"
+  _compare "'${_expected}'" "'${output}'"
   [[ "${output}" == "${_expected}" ]]
 }

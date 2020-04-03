@@ -408,6 +408,7 @@ Examples:
   notes add "Note content."
   notes add example.md --title "Example Title" --content "Example content."
   echo "Note content." | notes add
+  notes add -t "Secret Document" --encrypt
 
 Alias: `a`
 ```
@@ -493,7 +494,7 @@ Description:
   in <path>. Any additional arguments are passed directly to Pandoc.
   See the Pandoc help information for available options.
 
-  1. http://pandoc.org/
+    1. http://pandoc.org/
 
 Examples:
   # Export an Emacs Org mode note
@@ -523,8 +524,8 @@ Usage:
   notes help [<subcommand>]
 
 Description:
-  Print the program help information. When a subcommand name is passed, the
-  print the help information for the subcommand.
+  Print the program help information. When a subcommand name is passed, print
+  the help information for the subcommand.
 ```
 
 #### `history`
@@ -537,7 +538,7 @@ Description:
   Display git history using `tig` [1] (if available) or `git log`. When a
   <selection> is specified, the history for that note is displayed.
 
-  1. https://github.com/jonas/tig
+    1. https://github.com/jonas/tig
 ```
 
 #### `import`
@@ -662,7 +663,7 @@ Description:
 
 #### `remote`
 
-```
+```text
 Usage:
   notes remote
   notes remote remove
@@ -702,10 +703,10 @@ Options:
 
 Description:
   Search notes. Uses the first available tool in the following list:
-    1. `rg`    <https://github.com/BurntSushi/ripgrep>
-    2. `ag`    <https://github.com/ggreer/the_silver_searcher>
-    3. `ack`   <http://beyondgrep.com/>
-    4. `grep`  <https://en.wikipedia.org/wiki/Grep>
+    1. `rg`    https://github.com/BurntSushi/ripgrep
+    2. `ag`    https://github.com/ggreer/the_silver_searcher
+    3. `ack`   http://beyondgrep.com/
+    4. `grep`  https://en.wikipedia.org/wiki/Grep
 
 Alias: `q`
 ```
@@ -726,17 +727,17 @@ Options:
               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
               available, `--render` is ignored.
 
-            1. http://pandoc.org/
-            2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-            3. https://en.wikipedia.org/wiki/W3m
-
 Description:
   Show a note. Notes in text file formats can be rendered or dumped to
   standard output. Non-text files will be opened in your system's preferred
   app or program for that file type.
 
-  If Pygments <http://pygments.org/> is installed, notes are printed with
-  syntax highlighting.
+  If Pygments [4] is installed, notes are printed with syntax highlighting.
+
+    1. http://pandoc.org/
+    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    3. https://en.wikipedia.org/wiki/W3m
+    4. http://pygments.org/
 
 Alias: `s`
 ```
