@@ -2440,8 +2440,9 @@ HEREDOC
 ###############################################################################
 # .notesrc
 #
-# Configuration file for notes, a git-backed, syncable, searchable command line
-# note-taking tool.
+# Configuration file for \`notes\`, a command line note-taking and document
+# management tool with encryption, advanced search, Git-backed syncing, and
+# more in a single portable script.
 #
 # https://github.com/xwmx/notes
 ###############################################################################
