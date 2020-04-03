@@ -197,8 +197,7 @@ _set_notes_data_dir() {
       NOTES_DATA_DIR="${NOTES_DIR}/${_current}"
     fi
   fi
-}
-_set_notes_data_dir
+} && _set_notes_data_dir
 
 # `$NOTES_AUTO_SYNC`
 #
