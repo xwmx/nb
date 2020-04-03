@@ -841,7 +841,7 @@ export NOTES_DIR="~/Dropbox/Notes"
 
 #### `$NOTES_ENCRYPTION_TOOL`
 
-Default: 'openssl'
+Default: `openssl`
 
 The tool used for encrypting notes.
 
@@ -849,6 +849,7 @@ Supported Values:
 [`openssl`](https://www.openssl.org/),
 [`gpg`](https://gnupg.org/)
 
+Example:
 ```bash
 export NOTES_ENCRYPTION_TOOL="gpg"
 ```
