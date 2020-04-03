@@ -1,7 +1,7 @@
 {
   "name": "notes.sh",
   "version": "2.7.3",
-  "description": "A full-featured command line note-taking and document management tool with encryption, advanced search, Git-backed syncing, and more in a single portable script.",
+  "description": "A command line note-taking and document management tool with encryption, advanced search, Git-backed syncing, and more in a single portable script.",
   "directories": {
     "doc": "docs",
     "test": "test"

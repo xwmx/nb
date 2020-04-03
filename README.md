@@ -8,8 +8,8 @@
 |_| |_|\___/ \__\___||___/
 ```
 
-`notes` is a full-featured command line note-taking and document management
-tool with encryption, advanced search, [Git](https://git-scm.com/)-backed
+`notes` is a command line note-taking and document management tool with
+encryption, advanced search, [Git](https://git-scm.com/)-backed
 versioning and syncing, [Pandoc](http://pandoc.org/)-backed conversion, and
 more in a single portable script. `notes` creates notes in text-based formats
 like [Markdown](https://daringfireball.net/projects/markdown/) and
