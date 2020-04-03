@@ -297,5 +297,5 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes add [<filename> | <content>] [(-c | --content) <content>]" ]]
+  [[ "${lines[1]}" =~  notes\ add ]]
 }

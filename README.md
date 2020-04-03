@@ -293,9 +293,9 @@ For more commands and options, run `notes help`.
 ```text
 Usage:
   notes [<id> | <filename> | <path> | <title>] [<list options>]
-  notes add [<filename> | <content>] [(-c | --content) <content>]
-            [-e | --encrypt] [(-f | --filename) <filename>]
-            [(-t | --title) <title>] [--type <type>]
+  notes add [<filename> | <content>] [-c <content> | --content <content>]
+            [-e | --encrypt] [-f <filename> | --filename <filename>]
+            [-t <title> | --title <title>] [--type <type>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -305,8 +305,9 @@ Usage:
   notes history [<selection>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
-  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
-             [-s | --sort] [-r | --reverse] [<selection>]
+  notes list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
+             [-s | --sort] [-r | --reverse] [--titles]
+             [<id> | <filename> | <path> | <title>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
   notes notebook
@@ -322,7 +323,7 @@ Usage:
   notes settings
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
-  notes sync [-a|--all]
+  notes sync [-a | --all]
   notes use <notebook>
   notes -h | --help | help [<subcommand>]
   notes --version | version
@@ -370,9 +371,9 @@ Program Options:
 
 ```text
 Usage:
-  notes add [<filename> | <content>] [(-c | --content) <content>]
-            [-e | --encrypt] [(-f | --filename) <filename>]
-            [(-t | --title) <title>] [--type <type>]
+  notes add [<filename> | <content>] [-c <content> | --content <content>]
+            [-e | --encrypt] [-f <filename> | --filename <filename>]
+            [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c --content   <content>    The content for the new note.
@@ -575,8 +576,9 @@ Description:
 
 ```text
 Usage:
-  notes list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
-             [-s | --sort] [-r | --reverse] [<selection>]
+  notes list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
+             [-s | --sort] [-r | --reverse] [--titles]
+             [<id> | <filename> | <path> | <title>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
@@ -766,7 +768,7 @@ Description:
 
 ```text
 Usage:
-  notes sync [-a|--all]
+  notes sync [-a | --all]
 
 Options:
   -a --all  Sync all notebooks.

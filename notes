@@ -1198,9 +1198,9 @@ A git-backed, syncable, searchable command line note-taking tool.
 
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]
-  ${_ME} add [<filename> | <content>] [(-c | --content) <content>]
-            [-e | --encrypt] [(-f | --filename) <filename>]
-            [(-t | --title) <title>] [--type <type>]
+  ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
+            [-e | --encrypt] [-f <filename> | --filename <filename>]
+            [-t <title> | --title <title>] [--type <type>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1210,8 +1210,9 @@ Usage:
   ${_ME} history [<selection>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
-             [-s | --sort] [-r | --reverse] [<selection>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
+             [-s | --sort] [-r | --reverse] [--titles]
+             [<id> | <filename> | <path> | <title>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
   ${_ME} notebook
@@ -1227,7 +1228,7 @@ Usage:
   ${_ME} settings
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
-  ${_ME} sync [-a|--all]
+  ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -h | --help | help [<subcommand>]
   ${_ME} --version | version
@@ -1251,9 +1252,9 @@ HEREDOC
 
 desc "add" <<HEREDOC
 Usage:
-  ${_ME} add [<filename> | <content>] [(-c | --content) <content>]
-            [-e | --encrypt] [-f | --filename <filename>]
-            [(-t | --title) <title>] [--type <type>]
+  ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
+            [-e | --encrypt] [-f <filename> | --filename <filename>]
+            [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c --content   <content>    The content for the new note.
@@ -2483,14 +2484,15 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [(-e | --excerpt) [<length>]] [--no-id] [-n <limit>] [--titles]
-             [-s | --sort] [-r | --reverse] [<selection>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
+             [-s | --sort] [-r | --reverse] [--titles]
+             [<id> | <filename> | <path> | <title>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.
-  -n <limit>             The maximum number of notes to list.
+  -n           <limit>   The maximum number of notes to list.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
   --titles               Show title instead of filename when present.
@@ -3941,7 +3943,7 @@ _status() {
 
 desc "sync" <<HEREDOC
 Usage:
-  ${_ME} sync [-a|--all]
+  ${_ME} sync [-a | --all]
 
 Options:
   -a --all  Sync all notebooks.
