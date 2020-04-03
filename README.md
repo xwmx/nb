@@ -505,7 +505,7 @@ Examples:
   notes export pandoc example.md --from=markdown_strict
 
   # Export a Markdown note to a .docx Microsoft Office Word document
-  notes export example.md /path/to/example.doc
+  notes export example.md /path/to/example.docx
 ```
 
 #### `git`
