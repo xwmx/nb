@@ -773,8 +773,7 @@ _git_checkpoint() {
 
   cd "${_target_directory}" || _die printf "_git_checkpoint() \`cd\` failed.\\n"
 
-  _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" \
-    "$(ls -la)"
+  _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" "$(ls -la)"
 
   if ((NOTES_AUTO_SYNC))
   then
