@@ -370,9 +370,9 @@ Program Options:
 
 ```text
 Usage:
-  notes add [<filename> | <content>] [-c | --content <content>]
-            [-e | --encrypt] [-f | --filename <filename>]
-            [-t | --title <title>] [--type <type>]
+  notes add [<filename> | <content>] [(-c | --content) <content>]
+            [-e | --encrypt] [(-f | --filename) <filename>]
+            [(-t | --title) <title>] [--type <type>]
 
 Options:
   -c --content   <content>    The content for the new note.
