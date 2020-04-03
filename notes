@@ -2466,6 +2466,15 @@ HEREDOC
 # The location of the directory that contains the notebooks.
 # export NOTES_DIR="\$HOME/.notes"
 
+# \$NOTES_ENCRYPTION_TOOL
+#
+# Default: 'openssl'
+#
+# The tool used for encrypting notes.
+#
+# Supported Values: 'openssl' 'gpg'
+# export NOTES_ENCRYPTION_TOOL="gpg"
+
 # \$NOTES_DEFAULT_EXTENSION
 #
 # Default: 'md'
