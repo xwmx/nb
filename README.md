@@ -136,7 +136,7 @@ notes
 
 Notebooks are listed above the line, with the current notebook highlighted.
 
-Notes from the current notebook are listed with each id and filename. If the
+Notes from the current notebook are listed with each id and filename. When the
 note has a Markdown title on the first line (e.g., `# Example Title`), the
 title will be displayed instead of the filename:
 
