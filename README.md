@@ -274,10 +274,29 @@ notes search 'Example|Sample'
 notes search '^# Example'
 ```
 
-You can also import and export notes. If you have Pandoc installed, notes can
-be exported to any of the
+Files of any kind can be imported into a notebook. `notes show` and
+`notes edit` will open files in your system's default application for that
+file type.
+
+```bash
+# import an image file
+notes import ~/Pictures/example.png
+
+# open image in your default image viewer
+notes show example.png
+```
+
+`notes import` can also download and import files directly from the web:
+
+```bash
+notes import https://example.com/example.png
+# Imported 'https://example.com/example.png' to 'example.png'
+```
+
+Notes can also be exported. If you have Pandoc installed, notes can
+be converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
-The formats are determined by the file extensions:
+By default, the output format is determined by the file extension:
 
 ```bash
 # Export a Markdown note to a .docx Microsoft Office Word document
@@ -287,7 +306,8 @@ notes export example.md /path/to/example.docx
 notes export Movies /path/to/example.html
 ```
 
-For more commands and options, run `notes help`.
+For more commands and options, run `notes help` or `notes help
+<subcommand>`
 
 ### Help
 
