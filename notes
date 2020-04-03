@@ -1345,7 +1345,7 @@ _add() {
           return 1
         fi
         ;;
-      -e|--encrypt)
+      -e|--encrypt|--encrypted)
         _encrypt=1
         ;;
       -f|--filename)
