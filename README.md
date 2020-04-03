@@ -37,12 +37,13 @@ any device.
 - [Bash](https://www.gnu.org/software/bash/)
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
-  - [Vim](http://www.vim.org/),
-  - [Emacs](https://www.gnu.org/software/emacs/),
+  - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
+  - [Emacs](https://en.wikipedia.org/wiki/Emacs),
   - [Visual Studio Code](https://code.visualstudio.com/),
   - [Sublime Text](https://www.sublimetext.com/),
   - [Atom](https://atom.io/),
   - [TextMate](https://macromates.com/),
+  - [MacDown](https://macdown.uranusjr.com/),
   - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [or many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
 
@@ -846,7 +847,11 @@ The default extension to use for notes files. Change to `org` for Emacs Org
 mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you
 prefer.
 
-Example Values: `md`, `org`, `txt`, `rst`
+Example Values:
+[`md`](https://en.wikipedia.org/wiki/Markdown),
+[`org`](https://en.wikipedia.org/wiki/Org-mode),
+[`txt`](https://en.wikipedia.org/wiki/Text_file),
+[`rst`](https://en.wikipedia.org/wiki/ReStructuredText)
 
 Example:
 ```bash
@@ -860,7 +865,13 @@ Default: inherits the global `$EDITOR` value.
 Reassign `$EDITOR` to use a specific editor with `notes`, overriding the
 global `$EDITOR` setting.
 
-Example Values: `vim`, `emacs`, `subl`, `atom`, `code`, `macdown`
+Example Values:
+[`vim`](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
+[`emacs`](https://en.wikipedia.org/wiki/Emacs),
+[`code`](https://en.wikipedia.org/wiki/Visual_Studio_Code),
+[`subl`](https://en.wikipedia.org/wiki/Sublime_Text),
+[`atom`](https://en.wikipedia.org/wiki/Atom_\(text_editor\)),
+[`macdown`](https://macdown.uranusjr.com/)
 
 Examples:
 ```bash
