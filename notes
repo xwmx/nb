@@ -223,6 +223,30 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 export NOTES_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL:-openssl}"
 
 ###############################################################################
+# Temp Directory
+###############################################################################
+
+export _NOTES_TEMP_DIRECTORY
+_NOTES_TEMP_DIRECTORY="$(mktemp -d)"
+
+# Usage: _tempfile_path <basename>
+_tempfile_path() {
+  [[ -z "${1:-}" ]] && return 1
+  printf "%s/%s" "${_NOTES_TEMP_DIRECTORY}" "${1:-}"
+}
+
+# Usage: _notes_cleanup_on_exit
+_notes_cleanup_on_exit() {
+  if [[ -n "${_NOTES_TEMP_DIRECTORY:-}" ]] &&
+     [[ -e "${_NOTES_TEMP_DIRECTORY}"   ]]
+  then
+    rm -rf "${_NOTES_TEMP_DIRECTORY}"
+  fi
+}
+
+trap _notes_cleanup_on_exit EXIT
+
+###############################################################################
 # Helpers
 ###############################################################################
 
@@ -288,7 +312,7 @@ _decrypt_file() {
   _unencrypted_basename="$(printf "%s" "${_basename}" | sed 's/.enc$//')"
 
   local _unencrypted_path
-  _unencrypted_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_unencrypted_basename}"
+  _unencrypted_path="$(_tempfile_path "${_unencrypted_basename}")"
 
   local _file_command_response
   _file_command_response="$(file "${_encrypted_path}")"
@@ -1418,7 +1442,7 @@ _add() {
       fi
     fi
 
-    _target_path="/tmp/notes-n-$(date -u "+%Y%m%d%H%M%S")-${_basename}"
+    _target_path="$(_tempfile_path "${_basename}")"
   fi
 
   if [[ -n "${_title}" ]]
@@ -1441,7 +1465,7 @@ _add() {
     cat >> "${_target_path}"
   fi
 
-  if ((_encrypt))
+  if ((_encrypt)) && [[ -e "${_target_path}" ]]
   then
     local _decrypted_path="${_target_path}"
     local _encrypted_path="${NOTES_DATA_DIR}/${_basename}.enc"
@@ -2278,7 +2302,7 @@ _index() {
         [[ -z "${_reconcle_index_path:-}" ]] && return 1
 
         local _tmp_file
-        _tmp_file=$(mktemp /tmp/notes-index.XXXXXX)
+        _tmp_file="$(mktemp)"
         exec 3> "${_tmp_file}"
         exec 4< "${_tmp_file}"
         rm "${_tmp_file}"
