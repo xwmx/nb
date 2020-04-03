@@ -34,7 +34,8 @@
     "versioning",
     "syncing",
     "sync",
-    "encryption"
+    "encryption",
+    "pandoc"
   ],
   "author": "William Melody",
   "license": "GPL-2.0-only",
