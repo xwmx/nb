@@ -268,7 +268,7 @@ For more information about working with notebooks, run `notes help notebooks`
 
 ### Revision History
 
-Whenever a note is added, edited, or deleted, `notes` automatically commits
+Whenever a note is added, modified, or deleted, `notes` automatically commits
 the change to git transparently in the background. You can view the history of
 the notebook or an individual note with:
 
@@ -299,9 +299,9 @@ existing notebook and start syncing changes automatically:
 notes notebooks add Example https://gitlab.com/example/example.git
 ```
 
-Any notebook with remote URL set will sync automatically every time a
-command is run in that notebook. Turn off syncing for a notebook by simply
-removing the remote:
+Any notebook with a remote URL will sync automatically every time a command is
+run in that notebook. Turn off syncing for a notebook by simply removing the
+remote:
 
 ```bash
 # remove the current remote from the current notebook
