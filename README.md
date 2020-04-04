@@ -386,7 +386,7 @@ notes a example.md
 notes e 5
 
 # `d` (delete): delete note 19
-# notes d 19
+notes d 19
 
 # `q` (search): search notes for 'example query'
 notes q 'example query'
