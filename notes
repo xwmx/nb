@@ -1522,6 +1522,26 @@ _add() {
 desc "a" "$(_help 'add')"
 _a() { _add "${@}"; }
 
+# bookmark ####################################################################
+
+desc "bookmark" <<HEREDOC
+Usage:
+  ${_ME} bookmark <url> [--tags <tag1>,<tag2>...] [--description]
+                       [--title <title>] [--clip]
+Description:
+  Create a new bookmark-formatted note for <url>.
+
+Examples:
+  ${_ME} bookmark https://example.com
+  ${_ME} bookmark https://example.com --tags example,sample,demo
+  ${_ME} bookmark https://example.com/about --title 'Example Title'
+HEREDOC
+_bookmark() {
+  :
+}
+desc "b" "$(_help 'bookmark')"
+_b() { _bookmark "${@}"; }
+
 # commands ####################################################################
 
 desc "commands" <<HEREDOC
@@ -4261,6 +4281,8 @@ _notes() {
       local _core_subcommands=(
         a
         add
+        b
+        bookmark
         count
         d
         delete
@@ -4417,6 +4439,8 @@ _ARGUMENTS=()
 _SUBCOMMANDS=(
   a
   add
+  b
+  bookmark
   commands
   config
   count

@@ -11,5 +11,5 @@ load test_helper
   run "${_NOTES}" commands
   printf "\${lines[*]}: %s\\n" "${lines[*]}"
   [[ "${lines[0]}" =~ a ]]
-  [[ "${lines[39]}" =~ version ]]
+  [[ "${lines[41]}" =~ version ]]
 }
