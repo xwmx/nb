@@ -3576,6 +3576,22 @@ Description:
     3. \`ack\`   http://beyondgrep.com/
     4. \`grep\`  https://en.wikipedia.org/wiki/Grep
 
+Examples:
+  # search current notebook for 'example query'
+  ${_ME} search 'example query'
+
+  # search all notebooks for 'example query'
+  ${_ME} search 'example query' --all
+
+  # search notes for 'Example' OR 'Sample'
+  ${_ME} search 'Example|Sample'
+
+  # search for notes containing the hashtag '#example'
+  ${_ME} search '#example'
+
+  # search with a regular expression for notes containing phone numbers
+  ${_ME} search '^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$'
+
 Alias: \`q\`
 HEREDOC
 _search() {

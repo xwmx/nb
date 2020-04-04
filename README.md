@@ -323,11 +323,14 @@ notes search 'example query'
 # search all notebooks for 'example query'
 notes search 'example query' --all
 
-# search notes for "Example" OR "Sample"
+# search notes for 'Example' OR 'Sample'
 notes search 'Example|Sample'
 
-# search with a regular expression for Markdown notes titled "Example"
-notes search '^# Example'
+# search for notes containing the hashtag '#example'
+notes search '#example'
+
+# search with a regular expression for notes containing phone numbers
+notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 ```
 
 `notes search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
@@ -837,6 +840,22 @@ Description:
     2. `ag`    https://github.com/ggreer/the_silver_searcher
     3. `ack`   http://beyondgrep.com/
     4. `grep`  https://en.wikipedia.org/wiki/Grep
+
+Examples:
+  # search current notebook for 'example query'
+  notes search 'example query'
+
+  # search all notebooks for 'example query'
+  notes search 'example query' --all
+
+  # search notes for 'Example' OR 'Sample'
+  notes search 'Example|Sample'
+
+  # search for notes containing the hashtag '#example'
+  notes search '#example'
+
+  # search with a regular expression for notes containing phone numbers
+  notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
 Alias: `q`
 ```
