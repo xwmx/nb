@@ -373,6 +373,45 @@ notes export example.md /path/to/example.docx
 notes export Movies /path/to/example.html
 ```
 
+### Shortcut Aliases
+
+Several core `notes` subcommands have single-character aliases to make
+them faster to work with:
+
+```bash
+# `a` (add): add a new note named 'example.md'
+notes a example.md
+
+# `e` (edit): edit note 5
+notes e 5
+
+# `d` (delete): delete note 19
+# notes d 19
+
+# `q` (search): search notes for 'example query'
+notes q 'example query'
+
+# `h` (help): display the help information for the `add` subcommand
+notes h add
+
+# `u` (use): switch to example-notebook
+notes u example-notebook
+```
+
+If `n` is available on your system, you can add `alias n="notes"` to your
+`~/.bashrc` or equivalent, which will enable you to:
+
+```bash
+# add a new note
+n a
+
+# edit note 5
+n e 5
+
+# search notes for the hashtag '#example'
+n q '#example'
+```
+
 For more commands and options, run `notes help` or `notes help
 <subcommand>`
 
