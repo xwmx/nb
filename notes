@@ -1205,6 +1205,8 @@ Usage:
 Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
+
+Alias: \`h\`
 HEREDOC
 _help() {
   if [[ -z "${1:-}" ]]
@@ -1266,6 +1268,8 @@ HEREDOC
     desc --get "${@}"
   fi
 }
+desc "h" "$(_help 'help')"
+_h() { _help "${@}"; }
 
 ###############################################################################
 # Subcommands
@@ -4370,6 +4374,7 @@ _SUBCOMMANDS=(
   export
   env
   git
+  h
   help
   history
   import

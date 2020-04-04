@@ -618,6 +618,8 @@ Usage:
 Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
+
+Alias: `h`
 ```
 
 #### `history`
