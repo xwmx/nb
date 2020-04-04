@@ -1324,6 +1324,7 @@ HEREDOC
 _add() {
   local _basename=
   local _content=
+  local _edit_before_save=0
   local _encrypt=0
   local _filename=
   local _maybe_filename_or_content=
@@ -1348,6 +1349,9 @@ _add() {
           _help add
           return 1
         fi
+        ;;
+      --edit)
+        _edit_before_save=1
         ;;
       -e|--encrypt|--encrypted)
         _encrypt=1
@@ -1458,14 +1462,14 @@ _add() {
     printf "%s\\n" "${_content}" >> "${_target_path}"
   fi
 
-  if _interactive_input
-  then # terminal input.
-    if [[ -z "${_content:-}" ]]
-    then
-      _edit_file "${_target_path}"
-    fi
-  else # piped input.
+  if ! _interactive_input
+  then # piped input
     cat >> "${_target_path}"
+  fi
+
+  if ((_edit_before_save)) || _interactive_input && [[ -z "${_content:-}" ]]
+  then
+    _edit_file "${_target_path}"
   fi
 
   if ((_encrypt)) && [[ -e "${_target_path}" ]]
@@ -1699,7 +1703,12 @@ _bookmark() {
 
   if [[ -n "${_bookmark_content}" ]]
   then
-    printf "%s\\n" "${_bookmark_content}" | _add
+    if ((_edit_before_save))
+    then
+      printf "%s" "${_bookmark_content}" | _add --edit
+    else
+      printf "%s" "${_bookmark_content}" | _add
+    fi
   fi
 }
 desc "b" "$(_help 'bookmark')"
