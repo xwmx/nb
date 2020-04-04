@@ -101,6 +101,10 @@ notes
 
 This will set up your initial 'home' notebook where notes will be stored.
 
+### Working with Notes
+
+#### Adding Notes
+
 To add a note:
 
 ```bash
@@ -113,17 +117,22 @@ notes add example.md
 # create a new note containing "This is a note."
 notes add "This is a note."
 
-# creare a new password-protected, encrypted note
-notes add "# Secret Document" --encrypt
+# create a new password-protected, encrypted note
+notes add --title "Secret Document" --encrypt
+
+# create a new note with piped content
+echo "Note content." | notes add
 ```
 
-`notes add` with no arguments will open the new, blank note in your
+`notes add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
 [`$EDITOR`](https://askubuntu.com/questions/432524) variable in your
 environment or [`notes settings`](#configuration).
 
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`
+
+#### Listing Notes
 
 To list your notes and notebooks, run `notes` with no arguments:
 
@@ -176,7 +185,9 @@ notes 1 --excerpt
 arguments as `notes list`. For more information about options for listing
 notes, run `notes help list`.
 
-You can edit a note using its id, filename, or markdown title:
+#### Editing Notes
+
+You can edit a note in your editor using its id, filename, or markdown title:
 
 ```bash
 # edit note by id
@@ -189,12 +200,29 @@ notes edit example.md
 notes edit 'A Document Title'
 ```
 
+`notes edit` can also receive piped content, which it will append to the
+specified note:
+
+```bash
+echo "Content to append." | noted edit 1
+```
+
+#### Deleting Notes
+
 Deleting notes works the same:
 
 ```bash
 # delete note by id
 notes delete 3
+
+# delete note by filename
+notes delete example.md
+
+# delete note by title
+notes delete 'A Document Title'
 ```
+
+### Notebooks
 
 You can create additional notebooks, each of which has its own version history.
 
@@ -236,17 +264,11 @@ Notes can also be moved between notebooks:
 notes move 3 example-notebook
 ```
 
-When you have an existing `notes` notebook in a git repository, simply
-pass the URL to `notes notebooks add` and `notes` will clone your
-existing notebook and start syncing changes automatically:
-
-```bash
-notes notebooks add Example https://github.com/example/example.git
-```
-
 For more information about working with notebooks, run `notes help notebooks`
 
-Whenever a note is added, changed, or removed, `notes` automatically commits
+### Revision History
+
+Whenever a note is added, edited, or deleted, `notes` automatically commits
 the change to git transparently in the background. You can view the history of
 the notebook or an individual note with:
 
@@ -257,6 +279,39 @@ notes history
 # show history for note 4
 notes history 4
 ```
+
+### Syncing with Remotes
+
+Each notebook can be synced with a remote git repository by setting the
+remote URL:
+
+```bash
+# set the current notebook's remote to a private GitHub repository
+notes remote set https://github.com/example/example.git
+```
+
+When you have an existing `notes` notebook in a git repository, simply
+pass the URL to `notes notebooks add` and `notes` will clone your
+existing notebook and start syncing changes automatically:
+
+```bash
+# create a new notebook named Example cloned from a private GitLab repository
+notes notebooks add Example https://gitlab.com/example/example.git
+```
+
+Any notebook with remote URL set will sync automatically every time a
+command is run in that notebook. Turn off syncing for a notebook by simply
+removing the remote:
+
+```bash
+# remove the current remote from the current notebook
+notes remote remove
+```
+
+You can also turn off autosync in `notes settings` and sync manually with
+`notes sync`.
+
+### Search
 
 Use `notes search` to search your notes, with support for regular
 expressions:
@@ -274,6 +329,8 @@ notes search 'Example|Sample'
 # search with a regular expression for Markdown notes titled "Example"
 notes search '^# Example'
 ```
+
+### Import / Export
 
 Files of any kind can be imported into a notebook. `notes show` and
 `notes edit` will open files in your system's default application for that
