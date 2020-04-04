@@ -1526,8 +1526,23 @@ _a() { _add "${@}"; }
 
 desc "bookmark" <<HEREDOC
 Usage:
-  ${_ME} bookmark <url> [--tags <tag1>,<tag2>...] [--description]
-                       [--title <title>] [--clip]
+  ${_ME} bookmark <url> [-c | --clip]  [--description <description>]
+                       [-e | --edit] [--tags <tag1>,<tag2>...]
+                       [--title <title>]
+
+Options:
+  -c --clip                    Save the HTML page content in the bookmark note.
+                               This makes the full page content searchable
+                               with \`notes search\`.
+  --description <description>  The bookmark description. When not specified,
+                               \`notes\` will attempt to generate one from
+                               the page content.
+  -e --edit                    Open the new note in your editor before saving.
+  --tags        <tag1>,<tag2>  A comma-separated list of tags.
+  --title       <title>        The bookmark title. When not specified,
+                               \`notes\` will use the html <title> tag when
+                               present.
+
 Description:
   Create a new bookmark-formatted note for <url>.
 
@@ -1537,7 +1552,155 @@ Examples:
   ${_ME} bookmark https://example.com/about --title 'Example Title'
 HEREDOC
 _bookmark() {
-  :
+  local _clip=0
+  local _bookmark_content=
+  local _description=
+  local _edit_before_save=0
+  local _tag_list=
+  local _title=
+  local _url=
+
+  while ((${#}))
+  do
+    local _arg="${1:-}"
+    local _val="${2:-}"
+
+    case "${_arg}" in
+      -c|--clip)
+        _clip=1
+        ;;
+      --description)
+        if __option_value_is_present "${_val:-}"
+        then
+          _description="${_val:-}"
+          shift
+        else
+          _help "bookmark"
+          return 1
+        fi
+        ;;
+      -e|--edit)
+        _edit_before_save=1
+        ;;
+      --tags)
+        if __option_value_is_present "${_val:-}"
+        then
+          _tag_list="${_val:-}"
+          shift
+        else
+          _help "bookmark"
+          return 1
+        fi
+        ;;
+      --title)
+        if __option_value_is_present "${_val:-}"
+        then
+          _title="${_val:-}"
+          shift
+        else
+          _help "bookmark"
+          return 1
+        fi
+        ;;
+      *)
+        if [[ -z "${_url:-}" ]]
+        then
+          _url="${_arg:-}"
+        fi
+        ;;
+    esac
+
+    shift
+  done
+
+  if [[ -z "${_url:-}" ]]
+  then
+    _help "bookmark"
+    return 1
+  fi
+
+  local _basename
+  _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S')-bookmark")"
+
+  local _target_path="${NOTES_DATA_DIR}/${_basename}"
+
+  local _page_content
+  _page_content="$(curl -s "${_url}")"
+
+  if [[ -z "${_page_content:-}" ]]
+  then
+    printf "Unable to download page at '%s'\\n" "${_url}"
+    return 1
+  fi
+
+  if [[ -z "${_title}" ]]
+  then
+    _title="$(
+      printf "%s\\n" "${_page_content}" \
+        | awk -v IGNORECASE=1 -v RS='</title' 'RT{gsub(/.*<title[^>]*>/,"");print;exit}'
+    )" || : # TODO: pipeline returns error status but still returns title
+  fi
+
+  if [[ -z "${_description}" ]]
+  then
+    _description="$(
+      printf "%s\\n" "${_page_content}" \
+        | awk '/meta description/{ gsub(/.*meta description=\042|\042.*/,"");print }'
+    )"
+  fi
+
+  local _newline=$'\n'
+
+  if [[ -n "${_title:-}" ]]
+  then
+    _bookmark_content="# ${_title}${_newline}"
+  fi
+
+  if [[ -n "${_description}" ]]
+  then
+    _bookmark_content+="${_newline}${_description}${_newline}"
+  fi
+
+  _bookmark_content+="${_newline}<${_url}>${_newline}"
+
+  if [[ -n "${_tag_list}" ]]
+  then
+    local _tags=()
+    local _tag_string=
+
+    IFS=',' read -ra _tags <<< "${_tag_list}"
+    for __tag in "${_tags[@]:-}"
+    do
+      if [[ -z "${_tag_string}" ]]
+      then
+        _tag_string+="#${__tag}"
+      else
+        _tag_string+=" #${__tag}"
+      fi
+    done
+
+    _bookmark_content+="${_newline}${_tag_string}${_newline}"
+  fi
+
+  if ((_clip))
+  then
+    _bookmark_content+="${_newline}---${_newline}"
+    if _command_exists "pandoc"
+    then
+      local _markdown_content
+      _markdown_content="$(
+        printf "%s\\n" "${_page_content}" | pandoc -f html -t markdown
+      )"
+      _bookmark_content+="${_markdown_content}"
+    else
+      _bookmark_content+="${_page_content}"
+    fi
+  fi
+
+  if [[ -n "${_bookmark_content}" ]]
+  then
+    printf "%s\\n" "${_bookmark_content}" | _add
+  fi
 }
 desc "b" "$(_help 'bookmark')"
 _b() { _bookmark "${@}"; }
