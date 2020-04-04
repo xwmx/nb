@@ -2769,14 +2769,15 @@ Usage:
   ${_ME} ls [<list options>...]
 
 Description:
-  List notebooks and notes in the current notebook. Options are passed through
-  to \`list\`. For more information, see \`notes help list\`.
+  List notebooks and notes in the current notebook, displaying note titles
+  when available. Options are passed through to \`list\`. For more
+  information, see \`notes help list\`.
 
 Examples:
   ${_ME} ls
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
-  ${_ME} ls --titles --reverse
+  ${_ME} ls --reverse
 HEREDOC
 _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"

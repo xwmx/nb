@@ -714,14 +714,15 @@ Usage:
   notes ls [<list options>...]
 
 Description:
-  List notebooks and notes in the current notebook. Options are passed through
-  to `list`. For more information, see `notes help list`.
+  List notebooks and notes in the current notebook, displaying note titles
+  when available. Options are passed through to `list`. For more
+  information, see `notes help list`.
 
 Examples:
   notes ls
   notes ls example.md -e 10
   notes ls --excerpt --no-id
-  notes ls --titles --reverse
+  notes ls --reverse
 ```
 
 #### `move`
