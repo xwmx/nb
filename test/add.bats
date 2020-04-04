@@ -58,7 +58,7 @@ load test_helper
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 # --content option ############################################################
@@ -260,7 +260,7 @@ load test_helper
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {

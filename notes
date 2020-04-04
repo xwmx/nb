@@ -1491,16 +1491,21 @@ _add() {
   then
     _index add "${_basename}"
 
+    local _id
+    _id="$(_index get_id "${_basename}")"
+
     local _title
     _title="$(_get_title "${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added %s:%s '%s'\\n" \
+      printf "Added [%s] %s:%s '%s'\\n" \
+        "${_id}" \
         "${_SCOPE}" \
         "${_basename}" \
         "${_title}"
     else
-      printf "Added %s:%s\\n" \
+      printf "Added [%s] %s:%s\\n" \
+        "${_id}" \
         "${_SCOPE}" \
         "${_basename}"
     fi
@@ -1769,16 +1774,21 @@ _edit() {
 
     if [[ "${_before}" != "${_after}" ]]
     then
+      local _id
+      _id="$(_index get_id "${_basename}")"
+
       local _title
       _title="$(_get_title "${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated %s:%s '%s'\\n" \
+        printf "Updated [%s] %s:%s '%s'\\n" \
+          "${_id}" \
           "${_SCOPE}" \
           "${_basename}" \
           "${_title}"
       else
-        printf "Updated %s:%s\\n" \
+        printf "Updated [%s] %s:%s\\n" \
+          "${_id}" \
           "${_SCOPE}" \
           "${_basename}"
       fi

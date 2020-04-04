@@ -67,7 +67,7 @@ load test_helper
   run "${_NOTES}" edit one:"${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Updated\ one:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ one:[A-Za-z0-9]+.md ]]
 }
 
 # <selector> (no changes) #####################################################
@@ -114,7 +114,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
@@ -145,7 +145,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -176,7 +176,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 
 }
 
@@ -209,7 +209,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 # piped #######################################################################
@@ -243,7 +243,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 # encrypted ###################################################################
@@ -272,7 +272,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
 
   # Deletes temp files.
   [[ ! "$(ls /tmp/notes*)" ]]
