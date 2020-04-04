@@ -314,7 +314,7 @@ You can also turn off autosync in `notes settings` and sync manually with
 ### Search
 
 Use `notes search` to search your notes, with support for regular
-expressions:
+expressions and tags:
 
 ```bash
 # search current notebook for 'example query'
