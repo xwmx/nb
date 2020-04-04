@@ -1230,7 +1230,7 @@ Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
                [<pandoc options>...]
   ${_ME} git <git options>...
-  ${_ME} history [<selection>]
+  ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
@@ -1307,12 +1307,12 @@ Description:
   note with AES-256.
 
 Examples:
-  notes add
-  nores add example.md
-  notes add "Note content."
-  notes add example.md --title "Example Title" --content "Example content."
-  echo "Note content." | notes add
-  notes add -t "Secret Document" --encrypt
+  ${_ME} add
+  ${_ME} add example.md
+  ${_ME} add "Note content."
+  ${_ME} add example.md --title "Example Title" --content "Example content."
+  echo "Note content." | ${_ME} add
+  ${_ME} add -t "Secret Document" --encrypt
 
 Alias: \`a\`
 HEREDOC
@@ -1544,6 +1544,11 @@ Options:
 Description:
   Delete a note.
 
+Examples:
+  ${_ME} delete 3
+  ${_ME} delete example.md
+  ${_ME} delete 'A Document Title'
+
 Alias: \`d\`
 HEREDOC
 _delete() {
@@ -1650,9 +1655,11 @@ Description:
   Non-text files will be opened in your system's preferred app or program for
   that file type.
 
-Example:
-  notes edit 1
-  echo "Content to append." | noted edit 1
+Examples:
+  ${_ME} edit 3
+  ${_ME} edit example.md
+  ${_ME} edit 'A Document Title'
+  echo "Content to append." | ${_ME} edit 1
 
 Alias: \`e\`
 HEREDOC
@@ -1830,7 +1837,7 @@ Examples:
   ${_ME} export example.org /path/to/example.org
 
   # Export a Markdown note to HTML and print to standard output
-  ${_ME} export pandoc example.md --from=markdown_strict
+  ${_ME} export pandoc example.md --from=markdown_strict --to=html
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   ${_ME} export example.md /path/to/example.docx
@@ -1972,13 +1979,17 @@ _git() {
 
 desc "history" <<HEREDOC
 Usage:
-  ${_ME} history [<selection>]
+  ${_ME} history [<id> | <filename> | <path> | <title>]
 
 Description:
-  Display git history using \`tig\` [1] (if available) or \`git log\`. When a
-  <selection> is specified, the history for that note is displayed.
+  Display notebook history using \`tig\` [1] (if available) or \`git log\`.
+  When a note is specified, the history for that note is displayed.
 
     1. https://github.com/jonas/tig
+
+Examples:
+  ${_ME} history
+  ${_ME} history example.md
 HEREDOC
 _history() {
   cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\\n"
@@ -2025,6 +2036,11 @@ Subcommands:
 
 Description:
   Copy, move, or download a file into the current notebook.
+
+Examples:
+  ${_ME} import ~/Pictures/example.png
+  ${_ME} import ~/Documents/example.docx
+  ${_ME} import https://example.com/example.pdf
 HEREDOC
 _import() {
   # _import_validate_path()
@@ -2404,6 +2420,10 @@ Usage:
 Description:
   Initialize the local data directory and generate a ~/.notesrc configruation
   file if it doesn't exist.
+
+Examples:
+  ${_ME} init
+  ${_ME} init https://github.com/example/example.git
 HEREDOC
 _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
@@ -2747,6 +2767,12 @@ Usage:
 Description:
   List notebooks and notes in the current notebook. Options are passed through
   to \`list\`. For more information, see \`notes help list\`.
+
+Examples:
+  ${_ME} ls
+  ${_ME} ls example.md -e 10
+  ${_ME} ls --excerpt --no-id
+  ${_ME} ls --titles --reverse
 HEREDOC
 _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
@@ -2927,6 +2953,10 @@ Usage:
 Description:
   Move the specified note to <notebook>.
 
+Examples:
+  ${_ME} move 1 example-notebook
+  ${_ME} move example.md example-notebook
+
 Alias: \`mv\`
 HEREDOC
 _move() {
@@ -3069,6 +3099,14 @@ Subcommands:
   current    Print the current notebook name.
   rename     Rename a notebook.
   use        Switch to a notebook.
+
+Description:
+  Manage notebooks.
+
+Examples:
+  ${_ME} notebooks --names
+  ${_ME} notebooks add Example1
+  ${_ME} notebooks add Example2 https://github.com/example/example.git
 HEREDOC
 _notebooks() {
   # _notebooks_add()
@@ -3289,6 +3327,10 @@ Subcommands:
 
 Description:
   Get, set, and remove the remote repository URL for the current notebook.
+
+Examples:
+  ${_ME} remote set https://github.com/example/example.git
+  ${_ME} remove remove
 HEREDOC
 _remote() {
   local _existing_url=
@@ -3775,6 +3817,11 @@ Description:
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
     4. http://pygments.org/
+
+Examples:
+  ${_ME} show 1
+  ${_ME} show example.md --render
+  ${_ME} show 'A Document Title' --dump --no-color
 
 Alias: \`s\`
 HEREDOC

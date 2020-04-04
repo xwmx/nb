@@ -330,9 +330,15 @@ notes search 'Example|Sample'
 notes search '^# Example'
 ```
 
+`notes search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
+[`ag`](https://github.com/ggreer/the_silver_searcher),
+[`ack`](http://beyondgrep.com/), and
+[`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
+performs searches using the first tool it finds.
+
 ### Import / Export
 
-Files of any kind can be imported into a notebook. `notes show` and
+Files of any type can be imported into a notebook. `notes show` and
 `notes edit` will open files in your system's default application for that
 file type.
 
@@ -347,8 +353,8 @@ notes show example.png
 `notes import` can also download and import files directly from the web:
 
 ```bash
-notes import https://example.com/example.png
-# Imported 'https://example.com/example.png' to 'example.png'
+notes import https://example.com/example.pdf
+# Imported 'https://example.com/example.pdf' to 'example.pdf'
 ```
 
 Notes can also be exported. If you have Pandoc installed, notes can
@@ -381,7 +387,7 @@ Usage:
   notes export (<id> | <filename> | <path> | <title>) <path> [--force]
                [<pandoc options>...]
   notes git <git options>...
-  notes history [<selection>]
+  notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
   notes list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
@@ -514,6 +520,11 @@ Options:
 Description:
   Delete a note.
 
+Examples:
+  notes delete 3
+  notes delete example.md
+  notes delete 'A Document Title'
+
 Alias: `d`
 ```
 
@@ -530,9 +541,11 @@ Description:
   Non-text files will be opened in your system's preferred app or program for
   that file type.
 
-Example:
-  notes edit 1
-  echo "Content to append." | noted edit 1
+Examples:
+  notes edit 3
+  notes edit example.md
+  notes edit 'A Document Title'
+  echo "Content to append." | notes edit 1
 
 Alias: `e`
 ```
@@ -580,7 +593,7 @@ Examples:
   notes export example.org /path/to/example.org
 
   # Export a Markdown note to HTML and print to standard output
-  notes export pandoc example.md --from=markdown_strict
+  notes export pandoc example.md --from=markdown_strict --to=html
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   notes export example.md /path/to/example.docx
@@ -611,13 +624,17 @@ Description:
 
 ```text
 Usage:
-  notes history [<selection>]
+  notes history [<id> | <filename> | <path> | <title>]
 
 Description:
-  Display git history using `tig` [1] (if available) or `git log`. When a
-  <selection> is specified, the history for that note is displayed.
+  Display notebook history using `tig` [1] (if available) or `git log`.
+  When a note is specified, the history for that note is displayed.
 
     1. https://github.com/jonas/tig
+
+Examples:
+  notes history
+  notes history example.md
 ```
 
 #### `import`
@@ -640,6 +657,11 @@ Subcommands:
 
 Description:
   Copy, move, or download a file into the current notebook.
+
+Examples:
+  notes import ~/Pictures/example.png
+  notes import ~/Documents/example.docx
+  notes import https://example.com/example.pdf
 ```
 
 #### `init`
@@ -650,6 +672,10 @@ Usage:
 
 Description:
   Initialize the local git repository.
+
+Examples:
+  notes init
+  notes init https://github.com/example/example.git
 ```
 
 #### `list`
@@ -688,6 +714,12 @@ Usage:
 Description:
   List notebooks and notes in the current notebook. Options are passed through
   to `list`. For more information, see `notes help list`.
+
+Examples:
+  notes ls
+  notes ls example.md -e 10
+  notes ls --excerpt --no-id
+  notes ls --titles --reverse
 ```
 
 #### `move`
@@ -698,6 +730,10 @@ Usage:
 
 Description:
   Move the specified note to <notebook>.
+
+Examples:
+  notes move 1 example-notebook
+  notes move example.md example-notebook
 
 Alias: `mv`
 ```
@@ -728,6 +764,14 @@ Subcommands:
   current    Print the current notebook name.
   rename     Rename a notebook.
   use        Switch to a notebook.
+
+Description:
+  Manage notebooks.
+
+Examples:
+  notes notebooks --names
+  notes notebooks add Example1
+  notes notebooks add Example2 https://github.com/example/example.git
 ```
 
 #### `open`
@@ -755,6 +799,10 @@ Subcommands:
 
 Description:
   Get, set, and remove the remote repository URL for the current notebook.
+
+Examples:
+  notes remote set https://github.com/example/example.git
+  notes remove remove
 ```
 
 #### `rename`
@@ -817,6 +865,11 @@ Description:
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
     4. http://pygments.org/
+
+Examples:
+  notes show 1
+  notes show example.md --render
+  notes show 'A Document Title' --dump --no-color
 
 Alias: `s`
 ```
