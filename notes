@@ -2135,7 +2135,7 @@ _import() {
             _path="${__arg:-}"
           fi
         else
-          if [[ "${__arg:-}" =~ ^http ]]
+          if [[ "${__arg:-}" =~ ^http\:|^file\: ]]
           then
             _subcommand="download"
             _url="${__arg:-}"
@@ -2170,7 +2170,7 @@ _import() {
 
       if ((_convert))
       then
-        curl "${_url}" | pandoc \
+        curl -s "${_url}" | pandoc \
           --from html --to markdown \
           -o "${NOTES_DATA_DIR}/${_basename}"
       else
