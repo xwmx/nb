@@ -73,12 +73,15 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
   run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
 
   # Returns status 0
   [[ ${status} -eq 0 ]]
 
+  # Creates new note with bookmark filename
+  [[ "${_filename}}" =~ [A-Za-z0-9]+-bookmark.md ]]
+
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
   _bookmark_content="\
 # Example Domain
@@ -104,7 +107,7 @@ Example description.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
 # --clip option ###############################################################
@@ -156,7 +159,7 @@ More information..."
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
 # --description option ########################################################
@@ -200,7 +203,7 @@ New description.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
 # --tags option ###############################################################
@@ -246,7 +249,7 @@ Example description.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
 
@@ -291,7 +294,7 @@ Example description.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
 # help ########################################################################

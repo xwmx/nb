@@ -1624,7 +1624,10 @@ _bookmark() {
   fi
 
   local _basename
-  _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S')-bookmark")"
+  _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S')-bookmark.md")"
+
+  _debug printf \
+    "_bookmark() \`\${_basename}\`: '%s'\n" "${_basename:-}"
 
   local _target_path="${NOTES_DATA_DIR}/${_basename}"
 
@@ -1723,9 +1726,9 @@ _bookmark() {
   then
     if ((_edit_before_save))
     then
-      printf "%s" "${_bookmark_content}" | _add --edit
+      printf "%s" "${_bookmark_content}" | _add "${_basename}" --edit
     else
-      printf "%s" "${_bookmark_content}" | _add
+      printf "%s" "${_bookmark_content}" | _add "${_basename}"
     fi
   fi
 }
