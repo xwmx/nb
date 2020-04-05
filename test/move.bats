@@ -19,49 +19,24 @@ _setup_move() {
   run "${_NOTES}" move --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with 1
   [[ ${status} -eq 1 ]]
-}
 
-@test "\`move\` with no arguments does not delete note file." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
+  # does not delete note file
   [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
 
-  run "${_NOTES}" move --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-}
-
-@test "\`move\` with no arguments does not create git commit." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" move --force
-
+  # does not create git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ ! $(git log | grep '\[NOTES\] Delete') ]]
-}
 
-@test "\`move\` with no argument prints help information." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" move --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # prints help
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" =~ notes\ move ]]
 }
 
 # <selector> ##################################################################
@@ -76,7 +51,8 @@ _setup_move() {
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" =~ notes\ move ]]
+
 }
 
 @test "\`move <invalid> <notebook>\` exits with 1 and prints help." {
@@ -90,7 +66,7 @@ _setup_move() {
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" =~ notes\ move ]]
 }
 
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
@@ -104,7 +80,7 @@ _setup_move() {
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" =~ notes\ move ]]
 }
 
 @test "\`move <selector> <notebook> (no force)\` returns 0 and moves note." {
@@ -145,7 +121,7 @@ _setup_move() {
 
 # <filename> ##################################################################
 
-@test "\`move\` with <filename> argument exits with status 0." {
+@test "\`move\` with <filename> argument successfully moves note." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -154,54 +130,29 @@ _setup_move() {
   run "${_NOTES}" move "${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`moves\` with <filename> argument moves note file." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move "${_filename}" "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # moves note file
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
-}
+  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
-@test "\`move\` with <filename> argument creates git commit." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" move "${_filename}" "destination" --force
-
+  # creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
-}
 
-@test "\`move\` with <filename> argument prints output." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move "${_filename}" "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
 
-@test "\`move\` with <id> argument exits with status 0." {
+@test "\`move\` with <id> argument successfully moves note." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -210,54 +161,29 @@ _setup_move() {
   run "${_NOTES}" move 1 "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`move\` with <id> argument moves note file." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move 1 "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # moves note file
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
-}
+  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
-@test "\`move\` with <id> argument creates git commit." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" move 1 "destination" --force
-
+  # creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
-}
 
-@test "\`move\` with <id> argument prints output." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move 1 "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
 
-@test "\`move\` with <path> argument exits with status 0." {
+@test "\`move\` with <path> argument successfully moves note." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -266,54 +192,29 @@ _setup_move() {
   run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`move\` with <path> argument moves note file." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # moves note file
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
-}
+  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
-@test "\`move\` with <path> argument creates git commit." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-
-  run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
-
+  # creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
-}
 
-@test "\`move\` with <path> argument prints output." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
 
-@test "\`move\` with <title> argument exits with status 0." {
+@test "\`move\` with <title> argument successfully moves note." {
   {
     _setup_move
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
@@ -323,50 +224,23 @@ _setup_move() {
   run "${_NOTES}" move "${_title}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
   [[ ${status} -eq 0 ]]
-}
 
-@test "\`move\` with <title> argument moves note file." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-
-  run "${_NOTES}" move "${_title}" "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # moves note file
   [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
-}
+  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
-@test "\`move\` with <title> argument creates git commit." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-
-  run "${_NOTES}" move "${_title}" "destination" --force
-
+  # creates git commit
   cd "${NOTES_DATA_DIR}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   [[ $(git log | grep '\[NOTES\] Delete') ]]
-}
 
-@test "\`move\` with <title> argument prints output." {
-  {
-    _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-
-  run "${_NOTES}" move "${_title}" "destination" --force
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
