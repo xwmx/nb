@@ -1629,9 +1629,7 @@ _bookmark() {
   local _target_path="${NOTES_DATA_DIR}/${_basename}"
 
   local _page_content
-  _page_content="$(curl -s "${_url}")"
-
-  if [[ -z "${_page_content:-}" ]]
+  if ! _page_content="$(curl -s "${_url}")" && [[ -z "${_page_content:-}" ]]
   then
     printf "Unable to download page at '%s'\\n" "${_url}"
     return 1
@@ -1647,9 +1645,17 @@ _bookmark() {
 
   if [[ -z "${_description}" ]]
   then
+    local _sed_re_command
+    if sed --help >/dev/null 2>&1
+    then # GNU
+      _sed_re_command=(sed -r -n)
+    else # BSD
+      _sed_re_command=(sed -E -n)
+    fi
+
     _description="$(
       printf "%s\\n" "${_page_content}" \
-        | awk '/meta description/{ gsub(/.*meta description=\042|\042.*/,"");print }'
+        | "${_sed_re_command[@]}" '/<meta .*name=.description./ s/.*content="([^"]+)".*/\1/p'
     )"
   fi
 
@@ -1657,11 +1663,23 @@ _bookmark() {
 
   if [[ -n "${_title:-}" ]]
   then
+    if _command_exists "w3m"
+    then # convert html entities
+      _title="$(printf "%s\n" "${_title}" | w3m -dump -T text/html)"
+    fi
+
     _bookmark_content="# ${_title}${_newline}"
   fi
 
   if [[ -n "${_description}" ]]
   then
+    if _command_exists "w3m"
+    then # convert html entities
+      _description="$(
+        printf "%s\n" "${_description}" | w3m -dump -T text/html
+      )"
+    fi
+
     _bookmark_content+="${_newline}${_description}${_newline}"
   fi
 
@@ -1689,13 +1707,13 @@ _bookmark() {
   if ((_clip))
   then
     _bookmark_content+="${_newline}---${_newline}"
-    if _command_exists "pandoc"
+    if _command_exists "w3m"
     then
-      local _markdown_content
-      _markdown_content="$(
-        printf "%s\\n" "${_page_content}" | pandoc -f html -t markdown
+      local _w3m_content
+      _w3m_content="$(
+        printf "%s\\n" "${_page_content}" | w3m -dump -T text/html
       )"
-      _bookmark_content+="${_markdown_content}"
+      _bookmark_content+="${_w3m_content}"
     else
       _bookmark_content+="${_page_content}"
     fi
