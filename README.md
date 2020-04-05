@@ -134,8 +134,8 @@ files by default. To change the file type, see `notes help add`
 
 #### Adding Bookmarks
 
-`notes bookmark` creates bookmark-formatted notes for a URL using
-information extracted from the page:
+`notes bookmark` takes a URL and creates a new bookmark-formatted note
+using information extracted from the page:
 
 ```bash
 notes bookmark http://example.net
@@ -167,7 +167,7 @@ the HTML page content will be converted to Markdown:
 ```bash
 notes bookmark http://example.net --clip
 ```
-```makrdown
+```markdown
 # Example Domain
 
 <http://example.net>
