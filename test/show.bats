@@ -310,9 +310,6 @@ load test_helper
 
   # Prints file content
   [[ "${output}" =~ Content ]]
-
-  # Deletes temp files.
-  [[ ! "$(ls /tmp/notes*)" ]]
 }
 
 # help ########################################################################
