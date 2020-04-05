@@ -254,6 +254,49 @@ Example description.
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
+@test "\`bookmark\` with --tags option and hashtags creates new note with tags." {
+  {
+    run "${_NOTES}" init
+  }
+
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2'
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  [[ "${#_files[@]}" -eq 1 ]]
+  _bookmark_content="\
+# Example Domain
+
+Example description.
+
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+
+#tag1 #tag2"
+  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+
+  # Creates git commit
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
+
+  # Adds to index
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+}
 
 # --title option ##############################################################
 

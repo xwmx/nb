@@ -1697,11 +1697,14 @@ _bookmark() {
     IFS=',' read -ra _tags <<< "${_tag_list}"
     for __tag in "${_tags[@]:-}"
     do
+      local _normalized_tag
+      _normalized_tag="$(printf "%s\n" "${__tag}" | tr -d '#')"
+
       if [[ -z "${_tag_string}" ]]
       then
-        _tag_string+="#${__tag}"
+        _tag_string+="#${_normalized_tag}"
       else
-        _tag_string+=" #${__tag}"
+        _tag_string+=" #${_normalized_tag}"
       fi
     done
 
