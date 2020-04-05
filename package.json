@@ -1,7 +1,7 @@
 {
   "name": "notes.sh",
   "version": "2.7.7",
-  "description": "A command line note-taking and document management tool with encryption, advanced search, Git-backed syncing, and more in a single portable script.",
+  "description": "A command line note-taking and document management tool with encryption, advanced search, Git-backed syncing, tagged bookmarks, and more in a single portable script.",
   "directories": {
     "doc": "docs",
     "test": "test"
@@ -35,7 +35,10 @@
     "syncing",
     "sync",
     "encryption",
-    "pandoc"
+    "pandoc",
+    "bookmarks",
+    "tagging",
+    "tags"
   ],
   "author": "William Melody",
   "license": "GPL-2.0-only",
