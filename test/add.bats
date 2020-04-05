@@ -246,9 +246,6 @@ load test_helper
   [[ "${#_files[@]}" -eq 1 ]]
   [[ "${_files[0]}" =~ enc$ ]]
   [[ "$(file "${NOTES_DATA_DIR}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
-
-  # Deletes temp files.
-  [[ ! "$(ls /tmp/notes*)" ]]
 }
 
 # --password option ###########################################################
