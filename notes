@@ -3284,7 +3284,8 @@ _move() {
 
   "${_MY_PATH}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
 
-  local _id="$(
+  local _id
+  _id="$(
     "${_MY_PATH}" "${_target_notebook}:index" get_id "${_basename}"
   )"
 
