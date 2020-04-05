@@ -1555,6 +1555,8 @@ Examples:
   ${_ME} bookmark https://example.com
   ${_ME} bookmark https://example.com --tags example,sample,demo
   ${_ME} bookmark https://example.com/about --title 'Example Title'
+
+Alias: \`b\`
 HEREDOC
 _bookmark() {
   local _clip=0
