@@ -271,9 +271,6 @@ load test_helper
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
-
-  # Deletes temp files.
-  [[ ! "$(ls /tmp/notes*)" ]]
 }
 
 # help ########################################################################
