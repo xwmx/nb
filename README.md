@@ -255,7 +255,7 @@ notes edit 'A Document Title'
 specified note:
 
 ```bash
-echo "Content to append." | noted edit 1
+echo "Content to append." | notes edit 1
 ```
 
 #### Deleting Notes
