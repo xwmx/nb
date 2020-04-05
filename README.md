@@ -11,7 +11,7 @@
 [`notes`](https://github.com/xwmx/notes) is a command line note-taking and
 document management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
-[Pandoc](http://pandoc.org/)-backed conversion, bookmarking, and
+[Pandoc](http://pandoc.org/)-backed conversion, tagged bookmarks, and
 more in a single portable script. `notes` creates notes in text-based formats
 like [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
@@ -134,8 +134,8 @@ files by default. To change the file type, see `notes help add`
 
 #### Adding Bookmarks
 
-`notes bookmark` takes a URL and creates a new bookmark-formatted note
-using information extracted from the page:
+`notes bookmark` takes a URL and creates a new note using information
+extracted from the page:
 
 ```bash
 notes bookmark http://example.net
