@@ -540,6 +540,39 @@ Examples:
 Alias: `a`
 ```
 
+#### `bookmark`
+
+```text
+Usage:
+  notes bookmark <url> [-c | --clip]  [--description <description>]
+                       [-e | --edit] [--tags <tag1>,<tag2>...]
+                       [--title <title>]
+
+Options:
+  -c --clip                    Save the page content in the bookmark note,
+                               making page content searchable. If `pandoc`
+                               is installed, content will be converted to
+                               Markdown.
+  --description <description>  The bookmark description. When not specified,
+                               `notes` will attempt to generate one from
+                               the page content.
+  -e --edit                    Open the new note in your editor before saving.
+  --tags        <tag1>,<tag2>  A comma-separated list of tags.
+  --title       <title>        The bookmark title. When not specified,
+                               `notes` will use the html <title> tag when
+                               present.
+
+Description:
+  Create a new bookmark-formatted note for <url>.
+
+Examples:
+  notes bookmark https://example.com
+  notes bookmark https://example.com --tags example,sample,demo
+  notes bookmark https://example.com/about --title 'Example Title'
+
+Alias: `b
+```
+
 #### `count`
 
 ```text

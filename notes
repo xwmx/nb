@@ -1538,7 +1538,7 @@ Options:
   -c --clip                    Save the page content in the bookmark note,
                                making page content searchable. If \`pandoc\`
                                is installed, content will be converted to
-                               markdown.
+                               Markdown.
   --description <description>  The bookmark description. When not specified,
                                \`notes\` will attempt to generate one from
                                the page content.
