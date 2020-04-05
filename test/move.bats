@@ -140,7 +140,7 @@ _setup_move() {
   run "${_NOTES}" move one:"${_filename}" "home" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Moved\ to\ \'home\':\'[A-Za-z0-9]+.md\' ]]
+  [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:[A-Za-z0-9]+.md ]]
 }
 
 # <filename> ##################################################################
@@ -196,7 +196,7 @@ _setup_move() {
   run "${_NOTES}" move "${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
+  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
@@ -252,7 +252,7 @@ _setup_move() {
   run "${_NOTES}" move 1 "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
+  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -308,7 +308,7 @@ _setup_move() {
   run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
+  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
@@ -367,7 +367,7 @@ _setup_move() {
   run "${_NOTES}" move "${_title}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Moved\ to\ \'destination\':\'[A-Za-z0-9]+.md\' ]]
+  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
 # help ########################################################################

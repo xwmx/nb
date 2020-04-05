@@ -3280,13 +3280,20 @@ _move() {
   fi
 
   cat "${NOTES_DATA_DIR}/${_basename}" \
-    | "${_MY_PATH}" "${_target_notebook}:add" 1> /dev/null
+    | "${_MY_PATH}" "${_target_notebook}:add" "${_basename}" 1> /dev/null
 
   "${_MY_PATH}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
 
-  if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  local _id="$(
+    "${_MY_PATH}" "${_target_notebook}:index" get_id "${_basename}"
+  )"
+
+  if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]] ||
+     [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
   then
-    printf "Moved to '%s':'%s'\\n"  \
+    printf "Moved to [%s:%s] %s:%s\\n"  \
+      "${_target_notebook}" \
+      "${_id}" \
       "${_target_notebook}"        \
       "${_basename}"
   fi
