@@ -11,7 +11,7 @@
 [`notes`](https://github.com/xwmx/notes) is a command line note-taking and
 document management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
-[Pandoc](http://pandoc.org/)-backed conversion, and
+[Pandoc](http://pandoc.org/)-backed conversion, bookmarking, and
 more in a single portable script. `notes` creates notes in text-based formats
 like [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
@@ -131,6 +131,57 @@ environment or [`notes settings`](#configuration).
 
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`
+
+#### Adding Bookmarks
+
+`notes bookmark` creates bookmark-formatted notes for a URL using
+information extracted from the page:
+
+```bash
+notes bookmark http://example.net
+```
+```markdown
+# Example Domain
+
+<http://example.net>
+```
+
+Bookmarks can be tagged using the `--tags` option. Tags are converted
+into hashtags:
+
+```bash
+notes bookmark http://example.net --tags tag1,tag2
+```
+```markdown
+# Example Domain
+
+<http://example.net>
+
+#tag1 #tag2
+```
+
+The page content can be saved within the note with the `--clip` option, making
+the page content searchable with `notes search`. If `pandoc` is available,
+the HTML page content will be converted to Markdown:
+
+```bash
+notes bookmark http://example.net --clip
+```
+```makrdown
+# Example Domain
+
+<http://example.net>
+
+---
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information...](https://www.iana.org/domains/example)
+```
 
 #### Listing Notes
 
@@ -382,6 +433,9 @@ them faster to work with:
 # `a` (add): add a new note named 'example.md'
 notes a example.md
 
+# `b` (bookmark): add a new bookmark for https://example.com
+notes b https://example.com
+
 # `e` (edit): edit note 5
 notes e 5
 
@@ -404,6 +458,9 @@ If `n` is available on your system, you can add `alias n="notes"` to your
 ```bash
 # add a new note
 n a
+
+# add a new bookmark for example.com
+n b https://example.com
 
 # edit note 5
 n e 5
