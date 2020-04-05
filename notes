@@ -1614,7 +1614,7 @@ _bookmark() {
           return 1
         fi
         ;;
-      open|peek)
+      open|o|peek|p)
         if __option_value_is_present "${_val:-}"
         then
           _subcommand="${_arg}"
@@ -1636,7 +1636,7 @@ _bookmark() {
     shift
   done
 
-  if [[ "${_subcommand}" == 'peek' ]] || [[ "${_subcommand}" == 'open' ]]
+  if [[ "${_subcommand}" =~ ^open|o|peek|p$ ]]
   then
     local _basename
     _basename="$(_get_selection_basename "${_selection}")"
@@ -1653,12 +1653,12 @@ _bookmark() {
       awk -vRS=">" -vFS="<" '{print $2;exit}' "${NOTES_DATA_DIR}/${_basename}"
     )"
 
-    if [[ "${_subcommand}" == 'peek' ]]
+    if [[ "${_subcommand}" =~ ^peek|p$  ]]
     then
-      if _command_exists 'wd3m'
+      if _command_exists 'w3m'
       then
         w3m "${_target_url}"
-      elif _command_exists 'lydnx'
+      elif _command_exists 'lynx'
       then
         lynx "${_target_url}"
       else
@@ -1666,7 +1666,7 @@ _bookmark() {
       fi
 
       return 0
-    elif [[ "${_subcommand}" == 'open' ]]
+    elif [[ "${_subcommand}" =~ ^open|o$ ]]
     then
       if _command_exists "xdg-open"
       then
