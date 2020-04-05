@@ -1227,6 +1227,9 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
+  ${_ME} bookmark <url> [-c | --clip]  [--description <description>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1531,8 +1534,8 @@ _a() { _add "${@}"; }
 desc "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark <url> [-c | --clip]  [--description <description>]
-                       [-e | --edit] [--tags <tag1>,<tag2>...]
-                       [--title <title>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
 
 Options:
   -c --clip                    Save the page content in the bookmark note,

@@ -423,6 +423,9 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
+  notes bookmark <url> [-c | --clip]  [--description <description>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -545,8 +548,8 @@ Alias: `a`
 ```text
 Usage:
   notes bookmark <url> [-c | --clip]  [--description <description>]
-                       [-e | --edit] [--tags <tag1>,<tag2>...]
-                       [--title <title>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
 
 Options:
   -c --clip                    Save the page content in the bookmark note,
