@@ -1566,6 +1566,8 @@ _bookmark() {
   local _bookmark_content=
   local _description=
   local _edit_before_save=0
+  local _selection=
+  local _subcommand=
   local _tag_list=
   local _title=
   local _url=
@@ -1612,6 +1614,17 @@ _bookmark() {
           return 1
         fi
         ;;
+      open|peek)
+        if __option_value_is_present "${_val:-}"
+        then
+          _subcommand="${_arg}"
+          _selection="${_val:-}"
+          shift
+        else
+          _help "bookmark"
+          return 1
+        fi
+        ;;
       *)
         if [[ -z "${_url:-}" ]]
         then
@@ -1622,6 +1635,53 @@ _bookmark() {
 
     shift
   done
+
+  if [[ "${_subcommand}" == 'peek' ]] || [[ "${_subcommand}" == 'open' ]]
+  then
+    local _basename
+    _basename="$(_get_selection_basename "${_selection}")"
+    _debug printf "_bookmark() peek \${_basename}: '%s'\\n" "${_basename}"
+    if [[ -z "${_basename}" ]]
+    then
+      printf "Note not found.\n"
+      return 1
+    fi
+    _set_selection_notebook "${_selection}"
+
+    local _target_url
+    _target_url="$(
+      awk -vRS=">" -vFS="<" '{print $2;exit}' "${NOTES_DATA_DIR}/${_basename}"
+    )"
+
+    if [[ "${_subcommand}" == 'peek' ]]
+    then
+      if _command_exists 'wd3m'
+      then
+        w3m "${_target_url}"
+      elif _command_exists 'lydnx'
+      then
+        lynx "${_target_url}"
+      else
+        curl -s "${_target_url}" | "${PAGER:-less}"
+      fi
+
+      return 0
+    elif [[ "${_subcommand}" == 'open' ]]
+    then
+      if _command_exists "xdg-open"
+      then
+        xdg-open "${_target_url}"
+        return 0
+      elif _command_exists "open"
+      then
+        open "${_target_url}"
+        return 0
+      else
+        printf "notes doesn't know how to open URLs on your system.\n"
+        return 1
+      fi
+    fi
+  fi
 
   if [[ -z "${_url:-}" ]]
   then
