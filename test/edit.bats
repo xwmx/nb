@@ -55,11 +55,9 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" notebooks add "one"
-    run "${_NOTES}" use "one"
-    run "${_NOTES}" add
-    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
+    run "${_NOTES}" one:add
+    _filename=$("${_NOTES}" one:list -n 1 --no-id | head -1)
     echo "\${_filename:-}: ${_filename:-}"
-    run "${_NOTES}" use "home"
   }
   [[ -n "${_filename}" ]]
   [[ -e "${NOTES_DIR}/one/${_filename}" ]]
@@ -67,7 +65,7 @@ load test_helper
   run "${_NOTES}" edit one:"${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ one:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[one:[0-9]+\]\ one:[A-Za-z0-9]+.md ]]
 }
 
 # <selector> (no changes) #####################################################
@@ -114,7 +112,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
@@ -145,7 +143,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -176,7 +174,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 
 }
 
@@ -209,7 +207,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # piped #######################################################################
@@ -243,7 +241,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # encrypted ###################################################################
@@ -272,7 +270,7 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Edit') ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 
   # Deletes temp files.
   [[ ! "$(ls /tmp/notes*)" ]]

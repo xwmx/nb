@@ -1064,6 +1064,7 @@ _set_selection_notebook() {
   _parts=($(_get_selection_parts "${1:-}"))
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
+    _SCOPED=1
     NOTES_DATA_DIR="${NOTES_DIR}/${_parts[0]}"
     _SCOPE="$(basename "${NOTES_DATA_DIR}")"
   fi
@@ -1494,20 +1495,26 @@ _add() {
     local _id
     _id="$(_index get_id "${_basename}")"
 
+    local _scoped_basename="${_basename}"
+
+    if ((_SCOPED))
+    then
+      _id="${_SCOPE}:${_id}"
+      _scoped_basename="${_SCOPE}:${_basename}"
+    fi
+
     local _title
     _title="$(_get_title "${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added [%s] %s:%s '%s'\\n" \
+      printf "Added [%s] %s '%s'\\n" \
         "${_id}" \
-        "${_SCOPE}" \
-        "${_basename}" \
+        "${_scoped_basename}" \
         "${_title}"
     else
-      printf "Added [%s] %s:%s\\n" \
+      printf "Added [%s] %s\\n" \
         "${_id}" \
-        "${_SCOPE}" \
-        "${_basename}"
+        "${_scoped_basename}"
     fi
   fi &&
     _git_checkpoint "[NOTES] Add: ${_basename}"
@@ -1606,12 +1613,23 @@ _delete() {
   fi
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
 
+  local _id
+  _id="$(_index get_id "${_basename}")"
+
+  local _scoped_basename="${_basename}"
+
+  if ((_SCOPED))
+  then
+    _id="${_SCOPE}:${_id}"
+    _scoped_basename="${_SCOPE}:${_basename}"
+  fi
+
   _title="$(_get_title "${_basename}")"
   if [[ -n "${_title}" ]]
   then
-    _note_info_line="${_SCOPE}:${_basename} '${_title}'"
+    _note_info_line="[${_id}] ${_scoped_basename} '${_title}'"
   else
-    _note_info_line="${_SCOPE}:${_basename}"
+    _note_info_line="[${_id}] ${_scoped_basename}"
   fi
 
   if ! ((_force))
@@ -1777,20 +1795,26 @@ _edit() {
       local _id
       _id="$(_index get_id "${_basename}")"
 
+      local _scoped_basename="${_basename}"
+
+      if ((_SCOPED))
+      then
+        _id="${_SCOPE}:${_id}"
+        _scoped_basename="${_SCOPE}:${_basename}"
+      fi
+
       local _title
       _title="$(_get_title "${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated [%s] %s:%s '%s'\\n" \
+        printf "Updated [%s] %s '%s'\\n" \
           "${_id}" \
-          "${_SCOPE}" \
-          "${_basename}" \
+          "${_scoped_basename}" \
           "${_title}"
       else
-        printf "Updated [%s] %s:%s\\n" \
+        printf "Updated [%s] %s\\n" \
           "${_id}" \
-          "${_SCOPE}" \
-          "${_basename}"
+          "${_scoped_basename}"
       fi
     fi
   else
@@ -4206,6 +4230,7 @@ _notes() {
 
   if [[ -n "${_SCOPE}" ]]
   then
+    _SCOPED=1
     NOTES_DATA_DIR="${NOTES_DIR}/${_SCOPE}"
   else
     _SCOPE="$(basename "${NOTES_DATA_DIR}")"
@@ -4383,6 +4408,7 @@ _USE_DEBUG=0
 # Initialize additional expected option variables.
 _SUBCOMMAND=
 _SCOPE=
+_SCOPED=0
 _ARGUMENTS=()
 
 # $_SUBCOMMANDS

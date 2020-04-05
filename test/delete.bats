@@ -83,7 +83,7 @@ load test_helper
   run "${_NOTES}" delete one:"${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Deleted\ one:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\ \[one:[A-Za-z0-9]+\]\ one:[A-Za-z0-9]+.md ]]
 }
 
 # <filename> ##################################################################
@@ -121,7 +121,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
@@ -159,7 +159,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -197,7 +197,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
@@ -236,7 +236,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 # help ########################################################################

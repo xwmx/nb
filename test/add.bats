@@ -58,7 +58,39 @@ load test_helper
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+}
+
+@test "\`add\` with scope creates new note without errors." {
+  run "${_NOTES}" init
+  run "${_NOTES}" notebooks add Example
+  run "${_NOTES}" Example:add "# Content"
+  NOTES_DATA_DIR="${NOTES_DIR}/Example"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
+
+  # Creates git commit
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
+
+  # Adds to index
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\ \[Example:[0-9]+\]\ Example:[A-Za-z0-9]+.md ]]
 }
 
 # --content option ############################################################
@@ -260,7 +292,7 @@ load test_helper
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {
