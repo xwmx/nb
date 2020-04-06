@@ -597,7 +597,7 @@ _get_selection_basename() {
       _filenames=($(_list_notes_files))
       for __file in "${_filenames[@]:-}"
       do
-        _title="$(_get_title "${__file}")"
+        _title="$(_get_title "${NOTES_DATA_DIR}/${__file}")"
 
         if [[ -n "${_title}" ]] &&
            [[ "${_title}" == "${_identifier}" ]]
@@ -656,30 +656,22 @@ _get_selection_parts() {
 # _get_title()
 #
 # Usage:
-#   _get_title <basename> [<scope>]
+#   _get_title <path>
 #
 # Description:
-#   Print the title, if present, of the note with the given basename in
-#   `$NOTES_DATA_DIR` or <scope>.
+#   Print the title, if present, of the note at the path.
 _get_title() {
-  local _basename="${1:-}"
-  local _scope="${2:-}"
-  local _data_dir="${NOTES_DATA_DIR}"
+  local _path="${1:-}"
   local _title=
 
-  if [[ -n "${_scope}" ]]
+  if [[ -z "${_path}" ]]
   then
-    _data_dir="${NOTES_DIR}/${_scope}"
-  fi
-
-  if [[ -z "${_basename}" ]]
+    _die printf "Usage: _get_title <path>\\n"
+  elif [[ -e "${_path}" ]]
   then
-    _die printf "Usage: _get_title <basename>\\n"
-  elif [[ -e "${_data_dir}/${_basename}" ]]
-  then
-    if _file_is_text "${_data_dir}/${_basename}"
+    if _file_is_text "${_path}"
     then
-      _maybe_title="$(head -1 "${_data_dir}/${_basename}")"
+      _maybe_title="$(head -1 "${_path}")"
       if [[ "${_maybe_title}" =~ ^#\  ]]
       then # first line starts with an H1
         _title="$(printf "%s\\n" "${_maybe_title}" | sed 's/^\# //')"
@@ -1533,7 +1525,7 @@ _add() {
     fi
 
     local _title
-    _title="$(_get_title "${_basename}")"
+    _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
     if [[ -n "${_title}" ]]
     then
       printf "Added [%s] %s '%s'\\n" \
@@ -2016,7 +2008,7 @@ _delete() {
     _scoped_basename="${_SCOPE}:${_basename}"
   fi
 
-  _title="$(_get_title "${_basename}")"
+  _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
     _note_info_line="[${_id}] ${_scoped_basename} '${_title}'"
@@ -2196,7 +2188,7 @@ _edit() {
       fi
 
       local _title
-      _title="$(_get_title "${_basename}")"
+      _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
       if [[ -n "${_title}" ]]
       then
         printf "Updated [%s] %s '%s'\\n" \
@@ -3139,7 +3131,7 @@ HEREDOC
       local _maybe_title
       if ((_list_titles))
       then
-        _maybe_title="$(_get_title "${__basename}")"
+        _maybe_title="$(_get_title "${NOTES_DATA_DIR}/${__basename}")"
         if [[ -n "${_maybe_title}" ]]
         then # note file has title.
           _list_item_id="${_maybe_title}"
@@ -3461,7 +3453,7 @@ _move() {
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
 
-  _title="$(_get_title "${_basename}")"
+  _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
     _source_info_line="${_SCOPE}:${_basename} '${_title}'"
@@ -4176,7 +4168,7 @@ _search() {
           fi
 
           _id="$("${_MY_PATH}" "${__scope}:index" get_id "${_filename}")"
-          _title="$(_get_title "${_filename}" "${__scope}")"
+          _title="$(_get_title "${NOTES_DIR}/${__scope}/${_filename}")"
 
           if [[ -n "${_title}" ]]
           then
