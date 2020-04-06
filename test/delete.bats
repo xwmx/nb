@@ -32,7 +32,7 @@ load test_helper
 
   # Prints help information
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<id> | <filename> | <path> | <title>) [--force]" ]]
+  [[ "${lines[1]}" =~ notes\ delete ]]
 }
 
 # <selector> ##################################################################
@@ -251,5 +251,5 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes delete (<id> | <filename> | <path> | <title>) [--force]" ]]
+  [[ "${lines[1]}" =~ notes\ delete ]]
 }

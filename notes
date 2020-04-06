@@ -1231,9 +1231,9 @@ Usage:
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark (open | peek) (<id> | <filename> | <path> | <title>)
   ${_ME} count
-  ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
+  ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
-  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
+  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   ${_ME} git <git options>...
   ${_ME} history [<id> | <filename> | <path> | <title>]
@@ -1243,14 +1243,14 @@ Usage:
              [-s | --sort] [-r | --reverse] [--titles]
              [<id> | <filename> | <path> | <title>]
   ${_ME} ls [<list options>...]
-  ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
+  ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [open]
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
-  ${_ME} remote [remove | set <url> [--force]]
+  ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} settings
@@ -1859,10 +1859,10 @@ _count() {
 
 desc "delete" <<HEREDOC
 Usage:
-  ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
+  ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
 
 Options:
-  --force  Skip the confirmation prompt.
+  -f --force  Skip the confirmation prompt.
 
 Description:
   Delete a note.
@@ -1884,7 +1884,7 @@ _delete() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      --force)
+      -f|--force)
         _force=1
         ;;
       *)
@@ -2153,19 +2153,19 @@ _env() {
 
 desc "export" <<HEREDOC
 Usage:
-  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [--force]
+  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
                [<pandoc options>...]
 
 Options:
-  --force    Skip the confirmation prompt when overwriting an existing file.
+  -f --force  Skip the confirmation prompt when overwriting an existing file.
 
 Subcommands:
-  (default)  Export a file to <path>. If <path> has a different extension from
-             the source note, convert the note using \`pandoc\`.
-  pandoc     Export the file to standard output or a file using \`pandoc\`.
-             \`export pandoc\` prints to standard output by default.
+  (default)   Export a file to <path>. If <path> has a different extension
+              than the source note, convert the note using \`pandoc\`.
+  pandoc      Export the file to standard output or a file using \`pandoc\`.
+              \`export pandoc\` prints to standard output by default.
 
 Description:
   Export a file from the notebook.
@@ -2200,7 +2200,7 @@ _export() {
       pandoc)
         _pandoc_only=1
         ;;
-      --force)
+      -f|--force)
         _force=1
         ;;
       *)
@@ -3294,7 +3294,10 @@ _ls() {
 
 desc "move" <<HEREDOC
 Usage:
-  ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
+  ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+
+Options:
+  -f --force  Skip the confirmation prompt.
 
 Description:
   Move the specified note to <notebook>.
@@ -3316,7 +3319,7 @@ _move() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      --force)
+      -f|--force)
         _force=1
         ;;
       *)
@@ -3662,12 +3665,15 @@ desc "remote" <<HEREDOC
 Usage:
   ${_ME} remote
   ${_ME} remote remove
-  ${_ME} remote set <url> [--force]
+  ${_ME} remote set <url> [-f | --force]
 
 Subcommands:
   (default)  Print the remote URL for the notebook.
   remove     Remove the remote URL from the notebook.
   set        Set the remote URL for the notebook.
+
+Options:
+  -f --force  Skip the confirmation prompt.
 
 Description:
   Get, set, and remove the remote repository URL for the current notebook.
@@ -3686,7 +3692,7 @@ _remote() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      --force)
+      -f|--force)
         _force=1
         ;;
       *)

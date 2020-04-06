@@ -502,9 +502,9 @@ Usage:
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   notes bookmark (open | peek) (<id> | <filename> | <path> | <title>)
   notes count
-  notes delete (<id> | <filename> | <path> | <title>) [--force]
+  notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
   notes edit (<id> | <filename> | <path> | <title>)
-  notes export (<id> | <filename> | <path> | <title>) <path> [--force]
+  notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   notes git <git options>...
   notes history [<id> | <filename> | <path> | <title>]
@@ -514,14 +514,14 @@ Usage:
              [-s | --sort] [-r | --reverse] [--titles]
              [<id> | <filename> | <path> | <title>]
   notes ls [<list options>...]
-  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
+  notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   notes notebook [open]
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
-  notes remote [remove | set <url> [--force]]
+  notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
   notes settings
@@ -669,10 +669,10 @@ Description:
 
 ```text
 Usage:
-  notes delete (<id> | <filename> | <path> | <title>) [--force]
+  notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
 
 Options:
-  --force  Skip the confirmation prompt.
+  -f --force  Skip the confirmation prompt.
 
 Description:
   Delete a note.
@@ -721,19 +721,19 @@ Description:
 
 ```text
 Usage:
-  notes export (<id> | <filename> | <path> | <title>) <path> [--force]
+  notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   notes export pandoc (<id> | <filename> | <path> | <title>)
                [<pandoc options>...]
 
 Options:
-  --force    Skip the confirmation prompt when overwriting an existing file.
+  -f --force  Skip the confirmation prompt when overwriting an existing file.
 
 Subcommands:
-  (default)  Export a file to <path>. If <path> has a different extension from
-             the source note, convert the note using `pandoc`.
-  pandoc     Export the file to standard output or a file using `pandoc`.
-             `export pandoc` prints to standard output by default.
+  (default)   Export a file to <path>. If <path> has a different extension
+              than the source note, convert the note using `pandoc`.
+  pandoc      Export the file to standard output or a file using `pandoc`.
+              `export pandoc` prints to standard output by default.
 
 Description:
   Export a file from the notebook.
@@ -886,7 +886,10 @@ Examples:
 
 ```text
 Usage:
-  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
+  notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+
+Options:
+  -f --force  Skip the confirmation prompt.
 
 Description:
   Move the specified note to <notebook>.
@@ -895,7 +898,7 @@ Examples:
   notes move 1 example-notebook
   notes move example.md example-notebook
 
-Alias: `mv`
+Alias: `mv
 ```
 
 #### `notebook`
@@ -940,12 +943,15 @@ Examples:
 Usage:
   notes remote
   notes remote remove
-  notes remote set <url> [--force]
+  notes remote set <url> [-f | --force]
 
 Subcommands:
   (default)  Print the remote URL for the notebook.
   remove     Remove the remote URL from the notebook.
   set        Set the remote URL for the notebook.
+
+Options:
+  -f --force  Skip the confirmation prompt.
 
 Description:
   Get, set, and remove the remote repository URL for the current notebook.
