@@ -515,13 +515,12 @@ Usage:
              [<id> | <filename> | <path> | <title>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>
-  notes notebook
+  notes notebook [open]
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
-  notes open
   notes remote [remove | set <url> [--force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
@@ -553,9 +552,8 @@ Subcommands:
   list       List notes in the current notebook.
   ls         List notebooks and notes in the current notebook.
   move       Move a note to a different notebook.
-  notebook   Print current notebook name.
+  notebook   Manage the current notebook.
   notebooks  Manage notebooks.
-  open       Open the notebook directory in your file browser or explorer.
   remote     Get, set, and remove the remote URL for the notebook.
   rename     Rename a note.
   search     Search notes.
@@ -934,16 +932,6 @@ Examples:
   notes notebooks --names
   notes notebooks add Example1
   notes notebooks add Example2 https://github.com/example/example.git
-```
-
-#### `open`
-
-```text
-Usage:
-  notes open
-
-Description:
-  Open the notebook directory in your file browser, explorer, or finder.
 ```
 
 #### `remote`

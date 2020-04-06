@@ -1244,13 +1244,12 @@ Usage:
              [<id> | <filename> | <path> | <title>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [--force] <notebook>
-  ${_ME} notebook
+  ${_ME} notebook [open]
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
-  ${_ME} open
   ${_ME} remote [remove | set <url> [--force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
@@ -3422,15 +3421,27 @@ _mv()    { _move "${@}"; }
 
 desc "notebook" <<HEREDOC
 Usage:
-  ${_ME} notebook
+  ${_ME} notebook [open]
+
+Subcommands:
+  open  Open the notebook directory in your file browser, explorer, or finder.
 
 Description:
-  Print the current notebook name.
+  Print the current notebook name or open the directory in your file browser.
 HEREDOC
 _notebook() {
   if [[ "${1:-}" == "open" ]]
   then
-    open "${NOTES_DATA_DIR}"
+    if _command_exists "xdg-open"
+    then
+      xdg-open "${NOTES_DATA_DIR}"
+    elif _command_exists "open"
+    then
+      open "${NOTES_DATA_DIR}"
+    else
+      printf "notes doesn't know how to open directories on your system.\n"
+      return 1
+    fi
   else
     _notebooks current
   fi
@@ -3644,28 +3655,6 @@ _notebooks() {
 }
 desc "nbs" "$(_help 'notebooks')"
 _nbs()   { _notebooks "${@}"; }
-
-# open ########################################################################
-
-desc "open" <<HEREDOC
-Usage:
-  ${_ME} open
-
-Description:
-  Open the notebook directory in your file browser, explorer, or finder.
-HEREDOC
-_open() {
-  if _command_exists "xdg-open"
-  then
-    xdg-open "${NOTES_DATA_DIR}"
-  elif _command_exists "open"
-  then
-    open "${NOTES_DATA_DIR}"
-  else
-    printf "notes doesn't know how to open directories on your system.\n"
-    return 1
-  fi
-}
 
 # remote ######################################################################
 
@@ -4761,7 +4750,6 @@ _SUBCOMMANDS=(
   nbs
   notebook
   notebooks
-  open
   q
   remote
   rename
