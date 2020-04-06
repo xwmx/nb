@@ -134,40 +134,10 @@ files by default. To change the file type, see `notes help add`
 
 #### Adding Bookmarks
 
-`notes bookmark` takes a URL and creates a new note using information
-extracted from the page:
+`notes bookmark` takes a URL and creates a new note:
 
 ```bash
 notes bookmark http://example.net
-```
-```markdown
-# Example Domain
-
-<http://example.net>
-```
-
-Bookmarks can be tagged using the `--tags` option. Tags are converted
-into hashtags:
-
-```bash
-notes bookmark http://example.net --tags tag1,tag2
-```
-```markdown
-# Example Domain
-
-<http://example.net>
-
-## Tags
-
-#tag1 #tag2
-```
-
-The page content can be saved within the note with the `--clip` option, making
-the page content searchable with `notes search`. If `pandoc` is available,
-the HTML page content will be converted to Markdown:
-
-```bash
-notes bookmark http://example.net --clip
 ```
 ```markdown
 # Example Domain
@@ -184,6 +154,28 @@ use this domain in literature without prior coordination or asking for
 permission.
 
 [More information...](https://www.iana.org/domains/example)
+```
+
+`notes` automatically archives the page content in the note. When
+`pandoc` is installed, the HTML page content will be converted to Markdown.
+
+Bookmarks can be tagged using the `--tags` option. Tags are converted
+into hashtags:
+
+```bash
+notes bookmark http://example.net --tags tag1,tag2
+```
+```markdown
+# Example Domain
+
+<http://example.net>
+
+## Tags
+
+#tag1 #tag2
+
+## Content
+...
 ```
 
 #### Listing Notes
@@ -483,8 +475,8 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  notes bookmark <url> [--clip] [-c <comment> | --comment <comment>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
+                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -606,21 +598,22 @@ Alias: `a`
 
 ```text
 Usage:
-  notes bookmark <url> [--clip] [-c <comment> | --comment <comment>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
+                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
 
 Options:
-  --clip                      Save the page content in the bookmark note,
-                              making page content searchable. If `pandoc` is
-                              installed, content will be converted to Markdown.
-  -c --comment <comment>      A comment or note about this bookmark.
-  -e --edit                   Open the new note in your editor before saving.
-  --tags       <tag1>,<tag2>  A comma-separated list of tags.
-  --title      <title>        The bookmark title. When not specified, `notes`
-                              will use the html <title> tag when present.
+  -c --comment   <comment>      A comment or note about this bookmark.
+  -e --edit                     Open the new note in your editor before saving.
+  --skip-content                Omit page content from the note.
+  --tags         <tag1>,<tag2>  A comma-separated list of tags.
+  --title        <title>        The bookmark title. When not specified,
+                                `notes` will use the html <title> tag.
 
 Description:
-  Create a new bookmark-formatted note for <url>.
+  Create a new bookmark-formatted note for <url>. By default, the page content
+  is saved within the bookmark note, making page content searchable using
+  `notes search`. When `pandoc` is installed, content will be converted to
+  Markdown.
 
 Examples:
   notes bookmark https://example.com

@@ -86,48 +86,6 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
-  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
-
-  # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
-
-  # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
-
-  # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
-}
-
-# --clip option ###############################################################
-
-@test "\`bookmark\` with --clip option creates new note with clipping." {
-  {
-    run "${_NOTES}" init
-  }
-
-  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --clip
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
-
-  # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
-  [[ "${#_files[@]}" -eq 1 ]]
-  _bookmark_content="\
-# Example Domain
-
 <file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
 ## Content
@@ -185,7 +143,60 @@ permission.
 
 ## Comment
 
-New comment."
+New comment.
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information...](https://www.iana.org/domains/example)"
+  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+
+  # Creates git commit
+  cd "${NOTES_DATA_DIR}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
+
+  # Adds to index
+  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+}
+
+# --skip-content option #######################################################
+
+@test "\`bookmark\` with --skip-content option creates new note with no page content." {
+  {
+    run "${_NOTES}" init
+  }
+
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --skip-content
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  [[ "${#_files[@]}" -eq 1 ]]
+  _bookmark_content="\
+# Example Domain
+
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -231,7 +242,18 @@ New comment."
 
 ## Tags
 
-#tag1 #tag2"
+#tag1 #tag2
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -279,7 +301,18 @@ Example comment.
 
 ## Tags
 
-#tag1 #tag2"
+#tag1 #tag2
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -321,7 +354,18 @@ Example comment.
   _bookmark_content="\
 # New Title
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]

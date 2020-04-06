@@ -1227,8 +1227,8 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  ${_ME} bookmark <url> [--clip] [-c <comment> | --comment <comment>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
+                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1532,21 +1532,22 @@ _a() { _add "${@}"; }
 
 desc "bookmark" <<HEREDOC
 Usage:
-  ${_ME} bookmark <url> [--clip] [-c <comment> | --comment <comment>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
+                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
 
 Options:
-  --clip                      Save the page content in the bookmark note,
-                              making page content searchable. If \`pandoc\` is
-                              installed, content will be converted to Markdown.
-  -c --comment <comment>      A comment or note about this bookmark.
-  -e --edit                   Open the new note in your editor before saving.
-  --tags       <tag1>,<tag2>  A comma-separated list of tags.
-  --title      <title>        The bookmark title. When not specified, \`notes\`
-                              will use the html <title> tag when present.
+  -c --comment   <comment>      A comment or note about this bookmark.
+  -e --edit                     Open the new note in your editor before saving.
+  --skip-content                Omit page content from the note.
+  --tags         <tag1>,<tag2>  A comma-separated list of tags.
+  --title        <title>        The bookmark title. When not specified,
+                                \`notes\` will use the html <title> tag.
 
 Description:
-  Create a new bookmark-formatted note for <url>.
+  Create a new bookmark-formatted note for <url>. By default, the page content
+  is saved within the bookmark note, making page content searchable using
+  \`notes search\`. When \`pandoc\` is installed, content will be converted to
+  Markdown.
 
 Examples:
   ${_ME} bookmark https://example.com
@@ -1557,11 +1558,11 @@ Examples:
 Alias: \`b\`
 HEREDOC
 _bookmark() {
-  local _clip=0
   local _bookmark_content=
   local _comment=
   local _edit_before_save=0
   local _selection=
+  local _skip_content=0
   local _subcommand=
   local _tag_list=
   local _title=
@@ -1573,9 +1574,6 @@ _bookmark() {
     local _val="${2:-}"
 
     case "${_arg}" in
-      --clip)
-        _clip=1
-        ;;
       -c|--comment)
         if __option_value_is_present "${_val:-}"
         then
@@ -1588,6 +1586,9 @@ _bookmark() {
         ;;
       -e|--edit)
         _edit_before_save=1
+        ;;
+      --skip-content)
+        _skip_content=1
         ;;
       --tags)
         if __option_value_is_present "${_val:-}"
@@ -1783,7 +1784,7 @@ _bookmark() {
     _bookmark_content+="${_newline}${_tag_string}${_newline}"
   fi
 
-  if ((_clip))
+  if ! ((_skip_content))
   then
     _bookmark_content+="${_newline}## Content${_newline}"
     if _command_exists "pandoc"
