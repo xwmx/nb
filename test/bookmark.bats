@@ -410,7 +410,28 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ ${status} -eq 0 ]]
 
   # Prints output
-  [[ "${output}" =~ file:\/\/ ]]
+  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+}
+
+@test "\`bookmark url\` with multiple URLs prints first url in <>." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add example.bookmark.md \
+      --content "\
+https://example.net
+<${_BOOKMARK_URL}>
+<https://example.com>"
+  }
+
+  run "${_NOTES}" bookmark url 1
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Prints output
+  [[ "${output}" == "${_BOOKMARK_URL}" ]]
 }
 
 # help ########################################################################
