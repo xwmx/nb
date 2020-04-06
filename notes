@@ -927,13 +927,16 @@ _git_should_autosync() {
 #
 # Description:
 #   Use `tput` to highlight the given string.
+export _TPUT_SETAF_3= && _TPUT_SETAF_3="$(tput setaf 3)"
+export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 _highlight() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
   then
     _die printf "Usage: _highlight <string>"
   fi
-  printf "$(tput setaf 3)%s$(tput sgr0)\\n" "${_input}"
+
+  printf "${_TPUT_SETAF_3:-}%s${_TPUT_SGR0:-}\\n" "${_input}"
 }
 
 # _highlight_syntax_if_available()
