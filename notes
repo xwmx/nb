@@ -479,7 +479,7 @@ _file_is_archive() {
 #   1 If file is a bookmark.
 #   0 if not.
 _file_is_bookmark() {
-  [[ "${1:-}" =~ -bookmark.md$ ]]
+  [[ "${1:-}" =~ .bookmark.md$ ]] || [[ "${1:-}" =~ -bookmark.md$ ]]
 }
 
 # _file_is_encrypted()
@@ -1706,7 +1706,7 @@ _bookmark() {
   fi
 
   local _basename
-  _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S')-bookmark.md")"
+  _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S').bookmark.md")"
 
   _debug printf \
     "_bookmark() \`\${_basename}\`: '%s'\n" "${_basename:-}"

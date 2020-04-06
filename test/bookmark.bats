@@ -79,7 +79,7 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
   [[ ${status} -eq 0 ]]
 
   # Creates new note with bookmark filename
-  [[ "${_filename}}" =~ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
@@ -116,7 +116,7 @@ permission.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
 # --comment option ############################################################
@@ -173,7 +173,7 @@ permission.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
 # --skip-content option #######################################################
@@ -215,7 +215,7 @@ permission.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
 # --tags option ###############################################################
@@ -272,7 +272,7 @@ permission.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
 @test "\`bookmark\` with --tags option and hashtags creates new note with tags." {
@@ -331,7 +331,7 @@ permission.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
 # --title option ##############################################################
@@ -384,7 +384,7 @@ permission.
   [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
 # help ########################################################################
