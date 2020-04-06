@@ -645,6 +645,8 @@ Description:
   `notes search`. When `pandoc` is installed, content will be converted to
   Markdown.
 
+  Bookmark are identified by the `.bookmark.md` file extension.
+
 Examples:
   notes bookmark https://example.com
   notes bookmark https://example.com --tags example,sample,demo
