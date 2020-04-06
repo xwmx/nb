@@ -86,9 +86,11 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
   _bookmark_content="\
 # Example Domain
 
-Example description.
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
+## Description
+
+Example description."
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -130,11 +132,14 @@ Example description.
   _bookmark_content="\
 # Example Domain
 
-Example description.
-
 <file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
----
+## Description
+
+Example description.
+
+## Content
+
 Example Domain
 ==============
 
@@ -184,9 +189,11 @@ permission.
   _bookmark_content="\
 # Example Domain
 
-New description.
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
+## Description
+
+New description."
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -228,9 +235,13 @@ New description.
   _bookmark_content="\
 # Example Domain
 
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+
+## Description
+
 Example description.
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+## Tags
 
 #tag1 #tag2"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -272,9 +283,13 @@ Example description.
   _bookmark_content="\
 # Example Domain
 
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+
+## Description
+
 Example description.
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+## Tags
 
 #tag1 #tag2"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -318,9 +333,11 @@ Example description.
   _bookmark_content="\
 # New Title
 
-Example description.
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
+## Description
+
+Example description."
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]

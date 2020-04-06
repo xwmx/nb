@@ -1740,6 +1740,9 @@ _bookmark() {
     _bookmark_content="# ${_title}${_newline}"
   fi
 
+  _bookmark_content+="${_newline}<${_url}>${_newline}"
+
+
   if [[ -n "${_description}" ]]
   then
     if _command_exists "w3m"
@@ -1749,10 +1752,9 @@ _bookmark() {
       )"
     fi
 
+    _bookmark_content+="${_newline}## Description${_newline}"
     _bookmark_content+="${_newline}${_description}${_newline}"
   fi
-
-  _bookmark_content+="${_newline}<${_url}>${_newline}"
 
   if [[ -n "${_tag_list}" ]]
   then
@@ -1773,12 +1775,13 @@ _bookmark() {
       fi
     done
 
+    _bookmark_content+="${_newline}## Tags${_newline}"
     _bookmark_content+="${_newline}${_tag_string}${_newline}"
   fi
 
   if ((_clip))
   then
-    _bookmark_content+="${_newline}---${_newline}"
+    _bookmark_content+="${_newline}## Content${_newline}"
     if _command_exists "pandoc"
     then
       local _w3m_content
@@ -1786,9 +1789,9 @@ _bookmark() {
         printf "%s\\n" "${_page_content}" \
           | pandoc --from html --to markdown_strict-raw_html
       )"
-      _bookmark_content+="${_w3m_content}"
+      _bookmark_content+="${_newline}${_w3m_content}${_newline}"
     else
-      _bookmark_content+="${_page_content}"
+      _bookmark_content+="${_newline}${_page_content}${_newline}"
     fi
   fi
 
