@@ -86,11 +86,7 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
-
-## Description
-
-Example description."
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -134,10 +130,6 @@ Example description."
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-## Description
-
-Example description.
-
 ## Content
 
 Example Domain
@@ -169,14 +161,14 @@ permission.
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+-bookmark.md ]]
 }
 
-# --description option ########################################################
+# --comment option ############################################################
 
-@test "\`bookmark\` with --description option creates new note with description." {
+@test "\`bookmark\` with --comment option creates new note with comment." {
   {
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --description "New description."
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --comment "New comment."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -191,9 +183,9 @@ permission.
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-## Description
+## Comment
 
-New description."
+New comment."
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -237,10 +229,6 @@ New description."
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-## Description
-
-Example description.
-
 ## Tags
 
 #tag1 #tag2"
@@ -270,7 +258,7 @@ Example description.
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2'
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2' -c 'Example comment.'
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -285,9 +273,9 @@ Example description.
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
 
-## Description
+## Comment
 
-Example description.
+Example comment.
 
 ## Tags
 
@@ -333,11 +321,7 @@ Example description.
   _bookmark_content="\
 # New Title
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
-
-## Description
-
-Example description."
+<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]

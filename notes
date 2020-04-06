@@ -1227,9 +1227,8 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  ${_ME} bookmark <url> [-c | --clip]  [--description <description>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  ${_ME} bookmark <url> [--clip] [-c <comment> | --comment <comment>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [--force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1533,23 +1532,18 @@ _a() { _add "${@}"; }
 
 desc "bookmark" <<HEREDOC
 Usage:
-  ${_ME} bookmark <url> [-c | --clip]  [--description <description>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  ${_ME} bookmark <url> [--clip] [-c <comment> | --comment <comment>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
 
 Options:
-  -c --clip                    Save the page content in the bookmark note,
-                               making page content searchable. If \`pandoc\`
-                               is installed, content will be converted to
-                               Markdown.
-  --description <description>  The bookmark description. When not specified,
-                               \`notes\` will attempt to generate one from
-                               the page content.
-  -e --edit                    Open the new note in your editor before saving.
-  --tags        <tag1>,<tag2>  A comma-separated list of tags.
-  --title       <title>        The bookmark title. When not specified,
-                               \`notes\` will use the html <title> tag when
-                               present.
+  --clip                      Save the page content in the bookmark note,
+                              making page content searchable. If \`pandoc\` is
+                              installed, content will be converted to Markdown.
+  -c --comment <comment>      A comment or note about this bookmark.
+  -e --edit                   Open the new note in your editor before saving.
+  --tags       <tag1>,<tag2>  A comma-separated list of tags.
+  --title      <title>        The bookmark title. When not specified, \`notes\`
+                              will use the html <title> tag when present.
 
 Description:
   Create a new bookmark-formatted note for <url>.
@@ -1558,13 +1552,14 @@ Examples:
   ${_ME} bookmark https://example.com
   ${_ME} bookmark https://example.com --tags example,sample,demo
   ${_ME} bookmark https://example.com/about --title 'Example Title'
+  ${_ME} bookmark https://example.com -c 'Example comment.'
 
 Alias: \`b\`
 HEREDOC
 _bookmark() {
   local _clip=0
   local _bookmark_content=
-  local _description=
+  local _comment=
   local _edit_before_save=0
   local _selection=
   local _subcommand=
@@ -1578,13 +1573,13 @@ _bookmark() {
     local _val="${2:-}"
 
     case "${_arg}" in
-      -c|--clip)
+      --clip)
         _clip=1
         ;;
-      --description)
+      -c|--comment)
         if __option_value_is_present "${_val:-}"
         then
-          _description="${_val:-}"
+          _comment="${_val:-}"
           shift
         else
           _help "bookmark"
@@ -1712,21 +1707,23 @@ _bookmark() {
     )" || : # TODO: pipeline returns error status but still returns title
   fi
 
-  if [[ -z "${_description}" ]]
-  then
-    local _sed_re_command
-    if sed --help >/dev/null 2>&1
-    then # GNU
-      _sed_re_command=(sed -r -n)
-    else # BSD
-      _sed_re_command=(sed -E -n)
-    fi
+  # TODO: Many sites don't use meta description tags. Look for another
+  # approach to provide summaries or discard if page content is good enough.
+  # if [[ -z "${_description}" ]]
+  # then
+  #   local _sed_re_command
+  #   if sed --help >/dev/null 2>&1
+  #   then # GNU
+  #     _sed_re_command=(sed -r -n)
+  #   else # BSD
+  #     _sed_re_command=(sed -E -n)
+  #   fi
 
-    _description="$(
-      printf "%s\\n" "${_page_content}" \
-        | "${_sed_re_command[@]}" '/<meta .*name=.description./ s/.*content="([^"]+)".*/\1/p'
-    )"
-  fi
+  #   _description="$(
+  #     printf "%s\\n" "${_page_content}" \
+  #       | "${_sed_re_command[@]}" '/<meta .*name=.description./ s/.*content="([^"]+)".*/\1/p'
+  #   )"
+  # fi
 
   local _newline=$'\n'
 
@@ -1742,19 +1739,26 @@ _bookmark() {
 
   _bookmark_content+="${_newline}<${_url}>${_newline}"
 
+  # TODO: See above.
+  # if [[ -n "${_description}" ]]
+  # then
+  #   if _command_exists "w3m"
+  #   then # convert html entities
+  #     _description="$(
+  #       printf "%s\n" "${_description}" | w3m -dump -T text/html
+  #     )"
+  #   fi
 
-  if [[ -n "${_description}" ]]
+  #   _bookmark_content+="${_newline}## Description${_newline}"
+  #   _bookmark_content+="${_newline}${_description}${_newline}"
+  # fi
+
+  if [[ -n "${_comment}" ]]
   then
-    if _command_exists "w3m"
-    then # convert html entities
-      _description="$(
-        printf "%s\n" "${_description}" | w3m -dump -T text/html
-      )"
-    fi
-
-    _bookmark_content+="${_newline}## Description${_newline}"
-    _bookmark_content+="${_newline}${_description}${_newline}"
+    _bookmark_content+="${_newline}## Comment${_newline}"
+    _bookmark_content+="${_newline}${_comment}${_newline}"
   fi
+
 
   if [[ -n "${_tag_list}" ]]
   then

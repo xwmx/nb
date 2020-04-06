@@ -157,6 +157,8 @@ notes bookmark http://example.net --tags tag1,tag2
 
 <http://example.net>
 
+## Tags
+
 #tag1 #tag2
 ```
 
@@ -172,7 +174,8 @@ notes bookmark http://example.net --clip
 
 <http://example.net>
 
----
+## Content
+
 Example Domain
 ==============
 
@@ -480,9 +483,8 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  notes bookmark <url> [-c | --clip]  [--description <description>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  notes bookmark <url> [--clip] [-c <comment> | --comment <comment>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -604,23 +606,18 @@ Alias: `a`
 
 ```text
 Usage:
-  notes bookmark <url> [-c | --clip]  [--description <description>]
-                 [-e | --edit] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  notes bookmark <url> [--clip] [-c <comment> | --comment <comment>]
+                 [-e | --edit] [--tags <tag1>,<tag2>...] [--title <title>]
 
 Options:
-  -c --clip                    Save the page content in the bookmark note,
-                               making page content searchable. If `pandoc`
-                               is installed, content will be converted to
-                               Markdown.
-  --description <description>  The bookmark description. When not specified,
-                               `notes` will attempt to generate one from
-                               the page content.
-  -e --edit                    Open the new note in your editor before saving.
-  --tags        <tag1>,<tag2>  A comma-separated list of tags.
-  --title       <title>        The bookmark title. When not specified,
-                               `notes` will use the html <title> tag when
-                               present.
+  --clip                      Save the page content in the bookmark note,
+                              making page content searchable. If `pandoc` is
+                              installed, content will be converted to Markdown.
+  -c --comment <comment>      A comment or note about this bookmark.
+  -e --edit                   Open the new note in your editor before saving.
+  --tags       <tag1>,<tag2>  A comma-separated list of tags.
+  --title      <title>        The bookmark title. When not specified, `notes`
+                              will use the html <title> tag when present.
 
 Description:
   Create a new bookmark-formatted note for <url>.
@@ -629,8 +626,9 @@ Examples:
   notes bookmark https://example.com
   notes bookmark https://example.com --tags example,sample,demo
   notes bookmark https://example.com/about --title 'Example Title'
+  notes bookmark https://example.com -c 'Example comment.'
 
-Alias: `b
+Alias: `b`
 ```
 
 #### `count`
