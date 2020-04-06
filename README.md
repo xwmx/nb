@@ -132,52 +132,6 @@ environment or [`notes settings`](#configuration).
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`
 
-#### Adding Bookmarks
-
-`notes bookmark` takes a URL and creates a new note:
-
-```bash
-notes bookmark http://example.net
-```
-```markdown
-# Example Domain
-
-<http://example.net>
-
-## Content
-
-Example Domain
-==============
-
-This domain is for use in illustrative examples in documents. You may
-use this domain in literature without prior coordination or asking for
-permission.
-
-[More information...](https://www.iana.org/domains/example)
-```
-
-`notes` automatically archives the page content in the note. When
-`pandoc` is installed, the HTML page content will be converted to Markdown.
-
-Bookmarks can be tagged using the `--tags` option. Tags are converted
-into hashtags:
-
-```bash
-notes bookmark http://example.net --tags tag1,tag2
-```
-```markdown
-# Example Domain
-
-<http://example.net>
-
-## Tags
-
-#tag1 #tag2
-
-## Content
-...
-```
-
 #### Listing Notes
 
 To list your notes and notebooks, run `notes` with no arguments:
@@ -266,6 +220,72 @@ notes delete example.md
 
 # delete note by title
 notes delete 'A Document Title'
+```
+
+#### Bookmarks
+
+`notes bookmark` can be used to create and view bookmarks. Bookmark
+notes are Markdown notes containing information about the bookmarked
+page. To create a new bookmark:
+
+```bash
+notes bookmark http://example.net
+```
+```markdown
+# Example Domain (example.net)
+
+<http://example.net>
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
+
+`notes` automatically archives the page content in the note. When
+`pandoc` is installed, the HTML page content will be converted to Markdown.
+
+Bookmarks can be tagged using the `--tags` option. Tags are converted
+into hashtags:
+
+```bash
+notes bookmark http://example.net --tags tag1,tag2
+```
+```markdown
+# Example Domain (example.net)
+
+<http://example.net>
+
+## Tags
+
+#tag1 #tag2
+
+## Content
+...
+```
+
+`notes bookmark` provides two ways to view bookmarked web pages.
+
+`notes bookmark open` open the bookmarked page in your system's primary web
+browser:
+
+```bash
+# open bookmark by id
+notes bookmark open 3
+```
+
+`notes bookmark peek` open the bookmarked page in your terminal web
+browser:
+
+```bash
+# peek bookmark by id
+notes bookmark peek 12
 ```
 
 ### Notebooks
@@ -456,6 +476,9 @@ n a
 
 # add a new bookmark for example.com
 n b https://example.com
+
+# open bookmark 12 in your web browser
+n b o 12
 
 # edit note 5
 n e 5
