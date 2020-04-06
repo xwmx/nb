@@ -3178,7 +3178,9 @@ HEREDOC
       # End of line.
       printf "\\n"
 
-      if ((_print_excerpt)) && [[ "${_excerpt_length}" =~ ^[1-9] ]]
+      if ((_print_excerpt)) &&
+         [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
+         _file_is_text "${NOTES_DATA_DIR}/${__basename}"
       then # excerpt is specified with a non-zero digit, as required by `head`.
         _print_line "${_list_item}"
         head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${__basename}"
