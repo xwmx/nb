@@ -861,7 +861,7 @@ _git_required() {
     fi
     if [[ -z "${_git_email}" ]]
     then
-      printf "git config --global user.email \"you@example.com\"\\n"
+      printf "git config --global user.email \"you@example.net\"\\n"
     fi
     return 1
   fi
@@ -1582,13 +1582,13 @@ Description:
   Bookmark are identified by the \`.bookmark.md\` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:
 
-    <https://www.example.com>
+    <https://www.example.net>
 
 Examples:
-  ${_ME} bookmark https://example.com
-  ${_ME} bookmark https://example.com --tags example,sample,demo
-  ${_ME} bookmark https://example.com/about --title 'Example Title'
-  ${_ME} bookmark https://example.com -c 'Example comment.'
+  ${_ME} bookmark https://example.net
+  ${_ME} bookmark https://example.net --tags example,sample,demo
+  ${_ME} bookmark https://example.net/about --title 'Example Title'
+  ${_ME} bookmark https://example.net -c 'Example comment.'
   ${_ME} bookmark open 5
 
 Alias: \`b\`
@@ -2467,7 +2467,7 @@ Description:
 Examples:
   ${_ME} import ~/Pictures/example.png
   ${_ME} import ~/Documents/example.docx
-  ${_ME} import https://example.com/example.pdf
+  ${_ME} import https://example.net/example.pdf
 HEREDOC
 _import() {
   # _import_validate_path()
