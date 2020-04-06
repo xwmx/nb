@@ -470,6 +470,18 @@ _file_is_archive() {
   [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
 
+# _file_is_bookmark()
+#
+# Usage:
+#   _file_is_bookmark <path>
+#
+# Returns:
+#   1 If file is a bookmark.
+#   0 if not.
+_file_is_bookmark() {
+  [[ "${1:-}" =~ -bookmark.md$ ]]
+}
+
 # _file_is_encrypted()
 #
 # Usage:
@@ -3080,6 +3092,11 @@ HEREDOC
         else
           printf "%s" "${_list_item_color}"
         fi
+      fi
+
+      if _file_is_bookmark "${NOTES_DATA_DIR}/${__basename}"
+      then
+        printf " 🔖"
       fi
 
       # TODO: This is slow. Look for ways to speed up.
