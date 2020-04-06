@@ -97,7 +97,7 @@ This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
 permission.
 
-[More information...](https://www.iana.org/domains/example)"
+[More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -154,7 +154,7 @@ This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
 permission.
 
-[More information...](https://www.iana.org/domains/example)"
+[More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -253,7 +253,7 @@ This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
 permission.
 
-[More information...](https://www.iana.org/domains/example)"
+[More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -312,7 +312,7 @@ This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
 permission.
 
-[More information...](https://www.iana.org/domains/example)"
+[More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -365,7 +365,7 @@ This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
 permission.
 
-[More information...](https://www.iana.org/domains/example)"
+[More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
