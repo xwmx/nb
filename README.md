@@ -31,6 +31,14 @@ record changes and sync with a remote repository, if one has been configured.
 purpose syncing utility like Dropbox so notes can be edited in other apps on
 any device.
 
+`notes` is designed to be lightweight and portable, with a focus on vendor and
+tool independence, while providing a full-featured, intuitive experience. The
+entire program is a single well-tested Bash script that can be copied anywhere
+and should continue working as long as Bash, Git, and standard Linux / Unix
+environments exist. Since `notes` files are normal markdown files, it's easy
+incorporate or switch to any other tool, or just manage your notes manually in
+your shell or file browser.
+
 #### Dependencies
 
 ##### Required
@@ -1232,5 +1240,6 @@ export EDITOR="code"
 
 ## Testing
 
-To run the test suite, install [Bats](https://github.com/sstephenson/bats) and
-run `bats test` in the project root directory.
+`notes` has [an extensive test suite](test). To run it, install
+[Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
+root directory.
