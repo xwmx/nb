@@ -5,8 +5,9 @@
 # | | | | (_) | ||  __/\__ \
 # |_| |_|\___/ \__\___||___/
 #
-# A command line note-taking and document management tool with encryption,
-# advanced search, Git-backed syncing, and more in a single portable script.
+# A command line note-taking, bookmarking, and document management tool with
+# encryption, advanced search, Git-backed syncing, and more in a single
+# portable script.
 #
 # https://github.com/xwmx/notes
 #
@@ -1231,8 +1232,8 @@ _help() {
 | | | | (_) | ||  __/\__ \\
 |_| |_|\___/ \__\___||___/
 
-A note-taking and document management tool with encryption, advanced search,
-Git-backed syncing, and more in a single portable script.
+A note-taking, bookmarking, and document management tool with encryption,
+advanced search, Git-backed syncing, and more in a single portable script.
 
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]
