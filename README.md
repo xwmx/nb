@@ -11,7 +11,7 @@
 [`notes`](https://github.com/xwmx/notes) is a command line note-taking,
 bookmarking, and document management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
-[Pandoc](http://pandoc.org/)-backed conversion, tagging support, and
+[Pandoc](http://pandoc.org/)-backed conversion, tagging, and
 more in a single portable script. `notes` creates notes in text-based formats
 like [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
@@ -189,6 +189,16 @@ notes 1 --excerpt
 # This is an example excerpt.
 ```
 
+Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
+easily identifiable in lists:
+
+```text
+[4] Example Note
+[3] 20200101000001.md.enc 🔒
+[2] Example Bookmark (example.net) 🔖
+[1] 20200101000000.bookmark.md.enc 🔖 🔒
+```
+
 `notes` is a shortcut for `notes ls`, and both commands respond to the same
 arguments as `notes list`. For more information about options for listing
 notes, run `notes help list`.
@@ -285,9 +295,11 @@ Bookmarks can also be encrypted:
 notes bookmark https://example.net --encrypt
 ```
 
+##### Opening Bookmarks
+
 `notes bookmark` provides two ways to view bookmarked web pages.
 
-`notes bookmark open` open the bookmarked page in your system's primary web
+`notes bookmark open` opens the bookmarked page in your system's primary web
 browser:
 
 ```bash
@@ -295,7 +307,7 @@ browser:
 notes bookmark open 3
 ```
 
-`notes bookmark peek` open the bookmarked page in your terminal web
+`notes bookmark peek` opens the bookmarked page in your terminal web
 browser:
 
 ```bash
