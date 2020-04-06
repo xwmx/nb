@@ -3632,12 +3632,13 @@ _notebooks() {
       "_notebooks_list() \${_files[*]}: '%s'\\n" \
       "${_files[*]:-}"
 
+    local _current
+    _current="$(_notebooks current)"
+
     for __item in "${_files[@]}"
     do
       if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
-        local _current
-        _current="$(_notebooks current)"
         local _formatted_name
         local _origin_url
 
