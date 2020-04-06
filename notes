@@ -1241,7 +1241,7 @@ Usage:
             [-t <title> | --title <title>] [--type <type>]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
-  ${_ME} bookmark (open | peek) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -1546,7 +1546,7 @@ desc "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
-  ${_ME} bookmark (open | peek) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
 
 Options:
   -c --comment   <comment>      A comment or note about this bookmark.
@@ -1561,6 +1561,7 @@ Subcommands:
           Alias: \`o\`
   peek    Open the bookmarked page in your terminal web browser.
           Alias: \`p\`
+  url     Print the URL for the specified bookmark.
 
 Description:
   Create a new bookmark-formatted note for <url>. By default, the page content
@@ -1632,7 +1633,7 @@ _bookmark() {
           return 1
         fi
         ;;
-      open|o|peek|p)
+      open|o|peek|p|url)
         if __option_value_is_present "${_val:-}"
         then
           _subcommand="${_arg}"
@@ -1654,11 +1655,10 @@ _bookmark() {
     shift
   done
 
-  if [[ "${_subcommand}" =~ ^open|o|peek|p$ ]]
+  if [[ "${_subcommand}" =~ ^open|o|peek|p|url$ ]]
   then
     local _basename
     _basename="$(_get_selection_basename "${_selection}")"
-    _debug printf "_bookmark() peek \${_basename}: '%s'\\n" "${_basename}"
     if [[ -z "${_basename}" ]]
     then
       printf "Note not found.\n"
@@ -1698,6 +1698,10 @@ _bookmark() {
         printf "notes doesn't know how to open URLs on your system.\n"
         return 1
       fi
+    elif [[ "${_subcommand}" == "url" ]]
+    then
+      printf "%s\\n" "${_target_url}"
+      return 0
     fi
   fi
 

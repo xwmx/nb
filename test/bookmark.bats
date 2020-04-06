@@ -377,6 +377,42 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
+# `bookmark url` ##############################################################
+
+@test "\`bookmark url\` with invalid note prints error." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
+  }
+
+  run "${_NOTES}" bookmark url 99
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 1 ]]
+
+  # Prints output
+  [[ "${output}" =~ Note\ not\ found ]]
+}
+
+@test "\`bookmark url\` prints note url." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
+  }
+
+  run "${_NOTES}" bookmark url 1
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Prints output
+  [[ "${output}" =~ file:\/\/ ]]
+}
+
 # help ########################################################################
 
 @test "\`help bookmark\` exits with status 0 and prints." {
