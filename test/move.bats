@@ -256,5 +256,5 @@ _setup_move() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes move (<id> | <filename> | <path> | <title>) [--force] <notebook>" ]]
+  [[ "${lines[1]}" =~ notes\ move ]]
 }
