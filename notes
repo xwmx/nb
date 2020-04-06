@@ -1706,6 +1706,12 @@ _bookmark() {
       printf "%s\\n" "${_page_content}" \
         | awk -v IGNORECASE=1 -v RS='</title' 'RT{gsub(/.*<title[^>]*>/,"");print;exit}'
     )" || : # TODO: pipeline returns error status but still returns title
+    local _domain
+    _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
+    if [[ -n "${_domain}" ]]
+    then
+      _title+=" (${_domain})"
+    fi
   fi
 
   # TODO: Many sites don't use meta description tags. Look for another
