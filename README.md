@@ -466,6 +466,12 @@ notes a example.md
 # `b` (bookmark): add a new bookmark for https://example.com
 notes b https://example.com
 
+# `b o` (bookmark open): open bookmark 12 in your web browser
+notes b o 12
+
+# `b p` (bookmark peek): open bookmark 6 in your terminal browser
+notes b p 6
+
 # `e` (edit): edit note 5
 notes e 5
 
