@@ -93,9 +93,7 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
 Example Domain
 ==============
 
-This domain is for use in illustrative examples in documents. You may
-use this domain in literature without prior coordination or asking for
-permission.
+This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -150,9 +148,7 @@ New comment.
 Example Domain
 ==============
 
-This domain is for use in illustrative examples in documents. You may
-use this domain in literature without prior coordination or asking for
-permission.
+This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -249,9 +245,7 @@ permission.
 Example Domain
 ==============
 
-This domain is for use in illustrative examples in documents. You may
-use this domain in literature without prior coordination or asking for
-permission.
+This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -308,9 +302,7 @@ Example comment.
 Example Domain
 ==============
 
-This domain is for use in illustrative examples in documents. You may
-use this domain in literature without prior coordination or asking for
-permission.
+This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
@@ -361,9 +353,7 @@ permission.
 Example Domain
 ==============
 
-This domain is for use in illustrative examples in documents. You may
-use this domain in literature without prior coordination or asking for
-permission.
+This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"

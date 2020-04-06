@@ -1819,8 +1819,8 @@ _bookmark() {
       _w3m_content="$(
         printf "%s\\n" "${_page_content}" \
           | pandoc \
-            --from html-native_divs \
-            --to markdown
+            --from html-native_divs-native_spans \
+            --to markdown-grid_tables --wrap=none
         )"
       _bookmark_content+="${_newline}${_w3m_content}${_newline}"
     else
