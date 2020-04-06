@@ -288,6 +288,14 @@ browser:
 notes bookmark peek 12
 ```
 
+Bookmarks are identified by a `.bookmark.md` file extension. The
+bookmark URL is the first URL in the file within `<` and `>` characters.
+To create a minimal valid bookmark file with `notes add`:
+
+```bash
+notes add example.bookmark.md --content "<https://example.com>"
+```
+
 ### Notebooks
 
 You can create additional notebooks, each of which has its own version history.
@@ -500,7 +508,7 @@ Usage:
             [-t <title> | --title <title>] [--type <type>]
   notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
-  notes bookmark (open | peek) (<id> | <filename> | <path> | <title>)
+  notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -623,7 +631,7 @@ Alias: `a`
 Usage:
   notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
-  notes bookmark (open | peek) (<id> | <filename> | <path> | <title>)
+  notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
 
 Options:
   -c --comment   <comment>      A comment or note about this bookmark.
@@ -638,6 +646,7 @@ Subcommands:
           Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
           Alias: `p`
+  url     Print the URL for the specified bookmark.
 
 Description:
   Create a new bookmark-formatted note for <url>. By default, the page content
@@ -645,7 +654,10 @@ Description:
   `notes search`. When `pandoc` is installed, content will be converted to
   Markdown.
 
-  Bookmark are identified by the `.bookmark.md` file extension.
+  Bookmark are identified by the `.bookmark.md` file extension. The bookmark
+  URL is the first URL in the file within `<` and `>` characters:
+
+    <https://www.example.com>
 
 Examples:
   notes bookmark https://example.com
