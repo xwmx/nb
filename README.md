@@ -320,7 +320,7 @@ bookmark URL is the first URL in the file within `<` and `>` characters.
 To create a minimal valid bookmark file with `notes add`:
 
 ```bash
-notes add example.bookmark.md --content "<https://example.com>"
+notes add example.bookmark.md --content "<https://example.net>"
 ```
 
 ### Notebooks
@@ -457,8 +457,8 @@ notes show example.png
 `notes import` can also download and import files directly from the web:
 
 ```bash
-notes import https://example.com/example.pdf
-# Imported 'https://example.com/example.pdf' to 'example.pdf'
+notes import https://example.net/example.pdf
+# Imported 'https://example.net/example.pdf' to 'example.pdf'
 ```
 
 Notes can also be exported. If you have Pandoc installed, notes can
@@ -483,8 +483,8 @@ them faster to work with:
 # `a` (add): add a new note named 'example.md'
 notes a example.md
 
-# `b` (bookmark): add a new bookmark for https://example.com
-notes b https://example.com
+# `b` (bookmark): add a new bookmark for https://example.net
+notes b https://example.net
 
 # `b o` (bookmark open): open bookmark 12 in your web browser
 notes b o 12
@@ -515,8 +515,8 @@ If `n` is available on your system, you can add `alias n="notes"` to your
 # add a new note
 n a
 
-# add a new bookmark for example.com
-n b https://example.com
+# add a new bookmark for example.net
+n b https://example.net
 
 # open bookmark 12 in your web browser
 n b o 12
@@ -693,13 +693,13 @@ Description:
   Bookmark are identified by the `.bookmark.md` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:
 
-    <https://www.example.com>
+    <https://www.example.net>
 
 Examples:
-  notes bookmark https://example.com
-  notes bookmark https://example.com --tags example,sample,demo
-  notes bookmark https://example.com/about --title 'Example Title'
-  notes bookmark https://example.com -c 'Example comment.'
+  notes bookmark https://example.net
+  notes bookmark https://example.net --tags example,sample,demo
+  notes bookmark https://example.net/about --title 'Example Title'
+  notes bookmark https://example.net -c 'Example comment.'
   notes bookmark open 5
 
 Alias: `b`
@@ -870,7 +870,7 @@ Description:
 Examples:
   notes import ~/Pictures/example.png
   notes import ~/Documents/example.docx
-  notes import https://example.com/example.pdf
+  notes import https://example.net/example.pdf
 ```
 
 #### `init`
