@@ -477,6 +477,7 @@ Usage:
             [-t <title> | --title <title>] [--type <type>]
   notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+  notes bookmark (open | peek) (<id> | <filename> | <path> | <title>)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [--force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -515,6 +516,7 @@ Help:
 Subcommands:
   (default)  List notes and notebooks. This is an alias for `notes ls`.
   add        Add a new note.
+  bookmark   Add and open bookmarks.
   count      Print the number of notes.
   delete     Delete a note.
   edit       Edit a note.
@@ -600,6 +602,7 @@ Alias: `a`
 Usage:
   notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+  notes bookmark (open | peek) (<id> | <filename> | <path> | <title>)
 
 Options:
   -c --comment   <comment>      A comment or note about this bookmark.
@@ -608,6 +611,12 @@ Options:
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
                                 `notes` will use the html <title> tag.
+
+Subcommands:
+  open    Open the bookmarked page in your system's primary web browser.
+          Alias: `o`
+  peek    Open the bookmarked page in your terminal web browser.
+          Alias: `p`
 
 Description:
   Create a new bookmark-formatted note for <url>. By default, the page content
@@ -620,6 +629,7 @@ Examples:
   notes bookmark https://example.com --tags example,sample,demo
   notes bookmark https://example.com/about --title 'Example Title'
   notes bookmark https://example.com -c 'Example comment.'
+  notes bookmark open 5
 
 Alias: `b`
 ```
