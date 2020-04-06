@@ -270,6 +270,13 @@ notes bookmark http://example.net --tags tag1,tag2
 ...
 ```
 
+Bookmarks can also be encrypted:
+
+```bash
+# create a new password-protected, encrypted bookmark
+notes bookmark https://example.net --encrypt
+```
+
 `notes bookmark` provides two ways to view bookmarked web pages.
 
 `notes bookmark open` open the bookmarked page in your system's primary web
@@ -506,8 +513,9 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -629,13 +637,15 @@ Alias: `a`
 
 ```text
 Usage:
-  notes bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
 
 Options:
   -c --comment   <comment>      A comment or note about this bookmark.
-  -e --edit                     Open the new note in your editor before saving.
+  --edit                        Open the new note in your editor before saving.
+  -e --encrypt                  Encrypt the bookmark with a password.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
@@ -655,7 +665,7 @@ Description:
   Markdown.
 
   Bookmark are identified by the `.bookmark.md` file extension. The bookmark
-  URL is the first URL in the file within `<` and `>` characters:
+  URL is the first URL in the file within '<' and '>' characters:
 
     <https://www.example.com>
 

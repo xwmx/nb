@@ -480,7 +480,10 @@ _file_is_archive() {
 #   1 If file is a bookmark.
 #   0 if not.
 _file_is_bookmark() {
-  [[ "${1:-}" =~ .bookmark.md$ ]] || [[ "${1:-}" =~ -bookmark.md$ ]]
+  [[ "${1:-}" =~ .bookmark.md$      ]] ||
+  [[ "${1:-}" =~ .bookmark.md.enc$  ]] ||
+  [[ "${1:-}" =~ -bookmark.md$      ]] ||
+  [[ "${1:-}" =~ -bookmark.md.enc$  ]]
 }
 
 # _file_is_encrypted()
@@ -1240,8 +1243,9 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -1449,6 +1453,9 @@ _add() {
 
   _target_path="${NOTES_DATA_DIR}/${_basename}"
 
+  _debug printf "_show() \${_password}: '%s'\\n" "${_password}"
+
+
   if ((_encrypt))
   then
     if [[ -z "${_password}" ]]
@@ -1545,13 +1552,15 @@ _a() { _add "${@}"; }
 
 desc "bookmark" <<HEREDOC
 Usage:
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [-e | --edit]
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
 
 Options:
   -c --comment   <comment>      A comment or note about this bookmark.
-  -e --edit                     Open the new note in your editor before saving.
+  --edit                        Open the new note in your editor before saving.
+  -e --encrypt                  Encrypt the bookmark with a password.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
@@ -1588,6 +1597,8 @@ _bookmark() {
   local _bookmark_content=
   local _comment=
   local _edit_before_save=0
+  local _encrypt=0
+  local _password=
   local _selection=
   local _skip_content=0
   local _subcommand=
@@ -1611,8 +1622,21 @@ _bookmark() {
           return 1
         fi
         ;;
-      -e|--edit)
+      --edit)
         _edit_before_save=1
+        ;;
+      -e|--encrypt|--encrypted)
+        _encrypt=1
+        ;;
+      --password)
+        if __option_value_is_present "${_val:-}"
+        then
+          _password="${_val:-}"
+          shift
+        else
+          _help edit
+          return 1
+        fi
         ;;
       --skip-content)
         _skip_content=1
@@ -1670,9 +1694,36 @@ _bookmark() {
     fi
     _set_selection_notebook "${_selection}"
 
+    local _target_path="${NOTES_DATA_DIR}/${_basename}"
+
+    if _file_is_encrypted "${_target_path}"
+    then
+      local _encrypted_path
+      _encrypted_path="${_target_path}"
+
+      if [[ -z "${_password}" ]]
+      then
+        # Request password without displaying it
+        printf "Password: "
+        read -r -s _password </dev/tty
+        printf "\\n" # print newline to stop `read`.
+      fi
+
+      if [[ -z "${_password}" ]]
+      then
+        printf "Password required.\n"
+        return 1
+      fi
+
+      local _decrypted_path
+      _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
+
+      _target_path="${_decrypted_path}"
+    fi
+
     local _target_url
     _target_url="$(
-      awk -vRS=">" -vFS="<" '{print $2;exit}' "${NOTES_DATA_DIR}/${_basename}"
+      awk -vRS=">" -vFS="<" '{print $2;exit}' "${_target_path}"
     )"
 
     if [[ "${_subcommand}" =~ ^peek|p$  ]]
@@ -1840,9 +1891,18 @@ _bookmark() {
 
   if [[ -n "${_bookmark_content}" ]]
   then
-    if ((_edit_before_save))
+    local _add_options=()
+
+    ((_encrypt))              && _add_options+=("--encrypt")
+    ((_edit_before_save))     && _add_options+=("--edit")
+    [[ -n "${_password:-}" ]] && _add_options+=("--password" "${_password}")
+
+    _debug printf "_bookmark() \${_add_options[*]}}: '%s'\\n" "${_add_options[*]}"
+
+    if [[ -n "${_add_options[*]}" ]]
     then
-      printf "%s" "${_bookmark_content}" | _add "${_basename}" --edit
+      printf "%s" "${_bookmark_content}" \
+        | _add "${_basename}" "${_add_options[@]}"
     else
       printf "%s" "${_bookmark_content}" | _add "${_basename}"
     fi

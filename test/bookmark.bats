@@ -377,6 +377,30 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
+# --encrypt option ############################################################
+
+@test "\`bookmark --encrypt\` with content argument creates a new .enc bookmark." {
+  run "${_NOTES}" init
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${_files[0]}" =~ enc$ ]]
+  [[ "$(file "${NOTES_DATA_DIR}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
+}
+
+@test "\`bookmark --encrypt --password\` without argument exits with 1." {
+  run "${_NOTES}" init
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --encrypt --password
+
+  [[ ${status} -eq 1 ]]
+
+  _files=($(ls "${NOTES_DATA_DIR}/"))
+  [[ "${#_files[@]}" -eq 0 ]]
+}
+
 # `bookmark url` ##############################################################
 
 @test "\`bookmark url\` with invalid note prints error." {
@@ -424,6 +448,26 @@ https://example.net
   }
 
   run "${_NOTES}" bookmark url 1
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Prints output
+  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+}
+
+# encrypted ###################################################################
+
+@test "\`bookmark url\` with encrypted bookmark should print without errors." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
+    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" bookmark url 1 --password=example
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
