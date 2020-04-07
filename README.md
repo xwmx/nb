@@ -140,7 +140,7 @@ environment's preferred text editor. You can change your editor using the
 environment or [`notes settings`](#configuration).
 
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
-files by default. To change the file type, see `notes help add`
+files by default. To change the file type, see `notes help add`.
 
 Password-protected notes are encrypted with AES-256 using OpenSSL by
 default. GPG is also supported and can be configured in `notes settings`.
@@ -401,7 +401,7 @@ Notes can also be moved between notebooks:
 notes move 3 example-notebook
 ```
 
-For more information about working with notebooks, run `notes help notebooks`
+For more information about working with notebooks, run `notes help notebooks`.
 
 ### Revision History
 
