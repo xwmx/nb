@@ -241,9 +241,9 @@ specified note:
 echo "Content to append." | notes edit 1
 ```
 
-`notes edit` works great with encrypted notes. `notes edit` will prompt you for
-the note password, open the unencrypted content in your editor, and then
-automatically reencrypt the note when you are done.
+When a note is encrypted, `notes edit` will prompt you for the note password,
+open the unencrypted content in your editor, and then automatically reencrypt
+the note when you are done editing.
 
 #### Deleting Notes
 
