@@ -1460,7 +1460,6 @@ _add() {
 
   _debug printf "_show() \${_password}: '%s'\\n" "${_password}"
 
-
   if ((_encrypt))
   then
     if [[ -z "${_password}" ]]
@@ -1815,13 +1814,11 @@ _bookmark() {
 
   _bookmark_content+="${_newline}<${_url}>${_newline}"
 
-
   if [[ -n "${_comment}" ]]
   then
     _bookmark_content+="${_newline}## Comment${_newline}"
     _bookmark_content+="${_newline}${_comment}${_newline}"
   fi
-
 
   if [[ -n "${_tag_list}" ]]
   then
