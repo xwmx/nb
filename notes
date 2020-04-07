@@ -1224,7 +1224,7 @@ Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
 
-Alias: \`h\`
+Shortcut Alias: \`h\`
 HEREDOC
 _help() {
   if [[ -z "${1:-}" ]]
@@ -1339,7 +1339,7 @@ Examples:
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
 
-Alias: \`a\`
+Shortcut Alias: \`a\`
 HEREDOC
 _add() {
   local _basename=
@@ -1569,9 +1569,9 @@ Options:
 
 Subcommands:
   open    Open the bookmarked page in your system's primary web browser.
-          Alias: \`o\`
+          Shortcut Alias: \`o\`
   peek    Open the bookmarked page in your terminal web browser.
-          Alias: \`p\`
+          Shortcut Alias: \`p\`
   url     Print the URL for the specified bookmark.
 
 Description:
@@ -1592,7 +1592,7 @@ Examples:
   ${_ME} bookmark https://example.net -c 'Example comment.'
   ${_ME} bookmark open 5
 
-Alias: \`b\`
+Shortcut Alias: \`b\`
 HEREDOC
 _bookmark() {
   local _bookmark_content=
@@ -1955,7 +1955,7 @@ Examples:
   ${_ME} delete example.md
   ${_ME} delete 'A Document Title'
 
-Alias: \`d\`
+Shortcut Alias: \`d\`
 HEREDOC
 _delete() {
   local _basename=
@@ -2078,7 +2078,7 @@ Examples:
   ${_ME} edit 'A Document Title'
   echo "Content to append." | ${_ME} edit 1
 
-Alias: \`e\`
+Shortcut Alias: \`e\`
 HEREDOC
 _edit() {
   local _basename=
@@ -3396,7 +3396,7 @@ Examples:
   ${_ME} move 1 example-notebook
   ${_ME} move example.md example-notebook
 
-Alias: \`mv\`
+Shortcut Alias: \`mv\`
 HEREDOC
 _move() {
   local _basename=
@@ -3522,7 +3522,7 @@ Subcommands:
 Description:
   Print the current notebook name or open the directory in your file browser.
 
-Alias: \`nb\`
+Shortcut Alias: \`nb\`
 HEREDOC
 _notebook() {
   if [[ "${1:-}" == "open" ]]
@@ -3569,7 +3569,7 @@ Examples:
   ${_ME} notebooks add Example1
   ${_ME} notebooks add Example2 https://github.com/example/example.git
 
-Alias: \`nbs\`
+Shortcut Alias: \`nbs\`
 HEREDOC
 _notebooks() {
   # _notebooks_add()
@@ -4035,7 +4035,7 @@ Examples:
   # search with a regular expression for notes containing phone numbers
   ${_ME} search '^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$'
 
-Alias: \`q\`
+Shortcut Alias: \`q\`
 HEREDOC
 _search() {
   local _all=0
@@ -4287,7 +4287,7 @@ Examples:
   ${_ME} show example.md --render
   ${_ME} show 'A Document Title' --dump --no-color
 
-Alias: \`s\`
+Shortcut Alias: \`s\`
 HEREDOC
 _show() {
   _debug printf "_show() \${0:-}: '%s'\\n" "${0:-}"
@@ -4591,7 +4591,7 @@ Usage:
 Description:
   Switch to the specified notebook. Shortcut for \`notes notebooks use\`.
 
-Alias: \`u\`
+Shortcut Alias: \`u\`
 HEREDOC
 _use() {
   local _name="${1:-}"

@@ -675,7 +675,7 @@ Examples:
   echo "Note content." | notes add
   notes add -t "Secret Document" --encrypt
 
-Alias: `a`
+Shortcut Alias: `a`
 ```
 
 #### `bookmark`
@@ -698,9 +698,9 @@ Options:
 
 Subcommands:
   open    Open the bookmarked page in your system's primary web browser.
-          Alias: `o`
+          Shortcut Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
-          Alias: `p`
+          Shortcut Alias: `p`
   url     Print the URL for the specified bookmark.
 
 Description:
@@ -721,7 +721,7 @@ Examples:
   notes bookmark https://example.net -c 'Example comment.'
   notes bookmark open 5
 
-Alias: `b`
+Shortcut Alias: `b`
 ```
 
 #### `count`
@@ -751,7 +751,7 @@ Examples:
   notes delete example.md
   notes delete 'A Document Title'
 
-Alias: `d`
+Shortcut Alias: `d`
 ```
 
 #### `edit`
@@ -773,7 +773,7 @@ Examples:
   notes edit 'A Document Title'
   echo "Content to append." | notes edit 1
 
-Alias: `e`
+Shortcut Alias: `e`
 ```
 
 #### `env`
@@ -845,7 +845,7 @@ Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
 
-Alias: `h`
+Shortcut Alias: `h`
 ```
 
 #### `history`
@@ -967,7 +967,7 @@ Examples:
   notes move 1 example-notebook
   notes move example.md example-notebook
 
-Alias: `mv
+Shortcut Alias: `mv
 ```
 
 #### `notebook`
@@ -979,7 +979,7 @@ Usage:
 Description:
   Print the current notebook name.
 
-Alias: `nb`
+Shortcut Alias: `nb`
 ```
 
 #### `notebooks`
@@ -1007,7 +1007,7 @@ Examples:
   notes notebooks add Example1
   notes notebooks add Example2 https://github.com/example/example.git
 
-Alias: `nbs`
+Shortcut Alias: `nbs`
 ```
 
 #### `remote`
@@ -1080,7 +1080,7 @@ Examples:
   # search with a regular expression for notes containing phone numbers
   notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
-Alias: `q`
+Shortcut Alias: `q`
 ```
 
 #### `show`
@@ -1116,7 +1116,7 @@ Examples:
   notes show example.md --render
   notes show 'A Document Title' --dump --no-color
 
-Alias: `s`
+Shortcut Alias: `s`
 ```
 
 #### `settings`
@@ -1164,7 +1164,7 @@ Usage:
 Description:
   Switch to the specified notebook. Shortcut for `notes notebooks use`.
 
-Alias: `u`
+Shortcut Alias: `u`
 ```
 
 #### `version`
