@@ -664,7 +664,6 @@ _get_selection_parts() {
 #   Print the title, if present, of the note at the path.
 _get_title() {
   local _path="${1:-}"
-  local _maybe_title=
   local _title=
 
   if [[ -z "${_path}" ]]
@@ -674,15 +673,32 @@ _get_title() {
   then
     if _file_is_text "${_path}"
     then
-      # Get first line, various implementations:
-      # _maybe_title="$(head -1 "${_path}")"
-      # _maybe_title="$(sed -ne '1,1p' "${_path}")"
-      # _maybe_title="$(awk 'NR<=1' "${_path}")"
-      read -r _maybe_title < "${_path}"
-      if [[ "${_maybe_title}" =~ ^#\  ]]
-      then # first line starts with an H1
-        _title="$(printf "%s\\n" "${_maybe_title}" | sed 's/^\# //')"
-      fi
+      local _in_front_matter=0
+
+      while IFS= read -r __line
+      do
+        if [[ "${__line}" =~ ^#\  ]]
+        then # first line starts with an H1
+          _title="$(printf "%s\\n" "${__line}" | sed 's/^\# //')"
+          break
+        elif [[ "${__line}" =~ ^---$ ]]
+        then
+          if ((_in_front_matter))
+          then
+            _in_front_matter=0
+          else
+            _in_front_matter=1
+          fi
+        elif [[ "${__line}" =~ ^title\: ]]
+        then
+          _title="$(printf "%s\\n" "${__line}" | sed 's/title: //')"
+          break
+        elif ! ((_in_front_matter))
+        then
+          break
+        fi
+      done < "${_path}"
+
       printf "%s\\n" "${_title}"
     fi
   fi
