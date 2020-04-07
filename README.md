@@ -144,7 +144,7 @@ files by default. To change the file type, see `notes help add`.
 
 Password-protected notes are encrypted with AES-256 using OpenSSL by
 default. GPG is also supported and can be configured in `notes settings`.
-Encrypted notes can also be decrypted using the OpenSSL and GPG command line
+Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `notes` to decrypt your
 files.
 
