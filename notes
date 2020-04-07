@@ -323,6 +323,7 @@ _decrypt_file() {
     then
       printf "%s\\n" "${_password}" \
         | gpg \
+          --quiet \
           --batch \
           --passphrase-fd 0 \
           --output "${_unencrypted_path}" \
@@ -435,6 +436,7 @@ _encrypt_file() {
   then
     printf "%s\n" "${_password}" \
       | gpg \
+        --quiet \
         --batch \
         --passphrase-fd 0 \
         --output "${_encrypted_path}" \
