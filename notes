@@ -3599,7 +3599,7 @@ _notebooks() {
   # Usage:
   #   _notebooks_list [<name>] [--names]
   _notebooks_list() {
-    local _files=()
+    local _notebook_directories=()
     local _no_color=0
     local _only_names=0
 
@@ -3615,27 +3615,27 @@ _notebooks() {
           _no_color=1
           ;;
         *)
-          _files+=("${__arg}")
+          _notebook_directories+=("${__arg}")
           ;;
       esac
     done
 
-    if [[ -z "${_files[*]:-}" ]]
+    if [[ -z "${_notebook_directories[*]:-}" ]]
     then
-      _files=($(ls -1 "${NOTES_DIR}"))
+      _notebook_directories=($(ls -1 "${NOTES_DIR}"))
     fi
 
     _debug printf \
       "_notebooks_list() \${_only_names:-}: '%s'\\n" \
       "${_only_names:-}"
     _debug printf \
-      "_notebooks_list() \${_files[*]}: '%s'\\n" \
-      "${_files[*]:-}"
+      "_notebooks_list() \${_notebook_directories[*]}: '%s'\\n" \
+      "${_notebook_directories[*]:-}"
 
     local _current
     _current="$(_notebooks current)"
 
-    for __item in "${_files[@]}"
+    for __item in "${_notebook_directories[@]}"
     do
       if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
