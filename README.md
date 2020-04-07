@@ -155,50 +155,67 @@ To list your notes and notebooks, run `notes` with no arguments:
 ```bash
 notes
 ```
-```
+```text
 home
 ---------------------
-[3] todos.md
-[2] ideas.md
-[1] example.md
+[3] example.md
+[2] todos.md
+[1] ideas.md
 ```
 
 Notebooks are listed above the line, with the current notebook highlighted.
 
-Notes from the current notebook are listed with each id and filename. When the
-note has a Markdown title on the first line (e.g., `# Example Title`), the
-title will be displayed instead of the filename:
+Notes from the current notebook are listed with each id and either the filename
+or title, if present.
 
-```bash
-notes
+Titles can be defined with either Markdown `h1` style or in YAML front
+matter:
+
+```markdown
+# Example Title
 ```
+
+```markdown
+Todos
+=====
+```
+
+```markdown
+---
+title: Ideas
+---
+```
+
+Once defined, titles will be displayed in place of the filename in the output
+of `notes`:
+
 ```text
 home
 ---------------------
-[3] Todos
-[2] Ideas
-[1] Example Title
+[3] Example Title
+[2] Todos
+[1] Ideas
 ```
 
 Pass an id, filename, or markdown title to view the listing for that note:
 
 ```bash
 notes Todos
-# [3] Todos
+# [2] Todos
 ```
 
 ```bash
-notes 1
-# [1] Example Title
+notes 3
+# [3] Example Title
 ```
 
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
-notes 1 --excerpt
+notes 3 --excerpt
 ```
 ```text
-[1] Example Title
+[3] Example Title
 -----------------
 # Example Title
 
