@@ -1,11 +1,11 @@
 # notes
 
 ```
-             _
- _ __   ___ | |_ ___  ___
-| '_ \ / _ \| __/ _ \/ __|
-| | | | (_) | ||  __/\__ \
-|_| |_|\___/ \__\___||___/
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \
+/_/  |_| |_|\___/ \__\___||___/
 ```
 
 [`notes`](https://github.com/xwmx/notes) is a command line note-taking,
@@ -140,6 +140,11 @@ environment or [`notes settings`](#configuration).
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`
 
+Password-protected notes are encrypted with AES-256 using OpenSSL by
+default. GPG is also supported and can be configured in `notes settings`.
+`notes` doesn't do anything unusual and encrypted `notes` files can also be
+decrypted using OpenSSL and GPG directly.
+
 #### Listing Notes
 
 To list your notes and notebooks, run `notes` with no arguments:
@@ -176,10 +181,16 @@ Pass an id, filename, or markdown title to view the listing for that note:
 
 ```bash
 notes Todos
-# [3] Todos
+```
+```text
+[3] Todos
+```
 
+```bash
 notes 1
-# [1] Example Title
+```
+```text
+[1] Example Title
 ```
 
 To view excerpts of notes, use the `--excerpt` or `-e` option:

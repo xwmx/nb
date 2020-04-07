@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-#              _
-#  _ __   ___ | |_ ___  ___
-# | '_ \ / _ \| __/ _ \/ __|
-# | | | | (_) | ||  __/\__ \
-# |_| |_|\___/ \__\___||___/
+# __                _
+# \ \   _ __   ___ | |_ ___  ___
+#  \ \ | '_ \ / _ \| __/ _ \/ __|
+#  / / | | | | (_) | ||  __/\__ \
+# /_/  |_| |_|\___/ \__\___||___/
 #
-# A command line note-taking, bookmarking, and document management tool with
-# encryption, advanced search, Git-backed syncing, and more in a single
-# portable script.
+# Command line note-taking, bookmarking, and document management with
+# encryption, advanced search, Git-backed versioning and syncing,
+# Pandoc-backed format conversion, and more in a single portable script.
 #
 # https://github.com/xwmx/notes
 #
@@ -1230,14 +1230,15 @@ _help() {
   if [[ -z "${1:-}" ]]
   then
     cat <<HEREDOC
-             _
- _ __   ___ | |_ ___  ___
-| '_ \ / _ \| __/ _ \/ __|
-| | | | (_) | ||  __/\__ \\
-|_| |_|\___/ \__\___||___/
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
 
-A note-taking, bookmarking, and document management tool with encryption,
-advanced search, Git-backed syncing, and more in a single portable script.
+Command line note-taking, bookmarking, and document management with
+encryption, advanced search, Git-backed versioning and syncing,
+Pandoc-backed format conversion, and more in a single portable script.
 
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]
