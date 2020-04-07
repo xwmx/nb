@@ -1014,9 +1014,10 @@ _list_notes_files() {
 
   if [[ "${1:-}" == "--sort" ]]
   then
-    local _index_file
-    _index_file="$(cat "${NOTES_DATA_DIR}/.index")"
     local _filenames=()
+    local _index_file
+    _index_file="$(< "${NOTES_DATA_DIR}/.index")"
+
     for __line in "${_index_file[@]}"
     do
       if [[ -n "${__line}" ]]
