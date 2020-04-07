@@ -89,6 +89,12 @@ line nine
 line ten
 line eleven
 HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add "ten.md"
+# Title Ten #
+line two
+line three
+line four
+HEREDOC
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -99,13 +105,14 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" == "[9] Title Nine"    ]]
-  [[ "${lines[1]}" == "[8] Title Eight"   ]]
-  [[ "${lines[2]}" == "[7] Title Seven"   ]]
-  [[ "${lines[3]}" == "[6] six.md"        ]]
-  [[ "${lines[4]}" == "[5] Title Five"    ]]
-  [[ "${lines[5]}" == "[4] Title Four"    ]]
-  [[ "${lines[6]}" == "[3] Title Three"   ]]
-  [[ "${lines[7]}" == "[2] two.md"        ]]
-  [[ "${lines[8]}" == "[1] Title One"     ]]
+  [[ "${lines[0]}" == "[10] Title Ten"     ]]
+  [[ "${lines[1]}" == "[9]  Title Nine"    ]]
+  [[ "${lines[2]}" == "[8]  Title Eight"   ]]
+  [[ "${lines[3]}" == "[7]  Title Seven"   ]]
+  [[ "${lines[4]}" == "[6]  six.md"        ]]
+  [[ "${lines[5]}" == "[5]  Title Five"    ]]
+  [[ "${lines[6]}" == "[4]  Title Four"    ]]
+  [[ "${lines[7]}" == "[3]  Title Three"   ]]
+  [[ "${lines[8]}" == "[2]  two.md"        ]]
+  [[ "${lines[9]}" == "[1]  Title One"     ]]
 }
