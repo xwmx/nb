@@ -3632,8 +3632,11 @@ _notebooks() {
       "_notebooks_list() \${_notebook_directories[*]}: '%s'\\n" \
       "${_notebook_directories[*]:-}"
 
-    local _current
-    _current="$(_notebooks current)"
+    if ! ((_no_color))
+    then
+      local _current
+      _current="$(_notebooks current)"
+    fi
 
     for __item in "${_notebook_directories[@]}"
     do
@@ -3642,9 +3645,9 @@ _notebooks() {
         local _formatted_name
         local _origin_url
 
-        if [[ -n "${_current}" ]] &&
-           [[ "${_current}" == "${__item}" ]] &&
-           ! ((_no_color))
+        if ! ((_no_color)) &&
+           [[ -n "${_current}" ]] &&
+           [[ "${_current}" == "${__item}" ]]
         then # it's the current repository.
           _formatted_name="$(_highlight "${__item}")"
         else
