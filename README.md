@@ -164,13 +164,12 @@ home
 ```
 
 Notebooks are listed above the line, with the current notebook highlighted.
+Notes from the current notebook are listed with each id and either the
+filename or title, if one is present.
 
-Notes from the current notebook are listed with each id and either the filename
-or title, if present.
-
-Titles can be defined with
+Titles can be defined within a note using
 [either Markdown `h1` style](https://daringfireball.net/projects/markdown/syntax#header)
-or in [YAML front matter](https://jekyllrb.com/docs/front-matter/):
+or [YAML front matter](https://jekyllrb.com/docs/front-matter/):
 
 ```markdown
 # Example Title
@@ -198,7 +197,7 @@ home
 [1] Ideas
 ```
 
-Pass an id, filename, or markdown title to view the listing for that note:
+Pass an id, filename, or title to view the listing for that note:
 
 ```bash
 notes Todos
@@ -239,7 +238,7 @@ notes, run `notes help list`.
 
 #### Editing Notes
 
-You can edit a note in your editor using its id, filename, or markdown title:
+You can edit a note in your editor using its id, filename, or title:
 
 ```bash
 # edit note by id
