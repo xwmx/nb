@@ -978,6 +978,8 @@ Usage:
 
 Description:
   Print the current notebook name.
+
+Alias: `nb`
 ```
 
 #### `notebooks`
@@ -1004,6 +1006,8 @@ Examples:
   notes notebooks --names
   notes notebooks add Example1
   notes notebooks add Example2 https://github.com/example/example.git
+
+Alias: `nbs`
 ```
 
 #### `remote`

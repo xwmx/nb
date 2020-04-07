@@ -3521,6 +3521,8 @@ Subcommands:
 
 Description:
   Print the current notebook name or open the directory in your file browser.
+
+Alias: \`nb\`
 HEREDOC
 _notebook() {
   if [[ "${1:-}" == "open" ]]
@@ -3566,6 +3568,8 @@ Examples:
   ${_ME} notebooks --names
   ${_ME} notebooks add Example1
   ${_ME} notebooks add Example2 https://github.com/example/example.git
+
+Alias: \`nbs\`
 HEREDOC
 _notebooks() {
   # _notebooks_add()
