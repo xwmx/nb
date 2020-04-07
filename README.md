@@ -267,7 +267,7 @@ Markdown notes containing information about the bookmarked page. To create a
 new bookmark:
 
 ```bash
-notes bookmark http://example.com
+notes bookmark https://example.com
 ```
 
 `notes` automatically generates a bookmark using information from the page:
@@ -275,7 +275,7 @@ notes bookmark http://example.com
 ```markdown
 # Example Domain (example.com)
 
-<http://example.com>
+<https://example.com>
 
 ## Content
 
@@ -297,12 +297,12 @@ Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
 
 ```bash
-notes bookmark http://example.com --tags tag1,tag2
+notes bookmark https://example.com --tags tag1,tag2
 ```
 ```markdown
 # Example Domain (example.com)
 
-<http://example.com>
+<https://example.com>
 
 ## Tags
 
