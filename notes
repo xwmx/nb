@@ -662,6 +662,7 @@ _get_selection_parts() {
 #   Print the title, if present, of the note at the path.
 _get_title() {
   local _path="${1:-}"
+  local _maybe_title=
   local _title=
 
   if [[ -z "${_path}" ]]
@@ -671,7 +672,11 @@ _get_title() {
   then
     if _file_is_text "${_path}"
     then
-      _maybe_title="$(head -1 "${_path}")"
+      # Get first line, various implementations:
+      # _maybe_title="$(head -1 "${_path}")"
+      # _maybe_title="$(sed -ne '1,1p' "${_path}")"
+      # _maybe_title="$(awk 'NR<=1' "${_path}")"
+      read -r _maybe_title < "${_path}"
       if [[ "${_maybe_title}" =~ ^#\  ]]
       then # first line starts with an H1
         _title="$(printf "%s\\n" "${_maybe_title}" | sed 's/^\# //')"
