@@ -168,8 +168,9 @@ Notebooks are listed above the line, with the current notebook highlighted.
 Notes from the current notebook are listed with each id and either the filename
 or title, if present.
 
-Titles can be defined with either Markdown `h1` style or in YAML front
-matter:
+Titles can be defined with
+[either Markdown `h1` style](https://daringfireball.net/projects/markdown/syntax#header)
+or in [YAML front matter](https://jekyllrb.com/docs/front-matter/):
 
 ```markdown
 # Example Title
