@@ -4177,7 +4177,7 @@ _search() {
             )"
           fi
 
-          _id="$("${_MY_PATH}" "${__scope}:index" get_id "${_filename}")"
+          _id="$(NOTES_DATA_DIR="${NOTES_DIR}/${__scope}" _index get_id "${_filename}")"
           _title="$(_get_title "${NOTES_DIR}/${__scope}/${_filename}")"
 
           if [[ -n "${_title}" ]]
