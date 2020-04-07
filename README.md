@@ -125,11 +125,11 @@ notes add example.md
 # create a new note containing "This is a note."
 notes add "This is a note."
 
-# create a new password-protected, encrypted note
-notes add --title "Secret Document" --encrypt
-
 # create a new note with piped content
 echo "Note content." | notes add
+
+# create a new password-protected, encrypted note
+notes add --title "Secret Document" --encrypt
 ```
 
 `notes add` with no arguments or input will open the new, blank note in your
@@ -146,11 +146,13 @@ To list your notes and notebooks, run `notes` with no arguments:
 
 ```bash
 notes
-# home
-# ---------------------
-# [3] 20200101000002.md
-# [2] 20200101000001.md
-# [1] 20200101000000.md
+```
+```
+home
+---------------------
+[3] todos.md
+[2] ideas.md
+[1] example.md
 ```
 
 Notebooks are listed above the line, with the current notebook highlighted.
@@ -161,11 +163,13 @@ title will be displayed instead of the filename:
 
 ```bash
 notes
-# home
-# ---------------------
-# [3] Todos
-# [2] Links
-# [1] Example Title
+```
+```text
+home
+---------------------
+[3] Todos
+[2] Ideas
+[1] Example Title
 ```
 
 Pass an id, filename, or markdown title to view the listing for that note:
@@ -182,11 +186,13 @@ To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
 notes 1 --excerpt
-# [1] Example Title
-# -----------------
-# # Example Title
-#
-# This is an example excerpt.
+```
+```text
+[1] Example Title
+-----------------
+# Example Title
+
+This is an example excerpt.
 ```
 
 Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
@@ -249,6 +255,10 @@ page. To create a new bookmark:
 ```bash
 notes bookmark http://example.net
 ```
+
+`notes` automatically generates a bookmark note using information from
+the page:
+
 ```markdown
 # Example Domain (example.net)
 
@@ -266,8 +276,9 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-`notes` automatically archives the page content in the note. When
-`pandoc` is installed, the HTML page content will be converted to Markdown.
+`notes` automatically archives the page content in the note, making it
+available for full text search with `notes search`. When `pandoc` is installed,
+the HTML page content will be converted to Markdown.
 
 Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
@@ -285,7 +296,15 @@ notes bookmark http://example.net --tags tag1,tag2
 #tag1 #tag2
 
 ## Content
-...
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
 ```
 
 Bookmarks can also be encrypted:
