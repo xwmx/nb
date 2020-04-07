@@ -661,8 +661,11 @@ _get_selection_parts() {
 #   _get_title <path>
 #
 # Description:
-#   Print the title, if present, of the note at the path.
+#   Print the title, if present, of the note at the path. Supports both
+#   Markdown h1 styles and YAML front matter.
 _get_title() {
+  local _in_front_matter=0
+  local _maybe_title=
   local _path="${1:-}"
   local _title=
 
@@ -673,13 +676,12 @@ _get_title() {
   then
     if _file_is_text "${_path}"
     then
-      local _in_front_matter=0
 
       while IFS= read -r __line
       do
-        if [[ "${__line}" =~ ^#\  ]]
+        if [[ "${__line}" =~ ^[[:space:]]*#\  ]]
         then # first line starts with an H1
-          _title="$(printf "%s\\n" "${__line}" | sed 's/^\# //')"
+          _title="$(printf "%s\\n" "${__line}" | sed 's/^[[:space:]]*# //')"
           break
         elif [[ "${__line}" =~ ^---$ ]]
         then
@@ -691,11 +693,25 @@ _get_title() {
           fi
         elif [[ "${__line}" =~ ^title\: ]]
         then
-          _title="$(printf "%s\\n" "${__line}" | sed 's/title: //')"
+          _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
           break
         elif ! ((_in_front_matter))
         then
-          break
+          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
+          then
+            _maybe_title="${__line}"
+          elif [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
+          then
+            _title="$(
+              printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
+            )"
+            break
+          elif [[ -n "${_maybe_title}" ]]
+          then
+            break
+          else
+            continue
+          fi
         fi
       done < "${_path}"
 
