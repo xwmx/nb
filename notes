@@ -1806,7 +1806,9 @@ _bookmark() {
   then
     if _command_exists "w3m"
     then # convert html entities
-      _title="$(printf "%s\n" "${_title}" | w3m -dump -T text/html)"
+      _title="$(
+        printf "%s\n" "${_title}" | w3m -dump -T text/html -cols 1000
+      )"
     fi
 
     _bookmark_content="# ${_title}${_newline}"
