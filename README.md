@@ -142,8 +142,8 @@ files by default. To change the file type, see `notes help add`
 
 Password-protected notes are encrypted with AES-256 using OpenSSL by
 default. GPG is also supported and can be configured in `notes settings`.
-`notes` doesn't do anything unusual and encrypted `notes` files can also be
-decrypted using OpenSSL and GPG directly.
+`notes` doesn't do anything unusual and encrypted notes can also be
+decrypted using the OpenSSL and GPG command line tools directly.
 
 #### Listing Notes
 
@@ -181,16 +181,12 @@ Pass an id, filename, or markdown title to view the listing for that note:
 
 ```bash
 notes Todos
-```
-```text
-[3] Todos
+# [3] Todos
 ```
 
 ```bash
 notes 1
-```
-```text
-[1] Example Title
+# [1] Example Title
 ```
 
 To view excerpts of notes, use the `--excerpt` or `-e` option:
