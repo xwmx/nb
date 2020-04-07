@@ -57,7 +57,7 @@ load test_helper
 @test "\`import\` with valid <url> argument creates a new note file." {
   run "${_NOTES}" init
 
-  run "${_NOTES}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
+  run "${_NOTES}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -70,7 +70,7 @@ load test_helper
 @test "\`import\` with valid <url> argument creates git commit." {
   run "${_NOTES}" init
 
-  run "${_NOTES}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
+  run "${_NOTES}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

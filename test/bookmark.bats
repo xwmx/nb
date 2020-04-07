@@ -2,7 +2,7 @@
 
 load test_helper
 
-_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
+_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
 # no argument #################################################################
 
@@ -86,7 +86,7 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.net.html"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
 ## Content
 
@@ -137,7 +137,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
 ## Comment
 
@@ -192,7 +192,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>"
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>"
   printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
@@ -234,7 +234,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
 ## Tags
 
@@ -287,7 +287,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
 ## Comment
 
@@ -346,7 +346,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   _bookmark_content="\
 # New Title
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.net.html>
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
 ## Content
 
@@ -442,7 +442,7 @@ This domain is for use in illustrative examples in documents. You may use this d
     run "${_NOTES}" init
     run "${_NOTES}" add example.bookmark.md \
       --content "\
-https://example.net
+https://example.com
 <${_BOOKMARK_URL}>
 <https://example.com>"
   }
