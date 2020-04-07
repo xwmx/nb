@@ -967,7 +967,7 @@ Examples:
   notes move 1 example-notebook
   notes move example.md example-notebook
 
-Shortcut Alias: `mv
+Shortcut Alias: `mv`
 ```
 
 #### `notebook`
