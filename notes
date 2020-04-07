@@ -1878,14 +1878,14 @@ _bookmark() {
     _bookmark_content+="${_newline}## Content${_newline}"
     if _command_exists "pandoc"
     then
-      local _w3m_content
-      _w3m_content="$(
+      local _processed_content
+      _processed_content="$(
         printf "%s\\n" "${_page_content}" \
           | pandoc \
             --from html-native_divs-native_spans \
             --to markdown-grid_tables --wrap=none
         )"
-      _bookmark_content+="${_newline}${_w3m_content}${_newline}"
+      _bookmark_content+="${_newline}${_processed_content}${_newline}"
     else
       _bookmark_content+="${_newline}${_page_content}${_newline}"
     fi
