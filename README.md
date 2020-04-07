@@ -16,8 +16,8 @@ more in a single portable script. `notes` creates notes in text-based formats
 like [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
 work with files in any format, and can export notes to many document formats.
-`notes` can also create private, password-protected encrypted notes to protect
-sensitive information.
+`notes` can also create private, password-protected encrypted notes and
+bookmarks.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` works great in any
@@ -65,6 +65,8 @@ tools and uses them to enhance the experience whenever they are available.
 - [Ack](http://beyondgrep.com/)
 - [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
+- [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
+- [OpenSSL](https://en.wikipedia.org/wiki/OpenSSL)
 - [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
 - [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
@@ -107,7 +109,7 @@ To get started, simply run:
 notes
 ```
 
-This will set up your initial 'home' notebook where notes will be stored.
+This will set up your initial "home" notebook where notes will be stored.
 
 ### Working with Notes
 
@@ -142,8 +144,9 @@ files by default. To change the file type, see `notes help add`
 
 Password-protected notes are encrypted with AES-256 using OpenSSL by
 default. GPG is also supported and can be configured in `notes settings`.
-`notes` doesn't do anything unusual and encrypted notes can also be
-decrypted using the OpenSSL and GPG command line tools directly.
+Encrypted notes can also be decrypted using the OpenSSL and GPG command line
+tools directly, so you aren't dependent on `notes` to decrypt your
+files.
 
 #### Listing Notes
 
@@ -238,6 +241,10 @@ specified note:
 echo "Content to append." | notes edit 1
 ```
 
+`notes edit` works great with encrypted notes. `notes edit` will prompt you for
+the note password, open the unencrypted content in your editor, and then
+automatically reencrypt the note when you are done.
+
 #### Deleting Notes
 
 Deleting notes works the same:
@@ -255,16 +262,15 @@ notes delete 'A Document Title'
 
 #### Bookmarks
 
-`notes bookmark` can be used to create and view bookmarks. Bookmark
-notes are Markdown notes containing information about the bookmarked
-page. To create a new bookmark:
+`notes bookmark` is used to create and view bookmarks. Bookmarks are
+Markdown notes containing information about the bookmarked page. To create a
+new bookmark:
 
 ```bash
 notes bookmark http://example.net
 ```
 
-`notes` automatically generates a bookmark note using information from
-the page:
+`notes` automatically generates a bookmark using information from the page:
 
 ```markdown
 # Example Domain (example.net)
@@ -283,9 +289,9 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-`notes` automatically archives the page content in the note, making it
-available for full text search with `notes search`. When `pandoc` is installed,
-the HTML page content will be converted to Markdown.
+`notes` embeds the page content in the bookmark, making it available for full
+text search with `notes search`. When `pandoc` is installed, the HTML page
+content will be converted to Markdown.
 
 Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
@@ -340,6 +346,10 @@ browser:
 # peek bookmark by id
 notes bookmark peek 12
 ```
+
+`notes bookmark open` and `notes bookmark peek` also work seamlessly with
+encrypted bookmarks. `notes` will simply prompt you for the bookmark's
+password.
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
@@ -671,12 +681,13 @@ Description:
   different file type, use the extension in the filename or use the `--type`
   option. To change the default file type, use `notes settings`.
 
-  When the `--encrypt` option is specified, `notes` will encrypt the
-  note with AES-256.
+  When the `-e` / `--encrypt` option is used, `notes` will encrypt the
+  note with AES-256 using OpenSSL by default, or GPG, if configured in
+  `notes settings`.
 
 Examples:
   notes add
-  nores add example.md
+  notes add example.md
   notes add "Note content."
   notes add example.md --title "Example Title" --content "Example content."
   echo "Note content." | notes add
@@ -695,8 +706,8 @@ Usage:
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
 
 Options:
-  -c --comment   <comment>      A comment or note about this bookmark.
-  --edit                        Open the new note in your editor before saving.
+  -c --comment   <comment>      A comment or description for this bookmark.
+  --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
@@ -711,10 +722,11 @@ Subcommands:
   url     Print the URL for the specified bookmark.
 
 Description:
-  Create a new bookmark-formatted note for <url>. By default, the page content
-  is saved within the bookmark note, making page content searchable using
-  `notes search`. When `pandoc` is installed, content will be converted to
-  Markdown.
+  Create and view bookmarks.
+
+  By default, the page content is saved within the bookmark, making the
+  bookmarked page available for full-text search with `notes search`.
+  When `pandoc` is installed, content will be converted to Markdown.
 
   Bookmark are identified by the `.bookmark.md` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:

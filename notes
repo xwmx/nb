@@ -1329,8 +1329,9 @@ Description:
   different file type, use the extension in the filename or use the \`--type\`
   option. To change the default file type, use \`notes settings\`.
 
-  When the \`--encrypt\` option is specified, \`notes\` will encrypt the
-  note with AES-256.
+  When the \`-e\` / \`--encrypt\` option is used, \`notes\` will encrypt the
+  note with AES-256 using OpenSSL by default, or GPG, if configured in
+  \`notes settings\`.
 
 Examples:
   ${_ME} add
@@ -1560,8 +1561,8 @@ Usage:
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
 
 Options:
-  -c --comment   <comment>      A comment or note about this bookmark.
-  --edit                        Open the new note in your editor before saving.
+  -c --comment   <comment>      A comment or description for this bookmark.
+  --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
@@ -1576,10 +1577,11 @@ Subcommands:
   url     Print the URL for the specified bookmark.
 
 Description:
-  Create a new bookmark-formatted note for <url>. By default, the page content
-  is saved within the bookmark note, making page content searchable using
-  \`notes search\`. When \`pandoc\` is installed, content will be converted to
-  Markdown.
+  Create and view bookmarks.
+
+  By default, the page content is saved within the bookmark, making the
+  bookmarked page available for full-text search with \`notes search\`.
+  When \`pandoc\` is installed, content will be converted to Markdown.
 
   Bookmark are identified by the \`.bookmark.md\` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:
