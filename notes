@@ -1797,24 +1797,6 @@ _bookmark() {
     fi
   fi
 
-  # TODO: Many sites don't use meta description tags. Look for another
-  # approach to provide summaries or discard if page content is good enough.
-  # if [[ -z "${_description}" ]]
-  # then
-  #   local _sed_re_command
-  #   if sed --help >/dev/null 2>&1
-  #   then # GNU
-  #     _sed_re_command=(sed -r -n)
-  #   else # BSD
-  #     _sed_re_command=(sed -E -n)
-  #   fi
-
-  #   _description="$(
-  #     printf "%s\\n" "${_page_content}" \
-  #       | "${_sed_re_command[@]}" '/<meta .*name=.description./ s/.*content="([^"]+)".*/\1/p'
-  #   )"
-  # fi
-
   local _newline=$'\n'
 
   if [[ -n "${_title:-}" ]]
@@ -1829,19 +1811,6 @@ _bookmark() {
 
   _bookmark_content+="${_newline}<${_url}>${_newline}"
 
-  # TODO: See above.
-  # if [[ -n "${_description}" ]]
-  # then
-  #   if _command_exists "w3m"
-  #   then # convert html entities
-  #     _description="$(
-  #       printf "%s\n" "${_description}" | w3m -dump -T text/html
-  #     )"
-  #   fi
-
-  #   _bookmark_content+="${_newline}## Description${_newline}"
-  #   _bookmark_content+="${_newline}${_description}${_newline}"
-  # fi
 
   if [[ -n "${_comment}" ]]
   then
