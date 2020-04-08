@@ -36,8 +36,8 @@ tool independence, while providing a full-featured, intuitive experience. The
 entire program is a single well-tested Bash script that can be copied anywhere
 and should continue working as long as Bash, Git, and standard Linux / Unix
 environments exist. Since `notes` files are normal markdown files, it's easy
-incorporate or switch to any other tool, or just manage your notes manually in
-your shell or file browser.
+to incorporate or switch to any other tool, or just manage your notes manually
+in your shell or file browser.
 
 #### Dependencies
 
