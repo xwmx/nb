@@ -351,16 +351,58 @@ HEREDOC
   }
 
   run "${_NOTES}" list 1
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0 ]]
+
+  [[ "${#lines[@]}" -eq 1 ]]
+  [[ "${lines[0]}" =~ first.md$ ]]
+  [[ "${lines[0]}" =~ [*1*] ]]
+  [[ "${lines[0]}" =~ ${_files[0]} ]]
+}
+
+
+@test "\`list <query selection>\` exits with 0 and displays the selections." {
+  {
+    "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add 'first.md'
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add 'second.md'
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add 'third.md'
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "${_NOTES}" list 'r'
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 1 ]]
-  [[ "${lines[0]}" =~ first.md$ ]]
-  [[ "${lines[0]}" =~ [*1*] ]]
-  [[ "${lines[0]}" =~ ${_files[0]} ]]
+  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${lines[0]}" =~ third.md$ ]]
+  [[ "${lines[0]}" =~ [*3*] ]]
+  [[ "${lines[0]}" =~ ${_files[2]} ]]
+  [[ "${lines[1]}" =~ first.md$ ]]
+  [[ "${lines[1]}" =~ [*1*] ]]
+  [[ "${lines[1]}" =~ ${_files[0]} ]]
 }
 
 @test "\`list <invalid-selection>\` exits with 1 and displays a message." {

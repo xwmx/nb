@@ -209,6 +209,24 @@ notes 3
 # [3] Example Title
 ```
 
+If there is no immediate match, `notes` will list items with titles and
+filenames that fuzzy match the query:
+
+```bash
+notes 'idea'
+# [1] Ideas
+```
+
+A case-insensitive regular expression can also be to filter filenames and
+titles:
+
+```bash
+notes '^example.*'
+# [3] Example Title
+```
+
+For full text search, see `notes help search`.
+
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
@@ -234,7 +252,7 @@ easily identifiable in lists:
 
 `notes` is a shortcut for `notes ls`, and both commands respond to the same
 arguments as `notes list`. For more information about options for listing
-notes, run `notes help list`.
+notes, run `notes help ls` and `notes help list`.
 
 #### Editing Notes
 
@@ -605,9 +623,9 @@ Usage:
   notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
-  notes list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
-             [-s | --sort] [-r | --reverse] [--titles]
-             [<id> | <filename> | <path> | <title>]
+  notes list [-e [<length>] | --excerpt [<length>]] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [--titles] [<id> | <filename> | <path> | <title> | <query>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   notes notebook [open]
@@ -946,15 +964,16 @@ Examples:
 
 ```text
 Usage:
-  notes list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
-             [-s | --sort] [-r | --reverse] [--titles]
-             [<id> | <filename> | <path> | <title>]
+  notes list [-e [<length>] | --excerpt [<length>]] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [--titles] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.
   -n           <limit>   The maximum number of notes to list.
+  --<limit>              Shortcut for `-n <limit>`.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
   --titles               Show title instead of filename when present.
@@ -962,29 +981,57 @@ Options:
 Description:
   List notes in the current notebook.
 
+  When <id>, <filename>, <path>, or <title> are present, the listing for the
+  matching note will be displayed. When no match is found, titles and
+  filenames will be searched for any that match <query> as a case-insensitive
+  regular expression.
+
 Examples:
   notes list
   notes list example.md -e 10
   notes list --excerpt --no-id
   notes list --titles --reverse
+  notes list '^Example.*'
+  notes list --10
 ```
 
 #### `ls`
 
 ```text
 Usage:
-  notes ls [<list options>...]
+  notes ls [-e [<length>] | --excerpt [<length>]] [--no-id]
+           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+           [<id> | <filename> | <path> | <title> | <query>]
+
+Options:
+  -e --excerpt <length>  Print an excerpt <length> lines long under each
+                         note's filename [default: 3].
+  --no-id                Don't print the id next to each note's filename.
+  -n           <limit>   The maximum number of notes to list.
+  --<limit>              Shortcut for `-n <limit>`.
+  -s --sort              Order notes by id.
+  -r --reverse           Order notes by id descending.
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
-  when available. Options are passed through to `list`. For more
-  information, see `notes help list`.
+  when available. `notes ls` is a combination of the `notes notebooks`
+  and `notes list --titles` commands in one view.
+
+  When <id>, <filename>, <path>, or <title> are present, the listing for the
+  matching note will be displayed. When no match is found, titles and
+  filenames will be searched for any that match <query> as a case-insensitive
+  regular expression.
+
+  Options are passed through to `list`. For more information, see
+  `notes help list`.
 
 Examples:
   notes ls
   notes ls example.md -e 10
   notes ls --excerpt --no-id
   notes ls --reverse
+  notes list '^Example.*'
+  notes list --10
 ```
 
 #### `move`

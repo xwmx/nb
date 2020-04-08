@@ -1296,9 +1296,9 @@ Usage:
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
-             [-s | --sort] [-r | --reverse] [--titles]
-             [<id> | <filename> | <path> | <title>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [--titles] [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [open]
@@ -2975,15 +2975,16 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id] [-n <limit>]
-             [-s | --sort] [-r | --reverse] [--titles]
-             [<id> | <filename> | <path> | <title>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [--titles] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.
   -n           <limit>   The maximum number of notes to list.
+  --<limit>              Shortcut for \`-n <limit>\`.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
   --titles               Show title instead of filename when present.
@@ -2991,11 +2992,18 @@ Options:
 Description:
   List notes in the current notebook.
 
+  When <id>, <filename>, <path>, or <title> are present, the listing for the
+  matching note will be displayed. When no match is found, titles and
+  filenames will be searched for any that match <query> as a case-insensitive
+  regular expression.
+
 Examples:
   ${_ME} list
   ${_ME} list example.md -e 10
   ${_ME} list --excerpt --no-id
   ${_ME} list --titles --reverse
+  ${_ME} list '^Example.*'
+  ${_ME} list --10
 HEREDOC
 _list() {
   _debug printf "_list() \${1:-}: '%s'\\n" "${1:-}"
@@ -3075,15 +3083,8 @@ _list() {
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
     _set_selection_notebook "${_selection}"
-
-    if [[ -z "${_selection_basename}" ]]
-    then
-      printf "Note not found: %s\\n" "${_selection}"
-      printf "Help & Usage Info:\n"
-      printf "  notes help\\n"
-      return 1
-    fi
   fi
+  _debug printf "list() \${_selection_basename}: '%s'\\n" "${_selection_basename}"
 
   local _filenames=()
   if ((_reverse))
@@ -3114,15 +3115,42 @@ HEREDOC
     local _counter=0
     local _max_id
     _max_id="$(_index get_max_id)"
+    local _maybe_title=
 
     for __basename in "${_filenames[@]}"
     do
-      # If a valid <selection> has been specified, skip the rest of the loop
-      # unless the <selection> basename matches the current one.
-      if [[ -n "${_selection_basename}" ]] &&
-         [[ "${__basename}" != "${_selection_basename}" ]]
+      _debug printf "list() \${__basename}: '%s'\\n" "${__basename}"
+      if [[ -n "${_selection:-}" ]]
       then
-        continue
+        # If a valid <selection> has been specified, skip the rest of the loop
+        # unless the <selection> basename matches the current one.
+        if [[ -n "${_selection_basename}" ]]
+        then
+          if [[ "${__basename}" != "${_selection_basename}" ]]
+          then
+            continue
+          fi
+        else
+
+          # Turn on a case-insensitive matching (-s set nocasematch)
+          shopt -s nocasematch
+
+          if [[ "${__basename:-}" =~ ${_selection} ]]
+          then
+            : # include the note in the list
+          else
+            _maybe_title="$(_get_title "${NOTES_DATA_DIR}/${__basename}")"
+            if [[ "${_maybe_title:-}" =~ ${_selection} ]]
+            then
+              : # include the note in the list
+            else
+              continue # don't include not in list
+            fi
+          fi
+
+          # Turn off a case-insensitive matching (-u unset nocasematch)
+          shopt -u nocasematch
+        fi
       fi
 
       if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
@@ -3149,7 +3177,6 @@ HEREDOC
       _id_item_color="[$(_highlight "${_item_id_number}")]"
 
       local _list_item_id="${__basename}"
-      local _maybe_title
       if ((_list_titles))
       then
         _maybe_title="$(_get_title "${NOTES_DATA_DIR}/${__basename}")"
@@ -3205,6 +3232,14 @@ HEREDOC
 
       _counter=$((_counter+1))
     done
+
+    if ! ((_counter))
+    then
+      printf "Note not found: %s\\n" "${_selection}"
+      printf "Help & Usage Info:\n"
+      printf "  notes help\\n"
+      return 1
+    fi
   fi
 }
 
@@ -3212,18 +3247,39 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [<list options>...]
+  ${_ME} ls [-e [<length>] | --excerpt [<length>]] [--no-id]
+           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+           [<id> | <filename> | <path> | <title> | <query>]
+
+Options:
+  -e --excerpt <length>  Print an excerpt <length> lines long under each
+                         note's filename [default: 3].
+  --no-id                Don't print the id next to each note's filename.
+  -n           <limit>   The maximum number of notes to list.
+  --<limit>              Shortcut for \`-n <limit>\`.
+  -s --sort              Order notes by id.
+  -r --reverse           Order notes by id descending.
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
-  when available. Options are passed through to \`list\`. For more
-  information, see \`notes help list\`.
+  when available. \`notes ls\` is a combination of the \`notes notebooks\`
+  and \`notes list --titles\` commands in one view.
+
+  When <id>, <filename>, <path>, or <title> are present, the listing for the
+  matching note will be displayed. When no match is found, titles and
+  filenames will be searched for any that match <query> as a case-insensitive
+  regular expression.
+
+  Options are passed through to \`list\`. For more information, see
+  \`notes help list\`.
 
 Examples:
   ${_ME} ls
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
   ${_ME} ls --reverse
+  ${_ME} list '^Example.*'
+  ${_ME} list --10
 HEREDOC
 _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
