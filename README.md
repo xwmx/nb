@@ -255,19 +255,29 @@ can be run without the `ls`:
 
 ```bash
 notes
-# home
-# -----------------
-# [3] Example Title
-# [2] Todos
-# [1] Ideas
+```
+```text
+home
+-----------------
+[3] Example Title
+[2] Todos
+[1] Ideas
+```
+```bash
 notes '^example.*'
-# [3] Example Title
+```
+```text
+[3] Example Title
+```
+```bash
 notes 3 --excerpt
-# [3] Example Title
-# -----------------
-# # Example Title
-#
-# This is an example excerpt
+```
+```text
+[3] Example Title
+-----------------
+# Example Title
+
+This is an example excerpt
 ```
 
 `notes ls` is a combination of `notes notebooks` and
