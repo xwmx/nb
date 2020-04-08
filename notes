@@ -4325,6 +4325,41 @@ _settings() {
 desc "config" "$(_help 'settings')"
 _config()    { _settings "${@}"; }
 
+# shell  ######################################################################
+
+desc "shell" <<HEREDOC
+Usage:
+  ${_ME} shell
+
+Description:
+  Use the \`notes\` interactive shell. Type 'exit' to exit.
+
+Example:
+  $ notes shell
+  notes> ls 3
+  [3] Example
+  notes> edit 3 --content "New content."
+  Updated [3] Example
+  notes> notebook
+  home
+  notes> exit
+  $
+HEREDOC
+_shell() {
+  while true
+  do
+    while IFS='' read -r -e -d $'\n' -p 'notes> ' _options
+    do
+      if [[ "${_options}" =~ ^exit|quit$ ]]
+      then
+       return 0
+      else
+       eval "${_MY_PATH} ${_options}" || :
+      fi
+    done
+  done
+}
+
 # show ########################################################################
 
 desc "show" <<HEREDOC
@@ -4931,6 +4966,7 @@ _SUBCOMMANDS=(
   s
   search
   settings
+  shell
   show
   status
   sync
