@@ -26,11 +26,9 @@ Usage information:
 @test "\`list\` exits with 0 and lists files in reverse order." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    sleep 1
-    "${_NOTES}" add "# two"
-    sleep 1
-    "${_NOTES}" add "# three"
+    "${_NOTES}" add "one.md" --title "one"
+    "${_NOTES}" add "two.md" --title "two"
+    "${_NOTES}" add "three.md" --title "three"
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -41,9 +39,9 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[0]}" =~ ${_files[2]} ]]
-  [[ "${lines[1]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[1]}" =~ ${_files[1]} ]]
-  [[ "${lines[2]}" =~ 20[0-9]+\.md$ ]] && [[ "${lines[2]}" =~ ${_files[0]} ]]
+  [[ "${lines[0]}" =~ three.md  ]]
+  [[ "${lines[1]}" =~ two.md    ]]
+  [[ "${lines[2]}" =~ one.md    ]]
 }
 
 # `notes list --no-id` ########################################################
@@ -51,11 +49,9 @@ Usage information:
 @test "\`list --no-id\` exits with 0 and lists files in reverse order." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    sleep 1
-    "${_NOTES}" add "# two"
-    sleep 1
-    "${_NOTES}" add "# three"
+    "${_NOTES}" add "one.md" --title "one"
+    "${_NOTES}" add "two.md" --title "two"
+    "${_NOTES}" add "three.md" --title "three"
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -66,9 +62,9 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" == "${_files[2]}" ]]
-  [[ "${lines[1]}" == "${_files[1]}" ]]
-  [[ "${lines[2]}" == "${_files[0]}" ]]
+  [[ "${lines[0]}" =~ three.md  ]]
+  [[ "${lines[1]}" =~ two.md    ]]
+  [[ "${lines[2]}" =~ one.md    ]]
 }
 
 # `notes list --no-color` #####################################################
@@ -76,11 +72,9 @@ Usage information:
 @test "\`list --no-color\` exits with 0 and lists files in reverse order." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    sleep 1
-    "${_NOTES}" add "# two"
-    sleep 1
-    "${_NOTES}" add "# three"
+    "${_NOTES}" add "one.md" --title "one"
+    "${_NOTES}" add "two.md" --title "two"
+    "${_NOTES}" add "three.md" --title "three"
     _files=($(ls "${NOTES_DATA_DIR}/"))
   }
 
@@ -91,30 +85,28 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'[3] ${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" == "[3] ${_files[2]}" ]]
-  [[ "${lines[1]}" == "[2] ${_files[1]}" ]]
-  [[ "${lines[2]}" == "[1] ${_files[0]}" ]]
+  [[ "${lines[0]}" =~ three.md  ]]
+  [[ "${lines[1]}" =~ two.md    ]]
+  [[ "${lines[2]}" =~ one.md    ]]
 }
 
 # `notes list (-e | --excerpt)` ###############################################
 
 _setup_list_excerpt() {
   "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "one.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "two.md"
 # two
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "three.md"
 # three
 line two
 line three
@@ -222,21 +214,19 @@ HEREDOC
 
 _setup_list_limit() {
   "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "one.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "two.md"
 # two
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "three.md"
 # three
 line two
 line three
@@ -301,21 +291,19 @@ HEREDOC
 @test "\`list --titles\` exits with 0 and displays a list of titles." {
   {
     "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "second.md"
 line one
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "third.md"
 # three
 line two
 line three
@@ -331,9 +319,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ three$          ]] && [[ "${lines[0]}" =~ 3 ]]
-  [[ "${lines[1]}" =~ 20[0-9]+\.md$   ]] && [[ "${lines[1]}" =~ 2 ]]
-  [[ "${lines[2]}" =~ one$            ]] && [[ "${lines[2]}" =~ 1 ]]
+  [[ "${lines[0]}" =~ three$    ]] && [[ "${lines[0]}" =~ 3 ]]
+  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[2]}" =~ one$      ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
 # `notes list <selection>` ####################################################
@@ -341,21 +329,19 @@ HEREDOC
 @test "\`list <selection>\` exits with 0 and displays the selection." {
   {
     "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "second.md"
 # two
 line two
 line three
 line four
 HEREDOC
-    sleep 1
-    cat <<HEREDOC | "${_NOTES}" add
+    cat <<HEREDOC | "${_NOTES}" add "third.md"
 # three
 line two
 line three
@@ -372,7 +358,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 1 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ first.md$ ]]
   [[ "${lines[0]}" =~ [*1*] ]]
   [[ "${lines[0]}" =~ ${_files[0]} ]]
 }
