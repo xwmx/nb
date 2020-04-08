@@ -4353,6 +4353,9 @@ _shell() {
   _debug printf "_shell() \${1:-}: '%s'\\n" "${1:-}"
   local _initial_command="${1:-}"
 
+  HISTFILE=~/.notes_history
+  set -o history
+
   if [[ -n "${_initial_command}" ]]
   then
     eval "${_MY_PATH} ${_initial_command}"
@@ -4362,6 +4365,7 @@ _shell() {
   do
     while IFS='' read -r -e -d $'\n' -p 'notes> ' _options
     do
+      history -s "${_options}"
       if [[ "${_options}" =~ ^exit|quit$ ]]
       then
        return 0
