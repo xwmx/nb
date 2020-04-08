@@ -4331,7 +4331,10 @@ _config()    { _settings "${@}"; }
 
 desc "shell" <<HEREDOC
 Usage:
-  ${_ME} shell [<subcommand> [<options>...]]
+  ${_ME} shell [<subcommand> [<options>...] | --clear-history]
+
+Optons:
+  --clear-history  Clear the \`notes\` shell history.
 
 Description:
   Start the \`notes\` interactive shell. Type 'exit' to exit.
@@ -4350,15 +4353,32 @@ Example:
   $
 HEREDOC
 _shell() {
-  _debug printf "_shell() \${1:-}: '%s'\\n" "${1:-}"
-  local _initial_command="${1:-}"
-
-  HISTFILE=~/.notes_history
+  HISTFILE="${HOME}/.notes_history"
   set -o history
 
-  if [[ -n "${_initial_command}" ]]
+  local _clear_history=0
+  local _initial_command=()
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --clear-history)
+        if [[ -e "${HISTFILE}" ]]
+        then
+          rm "${HISTFILE}"
+          printf "History cleared.\n"
+          return 0
+        fi
+        ;;
+      *)
+        _initial_command+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if [[ -n "${_initial_command[*]:-}" ]]
   then
-    eval "${_MY_PATH} ${_initial_command}"
+    eval "${_MY_PATH} ${_initial_command[@]}"
   fi
 
   while true

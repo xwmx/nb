@@ -1214,10 +1214,13 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  notes shell [<subcommand> [<options>...]]
+  notes shell [<subcommand> [<options>...] | --clear-history]
+
+Optons:
+  --clear-history  Clear the `notes` shell history.
 
 Description:
-  Start the `notes` interactive shell. Type 'exit' or 'quit' to exit.
+  Start the `notes` interactive shell. Type 'exit' to exit.
 
   When <subcommand> is present, the command will run as the shell is opened.
 
