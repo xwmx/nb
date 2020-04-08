@@ -1,6 +1,6 @@
 {
   "name": "notes.sh",
-  "version": "2.8.6",
+  "version": "2.8.7",
   "description": "Command line note-taking, bookmarking, and document management with encryption, advanced search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "directories": {
     "doc": "docs",
