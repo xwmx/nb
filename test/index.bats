@@ -378,9 +378,8 @@ load test_helper
 @test "\`index verify\` verifies a valid index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    sleep 1
-    "${_NOTES}" add "# two"
+    "${_NOTES}" add "first.md" --title "one"
+    "${_NOTES}" add "second.md" --title "two"
     printf \
       "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
       "$(cat "${NOTES_DATA_DIR}/.index")"

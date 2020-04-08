@@ -68,11 +68,9 @@ load test_helper
 @test "\`notes\` with a non-empty repo exits with 0 and prints list." {
   {
     run "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    sleep 1
-    "${_NOTES}" add "# two"
-    sleep 1
-    "${_NOTES}" add "# three"
+    "${_NOTES}" add "first.md" --title "one"
+    "${_NOTES}" add "second.md" --title "two"
+    "${_NOTES}" add "third.md" --title "three"
     _files=($(ls -t "${NOTES_DATA_DIR}/"))
   }
 

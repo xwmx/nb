@@ -5,21 +5,19 @@ load test_helper
 
 _setup_ls() {
   "${_NOTES}" init
-  cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-  sleep 1
-  cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add "second.md"
 # two
 line two
 line three
 line four
 HEREDOC
-  sleep 1
-  cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add "third.md"
 # three
 line two
 line three

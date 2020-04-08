@@ -4,17 +4,15 @@ load test_helper
 
 _setup_search() {
   "${_NOTES}" init &>/dev/null
-  cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add "first.md"
 # one
 idyl
 HEREDOC
-  sleep 1
-  cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add "second.md"
 # two
 sweetish
 HEREDOC
-  sleep 1
-  cat <<HEREDOC | "${_NOTES}" add
+  cat <<HEREDOC | "${_NOTES}" add "third.md"
 # three
 sweetish
 HEREDOC
@@ -66,7 +64,7 @@ HEREDOC
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'one\' ]]
+  [[ "${lines[0]}" =~ first\.md\ \'one\' ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ idyl ]]
 }
@@ -81,7 +79,7 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/first\.md$ ]]
   [[ "${#lines[@]}" -eq 1 ]]
 }
 
@@ -99,10 +97,10 @@ HEREDOC
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\' ]]
+  [[ "${lines[0]}" =~ second\.md\ \'two\' ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
-  [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\' ]]
+  [[ "${lines[3]}" =~ third+\.md\ \'three\' ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
@@ -120,8 +118,8 @@ HEREDOC
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
-  [[ "${lines[1]}" =~ ${_NOTES_DATA_DIR}/20[0-9]+\.md$ ]]
+  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/second\.md$ ]]
+  [[ "${lines[1]}" =~ ${_NOTES_DATA_DIR}/third\.md$ ]]
   [[ "${#lines[@]}" -eq 2 ]]
 }
 
@@ -129,10 +127,9 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
-  sleep 1 # Give setup time to complete to avoid errors.
   "${_NOTES}" notebooks add one
   "${_NOTES}" use one
-  "${_NOTES}" add "# sweetish"
+  "${_NOTES}" add example.md --title "sweetish"
 }
 
 @test "\`search <query> --all\` exits with status 0 and prints output." {
@@ -147,22 +144,21 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:2 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\'$ ]]
+  [[ "${lines[0]}" =~ second\.md\ \'two\'$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:3 ]]
-  [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\'$ ]]
+  [[ "${lines[3]}" =~ third\.md\ \'three\'$ ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:1 ]]
-  [[ "${lines[6]}" =~ 20[0-9]+\.md\ \'sweetish\'$ ]]
+  [[ "${lines[6]}" =~ example\.md\ \'sweetish\'$ ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
 @test "\`search <query> -a\` exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
-    sleep 1 # Give setup time to complete to avoid errors.
   }
 
   run "${_NOTES}" search 'sweetish' -a --use-grep
@@ -172,15 +168,15 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:2 ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md\ \'two\'$ ]]
+  [[ "${lines[0]}" =~ second\.md\ \'two\'$ ]]
   [[ "${lines[1]}" =~ -*-$ ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:3 ]]
-  [[ "${lines[3]}" =~ 20[0-9]+\.md\ \'three\'$ ]]
+  [[ "${lines[3]}" =~ third\.md\ \'three\'$ ]]
   [[ "${lines[4]}" =~ -*-$ ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:1 ]]
-  [[ "${lines[6]}" =~ 20[0-9]+\.md\ \'sweetish\'$ ]]
+  [[ "${lines[6]}" =~ example\.md\ \'sweetish\'$ ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
@@ -209,9 +205,9 @@ _search_all_setup() {
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ ${_NOTES_DIR}/home/20[0-9]+\.md$ ]]
-  [[ "${lines[1]}" =~ ${_NOTES_DIR}/home/20[0-9]+\.md$ ]]
-  [[ "${lines[2]}" =~ ${_NOTES_DIR}/one/20[0-9]+\.md$ ]]
+  echo "${output}" | grep -q '/home/third\.md$'
+  echo "${output}" | grep -q '/home/second\.md$'
+  echo "${output}" | grep -q '/one/example\.md$'
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
