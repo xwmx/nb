@@ -1316,7 +1316,14 @@ export EDITOR="code"
 root directory.
 
 ---
+<p align="center">
+  Copyright (c) 2015-present William Melody • See LICENSE for details.
+</p>
 
 <p align="center">
   <a href="https://github.com/xwmx/notes">github.com/xwmx/notes</a>
+</p>
+
+<p align="center">
+  📝🔖🔒🔍📔
 </p>
