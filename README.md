@@ -153,9 +153,7 @@ files.
 To list your notes and notebooks, run `notes ls`:
 
 ```bash
-notes ls
-```
-```text
+> notes ls
 home
 --------------
 [3] example.md
@@ -200,29 +198,29 @@ home
 Pass an id, filename, or title to view the listing for that note:
 
 ```bash
-notes ls Todos
-# [2] Todos
+> notes ls Todos
+[2] Todos
 ```
 
 ```bash
-notes ls 3
-# [3] Example Title
+> notes ls 3
+[3] Example Title
 ```
 
 If there is no immediate match, `notes` will list items with titles and
 filenames that fuzzy match the query:
 
 ```bash
-notes ls 'idea'
-# [1] Ideas
+> notes ls 'idea'
+[1] Ideas
 ```
 
 A case-insensitive regular expression can also be to filter filenames and
 titles:
 
 ```bash
-notes ls '^example.*'
-# [3] Example Title
+> notes ls '^example.*'
+[3] Example Title
 ```
 
 For full text search, see `notes help search`.
@@ -230,9 +228,7 @@ For full text search, see `notes help search`.
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
-notes ls 3 --excerpt
-```
-```text
+> notes ls 3 --excerpt
 [3] Example Title
 -----------------
 # Example Title
@@ -254,25 +250,17 @@ easily identifiable in lists:
 can be run without the `ls`:
 
 ```bash
-notes
-```
-```text
+> notes
 home
 -----------------
 [3] Example Title
 [2] Todos
 [1] Ideas
-```
-```bash
-notes '^example.*'
-```
-```text
+
+> notes '^example.*'
 [3] Example Title
-```
-```bash
-notes 3 --excerpt
-```
-```text
+
+> notes 3 --excerpt
 [3] Example Title
 -----------------
 # Example Title
@@ -586,11 +574,11 @@ notes export Movies /path/to/example.html
 ```bash
 $ notes -i
 notes> ls example
-# [3] Example
+[3] Example
 notes> edit 3 --content "New content."
-# Updated [3] Example
+Updated [3] Example
 notes> notebook
-# home
+home
 notes> exit
 $
 ```
@@ -1238,10 +1226,13 @@ Example:
   $ notes shell
   notes> ls 3
   [3] Example
+
   notes> edit 3 --content "New content."
   Updated [3] Example
+
   notes> notebook
   home
+
   notes> exit
   $
 ```

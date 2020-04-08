@@ -4345,10 +4345,13 @@ Example:
   $ notes shell
   notes> ls 3
   [3] Example
+
   notes> edit 3 --content "New content."
   Updated [3] Example
+
   notes> notebook
   home
+
   notes> exit
   $
 HEREDOC
