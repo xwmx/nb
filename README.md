@@ -568,7 +568,7 @@ notes export Movies /path/to/example.html
 
 ### Interactive Shell
 
-`notes` has an interactive shell that can be started with `notes shell`,
+`notes` has its own interactive shell that can be started with `notes shell`,
 `notes -i`, or `notes --interactive`:
 
 ```bash
@@ -585,6 +585,9 @@ home
 notes> exit
 $
 ```
+
+The `notes` shell recognizes all `notes` subcommands and options,
+providing a streamlined, distraction-free approach for working with `notes`.
 
 ### Shortcut Aliases
 
