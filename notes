@@ -3447,7 +3447,7 @@ _ls() {
     _list --titles "${_args[@]:-}"
   } | if hash "less" 2>/dev/null
       then
-        less -X -F
+        less -R -X -F
       else
         cat
       fi
