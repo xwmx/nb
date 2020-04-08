@@ -426,7 +426,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 3 ]]
-  [[ "${lines[0]}" =~ Note\ not\ found:\ invalid$ ]]
+  [[ "${lines[0]}" == "Note not found: 'invalid'." ]]
 }
 
 # help ########################################################################

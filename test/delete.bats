@@ -46,7 +46,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Note not found." ]]
+  [[ "${lines[0]}" == "Note not found: '1'." ]]
 }
 
 @test "\`delete <selector> (no force)\` returns 0 and deletes note." {
