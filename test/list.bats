@@ -278,6 +278,24 @@ HEREDOC
   [[ "${lines[2]}" == "1 omitted. 3 total." ]]
 }
 
+@test "\`list --2\` exits with 0 and displays list with 2 items." {
+  {
+    _setup_list_limit
+    _files=($(ls "${NOTES_DATA_DIR}/"))
+  }
+
+  run "${_NOTES}" list --2
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 3 ]]
+
+  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
+}
+
 # `notes list --titles` #######################################################
 
 @test "\`list --titles\` exits with 0 and displays a list of titles." {

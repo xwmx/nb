@@ -3004,7 +3004,7 @@ _list() {
 
   local _excerpt_length=3
   local _print_excerpt=0
-  local _limit
+  local _limit=
   local _list_titles=0
   local _no_color=0
   local _no_id=0
@@ -3053,12 +3053,18 @@ _list() {
         ;;
       *)
         _debug printf "_list() *: '%s'\\n" "${_arg:-}"
-        _selection="${_arg:-}"
+        if [[ "${_arg:-}" =~ ^--[0-9]+$ ]] && [[ -z "${_limit}" ]]
+        then
+          _limit="${_arg:-}"
+        else
+          _selection="${_arg:-}"
+        fi
         ;;
     esac
     shift
   done
 
+  _debug printf "_list() \${_limit}: '%s'\\n" "${_limit:-}"
   _debug printf "_list() \${_print_excerpt}: '%s'\\n" "${_print_excerpt:-}"
   _debug printf "_list() \${_excerpt_length}: '%s'\\n" "${_excerpt_length:-}"
   _debug printf "_list() \${_selection}: '%s'\\n" "${_selection:-}"
