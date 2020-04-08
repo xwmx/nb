@@ -4356,8 +4356,7 @@ _shell() {
   HISTFILE="${HOME}/.notes_history"
   set -o history
 
-  local _clear_history=0
-  local _initial_command=()
+  local _initial_command=
 
   for __arg in "${@:-}"
   do
@@ -4371,14 +4370,14 @@ _shell() {
         fi
         ;;
       *)
-        _initial_command+=("${__arg}")
+        _initial_command+=" ${__arg}"
         ;;
     esac
   done
 
-  if [[ -n "${_initial_command[*]:-}" ]]
+  if [[ -n "${_initial_command:-}" ]]
   then
-    eval "${_MY_PATH} ${_initial_command[@]}"
+    eval "${_MY_PATH} ${_initial_command}"
   fi
 
   while true
