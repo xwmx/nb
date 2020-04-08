@@ -3117,6 +3117,14 @@ HEREDOC
 
     for __basename in "${_filenames[@]}"
     do
+      # If a valid <selection> has been specified, skip the rest of the loop
+      # unless the <selection> basename matches the current one.
+      if [[ -n "${_selection_basename}" ]] &&
+         [[ "${__basename}" != "${_selection_basename}" ]]
+      then
+        continue
+      fi
+
       if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
       then # the limit has been reached.
 
@@ -3139,14 +3147,6 @@ HEREDOC
 
       local _id_item_color
       _id_item_color="[$(_highlight "${_item_id_number}")]"
-
-      # If a valid <selection> has been specified, skip the rest of the loop
-      # unless the <selection> basename matches the current one.
-      if [[ -n "${_selection_basename}" ]] &&
-         [[ "${__basename}" != "${_selection_basename}" ]]
-      then
-        continue
-      fi
 
       local _list_item_id="${__basename}"
       local _maybe_title
