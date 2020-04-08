@@ -4334,29 +4334,29 @@ Usage:
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
 
 Optons:
-  --clear-history  Clear the \`notes\` shell history.
+  --clear-history  Clear the \`${_ME}\` shell history.
 
 Description:
-  Start the \`notes\` interactive shell. Type 'exit' to exit.
+  Start the \`${_ME}\` interactive shell. Type 'exit' to exit.
 
   When <subcommand> is present, the command will run as the shell is opened.
 
 Example:
-  $ notes shell
-  notes> ls 3
+  $ ${_ME} shell
+  ${_ME}> ls 3
   [3] Example
 
-  notes> edit 3 --content "New content."
+  ${_ME}> edit 3 --content "New content."
   Updated [3] Example
 
-  notes> notebook
+  ${_ME}> notebook
   home
 
-  notes> exit
+  ${_ME}> exit
   $
 HEREDOC
 _shell() {
-  HISTFILE="${HOME}/.notes_history"
+  HISTFILE="${HOME}/.${_ME}_history"
   set -o history
 
   local _initial_command=
@@ -4391,7 +4391,7 @@ _shell() {
 
   while true
   do
-    while IFS='' read -r -e -d $'\n' -p 'notes> ' _options
+    while IFS='' read -r -e -d $'\n' -p "${_ME}> " _options
     do
       history -s "${_options}"
       if [[ "${_options}" =~ ^exit|quit$ ]]
