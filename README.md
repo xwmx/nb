@@ -394,6 +394,34 @@ To create a minimal valid bookmark file with `notes add`:
 notes add example.bookmark.md --content "<https://example.com>"
 ```
 
+### Search
+
+Use `notes search` to search your notes, with support for regular
+expressions and tags:
+
+```bash
+# search current notebook for 'example query'
+notes search 'example query'
+
+# search all notebooks for 'example query'
+notes search 'example query' --all
+
+# search notes for 'Example' OR 'Sample'
+notes search 'Example|Sample'
+
+# search for notes containing the hashtag '#example'
+notes search '#example'
+
+# search with a regular expression for notes containing phone numbers
+notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
+```
+
+`notes search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
+[`ag`](https://github.com/ggreer/the_silver_searcher),
+[`ack`](http://beyondgrep.com/), and
+[`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
+performs searches using the first tool it finds.
+
 ### Revision History
 
 Whenever a note is added, modified, or deleted, `notes` automatically commits
@@ -482,34 +510,6 @@ notes remote remove
 
 You can also turn off autosync in `notes settings` and sync manually with
 `notes sync`.
-
-### Search
-
-Use `notes search` to search your notes, with support for regular
-expressions and tags:
-
-```bash
-# search current notebook for 'example query'
-notes search 'example query'
-
-# search all notebooks for 'example query'
-notes search 'example query' --all
-
-# search notes for 'Example' OR 'Sample'
-notes search 'Example|Sample'
-
-# search for notes containing the hashtag '#example'
-notes search '#example'
-
-# search with a regular expression for notes containing phone numbers
-notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
-```
-
-`notes search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
-[`ag`](https://github.com/ggreer/the_silver_searcher),
-[`ack`](http://beyondgrep.com/), and
-[`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
-performs searches using the first tool it finds.
 
 ### Import / Export
 
