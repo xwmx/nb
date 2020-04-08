@@ -682,7 +682,7 @@ Usage:
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
   notes settings
-  notes shell [<subcommand> [<options>...]]
+  notes shell [<subcommand> [<options>...] | --clear-history]
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   notes sync [-a | --all]

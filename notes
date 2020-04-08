@@ -1311,7 +1311,7 @@ Usage:
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} settings
-  ${_ME} shell [<subcommand> [<options>...]]
+  ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   ${_ME} sync [-a | --all]
