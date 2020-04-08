@@ -575,10 +575,13 @@ notes export Movies /path/to/example.html
 $ notes -i
 notes> ls example
 [3] Example
+
 notes> edit 3 --content "New content."
 Updated [3] Example
+
 notes> notebook
 home
+
 notes> exit
 $
 ```
