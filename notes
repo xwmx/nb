@@ -4373,10 +4373,16 @@ _shell() {
         fi
         ;;
       *)
-        _initial_command+=" ${__arg}"
+        if [[ -n "${__arg}" ]]
+        then
+          _initial_command+=" ${__arg}"
+        fi
         ;;
     esac
   done
+
+  _debug printf "_shell() \${_initial_command:-}: '%s'\\n" \
+    "${_initial_command:-}"
 
   if [[ -n "${_initial_command:-}" ]]
   then
