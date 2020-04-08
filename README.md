@@ -394,6 +394,20 @@ To create a minimal valid bookmark file with `notes add`:
 notes add example.bookmark.md --content "<https://example.com>"
 ```
 
+### Revision History
+
+Whenever a note is added, modified, or deleted, `notes` automatically commits
+the change to git transparently in the background. You can view the history of
+the notebook or an individual note with:
+
+```bash
+# show history for current notebook
+notes history
+
+# show history for note 4
+notes history 4
+```
+
 ### Notebooks
 
 You can create additional notebooks, each of which has its own version history.
@@ -437,20 +451,6 @@ notes move 3 example-notebook
 ```
 
 For more information about working with notebooks, run `notes help notebooks`.
-
-### Revision History
-
-Whenever a note is added, modified, or deleted, `notes` automatically commits
-the change to git transparently in the background. You can view the history of
-the notebook or an individual note with:
-
-```bash
-# show history for current notebook
-notes history
-
-# show history for note 4
-notes history 4
-```
 
 ### Syncing with Remotes
 
