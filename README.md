@@ -11,8 +11,8 @@ __                _
 `notes` is a command line note-taking, bookmarking, and document management
 tool with encryption, advanced search, [Git](https://git-scm.com/)-backed
 versioning and syncing, [Pandoc](http://pandoc.org/)-backed conversion,
-tagging, and more in a single portable script. `notes` creates notes in
-text-based formats like
+tagging, an interactive shell, and more in a single portable script.
+`notes` creates notes in text-based formats like
 [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
 work with files in any format, and can export notes to many document formats.
@@ -545,6 +545,23 @@ notes export example.md /path/to/example.docx
 notes export Movies /path/to/example.html
 ```
 
+### Interactive Shell
+
+`notes` has an interactive shell that can be started with `notes shell`,
+`notes -i`, or `notes --interactive`:
+
+```bash
+$ notes -i
+notes> ls example
+# [3] Example
+notes> edit 3 --content "New content."
+# Updated [3] Example
+notes> notebook
+# home
+notes> exit
+$
+```
+
 ### Shortcut Aliases
 
 Several core `notes` subcommands have single-character aliases to make
@@ -638,10 +655,12 @@ Usage:
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
   notes settings
+  notes shell [<subcommand> [<options>...]]
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   notes sync [-a | --all]
   notes use <notebook>
+  notes -i | --interactive [<subcommand> [<options>...]]
   notes -h | --help | help [<subcommand>]
   notes --version | version
 
@@ -671,6 +690,7 @@ Subcommands:
   rename     Rename a note.
   search     Search notes.
   settings   Edit configuration settings.
+  shell      Start the `notes` interactive shell.
   show       Show a note.
   status     Run `git status` in the current notebook.
   sync       Sync local notebook with the remote repository.
@@ -678,8 +698,9 @@ Subcommands:
   version    Display version information.
 
 Program Options:
-  -h --help              Display this help information.
-  --version              Display version information.
+  -i --interactive  Start the `notes` interactive shell.
+  -h --help         Display this help information.
+  --version         Display version information.
 ```
 
 ### Subcommands
@@ -1164,6 +1185,29 @@ Examples:
   notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
 Shortcut Alias: `q`
+```
+
+#### `shell`
+
+```text
+Usage:
+  notes shell [<subcommand> [<options>...]]
+
+Description:
+  Start the `notes` interactive shell. Type 'exit' or 'quit' to exit.
+
+  When <subcommand> is present, the command will run as the shell is opened.
+
+Example:
+  $ notes shell
+  notes> ls 3
+  [3] Example
+  notes> edit 3 --content "New content."
+  Updated [3] Example
+  notes> notebook
+  home
+  notes> exit
+  $
 ```
 
 #### `show`

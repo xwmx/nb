@@ -1311,10 +1311,12 @@ Usage:
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
   ${_ME} settings
+  ${_ME} shell [<subcommand> [<options>...]]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
+  ${_ME} -i | --interactive [<command]
   ${_ME} -h | --help | help [<subcommand>]
   ${_ME} --version | version
 
@@ -4329,10 +4331,12 @@ _config()    { _settings "${@}"; }
 
 desc "shell" <<HEREDOC
 Usage:
-  ${_ME} shell
+  ${_ME} shell [<subcommand> [<options>...]]
 
 Description:
-  Use the \`notes\` interactive shell. Type 'exit' to exit.
+  Start the \`notes\` interactive shell. Type 'exit' to exit.
+
+  When <subcommand> is present, the command will run as the shell is opened.
 
 Example:
   $ notes shell
@@ -4346,6 +4350,14 @@ Example:
   $
 HEREDOC
 _shell() {
+  _debug printf "_shell() \${1:-}: '%s'\\n" "${1:-}"
+  local _initial_command="${1:-}"
+
+  if [[ -n "${_initial_command}" ]]
+  then
+    eval "${_MY_PATH} ${_initial_command}"
+  fi
+
   while true
   do
     while IFS='' read -r -e -d $'\n' -p 'notes> ' _options
@@ -5056,6 +5068,9 @@ do
       else
         _PRINT_VERSION=1
       fi
+      ;;
+    -i|--interactive)
+      _SUBCOMMAND="shell"
       ;;
     *:*)
       __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
