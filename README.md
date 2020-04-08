@@ -150,14 +150,14 @@ files.
 
 #### Listing Notes
 
-To list your notes and notebooks, run `notes` with no arguments:
+To list your notes and notebooks, run `notes ls`:
 
 ```bash
-notes
+notes ls
 ```
 ```text
 home
----------------------
+--------------
 [3] example.md
 [2] todos.md
 [1] ideas.md
@@ -187,11 +187,11 @@ title: Ideas
 ```
 
 Once defined, titles will be displayed in place of the filename in the output
-of `notes`:
+of `notes ls`:
 
 ```text
 home
----------------------
+-----------------
 [3] Example Title
 [2] Todos
 [1] Ideas
@@ -200,12 +200,12 @@ home
 Pass an id, filename, or title to view the listing for that note:
 
 ```bash
-notes Todos
+notes ls Todos
 # [2] Todos
 ```
 
 ```bash
-notes 3
+notes ls 3
 # [3] Example Title
 ```
 
@@ -213,7 +213,7 @@ If there is no immediate match, `notes` will list items with titles and
 filenames that fuzzy match the query:
 
 ```bash
-notes 'idea'
+notes ls 'idea'
 # [1] Ideas
 ```
 
@@ -221,7 +221,7 @@ A case-insensitive regular expression can also be to filter filenames and
 titles:
 
 ```bash
-notes '^example.*'
+notes ls '^example.*'
 # [3] Example Title
 ```
 
@@ -230,7 +230,7 @@ For full text search, see `notes help search`.
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
-notes 3 --excerpt
+notes ls 3 --excerpt
 ```
 ```text
 [3] Example Title
@@ -250,9 +250,32 @@ easily identifiable in lists:
 [1] 20200101000000.bookmark.md.enc 🔖 🔒
 ```
 
-`notes` is a shortcut for `notes ls`, and both commands respond to the same
-arguments as `notes list`. For more information about options for listing
-notes, run `notes help ls` and `notes help list`.
+`notes` with no subcommand is an alias for `notes ls`, so the examples above
+can be run without the `ls`:
+
+```bash
+notes
+# home
+# -----------------
+# [3] Example Title
+# [2] Todos
+# [1] Ideas
+notes '^example.*'
+# [3] Example Title
+notes 3 --excerpt
+# [3] Example Title
+# -----------------
+# # Example Title
+#
+# This is an example excerpt
+```
+
+`notes ls` is a combination of `notes notebooks` and
+`notes list --titles` in one view and accepts the to the same arguments
+as `notes list`, which can be used to list only notes.
+
+For more information about options for listing notes, run `notes help ls` and
+`notes help list`.
 
 #### Editing Notes
 
