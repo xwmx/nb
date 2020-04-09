@@ -1356,6 +1356,32 @@ Open your `~/.notesrc` configuration file in your editor:
 notes settings
 ```
 
+### `.notesrc` Options
+
+#### `$EDITOR`
+
+Default: inherits the global `$EDITOR` value.
+
+Reassign `$EDITOR` to use a specific editor with `notes`, overriding the
+global `$EDITOR` setting.
+
+Example Values:
+[`vim`](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
+[`emacs`](https://en.wikipedia.org/wiki/Emacs),
+[`code`](https://en.wikipedia.org/wiki/Visual_Studio_Code),
+[`subl`](https://en.wikipedia.org/wiki/Sublime_Text),
+[`atom`](https://en.wikipedia.org/wiki/Atom_\(text_editor\)),
+[`macdown`](https://macdown.uranusjr.com/)
+
+Examples:
+```bash
+# Set to emacsclient
+export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
+
+# Set to VS Code
+export EDITOR="code"
+```
+
 #### `$NOTES_AUTO_SYNC`
 
 Default: `1`
@@ -1370,6 +1396,25 @@ Example:
 
 ```bash
 export NOTES_AUTO_SYNC=0
+```
+
+#### `$NOTES_DEFAULT_EXTENSION`
+
+Default: `md`
+
+The default extension to use for notes files. Change to `org` for Emacs Org
+mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you
+prefer.
+
+Example Values:
+[`md`](https://en.wikipedia.org/wiki/Markdown),
+[`org`](https://en.wikipedia.org/wiki/Org-mode),
+[`txt`](https://en.wikipedia.org/wiki/Text_file),
+[`rst`](https://en.wikipedia.org/wiki/ReStructuredText)
+
+Example:
+```bash
+export NOTES_DEFAULT_EXTENSION="org"
 ```
 
 #### `$NOTES_DIR`
@@ -1396,49 +1441,6 @@ Supported Values:
 Example:
 ```bash
 export NOTES_ENCRYPTION_TOOL="gpg"
-```
-
-#### `$NOTES_DEFAULT_EXTENSION`
-
-Default: `md`
-
-The default extension to use for notes files. Change to `org` for Emacs Org
-mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you
-prefer.
-
-Example Values:
-[`md`](https://en.wikipedia.org/wiki/Markdown),
-[`org`](https://en.wikipedia.org/wiki/Org-mode),
-[`txt`](https://en.wikipedia.org/wiki/Text_file),
-[`rst`](https://en.wikipedia.org/wiki/ReStructuredText)
-
-Example:
-```bash
-export NOTES_DEFAULT_EXTENSION="org"
-```
-
-#### `$EDITOR`
-
-Default: inherits the global `$EDITOR` value.
-
-Reassign `$EDITOR` to use a specific editor with `notes`, overriding the
-global `$EDITOR` setting.
-
-Example Values:
-[`vim`](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
-[`emacs`](https://en.wikipedia.org/wiki/Emacs),
-[`code`](https://en.wikipedia.org/wiki/Visual_Studio_Code),
-[`subl`](https://en.wikipedia.org/wiki/Sublime_Text),
-[`atom`](https://en.wikipedia.org/wiki/Atom_\(text_editor\)),
-[`macdown`](https://macdown.uranusjr.com/)
-
-Examples:
-```bash
-# Set to emacsclient
-export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
-
-# Set to VS Code
-export EDITOR="code"
 ```
 
 #### `$NOTES_HIGHLIGHT_COLOR`

@@ -2954,6 +2954,16 @@ HEREDOC
 # https://github.com/xwmx/notes
 ###############################################################################
 
+# \$EDITOR
+#
+# Default: inherits the global \`\$EDITOR\` value.
+#
+# Reassign \`\$EDITOR\` to use a specific editor with notes, overriding the
+# global \`\$EDITOR\` setting.
+#
+# Example Values: 'vim' 'emacs' 'subl' 'atom' 'code' 'macdown'
+# export EDITOR="code"
+
 # \$NOTES_AUTO_SYNC
 #
 # Default: 1
@@ -2964,6 +2974,17 @@ HEREDOC
 #
 # To disable this behavior, uncomment the following line.
 # export NOTES_AUTO_SYNC=0
+
+# \$NOTES_DEFAULT_EXTENSION
+#
+# Default: 'md'
+#
+# The default extension to use for notes files. Change to 'org' for Emacs Org
+# mode files, 'rst' for reStructuredText, 'txt' for plain text, or whatever
+# you prefer.
+
+# Example Values: 'md' 'org' 'txt' 'rst'
+# export NOTES_DEFAULT_EXTENSION="org"
 
 # \$NOTES_DIR
 #
@@ -2981,17 +3002,6 @@ HEREDOC
 # Supported Values: 'openssl' 'gpg'
 # export NOTES_ENCRYPTION_TOOL="gpg"
 
-# \$NOTES_DEFAULT_EXTENSION
-#
-# Default: 'md'
-#
-# The default extension to use for notes files. Change to 'org' for Emacs Org
-# mode files, 'rst' for reStructuredText, 'txt' for plain text, or whatever
-# you prefer.
-
-# Example Values: 'md' 'org' 'txt' 'rst'
-# export NOTES_DEFAULT_EXTENSION="org"
-
 # \$NOTES_HIGHLIGHT_COLOR
 #
 # Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
@@ -3003,16 +3013,6 @@ HEREDOC
 #
 # Supported Values: [0..255]
 # export NOTES_HIGHLIGHT_COLOR=213
-
-# \$EDITOR
-#
-# Default: inherits the global \`\$EDITOR\` value.
-#
-# Reassign \`\$EDITOR\` to use a specific editor with notes, overriding the
-# global \`\$EDITOR\` setting.
-#
-# Example Values: 'vim' 'emacs' 'subl' 'atom' 'code' 'macdown'
-# export EDITOR="code"
 HEREDOC
     printf "Created %s\\n" "${NOTESRC_PATH}"
   fi
