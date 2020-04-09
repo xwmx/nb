@@ -2625,13 +2625,20 @@ Subcommands:
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the notebook.
   rebuild       Rebuild the index. Some ids might change.
-  reconcile     Update index for added and deleted files.
+  reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
   verify        Verify that the index matches the notebook contents.
 
 Description:
-  Manage the index for the current notebook.
+  Manage the index for the current notebook. This subcommand is used
+  internally by \`notes\` and using it manually will probably mess up
+  the index. If something goes wrong with the index, fix it with
+  \`notes index reconcile\`.
+
+  The index is a text file named '.index' in the notebook directory containing
+  a list of filenames, and the line number of each filename represents the id.
+  .index is included in the git repository so ids are preserved across systems.
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
