@@ -685,7 +685,7 @@ Usage:
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
-  notes settings
+  notes settings [colors]
   notes shell [<subcommand> [<options>...] | --clear-history]
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
@@ -1287,10 +1287,14 @@ Shortcut Alias: `s`
 
 ```text
 Usage:
-  notes settings
+  notes settings [colors]
+
+Subcommands:
+  (default)  Open the ~/.notesrc configuration file in `$EDITOR`.
+  colors     Print a table of color numbers in the colors they represent.
 
 Description:
-  Open the ~/.notesrc configuration file in `$EDITOR`.
+  Configure `notes`.
 
   For more information about .notesrc, visit:
   https://github.com/xwmx/notes#configuration
@@ -1435,6 +1439,24 @@ export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
 
 # Set to VS Code
 export EDITOR="code"
+```
+
+#### `$NOTES_HIGHLIGHT_COLOR`
+
+Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
+
+Set highlighting color. This should be set to an xterm color number, usually
+a value between 1 and 256. For a table colors and their numbers run:
+
+```bash
+notes settings colors
+```
+
+Supported Values: [0..255]
+
+Example:
+```bash
+export NOTES_HIGHLIGHT_COLOR=213
 ```
 
 ## Testing

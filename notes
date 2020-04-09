@@ -219,14 +219,12 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 #
 # Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
 #
-# Set highlighting color. This should be set to an xterm foreground color
-# number, usually a value between 1 and 256. For a table of available color
-# options, run `notes settings color options`.
+# Set highlighting color. This should be set to an xterm color number, usually
+# a value between 1 and 256. For a table colors and their numbers run:
 #
-# Base Color Values: 0 (black), 1 (red),     2 (green), 3 (yellow)
-#                    4 (blue),  5 (magenta), 6 (cyan),  7 (white)
+#   notes settings colors
 #
-# Supported Values: [1..255]
+# Supported Values: [0..255]
 _set_notes_highlight_color() {
   local _colors=
   _colors="$(tput colors)"
@@ -2994,6 +2992,18 @@ HEREDOC
 # Example Values: 'md' 'org' 'txt' 'rst'
 # export NOTES_DEFAULT_EXTENSION="org"
 
+# \$NOTES_HIGHLIGHT_COLOR
+#
+# Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
+#
+# Set highlighting color. This should be set to an xterm color number, usually
+# a value between 1 and 256. For a table colors and their numbers run:
+#
+#   notes settings colors
+#
+# Supported Values: [0..255]
+# export NOTES_HIGHLIGHT_COLOR=213
+
 # \$EDITOR
 #
 # Default: inherits the global \`\$EDITOR\` value.
@@ -4365,11 +4375,14 @@ _q() {  _search "${@}"; }
 
 desc "settings" <<HEREDOC
 Usage:
-  ${_ME} settings
-  ${_ME} settings color options
+  ${_ME} settings [colors]
+
+Subcommands:
+  (default)  Open the ~/.notesrc configuration file in \`\$EDITOR\`.
+  colors     Print a table of color numbers in the colors they represent.
 
 Description:
-  Open the ~/.notesrc configuration file in \`\$EDITOR\`.
+  Configure \`notes\`.
 
   For more information about .notesrc, visit:
   https://github.com/xwmx/notes#configuration
@@ -4382,36 +4395,25 @@ _settings() {
 
     case "${_arg}" in
       color|colors)
-        if ! __option_value_is_present "${_val:-}"
-        then
-          _help settings
-          return 1
-        fi
+        _notes_settings_color(){
+            for __color_number
+            do
+              printf '\e[38;5;%dm %03d ' \
+                "${__color_number}" \
+                "${__color_number}"
+            done
+            printf '\e[0m \n'
+        }
 
-        if [[ "${_val}" =~ ^options|list$ ]]
-        then
-          _notes_settings_color(){
-              for __color_number
-              do
-                printf '\e[38;5;%dm %03d ' \
-                  "${__color_number}" \
-                  "${__color_number}"
-              done
-              printf '\e[0m \n'
-          }
+        IFS=$' \t\n' _notes_settings_color {0..15}
 
-          IFS=$' \t\n' _notes_settings_color {0..15}
+        for ((_i=0;_i<6;_i++))
+        do
+          IFS=$' \t\n' \
+            _notes_settings_color $(seq $((_i*36+16)) $((_i*36+51)))
+        done
 
-          for ((_i=0;_i<6;_i++))
-          do
-            IFS=$' \t\n' \
-              _notes_settings_color $(seq $((_i*36+16)) $((_i*36+51)))
-          done
-
-          IFS=$' \t\n' _notes_settings_color {232..255}
-        fi
-
-        shift
+        IFS=$' \t\n' _notes_settings_color {232..255}
         ;;
       *)
         _edit_file "${HOME}/.notesrc" --no-wait
