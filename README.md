@@ -11,7 +11,7 @@ __                _
 `notes` is a command line note-taking, bookmarking, and document management
 tool with encryption, advanced search, [Git](https://git-scm.com/)-backed
 versioning and syncing, [Pandoc](http://pandoc.org/)-backed conversion,
-tagging, interactive shell, and more in a single portable script.
+tagging, an interactive shell, and more in a single portable script.
 `notes` creates notes in text-based formats like
 [Markdown](https://daringfireball.net/projects/markdown/) and
 [Emacs Org mode](https://orgmode.org/), can organize and
