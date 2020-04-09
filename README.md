@@ -568,7 +568,7 @@ notes export Movies /path/to/example.html
 
 ### Interactive Shell
 
-`notes` has its own interactive shell that can be started with `notes shell`,
+`notes` has an interactive shell that can be started with `notes shell`,
 `notes -i`, or `notes --interactive`:
 
 ```bash
