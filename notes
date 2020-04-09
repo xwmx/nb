@@ -4388,7 +4388,7 @@ _settings() {
           return 1
         fi
 
-        if [[ "${_val}" == "options" ]]
+        if [[ "${_val}" =~ ^options|list$ ]]
         then
           _notes_settings_color(){
               for __color_number
