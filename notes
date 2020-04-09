@@ -379,15 +379,32 @@ This note was encrypted with GPG, but the GPG command was not found.\n"
 # _edit_file()
 #
 # Usage:
-#   _edit_file <path>
+#   _edit_file <path> [--no-wait]
 #
 # Description:
 #   Open the file in $EDITOR. Use the `-f` option in vim and `--wait` option in
 #   other GUI editors to wait until the file is closed in the editor before
-#   continuing.
+#   continuing, unless `--no-wait`.
 _edit_file() {
   local _file_path="${1:-}"
-  if [[ -z "${_file_path}" ]]
+  local _wait=1
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --no-wait)
+        _wait=0
+        ;;
+      *)
+        if [[ -z "${_file_path}" ]]
+        then
+          _file_path="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  if [[ -z "${_file_path}" ]] || [[ ! -e "${_file_path}" ]]
   then
     return 1
   fi
@@ -419,11 +436,13 @@ Can't edit archives. Export archive and expand to edit.\n"
     fi
   fi
 
-  if [[ "${EDITOR}" =~ mvim ]] ||
+  if ((_wait)) &&
+     [[ "${EDITOR}" =~ mvim ]] ||
      [[ "${EDITOR}" =~ gvim ]]
   then
     "${EDITOR}" -f "${_file_path}"
-  elif [[ "${EDITOR}" =~ code ]] ||
+  elif ((_wait)) &&
+       [[ "${EDITOR}" =~ code ]] ||
        [[ "${EDITOR}" =~ mate ]] ||
        [[ "${EDITOR}" =~ subl ]]
   then
@@ -4395,7 +4414,7 @@ _settings() {
         shift
         ;;
       *)
-        _edit_file "${HOME}/.notesrc"
+        _edit_file "${HOME}/.notesrc" --no-wait
         ;;
     esac
 
