@@ -215,6 +215,27 @@ export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-1}"
 # Example Values: 'md' 'org'
 export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 
+# `$NOTES_HIGHLIGHT_COLOR`
+#
+# Default: 3 (yellow) for 8 color terminals, 11 (yellow) for 256 color.
+#
+# Set highlighting color.
+#
+# Base Color Values: 0 (black), 1 (red),     2 (green), 3 (yellow)
+#                    4 (blue),  5 (magenta), 6 (cyan),  7 (white)
+#
+# Supported Values: [1..255]
+_set_notes_highlight_color() {
+  local _colors=
+  _colors="$(tput colors)"
+  if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
+  then
+    export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-11}"
+  else
+    export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-3}"
+  fi
+} && _set_notes_highlight_color
+
 # `$NOTES_ENCRYPTION_TOOL`
 #
 # Default: 'openssl'
@@ -962,7 +983,8 @@ _git_should_autosync() {
 #
 # Description:
 #   Use `tput` to highlight the given string.
-export _TPUT_SETAF_3= && _TPUT_SETAF_3="$(tput setaf 3)"
+export _TPUT_HIGHLIGHT_COLOR
+_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NOTES_HIGHLIGHT_COLOR}")"
 export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 _highlight() {
   local _input="${1:-}"
@@ -971,7 +993,7 @@ _highlight() {
     _die printf "Usage: _highlight <string>"
   fi
 
-  printf "${_TPUT_SETAF_3:-}%s${_TPUT_SGR0:-}\\n" "${_input}"
+  printf "${_TPUT_HIGHLIGHT_COLOR:-}%s${_TPUT_SGR0:-}\\n" "${_input}"
 }
 
 # _highlight_syntax_if_available()
