@@ -217,9 +217,11 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 
 # `$NOTES_HIGHLIGHT_COLOR`
 #
-# Default: 3 (yellow) for 8 color terminals, 11 (yellow) for 256 color.
+# Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
 #
-# Set highlighting color.
+# Set highlighting color. This should be set to an xterm foreground color
+# number, usually a value between 1 and 256. For a table of available color
+# options, run `notes settings color options`.
 #
 # Base Color Values: 0 (black), 1 (red),     2 (green), 3 (yellow)
 #                    4 (blue),  5 (magenta), 6 (cyan),  7 (white)
@@ -4345,6 +4347,7 @@ _q() {  _search "${@}"; }
 desc "settings" <<HEREDOC
 Usage:
   ${_ME} settings
+  ${_ME} settings color options
 
 Description:
   Open the ~/.notesrc configuration file in \`\$EDITOR\`.
@@ -4353,7 +4356,51 @@ Description:
   https://github.com/xwmx/notes#configuration
 HEREDOC
 _settings() {
-  _edit_file "${HOME}/.notesrc"
+  while ((${#}))
+  do
+    local _arg="${1:-}"
+    local _val="${2:-}"
+
+    case "${_arg}" in
+      color|colors)
+        if ! __option_value_is_present "${_val:-}"
+        then
+          _help settings
+          return 1
+        fi
+
+        if [[ "${_val}" == "options" ]]
+        then
+          _notes_settings_color(){
+              for __color_number
+              do
+                printf '\e[38;5;%dm %03d ' \
+                  "${__color_number}" \
+                  "${__color_number}"
+              done
+              printf '\e[0m \n'
+          }
+
+          IFS=$' \t\n' _notes_settings_color {0..15}
+
+          for ((_i=0;_i<6;_i++))
+          do
+            IFS=$' \t\n' \
+              _notes_settings_color $(seq $((_i*36+16)) $((_i*36+51)))
+          done
+
+          IFS=$' \t\n' _notes_settings_color {232..255}
+        fi
+
+        shift
+        ;;
+      *)
+        _edit_file "${HOME}/.notesrc"
+        ;;
+    esac
+
+    shift
+  done
 }
 desc "config" "$(_help 'settings')"
 _config()    { _settings "${@}"; }
