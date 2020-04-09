@@ -187,7 +187,8 @@ title: Ideas
 Once defined, titles will be displayed in place of the filename in the output
 of `notes ls`:
 
-```text
+```bash
+> notes ls
 home
 -----------------
 [3] Example Title
@@ -239,7 +240,10 @@ This is an example excerpt.
 Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
 easily identifiable in lists:
 
-```text
+```bash
+> notes ls
+home
+-----------------
 [4] Example Note
 [3] 20200101000001.md.enc 🔒
 [2] Example Bookmark (example.com) 🔖
