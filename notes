@@ -3006,8 +3006,8 @@ HEREDOC
 #
 # Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
 #
-# Set highlighting color. This should be set to an xterm color number, usually
-# a value between 1 and 256. For a table colors and their numbers run:
+# Set highlighting color. This should be set to an xterm color number between
+# 0 and 255. To display a table of available colors by number, run:
 #
 #   notes settings colors
 #

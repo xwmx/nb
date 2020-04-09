@@ -1291,7 +1291,7 @@ Usage:
 
 Subcommands:
   (default)  Open the ~/.notesrc configuration file in `$EDITOR`.
-  colors     Print a table of color numbers in the colors they represent.
+  colors     Display a table of available colors by number.
 
 Description:
   Configure `notes`.
@@ -1447,8 +1447,8 @@ export NOTES_ENCRYPTION_TOOL="gpg"
 
 Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
 
-Set highlighting color. This should be set to an xterm color number, usually
-a value between 1 and 256. For a table colors and their numbers run:
+Set highlighting color. This should be set to an xterm color number between
+0 and 255. To view a table of available colors and numbers, run:
 
 ```bash
 notes settings colors
