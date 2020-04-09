@@ -3445,7 +3445,9 @@ _ls() {
     fi
 
     _list --titles "${_args[@]:-}"
-  } | if hash "less" 2>/dev/null
+  } | if hash "less" 2>/dev/null      &&
+         [[ "${PAGER:-}" == 'less' ]] ||
+         [[ -z "${PAGER:-}" ]]
       then
         less -R -X -F
       else
