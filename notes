@@ -3226,7 +3226,7 @@ HEREDOC
             then
               : # include the note in the list
             else
-              continue # don't include not in list
+              continue # don't include note in list
             fi
           fi
 
@@ -4619,8 +4619,6 @@ _settings() {
       return 0
     fi
   }
-
-  local _subcommand=
 
   while ((${#}))
   do
