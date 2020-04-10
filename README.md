@@ -34,10 +34,12 @@ any device.
 `notes` is designed to be lightweight and portable, with a focus on vendor and
 tool independence, while providing a full-featured, intuitive experience. The
 entire program is a single well-tested Bash script that can be copied anywhere
-and should continue working as long as Bash, Git, and standard Linux / Unix
-environments exist. Since `notes` files are normal markdown files, it's easy
-to incorporate or switch to any other tool, or just manage your notes manually
-in your shell or file browser.
+and just work, using
+[progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
+to enhance the experience in more capable environments. `notes` makes it easy
+to incorporate other tools, writing apps, and workflows. `notes` can be used a
+little, a lot, once in a while, or for just a subset of features.
+`notes` is flexible.
 
 #### Dependencies
 
@@ -46,7 +48,7 @@ in your shell or file browser.
 - [Bash](https://www.gnu.org/software/bash/)
   - `notes` works perfectly with ZSH, fish, and any other shell set as your
     primary login shell, the system just needs to have Bash on it.
-    To confirm that bash installed, run `bash --version` in your terminal.
+    To confirm that bash is installed, run `bash --version` in your terminal.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
@@ -61,9 +63,10 @@ in your shell or file browser.
 
 ##### Optional
 
-`notes` leverages standard command line tools and works in any Bash
-environment. `notes` also checks the environment for some additional optional
-tools and uses them to enhance the experience whenever they are available.
+`notes` leverages standard command line tools and works in standard
+Linux / Unix environments. `notes` also checks the environment for some
+additional optional tools and uses them to enhance the experience whenever
+they are available.
 
 - [Ack](http://beyondgrep.com/)
 - [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
