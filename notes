@@ -3897,6 +3897,34 @@ _notebooks() {
 desc "nbs" "$(_help 'notebooks')"
 _nbs()   { _notebooks "${@}"; }
 
+# open ########################################################################
+
+desc "open" "$(_help 'bookmark')"
+_open() { _bookmark open "${@}"; }
+desc "o" "$(_help 'open')"
+_o() {
+  if [[ -n "${1:-}" ]]
+  then
+    _open "${@}"
+  else
+    _ls "${@}"
+  fi
+}
+
+# peek ########################################################################
+
+desc "peek" "$(_help 'bookmark')"
+_peek() { _bookmark peek "${@}"; }
+desc "p" "$(_help 'bookmark')"
+_p() {
+  if [[ -n "${1:-}" ]]
+  then
+    _peek "${@}"
+  else
+    _ls "${@}"
+  fi
+}
+
 # remote ######################################################################
 
 desc "remote" <<HEREDOC
@@ -5308,6 +5336,10 @@ _SUBCOMMANDS=(
   nbs
   notebook
   notebooks
+  o
+  open
+  p
+  peek
   q
   remote
   rename
