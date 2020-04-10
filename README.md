@@ -36,9 +36,9 @@ tool independence, while providing a full-featured, intuitive experience. The
 entire program is a single well-tested Bash script that can be copied anywhere
 and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
-to enhance the experience in more capable environments. `notes` makes it easy
-to incorporate other tools, writing apps, and workflows. `notes` can be used a
-little, a lot, once in a while, or for just a subset of features.
+for various experience improvements in more capable environments. `notes` makes
+it easy to incorporate other tools, writing apps, and workflows. `notes` can be
+used a little, a lot, once in a while, or for just a subset of features.
 `notes` is flexible.
 
 #### Dependencies
