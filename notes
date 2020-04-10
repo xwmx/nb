@@ -402,7 +402,7 @@ _edit_file() {
     esac
   done
 
-  if [[ -z "${_file_path}" ]] || [[ ! -e "${_file_path}" ]]
+  if [[ -z "${_file_path}" ]]
   then
     return 1
   fi
