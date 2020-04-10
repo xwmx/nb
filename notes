@@ -83,6 +83,7 @@ fi
 export NOTESRC_PATH="${NOTESRC_PATH:-${HOME}/.notesrc}"
 if [[ -e "${NOTESRC_PATH}" ]]
 then
+  NOTESRC_PATH="$(realpath "${NOTESRC_PATH}")"
   source "${NOTESRC_PATH}"
 fi
 
@@ -186,6 +187,10 @@ die() {
 #
 # Default: `$HOME/.notes`
 export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
+if [[ -L "${NOTES_DIR}" ]]
+then
+  NOTES_DIR="$(realpath "${NOTES_DIR}")"
+fi
 
 # `$NOTES_DATA_DIR`
 #
