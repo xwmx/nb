@@ -1784,8 +1784,8 @@ _bookmark() {
 
     if [[ "${_subcommand}" =~ ^open|o|peek|p$ ]]
     then
-      if [[ ! "${_basename}" =~ \.bookmark\.md$ ]] ||
-         [[ ! "${_basename}" =~ \.bookmark\.md\.enc$ ]]
+      if [[ ! "${_basename}" =~ .bookmark\.md$ ]] &&
+         [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
       then
         if [[ -n "${_password}" ]]
         then
