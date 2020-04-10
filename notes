@@ -1782,6 +1782,21 @@ _bookmark() {
 
     local _target_path="${NOTES_DATA_DIR}/${_basename}"
 
+    if [[ "${_subcommand}" =~ ^open|o|peek|p$ ]]
+    then
+      if [[ ! "${_basename}" =~ \.bookmark\.md$ ]] ||
+         [[ ! "${_basename}" =~ \.bookmark\.md\.enc$ ]]
+      then
+        if [[ -n "${_password}" ]]
+        then
+          _show "${_selection}" --password "${_password}"
+        else
+          _show "${_selection}"
+        fi
+        return 0
+      fi
+    fi
+
     if _file_is_encrypted "${_target_path}"
     then
       local _encrypted_path
