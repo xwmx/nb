@@ -780,32 +780,32 @@ Program Options:
 
 ### Subcommands
 
-[add](#add),
-[bookmark](#bookmark),
-[count](#count),
-[delete](#delete),
-[edit](#edit),
-[env](#env),
-[export](#export),
-[git](#git),
-[help](#help-1),
-[history](#history),
-[import](#import),
-[init](#init),
-[list](#list),
-[ls](#ls),
-[move](#move),
-[notebook](#notebook),
-[notebooks](#notebooks-1),
-[remote](#remote),
-[rename](#rename),
-[search](#search-1),
-[settings](#settings),
-[shell](#shell),
-[show](#show),
-[status](#status),
-[sync](#sync),
-[use](#use),
+[add](#add) •
+[bookmark](#bookmark) •
+[count](#count) •
+[delete](#delete) •
+[edit](#edit) •
+[env](#env) •
+[export](#export) •
+[git](#git) •
+[help](#help-1) •
+[history](#history) •
+[import](#import) •
+[init](#init) •
+[list](#list) •
+[ls](#ls) •
+[move](#move) •
+[notebook](#notebook) •
+[notebooks](#notebooks-1) •
+[remote](#remote) •
+[rename](#rename) •
+[search](#search-1) •
+[settings](#settings) •
+[shell](#shell) •
+[show](#show) •
+[status](#status) •
+[sync](#sync) •
+[use](#use) •
 [version](#version)
 
 #### `add`
