@@ -722,7 +722,9 @@ Usage:
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
-  notes settings [colors]
+  notes settings [colors | edit]
+  notes settings (get | unset) <setting>
+  notes settings set <setting> <value>
   notes shell [<subcommand> [<options>...] | --clear-history]
   notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
