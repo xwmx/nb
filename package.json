@@ -2,6 +2,8 @@
   "name": "notes.sh",
   "version": "2.10.2",
   "description": "Command line note-taking, bookmarking, and document management with encryption, advanced search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
+  "global": true,
+  "install": "make install",
   "directories": {
     "doc": "docs",
     "test": "test"

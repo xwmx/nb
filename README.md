@@ -96,6 +96,14 @@ To install with [npm](https://www.npmjs.com/package/notes.sh):
 npm install --global notes.sh
 ```
 
+### bpkg
+
+To install with [bpkg](https://github.com/bpkg/bpkg):
+
+```bash
+bpkg install xwmx/notes
+```
+
 #### Manual
 
 To install manually, simply add the `notes` script to your `$PATH`. If
