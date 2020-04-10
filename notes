@@ -4472,8 +4472,9 @@ _settings() {
 
   # Usage: _notes_settings_set <setting> <value>
   _notes_settings_set() {
-    local _entry
+    local _entry=
     _entry="export ${1:-}=${2:-} # Added by \`notes\` • $(date)"
+    local _stripped=
 
     _notes_settings_validate "${1:-}" &&
       _notes_settings_validate_value "${1:-}" "${2:-}" &&
@@ -4488,6 +4489,10 @@ _settings() {
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${1}.*Added by.*$//g" \
         "${NOTESRC_PATH}" &&
+        {
+          _stripped=$(<"${NOTESRC_PATH}")
+          printf "%s\\n" "${_stripped}" > "${NOTESRC_PATH}"
+        } &&
         printf "%s restored to the default: '%s'\\n" \
           "${1:-}" \
           "$(eval "${1:-}='' ${_MY_PATH} settings get ${1:-}")"
