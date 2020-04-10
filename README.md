@@ -23,7 +23,7 @@ With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` works in any
 standard Linux / Unix environment, including macOS and WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
-but `notes` is designed to work great without them.
+but `notes` works great without them.
 
 `notes` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync with a remote repository, if one has been configured.
