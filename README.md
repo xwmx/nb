@@ -96,7 +96,7 @@ To install with [npm](https://www.npmjs.com/package/notes.sh):
 npm install --global notes.sh
 ```
 
-### bpkg
+#### bpkg
 
 To install with [bpkg](https://github.com/bpkg/bpkg):
 
