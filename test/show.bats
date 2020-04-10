@@ -122,6 +122,7 @@ load test_helper
   }
 
   run "${_NOTES}" show 1 --dump
+  printf "\${_filename}: %s\\n" "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]

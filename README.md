@@ -137,7 +137,7 @@ notes add --title "Secret Document" --encrypt
 `notes add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
 [`$EDITOR`](https://askubuntu.com/questions/432524) variable in your
-environment or [`notes settings`](#configuration).
+environment or [`notes settings`](#settings).
 
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`.
@@ -647,8 +647,44 @@ n e 5
 n q '#example'
 ```
 
-For more commands and options, run `notes help` or `notes help
-<subcommand>`
+### Highlight Color and Other Settings
+
+`notes` has a minimal text interface and uses color (yellow, by default) to
+highlight certain elements, such as the current notebook name, the id, and
+the shell prompt. The highlight color can be changed with
+[`notes settings`](#settings):
+
+```bash
+notes settings set NOTES_HIGHLIGHT_COLOR 212
+```
+
+`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255. To
+print a table of available colors and numbers, run:
+
+```bash
+notes settings colors
+```
+
+Print the value of a setting:
+
+```bash
+> notes settings get NOTES_HIGHLIGHT_COLOR
+212
+```
+
+Unset a setting with:
+
+```bash
+> notes settings unset NOTES_HIGHLIGHT_COLOR
+NOTES_HIGHLIGHT_COLOR restored to the default: '11'
+
+> notes settings get NOTES_HIGHLIGHT_COLOR
+11
+```
+
+For a list of available settings, see [`notes help settings`](#settings).
+
+For more commands and options, run `notes help` or `notes help <subcommand>`
 
 ### Help
 
@@ -1005,11 +1041,12 @@ Usage:
   notes init [<remote-url>]
 
 Description:
-  Initialize the local git repository.
+  Initialize the local data directory and generate a ~/.notesrc configuration
+  file if it doesn't exist.
 
 Examples:
   notes init
-  notes init https://github.com/example/example.git
+  notes init https://github.com/example/example.gi
 ```
 
 #### `list`
@@ -1287,17 +1324,65 @@ Shortcut Alias: `s`
 
 ```text
 Usage:
-  notes settings [colors]
+  notes settings
+  notes settings colors
+  notes settings edit
+  notes settings get <setting>
+  notes settings set <setting> <value>
+  notes settings unset <setting>
 
 Subcommands:
-  (default)  Open the ~/.notesrc configuration file in `$EDITOR`.
-  colors     Display a table of available colors by number.
+  (default)  Print this help information.
+  colors     Print a table of color numbers in the colors they represent.
+  edit       Open the ~/.notesrc configuration file in `$EDITOR`.
+  get        Print the current value of <setting>.
+  set        The <setting> to <value>.
+  unset      Unset <setting>, returning it to the default value.
 
 Description:
-  Configure `notes`.
+  Configure `notes`. Use `settings set` to customize a setting and
+  `settings unset` to restore the default for a setting.
 
-  For more information about .notesrc, visit:
-  https://github.com/xwmx/notes#configuration
+Settings:
+  EDITOR
+    The command line text editor to use with `notes`. Example Values:
+    'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+
+  NOTES_AUTO_SYNC
+    Default: '1'
+
+    By default, operations that trigger a git commit like `add`, `edit`,
+    and `delete` will sync notebook changes to the remote repository, if one
+    is set. To disable this behavior, set this to '0'.
+
+  NOTES_DEFAULT_EXTENSION
+    Default: 'md'
+
+    The default extension to use for notes files. Change to 'org' for Emacs
+    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    whatever you prefer.
+
+  NOTES_DIR
+    Default: '~/.notes'
+
+    The location of the directory that contains the notebooks.
+
+  NOTES_ENCRYPTION_TOOL
+    Default: 'openssl'
+
+    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
+
+  NOTES_HIGHLIGHT_COLOR
+    Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
+
+    Set highlighting color. This should be set to an xterm color number between
+    0 and 255. To view a table of available colors and numbers, run:
+    `notes settings colors`.
+
+Example:
+  notes settings set NOTES_DEFAULT_EXTENSION 'org'
+  notes settings unset NOTES_HIGHLIGHT_COLOR
+  notes settings colors
 ```
 
 #### `status`
@@ -1345,123 +1430,7 @@ Description:
   Display version information.
 ```
 
-## Configuration
-
-`notes` is configured using environment variables set in the `.notesrc` file
-in your home directory.
-
-Open your `~/.notesrc` configuration file in your editor:
-
-```bash
-notes settings
-```
-
-### `.notesrc` Options
-
-#### `$EDITOR`
-
-Default: inherits the global `$EDITOR` value.
-
-Reassign `$EDITOR` to use a specific editor with `notes`, overriding the
-global `$EDITOR` setting.
-
-Example Values:
-[`vim`](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
-[`emacs`](https://en.wikipedia.org/wiki/Emacs),
-[`code`](https://en.wikipedia.org/wiki/Visual_Studio_Code),
-[`subl`](https://en.wikipedia.org/wiki/Sublime_Text),
-[`atom`](https://en.wikipedia.org/wiki/Atom_\(text_editor\)),
-[`macdown`](https://macdown.uranusjr.com/)
-
-Examples:
-```bash
-# Set to emacsclient
-export EDITOR="emacsclient -q --alternate-editor='' 2>/dev/null"
-
-# Set to VS Code
-export EDITOR="code"
-```
-
-#### `$NOTES_AUTO_SYNC`
-
-Default: `1`
-
-By default, operations that trigger a git commit like `add`, `edit`,
-and `delete` will also sync notebook changes to the remote repository, if
-one is set.
-
-To disable this behavior, set the value to '0'.
-
-Example:
-
-```bash
-export NOTES_AUTO_SYNC=0
-```
-
-#### `$NOTES_DEFAULT_EXTENSION`
-
-Default: `md`
-
-The default extension to use for notes files. Change to `org` for Emacs Org
-mode files, `rst` for reStructuredText, `txt` for plain text, or whatever you
-prefer.
-
-Example Values:
-[`md`](https://en.wikipedia.org/wiki/Markdown),
-[`org`](https://en.wikipedia.org/wiki/Org-mode),
-[`txt`](https://en.wikipedia.org/wiki/Text_file),
-[`rst`](https://en.wikipedia.org/wiki/ReStructuredText)
-
-Example:
-```bash
-export NOTES_DEFAULT_EXTENSION="org"
-```
-
-#### `$NOTES_DIR`
-
-Default: `~/.notes`
-
-The location of the directory that contains the notebooks.
-For example, to store your notes in Dropbox, you could use:
-
-```bash
-export NOTES_DIR="~/Dropbox/Notes"
-```
-
-#### `$NOTES_ENCRYPTION_TOOL`
-
-Default: `openssl`
-
-The tool used for encrypting notes.
-
-Supported Values:
-[`openssl`](https://www.openssl.org/),
-[`gpg`](https://gnupg.org/)
-
-Example:
-```bash
-export NOTES_ENCRYPTION_TOOL="gpg"
-```
-
-#### `$NOTES_HIGHLIGHT_COLOR`
-
-Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
-
-Set highlighting color. This should be set to an xterm color number between
-0 and 255. To view a table of available colors and numbers, run:
-
-```bash
-notes settings colors
-```
-
-Supported Values: [0..255]
-
-Example:
-```bash
-export NOTES_HIGHLIGHT_COLOR=213
-```
-
-## Testing
+## Tests
 
 `notes` has [an extensive test suite](test). To run it, install
 [Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
