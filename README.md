@@ -581,8 +581,8 @@ the shell prompt. The highlight color can be changed with
 notes settings set NOTES_HIGHLIGHT_COLOR 212
 ```
 
-`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255. Print
-a table of available colors and numbers:
+`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255.
+Print a table of available colors and numbers with:
 
 ```bash
 notes settings colors
