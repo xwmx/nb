@@ -109,7 +109,7 @@ then
   then
     export EDITOR="vi"
   else
-    _die printf "\$EDITOR not found. Set the editor in ~/.notesrc\n"
+    _die printf "\$EDITOR not found. Set the editor in ~/.notesrc\\n"
   fi
 fi
 
@@ -415,14 +415,14 @@ _edit_file() {
   if _file_is_encrypted "${_file_path}"
   then
     printf "\
-Can't edit encrypted files. Export file and decrypt to edit.\n"
+File must be decrypted before editing.\\n"
     exit 1
   fi
 
   if _file_is_archive "${_file_path}"
   then
     printf "\
-Can't edit archives. Export archive and expand to edit.\n"
+Can't edit archives. Export archive and expand to edit.\\n"
     exit 1
   fi
 
@@ -464,14 +464,14 @@ _encrypt_file() {
 
   if [[ -z "${_password}" ]]
   then
-    printf "Password required.\n"
+    printf "Password required.\\n"
     return 1
   fi
 
   if [[ -z "${_decrypted_path}" ]] ||
      [[ -z "${_encrypted_path}" ]]
   then
-    printf "Encrypted and decripted paths required.\n"
+    printf "Encrypted and decripted paths required.\\n"
     return 1
   fi
 
@@ -1599,7 +1599,7 @@ _add() {
   fi
 
   _debug printf \
-    "_add() \`\${_target_path}\`: '%s'\n" \
+    "_add() \`\${_target_path}\`: '%s'\\n" \
     "${_target_path:-}"
 
   if [[ -e "${_target_path}" ]]
@@ -1815,7 +1815,7 @@ _bookmark() {
 
       if [[ -z "${_password}" ]]
       then
-        printf "Password required.\n"
+        printf "Password required.\\n"
         return 1
       fi
 
@@ -1874,7 +1874,7 @@ _bookmark() {
   _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S').bookmark.md")"
 
   _debug printf \
-    "_bookmark() \`\${_basename}\`: '%s'\n" "${_basename:-}"
+    "_bookmark() \`\${_basename}\`: '%s'\\n" "${_basename:-}"
 
   local _target_path="${NOTES_DATA_DIR}/${_basename}"
 
@@ -2724,19 +2724,19 @@ _index() {
       fi
       if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
       then
-        printf "File not found: %s\n" "${_basename}"
+        printf "File not found: %s\\n" "${_basename}"
         return 1
       fi
 
       if ! grep -q "^${_basename}$" "${_index_path}"
       then
-        _debug printf "_index() add \$_basename: %s\n" "${_basename}"
-        printf "%s\n" "${_basename}" >> "${_index_path}"
+        _debug printf "_index() add \$_basename: %s\\n" "${_basename}"
+        printf "%s\\n" "${_basename}" >> "${_index_path}"
       fi
       ;;
     delete)
       local _basename="${2:-}"
-      _debug printf "_index() delete \${_basename}: '%s'\n" "${_basename}"
+      _debug printf "_index() delete \${_basename}: '%s'\\n" "${_basename}"
 
       if [[ -z "${_basename}" ]]
       then
@@ -2777,7 +2777,7 @@ _index() {
       then
         return 1
       else
-        printf "%s\n" "${_basename}"
+        printf "%s\\n" "${_basename}"
       fi
       ;;
     get_id)
@@ -2806,16 +2806,16 @@ _index() {
       then
         return 1
       else
-        printf "%s\n" "${_id}"
+        printf "%s\\n" "${_id}"
       fi
       ;;
     get_max_id)
       wc -l < "${_index_path}" | tr -d '[:space:]'
       ;;
     rebuild)
-      _debug printf "_index() rebuild\n"
+      _debug printf "_index() rebuild\\n"
       _debug printf \
-        "_index() rebuild: \`ls \${NOTES_DATA_DIR}\`: '%s'\n" \
+        "_index() rebuild: \`ls \${NOTES_DATA_DIR}\`: '%s'\\n" \
         "$(ls "${NOTES_DATA_DIR}")"
       ls "${NOTES_DATA_DIR}" > "${_index_path}" &&
         _git_checkpoint "[NOTES] Rebuild Index"
@@ -2848,10 +2848,10 @@ _index() {
       _index_reconcile_remove_duplicates "${_index_path}"
 
       _debug printf \
-        "_index() reconcile: \`\${_index_list[*]}\`: '%s'\n" \
+        "_index() reconcile: \`\${_index_list[*]}\`: '%s'\\n" \
         "${_index_list[*]:-}"
       _debug printf \
-        "_index() reconcile: \`\${_file_list[*]}\`: '%s'\n" \
+        "_index() reconcile: \`\${_file_list[*]}\`: '%s'\\n" \
         "${_file_list[*]:-}"
 
       for __item in "${_index_list[@]:-}"
@@ -2910,7 +2910,7 @@ _index() {
 
       if ((_errors))
       then
-        printf "Index corrupted. To fix, run:\n  %s index reconcile\n" \
+        printf "Index corrupted. To fix, run:\\n  %s index reconcile\\n" \
           "${_ME}"
         return 1
       fi
@@ -3474,8 +3474,8 @@ _ls() {
             )"
           fi
 
-          _output_hi="${_output_hi}${_padding}${_line_hi}\n"
-          _output_raw="${_output_raw}${_padding}${_line_raw}\n"
+          _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
+          _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
           _line_number=$((_line_number + 1))
 
           # Start the line for the next iteration using the current name..
@@ -3504,8 +3504,8 @@ _ls() {
             _print_padding "${_line_raw}" "${_columns}" "${_centered}"
           )"
 
-          _output_hi="${_output_hi}${_padding}${_line_hi}\n"
-          _output_raw="${_output_raw}${_padding}${_line_raw}\n"
+          _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
+          _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
           _line_number=$((_line_number + 1))
         fi
       done
@@ -3692,7 +3692,7 @@ _notebook() {
     then
       open "${NOTES_DATA_DIR}"
     else
-      printf "notes doesn't know how to open directories on your system.\n"
+      printf "notes doesn't know how to open directories on your system.\\n"
       return 1
     fi
   else
@@ -4047,7 +4047,7 @@ _remote() {
       then
         if [[ "${_existing_url}" == "${_url}" ]]
         then
-          printf "Remote already set to '%s'\n" "${_url}"
+          printf "Remote already set to '%s'\\n" "${_url}"
           return 1
         fi
 
@@ -4055,7 +4055,7 @@ _remote() {
         then
           while true
           do
-            printf "Updating remote from '%s' to '%s'\n" \
+            printf "Updating remote from '%s' to '%s'\\n" \
               "${_existing_url}" "${_url}"
             read -r -p "Do you want to proceed? [y/N] " __yn
             case ${__yn} in
@@ -4071,11 +4071,11 @@ _remote() {
         fi
 
         git remote set-url origin "${_url}" &&
-          printf "Remote set to '%s'\n" "${_url}" &&
+          printf "Remote set to '%s'\\n" "${_url}" &&
           return 0
       else
         git remote add origin "${_url}"  &&
-          printf "Remote set to '%s'\n" "${_url}" &&
+          printf "Remote set to '%s'\\n" "${_url}" &&
           return 0
       fi
       ;;
@@ -4085,7 +4085,7 @@ _remote() {
         git remote get-url origin &&
         return 0
       else
-        printf "No remote configured.\n"
+        printf "No remote configured.\\n"
         return 0
       fi
       ;;
@@ -4164,14 +4164,14 @@ _rename() {
       _index update "${_source_basename}" "${_target_basename}" &&
       _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
-    printf "%s renamed to %s\n" \
+    printf "%s renamed to %s\\n" \
       "${_source_basename}"   \
        "${_target_basename}."
   elif [[ -n "${_target_name}" ]]
   then
     if [[ -e "${NOTES_DATA_DIR}/${_target_name}" ]]
     then
-      printf "File already exists: '%s'\n" "${_target_name}"
+      printf "File already exists: '%s'\\n" "${_target_name}"
       return 1
     fi
 
@@ -4179,7 +4179,7 @@ _rename() {
       _index update "${_source_basename}" "${_target_name}" &&
       _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_name}"
-    printf "%s renamed to %s\n" \
+    printf "%s renamed to %s\\n" \
       "${_source_basename}"   \
       "${_target_name}"
   else
@@ -4572,7 +4572,7 @@ _settings() {
 
     if ! ((_match))
     then
-      printf "Setting not found: '%s'\n" "${1:-}"
+      printf "Setting not found: '%s'\\n" "${1:-}"
       return 1
     fi
   }
@@ -4721,7 +4721,7 @@ _shell() {
         if [[ -e "${HISTFILE}" ]]
         then
           rm "${HISTFILE}"
-          printf "History cleared.\n"
+          printf "History cleared.\\n"
           return 0
         fi
         ;;
@@ -4884,7 +4884,7 @@ _show() {
 
     if [[ -z "${_password}" ]]
     then
-      printf "Password required.\n"
+      printf "Password required.\\n"
       return 1
     fi
 
@@ -4897,7 +4897,7 @@ _show() {
   if _file_is_archive "${_target_path}"
   then
     printf "\
-Can't show archives. Export archive and expand to edit.\n"
+Can't show archives. Export archive and expand to edit.\\n"
     exit 1
   fi
 
@@ -5074,9 +5074,9 @@ HEREDOC
       done
 
       cat  "${_temp_file}" > "${BASH_SOURCE[0]}"
-      printf "%s updated to the latest version.\n" "${_ME}"
+      printf "%s updated to the latest version.\\n" "${_ME}"
     else
-      printf "Already at the latest version.\n"
+      printf "Already at the latest version.\\n"
     fi
 
     if [[ -n "${_temp_file}" ]]
