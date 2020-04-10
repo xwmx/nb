@@ -20,10 +20,10 @@ work with files in any format, and can export notes to many document formats.
 bookmarks.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
-Text, and any other text editor you prefer. `notes` works great in any
-[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) environment.
+Text, and any other text editor you prefer. `notes` works in any
+standard Linux / Unix environment, including macOS and WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
-but `notes` still works great without them.
+but `notes` is designed to work great without them.
 
 `notes` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync with a remote repository, if one has been configured.
@@ -44,6 +44,9 @@ in your shell or file browser.
 ##### Required
 
 - [Bash](https://www.gnu.org/software/bash/)
+  - `notes` works perfectly with ZSH, fish, and any other shell set as your
+    primary login shell, the system just needs to have Bash on it.
+    To confirm that bash installed, run `bash --version` in your terminal.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
