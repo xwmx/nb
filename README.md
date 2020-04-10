@@ -570,6 +570,44 @@ notes export example.md /path/to/example.docx
 notes export Movies /path/to/example.html
 ```
 
+### Highlight Color, Settings
+
+`notes` has a minimal text interface and uses color (yellow, by default) to
+highlight certain elements, such as the current notebook name, ids, and
+the shell prompt. The highlight color can be changed with
+[`notes settings`](#settings):
+
+```bash
+notes settings set NOTES_HIGHLIGHT_COLOR 212
+```
+
+`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255. Print
+a table of available colors and numbers:
+
+```bash
+notes settings colors
+```
+
+Print the value of a setting:
+
+```bash
+> notes settings get NOTES_HIGHLIGHT_COLOR
+212
+```
+
+Unset a setting and revert to default:
+
+```bash
+> notes settings unset NOTES_HIGHLIGHT_COLOR
+NOTES_HIGHLIGHT_COLOR restored to the default: '11'
+
+> notes settings get NOTES_HIGHLIGHT_COLOR
+11
+```
+
+`notes settings` provides access to various configuration options for `notes`.
+For a list of available settings, see [`notes help settings`](#settings).
+
 ### Interactive Shell
 
 `notes` has an interactive shell that can be started with `notes shell`,
@@ -646,44 +684,6 @@ n e 5
 # search notes for the hashtag '#example'
 n q '#example'
 ```
-
-### Highlight Color, Settings
-
-`notes` has a minimal text interface and uses color (yellow, by default) to
-highlight certain elements, such as the current notebook name, ids, and
-the shell prompt. The highlight color can be changed with
-[`notes settings`](#settings):
-
-```bash
-notes settings set NOTES_HIGHLIGHT_COLOR 212
-```
-
-`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255. Print
-a table of available colors and numbers:
-
-```bash
-notes settings colors
-```
-
-Print the value of a setting:
-
-```bash
-> notes settings get NOTES_HIGHLIGHT_COLOR
-212
-```
-
-Unset a setting and revert to default:
-
-```bash
-> notes settings unset NOTES_HIGHLIGHT_COLOR
-NOTES_HIGHLIGHT_COLOR restored to the default: '11'
-
-> notes settings get NOTES_HIGHLIGHT_COLOR
-11
-```
-
-`notes settings` provides access to various configuration options for `notes`.
-For a list of available settings, see [`notes help settings`](#settings).
 
 For more commands and options, run `notes help` or `notes help <subcommand>`
 
