@@ -33,8 +33,8 @@ any device.
 
 `notes` is designed to be lightweight and portable, with a focus on vendor and
 tool independence, while providing a full-featured, intuitive experience. The
-entire program is a single well-tested Bash script that can be copied anywhere
-and just work, using
+entire program is a single well-tested script that can be copied or `curl`ed
+anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments. `notes` makes
 it easy to incorporate other tools, writing apps, and workflows. `notes` can be
@@ -45,10 +45,10 @@ used a little, a lot, once in a while, or for just a subset of features.
 
 ##### Required
 
-- [Bash](https://www.gnu.org/software/bash/)
+- [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
   - `notes` works perfectly with ZSH, fish, and any other shell set as your
-    primary login shell, the system just needs to have Bash on it.
-    To confirm that bash is installed, run `bash --version` in your terminal.
+    primary login shell, the system just needs to have Bash available on it.
+    To confirm that Bash is installed, run `bash --version` in your terminal.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
