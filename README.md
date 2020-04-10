@@ -647,7 +647,7 @@ n e 5
 n q '#example'
 ```
 
-### Highlight Color and Other Settings
+### Highlight Color, Settings
 
 `notes` has a minimal text interface and uses color (yellow, by default) to
 highlight certain elements, such as the current notebook name, ids, and
@@ -682,6 +682,7 @@ NOTES_HIGHLIGHT_COLOR restored to the default: '11'
 11
 ```
 
+`notes settings` provides access to various configuration options for `notes`.
 For a list of available settings, see [`notes help settings`](#settings).
 
 For more commands and options, run `notes help` or `notes help <subcommand>`
