@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+###############################################################################
 # __                _
 # \ \   _ __   ___ | |_ ___  ___
 #  \ \ | '_ \ / _ \| __/ _ \/ __|
@@ -14,9 +15,14 @@
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
 # Copyright (c) 2015-present William Melody • hi@williammelody.com
+# See LICENSE for details.
+###############################################################################
 
 ###############################################################################
 # Strict Mode
+#
+# More Information:
+#   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
 ###############################################################################
 
 set -o nounset
@@ -29,6 +35,9 @@ IFS=$'\n\t'
 # Environment
 ###############################################################################
 
+# $_VERSION
+#
+# The most recent program version.
 _VERSION="2.10.1"
 
 # $_ME
