@@ -650,7 +650,7 @@ n q '#example'
 ### Highlight Color and Other Settings
 
 `notes` has a minimal text interface and uses color (yellow, by default) to
-highlight certain elements, such as the current notebook name, the id, and
+highlight certain elements, such as the current notebook name, ids, and
 the shell prompt. The highlight color can be changed with
 [`notes settings`](#settings):
 
@@ -658,8 +658,8 @@ the shell prompt. The highlight color can be changed with
 notes settings set NOTES_HIGHLIGHT_COLOR 212
 ```
 
-`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255. To
-print a table of available colors and numbers, run:
+`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255. Print
+a table of available colors and numbers:
 
 ```bash
 notes settings colors
@@ -672,7 +672,7 @@ Print the value of a setting:
 212
 ```
 
-Unset a setting with:
+Unset a setting and revert to default:
 
 ```bash
 > notes settings unset NOTES_HIGHLIGHT_COLOR
@@ -1255,6 +1255,71 @@ Examples:
 Shortcut Alias: `q`
 ```
 
+#### `settings`
+
+```text
+Usage:
+  notes settings
+  notes settings colors
+  notes settings edit
+  notes settings get <setting>
+  notes settings set <setting> <value>
+  notes settings unset <setting>
+
+Subcommands:
+  (default)  Print this help information.
+  colors     Print a table of color numbers in the colors they represent.
+  edit       Open the ~/.notesrc configuration file in `$EDITOR`.
+  get        Print the current value of <setting>.
+  set        Assign <value> to <setting>.
+  unset      Unset <setting>, returning it to the default value.
+
+Description:
+  Configure `notes`. Use `settings set` to customize a setting and
+  `settings unset` to restore the default for a setting.
+
+Settings:
+  EDITOR
+    The command line text editor to use with `notes`. Example Values:
+    'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+
+  NOTES_AUTO_SYNC
+    Default: '1'
+
+    By default, operations that trigger a git commit like `add`, `edit`,
+    and `delete` will sync notebook changes to the remote repository, if one
+    is set. To disable this behavior, set this to '0'.
+
+  NOTES_DEFAULT_EXTENSION
+    Default: 'md'
+
+    The default extension to use for notes files. Change to 'org' for Emacs
+    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    whatever you prefer.
+
+  NOTES_DIR
+    Default: '~/.notes'
+
+    The location of the directory that contains the notebooks.
+
+  NOTES_ENCRYPTION_TOOL
+    Default: 'openssl'
+
+    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
+
+  NOTES_HIGHLIGHT_COLOR
+    Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
+
+    Set highlighting color. This should be set to an xterm color number between
+    0 and 255. To view a table of available colors and numbers, run:
+    `notes settings colors`.
+
+Example:
+  notes settings set NOTES_DEFAULT_EXTENSION 'org'
+  notes settings unset NOTES_HIGHLIGHT_COLOR
+  notes settings colors
+```
+
 #### `shell`
 
 ```text
@@ -1318,71 +1383,6 @@ Examples:
   notes show 'A Document Title' --dump --no-color
 
 Shortcut Alias: `s`
-```
-
-#### `settings`
-
-```text
-Usage:
-  notes settings
-  notes settings colors
-  notes settings edit
-  notes settings get <setting>
-  notes settings set <setting> <value>
-  notes settings unset <setting>
-
-Subcommands:
-  (default)  Print this help information.
-  colors     Print a table of color numbers in the colors they represent.
-  edit       Open the ~/.notesrc configuration file in `$EDITOR`.
-  get        Print the current value of <setting>.
-  set        The <setting> to <value>.
-  unset      Unset <setting>, returning it to the default value.
-
-Description:
-  Configure `notes`. Use `settings set` to customize a setting and
-  `settings unset` to restore the default for a setting.
-
-Settings:
-  EDITOR
-    The command line text editor to use with `notes`. Example Values:
-    'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
-
-  NOTES_AUTO_SYNC
-    Default: '1'
-
-    By default, operations that trigger a git commit like `add`, `edit`,
-    and `delete` will sync notebook changes to the remote repository, if one
-    is set. To disable this behavior, set this to '0'.
-
-  NOTES_DEFAULT_EXTENSION
-    Default: 'md'
-
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
-    whatever you prefer.
-
-  NOTES_DIR
-    Default: '~/.notes'
-
-    The location of the directory that contains the notebooks.
-
-  NOTES_ENCRYPTION_TOOL
-    Default: 'openssl'
-
-    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
-
-  NOTES_HIGHLIGHT_COLOR
-    Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
-
-    Set highlighting color. This should be set to an xterm color number between
-    0 and 255. To view a table of available colors and numbers, run:
-    `notes settings colors`.
-
-Example:
-  notes settings set NOTES_DEFAULT_EXTENSION 'org'
-  notes settings unset NOTES_HIGHLIGHT_COLOR
-  notes settings colors
 ```
 
 #### `status`
