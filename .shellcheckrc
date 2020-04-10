@@ -5,6 +5,15 @@
 # https://github.com/koalaman/shellcheck/wiki/Ignore
 ###############################################################################
 
+# Disable SC1090
+#
+# > Shellcheck can't follow non-constant source.
+#
+# Sourced paths are dependent on the environment in this program.
+#
+# https://github.com/koalaman/shellcheck/wiki/SC1090
+disable=SC1090
+
 # Disable SC2002
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2002

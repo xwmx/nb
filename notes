@@ -74,12 +74,6 @@ fi
 export NOTESRC_PATH="${NOTESRC_PATH:-${HOME}/.notesrc}"
 if [[ -e "${NOTESRC_PATH}" ]]
 then
-  # shellcheck disable=SC1090
-  #
-  # Shellcheck can't follow non-constant source.
-  #
-  # More information:
-  #   https://github.com/koalaman/shellcheck/wiki/SC1090
   source "${NOTESRC_PATH}"
 fi
 
