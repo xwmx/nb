@@ -48,7 +48,6 @@ used a little, a lot, once in a while, or for just a subset of features.
 - [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
   - `notes` works perfectly with ZSH, fish, and any other shell set as your
     primary login shell, the system just needs to have Bash available on it.
-    To confirm that Bash is installed, run `bash --version` in your terminal.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
