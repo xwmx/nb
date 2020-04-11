@@ -458,7 +458,7 @@ Can't edit archives. Export archive and expand to edit.\\n"
   fi
 }
 
-# _encrypt_file
+# _encrypt_file()
 #
 # Usage:
 #   _encrypt_file <decrypted path> <encrypted path> <password>
@@ -515,8 +515,8 @@ _encrypt_file() {
 #   _file_is_archive <path>
 #
 # Returns:
-#   1  If file is an archive.
-#   0  if not.
+#   0  If file is an archive.
+#   1  if not.
 _file_is_archive() {
   [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
@@ -527,8 +527,8 @@ _file_is_archive() {
 #   _file_is_bookmark <path>
 #
 # Returns:
-#   1 If file is a bookmark.
-#   0 if not.
+#   0 If file is a bookmark.
+#   1 if not.
 _file_is_bookmark() {
   [[ "${1:-}" =~ .bookmark.md$      ]] ||
   [[ "${1:-}" =~ .bookmark.md.enc$  ]] ||
@@ -542,8 +542,8 @@ _file_is_bookmark() {
 #   _file_is_encrypted <path>
 #
 # Returns:
-#   1  If file is encrypted.
-#   0  if not.
+#   0  If file is encrypted.
+#   1  if not.
 _file_is_encrypted() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
@@ -577,8 +577,8 @@ _file_is_encrypted() {
 #   _file_is_text <path>
 #
 # Returns:
-#   1  If file is text.
-#   0  if not.
+#   0  If file is text.
+#   1  if not.
 _file_is_text() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
@@ -1130,8 +1130,8 @@ _list_notes_files() {
 #   __option_value_is_present "${variable}"
 #
 # Returns:
-#   0  The argument is blank or matches as an option flag.
-#   1  The argument is present and does not match an option flag.
+#   0  The argument is present and does not match an option flag.
+#   1  The argument is blank or matches as an option flag.
 __option_value_is_present() {
   [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
 }
