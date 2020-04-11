@@ -550,7 +550,9 @@ system.
 
 GitHub, GitLab, Bitbucket, and many other services provide free private git
 repositories, so git syncing with `notes` is easy, free, and
-vendor-independent.
+vendor-independent. You can also store your notes in Dropbox to sync
+with both git and Dropbox at the same time (see [`notes help
+settings`](#settings)).
 
 When you have an existing `notes` notebook in a git repository, simply
 pass the URL to `notes notebooks add` and `notes` will clone your
@@ -1366,7 +1368,9 @@ Settings:
   NOTES_DIR
     Default: '~/.notes'
 
-    The location of the directory that contains the notebooks.
+    The location of the directory that contains the notebooks. To sync with
+    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
+    `notes settings set NOTES_DIR ~/Dropbox/Notes`
 
   NOTES_ENCRYPTION_TOOL
     Default: 'openssl'
