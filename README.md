@@ -538,7 +538,7 @@ run in that notebook.
 
 When you use `notes` on multiple systems, you can set a notebook on both
 systems to the same remote and `notes` will keep everything in sync in the
-background every time that notebook is changed.
+background every time there's a change in that notebook.
 
 GitHub, GitLab, Bitbucket, and many other services provide free private git
 repositories, so git syncing with `notes` is easy, free, and
