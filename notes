@@ -4525,7 +4525,7 @@ _settings() {
 
   # Usage: _notes_settings_get <setting>
   _notes_settings_get() {
-    _notes_settings_validate "${1}" &&
+    _notes_settings_validate_setting "${1}" &&
       _env | grep "${1}" | cut -d= -f2
   }
 
@@ -4535,7 +4535,7 @@ _settings() {
     _entry="export ${1:-}=${2:-} # Set by \`notes\` • $(date)"
     local _stripped=
 
-    _notes_settings_validate "${1:-}" &&
+    _notes_settings_validate_setting "${1:-}" &&
       _notes_settings_validate_value "${1:-}" "${2:-}" &&
       _notes_settings_unset "${1}" > /dev/null 2>&1     &&
       printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}" &&
@@ -4544,7 +4544,7 @@ _settings() {
 
   # Usage: _notes_settings_unset <setting>
   _notes_settings_unset() {
-    _notes_settings_validate "${1}" &&
+    _notes_settings_validate_setting "${1}" &&
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${1}.*Added by.*$//g" \
         -e "s/^export ${1}.*Set by.*$//g" \
@@ -4558,8 +4558,8 @@ _settings() {
           "$(eval "${1:-}='' ${_MY_PATH} settings get ${1:-}")"
   }
 
-  # Usage: _notes_settings_validate <setting>
-  _notes_settings_validate() {
+  # Usage: _notes_settings_validate_setting <setting>
+  _notes_settings_validate_setting() {
     local _match=0
     local _available_settings=(
       EDITOR
