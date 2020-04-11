@@ -67,16 +67,21 @@ Linux / Unix environments. `notes` also checks the environment for some
 additional optional tools and uses them to enhance the experience whenever
 they are available.
 
-- [Ack](http://beyondgrep.com/)
-- [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
-- [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
-- [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
+Recommended:
+
 - [OpenSSL](https://en.wikipedia.org/wiki/OpenSSL)
 - [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
 - [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
 - [tig](https://github.com/jonas/tig)
 - [w3m](https://en.wikipedia.org/wiki/W3m)
+
+Also supported:
+
+- [Ack](http://beyondgrep.com/)
+- [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
+- [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
+- [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
 
 ### Installation
 
@@ -540,13 +545,13 @@ When you use `notes` on multiple systems, you can set a notebook on both
 systems to the same remote and `notes` will keep everything in sync in the
 background every time there's a change in that notebook.
 
-GitHub, GitLab, Bitbucket, and many other services provide free private git
-repositories, so git syncing with `notes` is easy, free, and
-vendor-independent.
-
 Since each notebook has its own git history, you can have some notebooks
 syncing with remotes while other notebooks are only available locally on that
 system.
+
+GitHub, GitLab, Bitbucket, and many other services provide free private git
+repositories, so git syncing with `notes` is easy, free, and
+vendor-independent.
 
 When you have an existing `notes` notebook in a git repository, simply
 pass the URL to `notes notebooks add` and `notes` will clone your
