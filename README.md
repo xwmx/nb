@@ -551,8 +551,8 @@ system.
 GitHub, GitLab, Bitbucket, and many other services provide free private git
 repositories, so git syncing with `notes` is easy, free, and
 vendor-independent. You can also sync your notes using Dropbox, Drive,
-Box, Syncthing, or another syncing tool and git syncing will still
-work simultaneously (see [`notes help settings`](#settings)).
+Box, Syncthing, or another syncing tool by changing your `notes` directory in
+[`notes settings`](#settings) and git syncing will still work simultaneously.
 
 When you have an existing `notes` notebook in a git repository, simply
 pass the URL to `notes notebooks add` and `notes` will clone your
