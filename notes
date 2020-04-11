@@ -4532,7 +4532,7 @@ _settings() {
   # Usage: _notes_settings_set <setting> <value>
   _notes_settings_set() {
     local _entry=
-    _entry="export ${1:-}=${2:-} # Added by \`notes\` • $(date)"
+    _entry="export ${1:-}=${2:-} # Set by \`notes\` • $(date)"
     local _stripped=
 
     _notes_settings_validate "${1:-}" &&
@@ -4547,6 +4547,7 @@ _settings() {
     _notes_settings_validate "${1}" &&
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${1}.*Added by.*$//g" \
+        -e "s/^export ${1}.*Set by.*$//g" \
         "${NOTESRC_PATH}" &&
         {
           _stripped=$(<"${NOTESRC_PATH}")
