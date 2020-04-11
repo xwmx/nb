@@ -3352,8 +3352,8 @@ Options:
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
-  when available. \`notes ls\` is a combination of the \`notes notebooks\`
-  and \`notes list --titles\` commands in one view.
+  when available. \`notes ls\` is a combination of \`notes notebooks\` and
+  \`notes list --titles\` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and

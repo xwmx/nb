@@ -285,9 +285,8 @@ home
 This is an example excerpt
 ```
 
-`notes ls` is a combination of `notes notebooks` and
-`notes list --titles` in one view and accepts the to the same arguments
-as `notes list`, which can be used to list only notes.
+`notes ls` is a combination of `notes notebooks` and `notes list --titles` in
+one view and accepts the same arguments as `notes list`, which lists notes.
 
 For more information about options for listing notes, run `notes help ls` and
 `notes help list`.
@@ -391,6 +390,12 @@ use this domain in literature without prior coordination or asking for
 permission.
 
 [More information\...](https://www.iana.org/domains/example)
+```
+
+Search for tagged bookmarks and notes with `notes search`:
+
+```bash
+notes search '#tagname'
 ```
 
 Bookmarks can also be encrypted:
@@ -528,6 +533,21 @@ remote URL:
 notes remote set https://github.com/example/example.git
 ```
 
+Any notebook with a remote URL will sync automatically every time a command is
+run in that notebook.
+
+When you use `notes` on multiple systems, you can set a notebook on both
+systems to the same remote and `notes` will keep everything in sync in the
+background every time that notebook is changed.
+
+GitHub, GitLab, Bitbucket, and many other services provide free private git
+repositories, so git syncing with `notes` is easy, free, and
+vendor-independent.
+
+Since each notebook has its own git history, you can have some notebooks
+syncing with remotes while other notebooks are only available locally on that
+system.
+
 When you have an existing `notes` notebook in a git repository, simply
 pass the URL to `notes notebooks add` and `notes` will clone your
 existing notebook and start syncing changes automatically:
@@ -537,9 +557,7 @@ existing notebook and start syncing changes automatically:
 notes notebooks add Example https://gitlab.com/example/example.git
 ```
 
-Any notebook with a remote URL will sync automatically every time a command is
-run in that notebook. Turn off syncing for a notebook by simply removing the
-remote:
+Turn off syncing for a notebook by simply removing the remote:
 
 ```bash
 # remove the current remote from the current notebook
@@ -1147,8 +1165,8 @@ Options:
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
-  when available. `notes ls` is a combination of the `notes notebooks`
-  and `notes list --titles` commands in one view.
+  when available. `notes ls` is a combination of `notes notebooks` and
+  `notes list --titles` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
