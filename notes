@@ -4319,7 +4319,7 @@ _search() {
         set +f
         grep \
           --ignore-case \
-          --exclude '.git' \
+          --exclude-dir '.git' \
           -n "${_query}" \
           "${NOTES_DIR}/${__scope}"/* "${NOTES_DIR}/${__scope}"/.[^.]* /dev/null \
             || return 0 # Don't fail out within a single scope.
