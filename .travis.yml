@@ -1,5 +1,3 @@
-sudo: false
-language: bash
 addons:
   apt:
     sources:
@@ -10,10 +8,10 @@ addons:
     - pandoc
     - python3-pygments
 before_install:
-  # rust
-  - curl https://sh.rustup.rs -sSf | sh -s -- -y
-  - source $HOME/.cargo/env
-  # ripgrep
-  - cargo install ripgrep
+   - curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+   - sudo dpkg -i ripgrep_11.0.2_amd64.deb
+dist: bionic
+language: bash
+sudo: false
 
 script: bats test
