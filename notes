@@ -2762,7 +2762,7 @@ _index() {
     get_basename)
       # Usage: _index_get_basename <id> <index path>
       _index_get_basename() {
-        if [[ -z "${1:-}" ]] && [[ "${1:-}" == "0" ]]
+        if [[ -z "${1:-}" ]] || [[ "${1:-}" == "0" ]]
         then
           return 1
         fi
