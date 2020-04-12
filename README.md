@@ -41,6 +41,8 @@ it easy to incorporate other tools, writing apps, and workflows. `notes` can be
 used a little, a lot, once in a while, or for just a subset of features.
 `notes` is flexible.
 
+[![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
+
 #### Dependencies
 
 ##### Required
