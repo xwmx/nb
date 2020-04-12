@@ -11,8 +11,6 @@ jobs:
       before_install:
         - curl -LO https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
         - sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
-        - git config --global user.name "Example Name"
-        - git config --global user.email "example@example.com"
       dist: bionic
       language: minimal
     - os: osx
