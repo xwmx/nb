@@ -9,8 +9,6 @@ jobs:
             - bats
             - python-pygments
       before_install:
-        - curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-        - sudo dpkg -i ripgrep_11.0.2_amd64.deb
         - curl -LO https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
         - sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
       dist: bionic
@@ -18,7 +16,6 @@ jobs:
     - os: osx
       before_install:
         - brew install bats-core
-        - brew install git
         - brew install pandoc
         - brew install pygments
         - brew install w3m
