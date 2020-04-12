@@ -4155,21 +4155,10 @@ _rename() {
   if ((_reset))
   then
     local _file_type="${NOTES_DEFAULT_EXTENSION}"
-    local _timestamp
-
-    if stat -c &>/dev/null
-    then # GNU
-      _timestamp="$(stat -c %Y "${_source_path}")"
-    elif gstat -c &>/dev/null
-    then # GNU prefixed
-      _timestamp="$(gstat -c %Y "${_source_path}")"
-    else
-      _timestamp="$(stat -f '%m' "${_source_path}")"
-    fi
 
     # Assign filename with unicode timestamp.
     local _target_basename
-    _target_basename="$(date -r "${_timestamp}" -u "+%Y%m%d%H%M%S").${_file_type}"
+    _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
     local _destination_path="${NOTES_DATA_DIR}/${_target_basename}"
 
     mv "${_source_path}" "${_destination_path}" &&
