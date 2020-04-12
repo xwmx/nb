@@ -1844,7 +1844,9 @@ _bookmark() {
 
     local _target_url
     _target_url="$(
-      awk -vRS=">" -vFS="<" '{print $2;exit}' "${_target_path}"
+      awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
+        print substr($0, RSTART+1, RLENGTH-2); exit
+      }' "${_target_path}"
     )"
 
     if [[ "${_subcommand}" =~ ^peek|p$  ]]
@@ -1906,7 +1908,11 @@ _bookmark() {
   then
     _title="$(
       printf "%s\\n" "${_page_content}" \
-        | awk -v IGNORECASE=1 -v RS='</title' 'RT{gsub(/.*<title[^>]*>/,"");print;exit}'
+        | grep -o -E -i '.*<title[^>]*>.*</title>' \
+        | sed 's/.*<title[^>]*>//' \
+        | sed 's/.*<TITLE[^>]*>//' \
+        | sed 's/<\/title>.*//'    \
+        | sed 's/<\/TITLE>.*//'
     )" || : # TODO: pipeline returns error status but still returns title
     local _domain
     _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
