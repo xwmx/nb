@@ -4,7 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`add\` with no arguments creates new note file created with $EDITOR." {
+@test "\`add\` with no arguments creates new note file created with \$EDITOR." {
   run "${_NOTES}" init
   run "${_NOTES}" add
   printf "\${status}: %s\\n" "${status}"
