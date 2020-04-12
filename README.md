@@ -814,33 +814,35 @@ Program Options:
 
 ### Subcommands
 
-[add](#add) •
-[bookmark](#bookmark) •
-[count](#count) •
-[delete](#delete) •
-[edit](#edit) •
-[env](#env) •
-[export](#export) •
-[git](#git) •
-[help](#help-1) •
-[history](#history) •
-[import](#import) •
-[init](#init) •
-[list](#list) •
-[ls](#ls) •
-[move](#move) •
-[notebook](#notebook) •
-[notebooks](#notebooks-1) •
-[remote](#remote) •
-[rename](#rename) •
-[search](#search-1) •
-[settings](#settings) •
-[shell](#shell) •
-[show](#show) •
-[status](#status) •
-[sync](#sync) •
-[use](#use) •
-[version](#version)
+<p align="center">
+  <a href="#add">add</a> •
+  <a href="#bookmark">bookmark</a> •
+  <a href="#count">count</a> •
+  <a href="#delete">delete</a> •
+  <a href="#edit">edit</a> •
+  <a href="#env">env</a> •
+  <a href="#export">export</a> •
+  <a href="#git">git</a> •
+  <a href="#help-1">help</a> •
+  <a href="#history">history</a> •
+  <a href="#import">import</a> •
+  <a href="#init">init</a> •
+  <a href="#list">list</a> •
+  <a href="#ls">ls</a> •
+  <a href="#move">move</a> •
+  <a href="#notebook">notebook</a> •
+  <a href="#notebooks-1">notebooks</a> •
+  <a href="#remote">remote</a> •
+  <a href="#rename">rename</a> •
+  <a href="#search-1">search</a> •
+  <a href="#settings">settings</a> •
+  <a href="#shell">shell</a> •
+  <a href="#show">show</a> •
+  <a href="#status">status</a> •
+  <a href="#sync">sync</a> •
+  <a href="#use">use</a> •
+  <a href="#version">version</a>
+</p>
 
 #### `add`
 
