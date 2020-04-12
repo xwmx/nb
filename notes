@@ -937,7 +937,18 @@ _git_required() {
 
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
   then
-    printf "git configuration incomplete. To set your name and email, run:\\n"
+    cat <<HEREDOC
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
+
+Welcome to \`notes\`
+
+\`git\` requires some additional setup before using \`notes\`. Use these
+commands to set your information in \`git\`, then run \`notes\` again:
+HEREDOC
     if [[ -z "${_git_name}" ]]
     then
       printf "git config --global user.name \"Your Name\"\\n"
