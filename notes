@@ -959,8 +959,9 @@ _git_required() {
 #   0  If an autosync should be triggered.
 #   1  If not.
 _git_should_autosync() {
-  local _last_fetch_timestamp
   local _current_timestamp
+  local _last_fetch_timestamp
+  local _maybe_fetch_timestamp
 
   if ! ((NOTES_AUTO_SYNC))
   then # autosync not enabled.
@@ -978,12 +979,12 @@ _git_should_autosync() {
     return 0
   fi
 
-  if stat -c &>/dev/null
+  if _maybe_fetch_timestamp="$(stat -c %Y .git/FETCH_HEAD 2>/dev/null)"
   then # GNU
-    _last_fetch_timestamp="$(stat -c %Y .git/FETCH_HEAD)"
-  elif gstat -c &>/dev/null
+    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+  elif _maybe_fetch_timestamp="$(gstat -c %Y .git/FETCH_HEAD 2>/dev/null)"
   then # GNU prefixed
-    _last_fetch_timestamp="$(gstat -c %Y .git/FETCH_HEAD)"
+    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
   else
     _last_fetch_timestamp="$(stat -f '%m' .git/FETCH_HEAD)"
   fi
