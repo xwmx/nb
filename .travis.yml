@@ -7,4 +7,8 @@ addons:
     packages:
     - bats
     - bc
+    - pandoc
+    - python3-pygments
+    - ripgrep
+
 script: bats test
