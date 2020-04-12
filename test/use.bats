@@ -60,6 +60,7 @@ _setup_use() {
 @test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
   {
     _setup_use
+    _expected="Now using $(tput setaf 11)one$(tput sgr0)."
   }
 
   run "${_NOTES}" use one
@@ -67,9 +68,9 @@ _setup_use() {
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using $(tput setaf 11)one$(tput sgr0).'" "'${output}'"
+  _compare "'${_expected}'" "'${output}'"
 
-  [[ "${output}" == "Now using $(tput setaf 11)one$(tput sgr0)." ]]
+  [[ "${output}" == "${_expected}" ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
   run "${_NOTES}" env
