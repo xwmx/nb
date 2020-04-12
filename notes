@@ -1975,9 +1975,11 @@ _bookmark() {
     ((_edit_before_save))     && _add_options+=("--edit")
     [[ -n "${_password:-}" ]] && _add_options+=("--password" "${_password}")
 
-    _debug printf "_bookmark() \${_add_options[*]}}: '%s'\\n" "${_add_options[*]}"
+    _debug printf \
+      "_bookmark() \${_add_options[*]}}: '%s'\\n" \
+      "${_add_options[*]:-}"
 
-    if [[ -n "${_add_options[*]}" ]]
+    if [[ -n "${_add_options[*]:-}" ]]
     then
       printf "%s" "${_bookmark_content}" \
         | _add "${_basename}" "${_add_options[@]}"
