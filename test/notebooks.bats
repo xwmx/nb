@@ -17,11 +17,11 @@ _setup_notebooks() {
 @test "\`notebooks\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(tput setaf 11)home$(tput sgr0)
+    _expected="$(tput setaf 3)home$(tput sgr0)
 one	(${_GIT_REMOTE_URL})"
   }
 
-  run "${_NOTES}" notebooks
+  NOTES_HIGHLIGHT_COLOR=3 run "${_NOTES}" notebooks
   [[ ${status} -eq 0 ]]
 
 
@@ -50,7 +50,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks
-    _expected="$(tput setaf 11)home$(tput sgr0)"
+    _expected="$(tput setaf 3)home$(tput sgr0)"
   }
 
   run "${_NOTES}" notebooks home --names
@@ -66,7 +66,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks --names\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(tput setaf 11)home$(tput sgr0)
+    _expected="$(tput setaf 3)home$(tput sgr0)
 one"
   }
 
@@ -364,9 +364,9 @@ one"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using $(tput setaf 11)one$(tput sgr0).'" "'${output}'"
+  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'${output}'"
 
-  [[ "${output}" == "Now using $(tput setaf 11)one$(tput sgr0)." ]]
+  [[ "${output}" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
   run "${_NOTES}" env
@@ -387,9 +387,9 @@ one"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using $(tput setaf 11)one$(tput sgr0).'" "'${output}'"
+  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'${output}'"
 
-  [[ "${output}" == "Now using $(tput setaf 11)one$(tput sgr0)." ]]
+  [[ "${output}" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
   run "${_NOTES}" env

@@ -60,7 +60,7 @@ _setup_use() {
 @test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
   {
     _setup_use
-    _expected="Now using $(tput setaf 11)one$(tput sgr0)."
+    _expected="Now using $(tput setaf 3)one$(tput sgr0)."
   }
 
   run "${_NOTES}" use one
