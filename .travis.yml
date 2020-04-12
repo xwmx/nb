@@ -9,6 +9,11 @@ addons:
     - bc
     - pandoc
     - python3-pygments
-    - ripgrep
+before_install:
+  # rust
+  - curl https://sh.rustup.rs -sSf | sh -s -- -y
+  - source $HOME/.cargo/env
+  # ripgrep
+  - cargo install ripgrep
 
 script: bats test
