@@ -17,16 +17,18 @@ _setup_notebooks() {
 @test "\`notebooks\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
+    _expected="$(tput setaf 11)home$(tput sgr0)
+one	(${_GIT_REMOTE_URL})"
   }
 
   run "${_NOTES}" notebooks
   [[ ${status} -eq 0 ]]
 
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_expected}: '%s'\\n" "${_expected}"
 
-  _expected="$(tput setaf 11)home$(tput sgr0)
-one	(${_GIT_REMOTE_URL})"
   [[ "${output}" == "${_expected}" ]]
 }
 
@@ -48,6 +50,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks
+    _expected="$(tput setaf 11)home$(tput sgr0)"
   }
 
   run "${_NOTES}" notebooks home --names
@@ -55,14 +58,16 @@ one	(${_GIT_REMOTE_URL})"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_expected}: '%s'\\n" "${_expected}"
 
-  _expected="$(tput setaf 11)home$(tput sgr0)"
   [[ "${output}" == "${_expected}" ]]
 }
 
 @test "\`notebooks --names\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
+    _expected="$(tput setaf 11)home$(tput sgr0)
+one"
   }
 
   run "${_NOTES}" notebooks --names
@@ -70,9 +75,8 @@ one	(${_GIT_REMOTE_URL})"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_expected}: '%s'\\n" "${_expected}"
 
-  _expected="$(tput setaf 11)home$(tput sgr0)
-one"
   [[ "${output}" == "${_expected}" ]]
 }
 
