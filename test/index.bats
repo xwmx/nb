@@ -23,23 +23,27 @@ load test_helper
 @test "\`index add <filename>\` adds an item to the index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
     echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ 20[0-9]+\.md$ ]]
+    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NOTES}" index add "$(ls ${NOTES_DATA_DIR})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ 20[0-9]+\.md$ ]]
+  printf "\$(cat \${NOTES_DATA_DIR}/.index): '%s'\\n" \
+    "$(cat "${NOTES_DATA_DIR}/.index")"
+  printf "\$(ls ${NOTES_DATA_DIR}): '%s'\\n" "$(ls ${NOTES_DATA_DIR})"
+
+  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ first.md$ ]]
 }
 
 @test "\`index add\` with no argument returns 1 and prints help." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
     echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ 20[0-9]+\.md$ ]]
+    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NOTES}" index add
@@ -53,9 +57,9 @@ load test_helper
 @test "\`index add <filename>\` with non-file returns 1 and prints message." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
     echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ 20[0-9]+\.md$ ]]
+    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NOTES}" index add 'not-a-file'
@@ -68,14 +72,14 @@ load test_helper
 @test "\`index add <filename>\` with existing entry does nothing." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ 20[0-9]+\.md$ ]]
+    "${_NOTES}" add "first.md"  --title "one"
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NOTES}" index add "$(ls ${NOTES_DATA_DIR})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ 20[0-9]+\.md$ ]]
+  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
   [[ -z "${lines[1]}" ]]
 }
 
@@ -97,7 +101,7 @@ load test_helper
 @test "\`index get_basename\` with invalid index prints nothing." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index get_basename 12345
@@ -109,7 +113,7 @@ load test_helper
 @test "\`index get_basename\` with no argument returns 1 and prints help." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index get_basename
@@ -124,7 +128,7 @@ load test_helper
 @test "\`index get_id <filename>\` deletes an item from the index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index get_id "$(ls ${NOTES_DATA_DIR})"
@@ -137,7 +141,7 @@ load test_helper
 @test "\`index get_id\` with no argument returns 1 and prints help." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index get_id
@@ -150,7 +154,7 @@ load test_helper
 @test "\`index delete <filename>\` with non-entry returns 1." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index delete 'not-an-entry'
@@ -165,7 +169,7 @@ load test_helper
 @test "\`index delete <filename>\` deletes an item from the index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index delete "$(ls ${NOTES_DATA_DIR})"
@@ -178,7 +182,7 @@ load test_helper
 @test "\`index delete\` with no argument returns 1 and prints help." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index delete
@@ -191,7 +195,7 @@ load test_helper
 @test "\`index delete <filename>\` with non-file returns 1 and prints message." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
   }
 
   run "${_NOTES}" index delete 'not-a-file'
@@ -205,7 +209,7 @@ load test_helper
 @test "\`index rebuild\` rebuilds the index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
+    "${_NOTES}" add "first.md"  --title "one"
     echo "" > "${NOTES_DATA_DIR}/.index"
     [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "" ]]
   }
@@ -242,14 +246,14 @@ load test_helper
 @test "\`index reconcile\` does not modify a valid index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    "${_NOTES}" add "# two"
+    "${_NOTES}" add "first.md"  --title "one"
+    "${_NOTES}" add "second.md" --title "two"
     printf \
       "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
       "$(cat "${NOTES_DATA_DIR}/.index")"
-    printf "\$(ls -r \${NOTES_DATA_DIR}): '%s'\\n" "$(ls -r ${NOTES_DATA_DIR})"
+    printf "\$(ls -r \${NOTES_DATA_DIR}): '%s'\\n" "$(ls ${NOTES_DATA_DIR})"
     _existing_index="$(cat "${NOTES_DATA_DIR}/.index")"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls -r ${NOTES_DATA_DIR})" ]]
+    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls ${NOTES_DATA_DIR})" ]]
   }
 
   run "${_NOTES}" index reconcile
@@ -262,8 +266,8 @@ load test_helper
 @test "\`index reconcile\` updates when file has been deleted." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    "${_NOTES}" add "# two"
+    "${_NOTES}" add "first.md"  --title "one"
+    "${_NOTES}" add "second.md" --title "two"
     printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
     [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
   }
@@ -280,8 +284,8 @@ load test_helper
 @test "\`index reconcile\` updates when file has been added." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    "${_NOTES}" add "# two"
+    "${_NOTES}" add "first.md"  --title "one"
+    "${_NOTES}" add "second.md" --title "two"
     echo "# Example" > "${NOTES_DATA_DIR}/example.md"
     [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
   }
@@ -298,8 +302,8 @@ load test_helper
 @test "\`index reconcile\` updates when files have been added and deleted." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    "${_NOTES}" add "# two"
+    "${_NOTES}" add "first.md"  --title "one"
+    "${_NOTES}" add "second.md" --title "two"
     printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
     echo "# Example" > "${NOTES_DATA_DIR}/example.md"
     [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
@@ -378,7 +382,7 @@ load test_helper
 @test "\`index verify\` verifies a valid index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "first.md" --title "one"
+    "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
     printf \
       "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
@@ -396,8 +400,8 @@ load test_helper
 @test "\`index verify\` returns 1 with an invalid index." {
   {
     "${_NOTES}" init
-    "${_NOTES}" add "# one"
-    "${_NOTES}" add "# two"
+    "${_NOTES}" add "first.md"  --title "one"
+    "${_NOTES}" add "second.md" --title "two"
     printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
     [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
   }
