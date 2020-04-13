@@ -120,6 +120,13 @@ curl -L https://raw.github.com/xwmx/notes/master/notes \
   -o ~/bin/notes && chmod +x ~/bin/notes
 ```
 
+#### Tab Completion
+
+`notes` supports tab completion for bash and zsh. If you install `notes`
+with Homebrew, the completion scripts will be installed automatically.
+When installing `notes` through other methods, [completion can be
+enabled with a few commands](etc/README.md).
+
 ## Usage
 
 To get started, simply run:
