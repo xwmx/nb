@@ -1,3 +1,5 @@
+#compdef notes
+
 _notes_subcommands() {
   local _commands
   _commands=($(notes commands))
@@ -27,4 +29,4 @@ _notes_subcommands() {
   fi
 }
 
-compdef _notes_subcommands notes
+_notes_subcommands "$@"
