@@ -1506,14 +1506,9 @@ Description:
 
 ## Tests
 
-`notes` has [an extensive test suite](test). To run it, install
-[Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
-root directory.
-
 To run the [test suite](test), install
 [Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
 root.
-
 
 ---
 <p align="center">
