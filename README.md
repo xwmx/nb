@@ -1,4 +1,4 @@
-# notes
+[![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
 
 ```
 __                _
@@ -7,6 +7,8 @@ __                _
  / / | | | | (_) | ||  __/\__ \
 /_/  |_| |_|\___/ \__\___||___/
 ```
+
+# notes
 
 `notes` is a command line note-taking, bookmarking, and document management
 tool with encryption, advanced search, [Git](https://git-scm.com/)-backed
@@ -40,8 +42,6 @@ for various experience improvements in more capable environments. `notes` makes
 it easy to incorporate other tools, writing apps, and workflows. `notes` can be
 used a little, a lot, once in a while, or for just a subset of features.
 `notes` is flexible.
-
-[![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
 
 #### Dependencies
 
@@ -1509,6 +1509,11 @@ Description:
 `notes` has [an extensive test suite](test). To run it, install
 [Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
 root directory.
+
+To run the [test suite](test), install
+[Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
+root.
+
 
 ---
 <p align="center">
