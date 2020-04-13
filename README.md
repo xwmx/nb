@@ -1507,7 +1507,7 @@ Description:
 ## Tests
 
 To run the [test suite](test), install
-[Bats](https://github.com/sstephenson/bats) and run `bats test` in the project
+[Bats](https://github.com/bats-core/bats-core) and run `bats test` in the project
 root.
 
 ---
