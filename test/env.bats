@@ -3,13 +3,6 @@
 load test_helper
 
 @test "\`env\` exits with status 0." {
-  if [[ $(tput colors) -gt 8 ]]
-  then
-    _color="11"
-  else
-    _color="3"
-  fi
-
   _expected="\
 EDITOR=${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor
 NOTES_AUTO_SYNC=1
@@ -17,7 +10,7 @@ NOTES_DIR=${_TMP_DIR}/.notes
 NOTES_DATA_DIR=${_TMP_DIR}/.notes/home
 NOTES_DEFAULT_EXTENSION=md
 NOTES_ENCRYPTION_TOOL=openssl
-NOTES_HIGHLIGHT_COLOR=${_color}
+NOTES_HIGHLIGHT_COLOR=3
 NOTESRC_PATH=${_TMP_DIR}/.notesrc"
 
   run "${_NOTES}" env
@@ -26,6 +19,7 @@ NOTESRC_PATH=${_TMP_DIR}/.notesrc"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
+  printf "\$(tput colors): '%s'\\n" "$(tput colors)"
 
   [[ "${_expected}" == "${output}" ]]
 }
