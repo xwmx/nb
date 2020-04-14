@@ -3,26 +3,25 @@
 ## Homebrew
 
 Installing via Homebrew with `brew install xwmx/taps/notes` will also
-install the completion scripts. The extra steps to install `notes` completion
-scripts outlined below are not needed.
+install the completion scripts. The extra steps to install `notes`
+completions below are not needed.
 
 A one-time setup might be needed to [enable completion for all Homebrew
 programs](https://docs.brew.sh/Shell-Completion).
 
 ## npm, bpkg, Make
 
-When `notes` is installed with `npm` using `npm install -g notes.sh`,
-`bpkg`, or using make an install hook will check your environment and attempt
-to install completions. If it's successful, you should see a message similar
-to:
+When `notes` is installed with `npm`, `bpkg`, or Make, an install hook will
+check the environment and attempt to install completions. If it's successful,
+you should see a message similar to:
 
 ```bash
 Completion installed: /usr/local/etc/bash_completion.d/notes-completion.bash
 Completion installed: /usr/local/share/zsh/site-functions/_notes
 ```
 
-If completion still isn't working after, try the scripts or manual
-installation below.
+If completion is working after installing through any of these methods, then
+you don't need to do anything else.
 
 ## Scripts
 
