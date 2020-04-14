@@ -772,6 +772,8 @@ Usage:
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
+  notes open (<id> | <filename> | <path> | <title>)
+  notes peek (<id> | <filename> | <path> | <title>)
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--path]
@@ -809,6 +811,8 @@ Subcommands:
   move       Move a note to a different notebook.
   notebook   Manage the current notebook.
   notebooks  Manage notebooks.
+  open       Open a bookmark in your system's primary web browser.
+  peek       Open a bookmark in your terminal web browser.
   remote     Get, set, and remove the remote URL for the notebook.
   rename     Rename a note.
   search     Search notes.
@@ -846,6 +850,8 @@ Program Options:
   <a href="#move">move</a> •
   <a href="#notebook">notebook</a> •
   <a href="#notebooks-1">notebooks</a> •
+  <a href="#open">open</a> •
+  <a href="#peek">peek</a> •
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
   <a href="#search-1">search</a> •
@@ -1266,6 +1272,36 @@ Examples:
   notes notebooks add Example2 https://github.com/example/example.git
 
 Shortcut Alias: `nbs`
+```
+
+#### `open`
+
+```text
+Usage:
+  notes open (<id> | <filename> | <path> | <title>)
+
+Description:
+  Open the bookmarked page in your system's primary web browser.
+
+  When used with a bookmark, `open` is the equivalent of `bookmark open`.
+  When used with a note, `open` is the equivalent of `show`.
+
+Shortcut Alias: `o`
+```
+
+#### `peek`
+
+```text
+Usage:
+  notes peek (<id> | <filename> | <path> | <title>)
+
+Description:
+  Open the bookmarked page in your terminal web browser.
+
+  When used with a bookmark, `peek` is the equivalent of `bookmark peek`.
+  When used with a note, `peek` is the equivalent of `show`.
+
+Shortcut Alias: `p`
 ```
 
 #### `remote`

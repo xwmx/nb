@@ -1407,6 +1407,8 @@ Usage:
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
+  ${_ME} open (<id> | <filename> | <path> | <title>)
+  ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--path]
@@ -3982,11 +3984,35 @@ _alias_subcommand "notebooks" "nbs"
 # open ########################################################################
 
 _alias_subcommand "bookmark open" "open"
+desc "open" <<HEREDOC
+Usage:
+  ${_ME} open (<id> | <filename> | <path> | <title>)
+
+Description:
+  Open the bookmarked page in your system's primary web browser.
+
+  When used with a bookmark, \`open\` is the equivalent of \`bookmark open\`.
+  When used with a note, \`open\` is the equivalent of \`show\`.
+
+Shortcut Alias: \`o\`
+HEREDOC
 _alias_subcommand "open" "o"
 
 # peek ########################################################################
 
 _alias_subcommand "bookmark peek" "peek"
+desc "peek" <<HEREDOC
+Usage:
+  ${_ME} peek (<id> | <filename> | <path> | <title>)
+
+Description:
+  Open the bookmarked page in your terminal web browser.
+
+  When used with a bookmark, \`peek\` is the equivalent of \`bookmark peek\`.
+  When used with a note, \`peek\` is the equivalent of \`show\`.
+
+Shortcut Alias: \`p\`
+HEREDOC
 _alias_subcommand "peek" "p"
 
 # remote ######################################################################
