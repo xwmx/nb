@@ -203,7 +203,7 @@ _set_notebook_path() {
   then
     local _current
     _current="$(cat "${NOTES_DIR}/.current")"
-    if [[ -e "${NOTES_DIR}/${_current}" ]]
+    if [[ -d "${NOTES_DIR}/${_current}" ]]
     then
       _NOTEBOOK_PATH="${NOTES_DIR}/${_current}"
     fi
