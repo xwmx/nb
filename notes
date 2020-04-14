@@ -309,9 +309,9 @@ _alias_subcommand() {
 # _command_exists()
 #
 # Usage:
-#   _command_exists "possible_command_name"
+#   _command_exists <name>
 #
-# Takes a potential command name as an argument and returns whether a command
+# Takes a potential command <name> as an argument and returns whether a command
 # exists with that name.
 #
 # For information on why `hash` is used here, see:
@@ -342,7 +342,7 @@ _contains() {
   return 1
 }
 
-# _decrypt_file
+# _decrypt_file()
 #
 # Usage:
 #   _decrypt_file <path> <password>
