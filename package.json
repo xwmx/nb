@@ -12,7 +12,9 @@
     "notes": "./notes"
   },
   "scripts": {
-    "test": "bats test"
+    "test": "bats test",
+    "postinstall": "scripts/install-completion.bash",
+    "preuninstall": "script/uninstall-completion.bash"
   },
   "repository": {
     "type": "git",
