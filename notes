@@ -3377,13 +3377,13 @@ HEREDOC
       local _id_item_color
       _id_item_color="[$(_highlight "${_item_id_number}")]"
 
-      local _list_item_title_or_basename="${__basename}"
+      local _title_or_basename="${__basename}"
       if ((_list_titles))
       then
         _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
         if [[ -n "${_maybe_title}" ]]
         then # note file has title.
-          _list_item_title_or_basename="${_maybe_title}"
+          _title_or_basename="${_maybe_title}"
         fi
       fi
 
@@ -3418,14 +3418,14 @@ HEREDOC
         fi
       fi
 
-      local _padded_indicator="${_spaces}${_indicators} "
+      local _padded_indicators="${_spaces}${_indicators} "
 
-      local _list_item="${_id_item}${_padded_indicator}${_list_item_title_or_basename}"
-      local _list_item_color="${_id_item_color}${_padded_indicator}${_list_item_title_or_basename}"
+      local _list_item="${_id_item}${_padded_indicators}${_title_or_basename}"
+      local _list_item_color="${_id_item_color}${_padded_indicators}${_title_or_basename}"
 
       if ((_no_id))
       then
-        printf "%s" "${_list_item_title_or_basename}"
+        printf "%s" "${_title_or_basename}"
       else
         if ((_no_color))
         then
