@@ -137,6 +137,7 @@ _debug() {
     printf "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
   fi
 }
+
 # debug()
 #
 # Usage:
@@ -167,6 +168,7 @@ _die() {
   "${@}" 1>&2
   exit 1
 }
+
 # die()
 #
 # Usage:
@@ -3827,6 +3829,7 @@ _notebooks() {
     fi
     printf "Added: %s\\n" "${_name}"
   }
+
   # _notebooks_list()
   #
   # Usage:
@@ -3904,6 +3907,7 @@ _notebooks() {
       fi
     done
   }
+
   # _notebooks_rename()
   #
   # Usage:
