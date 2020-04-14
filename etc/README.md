@@ -3,8 +3,7 @@
 ## Homebrew
 
 Installing via Homebrew with `brew install xwmx/taps/notes` will also
-install the completion scripts. The extra steps to install `notes`
-completions below are not needed.
+install the completion scripts.
 
 A one-time setup might be needed to [enable completion for all Homebrew
 programs](https://docs.brew.sh/Shell-Completion).
