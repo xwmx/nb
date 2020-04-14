@@ -34,6 +34,7 @@ _install_completion() {
 
   if [[ -n "${_bash_completion_path:-}" ]] &&
      [[ -d "${_bash_completion_path}"   ]] &&
+     [[ -w "${_bash_completion_path}"   ]] &&
      [[ ! -e "${_bash_completion_path}/notes-completion.bash" ]]
   then
     cp \
