@@ -33,7 +33,7 @@ _get_bash_completion_path() {
     if [[ -n "${_maybe_path:-}" ]] &&
        [[ -w "${_maybe_path:-}" ]]
     then
-      _bash_completion_path=
+      _bash_completion_path="${_maybe_path}"
     fi
   fi
 
