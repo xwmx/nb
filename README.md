@@ -109,6 +109,15 @@ To install with [bpkg](https://github.com/bpkg/bpkg):
 bpkg install xwmx/notes
 ```
 
+#### Make
+
+To install with [Make](https://en.wikipedia.org/wiki/Make_(software)),
+clone this repository, navigate to the clone's root directory, and run:
+
+```bash
+make install
+```
+
 #### Manual
 
 To install manually, simply add the `notes` script to your `$PATH`. If

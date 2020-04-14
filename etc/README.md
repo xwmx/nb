@@ -9,26 +9,34 @@ scripts outlined below are not needed.
 A one-time setup might be needed to [enable completion for all Homebrew
 programs](https://docs.brew.sh/Shell-Completion).
 
-## npm
+## npm, bpkg, Make
 
-When `notes` is installed with `npm` using `npm install -g notes.sh`, a
-post-install hook will check your environment and attempt to install
-completions. If it's successful, you should see a message similar to:
+When `notes` is installed with `npm` using `npm install -g notes.sh`,
+`bpkg`, or using make an install hook will check your environment and attempt
+to install completions. If it's successful, you should see a message similar
+to:
 
 ```bash
 Completion installed: /usr/local/etc/bash_completion.d/notes-completion.bash
 Completion installed: /usr/local/share/zsh/site-functions/_notes
 ```
 
-If completion still isn't working after an `npm install`, try the
-scripts or manual installation below.
+If completion still isn't working after, try the scripts or manual
+installation below.
 
 ## Scripts
 
 `notes` includes scripts for installing and uninstalling completions.
+These are used in installation hooks:
 
 - [install-completion.bash](../scripts/install-completion.bash)
 - [uninstall-completion.bash](../scripts/uninstall-completion.bash)
+
+To run them, navigate to this directory in your terminal and run:
+
+```bash
+./install-completion.bash
+```
 
 These scripts will try to determine the completion installation
 locations from your environment. If completion doesn't work, you might
