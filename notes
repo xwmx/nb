@@ -615,20 +615,20 @@ _file_is_image() {
     =~ ^png|jpg|jpeg|gif|webp|tiff|tif|psd|raw|bmp|ind|indd|ind|svg|svgz|ai$ ]]
 }
 
-# _file_is_pdf()
+# _file_is_document()
 #
 # Usage:
-#   _file_is_pdf <path>
+#   _file_is_document <path>
 #
 # Returns:
-#   0  If file is a pdf.
+#   0  If file is a Word, Open Office, PDF, or other document.
 #   1  if not.
-_file_is_pdf() {
+_file_is_document() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  [[ "${_file_type}" =~ pdf ]]
+  [[ "${_file_type}" =~ ^doc|docx|odt|pdf|rtf$ ]]
 }
 
 # _file_is_text()
@@ -3181,6 +3181,12 @@ Description:
   filenames will be searched for any that match <query> as a case-insensitive
   regular expression.
 
+Indicators:
+  🔖  Bookmark
+  🔒  Encrypted note or bookmark
+  🌄  Image
+  📄  Word, Open Office, PDF, or rtf document
+
 Examples:
   ${_ME} list
   ${_ME} list example.md -e 10
@@ -3388,7 +3394,7 @@ HEREDOC
         _indicators+=" 🌄"
       fi
 
-      if _file_is_pdf "${_NOTEBOOK_PATH}/${__basename}"
+      if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
       then
         _indicators+=" 📄"
       fi
