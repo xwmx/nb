@@ -1,4 +1,4 @@
-# Installation instructions
+# Completion Installation
 
 ## Homebrew
 
