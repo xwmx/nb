@@ -77,7 +77,7 @@ load test_helper
     _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
   }
 
-  run export EDITOR="cat" && "${_NOTES}" edit "${_filename}"
+  run export EDITOR=cat; "${_NOTES}" edit "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
