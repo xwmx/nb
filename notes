@@ -253,6 +253,13 @@ _set_notes_highlight_color() {
 # Supported Values: 'gpg' 'openssl'
 export NOTES_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL:-openssl}"
 
+# `$NOTES_INDICATORS_ENABLED`
+#
+# Default: 1
+#
+# Supported Values: 0, 1
+export NOTES_INDICATORS_ENABLED="${NOTES_INDICATORS_ENABLED:-1}"
+
 ###############################################################################
 # Temp Directory
 ###############################################################################
@@ -3202,6 +3209,7 @@ _list() {
 
   local _excerpt_length=3
   local _print_excerpt=0
+  local _print_indicators="${NOTES_INDICATORS_ENABLED:-1}"
   local _limit=
   local _list_titles=0
   local _no_color=0
@@ -3232,6 +3240,9 @@ _list() {
         ;;
       --nocolor|--no-color)
         _no_color=1
+        ;;
+      --no-indicators|--noindicators)
+        _print_indicators=0
         ;;
       -n)
         if __option_value_is_present "${_val:-}"
@@ -3384,27 +3395,30 @@ HEREDOC
 
       local _indicators=
 
-      if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
+      if ((_print_indicators))
       then
-        _indicators+=" 🔖"
+        if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
+        then
+          _indicators+=" 🔖"
+        fi
+
+        if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
+        then
+          _indicators+=" 🌄"
+        fi
+
+        if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
+        then
+          _indicators+=" 📄"
+        fi
+
+        if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
+        then
+          _indicators+=" 🔒"
+        fi
       fi
 
-      if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
-      then
-        _indicators+=" 🌄"
-      fi
-
-      if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
-      then
-        _indicators+=" 📄"
-      fi
-
-      if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
-      then
-        _indicators+=" 🔒"
-      fi
-
-      _padded_indicator="${_spaces}${_indicators} "
+      local _padded_indicator="${_spaces}${_indicators} "
 
       local _list_item="${_id_item}${_padded_indicator}${_list_item_title_or_basename}"
       local _list_item_color="${_id_item_color}${_padded_indicator}${_list_item_title_or_basename}"
