@@ -20,35 +20,35 @@ load test_helper
   [[ ${status} -eq 1 ]]
 }
 
-@test "\`init\` exits with status 1 when \`\$NOTES_DATA_DIR\` exists." {
-  mkdir -p "${NOTES_DATA_DIR}"
-  [[ -e "${NOTES_DATA_DIR}" ]]
+@test "\`init\` exits with status 1 when \`\$_NOTEBOOK_PATH\` exists." {
+  mkdir -p "${_NOTEBOOK_PATH}"
+  [[ -e "${_NOTEBOOK_PATH}" ]]
   run "${_NOTES}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
 }
 
-@test "\`init\` creates \`\$NOTES_DIR\` and \`\$NOTES_DATA_DIR\` directories." {
+@test "\`init\` creates \`\$NOTES_DIR\` and \`\$_NOTEBOOK_PATH\` directories." {
   run "${_NOTES}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ -d "${NOTES_DIR}" ]]
-  [[ -d "${NOTES_DATA_DIR}" ]]
+  [[ -d "${_NOTEBOOK_PATH}" ]]
 }
 
-@test "\`init\` creates a git directory in \`\$NOTES_DATA_DIR\`." {
+@test "\`init\` creates a git directory in \`\$_NOTEBOOK_PATH\`." {
   run "${_NOTES}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ -d "${NOTES_DATA_DIR}/.git" ]]
+  [[ -d "${_NOTEBOOK_PATH}/.git" ]]
 }
 
-@test "\`init\` creates an .index \`\$NOTES_DATA_DIR\`." {
+@test "\`init\` creates an .index \`\$_NOTEBOOK_PATH\`." {
   run "${_NOTES}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
 }
 
 @test "\`init\` exits with status 0 when \$NOTESRC_PATH\` exists." {
@@ -74,7 +74,7 @@ load test_helper
 @test "\`init\` creates git commit." {
   run "${_NOTES}" init
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -85,14 +85,14 @@ load test_helper
 
 # `notes init <remote-url>` ###################################################
 
-@test "\`init <remote-url>\` creates a clone in \`\$NOTES_DATA_DIR\`." {
+@test "\`init <remote-url>\` creates a clone in \`\$_NOTEBOOK_PATH\`." {
   _setup_remote_repo
   run "${_NOTES}" init "${_GIT_REMOTE_URL}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -d "${NOTES_DATA_DIR}/.git" ]]
-  _origin="$(cd "${NOTES_DATA_DIR}" && git config --get remote.origin.url)"
+  [[ -d "${_NOTEBOOK_PATH}/.git" ]]
+  _origin="$(cd "${_NOTEBOOK_PATH}" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
   [[ "${_origin}" =~  "${_GIT_REMOTE_URL}" ]]
 }

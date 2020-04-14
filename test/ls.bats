@@ -30,7 +30,7 @@ HEREDOC
 @test "\`ls\` exits with 0 and lists files." {
   {
     _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" ls
@@ -51,7 +51,7 @@ HEREDOC
 @test "\`ls -e <excerpt length>\` exits with 0 and displays excerpts." {
   {
     _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" ls -e 5
@@ -69,7 +69,7 @@ HEREDOC
 @test "\`ls -n 0\` exits with 0 and lists 0 files." {
   {
     _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" ls -n 0
@@ -86,7 +86,7 @@ HEREDOC
 @test "\`ls -n 1\` exits with 0 and lists 1 file." {
   {
     _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" ls -n 1
@@ -105,7 +105,7 @@ HEREDOC
 @test "\`ls -n 2\` exits with 0 and lists 2 files." {
   {
     _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" ls -n 2
@@ -125,7 +125,7 @@ HEREDOC
 @test "\`ls -n 3\` exits with 0 and lists 3 files." {
   {
     _setup_ls
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" ls -n 3

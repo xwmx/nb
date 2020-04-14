@@ -8,9 +8,9 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NOTES}" delete --force
   printf "\${status}: %s\\n" "${status}"
@@ -20,10 +20,10 @@ load test_helper
   [[ ${status} -eq 1 ]]
 
   # Does not delete note file
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   # Does not create git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -54,15 +54,15 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NOTES}" delete "${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -92,10 +92,10 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-  _original_index="$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NOTES}" delete "${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
@@ -105,10 +105,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Deletes note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -116,9 +116,9 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 
   # Deletes entry from index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -130,10 +130,10 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-  _original_index="$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NOTES}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
@@ -143,10 +143,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Deletes note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -154,9 +154,9 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 
   # Deletes entry from index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -168,12 +168,12 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-  _original_index="$(cat "${NOTES_DATA_DIR}/.index")"
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-  run "${_NOTES}" delete "${NOTES_DATA_DIR}/${_filename}" --force
+  run "${_NOTES}" delete "${_NOTEBOOK_PATH}/${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -181,10 +181,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Deletes note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -192,9 +192,9 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 
   # Deletes entry from index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -206,11 +206,11 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
-  _original_index="$(cat "${NOTES_DATA_DIR}/.index")"
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NOTES}" delete "${_title}" --force
   printf "\${status}: %s\\n" "${status}"
@@ -220,10 +220,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Deletes note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -231,9 +231,9 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Delete') ]]
 
   # Deletes entry from index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]

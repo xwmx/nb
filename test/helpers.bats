@@ -95,7 +95,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --titles --no-color

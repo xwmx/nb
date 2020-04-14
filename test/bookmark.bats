@@ -19,11 +19,11 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
   [[ ${status} -eq 1 ]]
 
   # Does not create note file
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 
   # Does not create git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -50,11 +50,11 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
   [[ ${status} -eq 1 ]]
 
   # Does not create note file
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 
   # Does not create git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -73,7 +73,7 @@ _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
   run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
   [[ ${status} -eq 0 ]]
@@ -96,13 +96,13 @@ Example Domain
 This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -110,8 +110,8 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
@@ -132,7 +132,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
   _bookmark_content="\
 # Example Domain
@@ -151,13 +151,13 @@ Example Domain
 This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -165,8 +165,8 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
@@ -187,19 +187,19 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
   _bookmark_content="\
 # Example Domain
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -207,8 +207,8 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
@@ -229,7 +229,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
   _bookmark_content="\
 # Example Domain
@@ -248,13 +248,13 @@ Example Domain
 This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -262,8 +262,8 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
@@ -282,7 +282,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
   _bookmark_content="\
 # Example Domain
@@ -305,13 +305,13 @@ Example Domain
 This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -319,8 +319,8 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
@@ -341,7 +341,7 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
   _bookmark_content="\
 # New Title
@@ -356,13 +356,13 @@ Example Domain
 This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
 
 [More information\...](https://www.iana.org/domains/example)"
-  printf "cat file: '%s'\\n" "$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# New Title' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# New Title' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -370,8 +370,8 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
@@ -385,10 +385,10 @@ This domain is for use in illustrative examples in documents. You may use this d
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ "${_files[0]}" =~ enc$ ]]
-  [[ "$(file "${NOTES_DATA_DIR}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
+  [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
 }
 
 @test "\`bookmark --encrypt --password\` without argument exits with 1." {
@@ -397,7 +397,7 @@ This domain is for use in illustrative examples in documents. You may use this d
 
   [[ ${status} -eq 1 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
@@ -464,7 +464,7 @@ https://example.com
   {
     run "${_NOTES}" init
     run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" bookmark url 1 --password=example

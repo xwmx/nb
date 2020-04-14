@@ -29,7 +29,7 @@ Usage information:
     "${_NOTES}" add "one.md" --title "one"
     "${_NOTES}" add "two.md" --title "two"
     "${_NOTES}" add "three.md" --title "three"
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list
@@ -52,7 +52,7 @@ Usage information:
     "${_NOTES}" add "one.md" --title "one"
     "${_NOTES}" add "two.md" --title "two"
     "${_NOTES}" add "three.md" --title "three"
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --no-id
@@ -75,7 +75,7 @@ Usage information:
     "${_NOTES}" add "one.md" --title "one"
     "${_NOTES}" add "two.md" --title "two"
     "${_NOTES}" add "three.md" --title "three"
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --no-color
@@ -117,7 +117,7 @@ HEREDOC
 @test "\`list -e\` exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list -e
@@ -133,7 +133,7 @@ HEREDOC
 @test "\`list -e 2\` exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list -e 2
@@ -149,7 +149,7 @@ HEREDOC
 @test "\`list -e 0\` exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list -e 0
@@ -165,7 +165,7 @@ HEREDOC
 @test "\`list --excerpt\` exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --excerpt
@@ -181,7 +181,7 @@ HEREDOC
 @test "\`list --excerpt 2\` exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --excerpt 2
@@ -197,7 +197,7 @@ HEREDOC
 @test "\`list --excerpt 0\` exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --excerpt 0
@@ -237,7 +237,7 @@ HEREDOC
 @test "\`list -n\` exits with 0 and displays full list." {
   {
     _setup_list_limit
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list -n
@@ -253,7 +253,7 @@ HEREDOC
 @test "\`list -n 2\` exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list -n 2
@@ -271,7 +271,7 @@ HEREDOC
 @test "\`list --2\` exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --2
@@ -309,7 +309,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list --titles
@@ -347,7 +347,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list 1
@@ -386,7 +386,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list 'r'
@@ -415,7 +415,7 @@ line three
 line four
 HEREDOC
     sleep 1
-    _files=($(ls "${NOTES_DATA_DIR}/"))
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}" list invalid

@@ -13,7 +13,7 @@ _setup_move() {
 @test "\`move\` with no arguments exits with status 1." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" move --force
@@ -24,10 +24,10 @@ _setup_move() {
   [[ ${status} -eq 1 ]]
 
   # does not delete note file
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   # does not create git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -58,7 +58,7 @@ _setup_move() {
 @test "\`move <invalid> <notebook>\` exits with 1 and prints help." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" move "invalid" "destination" --force
@@ -72,7 +72,7 @@ _setup_move() {
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" move 0 "invalid" --force
@@ -87,15 +87,15 @@ _setup_move() {
   skip "Determine how to test interactive prompt."
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  [[ -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NOTES}" move "${_filename}" "destination"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -124,7 +124,7 @@ _setup_move() {
 @test "\`move\` with <filename> argument successfully moves note." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" move "${_filename}" "destination" --force
@@ -135,11 +135,11 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
   # creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -155,7 +155,7 @@ _setup_move() {
 @test "\`move\` with <id> argument successfully moves note." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" move 1 "destination" --force
@@ -166,11 +166,11 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
   # creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -186,10 +186,10 @@ _setup_move() {
 @test "\`move\` with <path> argument successfully moves note." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "${NOTES_DATA_DIR}/${_filename}" "destination" --force
+  run "${_NOTES}" move "${_NOTEBOOK_PATH}/${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -197,11 +197,11 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
   # creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -217,9 +217,9 @@ _setup_move() {
 @test "\`move\` with <title> argument successfully moves note." {
   {
     _setup_move
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" move "${_title}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
@@ -229,11 +229,11 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
 
   # creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1

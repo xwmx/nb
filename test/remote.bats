@@ -20,7 +20,7 @@ _setup_remote() {
 
 @test "\`remote\` with no arguments and existing remote prints url." {
   run "${_NOTES}" init
-  cd "${NOTES_DATA_DIR}" &&
+  cd "${_NOTEBOOK_PATH}" &&
     git remote add origin "https://example.com/example.git"
 
   run "${_NOTES}" remote
@@ -44,7 +44,7 @@ _setup_remote() {
 
 @test "\`remote remove\` with existing remote removes remote and prints message." {
   run "${_NOTES}" init
-  cd "${NOTES_DATA_DIR}" &&
+  cd "${_NOTEBOOK_PATH}" &&
     git remote add origin "https://example.com/example.git"
 
   run "${_NOTES}" remote remove --force
@@ -78,7 +78,7 @@ _setup_remote() {
 
 @test "\`remote set\` with existing remote sets remote and prints message." {
   run "${_NOTES}" init
-  cd "${NOTES_DATA_DIR}" &&
+  cd "${_NOTEBOOK_PATH}" &&
     git remote add origin "https://example.com/example.git"
 
   run "${_NOTES}" remote set "https://example.com/example2.git" --force
@@ -91,7 +91,7 @@ _setup_remote() {
 
 @test "\`remote set\` to same URL as existing remote exits and prints message." {
   run "${_NOTES}" init
-  cd "${NOTES_DATA_DIR}" &&
+  cd "${_NOTEBOOK_PATH}" &&
     git remote add origin "https://example.com/example.git"
 
   run "${_NOTES}" remote set "https://example.com/example.git" --force

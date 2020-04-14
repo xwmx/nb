@@ -8,7 +8,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show
@@ -25,7 +25,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show
@@ -39,7 +39,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Example"
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show 1 --dump
@@ -54,7 +54,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Example"
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show 1 --dump --no-color
@@ -68,7 +68,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Example"
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show --dump
@@ -102,7 +102,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show "${_filename}" --dump
@@ -118,7 +118,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show 1 --dump
@@ -135,10 +135,10 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --dump
+  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -151,9 +151,9 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" show "${_title}" --dump
   printf "\${status}: %s\\n" "${status}"
@@ -168,14 +168,14 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show "${_filename}" --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
 # `notes show <id> --path` ####################################################
@@ -184,14 +184,14 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show 1 --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
 
@@ -201,14 +201,14 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --path
+  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
 # `notes show <title> --path` #################################################
@@ -217,15 +217,15 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" show "${_title}" --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${NOTES_DATA_DIR}/${_filename}" ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
 # `notes show <filename> --id` ################################################
@@ -234,7 +234,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show "${_filename}" --id
@@ -250,7 +250,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show 1 --id
@@ -266,10 +266,10 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --id
+  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -282,11 +282,11 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" show "${NOTES_DATA_DIR}/${_filename}" --id
+  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -299,7 +299,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Content" --encrypt --password=example
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" show 1 --password=example --dump

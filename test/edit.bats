@@ -8,9 +8,9 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _original="$(cat "${NOTES_DATA_DIR}/${_filename}")"
+  _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
 
   run "${_NOTES}" edit
   printf "\${status}: %s\\n" "${status}"
@@ -20,10 +20,10 @@ load test_helper
   [[ ${status} -eq 1 ]]
 
   # Does not update note file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" == "${_original}" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_original}" ]]
 
   # Does not create git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   if [[ -n "$(git status --porcelain)" ]]
   then
     sleep 1
@@ -74,7 +74,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run export EDITOR=cat; "${_NOTES}" edit "${_filename}"
@@ -90,7 +90,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" edit "${_filename}"
@@ -101,10 +101,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -121,7 +121,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" edit 1
@@ -132,10 +132,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -152,10 +152,10 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit "${NOTES_DATA_DIR}/${_filename}"
+  run "${_NOTES}" edit "${_NOTEBOOK_PATH}/${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -163,10 +163,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -184,9 +184,9 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${NOTES_DATA_DIR}/${_filename}" | sed 's/^\# //')"
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NOTES}" edit "${_title}"
   printf "\${status}: %s\\n" "${status}"
@@ -196,10 +196,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -216,7 +216,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Example"
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run bash -c "echo '## Piped' | ${_NOTES} edit 1"
@@ -228,12 +228,12 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
-  [[ $(grep '# Example' "${NOTES_DATA_DIR}"/*) ]]
-  [[ $(grep '## Piped' "${NOTES_DATA_DIR}"/*) ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
+  [[ $(grep '# Example' "${_NOTEBOOK_PATH}"/*) ]]
+  [[ $(grep '## Piped' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -250,7 +250,7 @@ load test_helper
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "# Content" --encrypt --password=example
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" edit 1 --password=example
@@ -259,10 +259,10 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates file
-  [[ "$(cat "${NOTES_DATA_DIR}/${_filename}")" != "${_original}" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1

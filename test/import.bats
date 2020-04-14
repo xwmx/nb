@@ -16,7 +16,7 @@ load test_helper
 @test "\`import\` with no arguments does not create git commit." {
   run "${_NOTES}" init
   run "${_NOTES}" import
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -34,16 +34,16 @@ load test_helper
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Example Title' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# Example Title' "${_NOTEBOOK_PATH}"/*) ]]
   [[ "${lines[0]}" =~ "Imported" ]]
 }
 
 @test "\`import\` with valid <path> argument creates git commit." {
   run "${_NOTES}" init
   run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -61,9 +61,9 @@ load test_helper
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep 'Example' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep 'Example' "${_NOTEBOOK_PATH}"/*) ]]
   [[ "${output}" =~ "Imported" ]]
 }
 
@@ -74,7 +74,7 @@ load test_helper
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do

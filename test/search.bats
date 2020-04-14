@@ -23,7 +23,7 @@ HEREDOC
 @test "\`search\` exits with status 1 and prints help information." {
   {
     _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" search
@@ -40,7 +40,7 @@ HEREDOC
 @test "\`search <no match>\` exits with status 1 and does not print output." {
   {
     _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" search 'no match'
@@ -55,7 +55,7 @@ HEREDOC
 @test "\`search <one match>\` exits with status 0 and prints output." {
   {
     _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" search 'idyl'
@@ -72,14 +72,14 @@ HEREDOC
 @test "\`search <one match> --path\` exits with status 0 and prints path." {
   {
     _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" search 'idyl' --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/first\.md$ ]]
+  [[ "${lines[0]}" =~ ${_NOTEBOOK_PATH}/first\.md$ ]]
   [[ "${#lines[@]}" -eq 1 ]]
 }
 
@@ -88,7 +88,7 @@ HEREDOC
 @test "\`search <multiple matches>\` exits with status 0 and prints output." {
   {
     _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" search 'sweetish' --use-grep
@@ -109,7 +109,7 @@ HEREDOC
 @test "\`search <multiple matches> --path\` exits with 0 and prints paths." {
   {
     _setup_search
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   run "${_NOTES}" search 'sweetish' --path --use-grep
@@ -118,8 +118,8 @@ HEREDOC
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ ${_NOTES_DATA_DIR}/second\.md$ ]]
-  [[ "${lines[1]}" =~ ${_NOTES_DATA_DIR}/third\.md$ ]]
+  [[ "${lines[0]}" =~ ${_NOTEBOOK_PATH}/second\.md$ ]]
+  [[ "${lines[1]}" =~ ${_NOTEBOOK_PATH}/third\.md$ ]]
   [[ "${#lines[@]}" -eq 2 ]]
 }
 

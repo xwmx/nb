@@ -16,7 +16,7 @@ setup() {
   _TMP_DIR="$(mktemp -d /tmp/notes_test.XXXXXX)" || exit 1
 
   export NOTES_DIR="${_TMP_DIR}/.notes"
-  export NOTES_DATA_DIR="${NOTES_DIR}/home"
+  export _NOTEBOOK_PATH="${NOTES_DIR}/home"
   export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
   export NOTES_HIGHLIGHT_COLOR=3
 
@@ -30,7 +30,7 @@ setup() {
   export PATH="${BATS_TEST_DIRNAME}/fixtures/bin:${PATH}"
 
   if [[ ! "${NOTES_DIR}"      =~ ^/tmp/notes_test ]] ||
-     [[ ! "${NOTES_DATA_DIR}" =~ ^/tmp/notes_test ]] ||
+     [[ ! "${_NOTEBOOK_PATH}" =~ ^/tmp/notes_test ]] ||
      [[ ! "${NOTESRC_PATH}"   =~ ^/tmp/notes_test ]]
   then
     exit 1

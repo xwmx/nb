@@ -196,17 +196,18 @@ fi
 #
 # Default: `$NOTES_DIR/home`
 export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/home}"
-_set_notes_data_dir() {
+export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DATA_DIR}}"
+_set_notebook_path() {
   if [[ -e "${NOTES_DIR}/.current" ]]
   then
     local _current
     _current="$(cat "${NOTES_DIR}/.current")"
     if [[ -e "${NOTES_DIR}/${_current}" ]]
     then
-      NOTES_DATA_DIR="${NOTES_DIR}/${_current}"
+      _NOTEBOOK_PATH="${NOTES_DIR}/${_current}"
     fi
   fi
-} && _set_notes_data_dir
+} && _set_notebook_path
 
 # `$NOTES_AUTO_SYNC`
 #
@@ -440,7 +441,7 @@ _edit_file() {
     return 1
   fi
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
 
   if _file_is_encrypted "${_file_path}"
   then
@@ -641,7 +642,7 @@ _get_hash() {
 #   _get_selection_basename <title>
 #
 # Description:
-#   Determine the basename of the file in `$NOTES_DATA_DIR` that is identified
+#   Determine the basename of the file in `$_NOTEBOOK_PATH` that is identified
 #   by the given <id>, <filename>, <path>, or <title>.
 _get_selection_basename() {
   local _basename=
@@ -656,10 +657,10 @@ _get_selection_basename() {
     _identifier="$(_get_selection_identifier "${_selection}")"
 
     if [[ -e "${_identifier}" ]] &&
-       [[ "${_identifier}" =~ ${NOTES_DATA_DIR} ]]
+       [[ "${_identifier}" =~ ${_NOTEBOOK_PATH} ]]
     then # <selection> is a full path.
       _basename="$(basename "${_identifier}")"
-    elif [[ -e "${NOTES_DATA_DIR}/${_identifier}" ]]
+    elif [[ -e "${_NOTEBOOK_PATH}/${_identifier}" ]]
     then # <selection> is a filename.
       _basename="${_identifier}"
     elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
@@ -672,7 +673,7 @@ _get_selection_basename() {
       _filenames=($(_list_notes_files))
       for __file in "${_filenames[@]:-}"
       do
-        _title="$(_get_title "${NOTES_DATA_DIR}/${__file}")"
+        _title="$(_get_title "${_NOTEBOOK_PATH}/${__file}")"
 
         if [[ -n "${_title}" ]] &&
            [[ "${_title}" == "${_identifier}" ]]
@@ -821,7 +822,7 @@ _get_unique_basename() {
 
   local _uniqueness_counter=0
   local _unique_filename="${_file_name}"
-  while [[ -e "${NOTES_DATA_DIR}/${_unique_filename}.${_file_type}" ]]
+  while [[ -e "${_NOTEBOOK_PATH}/${_unique_filename}.${_file_type}" ]]
   do
     printf -v _unique_filename -- "%s-%02d" \
       "${_file_name}" \
@@ -878,7 +879,7 @@ _git_checkpoint() {
 
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${NOTES_DATA_DIR}"
+    _target_directory="${_NOTEBOOK_PATH}"
   fi
 
   _debug printf "_git_checkpoint() \${_target_directory}: '%s'\n" \
@@ -927,14 +928,14 @@ _git_checkpoint() {
 #   _git_index_is_dirty [<target-directory>]
 #
 # Returns:
-#   0  If there are uncommitted changes in `NOTES_DATA_DIR` or
+#   0  If there are uncommitted changes in `_NOTEBOOK_PATH` or
 #      <target-directory>.
-#   1  If the `$NOTES_DATA_DIR` repository is clean.
+#   1  If the `$_NOTEBOOK_PATH` repository is clean.
 _git_index_is_dirty() {
   local _target_directory="${1:-}"
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${NOTES_DATA_DIR}"
+    _target_directory="${_NOTEBOOK_PATH}"
   fi
 
   cd "${_target_directory}" ||
@@ -1004,13 +1005,13 @@ _git_should_autosync() {
     return 1
   fi
 
-  cd "${NOTES_DATA_DIR}" || _die printf "\`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _die printf "\`cd\` failed.\\n"
   if ! git config --get remote.origin.url &>/dev/null
   then # there is no remote configured.
     return 1
   fi
 
-  if [[ ! -e "${NOTES_DATA_DIR}/.git/FETCH_HEAD" ]]
+  if [[ ! -e "${_NOTEBOOK_PATH}/.git/FETCH_HEAD" ]]
   then # no previous fetches, but has an origin and autosync is enabled.
     return 0
   fi
@@ -1140,7 +1141,7 @@ _list_notes_files() {
   then
     local _filenames=()
     local _index_file
-    _index_file="$(< "${NOTES_DATA_DIR}/.index")"
+    _index_file="$(< "${_NOTEBOOK_PATH}/.index")"
 
     for __line in "${_index_file[@]}"
     do
@@ -1157,7 +1158,7 @@ _list_notes_files() {
       printf "%s\n" "${_filenames[@]}"
     fi
   else
-    ls -t "${NOTES_DATA_DIR}"
+    ls -t "${_NOTEBOOK_PATH}"
   fi
 }
 
@@ -1198,7 +1199,7 @@ _print_line() {
 #   _set_selection_notebook <selection>
 #
 # Description:
-#   Given <selection>, set `$_SCOPE` and `$NOTES_DATA_DIR` with the notebook
+#   Given <selection>, set `$_SCOPE` and `$_NOTEBOOK_PATH` with the notebook
 #   name, if present.
 _set_selection_notebook() {
   local _parts=()
@@ -1206,8 +1207,8 @@ _set_selection_notebook() {
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
     _SCOPED=1
-    NOTES_DATA_DIR="${NOTES_DIR}/${_parts[0]}"
-    _SCOPE="$(basename "${NOTES_DATA_DIR}")"
+    _NOTEBOOK_PATH="${NOTES_DIR}/${_parts[0]}"
+    _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
   fi
 }
 
@@ -1583,7 +1584,7 @@ _add() {
     _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
   fi
 
-  _target_path="${NOTES_DATA_DIR}/${_basename}"
+  _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
   _debug printf "_show() \${_password}: '%s'\\n" "${_password}"
 
@@ -1628,7 +1629,7 @@ _add() {
   if ((_encrypt)) && [[ -e "${_target_path}" ]]
   then
     local _decrypted_path="${_target_path}"
-    local _encrypted_path="${NOTES_DATA_DIR}/${_basename}.enc"
+    local _encrypted_path="${_NOTEBOOK_PATH}/${_basename}.enc"
 
     _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
 
@@ -1661,7 +1662,7 @@ _add() {
     fi
 
     local _title
-    _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
+    _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
     if [[ -n "${_title}" ]]
     then
       printf "Added [%s] %s '%s'\\n" \
@@ -1825,7 +1826,7 @@ _bookmark() {
     fi
     _set_selection_notebook "${_selection}"
 
-    local _target_path="${NOTES_DATA_DIR}/${_basename}"
+    local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
     if [[ "${_subcommand}" =~ ^open|o|peek|p$ ]]
     then
@@ -1932,7 +1933,7 @@ _bookmark() {
   _debug printf \
     "_bookmark() \`\${_basename}\`: '%s'\\n" "${_basename:-}"
 
-  local _target_path="${NOTES_DATA_DIR}/${_basename}"
+  local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
   local _page_content
   if ! _page_content="$(curl -s "${_url}")" && [[ -z "${_page_content:-}" ]]
@@ -2147,7 +2148,7 @@ _delete() {
     _scoped_basename="${_SCOPE}:${_basename}"
   fi
 
-  _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
+  _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
     _note_info_line="[${_id}] ${_scoped_basename} '${_title}'"
@@ -2173,12 +2174,12 @@ _delete() {
     done
   fi
 
-  if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] && [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
-    cd "${NOTES_DATA_DIR}" || _die printf "_delete() \`cd\` failed.\\n"
+    cd "${_NOTEBOOK_PATH}" || _die printf "_delete() \`cd\` failed.\\n"
     git rm "${_basename}" 1>/dev/null
 
-    if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+    if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
     then
       _index delete "${_basename}"
       _git_checkpoint "[NOTES] Delete: ${_basename}"
@@ -2262,12 +2263,12 @@ _edit() {
 
   _set_selection_notebook "${_selection}"
 
-  if [[ -n "${_basename}" ]] || [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] || [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
-    local _target_file="${NOTES_DATA_DIR}/${_basename}"
+    local _target_file="${_NOTEBOOK_PATH}/${_basename}"
 
     local _before
-    _before="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
+    _before="$(_get_hash "${_NOTEBOOK_PATH}/${_basename}")"
 
     if _file_is_encrypted "${_target_file}"
     then
@@ -2308,7 +2309,7 @@ _edit() {
 
     _git_checkpoint "[NOTES] Edit: ${_basename}"
 
-    _after="$(_get_hash "${NOTES_DATA_DIR}/${_basename}")"
+    _after="$(_get_hash "${_NOTEBOOK_PATH}/${_basename}")"
     _debug printf "_edit() \${_before}: %s\\n" "${_before}"
     _debug printf "_edit() \${_after}: %s\\n" "${_after}"
 
@@ -2326,7 +2327,7 @@ _edit() {
       fi
 
       local _title
-      _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
+      _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
       if [[ -n "${_title}" ]]
       then
         printf "Updated [%s] %s '%s'\\n" \
@@ -2359,7 +2360,7 @@ _env() {
   printf "EDITOR=%s\\n" "${EDITOR}"
   printf "NOTES_AUTO_SYNC=%s\\n" "${NOTES_AUTO_SYNC}"
   printf "NOTES_DIR=%s\\n" "${NOTES_DIR}"
-  printf "NOTES_DATA_DIR=%s\\n" "${NOTES_DATA_DIR}"
+  printf "_NOTEBOOK_PATH=%s\\n" "${_NOTEBOOK_PATH}"
   printf "NOTES_DEFAULT_EXTENSION=%s\\n" "${NOTES_DEFAULT_EXTENSION}"
   printf "NOTES_ENCRYPTION_TOOL=%s\\n" "${NOTES_ENCRYPTION_TOOL}"
   printf "NOTES_HIGHLIGHT_COLOR=%s\\n" "${NOTES_HIGHLIGHT_COLOR}"
@@ -2445,7 +2446,7 @@ _export() {
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
 
-  if [[ -z "${_basename:-}" ]] || [[ ! -e "${NOTES_DATA_DIR}/${_basename:-}" ]]
+  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_NOTEBOOK_PATH}/${_basename:-}" ]]
   then
     printf "Note not found: '%s'.\\n" "${_selection}"
     return 1
@@ -2458,9 +2459,9 @@ _export() {
     then
       if [[ -n "${_args[*]:-}" ]]
       then
-        pandoc "${NOTES_DATA_DIR}/${_basename}" "${_args[@]:-}"
+        pandoc "${_NOTEBOOK_PATH}/${_basename}" "${_args[@]:-}"
       else
-        pandoc "${NOTES_DATA_DIR}/${_basename}"
+        pandoc "${_NOTEBOOK_PATH}/${_basename}"
       fi
     else
       printf "Pandoc required. http://pandoc.org/\n"
@@ -2508,16 +2509,16 @@ _export() {
         pandoc \
           -o "${_target_path}" \
           --standalone \
-          "${NOTES_DATA_DIR}/${_basename}" \
+          "${_NOTEBOOK_PATH}/${_basename}" \
           "${_args[@]:-}"
       else
         pandoc \
           -o "${_target_path}" \
           --standalone \
-          "${NOTES_DATA_DIR}/${_basename}"
+          "${_NOTEBOOK_PATH}/${_basename}"
       fi
     else
-      cp "${NOTES_DATA_DIR}/${_basename}" "${_target_path}"
+      cp "${_NOTEBOOK_PATH}/${_basename}" "${_target_path}"
     fi &&
       printf "Exported '%s' to '%s'\n" "${_selection}" "${_target_path}"
   fi
@@ -2533,7 +2534,7 @@ Description:
   Alias for \`git\` within the current notebook.
 HEREDOC
 _git() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _die printf "_git() \`cd\` failed.\\n"
   git "${@}"
 }
 
@@ -2554,7 +2555,7 @@ Examples:
   ${_ME} history example.md
 HEREDOC
 _history() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_history() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _die printf "_history() \`cd\` failed.\\n"
 
   local _log_command="git log"
   if _command_exists "tig"
@@ -2570,7 +2571,7 @@ _history() {
   _set_selection_notebook "${_selection}"
   _debug printf "_history() \${_basename}: '%s'\\n" "${_basename}"
 
-  if [[ -n "${_basename}" ]] && [[ -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] && [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
     eval "${_log_command} -- ${_basename}"
   else
@@ -2627,7 +2628,7 @@ _import() {
   #   _import_get_valid_basename <basename>
   _import_get_valid_basename() {
     local _target_basename="${1:-}"
-    if [[ -e "${NOTES_DATA_DIR}/${_target_basename}" ]]
+    if [[ -e "${_NOTEBOOK_PATH}/${_target_basename}" ]]
     then
       _target_basename="$(_get_unique_basename "${_target_basename}")"
     fi
@@ -2679,7 +2680,7 @@ _import() {
       _basename="$(basename -- "${_path}")"
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      cp "${_path}" "${NOTES_DATA_DIR}/${_basename}" &&
+      cp "${_path}" "${_NOTEBOOK_PATH}/${_basename}" &&
         _index add "${_basename}" &&
         _git_checkpoint "[NOTES] Import: ${_basename}"
       printf "Imported '%s' to '%s'\n" "${_path}" "${_basename}"
@@ -2696,9 +2697,9 @@ _import() {
       then
         curl -s "${_url}" | pandoc \
           --from html --to markdown \
-          -o "${NOTES_DATA_DIR}/${_basename}"
+          -o "${_NOTEBOOK_PATH}/${_basename}"
       else
-        curl "${_url}" -o "${NOTES_DATA_DIR}/${_basename}"
+        curl "${_url}" -o "${_NOTEBOOK_PATH}/${_basename}"
       fi &&
         _index add "${_basename}" &&
         _git_checkpoint "\
@@ -2714,7 +2715,7 @@ ${_url}
       _basename="$(basename -- "${_path}")"
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      mv "${_path}" "${NOTES_DATA_DIR}/${_basename}" &&
+      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}" &&
         _index add "${_basename}" &&
         _git_checkpoint "[NOTES] Import: ${_basename}"
       printf "Imported '%s' to '%s'\n" "${_path}" "${_basename}"
@@ -2765,7 +2766,7 @@ Description:
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
-  local _index_path="${NOTES_DATA_DIR}/.index"
+  local _index_path="${_NOTEBOOK_PATH}/.index"
 
   if [[ ! -e "${_index_path}" ]] &&
      [[ ! "${_subcommand}" == "rebuild" ]]
@@ -2781,7 +2782,7 @@ _index() {
         _help index
         return 1
       fi
-      if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+      if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
       then
         printf "File not found: %s\\n" "${_basename}"
         return 1
@@ -2879,9 +2880,9 @@ _index() {
     rebuild)
       _debug printf "_index() rebuild\\n"
       _debug printf \
-        "_index() rebuild: \`ls \${NOTES_DATA_DIR}\`: '%s'\\n" \
-        "$(ls "${NOTES_DATA_DIR}")"
-      ls "${NOTES_DATA_DIR}" > "${_index_path}" &&
+        "_index() rebuild: \`ls \${_NOTEBOOK_PATH}\`: '%s'\\n" \
+        "$(ls "${_NOTEBOOK_PATH}")"
+      ls "${_NOTEBOOK_PATH}" > "${_index_path}" &&
         _git_checkpoint "[NOTES] Rebuild Index"
       ;;
     reconcile)
@@ -2907,7 +2908,7 @@ _index() {
       _index_list=($(<"${_index_path}"))
 
       local _file_list
-      _file_list=($(ls "${NOTES_DATA_DIR}"))
+      _file_list=($(ls "${_NOTEBOOK_PATH}"))
 
       _index_reconcile_remove_duplicates "${_index_path}"
 
@@ -2960,7 +2961,7 @@ _index() {
       local _index_list
       _index_list=($(<"${_index_path}"))
       local _file_list
-      _file_list=($(ls "${NOTES_DATA_DIR}"))
+      _file_list=($(ls "${_NOTEBOOK_PATH}"))
       local _errors=0
 
       for __item in "${_index_list[@]:-}"
@@ -3005,10 +3006,10 @@ _init() {
     printf "\`init\`: %s already exists and is not a directory.\\n" \
       "${NOTES_DIR}"
     return 1
-  elif [[ -e "${NOTES_DATA_DIR}" ]]
+  elif [[ -e "${_NOTEBOOK_PATH}" ]]
   then
     printf "\`init\`: %s already exists.\\n" \
-      "${NOTES_DATA_DIR}"
+      "${_NOTEBOOK_PATH}"
     return 1
   fi
 
@@ -3107,12 +3108,12 @@ HEREDOC
   local _repo_url="${1:-}"
   if [[ -n "${_repo_url}" ]]
   then
-    git clone "${_repo_url}" "${NOTES_DATA_DIR}"
+    git clone "${_repo_url}" "${_NOTEBOOK_PATH}"
   else
-    mkdir -p "${NOTES_DATA_DIR}"
-    cd "${NOTES_DATA_DIR}" &&
+    mkdir -p "${_NOTEBOOK_PATH}"
+    cd "${_NOTEBOOK_PATH}" &&
       git init 1>/dev/null &&
-      touch "${NOTES_DATA_DIR}/.index" &&
+      touch "${_NOTEBOOK_PATH}/.index" &&
       _git_checkpoint "[NOTES] Initialize"
   fi
   printf "home\\n" > "${NOTES_DIR}/.current"
@@ -3250,7 +3251,7 @@ _list() {
   _debug printf "list() \${_filenames_count}: '%s'\\n" "${_filenames_count[@]}"
 
   if [[ "${_filenames_count}" -eq 0 ]]
-  then # no files in `$NOTES_DATA_DIR`
+  then # no files in `$_NOTEBOOK_PATH`
     cat <<HEREDOC
 0 notes.
 
@@ -3288,7 +3289,7 @@ HEREDOC
           then
             : # include the note in the list
           else
-            _maybe_title="$(_get_title "${NOTES_DATA_DIR}/${__basename}")"
+            _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
             if [[ "${_maybe_title:-}" =~ ${_selection} ]]
             then
               : # include the note in the list
@@ -3328,7 +3329,7 @@ HEREDOC
       local _list_item_title_or_basename="${__basename}"
       if ((_list_titles))
       then
-        _maybe_title="$(_get_title "${NOTES_DATA_DIR}/${__basename}")"
+        _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
         if [[ -n "${_maybe_title}" ]]
         then # note file has title.
           _list_item_title_or_basename="${_maybe_title}"
@@ -3343,12 +3344,12 @@ HEREDOC
 
       local _indicators=
 
-      if _file_is_bookmark "${NOTES_DATA_DIR}/${__basename}"
+      if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
       then
         _indicators+=" 🔖"
       fi
 
-      if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
+      if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
       then
         _indicators+=" 🔒"
       fi
@@ -3375,10 +3376,10 @@ HEREDOC
 
       if ((_print_excerpt)) &&
          [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
-         _file_is_text "${NOTES_DATA_DIR}/${__basename}"
+         _file_is_text "${_NOTEBOOK_PATH}/${__basename}"
       then # excerpt is specified with a non-zero digit, as required by `head`.
         _print_line "${_list_item}"
-        head -"${_excerpt_length}" "${NOTES_DATA_DIR}/${__basename}"
+        head -"${_excerpt_length}" "${_NOTEBOOK_PATH}/${__basename}"
         printf "\\n"
       fi
 
@@ -3672,7 +3673,7 @@ _move() {
   then
     _help "move"
     return 1
-  elif [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]]
+  elif [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then
     printf "Not Found: %s:%s\\n" "${_SCOPE}" "${_basename}"
     return 1
@@ -3684,7 +3685,7 @@ _move() {
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
 
-  _title="$(_get_title "${NOTES_DATA_DIR}/${_basename}")"
+  _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
     _source_info_line="${_SCOPE}:${_basename} '${_title}'"
@@ -3712,7 +3713,7 @@ _move() {
     done
   fi
 
-  cat "${NOTES_DATA_DIR}/${_basename}" \
+  cat "${_NOTEBOOK_PATH}/${_basename}" \
     | "${_MY_PATH}" "${_target_notebook}:add" "${_basename}" 1> /dev/null
 
   "${_MY_PATH}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
@@ -3722,7 +3723,7 @@ _move() {
     "${_MY_PATH}" "${_target_notebook}:index" get_id "${_basename}"
   )"
 
-  if [[ ! -e "${NOTES_DATA_DIR}/${_basename}" ]] ||
+  if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]] ||
      [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
   then
     printf "Moved to [%s:%s] %s:%s\\n"  \
@@ -3753,10 +3754,10 @@ _notebook() {
   then
     if _command_exists "xdg-open"
     then
-      xdg-open "${NOTES_DATA_DIR}"
+      xdg-open "${_NOTEBOOK_PATH}"
     elif _command_exists "open"
     then
-      open "${NOTES_DATA_DIR}"
+      open "${_NOTEBOOK_PATH}"
     else
       printf "notes doesn't know how to open directories on your system.\\n"
       return 1
@@ -3944,7 +3945,7 @@ _notebooks() {
       _notebooks_add "${_name:-}" "${3:-}"
       ;;
     current)
-      basename "${NOTES_DATA_DIR}"
+      basename "${_NOTEBOOK_PATH}"
       ;;
     rename)
       _notebooks_rename "${_name:-}" "${3:-}"
@@ -4074,7 +4075,7 @@ _remote() {
   _debug printf "_remote() \${_subcommand}: '%s'\\n" "${_subcommand}"
   _debug printf "_remote() \${_url}: '%s'\\n" "${_url}"
 
-  cd "${NOTES_DATA_DIR}" || _die printf "_git() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _die printf "_git() \`cd\` failed.\\n"
 
   if [[ "$(git remote get-url origin 2>/dev/null)" ]]
   then
@@ -4210,7 +4211,7 @@ _rename() {
   local _source_basename
   _source_basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
-  local _source_path="${NOTES_DATA_DIR}/${_source_basename}"
+  local _source_path="${_NOTEBOOK_PATH}/${_source_basename}"
 
   if [[ -z "${_source_basename}" ]]
   then
@@ -4227,7 +4228,7 @@ _rename() {
     # Assign filename with unicode timestamp.
     local _target_basename
     _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
-    local _destination_path="${NOTES_DATA_DIR}/${_target_basename}"
+    local _destination_path="${_NOTEBOOK_PATH}/${_target_basename}"
 
     mv "${_source_path}" "${_destination_path}" &&
       _index update "${_source_basename}" "${_target_basename}" &&
@@ -4238,13 +4239,13 @@ _rename() {
        "${_target_basename}."
   elif [[ -n "${_target_name}" ]]
   then
-    if [[ -e "${NOTES_DATA_DIR}/${_target_name}" ]]
+    if [[ -e "${_NOTEBOOK_PATH}/${_target_name}" ]]
     then
       printf "File already exists: '%s'\\n" "${_target_name}"
       return 1
     fi
 
-    mv "${_source_path}" "${NOTES_DATA_DIR}/${_target_name}" &&
+    mv "${_source_path}" "${_NOTEBOOK_PATH}/${_target_name}" &&
       _index update "${_source_basename}" "${_target_name}" &&
       _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_name}"
@@ -4437,7 +4438,7 @@ _search() {
             )"
           fi
 
-          _id="$(NOTES_DATA_DIR="${NOTES_DIR}/${__scope}" _index get_id "${_filename}")"
+          _id="$(_NOTEBOOK_PATH="${NOTES_DIR}/${__scope}" _index get_id "${_filename}")"
           _title="$(_get_title "${NOTES_DIR}/${__scope}/${_filename}")"
 
           if [[ -n "${_title}" ]]
@@ -4939,7 +4940,7 @@ _show() {
   fi
   _set_selection_notebook "${_selection}"
 
-  local _target_path="${NOTES_DATA_DIR}/${_basename}"
+  local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
   if _file_is_encrypted "${_target_path}"
   then
@@ -4989,7 +4990,7 @@ Can't show archives. Export archive and expand to edit.\\n"
   then # _basename is assigned and a note exists with that name.
     if ((_print_path))
     then # `notes show --path`
-      printf "%s/%s\\n" "${NOTES_DATA_DIR}" "${_basename}"
+      printf "%s/%s\\n" "${_NOTEBOOK_PATH}" "${_basename}"
     elif ((_print_id))
     then
       local _id
@@ -5054,7 +5055,7 @@ Description:
   Run \`git status\` in the current notebook.
 HEREDOC
 _status() {
-  cd "${NOTES_DATA_DIR}" || _die printf "_status() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _die printf "_status() \`cd\` failed.\\n"
   git status
 }
 
@@ -5089,7 +5090,7 @@ _sync() {
   for __notebook in "${_notebooks[@]:-}"
   do
     printf "%s..." "${__notebook}"
-    NOTES_DATA_DIR="${NOTES_DIR}/${__notebook}"
+    _NOTEBOOK_PATH="${NOTES_DIR}/${__notebook}"
     (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner)
   done &&
     printf "Done!\\n" ||
@@ -5214,9 +5215,9 @@ _notes() {
   if [[ -n "${_SCOPE}" ]]
   then
     _SCOPED=1
-    NOTES_DATA_DIR="${NOTES_DIR}/${_SCOPE}"
+    _NOTEBOOK_PATH="${NOTES_DIR}/${_SCOPE}"
   else
-    _SCOPE="$(basename "${NOTES_DATA_DIR}")"
+    _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
   fi
 
   case "${_SUBCOMMAND}" in
@@ -5233,7 +5234,7 @@ _notes() {
       # Call `_init()` if configuration hasn't been initialized.
       if [[ ! -e "${NOTES_DIR}"       ]] &&
          [[ ! -e "${NOTESRC_PATH}"    ]] ||
-         [[ ! -e "${NOTES_DATA_DIR}"  ]]
+         [[ ! -e "${_NOTEBOOK_PATH}"  ]]
       then
         _git_required
         _init "${@}"

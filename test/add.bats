@@ -14,12 +14,12 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates a new note file with $EDITOR
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# mock_editor' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -41,12 +41,12 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# Content' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -54,8 +54,8 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -65,7 +65,7 @@ load test_helper
   run "${_NOTES}" init
   run "${_NOTES}" notebooks add Example
   run "${_NOTES}" Example:add "# Content"
-  NOTES_DATA_DIR="${NOTES_DIR}/Example"
+  _NOTEBOOK_PATH="${NOTES_DIR}/Example"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -73,12 +73,12 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates new note file with content
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# Content' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -86,8 +86,8 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[Example:[0-9]+\]\ Example:[A-Za-z0-9]+.md ]]
@@ -104,11 +104,11 @@ load test_helper
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Content' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# Content' "${_NOTEBOOK_PATH}"/*) ]]
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -124,7 +124,7 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
@@ -139,14 +139,14 @@ load test_helper
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
   [[ "${#_files[@]}" -eq 1 ]]
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
 
   [[ -n "$(ls example.md)" ]]
-  [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# mock_editor' "${_NOTEBOOK_PATH}"/*) ]]
 
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -163,9 +163,9 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  cd "${NOTES_DATA_DIR}" || return 1
-  ls "${NOTES_DATA_DIR}/"
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  cd "${_NOTEBOOK_PATH}" || return 1
+  ls "${_NOTEBOOK_PATH}/"
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
@@ -180,14 +180,14 @@ load test_helper
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
   [[ "${#_files[@]}" -eq 1 ]]
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
 
   [[ -n "$(ls Example_Title.md)" ]]
-  [[ $(grep '# mock_editor' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# mock_editor' "${_NOTEBOOK_PATH}"/*) ]]
 
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -204,9 +204,9 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  cd "${NOTES_DATA_DIR}" || return 1
-  ls "${NOTES_DATA_DIR}/"
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  cd "${_NOTEBOOK_PATH}" || return 1
+  ls "${_NOTEBOOK_PATH}/"
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
@@ -218,9 +218,9 @@ load test_helper
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '* Content' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '* Content' "${_NOTEBOOK_PATH}"/*) ]]
   [[ "${_files[0]}" =~ org$ ]]
 }
 
@@ -230,7 +230,7 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
@@ -242,10 +242,10 @@ load test_helper
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   [[ "${_files[0]}" =~ enc$ ]]
-  [[ "$(file "${NOTES_DATA_DIR}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
+  [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
 }
 
 # --password option ###########################################################
@@ -256,7 +256,7 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
@@ -272,12 +272,12 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates new note file
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# Piped' "${_NOTEBOOK_PATH}"/*) ]]
 
   # Creates git commit
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -285,8 +285,8 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Add') ]]
 
   # Adds to index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
-  [[ "$(ls "${NOTES_DATA_DIR}")" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -298,9 +298,9 @@ load test_helper
 
   [[ ${status} -eq 0 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Piped' "${NOTES_DATA_DIR}"/*) ]]
+  [[ $(grep '# Piped' "${_NOTEBOOK_PATH}"/*) ]]
   [[ "${_files[0]}" =~ org$ ]]
 }
 
@@ -310,7 +310,7 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  _files=($(ls "${NOTES_DATA_DIR}/"))
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 0 ]]
 }
 

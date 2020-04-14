@@ -7,12 +7,12 @@ load test_helper
 @test "\`index\` builds an index if one doesn't exist." {
   {
     "${_NOTES}" init
-    rm "${NOTES_DATA_DIR}/.index"
-    [[ ! -e "${NOTES_DATA_DIR}/.index" ]]
+    rm "${_NOTEBOOK_PATH}/.index"
+    [[ ! -e "${_NOTEBOOK_PATH}/.index" ]]
   }
 
   run "${_NOTES}" index
-  [[ -e "${NOTES_DATA_DIR}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -24,26 +24,26 @@ load test_helper
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
-    echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
+    echo "" > "${_NOTEBOOK_PATH}/.index"
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
-  run "${_NOTES}" index add "$(ls ${NOTES_DATA_DIR})"
+  run "${_NOTES}" index add "$(ls ${_NOTEBOOK_PATH})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf "\$(cat \${NOTES_DATA_DIR}/.index): '%s'\\n" \
-    "$(cat "${NOTES_DATA_DIR}/.index")"
-  printf "\$(ls ${NOTES_DATA_DIR}): '%s'\\n" "$(ls ${NOTES_DATA_DIR})"
+  printf "\$(cat \${_NOTEBOOK_PATH}/.index): '%s'\\n" \
+    "$(cat "${_NOTEBOOK_PATH}/.index")"
+  printf "\$(ls ${_NOTEBOOK_PATH}): '%s'\\n" "$(ls ${_NOTEBOOK_PATH})"
 
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ first.md$ ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ first.md$ ]]
 }
 
 @test "\`index add\` with no argument returns 1 and prints help." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
-    echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
+    echo "" > "${_NOTEBOOK_PATH}/.index"
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NOTES}" index add
@@ -58,8 +58,8 @@ load test_helper
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
-    echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
+    echo "" > "${_NOTEBOOK_PATH}/.index"
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NOTES}" index add 'not-a-file'
@@ -73,13 +73,13 @@ load test_helper
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
-  run "${_NOTES}" index add "$(ls ${NOTES_DATA_DIR})"
+  run "${_NOTES}" index add "$(ls ${_NOTEBOOK_PATH})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ ^first.md$ ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   [[ -z "${lines[1]}" ]]
 }
 
@@ -131,7 +131,7 @@ load test_helper
     "${_NOTES}" add "first.md"  --title "one"
   }
 
-  run "${_NOTES}" index get_id "$(ls ${NOTES_DATA_DIR})"
+  run "${_NOTES}" index get_id "$(ls ${_NOTEBOOK_PATH})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -172,11 +172,11 @@ load test_helper
     "${_NOTES}" add "first.md"  --title "one"
   }
 
-  run "${_NOTES}" index delete "$(ls ${NOTES_DATA_DIR})"
+  run "${_NOTES}" index delete "$(ls ${_NOTEBOOK_PATH})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "" ]]
 }
 
 @test "\`index delete\` with no argument returns 1 and prints help." {
@@ -210,29 +210,29 @@ load test_helper
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
-    echo "" > "${NOTES_DATA_DIR}/.index"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "" ]]
+    echo "" > "${_NOTEBOOK_PATH}/.index"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "" ]]
   }
 
   run "${_NOTES}" index rebuild
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls ${NOTES_DATA_DIR})" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls ${_NOTEBOOK_PATH})" ]]
 }
 
 @test "\`index rebuild\` creates git commit." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add
-    _files=($(ls "${NOTES_DATA_DIR}/")) && _filename="${_files[0]}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     run "${_NOTES}" delete "${_filename}" --force
     run "${_NOTES}" add
   }
 
   run "${_NOTES}" index rebuild
 
-  cd "${NOTES_DATA_DIR}" || return 1
+  cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -249,11 +249,11 @@ load test_helper
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
     printf \
-      "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
-      "$(cat "${NOTES_DATA_DIR}/.index")"
-    printf "\$(ls -r \${NOTES_DATA_DIR}): '%s'\\n" "$(ls ${NOTES_DATA_DIR})"
-    _existing_index="$(cat "${NOTES_DATA_DIR}/.index")"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls ${NOTES_DATA_DIR})" ]]
+      "\"\$(cat \"\${_NOTEBOOK_PATH}/.index\")\": '%s'\\n" \
+      "$(cat "${_NOTEBOOK_PATH}/.index")"
+    printf "\$(ls -r \${_NOTEBOOK_PATH}): '%s'\\n" "$(ls ${_NOTEBOOK_PATH})"
+    _existing_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls ${_NOTEBOOK_PATH})" ]]
   }
 
   run "${_NOTES}" index reconcile
@@ -268,16 +268,16 @@ load test_helper
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
-    printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+    printf "not-a-file\n" >> "${_NOTEBOOK_PATH}/.index"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls ${_NOTEBOOK_PATH})" ]]
   }
 
   run "${_NOTES}" index reconcile
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  cat "${NOTES_DATA_DIR}/.index"
+  cat "${_NOTEBOOK_PATH}/.index"
   [[ ${status} -eq 0 ]]
-  [[ ! "$(cat "${NOTES_DATA_DIR}/.index")" =~ not-a-file ]]
+  [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ not-a-file ]]
   "${_NOTES}" index verify
 }
 
@@ -286,16 +286,16 @@ load test_helper
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
-    echo "# Example" > "${NOTES_DATA_DIR}/example.md"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+    echo "# Example" > "${_NOTEBOOK_PATH}/example.md"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls ${_NOTEBOOK_PATH})" ]]
   }
 
   run "${_NOTES}" index reconcile
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  cat "${NOTES_DATA_DIR}/.index"
+  cat "${_NOTEBOOK_PATH}/.index"
   [[ ${status} -eq 0 ]]
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ example.md ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ example.md ]]
   "${_NOTES}" index verify
 }
 
@@ -304,17 +304,17 @@ load test_helper
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
-    printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
-    echo "# Example" > "${NOTES_DATA_DIR}/example.md"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+    printf "not-a-file\n" >> "${_NOTEBOOK_PATH}/.index"
+    echo "# Example" > "${_NOTEBOOK_PATH}/example.md"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls ${_NOTEBOOK_PATH})" ]]
   }
 
   run "${_NOTES}" index reconcile
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  cat "${NOTES_DATA_DIR}/.index"
+  cat "${_NOTEBOOK_PATH}/.index"
   [[ ${status} -eq 0 ]]
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" =~ example.md ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ example.md ]]
   "${_NOTES}" index verify
 }
 
@@ -330,7 +330,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "$(cat "${NOTES_DATA_DIR}/.index")" ]]
+  [[ "${output}" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 }
 
 # update ######################################################################
@@ -341,14 +341,14 @@ load test_helper
     "${_NOTES}" add "# one"
   }
 
-  run "${_NOTES}" index update "$(ls ${NOTES_DATA_DIR})" "example.md"
+  run "${_NOTES}" index update "$(ls ${_NOTEBOOK_PATH})" "example.md"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf \
-    "$(cat \"\${NOTES_DATA_DIR}/.index\"): '%s'\\n" \
-    "$(cat "${NOTES_DATA_DIR}/.index")"
+    "$(cat \"\${_NOTEBOOK_PATH}/.index\"): '%s'\\n" \
+    "$(cat "${_NOTEBOOK_PATH}/.index")"
   [[ ${status} -eq 0 ]]
-  [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "example.md" ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "example.md" ]]
 }
 
 @test "\`index update\` with no arguments returns 1 and prints help." {
@@ -370,7 +370,7 @@ load test_helper
     "${_NOTES}" add "# one"
   }
 
-  run "${_NOTES}" index update "$(ls ${NOTES_DATA_DIR})"
+  run "${_NOTES}" index update "$(ls ${_NOTEBOOK_PATH})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -385,10 +385,10 @@ load test_helper
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
     printf \
-      "\"\$(cat \"\${NOTES_DATA_DIR}/.index\")\": '%s'\\n" \
-      "$(cat "${NOTES_DATA_DIR}/.index")"
-    printf "\$(ls \${NOTES_DATA_DIR}): '%s'\\n" "$(ls ${NOTES_DATA_DIR})"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" == "$(ls ${NOTES_DATA_DIR})" ]]
+      "\"\$(cat \"\${_NOTEBOOK_PATH}/.index\")\": '%s'\\n" \
+      "$(cat "${_NOTEBOOK_PATH}/.index")"
+    printf "\$(ls \${_NOTEBOOK_PATH}): '%s'\\n" "$(ls ${_NOTEBOOK_PATH})"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls ${_NOTEBOOK_PATH})" ]]
   }
 
   run "${_NOTES}" index verify
@@ -402,8 +402,8 @@ load test_helper
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
-    printf "not-a-file\n" >> "${NOTES_DATA_DIR}/.index"
-    [[ "$(cat "${NOTES_DATA_DIR}/.index")" != "$(ls ${NOTES_DATA_DIR})" ]]
+    printf "not-a-file\n" >> "${_NOTEBOOK_PATH}/.index"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls ${_NOTEBOOK_PATH})" ]]
   }
 
   run "${_NOTES}" index verify

@@ -71,7 +71,7 @@ load test_helper
     "${_NOTES}" add "first.md" --title "one"
     "${_NOTES}" add "second.md" --title "two"
     "${_NOTES}" add "third.md" --title "three"
-    _files=($(ls -t "${NOTES_DATA_DIR}/"))
+    _files=($(ls -t "${_NOTEBOOK_PATH}/"))
   }
 
   run "${_NOTES}"
