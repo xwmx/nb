@@ -279,6 +279,45 @@ trap _notes_cleanup_on_exit EXIT
 # Helpers
 ###############################################################################
 
+# _alias_subcommand()
+#
+# Usage:
+#   _alias_subcommand <subcommand> <alias>
+#
+# Description:
+#   Create an <alias> of <subcommand>. NOTE: aliases also have to be added to
+#   the $_SUBCOMMANDS variable.
+_alias_subcommand() {
+  local _subcommand="${1:-}"
+  local _alias="${2:-}"
+  if [[ -z "${_subcommand}" ]] || [[ -z "${_alias}" ]]
+  then
+    return 1
+  fi
+
+  local _subcommand_help
+  _subcommand_help="$(
+    printf "%s\n" "${_subcommand}" | cut -d' ' -f1
+  )"
+
+  eval "desc \"${_alias}\" \"\$(_help '${_subcommand_help}')\""
+
+  if [[ "${#_alias}" == 1 ]]
+  then
+    eval "\
+_${_alias}() {
+  if [[ -n \"\${1:-}\" ]]
+  then
+    _${_subcommand} \"\${@}\"
+  else
+    eval \"_ls ${_alias} \${*}\"
+  fi
+}"
+  else
+    eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
+  fi
+}
+
 # _command_exists()
 #
 # Usage:
@@ -1393,8 +1432,7 @@ HEREDOC
     desc --get "${@}"
   fi
 }
-desc "h" "$(_help 'help')"
-_h() { _help "${@}"; }
+_alias_subcommand "help" "h"
 
 ###############################################################################
 # Subcommands
@@ -1650,8 +1688,7 @@ _add() {
   fi &&
     _git_checkpoint "[NOTES] Add: ${_basename}"
 }
-desc "a" "$(_help 'add')"
-_a() { _add "${@}"; }
+_alias_subcommand "add" "a"
 
 # bookmark ####################################################################
 
@@ -2006,8 +2043,7 @@ _bookmark() {
     fi
   fi
 }
-desc "b" "$(_help 'bookmark')"
-_b() { _bookmark "${@}"; }
+_alias_subcommand "bookmark" "b"
 
 # commands ####################################################################
 
@@ -2153,8 +2189,7 @@ _delete() {
     return 1
   fi
 }
-desc "d" "$(_help 'delete')"
-_d() { _delete "${@}"; }
+_alias_subcommand "delete" "d"
 
 # edit ########################################################################
 
@@ -2309,8 +2344,7 @@ _edit() {
     return 1
   fi
 }
-desc "e" "$(_help 'edit')"
-_e() { _edit "${@}"; }
+_alias_subcommand "edit" "e"
 
 # env #########################################################################
 
@@ -3698,8 +3732,7 @@ _move() {
       "${_basename}"
   fi
 }
-desc "mv" "$(_help 'move')"
-_mv()    { _move "${@}"; }
+_alias_subcommand "move" "mv"
 
 # notebook ####################################################################
 
@@ -3732,8 +3765,7 @@ _notebook() {
     _notebooks current
   fi
 }
-desc "nb" "$(_help 'notebook')"
-_nb()    { _notebook "${@}"; }
+_alias_subcommand "notebook" "nb"
 
 # notebooks ###################################################################
 
@@ -3945,36 +3977,17 @@ _notebooks() {
       ;;
   esac
 }
-desc "nbs" "$(_help 'notebooks')"
-_nbs()   { _notebooks "${@}"; }
+_alias_subcommand "notebooks" "nbs"
 
 # open ########################################################################
 
-desc "open" "$(_help 'bookmark')"
-_open() { _bookmark open "${@}"; }
-desc "o" "$(_help 'open')"
-_o() {
-  if [[ -n "${1:-}" ]]
-  then
-    _open "${@}"
-  else
-    _ls "${@}"
-  fi
-}
+_alias_subcommand "bookmark open" "open"
+_alias_subcommand "open" "o"
 
 # peek ########################################################################
 
-desc "peek" "$(_help 'bookmark')"
-_peek() { _bookmark peek "${@}"; }
-desc "p" "$(_help 'bookmark')"
-_p() {
-  if [[ -n "${1:-}" ]]
-  then
-    _peek "${@}"
-  else
-    _ls "${@}"
-  fi
-}
+_alias_subcommand "bookmark peek" "peek"
+_alias_subcommand "peek" "p"
 
 # remote ######################################################################
 
@@ -4446,8 +4459,7 @@ _search() {
     fi
   fi
 }
-desc "q" "$(_help 'search')"
-_q() {  _search "${@}"; }
+_alias_subcommand "search" "q"
 
 # settings ####################################################################
 
@@ -4701,8 +4713,7 @@ _settings() {
     shift
   done
 }
-desc "config" "$(_help 'settings')"
-_config()    { _settings "${@}"; }
+_alias_subcommand "settings" "config"
 
 # shell  ######################################################################
 
@@ -4996,8 +5007,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     rm "${_decrypted_path}"
   fi
 }
-desc "s" "$(_help 'show')"
-_s() { _show "${@}"; }
+_alias_subcommand "show" "s"
 
 # status ######################################################################
 
@@ -5132,8 +5142,7 @@ _use() {
   fi
   _notebooks use "${_name}"
 }
-desc "u" "$(_help 'use')"
-_u() { _use "${@}"; }
+_alias_subcommand "use" "u"
 
 # version ####################################################################
 
