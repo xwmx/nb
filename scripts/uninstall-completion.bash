@@ -52,5 +52,4 @@ _uninstall_completion() {
     printf "Completion removed: %s\\n" \
       "${_zsh_completion_path}/_notes"
   fi
-
 } && _uninstall_completion

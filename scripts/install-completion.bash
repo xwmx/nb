@@ -56,5 +56,4 @@ _install_completion() {
     printf "Completion installed: %s\\n" \
       "${_zsh_completion_path}/_notes"
   fi
-
 } && _install_completion
