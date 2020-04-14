@@ -3307,8 +3307,22 @@ HEREDOC
       _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
       printf -v _spaces '%*s' "${_spaces_length}"
 
-      local _list_item="${_id_item}${_spaces}${_list_item_id}"
-      local _list_item_color="${_id_item_color}${_spaces}${_list_item_id}"
+      local _indicators=
+
+      if _file_is_bookmark "${NOTES_DATA_DIR}/${__basename}"
+      then
+        _indicators+="🔖"
+      fi
+
+      if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
+      then
+        _indicators+="🔒"
+      fi
+
+      _padded_indicator="${_spaces}${_indicators} "
+
+      local _list_item="${_id_item}${_padded_indicator}${_list_item_id}"
+      local _list_item_color="${_id_item_color}${_padded_indicator}${_list_item_id}"
 
       if ((_no_id))
       then
@@ -3320,17 +3334,6 @@ HEREDOC
         else
           printf "%s" "${_list_item_color}"
         fi
-      fi
-
-      if _file_is_bookmark "${NOTES_DATA_DIR}/${__basename}"
-      then
-        printf " 🔖"
-      fi
-
-      # TODO: This is slow. Look for ways to speed up.
-      if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
-      then
-        printf " 🔒"
       fi
 
       # End of line.
