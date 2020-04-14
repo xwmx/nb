@@ -124,8 +124,7 @@ To install manually, simply add the `notes` script to your `$PATH`. If
 you already have a `~/bin` directory, you can use the following command:
 
 ```bash
-curl -L https://raw.github.com/xwmx/notes/master/notes \
-  -o ~/bin/notes && chmod +x ~/bin/notes
+curl -L https://raw.github.com/xwmx/notes/master/notes -o ~/bin/notes && chmod +x ~/bin/notes
 ```
 
 #### Tab Completion
