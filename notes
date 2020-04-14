@@ -3385,7 +3385,7 @@ HEREDOC
 
       if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
       then
-        _indicators+=" 🖼 "
+        _indicators+=" 🌄"
       fi
 
       if _file_is_pdf "${_NOTEBOOK_PATH}/${__basename}"
