@@ -615,6 +615,22 @@ _file_is_image() {
     =~ ^png|jpg|jpeg|gif|webp|tiff|tif|psd|raw|bmp|ind|indd|ind|svg|svgz|ai$ ]]
 }
 
+# _file_is_pdf()
+#
+# Usage:
+#   _file_is_pdf <path>
+#
+# Returns:
+#   0  If file is a pdf.
+#   1  if not.
+_file_is_pdf() {
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
+  # Avoid calling `file` for better performance.
+  [[ "${_file_type}" =~ pdf ]]
+}
+
 # _file_is_text()
 #
 # Usage:
@@ -3370,6 +3386,11 @@ HEREDOC
       if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
       then
         _indicators+=" 🖼 "
+      fi
+
+      if _file_is_pdf "${_NOTEBOOK_PATH}/${__basename}"
+      then
+        _indicators+=" 📄"
       fi
 
       if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
