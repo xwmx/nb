@@ -9,11 +9,6 @@ scripts outlined below are *not needed*.
 A one-time setup might be needed to [enable completion for all Homebrew
 programs](https://docs.brew.sh/Shell-Completion).
 
-## npm
-
-Installing via npm should install the completion scripts. If completion
-isn't working, try the instructions below.
-
 ## Scripts
 
 `notes` includes scripts for installing and uninstalling completions.
