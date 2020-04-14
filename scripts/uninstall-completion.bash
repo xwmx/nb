@@ -30,6 +30,7 @@ _uninstall_completion() {
   local _zsh_completion_path="/usr/local/share/zsh/site-functions"
 
   if [[ -d "${_zsh_completion_path}" ]] &&
+     [[ -w "${_zsh_completion_path}" ]] &&
      [[ -e "${_zsh_completion_path}/_notes" ]]
   then
     rm "${_zsh_completion_path}/_notes"

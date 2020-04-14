@@ -17,26 +17,36 @@ IFS=$'\n\t'
 _get_bash_completion_path() {
   local _bash_completion_path=
 
-  if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
+  if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]] &&
+     [[ -w "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
   then
     _bash_completion_path="${BASH_COMPLETION_COMPAT_DIR}"
   fi
 
   if [[ -z "${_bash_completion_path:-}" ]]
   then
-    _bash_completion_path="$(
+    local _maybe_path
+    _maybe_path="$(
       pkg-config --variable=completionsdir bash-completion 2>/dev/null || true
     )"
+
+    if [[ -n "${_maybe_path:-}" ]] &&
+       [[ -w "${_maybe_path:-}" ]]
+    then
+      _bash_completion_path=
+    fi
   fi
 
-  if [[ -z "${_bash_completion_path:-}" ]] &&
-     [[ -d "/usr/local/etc/bash_completion.d" ]]
+  if [[ -z "${_bash_completion_path:-}"       ]] &&
+     [[ -d "/usr/local/etc/bash_completion.d" ]] &&
+     [[ -w "/usr/local/etc/bash_completion.d" ]]
   then
     _bash_completion_path="/usr/local/etc/bash_completion.d"
   fi
 
   if [[ -z "${_bash_completion_path:-}" ]] &&
-     [[ -d "/etc/bash_completion.d" ]]
+     [[ -d "/etc/bash_completion.d"     ]] &&
+     [[ -w "/etc/bash_completion.d"     ]]
   then
     _bash_completion_path="/etc/bash_completion.d"
   fi
