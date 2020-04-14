@@ -47,7 +47,7 @@ _ME="$(basename "${0}")"
 
 # $_MY_PATH
 #
-# Set to the programs full path.
+# Set to the program's full path.
 _MY_PATH="$(cd "$(dirname "$0")"; pwd)/$(basename "${0}")"
 
 # extglob
