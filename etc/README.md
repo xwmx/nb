@@ -1,4 +1,4 @@
-# Completion Installation
+# `notes` Tab Completion
 
 ## Homebrew
 
