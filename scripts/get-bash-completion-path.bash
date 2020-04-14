@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 ###############################################################################
-# uninstall.bash
+# notes / scripts / get-bash-completion.bash
+#
+# https://github.com/xwmx/notes
 ###############################################################################
 
 ###############################################################################
 # Strict Mode
+#
+# More Information:
+#   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
 ###############################################################################
 
 set -o nounset
@@ -13,6 +18,8 @@ trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR
 set -o errtrace
 set -o pipefail
 IFS=$'\n\t'
+
+###############################################################################
 
 _get_bash_completion_path() {
   local _bash_completion_path=

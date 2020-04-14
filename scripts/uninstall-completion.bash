@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 ###############################################################################
-# uninstall-completion.bash
+# notes / scripts / uninstall-completion.bash
+#
+# https://github.com/xwmx/notes
+###############################################################################
+
+###############################################################################
+# Strict Mode
+#
+# More Information:
+#   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
 ###############################################################################
 
 set -o nounset
@@ -9,6 +18,8 @@ trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR
 set -o errtrace
 set -o pipefail
 IFS=$'\n\t'
+
+###############################################################################
 
 _MY_DIR="$(cd "$(dirname "$0")"; pwd)"
 if [[ -z "${_MY_DIR}" ]] && [[ ! -d "${_MY_DIR}" ]]
@@ -25,6 +36,8 @@ _uninstall_completion() {
      [[ -e "${_bash_completion_path}/notes-completion.bash" ]]
   then
     rm "${_bash_completion_path}/notes-completion.bash"
+    printf "Completion removed: %s\\n" \
+      "${_bash_completion_path}/notes-completion.bash"
   fi
 
   local _zsh_completion_path="/usr/local/share/zsh/site-functions"
@@ -34,6 +47,8 @@ _uninstall_completion() {
      [[ -e "${_zsh_completion_path}/_notes" ]]
   then
     rm "${_zsh_completion_path}/_notes"
+    printf "Completion removed: %s\\n" \
+      "${_zsh_completion_path}/_notes"
   fi
 
-} && _uninstall_completion "$@"
+} && _uninstall_completion
