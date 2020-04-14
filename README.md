@@ -811,8 +811,8 @@ Subcommands:
   move       Move a note to a different notebook.
   notebook   Manage the current notebook.
   notebooks  Manage notebooks.
-  open       Open a bookmark in your system's primary web browser.
-  peek       Open a bookmark in your terminal web browser.
+  open       Open a bookmark in the primary web browser or edit a note.
+  peek       Open a bookmark in your terminal web browser or show a note.
   remote     Get, set, and remove the remote URL for the notebook.
   rename     Rename a note.
   search     Search notes.
@@ -1283,8 +1283,8 @@ Usage:
 Description:
   Open the bookmarked page in your system's primary web browser.
 
-  When used with a bookmark, `open` is the equivalent of `bookmark open`.
-  When used with a note, `open` is the equivalent of `show`.
+  When used with a bookmark, open the bookmarked page in your system's primary
+  web browser. When used with a note, `open` is the equivalent of `edit`.
 
 Shortcut Alias: `o`
 ```
@@ -1298,8 +1298,9 @@ Usage:
 Description:
   Open the bookmarked page in your terminal web browser.
 
-  When used with a bookmark, `peek` is the equivalent of `bookmark peek`.
-  When used with a note, `peek` is the equivalent of `show`.
+  When used with a bookmark, `peek`, open the bookmarked page in your
+  terminal web browser. When used with a note, `peek` is the equivalent of
+  `show`.
 
 Shortcut Alias: `p`
 ```
