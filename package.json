@@ -1,6 +1,6 @@
 {
   "name": "notes.sh",
-  "version": "2.10.5",
+  "version": "2.10.6",
   "description": "Command line note-taking, bookmarking, and document management with encryption, advanced search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "global": true,
   "install": "make install",
@@ -14,7 +14,7 @@
   "scripts": {
     "test": "bats test",
     "postinstall": "scripts/install-completion.bash",
-    "preuninstall": "script/uninstall-completion.bash"
+    "preuninstall": "scripts/uninstall-completion.bash"
   },
   "repository": {
     "type": "git",
