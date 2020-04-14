@@ -271,9 +271,9 @@ easily identifiable in lists:
 home
 -----------------
 [4] Example Note
-[3] 20200101000001.md.enc 🔒
-[2] Example Bookmark (example.com) 🔖
-[1] 20200101000000.bookmark.md.enc 🔖 🔒
+[3] 🔒 example.md.enc
+[2] 🔖 Example Bookmark (example.com)
+[1] 🔖 🔒 example.bookmark.md.enc
 ```
 
 `notes` with no subcommand is an alias for `notes ls`, so the examples above
