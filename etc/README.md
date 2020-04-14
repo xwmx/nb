@@ -23,7 +23,7 @@ Completion installed: /usr/local/share/zsh/site-functions/_notes
 If completion is working after installing through any of these methods, then
 you don't need to do anything else.
 
-## Installation Script
+## `scripts/notes-completion`
 
 `notes` includes a script for installing and uninstalling `notes` completions
 that is used in installation hooks:
