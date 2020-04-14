@@ -1286,7 +1286,9 @@ Description:
   When used with a bookmark, open the bookmarked page in your system's primary
   web browser. When used with a note, `open` is the equivalent of `edit`.
 
-  See also: `notes help bookmark`
+See also:
+  notes help bookmark
+  notes help edit
 
 Shortcut Alias: `o`
 ```
@@ -1301,7 +1303,9 @@ Description:
   When used with a bookmark, view the bookmarked page in your terminal web
   browser. When used with a note, `peek` is the equivalent of `show`.
 
-  See also: `notes help bookmark`
+See also:
+  notes help bookmark
+  notes help show
 
 Shortcut Alias: `p`
 ```
