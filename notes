@@ -4555,6 +4555,7 @@ Settings:
 
 Example:
   ${_ME} settings set NOTES_DEFAULT_EXTENSION 'org'
+  ${_ME} settings set NOTES_HIGHLIGHT_COLOR 105
   ${_ME} settings unset NOTES_HIGHLIGHT_COLOR
   ${_ME} settings colors
 HEREDOC

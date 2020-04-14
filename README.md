@@ -630,7 +630,7 @@ the shell prompt. The highlight color can be changed with
 [`notes settings`](#settings):
 
 ```bash
-notes settings set NOTES_HIGHLIGHT_COLOR 212
+notes settings set NOTES_HIGHLIGHT_COLOR 105
 ```
 
 `NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255.
@@ -644,7 +644,7 @@ Print the value of a setting:
 
 ```bash
 > notes settings get NOTES_HIGHLIGHT_COLOR
-212
+105
 ```
 
 Unset a setting and revert to default:
@@ -1443,6 +1443,7 @@ Settings:
 
 Example:
   notes settings set NOTES_DEFAULT_EXTENSION 'org'
+  notes settings set NOTES_HIGHLIGHT_COLOR 105
   notes settings unset NOTES_HIGHLIGHT_COLOR
   notes settings colors
 ```
