@@ -715,15 +715,15 @@ _get_selection_identifier() {
 #   Given <selection>, split on first colon.
 _get_selection_parts() {
   local _identifier
-  local _data_dir
+  local _notebook_dir
 
-  _data_dir=$(printf "%s\\n" "${1:-}" | cut -f 1 -d ":")
+  _notebook_dir=$(printf "%s\\n" "${1:-}" | cut -f 1 -d ":")
 
   if [[ "${1:-}" =~ ':'       ]] &&
-     [[ -e "${NOTES_DIR}/${_data_dir}/.git" ]]
+     [[ -e "${NOTES_DIR}/${_notebook_dir}/.git" ]]
   then
     _identifier=$(printf "%s\\n" "${1:-}" | cut -f 2- -d ":")
-    printf "%s\\n%s\\n" "${_data_dir}" "${_identifier}"
+    printf "%s\\n%s\\n" "${_notebook_dir}" "${_identifier}"
   else
     printf "%s\\n" "${1:-}"
   fi
