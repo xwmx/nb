@@ -3208,12 +3208,12 @@ _list() {
   _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
 
   local _excerpt_length=3
-  local _print_excerpt=0
-  local _print_indicators="${NOTES_INDICATORS_ENABLED:-1}"
   local _limit=
   local _list_titles=0
   local _no_color=0
   local _no_id=0
+  local _print_excerpt=0
+  local _print_indicators="${NOTES_INDICATORS_ENABLED:-1}"
   local _reverse=0
   local _selection
   local _sort=0
@@ -3238,7 +3238,7 @@ _list() {
       --no-id|--noid|--noindex|--no-index)
         _no_id=1
         ;;
-      --nocolor|--no-color)
+      --no-color|--nocolor)
         _no_color=1
         ;;
       --no-indicators|--noindicators)
