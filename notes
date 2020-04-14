@@ -3304,19 +3304,19 @@ HEREDOC
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
       local _spaces_length=1
-      _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
+      _spaces_length=$(( ${#_max_id} + 2 - ${#_id_item} ))
       printf -v _spaces '%*s' "${_spaces_length}"
 
       local _indicators=
 
       if _file_is_bookmark "${NOTES_DATA_DIR}/${__basename}"
       then
-        _indicators+="🔖"
+        _indicators+=" 🔖"
       fi
 
       if _file_is_encrypted "${NOTES_DATA_DIR}/${__basename}"
       then
-        _indicators+="🔒"
+        _indicators+=" 🔒"
       fi
 
       _padded_indicator="${_spaces}${_indicators} "
