@@ -563,6 +563,22 @@ _file_is_bookmark() {
   [[ "${1:-}" =~ -bookmark.md.enc$  ]]
 }
 
+# _file_is_document()
+#
+# Usage:
+#   _file_is_document <path>
+#
+# Returns:
+#   0  If file is a Word, Open Office, PDF, or other document.
+#   1  if not.
+_file_is_document() {
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
+  # Avoid calling `file` for better performance.
+  [[ "${_file_type}" =~ ^doc|docx|odt|pdf|rtf$ ]]
+}
+
 # _file_is_encrypted()
 #
 # Usage:
@@ -613,22 +629,6 @@ _file_is_image() {
   # Avoid calling `file` for better performance.
   [[ "${_file_type}" \
     =~ ^png|jpg|jpeg|gif|webp|tiff|tif|psd|raw|bmp|ind|indd|ind|svg|svgz|ai$ ]]
-}
-
-# _file_is_document()
-#
-# Usage:
-#   _file_is_document <path>
-#
-# Returns:
-#   0  If file is a Word, Open Office, PDF, or other document.
-#   1  if not.
-_file_is_document() {
-  local _file_path="${1:-}"
-  local _file_type="${_file_path##*.}"
-
-  # Avoid calling `file` for better performance.
-  [[ "${_file_type}" =~ ^doc|docx|odt|pdf|rtf$ ]]
 }
 
 # _file_is_text()
