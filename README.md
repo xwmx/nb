@@ -71,8 +71,6 @@ they are available.
 
 Recommended:
 
-- [OpenSSL](https://en.wikipedia.org/wiki/OpenSSL) or [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
-- [Pandoc](http://pandoc.org/)
 - [Pygments](http://pygments.org/)
 - [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
 - [tig](https://github.com/jonas/tig)
@@ -82,6 +80,7 @@ Also supported:
 
 - [Ack](http://beyondgrep.com/)
 - [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
+- [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 
 ### Installation
