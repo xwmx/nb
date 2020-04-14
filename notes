@@ -192,11 +192,10 @@ then
   NOTES_DIR="$(realpath "${NOTES_DIR}")"
 fi
 
-# `$NOTES_DATA_DIR`
+# `$_NOTEBOOK_PATH`
 #
 # Default: `$NOTES_DIR/home`
-export NOTES_DATA_DIR="${NOTES_DATA_DIR:-${NOTES_DIR}/home}"
-export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DATA_DIR}}"
+export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DIR}/home}"
 _set_notebook_path() {
   if [[ -e "${NOTES_DIR}/.current" ]]
   then
