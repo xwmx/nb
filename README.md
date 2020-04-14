@@ -707,6 +707,9 @@ notes e 5
 # `d` (delete): delete note 19
 notes d 19
 
+# `s` (show): show note 27
+notes s 27
+
 # `q` (search): search notes for 'example query'
 notes q 'example query'
 
@@ -1280,10 +1283,10 @@ Usage:
   notes open (<id> | <filename> | <path> | <title>)
 
 Description:
-  Open the bookmarked page in your system's primary web browser.
-
   When used with a bookmark, open the bookmarked page in your system's primary
   web browser. When used with a note, `open` is the equivalent of `edit`.
+
+  See also: `notes help bookmark`
 
 Shortcut Alias: `o`
 ```
@@ -1295,11 +1298,11 @@ Usage:
   notes peek (<id> | <filename> | <path> | <title>)
 
 Description:
-  Open the bookmarked page in your terminal web browser.
-
   When used with a bookmark, `peek`, open the bookmarked page in your
   terminal web browser. When used with a note, `peek` is the equivalent of
   `show`.
+
+  See also: `notes help bookmark`
 
 Shortcut Alias: `p`
 ```

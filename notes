@@ -301,21 +301,7 @@ _alias_subcommand() {
   )"
 
   eval "desc \"${_alias}\" \"\$(_help '${_subcommand_help}')\""
-
-  if [[ "${#_alias}" == 1 ]]
-  then
-    eval "\
-_${_alias}() {
-  if [[ -n \"\${1:-}\" ]]
-  then
-    _${_subcommand} \"\${@}\"
-  else
-    eval \"_ls ${_alias} \${*}\"
-  fi
-}"
-  else
-    eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
-  fi
+  eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
 # _command_exists()
@@ -3995,37 +3981,43 @@ _alias_subcommand "notebooks" "nbs"
 
 # open ########################################################################
 
-_alias_subcommand "bookmark open" "open"
 desc "open" <<HEREDOC
 Usage:
   ${_ME} open (<id> | <filename> | <path> | <title>)
 
 Description:
-  Open the bookmarked page in your system's primary web browser.
-
   When used with a bookmark, open the bookmarked page in your system's primary
   web browser. When used with a note, \`open\` is the equivalent of \`edit\`.
 
+  See also: \`${_ME} help bookmark\`
+
 Shortcut Alias: \`o\`
 HEREDOC
+_open() {
+  [[ -z "${1:-}" ]] && _help "open" && return 1
+  _bookmark open "${@}"
+}
 _alias_subcommand "open" "o"
 
 # peek ########################################################################
 
-_alias_subcommand "bookmark peek" "peek"
 desc "peek" <<HEREDOC
 Usage:
   ${_ME} peek (<id> | <filename> | <path> | <title>)
 
 Description:
-  Open the bookmarked page in your terminal web browser.
-
   When used with a bookmark, \`peek\`, open the bookmarked page in your
   terminal web browser. When used with a note, \`peek\` is the equivalent of
   \`show\`.
 
+  See also: \`${_ME} help bookmark\`
+
 Shortcut Alias: \`p\`
 HEREDOC
+_peek() {
+  [[ -z "${1:-}" ]] && _help "peek" && return 1
+  _bookmark peek "${@}"
+}
 _alias_subcommand "peek" "p"
 
 # remote ######################################################################
