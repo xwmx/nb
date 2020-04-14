@@ -1298,9 +1298,8 @@ Usage:
   notes peek (<id> | <filename> | <path> | <title>)
 
 Description:
-  When used with a bookmark, `peek`, view the bookmarked page in your
-  terminal web browser. When used with a note, `peek` is the equivalent of
-  `show`.
+  When used with a bookmark, view the bookmarked page in your terminal web
+  browser. When used with a note, `peek` is the equivalent of `show`.
 
   See also: `notes help bookmark`
 
