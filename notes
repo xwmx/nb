@@ -3476,6 +3476,12 @@ Description:
   Options are passed through to \`list\`. For more information, see
   \`notes help list\`.
 
+Indicators:
+  🔖  Bookmark
+  🔒  Encrypted note or bookmark
+  🌄  Image
+  📄  Word, Open Office, PDF, or rtf document
+
 Examples:
   ${_ME} ls
   ${_ME} ls example.md -e 10

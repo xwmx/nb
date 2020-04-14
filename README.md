@@ -1168,6 +1168,12 @@ Description:
   filenames will be searched for any that match <query> as a case-insensitive
   regular expression.
 
+Indicators:
+  🔖  Bookmark
+  🔒  Encrypted note or bookmark
+  🌄  Image
+  📄  Word, Open Office, PDF, or rtf document
+
 Examples:
   notes list
   notes list example.md -e 10
@@ -1206,6 +1212,12 @@ Description:
 
   Options are passed through to `list`. For more information, see
   `notes help list`.
+
+Indicators:
+  🔖  Bookmark
+  🔒  Encrypted note or bookmark
+  🌄  Image
+  📄  Word, Open Office, PDF, or rtf document
 
 Examples:
   notes ls
