@@ -4006,7 +4006,7 @@ Usage:
   ${_ME} peek (<id> | <filename> | <path> | <title>)
 
 Description:
-  When used with a bookmark, \`peek\`, open the bookmarked page in your
+  When used with a bookmark, \`peek\`, view the bookmarked page in your
   terminal web browser. When used with a note, \`peek\` is the equivalent of
   \`show\`.
 

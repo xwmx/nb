@@ -814,7 +814,7 @@ Subcommands:
   notebook   Manage the current notebook.
   notebooks  Manage notebooks.
   open       Open a bookmark in the primary web browser or edit a note.
-  peek       Open a bookmark in your terminal web browser or show a note.
+  peek       View a bookmark in the terminal web browser or show a note.
   remote     Get, set, and remove the remote URL for the notebook.
   rename     Rename a note.
   search     Search notes.
@@ -1298,7 +1298,7 @@ Usage:
   notes peek (<id> | <filename> | <path> | <title>)
 
 Description:
-  When used with a bookmark, `peek`, open the bookmarked page in your
+  When used with a bookmark, `peek`, view the bookmarked page in your
   terminal web browser. When used with a note, `peek` is the equivalent of
   `show`.
 
