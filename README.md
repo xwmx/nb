@@ -181,7 +181,7 @@ To list your notes and notebooks, run `notes ls`:
 ```bash
 > notes ls
 home
---------------
+----
 [3] example.md
 [2] todos.md
 [1] ideas.md
@@ -216,7 +216,7 @@ of `notes ls`:
 ```bash
 > notes ls
 home
------------------
+----
 [3] Example Title
 [2] Todos
 [1] Ideas
@@ -269,7 +269,7 @@ easily identifiable in lists:
 ```bash
 > notes ls
 home
------------------
+----
 [4] Example Note
 [3] 🔒 example.md.enc
 [2] 🔖 Example Bookmark (example.com)
@@ -282,7 +282,7 @@ can be run without the `ls`:
 ```bash
 > notes
 home
------------------
+----
 [3] Example Title
 [2] Todos
 [1] Ideas
