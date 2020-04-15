@@ -1993,7 +1993,7 @@ _bookmark() {
         return 0
       elif _command_exists "wget"
       then
-        wget -qO- "${_target_url}" | "${PAGER:-less}"
+        wget --quiet -O - "${_target_url}" 2>/dev/null | "${PAGER:-less}"
         return 0
       else
         printf "Terminal web browser not detected.\\n"
@@ -2047,7 +2047,7 @@ _bookmark() {
     fi
   elif _command_exists "wget"
   then
-    if ! _page_content="$(wget -qO- "${_url}")" &&
+    if ! _page_content="$(wget --quiet -O - "${_url}" 2>/dev/null)" &&
        [[ -z "${_page_content:-}" ]]
     then
       printf "Unable to download page at '%s'\\n" "${_url}"
@@ -2815,14 +2815,19 @@ _import() {
           -o "${_NOTEBOOK_PATH}/${_basename}"
       elif ((_convert)) && _command_exists "wget"
       then
-        wget -qO- "${_url}" | pandoc --from html --to markdown \
-          -o "${_NOTEBOOK_PATH}/${_basename}"
+        wget --quiet -O -  "${_url}" 2>/dev/null \
+          | pandoc \
+              --from html \
+              --to markdown \
+              -o "${_NOTEBOOK_PATH}/${_basename}"
       elif _command_exists "curl" && ! ((_convert))
       then
         curl "${_url}" -o "${_NOTEBOOK_PATH}/${_basename}"
       elif _command_exists "wget" && ! ((_convert))
       then
-        wget -q -o "${_NOTEBOOK_PATH}/${_basename}" "${_url}"
+        wget --quiet \
+          -O "${_NOTEBOOK_PATH}/${_basename}" \
+          "${_url}" 2>/dev/null
       else
         printf "Unable to download: %s\\n" "${_url}"
         return 1
@@ -5307,7 +5312,7 @@ HEREDOC
       curl -s "${_notes_url}" -o "${_temp_file}"
     elif _command_exists "wget"
     then
-      wget -q -o "${_temp_file}" "${_notes_url}"
+      wget --quiet -O "${_temp_file}" "${_notes_url}" 2>/dev/null
     else
       printf "Unable to download update.\\n"
       return 1
