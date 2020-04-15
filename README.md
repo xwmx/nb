@@ -600,18 +600,22 @@ notes import ~/Pictures/example.png
 # open image in your default image viewer
 notes open example.png
 
-# import an .docx file
-notes import ~/Documents/example.pdf
+# import a .docx file
+notes import ~/Documents/example.docx
 
-# open example.pdf in your system's PDF viewer
-notes open example.pdf
+# open .docx file in Word or your system's .docx viewer
+notes open example.docx
 ```
 
 `notes import` can also download and import files directly from the web:
 
 ```bash
+# import a PDF file from the web
 notes import https://example.com/example.pdf
 # Imported 'https://example.com/example.pdf' to 'example.pdf'
+
+# open example.pdf in your system's PDF viewer
+notes open example.pdf
 ```
 
 Some imported file types have indicators to make them easier to identify in
