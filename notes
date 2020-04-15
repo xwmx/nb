@@ -1953,14 +1953,24 @@ _bookmark() {
       if _command_exists 'w3m'
       then
         w3m "${_target_url}"
+        return 0
       elif _command_exists 'lynx'
       then
         lynx "${_target_url}"
-      else
+        return 0
+      elif _command_exists "curl"
+      then
         curl -s "${_target_url}" | "${PAGER:-less}"
+        return 0
+      elif _command_exists "wget"
+      then
+        wget -qO- "${_target_url}" | "${PAGER:-less}"
+        return 0
+      else
+        printf "Terminal web browser not detected.\\n"
+        return 1
       fi
 
-      return 0
     elif [[ "${_subcommand}" =~ ^open|o$ ]]
     then
       if _command_exists "xdg-open"
@@ -1997,8 +2007,24 @@ _bookmark() {
   local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
   local _page_content
-  if ! _page_content="$(curl -s "${_url}")" && [[ -z "${_page_content:-}" ]]
+
+  if _command_exists "curl"
   then
+    if ! _page_content="$(curl -s "${_url}")" &&
+       [[ -z "${_page_content:-}" ]]
+    then
+      printf "Unable to download page at '%s'\\n" "${_url}"
+      return 1
+    fi
+  elif _command_exists "wget"
+  then
+    if ! _page_content="$(wget -qO- "${_url}")" &&
+       [[ -z "${_page_content:-}" ]]
+    then
+      printf "Unable to download page at '%s'\\n" "${_url}"
+      return 1
+    fi
+  else
     printf "Unable to download page at '%s'\\n" "${_url}"
     return 1
   fi
@@ -2754,13 +2780,23 @@ _import() {
       fi
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      if ((_convert))
+      if ((_convert)) && _command_exists "curl"
       then
-        curl -s "${_url}" | pandoc \
-          --from html --to markdown \
+        curl -s "${_url}" | pandoc --from html --to markdown \
           -o "${_NOTEBOOK_PATH}/${_basename}"
-      else
+      elif ((_convert)) && _command_exists "wget"
+      then
+        wget -qO- "${_url}" | pandoc --from html --to markdown \
+          -o "${_NOTEBOOK_PATH}/${_basename}"
+      elif ! ((_convert)) && _command_exists "curl"
+      then
         curl "${_url}" -o "${_NOTEBOOK_PATH}/${_basename}"
+      elif ! ((_convert)) && _command_exists "wget"
+      then
+        wget -q -o "${_NOTEBOOK_PATH}/${_basename}" "${_url}"
+      else
+        printf "Unable to download: %s\\n" "${_url}"
+        return 1
       fi &&
         _index add "${_basename}" &&
         _git_checkpoint "\
@@ -5234,7 +5270,16 @@ HEREDOC
     _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
     _temp_file="$(mktemp)"
 
-    curl -s "${_notes_url}" -o "${_temp_file}"
+    if _command_exists "curl"
+    then
+      curl -s "${_notes_url}" -o "${_temp_file}"
+    elif _command_exists "wget"
+    then
+      wget -q -o "${_temp_file}" "${_notes_url}"
+    else
+      printf "Unable to download update.\\n"
+      return 1
+    fi
 
     if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${BASH_SOURCE[0]}")" ]]
     then
