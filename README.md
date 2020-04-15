@@ -601,10 +601,10 @@ notes import ~/Pictures/example.png
 notes open example.png
 
 # import an .docx file
-notes import ~/Documents/example.docx
+notes import ~/Documents/example.pdf
 
-# open example.docx in Word or your system's word processor
-notes open example.docx
+# open example.pdf in your system's PDF viewer
+notes open example.pdf
 ```
 
 `notes import` can also download and import files directly from the web:
@@ -612,6 +612,17 @@ notes open example.docx
 ```bash
 notes import https://example.com/example.pdf
 # Imported 'https://example.com/example.pdf' to 'example.pdf'
+```
+
+Some imported file types have indicators to make them easier to identify in
+lists:
+
+```bash
+> notes ls
+[4] 🌄 example-picture.png
+[3] 📄 example-document.docx
+[2] 📹 example-video.mp4
+[1] 🔉 example-audio.mp3
 ```
 
 Notes can also be exported. If you have Pandoc installed, notes can
