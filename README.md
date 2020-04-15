@@ -619,6 +619,8 @@ lists:
 
 ```bash
 > notes ls
+home
+----
 [4] 🌄 example-picture.png
 [3] 📄 example-document.docx
 [2] 📹 example-video.mp4
