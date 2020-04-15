@@ -555,6 +555,21 @@ _file_is_archive() {
   [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
 
+# _file_is_audio()
+#
+# Usage:
+#   _file_is_audio <path>
+#
+# Returns:
+#   0  If file is an audio file.
+#   1  if not.
+_file_is_audio() {
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
+  [[ "${_file_type}" =~ ^aac|aiff|flac|m4a|mp3|ogg|wav$ ]]
+}
+
 # _file_is_bookmark()
 #
 # Usage:
@@ -599,18 +614,8 @@ _file_is_encrypted() {
   local _file_type="${_file_path##*.}"
 
   # `file` with 'soft' test is slow, so avoid calling it.
-  [[ "${_file_type}" == "enc" ]] ||
-    [[ ! "$(file "${1:-}" \
-            -b --mime-type \
-            --exclude=apptype \
-            --exclude=encoding \
-            --exclude=tokens \
-            --exclude=cdf \
-            --exclude=compress \
-            --exclude=elf \
-            --exclude=soft \
-            --exclude=tar)" =~ ^text ]] &&
-    # [[ "$(dd bs=1 count=6 if="${_file_path}" 2>/dev/null)" == 'Salted'  ]] ||
+  [[ "${_file_type}" == "enc" ]]  ||
+    ! _file_is_text "${1:-}" &&
     [[ "$(file "${_file_path:-}" \
             --exclude=apptype \
             --exclude=encoding \
@@ -653,6 +658,21 @@ _file_is_text() {
   # Avoid calling `file` for better performance.
   [[ "${_file_type}" =~ ^html|latex|md|markdown|org|rst|textile|txt$ ]] ||
     [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+}
+
+# _file_is_video()
+#
+# Usage:
+#   _file_is_video <path>
+#
+# Returns:
+#   0  If file is a video file.
+#   1  if not.
+_file_is_video() {
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
+  [[ "${_file_type}" =~ ^webm|mpg|mp2|mpeg|mp4|m4p|m4v|avi|wmv|mov|qt|flv$ ]]
 }
 
 # _get_hash()
@@ -3193,6 +3213,8 @@ Indicators:
   🔒  Encrypted note or bookmark
   🌄  Image
   📄  Word, Open Office, PDF, or rtf document
+  📹  Video
+  🔉  Audio
 
 Examples:
   ${_ME} list
@@ -3412,6 +3434,16 @@ HEREDOC
           _indicators+=" 📄"
         fi
 
+        if _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
+        then
+          _indicators+=" 📹"
+        fi
+
+        if _file_is_audio "${_NOTEBOOK_PATH}/${__basename}"
+        then
+          _indicators+=" 🔉"
+        fi
+
         if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
         then
           _indicators+=" 🔒"
@@ -3495,6 +3527,8 @@ Indicators:
   🔒  Encrypted note or bookmark
   🌄  Image
   📄  Word, Open Office, PDF, or rtf document
+  📹  Video
+  🔉  Audio
 
 Examples:
   ${_ME} ls
