@@ -3162,8 +3162,11 @@ HEREDOC
 # .notesrc
 #
 # Configuration file for \`notes\`, a command line note-taking and document
-# management tool with encryption, advanced search, Git-backed syncing, and
-# more in a single portable script.
+# management tool with encryption, search, Git-backed syncing, and more in a
+# single portable script.
+#
+# Edit this file manually or manage settings using the \`notes settings\`
+# subcommand.
 #
 # https://github.com/xwmx/notes
 ###############################################################################
