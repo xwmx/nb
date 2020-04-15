@@ -530,7 +530,7 @@ _encrypt_file() {
     openssl enc -aes-256-cbc \
       -in "${_decrypted_path}" \
       -out "${_encrypted_path}" \
-      -pass file:<(printf "%s\n" "${_password}")
+      -pass file:<(printf "%s\n" "${_password}") 2> /dev/null
   else
     printf "\$NOTES_ENCRYPTION_TOOL must be set to either 'gpg' or 'openssl'."
     return 1
