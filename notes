@@ -2776,7 +2776,7 @@ _import() {
             _path="${__arg:-}"
           fi
         else
-          if [[ "${__arg:-}" =~ ^http\:|^file\: ]]
+          if [[ "${__arg:-}" =~ ^http|^file\: ]]
           then
             _subcommand="download"
             _url="${__arg:-}"
@@ -2817,10 +2817,10 @@ _import() {
       then
         wget -qO- "${_url}" | pandoc --from html --to markdown \
           -o "${_NOTEBOOK_PATH}/${_basename}"
-      elif ! ((_convert)) && _command_exists "curl"
+      elif _command_exists "curl" && ! ((_convert))
       then
         curl "${_url}" -o "${_NOTEBOOK_PATH}/${_basename}"
-      elif ! ((_convert)) && _command_exists "wget"
+      elif _command_exists "wget" && ! ((_convert))
       then
         wget -q -o "${_NOTEBOOK_PATH}/${_basename}" "${_url}"
       else
