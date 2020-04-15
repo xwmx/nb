@@ -1014,7 +1014,20 @@ _git_index_is_dirty() {
 _git_required() {
   if ! _command_exists "git"
   then
-    _die printf "\`git\` is required, but wasn't found.\\n"
+    cat <<HEREDOC
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
+
+Welcome to \`notes\`
+
+\`git\` is required, but wasn't found. Install Git, then run \`notes\` again.
+
+About Git: https://git-scm.com/
+HEREDOC
+    return 1
   fi
 
   local _git_name
@@ -1033,18 +1046,34 @@ __                _
 
 Welcome to \`notes\`
 
-\`git\` requires some additional setup before using \`notes\`. Use these
-commands to set your information in \`git\`, then run \`notes\` again:
+\`git\` requires some additional setup before using \`notes\`. Enter the name
+and email address you'd like to use with Git.
 HEREDOC
     if [[ -z "${_git_name}" ]]
     then
-      printf "git config --global user.name \"Your Name\"\\n"
+      while true
+      do
+        read -r -p "Your name: " __name
+        if [[ -n "${__name}" ]]
+        then
+          git config --global user.name "${__name}"
+          break
+        fi
+      done
     fi
+
     if [[ -z "${_git_email}" ]]
     then
-      printf "git config --global user.email \"you@example.com\"\\n"
+      while true
+      do
+        read -r -p "Your email: " __email
+        if [[ -n "${__email}" ]]
+        then
+          git config --global user.email "${__email}"
+          break
+        fi
+      done
     fi
-    return 1
   fi
 }
 
