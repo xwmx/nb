@@ -23,7 +23,7 @@ setup() {
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
-  export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor"
+  export EDITOR="${TEST_EDITOR:-${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor}"
 
   # Use empty `notes` script in environment to avoid depending on `notes`
   # being available in `$PATH`.
