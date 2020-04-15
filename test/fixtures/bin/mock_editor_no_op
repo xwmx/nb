@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# _mock_editor_no_op()
+#
+# Usage:
+#   _mock_editor_no_op <filename>
+#
+# Description:
+#   Take a filename and do nothing.
+_mock_editor_no_op() {
+  local _filename="${1:-}"
+
+  if [[ -z "${_filename}" ]]
+  then
+    printf "Usage: _mock_editor <filename>\n"
+    return 1
+  else
+    return 0
+  fi
+}
+
+_mock_editor_no_op "$@"

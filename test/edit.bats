@@ -77,7 +77,8 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run export TEST_EDITOR=cat; "${_NOTES}" edit "${_filename}"
+  export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
+    run "${_NOTES}" edit "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
