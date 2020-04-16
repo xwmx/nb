@@ -1041,7 +1041,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "Your name: " __name
+        read -r -p "Name: " __name
         if [[ -n "${__name}" ]]
         then
           git config --global user.name "${__name}"
@@ -1054,7 +1054,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "Your email: " __email
+        read -r -p "Email: " __email
         if [[ -n "${__email}" ]]
         then
           git config --global user.email "${__email}"
