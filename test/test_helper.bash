@@ -45,7 +45,7 @@ teardown() {
      [[ -e "${_TMP_DIR}"   ]] &&
      [[ "${_TMP_DIR}" =~ ^/tmp/notes_test ]]
   then
-    rm -rf "${_TMP_DIR:-/tmp/notes_test._TMP_DIR}"
+    rm -rf "${_TMP_DIR}"
   fi
 }
 
@@ -80,11 +80,11 @@ _setup_remote_repo() {
   if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
      [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/notes_test ]]
   then
-    mkdir "${_GIT_REMOTE_PATH}"    \
-      && cd "${_GIT_REMOTE_PATH}"  \
-      && git init       \
-      && touch '.keep'  \
-      && git add --all  \
-      && git commit -a -m "Initial commit."
+    mkdir "${_GIT_REMOTE_PATH}" &&
+      cd "${_GIT_REMOTE_PATH}"  &&
+      git init                  &&
+      touch '.keep'             &&
+      git add --all             &&
+      git commit -a -m "Initial commit."
   fi
 }
