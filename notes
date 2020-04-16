@@ -2328,42 +2328,47 @@ _completions() {
 
       if [[ ! -f "${_completion_source}" ]]
       then
-        printf "Unable to install %s completion script. More information:\\n" \
-          "${_shell}"
-        printf "https://github.com/xwmx/notes/blob/master/etc/README.md\\n"
-        return 1
-      fi
+        cat <<HEREDOC
+Unable to find source ${_shell} completion script. You can try downloading
+and installing the latest version with the following command (\`sudo\` might
+be necessary):
+  notes completions install --download
 
-      local _completion_path=
-      local _completion_target=
-      if [[ "${_shell}" == "bash" ]]
-      then
-        _completion_path="$(_get_bash_completion_path)"
-        _completion_target="${_completion_path}/notes"
-      elif [[ "${_shell}" == "zsh" ]]
-      then
-        _completion_path="/usr/local/share/zsh/site-functions"
-        _completion_target="${_completion_path}/_notes"
-      fi
-
-      if [[ -n "${_completion_path:-}" ]] &&
-         [[ -d "${_completion_path}"   ]]
-      then
-        if [[ -w "${_completion_path}" ]]
+More information: ${_shell}
+  https://github.com/xwmx/notes/blob/master/etc/README.md
+HEREDOC
+      else
+        local _completion_path=
+        local _completion_target=
+        if [[ "${_shell}" == "bash" ]]
         then
-          if [[ ! -e "${_completion_target}" ]]
+          _completion_path="$(_get_bash_completion_path)"
+          _completion_target="${_completion_path}/notes"
+        elif [[ "${_shell}" == "zsh" ]]
+        then
+          _completion_path="/usr/local/share/zsh/site-functions"
+          _completion_target="${_completion_path}/_notes"
+        fi
+
+        if [[ -n "${_completion_path:-}" ]] &&
+           [[ -d "${_completion_path}"   ]]
+        then
+          if [[ -w "${_completion_path}" ]]
           then
-            cp \
-              "${_completion_source}" \
-              "${_completion_target}"
-            chmod +r "${_completion_target}"
-            printf "Completion script installed: %s\\n" \
-              "${_completion_target}"
+            if [[ ! -e "${_completion_target}" ]]
+            then
+              cp \
+                "${_completion_source}" \
+                "${_completion_target}"
+              chmod +r "${_completion_target}"
+              printf "Completion script installed: %s\\n" \
+                "${_completion_target}"
+            else
+              printf "Exists: %s\\n" "${_completion_target}"
+            fi
           else
-            printf "Exists: %s\\n" "${_completion_target}"
+            printf "Permission denied: %s\\n" "${_completion_path}"
           fi
-        else
-          printf "Permission denied: %s\\n" "${_completion_path}"
         fi
       fi
     done
