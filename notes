@@ -5053,7 +5053,7 @@ _settings() {
     fi
   }
 
-  # Usage: _notes_settings_validate_color <setting> <value>
+  # Usage: _notes_settings_validate_value <setting> <value>
   _notes_settings_validate_value() {
     if [[ "${1:-}" == 'EDITOR' ]] ||
        [[ "${1:-}" == 'NOTES_DEFAULT_EXTENSION' ]] ||
