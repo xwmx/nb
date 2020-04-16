@@ -155,9 +155,10 @@ wget https://raw.github.com/xwmx/notes/master/notes -O ~/bin/notes && chmod +x ~
 
 #### Tab Completion
 
-Bash and Zsh tab completion is enabled when `notes` is installed using
-Homebrew, npm, bpkg, Make, or manually as an administrator using the
-command above. If completion isn't working, see the [completion installation
+Bash and Zsh tab completion should be enabled when `notes` is installed using
+Homebrew, npm, bpkg, or Make, assuming you have the appropriate system
+permissions or installed with `sudo`. If completion isn't working after
+installing `notes`, see the [completion installation
 instructions](etc/README.md).
 
 ## Usage
