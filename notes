@@ -2269,7 +2269,7 @@ _completions() {
       cp \
         "${_my_dir}/etc/notes-completion.bash" \
         "${_bash_completion_path}/notes"
-      printf "Completion installed: %s\\n" \
+      printf "Completion script installed: %s\\n" \
         "${_bash_completion_path}/notes"
     fi
 
@@ -2282,7 +2282,7 @@ _completions() {
       cp \
         "${_my_dir}/etc/notes-completion.zsh" \
         "${_zsh_completion_path}/_notes"
-      printf "Completion installed: %s\\n" \
+      printf "Completion script installed: %s\\n" \
         "${_zsh_completion_path}/_notes"
     fi
   }
@@ -2298,7 +2298,7 @@ _completions() {
        [[ -e "${_bash_completion_path}/notes" ]]
     then
       rm "${_bash_completion_path}/notes"
-      printf "Completion removed: %s\\n" \
+      printf "Completion script removed: %s\\n" \
         "${_bash_completion_path}/notes"
     fi
 
@@ -2309,7 +2309,7 @@ _completions() {
        [[ -e "${_zsh_completion_path}/_notes" ]]
     then
       rm "${_zsh_completion_path}/_notes"
-      printf "Completion removed: %s\\n" \
+      printf "Completion script removed: %s\\n" \
         "${_zsh_completion_path}/_notes"
     fi
   }
