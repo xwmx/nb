@@ -416,6 +416,54 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
   printf "%s\\n" "${_unencrypted_path}"
 }
 
+# _download_from()
+#
+# Usage:
+#   _download_from <url> [<outfile>]
+#
+# Description:
+#   Download the file at <url> and print to standard output or <outfile>, if
+#   present.
+_download_from() {
+  local _downloaded=0
+  local _url="${1:-}"
+  if [[ -z "${_url}" ]] ||
+     [[ ! "${_url}" =~ ^ftp|http|file|mailto|news|telnet|gopher ]]
+  then
+    return 1
+  fi
+
+  local _target_path="${2:-}"
+
+  if [[ -n "${_target_path}" ]]
+  then
+    if _command_exists "curl"
+    then
+      curl -s -L "${_url}" -o "${_target_path}" &&
+        _downloaded=1
+    elif _command_exists "wget"
+    then
+      wget --quiet -O "${_target_path}" "${_url}" 2>/dev/null &&
+        _downloaded=1
+    fi
+  else
+    if _command_exists "curl"
+    then
+      curl -s -L "${_url}" &&
+        _downloaded=1
+    elif _command_exists "wget"
+    then
+      wget --quiet -O - "${_url}" 2>/dev/null &&
+        _downloaded=1
+    fi
+  fi
+
+  if ! ((_downloaded))
+  then
+    return 1
+  fi
+}
+
 # _edit_file()
 #
 # Usage:
@@ -1976,13 +2024,9 @@ _bookmark() {
       then
         lynx "${_target_url}"
         return 0
-      elif _command_exists "curl"
+      elif _command_exists "curl" || _command_exists "wget"
       then
-        curl -s -L "${_target_url}" | "${PAGER:-less}"
-        return 0
-      elif _command_exists "wget"
-      then
-        wget --quiet -O - "${_target_url}" 2>/dev/null | "${PAGER:-less}"
+        _download_from "${_target_url}" | "${PAGER:-less}"
         return 0
       else
         printf "Terminal web browser not detected.\\n"
@@ -2025,24 +2069,9 @@ _bookmark() {
   local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
   local _page_content
-
-  if _command_exists "curl"
+  if ! _page_content="$(_download_from "${_url}")" &&
+     [[ -z "${_page_content:-}" ]]
   then
-    if ! _page_content="$(curl -s -L "${_url}")" &&
-       [[ -z "${_page_content:-}" ]]
-    then
-      printf "Unable to download page at '%s'\\n" "${_url}"
-      return 1
-    fi
-  elif _command_exists "wget"
-  then
-    if ! _page_content="$(wget --quiet -O - "${_url}" 2>/dev/null)" &&
-       [[ -z "${_page_content:-}" ]]
-    then
-      printf "Unable to download page at '%s'\\n" "${_url}"
-      return 1
-    fi
-  else
     printf "Unable to download page at '%s'\\n" "${_url}"
     return 1
   fi
@@ -2280,17 +2309,8 @@ _completions() {
           _completion_source="$(mktemp)"
           local _completion_url="${_my_raw_url}/etc/notes-completion.${_shell}"
 
-          if _command_exists "curl"
+          if ! _download_from "${_completion_url}" "${_completion_source}"
           then
-            curl -s -L \
-              "${_completion_url}" \
-              -o "${_completion_source}"
-          elif _command_exists "wget"
-          then
-            wget --quiet \
-              -O "${_completion_source}" \
-              "${_completion_url}" 2>/dev/null
-          else
             printf "Unable to download Completion script from %s\\n" \
               "${_completion_source}"
             return 1
@@ -3017,28 +3037,23 @@ _import() {
       fi
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      if ((_convert)) && _command_exists "curl"
+      if ((_convert))
       then
-        curl -s -L "${_url}" | pandoc --from html --to markdown \
-          -o "${_NOTEBOOK_PATH}/${_basename}"
-      elif ((_convert)) && _command_exists "wget"
-      then
-        wget --quiet -O -  "${_url}" 2>/dev/null \
-          | pandoc \
+        if ! _download_from "${_url}" \
+            | pandoc \
               --from html \
               --to markdown \
               -o "${_NOTEBOOK_PATH}/${_basename}"
-      elif _command_exists "curl" && ! ((_convert))
-      then
-        curl -L "${_url}" -o "${_NOTEBOOK_PATH}/${_basename}"
-      elif _command_exists "wget" && ! ((_convert))
-      then
-        wget --quiet \
-          -O "${_NOTEBOOK_PATH}/${_basename}" \
-          "${_url}" 2>/dev/null
+        then
+          printf "Unable to download: %s\\n" "${_url}"
+          return 1
+        fi
       else
-        printf "Unable to download: %s\\n" "${_url}"
-        return 1
+        if ! _download_from "${_url}" "${_NOTEBOOK_PATH}/${_basename}"
+        then
+          printf "Unable to download: %s\\n" "${_url}"
+          return 1
+        fi
       fi &&
         _index add "${_basename}" &&
         _git_checkpoint "\
@@ -5528,13 +5543,8 @@ HEREDOC
     _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
     _temp_file="$(mktemp)"
 
-    if _command_exists "curl"
+    if ! _download_from "${_notes_url}" "${_temp_file}"
     then
-      curl -s -L "${_notes_url}" -o "${_temp_file}"
-    elif _command_exists "wget"
-    then
-      wget --quiet -O "${_temp_file}" "${_notes_url}" 2>/dev/null
-    else
       printf "Unable to download update.\\n"
       return 1
     fi
