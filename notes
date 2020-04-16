@@ -3930,8 +3930,8 @@ _ls() {
 
         if [[ "${#_test_line}" -gt "${_columns}" ]]
         then # wrap to next line
-          # Use the existing value of $_line_[highlighted|raw] without the current
-          # name.
+          # Use the existing value of $_line_[highlighted|raw] without the
+          # current name.
           if ((_auto_align)) || ((_centered)) && ! ((_justified))
           then
             _centered=1
