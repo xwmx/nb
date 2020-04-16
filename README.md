@@ -70,6 +70,7 @@ they are available.
 
 Recommended:
 
+- [Pandoc](https://pandoc.org/)
 - [Pygments](http://pygments.org/)
 - [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
 - [tig](https://github.com/jonas/tig)
