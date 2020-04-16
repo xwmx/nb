@@ -25,21 +25,22 @@ you don't need to do anything else.
 ## `notes completions`
 
 The `notes completions` subcommand can be used for installing and uninstalling
-completion scripts.
+completion scripts. Depending on your configuration, you might need to use
+`sudo` to install completion scripts easily:
 
 ```bash
-> notes completions check
+> sudo notes completions check
 Completion scripts not found.
 
-> notes completions install
+> sudo notes completions install
 Completion script installed: /usr/local/etc/bash_completion.d/notes
 Completion script installed: /usr/local/share/zsh/site-functions/_notes
 
-> notes completions check
+> sudo notes completions check
 Exists: /usr/local/etc/bash_completion.d/notes
 Exists: /usr/local/share/zsh/site-functions/_notes
 
-> notes completions uninstall
+> sudo notes completions uninstall
 Completion script removed: /usr/local/etc/bash_completion.d/notes
 Completion script removed: /usr/local/share/zsh/site-functions/_notes
 ```
@@ -47,14 +48,7 @@ Completion script removed: /usr/local/share/zsh/site-functions/_notes
 If you installed `notes` manually by downloading just the `notes` script,
 the completion scripts won't be immediately available for
 `notes completions install`. You can try installing the completions with
-the `--download` flag, which will get the latest versions from GitHub:
-
-```bash
-notes completions install --download
-```
-
-Depending on your configuration, you might need to use `sudo` to install
-completion scripts easily:
+the `--download` flag, which will get the latest version from GitHub:
 
 ```bash
 sudo notes completions install --download
