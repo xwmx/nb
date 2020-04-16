@@ -33,15 +33,15 @@ completion scripts. Depending on your configuration, you might need to use
 Completion scripts not found.
 
 > sudo notes completions install
-Completion script installed: /usr/local/etc/bash_completion.d/notes
+Completion script installed: /usr/share/bash-completion/completions/notes
 Completion script installed: /usr/local/share/zsh/site-functions/_notes
 
 > sudo notes completions check
-Exists: /usr/local/etc/bash_completion.d/notes
+Exists: /usr/share/bash-completion/completions/notes
 Exists: /usr/local/share/zsh/site-functions/_notes
 
 > sudo notes completions uninstall
-Completion script removed: /usr/local/etc/bash_completion.d/notes
+Completion script removed: /usr/share/bash-completion/completions/notes
 Completion script removed: /usr/local/share/zsh/site-functions/_notes
 ```
 
@@ -70,7 +70,7 @@ be available.
 Place the completion script in `/etc/bash_completion.d/`:
 
 ```bash
-sudo curl -L https://raw.githubusercontent.com/xwmx/notes/master/notes-completion.bash -o /etc/bash_completion.d/notes
+sudo curl -L https://raw.githubusercontent.com/xwmx/notes/master/etc/notes-completion.bash -o etc/bash_completion.d/notes
 ```
 
 #### macOS
@@ -92,7 +92,7 @@ Place the completion script in your `/path/to/zsh/completion` (typically
 
 ```bash
 $ mkdir -p ~/.zsh/completion
-$ curl -L https://raw.githubusercontent.com/xwmx/notes/master/notes-completion.zsh > ~/.zsh/completion/_notes
+$ curl -L https://raw.githubusercontent.com/xwmx/notes/master/etc/notes-completion.zsh > ~/.zsh/completion/_notes
 ```
 Include the directory in your `$fpath` by adding in `~/.zshrc`:
 
