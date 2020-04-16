@@ -1553,16 +1553,16 @@ Examples:
 Shortcut Alias: \`a\`
 HEREDOC
 _add() {
+  local _arguments=()
   local _basename=
   local _content=
   local _edit_before_save=0
   local _encrypt=0
   local _filename=
-  local _maybe_filename_or_content=
-  local _title=
   local _file_type="${NOTES_DEFAULT_EXTENSION}"
-  local _arguments=()
+  local _maybe_filename_or_content=
   local _password=
+  local _title=
 
   # Parse function options.
   while ((${#}))
@@ -4699,8 +4699,8 @@ _search() {
   local _all=0
   local _arguments=("${@}")
   local _last_path=
-  local _query=
   local _print_paths=0
+  local _query=
   local _use_grep=0
 
   for __arg in "${_arguments[@]:-}"
