@@ -53,6 +53,13 @@ the `--download` flag, which will get the latest versions from GitHub:
 notes completions install --download
 ```
 
+Depending on your configuration, you might need to use `sudo` to install
+completion scripts easily:
+
+```bash
+sudo notes completions install --download
+```
+
 `notes completions` will try to determine the completion script directories
 from your environment. If `notes completions` isn't able to install
 the completion scripts, you can try installing them manually.

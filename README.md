@@ -118,10 +118,25 @@ clone this repository, navigate to the clone's root directory, and run:
 make install
 ```
 
+Depending on your system configuration, `sudo` might be required:
+
+```bash
+sudo make install
+```
+
 #### Manual
 
-To install manually, simply add the `notes` script to your `$PATH`. If
-you already have a `~/bin` directory, for example, you can use one of the following commands:
+To install as an administrator, copy and paste the following multi-line command:
+
+```bash
+sudo curl -L https://raw.github.com/xwmx/notes/master/notes -o /usr/local/bin/notes &&
+  sudo chmod +x /usr/local/bin/notes &&
+  sudo notes completions install --download
+```
+
+To install as a user, simply add the `notes` script to your `$PATH`. If
+you already have a `~/bin` directory, for example, you can use one of the
+following commands:
 
 ```bash
 # download with curl
