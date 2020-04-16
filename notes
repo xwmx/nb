@@ -3143,9 +3143,16 @@ __                _
 -------------------------------
 Initializing...
 HEREDOC
-  if [[ -e "${NOTES_DIR}" ]]
+  if [[ -d "${NOTES_DIR}" ]]
   then
-    printf "Already exists: %s\\n" "${NOTES_DIR}"
+    printf "\`notes\` data directory already exists: %s\\n" "${NOTES_DIR}"
+  elif [[ -e "${NOTES_DIR}" ]]
+  then
+    cat <<HEREDOC
+Unable to set up \`notes\` data directory. File already exists at:
+${NOTES_DIR}
+HEREDOC
+    return 1
   else
     mkdir -p "${NOTES_DIR}"
     printf "Created %s\\n" "${NOTES_DIR}"
@@ -3153,7 +3160,7 @@ HEREDOC
 
   if [[ -e "${NOTESRC_PATH}" ]]
   then
-    printf "A .notesrc configuration file already exists: %s\\n" \
+    printf "Configuration file already exists at %s\\n" \
       "${NOTESRC_PATH}"
   else
     cat <<HEREDOC > "${NOTESRC_PATH}"
