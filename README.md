@@ -779,6 +779,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes completions (check | install | uninstall)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -820,36 +821,37 @@ Help:
   notes help [<subcommand>]
 
 Subcommands:
-  (default)  List notes and notebooks. This is an alias for `notes ls`.
-  add        Add a new note.
-  bookmark   Add and open bookmarks.
-  count      Print the number of notes.
-  delete     Delete a note.
-  edit       Edit a note.
-  env        Print program environment variables.
-  export     Export a note to a variety of different formats.
-  git        Alias for `git` within the current notebook.
-  help       Display this help information.
-  history    Display git history for the current notebook or a note.
-  import     Import a file into the current notebook.
-  init       Initialize the first notebook.
-  list       List notes in the current notebook.
-  ls         List notebooks and notes in the current notebook.
-  move       Move a note to a different notebook.
-  notebook   Manage the current notebook.
-  notebooks  Manage notebooks.
-  open       Open a bookmark in the primary web browser or edit a note.
-  peek       View a bookmark in the terminal web browser or show a note.
-  remote     Get, set, and remove the remote URL for the notebook.
-  rename     Rename a note.
-  search     Search notes.
-  settings   Edit configuration settings.
-  shell      Start the `notes` interactive shell.
-  show       Show a note.
-  status     Run `git status` in the current notebook.
-  sync       Sync local notebook with the remote repository.
-  use        Switch to a notebook.
-  version    Display version information.
+  (default)    List notes and notebooks. This is an alias for `notes ls`.
+  add          Add a new note.
+  bookmark     Add and open bookmarks.
+  completions  Install and uninstall completion scripts.
+  count        Print the number of notes.
+  delete       Delete a note.
+  edit         Edit a note.
+  env          Print program environment variables.
+  export       Export a note to a variety of different formats.
+  git          Alias for `git` within the current notebook.
+  help         Display this help information.
+  history      Display git history for the current notebook or a note.
+  import       Import a file into the current notebook.
+  init         Initialize the first notebook.
+  list         List notes in the current notebook.
+  ls           List notebooks and notes in the current notebook.
+  move         Move a note to a different notebook.
+  notebook     Manage the current notebook.
+  notebooks    Manage notebooks.
+  open         Open a bookmark in the primary web browser or edit a note.
+  peek         View a bookmark in the terminal web browser or show a note.
+  remote       Get, set, and remove the remote URL for the notebook.
+  rename       Rename a note.
+  search       Search notes.
+  settings     Edit configuration settings.
+  shell        Start the `notes` interactive shell.
+  show         Show a note.
+  status       Run `git status` in the current notebook.
+  sync         Sync local notebook with the remote repository.
+  use          Switch to a notebook.
+  version      Display version information.
 
 Program Options:
   -i --interactive  Start the `notes` interactive shell.
@@ -983,6 +985,17 @@ Examples:
   notes bookmark open 5
 
 Shortcut Alias: `b`
+```
+
+#### `completions`
+
+```text
+Usage:
+  notes completions (check | install | uninstall)
+
+Description:
+  Manage completion scripts. For more information, visit:
+  https://github.com/xwmx/notes/blob/master/etc/README.md
 ```
 
 #### `count`

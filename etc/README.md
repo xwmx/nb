@@ -22,42 +22,31 @@ Completion installed: /usr/local/share/zsh/site-functions/_notes
 If completion is working after installing through any of these methods, then
 you don't need to do anything else.
 
-## `scripts/notes-completion`
+## `notes completions`
 
-`notes` includes a script for installing and uninstalling `notes` completions
-that is used in installation hooks:
-[notes-completion](../scripts/notes-completion)
-
-To run this script directly, navigate to this directory in your terminal, and
-run:
+`notes completions` can be used for installing and uninstalling completion
+scripts.
 
 ```bash
-./notes-completion
-```
+> notes completions check
+Completion scripts not found.
 
-To install completions:
+> notes completions install
+Completion script installed: /usr/local/etc/bash_completion.d/notes-completion.bash
+Completion script installed: /usr/local/share/zsh/site-functions/_notes
 
-```bash
-./notes-completion install
-```
-
-To uninstall:
-
-```bash
-./notes-completion uninstall
-```
-
-Use the `check` subcommand to determine if completion scripts are installed:
-
-```bash
-> ./notes-completion check
+> notes completions check
 Exists: /usr/local/etc/bash_completion.d/notes-completion.bash
 Exists: /usr/local/share/zsh/site-functions/_notes
+
+> notes completions uninstall
+Completion script removed: /usr/local/etc/bash_completion.d/notes-completion.bash
+Completion script removed: /usr/local/share/zsh/site-functions/_notes
 ```
 
-This script will try to determine the completion installation
-locations from your environment. If completion doesn't work, you might
-need to try installing manually.
+`notes completions` will try to determine the completion script directories
+from your environment. If `notes completions` isn't able to install
+the completion scripts, you might need to try installing them manually.
 
 ## Manual Installation
 

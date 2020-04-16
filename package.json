@@ -13,8 +13,8 @@
   },
   "scripts": {
     "test": "bats test",
-    "postinstall": "scripts/notes-completion install",
-    "preuninstall": "scripts/notes-completion uninstall"
+    "postinstall": "./notes completions install",
+    "preuninstall": "./notes completions uninstall"
   },
   "repository": {
     "type": "git",

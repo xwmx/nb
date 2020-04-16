@@ -1452,6 +1452,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} completions (check | install | uninstall)
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -2161,6 +2162,175 @@ Description:
 HEREDOC
 _commands() {
   printf "%s\\n" "${_SUBCOMMANDS[*]}"
+}
+
+# completions #################################################################
+
+desc "completions" <<HEREDOC
+Usage:
+  ${_ME} completions (check | install | uninstall)
+
+Description:
+  Manage completion scripts. For more information, visit:
+  https://github.com/xwmx/notes/blob/master/etc/README.md
+HEREDOC
+_completions() {
+  # Usage: _completions_check
+  _completions_check() {
+    local _bash_completion_path=
+    _bash_completion_path="$(_get_bash_completion_path)"
+
+    local _exists=0
+
+    if [[ -n "${_bash_completion_path:-}" ]] &&
+       [[ -d "${_bash_completion_path}"   ]] &&
+       [[ -w "${_bash_completion_path}"   ]] &&
+       [[ -e "${_bash_completion_path}/notes-completion.bash" ]]
+    then
+      _exists=1
+      printf "Exists: %s\\n" "${_bash_completion_path}/notes-completion.bash"
+    fi
+
+    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
+
+    if [[ -d "${_zsh_completion_path}" ]] &&
+       [[ -w "${_zsh_completion_path}" ]] &&
+       [[ -e "${_zsh_completion_path}/_notes" ]]
+    then
+      _exists=1
+      printf "Exists: %s\\n" "${_zsh_completion_path}/_notes"
+    fi
+
+    if ! ((_exists))
+    then
+      printf "Completion scripts not found.\\n"
+      return 1
+    fi
+  }
+
+  # Usage: _get_bash_completion_path
+  _get_bash_completion_path() {
+    local _bash_completion_path=
+
+    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]] &&
+       [[ -w "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
+    then
+      _bash_completion_path="${BASH_COMPLETION_COMPAT_DIR}"
+    fi
+
+    if [[ -z "${_bash_completion_path:-}" ]]
+    then
+      local _maybe_path
+      _maybe_path="$(
+        pkg-config --variable=completionsdir bash-completion 2>/dev/null || true
+      )"
+
+      if [[ -n "${_maybe_path:-}" ]] &&
+         [[ -w "${_maybe_path:-}" ]]
+      then
+        _bash_completion_path="${_maybe_path}"
+      fi
+    fi
+
+    if [[ -z "${_bash_completion_path:-}"       ]] &&
+       [[ -d "/usr/local/etc/bash_completion.d" ]] &&
+       [[ -w "/usr/local/etc/bash_completion.d" ]]
+    then
+      _bash_completion_path="/usr/local/etc/bash_completion.d"
+    fi
+
+    if [[ -z "${_bash_completion_path:-}" ]] &&
+       [[ -d "/etc/bash_completion.d"     ]] &&
+       [[ -w "/etc/bash_completion.d"     ]]
+    then
+      _bash_completion_path="/etc/bash_completion.d"
+    fi
+
+    printf "%s\\n" "${_bash_completion_path:-}"
+  }
+
+  # Usage: _completions_install
+  _completions_install() {
+    local _bash_completion_path=
+    _bash_completion_path="$(_get_bash_completion_path)"
+
+    local _my_dir=
+    _my_dir="$(cd "$(dirname "$(realpath "$0")")"; pwd)"
+    if [[ -z "${_my_dir}" ]] || [[ ! -d "${_my_dir}" ]]
+    then
+      exit 1
+    fi
+
+    if [[ -n "${_bash_completion_path:-}" ]] &&
+       [[ -d "${_bash_completion_path}"   ]] &&
+       [[ -w "${_bash_completion_path}"   ]] &&
+       [[ ! -e "${_bash_completion_path}/notes-completion.bash" ]]
+    then
+      cp \
+        "${_my_dir}/etc/notes-completion.bash" \
+        "${_bash_completion_path}/notes-completion.bash"
+      printf "Completion installed: %s\\n" \
+        "${_bash_completion_path}/notes-completion.bash"
+    fi
+
+    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
+
+    if [[ -d "${_zsh_completion_path}" ]] &&
+       [[ -w "${_zsh_completion_path}" ]] &&
+       [[ ! -e "${_zsh_completion_path}/_notes" ]]
+    then
+      cp \
+        "${_my_dir}/etc/notes-completion.zsh" \
+        "${_zsh_completion_path}/_notes"
+      printf "Completion installed: %s\\n" \
+        "${_zsh_completion_path}/_notes"
+    fi
+  }
+
+  # Usage: _completions_uninstall
+  _completions_uninstall() {
+    local _bash_completion_path=
+    _bash_completion_path="$(_get_bash_completion_path)"
+
+    if [[ -n "${_bash_completion_path:-}" ]] &&
+       [[ -d "${_bash_completion_path}"   ]] &&
+       [[ -w "${_bash_completion_path}"   ]] &&
+       [[ -e "${_bash_completion_path}/notes-completion.bash" ]]
+    then
+      rm "${_bash_completion_path}/notes-completion.bash"
+      printf "Completion removed: %s\\n" \
+        "${_bash_completion_path}/notes-completion.bash"
+    fi
+
+    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
+
+    if [[ -d "${_zsh_completion_path}" ]] &&
+       [[ -w "${_zsh_completion_path}" ]] &&
+       [[ -e "${_zsh_completion_path}/_notes" ]]
+    then
+      rm "${_zsh_completion_path}/_notes"
+      printf "Completion removed: %s\\n" \
+        "${_zsh_completion_path}/_notes"
+    fi
+  }
+
+  local _subcommand="${1:-}"
+
+  case "${_subcommand}" in
+    check)
+      _completions_check
+      ;;
+    install)
+      _completions_install
+      ;;
+    uninstall)
+      _completions_uninstall
+      ;;
+    *)
+      _help "completions"
+      return 0
+      ;;
+  esac
 }
 
 # count #######################################################################
@@ -5598,6 +5768,7 @@ _SUBCOMMANDS=(
   b
   bookmark
   commands
+  completions
   config
   count
   d
