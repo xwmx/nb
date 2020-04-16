@@ -120,10 +120,14 @@ make install
 #### Manual
 
 To install manually, simply add the `notes` script to your `$PATH`. If
-you already have a `~/bin` directory, you can use the following command:
+you already have a `~/bin` directory, for example, you can use one of the following commands:
 
 ```bash
+# download with curl
 curl -L https://raw.github.com/xwmx/notes/master/notes -o ~/bin/notes && chmod +x ~/bin/notes
+
+# download with wget
+wget https://raw.github.com/xwmx/notes/master/notes -O ~/bin/notes && chmod +x ~/bin/notes
 ```
 
 #### Tab Completion
