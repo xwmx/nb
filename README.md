@@ -126,10 +126,17 @@ sudo make install
 
 #### Manual
 
-To install as an administrator, copy and paste the following multi-line command:
+To install as an administrator, copy and paste one of the following multi-line
+commands:
 
 ```bash
+# install using curl
 sudo curl -L https://raw.github.com/xwmx/notes/master/notes -o /usr/local/bin/notes &&
+  sudo chmod +x /usr/local/bin/notes &&
+  sudo notes completions install --download
+
+# install using wget
+sudo wget https://raw.github.com/xwmx/notes/master/notes -O /usr/local/bin/notes &&
   sudo chmod +x /usr/local/bin/notes &&
   sudo notes completions install --download
 ```
