@@ -779,7 +779,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  notes completions (check | install | uninstall)
+  notes completions (check | install [-d | --download] | uninstall)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
   notes edit (<id> | <filename> | <path> | <title>)
@@ -991,7 +991,10 @@ Shortcut Alias: `b`
 
 ```text
 Usage:
-  notes completions (check | install | uninstall)
+  notes completions (check | install [-d | --download] | uninstall)
+
+Options:
+  -d --download  Download the completion scripts and install.
 
 Description:
   Manage completion scripts. For more information, visit:

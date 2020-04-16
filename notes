@@ -1452,7 +1452,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  ${_ME} completions (check | install | uninstall)
+  ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
@@ -2168,7 +2168,10 @@ _commands() {
 
 desc "completions" <<HEREDOC
 Usage:
-  ${_ME} completions (check | install | uninstall)
+  ${_ME} completions (check | install [-d | --download] | uninstall)
+
+Options:
+  -d --download  Download the completion scripts and install.
 
 Description:
   Manage completion scripts. For more information, visit:
@@ -2249,10 +2252,13 @@ _completions() {
     printf "%s\\n" "${_bash_completion_path:-}"
   }
 
-  # Usage: _completions_install
+  # Usage: _completions_install [--download]
   _completions_install() {
-    local _bash_completion_path=
-    _bash_completion_path="$(_get_bash_completion_path)"
+    local _download=0
+    if [[ "${1:-}" == "--download" ]]
+    then
+      _download=1
+    fi
 
     local _my_dir=
     _my_dir="$(cd "$(dirname "$(realpath "$0")")"; pwd)"
@@ -2261,44 +2267,69 @@ _completions() {
       exit 1
     fi
 
-    if [[ ! -f "${_my_dir}/etc/notes-completion.bash" ]]
-    then
-      printf "Unable to install Bash completion script. More information:\\n"
-      printf "https://github.com/xwmx/notes/blob/master/etc/README.md\\n"
-      return 1
-    fi
+    local _my_raw_url="https://raw.githubusercontent.com/xwmx/notes/master"
 
-    if [[ -n "${_bash_completion_path:-}" ]] &&
-       [[ -d "${_bash_completion_path}"   ]] &&
-       [[ -w "${_bash_completion_path}"   ]] &&
-       [[ ! -e "${_bash_completion_path}/notes" ]]
-    then
-      cp \
-        "${_my_dir}/etc/notes-completion.bash" \
-        "${_bash_completion_path}/notes"
-      printf "Completion script installed: %s\\n" \
-        "${_bash_completion_path}/notes"
-    fi
+    for _shell in bash zsh
+    do
+      local _completion_source="${_my_dir}/etc/notes-completion.${_shell}"
 
-    if [[ ! -f "${_my_dir}/etc/notes-completion.zsh" ]]
-    then
-      printf "Unable to install Zsh completion script. More information:\\n"
-      printf "https://github.com/xwmx/notes/blob/master/etc/README.md\\n"
-      return 1
-    fi
+      if ((_download))
+      then
+        if [[ ! -f "${_completion_source}" ]]
+        then
+          _completion_source="$(mktemp)"
+          local _completion_url="${_my_raw_url}/etc/notes-completion.${_shell}"
 
-    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
+          if _command_exists "curl"
+          then
+            curl -s -L \
+              "${_completion_url}" \
+              -o "${_completion_source}"
+          elif _command_exists "wget"
+          then
+            wget --quiet \
+              -O "${_completion_source}" \
+              "${_completion_url}" 2>/dev/null
+          else
+            printf "Unable to download Completion script from %s\\n" \
+              "${_completion_source}"
+            return 1
+          fi
+        fi
+      fi
 
-    if [[ -d "${_zsh_completion_path}" ]] &&
-       [[ -w "${_zsh_completion_path}" ]] &&
-       [[ ! -e "${_zsh_completion_path}/_notes" ]]
-    then
-      cp \
-        "${_my_dir}/etc/notes-completion.zsh" \
-        "${_zsh_completion_path}/_notes"
-      printf "Completion script installed: %s\\n" \
-        "${_zsh_completion_path}/_notes"
-    fi
+      if [[ ! -f "${_completion_source}" ]]
+      then
+        printf "Unable to install %s completion script. More information:\\n" \
+          "${_shell}"
+        printf "https://github.com/xwmx/notes/blob/master/etc/README.md\\n"
+        return 1
+      fi
+
+      local _completion_path=
+      local _completion_target=
+      if [[ "${_shell}" == "bash" ]]
+      then
+        _completion_path="$(_get_bash_completion_path)"
+        _completion_target="${_completion_path}/notes"
+      elif [[ "${_shell}" == "zsh" ]]
+      then
+        _completion_path="/usr/local/share/zsh/site-functions"
+        _completion_target="${_completion_path}/_notes"
+      fi
+
+      if [[ -n "${_completion_path:-}"   ]] &&
+         [[ -d "${_completion_path}"     ]] &&
+         [[ -w "${_completion_path}"     ]] &&
+         [[ ! -e "${_completion_target}" ]]
+      then
+        cp \
+          "${_completion_source}" \
+          "${_completion_target}"
+        printf "Completion script installed: %s\\n" \
+          "${_completion_target}"
+      fi
+    done
   }
 
   # Usage: _completions_uninstall
@@ -2335,7 +2366,12 @@ _completions() {
       _completions_check
       ;;
     install)
-      _completions_install
+      if [[ "${2:-}" =~ ^-d|--download$ ]]
+      then
+        _completions_install --download
+      else
+        _completions_install
+      fi
       ;;
     uninstall)
       _completions_uninstall

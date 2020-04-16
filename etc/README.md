@@ -44,6 +44,15 @@ Completion script removed: /usr/local/etc/bash_completion.d/notes
 Completion script removed: /usr/local/share/zsh/site-functions/_notes
 ```
 
+If you installed `notes` manually, the completion scripts won't be immediately
+available and `notes completions install` will fail. You can try installing
+the completions with the `--download` flag, which will get the latest
+versions from GitHub:
+
+```bash
+notes completions install --download
+```
+
 `notes completions` will try to determine the completion script directories
 from your environment. If `notes completions` isn't able to install
 the completion scripts, you might need to try installing them manually.
