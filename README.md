@@ -22,7 +22,7 @@ bookmarks.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` works in any
-standard Linux / Unix environment, including macOS and WSL.
+standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `notes` works great without them.
 
@@ -47,7 +47,7 @@ used a little, a lot, once in a while, or for just a subset of features.
 ##### Required
 
 - [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-  - `notes` works perfectly with ZSH, fish, and any other shell set as your
+  - `notes` works perfectly with Zsh, fish, and any other shell set as your
     primary login shell, the system just needs to have Bash available on it.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
