@@ -70,7 +70,7 @@ load test_helper
 
 # <selector> (no changes) #####################################################
 
-@test "\`edit\` with no changes does not print outpout." {
+@test "\`edit\` with no changes does not print output." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "example.md" --content "Example content."
@@ -85,7 +85,7 @@ load test_helper
   [[ -z ${output} ]]
 }
 
-@test "\`edit\` encrypted with no changes does not print outpout." {
+@test "\`edit\` encrypted with no changes does not print output." {
   {
     run "${_NOTES}" init
     run "${_NOTES}" add "example.md" --content "Example content." \
