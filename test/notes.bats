@@ -28,15 +28,15 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${status}" -eq 0 ]]
 
-  [[ "${lines[6]}" == "Initializing..." ]]
-  [[ "${lines[7]}" =~ Created ]]
-  [[ "${lines[8]}" =~ Created ]]
+  [[ "${lines[8]}" == "Initializing..." ]]
   [[ "${lines[9]}" =~ Created ]]
-  [[ "${lines[12]}" == "0 notes." ]]
-  [[ "${lines[13]}" == "Add a note:" ]]
-  [[ "${lines[14]}" == "  notes add" ]]
-  [[ "${lines[15]}" == "Usage information:" ]]
-  [[ "${lines[16]}" == "  notes help" ]]
+  [[ "${lines[10]}" =~ Created ]]
+  [[ "${lines[11]}" =~ Created ]]
+  [[ "${lines[14]}" == "0 notes." ]]
+  [[ "${lines[15]}" == "Add a note:" ]]
+  [[ "${lines[16]}" == "  notes add" ]]
+  [[ "${lines[17]}" == "Usage information:" ]]
+  [[ "${lines[18]}" == "  notes help" ]]
 }
 
 # `notes` (empty repo) ########################################################
