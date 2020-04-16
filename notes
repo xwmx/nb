@@ -1015,13 +1015,7 @@ _git_required() {
   if ! _command_exists "git"
   then
     cat <<HEREDOC
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
-
-Welcome to \`notes\`
+Welcome to \`notes\`!
 
 \`git\` is required, but wasn't found. Install Git, then run \`notes\` again.
 
@@ -1038,13 +1032,7 @@ HEREDOC
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
   then
     cat <<HEREDOC
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
-
-Welcome to \`notes\`
+Welcome to \`notes\`!
 
 \`git\` requires some additional setup before using \`notes\`. Enter the name
 and email address you'd like to use with Git.
@@ -3145,23 +3133,29 @@ _init() {
   fi
 
   cat <<HEREDOC
+-------------------------------
 Welcome to
-             _
- _ __   ___ | |_ ___  ___
-| '_ \ / _ \| __/ _ \/ __|
-| | | | (_) | ||  __/\__ \\
-|_| |_|\___/ \__\___||___/
-
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
+-------------------------------
 Initializing...
 HEREDOC
-  if [[ ! -e "${NOTES_DIR}" ]]
+  if [[ -e "${NOTES_DIR}" ]]
   then
+    printf "Already exists: %s\\n" "${NOTES_DIR}"
+  else
     mkdir -p "${NOTES_DIR}"
     printf "Created %s\\n" "${NOTES_DIR}"
   fi
 
-  if [[ ! -e "${NOTESRC_PATH}" ]]
+  if [[ -e "${NOTESRC_PATH}" ]]
   then
+    printf "A .notesrc configuration file already exists: %s\\n" \
+      "${NOTESRC_PATH}"
+  else
     cat <<HEREDOC > "${NOTESRC_PATH}"
 ###############################################################################
 # .notesrc
