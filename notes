@@ -2346,6 +2346,7 @@ _completions() {
         cp \
           "${_completion_source}" \
           "${_completion_target}"
+        chmod +r "${_completion_target}"
         printf "Completion script installed: %s\\n" \
           "${_completion_target}"
       fi
