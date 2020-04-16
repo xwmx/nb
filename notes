@@ -5555,23 +5555,32 @@ Description:
   Update ${_ME} to the latest version.
 HEREDOC
 _update() {
+    local _current_path
+    _current_path="${BASH_SOURCE[0]}"
+    if [[ -n "${_current_path}" ]]
+    then
+      _current_path="$(realpath "${_current_path}")"
+    fi
+
   if hash npm 2>/dev/null &&
      npm list | grep -q notes.sh &&
-     [[ "${BASH_SOURCE[0]}" =~ \/node\/|\/node_modules\/ ]]
+     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
     cat <<'HEREDOC'
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
   elif [[ "${OSTYPE}" =~ ^darwin ]] &&
-       [[ "$(realpath "${BASH_SOURCE[0]}")" =~ Cellar ]]
+       [[ "${_current_path}" =~ Cellar ]]
   then
     cat <<'HEREDOC'
 Installed with Homebrew. To update, run:
   brew upgrade xwmx/taps/notes
 HEREDOC
   else
-    _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
+    local _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
+
+    local _temp_file
     _temp_file="$(mktemp)"
 
     if ! _download_from "${_notes_url}" "${_temp_file}"
@@ -5580,7 +5589,7 @@ HEREDOC
       return 1
     fi
 
-    if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${BASH_SOURCE[0]}")" ]]
+    if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${_current_path}")" ]]
     then
       while true
       do
@@ -5597,7 +5606,7 @@ HEREDOC
         esac
       done
 
-      cat  "${_temp_file}" > "${BASH_SOURCE[0]}"
+      cat  "${_temp_file}" > "${_current_path}"
       printf "%s updated to the latest version.\\n" "${_ME}"
     else
       printf "Already at the latest version.\\n"
