@@ -306,7 +306,7 @@ _alias_subcommand() {
 
   local _subcommand_help
   _subcommand_help="$(
-    printf "%s\n" "${_subcommand}" | cut -d' ' -f1
+    printf "%s\\n" "${_subcommand}" | cut -d' ' -f1
   )"
 
   eval "desc \"${_alias}\" \"\$(_help '${_subcommand_help}')\""
@@ -359,7 +359,7 @@ _decrypt_file() {
 
   if [[ -z "${_password}" ]]
   then
-    printf "Password required.\n"
+    printf "Password required.\\n"
     return 1
   fi
 
@@ -393,7 +393,7 @@ _decrypt_file() {
           --decrypt "${_encrypted_path}"
     else
       printf "\
-This note was encrypted with GPG, but the GPG command was not found.\n"
+This note was encrypted with GPG, but the GPG command was not found.\\n"
       return 1
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
@@ -409,11 +409,11 @@ This note was encrypted with GPG, but the GPG command was not found.\n"
 
   if [[ ! -e "${_unencrypted_path}" ]]
   then
-    printf "Decryption error.\n" 1>&2
+    printf "Decryption error.\\n" 1>&2
     return 1
   fi
 
-  printf "%s\n" "${_unencrypted_path}"
+  printf "%s\\n" "${_unencrypted_path}"
 }
 
 # _edit_file()
@@ -516,7 +516,7 @@ _encrypt_file() {
 
   if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
   then
-    printf "%s\n" "${_password}" \
+    printf "%s\\n" "${_password}" \
       | gpg \
         --quiet \
         --batch \
@@ -530,15 +530,15 @@ _encrypt_file() {
     openssl enc -aes-256-cbc \
       -in "${_decrypted_path}" \
       -out "${_encrypted_path}" \
-      -pass file:<(printf "%s\n" "${_password}") 2> /dev/null
+      -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
-    printf "\$NOTES_ENCRYPTION_TOOL must be set to either 'gpg' or 'openssl'."
+    printf "\$NOTES_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
     return 1
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
   then
-    printf "Encryption error.\n"
+    printf "Encryption error.\\n"
     return 1
   fi
 }
@@ -889,7 +889,7 @@ _get_unique_basename() {
       "${_file_name}" \
       "$(( ++_uniqueness_counter ))"
   done
-  printf "%s\n" "${_unique_filename}.${_file_type}"
+  printf "%s\\n" "${_unique_filename}.${_file_type}"
 }
 
 # _git_checkpoint()
@@ -902,7 +902,7 @@ _get_unique_basename() {
 _git_checkpoint() {
   _git_checkpoint_commit() {
     [[ -z "${1:-}" ]] && _die printf "Usage: _git_checkpoint_commit <message>"
-    _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" \
+    _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" \
       "$(ls -la)"
 
     git add --all && git commit -a -m "${1}"
@@ -943,7 +943,7 @@ _git_checkpoint() {
     _target_directory="${_NOTEBOOK_PATH}"
   fi
 
-  _debug printf "_git_checkpoint() \${_target_directory}: '%s'\n" \
+  _debug printf "_git_checkpoint() \${_target_directory}: '%s'\\n" \
     "${_target_directory}"
 
   if [[ -z "${_message}" ]]
@@ -959,7 +959,7 @@ _git_checkpoint() {
 
   cd "${_target_directory}" || _die printf "_git_checkpoint() \`cd\` failed.\\n"
 
-  _debug printf "_git_checkpoint() \$(ls -la): '%s'\n" "$(ls -la)"
+  _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
 
   if ((NOTES_AUTO_SYNC))
   then
@@ -1231,9 +1231,9 @@ _list_notes_files() {
 
     if [[ "${2:-}" == "--reverse" ]]
     then
-      printf "%s\n" "${_filenames[@]}" | sort -r
+      printf "%s\\n" "${_filenames[@]}" | sort -r
     else
-      printf "%s\n" "${_filenames[@]}"
+      printf "%s\\n" "${_filenames[@]}"
     fi
   else
     ls -t "${_NOTEBOOK_PATH}"
@@ -1677,7 +1677,7 @@ _add() {
 
       if [[ -z "${_password:-}" ]]
       then
-        printf "Password required.\n"
+        printf "Password required.\\n"
         return 1
       fi
     fi
@@ -2000,7 +2000,7 @@ _bookmark() {
         open "${_target_url}"
         return 0
       else
-        printf "notes doesn't know how to open URLs on your system.\n"
+        printf "notes doesn't know how to open URLs on your system.\\n"
         return 1
       fi
     elif [[ "${_subcommand}" == "url" ]]
@@ -2072,7 +2072,7 @@ _bookmark() {
     if _command_exists "w3m"
     then # convert html entities
       _title="$(
-        printf "%s\n" "${_title}" | w3m -dump -T text/html -cols 1000
+        printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 1000
       )"
     fi
 
@@ -2096,7 +2096,7 @@ _bookmark() {
     for __tag in "${_tags[@]:-}"
     do
       local _normalized_tag
-      _normalized_tag="$(printf "%s\n" "${__tag}" | tr -d '#')"
+      _normalized_tag="$(printf "%s\\n" "${__tag}" | tr -d '#')"
 
       if [[ -z "${_tag_string}" ]]
       then
@@ -2788,7 +2788,7 @@ _export() {
         pandoc "${_NOTEBOOK_PATH}/${_basename}"
       fi
     else
-      printf "Pandoc required. http://pandoc.org/\n"
+      printf "Pandoc required. http://pandoc.org/\\n"
       return 1
     fi
   else
@@ -2844,7 +2844,7 @@ _export() {
     else
       cp "${_NOTEBOOK_PATH}/${_basename}" "${_target_path}"
     fi &&
-      printf "Exported '%s' to '%s'\n" "${_selection}" "${_target_path}"
+      printf "Exported '%s' to '%s'\\n" "${_selection}" "${_target_path}"
   fi
 }
 
@@ -2941,7 +2941,7 @@ _import() {
       return 1
     elif [[ ! -e "${1:-}" ]]
     then
-      printf "File not found: %s\n" "${1:-}"
+      printf "File not found: %s\\n" "${1:-}"
       return 1
     fi
   }
@@ -2956,7 +2956,7 @@ _import() {
     then
       _target_basename="$(_get_unique_basename "${_target_basename}")"
     fi
-    printf "%s\n" "${_target_basename}"
+    printf "%s\\n" "${_target_basename}"
   }
 
   local _basename=
@@ -3007,7 +3007,7 @@ _import() {
       cp "${_path}" "${_NOTEBOOK_PATH}/${_basename}" &&
         _index add "${_basename}" &&
         _git_checkpoint "[NOTES] Import: ${_basename}"
-      printf "Imported '%s' to '%s'\n" "${_path}" "${_basename}"
+      printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -3047,7 +3047,7 @@ _import() {
 Source:
 ${_url}
 "
-      printf "Imported '%s' to '%s'\n" "${_url}" "${_basename}"
+      printf "Imported '%s' to '%s'\\n" "${_url}" "${_basename}"
       ;;
     move)
       _import_validate_path "${_path:-}"
@@ -3057,7 +3057,7 @@ ${_url}
       mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}" &&
         _index add "${_basename}" &&
         _git_checkpoint "[NOTES] Import: ${_basename}"
-      printf "Imported '%s' to '%s'\n" "${_path}" "${_basename}"
+      printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
       ;;
     *)
       _help import
@@ -3779,7 +3779,7 @@ HEREDOC
     if ! ((_counter)) && [[ -n "${_selection:-}" ]]
     then
       printf "Note not found: '%s'.\\n" "${_selection}"
-      printf "Help & Usage Info:\n"
+      printf "Help & Usage Info:\\n"
       printf "  notes help\\n"
       return 1
     fi
@@ -3875,7 +3875,7 @@ _ls() {
       # _notebooks --names \
       #   | tr '\n' ' ' \
       #   | fold -s "-w$(tput cols)" \
-      #   && printf "\n"
+      #   && printf "\\n"
 
       # _print_paddding()
       #
@@ -4496,7 +4496,7 @@ _remote() {
         then
           while true
           do
-            printf "Removing remote '%s'\n" \
+            printf "Removing remote '%s'\\n" \
               "${_existing_url}"
             read -r -p "Do you want to proceed? [y/N] " __yn
             case ${__yn} in
@@ -4512,10 +4512,10 @@ _remote() {
         fi
 
         git remote rm origin &&
-          printf "Removed remote '%s'\n" "${_existing_url}" &&
+          printf "Removed remote '%s'\\n" "${_existing_url}" &&
           return 0
       else
-        printf "No remote configured.\n"
+        printf "No remote configured.\\n"
         return 1
       fi
       ;;
