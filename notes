@@ -2215,22 +2215,34 @@ _completions() {
     local _exists=0
 
     if [[ -n "${_bash_completion_path:-}" ]] &&
-       [[ -d "${_bash_completion_path}"   ]] &&
-       [[ -w "${_bash_completion_path}"   ]] &&
-       [[ -e "${_bash_completion_path}/notes" ]]
+       [[ -d "${_bash_completion_path}"   ]]
     then
-      _exists=1
-      printf "Exists: %s\\n" "${_bash_completion_path}/notes"
+      if [[ -w "${_bash_completion_path}"   ]]
+      then
+        if [[ -e "${_bash_completion_path}/notes" ]]
+        then
+          _exists=1
+          printf "Exists: %s\\n" "${_bash_completion_path}/notes"
+        fi
+      else
+        printf "Permission denied: %s\\n" "${_bash_completion_path}"
+      fi
     fi
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
 
-    if [[ -d "${_zsh_completion_path}" ]] &&
-       [[ -w "${_zsh_completion_path}" ]] &&
-       [[ -e "${_zsh_completion_path}/_notes" ]]
+    if [[ -d "${_zsh_completion_path}" ]]
     then
-      _exists=1
-      printf "Exists: %s\\n" "${_zsh_completion_path}/_notes"
+      if [[ -w "${_zsh_completion_path}" ]]
+      then
+        if [[ -e "${_zsh_completion_path}/_notes" ]]
+        then
+          _exists=1
+          printf "Exists: %s\\n" "${_zsh_completion_path}/_notes"
+        fi
+      else
+        printf "Permission denied: %s\\n" "${_zsh_completion_path}"
+      fi
     fi
 
     if ! ((_exists))
@@ -2244,8 +2256,7 @@ _completions() {
   _get_bash_completion_path() {
     local _bash_completion_path=
 
-    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]] &&
-       [[ -w "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
+    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
     then
       _bash_completion_path="${BASH_COMPLETION_COMPAT_DIR}"
     fi
@@ -2257,23 +2268,20 @@ _completions() {
         pkg-config --variable=completionsdir bash-completion 2>/dev/null || true
       )"
 
-      if [[ -n "${_maybe_path:-}" ]] &&
-         [[ -w "${_maybe_path:-}" ]]
+      if [[ -n "${_maybe_path:-}" ]]
       then
         _bash_completion_path="${_maybe_path}"
       fi
     fi
 
     if [[ -z "${_bash_completion_path:-}"       ]] &&
-       [[ -d "/usr/local/etc/bash_completion.d" ]] &&
-       [[ -w "/usr/local/etc/bash_completion.d" ]]
+       [[ -d "/usr/local/etc/bash_completion.d" ]]
     then
       _bash_completion_path="/usr/local/etc/bash_completion.d"
     fi
 
     if [[ -z "${_bash_completion_path:-}" ]] &&
-       [[ -d "/etc/bash_completion.d"     ]] &&
-       [[ -w "/etc/bash_completion.d"     ]]
+       [[ -d "/etc/bash_completion.d"     ]]
     then
       _bash_completion_path="/etc/bash_completion.d"
     fi
@@ -2338,46 +2346,63 @@ _completions() {
         _completion_target="${_completion_path}/_notes"
       fi
 
-      if [[ -n "${_completion_path:-}"   ]] &&
-         [[ -d "${_completion_path}"     ]] &&
-         [[ -w "${_completion_path}"     ]] &&
-         [[ ! -e "${_completion_target}" ]]
+      if [[ -n "${_completion_path:-}" ]] &&
+         [[ -d "${_completion_path}"   ]]
       then
-        cp \
-          "${_completion_source}" \
-          "${_completion_target}"
-        chmod +r "${_completion_target}"
-        printf "Completion script installed: %s\\n" \
-          "${_completion_target}"
+        if [[ -w "${_completion_path}" ]]
+        then
+          if [[ ! -e "${_completion_target}" ]]
+          then
+            cp \
+              "${_completion_source}" \
+              "${_completion_target}"
+            chmod +r "${_completion_target}"
+            printf "Completion script installed: %s\\n" \
+              "${_completion_target}"
+          else
+            printf "Exists: %s\\n" "${_completion_target}"
+          fi
+        else
+          printf "Permission denied: %s\\n" "${_completion_path}"
+        fi
       fi
     done
   }
 
   # Usage: _completions_uninstall
   _completions_uninstall() {
-    local _bash_completion_path=
-    _bash_completion_path="$(_get_bash_completion_path)"
+    local _completion_path=
+    local _completion_target=
 
-    if [[ -n "${_bash_completion_path:-}" ]] &&
-       [[ -d "${_bash_completion_path}"   ]] &&
-       [[ -w "${_bash_completion_path}"   ]] &&
-       [[ -e "${_bash_completion_path}/notes" ]]
-    then
-      rm "${_bash_completion_path}/notes"
-      printf "Completion script removed: %s\\n" \
-        "${_bash_completion_path}/notes"
-    fi
+    for _shell in bash zsh
+    do
+      if [[ "${_shell}" == "bash" ]]
+      then
+        _completion_path="$(_get_bash_completion_path)"
+        _completion_target="${_completion_path}/notes"
+      elif [[ "${_shell}" == "zsh" ]]
+      then
+        _completion_path="/usr/local/share/zsh/site-functions"
+        _completion_target="${_completion_path}/_notes"
+      fi
 
-    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
-
-    if [[ -d "${_zsh_completion_path}" ]] &&
-       [[ -w "${_zsh_completion_path}" ]] &&
-       [[ -e "${_zsh_completion_path}/_notes" ]]
-    then
-      rm "${_zsh_completion_path}/_notes"
-      printf "Completion script removed: %s\\n" \
-        "${_zsh_completion_path}/_notes"
-    fi
+      if [[ -n "${_completion_path:-}" ]] &&
+         [[ -d "${_completion_path}"   ]]
+      then
+        if [[ -w "${_completion_path}"   ]] &&
+           [[ -w "${_completion_target}" ]]
+        then
+          if [[ -f "${_completion_target}" ]]
+          then
+            rm "${_completion_target}"
+            printf "Completion script removed: %s\\n" \
+              "${_completion_target}"
+          fi
+        else
+          printf "Permission denied: %s\\n" "${_completion_path}"
+        fi
+      fi
+    done
   }
 
   local _subcommand="${1:-}"
