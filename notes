@@ -2185,10 +2185,10 @@ _completions() {
     if [[ -n "${_bash_completion_path:-}" ]] &&
        [[ -d "${_bash_completion_path}"   ]] &&
        [[ -w "${_bash_completion_path}"   ]] &&
-       [[ -e "${_bash_completion_path}/notes-completion.bash" ]]
+       [[ -e "${_bash_completion_path}/notes" ]]
     then
       _exists=1
-      printf "Exists: %s\\n" "${_bash_completion_path}/notes-completion.bash"
+      printf "Exists: %s\\n" "${_bash_completion_path}/notes"
     fi
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
@@ -2264,13 +2264,13 @@ _completions() {
     if [[ -n "${_bash_completion_path:-}" ]] &&
        [[ -d "${_bash_completion_path}"   ]] &&
        [[ -w "${_bash_completion_path}"   ]] &&
-       [[ ! -e "${_bash_completion_path}/notes-completion.bash" ]]
+       [[ ! -e "${_bash_completion_path}/notes" ]]
     then
       cp \
         "${_my_dir}/etc/notes-completion.bash" \
-        "${_bash_completion_path}/notes-completion.bash"
+        "${_bash_completion_path}/notes"
       printf "Completion installed: %s\\n" \
-        "${_bash_completion_path}/notes-completion.bash"
+        "${_bash_completion_path}/notes"
     fi
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
@@ -2295,11 +2295,11 @@ _completions() {
     if [[ -n "${_bash_completion_path:-}" ]] &&
        [[ -d "${_bash_completion_path}"   ]] &&
        [[ -w "${_bash_completion_path}"   ]] &&
-       [[ -e "${_bash_completion_path}/notes-completion.bash" ]]
+       [[ -e "${_bash_completion_path}/notes" ]]
     then
-      rm "${_bash_completion_path}/notes-completion.bash"
+      rm "${_bash_completion_path}/notes"
       printf "Completion removed: %s\\n" \
-        "${_bash_completion_path}/notes-completion.bash"
+        "${_bash_completion_path}/notes"
     fi
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
