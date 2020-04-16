@@ -2640,14 +2640,14 @@ _edit() {
 
   if [[ -n "${_basename}" ]] || [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # _basename is assigned and a note exists with that name.
-    local _target_file="${_NOTEBOOK_PATH}/${_basename}"
-
     local _before
     _before="$(_get_hash "${_NOTEBOOK_PATH}/${_basename}")"
+    local _decrypted_path=
+    local _encrypted_path=
+    local _target_file="${_NOTEBOOK_PATH}/${_basename}"
 
     if _file_is_encrypted "${_target_file}"
     then
-      local _encrypted_path
       _encrypted_path="${_target_file}"
 
       if [[ -z "${_password}" ]]
@@ -2658,10 +2658,11 @@ _edit() {
         printf "\\n" # print newline to stop `read`.
       fi
 
-      local _decrypted_path
       _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"
 
       _target_file="${_decrypted_path}"
+
+      _before="$(_get_hash "${_decrypted_path}")"
     fi
 
     if _interactive_input
@@ -2674,19 +2675,34 @@ _edit() {
       cat >> "${_target_file}"
     fi
 
-    if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
-    then
-      local _temp_encrypted_path="${_decrypted_path}.tmp"
-      mv "${_encrypted_path}" "${_temp_encrypted_path}"
-      _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
-      rm "${_temp_encrypted_path}" && rm "${_decrypted_path}"
-    fi
-
-    _git_checkpoint "[NOTES] Edit: ${_basename}"
-
     _after="$(_get_hash "${_NOTEBOOK_PATH}/${_basename}")"
     _debug printf "_edit() \${_before}: %s\\n" "${_before}"
     _debug printf "_edit() \${_after}: %s\\n" "${_after}"
+
+    if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path:-}" ]]
+    then
+      _after="$(_get_hash "${_decrypted_path}")"
+
+      if [[ "${_before}" != "${_after}" ]]
+      then
+        local _temp_encrypted_path=
+        _temp_encrypted_path="$(_tempfile_path "${_basename}").tmp"
+
+        mv "${_encrypted_path}" "${_temp_encrypted_path}"
+        _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+
+        if [[ -e "${_encrypted_path}" ]]
+        then
+          rm "${_temp_encrypted_path}"
+        else
+          mv "${_temp_encrypted_path}" "${_encrypted_path}"
+        fi
+      fi
+
+      rm "${_decrypted_path}"
+    fi
+
+    _git_checkpoint "[NOTES] Edit: ${_basename}"
 
     if [[ "${_before}" != "${_after}" ]]
     then

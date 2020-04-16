@@ -85,6 +85,22 @@ load test_helper
   [[ -z ${output} ]]
 }
 
+@test "\`edit\` encrypted with no changes does not print outpout." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add "example.md" --content "Example content." \
+      --encrypt --password example
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
+    run "${_NOTES}" edit "${_filename}" --password example
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ -z ${output} ]]
+}
+
 # <filename> ##################################################################
 
 @test "\`edit\` with <filename> argument edits properly without errors." {
