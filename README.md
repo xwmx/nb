@@ -865,6 +865,7 @@ Program Options:
 <p align="center">
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
+  <a href="#completions">completions</a> •
   <a href="#count">count</a> •
   <a href="#delete">delete</a> •
   <a href="#edit">edit</a> •
