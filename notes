@@ -2261,6 +2261,13 @@ _completions() {
       exit 1
     fi
 
+    if [[ ! -f "${_my_dir}/etc/notes-completion.bash" ]]
+    then
+      printf "Unable to install Bash completion script. More information:\\n"
+      printf "https://github.com/xwmx/notes/blob/master/etc/README.md\\n"
+      return 1
+    fi
+
     if [[ -n "${_bash_completion_path:-}" ]] &&
        [[ -d "${_bash_completion_path}"   ]] &&
        [[ -w "${_bash_completion_path}"   ]] &&
@@ -2271,6 +2278,13 @@ _completions() {
         "${_bash_completion_path}/notes"
       printf "Completion script installed: %s\\n" \
         "${_bash_completion_path}/notes"
+    fi
+
+    if [[ ! -f "${_my_dir}/etc/notes-completion.zsh" ]]
+    then
+      printf "Unable to install Zsh completion script. More information:\\n"
+      printf "https://github.com/xwmx/notes/blob/master/etc/README.md\\n"
+      return 1
     fi
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
