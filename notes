@@ -5374,8 +5374,8 @@ __                _
  / / | | | | (_) | ||  __/\__ \\
 /_/  |_| |_|\___/ \__\___||___/
 -------------------------------
-\`notes shell\` started. Enter any subcommand to run it, enter 'help' for a
-list of commands, or enter 'exit' to exit.
+$(_highlight "notes shell") started. Enter $(_highlight "ls") to list notes and notebooks.
+Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
 HEREDOC
 
   if [[ -n "${_initial_command:-}" ]]
