@@ -5553,6 +5553,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "icat" && _file_is_image "${_target_path}"
     then
       icat "${_target_path}"
+    elif _command_exists "afplay" && _file_is_audio "${_target_path}"
+    then
+      afplay "${_target_path}"
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
