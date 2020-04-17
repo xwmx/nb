@@ -33,7 +33,6 @@
     "vim",
     "emacs",
     "vscode",
-    "document-management",
     "git",
     "versioning",
     "syncing",
@@ -43,7 +42,8 @@
     "bookmarks",
     "bookmarking",
     "tagging",
-    "tags"
+    "tags",
+    "archive"
   ],
   "author": "William Melody",
   "license": "GPL-2.0-only",
