@@ -5493,6 +5493,26 @@ _show() {
 
   local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
+  if [[ -z "${_basename:-}" ]] && [[ ! -e "${_target_path}" ]]
+  then
+    printf "Selection not found.\\n"
+    return 1
+  fi
+
+  if ((_print_path))
+  then # `notes show --path`
+    printf "%s/%s\\n" "${_NOTEBOOK_PATH}" "${_basename}"
+    return 0
+  fi
+
+  if ((_print_id))
+  then
+    local _id
+    _id="$(_index get_id "${_basename}")"
+    printf "%s\\n" "${_id}"
+    return 0
+  fi
+
   if _file_is_encrypted "${_target_path}"
   then
     local _encrypted_path
@@ -5522,82 +5542,60 @@ _show() {
   then
     printf "\
 Can't show archives. Export archive and expand to edit.\\n"
-    exit 1
-  fi
-
-  if _file_is_image "${_target_path}"
-  then
-    if _command_exists "imgcat"
-    then
-      imgcat "${_target_path}" && return 0
-    elif _command_exists "icat"
-    then
-      icat "${_target_path}" && return 0
-    fi
+    return 1
   fi
 
   if ! _file_is_text "${_target_path}"
   then
-    if _command_exists "xdg-open"
+    if _command_exists "imgcat" && _file_is_image "${_target_path}"
     then
-      xdg-open "${_target_path}" && return 0
+      imgcat "${_target_path}"
+    elif _command_exists "icat" && _file_is_image "${_target_path}"
+    then
+      icat "${_target_path}"
+    elif _command_exists "xdg-open"
+    then
+      xdg-open "${_target_path}"
     elif [[ "${OSTYPE}" =~ ^darwin ]]
     then
-      open "${_target_path}" && return 0
+      open "${_target_path}"
     fi
-  fi
-
-  # Display file.
-  if [[ -n "${_basename}" ]] && [[ -e "${_target_path}" ]]
-  then # _basename is assigned and a note exists with that name.
-    if ((_print_path))
-    then # `notes show --path`
-      printf "%s/%s\\n" "${_NOTEBOOK_PATH}" "${_basename}"
-    elif ((_print_id))
-    then
-      local _id
-      _id="$(_index get_id "${_basename}")"
-      printf "%s\\n" "${_id}"
-    elif ((_render)) &&
-         ((_dump))   &&
-         _command_exists "pandoc" &&
-         _command_exists "w3m"
-    then # `notes show --render --dump` with `pandoc` and `w3m` available.
-      pandoc "${_target_path}" \
-        | w3m -dump -T text/html
-    elif ((_render)) &&
-         _command_exists "pandoc" &&
-         _command_exists "w3m"
-    then # `notes show --render` with `pandoc` and `w3m` available.
-      pandoc "${_target_path}" \
-        | w3m -T text/html
-    elif ((_render)) &&
-         _command_exists "pandoc" &&
-         _command_exists "lynx"
-    then # `notes show --render` with `pandoc` and `lynx` available.
-      pandoc "${_target_path}" | lynx -stdin
-    else # default
-      if ((_dump))
-      then # `notes show --dump [--no-color]`
-        if ((_print_no_color))
-        then # `notes show --dump --no-color`
-          cat "${_target_path}"
-        else # `notes show --dump`
-          _highlight_syntax_if_available "${_target_path}"
-        fi
-      else # `notes show`
-        if [[ -n "${PAGER:-}" ]]
-        then
-          _highlight_syntax_if_available "${_target_path}" \
-            | "${PAGER}"
-        else
-          _highlight_syntax_if_available "${_target_path}"
-        fi
+  elif ((_render)) &&
+       ((_dump))   &&
+       _command_exists "pandoc" &&
+       _command_exists "w3m"
+  then # `notes show --render --dump` with `pandoc` and `w3m` available.
+    pandoc "${_target_path}" \
+      | w3m -dump -T text/html
+  elif ((_render)) &&
+       _command_exists "pandoc" &&
+       _command_exists "w3m"
+  then # `notes show --render` with `pandoc` and `w3m` available.
+    pandoc "${_target_path}" \
+      | w3m -T text/html
+  elif ((_render)) &&
+       _command_exists "pandoc" &&
+       _command_exists "lynx"
+  then # `notes show --render` with `pandoc` and `lynx` available.
+    pandoc "${_target_path}" | lynx -stdin
+  else # default
+    if ((_dump))
+    then # `notes show --dump [--no-color]`
+      if ((_print_no_color))
+      then # `notes show --dump --no-color`
+        cat "${_target_path}"
+      else # `notes show --dump`
+        _highlight_syntax_if_available "${_target_path}"
+      fi
+    else # `notes show`
+      if [[ -n "${PAGER:-}" ]]
+      then
+        _highlight_syntax_if_available "${_target_path}" \
+          | "${PAGER}"
+      else
+        _highlight_syntax_if_available "${_target_path}"
       fi
     fi
-  else # _basename is not assigned or no note exists with that name.
-    printf "Selection not found.\\n"
-    return 1
   fi
 
   if [[ -n "${_decrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
