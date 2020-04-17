@@ -3918,6 +3918,9 @@ _ls() {
       --plain)
         _plain=1
         ;;
+      -l|-a)
+        : # Ignore accidental ls -l and -a flags due to muscle memory.
+        ;;
       *)
         _args+=("${__arg}")
         ;;
