@@ -239,7 +239,7 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" == 'NOTES_HIGHLIGHT_COLOR must be number between 0 and 255.' ]]
+  [[ "${output}" == 'NOTES_HIGHLIGHT_COLOR must be a number between 0 and 255.' ]]
   [[ "$("${_NOTES}" settings get NOTES_HIGHLIGHT_COLOR)" == '123' ]]
 }
 
