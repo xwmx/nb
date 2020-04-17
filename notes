@@ -4995,10 +4995,11 @@ _NOTES_SETTINGS_LIST="\
     • Current Value: '${NOTES_DIR}'
 
 [5] NOTES_ENCRYPTION_TOOL
-    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
+    The tool used for encrypting notes.
 
-    • Default Value: 'openssl'
-    • Current Value: '${NOTES_ENCRYPTION_TOOL}'
+    • Supported Values: 'openssl', 'gpg'
+    • Default Value:    'openssl'
+    • Current Value:    '${NOTES_ENCRYPTION_TOOL}'
 
 [6] NOTES_HIGHLIGHT_COLOR
     Set highlighting color. This should be set to an xterm color number

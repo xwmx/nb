@@ -1535,9 +1535,10 @@ Settings:
     • Default Value: '~/.notes'
 
 [5] NOTES_ENCRYPTION_TOOL
-    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
+    The tool used for encrypting notes.
 
-    • Default Value: 'openssl'
+    • Supported Values: 'openssl', 'gpg'
+    • Default Value:    'openssl'
 
 [6] NOTES_HIGHLIGHT_COLOR
     Set highlighting color. This should be set to an xterm color number
