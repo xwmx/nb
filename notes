@@ -5113,13 +5113,13 @@ _settings() {
 ----------------
 ${_NOTES_SETTINGS_LIST}
 
-Enter the number or name of the setting you'd like to change, or 'q' to quit.
+Enter the number or name of the setting you'd like to change, or "q" to quit.
 HEREDOC
     local _setting_name=
 
     while true
     do
-      read -r -p "Number or name: " __setting
+      read -r -p "$(_highlight "Number or Name: ")" __setting
       if [[ -n "${__setting}" ]]
       then
         case "${__setting}" in
@@ -5138,12 +5138,14 @@ HEREDOC
       "${_setting_name}" \
       "$(_notes_settings_get_value "${_setting_name}")"
 
-    printf "\
-Enter a new value, \"unset\" to set to the default value, or \"q\" to quit.\\n"
+    cat <<HEREDOC
+
+Enter a new value, "unset" to set to the default value, or "q" to quit.
+HEREDOC
 
     while true
     do
-      read -r -p "New value: " __value
+      read -r -p "$(_highlight "Value: ")" __value
       if [[ -n "${__value}" ]]
       then
         case "${__value}" in
