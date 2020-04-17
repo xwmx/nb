@@ -5079,13 +5079,12 @@ _settings() {
     local _setting_name=
     local _stripped=
 
-    _setting_name="$(_notes_settings_get_name "${1:-}")"
-    _notes_settings_validate_value "${_setting_name}" "${2:-}"
-    _entry="export ${_setting_name}=${2} # Set by \`notes\` • $(date)"
-    _notes_settings_unset "${_setting_name}" > /dev/null 2>&1
-    printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}"
-
-    printf "%s set to '%s'\\n" "${_setting_name}" "${2}"
+    _setting_name="$(_notes_settings_get_name "${1:-}")" &&
+      _notes_settings_validate_value "${_setting_name}" "${2:-}" &&
+      _entry="export ${_setting_name}=${2} # Set by \`notes\` • $(date)" &&
+      _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
+      printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}" &&
+      printf "%s set to '%s'\\n" "${_setting_name}" "${2}"
   }
 
   # Usage: _notes_settings_unset (<number> | <name>)
