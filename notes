@@ -5317,6 +5317,9 @@ Optons:
 Description:
   Start the \`${_ME}\` interactive shell. Type 'exit' to exit.
 
+  \`notes shell\` recognizes all \`notes\` subcommands and options, providing
+  a streamlined, distraction-free approach for working with \`notes\`.
+
   When <subcommand> is present, the command will run as the shell is opened.
 
 Example:
@@ -5364,6 +5367,17 @@ _shell() {
   _debug printf "_shell() \${_initial_command:-}: '%s'\\n" \
     "${_initial_command:-}"
 
+  cat <<HEREDOC
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
+-------------------------------
+\`notes shell\` started. Enter any subcommand to run it, enter 'help' for a
+list of commands, or enter 'exit' to exit.
+HEREDOC
+
   if [[ -n "${_initial_command:-}" ]]
   then
     eval "${_MY_PATH} ${_initial_command}"
@@ -5378,15 +5392,35 @@ _shell() {
       then
        return 0
       else
-        local _normalized_input
+        # Strip leading 'notes' or 'n'.
+        local _normalized_input=
         _normalized_input="$(
           printf "%s\\n" "${__input}" \
             | sed -e 's/^n$//'         \
             | sed -e 's/^n //'        \
             | sed -e 's/^notes$//'     \
             | sed -e 's/^notes //'
+        )"
+
+        if [[ "${_normalized_input}" =~ ^help   ]] ||
+           [[ "${_normalized_input}" =~ ^help\  ]]
+        then
+          # Strip 'notes' command name from help output.
+          local _output=
+          local _processed_output=
+
+          _output="$(eval "${_MY_PATH} ${_normalized_input}" || :)"
+          _processed_output="$(
+            printf "%s\\n" "${_output}" \
+              | sed -e "s/^  notes /  /"
           )"
-        eval "${_MY_PATH} ${_normalized_input}" || :
+          printf "%s\\n" "${_processed_output}"
+        elif [[ "${_normalized_input}" =~ echo\ .* ]]
+        then
+          eval "${_normalized_input}"
+        else
+          eval "${_MY_PATH} ${_normalized_input}" || :
+        fi
       fi
     done
   done

@@ -1569,6 +1569,9 @@ Optons:
 Description:
   Start the `notes` interactive shell. Type 'exit' to exit.
 
+  `notes shell` recognizes all `notes` subcommands and options, providing
+  a streamlined, distraction-free approach for working with `notes`.
+
   When <subcommand> is present, the command will run as the shell is opened.
 
 Example:
