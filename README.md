@@ -1499,9 +1499,9 @@ Subcommands:
   (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
   edit       Open the ~/.notesrc configuration file in `$EDITOR`.
-  get        Print the current value of <setting>.
-  set        Assign <value> to <setting>
-  unset      Unset <setting>, returning it to the default value.
+  get        Print the value of a setting.
+  set        Assign <value> to a setting.
+  unset      Unset a setting, returning it to the default value.
 
 Description:
   Configure `notes`. Use `settings set` to customize a setting and
