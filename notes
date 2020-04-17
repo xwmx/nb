@@ -5555,6 +5555,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       icat "${_target_path}"
     elif _command_exists "afplay" && _file_is_audio "${_target_path}"
     then
+      printf "Playing audio. Press Ctrl-C to quit.\\n"
       afplay "${_target_path}"
     elif _command_exists "xdg-open"
     then
