@@ -5031,7 +5031,6 @@ Description:
   \`settings unset\` to restore the default for a setting.
 
 Settings:
-
 ${_NOTES_SETTINGS_LIST}
 
 Examples:

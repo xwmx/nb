@@ -1508,7 +1508,6 @@ Description:
   `settings unset` to restore the default for a setting.
 
 Settings:
-
 [1] EDITOR
     The command line text editor to use with `notes`.
 
