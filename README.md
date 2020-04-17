@@ -675,9 +675,9 @@ notes export Movies /path/to/example.html
 ### Highlight Color, Settings
 
 `notes` has a minimal text interface and uses color (yellow, by default) to
-highlight certain elements, such as the current notebook name, ids, and
-the shell prompt. The highlight color can be changed with
-[`notes settings`](#settings).
+highlight certain elements like ids, the current notebook name, and the shell
+prompt. The highlight color and other options can be changed with
+`notes settings`.
 
 ```bash
 notes settings
@@ -719,7 +719,7 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> notes settings reset NOTES_HIGHLIGHT_COLOR
+> notes settings unset NOTES_HIGHLIGHT_COLOR
 NOTES_HIGHLIGHT_COLOR restored to the default: '11'
 
 > notes settings get NOTES_HIGHLIGHT_COLOR
