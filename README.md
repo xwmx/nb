@@ -1254,9 +1254,9 @@ Description:
 
 Indicators:
   🔖  Bookmark
-  🔒  Encrypted note or bookmark
+  🔒  Encrypted
   🌄  Image
-  📄  Word, Open Office, PDF, or rtf document
+  📄  PDF, Word, or Open Office document
   📹  Video
   🔉  Audio
 
@@ -1301,9 +1301,9 @@ Description:
 
 Indicators:
   🔖  Bookmark
-  🔒  Encrypted note or bookmark
+  🔒  Encrypted
   🌄  Image
-  📄  Word, Open Office, PDF, or rtf document
+  📄  PDF, Word, or Open Office document
   📹  Video
   🔉  Audio
 
