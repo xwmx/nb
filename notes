@@ -5240,7 +5240,7 @@ HEREDOC
       then
         return 0
       else
-        printf "NOTES_HIGHLIGHT_COLOR must be number between 0 and 255.\\n"
+        printf "NOTES_HIGHLIGHT_COLOR must be a number between 0 and 255.\\n"
         return 1
       fi
     else
