@@ -6,9 +6,9 @@
 #  / / | | | | (_) | ||  __/\__ \
 # /_/  |_| |_|\___/ \__\___||___/
 #
-# Command line note-taking, bookmarking, and document management with
-# encryption, advanced search, Git-backed versioning and syncing,
-# Pandoc-backed format conversion, and more in a single portable script.
+# Command line note-taking, bookmarking, and archiving with encryption, search,
+# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
+# in a single portable script.
 #
 # https://github.com/xwmx/notes
 #
@@ -1487,9 +1487,9 @@ __                _
  / / | | | | (_) | ||  __/\__ \\
 /_/  |_| |_|\___/ \__\___||___/
 
-Command line note-taking, bookmarking, and document management with
-encryption, advanced search, Git-backed versioning and syncing,
-Pandoc-backed format conversion, and more in a single portable script.
+Command line note-taking, bookmarking, and archiving with encryption, search,
+Git-backed versioning and syncing, Pandoc-backed format conversion, and more
+in a single portable script.
 
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]

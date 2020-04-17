@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
+[![npm](https://img.shields.io/npm/v/notes.sh)](https://www.npmjs.com/package/notes.sh)
 
 ```
 __                _
@@ -10,7 +11,7 @@ __                _
 
 # notes
 
-`notes` is a command line note-taking, bookmarking, and document management
+`notes` is a command line note-taking, bookmarking, and archiving
 tool with encryption, search, [Git](https://git-scm.com/)-backed versioning
 and syncing, [Pandoc](http://pandoc.org/)-backed conversion, tagging, and more
 in a single portable script. `notes` creates notes in text-based formats like
