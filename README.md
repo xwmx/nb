@@ -304,10 +304,10 @@ easily identifiable in lists:
 > notes ls
 home
 ----
-[4] Example Note                        # Note
-[3] 🔒 example.md.enc                   # Encrypted Note
-[2] 🔖 Example Bookmark (example.com)   # Bookmark
-[1] 🔖 🔒 example.bookmark.md.enc       # Encrypted Bookmark
+[4] Example Note
+[3] 🔒 example-encrypted.md.enc
+[2] 🔖 Example Bookmark (example.com)
+[1] 🔖 🔒 example-encrypted.bookmark.md.enc
 ```
 
 `notes` with no subcommand is an alias for `notes ls`, so the examples above
