@@ -5557,6 +5557,16 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
       afplay "${_target_path}"
+    elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
+    then
+      pdftotext "${_target_path}" - \
+        | tr -d '\014' \
+        | if [[ -n "${PAGER:-}" ]]
+          then
+            "${PAGER}"
+          else
+            cat
+          fi
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
