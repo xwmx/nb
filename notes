@@ -5415,7 +5415,8 @@ HEREDOC
               | sed -e "s/^  notes /  /"
           )"
           printf "%s\\n" "${_processed_output}"
-        elif [[ "${_normalized_input}" =~ echo\ .* ]]
+        elif [[ "${_normalized_input}" =~ echo\ .*   ]] ||
+             [[ "${_normalized_input}" =~ printf\ .* ]]
         then
           eval "${_normalized_input}"
         else
