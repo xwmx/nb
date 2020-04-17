@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
-[![npm](https://img.shields.io/npm/v/notes.sh)](https://www.npmjs.com/package/notes.sh)
 
 ```
 __                _
