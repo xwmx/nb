@@ -5368,14 +5368,22 @@ _shell() {
 
   while true
   do
-    while IFS='' read -r -e -d $'\n' -p "${_prompt}" _options
+    while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
     do
-      history -s "${_options}"
-      if [[ "${_options}" =~ ^exit|quit$ ]]
+      history -s "${__input}"
+      if [[ "${__input}" =~ ^exit|quit$ ]]
       then
        return 0
       else
-       eval "${_MY_PATH} ${_options}" || :
+        local _normalized_input
+        _normalized_input="$(
+          printf "%s\\n" "${__input}" \
+            | sed -e 's/^n$//'         \
+            | sed -e 's/^n //'        \
+            | sed -e 's/^notes$//'     \
+            | sed -e 's/^notes //'
+          )"
+        eval "${_MY_PATH} ${_normalized_input}" || :
       fi
     done
   done
