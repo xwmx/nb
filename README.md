@@ -677,25 +677,26 @@ notes export Movies /path/to/example.html
 `notes` has a minimal text interface and uses color (yellow, by default) to
 highlight certain elements, such as the current notebook name, ids, and
 the shell prompt. The highlight color can be changed with
-[`notes settings`](#settings)
+[`notes settings`](#settings).
 
 ```bash
 notes settings
 ```
 
-`notes settings` with no arguments opens the settings prompt, which
-prints help information and provides an easy way to change your
-settings. To print a list of available settings, see
-`[notes help settings](#settings)`.
+`notes settings` opens the settings prompt, which prints help information and
+provides an easy way to change your settings. To print a list of available
+settings, see [`notes help settings`](#settings).
 
 You can update a setting without the prompt using `notes settings set`:
 
 ```bash
 # set highlight color with name
-notes settings set NOTES_HIGHLIGHT_COLOR 105
+> notes settings set NOTES_HIGHLIGHT_COLOR 105
+NOTES_HIGHLIGHT_COLOR set to '105'
 
 # set highlight color with setting number (6)
-notes setting set 6 105
+> notes setting set 6 105
+NOTES_HIGHLIGHT_COLOR set to '105'
 ```
 
 `NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255.
@@ -1515,8 +1516,8 @@ Settings:
 
 [2] NOTES_AUTO_SYNC
     By default, operations that trigger a git commit like `add`, `edit`,
-    and `delete` will sync notebook changes to the remote repository, if one
-    is set. To disable this behavior, set this to '0'.
+    and `delete` will sync notebook changes to the remote repository, if
+    one is set. To disable this behavior, set this to '0'.
 
     • Default Value: '1'
 
