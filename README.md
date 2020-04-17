@@ -1550,7 +1550,7 @@ Settings:
 
 Examples:
   notes settings
-  notes settings set NOTES_DEFAULT_EXTENSION 'org'
+  notes settings set 3 'org'
   notes settings set NOTES_HIGHLIGHT_COLOR 105
   notes settings unset NOTES_HIGHLIGHT_COLOR
   notes settings colors

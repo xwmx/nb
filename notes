@@ -5036,7 +5036,7 @@ ${_NOTES_SETTINGS_LIST}
 
 Examples:
   ${_ME} settings
-  ${_ME} settings set NOTES_DEFAULT_EXTENSION 'org'
+  ${_ME} settings set 3 'org'
   ${_ME} settings set NOTES_HIGHLIGHT_COLOR 105
   ${_ME} settings unset NOTES_HIGHLIGHT_COLOR
   ${_ME} settings colors
