@@ -5817,7 +5817,7 @@ _notes() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|env|help|version)
+    commands|completions|env|help|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
