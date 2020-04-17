@@ -5525,6 +5525,17 @@ Can't show archives. Export archive and expand to edit.\\n"
     exit 1
   fi
 
+  if _file_is_image "${_target_path}"
+  then
+    if _command_exists "imgcat"
+    then
+      imgcat "${_target_path}" && return 0
+    elif _command_exists "icat"
+    then
+      icat "${_target_path}" && return 0
+    fi
+  fi
+
   if ! _file_is_text "${_target_path}"
   then
     if _command_exists "xdg-open"
