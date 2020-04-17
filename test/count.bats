@@ -2,7 +2,6 @@
 
 load test_helper
 
-
 _setup_count() {
   "${_NOTES}" init
   cat <<HEREDOC | "${_NOTES}" add "first.md"
