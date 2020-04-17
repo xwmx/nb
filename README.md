@@ -677,10 +677,25 @@ notes export Movies /path/to/example.html
 `notes` has a minimal text interface and uses color (yellow, by default) to
 highlight certain elements, such as the current notebook name, ids, and
 the shell prompt. The highlight color can be changed with
-[`notes settings`](#settings):
+[`notes settings`](#settings)
 
 ```bash
+notes settings
+```
+
+`notes settings` with no arguments opens the settings prompt, which
+prints help information and provides an easy way to change your
+settings. To print a list of available settings, see
+`[notes help settings](#settings)`.
+
+You can update a setting without the prompt using `notes settings set`:
+
+```bash
+# set highlight color with name
 notes settings set NOTES_HIGHLIGHT_COLOR 105
+
+# set highlight color with setting number (6)
+notes setting set 6 105
 ```
 
 `NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255.
@@ -695,20 +710,20 @@ Print the value of a setting:
 ```bash
 > notes settings get NOTES_HIGHLIGHT_COLOR
 105
+
+> notes settings get 6
+105
 ```
 
 Unset a setting and revert to default:
 
 ```bash
-> notes settings unset NOTES_HIGHLIGHT_COLOR
+> notes settings reset NOTES_HIGHLIGHT_COLOR
 NOTES_HIGHLIGHT_COLOR restored to the default: '11'
 
 > notes settings get NOTES_HIGHLIGHT_COLOR
 11
 ```
-
-`notes settings` provides access to various configuration options for `notes`.
-For a list of available settings, see [`notes help settings`](#settings).
 
 ### Interactive Shell
 
@@ -1475,16 +1490,16 @@ Usage:
   notes settings
   notes settings colors
   notes settings edit
-  notes settings get <setting>
-  notes settings set <setting> <value>
-  notes settings unset <setting>
+  notes settings get   (<number> | <name>)
+  notes settings set   (<number> | <name>) <value>
+  notes settings unset (<number> | <name>)
 
 Subcommands:
-  (default)  Print this help information.
-  colors     Print a table of color numbers in the colors they represent.
+  (default)  Open the settings prompt.
+  colors     Print a table of available colors and their xterm color numbers.
   edit       Open the ~/.notesrc configuration file in `$EDITOR`.
   get        Print the current value of <setting>.
-  set        Assign <value> to <setting>.
+  set        Assign <value> to <setting>
   unset      Unset <setting>, returning it to the default value.
 
 Description:
@@ -1492,48 +1507,53 @@ Description:
   `settings unset` to restore the default for a setting.
 
 Settings:
-  EDITOR
-    The command line text editor to use with `notes`. Example Values:
-    'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
 
-  NOTES_AUTO_SYNC
-    Default: '1'
+[1] EDITOR
+    The command line text editor to use with `notes`.
 
+    • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+
+[2] NOTES_AUTO_SYNC
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if one
     is set. To disable this behavior, set this to '0'.
 
-  NOTES_DEFAULT_EXTENSION
-    Default: 'md'
+    • Default Value: '1'
 
+[3] NOTES_DEFAULT_EXTENSION
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
 
-  NOTES_DIR
-    Default: '~/.notes'
+    • Default Value: 'md'
 
+[4] NOTES_DIR
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     `notes settings set NOTES_DIR ~/Dropbox/Notes`
 
-  NOTES_ENCRYPTION_TOOL
-    Default: 'openssl'
+    • Default Value: '~/.notes'
 
+[5] NOTES_ENCRYPTION_TOOL
     The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
 
-  NOTES_HIGHLIGHT_COLOR
-    Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
+    • Default Value: 'openssl'
 
-    Set highlighting color. This should be set to an xterm color number between
-    0 and 255. To view a table of available colors and numbers, run:
+[6] NOTES_HIGHLIGHT_COLOR
+    Set highlighting color. This should be set to an xterm color number
+    between 0 and 255. To view a table of available colors and numbers, run
     `notes settings colors`.
 
-Example:
+    • Default Value: '11' (yellow) for 256 color terminals,
+                     '3'  (yellow) for  8  color terminals.
+
+Examples:
+  notes settings
   notes settings set NOTES_DEFAULT_EXTENSION 'org'
   notes settings set NOTES_HIGHLIGHT_COLOR 105
   notes settings unset NOTES_HIGHLIGHT_COLOR
   notes settings colors
+
 ```
 
 #### `shell`

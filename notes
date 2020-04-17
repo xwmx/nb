@@ -4962,17 +4962,64 @@ _alias_subcommand "search" "q"
 
 # settings ####################################################################
 
+export _NOTES_SETTINGS_LIST
+_NOTES_SETTINGS_LIST="\
+[1] EDITOR
+    The command line text editor to use with \`notes\`.
+
+    • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+    • Current Value:  '${EDITOR}'
+
+[2] NOTES_AUTO_SYNC
+    By default, operations that trigger a git commit like \`add\`, \`edit\`,
+    and \`delete\` will sync notebook changes to the remote repository, if one
+    is set. To disable this behavior, set this to '0'.
+
+    • Default Value: '1'
+    • Current Value: '${NOTES_AUTO_SYNC}'
+
+[3] NOTES_DEFAULT_EXTENSION
+    The default extension to use for notes files. Change to 'org' for Emacs
+    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    whatever you prefer.
+
+    • Default Value: 'md'
+    • Current Value: '${NOTES_DEFAULT_EXTENSION}'
+
+[4] NOTES_DIR
+    The location of the directory that contains the notebooks. To sync with
+    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
+    \`${_ME} settings set NOTES_DIR ~/Dropbox/Notes\`
+
+    • Default Value: '~/.notes'
+    • Current Value: '${NOTES_DIR}'
+
+[5] NOTES_ENCRYPTION_TOOL
+    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
+
+    • Default Value: 'openssl'
+    • Current Value: '${NOTES_ENCRYPTION_TOOL}'
+
+[6] NOTES_HIGHLIGHT_COLOR
+    Set highlighting color. This should be set to an xterm color number
+    between 0 and 255. To view a table of available colors and numbers, run
+    \`notes settings colors\`.
+
+    • Default Value: '11' (yellow) for 256 color terminals,
+                     '3'  (yellow) for  8  color terminals.
+    • Current Value: '${NOTES_HIGHLIGHT_COLOR}'"
+
 desc "settings" <<HEREDOC
 Usage:
   ${_ME} settings
   ${_ME} settings colors
   ${_ME} settings edit
-  ${_ME} settings get <setting>
-  ${_ME} settings set <setting> <value>
-  ${_ME} settings unset <setting>
+  ${_ME} settings get   (<number> | <name>)
+  ${_ME} settings set   (<number> | <name>) <value>
+  ${_ME} settings unset (<number> | <name>)
 
 Subcommands:
-  (default)  Print this help information.
+  (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
   edit       Open the ~/.notesrc configuration file in \`\$EDITOR\`.
   get        Print the current value of <setting>.
@@ -4984,44 +5031,11 @@ Description:
   \`settings unset\` to restore the default for a setting.
 
 Settings:
-  EDITOR
-    The command line text editor to use with \`notes\`. Example Values:
-    'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
 
-  NOTES_AUTO_SYNC
-    Default: '1'
+${_NOTES_SETTINGS_LIST}
 
-    By default, operations that trigger a git commit like \`add\`, \`edit\`,
-    and \`delete\` will sync notebook changes to the remote repository, if one
-    is set. To disable this behavior, set this to '0'.
-
-  NOTES_DEFAULT_EXTENSION
-    Default: 'md'
-
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
-    whatever you prefer.
-
-  NOTES_DIR
-    Default: '~/.notes'
-
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    \`${_ME} settings set NOTES_DIR ~/Dropbox/Notes\`
-
-  NOTES_ENCRYPTION_TOOL
-    Default: 'openssl'
-
-    The tool used for encrypting notes. Supported Values: 'openssl', 'gpg'
-
-  NOTES_HIGHLIGHT_COLOR
-    Default: 11 (yellow) for 256 color terminals, 3 (yellow) for 8 color.
-
-    Set highlighting color. This should be set to an xterm color number between
-    0 and 255. To view a table of available colors and numbers, run:
-    \`notes settings colors\`.
-
-Example:
+Examples:
+  ${_ME} settings
   ${_ME} settings set NOTES_DEFAULT_EXTENSION 'org'
   ${_ME} settings set NOTES_HIGHLIGHT_COLOR 105
   ${_ME} settings unset NOTES_HIGHLIGHT_COLOR
@@ -5053,69 +5067,141 @@ _settings() {
     printf "\\n"
   }
 
-  # Usage: _notes_settings_get <setting>
-  _notes_settings_get() {
-    _notes_settings_validate_setting "${1}" &&
-      _env | grep "${1}" | cut -d= -f2
+  # Usage: _notes_settings_get_value (<number> | <name>)
+  _notes_settings_get_value() {
+    local _setting_name=
+    _setting_name="$(_notes_settings_get_name "${1:-}")" &&
+      _env | grep "${_setting_name}" | cut -d= -f2
   }
 
-  # Usage: _notes_settings_set <setting> <value>
+  # Usage: _notes_settings_set (<number> | <name>) <value>
   _notes_settings_set() {
     local _entry=
-    _entry="export ${1:-}=${2:-} # Set by \`notes\` • $(date)"
+    local _setting_name=
     local _stripped=
 
-    _notes_settings_validate_setting "${1:-}" &&
-      _notes_settings_validate_value "${1:-}" "${2:-}" &&
-      _notes_settings_unset "${1}" > /dev/null 2>&1     &&
-      printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}" &&
-      printf "%s set to '%s'\\n" "${1:-}" "${2:-}"
+    _setting_name="$(_notes_settings_get_name "${1:-}")"
+    _notes_settings_validate_value "${_setting_name}" "${2:-}"
+    _entry="export ${_setting_name}=${2} # Set by \`notes\` • $(date)"
+    _notes_settings_unset "${_setting_name}" > /dev/null 2>&1
+    printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}"
+
+    printf "%s set to '%s'\\n" "${_setting_name}" "${2}"
   }
 
-  # Usage: _notes_settings_unset <setting>
+  # Usage: _notes_settings_unset (<number> | <name>)
   _notes_settings_unset() {
-    _notes_settings_validate_setting "${1}" &&
+    local _setting_name=
+
+    _setting_name="$(_notes_settings_get_name "${1:-}")" &&
       "${_SED_I_COMMAND[@]}" \
-        -e "s/^export ${1}.*Added by.*$//g" \
-        -e "s/^export ${1}.*Set by.*$//g" \
+        -e "s/^export ${_setting_name}.*Added by.*$//g" \
+        -e "s/^export ${_setting_name}.*Set by.*$//g" \
         "${NOTESRC_PATH}" &&
         {
           _stripped=$(<"${NOTESRC_PATH}")
           printf "%s\\n" "${_stripped}" > "${NOTESRC_PATH}"
         } &&
         printf "%s restored to the default: '%s'\\n" \
-          "${1:-}" \
-          "$(eval "${1:-}='' ${_MY_PATH} settings get ${1:-}")"
+          "${_setting_name}" \
+          "$(eval "${_setting_name}='' ${_MY_PATH} settings get ${_setting_name}")"
   }
 
-  # Usage: _notes_settings_validate_setting <setting>
-  _notes_settings_validate_setting() {
-    local _match=0
-    local _available_settings=(
-      EDITOR
-      NOTES_AUTO_SYNC
-      NOTES_DEFAULT_EXTENSION
-      NOTES_DIR
-      NOTES_ENCRYPTION_TOOL
-      NOTES_HIGHLIGHT_COLOR
-    )
+  # Usage: _notes_settings_prompt
+  _notes_settings_prompt() {
+    cat <<HEREDOC
+\`notes\` Settings
+----------------
+${_NOTES_SETTINGS_LIST}
 
-    for __setting in "${_available_settings[@]}"
+Enter the number or name of the setting you'd like to change, or 'q' to quit.
+HEREDOC
+    local _setting_name=
+
+    while true
     do
-      if [[ "${__setting}" == "${1:-}" ]]
+      read -r -p "Number or name: " __setting
+      if [[ -n "${__setting}" ]]
       then
-        _match=1
+        case "${__setting}" in
+          q|quit|exit)
+            return 0
+            ;;
+          *)
+            _setting_name="$(_notes_settings_get_name "${__setting}")" &&
+              break
+            ;;
+        esac
       fi
     done
 
-    if ! ((_match))
-    then
-      printf "Setting not found: '%s'\\n" "${1:-}"
-      return 1
-    fi
+    printf "%s is currently set to '%s'\\n" \
+      "${_setting_name}" \
+      "$(_notes_settings_get_value "${_setting_name}")"
+
+    printf "\
+Enter a new value, \"unset\" to set to the default value, or \"q\" to quit.\\n"
+
+    while true
+    do
+      read -r -p "New value: " __value
+      if [[ -n "${__value}" ]]
+      then
+        case "${__value}" in
+          q|quit|exit)
+            return 0
+            ;;
+          reset|unset)
+            _notes_settings_unset "${_setting_name}" || continue
+            break
+            ;;
+          *)
+            _notes_settings_set "${_setting_name}" "${__value}" || continue
+            break
+            ;;
+        esac
+      fi
+    done
   }
 
-  # Usage: _notes_settings_validate_value <setting> <value>
+  # Usage: _notes_settings_get_name (<number> | <name>)
+  _notes_settings_get_name() {
+    local _id_or_name="${1:-}"
+    [[ -n "${_id_or_name:-}" ]] || return 1
+
+    case "${_id_or_name}" in
+      1|EDITOR)
+        printf "EDITOR"
+        return 0
+        ;;
+      2|NOTES_AUTO_SYNC)
+        printf "NOTES_AUTO_SYNC"
+        return 0
+        ;;
+      3|NOTES_DEFAULT_EXTENSION)
+        printf "NOTES_DEFAULT_EXTENSION"
+        return 0
+        ;;
+      4|NOTES_DIR)
+        printf "NOTES_DIR"
+        return 0
+        ;;
+      5|NOTES_ENCRYPTION_TOOL)
+       printf "NOTES_ENCRYPTION_TOOL"
+        return 0
+        ;;
+      6|NOTES_HIGHLIGHT_COLOR)
+        printf "NOTES_HIGHLIGHT_COLOR"
+        return 0
+        ;;
+      *)
+        printf "Setting not found: '%s'\\n" "${_id_or_name}" >&2
+        return 1
+        ;;
+    esac
+  }
+
+  # Usage: _notes_settings_validate_value (<number> | <name>) <value>
   _notes_settings_validate_value() {
     if [[ "${1:-}" == 'EDITOR' ]] ||
        [[ "${1:-}" == 'NOTES_DEFAULT_EXTENSION' ]] ||
@@ -5181,7 +5267,7 @@ _settings() {
           return 1
         fi
 
-        _notes_settings_get "${2:-}"
+        _notes_settings_get_value "${2:-}"
         return 0
         ;;
       set)
@@ -5194,7 +5280,7 @@ _settings() {
         _notes_settings_set "${2:-}" "${3:-}"
         return 0
         ;;
-      unset)
+      reset|unset)
         if [[ -z "${2:-}" ]]
         then
           _help settings
@@ -5205,7 +5291,7 @@ _settings() {
         return 0
         ;;
       *)
-        _help settings
+        _notes_settings_prompt
         return 0
         ;;
     esac
