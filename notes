@@ -5010,19 +5010,19 @@ _search() {
         set -f
       fi | while read -r _line
       do
-        local _path=
+        local _content_line_with_hit=
+        local _file_info=
+        local _file_info_color=
         local _filename=
         local _filename_color=
         local _filename_hit=0
         local _id=
-        local _title=
-        local _file_info=
-        local _file_info_color=
         # Define `_id_filename` with and without color to have a version
         # without the additional length from `tput` calls.
         local _id_filename=
         local _id_filename_color=
-        local _content_line_with_hit=
+        local _path=
+        local _title=
 
         # Use `sed` to remove color from output.
         # http://unix.stackexchange.com/a/140255
