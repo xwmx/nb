@@ -888,7 +888,7 @@ Usage:
   notes peek (<id> | <filename> | <path> | <title>)
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
-  notes search <query> [-a | --all] [--path]
+  notes search <query> [-a | --all] [--bookmarks] [--path]
   notes settings [colors | edit]
   notes settings (get | unset) <setting>
   notes settings set <setting> <value>
@@ -1580,11 +1580,12 @@ Description:
 
 ```text
 Usage:
-  notes search <query> [-a | --all] [--path]
+  notes search <query> [-a | --all] [--bookmarks] [--path]
 
 Options:
-  -a --all  Search all notebooks.
-  --path    Print the full path for each file with query matches.
+  -a --all     Search all notebooks.
+  --bookmarks  Search only bookmarks.
+  --path       Print the full path for each file with query matches.
 
 Description:
   Search notes. Uses the first available tool in the following list:
@@ -1603,8 +1604,8 @@ Examples:
   # search notes for 'Example' OR 'Sample'
   notes search 'Example|Sample'
 
-  # search for notes containing the hashtag '#example'
-  notes search '#example'
+  # search for bookmarks containing the hashtag '#example'
+  notes search '#example' --bookmarks
 
   # search with a regular expression for notes containing phone numbers
   notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'

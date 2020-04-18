@@ -1567,7 +1567,7 @@ Usage:
   ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
-  ${_ME} search <query> [-a | --all] [--path]
+  ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
   ${_ME} settings [colors | edit]
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
@@ -4882,11 +4882,12 @@ _rename() {
 
 desc "search" <<HEREDOC
 Usage:
-  ${_ME} search <query> [-a | --all] [--path]
+  ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
 
 Options:
-  -a --all  Search all notebooks.
-  --path    Print the full path for each file with query matches.
+  -a --all     Search all notebooks.
+  --bookmarks  Search only bookmarks.
+  --path       Print the full path for each file with query matches.
 
 Description:
   Search notes. Uses the first available tool in the following list:
@@ -4905,8 +4906,8 @@ Examples:
   # search notes for 'Example' OR 'Sample'
   ${_ME} search 'Example|Sample'
 
-  # search for notes containing the hashtag '#example'
-  ${_ME} search '#example'
+  # search for bookmarks containing the hashtag '#example'
+  ${_ME} search '#example' --bookmarks
 
   # search with a regular expression for notes containing phone numbers
   ${_ME} search '^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$'
@@ -4917,6 +4918,7 @@ _search() {
   local _all=0
   local _arguments=("${@}")
   local _last_path=
+  local _only_bookmarks=0
   local _print_paths=0
   local _query=
   local _use_grep=0
@@ -4926,6 +4928,9 @@ _search() {
     case "${__arg}" in
       -a|--all)
         _all=1
+        ;;
+      --bookmarks)
+        _only_bookmarks=1
         ;;
       --path)
         _print_paths=1
@@ -5022,6 +5027,7 @@ _search() {
         local _id_filename=
         local _id_filename_color=
         local _path=
+        local _skip=0
         local _title=
 
         # Use `sed` to remove color from output.
@@ -5031,6 +5037,17 @@ _search() {
             | cut -d: -f 1 \
             | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
         )"
+
+        if [[ "${_last_path}" != "${_path}" ]]
+        then
+          if ((_only_bookmarks)) && [[ "${_path}" =~ bookmark.md$ ]]
+          then
+            _skip=0
+          elif ((_only_bookmarks))
+          then
+            _skip=1
+          fi
+        fi
 
         if [[ -z "${_line}" ]]
         then
@@ -5044,6 +5061,11 @@ _search() {
             printf "%s\\n" "${_path}"
           fi
         else
+          if ((_skip))
+          then
+            continue
+          fi
+
           _filename="$(basename "${_path}")"
           _filename_color="${_filename}"
 

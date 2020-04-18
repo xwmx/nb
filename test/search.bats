@@ -32,7 +32,7 @@ HEREDOC
 
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--path]" ]]
+  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--bookmarks] [--path]" ]]
 }
 
 # `search <no match>` #########################################################
@@ -121,6 +121,50 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_NOTEBOOK_PATH}/second\.md$ ]]
   [[ "${lines[1]}" =~ ${_NOTEBOOK_PATH}/third\.md$ ]]
   [[ "${#lines[@]}" -eq 2 ]]
+}
+
+# `search --bookmarks` #################################################
+
+@test "\`search --bookmarks\` exits with status 0 and prints output." {
+  {
+    _setup_search
+  cat <<HEREDOC | "${_NOTES}" add "fourth.bookmark.md"
+# four
+
+<https://example.com/>
+
+sweetish
+HEREDOC
+  cat <<HEREDOC | "${_NOTES}" add "fifth.bookmark.md"
+# five
+
+<https://example.com/>
+
+idyl
+HEREDOC
+  cat <<HEREDOC | "${_NOTES}" add "sixth.bookmark.md"
+# six
+
+<https://example.com/>
+
+sweetish
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" search 'sweetish' --bookmarks --use-grep
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ fourth\.bookmark\.md\ \'four\' ]]
+  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[2]}" =~ sweetish ]]
+  [[ "${lines[3]}" =~ sixth\.bookmark\.md\ \'six\' ]]
+  [[ "${lines[4]}" =~ -*-$ ]]
+  [[ "${lines[5]}" =~ sweetish ]]
+  [[ "${lines[0]}" != "${lines[3]}" ]]
 }
 
 # `search <query> --all [--path]` #############################################
@@ -237,5 +281,5 @@ _search_all_setup() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--path]" ]]
+  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--bookmarks] [--path]" ]]
 }
