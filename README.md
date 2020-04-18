@@ -533,11 +533,31 @@ notes search '#example'
 notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 ```
 
+`notes` search prints the id, filename, and title of each matched file,
+followed by each match and its line number, with color highlighting:
+
+```bash
+> notes search 'example'
+[314] example.bookmark.md 'Example Bookmark'
+--------------------------------------------
+1:# Example Bookmark
+
+3:<https://example.com>
+
+[2718] example.md 'Example Note'
+------------------------
+1:# Example Note
+```
+
 `notes search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
 [`ag`](https://github.com/ggreer/the_silver_searcher),
 [`ack`](http://beyondgrep.com/), and
 [`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
-performs searches using the first tool it finds.
+performs searches using the first tool it finds. `notes search` works
+the same regardless of which tool is found and is perfectly fine using
+the environment's built-in `grep`. `rg`, `ag`, and `ack` are a lot faster
+on large notebooks and there are some subtle differences in color
+highlighting.
 
 ### Revision History
 
@@ -763,12 +783,31 @@ NOTES_HIGHLIGHT_COLOR restored to the default: '11'
 $ notes -i
 notes> ls example
 [3] Example
+[2] Sample
+[1] Demo
 
 notes> edit 3 --content "New content."
 Updated [3] Example
 
-notes> notebook
-home
+notes> bookmark https://example.com
+
+notes> ls
+[4] 🔖 Example Bookmark
+[3] Example
+[2] Sample
+[1] Demo
+
+notes> bookmark url 4
+https://example.com
+
+notes> search 'Example'
+[4] example.bookmark.md 'Example Bookmark'
+------------------------------------------
+1:# Example Bookmark
+
+[3] example.md 'Example'
+------------------------
+1:# Example
 
 notes> exit
 $
@@ -1017,7 +1056,11 @@ Examples:
   bookmark https://example.com --tags example,sample,demo
   bookmark https://example.com/about --title 'Example Title'
   bookmark https://example.com -c 'Example comment.'
+  bookmark list
+  bookmark search 'example query'
+  bookmark search '^example[[:space:]]regular[[:space:]]expression$'
   bookmark open 5
+  bookmark url 10
 
 -----------------------------------------------------
 Part of `notes` (https://github.com/xwmx/notes).
@@ -1156,7 +1199,11 @@ Examples:
   notes bookmark https://example.com --tags example,sample,demo
   notes bookmark https://example.com/about --title 'Example Title'
   notes bookmark https://example.com -c 'Example comment.'
+  notes bookmark list
+  notes bookmark search 'example query'
+  notes bookmark search '^example[[:space:]]regular[[:space:]]expression$'
   notes bookmark open 5
+  notes bookmark url 10
 
 Shortcut Alias: `b`
 ```

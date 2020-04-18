@@ -1943,7 +1943,11 @@ Examples:
   ${_ME} bookmark https://example.com --tags example,sample,demo
   ${_ME} bookmark https://example.com/about --title 'Example Title'
   ${_ME} bookmark https://example.com -c 'Example comment.'
+  ${_ME} bookmark list
+  ${_ME} bookmark search 'example query'
+  ${_ME} bookmark search '^example[[:space:]]regular[[:space:]]expression$'
   ${_ME} bookmark open 5
+  ${_ME} bookmark url 10
 
 Shortcut Alias: \`b\`
 HEREDOC
