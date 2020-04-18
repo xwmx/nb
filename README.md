@@ -42,6 +42,12 @@ approach for various experience improvements in more capable environments.
 `notes` can be used a little, a lot, once in a while, or for just a subset of
 features. `notes` is flexible.
 
+<p align="center">
+  <a href="#working-with-notes">Installation</a> •
+  <a href="#bookmarks">Usage</a> •
+  <a href="#help">Help</a>
+</p>
+
 #### Dependencies
 
 ##### Required
