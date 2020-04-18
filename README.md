@@ -530,13 +530,13 @@ List bookmarks:
 [1] 🔖 Example Bookmark One (example1.com)
 ```
 
-View bookmark in your terminal web browser:
+View a bookmark in your terminal web browser:
 
 ```bash
 > bookmark peek 2
 ```
 
-Open bookmark in your system's primary web browser:
+Open a bookmark in your system's primary web browser:
 
 ```bash
 > bookmark open 2
