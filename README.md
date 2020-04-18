@@ -476,25 +476,31 @@ notes bookmark https://example.com --encrypt
 
 #### Opening Bookmarks
 
-`notes bookmark` provides two ways to view bookmarked web pages.
+`notes` provides multiple ways to view bookmarked web pages.
 
-`notes open` opens the bookmarked page in your system's primary web
-browser:
+`notes bookmark open` and `notes open` open the bookmarked page in your
+system's primary web browser:
 
 ```bash
 # open bookmark by id
 notes open 3
 ```
 
-`notes peek` opens the bookmarked page in your terminal web browser:
+`notes bookmark peek` and `notes peek` open the bookmarked page in your
+terminal web browser:
 
 ```bash
 # peek bookmark by id
 notes peek 12
 ```
 
-`notes open` and `notes peek` also work seamlessly with encrypted bookmarks.
+When used with bookmarks, `notes open` and `notes peek` are aliases for
+`notes bookmark open` and `notes bookmark peek`.
+
+`open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `notes` will simply prompt you for the bookmark's password.
+
+#### Bookmark Note File Format
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
