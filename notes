@@ -1536,6 +1536,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark list [<list options>...]
   ${_ME} bookmarks [<list options>...]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count
@@ -1851,6 +1852,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark list [<list options>...]
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
@@ -1862,6 +1864,7 @@ Options:
                                 \`notes\` will use the html <title> tag.
 
 Subcommands:
+  list    List bookmarks in the current notebook.
   open    Open the bookmarked page in your system's primary web browser.
           Shortcut Alias: \`o\`
   peek    Open the bookmarked page in your terminal web browser.
@@ -1894,6 +1897,7 @@ _bookmark() {
   local _comment=
   local _edit_before_save=0
   local _encrypt=0
+  local _list_arguments=()
   local _password=
   local _selection=
   local _skip_content=0
@@ -1957,6 +1961,9 @@ _bookmark() {
           return 1
         fi
         ;;
+      list)
+        _subcommand="list"
+        ;;
       open|o|peek|p|url)
         if __option_value_is_present "${_val:-}"
         then
@@ -1969,15 +1976,30 @@ _bookmark() {
         fi
         ;;
       *)
-        if [[ -z "${_url:-}" ]]
+        if [[ ! "${_subcommand:-}" == "list" ]] && [[ -z "${_url:-}" ]]
         then
           _url="${_arg:-}"
+        elif [[ "${_subcommand}" == "list" ]]
+        then
+          _list_arguments+=("${_arg}")
         fi
         ;;
     esac
 
     shift
   done
+
+  if [[ "${_subcommand}" == "list" ]]
+  then
+    if [[ -n "${_list_arguments[*]:-}" ]]
+    then
+      _list --titles --bookmarks "${_list_arguments[@]}"
+      return 0
+    else
+      _list --titles --bookmarks
+      return 0
+    fi
+  fi
 
   if [[ "${_subcommand}" =~ ^open|o|peek|p|url$ ]]
   then

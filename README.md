@@ -820,6 +820,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes bookmark list [<list options>...]
   notes bookmarks [<list options>...]
   notes completions (check | install [-d | --download] | uninstall)
   notes count
@@ -865,7 +866,7 @@ Help:
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `notes ls`.
   add          Add a new note.
-  bookmark     Add and open bookmarks.
+  bookmark     Add open, and list bookmarks.
   bookmarks    List bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -993,6 +994,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes bookmark list [<list options>...]
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
@@ -1004,6 +1006,7 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
+  list    List bookmarks in the current notebook.
   open    Open the bookmarked page in your system's primary web browser.
           Shortcut Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
