@@ -507,7 +507,7 @@ Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
 > bookmark open 2
 ```
 
-See `bookmark help` for more information.
+See [`bookmark help`](#bookmark-help) for more information.
 
 ### Search
 
