@@ -512,9 +512,8 @@ notes add example.bookmark.md --content "<https://example.com>"
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`notes` includes a `bookmark` executable that's a shortcut for
-`notes bookmark`, providing a nice, simple interface for creating,
-viewing, and searching bookmarks.
+`notes` includes `bookmark`, a streamlined command line interface for
+creating, viewing, and searching bookmarks.
 
 Bookmark a page:
 
@@ -551,6 +550,9 @@ Perform a full text search of bookmarks and archived page content:
 --------------------------------------------
 5:Lorem ipsum example query.
 ```
+
+`bookmark` is simply a shortcut for `notes bookmark`, accepts all of the same
+subcommands and options, and behaves identically.
 
 See [`bookmark help`](#bookmark-help) for more information.
 
