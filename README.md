@@ -506,7 +506,7 @@ Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
 > bookmark open 2
 
 # do a full text search of bookmarks and archived page content
-bookmark search 'example query'
+> bookmark search 'example query'
 ```
 
 See [`bookmark help`](#bookmark-help) for more information.
