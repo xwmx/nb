@@ -45,7 +45,11 @@ HEREDOC
 fi
 
 _main() {
-  if [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]]
+  if [[ -z "${1:-}" ]] ||
+     [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
+     {
+       [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
+     }
   then
     cat <<HEREDOC
     __                __                        __
@@ -67,12 +71,6 @@ HEREDOC
 Part of \`notes\` (https://github.com/xwmx/notes).
 For more information, see: \`notes help\`.
 HEREDOC
-  elif [[ "${1:-}" == "search" ]] && [[ -z "${2:-}" ]]
-  then
-    "${_NOTES_PATH:-}" help search          \
-      | sed -e "s/  notes /  /"             \
-      | sed -e "s/Shortcut Alias: \`q\`//"  \
-      | sed -e '$ d'
   else
     "${_NOTES_PATH}" bookmark "${@:-}"
   fi
