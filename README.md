@@ -43,6 +43,14 @@ approach for various experience improvements in more capable environments.
 features. `notes` is flexible.
 
 <p align="center">
+  📝
+  🔖
+  🔒
+  🔍
+  📔
+</p>
+
+<p align="center">
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
   <a href="#help">Help</a>
