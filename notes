@@ -1536,6 +1536,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmarks [<list options>...]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -2215,6 +2216,28 @@ _bookmark() {
   fi
 }
 _alias_subcommand "bookmark" "b"
+
+# bookmarks ###################################################################
+
+desc "bookmarks" <<HEREDOC
+Usage:
+  ${_ME} bookmarks [<list options>...]
+
+Description:
+  List bookmarks with titles. All \`${_ME} list\` options are supported.
+  For more information, see \`${_ME} help list\`.
+
+Shortcut Alias: \`bs\`
+HEREDOC
+_bookmarks() {
+  if [[ -n "${*:-}" ]]
+  then
+    _list --titles --bookmarks "${@}"
+  else
+    _list --titles --bookmarks
+  fi
+}
+_alias_subcommand "bookmarks" "bs"
 
 # commands ####################################################################
 
@@ -6112,7 +6135,9 @@ _SUBCOMMANDS=(
   a
   add
   b
+  bs
   bookmark
+  bookmarks
   commands
   completions
   config

@@ -820,6 +820,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes bookmarks [<list options>...]
   notes completions (check | install [-d | --download] | uninstall)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -865,6 +866,7 @@ Subcommands:
   (default)    List notes and notebooks. This is an alias for `notes ls`.
   add          Add a new note.
   bookmark     Add and open bookmarks.
+  bookmarks    List bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
   delete       Delete a note.
@@ -905,6 +907,7 @@ Program Options:
 <p align="center">
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
+  <a href="#bookmarks-1">bookmarks</a> •
   <a href="#completions">completions</a> •
   <a href="#count">count</a> •
   <a href="#delete">delete</a> •
@@ -1027,6 +1030,19 @@ Examples:
   notes bookmark open 5
 
 Shortcut Alias: `b`
+```
+
+#### `bookmarks`
+
+```text
+Usage:
+  notes bookmarks [<list options>...]
+
+Description:
+  List bookmarks with titles. All `notes list` options are supported.
+  For more information, see `notes help list`.
+
+Shortcut Alias: `bs`
 ```
 
 #### `completions`
