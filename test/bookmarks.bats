@@ -42,7 +42,7 @@ HEREDOC
   [[ "${lines[1]}" =~ second.bookmark.md$      ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
-# `notes bookmarks` ###########################################################
+# `notes bookmarks --sort` ####################################################
 
 @test "\`bookmarks --sort\` exits with 0 and displays a sorted list of bookmarks." {
   {
