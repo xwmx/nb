@@ -1538,8 +1538,9 @@ Usage:
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
+  ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  ${_ME} bookmark [list [<list options>...] | search <query>]
+  ${_ME} bookmark search <query>
   ${_ME} bookmarks [<list options>...]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count
@@ -1914,13 +1915,14 @@ Options:
                                 \`notes\` will use the html <title> tag.
 
 Subcommands:
-  list    List bookmarks in the current notebook.
-  open    Open the bookmarked page in your system's primary web browser.
-          Shortcut Alias: \`o\`
-  peek    Open the bookmarked page in your terminal web browser.
-          Shortcut Alias: \`p\`
-  search  Search bookmarks for <query>.
-  url     Print the URL for the specified bookmark.
+  list     List bookmarks in the current notebook.
+           Shortcut Alias: \`ls\`
+  open     Open the bookmarked page in your system's primary web browser.
+           Shortcut Alias: \`o\`
+  peek     Open the bookmarked page in your terminal web browser.
+           Shortcut Alias: \`p\`
+  search   Search bookmarks for <query>.
+  url      Print the URL for the specified bookmark.
 
 Description:
   Create, view, and search bookmarks.
@@ -2012,7 +2014,7 @@ _bookmark() {
           return 1
         fi
         ;;
-      list)
+      ls|list)
         _subcommand="list"
         ;;
       search)

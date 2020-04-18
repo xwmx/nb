@@ -859,9 +859,9 @@ Usage:
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
+  notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  notes bookmark [list [<list options>...] | search <query>]
-  notes bookmarks [<list options>...]
+  notes bookmark search <query>
   notes completions (check | install [-d | --download] | uninstall)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -976,13 +976,14 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
-  list    List bookmarks in the current notebook.
-  open    Open the bookmarked page in your system's primary web browser.
-          Shortcut Alias: `o`
-  peek    Open the bookmarked page in your terminal web browser.
-          Shortcut Alias: `p`
-  search  Search bookmarks for <query>.
-  url     Print the URL for the specified bookmark.
+  list     List bookmarks in the current notebook.
+           Shortcut Alias: `ls`
+  open     Open the bookmarked page in your system's primary web browser.
+           Shortcut Alias: `o`
+  peek     Open the bookmarked page in your terminal web browser.
+           Shortcut Alias: `p`
+  search   Search bookmarks for <query>.
+  url      Print the URL for the specified bookmark.
 
 Description:
   Create, view, and search bookmarks.
@@ -1112,13 +1113,14 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
-  list    List bookmarks in the current notebook.
-  open    Open the bookmarked page in your system's primary web browser.
-          Shortcut Alias: `o`
-  peek    Open the bookmarked page in your terminal web browser.
-          Shortcut Alias: `p`
-  search  Search bookmarks for <query>.
-  url     Print the URL for the specified bookmark.
+  list     List bookmarks in the current notebook.
+           Shortcut Alias: `ls`
+  open     Open the bookmarked page in your system's primary web browser.
+           Shortcut Alias: `o`
+  peek     Open the bookmarked page in your terminal web browser.
+           Shortcut Alias: `p`
+  search   Search bookmarks for <query>.
+  url      Print the URL for the specified bookmark.
 
 Description:
   Create, view, and search bookmarks.
