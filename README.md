@@ -171,11 +171,12 @@ notes
 
 This will set up your initial "home" notebook where notes will be stored.
 
+
 ### Working with Notes
 
 #### Adding Notes
 
-To add a note:
+Use `notes add` to create new notes:
 
 ```bash
 # create a new note in your text editor
