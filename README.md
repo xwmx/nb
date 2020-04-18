@@ -380,7 +380,7 @@ notes delete example.md
 notes delete 'A Document Title'
 ```
 
-#### Bookmarks
+### Bookmarks
 
 `notes bookmark` is used to create and view bookmarks. Bookmarks are
 Markdown notes containing information about the bookmarked page. To create a
@@ -453,7 +453,7 @@ Bookmarks can also be encrypted:
 notes bookmark https://example.com --encrypt
 ```
 
-##### Opening Bookmarks
+#### Opening Bookmarks
 
 `notes bookmark` provides two ways to view bookmarked web pages.
 
