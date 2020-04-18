@@ -968,7 +968,7 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
 ### Help
 
 <p align="center">
-  <a href="#add">notes</a> •
+  <a href="notes-help---long">notes</a> •
   <a href="#bookmark-help">bookmark</a>
   </br>---</br>
   <a href="#add">add</a> •
