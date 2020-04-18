@@ -465,8 +465,7 @@ browser:
 notes open 3
 ```
 
-`notes peek` opens the bookmarked page in your terminal web
-browser:
+`notes peek` opens the bookmarked page in your terminal web browser:
 
 ```bash
 # peek bookmark by id
@@ -995,6 +994,7 @@ Subcommands:
   open     Open the bookmarked page in your system's primary web browser.
            Shortcut Alias: `o`
   peek     Open the bookmarked page in your terminal web browser.
+           Alias: `preview`
            Shortcut Alias: `p`
   search   Search bookmarks for <query>.
            Shortcut Alias: `q`
@@ -1133,6 +1133,7 @@ Subcommands:
   open     Open the bookmarked page in your system's primary web browser.
            Shortcut Alias: `o`
   peek     Open the bookmarked page in your terminal web browser.
+           Alias: `preview`
            Shortcut Alias: `p`
   search   Search bookmarks for <query>.
            Shortcut Alias: `q`
@@ -1554,6 +1555,7 @@ See also:
   notes help bookmark
   notes help show
 
+Alias: `preview`
 Shortcut Alias: `p`
 ```
 

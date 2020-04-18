@@ -1920,6 +1920,7 @@ Subcommands:
   open     Open the bookmarked page in your system's primary web browser.
            Shortcut Alias: \`o\`
   peek     Open the bookmarked page in your terminal web browser.
+           Alias: \`preview\`
            Shortcut Alias: \`p\`
   search   Search bookmarks for <query>.
            Shortcut Alias: \`q\`
@@ -4639,6 +4640,7 @@ See also:
   ${_ME} help bookmark
   ${_ME} help show
 
+Alias: \`preview\`
 Shortcut Alias: \`p\`
 HEREDOC
 _peek() {
