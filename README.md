@@ -834,6 +834,19 @@ n e 5
 n q '#example'
 ```
 
+Similarly, you can `alias b="bookmark"` and do:
+
+```bash
+# add a new bookmark
+b http://example.com
+
+# open bookmark 12
+b o 12
+
+# search bookmarks
+b q '#example'
+```
+
 For more commands and options, run `notes help` or `notes help <subcommand>`
 
 ### Help
