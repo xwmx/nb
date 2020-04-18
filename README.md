@@ -163,6 +163,19 @@ instructions](etc/README.md).
 
 ## Usage
 
+<p align="center">
+  <a href="#working-with-notes">Notes</a> •
+  <a href="#bookmarks">Bookmarks</a> •
+  <a href="#search">Search</a> •
+  <a href="#revision-history">History</a> •
+  <a href="#notebooks">Notebooks</a> •
+  <a href="#syncing-with-remotes">Git Sync</a> •
+  <a href="#import--export">Import / Export</a> •
+  <a href="#highlight-color-settings">Settings</a> •
+  <a href="#shell">Shell</a> •
+  <a href="#shortcut-aliases">Shortcuts</a>
+</p>
+
 To get started, simply run:
 
 ```bash
