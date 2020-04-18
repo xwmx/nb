@@ -185,7 +185,7 @@ instructions](etc/README.md).
   <a href="#notebooks">Notebooks</a> •
   <a href="#syncing-with-remotes">Git Sync</a> •
   <a href="#import--export">Import / Export</a> •
-  <a href="#highlight-color-settings">Settings</a> •
+  <a href="#settings">Settings</a> •
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a>
@@ -789,20 +789,25 @@ notes export example.md /path/to/example.docx
 notes export Movies /path/to/example.html
 ```
 
-### Highlight Color, Settings
+### Settings
 
-`notes` has a minimal text interface and uses color (yellow, by default) to
-highlight certain elements like ids, the current notebook name, and the shell
-prompt. The highlight color and other options can be changed with
-`notes settings`.
+`notes settings` opens the settings prompt, which provides an easy way to
+change your `notes` settings. To print a list of available settings, see
+[`notes help settings`](#settings-1).
 
 ```bash
 notes settings
 ```
 
-`notes settings` opens the settings prompt, which prints help information and
-provides an easy way to change your settings. To print a list of available
-settings, see [`notes help settings`](#settings).
+To update a setting in the prompt, enter the setting name or number,
+then enter the new value, and `notes` will add the stting to your
+`~/.notesrc` configuration file.
+
+#### Example: Highlight Color
+
+`notes` has a minimal text interface and uses color (yellow, by default) to
+highlight certain elements like ids, the current notebook name, and the shell
+prompt.
 
 You can update a setting without the prompt using `notes settings set`:
 
@@ -987,7 +992,7 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
   <a href="#search-1">search</a> •
-  <a href="#settings">settings</a> •
+  <a href="#settings-1">settings</a> •
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
   <a href="#status">status</a> •
