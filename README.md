@@ -382,9 +382,9 @@ notes delete 'A Document Title'
 
 ### Bookmarks
 
-`notes bookmark` is used to create and view bookmarks. Bookmarks are
-Markdown notes containing information about the bookmarked page. To create a
-new bookmark:
+Use `notes bookmark` to create, view, and search bookmarks, links, and
+online references. Bookmarks are Markdown notes containing information about
+the bookmarked page. To create a new bookmark:
 
 ```bash
 notes bookmark https://example.com
@@ -410,8 +410,8 @@ permission.
 ```
 
 `notes` embeds the page content in the bookmark, making it available for full
-text search with `notes search`. When `pandoc` is installed, the HTML page
-content will be converted to Markdown.
+text search with `notes search` and `notes bookmark search`. When `pandoc` is
+installed, the HTML page content will be converted to Markdown.
 
 Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
@@ -440,7 +440,14 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks and notes with `notes search`:
+Search for tagged bookmarks with `notes bookmark search`:
+
+```bash
+notes bookmark search '#tagname'
+```
+
+`notes bookmark search` has the same full text search as `notes search`.
+Search both bookmarks and notes with `notes search`:
 
 ```bash
 notes search '#tagname'
@@ -486,27 +493,43 @@ notes add example.bookmark.md --content "<https://example.com>"
 #### `bookmark` -- A command line tool for managing bookmarks.
 
 `notes` includes a `bookmark` executable that's a shortcut for
-`notes bookmark`, providing a full-featured bookmark management tool:
+`notes bookmark`, providing a nice, simple interface for creating,
+viewing, and searching bookmarks.
+
+Bookmark a page:
 
 ```bash
-# bookmark a page
 > bookmark https://example.com --tags tag1,tag2
 Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
+```
+List bookmarks:
 
-# list bookmarks
+```bash
 > bookmark list
 [3] 🔖 Example Domain (example.com)
 [2] 🔖 Example Bookmark Two (example2.com)
 [1] 🔖 Example Bookmark One (example1.com)
+```
 
-# view bookmark in your terminal web browser.
+View bookmark in your terminal web browser:
+
+```bash
 > bookmark peek 2
+```
 
-# open bookmark in your system's primary web browser.
+Open bookmark in your system's primary web browser:
+
+```bash
 > bookmark open 2
+```
 
-# do a full text search of bookmarks and archived page content
+Perform a full text search of bookmarks and archived page content:
+
+```bash
 > bookmark search 'example query'
+[10] example.bookmark.md 'Example Bookmark'
+--------------------------------------------
+5:Lorem ipsum example query.
 ```
 
 See [`bookmark help`](#bookmark-help) for more information.
