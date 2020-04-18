@@ -983,6 +983,7 @@ Subcommands:
   peek     Open the bookmarked page in your terminal web browser.
            Shortcut Alias: `p`
   search   Search bookmarks for <query>.
+           Shortcut Alias: `q`
   url      Print the URL for the specified bookmark.
 
 Description:
@@ -1120,6 +1121,7 @@ Subcommands:
   peek     Open the bookmarked page in your terminal web browser.
            Shortcut Alias: `p`
   search   Search bookmarks for <query>.
+           Shortcut Alias: `q`
   url      Print the URL for the specified bookmark.
 
 Description:

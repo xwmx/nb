@@ -1922,6 +1922,7 @@ Subcommands:
   peek     Open the bookmarked page in your terminal web browser.
            Shortcut Alias: \`p\`
   search   Search bookmarks for <query>.
+           Shortcut Alias: \`q\`
   url      Print the URL for the specified bookmark.
 
 Description:
@@ -2017,7 +2018,7 @@ _bookmark() {
       ls|list)
         _subcommand="list"
         ;;
-      search)
+      search|q)
         _subcommand="search"
         ;;
       open|o|peek|p|url)
