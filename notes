@@ -1900,8 +1900,9 @@ Usage:
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
-  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark list [<list options>...]
+  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark search <query>
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
@@ -1918,6 +1919,7 @@ Subcommands:
           Shortcut Alias: \`o\`
   peek    Open the bookmarked page in your terminal web browser.
           Shortcut Alias: \`p\`
+  search  Search notes and bookmarks for <query>. Alias for \`notes search\`.
   url     Print the URL for the specified bookmark.
 
 Description:
@@ -1942,11 +1944,11 @@ Examples:
 Shortcut Alias: \`b\`
 HEREDOC
 _bookmark() {
+  local _arguments=()
   local _bookmark_content=
   local _comment=
   local _edit_before_save=0
   local _encrypt=0
-  local _list_arguments=()
   local _password=
   local _selection=
   local _skip_content=0
@@ -2013,6 +2015,9 @@ _bookmark() {
       list)
         _subcommand="list"
         ;;
+      search)
+        _subcommand="search"
+        ;;
       open|o|peek|p|url)
         if __option_value_is_present "${_val:-}"
         then
@@ -2025,12 +2030,13 @@ _bookmark() {
         fi
         ;;
       *)
-        if [[ ! "${_subcommand:-}" == "list" ]] && [[ -z "${_url:-}" ]]
+        if [[ ! "${_subcommand:-}" =~ ^list$|^search$ ]] &&
+           [[ -z "${_url:-}" ]]
         then
           _url="${_arg:-}"
-        elif [[ "${_subcommand}" == "list" ]]
+        elif [[ "${_subcommand:-}" =~ ^list$|^search$ ]]
         then
-          _list_arguments+=("${_arg}")
+          _arguments+=("${_arg}")
         fi
         ;;
     esac
@@ -2040,14 +2046,20 @@ _bookmark() {
 
   if [[ "${_subcommand}" == "list" ]]
   then
-    if [[ -n "${_list_arguments[*]:-}" ]]
+    if [[ -n "${_arguments[*]:-}" ]]
     then
-      _list --titles --bookmarks "${_list_arguments[@]}"
+      _list --titles --bookmarks "${_arguments[@]}"
       return 0
     else
       _list --titles --bookmarks
       return 0
     fi
+  fi
+
+  if [[ "${_subcommand}" == "search" ]]
+  then
+    _search "${_arguments[@]}"
+    return 0
   fi
 
   if [[ "${_subcommand}" =~ ^open|o|peek|p|url$ ]]

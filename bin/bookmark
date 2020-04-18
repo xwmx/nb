@@ -55,7 +55,7 @@ _main() {
 bookmark -- A command line tool for managing bookmarks.
 
 HEREDOC
-    notes help bookmark \
+    "${_NOTES_PATH:-}" help bookmark \
       | sed -e "s/  notes /  /" \
       | sed -e "s/Shortcut Alias: \`b\`//" \
       | sed -e '$ d'
@@ -65,6 +65,12 @@ HEREDOC
 Part of \`notes\` (https://github.com/xwmx/notes).
 For more information, see: \`notes help\`. ${1:-}
 HEREDOC
+  elif [[ "${1:-}" == "search" ]] && [[ -z "${2:-}" ]]
+  then
+    "${_NOTES_PATH:-}" help search \
+      | sed -e "s/  notes /  /" \
+      | sed -e "s/Shortcut Alias: \`q\`//" \
+      | sed -e '$ d'
   else
     "${_NOTES_PATH}" bookmark "${@:-}"
   fi

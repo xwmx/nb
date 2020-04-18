@@ -504,6 +504,9 @@ Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
 
 # open bookmark in your system's primary web browser.
 > bookmark open 2
+
+# do a full text search of bookmarks and archived page content
+bookmark search 'example query'
 ```
 
 See [`bookmark help`](#bookmark-help) for more information.
@@ -959,8 +962,9 @@ Usage:
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
-  bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark list [<list options>...]
+  bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  bookmark search <query>
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
@@ -977,6 +981,7 @@ Subcommands:
           Shortcut Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
           Shortcut Alias: `p`
+  search  Search notes and bookmarks for <query>. Alias for `notes search`.
   url     Print the URL for the specified bookmark.
 
 Description:
@@ -1093,8 +1098,9 @@ Usage:
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
-  notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark list [<list options>...]
+  notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes bookmark search <query>
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
@@ -1111,6 +1117,7 @@ Subcommands:
           Shortcut Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
           Shortcut Alias: `p`
+  search  Search notes and bookmarks for <query>. Alias for `notes search`.
   url     Print the URL for the specified bookmark.
 
 Description:
