@@ -848,7 +848,7 @@ notes> ls
 notes> bookmark url 4
 https://example.com
 
-notes> search 'Example'
+notes> search 'example'
 [4] example.bookmark.md 'Example Domain (example.com)'
 ------------------------------------------------------
 1:# Example Bookmark
