@@ -492,10 +492,11 @@ from `notes`:
 ```bash
 # bookmark a page
 > bookmark https://example.com --tags tag1,tag2
-Added [34] 20200101000000.bookmark.md 'Example Domain (example.com)'
+Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
 
 # list bookmarks
 > bookmark list
+[3] 🔖 Example Domain (example.com)
 [2] 🔖 Example Bookmark Two (example2.com)
 [1] 🔖 Example Bookmark One (example1.com)
 
