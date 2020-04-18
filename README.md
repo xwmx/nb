@@ -840,7 +840,7 @@ notes> bookmark https://example.com
 Added [4] example.bookmark.md 'Example Domain (example.com)'
 
 notes> ls
-[4] 🔖 Example Bookmark
+[4] 🔖 Example Domain (example.com)
 [3] Example
 [2] Sample
 [1] Demo
@@ -849,9 +849,11 @@ notes> bookmark url 4
 https://example.com
 
 notes> search 'Example'
-[4] example.bookmark.md 'Example Bookmark'
-------------------------------------------
+[4] example.bookmark.md 'Example Domain (example.com)'
+------------------------------------------------------
 1:# Example Bookmark
+
+3:<https://example.com>
 
 [3] example.md 'Example'
 ------------------------
