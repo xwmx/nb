@@ -485,9 +485,8 @@ notes add example.bookmark.md --content "<https://example.com>"
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`notes` includes a `bookmark` executable that provides a full-featured
-bookmark management system simply by aliasing the `bookmark` subcommand
-from `notes`:
+`notes` includes a `bookmark` executable that's a shortcut for
+`notes bookmark`, providing a full-featured bookmark management tool:
 
 ```bash
 # bookmark a page
