@@ -43,8 +43,8 @@ approach for various experience improvements in more capable environments.
 features. `notes` is flexible.
 
 <p align="center">
-  <a href="#working-with-notes">Installation</a> •
-  <a href="#bookmarks">Usage</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
   <a href="#help">Help</a>
 </p>
 
