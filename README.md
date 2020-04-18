@@ -837,6 +837,7 @@ notes> edit 3 --content "New content."
 Updated [3] Example
 
 notes> bookmark https://example.com
+Added [4] example.bookmark.md 'Example Domain (example.com)'
 
 notes> ls
 [4] 🔖 Example Bookmark
