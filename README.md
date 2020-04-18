@@ -937,6 +937,40 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
 
 ### Help
 
+<p align="center">
+  <a href="#add">add</a> •
+  <a href="#bookmark">bookmark</a> •
+  <a href="#bookmarks-1">bookmarks</a> •
+  <a href="#completions">completions</a> •
+  <a href="#count">count</a> •
+  <a href="#delete">delete</a> •
+  <a href="#edit">edit</a> •
+  <a href="#env">env</a> •
+  <a href="#export">export</a> •
+  <a href="#git">git</a> •
+  <a href="#help-1">help</a> •
+  <a href="#history">history</a> •
+  <a href="#import">import</a> •
+  <a href="#init">init</a> •
+  <a href="#list">list</a> •
+  <a href="#ls">ls</a> •
+  <a href="#move">move</a> •
+  <a href="#notebook">notebook</a> •
+  <a href="#notebooks-1">notebooks</a> •
+  <a href="#open">open</a> •
+  <a href="#peek">peek</a> •
+  <a href="#remote">remote</a> •
+  <a href="#rename">rename</a> •
+  <a href="#search-1">search</a> •
+  <a href="#settings">settings</a> •
+  <a href="#shell">shell</a> •
+  <a href="#show">show</a> •
+  <a href="#status">status</a> •
+  <a href="#sync">sync</a> •
+  <a href="#use">use</a> •
+  <a href="#version">version</a>
+</p>
+
 #### `notes help --long`
 
 ```text
@@ -1115,40 +1149,6 @@ For more information, see: `notes help`.
 ```
 
 ### Subcommands
-
-<p align="center">
-  <a href="#add">add</a> •
-  <a href="#bookmark">bookmark</a> •
-  <a href="#bookmarks-1">bookmarks</a> •
-  <a href="#completions">completions</a> •
-  <a href="#count">count</a> •
-  <a href="#delete">delete</a> •
-  <a href="#edit">edit</a> •
-  <a href="#env">env</a> •
-  <a href="#export">export</a> •
-  <a href="#git">git</a> •
-  <a href="#help-1">help</a> •
-  <a href="#history">history</a> •
-  <a href="#import">import</a> •
-  <a href="#init">init</a> •
-  <a href="#list">list</a> •
-  <a href="#ls">ls</a> •
-  <a href="#move">move</a> •
-  <a href="#notebook">notebook</a> •
-  <a href="#notebooks-1">notebooks</a> •
-  <a href="#open">open</a> •
-  <a href="#peek">peek</a> •
-  <a href="#remote">remote</a> •
-  <a href="#rename">rename</a> •
-  <a href="#search-1">search</a> •
-  <a href="#settings">settings</a> •
-  <a href="#shell">shell</a> •
-  <a href="#show">show</a> •
-  <a href="#status">status</a> •
-  <a href="#sync">sync</a> •
-  <a href="#use">use</a> •
-  <a href="#version">version</a>
-</p>
 
 #### `add`
 
