@@ -800,7 +800,7 @@ notes settings
 ```
 
 To update a setting in the prompt, enter the setting name or number,
-then enter the new value, and `notes` will add the stting to your
+then enter the new value, and `notes` will add the setting to your
 `~/.notesrc` configuration file.
 
 #### Example: Highlight Color
