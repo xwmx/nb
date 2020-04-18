@@ -63,7 +63,7 @@ HEREDOC
     cat <<HEREDOC
 -----------------------------------------------------
 Part of \`notes\` (https://github.com/xwmx/notes).
-For more information, see: \`notes help\`. ${1:-}
+For more information, see: \`notes help\`.
 HEREDOC
   elif [[ "${1:-}" == "search" ]] && [[ -z "${2:-}" ]]
   then

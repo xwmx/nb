@@ -1539,7 +1539,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  ${_ME} bookmark list [<list options>...]
+  ${_ME} bookmark [list [<list options>...] | search <query>]
   ${_ME} bookmarks [<list options>...]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count
@@ -1577,7 +1577,7 @@ Usage:
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
-  ${_ME} -h | --help | help [<subcommand>]
+  ${_ME} -h | --help | help [<subcommand>] [-l | --long]
   ${_ME} --version | version
 
 Help:
@@ -1594,7 +1594,7 @@ HEREDOC
 Subcommands:
   (default)    List notes and notebooks. This is an alias for \`notes ls\`.
   add          Add a new note.
-  bookmark     Add open, and list bookmarks.
+  bookmark     Add, open, list, and search bookmarks.
   bookmarks    List bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -1919,15 +1919,15 @@ Subcommands:
           Shortcut Alias: \`o\`
   peek    Open the bookmarked page in your terminal web browser.
           Shortcut Alias: \`p\`
-  search  Search notes and bookmarks for <query>. Alias for \`notes search\`.
+  search  Search bookmarks for <query>.
   url     Print the URL for the specified bookmark.
 
 Description:
-  Create and view bookmarks.
+  Create, view, and search bookmarks.
 
   By default, the page content is saved within the bookmark, making the
-  bookmarked page available for full-text search with \`notes search\`.
-  When \`pandoc\` is installed, content will be converted to Markdown.
+  bookmarked page available for full-text search. When \`pandoc\` is
+  installed, content will be converted to Markdown.
 
   Bookmark are identified by the \`.bookmark.md\` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:
@@ -2058,7 +2058,7 @@ _bookmark() {
 
   if [[ "${_subcommand}" == "search" ]]
   then
-    _search "${_arguments[@]}"
+    _search --bookmarks "${_arguments[@]}"
     return 0
   fi
 

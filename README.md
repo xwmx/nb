@@ -860,7 +860,7 @@ Usage:
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  notes bookmark list [<list options>...]
+  notes bookmark [list [<list options>...] | search <query>]
   notes bookmarks [<list options>...]
   notes completions (check | install [-d | --download] | uninstall)
   notes count
@@ -910,7 +910,7 @@ More Information:
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `notes ls`.
   add          Add a new note.
-  bookmark     Add open, and list bookmarks.
+  bookmark     Add, open, list, and search bookmarks.
   bookmarks    List bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -981,15 +981,15 @@ Subcommands:
           Shortcut Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
           Shortcut Alias: `p`
-  search  Search notes and bookmarks for <query>. Alias for `notes search`.
+  search  Search bookmarks for <query>.
   url     Print the URL for the specified bookmark.
 
 Description:
-  Create and view bookmarks.
+  Create, view, and search bookmarks.
 
   By default, the page content is saved within the bookmark, making the
-  bookmarked page available for full-text search with `notes search`.
-  When `pandoc` is installed, content will be converted to Markdown.
+  bookmarked page available for full-text search. When `pandoc` is
+  installed, content will be converted to Markdown.
 
   Bookmark are identified by the `.bookmark.md` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:
@@ -1117,15 +1117,15 @@ Subcommands:
           Shortcut Alias: `o`
   peek    Open the bookmarked page in your terminal web browser.
           Shortcut Alias: `p`
-  search  Search notes and bookmarks for <query>. Alias for `notes search`.
+  search  Search bookmarks for <query>.
   url     Print the URL for the specified bookmark.
 
 Description:
-  Create and view bookmarks.
+  Create, view, and search bookmarks.
 
   By default, the page content is saved within the bookmark, making the
-  bookmarked page available for full-text search with `notes search`.
-  When `pandoc` is installed, content will be converted to Markdown.
+  bookmarked page available for full-text search. When `pandoc` is
+  installed, content will be converted to Markdown.
 
   Bookmark are identified by the `.bookmark.md` file extension. The bookmark
   URL is the first URL in the file within '<' and '>' characters:
