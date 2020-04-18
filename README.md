@@ -835,7 +835,7 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
 
 ### Help
 
-#### `notes help`
+#### `notes help --long`
 
 ```text
 __                _
@@ -866,6 +866,7 @@ Usage:
   notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   notes git <git options>...
+  notes help [-l | --long]
   notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
@@ -894,11 +895,14 @@ Usage:
   notes sync [-a | --all]
   notes use <notebook>
   notes -i | --interactive [<subcommand> [<options>...]]
-  notes -h | --help | help [<subcommand>]
+  notes -h | --help | help [<subcommand>] [-l | --long]
   notes --version | version
 
 Help:
   notes help [<subcommand>]
+
+More Information:
+  https://github.com/xwmx/notes
 
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `notes ls`.
