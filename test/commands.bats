@@ -12,5 +12,5 @@ load test_helper
   printf "\${lines[*]}: %s\\n" "${lines[*]}"
   printf "\${#lines[@]}: %s\\n" "${#lines[@]}"
   [[ "${lines[0]}" =~ a ]]
-  [[ "${lines[48]}" =~ version ]]
+  [[ "${lines[49]}" =~ version ]]
 }

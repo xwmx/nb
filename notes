@@ -2021,7 +2021,7 @@ _bookmark() {
       search|q)
         _subcommand="search"
         ;;
-      open|o|peek|p|url)
+      open|o|peek|p|preview|url)
         if __option_value_is_present "${_val:-}"
         then
           _subcommand="${_arg}"
@@ -2065,7 +2065,7 @@ _bookmark() {
     return 0
   fi
 
-  if [[ "${_subcommand}" =~ ^open|o|peek|p|url$ ]]
+  if [[ "${_subcommand}" =~ ^open|o|peek|p|preview|url$ ]]
   then
     local _basename
     _basename="$(_get_selection_basename "${_selection}")"
@@ -2078,7 +2078,7 @@ _bookmark() {
 
     local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
-    if [[ "${_subcommand}" =~ ^open|o|peek|p$ ]]
+    if [[ "${_subcommand}" =~ ^open|o|peek|p|preview$ ]]
     then
       if [[ ! "${_basename}" =~ .bookmark\.md$ ]] &&
          [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
@@ -2091,7 +2091,7 @@ _bookmark() {
           else
             _edit "${_selection}"
           fi
-        elif [[ "${_subcommand}" =~ ^peek|p$ ]]
+        elif [[ "${_subcommand}" =~ ^peek|p|preview$ ]]
         then
           if [[ -n "${_password}" ]]
           then
@@ -2137,7 +2137,7 @@ _bookmark() {
       }' "${_target_path}"
     )"
 
-    if [[ "${_subcommand}" =~ ^peek|p$  ]]
+    if [[ "${_subcommand}" =~ ^peek|p|preview$  ]]
     then
       if _command_exists 'w3m'
       then
@@ -4646,6 +4646,7 @@ _peek() {
   _bookmark peek "${@}"
 }
 _alias_subcommand "peek" "p"
+_alias_subcommand "peek" "preview"
 
 # remote ######################################################################
 
@@ -6275,6 +6276,7 @@ _SUBCOMMANDS=(
   open
   p
   peek
+  preview
   q
   remote
   rename
