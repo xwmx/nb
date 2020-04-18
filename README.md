@@ -605,7 +605,7 @@ highlighting:
 3:<https://example.com>
 
 [2718] example.md 'Example Note'
-------------------------
+--------------------------------
 1:# Example Note
 ```
 
@@ -1176,7 +1176,7 @@ Examples:
   bookmark open 5
   bookmark url 10
 
------------------------------------------------------
+------------------------------------------------
 Part of `notes` (https://github.com/xwmx/notes).
 For more information, see: `notes help`.
 ```

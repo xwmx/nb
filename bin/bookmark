@@ -67,7 +67,7 @@ HEREDOC
       | sed -e '$ d'
 
     cat <<HEREDOC
------------------------------------------------------
+------------------------------------------------
 Part of \`notes\` (https://github.com/xwmx/notes).
 For more information, see: \`notes help\`.
 HEREDOC
