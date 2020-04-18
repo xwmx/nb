@@ -500,7 +500,7 @@ When used with bookmarks, `notes open` and `notes peek` are aliases for
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `notes` will simply prompt you for the bookmark's password.
 
-#### Bookmark Note File Format
+#### Bookmark File Format
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
