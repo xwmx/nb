@@ -483,6 +483,31 @@ To create a minimal valid bookmark file with `notes add`:
 notes add example.bookmark.md --content "<https://example.com>"
 ```
 
+#### `bookmark` -- A command line tool for managing bookmarks.
+
+`notes` includes a `bookmark` executable that provides a full-featured
+bookmark management system simply by aliasing the `bookmark` subcommand
+from `notes`:
+
+```bash
+# bookmark a page
+> bookmark https://example.com --tags tag1,tag2
+Added [34] 20200101000000.bookmark.md 'Example Domain (example.com)'
+
+# list bookmarks
+> bookmark list
+[2] 🔖 Example Bookmark Two (example2.com)
+[1] 🔖 Example Bookmark One (example1.com)
+
+# view bookmark in your terminal web browser.
+> bookmark peek 2
+
+# open bookmark in your system's primary web browser.
+> bookmark open 2
+```
+
+See `bookmark help` for more information.
+
 ### Search
 
 Use `notes search` to search your notes, with support for regular
@@ -810,7 +835,19 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
 
 ### Help
 
+#### `notes help`
+
 ```text
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \
+/_/  |_| |_|\___/ \__\___||___/
+
+Command line note-taking, bookmarking, and archiving with encryption, search,
+Git-backed versioning and syncing, Pandoc-backed format conversion, and more
+in a single portable script.
+
 Usage:
   notes [<id> | <filename> | <path> | <title>] [<list options>]
   notes add [<filename> | <content>] [-c <content> | --content <content>]
@@ -901,6 +938,65 @@ Program Options:
   -i --interactive  Start the `notes` interactive shell.
   -h --help         Display this help information.
   --version         Display version information.
+```
+
+#### `bookmark help`
+
+```text
+    __                __                        __
+   / /_  ____  ____  / /______ ___  ____ ______/ /__
+  / __ \/ __ \/ __ \/ //_/ __ `__ \/ __ `/ ___/ //_/
+ / /_/ / /_/ / /_/ / ,< / / / / / / /_/ / /  / ,<
+/_.___/\____/\____/_/|_/_/ /_/ /_/\__,_/_/  /_/|_|
+
+bookmark -- A command line tool for managing bookmarks.
+
+Usage:
+  bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
+                 [--title <title>]
+  bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  bookmark list [<list options>...]
+
+Options:
+  -c --comment   <comment>      A comment or description for this bookmark.
+  --edit                        Open the bookmark in your editor before saving.
+  -e --encrypt                  Encrypt the bookmark with a password.
+  --skip-content                Omit page content from the note.
+  --tags         <tag1>,<tag2>  A comma-separated list of tags.
+  --title        <title>        The bookmark title. When not specified,
+                                `notes` will use the html <title> tag.
+
+Subcommands:
+  list    List bookmarks in the current notebook.
+  open    Open the bookmarked page in your system's primary web browser.
+          Shortcut Alias: `o`
+  peek    Open the bookmarked page in your terminal web browser.
+          Shortcut Alias: `p`
+  url     Print the URL for the specified bookmark.
+
+Description:
+  Create and view bookmarks.
+
+  By default, the page content is saved within the bookmark, making the
+  bookmarked page available for full-text search with `notes search`.
+  When `pandoc` is installed, content will be converted to Markdown.
+
+  Bookmark are identified by the `.bookmark.md` file extension. The bookmark
+  URL is the first URL in the file within '<' and '>' characters:
+
+    <https://www.example.com>
+
+Examples:
+  bookmark https://example.com
+  bookmark https://example.com --tags example,sample,demo
+  bookmark https://example.com/about --title 'Example Title'
+  bookmark https://example.com -c 'Example comment.'
+  bookmark open 5
+
+-----------------------------------------------------
+Part of `notes` (https://github.com/xwmx/notes).
+For more information, see: `notes help`.
 ```
 
 ### Subcommands

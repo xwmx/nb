@@ -12,6 +12,12 @@ setup() {
   # The location of the `notes` script being tested.
   export _NOTES="${BATS_TEST_DIRNAME}/../notes"
 
+    # `$_BOOKMARK`
+  #
+  # The location of the `notes` script being tested.
+  export _BOOKMARK="${BATS_TEST_DIRNAME}/../bin/bookmark"
+  export _NOTES_PATH="${_NOTES}"
+
   export _TMP_DIR
   _TMP_DIR="$(mktemp -d /tmp/notes_test.XXXXXX)" || exit 1
 

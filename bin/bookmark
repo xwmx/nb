@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+###############################################################################
+#     __                __                        __
+#    / /_  ____  ____  / /______ ___  ____ ______/ /__
+#   / __ \/ __ \/ __ \/ //_/ __ `__ \/ __ `/ ___/ //_/
+#  / /_/ / /_/ / /_/ / ,< / / / / / / /_/ / /  / ,<
+# /_.___/\____/\____/_/|_/_/ /_/ /_/\__,_/_/  /_/|_|
+#
+# bookmark -- A command line tool for managing bookmarks.
+#
+# Part of:
+# __                _
+# \ \   _ __   ___ | |_ ___  ___
+#  \ \ | '_ \ / _ \| __/ _ \/ __|
+#  / / | | | | (_) | ||  __/\__ \
+# /_/  |_| |_|\___/ \__\___||___/
+#
+# Command line note-taking, bookmarking, and archiving with encryption, search,
+# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
+# in a single portable script.
+#
+# https://github.com/xwmx/notes
+#
+# Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
+#
+# Copyright (c) 2015-present William Melody • hi@williammelody.com
+# GPLv2 • See LICENSE for details.
+###############################################################################
+
+export _NOTES_PATH="${_NOTES_PATH:-}"
+
+if [[ -z "${_NOTES_PATH:-}" ]]
+then
+  _NOTES_PATH="$(command -v notes)"
+fi
+
+if [[ -z "${_NOTES_PATH:-}" ]]
+then
+  cat <<HEREDOC
+\`bookmark\` is part of \`notes\`. To install \`notes\`, see:
+  https://github.com/xwmx/notes
+HEREDOC
+fi
+
+_main() {
+  if [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]]
+  then
+    cat <<HEREDOC
+    __                __                        __
+   / /_  ____  ____  / /______ ___  ____ ______/ /__
+  / __ \\/ __ \\/ __ \\/ //_/ __ \`__ \\/ __ \`/ ___/ //_/
+ / /_/ / /_/ / /_/ / ,< / / / / / / /_/ / /  / ,<
+/_.___/\\____/\\____/_/|_/_/ /_/ /_/\\__,_/_/  /_/|_|
+
+bookmark -- A command line tool for managing bookmarks.
+
+HEREDOC
+    notes help bookmark \
+      | sed -e "s/  notes /  /" \
+      | sed -e "s/Shortcut Alias: \`b\`//" \
+      | sed -e '$ d'
+
+    cat <<HEREDOC
+-----------------------------------------------------
+Part of \`notes\` (https://github.com/xwmx/notes).
+For more information, see: \`notes help\`. ${1:-}
+HEREDOC
+  else
+    "${_NOTES_PATH}" bookmark "${@:-}"
+  fi
+} && _main "${@:-}"
