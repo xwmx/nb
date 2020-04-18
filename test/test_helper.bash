@@ -23,6 +23,8 @@ setup() {
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
+  export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+
   if [[ -z "${EDITOR:-}" ]] || [[ ! "${EDITOR:-}" =~ mock_editor ]]
   then
     export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor"

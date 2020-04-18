@@ -2,8 +2,6 @@
 
 load test_helper
 
-_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
-
 # no argument #################################################################
 
 @test "\`bookmark\` with no argument exits with 1." {

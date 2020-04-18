@@ -1251,7 +1251,7 @@ _join() {
 # _list_notes_files()
 #
 # Usage:
-#   _list_notes_files [--sort] [--reverse]
+#   _list_notes_files [--sort] [--reverse] [--bookmarks]
 #
 # Description:
 #   List note files with default sorting.
@@ -1263,7 +1263,26 @@ _list_notes_files() {
   # -r  Reverse the order of the sort to get reverse order or the oldest
   #     entries first (or largest files last, combined with sort by size
 
-  if [[ "${1:-}" == "--sort" ]]
+  local _bookmarks=0
+  local _reverse=0
+  local _sort=0
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --bookmarks)
+        _bookmarks=1
+        ;;
+      --reverse)
+        _reverse=1
+        ;;
+      --sort)
+        _sort=1
+        ;;
+    esac
+  done
+
+  if ((_sort)) || ((_reverse))
   then
     local _filenames=()
     local _index_file
@@ -1277,14 +1296,31 @@ _list_notes_files() {
       fi
     done
 
-    if [[ "${2:-}" == "--reverse" ]]
+    if ((_reverse))
     then
       printf "%s\\n" "${_filenames[@]}" | sort -r
     else
       printf "%s\\n" "${_filenames[@]}"
-    fi
+    fi | if ((_bookmarks))
+         then
+           grep --color=never    \
+             -e '\.bookmark\.'   \
+             -e '\-bookmark\.'
+          else
+            cat
+          fi
   else
-    ls -t "${_NOTEBOOK_PATH}"
+    if ((_bookmarks))
+    then
+      # Allow `ls | grep` since `-t` is used for sorting.
+      # shellcheck disable=SC2010
+      ls -t "${_NOTEBOOK_PATH}" \
+        | grep --color=never    \
+            -e '\.bookmark\.'   \
+            -e '\-bookmark\.'
+    else
+      ls -t "${_NOTEBOOK_PATH}"
+    fi
   fi
 }
 
@@ -1510,7 +1546,7 @@ Usage:
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id]
+  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
              [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
              [--titles] [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
@@ -3542,11 +3578,12 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--no-id]
+  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
              [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
              [--titles] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.
@@ -3585,6 +3622,7 @@ _list() {
   _debug printf "_list() \${2:-}: '%s'\\n" "${2:-}"
   _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
 
+  local _bookmarks=0
   local _excerpt_length=3
   local _limit=
   local _list_titles=0
@@ -3605,6 +3643,9 @@ _list() {
     local _val="${2:-}"
 
     case "${_arg}" in
+      --bookmarks)
+        _bookmarks=1
+        ;;
       -e|--excerpt)
         _print_excerpt=1
         if __option_value_is_present "${_val:-}"
@@ -3651,6 +3692,7 @@ _list() {
     shift
   done
 
+  _debug printf "_list() \${_bookmarks}: '%s'\\n" "${_bookmarks:-}"
   _debug printf "_list() \${_limit}: '%s'\\n" "${_limit:-}"
   _debug printf "_list() \${_print_excerpt}: '%s'\\n" "${_print_excerpt:-}"
   _debug printf "_list() \${_excerpt_length}: '%s'\\n" "${_excerpt_length:-}"
@@ -3665,16 +3707,20 @@ _list() {
   fi
   _debug printf "list() \${_selection_basename}: '%s'\\n" "${_selection_basename}"
 
+  local _list_note_file_options=()
   local _filenames=()
-  if ((_reverse))
+
+  ((_bookmarks))  && _list_note_file_options+=("--bookmarks")
+  ((_reverse))    && _list_note_file_options+=("--reverse")
+  ((_sort))       && _list_note_file_options+=("--sort")
+
+  if [[ -n "${_list_note_file_options[*]:-}" ]]
   then
-    _filenames=($(_list_notes_files --sort --reverse))
-  elif ((_sort))
-  then
-    _filenames=($(_list_notes_files --sort))
+    _filenames=($(_list_notes_files "${_list_note_file_options[@]}"))
   else
     _filenames=($(_list_notes_files))
   fi
+
   local _filenames_count="${#_filenames[@]}"
 
   _debug printf "list() \${_filenames_count}: '%s'\\n" "${_filenames_count[@]}"
@@ -3852,11 +3898,12 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [-e [<length>] | --excerpt [<length>]] [--no-id]
+  ${_ME} ls [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
            [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
            [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.

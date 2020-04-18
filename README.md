@@ -830,7 +830,7 @@ Usage:
   notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
-  notes list [-e [<length>] | --excerpt [<length>]] [--no-id]
+  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
              [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
              [--titles] [<id> | <filename> | <path> | <title> | <query>]
   notes ls [<list options>...]
@@ -1230,11 +1230,12 @@ Examples:
 
 ```text
 Usage:
-  notes list [-e [<length>] | --excerpt [<length>]] [--no-id]
+  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
              [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
              [--titles] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.
@@ -1273,11 +1274,12 @@ Examples:
 
 ```text
 Usage:
-  notes ls [-e [<length>] | --excerpt [<length>]] [--no-id]
+  notes ls [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
            [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
            [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
   --no-id                Don't print the id next to each note's filename.
