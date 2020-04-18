@@ -569,8 +569,9 @@ notes search '#example'
 notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 ```
 
-`notes` search prints the id, filename, and title of each matched file,
-followed by each match and its line number, with color highlighting:
+`notes search` prints the id number, filename, and title of each matched
+file, followed by each search query match and its line number, with color
+highlighting:
 
 ```bash
 > notes search 'example'
@@ -605,9 +606,18 @@ the notebook or an individual note with:
 # show history for current notebook
 notes history
 
-# show history for note 4
+# show history for note number 4
 notes history 4
+
+# show history for note with filename example.md
+notes history example.md
+
+# show history for note titled 'Example'
+notes history Example
 ```
+
+`notes history` uses `git log` by default and prefers
+[`tig`](https://github.com/jonas/tig) when available.
 
 ### Notebooks
 
