@@ -2357,6 +2357,9 @@ Description:
   https://github.com/xwmx/notes/blob/master/etc/README.md
 HEREDOC
 _completions() {
+  local _BASH_COMP_NAME="notes"
+  local _ZSH_COMP_NAME="_notes"
+
   # Usage: _completions_check
   _completions_check() {
     local _bash_completion_path=
@@ -2369,10 +2372,10 @@ _completions() {
     then
       if [[ -w "${_bash_completion_path}"   ]]
       then
-        if [[ -e "${_bash_completion_path}/notes" ]]
+        if [[ -e "${_bash_completion_path}/${_BASH_COMP_NAME}" ]]
         then
           _exists=1
-          printf "Exists: %s\\n" "${_bash_completion_path}/notes"
+          printf "Exists: %s\\n" "${_bash_completion_path}/${_BASH_COMP_NAME}"
         fi
       else
         printf "Permission denied: %s\\n" "${_bash_completion_path}"
@@ -2388,7 +2391,7 @@ _completions() {
         if [[ -e "${_zsh_completion_path}/_notes" ]]
         then
           _exists=1
-          printf "Exists: %s\\n" "${_zsh_completion_path}/_notes"
+          printf "Exists: %s\\n" "${_zsh_completion_path}/${_ZSH_COMP_NAME}"
         fi
       else
         printf "Permission denied: %s\\n" "${_zsh_completion_path}"
@@ -2493,11 +2496,11 @@ HEREDOC
         if [[ "${_shell}" == "bash" ]]
         then
           _completion_path="$(_get_bash_completion_path)"
-          _completion_target="${_completion_path}/notes"
+          _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
         elif [[ "${_shell}" == "zsh" ]]
         then
           _completion_path="/usr/local/share/zsh/site-functions"
-          _completion_target="${_completion_path}/_notes"
+          _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
         fi
 
         if [[ -n "${_completion_path:-}" ]] &&
@@ -2534,11 +2537,11 @@ HEREDOC
       if [[ "${_shell}" == "bash" ]]
       then
         _completion_path="$(_get_bash_completion_path)"
-        _completion_target="${_completion_path}/notes"
+        _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
       elif [[ "${_shell}" == "zsh" ]]
       then
         _completion_path="/usr/local/share/zsh/site-functions"
-        _completion_target="${_completion_path}/_notes"
+        _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
       fi
 
       if [[ -n "${_completion_path:-}" ]] &&
