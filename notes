@@ -6331,23 +6331,6 @@ _is_valid_subcommand() {
   esac
 }
 
-# _require_argument()
-#
-# Usage:
-#   _require_argument <option> <argument>
-#
-# If <argument> is blank or another option, print an error message and  exit
-# with status 1.
-_require_argument() {
-  local _option="${1:-}"
-  local _value="${2:-}"
-
-  if [[ -z "${_value}" ]] || [[ "${_value}" =~ ^- ]]
-  then
-    _die printf "Option requires an argument: %s\\n" "${_option}"
-  fi
-}
-
 # getopts and getopts have inconsistent behavior, so using a simple home-brewed
 # while loop. This isn't perfectly compliant with POSIX, but it's close enough
 # and this appears to be a widely used approach.
