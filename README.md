@@ -107,6 +107,9 @@ To install with [Homebrew](http://brew.sh/):
 brew install xwmx/taps/notes
 ```
 
+Installing `notes` with Homebrew also installs the recommended dependencies
+above.
+
 #### npm
 
 To install with [npm](https://www.npmjs.com/package/notes.sh):
