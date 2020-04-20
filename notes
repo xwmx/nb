@@ -5929,7 +5929,7 @@ _sync() {
     (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner)
   done &&
     printf "Done!\\n" ||
-    printf "Syncing failed!\\n"
+      printf "Syncing failed!\\n"
 }
 
 # update ######################################################################
