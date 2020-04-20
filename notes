@@ -1933,8 +1933,8 @@ Description:
   bookmarked page available for full-text search. When \`pandoc\` is
   installed, content will be converted to Markdown.
 
-  Bookmark are identified by the \`.bookmark.md\` file extension. The bookmark
-  URL is the first URL in the file within '<' and '>' characters:
+  Bookmarks are identified by the \`.bookmark.md\` file extension. The
+  bookmark URL is the first URL in the file within '<' and '>' characters:
 
     <https://www.example.com>
 
