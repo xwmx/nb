@@ -2942,8 +2942,10 @@ _env() {
     printf "code:         %s\\n" "$(command -v code)"
     printf "curl:         %s\\n" "$(command -v curl)"
     printf "emacs:        %s\\n" "$(command -v emacs)"
+    printf "git:          %s\\n" "$(command -v git)"
     printf "gvim:         %s\\n" "$(command -v gvim)"
     printf "gpg:          %s\\n" "$(command -v gpg)"
+    printf "less:         %s\\n" "$(command -v less)"
     printf "lynx:         %s\\n" "$(command -v lynx)"
     printf "macdown:      %s\\n" "$(command -v macdown)"
     printf "mate:         %s\\n" "$(command -v mate)"
@@ -2958,8 +2960,9 @@ _env() {
     printf "tig:          %s\\n" "$(command -v tig)"
     printf "w3m:          %s\\n" "$(command -v w3m)"
     printf "vim:          %s\\n" "$(command -v vim)"
-    printf "\`uname -a\`:   %s\\n" "$(uname -a)"
-    
+
+    printf "bash --version: %s\\n" "$(bash --version | head -1)"
+    printf "\`uname -a\`:     %s\\n" "$(uname -a)"
   fi
 }
 
