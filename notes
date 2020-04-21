@@ -5859,12 +5859,15 @@ Can't show archives. Export archive and expand to edit.\\n"
         _highlight_syntax_if_available "${_target_path}"
       fi
     else # `notes show`
-      if [[ -n "${PAGER:-}" ]]
+      if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
       then
-        _highlight_syntax_if_available "${_target_path}" | "${PAGER}"
+        _highlight_syntax_if_available "${_target_path}" | "${PAGER}" -R
       elif _command_exists "less"
       then
-        _highlight_syntax_if_available "${_target_path}" | less
+        _highlight_syntax_if_available "${_target_path}" | less -R
+      elif [[ -n "${PAGER:-}" ]]
+      then
+        _highlight_syntax_if_available "${_target_path}" | "${PAGER}"
       else
         _highlight_syntax_if_available "${_target_path}"
       fi
