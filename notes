@@ -1801,8 +1801,6 @@ _add() {
 
   _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
-  _debug printf "_show() \${_password}: '%s'\\n" "${_password}"
-
   if ((_encrypt))
   then
     if [[ -z "${_password}" ]]
