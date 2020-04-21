@@ -327,9 +327,9 @@ one"
   run "${_NOTES}" env
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NOTES_DIR}/home'" "'${lines[3]}'"
+  _compare "'_NOTEBOOK_PATH            ${NOTES_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[3]}" == "_NOTEBOOK_PATH=${NOTES_DIR}/home" ]]
+  [[ "${lines[2]}" == "_NOTEBOOK_PATH            ${NOTES_DIR}/home" ]]
 }
 
 @test "\`notebooks use <invalid>\` exits with 1 and prints error message." {
@@ -349,9 +349,9 @@ one"
   run "${_NOTES}" env
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NOTES_DIR}/home'" "'${lines[3]}'"
+  _compare "'_NOTEBOOK_PATH            ${NOTES_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[3]}" == "_NOTEBOOK_PATH=${NOTES_DIR}/home" ]]
+  [[ "${lines[2]}" == "_NOTEBOOK_PATH            ${NOTES_DIR}/home" ]]
 }
 
 @test "\`notebooks use <name>\` exits with 0 and sets <name> in .current." {
@@ -372,9 +372,9 @@ one"
   run "${_NOTES}" env
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NOTES_DIR}/one'" "'${lines[3]}'"
+  _compare "'_NOTEBOOK_PATH            ${NOTES_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[3]}" == "_NOTEBOOK_PATH=${NOTES_DIR}/one" ]]
+  [[ "${lines[2]}" == "_NOTEBOOK_PATH            ${NOTES_DIR}/one" ]]
 }
 
 @test "\`notebooks use <name>:\` exits with 0 and sets <name> in .current." {
@@ -395,9 +395,9 @@ one"
   run "${_NOTES}" env
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NOTES_DIR}/one'" "'${lines[3]}'"
+  _compare "'_NOTEBOOK_PATH            ${NOTES_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[3]}" == "_NOTEBOOK_PATH=${NOTES_DIR}/one" ]]
+  [[ "${lines[2]}" == "_NOTEBOOK_PATH            ${NOTES_DIR}/one" ]]
 }
 
 # help ########################################################################
