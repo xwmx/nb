@@ -2960,9 +2960,8 @@ _env() {
     printf "tig:          %s\\n" "$(command -v tig)"
     printf "w3m:          %s\\n" "$(command -v w3m)"
     printf "vim:          %s\\n" "$(command -v vim)"
-
     printf "bash --version: %s\\n" "$(bash --version | head -1)"
-    printf "\`uname -a\`:     %s\\n" "$(uname -a)"
+    printf "uname -a: %s\\n" "$(uname -a)"
   fi
 }
 
