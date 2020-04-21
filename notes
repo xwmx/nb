@@ -6050,6 +6050,7 @@ HEREDOC
 
       cat  "${_temp_file}" > "${_current_path}"
       printf "%s updated to the latest version.\\n" "${_ME}"
+      exit 0
     else
       printf "Already at the latest version.\\n"
     fi
