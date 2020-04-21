@@ -1208,9 +1208,12 @@ _highlight_syntax_if_available() {
     local _extension="${_basename##*.}"
 
     # Markdown highlighting is better with explicit 'md' lexer.
-    [[ ! "${_extension}" == "md" ]] &&
-      pygmentize -O style=pastie "${@}" 2>/dev/null ||
-      pygmentize -l md -O style=pastie "${@}"
+    if [[ ! "${_extension}" == "md" ]]
+    then
+      pygmentize -O style=friendly "${@}" 2>/dev/null
+    else
+      pygmentize -l md -O style=friendly "${@}"
+    fi
   else
     cat "${@}"
   fi
