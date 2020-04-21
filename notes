@@ -2899,14 +2899,68 @@ Description:
   Print program environment variables.
 HEREDOC
 _env() {
-  printf "EDITOR=%s\\n" "${EDITOR}"
-  printf "NOTES_AUTO_SYNC=%s\\n" "${NOTES_AUTO_SYNC}"
-  printf "NOTES_DIR=%s\\n" "${NOTES_DIR}"
-  printf "_NOTEBOOK_PATH=%s\\n" "${_NOTEBOOK_PATH}"
-  printf "NOTES_DEFAULT_EXTENSION=%s\\n" "${NOTES_DEFAULT_EXTENSION}"
-  printf "NOTES_ENCRYPTION_TOOL=%s\\n" "${NOTES_ENCRYPTION_TOOL}"
-  printf "NOTES_HIGHLIGHT_COLOR=%s\\n" "${NOTES_HIGHLIGHT_COLOR}"
-  printf "NOTESRC_PATH=%s\\n" "${NOTESRC_PATH}"
+  local _subcommand="${1:-}"
+  if [[ -n "${_subcommand}" ]] && [[ "${_subcommand}" == "install" ]]
+  then
+    # packages: curl pandoc pygments w3m ripgrep tig
+    if [[ -x "$(command -v apk)" ]]
+    then
+      apk add --no-cache curl pandoc ripgrep tig w3m
+    fi
+    if [[ -x "$(command -v apt-get)" ]]
+    then
+      apt-get install curl python-pygments tig w3m
+
+      https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
+      sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
+
+      curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+      sudo dpkg -i ripgrep_11.0.2_amd64.deb
+    fi
+    if [[ -x "$(command -v dnf)" ]]
+    then
+      : # TODO: dnf install
+    fi
+    if [[ -x "$(command -v zypper)" ]]
+    then
+      : # TODO: zypper install curl jq
+    fi
+  else
+    printf "_ME                       %s\\n" "${_ME}"
+    printf "_MY_PATH                  %s\\n" "${_MY_PATH}"
+    printf "_NOTEBOOK_PATH            %s\\n" "${_NOTEBOOK_PATH}"
+    printf "EDITOR                    %s\\n" "${EDITOR}"
+    printf "PAGER                     %s\\n" "${PAGER}"
+    printf "NOTES_AUTO_SYNC           %s\\n" "${NOTES_AUTO_SYNC}"
+    printf "NOTES_DIR                 %s\\n" "${NOTES_DIR}"
+    printf "NOTES_DEFAULT_EXTENSION   %s\\n" "${NOTES_DEFAULT_EXTENSION}"
+    printf "NOTES_ENCRYPTION_TOOL     %s\\n" "${NOTES_ENCRYPTION_TOOL}"
+    printf "NOTES_HIGHLIGHT_COLOR     %s\\n" "${NOTES_HIGHLIGHT_COLOR}"
+    printf "NOTESRC_PATH              %s\\n" "${NOTESRC_PATH}"
+    printf "ack:          %s\\n" "$(command -v ack)"
+    printf "ag:           %s\\n" "$(command -v ag)"
+    printf "code:         %s\\n" "$(command -v code)"
+    printf "curl:         %s\\n" "$(command -v curl)"
+    printf "emacs:        %s\\n" "$(command -v emacs)"
+    printf "gvim:         %s\\n" "$(command -v gvim)"
+    printf "gpg:          %s\\n" "$(command -v gpg)"
+    printf "lynx:         %s\\n" "$(command -v lynx)"
+    printf "macdown:      %s\\n" "$(command -v macdown)"
+    printf "mate:         %s\\n" "$(command -v mate)"
+    printf "mvim:         %s\\n" "$(command -v mvim)"
+    printf "nano:         %s\\n" "$(command -v nano)"
+    printf "nvim:         %s\\n" "$(command -v nvim)"
+    printf "openssl:      %s\\n" "$(command -v openssl)"
+    printf "pandoc:       %s\\n" "$(command -v pandoc)"
+    printf "pygments:     %s\\n" "$(command -v pygmentize)"
+    printf "rg:           %s\\n" "$(command -v rg)"
+    printf "subl:         %s\\n" "$(command -v subl)"
+    printf "tig:          %s\\n" "$(command -v tig)"
+    printf "w3m:          %s\\n" "$(command -v w3m)"
+    printf "vim:          %s\\n" "$(command -v vim)"
+    printf "\`uname -a\`:   %s\\n" "$(uname -a)"
+    
+  fi
 }
 
 # export ######################################################################
