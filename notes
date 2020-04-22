@@ -5043,12 +5043,12 @@ _search() {
       if _command_exists "rg" && ! ((_use_grep))
       then
         rg \
-          --hidden \
+          --hidden        \
           --iglob '!.git' \
-          --ignore-case \
-          --no-heading \
-          --color always \
-          --line-number \
+          --ignore-case   \
+          --no-heading    \
+          --color always  \
+          --line-number   \
           --max-columns "${_max_columns}" --max-columns-preview \
           "${_query}" "${NOTES_DIR}/${__scope}" \
             || return 0 # Don't fail out within a single scope.
@@ -5057,10 +5057,10 @@ _search() {
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
         ag \
-          --hidden \
+          --hidden      \
           --ignore-case \
-          --noheading \
-          --color \
+          --noheading   \
+          --color       \
           --color-line-number '32' \
           --color-match '1;35' \
           "${_query}" "${NOTES_DIR}/${__scope}" \
@@ -5069,8 +5069,8 @@ _search() {
       then # ack is available.
         ack "${_query}" "${NOTES_DIR}/${__scope}" \
           --ignore-case \
-          --noheading \
-          --color-lineno='bold green' \
+          --noheading   \
+          --color-lineno='bold green'   \
           --color-match='black on_blue' \
             || return 0 # Don't fail out within a single scope.
       else # fall back to POSIX grep.
