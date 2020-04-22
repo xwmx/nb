@@ -4754,7 +4754,7 @@ _remote() {
         if [[ -z "${_subcommand}" ]]
         then
           _subcommand="${__arg}"
-        elif [[ "${_subcommand}" == "set" ]] &&
+        elif [[ "${_subcommand}" =~ ^set$|^add$ ]] &&
              [[ -z "${_url}" ]]
         then
           _url="${__arg}"
@@ -4777,7 +4777,7 @@ _remote() {
   _debug printf "_remote() \${_existing_url}: '%s'\\n" "${_existing_url}"
 
   case "${_subcommand}" in
-    remove)
+    remove|rm)
       if ((_remote_exists))
       then
         if ! ((_force))
@@ -4807,7 +4807,7 @@ _remote() {
         return 1
       fi
       ;;
-    set)
+    set|add)
       if [[ -z "${_url}" ]]
       then
         _help remote
