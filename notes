@@ -5079,9 +5079,10 @@ _search() {
         set +f
         find . -type f -not -path '*/\.git*' \
           | grep \
-              --ignore-case \
-              --color=always \
-              -n "${_query}" \
+              --ignore-case   \
+              --color=always  \
+              --text          \
+              -n "${_query}"  \
               "${NOTES_DIR}/${__scope}"/* \
               "${NOTES_DIR}/${__scope}"/.index /dev/null \
                 || return 0 # Don't fail out within a single scope.
@@ -5139,6 +5140,7 @@ _search() {
             continue
           fi
 
+          # Remove ' matches' from the end of some grep matches.
           _path="$(printf "%s\\n" "${_path}" | sed -e 's/ matches//g')"
 
           _filename="$(basename "${_path}")"
@@ -5195,6 +5197,7 @@ _search() {
             )"
           fi
 
+          # Truncate long lines.
           local _line_length=
           _line_length="$(
             printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
@@ -5208,7 +5211,9 @@ _search() {
               printf "%s\\n" "${_content_line_with_hit}" \
                 | awk '{ print substr($0, 1, 2000) }'
             )"
-            _content_line_with_hit+="$(_highlight "... [${_line_length_diff} characters omitted]")"
+            _content_line_with_hit+="$(
+              _highlight "... [${_line_length_diff} characters omitted]"
+            )"
           fi
 
           printf "%s\\n\\n" "${_content_line_with_hit}"
