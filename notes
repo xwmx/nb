@@ -4988,6 +4988,7 @@ _search() {
   local _all=0
   local _arguments=("${@}")
   local _last_path=
+  local _max_columns="2000"
   local _only_bookmarks=0
   local _print_paths=0
   local _query=
@@ -5048,6 +5049,7 @@ _search() {
           --no-heading \
           --color always \
           --line-number \
+          --max-columns "${_max_columns}" --max-columns-preview \
           "${_query}" "${NOTES_DIR}/${__scope}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ag" && ! ((_use_grep))
@@ -5075,7 +5077,7 @@ _search() {
         # Add /dev/null so file path is printed even if there is only one
         # matching file. Reference: http://stackoverflow.com/a/15432718
         set +f
-        find . ! -name ".git" \
+        find . -type f -not -path '*/\.git*' \
           | grep \
               --ignore-case \
               -n "${_query}" \
@@ -5136,6 +5138,8 @@ _search() {
             continue
           fi
 
+          _path="$(printf "%s\\n" "${_path}" | sed -e 's/ matches//g')"
+
           _filename="$(basename "${_path}")"
           _filename_color="${_filename}"
 
@@ -5188,6 +5192,22 @@ _search() {
             _content_line_with_hit="$(
               printf "%s\\n" "${_line}" | cut -d: -f 2-
             )"
+          fi
+
+          local _line_length=
+          _line_length="$(
+            printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
+          )"
+          local _line_length_diff
+          _line_length_diff=$((_line_length-_max_columns-100))
+
+          if [[ "${_line_length_diff}" -gt 0 ]]
+          then
+            _content_line_with_hit="$(\
+              printf "%s\\n" "${_content_line_with_hit}" \
+                | awk '{ print substr($0, 1, 2000) }'
+            )"
+            _content_line_with_hit+="$(_highlight "... [${_line_length_diff} characters omitted]")"
           fi
 
           printf "%s\\n\\n" "${_content_line_with_hit}"
