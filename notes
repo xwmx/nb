@@ -5080,6 +5080,7 @@ _search() {
         find . -type f -not -path '*/\.git*' \
           | grep \
               --ignore-case \
+              --color=always \
               -n "${_query}" \
               "${NOTES_DIR}/${__scope}"/* \
               "${NOTES_DIR}/${__scope}"/.index /dev/null \
