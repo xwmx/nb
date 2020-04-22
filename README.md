@@ -617,10 +617,9 @@ highlighting:
 [`ack`](http://beyondgrep.com/), and
 [`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
 performs searches using the first tool it finds. `notes search` works
-the same regardless of which tool is found and is perfectly fine using
-the environment's built-in `grep`. `rg`, `ag`, and `ack` are a lot faster
-on large notebooks and there are some subtle differences in color
-highlighting.
+mostly the same regardless of which tool is found and is perfectly fine using
+the environment's built-in `grep`. `rg`, `ag`, and `ack` are faster and there
+are some subtle differences in color highlighting.
 
 ### Revision History
 
