@@ -364,8 +364,8 @@ home
 This is an example excerpt
 ```
 
-On most systems, when the list of notes is longer than the screen can
-display, `notes` will open the list in
+On most systems, when the list of notes is longer than the terminal
+can display on one screen, `notes` will open the list in
 [`less`](https://en.wikipedia.org/wiki/Less_(Unix)). Use the following
 keys to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
 for more information):
