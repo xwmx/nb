@@ -857,6 +857,15 @@ NOTES_HIGHLIGHT_COLOR restored to the default: '11'
 
 ```bash
 $ notes -i
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \
+/_/  |_| |_|\___/ \__\___||___/
+-------------------------------
+notes shell started. Enter ls to list notes and notebooks.
+Enter help for a list of subcommands. Enter exit to exit.
+${_ME}> ls 3
 notes> ls example
 [3] Example
 [2] Sample
