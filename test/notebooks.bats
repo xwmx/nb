@@ -18,7 +18,7 @@ _setup_notebooks() {
   {
     _setup_notebooks
     _expected="$(_highlight 'home' --underline)
-one	(${_GIT_REMOTE_URL})"
+one (${_GIT_REMOTE_URL})"
   }
 
   NOTES_HIGHLIGHT_COLOR=3 run "${_NOTES}" notebooks
@@ -43,7 +43,7 @@ one	(${_GIT_REMOTE_URL})"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="one	(${_GIT_REMOTE_URL})"
+  _expected="one (${_GIT_REMOTE_URL})"
   [[ "${output}" == "${_expected}" ]]
 }
 
@@ -92,7 +92,7 @@ one"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="home
-one	(${_GIT_REMOTE_URL})"
+one (${_GIT_REMOTE_URL})"
   [[ "${output}" == "${_expected}" ]]
 }
 
@@ -127,6 +127,38 @@ one"
   [[ "${output}" == "${_expected}" ]]
 }
 
+@test "\`notebooks --names --no-color --archived\` exits with 0 and prints archived." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" one:notebook archive
+  }
+
+  run "${_NOTES}" notebooks --names --no-color --archived
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="one"
+  [[ "${output}" == "${_expected}" ]]
+}
+
+@test "\`notebooks --names --no-color --unarchived\` exits with 0 and prints unarchived." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" one:notebook archive
+  }
+
+  run "${_NOTES}" notebooks --names --no-color --unarchived
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="home"
+  [[ "${output}" == "${_expected}" ]]
+}
+
 # `notes notebooks current` ###################################################
 
 @test "\`notebooks current\` exits with 0 and prints the current notebook name." {
@@ -157,7 +189,7 @@ one"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[1]}" == "  notes notebooks [<name>] [--names] [--no-color]" ]]
+  [[ "${lines[1]}" =~ \ \ notes\ notebooks\ \[\<name\>\] ]]
   [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
 }
 
@@ -321,7 +353,7 @@ one"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NOTES_DIR}/.current")"
-  [[ "${lines[1]}" == "  notes notebooks [<name>] [--names] [--no-color]" ]]
+  [[ "${lines[1]}" =~ \ \ notes\ notebooks\ \[\<name\>\] ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 
   run "${_NOTES}" env
@@ -412,5 +444,5 @@ one"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes notebooks [<name>] [--names] [--no-color]" ]]
+  [[ "${lines[1]}" =~ \ \ notes\ notebooks\ \[\<name\>\] ]]
 }

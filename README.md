@@ -772,7 +772,49 @@ Notes can also be moved between notebooks:
 notes move 3 example-notebook
 ```
 
-For more information about working with notebooks, run `notes help notebooks`.
+#### Archiving Notebooks
+
+Notebooks can be archived:
+
+```bash
+# archive the current notebook
+notes notebook archive
+
+# archive the notebook named 'example'
+notes example:notebook archive
+```
+
+When a notebook is archived it it is not included in `ls` output, synced
+automatically with `sync --all`, and or included in `search --all`.
+
+```bash
+> notes ls
+example1 · example2 · example3 · [1 archived]
+---------------------------------------------
+[3] Title Three
+[2] Title Two
+[1] Title One
+```
+
+Check a notebook's archival status with `notes notebook status`:
+
+```bash
+> notes notebook status
+example is archived.
+```
+
+Unarchiving a notebook is simple:
+
+```bash
+# unarchive the current notebook
+notes notebook unarchive
+
+# unarchive the notebook named 'example'
+notes example:notebook unarchive
+```
+
+For more information about working with notebooks, run `notes help notebooks`
+and `notes help notebook`.
 
 ### Syncing with Remotes
 
@@ -1676,9 +1718,9 @@ Options:
   -r --reverse           Order notes by id descending.
 
 Description:
-  List notebooks and notes in the current notebook, displaying note titles
-  when available. `notes ls` is a combination of `notes notebooks` and
-  `notes list` in one view.
+  List unarchived notebooks and notes in the current notebook, displaying note
+  titles when available. `notes ls` is a combination of `notes notebooks`
+  and `notes list` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
@@ -1743,10 +1785,19 @@ Shortcut Alias: `mv`
 
 ```text
 Usage:
-  notes notebook
+  notes notebook [archive | open | status | unarchive]
+
+Subcommands:
+  archive     Set the notebook to 'archived' status.
+  open        Open the notebook directory in your file browser, explorer, or
+              finder.
+  status      Print the archival status of the current notebook.
+  unarchive   Remove 'archived' status from notebook.
 
 Description:
-  Print the current notebook name.
+  Print, archive, or open the current notebook.
+
+  Archiving a notebook hides it from `ls` output.
 
 Shortcut Alias: `nb`
 ```
@@ -1755,15 +1806,17 @@ Shortcut Alias: `nb`
 
 ```text
 Usage:
-  notes notebooks [<name>] [--names] [--no-color]
+  notes notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
 
 Options:
+  --achived     Only list archived notebooks.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
+  --unarchived  Only list unarchived notebooks.
 
 Subcommands:
   (default)  List notebooks.
@@ -1875,7 +1928,7 @@ Usage:
   notes search <query> [-a | --all] [--bookmarks] [--path]
 
 Options:
-  -a --all     Search all notebooks.
+  -a --all     Search all unarchived notebooks.
   --bookmarks  Search only bookmarks.
   --path       Print the full path for each file with query matches.
 
@@ -2086,7 +2139,7 @@ Usage:
   notes sync [-a | --all]
 
 Options:
-  -a --all  Sync all notebooks.
+  -a --all  Sync all unarchived notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.

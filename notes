@@ -4351,9 +4351,9 @@ Options:
   -r --reverse           Order notes by id descending.
 
 Description:
-  List notebooks and notes in the current notebook, displaying note titles
-  when available. \`${_ME} ls\` is a combination of \`${_ME} notebooks\` and
-  \`${_ME} list\` in one view.
+  List unarchived notebooks and notes in the current notebook, displaying note
+  titles when available. \`${_ME} ls\` is a combination of \`${_ME} notebooks\`
+  and \`${_ME} list\` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
@@ -4469,11 +4469,29 @@ _ls() {
     _columns="$(tput cols)"
 
     local _notebook_names_raw
-    _notebook_names_raw=($(_notebooks --names --no-color))
-    local _notebooks_count="${#_notebook_names_raw[@]}"
+    _notebook_names_raw=($(_notebooks --names --no-color --unarchived))
 
     local _notebook_names_hi
-    _notebook_names_hi=($(_notebooks --names))
+    _notebook_names_hi=($(_notebooks --names  --unarchived))
+
+    local _notebook_names_archived=
+    _notebook_names_archived=($(
+      _notebooks --names --no-color --archived
+    ))
+    local _archived_count="${#_notebook_names_archived[@]}"
+
+    if ((_archived_count))
+    then
+      _notebook_names_hi=(
+        "${_notebook_names_hi[@]}"
+        "[${_archived_count} archived]"
+      )
+      _notebook_names_raw=(
+        "${_notebook_names_raw[@]}"
+        "[${_archived_count} archived]"
+      )
+    fi
+    local _notebooks_count="${#_notebook_names_raw[@]}"
 
     local _line_number=0
     local _padding=
@@ -4750,18 +4768,34 @@ _alias_subcommand "move" "mv"
 
 desc "notebook" <<HEREDOC
 Usage:
-  ${_ME} notebook [open]
+  ${_ME} notebook [archive | open | status | unarchive]
 
 Subcommands:
-  open  Open the notebook directory in your file browser, explorer, or finder.
+  archive     Set the notebook to 'archived' status.
+  open        Open the notebook directory in your file browser, explorer, or
+              finder.
+  status      Print the archival status of the current notebook.
+  unarchive   Remove 'archived' status from notebook.
 
 Description:
-  Print the current notebook name or open the directory in your file browser.
+  Print, archive, or open the current notebook.
+
+  Archiving a notebook hides it from \`ls\` output.
 
 Shortcut Alias: \`nb\`
 HEREDOC
 _notebook() {
-  if [[ "${1:-}" == "open" ]]
+  local _notebook_name
+  _notebook_name="$(_notebooks current)"
+  local _subcommand="${1:-}"
+
+  if [[ -z "${_subcommand}" ]]
+  then
+    printf "%s\\n" "${_notebook_name}"
+    return 0
+  fi
+
+  if [[ "${_subcommand:-}" == "open" ]]
   then
     if _command_exists "xdg-open"
     then
@@ -4776,7 +4810,35 @@ _notebook() {
       return 1
     fi
   else
-    _notebooks current
+    _dotfile_path="${_NOTEBOOK_PATH}/.archived"
+
+    if [[ "${_subcommand}" == "archive" ]]
+    then
+      if [[ ! -e "${_dotfile_path}" ]]
+      then
+        touch "${_dotfile_path}" &&
+          _git_checkpoint "[NOTES] Archived"
+      fi
+
+      printf "%s archived.\\n" "${_notebook_name}"
+    elif [[ "${_subcommand}" == "status" ]]
+    then
+      if [[ -e "${_dotfile_path}" ]]
+      then
+        printf "%s is archived.\\n" "${_notebook_name}"
+      else
+        printf "%s is not archived.\\n" "${_notebook_name}"
+      fi
+    elif [[ "${_subcommand}" == "unarchive" ]]
+    then
+      if [[ -e "${_dotfile_path}" ]]
+      then
+        rm "${_dotfile_path}" &&
+          _git_checkpoint "[NOTES] Unarchived"
+      fi
+
+      printf "%s unarchived.\\n" "${_notebook_name}"
+    fi
   fi
 }
 _alias_subcommand "notebook" "nb"
@@ -4785,15 +4847,17 @@ _alias_subcommand "notebook" "nb"
 
 desc "notebooks" <<HEREDOC
 Usage:
-  ${_ME} notebooks [<name>] [--names] [--no-color]
+  ${_ME} notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
 
 Options:
+  --achived     Only list archived notebooks.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
+  --unarchived  Only list unarchived notebooks.
 
 Subcommands:
   (default)  List notebooks.
@@ -4849,22 +4913,31 @@ _notebooks() {
   # _notebooks_list()
   #
   # Usage:
-  #   _notebooks_list [<name>] [--names]
+  #   _notebooks_list [<name>] [--archived] [--names] [--no-color]
+  #                            [--unarchived]
   _notebooks_list() {
     local _notebook_directories=()
     local _no_color=0
+    local _only_archived=0
     local _only_names=0
+    local _only_unarchived=0
 
     _debug printf "_notebooks_list() \${@:-}: '%s'\\n" "${@:-}"
 
     for __arg in "${@:-}"
     do
       case "${__arg}" in
+        --archived)
+          _only_archived=1
+          ;;
         --names)
           _only_names=1
           ;;
         --nocolor|--no-color)
           _no_color=1
+          ;;
+        --unarchived)
+          _only_unarchived=1
           ;;
         *)
           _notebook_directories+=("${__arg}")
@@ -4894,37 +4967,49 @@ _notebooks() {
     do
       if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
-        local _formatted_name
-        local _origin_url
+        local _notebook_line=
+        local _origin_url=
 
         if ! ((_no_color)) &&
            [[ -n "${_current}" ]] &&
            [[ "${_current}" == "${__item}" ]]
         then # it's the current repository.
-          _formatted_name="$(_highlight "${__item}")"
+          _notebook_line="$(_highlight "${__item}")"
 
           if [[ "${#_notebook_directories[@]}" -gt 1 ]]
           then
-            _formatted_name="$(_highlight "${__item}" --underline)"
+            _notebook_line="$(_highlight "${__item}" --underline)"
           fi
         else
-          _formatted_name="${__item}"
+          _notebook_line="${__item}"
         fi
 
-        local _origin_url
+        if [[ -e "${NOTES_DIR}/${__item}/.archived" ]]
+        then
+          if ((_only_unarchived))
+          then
+            continue
+          elif ! ((_only_names))
+          then
+            _notebook_line="${_notebook_line} (archived)"
+          fi
+        elif ((_only_archived))
+        then
+          continue
+        fi
+
         if ! ((_only_names))
         then
           cd "${NOTES_DIR}/${__item}" ||
             _die printf "_notebooks() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
+          if [[ -n "${_origin_url:-}" ]]
+          then
+            _notebook_line="${_notebook_line} (${_origin_url})"
+          fi
         fi
 
-        if [[ -n "${_origin_url:-}" ]]
-        then
-          printf "%s\\n" "${_formatted_name}	(${_origin_url})"
-        else
-          printf "%s\\n" "${_formatted_name}"
-        fi
+        printf "%s\\n" "${_notebook_line}"
       fi
     done
   }
@@ -5329,7 +5414,7 @@ Usage:
   ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
 
 Options:
-  -a --all     Search all notebooks.
+  -a --all     Search all unarchived notebooks.
   --bookmarks  Search only bookmarks.
   --path       Print the full path for each file with query matches.
 
@@ -5403,7 +5488,7 @@ _search() {
 
     if ((_all))
     then
-      _target_notebooks=($(_notebooks --names --no-color))
+      _target_notebooks=($(_notebooks --names --no-color --unarchived))
     else
       _target_notebooks=($(_notebook))
     fi
@@ -6442,7 +6527,7 @@ Usage:
   ${_ME} sync [-a | --all]
 
 Options:
-  -a --all  Sync all notebooks.
+  -a --all  Sync all unarchived notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.
@@ -6455,7 +6540,7 @@ _sync() {
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\\n"
-    _notebooks=($(_notebooks --names --no-color))
+    _notebooks=($(_notebooks --names --no-color --unarchived))
   else
     _notebooks=($(_notebook))
   fi

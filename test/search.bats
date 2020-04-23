@@ -174,6 +174,10 @@ _search_all_setup() {
   "${_NOTES}" notebooks add one
   "${_NOTES}" use one
   "${_NOTES}" add example.md --title "sweetish"
+  "${_NOTES}" notebooks add two
+  "${_NOTES}" use two
+  "${_NOTES}" add example.md --title "sweetish"
+  "${_NOTES}" two:notebook archive
 }
 
 @test "\`search <query> --all\` exits with status 0 and prints output." {

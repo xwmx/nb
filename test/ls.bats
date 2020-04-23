@@ -40,7 +40,31 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
+  [[ "${lines[0]}" =~ home    ]]
   [[ "${lines[1]}" =~ ----    ]]
+  [[ "${lines[2]}" =~ three   ]]
+  [[ "${lines[3]}" =~ two     ]]
+  [[ "${lines[4]}" =~ one     ]]
+}
+
+@test "\`ls\` exits with 0 and includes archive count." {
+  {
+    _setup_ls
+    "${_NOTES}" notebooks add one
+    "${_NOTES}" one:notebook archive
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NOTES}" ls
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ "${lines[0]}" =~ home                 ]]
+  [[ "${lines[0]}" =~ .\ \[1\ archived\]   ]]
+  [[ "${lines[1]}" =~ -------------------  ]]
   [[ "${lines[2]}" =~ three   ]]
   [[ "${lines[3]}" =~ two     ]]
   [[ "${lines[4]}" =~ one     ]]
