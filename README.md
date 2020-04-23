@@ -1600,11 +1600,14 @@ Description:
   regular expression.
 
   On most systems, if the list of notes is longer than the terminal can
-  display, the list will be opened in `less`. Use the following keys
-  to navigate in `less` (see `man less` for more information):
-    f  Move forward one
-    b  Move back one page
-    q  Quit
+  display, then the list will be opened in `less`. Use the following
+  keys to navigate in `less` (see `man less` for more information):
+
+    Key  Function
+    ---  --------
+    f    Move forward one page
+    b    Move back one page
+    q    Quit
 
   Options are passed through to `list`. For more information, see
   `notes help list`.
@@ -1927,11 +1930,16 @@ Description:
   app or program for that file type.
 
   By default, the note will be opened using `less` or the program configured
-  in the `$PAGER` environment variable.  Use the following keys to navigate
+  in the `$PAGER` environment variable. Use the following keys to navigate
   in `less` (see `man less` for more information):
-    f  Move forward one
-    b  Move back one page
-    q  Quit
+
+    Key  Function
+    ---  --------
+    f    Move forward one page
+    b    Move back one page
+    q    Quit
+
+  To skip the pager and print to standard output, use the `--dump` option.
 
   If Pygments [4] is installed, notes are printed with syntax highlighting.
 
