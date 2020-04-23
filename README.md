@@ -370,11 +370,22 @@ display, `notes` will open the list in
 key to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
 for more information):
 
-| Key | Description |
-| --- | --- |
-| f | Move forward one page|
-| b | Move back one page |
-| q | Quit |
+<table>
+  <tbody>
+    <tr>
+      <td>f</td>
+      <td> Move forward one page</td>
+    </tr>
+    <tr>
+      <td>b</td>
+      <td>Move back one page</td>
+    </tr>
+    <tr>
+      <td>q</td>
+      <td>Quit</td>
+    </tr>
+  </tbody>
+</table>
 
 `notes ls` is a combination of `notes notebooks` and `notes list --titles` in
 one view and accepts the same arguments as `notes list`, which lists only
