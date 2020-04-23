@@ -364,8 +364,21 @@ home
 This is an example excerpt
 ```
 
+On most systems, when the list of notes is longer than the screen can
+display, `notes` will open the list in
+[`less`](https://en.wikipedia.org/wiki/Less_(Unix)). Use the following
+key to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
+for more information):
+
+| Key | Description |
+| --- | --- |
+| f | Move forward one page|
+| b | Move back one page |
+| q | Quit |
+
 `notes ls` is a combination of `notes notebooks` and `notes list --titles` in
-one view and accepts the same arguments as `notes list`, which lists notes.
+one view and accepts the same arguments as `notes list`, which lists only
+notes.
 
 For more information about options for listing notes, run `notes help ls` and
 `notes help list`.
