@@ -4230,7 +4230,7 @@ _ls() {
           _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
           _line_number=$((_line_number + 1))
 
-          # Start the line for the next iteration using the current name..
+          # Start the line for the next iteration using the current name.
           _test_line="${_notebook_names_raw[i]}"
           _line_hi="${_notebook_names_hi[i]:-}"
           _line_raw="${_notebook_names_raw[i]}"
