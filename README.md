@@ -865,8 +865,9 @@ __                _
 -------------------------------
 notes shell started. Enter ls to list notes and notebooks.
 Enter help for a list of subcommands. Enter exit to exit.
-${_ME}> ls 3
-notes> ls example
+notes> ls
+home
+----
 [3] Example
 [2] Sample
 [1] Demo
@@ -878,6 +879,8 @@ notes> bookmark https://example.com
 Added [4] example.bookmark.md 'Example Domain (example.com)'
 
 notes> ls
+home
+----
 [4] 🔖 Example Domain (example.com)
 [3] Example
 [2] Sample
