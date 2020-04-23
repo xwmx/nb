@@ -1645,6 +1645,10 @@ Usage:
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
 
+Options:
+  --names       Only print each notebook's name.
+  --no-color    Print names without highlighting the current notebook.
+
 Subcommands:
   (default)  List notebooks.
   add        Create a new notebook.
