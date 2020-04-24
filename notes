@@ -1572,7 +1572,7 @@ Usage:
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
-  ${_ME} settings [colors | edit]
+  ${_ME} settings [colors [<number>] | edit]
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
@@ -5303,7 +5303,7 @@ _NOTES_SETTINGS_LIST="\
 desc "settings" <<HEREDOC
 Usage:
   ${_ME} settings
-  ${_ME} settings colors
+  ${_ME} settings colors [<number>]
   ${_ME} settings edit
   ${_ME} settings get   (<number> | <name>)
   ${_ME} settings set   (<number> | <name>) <value>
@@ -5312,6 +5312,7 @@ Usage:
 Subcommands:
   (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
+             When <number> is provided, print the number in its color.
   edit       Open the ~/.notesrc configuration file in \`\$EDITOR\`.
   get        Print the value of a setting.
   set        Assign <value> to a setting.
@@ -5330,6 +5331,7 @@ Examples:
   ${_ME} settings set NOTES_HIGHLIGHT_COLOR 105
   ${_ME} settings unset NOTES_HIGHLIGHT_COLOR
   ${_ME} settings colors
+  ${_ME} settings colors 105
 HEREDOC
 _settings() {
   # Usage: _notes_settings_colors
@@ -5341,20 +5343,25 @@ _settings() {
             "${__color_number}" \
             "${__color_number}"
         done
-        # printf '\e[0m \n'
-        printf '\e[0m '
+        printf '\e[0m \n'
+        # printf '\e[0m '
     }
 
-    _notes_settings_print_color {0..15}
+    if [[ -n "${1:-}" ]]
+    then
+      _notes_settings_print_color "${1:-}"
+    else
+      _notes_settings_print_color {0..15}
 
-    for ((_i=0;_i<6;_i++))
-    do
-      _notes_settings_print_color $(seq $((_i*36+16)) $((_i*36+51)))
-    done
+      for ((_i=0;_i<6;_i++))
+      do
+        _notes_settings_print_color $(seq $((_i*36+16)) $((_i*36+51)))
+      done
 
-    _notes_settings_print_color {232..255}
+      _notes_settings_print_color {232..255}
 
-    printf "\\n"
+      printf "\\n"
+    fi
   }
 
   # Usage: _notes_settings_get_value (<number> | <name>)
@@ -5544,7 +5551,7 @@ HEREDOC
 
     case "${_arg}" in
       color|colors)
-        _notes_settings_colors
+        _notes_settings_colors "${2:-}"
         return 0
         ;;
       edit)

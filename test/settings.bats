@@ -31,6 +31,22 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ '   0' ]]
+  [[ "${output}" =~ ' 105' ]]
+  [[ "${output}" =~ ' 106' ]]
+}
+
+@test "\`settings colors <number>\` prints color." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings colors 105
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ ' 105' ]]
+  [[ ! "${output}" =~ ' 106' ]]
 }
 
 # `edit` ######################################################################

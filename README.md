@@ -1808,7 +1808,7 @@ Shortcut Alias: `q`
 ```text
 Usage:
   notes settings
-  notes settings colors
+  notes settings colors [<number>]
   notes settings edit
   notes settings get   (<number> | <name>)
   notes settings set   (<number> | <name>) <value>
@@ -1817,6 +1817,7 @@ Usage:
 Subcommands:
   (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
+             When <number> is provided, print the number in its color.
   edit       Open the ~/.notesrc configuration file in `$EDITOR`.
   get        Print the value of a setting.
   set        Assign <value> to a setting.
@@ -1873,7 +1874,7 @@ Examples:
   notes settings set NOTES_HIGHLIGHT_COLOR 105
   notes settings unset NOTES_HIGHLIGHT_COLOR
   notes settings colors
-
+  notes settings colors 105
 ```
 
 #### `shell`
