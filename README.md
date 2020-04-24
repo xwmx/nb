@@ -1524,7 +1524,7 @@ Description:
 
 Examples:
   notes init
-  notes init https://github.com/example/example.gi
+  notes init https://github.com/example/example.git
 ```
 
 #### `list`
