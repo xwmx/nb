@@ -5336,7 +5336,7 @@ HEREDOC
 _settings() {
   # Usage: _notes_settings_colors
   _notes_settings_colors() {
-    _notes_settings_print_color(){
+    _notes_settings_colors_print(){
         for __color_number
         do
           printf '\e[38;5;%dm %3d ' \
@@ -5349,16 +5349,16 @@ _settings() {
 
     if [[ -n "${1:-}" ]]
     then
-      _notes_settings_print_color "${1:-}"
+      _notes_settings_colors_print "${1:-}"
     else
-      _notes_settings_print_color {0..15}
+      _notes_settings_colors_print {0..15}
 
       for ((_i=0;_i<6;_i++))
       do
-        _notes_settings_print_color $(seq $((_i*36+16)) $((_i*36+51)))
+        _notes_settings_colors_print $(seq $((_i*36+16)) $((_i*36+51)))
       done
 
-      _notes_settings_print_color {232..255}
+      _notes_settings_colors_print {232..255}
 
       printf "\\n"
     fi
