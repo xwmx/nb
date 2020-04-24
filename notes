@@ -1894,6 +1894,8 @@ _add() {
     _git_checkpoint "[NOTES] Add: ${_basename}"
 }
 _alias_subcommand "add" "a"
+_alias_subcommand "add" "create"
+_alias_subcommand "add" "new"
 
 # bookmark ####################################################################
 
@@ -2341,7 +2343,7 @@ Description:
   List available commands.
 HEREDOC
 _commands() {
-  printf "%s\\n" "${_SUBCOMMANDS[*]}"
+  printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
 }
 
 # completions #################################################################
@@ -6374,6 +6376,7 @@ _SUBCOMMANDS=(
   completions
   config
   count
+  create
   d
   delete
   e
@@ -6393,6 +6396,7 @@ _SUBCOMMANDS=(
   mv
   nb
   nbs
+  new
   notebook
   notebooks
   o
@@ -6414,6 +6418,44 @@ _SUBCOMMANDS=(
   upgrade
   use
   u
+  version
+)
+
+_DOCUMENTED_SUBCOMMANDS=(
+  add
+  bookmark
+  bookmarks
+  commands
+  completions
+  count
+  delete
+  edit
+  export
+  env
+  git
+  help
+  history
+  import
+  index
+  init
+  list
+  ls
+  move
+  notebook
+  notebooks
+  open
+  peek
+  preview
+  remote
+  rename
+  search
+  settings
+  shell
+  show
+  status
+  sync
+  update
+  use
   version
 )
 
