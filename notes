@@ -3622,14 +3622,14 @@ _init() {
     return 1
   elif [[ -e "${_NOTEBOOK_PATH}" ]]
   then
-    printf "\`init\`: %s already exists.\\n" \
+    printf "Notebook already exists: %s\\n" \
       "${_NOTEBOOK_PATH}"
     return 1
   fi
 
   cat <<HEREDOC
 -------------------------------
-Welcome to
+$(_highlight "Welcome") to
 __                _
 \ \   _ __   ___ | |_ ___  ___
  \ \ | '_ \ / _ \| __/ _ \/ __|
@@ -3640,7 +3640,9 @@ Initializing...
 HEREDOC
   if [[ -d "${NOTES_DIR}" ]]
   then
-    printf "\`notes\` data directory already exists: %s\\n" "${NOTES_DIR}"
+    printf "%s data directory already exists: %s\\n" \
+      "$(_highlight "notes")" \
+      "${NOTES_DIR}"
   elif [[ -e "${NOTES_DIR}" ]]
   then
     cat <<HEREDOC
@@ -3655,7 +3657,7 @@ HEREDOC
 
   if [[ -e "${NOTESRC_PATH}" ]]
   then
-    printf "Configuration file already exists at %s\\n" \
+    printf "Configuration file already exists: %s\\n" \
       "${NOTESRC_PATH}"
   else
     cat <<HEREDOC > "${NOTESRC_PATH}"
@@ -3750,7 +3752,7 @@ HEREDOC
   fi
   printf "home\\n" > "${NOTES_DIR}/.current"
 
-  printf "Created 'home' notebook\\n"
+  printf "Created %s notebook.\\n" "$(_highlight "home")"
 }
 
 # list ########################################################################
@@ -3913,9 +3915,9 @@ _list() {
 0 notes.
 
 Add a note:
-  ${_ME} add
-Usage information:
-  ${_ME} help
+  $(_highlight "${_ME} add")
+Help information:
+  $(_highlight "${_ME} help")
 HEREDOC
     return 1
   else
