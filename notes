@@ -4314,7 +4314,7 @@ _ls() {
         if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
         then # end of list
           if ((_line_number)) && ! ((_justified)) &&
-             ((_auto_align)) || ((_centered))
+             ((_auto_align))  ||   ((_centered))
           then
             _centered=1
           fi
