@@ -837,8 +837,9 @@ NOTES_HIGHLIGHT_COLOR set to '105'
 NOTES_HIGHLIGHT_COLOR set to '105'
 ```
 
-`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255.
-Print a table of available colors and numbers with:
+`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255,
+and can support higher values for terminals that support many colors.
+Print a table of common colors and numbers with:
 
 ```bash
 notes settings colors
@@ -1861,9 +1862,12 @@ Settings:
     • Default Value:    'openssl'
 
 [6] NOTES_HIGHLIGHT_COLOR
-    Set highlighting color. This should be set to an xterm color number
-    between 0 and 255. To view a table of available colors and numbers, run
-    `notes settings colors`.
+    Set highlighting color. Often this can be set to an xterm color number
+    between 0 and 255. Some terminals support many more colors. To view a
+    table of 256 common colors and numbers, run:
+      `notes settings colors`
+    To view a color for a number, run:
+      `notes settings colors <number>`
 
     • Default Value: '68' (blue) for 256 color terminals,
                      '4'  (blue) for  8  color terminals.

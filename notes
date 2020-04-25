@@ -3773,12 +3773,12 @@ HEREDOC
 #
 # Set highlighting color. Often this can be set to an xterm color number
 # between 0 and 255. Some terminals support many more colors. To view a
-# table of 256 common colors and numbers, run:
+# table of common colors and numbers, run:
 #   notes settings colors
 # To view a color for a number, run:
 #   notes settings colors <number>
 #
-# Supported Values: [0..255]
+# Supported Values: [0..255+]
 # export NOTES_HIGHLIGHT_COLOR=213
 HEREDOC
     printf "Created %s\\n" "${NOTESRC_PATH}"
