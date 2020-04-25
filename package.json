@@ -10,6 +10,7 @@
   },
   "bin": {
     "notes": "./notes",
+    "notes.sh": "./notes",
     "bookmark": "./bin/bookmark"
   },
   "scripts": {
