@@ -1535,7 +1535,7 @@ Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
 Usage:
-  ${_ME} [<id> | <filename> | <path> | <title>] [<list options>]
+  ${_ME} [<id> | <filename> | <path> | <title>] [<list options>...]
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]

@@ -1046,7 +1046,7 @@ Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
 Usage:
-  notes [<id> | <filename> | <path> | <title>] [<list options>]
+  notes [<id> | <filename> | <path> | <title>] [<list options>...]
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
