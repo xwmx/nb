@@ -859,10 +859,10 @@ Unset a setting and revert to default:
 
 ```bash
 > notes settings unset NOTES_HIGHLIGHT_COLOR
-NOTES_HIGHLIGHT_COLOR restored to the default: '11'
+NOTES_HIGHLIGHT_COLOR restored to the default: '4'
 
 > notes settings get NOTES_HIGHLIGHT_COLOR
-11
+4
 ```
 
 ### Interactive Shell
