@@ -386,9 +386,9 @@ _decrypt_file() {
     if _command_exists "gpg"
     then
       printf "%s\\n" "${_password}" \
-        | gpg \
-          --quiet \
-          --batch \
+        | gpg               \
+          --quiet           \
+          --batch           \
           --passphrase-fd 0 \
           --output "${_unencrypted_path}" \
           --decrypt "${_encrypted_path}"
@@ -566,18 +566,18 @@ _encrypt_file() {
   if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
   then
     printf "%s\\n" "${_password}" \
-      | gpg \
-        --quiet \
-        --batch \
-        --passphrase-fd 0 \
+      | gpg                   \
+        --quiet               \
+        --batch               \
+        --passphrase-fd 0     \
+        --symmetric           \
+        --cipher-algo AES256  \
         --output "${_encrypted_path}" \
-        --symmetric \
-        --cipher-algo AES256 \
         "${_decrypted_path}"
   elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
   then
-    openssl enc -aes-256-cbc \
-      -in "${_decrypted_path}" \
+    openssl enc -aes-256-cbc    \
+      -in "${_decrypted_path}"  \
       -out "${_encrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
@@ -665,13 +665,13 @@ _file_is_encrypted() {
   # `file` with 'soft' test is slow, so avoid calling it.
   [[ "${_file_type}" == "enc" ]]  ||
     ! _file_is_text "${1:-}" &&
-    [[ "$(file "${_file_path:-}" \
-            --exclude=apptype \
-            --exclude=encoding \
-            --exclude=tokens \
-            --exclude=cdf \
-            --exclude=compress \
-            --exclude=elf \
+    [[ "$(file "${_file_path:-}"  \
+            --exclude=apptype     \
+            --exclude=encoding    \
+            --exclude=tokens      \
+            --exclude=cdf         \
+            --exclude=compress    \
+            --exclude=elf         \
             --exclude=tar)" =~ encrypted|openssl ]]
 }
 
@@ -5707,9 +5707,9 @@ HEREDOC
         local _normalized_input=
         _normalized_input="$(
           printf "%s\\n" "${__input}" \
-            | sed -e 's/^n$//'         \
+            | sed -e 's/^n$//'        \
             | sed -e 's/^n //'        \
-            | sed -e 's/^notes$//'     \
+            | sed -e 's/^notes$//'    \
             | sed -e 's/^notes //'
         )"
 
