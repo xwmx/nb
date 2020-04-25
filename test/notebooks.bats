@@ -50,7 +50,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks
-    _expected="$(tput smul)$(tput setaf 3)home$(tput sgr0)"
+    _expected="$(tput setaf 3)home$(tput sgr0)"
   }
 
   run "${_NOTES}" notebooks home --names
@@ -66,7 +66,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks --names\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(tput setaf 3)home$(tput sgr0)
+    _expected="$(tput smul)$(tput setaf 3)home$(tput sgr0)
 one"
   }
 
