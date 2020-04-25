@@ -39,9 +39,9 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
-  [[ "${lines[0]}" =~ three.md  ]]
-  [[ "${lines[1]}" =~ two.md    ]]
-  [[ "${lines[2]}" =~ one.md    ]]
+  [[ "${lines[0]}" =~ three ]]
+  [[ "${lines[1]}" =~ two    ]]
+  [[ "${lines[2]}" =~ one    ]]
 }
 
 # `notes list --no-id` ########################################################
@@ -62,9 +62,9 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" =~ three.md  ]]
-  [[ "${lines[1]}" =~ two.md    ]]
-  [[ "${lines[2]}" =~ one.md    ]]
+  [[ "${lines[0]}" =~ three  ]]
+  [[ "${lines[1]}" =~ two    ]]
+  [[ "${lines[2]}" =~ one    ]]
 }
 
 # `notes list --no-color` #####################################################
@@ -85,9 +85,9 @@ Usage information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'[3] ${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" =~ three.md  ]]
-  [[ "${lines[1]}" =~ two.md    ]]
-  [[ "${lines[2]}" =~ one.md    ]]
+  [[ "${lines[0]}" =~ three  ]]
+  [[ "${lines[1]}" =~ two    ]]
+  [[ "${lines[2]}" =~ one    ]]
 }
 
 # `notes list (-e | --excerpt)` ###############################################
@@ -324,6 +324,44 @@ HEREDOC
   [[ "${lines[2]}" =~ one$      ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
+# `notes list --filenames` ####################################################
+
+@test "\`list --filenames\` exits with 0 and displays a list of filenames." {
+  {
+    "${_NOTES}" init
+    cat <<HEREDOC | "${_NOTES}" add "first.md"
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add "third.md"
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NOTES}" list --filenames
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ third.md  ]] && [[ "${lines[0]}" =~ 3 ]]
+  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
+}
+
 # `notes list --bookmarks` #######################################################
 
 @test "\`list --bookmarks\` exits with 0 and displays a list of bookmarks." {
@@ -344,7 +382,7 @@ line four
 HEREDOC
     "${_NOTES}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>"
     cat <<HEREDOC | "${_NOTES}" add "fifth.md"
-# three
+# fifth
 line two
 line three
 line four
@@ -359,7 +397,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ fourth.bookmark.md$  ]] && [[ "${lines[0]}" =~ 4 ]]
+  [[ "${lines[0]}" =~ fifth$               ]] && [[ "${lines[0]}" =~ 4 ]]
   [[ "${lines[1]}" =~ second.bookmark.md$  ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
@@ -389,7 +427,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" list 1
+  run "${_NOTES}" list 1 --filenames
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -428,7 +466,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" list 'r'
+  run "${_NOTES}" list 'r' --filenames
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"

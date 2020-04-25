@@ -73,7 +73,7 @@ load test_helper
     run "${_NOTES}" notebooks add "one"
     run "${_NOTES}" use "one"
     run "${_NOTES}" add
-    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
     run "${_NOTES}" use "home"
   }

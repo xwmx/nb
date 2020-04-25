@@ -98,7 +98,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" list --titles --no-color
+  run "${_NOTES}" list --no-color
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"

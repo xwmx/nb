@@ -56,7 +56,7 @@ load test_helper
     run "${_NOTES}" init
     run "${_NOTES}" notebooks add "one"
     run "${_NOTES}" one:add
-    _filename=$("${_NOTES}" one:list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" one:list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -n "${_filename}" ]]

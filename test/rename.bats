@@ -41,7 +41,7 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument renames without errors." {
   {
     _setup_rename
-    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
@@ -77,7 +77,7 @@ _setup_rename() {
   {
     _setup_rename
     run "${_NOTES}" add "EXAMPLE.org"
-    _filename=$("${_NOTES}" list -n 1 --no-id | head -1)
+    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
@@ -95,7 +95,7 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument renames without errors." {
   {
     _setup_rename
-    _original=$("${_NOTES}" list -n 1 --no-id | head -1)
+    _original=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
     _filename="test.md"
     "${_NOTES}" rename "${_original}" "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"

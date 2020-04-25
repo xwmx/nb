@@ -1557,9 +1557,9 @@ Usage:
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
-  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [--titles] [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
+             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
+             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [open]
@@ -2060,10 +2060,10 @@ _bookmark() {
   then
     if [[ -n "${_arguments[*]:-}" ]]
     then
-      _list --titles --bookmarks "${_arguments[@]}"
+      _list --bookmarks "${_arguments[@]}"
       return 0
     else
-      _list --titles --bookmarks
+      _list --bookmarks
       return 0
     fi
   fi
@@ -2327,9 +2327,9 @@ HEREDOC
 _bookmarks() {
   if [[ -n "${*:-}" ]]
   then
-    _list --titles --bookmarks "${@}"
+    _list --bookmarks "${@}"
   else
-    _list --titles --bookmarks
+    _list --bookmarks
   fi
 }
 _alias_subcommand "bookmarks" "bs"
@@ -3757,20 +3757,20 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [--titles] [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
+             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
+             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
+  --filenames            Print the filename for each note.
   --no-id                Don't print the id next to each note's filename.
   -n           <limit>   The maximum number of notes to list.
   --<limit>              Shortcut for \`-n <limit>\`.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
-  --titles               Show title instead of filename when present.
 
 Description:
   List notes in the current notebook.
@@ -3792,7 +3792,7 @@ Examples:
   ${_ME} list
   ${_ME} list example.md -e 10
   ${_ME} list --excerpt --no-id
-  ${_ME} list --titles --reverse
+  ${_ME} list --filenames --reverse
   ${_ME} list '^Example.*'
   ${_ME} list --10
 HEREDOC
@@ -3804,7 +3804,7 @@ _list() {
   local _bookmarks=0
   local _excerpt_length=3
   local _limit=
-  local _list_titles=0
+  local _list_filenames=0
   local _no_color=0
   local _no_id=0
   local _print_excerpt=0
@@ -3833,6 +3833,9 @@ _list() {
           shift
         fi
         ;;
+      --filenames)
+        _list_filenames=1
+        ;;
       --no-id|--noid|--noindex|--no-index)
         _no_id=1
         ;;
@@ -3849,14 +3852,14 @@ _list() {
           shift
         fi
         ;;
-      --titles)
-        _list_titles=1
-        ;;
       -s|--sort)
         _sort=1
         ;;
       -r|--reverse)
         _reverse=1
+        ;;
+      --titles)
+        : # Do nothing. This is now the default behavior. TODO: Remove.
         ;;
       *)
         _debug printf "_list() *: '%s'\\n" "${_arg:-}"
@@ -3981,7 +3984,7 @@ HEREDOC
       _id_item_color="[$(_highlight "${_item_id_number}")]"
 
       local _title_or_basename="${__basename}"
-      if ((_list_titles))
+      if ! ((_list_filenames))
       then
         _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
         if [[ -n "${_maybe_title}" ]]
@@ -4077,14 +4080,15 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
-           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-           [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} ls [--bookmarks] [-e [<length>] | --excerpt [<length>]]
+           [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
+           [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
+  --filenames            Print the filename for each note.
   --no-id                Don't print the id next to each note's filename.
   -n           <limit>   The maximum number of notes to list.
   --<limit>              Shortcut for \`-n <limit>\`.
@@ -4094,7 +4098,7 @@ Options:
 Description:
   List notebooks and notes in the current notebook, displaying note titles
   when available. \`notes ls\` is a combination of \`notes notebooks\` and
-  \`notes list --titles\` in one view.
+  \`notes list\` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
@@ -4294,7 +4298,7 @@ _ls() {
       printf '\n'
     fi
 
-    _list --titles "${_args[@]:-}"
+    _list "${_args[@]:-}"
   } | if _command_exists "less" &&
          [[ "${PAGER:-}" == 'less' ]] ||
          [[ -z "${PAGER:-}" ]]

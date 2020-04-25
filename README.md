@@ -378,9 +378,8 @@ b    Move back one page
 q    Quit
 ```
 
-`notes ls` is a combination of `notes notebooks` and `notes list --titles` in
-one view and accepts the same arguments as `notes list`, which lists only
-notes.
+`notes ls` is a combination of `notes notebooks` and `notes list` in one view
+and accepts the same arguments as `notes list`, which lists only notes.
 
 For more information about options for listing notes, run `notes help ls` and
 `notes help list`.
@@ -1068,9 +1067,9 @@ Usage:
   notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
-  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [--titles] [<id> | <filename> | <path> | <title> | <query>]
+  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
+             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
+             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   notes notebook [open]
@@ -1531,20 +1530,20 @@ Examples:
 
 ```text
 Usage:
-  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [--titles] [<id> | <filename> | <path> | <title> | <query>]
+  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
+             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
+             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
+  --filenames            Print the filename for each note.
   --no-id                Don't print the id next to each note's filename.
   -n           <limit>   The maximum number of notes to list.
   --<limit>              Shortcut for `-n <limit>`.
   -s --sort              Order notes by id.
   -r --reverse           Order notes by id descending.
-  --titles               Show title instead of filename when present.
 
 Description:
   List notes in the current notebook.
@@ -1566,7 +1565,7 @@ Examples:
   notes list
   notes list example.md -e 10
   notes list --excerpt --no-id
-  notes list --titles --reverse
+  notes list --filenames --reverse
   notes list '^Example.*'
   notes list --10
 ```
@@ -1575,14 +1574,15 @@ Examples:
 
 ```text
 Usage:
-  notes ls [--bookmarks] [-e [<length>] | --excerpt [<length>]] [--no-id]
-           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-           [<id> | <filename> | <path> | <title> | <query>]
+  notes ls [--bookmarks] [-e [<length>] | --excerpt [<length>]]
+           [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
+           [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   --bookmarks            List only bookmarks.
   -e --excerpt <length>  Print an excerpt <length> lines long under each
                          note's filename [default: 3].
+  --filenames            Print the filename for each note.
   --no-id                Don't print the id next to each note's filename.
   -n           <limit>   The maximum number of notes to list.
   --<limit>              Shortcut for `-n <limit>`.
@@ -1592,7 +1592,7 @@ Options:
 Description:
   List notebooks and notes in the current notebook, displaying note titles
   when available. `notes ls` is a combination of `notes notebooks` and
-  `notes list --titles` in one view.
+  `notes list` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
