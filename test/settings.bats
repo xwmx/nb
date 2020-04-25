@@ -250,12 +250,12 @@ skip "Determine how to test interactive prompt."
 
   run "${_NOTES}" settings set NOTES_HIGHLIGHT_COLOR 123
   [[ "${output}" =~ NOTES_HIGHLIGHT_COLOR\ set\ to\ \'123\' ]]
-  run "${_NOTES}" settings set NOTES_HIGHLIGHT_COLOR 257
+  run "${_NOTES}" settings set NOTES_HIGHLIGHT_COLOR invalid-color
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" == 'NOTES_HIGHLIGHT_COLOR must be a number between 0 and 255.' ]]
+  [[ "${output}" == 'NOTES_HIGHLIGHT_COLOR must be a number.' ]]
   [[ "$("${_NOTES}" settings get NOTES_HIGHLIGHT_COLOR)" == '123' ]]
 }
 

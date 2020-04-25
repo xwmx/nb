@@ -5594,12 +5594,11 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NOTES_HIGHLIGHT_COLOR' ]]
     then
-      if [[ "${2:-}" =~ ^[0-9]{1,3}$ ]] &&
-         [[ "${2:-}" -lt '256' ]]
+      if [[ "${2:-}" =~ ^[0-9] ]]
       then
         return 0
       else
-        printf "NOTES_HIGHLIGHT_COLOR must be a number between 0 and 255.\\n"
+        printf "NOTES_HIGHLIGHT_COLOR must be a number.\\n"
         return 1
       fi
     else
