@@ -4,10 +4,9 @@ load test_helper
 
 # `notes list` (empty) ########################################################
 
-@test "\`list\` (empty) exits with 1 and lists files." {
+@test "\`list\` (empty) exits with 0 and lists files." {
   run "${_NOTES}" init
   run "${_NOTES}" list
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -18,6 +17,7 @@ Add a note:
   $(tput setaf 3)notes add$(tput sgr0)
 Help information:
   $(tput setaf 3)notes help$(tput sgr0)"
+  [[ ${status} -eq 0 ]]
   [[ "${_expected}" == "${output}" ]]
 }
 

@@ -41,20 +41,14 @@ load test_helper
 
 # `notes` (empty repo) ########################################################
 
-@test "\`notes\` with empty repo exits with status 1 and \`ls\` output." {
+@test "\`notes\` with empty repo exits with status 0 and \`ls\` output." {
   run "${_NOTES}" init
   run "${_NOTES}"
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ "${status}" -eq 1 ]]
-}
 
-@test "\`notes\` with an empty repo prints error." {
-  run "${_NOTES}" init
-  run "${_NOTES}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ "${status}" -eq 0 ]]
   [[ "${lines[1]}" =~ ---- ]]
   [[ "${lines[2]}" == "0 notes." ]]
   [[ "${lines[3]}" == "Add a note:" ]]

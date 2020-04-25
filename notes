@@ -3919,7 +3919,7 @@ Add a note:
 Help information:
   $(_highlight "${_ME} help")
 HEREDOC
-    return 1
+    return 0
   else
     local _counter=0
     local _max_id

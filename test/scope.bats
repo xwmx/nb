@@ -85,13 +85,13 @@ _setup_scope() {
   [[ "${lines[0]}" = "first" ]]
 }
 
-@test "\`notes two:\` exits with 1 and scoped \`ls\` output." {
+@test "\`notes two:\` exits with 0 and scoped \`ls\` output." {
   {
     _setup_scope &>/dev/null
   }
 
   run "${_NOTES}" two:
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
