@@ -4588,6 +4588,11 @@ _notebooks() {
            [[ "${_current}" == "${__item}" ]]
         then # it's the current repository.
           _formatted_name="$(_highlight "${__item}")"
+
+          if [[ "${#_notebook_directories[@]}" -gt 1 ]]
+          then
+            _formatted_name="$(tput smul)${_formatted_name}"
+          fi
         else
           _formatted_name="${__item}"
         fi
