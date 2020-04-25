@@ -1064,9 +1064,9 @@ _git_required() {
   if ! _command_exists "git"
   then
     cat <<HEREDOC
-Welcome to \`notes\`!
+Welcome to $(_highlight "notes")!
 
-\`git\` is required, but wasn't found. Install Git, then run \`notes\` again.
+Git is required, but wasn't found. Install Git, then run \`notes\` again.
 
 About Git: https://git-scm.com/
 HEREDOC
@@ -1081,16 +1081,16 @@ HEREDOC
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
   then
     cat <<HEREDOC
-Welcome to \`notes\`!
+Welcome to $(_highlight "notes")!
 
-\`git\` requires some additional setup before using \`notes\`. Enter the name
-and email address you'd like to use with Git.
+Git requires some additional setup before using $(_highlight "notes").
+Enter the name and email address you'd like to use with Git.
 HEREDOC
     if [[ -z "${_git_name}" ]]
     then
       while true
       do
-        read -r -p "Name: " __name
+        read -r -p "$(_highlight "Name"): " __name
         if [[ -n "${__name}" ]]
         then
           git config --global user.name "${__name}"
@@ -1103,7 +1103,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "Email: " __email
+        read -r -p "$(_highlight "Email"): " __email
         if [[ -n "${__email}" ]]
         then
           git config --global user.email "${__email}"
@@ -3644,7 +3644,7 @@ HEREDOC
   elif [[ -e "${NOTES_DIR}" ]]
   then
     cat <<HEREDOC
-Unable to set up \`notes\` data directory. File already exists at:
+Unable to set up the $(_highlight "notes") data directory. File already exists at:
 ${NOTES_DIR}
 HEREDOC
     return 1
