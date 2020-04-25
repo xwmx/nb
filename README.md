@@ -822,7 +822,7 @@ then enter the new value, and `notes` will add the setting to your
 
 #### Example: Highlight Color
 
-`notes` has a minimal text interface and uses color (yellow, by default) to
+`notes` has a minimal text interface and uses color (blue, by default) to
 highlight certain elements like ids, the current notebook name, and the shell
 prompt.
 
@@ -1865,8 +1865,8 @@ Settings:
     between 0 and 255. To view a table of available colors and numbers, run
     `notes settings colors`.
 
-    • Default Value: '11' (yellow) for 256 color terminals,
-                     '3'  (yellow) for  8  color terminals.
+    • Default Value: '12' (blue) for 256 color terminals,
+                     '4'  (blue) for  8  color terminals.
 
 Examples:
   notes settings
