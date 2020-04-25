@@ -724,6 +724,51 @@ _file_is_video() {
   [[ "${_file_type}" =~ ^webm|mpg|mp2|mpeg|mp4|m4p|m4v|avi|wmv|mov|qt|flv$ ]]
 }
 
+# _get_first_line()
+#
+# Usage:
+#   _get_first_line <path>
+#
+# Description:
+#   Print the first line of the file at <path>, skipping any front matter.
+_get_first_line() {
+  local _in_front_matter=0
+  local _first_line=
+  local _path="${1:-}"
+
+  if [[ -z "${_path}" ]]
+  then
+    _die printf "Usage: _get_title <path>\\n"
+  elif [[ -e "${_path}" ]]
+  then
+    if _file_is_text "${_path}"
+    then
+
+      while IFS= read -r __line
+      do
+        if [[ "${__line}" =~ ^---$ ]]
+        then
+          if ((_in_front_matter))
+          then
+            _in_front_matter=0
+          else
+            _in_front_matter=1
+          fi
+        elif ! ((_in_front_matter))
+        then
+          if [[ -z "${_first_line}" ]] && [[ -n "${__line}" ]]
+          then
+            _first_line="${__line}"
+            break
+          fi
+        fi
+      done < "${_path}"
+
+      printf "%s\\n" "${_first_line}"
+    fi
+  fi
+}
+
 # _get_hash()
 #
 # Usage:
