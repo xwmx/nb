@@ -3833,16 +3833,16 @@ _list() {
           shift
         fi
         ;;
-      --filenames)
+      --filenames|--filename)
         _list_filenames=1
         ;;
-      --no-id|--noid|--noindex|--no-index)
+      --no-id|--no-ids|--noid|--noindex|--no-index)
         _no_id=1
         ;;
       --no-color|--nocolor)
         _no_color=1
         ;;
-      --no-indicators|--noindicators)
+      --no-indicators|--no-indicator|--noindicators)
         _print_indicators=0
         ;;
       -n)
