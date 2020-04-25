@@ -241,7 +241,7 @@ _set_notes_highlight_color() {
   _colors="$(tput colors)"
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
-    export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-12}"
+    export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-68}"
   else
     export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-4}"
   fi
@@ -5311,7 +5311,7 @@ _NOTES_SETTINGS_LIST="\
     To view a color for a number, run:
       \`notes settings colors <number>\`
 
-    • Default Value: '12' (blue) for 256 color terminals,
+    • Default Value: '68' (blue) for 256 color terminals,
                      '4'  (blue) for  8  color terminals.
     • Current Value: '${NOTES_HIGHLIGHT_COLOR}'"
 

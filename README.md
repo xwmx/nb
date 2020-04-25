@@ -1865,7 +1865,7 @@ Settings:
     between 0 and 255. To view a table of available colors and numbers, run
     `notes settings colors`.
 
-    • Default Value: '12' (blue) for 256 color terminals,
+    • Default Value: '68' (blue) for 256 color terminals,
                      '4'  (blue) for  8  color terminals.
 
 Examples:
