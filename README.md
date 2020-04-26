@@ -482,7 +482,7 @@ notes delete example.md
 notes delete 'A Document Title'
 ```
 
-By default, `notes` will display a confirmation prompt. To skip, use the
+By default, `notes delete` will display a confirmation prompt. To skip, use the
 `--force` option:
 
 ```bash
