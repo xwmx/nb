@@ -738,7 +738,7 @@ _get_first_line() {
 
   if [[ -z "${_path}" ]]
   then
-    _die printf "Usage: _get_title <path>\\n"
+    _die printf "Usage: _get_first_line <path>\\n"
   elif [[ -e "${_path}" ]]
   then
     if _file_is_text "${_path}"
