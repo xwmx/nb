@@ -242,20 +242,21 @@ files.
 
 #### Listing Notes
 
-To list your notes and notebooks, run `notes ls`:
+To list notes and notebooks, run `notes ls`:
 
 ```bash
 > notes ls
 home
 ----
-[3] example.md
-[2] todos.md
-[1] ideas.md
+[3] example.md · "Example content."
+[2] todos.md · "Todos:"
+[1] ideas.md · "- Example idea one."
 ```
 
 Notebooks are listed above the line, with the current notebook highlighted.
 Notes from the current notebook are listed with each id and either the
-filename or title, if one is present.
+filename or title, if one is present. When no title is present, the
+first line of the note file is displayed next to the filename.
 
 Titles can be defined within a note using
 [either Markdown `h1` style](https://daringfireball.net/projects/markdown/syntax#header)
@@ -276,8 +277,8 @@ title: Ideas
 ---
 ```
 
-Once defined, titles will be displayed in place of the filename in the output
-of `notes ls`:
+Once defined, titles will be displayed in place of the filename and first line
+in the output of `notes ls`:
 
 ```bash
 > notes ls
