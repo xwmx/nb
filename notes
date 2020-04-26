@@ -4107,7 +4107,19 @@ HEREDOC
       local _list_item_id="${_id_item}${_spaces}${_list_item}"
       local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
 
-      if [[ "${#_list_item_id}" -gt "${_columns}" ]] &&
+      local _print_item=
+      local _print_item_color=
+
+      if ((_no_id))
+      then
+        _print_item="${_list_item}"
+        _print_item_color="${_list_item}"
+      else
+        _print_item="${_list_item_id}"
+        _print_item_color="${_list_item_id_color}"
+      fi
+
+      if [[ "${#_print_item}" -gt "${_columns}" ]] &&
         ! {
           ((_print_excerpt))  ||
           ((_list_filenames)) ||
@@ -4122,21 +4134,14 @@ HEREDOC
         printf '\033[?7l'
       fi
 
-      if ((_no_id))
+      if ((_no_color))
       then
-        printf "%s" "${_list_item}"
+        printf "%s" "${_print_item}"
       else
-        if ((_no_color))
-        then
-          printf "%s" "${_list_item_id}"
-        else
-
-          printf "%s" "${_list_item_id_color}"
-
-        fi
+        printf "%s" "${_print_item_color}"
       fi
 
-      if [[ "${#_list_item_id}" -gt "${_columns}" ]] &&
+      if [[ "${#_print_item}" -gt "${_columns}" ]] &&
         ! {
           ((_print_excerpt))  ||
           ((_list_filenames)) ||
