@@ -6064,10 +6064,24 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "icat" && _file_is_image "${_target_path}"
     then
       icat "${_target_path}"
+    elif _command_exists "mplayer" && _file_is_audio "${_target_path}"
+    then
+      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      mplayer "${_target_path}"
     elif _command_exists "afplay" && _file_is_audio "${_target_path}"
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
       afplay "${_target_path}"
+    elif _command_exists "mpg123"         &&
+         _file_is_audio "${_target_path}" &&
+         [[ "${_target_path}" =~ mp1$|mp2$|mp3$ ]]
+    then
+      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      mpg123 "${_target_path}"
+    elif _command_exists "ffplay" && _file_is_audio "${_target_path}"
+    then
+      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      ffplay -loglevel quiet "${_target_path}"
     elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
     then
       pdftotext "${_target_path}" - \

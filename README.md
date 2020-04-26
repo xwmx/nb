@@ -442,7 +442,10 @@ depending on the tools available in the environment. Supported tools
 and file types include:
 
 - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext) - PDF files
-- [`afplay`](https://ss64.com/osx/afplay.html) - Audio files
+- [`mplayer`](https://en.wikipedia.org/wiki/MPlayer),
+  [`afplay`](https://ss64.com/osx/afplay.html),
+  [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
+  [`ffplay`](http://ffmpeg.org/ffplay.html) - Audio files
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) - Images
 
 With other file types, `notes show` will open files in your system's
