@@ -427,7 +427,7 @@ notes show 'A Document Title'
 ```
 
 By default, `notes show` will open the note in
-[`man less`](https://linux.die.net/man/1/less), with syntax highlighting if
+[`less`](https://linux.die.net/man/1/less), with syntax highlighting if
 [Pygments](http://pygments.org/) is installed, and you can navigate with the
 same keys used in `notes ls`:
 
