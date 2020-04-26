@@ -813,9 +813,8 @@ You can also turn off autosync in `notes settings` and sync manually with
 
 ### Import / Export
 
-Files of any type can be imported into a notebook. `notes edit`, `notes
-open`, and `notes show` will open files in your system's default application
-for that file type.
+Files of any type can be imported into a notebook. `notes edit` and `notes
+open` will open files in your system's default application for that file type.
 
 ```bash
 # import an image file
