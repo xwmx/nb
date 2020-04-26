@@ -4094,7 +4094,7 @@ HEREDOC
       local _list_item="${_padded_indicators}${_title_or_basename}"
       if [[ -n "${_first_line:-}" ]]
       then
-        _list_item="${_list_item}  \"${_first_line}\""
+        _list_item="${_list_item} · \"${_first_line}\""
       fi
 
       local _list_item_id="${_id_item}${_list_item}"
@@ -4130,7 +4130,7 @@ HEREDOC
       _excerpt_line_length_bytes="$(printf "%s" "${_list_item_id}" | wc -c)"
 
       local _excerpt_line_length_diff=
-      _excerpt_line_length_diff=$(((_excerpt_line_length_bytes-_excerpt_line_length)/2))
+      _excerpt_line_length_diff=$(((_excerpt_line_length_bytes-_excerpt_line_length)/3))
 
       _excerpt_line_length=$((_excerpt_line_length+_excerpt_line_length_diff))
 
