@@ -318,10 +318,13 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+  printf "\${lines[1]}: '%s'\\n" "${lines[1]}"
+  printf "\${lines[2]}: '%s'\\n" "${lines[2]}"
 
-  [[ "${lines[0]}" =~ three$    ]] && [[ "${lines[0]}" =~ 3 ]]
+  [[ "${lines[0]}" =~ three     ]] && [[ "${lines[0]}" =~ 3 ]]
   [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
-  [[ "${lines[2]}" =~ one$      ]] && [[ "${lines[2]}" =~ 1 ]]
+  [[ "${lines[2]}" =~ one       ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
 # `notes list --filenames` ####################################################
@@ -397,8 +400,8 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ fifth$               ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${lines[1]}" =~ second.bookmark.md$  ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[0]}" =~ fourth.bookmark.md  ]] && [[ "${lines[0]}" =~ 4 ]]
+  [[ "${lines[1]}" =~ second.bookmark.md  ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
 # `notes list <selection>` ####################################################
@@ -436,7 +439,7 @@ HEREDOC
   [[ ${status} -eq 0 ]]
 
   [[ "${#lines[@]}" -eq 1 ]]
-  [[ "${lines[0]}" =~ first.md$ ]]
+  [[ "${lines[0]}" =~ first.md ]]
   [[ "${lines[0]}" =~ [*1*] ]]
   [[ "${lines[0]}" =~ ${_files[0]} ]]
 }
@@ -474,10 +477,10 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${#lines[@]}" -eq 2 ]]
-  [[ "${lines[0]}" =~ third.md$ ]]
+  [[ "${lines[0]}" =~ third.md ]]
   [[ "${lines[0]}" =~ [*3*] ]]
   [[ "${lines[0]}" =~ ${_files[2]} ]]
-  [[ "${lines[1]}" =~ first.md$ ]]
+  [[ "${lines[1]}" =~ first.md ]]
   [[ "${lines[1]}" =~ [*1*] ]]
   [[ "${lines[1]}" =~ ${_files[0]} ]]
 }

@@ -4045,49 +4045,55 @@ HEREDOC
       # Use calculated number of spaces for nicer formatting.
       local _spaces=''
       local _spaces_length=1
-      _spaces_length=$(( ${#_max_id} + 2 - ${#_id_item} ))
+      _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
       printf -v _spaces '%*s' "${_spaces_length}"
 
       local _indicators=
+      local _padded_indicators=
 
       if ((_print_indicators))
       then
         if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
         then
-          _indicators+=" 🔖"
+          _indicators+="🔖"
         fi
 
         if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
         then
-          _indicators+=" 🌄"
+          _indicators+="🌄"
         fi
 
         if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
         then
-          _indicators+=" 📄"
+          _indicators+="📄"
         fi
 
         if _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
         then
-          _indicators+=" 📹"
+          _indicators+="📹"
         fi
 
         if _file_is_audio "${_NOTEBOOK_PATH}/${__basename}"
         then
-          _indicators+=" 🔉"
+          _indicators+="🔉"
         fi
 
         if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
         then
-          _indicators+=" 🔒"
+          _indicators+="🔒"
+        fi
+
+        if [[ -n "${_indicators:-}" ]]
+        then
+          _padded_indicators="${_indicators} "
         fi
       fi
 
-      local _padded_indicators="${_spaces}${_indicators} "
-
       local _list_item="${_padded_indicators}${_title_or_basename}"
 
-      if [[ "${_title_or_basename}" == "${__basename}" ]]
+      if ! ((_list_filenames)) &&
+         ! ((_print_excerpt))  &&
+         [[ "${_title_or_basename}" == "${__basename}" ]]
       then
         local _first_line=
         _first_line="$(_get_first_line "${_NOTEBOOK_PATH}/${__basename}")"
@@ -4098,11 +4104,23 @@ HEREDOC
         fi
       fi
 
-      local _list_item_id="${_id_item}${_list_item}"
-      local _list_item_id_color="${_id_item_color}${_list_item}"
+      local _list_item_id="${_id_item}${_spaces}${_list_item}"
+      local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
 
-      # Turn off line-wrapping
-      printf '\033[?7l'
+      if [[ "${#_list_item_id}" -gt "${_columns}" ]] &&
+        ! {
+          ((_print_excerpt))  ||
+          ((_list_filenames)) ||
+          ((_no_id))          ||
+          ((_no_color))
+        } && {
+          [[ -n "${_maybe_title:-}" ]] ||
+          [[ "${_first_line:-}"     ]]
+        }
+      then
+        # Turn off line-wrapping
+        printf '\033[?7l'
+      fi
 
       if ((_no_id))
       then
@@ -4112,15 +4130,29 @@ HEREDOC
         then
           printf "%s" "${_list_item_id}"
         else
+
           printf "%s" "${_list_item_id_color}"
+
         fi
+      fi
+
+      if [[ "${#_list_item_id}" -gt "${_columns}" ]] &&
+        ! {
+          ((_print_excerpt))  ||
+          ((_list_filenames)) ||
+          ((_no_id))          ||
+          ((_no_color))
+        } && {
+          [[ -n "${_maybe_title:-}" ]] ||
+          [[ "${_first_line:-}"     ]]
+        }
+      then
+        # Turn on line-wrapping
+        printf '\033[?7h'
       fi
 
       # End of line.
       printf "\\n"
-
-      # Turn on line-wrapping
-      printf '\033[?7h'
 
       # Calculate apparent length of the list item string, with byte and
       # character calculations for handling unicode characters.

@@ -513,7 +513,7 @@ HEREDOC
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${lines[1]}" =~ second.bookmark.md$      ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ second.bookmark.md       ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
 # `notes bookmark list --sort` ################################################
@@ -552,7 +552,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md$      ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]
   [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 

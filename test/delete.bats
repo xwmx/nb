@@ -74,7 +74,9 @@ load test_helper
     run "${_NOTES}" use "one"
     run "${_NOTES}" add
     _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
-    echo "\${_filename:-}: ${_filename:-}"
+    echo "\${_filename:-}: '${_filename:-}'"
+    printf "home:list\\n" && "${_NOTES}" home:list --no-id --filenames
+    printf "one:list\\n"  && "${_NOTES}" one:list --no-id --filenames
     run "${_NOTES}" use "home"
   }
   [[ -n "${_filename}" ]]
