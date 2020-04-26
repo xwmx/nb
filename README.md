@@ -461,9 +461,14 @@ and file types include:
 With other file types, `notes show` will open files in your system's
 preferred application for each type.
 
+`notes show` is primarily intended for previewing notes and files within
+the terminal. To view files in the system's preferred GUI application,
+use [`notes open`](#import--export).
+
 #### Deleting Notes
 
-Deleting notes works the same:
+Deleting notes works the same, accepting an id, filename, or title to
+specify the note:
 
 ```bash
 # delete note by id
@@ -474,6 +479,13 @@ notes delete example.md
 
 # delete note by title
 notes delete 'A Document Title'
+```
+
+By default, `notes` will display a confirmation prompt. To skip, use the
+`--force` option:
+
+```bash
+notes delete 3 --force
 ```
 
 ### Bookmarks
