@@ -14,7 +14,7 @@ __                _
 tool with encryption, search, [Git](https://git-scm.com/)-backed versioning
 and syncing, [Pandoc](http://pandoc.org/)-backed conversion, tagging, and more
 in a single portable script. `notes` creates notes in text-based formats like
-[Markdown](https://daringfireball.net/projects/markdown/) and
+[Markdown](https://en.wikipedia.org/wiki/Markdown) and
 [Emacs Org mode](https://orgmode.org/), can organize and
 work with files in any format, and can export notes to many document formats.
 `notes` can also create private, password-protected encrypted notes and
