@@ -3849,6 +3849,8 @@ _list() {
   _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
 
   local _bookmarks=0
+  local _columns
+  _columns="$(tput cols)"
   local _excerpt_length=3
   local _limit=
   local _list_filenames=0
@@ -4101,11 +4103,29 @@ HEREDOC
       # End of line.
       printf "\\n"
 
+      # Calculate apparent length of the list item string, with byte and
+      # character calculations for handling unicode characters.
+      local _excerpt_line_length=
+      _excerpt_line_length="$(printf "%s" "${_list_item}" | wc -m)"
+
+      local _excerpt_line_length_bytes=
+      _excerpt_line_length_bytes="$(printf "%s" "${_list_item}" | wc -c)"
+
+      local _excerpt_line_length_diff=
+      _excerpt_line_length_diff=$(((_excerpt_line_length_bytes-_excerpt_line_length)/2))
+
+      _excerpt_line_length=$((_excerpt_line_length+_excerpt_line_length_diff))
+
       if ((_print_excerpt)) &&
          [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
          _file_is_text "${_NOTEBOOK_PATH}/${__basename}"
       then # excerpt is specified with a non-zero digit, as required by `head`.
-        _print_line "${_list_item}"
+        if [[ "${_excerpt_line_length}" -gt "${_columns}" ]]
+        then
+          _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+        else
+          _print_line "$(printf "%-${_excerpt_line_length}s" '.')"
+        fi
         head -"${_excerpt_length}" "${_NOTEBOOK_PATH}/${__basename}"
         printf "\\n"
       fi
