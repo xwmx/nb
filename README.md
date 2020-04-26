@@ -426,8 +426,18 @@ notes show example.md
 notes show 'A Document Title'
 ```
 
-By default, `notes show` will open the note in `less`, with syntax
-highlighting if [Pygments](http://pygments.org/) is installed.
+By default, `notes show` will open the note in
+[`man less`](https://linux.die.net/man/1/less), with syntax highlighting if
+[Pygments](http://pygments.org/) is installed, and you can navigate with the
+same keys used in `notes ls`:
+
+```text
+Key  Function
+---  --------
+f    Move forward one page
+b    Move back one page
+q    Quit
+```
 
 When [Pandoc](http://pandoc.org/) is available, use the `--render` option to
 render the note to HTML and open it in your terminal browser:
