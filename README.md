@@ -411,6 +411,40 @@ When a note is encrypted, `notes edit` will prompt you for the note password,
 open the unencrypted content in your editor, and then automatically reencrypt
 the note when you are done editing.
 
+#### Viewing Notes
+
+Notes can be viewed using `notes show`:
+
+```bash
+# show note by id
+notes show 3
+
+# show note by filename
+notes show example.md
+
+# show note by title
+notes show 'A Document Title'
+```
+
+By default, `notes show` will open the note in `less`, with syntax
+highlighting if [Pygments](http://pygments.org/) is installed.
+
+When [Pandoc](http://pandoc.org/) is available, use the `--render` option to
+render the note to HTML and open it in your terminal browser:
+
+```bash
+notes show example.md --render
+# opens example.md as an HTML page in w3m or lynx
+```
+
+`notes show` also supports previewing other file types, depending on the
+tools available in the environment. For example, if
+[`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext) is available on
+the system, using `notes show` with a PDF file will render it to text and
+display it in `less`. Similarly, if
+[`afplay`](https://ss64.com/osx/afplay.html) is available, audio files
+will play in the terminal.
+
 #### Deleting Notes
 
 Deleting notes works the same:
