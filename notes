@@ -4085,16 +4085,17 @@ HEREDOC
 
       local _padded_indicators="${_spaces}${_indicators} "
 
-      local _first_line=
+      local _list_item="${_padded_indicators}${_title_or_basename}"
+
       if [[ "${_title_or_basename}" == "${__basename}" ]]
       then
+        local _first_line=
         _first_line="$(_get_first_line "${_NOTEBOOK_PATH}/${__basename}")"
-      fi
 
-      local _list_item="${_padded_indicators}${_title_or_basename}"
-      if [[ -n "${_first_line:-}" ]]
-      then
-        _list_item="${_list_item} · \"${_first_line}\""
+        if [[ -n "${_first_line:-}" ]]
+        then
+          _list_item="${_list_item} · \"${_first_line}\""
+        fi
       fi
 
       local _list_item_id="${_id_item}${_list_item}"
