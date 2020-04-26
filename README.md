@@ -483,7 +483,7 @@ notes delete 'A Document Title'
 ```
 
 By default, `notes delete` will display a confirmation prompt. To skip, use the
-`--force` option:
+`--force` / `-f` option:
 
 ```bash
 notes delete 3 --force
