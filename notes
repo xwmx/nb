@@ -6060,10 +6060,22 @@ Can't show archives. Export archive and expand to edit.\\n"
   then
     if _command_exists "imgcat" && _file_is_image "${_target_path}"
     then
-      imgcat "${_target_path}"
+      imgcat "${_target_path}" \
+        | if _command_exists "less" && ! ((_dump))
+          then
+            less -r
+          else
+            cat
+          fi
     elif _command_exists "icat" && _file_is_image "${_target_path}"
     then
-      icat "${_target_path}"
+      icat "${_target_path}"  \
+        | if _command_exists "less" && ! ((_dump))
+          then
+            less -r
+          else
+            cat
+          fi
     elif _command_exists "mplayer" && _file_is_audio "${_target_path}"
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
