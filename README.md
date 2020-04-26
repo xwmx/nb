@@ -437,13 +437,16 @@ notes show example.md --render
 # opens example.md as an HTML page in w3m or lynx
 ```
 
-`notes show` also supports previewing other file types, depending on the
-tools available in the environment. For example, if
-[`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext) is available on
-the system, using `notes show` with a PDF file will render it to text and
-display it in `less`. Similarly, if
-[`afplay`](https://ss64.com/osx/afplay.html) is available, audio files
-will play in the terminal.
+`notes show` also supports previewing other file types in the terminal,
+depending on the tools available in the environment. Supported tools
+and file types include:
+
+- [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext) - PDF files
+- [`afplay`](https://ss64.com/osx/afplay.html) - Audio files
+- [`imgcat`](https://www.iterm2.com/documentation-images.html) - Images
+
+With other file types, `notes show` will open files in your system's
+preferred application for each type.
 
 #### Deleting Notes
 
