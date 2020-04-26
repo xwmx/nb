@@ -458,8 +458,9 @@ and file types include:
   [`ffplay`](http://ffmpeg.org/ffplay.html) - Audio files
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) - Images
 
-With other file types, `notes show` will open files in your system's
-preferred application for each type.
+When using `notes show` with other file types or if the above tools are not
+available, `notes show` will open files in your system's preferred application
+for each type.
 
 `notes show` is primarily intended for previewing notes and files within
 the terminal. To view files in the system's preferred GUI application,
