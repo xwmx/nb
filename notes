@@ -4430,6 +4430,7 @@ _ls() {
       # Use control characters to disable wrapping for long lines.
       # Source: http://superuser.com/a/189068
       printf '\033[?7l'
+      tput setaf 8
       if ((_centered))
       then # print full-width line.
         _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
@@ -4439,6 +4440,7 @@ _ls() {
           printf "%s" "${_output_raw}" | sed 's/..$//'
         )" | tr -d '\n'
       fi
+      tput sgr0
       printf '\033[?7h'
       printf '\n'
     fi
