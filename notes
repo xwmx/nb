@@ -2420,6 +2420,7 @@ HEREDOC
 _commands() {
   printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
 }
+_alias_subcommand "commands" "subcommands"
 
 # completions #################################################################
 
@@ -6607,6 +6608,7 @@ _SUBCOMMANDS=(
   shell
   show
   status
+  subcommands
   sync
   update
   upgrade
