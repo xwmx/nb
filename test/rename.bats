@@ -142,6 +142,78 @@ _setup_rename() {
   [[ "${output}" =~ renamed\ to\ \'EXAMPLE.bookmark.md\'   ]]
 }
 
+@test "\`rename\` bookmark with extension <filename> argument uses target extension." {
+  {
+    "${_NOTES}" init
+    _filename="initial sample name.bookmark.md"
+    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    echo "\${_filename:-}: ${_filename:-}"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.md"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md" ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Rename') ]]
+
+  # Updates index
+  [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ \'initial\ sample\ name.bookmark.md\' ]]
+  [[ "${output}" =~ renamed\ to\ \'EXAMPLE.md\'   ]]
+}
+
+@test "\`rename\` notes with bookmark extension <filename> argument uses target extension." {
+  {
+    "${_NOTES}" init
+    _filename="initial sample name.md"
+    "${_NOTES}" add "${_filename}"
+    echo "\${_filename:-}: ${_filename:-}"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.bookmark.md"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.bookmark.md" ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Rename') ]]
+
+  # Updates index
+  [[ "$("${_NOTES}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ \'initial\ sample\ name.md\' ]]
+  [[ "${output}" =~ renamed\ to\ \'EXAMPLE.bookmark.md\'   ]]
+}
+
 @test "\`rename\` with existing <filename> exits with status 1." {
   {
     _setup_rename
