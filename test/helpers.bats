@@ -2,7 +2,6 @@
 
 load test_helper
 
-
 # `_get_title()` ##############################################################
 
 @test "\`_get_title()\` detects and returns Markdown title formats." {
