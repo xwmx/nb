@@ -1624,6 +1624,7 @@ Usage:
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
+             [-e <editor> | --editor <editor>]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   ${_ME} git <git options>...
@@ -2804,10 +2805,16 @@ _alias_subcommand "delete" "d"
 desc "edit" <<HEREDOC
 Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
+             [-e <editor> | --editor <editor>]
+
+Options:
+  -e --editor <editor>  Edit the note with <editor>, overriding the editor
+                        specified in the \`\$EDITOR\` environment variable.
 
 Description:
-  Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}'. Any
-  data piped to \`notes edit\` will be appended to the file.
+  Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}', or
+  <editor> if specified. Any data piped to \`notes edit\` will be appended to
+  the file.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
@@ -2822,6 +2829,7 @@ Shortcut Alias: \`e\`
 HEREDOC
 _edit() {
   local _basename=
+  local _local_editor=
   local _password=
   local _selection="${1:-}"
 
@@ -2832,6 +2840,16 @@ _edit() {
     local _val="${2:-}"
 
     case "${_arg}" in
+      -e|--editor)
+        if __option_value_is_present "${_val:-}"
+        then
+          _local_editor="${_val:-}"
+          shift
+        else
+          _help edit
+          return 1
+        fi
+        ;;
       --password)
         if __option_value_is_present "${_val:-}"
         then
@@ -2901,7 +2919,12 @@ _edit() {
     then # terminal input.
       if [[ -z "${_content:-}" ]]
       then
-        _edit_file "${_target_file}"
+        if [[ -n "${_local_editor}" ]]
+        then
+          EDITOR="${_local_editor}" _edit_file "${_target_file}"
+        else
+          _edit_file "${_target_file}"
+        fi
       fi
     else # piped input.
       cat >> "${_target_file}"

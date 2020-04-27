@@ -1131,6 +1131,7 @@ Usage:
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
   notes edit (<id> | <filename> | <path> | <title>)
+             [-e <editor> | --editor <editor>]
   notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   notes git <git options>...
@@ -1449,10 +1450,16 @@ Shortcut Alias: `d`
 ```text
 Usage:
   notes edit (<id> | <filename> | <path> | <title>)
+             [-e <editor> | --editor <editor>]
+
+Options:
+  -e --editor <editor>  Edit the note with <editor>, overriding the editor
+                        specified in the `$EDITOR` environment variable.
 
 Description:
-  Open the specified note in `$EDITOR`. Any data piped to `notes edit` will be
-  appended to the file.
+  Open the specified note in `$EDITOR`, currently set to 'code', or
+  <editor> if specified. Any data piped to `notes edit` will be appended to
+  the file.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
