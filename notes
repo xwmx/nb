@@ -4152,7 +4152,7 @@ HEREDOC
           ((_no_color))
         } && {
           [[ -n "${_maybe_title:-}" ]] ||
-          [[ "${_first_line:-}"     ]]
+          [[ -n "${_first_line:-}"  ]]
         }
       then
         # Turn off line-wrapping
@@ -4174,7 +4174,7 @@ HEREDOC
           ((_no_color))
         } && {
           [[ -n "${_maybe_title:-}" ]] ||
-          [[ "${_first_line:-}"     ]]
+          [[ -n "${_first_line:-}"  ]]
         }
       then
         # Turn on line-wrapping
