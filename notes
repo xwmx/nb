@@ -5623,7 +5623,7 @@ _settings() {
         } &&
         printf "%s restored to the default: '%s'\\n" \
           "${_setting_name}" \
-          "$(eval "${_setting_name}='' ${_MY_PATH} settings get ${_setting_name}")"
+          "$(eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}")"
   }
 
   # Usage: _notes_settings_prompt
@@ -5896,7 +5896,7 @@ HEREDOC
 
   if [[ -n "${_initial_command:-}" ]]
   then
-    eval "${_MY_PATH} ${_initial_command}"
+    eval "\"${_MY_PATH}\" ${_initial_command}"
   fi
 
   while true
@@ -5925,7 +5925,7 @@ HEREDOC
           local _output=
           local _processed_output=
 
-          _output="$(eval "${_MY_PATH} ${_normalized_input}" || :)"
+          _output="$(eval "\"${_MY_PATH}\" ${_normalized_input}" || :)"
           _processed_output="$(
             printf "%s\\n" "${_output}" \
               | sed -e "s/^  notes /  /"
@@ -5956,9 +5956,9 @@ HEREDOC
               | sed -e "s/^${_command_name} //"
           )"
 
-          eval "EDITOR=${_command_name} ${_MY_PATH} edit ${_normalized_input}"
+          eval "EDITOR=${_command_name} \"${_MY_PATH}\" edit ${_normalized_input}"
         else
-          eval "${_MY_PATH} ${_normalized_input}" || :
+          eval "\"${_MY_PATH}\" ${_normalized_input}" || :
         fi
       fi
     done
