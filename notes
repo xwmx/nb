@@ -895,6 +895,7 @@ _get_selection_parts() {
 #   Print the title, if present, of the note at the path. Supports both
 #   Markdown h1 styles and YAML front matter.
 _get_title() {
+  local _in_code_block=0
   local _in_front_matter=0
   local _maybe_title=
   local _path="${1:-}"
@@ -910,7 +911,8 @@ _get_title() {
 
       while IFS= read -r __line
       do
-        if [[ "${__line}" =~ ^[[:space:]]*#\  ]]
+        if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
+           ! ((_in_code_block))
         then # first line starts with an H1
           _title="$(
             printf "%s\\n" "${__line}" \
@@ -926,11 +928,19 @@ _get_title() {
           else
             _in_front_matter=1
           fi
+        elif [[ "${__line}" =~ ^\`\`\` ]]
+        then
+          if ((_in_code_block))
+          then
+            _in_code_block=0
+          else
+            _in_code_block=1
+          fi
         elif [[ "${__line}" =~ ^title\: ]]
         then
           _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
           break
-        elif ! ((_in_front_matter))
+        elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
           if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
           then
@@ -941,7 +951,8 @@ _get_title() {
               printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
             )"
             break
-          elif [[ -n "${_maybe_title}" ]]
+          elif [[ -n "${_maybe_title}"       ]] &&
+               [[ ! "${_maybe_title}" =~ ^\[ ]]
           then
             break
           else

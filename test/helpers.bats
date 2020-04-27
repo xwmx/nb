@@ -94,6 +94,26 @@ line two
 line three
 line four
 HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add "ten.md"
+[](https://example.com/example.png)
+
+# Title Eleven
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NOTES}" add "ten.md"
+[](https://example.com/example.png)
+
+```text
+# Example In Code Block
+```
+
+# Title Twelve
+line two
+line three
+line four
+HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
@@ -104,16 +124,18 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" == "[10] Title Ten"              ]]
-  [[ "${lines[1]}" == "[9]  Title Nine"             ]]
-  [[ "${lines[2]}" == "[8]  Title Eight"            ]]
-  [[ "${lines[3]}" == "[7]  Title Seven"            ]]
-  [[ "${lines[4]}" == "[6]  six.md · \"line five\"" ]]
-  [[ "${lines[5]}" == "[5]  Title Five"             ]]
-  [[ "${lines[6]}" == "[4]  Title Four"             ]]
-  [[ "${lines[7]}" == "[3]  Title Three"            ]]
-  [[ "${lines[8]}" == "[2]  two.md · \"line one\""  ]]
-  [[ "${lines[9]}" == "[1]  Title One"              ]]
+  [[ "${lines[0]}"  == "[12] Title Twelve"           ]]
+  [[ "${lines[1]}"  == "[11] Title Eleven"           ]]
+  [[ "${lines[2]}"  == "[10] Title Ten"              ]]
+  [[ "${lines[3]}"  == "[9]  Title Nine"             ]]
+  [[ "${lines[4]}"  == "[8]  Title Eight"            ]]
+  [[ "${lines[5]}"  == "[7]  Title Seven"            ]]
+  [[ "${lines[6]}"  == "[6]  six.md · \"line five\"" ]]
+  [[ "${lines[7]}"  == "[5]  Title Five"             ]]
+  [[ "${lines[8]}"  == "[4]  Title Four"             ]]
+  [[ "${lines[9]}"  == "[3]  Title Three"            ]]
+  [[ "${lines[10]}" == "[2]  two.md · \"line one\""  ]]
+  [[ "${lines[11]}" == "[1]  Title One"              ]]
 }
 
 # `_get_unique_basename()` ####################################################
