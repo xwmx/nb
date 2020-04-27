@@ -3703,14 +3703,14 @@ _init() {
   fi
 
   cat <<HEREDOC
--------------------------------
+$(tput setaf 8)-------------------------------${_TPUT_SGR0}
 $(_highlight "Welcome") to
 __                _
 \ \   _ __   ___ | |_ ___  ___
  \ \ | '_ \ / _ \| __/ _ \/ __|
  / / | | | | (_) | ||  __/\__ \\
 /_/  |_| |_|\___/ \__\___||___/
--------------------------------
+$(tput setaf 8)-------------------------------${_TPUT_SGR0}
 Initializing...
 HEREDOC
   if [[ -d "${NOTES_DIR}" ]]
@@ -5595,7 +5595,7 @@ _settings() {
   _notes_settings_prompt() {
     cat <<HEREDOC
 \`notes\` Settings
-----------------
+$(tput setaf 8)----------------${_TPUT_SGR0}
 ${_NOTES_SETTINGS_LIST}
 
 Enter the number or name of the setting you'd like to change, or "q" to quit.
@@ -5854,7 +5854,7 @@ __                _
  \ \ | '_ \ / _ \| __/ _ \/ __|
  / / | | | | (_) | ||  __/\__ \\
 /_/  |_| |_|\___/ \__\___||___/
--------------------------------
+$(tput setaf 8)-------------------------------${_TPUT_SGR0}
 $(_highlight "notes shell") started. Enter $(_highlight "ls") to list notes and notebooks.
 Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
 HEREDOC
