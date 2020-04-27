@@ -6184,7 +6184,8 @@ _show() {
     _target_path="${_decrypted_path}"
   fi
 
-  if _file_is_archive "${_target_path}"
+  if _file_is_archive "${_target_path}" &&
+     [[ ! "${_target_path}" =~ docx$ ]]
   then
     printf "\
 Can't show archives. Export archive and expand to edit.\\n"
