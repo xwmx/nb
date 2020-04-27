@@ -34,9 +34,9 @@ load test_helper
   [[ "${lines[11]}" =~ Created ]]
   [[ "${lines[14]}" == "0 notes." ]]
   [[ "${lines[15]}" == "Add a note:" ]]
-  [[ "${lines[16]}" == "  $(tput setaf 3)notes add$(tput sgr0)" ]]
+  [[ "${lines[16]}" == "  $(_highlight 'notes add')" ]]
   [[ "${lines[17]}" == "Help information:" ]]
-  [[ "${lines[18]}" == "  $(tput setaf 3)notes help$(tput sgr0)" ]]
+  [[ "${lines[18]}" == "  $(_highlight 'notes help')" ]]
 }
 
 # `notes` (empty repo) ########################################################
@@ -52,9 +52,9 @@ load test_helper
   [[ "${lines[1]}" =~ ---- ]]
   [[ "${lines[2]}" == "0 notes." ]]
   [[ "${lines[3]}" == "Add a note:" ]]
-  [[ "${lines[4]}" == "  $(tput setaf 3)notes add$(tput sgr0)" ]]
+  [[ "${lines[4]}" == "  $(_highlight 'notes add')" ]]
   [[ "${lines[5]}" == "Help information:" ]]
-  [[ "${lines[6]}" == "  $(tput setaf 3)notes help$(tput sgr0)" ]]
+  [[ "${lines[6]}" == "  $(_highlight 'notes help')" ]]
 }
 
 # `notes` (non-empty repo) ####################################################

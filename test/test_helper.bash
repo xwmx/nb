@@ -76,6 +76,33 @@ _compare() {
   printf "actual:\\n%s\\n" "${_actual}"
 }
 
+# _highlight()
+#
+# Usage:
+#   _highlight <string> [--underline]
+export _TPUT_HIGHLIGHT_COLOR
+_TPUT_HIGHLIGHT_COLOR="$(tput setaf 3)"
+export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
+_highlight() {
+  local _input="${1:-}"
+  if [[ -z "${_input}" ]]
+  then
+    _die printf "Usage: _highlight <string>"
+  fi
+
+  if [[ "${2:-}" == "--underline" ]]
+  then
+    printf \
+      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_HIGHLIGHT_COLOR}%s${_TPUT_SGR0}\\n" \
+      "${_input}"
+  else
+    printf \
+      "${_TPUT_SGR0}${_TPUT_HIGHLIGHT_COLOR}%s${_TPUT_SGR0}\\n" \
+      "${_input}"
+  fi
+}
+
 # _setup_remote_repo()
 #
 # Usage:

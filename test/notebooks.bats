@@ -17,7 +17,7 @@ _setup_notebooks() {
 @test "\`notebooks\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(tput smul)$(tput setaf 3)home$(tput sgr0)
+    _expected="$(_highlight 'home' --underline)
 one	(${_GIT_REMOTE_URL})"
   }
 
@@ -50,7 +50,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks
-    _expected="$(tput setaf 3)home$(tput sgr0)"
+    _expected="$(_highlight 'home')"
   }
 
   run "${_NOTES}" notebooks home --names
@@ -66,7 +66,7 @@ one	(${_GIT_REMOTE_URL})"
 @test "\`notebooks --names\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(tput smul)$(tput setaf 3)home$(tput sgr0)
+    _expected="$(_highlight 'home' --underline)
 one"
   }
 
@@ -364,9 +364,9 @@ one"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'${output}'"
+  _compare "'Now using $(_highlight 'one').'" "'${output}'"
 
-  [[ "${output}" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
+  [[ "${output}" == "Now using $(_highlight 'one')." ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
   run "${_NOTES}" env
@@ -387,9 +387,9 @@ one"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using $(tput setaf 3)one$(tput sgr0).'" "'${output}'"
+  _compare "'Now using $(_highlight 'one').'" "'${output}'"
 
-  [[ "${output}" == "Now using $(tput setaf 3)one$(tput sgr0)." ]]
+  [[ "${output}" == "Now using $(_highlight 'one')." ]]
   [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
 
   run "${_NOTES}" env

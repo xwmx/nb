@@ -14,9 +14,9 @@ load test_helper
   _expected="0 notes.
 
 Add a note:
-  $(tput setaf 3)notes add$(tput sgr0)
+  $(_highlight 'notes add')
 Help information:
-  $(tput setaf 3)notes help$(tput sgr0)"
+  $(_highlight 'notes help')"
   [[ ${status} -eq 0 ]]
   [[ "${_expected}" == "${output}" ]]
 }

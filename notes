@@ -1224,15 +1224,25 @@ _git_should_autosync() {
 #   Use `tput` to highlight the given string.
 export _TPUT_HIGHLIGHT_COLOR
 _TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NOTES_HIGHLIGHT_COLOR}")"
-export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
 _highlight() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
   then
-    _die printf "Usage: _highlight <string>"
+    _die printf "Usage: _highlight <string> [--underline]"
   fi
 
-  printf "${_TPUT_HIGHLIGHT_COLOR:-}%s${_TPUT_SGR0:-}\\n" "${_input}"
+  if [[ "${2:-}" == "--underline" ]]
+  then
+    printf \
+      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_HIGHLIGHT_COLOR}%s${_TPUT_SGR0}\\n" \
+      "${_input}"
+  else
+    printf \
+      "${_TPUT_SGR0}${_TPUT_HIGHLIGHT_COLOR}%s${_TPUT_SGR0}\\n" \
+      "${_input}"
+  fi
 }
 
 # _highlight_syntax_if_available()
@@ -4736,7 +4746,7 @@ _notebooks() {
 
           if [[ "${#_notebook_directories[@]}" -gt 1 ]]
           then
-            _formatted_name="$(tput smul)${_formatted_name}"
+            _formatted_name="$(_highlight "${__item}" --underline)"
           fi
         else
           _formatted_name="${__item}"
