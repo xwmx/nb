@@ -94,7 +94,7 @@ line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "ten.md"
+    cat <<HEREDOC | "${_NOTES}" add "eleven.md"
 [](https://example.com/example.png)
 
 # Title Eleven
@@ -102,7 +102,7 @@ line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "ten.md"
+    cat <<HEREDOC | "${_NOTES}" add "twelve.md"
 [](https://example.com/example.png)
 
 ```text
