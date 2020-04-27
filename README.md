@@ -202,7 +202,6 @@ notes
 
 This will set up your initial "home" notebook where notes will be stored.
 
-
 ### Working with Notes
 
 #### Adding Notes
