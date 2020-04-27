@@ -4268,6 +4268,12 @@ _ls() {
   local _justified=0
   local _plain=0
 
+  local _notes_count=0
+  _notes_count="$(_count)"
+  local _size=
+  _size="$(stty size)"
+  local _lines="${_size% *}"
+
   for __arg in "${@:-}"
   do
     case "${__arg}" in
@@ -4424,11 +4430,17 @@ _ls() {
     fi
 
     _list "${_args[@]:-}"
-  } | if _command_exists "less" &&
-         [[ "${PAGER:-}" == 'less' ]] ||
-         [[ -z "${PAGER:-}" ]]
+  } | if _command_exists "less"        &&
+         [[ "${PAGER:-}" == 'less'  ]] ||
+         [[ -z "${PAGER:-}"         ]]
       then
-        less -r -X -F
+        # NOTE: Avoid `less -X`, which disables scroll.
+        if [[ "${_notes_count}" -gt $((_lines-4)) ]]
+        then
+          less -r
+        else
+          cat
+        fi
       else
         cat
       fi
