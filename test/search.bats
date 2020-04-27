@@ -65,7 +65,7 @@ HEREDOC
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ first\.md\ \'one\' ]]
-  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ idyl ]]
 }
 
@@ -98,10 +98,10 @@ HEREDOC
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ second\.md\ \'two\' ]]
-  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ third+\.md\ \'three\' ]]
-  [[ "${lines[4]}" =~ -*-$ ]]
+  [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
 }
@@ -159,10 +159,10 @@ HEREDOC
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ fourth\.bookmark\.md\ \'four\' ]]
-  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ sixth\.bookmark\.md\ \'six\' ]]
-  [[ "${lines[4]}" =~ -*-$ ]]
+  [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
 }
@@ -189,11 +189,11 @@ _search_all_setup() {
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:2 ]]
   [[ "${lines[0]}" =~ second\.md\ \'two\'$ ]]
-  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:3 ]]
   [[ "${lines[3]}" =~ third\.md\ \'three\'$ ]]
-  [[ "${lines[4]}" =~ -*-$ ]]
+  [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:1 ]]
   [[ "${lines[6]}" =~ example\.md\ \'sweetish\'$ ]]
@@ -213,11 +213,11 @@ _search_all_setup() {
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:2 ]]
   [[ "${lines[0]}" =~ second\.md\ \'two\'$ ]]
-  [[ "${lines[1]}" =~ -*-$ ]]
+  [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:3 ]]
   [[ "${lines[3]}" =~ third\.md\ \'three\'$ ]]
-  [[ "${lines[4]}" =~ -*-$ ]]
+  [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:1 ]]
   [[ "${lines[6]}" =~ example\.md\ \'sweetish\'$ ]]
