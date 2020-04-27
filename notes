@@ -529,15 +529,15 @@ Can't edit archives. Export archive and expand to edit.\\n"
      [[ "${EDITOR}" =~ mvim ]] ||
      [[ "${EDITOR}" =~ gvim ]]
   then
-    "${EDITOR}" -f "${_file_path}"
+    eval "${EDITOR} -f ${_file_path}"
   elif ((_wait)) &&
        [[ "${EDITOR}" =~ code ]] ||
        [[ "${EDITOR}" =~ mate ]] ||
        [[ "${EDITOR}" =~ subl ]]
   then
-    "${EDITOR}" --wait "${_file_path}"
+    eval "${EDITOR} --wait ${_file_path}"
   else
-    "${EDITOR}" "${_file_path}"
+    eval "${EDITOR} ${_file_path}"
   fi
 }
 
