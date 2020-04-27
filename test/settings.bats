@@ -105,6 +105,18 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ ${NOTES_DIR} ]]
 }
 
+@test "\`settings get\` with lowercase argument exits and prints." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings get notes_dir
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ ${NOTES_DIR} ]]
+}
 
 # `set` #######################################################################
 
@@ -178,6 +190,22 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ EDITOR\ set\ to\ \'example\ editor\' ]]
   [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR="example editor"' ]]
+}
+
+@test "\`settings set\` with lowercase setting name exits and sets." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set editor example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".notesrc:\\n" "$(cat "${NOTESRC_PATH}")"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ EDITOR\ set\ to\ \'example\' ]]
+  [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
 # `set NOTES_AUTO_SYNC` #######################################################

@@ -5691,27 +5691,27 @@ HEREDOC
     [[ -n "${_id_or_name:-}" ]] || return 1
 
     case "${_id_or_name}" in
-      1|EDITOR)
+      1|EDITOR|editor)
         printf "EDITOR"
         return 0
         ;;
-      2|NOTES_AUTO_SYNC)
+      2|NOTES_AUTO_SYNC|notes_auto_sync)
         printf "NOTES_AUTO_SYNC"
         return 0
         ;;
-      3|NOTES_DEFAULT_EXTENSION)
+      3|NOTES_DEFAULT_EXTENSION|notes_default_extension)
         printf "NOTES_DEFAULT_EXTENSION"
         return 0
         ;;
-      4|NOTES_DIR)
+      4|NOTES_DIR|notes_dir)
         printf "NOTES_DIR"
         return 0
         ;;
-      5|NOTES_ENCRYPTION_TOOL)
+      5|NOTES_ENCRYPTION_TOOL|notes_encryption_tool)
        printf "NOTES_ENCRYPTION_TOOL"
         return 0
         ;;
-      6|NOTES_HIGHLIGHT_COLOR)
+      6|NOTES_HIGHLIGHT_COLOR|notes_highlight_color)
         printf "NOTES_HIGHLIGHT_COLOR"
         return 0
         ;;
