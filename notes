@@ -3759,6 +3759,7 @@ HEREDOC
       "${NOTESRC_PATH}"
   else
     cat <<HEREDOC > "${NOTESRC_PATH}"
+#!/usr/bin/env bash
 ###############################################################################
 # .notesrc
 #
