@@ -4822,7 +4822,7 @@ _notebooks() {
       if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
       then
         printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
-        printf "Now using %s.\\n" "$( _highlight "${_name}")"
+        printf "Now using %s.\\n" "$(_highlight "${_name}")"
       else
         printf "Not found: %s\\n" "${_name}"
         return 1
