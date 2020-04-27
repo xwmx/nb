@@ -372,11 +372,15 @@ keys to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
 for more information):
 
 ```text
-Key  Function
----  --------
-f    Move forward one page
-b    Move back one page
-q    Quit
+Key               Function
+---               --------
+mouse scroll      Scroll up / down
+arrow up / down   Scroll one line up / down
+f                 Move forward one page
+b                 Move back one page
+/<query>          Search for <query>
+n                 Jump to next <query> match
+q                 Quit
 ```
 
 `notes ls` is a combination of `notes notebooks` and `notes list` in one view
@@ -432,11 +436,15 @@ By default, `notes show` will open the note in
 same keys used in `notes ls`:
 
 ```text
-Key  Function
----  --------
-f    Move forward one page
-b    Move back one page
-q    Quit
+Key               Function
+---               --------
+mouse scroll      Scroll up / down
+arrow up / down   Scroll one line up / down
+f                 Move forward one page
+b                 Move back one page
+/<query>          Search for <query>
+n                 Jump to next <query> match
+q                 Quit
 ```
 
 When [Pandoc](http://pandoc.org/) is available, use the `--render` option to
@@ -1667,11 +1675,15 @@ Description:
   display on one screen, the list will be opened in `less`. Use the
   following keys to navigate in `less` (see `man less` for more):
 
-    Key  Function
-    ---  --------
-    f    Move forward one page
-    b    Move back one page
-    q    Quit
+    Key               Function
+    ---               --------
+    mouse scroll      Scroll up / down
+    arrow up / down   Scroll one line up / down
+    f                 Move forward one page
+    b                 Move back one page
+    /<query>          Search for <query>
+    n                 Jump to next <query> match
+    q                 Quit
 
   Options are passed through to `list`. For more information, see
   `notes help list`.
@@ -2001,11 +2013,15 @@ Description:
   in the `$PAGER` environment variable. Use the following keys to navigate
   in `less` (see `man less` for more information):
 
-    Key  Function
-    ---  --------
-    f    Move forward one page
-    b    Move back one page
-    q    Quit
+    Key               Function
+    ---               --------
+    mouse scroll      Scroll up / down
+    arrow up / down   Scroll one line up / down
+    f                 Move forward one page
+    b                 Move back one page
+    /<query>          Search for <query>
+    n                 Jump to next <query> match
+    q                 Quit
 
   To skip the pager and print to standard output, use the `--dump` option.
 
