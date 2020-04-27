@@ -1413,7 +1413,7 @@ _print_line() {
   local _line=
   _text_length=${#_text}
   printf -v _line '%*s' "${_text_length}"
-  printf "%s\\n" "${_line// /-}"
+  printf "%s%s%s\\n" "$(tput setaf 8)" "${_line// /-}" "${_TPUT_SGR0}"
 }
 
 # _set_selection_notebook()
@@ -4430,7 +4430,6 @@ _ls() {
       # Use control characters to disable wrapping for long lines.
       # Source: http://superuser.com/a/189068
       printf '\033[?7l'
-      tput setaf 8
       if ((_centered))
       then # print full-width line.
         _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
