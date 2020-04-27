@@ -650,7 +650,7 @@ Perform a full text search of bookmarks and archived page content:
 ```bash
 > bookmark search 'example query'
 [10] example.bookmark.md 'Example Bookmark'
---------------------------------------------
+-------------------------------------------
 5:Lorem ipsum example query.
 ```
 
