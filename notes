@@ -1248,7 +1248,7 @@ _highlight() {
 # _highlight_syntax_if_available()
 #
 # Usage:
-#   _highlight_syntax_if_available [<path>]
+#   _highlight_syntax_if_available [<path>] [<lexer>]
 #
 # Description:
 #   If Pygments is available, use it to highlight syntax. When it is not
@@ -1259,18 +1259,35 @@ _highlight() {
 _highlight_syntax_if_available() {
   if hash "pygmentize" 2>/dev/null
   then # pygments is installed.
-    local _path="${1:-}"
-    local _basename
-    _basename="$(basename "${_path}")"
-
-    local _extension="${_basename##*.}"
-
-    # Markdown highlighting is better with explicit 'md' lexer.
-    if [[ ! "${_extension}" == "md" ]]
+    if _interactive_input
     then
-      pygmentize -O style=friendly "${@}" 2>/dev/null
+      local _path="${1:-}"
+      local _basename
+      _basename="$(basename "${_path}")"
+      local _extension="${_basename##*.}"
+
+      local _lexer="${2:-}"
+
+      # Markdown highlighting is better with explicit 'md' lexer.
+      if [[ ! "${_extension}" == "md" ]] &&
+         [[ -z "${_lexer:-}" ]]
+      then
+        pygmentize -O style=friendly "${@}" 2>/dev/null
+      elif [[ -n "${_lexer:-}" ]]
+      then
+        pygmentize -l "${_lexer }" -O style=friendly "${@}" 2>/dev/null
+      else
+        pygmentize -l md -O style=friendly "${@}"
+      fi
     else
-      pygmentize -l md -O style=friendly "${@}"
+      local _lexer="${1:-}"
+
+      if [[ -n "${_lexer:-}" ]]
+      then
+        pygmentize -l "${_lexer:-}" -O style=friendly
+      else
+        pygmentize -l md -O style=friendly
+      fi
     fi
   else
     cat "${@}"
