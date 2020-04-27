@@ -116,3 +116,59 @@ HEREDOC
   [[ "${lines[8]}" == "[2]  two.md · \"line one\""  ]]
   [[ "${lines[9]}" == "[1]  Title One"              ]]
 }
+
+# `_get_unique_basename()` ####################################################
+
+@test "\`_get_unique_basename()\` works for notes" {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "example.md" --content "Example"
+  }
+
+  run "${_NOTES}" add "example.md" --content "Example"
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-01.md ]]
+
+  run "${_NOTES}" add "example.md" --content "Example"
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-02.md ]]
+}
+
+@test "\`_get_unique_basename()\` works for bookmarks" {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "example.bookmark.md" --content "<https://example.com>"
+  }
+
+  run "${_NOTES}" add "example.bookmark.md" --content "<https://example.com>"
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-01.bookmark.md ]]
+
+  run "${_NOTES}" add "example.bookmark.md" --content "<https://example.com>"
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-02.bookmark.md ]]
+}

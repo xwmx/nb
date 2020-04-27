@@ -965,13 +965,13 @@ _get_title() {
 _get_unique_basename() {
   local _file_basename="${1:-}"
 
-  local _file_name="${_file_basename%.*}"
+  local _file_name="${_file_basename%%.*}"
   if [[ -z "${_file_name}" ]]
   then
     _file_name="$(date -u "+%Y%m%d%H%M%S")"
   fi
 
-  local _file_type="${_file_basename##*.}"
+  local _file_type="${_file_basename#*.}"
   if [[ -z "${_file_type}" ]]
   then
      _file_type="md"
