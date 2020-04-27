@@ -5110,7 +5110,18 @@ Options:
   --reset  Reset the filename to the timestamp at which it was last updated.
 
 Description:
-  Rename a note. Set the filename to <name> for the specified note file.
+  Rename a note. Set the filename to <name> for the specified note file. When
+  file extension is omitted, the existing extension will be used.
+
+Examples:
+  # Rename 'example.md' to 'example.org'
+  ${_ME} rename example.md example.org
+
+  # Rename note 3 (example.md) to "New Name.md"
+  ${_ME} rename 3 "New Name"
+
+  # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
+  ${_ME} rename example.bookmark.md "New Name"
 HEREDOC
 _rename() {
   local _reset=0
@@ -5161,11 +5172,36 @@ _rename() {
       _index update "${_source_basename}" "${_target_basename}" &&
       _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
-    printf "%s renamed to %s\\n" \
+    printf "'%s' renamed to '%s'\\n" \
       "${_source_basename}"   \
-       "${_target_basename}."
+       "${_target_basename}"
   elif [[ -n "${_target_name}" ]]
   then
+    local _source_file_type="${_source_basename#*.}"
+    if [[ -z "${_source_file_type:-}" ]] ||
+       [[ "${_source_file_type}" == "${_source_basename}" ]]
+    then
+      _source_file_type=
+    fi
+
+    local _target_file_name="${_target_name%%.*}"
+    local _target_file_type="${_target_name#*.}"
+    if [[ -z "${_target_file_type:-}" ]] ||
+        [[ "${_target_file_type}" == "${_target_name}" ]]
+    then
+      if [[ -n "${_source_file_type}" ]]
+      then
+        _target_file_type="${_source_file_type}"
+      else
+        _target_file_type=
+      fi
+    fi
+
+    if [[ -n "${_target_file_type:-}" ]]
+    then
+      _target_name="${_target_file_name}.${_target_file_type}"
+    fi
+
     if [[ -e "${_NOTEBOOK_PATH}/${_target_name}" ]]
     then
       printf "File already exists: '%s'\\n" "${_target_name}"
@@ -5176,7 +5212,7 @@ _rename() {
       _index update "${_source_basename}" "${_target_name}" &&
       _git_checkpoint \
         "[NOTES] Rename: ${_source_basename} to ${_target_name}"
-    printf "%s renamed to %s\\n" \
+    printf "'%s' renamed to '%s'\\n" \
       "${_source_basename}"   \
       "${_target_name}"
   else

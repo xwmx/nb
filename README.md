@@ -1845,7 +1845,18 @@ Options:
   --reset  Reset the filename to the timestamp at which it was last updated.
 
 Description:
-  Rename a note. Set the filename to <name> for the specified note file.
+  Rename a note. Set the filename to <name> for the specified note file. When
+  file extension is omitted, the existing extension will be used.
+
+Examples:
+  # Rename 'example.md' to 'example.org'
+  notes rename example.md example.org
+
+  # Rename note 3 (example.md) to "New Name.md"
+  notes rename 3 "New Name"
+
+  # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
+  notes rename example.bookmark.md "New Name"
 ```
 
 #### `search`
