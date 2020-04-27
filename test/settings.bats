@@ -157,9 +157,27 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf ".notesrc:\\n" "$(cat "${NOTESRC_PATH}")"
+
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ EDITOR\ set\ to\ \'example\' ]]
-  [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR=example' ]]
+  [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR="example"' ]]
+}
+
+@test "\`settings set\` with multi-word argument exits and sets." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set EDITOR "example editor"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".notesrc:\\n" "$(cat "${NOTESRC_PATH}")"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ EDITOR\ set\ to\ \'example\ editor\' ]]
+  [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR="example editor"' ]]
 }
 
 # `set NOTES_AUTO_SYNC` #######################################################
@@ -193,6 +211,64 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 1 ]]
   [[ "${output}" == "NOTES_AUTO_SYNC must be either '0' or '1'." ]]
   [[ "$("${_NOTES}" settings get NOTES_AUTO_SYNC)" == '0' ]]
+}
+
+# `set NOTES_DIR` #############################################################
+
+@test "\`settings set NOTES_DIR\` with full path argument sets and exits." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set NOTES_DIR /tmp/path/to/data/dir
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NOTES_DIR\ set\ to\ \'/tmp/path/to/data/dir\' ]]
+  [[ "$("${_NOTES}" settings get NOTES_DIR)" == '/tmp/path/to/data/dir' ]]
+}
+
+@test "\`settings set NOTES_DIR\` with spaces sets and exits." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set NOTES_DIR "/tmp/path to data/dir"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NOTES_DIR\ set\ to\ \'/tmp/path\ to\ data/dir\' ]]
+  [[ "$("${_NOTES}" settings get NOTES_DIR)" == '/tmp/path to data/dir' ]]
+}
+
+@test "\`settings set NOTES_DIR\` with unquoted ~/ sets with \$HOME." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set NOTES_DIR ~/tmp/path
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NOTES_DIR\ set\ to\ \'${HOME}/tmp/path\' ]]
+  [[ "$("${_NOTES}" settings get NOTES_DIR)" == "${HOME}/tmp/path" ]]
+}
+
+@test "\`settings set NOTES_DIR\` with quoted ~/ sets with \$HOME." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set NOTES_DIR "~/tmp/path"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NOTES_DIR\ set\ to\ \'${HOME}/tmp/path\' ]]
+  [[ "$("${_NOTES}" settings get NOTES_DIR)" == "${HOME}/tmp/path" ]]
 }
 
 # `set NOTES_ENCRYPTION_TOOL` #################################################
@@ -292,7 +368,7 @@ skip "Determine how to test interactive prompt."
     "${_NOTES}" init
     run "${_NOTES}" settings set EDITOR sample
     [[ "$("${_NOTES}" settings get EDITOR)" == 'sample' ]]
-    [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR=sample' ]]
+    [[ "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR="sample"' ]]
   }
 
   run "${_NOTES}" settings unset EDITOR
@@ -301,7 +377,7 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf ".notesrc:\\n'%s'\\n" "$(cat "${NOTESRC_PATH}")"
   [[ ${status} -eq 0 ]]
-  [[ ! "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR=sample' ]]
+  [[ ! "$(cat "${NOTESRC_PATH}")" =~ 'EDITOR="sample"' ]]
   [[ "${output}" =~ EDITOR\ restored\ to\ the\ default ]]
   [[ ! "${output}" =~ sample ]]
 }

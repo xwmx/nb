@@ -5590,13 +5590,22 @@ _settings() {
     local _entry=
     local _setting_name=
     local _stripped=
+    local _value=
 
     _setting_name="$(_notes_settings_get_name "${1:-}")" &&
       _notes_settings_validate_value "${_setting_name}" "${2:-}" &&
-      _entry="export ${_setting_name}=${2} # Set by \`notes\` • $(date)" &&
+      {
+        _value="${2:-}"
+        if [[ "${_value}" =~ ^~ ]]
+        then
+          # shellcheck disable=SC2016
+          _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
+        fi
+      } &&
+      _entry="export ${_setting_name}=\"${_value}\" # Set by \`notes\` • $(date)" &&
       _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}" &&
-      printf "%s set to '%s'\\n" "${_setting_name}" "${2}"
+      printf "%s set to '%s'\\n" "${_setting_name}" "${_value}"
   }
 
   # Usage: _notes_settings_unset (<number> | <name>)
