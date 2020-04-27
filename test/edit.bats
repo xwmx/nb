@@ -132,6 +132,36 @@ load test_helper
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
 }
 
+@test "\`edit\` with <filename> with spaces edits properly without errors." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" add "Note name with spaces.md"
+    _filename="Note name with spaces.md"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  }
+
+  run "${_NOTES}" edit "${_filename}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+# Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Edit') ]]
+
+  # Prints output
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ Note\ name\ with\ spaces.md ]]
+}
+
 # <id> ########################################################################
 
 @test "\`edit\` with <id> argument edits properly without errors." {
