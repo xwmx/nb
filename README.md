@@ -227,8 +227,7 @@ notes add --title "Secret Document" --encrypt
 
 `notes add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-[`$EDITOR`](https://askubuntu.com/questions/432524) variable in your
-environment or [`notes settings`](#settings).
+`$EDITOR` environment variable or [`notes settings`](#settings).
 
 `notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. To change the file type, see `notes help add`.
