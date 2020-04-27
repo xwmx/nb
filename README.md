@@ -199,8 +199,31 @@ To get started, simply run:
 ```bash
 notes
 ```
+```text
+-------------------------------
+Welcome to
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \
+/_/  |_| |_|\___/ \__\___||___/
+-------------------------------
+Initializing...
+Created /home/example/.notes
+Created /home/example/.notesrc
+Created home notebook.
+home
+----
+0 notes.
 
-This will set up your initial "home" notebook where notes will be stored.
+Add a note:
+  notes add
+Help information:
+  notes help
+```
+
+`notes` sets up your initial "home" notebook the first time it runs.
+Now it's ready for you to start adding notes.
 
 ### Working with Notes
 
