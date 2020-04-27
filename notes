@@ -744,7 +744,9 @@ _get_first_line() {
     if _file_is_text "${_path}"
     then
 
-      while IFS= read -r __line
+      # Avoid single line being ignored.
+      # https://stackoverflow.com/a/10929511
+      while IFS= read -r __line || [[ -n "${__line}" ]]
       do
         if [[ "${__line}" =~ ^---$ ]]
         then
