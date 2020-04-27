@@ -2831,7 +2831,6 @@ _edit() {
   local _basename=
   local _local_editor=
   local _password=
-  local _selection="${1:-}"
 
   # Parse function options.
   while ((${#}))
@@ -5956,7 +5955,7 @@ HEREDOC
               | sed -e "s/^${_command_name} //"
           )"
 
-          eval "EDITOR=${_command_name} \"${_MY_PATH}\" edit ${_normalized_input}"
+          eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
         else
           eval "\"${_MY_PATH}\" ${_normalized_input}" || :
         fi
