@@ -1068,7 +1068,7 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
 ### Help
 
 <p align="center">
-  <a href="#notes-help---long">notes</a> •
+  <a href="#notes-help">notes</a> •
   <a href="#bookmark-help">bookmark</a>
   </br>---</br>
   <a href="#add">add</a> •
@@ -1104,7 +1104,7 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
   <a href="#version">version</a>
 </p>
 
-#### `notes help --long`
+#### `notes help`
 
 ```text
 __                _
@@ -1166,12 +1166,11 @@ Usage:
   notes sync [-a | --all]
   notes use <notebook>
   notes -i | --interactive [<subcommand> [<options>...]]
-  notes -h | --help | help [<subcommand> | -l | --long | --readme]
+  notes -h | --help | help [<subcommand> | --readme]
   notes --version | version
 
 Help:
   notes help <subcommand>  View help information for <subcommand>
-  notes help --long        View a list of subcommands and descriptions.
   notes help --readme      Download and view README.md.
 
 More Information:
@@ -1540,10 +1539,9 @@ Description:
 
 ```text
 Usage:
-  notes help [<subcommand> | -l | --long | --readme]
+  notes help [<subcommand> | --readme]
 
 Options:
-  -l --long  Include a list of subcommands and their descriptions.
   --readme   Download and view README.md in the terminal.
 
 Description:

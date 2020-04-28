@@ -1605,10 +1605,9 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand> | -l | --long | --readme]
+  ${_ME} help [<subcommand> | --readme]
 
 Options:
-  -l --long  Include a list of subcommands and their descriptions.
   --readme   Download and view README.md in the terminal.
 
 Description:
@@ -1638,7 +1637,7 @@ _help() {
               else
                 cat
               fi
-  elif [[ -z "${1:-}" ]] || [[ "${1}" =~ ^-l$|^--long$ ]]
+  elif [[ -z "${1:-}" ]]
   then
     cat <<HEREDOC
 __                _
@@ -1700,21 +1699,15 @@ Usage:
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
-  ${_ME} -h | --help | help [<subcommand> | -l | --long | --readme]
+  ${_ME} -h | --help | help [<subcommand> | --readme]
   ${_ME} --version | version
 
 Help:
   ${_ME} help <subcommand>  View help information for <subcommand>
-  ${_ME} help --long        View a list of subcommands and descriptions.
   ${_ME} help --readme      Download and view README.md.
 
 More Information:
   https://github.com/xwmx/notes
-HEREDOC
-
-    if [[ "${1:-}" =~ ^-l$|^--long$ ]]
-    then
-      cat <<HEREDOC
 
 Subcommands:
   (default)    List notes and notebooks. This is an alias for \`notes ls\`.
@@ -1755,7 +1748,6 @@ Program Options:
   -h --help         Display this help information.
   --version         Display version information.
 HEREDOC
-    fi
   else
     desc --get "${@}"
   fi

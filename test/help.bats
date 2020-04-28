@@ -36,10 +36,9 @@ export _HELP_HEADER
   _expected="$(
     cat <<HEREDOC
 Usage:
-  notes help [<subcommand> | -l | --long | --readme]
+  notes help [<subcommand> | --readme]
 
 Options:
-  -l --long  Include a list of subcommands and their descriptions.
   --readme   Download and view README.md in the terminal.
 
 Description:
