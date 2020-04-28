@@ -507,7 +507,8 @@ File must be decrypted before editing.\\n"
     exit 1
   fi
 
-  if _file_is_archive "${_file_path}"
+  if _file_is_archive "${_file_path}" &&
+     [[ ! "${_file_path}" =~ docx$ ]]
   then
     printf "\
 Can't edit archives. Export archive and expand to edit.\\n"
