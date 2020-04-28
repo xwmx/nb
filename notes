@@ -4567,7 +4567,7 @@ _ls() {
   then
     _notes_count_local="$(
       _list \
-        -n $((_lines))  \
+        -n "${_lines}"  \
         "${_args[@]:-}" \
         --no-id         \
         --no-indicators \
