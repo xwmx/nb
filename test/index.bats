@@ -310,7 +310,13 @@ load test_helper
     printf "also-no-file\\n" >> "${_NOTEBOOK_PATH}/.index"
     echo "# Example" > "${_NOTEBOOK_PATH}/example.md"
     echo "# Sample" > "${_NOTEBOOK_PATH}/sample.md"
-    "${_SED_I_COMMAND[@]}" -e "s/^first.md$//g" "${_NOTEBOOK_PATH}/.index"
+
+    if sed --help >/dev/null 2>&1
+    then
+      sed -i -e "s/^first.md$//g" "${_NOTEBOOK_PATH}/.index"
+    else
+      sed -i '' -e "s/^first.md$//g" "${_NOTEBOOK_PATH}/.index"
+    fi
 
     printf "first.md id: %s\\n" "$("${_NOTES}" index get_id "first.md")"
     printf "second.md id: %s\\n" "$("${_NOTES}" index get_id "second.md")"

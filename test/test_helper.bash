@@ -61,22 +61,6 @@ teardown() {
 # Helpers
 ###############################################################################
 
-# $_SED_I_COMMAND
-#
-# `sed -i` takes an extension on macOS, but that extension can cause errors in
-# GNU `sed`.
-#
-# NOTE: To use this command, call it with `"${_SED_I_COMMAND[@]}"`
-#
-# https://stackoverflow.com/q/43171648
-# http://stackoverflow.com/a/16746032
-if sed --help >/dev/null 2>&1
-then # GNU
-  export _SED_I_COMMAND=(sed -i)
-else # macOS
-  export _SED_I_COMMAND=(sed -i '')
-fi
-
 # _compare()
 #
 # Usage:
