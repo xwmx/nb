@@ -52,6 +52,67 @@ load test_helper
   [[ $(git log | grep '\[NOTES\] Import') ]]
 }
 
+# <directory path> ############################################################
+
+@test "\`import\` with valid <directory path> argument imports a directory." {
+  run "${_NOTES}" init
+
+  run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+
+  IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*) ]]
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder" ]]
+  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.md"       ]]
+  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html" ]]
+  [[ "${lines[0]}" =~ "Imported" ]]
+
+  # creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Import') ]]
+}
+
+@test "\`import move\` with valid <directory path> argument moves a directory." {
+  run "${_NOTES}" init
+  cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_TMP_DIR}"
+  [[ -e "${_TMP_DIR}/Example Folder" ]]
+
+  run "${_NOTES}" import move "${_TMP_DIR}/Example Folder"
+
+  IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+
+  [[ ! -e "${_TMP_DIR}/Example Folder" ]]
+  [[ "${#_files[@]}" -eq 1 ]]
+  [[ $(grep '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*) ]]
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder" ]]
+  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.md"       ]]
+  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html" ]]
+  [[ "${lines[0]}" =~ "Imported" ]]
+
+  # creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Import') ]]
+}
+
 # <url> ######################################################################
 
 @test "\`import\` with valid <url> argument creates a new note file." {
