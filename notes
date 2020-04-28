@@ -4554,14 +4554,12 @@ _ls() {
   } | if [[ "${_notes_count}" -gt $((_lines-4)) ]]
       then
         # NOTE: Avoid `less -X`, which disables scroll.
-        if _command_exists "less"        &&
-           [[ "${PAGER:-}" =~ 'less'  ]] ||
-           [[ -z "${PAGER:-}"         ]]
-        then
-          less -r
-        elif [[ -n "${PAGER:-}" ]]
+        if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
         then
           "${PAGER}"
+        elif _command_exists "less"
+        then
+          less -r
         else
           cat
         fi
