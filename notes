@@ -285,6 +285,11 @@ trap _notes_cleanup_on_exit EXIT
 # Helpers
 ###############################################################################
 
+# $_NEWLINE
+#
+# Assign newline with ANSI-C quoting for string building.
+_NEWLINE=$'\n'
+
 # _alias_subcommand()
 #
 # Usage:
@@ -2344,8 +2349,6 @@ _bookmark() {
     fi
   fi
 
-  local _newline=$'\n'
-
   if [[ -n "${_title:-}" ]]
   then
     if _command_exists "w3m"
@@ -2355,15 +2358,15 @@ _bookmark() {
       )"
     fi
 
-    _bookmark_content="# ${_title}${_newline}"
+    _bookmark_content="# ${_title}${_NEWLINE}"
   fi
 
-  _bookmark_content+="${_newline}<${_url}>${_newline}"
+  _bookmark_content+="${_NEWLINE}<${_url}>${_NEWLINE}"
 
   if [[ -n "${_comment}" ]]
   then
-    _bookmark_content+="${_newline}## Comment${_newline}"
-    _bookmark_content+="${_newline}${_comment}${_newline}"
+    _bookmark_content+="${_NEWLINE}## Comment${_NEWLINE}"
+    _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
   fi
 
   if [[ -n "${_tag_list}" ]]
@@ -2385,13 +2388,13 @@ _bookmark() {
       fi
     done
 
-    _bookmark_content+="${_newline}## Tags${_newline}"
-    _bookmark_content+="${_newline}${_tag_string}${_newline}"
+    _bookmark_content+="${_NEWLINE}## Tags${_NEWLINE}"
+    _bookmark_content+="${_NEWLINE}${_tag_string}${_NEWLINE}"
   fi
 
   if ! ((_skip_content))
   then
-    _bookmark_content+="${_newline}## Content${_newline}"
+    _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
     if _command_exists "pandoc"
     then
       local _processed_content
@@ -2401,9 +2404,9 @@ _bookmark() {
             --from html-native_divs-native_spans \
             --to markdown-grid_tables --wrap=none
         )"
-      _bookmark_content+="${_newline}${_processed_content}${_newline}"
+      _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
     else
-      _bookmark_content+="${_newline}${_page_content}${_newline}"
+      _bookmark_content+="${_NEWLINE}${_page_content}${_NEWLINE}"
     fi
   fi
 
