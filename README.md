@@ -96,6 +96,8 @@ Also supported:
 - [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
 - [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
 - [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser))
+- [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander)
+- [Ranger](https://ranger.github.io/)
 
 ### Installation
 
@@ -464,6 +466,9 @@ and file types include:
   [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
   [`ffplay`](http://ffmpeg.org/ffplay.html) - Audio files
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) - Images
+- [`ranger`](https://ranger.github.io/),
+  [`mc`](https://en.wikipedia.org/wiki/Midnight_Commander) - Folders /
+  Directories
 
 When using `notes show` with other file types or if the above tools are not
 available, `notes show` will open files in your system's preferred application
