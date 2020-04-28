@@ -5245,7 +5245,7 @@ _rename() {
     local _target_file_name="${_target_name%%.*}"
     local _target_file_type="${_target_name#*.}"
     if [[ -z "${_target_file_type:-}" ]] ||
-        [[ "${_target_file_type}" == "${_target_name}" ]]
+       [[ "${_target_file_type}" == "${_target_name}" ]]
     then
       if [[ -n "${_source_file_type}" ]]
       then
