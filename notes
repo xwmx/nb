@@ -6243,6 +6243,19 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
+    elif [[ "${_target_path}" =~ docx$ ]] && _command_exists "pandoc"
+    then
+      pandoc --from docx --to markdown "${_target_path}"   \
+        | _highlight_syntax_if_available  \
+        | if [[ -n "${PAGER:-}" ]] && ! ((_dump))
+          then
+            "${PAGER}"
+          elif _command_exists "less" && ! ((_dump))
+          then
+            less
+          else
+            cat
+          fi
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
