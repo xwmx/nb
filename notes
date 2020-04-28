@@ -780,13 +780,26 @@ _get_first_line() {
 # Description:
 #   Generate a hash for the file at the given <path>.
 _get_hash() {
-  local _hash
+  local _hash=
+  local _path="${1:-}"
+  [[ -n "${_path:-}" ]] || return 1
+
   if _command_exists "md5sum"
   then
-    _hash="$(md5sum "${1:-}" | awk '{ print $1 }')"
+    if [[ -d "${_path}" ]]
+    then
+      _hash="$(tar -P -cf - "${_path}" | md5sum | awk '{ print $1 }')"
+    else
+      _hash="$(md5sum "${_path}" | awk '{ print $1 }')"
+    fi
   elif _command_exists "md5"
   then
-    _hash="$(md5 -q "${1:-}")"
+    if [[ -d "${_path}" ]]
+    then
+      _hash="$(tar -P -cf - "${_path}" | md5 -q | awk '{ print $1 }')"
+    else
+      _hash="$(md5 -q "${1:-}")"
+    fi
   fi
   printf "%s\\n" "${_hash}"
 }
