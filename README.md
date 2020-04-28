@@ -900,12 +900,12 @@ You can update a setting without the prompt using `notes settings set`:
 
 ```bash
 # set highlight color with name
-> notes settings set NOTES_HIGHLIGHT_COLOR 105
+> notes settings set notes_highlight_color 105
 NOTES_HIGHLIGHT_COLOR set to '105'
 
 # set highlight color with setting number (6)
 > notes setting set 6 105
-NOTES_HIGHLIGHT_COLOR set to '105'
+notes_highlight_color set to '105'
 ```
 
 `NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255,
@@ -919,7 +919,7 @@ notes settings colors
 Print the value of a setting:
 
 ```bash
-> notes settings get NOTES_HIGHLIGHT_COLOR
+> notes settings get notes_highlight_color
 105
 
 > notes settings get 6
@@ -929,10 +929,10 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> notes settings unset NOTES_HIGHLIGHT_COLOR
-NOTES_HIGHLIGHT_COLOR restored to the default: '4'
+> notes settings unset notes_highlight_color
+notes_highlight_color restored to the default: '4'
 
-> notes settings get NOTES_HIGHLIGHT_COLOR
+> notes settings get notes_highlight_color
 4
 ```
 
@@ -1156,7 +1156,7 @@ Usage:
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   notes search <query> [-a | --all] [--bookmarks] [--path]
-  notes settings [colors | edit]
+  notes settings [colors [<number>] | edit | list]
   notes settings (get | unset) <setting>
   notes settings set <setting> <value>
   notes shell [<subcommand> [<options>...] | --clear-history]
@@ -1911,6 +1911,7 @@ Usage:
   notes settings colors [<number>]
   notes settings edit
   notes settings get   (<number> | <name>)
+  notes settings list
   notes settings set   (<number> | <name>) <value>
   notes settings unset (<number> | <name>)
 
@@ -1920,64 +1921,66 @@ Subcommands:
              When <number> is provided, print the number in its color.
   edit       Open the ~/.notesrc configuration file in `$EDITOR`.
   get        Print the value of a setting.
+  list       List information about available settings.
   set        Assign <value> to a setting.
   unset      Unset a setting, returning it to the default value.
 
 Description:
-  Configure `notes`. Use `settings set` to customize a setting and
-  `settings unset` to restore the default for a setting.
-
-Settings:
-[1] EDITOR
-    The command line text editor to use with `notes`.
-
-    • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
-
-[2] NOTES_AUTO_SYNC
-    By default, operations that trigger a git commit like `add`, `edit`,
-    and `delete` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to '0'.
-
-    • Default Value: '1'
-
-[3] NOTES_DEFAULT_EXTENSION
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
-    whatever you prefer.
-
-    • Default Value: 'md'
-
-[4] NOTES_DIR
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    `notes settings set NOTES_DIR ~/Dropbox/Notes`
-
-    • Default Value: '~/.notes'
-
-[5] NOTES_ENCRYPTION_TOOL
-    The tool used for encrypting notes.
-
-    • Supported Values: 'openssl', 'gpg'
-    • Default Value:    'openssl'
-
-[6] NOTES_HIGHLIGHT_COLOR
-    Set highlighting color. Often this can be set to an xterm color number
-    between 0 and 255. Some terminals support many more colors. To view a
-    table of 256 common colors and numbers, run:
-      `notes settings colors`
-    To view a color for a number, run:
-      `notes settings colors <number>`
-
-    • Default Value: '68' (blue) for 256 color terminals,
-                     '4'  (blue) for  8  color terminals.
+  Configure `notes`. Use `notes settings set` to customize a setting and
+  `notes settings unset` to restore the default for a setting.
 
 Examples:
   notes settings
   notes settings set 3 'org'
-  notes settings set NOTES_HIGHLIGHT_COLOR 105
-  notes settings unset NOTES_HIGHLIGHT_COLOR
+  notes settings set notes_highlight_color 105
+  notes settings unset notes_highlight_color
   notes settings colors
   notes settings colors 105
+```
+
+##### `settings list`
+
+```text
+[1] editor
+    ------
+    The command line text editor to use with `notes`.
+      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+
+[2] notes_auto_sync
+    ---------------
+    By default, operations that trigger a git commit like `add`, `edit`,
+    and `delete` will sync notebook changes to the remote repository, if
+    one is set. To disable this behavior, set this to '0'.
+      • Default Value: '1'
+
+[3] notes_default_extension
+    -----------------------
+    The default extension to use for notes files. Change to 'org' for Emacs
+    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    whatever you prefer.
+      • Default Value: 'md'
+
+[4] notes_dir
+    ---------
+    The location of the directory that contains the notebooks. To sync with
+    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
+    `notes settings set NOTES_DIR ~/Dropbox/Notes`
+      • Default Value: '~/.notes'
+
+[5] notes_encryption_tool
+    ---------------------
+    The tool used for encrypting notes.
+      • Supported Values: 'openssl', 'gpg'
+      • Default Value:    'openssl'
+
+[6] notes_highlight_color
+    ---------------------
+    Set highlighting color. Often this can be set to an xterm color number
+    between 0 and 255. Some terminals support many more colors. To view a
+    table of 256 common colors and numbers, run: `notes settings colors`
+    To view a color for a number, run: `notes settings colors <number>`
+      • Default Value: '68' (blue) for 256 color terminals,
+                       '4'  (blue) for  8  color terminals.
 ```
 
 #### `shell`

@@ -1691,7 +1691,7 @@ Usage:
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
   ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
-  ${_ME} settings [colors [<number>] | edit]
+  ${_ME} settings [colors [<number>] | edit | list]
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
@@ -5608,12 +5608,10 @@ _NOTES_SETTINGS_LIST="\
     ${_TPUT_SETAF_8}---------------------${_TPUT_SGR0}
     Set highlighting color. Often this can be set to an xterm color number
     between 0 and 255. Some terminals support many more colors. To view a
-    table of 256 common colors and numbers, run:
-      \`${_ME} settings colors\`
-    To view a color for a number, run:
-      \`${_ME} settings colors <number>\`
+    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
+    To view a color for a number, run: \`${_ME} settings colors <number>\`
       • Default Value: '68' (blue) for 256 color terminals,
-                     '4'  (blue) for  8  color terminals.
+                       '4'  (blue) for  8  color terminals.
       • Current Value: '${NOTES_HIGHLIGHT_COLOR}'"
 
 desc "settings" <<HEREDOC
@@ -5622,6 +5620,7 @@ Usage:
   ${_ME} settings colors [<number>]
   ${_ME} settings edit
   ${_ME} settings get   (<number> | <name>)
+  ${_ME} settings list
   ${_ME} settings set   (<number> | <name>) <value>
   ${_ME} settings unset (<number> | <name>)
 
@@ -5631,6 +5630,7 @@ Subcommands:
              When <number> is provided, print the number in its color.
   edit       Open the ~/.notesrc configuration file in \`\$EDITOR\`.
   get        Print the value of a setting.
+  list       List information about available settings.
   set        Assign <value> to a setting.
   unset      Unset a setting, returning it to the default value.
 
@@ -5641,8 +5641,8 @@ Description:
 Examples:
   ${_ME} settings
   ${_ME} settings set 3 'org'
-  ${_ME} settings set NOTES_HIGHLIGHT_COLOR 105
-  ${_ME} settings unset NOTES_HIGHLIGHT_COLOR
+  ${_ME} settings set notes_highlight_color 105
+  ${_ME} settings unset notes_highlight_color
   ${_ME} settings colors
   ${_ME} settings colors 105
 HEREDOC
@@ -5887,6 +5887,10 @@ HEREDOC
         fi
 
         _notes_settings_get_value "${2:-}"
+        return 0
+        ;;
+      list)
+        printf "%s\\n" "${_NOTES_SETTINGS_LIST}"
         return 0
         ;;
       set)

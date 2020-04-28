@@ -118,6 +118,21 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ ${NOTES_DIR} ]]
 }
 
+# `list` ######################################################################
+
+@test "\`settings list\` lists available settings." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings list
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ editor ]]
+}
+
 # `set` #######################################################################
 
 @test "\`settings set\` with no argument exits with error." {
