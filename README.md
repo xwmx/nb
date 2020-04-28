@@ -906,10 +906,10 @@ NOTES_HIGHLIGHT_COLOR set to '105'
 
 # set highlight color with setting number (6)
 > notes setting set 6 105
-notes_highlight_color set to '105'
+NOTES_HIGHLIGHT_COLOR set to '105'
 ```
 
-`NOTES_HIGHLIGHT_COLOR` expects an xterm color number between 0 and 255,
+`notes_highlight_color` expects an xterm color number between 0 and 255,
 and can support higher values for terminals that support many colors.
 Print a table of common colors and numbers with:
 
@@ -930,8 +930,8 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> notes settings unset notes_highlight_color
-notes_highlight_color restored to the default: '4'
+> notes settings unset notes_highlight_color 
+NOTES_HIGHLIGHT_COLOR restored to the default: '4'
 
 > notes settings get notes_highlight_color
 4
