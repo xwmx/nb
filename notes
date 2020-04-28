@@ -332,23 +332,16 @@ _command_exists() {
 # _contains()
 #
 # Usage:
-#   _contains "$item" "${list[*]}"
+#   _contains "${item}" "${list[@]}"
 #
 # Returns:
 #   0  If the item is included in the list.
 #   1  If not.
 _contains() {
-  local _test_list=(${*:2})
-  for __test_element in "${_test_list[@]:-}"
-  do
-    _debug printf "_contains() \${__test_element}: %s\\n" "${__test_element}"
-    if [[ "${__test_element}" == "${1}" ]]
-    then
-      _debug printf "_contains() match: %s\\n" "${1}"
-      return 0
-    fi
-  done
-  return 1
+  local _query_element="${1:-}"
+  local _list=(${*:2})
+
+  [[ "$(printf '|%s|' "${_list[@]}")" =~ \|${_query_element}\| ]]
 }
 
 # _decrypt_file()
@@ -3692,7 +3685,7 @@ _index() {
       do
         if [[ -n "${__item}" ]]
         then
-          _contains "${__item}" "${_file_list[*]:-}" ||
+          _contains "${__item}" "${_file_list[@]:-}" ||
             _index delete "${__item}"
         fi
       done
@@ -3701,7 +3694,7 @@ _index() {
       do
         if [[ -n "${__item}" ]]
         then
-          _contains "${__item}" "${_index_list[*]:-}" ||
+          _contains "${__item}" "${_index_list[@]:-}" ||
             _index add "${__item}"
         fi
       done
@@ -3735,11 +3728,11 @@ _index() {
 
       for __item in "${_index_list[@]:-}"
       do
-        _contains "${__item}" "${_file_list[*]:-}" || _errors=1
+        _contains "${__item}" "${_file_list[@]:-}" || _errors=1
       done
       for __item in "${_file_list[@]:-}"
       do
-        _contains "${__item}" "${_index_list[*]:-}" || _errors=1
+        _contains "${__item}" "${_index_list[@]:-}" || _errors=1
       done
 
       if ((_errors))
