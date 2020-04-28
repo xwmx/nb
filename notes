@@ -1576,7 +1576,7 @@ desc() {
     local _name="${2:-}"
     local _desc_var="___desc_${_name}"
 
-    if [[ -n "${!_desc_var:-}" ]]
+    if [[ ! "${_name}" =~ ^\- ]] && [[ -n "${!_desc_var:-}" ]]
     then
       printf "%s\\n" "${!_desc_var}"
     else
@@ -1637,7 +1637,7 @@ _help() {
               else
                 cat
               fi
-  elif [[ -z "${1:-}" ]]
+  elif [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^\-s$|^\-\-short$ ]]
   then
     cat <<HEREDOC
 __                _
@@ -1708,6 +1708,11 @@ Help:
 
 More Information:
   https://github.com/xwmx/notes
+HEREDOC
+
+    if [[ ! "${1:-}" =~ ^\-s$|^\-\-short$ ]]
+    then
+      cat <<HEREDOC
 
 Subcommands:
   (default)    List notes and notebooks. This is an alias for \`notes ls\`.
@@ -1748,6 +1753,7 @@ Program Options:
   -h --help         Display this help information.
   --version         Display version information.
 HEREDOC
+    fi
   else
     desc --get "${@}"
   fi
