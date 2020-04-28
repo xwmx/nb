@@ -5728,11 +5728,11 @@ _settings() {
   # Usage: _notes_settings_prompt
   _notes_settings_prompt() {
     cat <<HEREDOC
-\`${_ME}\` Settings
+$(_highlight "${_ME}") Settings
 ${_TPUT_SETAF_8}----------------${_TPUT_SGR0}
 ${_NOTES_SETTINGS_LIST}
 
-Enter the number or name of the setting you'd like to change, or "q" to quit.
+Enter the number or name of the setting you'd like to change, or $(_highlight 'q') to quit.
 HEREDOC
     local _setting_name=
 
