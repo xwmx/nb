@@ -94,7 +94,7 @@ fi
 # Set default $EDITOR if one has not been set.
 if [[ -z "${EDITOR:-}" ]]
 then
-  for __editor in "code" "subl" "mate" "nano" "vi"
+  for __editor in "code" "subl" "mate" "macdown" "nano" "pico" "vim" "vi"
   do
     if hash "${__editor}" 2>/dev/null
     then
