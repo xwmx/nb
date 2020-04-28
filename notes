@@ -3681,7 +3681,18 @@ _index() {
         "_index() reconcile: \`\${_file_list[*]}\`: '%s'\\n" \
         "${_file_list[*]:-}"
 
-      for __item in "${_index_list[@]:-}"
+      local -a _index_file_list_diff=()
+      _index_file_list_diff=($(
+        printf "%s\\n" "${_index_list[@]}" "${_file_list[@]}" | sort | uniq -u
+      ))
+
+      local -a _diff_in_index=()
+      _diff_in_index=($(
+        printf "%s\\n" "${_index_list[@]}" "${_index_file_list_diff[@]}" \
+          | sort | uniq -d | uniq
+      ))
+
+      for __item in "${_diff_in_index[@]:-}"
       do
         if [[ -n "${__item}" ]]
         then
@@ -3690,7 +3701,13 @@ _index() {
         fi
       done
 
-      for __item in "${_file_list[@]:-}"
+      local -a _diff_in_file_list=()
+      _diff_in_file_list=($(
+        printf "%s\\n" "${_file_list[@]}" "${_index_file_list_diff[@]}" \
+          | sort | uniq -d | uniq
+      ))
+
+      for __item in "${_diff_in_file_list[@]:-}"
       do
         if [[ -n "${__item}" ]]
         then
