@@ -2810,7 +2810,14 @@ _delete() {
   if [[ -n "${_basename}" ]] && [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
     cd "${_NOTEBOOK_PATH}" || _die printf "_delete() \`cd\` failed.\\n"
-    git rm "${_basename}" 1>/dev/null
+
+    if [[ -d "${_NOTEBOOK_PATH}/${_basename}" ]] &&
+       [[ -z "$(ls -A "${_NOTEBOOK_PATH}/${_basename}")" ]]
+    then
+      rm -r "${_NOTEBOOK_PATH}/${_basename}"
+    else
+      git rm -r "${_basename}" 1>/dev/null
+    fi
 
     if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
     then
@@ -4649,8 +4656,15 @@ _move() {
     done
   fi
 
-  cat "${_NOTEBOOK_PATH}/${_basename}" \
-    | "${_MY_PATH}" "${_target_notebook}:add" "${_basename}" 1> /dev/null
+  if [[ -d "${_NOTEBOOK_PATH}/${_basename}" ]]
+  then
+    "${_MY_PATH}" \
+      "${_target_notebook}:import" \
+      "${_NOTEBOOK_PATH}/${_basename}" 1> /dev/null
+  else
+    cat "${_NOTEBOOK_PATH}/${_basename}" \
+      | "${_MY_PATH}" "${_target_notebook}:add" "${_basename}" 1> /dev/null
+  fi
 
   "${_MY_PATH}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
 

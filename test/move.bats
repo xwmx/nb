@@ -244,6 +244,39 @@ _setup_move() {
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
 }
 
+# <folder> ####################################################################
+
+@test "\`move\` with <folder> argument successfully moves note." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" notebooks add "destination"
+    run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" move "${_filename}" "destination" --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
+  [[ ${status} -eq 0 ]]
+
+  # moves note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
+
+  # creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Delete') ]]
+
+  # prints output
+  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:Example\ Folder ]]
+}
+
 # help ########################################################################
 
 @test "\`help move\` exits with status 0." {
