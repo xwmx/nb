@@ -1137,7 +1137,7 @@ Usage:
   notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   notes git <git options>...
-  notes help [-l | --long]
+  notes help [<subcommand> | --readme]
   notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]

@@ -1670,7 +1670,7 @@ Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
   ${_ME} git <git options>...
-  ${_ME} help [-l | --long]
+  ${_ME} help [<subcommand> | --readme]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
