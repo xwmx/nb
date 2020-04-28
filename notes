@@ -1134,7 +1134,7 @@ _git_required() {
     cat <<HEREDOC
 Welcome to $(_highlight "notes")!
 
-Git is required, but wasn't found. Install Git, then run \`notes\` again.
+Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
 
 About Git: https://git-scm.com/
 HEREDOC
@@ -1736,7 +1736,7 @@ Subcommands:
   rename       Rename a note.
   search       Search notes.
   settings     Edit configuration settings.
-  shell        Start the \`notes\` interactive shell.
+  shell        Start the \`${_ME}\` interactive shell.
   show         Show a note.
   status       Run \`git status\` in the current notebook.
   sync         Sync local notebook with the remote repository.
@@ -1744,7 +1744,7 @@ Subcommands:
   version      Display version information.
 
 Program Options:
-  -i --interactive  Start the \`notes\` interactive shell.
+  -i --interactive  Start the \`${_ME}\` interactive shell.
   -h --help         Display this help information.
   --version         Display version information.
 HEREDOC
@@ -1781,16 +1781,16 @@ Description:
 
   If no arguments are passed, a new blank note file is opened with
   \`\$EDITOR\`, currently set to '${EDITOR}'. If a non-option argument is
-  passed, \`notes\` will treat it as a <filename≥ if a file extension is found.
-  If no file extension is found, \`notes\` will treat the string as
+  passed, \`${_ME}\` will treat it as a <filename≥ if a file extension is found.
+  If no file extension is found, \`${_ME}\` will treat the string as
   <content> and will create a new note without opening the editor.
   \`notes add\` can also create a new note with piped content.
 
-  \`notes\` creates Markdown files by default. To create a note with a
+  \`${_ME}\` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the \`--type\`
   option. To change the default file type, use \`notes settings\`.
 
-  When the \`-e\` / \`--encrypt\` option is used, \`notes\` will encrypt the
+  When the \`-e\` / \`--encrypt\` option is used, \`${_ME}\` will encrypt the
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   \`notes settings\`.
 
@@ -2028,7 +2028,7 @@ Options:
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
-                                \`notes\` will use the html <title> tag.
+                                \`${_ME}\` will use the html <title> tag.
 
 Subcommands:
   list     List bookmarks in the current notebook.
@@ -3811,7 +3811,7 @@ HEREDOC
 ###############################################################################
 # .notesrc
 #
-# Configuration file for \`notes\`, a command line note-taking and document
+# Configuration file for \`${_ME}\`, a command line note-taking and document
 # management tool with encryption, search, Git-backed syncing, and more in a
 # single portable script.
 #
@@ -5695,7 +5695,7 @@ _settings() {
           _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
         fi
       } &&
-      _entry="export ${_setting_name}=\"${_value}\" # Set by \`notes\` • $(date)" &&
+      _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
       _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}" &&
       printf "%s set to '%s'\\n" "${_setting_name}" "${_value}"
@@ -5722,7 +5722,7 @@ _settings() {
   # Usage: _notes_settings_prompt
   _notes_settings_prompt() {
     cat <<HEREDOC
-\`notes\` Settings
+\`${_ME}\` Settings
 ${_TPUT_SETAF_8}----------------${_TPUT_SGR0}
 ${_NOTES_SETTINGS_LIST}
 
