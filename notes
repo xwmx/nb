@@ -4130,33 +4130,6 @@ HEREDOC
         break
       fi
 
-      # NOTE: Plain version serves as the reference version and can be used
-      # for length calculations.
-      local _item_id_number
-      _item_id_number="$(_index get_id "${__basename}")"
-
-      local _id_item
-      _id_item="[${_item_id_number}]"
-
-      local _id_item_color
-      _id_item_color="[$(_highlight "${_item_id_number}")]"
-
-      local _title_or_basename="${__basename}"
-      if ! ((_list_filenames))
-      then
-        _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
-        if [[ -n "${_maybe_title}" ]]
-        then # note file has title.
-          _title_or_basename="${_maybe_title}"
-        fi
-      fi
-
-      # Use calculated number of spaces for nicer formatting.
-      local _spaces=''
-      local _spaces_length=1
-      _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
-      printf -v _spaces '%*s' "${_spaces_length}"
-
       local _indicators=
       local _maybe_padded_indicators=
 
@@ -4203,7 +4176,37 @@ HEREDOC
         fi
       fi
 
+      local _title_or_basename="${__basename}"
+      if ! ((_list_filenames))
+      then
+        _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
+        if [[ -n "${_maybe_title}" ]]
+        then # note file has title.
+          _title_or_basename="${_maybe_title}"
+        fi
+      fi
+
       local _list_item="${_maybe_padded_indicators}${_title_or_basename}"
+
+      if ! ((_no_id))
+      then
+        # NOTE: Plain version serves as the reference version and can be used
+        # for length calculations.
+        local _item_id_number
+        _item_id_number="$(_index get_id "${__basename}")"
+
+        local _id_item
+        _id_item="[${_item_id_number}]"
+
+        local _id_item_color
+        _id_item_color="[$(_highlight "${_item_id_number}")]"
+
+        # Use calculated number of spaces for nicer formatting.
+        local _spaces=''
+        local _spaces_length=1
+        _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
+        printf -v _spaces '%*s' "${_spaces_length}"
+      fi
 
       if ! ((_list_filenames)) &&
          ! ((_print_excerpt))  &&
@@ -4218,9 +4221,6 @@ HEREDOC
         fi
       fi
 
-      local _list_item_id="${_id_item}${_spaces}${_list_item}"
-      local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
-
       local _print_item=
       local _print_item_color=
 
@@ -4229,6 +4229,9 @@ HEREDOC
         _print_item="${_list_item}"
         _print_item_color="${_list_item}"
       else
+        local _list_item_id="${_id_item}${_spaces}${_list_item}"
+        local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
+
         _print_item="${_list_item_id}"
         _print_item_color="${_list_item_id_color}"
       fi
@@ -4548,7 +4551,7 @@ _ls() {
     fi
 
     _list "${_args[@]:-}"
-  } | if [[ "${_notes_count}" -gt $((_lines-4)) ]]
+  } | if [[ ! "${_notes_count}" -gt $((_lines-4)) ]]
       then
         # NOTE: Avoid `less -X`, which disables scroll.
         if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
