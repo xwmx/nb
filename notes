@@ -3912,6 +3912,7 @@ Indicators:
   📄  PDF, Word, or Open Office document
   📹  Video
   🔉  Audio
+  📁  Folder
 
 Examples:
   ${_ME} list
@@ -4146,6 +4147,11 @@ HEREDOC
           _indicators+="📄 "
         fi
 
+        if [[ -d "${_NOTEBOOK_PATH}/${__basename}" ]]
+        then
+          _indicators+="📁 "
+        fi
+
         if _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
         then
           _indicators+="📹 "
@@ -4330,6 +4336,7 @@ Indicators:
   📄  PDF, Word, or Open Office document
   📹  Video
   🔉  Audio
+  📁  Folder
 
 Examples:
   ${_ME} ls
