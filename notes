@@ -3666,10 +3666,10 @@ _index() {
         exec 4<&-
       }
 
-      local _index_list
+    local -a _index_list=()
       _index_list=($(<"${_index_path}"))
 
-      local _file_list
+      local -a _file_list=()
       _file_list=($(ls "${_NOTEBOOK_PATH}"))
 
       _index_reconcile_remove_duplicates "${_index_path}"
@@ -3683,12 +3683,12 @@ _index() {
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
-        printf "%s\\n" "${_index_list[@]}" "${_file_list[@]}" | sort | uniq -u
+        printf "%s\\n" "${_index_list[@]:-}" "${_file_list[@]:-}" | sort | uniq -u
       ))
 
       local -a _diff_in_index=()
       _diff_in_index=($(
-        printf "%s\\n" "${_index_list[@]}" "${_index_file_list_diff[@]}" \
+        printf "%s\\n" "${_index_list[@]:-}" "${_index_file_list_diff[@]:-}" \
           | sort | uniq -d | uniq
       ))
 
@@ -3703,7 +3703,7 @@ _index() {
 
       local -a _diff_in_file_list=()
       _diff_in_file_list=($(
-        printf "%s\\n" "${_file_list[@]}" "${_index_file_list_diff[@]}" \
+        printf "%s\\n" "${_file_list[@]:-}" "${_index_file_list_diff[@]:-}" \
           | sort | uniq -d | uniq
       ))
 
@@ -3737,9 +3737,9 @@ _index() {
       fi
       ;;
     verify)
-      local _index_list
+      local -a _index_list=()
       _index_list=($(<"${_index_path}"))
-      local _file_list
+      local -a _file_list=()
       _file_list=($(ls "${_NOTEBOOK_PATH}"))
 
       _debug printf \
@@ -3751,7 +3751,7 @@ _index() {
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
-        printf "%s\\n" "${_index_list[@]}" "${_file_list[@]}" | sort | uniq -u
+        printf "%s\\n" "${_index_list[@]:-}" "${_file_list[@]:-}" | sort | uniq -u
       ))
 
       if [[ -n "${_index_file_list_diff[*]:-}" ]]
