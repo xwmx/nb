@@ -1704,7 +1704,9 @@ Usage:
   ${_ME} --version | version
 
 Help:
-  ${_ME} help [<subcommand>]
+  ${_ME} help <subcommand>  View help information for <subcommand>
+  ${_ME} help --long        View a list of subcommands and descriptions.
+  ${_ME} help --readme      Download and view README.md.
 
 More Information:
   https://github.com/xwmx/notes
