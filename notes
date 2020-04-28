@@ -4575,7 +4575,20 @@ _ls() {
 
   local _use_pager=0
 
-  if [[ "${_notes_count_total}" -gt $((_lines-4)) ]]
+  if [[ "${_notes_count_total}" -gt 200 ]] && [[ -n "${_args[*]:-}" ]]
+  then
+    _notes_count_local="$(
+      _list \
+        -n "${_lines}"  \
+        "${_args[@]:-}" \
+        --no-id         \
+        --no-indicators \
+        --filenames     \
+        | wc -l
+    )" &
+
+    _spinner ${!}
+  elif [[ "${_notes_count_total}" -gt $((_lines-4)) ]]
   then
     _notes_count_local="$(
       _list \
@@ -4586,11 +4599,11 @@ _ls() {
         --filenames     \
         | wc -l
     )"
+  fi
 
-    if [[ "${_notes_count_local}" -gt $((_lines-4)) ]]
-    then
-      _use_pager=1
-    fi
+  if [[ "${_notes_count_local}" -gt $((_lines-4)) ]]
+  then
+    _use_pager=1
   fi
 
   if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
