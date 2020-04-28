@@ -1128,6 +1128,7 @@ Usage:
   notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark search <query>
+  notes bookmarks [<list options>...]
   notes completions (check | install [-d | --download] | uninstall)
   notes count
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -1169,7 +1170,9 @@ Usage:
   notes --version | version
 
 Help:
-  notes help [<subcommand>]
+  notes help <subcommand>  View help information for <subcommand>
+  notes help --long        View a list of subcommands and descriptions.
+  notes help --readme      Download and view README.md.
 
 More Information:
   https://github.com/xwmx/notes
