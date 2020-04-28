@@ -3659,7 +3659,7 @@ _index() {
         rm "${_tmp_file}"
 
         # Remove duplicates
-        awk '!seen[$0]++' "${_reconcle_index_path}" >&3
+        awk '!NF || !seen[$0]++' "${_reconcle_index_path}" >&3
         cat <&4 > "${_reconcle_index_path}"
 
         exec 3>&-

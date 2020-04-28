@@ -303,18 +303,27 @@ load test_helper
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
+    printf "\\n" >> "${_NOTEBOOK_PATH}/.index"
+    printf "\\n" >> "${_NOTEBOOK_PATH}/.index"
     "${_NOTES}" add "second.md" --title "two"
-    printf "not-a-file\n" >> "${_NOTEBOOK_PATH}/.index"
-    printf "also-no-file\n" >> "${_NOTEBOOK_PATH}/.index"
+    printf "not-a-file\\n" >> "${_NOTEBOOK_PATH}/.index"
+    printf "also-no-file\\n" >> "${_NOTEBOOK_PATH}/.index"
     echo "# Example" > "${_NOTEBOOK_PATH}/example.md"
     echo "# Sample" > "${_NOTEBOOK_PATH}/sample.md"
     "${_SED_I_COMMAND[@]}" -e "s/^first.md$//g" "${_NOTEBOOK_PATH}/.index"
+
+    printf "first.md id: %s\\n" "$("${_NOTES}" index get_id "first.md")"
+    printf "second.md id: %s\\n" "$("${_NOTES}" index get_id "second.md")"
+    printf ".index: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/.index")"
+    printf "ls: '%s'\\n" "$(ls ${_NOTEBOOK_PATH})"
+
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls ${_NOTEBOOK_PATH})" ]]
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ first.md ]]
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ sample.md    ]]
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ sample.md    ]]
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ not-a-file   ]]
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ also-no-file ]]
+    [[ "$("${_NOTES}" index get_id "second.md")" == '4' ]]
   }
 
   run "${_NOTES}" index reconcile
@@ -327,6 +336,11 @@ load test_helper
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ sample.md    ]]
   [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ not-a-file   ]]
   [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ also-no-file ]]
+  [[ "$("${_NOTES}" index get_id "second.md")"  == '4' ]]
+  [[ "$("${_NOTES}" index get_id "example.md")" == '7' ]]
+  [[ "$("${_NOTES}" index get_id "first.md")"   == '8' ]]
+  [[ "$("${_NOTES}" index get_id "sample.md")"  == '9' ]]
+
   "${_NOTES}" index verify
 }
 
