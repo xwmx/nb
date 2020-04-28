@@ -39,7 +39,7 @@ Usage:
   notes help [<subcommand> | --readme]
 
 Options:
-  --readme   Download and view README.md in the terminal.
+  --readme   Download and view the \`notes\` README file.
 
 Description:
   Print the program help information. When a subcommand name is passed, print

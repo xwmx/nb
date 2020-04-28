@@ -1608,7 +1608,7 @@ Usage:
   ${_ME} help [<subcommand> | --readme]
 
 Options:
-  --readme   Download and view README.md in the terminal.
+  --readme   Download and view the \`${_ME}\` README file.
 
 Description:
   Print the program help information. When a subcommand name is passed, print
@@ -1704,7 +1704,7 @@ Usage:
 
 Help:
   ${_ME} help <subcommand>  View help information for <subcommand>
-  ${_ME} help --readme      Download and view README.md.
+  ${_ME} help --readme      Download and view the \`${_ME}\` README file.
 
 More Information:
   https://github.com/xwmx/notes
