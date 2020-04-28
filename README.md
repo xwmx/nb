@@ -865,7 +865,7 @@ home
 [4] 📄 example-document.docx
 [3] 📹 example-video.mp4
 [2] 🔉 example-audio.mp3
-[1] 📁 Example Folder
+[1] 📂 Example Folder
 ```
 
 Notes can also be exported. If you have Pandoc installed, notes can
@@ -1644,7 +1644,7 @@ Indicators:
   📄  PDF, Word, or Open Office document
   📹  Video
   🔉  Audio
-  📁  Folder
+  📂  Folder
 
 Examples:
   notes list
@@ -1708,7 +1708,7 @@ Indicators:
   📄  PDF, Word, or Open Office document
   📹  Video
   🔉  Audio
-  📁  Folder
+  📂  Folder
 
 Examples:
   notes ls
