@@ -3996,13 +3996,13 @@ _list() {
       --filenames|--filename)
         _list_filenames=1
         ;;
-      --no-id|--no-ids|--noid|--noindex|--no-index)
+      --no-id|--noid|--no-ids|--no-index|--noindex)
         _no_id=1
         ;;
       --no-color|--nocolor)
         _no_color=1
         ;;
-      --no-indicators|--no-indicator|--noindicators)
+      --no-indicators|--noindicators|--no-indicator|--noindicator)
         _print_indicators=0
         ;;
       -n)
