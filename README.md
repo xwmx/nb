@@ -1165,7 +1165,7 @@ Usage:
   notes sync [-a | --all]
   notes use <notebook>
   notes -i | --interactive [<subcommand> [<options>...]]
-  notes -h | --help | help [<subcommand>] [-l | --long]
+  notes -h | --help | help [<subcommand> | -l | --long | --readme]
   notes --version | version
 
 Help:
@@ -1537,7 +1537,11 @@ Description:
 
 ```text
 Usage:
-  notes help [<subcommand>]
+  notes help [<subcommand> | -l | --long | --readme]
+
+Options:
+  -l --long  Include a list of subcommands and their descriptions.
+  --readme   Download and view README.md in the terminal.
 
 Description:
   Print the program help information. When a subcommand name is passed, print

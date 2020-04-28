@@ -1608,10 +1608,11 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand> | -l | --long]
+  ${_ME} help [<subcommand> | -l | --long | --readme]
 
 Options:
   -l --long  Include a list of subcommands and their descriptions.
+  --readme   Download and view README.md in the terminal.
 
 Description:
   Print the program help information. When a subcommand name is passed, print
@@ -1620,7 +1621,27 @@ Description:
 Shortcut Alias: \`h\`
 HEREDOC
 _help() {
-  if [[ -z "${1:-}" ]] || [[ "${1}" =~ ^-l$|^--long$ ]]
+  if [[ -n "${1:-}" ]] && [[ "${1:-}" =~ ^readme$|^README$|^\-\-readme$ ]]
+  then
+    _download_from \
+      "https://raw.githubusercontent.com/xwmx/notes/master/README.md" \
+      | if _command_exists "pandoc" && _command_exists "w3m"
+        then
+          pandoc --from markdown --to html \
+            | w3m -T text/html
+            return 0
+        else
+          cat
+        fi |  if [[ -n "${PAGER:-}" ]]
+              then
+                "${PAGER}"
+              elif _command_exists "less"
+              then
+                less
+              else
+                cat
+              fi
+  elif [[ -z "${1:-}" ]] || [[ "${1}" =~ ^-l$|^--long$ ]]
   then
     cat <<HEREDOC
 __                _
@@ -1682,7 +1703,7 @@ Usage:
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
-  ${_ME} -h | --help | help [<subcommand>] [-l | --long]
+  ${_ME} -h | --help | help [<subcommand> | -l | --long | --readme]
   ${_ME} --version | version
 
 Help:
