@@ -94,23 +94,19 @@ fi
 # Set default $EDITOR if one has not been set.
 if [[ -z "${EDITOR:-}" ]]
 then
-  if hash "code" 2>/dev/null
+  for __editor in "code" "subl" "mate" "nano" "vi"
+  do
+    if hash "${__editor}" 2>/dev/null
+    then
+      export EDITOR="${__editor}"
+      break
+    fi
+  done
+
+  if [[ -z "${EDITOR:-}" ]]
   then
-    export EDITOR="code"
-  elif hash "subl" 2>/dev/null
-  then
-    export EDITOR="subl"
-  elif hash "mate" 2>/dev/null
-  then
-    export EDITOR="mate"
-  elif hash "nano" 2>/dev/null
-  then
-    export EDITOR="nano"
-  elif hash "vi" 2>/dev/null
-  then
-    export EDITOR="vi"
-  else
-    _die printf "\$EDITOR not found. Set the editor in ~/.notesrc\\n"
+    printf "\$EDITOR not found. Set the editor in ~/.notesrc\\n"
+    exit 1
   fi
 fi
 
