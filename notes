@@ -2831,7 +2831,7 @@ _delete() {
     if [[ -d "${_NOTEBOOK_PATH}/${_basename}" ]] &&
        [[ -z "$(ls -A "${_NOTEBOOK_PATH}/${_basename}")" ]]
     then
-      rm -r "${_NOTEBOOK_PATH}/${_basename}"
+      rm -r "${_NOTEBOOK_PATH:?}/${_basename}"
     else
       git rm -r "${_basename}" 1>/dev/null
     fi
