@@ -1281,7 +1281,7 @@ Program Options:
 /_.___/\____/\____/_/|_/_/ /_/ /_/\__,_/_/  /_/|_|
 
 bookmark -- Command line bookmarking with tagging, encryption,
-full-text search of page content with regular expression support,
+full-text page content search with regular expression support,
 and data stored in plain text Markdown files.
 
 Usage:
