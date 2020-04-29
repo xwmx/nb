@@ -2314,9 +2314,12 @@ _bookmark() {
 
   if [[ -z "${_url:-}" ]]
   then
+    local _header=
+    _header="Add: $(_highlight "${_ME} bookmark <url>")"
+    _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
 cat <<HEREDOC
-Add a bookmark: $(_highlight "${_ME} bookmark <url>") Help: $(_highlight "${_ME} help bookmark")
-${_TPUT_SETAF_8}--------------------------------------------------------------${_TPUT_SGR0}
+${_header}
+${_TPUT_SETAF_8}--------------------------------------------------${_TPUT_SGR0}
 HEREDOC
     _bookmark list
     return 0
