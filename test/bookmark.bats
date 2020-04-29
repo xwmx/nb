@@ -585,6 +585,28 @@ HEREDOC
   [[ "${lines[1]}" =~ second.bookmark.md       ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
+@test "\`bookmarks list\` with no bookmarks prints message." {
+  {
+    "${_NOTES}" init
+    _expected="0 bookmarks.
+
+Add a bookmark:
+  $(_highlight 'notes bookmark <url>')
+Help information:
+  $(_highlight 'notes help bookmark')"
+  }
+
+  run "${_NOTES}" bookmark list
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${_expected}: '%s'\\n" "${_expected}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${_expected}" == "${output}" ]]
+}
+
 # `notes bookmark list --sort` ################################################
 
 @test "\`bookmark list --sort\` exits with 0 and displays a sorted list of bookmarks." {
