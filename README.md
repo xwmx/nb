@@ -800,10 +800,10 @@ Archived notebooks can still be used individually using normal notebook
 commands:
 
 ```bash
-# switch the current notebook to "example"
+# switch the current notebook to 'example'
 notes use example
 
-# run the `list` subcommand in "example"
+# run the `list` subcommand in 'example'
 notes example:list
 ```
 
