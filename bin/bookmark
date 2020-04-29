@@ -59,6 +59,10 @@ _main() {
         printf "%s\\n" "${__line}" \
           | sed -e 's/notes bookmark/bookmark/' \
           | sed -e 's/notes help bookmark/bookmark help/'
+      elif [[ "${_count}" == 2 ]]
+      then
+        printf "%s\\n" "${__line}" \
+          | sed -e 's/------------//'
       else
         printf "%s\\n" "${__line}"
       fi
