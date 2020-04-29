@@ -1678,7 +1678,7 @@ Usage:
              [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  ${_ME} notebook [open]
+  ${_ME} notebook [archive | open | status | unarchive]
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current

@@ -1201,7 +1201,7 @@ Usage:
              [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  notes notebook [open]
+  notes notebook [archive | open | status | unarchive]
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
