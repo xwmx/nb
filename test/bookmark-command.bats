@@ -29,7 +29,7 @@ load test_helper
   [[ ! $(git log | grep '\[NOTES\] Add') ]]
 
   # Prints help information
-  [[ "${lines[0]}" =~ Add\ a\ bookmark ]]
+  [[ "${lines[0]}" =~ ^Add ]]
 }
 
 # <url> argument ##############################################################
