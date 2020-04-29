@@ -5017,7 +5017,7 @@ HEREDOC
     then
       trash "${NOTES_DIR:?}/${_name}"
     else
-      rm -r "${NOTES_DIR:?}/${_name}"
+      rm -r -f "${NOTES_DIR:?}/${_name}"
     fi &&
       printf "Notebook deleted: %s\\n" "${_name}"
   }
