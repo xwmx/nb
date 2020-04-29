@@ -785,7 +785,7 @@ notes example:notebook archive
 ```
 
 When a notebook is archived it it is not included in `ls` output, synced
-automatically with `sync --all`, and or included in `search --all`.
+automatically with `sync --all`, or included in `search --all`.
 
 ```bash
 > notes ls
