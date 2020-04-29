@@ -1179,7 +1179,7 @@ Usage:
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
-  notes bookmark list [<list options>...]
+  notes bookmark [list [<list options>...]]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   notes bookmark search <query>
@@ -1283,6 +1283,7 @@ Program Options:
 bookmark -- A command line tool for managing bookmarks.
 
 Usage:
+  bookmark
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
@@ -1301,18 +1302,19 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
-  delete   Delete a bookmark.
-  edit     Edit a bookmark.
-  list     List bookmarks in the current notebook.
-           Shortcut Alias: `ls`
-  open     Open the bookmarked page in your system's primary web browser.
-           Shortcut Alias: `o`
-  peek     Open the bookmarked page in your terminal web browser.
-           Alias: `preview`
-           Shortcut Alias: `p`
-  search   Search bookmarks for <query>.
-           Shortcut Alias: `q`
-  url      Print the URL for the specified bookmark.
+  (default)  Add a new bookmark for <url>, or list bookmarks.
+  delete     Delete a bookmark.
+  edit       Edit a bookmark.
+  list       List bookmarks in the current notebook.
+             Shortcut Alias: `ls`
+  open       Open the bookmarked page in your system's primary web browser.
+             Shortcut Alias: `o`
+  peek       Open the bookmarked page in your terminal web browser.
+             Alias: `preview`
+             Shortcut Alias: `p`
+  search     Search bookmarks for <query>.
+             Shortcut Alias: `q`
+  url        Print the URL for the specified bookmark.
 
 Description:
   Create, view, search, edit, and delete bookmarks.
@@ -1392,6 +1394,7 @@ Shortcut Alias: `a`
 
 ```text
 Usage:
+  notes bookmark
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
@@ -1410,18 +1413,19 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
-  delete   Delete a bookmark.
-  edit     Edit a bookmark.
-  list     List bookmarks in the current notebook.
-           Shortcut Alias: `ls`
-  open     Open the bookmarked page in your system's primary web browser.
-           Shortcut Alias: `o`
-  peek     Open the bookmarked page in your terminal web browser.
-           Alias: `preview`
-           Shortcut Alias: `p`
-  search   Search bookmarks for <query>.
-           Shortcut Alias: `q`
-  url      Print the URL for the specified bookmark.
+  (default)  Add a new bookmark for <url>, or list bookmarks.
+  delete     Delete a bookmark.
+  edit       Edit a bookmark.
+  list       List bookmarks in the current notebook.
+             Shortcut Alias: `ls`
+  open       Open the bookmarked page in your system's primary web browser.
+             Shortcut Alias: `o`
+  peek       Open the bookmarked page in your terminal web browser.
+             Alias: `preview`
+             Shortcut Alias: `p`
+  search     Search bookmarks for <query>.
+             Shortcut Alias: `q`
+  url        Print the URL for the specified bookmark.
 
 Description:
   Create, view, search, edit, and delete bookmarks.

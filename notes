@@ -1656,7 +1656,7 @@ Usage:
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
-  ${_ME} bookmark list [<list options>...]
+  ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
@@ -2019,6 +2019,7 @@ _alias_subcommand "add" "new"
 
 desc "bookmark" <<HEREDOC
 Usage:
+  ${_ME} bookmark
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
                  [--title <title>]
@@ -2037,18 +2038,19 @@ Options:
                                 \`${_ME}\` will use the html <title> tag.
 
 Subcommands:
-  delete   Delete a bookmark.
-  edit     Edit a bookmark.
-  list     List bookmarks in the current notebook.
-           Shortcut Alias: \`ls\`
-  open     Open the bookmarked page in your system's primary web browser.
-           Shortcut Alias: \`o\`
-  peek     Open the bookmarked page in your terminal web browser.
-           Alias: \`preview\`
-           Shortcut Alias: \`p\`
-  search   Search bookmarks for <query>.
-           Shortcut Alias: \`q\`
-  url      Print the URL for the specified bookmark.
+  (default)  Add a new bookmark for <url>, or list bookmarks.
+  delete     Delete a bookmark.
+  edit       Edit a bookmark.
+  list       List bookmarks in the current notebook.
+             Shortcut Alias: \`ls\`
+  open       Open the bookmarked page in your system's primary web browser.
+             Shortcut Alias: \`o\`
+  peek       Open the bookmarked page in your terminal web browser.
+             Alias: \`preview\`
+             Shortcut Alias: \`p\`
+  search     Search bookmarks for <query>.
+             Shortcut Alias: \`q\`
+  url        Print the URL for the specified bookmark.
 
 Description:
   Create, view, search, edit, and delete bookmarks.
