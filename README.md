@@ -1170,6 +1170,7 @@ Usage:
                  [--title <title>]
   notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   notes bookmark search <query>
   notes bookmarks [<list options>...]
   notes completions (check | install [-d | --download] | uninstall)
@@ -1277,6 +1278,7 @@ Usage:
                  [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   bookmark search <query>
 
 Options:
@@ -1289,6 +1291,8 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
+  delete   Delete a bookmark.
+  edit     Edit a bookmark.
   list     List bookmarks in the current notebook.
            Shortcut Alias: `ls`
   open     Open the bookmarked page in your system's primary web browser.
@@ -1301,14 +1305,14 @@ Subcommands:
   url      Print the URL for the specified bookmark.
 
 Description:
-  Create, view, and search bookmarks.
+  Create, view, search, edit, and delete bookmarks.
 
   By default, the page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When `pandoc` is
   installed, content will be converted to Markdown.
 
-  Bookmark are identified by the `.bookmark.md` file extension. The bookmark
-  URL is the first URL in the file within '<' and '>' characters:
+  Bookmarks are identified by the `.bookmark.md` file extension. The
+  bookmark URL is the first URL in the file within '<' and '>' characters:
 
     <https://www.example.com>
 
@@ -1386,6 +1390,7 @@ Usage:
                  [--title <title>]
   notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   notes bookmark search <query>
 
 Options:
@@ -1398,6 +1403,8 @@ Options:
                                 `notes` will use the html <title> tag.
 
 Subcommands:
+  delete   Delete a bookmark.
+  edit     Edit a bookmark.
   list     List bookmarks in the current notebook.
            Shortcut Alias: `ls`
   open     Open the bookmarked page in your system's primary web browser.
@@ -1410,7 +1417,7 @@ Subcommands:
   url      Print the URL for the specified bookmark.
 
 Description:
-  Create, view, and search bookmarks.
+  Create, view, search, edit, and delete bookmarks.
 
   By default, the page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When `pandoc` is

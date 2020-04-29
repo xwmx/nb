@@ -399,6 +399,75 @@ This domain is for use in illustrative examples in documents. You may use this d
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
+# `bookmark delete` ###########################################################
+
+@test "\`bookmark delete\` deletes properly without errors." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+
+  run "${_NOTES}" delete 1 --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Deletes note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Delete') ]]
+
+  # Deletes entry from index
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+}
+
+# `bookmark edit` #############################################################
+
+@test "\`bookmark edit\` edits properly without errors." {
+  {
+    run "${_NOTES}" init
+    run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" bookmark edit 1
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+# Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Edit') ]]
+
+  # Prints output
+  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+}
+
 # `bookmark url` ##############################################################
 
 @test "\`bookmark url\` with invalid note prints error." {

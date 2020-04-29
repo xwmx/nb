@@ -1658,6 +1658,7 @@ Usage:
                  [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
   ${_ME} bookmarks [<list options>...]
   ${_ME} completions (check | install [-d | --download] | uninstall)
@@ -2024,6 +2025,7 @@ Usage:
                  [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
 
 Options:
@@ -2036,6 +2038,8 @@ Options:
                                 \`${_ME}\` will use the html <title> tag.
 
 Subcommands:
+  delete   Delete a bookmark.
+  edit     Edit a bookmark.
   list     List bookmarks in the current notebook.
            Shortcut Alias: \`ls\`
   open     Open the bookmarked page in your system's primary web browser.
@@ -2048,7 +2052,7 @@ Subcommands:
   url      Print the URL for the specified bookmark.
 
 Description:
-  Create, view, and search bookmarks.
+  Create, view, search, edit, and delete bookmarks.
 
   By default, the page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When \`pandoc\` is
@@ -2140,6 +2144,14 @@ _bookmark() {
           _help "bookmark"
           return 1
         fi
+        ;;
+      delete)
+        _delete "${_val:-}" "${3:-}"
+        return 0
+        ;;
+      edit)
+        _edit "${_val:-}"
+        return 0
         ;;
       ls|list)
         _subcommand="list"
