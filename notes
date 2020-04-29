@@ -2314,8 +2314,12 @@ _bookmark() {
 
   if [[ -z "${_url:-}" ]]
   then
-    _help "bookmark"
-    return 1
+cat <<HEREDOC
+Add a bookmark: $(_highlight "${_ME} bookmark <url>") Help: $(_highlight "${_ME} help bookmark")
+${_TPUT_SETAF_8}--------------------------------------------------------------${_TPUT_SGR0}
+HEREDOC
+    _bookmark list
+    return 0
   fi
 
   local _basename
