@@ -796,6 +796,17 @@ example1 · example2 · example3 · [1 archived]
 [1] Title One
 ```
 
+Archived notebooks can still be used individually using normal notebook
+commands:
+
+```bash
+# switch the current notebook to "example"
+notes use example
+
+# run the `list` subcommand in "example"
+notes example:list
+```
+
 Check a notebook's archival status with `notes notebook status`:
 
 ```bash
