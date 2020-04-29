@@ -4,7 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`bookmark\` with no argument exits with 0 and prints help." {
+@test "\`bookmark\` with no argument exits with 0, prints message, and lists." {
   {
     run "${_NOTES}" init
   }
@@ -12,9 +12,8 @@ load test_helper
   run "${_BOOKMARK}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf "\${lines[5]}: '%s'\\n" "${lines[5]}"
 
-  # Exits with status 1
+  # Exits with status 0
   [[ ${status} -eq 0 ]]
 
   # Does not create note file
@@ -30,7 +29,7 @@ load test_helper
   [[ ! $(git log | grep '\[NOTES\] Add') ]]
 
   # Prints help information
-  [[ "${lines[5]}" =~ bookmark\ \-\- ]]
+  [[ "${lines[0]}" =~ Add\ a\ bookmark ]]
 }
 
 # <url> argument ##############################################################

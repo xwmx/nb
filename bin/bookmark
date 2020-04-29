@@ -45,8 +45,25 @@ HEREDOC
 fi
 
 _main() {
-  if [[ -z "${1:-}" ]] ||
-     [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
+  if [[ -z "${1:-}" ]]
+  then
+    local _count=0
+    while IFS= read -r __line
+    do
+      _count=$((_count+1))
+
+      if [[ "${_count}" == 1 ]] ||
+         [[ "${_count}" == 6 ]] ||
+         [[ "${_count}" == 8 ]]
+      then
+        printf "%s\\n" "${__line}" \
+          | sed -e 's/notes bookmark/bookmark/' \
+          | sed -e 's/notes help bookmark/bookmark help/'
+      else
+        printf "%s\\n" "${__line}"
+      fi
+    done < <("${_NOTES_PATH:-}" bookmark)
+  elif [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
      {
        [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
      }
