@@ -1681,6 +1681,7 @@ Usage:
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
+  ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title>)
@@ -4850,11 +4851,13 @@ Usage:
   ${_ME} notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks current
+  ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
 
 Options:
   --achived     Only list archived notebooks.
+  -f --force    Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
   --unarchived  Only list unarchived notebooks.
@@ -4863,6 +4866,7 @@ Subcommands:
   (default)  List notebooks.
   add        Create a new notebook.
   current    Print the current notebook name.
+  delete     Delete a notebook.
   rename     Rename a notebook.
   use        Switch to a notebook.
 
@@ -4908,6 +4912,88 @@ _notebooks() {
         _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
+  }
+
+  # _notebooks_delete()
+  #
+  # Usage:
+  #   _notebooks_delete <name>
+  _notebooks_delete() {
+    local _name="${1:-}"
+    if [[ -z "${_name}" ]]
+    then
+      _help notebooks
+      return 1
+    fi
+
+    local _force=0
+    if [[ "${2:-}" =~ ^\-f$|^\-\-force$ ]]
+    then
+      _force=1
+    fi
+
+    if [[ ! -d "${NOTES_DIR}/${_name}"        ]] ||
+       [[ ! -e "${NOTES_DIR}/${_name}/.git"   ]] ||
+       [[ ! -e "${NOTES_DIR}/${_name}/.index" ]]
+    then
+      printf "Notebook not found: %s\\n" "${_name}"
+      return 1
+    fi
+
+    local _notebook_names=
+    _notebook_names=($(_notebooks --names --no-color))
+
+    local _notebook_count=
+    _notebook_count="${#_notebook_names[@]}"
+
+    if ! ((_force))
+    then
+      cat <<HEREDOC
+Deleting $(_highlight "${_name}").
+
+This action cannot be undone. This will permanently delete the
+$(_highlight "${_name}") notebook, all notes and files it contains,
+and the entire revision history.
+
+HEREDOC
+      while true
+      do
+        read -r -p "Please type $(_highlight "${_name}") to confirm: " __response
+        if [[ "${__response}" == "${_name}" ]]
+        then
+          break
+        else
+          printf "Exiting...\\n"
+          exit 0
+        fi
+      done
+    fi
+
+    if [[ "$(_notebooks current)" == "${_name}" ]] &&
+       [[ "${_notebook_count}" -gt 1 ]]
+    then
+      if [[ "${_name}" != "home" ]]
+      then
+        _notebooks use "home"
+      else
+        for __notebook in "${_notebook_names[@]:-}"
+        do
+          if [[ "${__notebook}" != "$(_notebooks current)" ]]
+          then
+            _notebooks use "${__notebook}"
+            break
+          fi
+        done
+      fi
+    fi
+
+    if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
+    then
+      trash "${NOTES_DIR:?}/${_name}"
+    else
+      rm -r "${NOTES_DIR:?}/${_name}"
+    fi &&
+      printf "Notebook deleted: %s\\n" "${_name}"
   }
 
   # _notebooks_list()
@@ -5055,6 +5141,9 @@ _notebooks() {
       ;;
     current)
       basename "${_NOTEBOOK_PATH}"
+      ;;
+    delete)
+      _notebooks_delete "${_name:-}" "${3:-}"
       ;;
     rename)
       _notebooks_rename "${_name:-}" "${3:-}"

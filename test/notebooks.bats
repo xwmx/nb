@@ -8,6 +8,7 @@ _setup_notebooks() {
   cd "${NOTES_DIR}/one"
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
+  touch "${NOTES_DIR}/one/.index"
   mkdir -p "${NOTES_DIR}/two"
   cd "${NOTES_DIR}"
 }
@@ -173,7 +174,7 @@ one"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" == "one" ]]
+  [[ "${output}" =~ one ]]
 }
 
 # `notes notebooks add <name>` ################################################
@@ -263,6 +264,83 @@ one"
   _origin="$(cd "${NOTES_DIR}/example" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
   [[ "${_origin}" =~  "${_GIT_REMOTE_URL}" ]]
+}
+
+# `notes notebooks delete` ####################################################
+
+@test "\`notebooks delete <valid>\` exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NOTES}" notebooks delete "one" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "Notebook deleted: one" ]]
+  [[ ! -e "${NOTES_DIR}/one" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+}
+
+@test "\`notebooks delete <current>\` exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+    "${_NOTES}" notebooks use "one"
+    [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
+  }
+
+  run "${_NOTES}" notebooks delete "one" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ Now\ using ]]
+  [[ "${lines[0]}" =~ home ]]
+  [[ "${lines[1]}" == "Notebook deleted: one" ]]
+  [[ ! -e "${NOTES_DIR}/one" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+}
+
+@test "\`notebooks delete <home>\` exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+    [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+  }
+
+  run "${_NOTES}" notebooks delete "home" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ Now\ using ]]
+  [[ "${lines[0]}" =~ one ]]
+  [[ "${lines[1]}" == "Notebook deleted: home" ]]
+  [[ ! -e "${NOTES_DIR}/home" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "one" ]]
+}
+
+@test "\`notebooks delete <home>\` last notebook exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+    [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+    "${_NOTES}" notebooks delete "one" --force
+    [[ -e "${NOTES_DIR}/home" ]]
+    [[ ! -e "${NOTES_DIR}/one" ]]
+  }
+
+  run "${_NOTES}" notebooks delete "home" --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" == "Notebook deleted: home" ]]
+  [[ ! -e "${NOTES_DIR}/home" ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 }
 
 # `notes notebooks rename` ####################################################

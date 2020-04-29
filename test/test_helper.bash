@@ -25,6 +25,7 @@ setup() {
   export _NOTEBOOK_PATH="${NOTES_DIR}/home"
   export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
   export NOTES_HIGHLIGHT_COLOR=3
+  export NOTES_AUTO_SYNC=0
 
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"

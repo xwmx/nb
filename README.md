@@ -1193,6 +1193,7 @@ Usage:
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
+  notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
   notes open (<id> | <filename> | <path> | <title>)
@@ -1809,11 +1810,13 @@ Usage:
   notes notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
   notes notebooks add <name> [<remote-url>]
   notes notebooks current
+  notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
 
 Options:
   --achived     Only list archived notebooks.
+  -f --force    Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
   --unarchived  Only list unarchived notebooks.
@@ -1822,6 +1825,7 @@ Subcommands:
   (default)  List notebooks.
   add        Create a new notebook.
   current    Print the current notebook name.
+  delete     Delete a notebook.
   rename     Rename a notebook.
   use        Switch to a notebook.
 
