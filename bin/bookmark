@@ -6,7 +6,9 @@
 #  / /_/ / /_/ / /_/ / ,< / / / / / / /_/ / /  / ,<
 # /_.___/\____/\____/_/|_/_/ /_/ /_/\__,_/_/  /_/|_|
 #
-# bookmark -- Command line bookmarking.
+# bookmark -- Command line bookmarking with tagging, encryption,
+# full-text search of page content  with regular expression support,
+# and data stored in plain text Markdown files.
 #
 # Part of:
 # __                _
@@ -79,7 +81,9 @@ _main() {
  / /_/ / /_/ / /_/ / ,< / / / / / / /_/ / /  / ,<
 /_.___/\\____/\\____/_/|_/_/ /_/ /_/\\__,_/_/  /_/|_|
 
-bookmark -- Command line bookmarking.
+bookmark -- Command line bookmarking with tagging, encryption,
+full-text search of page content with regular expression support,
+and data stored in plain text Markdown files.
 
 HEREDOC
     "${_NOTES_PATH:-}" help bookmark        \

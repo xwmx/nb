@@ -1280,7 +1280,9 @@ Program Options:
  / /_/ / /_/ / /_/ / ,< / / / / / / /_/ / /  / ,<
 /_.___/\____/\____/_/|_/_/ /_/ /_/\__,_/_/  /_/|_|
 
-bookmark -- A command line tool for managing bookmarks.
+bookmark -- Command line bookmarking with tagging, encryption,
+full-text search of page content with regular expression support,
+and data stored in plain text Markdown files.
 
 Usage:
   bookmark
