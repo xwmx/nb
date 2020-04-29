@@ -1204,10 +1204,9 @@ Usage:
   notes notebook [archive | open | status | unarchive]
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
-  notes notebooks current
+  notes notebooks [current | use <name>]
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
-  notes notebooks use <name>
   notes open (<id> | <filename> | <path> | <title>)
   notes peek (<id> | <filename> | <path> | <title>)
   notes remote [remove | set <url> [-f | --force]]

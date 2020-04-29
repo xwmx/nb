@@ -1681,10 +1681,9 @@ Usage:
   ${_ME} notebook [archive | open | status | unarchive]
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
-  ${_ME} notebooks current
+  ${_ME} notebooks [current | use <name>]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
-  ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title>)
   ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
