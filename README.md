@@ -1319,13 +1319,10 @@ Description:
 Examples:
   bookmark https://example.com
   bookmark https://example.com --tags example,sample,demo
-  bookmark https://example.com/about --title 'Example Title'
-  bookmark https://example.com -c 'Example comment.'
+  bookmark https://example.com/about -c 'Example comment.'
   bookmark list
   bookmark search 'example query'
-  bookmark search '^example[[:space:]]regular[[:space:]]expression$'
   bookmark open 5
-  bookmark url 10
 
 ------------------------------------------------
 Part of `notes` (https://github.com/xwmx/notes).
@@ -1431,13 +1428,10 @@ Description:
 Examples:
   notes bookmark https://example.com
   notes bookmark https://example.com --tags example,sample,demo
-  notes bookmark https://example.com/about --title 'Example Title'
-  notes bookmark https://example.com -c 'Example comment.'
+  notes bookmark https://example.com/about -c 'Example comment.'
   notes bookmark list
   notes bookmark search 'example query'
-  notes bookmark search '^example[[:space:]]regular[[:space:]]expression$'
   notes bookmark open 5
-  notes bookmark url 10
 
 Shortcut Alias: `b`
 ```
