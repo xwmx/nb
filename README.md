@@ -1718,9 +1718,9 @@ Options:
   -r --reverse           Order notes by id descending.
 
 Description:
-  List unarchived notebooks and notes in the current notebook, displaying note
-  titles when available. `notes ls` is a combination of `notes notebooks`
-  and `notes list` in one view.
+  List notebooks and notes in the current notebook, displaying note titles
+  when available. `notes ls` is a combination of `notes notebooks` and
+  `notes list` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
@@ -1928,7 +1928,7 @@ Usage:
   notes search <query> [-a | --all] [--bookmarks] [--path]
 
 Options:
-  -a --all     Search all unarchived notebooks.
+  -a --all     Search all active notebooks.
   --bookmarks  Search only bookmarks.
   --path       Print the full path for each file with query matches.
 
@@ -2139,7 +2139,7 @@ Usage:
   notes sync [-a | --all]
 
 Options:
-  -a --all  Sync all unarchived notebooks.
+  -a --all  Sync all active notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.
