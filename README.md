@@ -615,8 +615,8 @@ notes add example.bookmark.md --content "<https://example.com>"
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`notes` includes `bookmark`, a streamlined command line interface for
-creating, viewing, and searching bookmarks.
+`notes` includes `bookmark`, a full-featured, streamlined command line
+interface for creating, viewing, searching, editing, and deleing bookmarks.
 
 Bookmark a page:
 
