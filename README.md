@@ -1282,7 +1282,8 @@ Program Options:
 
 bookmark -- Command line bookmarking with tagging, encryption,
 full-text page content search with regular expression support,
-and data stored in plain text Markdown files.
+GUI and terminal browser support, and data stored in plain text
+Markdown files with Git-backed versioning and syncing.
 
 Usage:
   bookmark

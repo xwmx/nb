@@ -8,7 +8,8 @@
 #
 # bookmark -- Command line bookmarking with tagging, encryption,
 # full-text page content search with regular expression support,
-# and data stored in plain text Markdown files.
+# GUI and terminal browser support, and data stored in plain text
+# Markdown files with Git-backed versioning and syncing.
 #
 # Part of:
 # __                _
@@ -83,7 +84,8 @@ _main() {
 
 bookmark -- Command line bookmarking with tagging, encryption,
 full-text page content search with regular expression support,
-and data stored in plain text Markdown files.
+GUI and terminal browser support, and data stored in plain text
+Markdown files with Git-backed versioning and syncing.
 
 HEREDOC
     "${_NOTES_PATH:-}" help bookmark        \
