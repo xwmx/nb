@@ -5,13 +5,13 @@ _notes_subcommands() {
     local _cache_path="${1:-}"
 
     local _commands
-    _commands=($(notes commands))
+    IFS=$'\n' _commands=($(notes commands))
 
     local _notebooks
-    _notebooks=($(notes notebooks --names --no-color --unarchived))
+    IFS=$'\n' _notebooks=($(notes notebooks --names --no-color --unarchived))
 
     local _completions=()
-    _completions=(${_commands[@]})
+    IFS=$'\n' _completions=(${_commands[@]})
 
     local _commands_cached=
     local _notebooks_cached=
@@ -44,7 +44,7 @@ _notes_subcommands() {
       do
         for __command in "${_commands[@]}"
         do
-          if [[ -n "${__notebook:-}" ]] && [[ -n "${__command}" ]]
+          if [[ -n "${__notebook:-}" ]] && [[ -n "${__command:-}" ]]
           then
             _completions+=("${__notebook}:${__command}")
           fi
@@ -58,8 +58,8 @@ _notes_subcommands() {
       printf "" > "${_cache_path}"
 
       {
-        printf "%s\\n" "${_commands[*]}"
-        printf "%s\\n" "${_notebooks[*]}"
+        (IFS=$' '; printf "%s\\n" "${_commands[*]}")
+        (IFS=$' '; printf "%s\\n" "${_notebooks[*]}")
         printf "%s\\n" "${_completions[@]}"
       } >> "${_cache_path}"
     fi
