@@ -49,6 +49,10 @@ _notes_subcommands() {
         done
       done
 
+      local _directory_path
+      _directory_path="$(dirname "${_cache_path}")"
+      mkdir -p "${_directory_path}"
+
       printf "" > "${_cache_path}"
       printf "%s\\n" "${_commands[*]}"    >> "${_cache_path}"
       printf "%s\\n" "${_notebooks[*]}"   >> "${_cache_path}"
@@ -56,7 +60,7 @@ _notes_subcommands() {
     fi
   }
 
-  local _cache_path="${HOME}/.notes-completion-cache-bash"
+  local _cache_path="${HOME}/.notes/.cache/.notes-completion-cache-bash"
   local _completions_cached=()
 
   if [[ ! -e "${_cache_path}" ]]
