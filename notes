@@ -285,6 +285,11 @@ trap _notes_cleanup_on_exit EXIT
 # Helpers
 ###############################################################################
 
+# $_LESS_PROMPT
+#
+# The prompt to display in `less`
+_LESS_PROMPT="press f to skip forward, b for back, h for help, or q to quit"
+
 # $_NEWLINE
 #
 # Assign newline with ANSI-C quoting for string building.
@@ -1619,19 +1624,19 @@ _help() {
   then
     _download_from \
       "https://raw.githubusercontent.com/xwmx/notes/master/README.md" \
-      | if _command_exists "pandoc" && _command_exists "w3m"
+      | if _command_exists "paxndoc" && _command_exists "w3m"
         then
           pandoc --from markdown --to html \
             | w3m -T text/html
             return 0
         else
           cat
-        fi |  if [[ -n "${PAGER:-}" ]]
+        fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
               then
                 "${PAGER}"
               elif _command_exists "less"
               then
-                less
+                less --prompt="${_LESS_PROMPT}"
               else
                 cat
               fi
@@ -2285,7 +2290,17 @@ _bookmark() {
         return 0
       elif _command_exists "curl" || _command_exists "wget"
       then
-        _download_from "${_target_url}" | "${PAGER:-less}"
+        _download_from "${_target_url}" \
+          | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+              then
+                "${PAGER}"
+              elif _command_exists "less"
+              then
+                less --prompt="${_LESS_PROMPT}"
+              else
+                cat
+              fi
+
         return 0
       else
         printf "Terminal web browser not detected.\\n"
@@ -4649,7 +4664,7 @@ _ls() {
     {
       printf "%s" "${_maybe_notebook_list}"
       _list "${_args[@]:-}"
-    } | less -r
+    } | less -r --prompt="${_LESS_PROMPT}"
   else
     printf "%s" "${_maybe_notebook_list}"
     _list "${_args[@]:-}"
@@ -6508,7 +6523,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       imgcat "${_target_path}" \
         | if _command_exists "less" && ! ((_dump))
           then
-            less -r
+            less -r --prompt="${_LESS_PROMPT}"
           else
             cat
           fi
@@ -6517,7 +6532,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       icat "${_target_path}"  \
         | if _command_exists "less" && ! ((_dump))
           then
-            less -r
+            less -r --prompt="${_LESS_PROMPT}"
           else
             cat
           fi
@@ -6543,12 +6558,14 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       pdftotext "${_target_path}" - \
         | tr -d '\014' \
-        | if [[ -n "${PAGER:-}" ]] && ! ((_dump))
+        | if [[ -n "${PAGER:-}"       ]] &&
+             [[ ! "${PAGER}" =~ less  ]] &&
+             ! ((_dump))
           then
             "${PAGER}"
           elif _command_exists "less" && ! ((_dump))
           then
-            less
+            less --prompt="${_LESS_PROMPT}"
           else
             cat
           fi
@@ -6556,12 +6573,14 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       pandoc --from docx --to markdown "${_target_path}"   \
         | _highlight_syntax_if_available  \
-        | if [[ -n "${PAGER:-}" ]] && ! ((_dump))
+        | if [[ -n "${PAGER:-}"      ]] &&
+             [[ ! "${PAGER}" =~ less ]] &&
+             ! ((_dump))
           then
             "${PAGER}"
           elif _command_exists "less" && ! ((_dump))
           then
-            less
+            less --prompt="${_LESS_PROMPT}"
           else
             cat
           fi
@@ -6602,10 +6621,12 @@ Can't show archives. Export archive and expand to edit.\\n"
     else # `notes show`
       if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
       then
-        _highlight_syntax_if_available "${_target_path}" | "${PAGER}" -R
+        _highlight_syntax_if_available "${_target_path}" \
+          | "${PAGER}" -R --prompt="${_LESS_PROMPT}"
       elif _command_exists "less"
       then
-        _highlight_syntax_if_available "${_target_path}" | less -R
+        _highlight_syntax_if_available "${_target_path}" \
+          | less -R --prompt="${_LESS_PROMPT}"
       elif [[ -n "${PAGER:-}" ]]
       then
         _highlight_syntax_if_available "${_target_path}" | "${PAGER}"
