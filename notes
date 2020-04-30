@@ -306,12 +306,7 @@ _alias_subcommand() {
     return 1
   fi
 
-  local _subcommand_help
-  _subcommand_help="$(
-    printf "%s\\n" "${_subcommand}" | cut -d' ' -f1
-  )"
-
-  eval "desc \"${_alias}\" \"\$(_help '${_subcommand_help}')\""
+  eval "desc \"${_alias}\" \"\$___desc_${_subcommand}\""
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
