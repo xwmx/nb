@@ -56,9 +56,12 @@ _notes_subcommands() {
       mkdir -p "${_directory_path}"
 
       printf "" > "${_cache_path}"
-      printf "%s\\n" "${_commands[*]}"    >> "${_cache_path}"
-      printf "%s\\n" "${_notebooks[*]}"   >> "${_cache_path}"
-      printf "%s\\n" "${_completions[@]}" >> "${_cache_path}"
+
+      {
+        printf "%s\\n" "${_commands[*]}"
+        printf "%s\\n" "${_notebooks[*]}"
+        printf "%s\\n" "${_completions[@]}"
+      } >> "${_cache_path}"
     fi
   }
 
