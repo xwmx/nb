@@ -1353,22 +1353,8 @@ _join() {
 #
 # The prompt to display in `less`.
 _less_prompt() {
-  local _columns=
-  _columns="$(tput cols)"
-  local _prompt=
-
-  if [[ "${_columns}" -gt "80" ]]
-  then
-    _prompt="\
-> scroll for more, f to skip forward, b for back, h for help, or q to quit"
-  elif [[ "${_columns}" -gt "65" ]]
-  then
-    _prompt="\
-> scroll for more, b to skip back, h for help, or q to quit"
-  else
-    _prompt="\
+  _prompt="\
 > scroll for more, h for help, or q to quit"
-  fi
 
   printf "%s\\n" "${_prompt}"
 }
