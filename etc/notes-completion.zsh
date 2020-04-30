@@ -5,20 +5,58 @@ _notes_subcommands() {
   _commands=($(notes commands))
   local _notebooks
   _notebooks=($(notes notebooks --names --no-color --unarchived))
-  local _completions
-  _completions=(${_commands[@]})
+  local _completions=()
 
-  # Construct <notebook>:<subcommand> completions.
-  for __notebook in "${_notebooks[@]}"
-  do
-    for __command in "${_commands[@]}"
+  local _cache_path="${HOME}/.notes-completion-cache"
+  local _commands_match=0
+  local _counter=0
+  local _notebooks_match=0
+
+  if [[ -e "${_cache_path}" ]]
+  then
+    while IFS= read -r __line
     do
-      if [[ -n "${__notebook:-}" ]] && [[ -n "${__command}" ]]
+      _counter=$((_counter+1))
+
+      if [[ "${_counter}" == 1 ]]
       then
-        _completions+=("${__notebook}:${__command}")
+        [[ "${__line}" == "${_commands[*]}" ]] &&
+          _commands_match=1
+      elif [[ "${_counter}" == 2 ]]
+      then
+        [[ "${__line}" == "${_notebooks[*]}" ]] &&
+          _notebooks_match=1
+      else
+        _completions+=("${__line}")
       fi
+    done < "${_cache_path}"
+  fi
+
+  if [[ ! -e "${_cache_path}" ]]  ||
+     ! ((_commands_match))        ||
+     ! ((_notebooks_match))       ||
+     [[ -z "${_completions[*]}" ]]
+  then
+
+    _completions=(${_commands[@]})
+
+    # Construct <notebook>:<subcommand> completions.
+    for __notebook in "${_notebooks[@]}"
+    do
+      for __command in "${_commands[@]}"
+      do
+        if [[ -n "${__notebook:-}" ]] && [[ -n "${__command}" ]]
+        then
+          _completions+=("${__notebook}:${__command}")
+        fi
+      done
     done
-  done
+
+    printf "" > "${_cache_path}"
+    printf "%s\\n" "${_commands[*]}" >> "${_cache_path}"
+    printf "%s\\n" "${_notebooks[*]}" >> "${_cache_path}"
+    printf "%s\\n" "${_completions[@]}" >> "${_cache_path}"
+  fi
 
   if [[ "${?}" -eq 0 ]]
   then
