@@ -315,6 +315,23 @@ _alias_subcommand() {
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
+# _clear_notes_cache()
+#
+# Usage:
+#   _clear_notes_cache
+#
+# Description:
+#   Clear the notes cache.
+_clear_notes_cache() {
+  local _cache_path="${NOTES_DIR:?}/.cache"
+
+  if [[ -e "${_cache_path}" ]] &&
+     [[ -d "${_cache_path}" ]]
+  then
+    rm -r "${_cache_path:?}"
+  fi
+}
+
 # _command_exists()
 #
 # Usage:
@@ -4990,6 +5007,7 @@ _notebooks() {
       cd "${NOTES_DIR}/${_name}" &&
         git init 1>/dev/null &&
         touch "${NOTES_DIR}/${_name}/.index" &&
+        _clear_notes_cache &&
         _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
@@ -5074,6 +5092,7 @@ HEREDOC
     else
       rm -r -f "${NOTES_DIR:?}/${_name}"
     fi &&
+      _clear_notes_cache &&
       printf "Notebook deleted: %s\\n" "${_name}"
   }
 
@@ -5210,6 +5229,7 @@ HEREDOC
       printf "%s\\n" "${_new}" > "${NOTES_DIR}/.current"
     fi
 
+    _clear_notes_cache
     printf "'%s' is now named '%s'\\n" "${_old}" "${_new}"
   }
 

@@ -2,6 +2,27 @@
 
 load test_helper
 
+# `_clear_notes_cache()` ######################################################
+
+@test "\`_clear_notes_cache()\` clears the notes cache." {
+  {
+    "${_NOTES}" init
+    mkdir -p "${NOTES_DIR}/.cache"
+    echo "Example" > "${NOTES_DIR}/.cache/example"
+    [[ -e "${NOTES_DIR}/.cache" ]]
+  }
+
+
+  run "${_NOTES}" notebooks add "example"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0 ]]
+  [[ ! -e "${NOTES_DIR}/.cache" ]]
+}
+
 # `_get_title()` ##############################################################
 
 @test "\`_get_title()\` detects and returns Markdown title formats." {
