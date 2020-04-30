@@ -6182,7 +6182,7 @@ HEREDOC
           [[ ! -w "${2}" ]]
          }
       then
-        printf "NOTES_DIR not valid.\\n"
+        printf "'%s' is not a valid location for NOTES_DIR.\\n" "${2:-}"
         return 1
       fi
     elif [[ "${1:-}" == 'NOTES_ENCRYPTION_TOOL' ]]

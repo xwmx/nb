@@ -324,7 +324,7 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ NOTES_DIR\ not\ valid ]]
+  [[ "${output}" =~ "'/' is not a valid location for NOTES_DIR." ]]
   [[ ! "$("${_NOTES}" settings get NOTES_DIR)" == "/" ]]
 }
 
