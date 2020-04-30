@@ -65,7 +65,25 @@ _notes_subcommands() {
     fi
   }
 
-  local _cache_path="${HOME}/.notes/.cache/notes-completion-cache-zsh"
+
+  local _notes_dir=
+  _notes_dir="$(notes env | grep 'NOTES_DIR' | cut -d = -f 2)"
+
+  if [[ -z "${_notes_dir:?}"  ]] ||
+     [[ ! -e "${_notes_dir}"  ]]
+  then
+    return 0
+  elif [[ -L "${_notes_dir}" ]]
+  then
+    _notes_dir="$(realpath "${_notes_dir}")"
+  fi
+
+  if [[ ! -d "${_notes_dir}"  ]]
+  then
+    return 0
+  fi
+
+  local _cache_path="${_notes_dir}/.cache/notes-completion-cache-zsh"
   local _completions_cached=()
 
   if [[ ! -e "${_cache_path}" ]]
