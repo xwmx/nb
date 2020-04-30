@@ -1427,24 +1427,6 @@ _list_notes_files() {
   fi
 }
 
-# _pager_or_cat()
-#
-# Usage:
-#   <command> | _pager_or_cat
-#
-# Display piped content in $PAGER, less, or cat.
-_pager_or_cat() {
-  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-  then
-    "${PAGER}"
-  elif _command_exists "less"
-  then
-    less --prompt="${_LESS_PROMPT}"
-  else
-    cat
-  fi
-}
-
 # __option_value_is_present()
 #
 # Usage:
@@ -1649,7 +1631,15 @@ _help() {
             return 0
         else
           cat
-        fi |  _pager_or_cat
+        fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+              then
+                "${PAGER}"
+              elif _command_exists "less"
+              then
+                less --prompt="${_LESS_PROMPT}"
+              else
+                cat
+              fi
   elif [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^\-s$|^\-\-short$ ]]
   then
     {
@@ -1769,7 +1759,15 @@ Program Options:
   --version         Display version information.
 HEREDOC
       fi
-    } | _pager_or_cat
+    } | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+        then
+          "${PAGER}"
+        elif _command_exists "less"
+        then
+          less --prompt="${_LESS_PROMPT}"
+        else
+          cat
+        fi
   else
     desc --get "${@}"
   fi

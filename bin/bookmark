@@ -104,7 +104,21 @@ HEREDOC
           "${PAGER}"
         elif hash "less" 2>/dev/null
         then
-          less --prompt="press RETURN for more, h for help, or q to quit"
+          local _columns
+          _columns="$(tput cols)"
+
+          if [[ "${_columns}" -gt "80" ]]
+          then
+            less --prompt="\
+press RETURN for more, f to skip forward, b for back, h for help, or q to quit"
+          elif [[ "${_columns}" -gt "65" ]]
+          then
+            less --prompt="\
+press RETURN for more, b to skip back, h for help, or q to quit"
+          else
+            less --prompt="\
+press RETURN for more, h for help, or q to quit"
+          fi
         else
           cat
         fi
