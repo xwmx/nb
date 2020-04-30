@@ -1522,9 +1522,8 @@ Options:
                         specified in the `$EDITOR` environment variable.
 
 Description:
-  Open the specified note in `$EDITOR`, currently set to 'code', or
-  <editor> if specified. Any data piped to `notes edit` will be appended to
-  the file.
+  Open the specified note in `$EDITOR` or <editor> if specified. Any data
+  piped to `notes edit` will be appended to the file.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
