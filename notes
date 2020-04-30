@@ -6155,8 +6155,7 @@ HEREDOC
   # Usage: _notes_settings_validate_value (<number> | <name>) <value>
   _notes_settings_validate_value() {
     if [[ "${1:-}" == 'EDITOR' ]] ||
-       [[ "${1:-}" == 'NOTES_DEFAULT_EXTENSION' ]] ||
-       [[ "${1:-}" == 'NOTES_DIR' ]]
+       [[ "${1:-}" == 'NOTES_DEFAULT_EXTENSION' ]]
     then
       if [[ -n "${2:-}" ]]
       then
@@ -6172,6 +6171,18 @@ HEREDOC
         return 0
       else
         printf "NOTES_AUTO_SYNC must be either '0' or '1'.\\n"
+        return 1
+      fi
+    elif [[ "${1:-}" == 'NOTES_DIR' ]]
+    then
+      if [[ -z "${2:-}"     ]] ||
+         [[ "${2}" == "/" ]] ||
+         {
+          [[ -e "${2}"   ]] &&
+          [[ ! -w "${2}" ]]
+         }
+      then
+        printf "NOTES_DIR not valid.\\n"
         return 1
       fi
     elif [[ "${1:-}" == 'NOTES_ENCRYPTION_TOOL' ]]

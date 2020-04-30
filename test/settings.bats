@@ -314,6 +314,20 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NOTES}" settings get NOTES_DIR)" == "${HOME}/tmp/path" ]]
 }
 
+@test "\`settings set NOTES_DIR\` with invalid directory exits with error." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" settings set NOTES_DIR "/"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ NOTES_DIR\ not\ valid ]]
+  [[ ! "$("${_NOTES}" settings get NOTES_DIR)" == "/" ]]
+}
+
 # `set NOTES_ENCRYPTION_TOOL` #################################################
 
 @test "\`settings set NOTES_ENCRYPTION_TOOL\` with valid argument sets and exits." {
