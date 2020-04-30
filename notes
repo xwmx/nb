@@ -190,6 +190,22 @@ then
   NOTES_DIR="$(realpath "${NOTES_DIR}")"
 fi
 
+if [[ -z "${NOTES_DIR:?}"   ]] ||
+   [[ "${NOTES_DIR}" == "/" ]] ||
+   {
+     [[ -e "${NOTES_DIR}"   ]] &&
+     [[ ! -w "${NOTES_DIR}" ]]
+   }
+then
+  cat <<HEREDOC
+NOTES_DIR is not valid:
+${NOTES_DIR}
+Edit the following file and remove NOTES_DIR settings:
+${NOTESRC_PATH}
+HEREDOC
+  exit 1
+fi
+
 # `$_NOTEBOOK_PATH`
 #
 # Default: `$NOTES_DIR/home`

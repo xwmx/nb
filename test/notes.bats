@@ -78,3 +78,19 @@ load test_helper
   [[ "${lines[3]}" =~ two   ]]
   [[ "${lines[4]}" =~ one   ]]
 }
+
+# `notes` NOTES_DIR ###########################################################
+
+@test "\`notes\` with invalid NOTES_DIR exits with 1." {
+  {
+    run "${_NOTES}" init
+  }
+
+  NOTES_DIR='/' run "${_NOTES}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[*]}" "${lines[*]}"
+
+  [[ "${status}" -eq 1 ]]
+  [[ "${lines[0]}" =~ NOTES_DIR\ is\ not\ valid ]]
+}
