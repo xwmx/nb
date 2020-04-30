@@ -1,4 +1,12 @@
 _notes_subcommands() {
+  # _cache_completions()
+  #
+  # Usage:
+  #   _cache_completions <path>
+  #
+  # Description:
+  #   Cache completions for `notes`. Generating completions can be slow and
+  #   native shell caching doesn't appear to help.
   _cache_completions() {
     local _cache_path="${1:-}"
 
