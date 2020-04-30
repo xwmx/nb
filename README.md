@@ -93,7 +93,17 @@ Recommended:
 
 Also supported:
 
-[Ack](http://beyondgrep.com/), [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher), [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard), [`imgcat`](https://www.iterm2.com/documentation-images.html), [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)), [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander), [MPlayer](https://en.wikipedia.org/wiki/MPlayer), [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext), [Ranger](https://ranger.github.io/)
+[Ack](http://beyondgrep.com/),
+[Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
+[`ffplay`](http://ffmpeg.org/ffplay.html),
+[GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
+[`imgcat`](https://www.iterm2.com/documentation-images.html),
+[Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
+[Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
+[`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
+[MPlayer](https://en.wikipedia.org/wiki/MPlayer),
+[`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
+[Ranger](https://ranger.github.io/)
 
 ### Installation
 
