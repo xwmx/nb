@@ -285,11 +285,6 @@ trap _notes_cleanup_on_exit EXIT
 # Helpers
 ###############################################################################
 
-# $_LESS_PROMPT
-#
-# The prompt to display in `less`
-_LESS_PROMPT="press f to skip forward, b for back, h for help, or q to quit"
-
 # $_NEWLINE
 #
 # Assign newline with ANSI-C quoting for string building.
@@ -1351,6 +1346,33 @@ _join() {
   printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
 }
 
+# _less_prompt
+#
+# Usage:
+#   _less_prompt
+#
+# The prompt to display in `less`.
+_less_prompt() {
+  local _columns=
+  _columns="$(tput cols)"
+  local _prompt=
+
+  if [[ "${_columns}" -gt "80" ]]
+  then
+    _prompt="\
+press RETURN for more, f to skip forward, b for back, h for help, or q to quit"
+  elif [[ "${_columns}" -gt "65" ]]
+  then
+    _prompt="\
+press RETURN for more, b to skip back, h for help, or q to quit"
+  else
+    _prompt="\
+press RETURN for more, h for help, or q to quit"
+  fi
+
+  printf "%s\\n" "${_prompt}"
+}
+
 # _list_notes_files()
 #
 # Usage:
@@ -1636,7 +1658,7 @@ _help() {
                 "${PAGER}"
               elif _command_exists "less"
               then
-                less --prompt="${_LESS_PROMPT}"
+                less --prompt="$(_less_prompt)"
               else
                 cat
               fi
@@ -1764,7 +1786,7 @@ HEREDOC
           "${PAGER}"
         elif _command_exists "less"
         then
-          less --prompt="${_LESS_PROMPT}"
+          less --prompt="$(_less_prompt)"
         else
           cat
         fi
@@ -2306,7 +2328,7 @@ _bookmark() {
                 "${PAGER}"
               elif _command_exists "less"
               then
-                less --prompt="${_LESS_PROMPT}"
+                less --prompt="$(_less_prompt)"
               else
                 cat
               fi
@@ -4674,7 +4696,7 @@ _ls() {
     {
       printf "%s" "${_maybe_notebook_list}"
       _list "${_args[@]:-}"
-    } | less -r --prompt="${_LESS_PROMPT}"
+    } | less -r --prompt="$(_less_prompt)"
   else
     printf "%s" "${_maybe_notebook_list}"
     _list "${_args[@]:-}"
@@ -6533,7 +6555,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       imgcat "${_target_path}" \
         | if _command_exists "less" && ! ((_dump))
           then
-            less -r --prompt="${_LESS_PROMPT}"
+            less -r --prompt="$(_less_prompt)"
           else
             cat
           fi
@@ -6542,7 +6564,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       icat "${_target_path}"  \
         | if _command_exists "less" && ! ((_dump))
           then
-            less -r --prompt="${_LESS_PROMPT}"
+            less -r --prompt="$(_less_prompt)"
           else
             cat
           fi
@@ -6575,7 +6597,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             "${PAGER}"
           elif _command_exists "less" && ! ((_dump))
           then
-            less --prompt="${_LESS_PROMPT}"
+            less --prompt="$(_less_prompt)"
           else
             cat
           fi
@@ -6590,7 +6612,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             "${PAGER}"
           elif _command_exists "less" && ! ((_dump))
           then
-            less --prompt="${_LESS_PROMPT}"
+            less --prompt="$(_less_prompt)"
           else
             cat
           fi
@@ -6632,11 +6654,11 @@ Can't show archives. Export archive and expand to edit.\\n"
       if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
       then
         _highlight_syntax_if_available "${_target_path}" \
-          | "${PAGER}" -R --prompt="${_LESS_PROMPT}"
+          | "${PAGER}" -R --prompt="$(_less_prompt)"
       elif _command_exists "less"
       then
         _highlight_syntax_if_available "${_target_path}" \
-          | less -R --prompt="${_LESS_PROMPT}"
+          | less -R --prompt="$(_less_prompt)"
       elif [[ -n "${PAGER:-}" ]]
       then
         _highlight_syntax_if_available "${_target_path}" | "${PAGER}"
