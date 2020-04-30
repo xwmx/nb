@@ -1360,14 +1360,14 @@ _less_prompt() {
   if [[ "${_columns}" -gt "80" ]]
   then
     _prompt="\
-press RETURN for more, f to skip forward, b for back, h for help, or q to quit"
+scroll for more, f to skip forward, b for back, h for help, or q to quit"
   elif [[ "${_columns}" -gt "65" ]]
   then
     _prompt="\
-press RETURN for more, b to skip back, h for help, or q to quit"
+scroll for more, b to skip back, h for help, or q to quit"
   else
     _prompt="\
-press RETURN for more, h for help, or q to quit"
+scroll for more, h for help, or q to quit"
   fi
 
   printf "%s\\n" "${_prompt}"
