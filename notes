@@ -1656,7 +1656,7 @@ _help() {
                 "${PAGER}"
               elif _command_exists "less"
               then
-                less --prompt="$(_less_prompt)"
+                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
               else
                 cat
               fi
@@ -1784,7 +1784,7 @@ HEREDOC
           "${PAGER}"
         elif _command_exists "less"
         then
-          less --prompt="$(_less_prompt)"
+          less --CLEAR-SCREEN --prompt="$(_less_prompt)"
         else
           cat
         fi
@@ -1807,7 +1807,7 @@ HEREDOC
         elif [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
              _command_exists "less"
         then
-          less --prompt="$(_less_prompt)"
+          less --CLEAR-SCREEN --prompt="$(_less_prompt)"
         else
           cat
         fi
@@ -2347,7 +2347,7 @@ _bookmark() {
                 "${PAGER}"
               elif _command_exists "less"
               then
-                less --prompt="$(_less_prompt)"
+                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
               else
                 cat
               fi
@@ -4715,7 +4715,7 @@ _ls() {
     {
       printf "%s" "${_maybe_notebook_list}"
       _list "${_args[@]:-}"
-    } | less -r --prompt="$(_less_prompt)"
+    } | less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
   else
     printf "%s" "${_maybe_notebook_list}"
     _list "${_args[@]:-}"
@@ -6619,7 +6619,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             "${PAGER}"
           elif _command_exists "less" && ! ((_dump))
           then
-            less --prompt="$(_less_prompt)"
+            less --CLEAR-SCREEN --prompt="$(_less_prompt)"
           else
             cat
           fi
@@ -6634,7 +6634,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             "${PAGER}"
           elif _command_exists "less" && ! ((_dump))
           then
-            less --prompt="$(_less_prompt)"
+            less --CLEAR-SCREEN --prompt="$(_less_prompt)"
           else
             cat
           fi
@@ -6676,11 +6676,11 @@ Can't show archives. Export archive and expand to edit.\\n"
       if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
       then
         _highlight_syntax_if_available "${_target_path}" \
-          | "${PAGER}" -R --prompt="$(_less_prompt)"
+          | "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
       elif _command_exists "less"
       then
         _highlight_syntax_if_available "${_target_path}" \
-          | less -R --prompt="$(_less_prompt)"
+          | less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
       elif [[ -n "${PAGER:-}" ]]
       then
         _highlight_syntax_if_available "${_target_path}" | "${PAGER}"
