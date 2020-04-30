@@ -1624,7 +1624,7 @@ _help() {
   then
     _download_from \
       "https://raw.githubusercontent.com/xwmx/notes/master/README.md" \
-      | if _command_exists "paxndoc" && _command_exists "w3m"
+      | if _command_exists "pandoc" && _command_exists "w3m"
         then
           pandoc --from markdown --to html \
             | w3m -T text/html
@@ -1642,7 +1642,8 @@ _help() {
               fi
   elif [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^\-s$|^\-\-short$ ]]
   then
-    cat <<HEREDOC
+    {
+      cat <<HEREDOC
 __                _
 \ \   _ __   ___ | |_ ___  ___
  \ \ | '_ \ / _ \| __/ _ \/ __|
@@ -1757,7 +1758,17 @@ Program Options:
   -h --help         Display this help information.
   --version         Display version information.
 HEREDOC
-    fi
+      fi
+    } | if [[ -n "${PAGER:-}"      ]] &&
+           [[ ! "${PAGER}" =~ less ]]
+          then
+            "${PAGER}"
+          elif _command_exists "less"
+          then
+            less --prompt="${_LESS_PROMPT}"
+          else
+            cat
+          fi
   else
     desc --get "${@}"
   fi
