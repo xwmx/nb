@@ -75,7 +75,8 @@ _main() {
        [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
      }
   then
-    cat <<HEREDOC
+    {
+      cat <<HEREDOC
     __                __                        __
    / /_  ____  ____  / /______ ___  ____ ______/ /__
   / __ \\/ __ \\/ __ \\/ //_/ __ \`__ \\/ __ \`/ ___/ //_/
@@ -88,16 +89,25 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 HEREDOC
-    "${_NOTES_PATH:-}" help bookmark        \
-      | sed -e "s/  notes /  /"             \
-      | sed -e "s/Shortcut Alias: \`b\`//"  \
-      | sed -e '$ d'
+      "${_NOTES_PATH:-}" help bookmark        \
+        | sed -e "s/  notes /  /"             \
+        | sed -e "s/Shortcut Alias: \`b\`//"  \
+        | sed -e '$ d'
 
-    cat <<HEREDOC
+      cat <<HEREDOC
 ------------------------------------------------
 Part of \`notes\` (https://github.com/xwmx/notes).
 For more information, see: \`notes help\`.
 HEREDOC
+    } | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+        then
+          "${PAGER}"
+        elif hash "less" 2>/dev/null
+        then
+          less --prompt="press RETURN for more, h for help, or q to quit"
+        else
+          cat
+        fi
   else
     "${_NOTES_PATH}" bookmark "${@:-}"
   fi
