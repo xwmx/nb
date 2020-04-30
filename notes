@@ -1794,26 +1794,22 @@ HEREDOC
     local _help_text=
     _help_text="$(desc --get "${@}")"
 
+    local _help_text_lines=
+    _help_text_lines="$(printf "%s\\n" "${_help_text}" | wc -l)"
+
     local _lines=
     _lines="$(tput lines)"
 
-    local _local_prompt=
-
-    if [[ "${_lines}" -gt "$(printf "%s\\n" "${_help_text}" | wc -l)" ]]
-    then
-      _local_prompt="press h for help, or q to quit"
-    else
-      _local_prompt="$(_less_prompt)"
-    fi
-
     printf "%s\\n" "${_help_text}" \
-      | if [[ -n "${PAGER:-}" ]] &&
+      | if [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
+           [[ -n "${PAGER:-}" ]] &&
            [[ ! "${PAGER:-}" =~ less ]]
         then
           "${PAGER}"
-        elif _command_exists "less"
+        elif [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
+             _command_exists "less"
         then
-          less --prompt="${_local_prompt}"
+          less --prompt="$(_less_prompt)"
         else
           cat
         fi
