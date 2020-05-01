@@ -1211,7 +1211,7 @@ Usage:
              [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  notes notebook [archive | open | status | unarchive]
+  notes notebook [archive | open | peek | status | unarchive]
   notes notebooks [<name>] [--names] [--no-color]
   notes notebooks add <name> [<remote-url>]
   notes notebooks [current | use <name>]
@@ -1812,14 +1812,18 @@ Shortcut Alias: `mv`
 
 ```text
 Usage:
-  notes notebook [archive | open | status | unarchive]
+  notes notebook [archive | open | peek | status | unarchive]
 
 Subcommands:
   archive     Set the notebook to 'archived' status.
   open        Open the notebook directory in your file browser, explorer, or
               finder.
+  peek        Open the notebook directory in `ranger` [1] or `mc` [2].
   status      Print the archival status of the current notebook.
   unarchive   Remove 'archived' status from notebook.
+
+    1. https://ranger.github.io/
+    2. https://en.wikipedia.org/wiki/Midnight_Commander
 
 Description:
   Print, archive, or open the current notebook.

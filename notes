@@ -1764,7 +1764,7 @@ Usage:
              [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  ${_ME} notebook [archive | open | status | unarchive]
+  ${_ME} notebook [archive | open | peek | status | unarchive]
   ${_ME} notebooks [<name>] [--names] [--no-color]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks [current | use <name>]
@@ -4921,14 +4921,18 @@ _alias_subcommand "move" "mv"
 
 desc "notebook" <<HEREDOC
 Usage:
-  ${_ME} notebook [archive | open | status | unarchive]
+  ${_ME} notebook [archive | open | peek | status | unarchive]
 
 Subcommands:
   archive     Set the notebook to 'archived' status.
   open        Open the notebook directory in your file browser, explorer, or
               finder.
+  peek        Open the notebook directory in \`ranger\` [1] or \`mc\` [2].
   status      Print the archival status of the current notebook.
   unarchive   Remove 'archived' status from notebook.
+
+    1. https://ranger.github.io/
+    2. https://en.wikipedia.org/wiki/Midnight_Commander
 
 Description:
   Print, archive, or open the current notebook.
@@ -4961,6 +4965,15 @@ _notebook() {
         "%s doesn't know how to open directories on your system.\\n" \
         "${_ME}"
       return 1
+    fi
+  elif [[ "${_subcommand:-}" == "peek" ]]
+  then
+    if _command_exists "ranger"
+    then
+      ranger "${_NOTEBOOK_PATH}"
+    elif _command_exists "mc"
+    then
+      mc "${_NOTEBOOK_PATH}"
     fi
   else
     _dotfile_path="${_NOTEBOOK_PATH}/.archived"
