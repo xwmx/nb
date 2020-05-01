@@ -572,7 +572,7 @@ List bookmarks with `notes bookmark` and `notes bookmark list`:
 
 ```bash
 > notes bookmark
-Add: notes bookmark <url> Help: notes bookmark help
+Add: notes bookmark <url> Help: notes help bookmark
 ---------------------------------------------------
 [3] 🔖 Example Three (example.com)
 [2] 🔖 Example Two (example.com)

@@ -2276,6 +2276,10 @@ _bookmark() {
         _edit "${_val:-}"
         return 0
         ;;
+      help)
+        _help "bookmark"
+        return 0
+        ;;
       ls|list)
         _subcommand="list"
         ;;

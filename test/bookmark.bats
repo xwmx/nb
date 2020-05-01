@@ -683,3 +683,17 @@ HEREDOC
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" =~  notes\ bookmark ]]
 }
+
+@test "\`bookmark help\` exits with status 0 and prints." {
+  "${_NOTES}" init
+
+  run "${_NOTES}" bookmark help
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[1]}" =~  notes\ bookmark ]]
+}
