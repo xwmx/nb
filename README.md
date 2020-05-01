@@ -660,8 +660,8 @@ Perform a full text search of bookmarks and archived page content:
 
 ```bash
 > bookmark search 'example query'
-[10] example.bookmark.md 'Example Bookmark'
--------------------------------------------
+[10] example.bookmark.md 'Example Bookmark (example.com)'
+---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
 
@@ -698,9 +698,9 @@ highlighting:
 
 ```bash
 > notes search 'example'
-[314] example.bookmark.md 'Example Bookmark'
---------------------------------------------
-1:# Example Bookmark
+[314] example.bookmark.md 'Example Bookmark (example.com)'
+----------------------------------------------------------
+1:# Example Bookmark (example.com)
 
 3:<https://example.com>
 
@@ -994,7 +994,7 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> notes settings unset notes_highlight_color 
+> notes settings unset notes_highlight_color
 NOTES_HIGHLIGHT_COLOR restored to the default: '4'
 
 > notes settings get notes_highlight_color
@@ -1041,9 +1041,9 @@ notes> bookmark url 4
 https://example.com
 
 notes> search 'example'
-[4] example.bookmark.md 'Example Domain (example.com)'
-------------------------------------------------------
-1:# Example Bookmark
+[4] example.bookmark.md 'Example (example.com)'
+-----------------------------------------------
+1:# Example (example.com)
 
 3:<https://example.com>
 
