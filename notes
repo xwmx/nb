@@ -6538,6 +6538,7 @@ _show() {
   local _print_path=0
   local _render=0
   local _selection=
+  local _tool=
 
   # Parse function options.
   while ((${#}))
@@ -6570,6 +6571,16 @@ _show() {
         ;;
       --render|-r)
         _render=1
+        ;;
+      --tool)
+        if __option_value_is_present "${_val:-}"
+        then
+          _tool="${_val:-}"
+          shift
+        else
+          _help "show"
+          return 1
+        fi
         ;;
       *)
         if [[ -z "${_selection:-}" ]]
@@ -6658,13 +6669,25 @@ Can't show archives. Export archive and expand to edit.\\n"
 
   if ! _file_is_text "${_target_path}"
   then
-    if [[ -d "${_target_path}" ]] && _command_exists "ranger"
+    if [[ -d "${_target_path}" ]] &&
+       _command_exists "ranger"   &&
+       {
+         [[ -z "${_tool}" ]] || [[ "${_tool}" == "ranger" ]]
+       }
     then
       ranger "${_target_path}"
-    elif [[ -d "${_target_path}" ]] && _command_exists "mc"
+    elif [[ -d "${_target_path}" ]] &&
+         _command_exists "mc"       &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "mc" ]]
+         }
     then
       mc "${_target_path}"
-    elif [[ -d "${_target_path}" ]] && _command_exists "exa"
+    elif [[ -d "${_target_path}" ]] &&
+         _command_exists "exa"      &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "exa" ]]
+         }
     then
       exa -lah --git "${_target_path}"
     elif [[ -d "${_target_path}" ]]
@@ -6672,7 +6695,11 @@ Can't show archives. Export archive and expand to edit.\\n"
       # gnu || bsd
       ls -lah --color=always "${_target_path}" 2>/dev/null ||
         ls -lah -G "${_target_path}"
-    elif _command_exists "imgcat" && _file_is_image "${_target_path}"
+    elif _command_exists "imgcat"         &&
+         _file_is_image "${_target_path}" &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "imgcat" ]]
+         }
     then
       imgcat "${_target_path}" \
         | if _command_exists "less" && ! ((_dump))
@@ -6681,7 +6708,11 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
-    elif _command_exists "icat" && _file_is_image "${_target_path}"
+    elif _command_exists "icat"           &&
+         _file_is_image "${_target_path}" &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "icat" ]]
+         }
     then
       icat "${_target_path}"  \
         | if _command_exists "less" && ! ((_dump))
@@ -6690,21 +6721,36 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
-    elif _command_exists "mplayer" && _file_is_audio "${_target_path}"
+    elif _command_exists "mplayer"        &&
+         _file_is_audio "${_target_path}" &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "mplayer" ]]
+         }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
       mplayer "${_target_path}"
-    elif _command_exists "afplay" && _file_is_audio "${_target_path}"
+    elif _command_exists "afplay"         &&
+         _file_is_audio "${_target_path}" &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "afplay" ]]
+         }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
       afplay "${_target_path}"
-    elif _command_exists "mpg123"         &&
-         _file_is_audio "${_target_path}" &&
-         [[ "${_target_path}" =~ mp1$|mp2$|mp3$ ]]
+    elif _command_exists "mpg123"                   &&
+         _file_is_audio "${_target_path}"           &&
+         [[ "${_target_path}" =~ mp1$|mp2$|mp3$ ]]  &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "mpg123" ]]
+         }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
       mpg123 "${_target_path}"
-    elif _command_exists "ffplay" && _file_is_audio "${_target_path}"
+    elif _command_exists "ffplay"         &&
+         _file_is_audio "${_target_path}" &&
+         {
+           [[ -z "${_tool}" ]] || [[ "${_tool}" == "ffplay" ]]
+         }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
       ffplay -loglevel quiet "${_target_path}"
