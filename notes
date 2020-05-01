@@ -4980,12 +4980,9 @@ _notebook() {
     then
       exa -lah --git "${_NOTEBOOK_PATH}"
     else
-      if ls --color=always > /dev/null 2>&1
-      then # gnu
-        ls -lah --color=always "${_NOTEBOOK_PATH}"
-      else # bsd
+      # gnu || bsd
+      ls -lah --color=always "${_NOTEBOOK_PATH}" 2>/dev/null ||
         ls -lah -G "${_NOTEBOOK_PATH}"
-      fi
     fi
   else
     _dotfile_path="${_NOTEBOOK_PATH}/.archived"
@@ -6672,12 +6669,9 @@ Can't show archives. Export archive and expand to edit.\\n"
       exa -lah --git "${_target_path}"
     elif [[ -d "${_target_path}" ]]
     then
-      if ls --color=always > /dev/null 2>&1
-      then # gnu
-        ls -lah --color=always "${_target_path}"
-      else # bsd
+      # gnu || bsd
+      ls -lah --color=always "${_target_path}" 2>/dev/null ||
         ls -lah -G "${_target_path}"
-      fi
     elif _command_exists "imgcat" && _file_is_image "${_target_path}"
     then
       imgcat "${_target_path}" \
