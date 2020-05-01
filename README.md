@@ -91,10 +91,11 @@ Recommended:
 - [tig](https://github.com/jonas/tig)
 - [w3m](https://en.wikipedia.org/wiki/W3m)
 
-Also supported:
+Also supported for various enhancements:
 
 [Ack](http://beyondgrep.com/),
 [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
+[`exa`](https://github.com/ogham/exa),
 [`ffplay`](http://ffmpeg.org/ffplay.html),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
