@@ -3665,13 +3665,14 @@ Subcommands:
 
 Description:
   Manage the index for the current notebook. This subcommand is used
-  internally by \`${_ME}\` and using it manually will probably mess up
+  internally by \`${_ME}\` and using it manually will probably corrupt
   the index. If something goes wrong with the index, fix it with
   \`${_ME} index reconcile\`.
 
-  The index is a text file named '.index' in the notebook directory containing
-  a list of filenames, and the line number of each filename represents the id.
-  .index is included in the git repository so ids are preserved across systems.
+  The index is a text file named '.index' in the notebook directory. .index
+  contains a list of filenames, and the line number of each filename
+  represents the id. .index is included in the git repository so ids are
+  preserved across systems.
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
