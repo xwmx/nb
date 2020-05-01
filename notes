@@ -2543,7 +2543,7 @@ HEREDOC
     if ! ((_raw_content)) &&
        _command_exists "pandoc"
     then
-      _bookmark_content+="${_NEWLINE}## Markdown Content${_NEWLINE}"
+      _bookmark_content+="${_NEWLINE}## Page Content${_NEWLINE}"
 
       local _processed_content
       _processed_content="$(
@@ -2554,7 +2554,7 @@ HEREDOC
         )"
       _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
     else
-      _bookmark_content+="${_NEWLINE}## HTML Content${_NEWLINE}"
+      _bookmark_content+="${_NEWLINE}## Page Content (HTML)${_NEWLINE}"
       _bookmark_content+="${_NEWLINE}${_page_content}${_NEWLINE}"
     fi
   fi

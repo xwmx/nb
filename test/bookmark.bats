@@ -85,7 +85,7 @@ load test_helper
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## Markdown Content
+## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -135,7 +135,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 New comment.
 
-## Markdown Content
+## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -184,7 +184,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## HTML Content
+## Page Content (HTML)
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -276,7 +276,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
 
 #tag1 #tag2
 
-## Markdown Content
+## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -328,7 +328,7 @@ Example comment.
 
 #tag1 #tag2
 
-## Markdown Content
+## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -374,7 +374,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## Markdown Content
+## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
