@@ -1776,7 +1776,8 @@ Usage:
   ${_ME} open (<id> | <filename> | <path> | <title>)
   ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
-  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
+  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
+               --to-bookmark | --to-note) [-f | --force]
   ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
   ${_ME} settings [colors [<number>] | edit | list]
   ${_ME} settings (get | unset) <setting>
@@ -5588,10 +5589,17 @@ _remote() {
 
 desc "rename" <<HEREDOC
 Usage:
-  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
+  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
+               --to-bookmark | --to-note) [-f | --force]
 
 Options:
-  --reset  Reset the filename to the timestamp at which it was last updated.
+  -f --force     Skip the confirmation prompt.
+  --reset        Reset the filename to the timestamp at which it was last updated.
+  --to-bookmark  Preserve the existing filename and replace the extension with
+                 '.bookmark.md' to convert the note to a bookmark.
+  --to-note      Preserve the existing filename and replace the bookmark's
+                 '.bookmark.md' extension with '.md' to convert the bookmark to
+                 a Markdown note.
 
 Description:
   Rename a note. Set the filename to <name> for the specified note file. When
@@ -5606,28 +5614,48 @@ Examples:
 
   # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
   ${_ME} rename example.bookmark.md "New Name"
+
+  # Rename note 3 ('example.md') to bookmark named 'example.bookmark.md'
+  ${_ME} rename 3 --to-bookmark
 HEREDOC
 _rename() {
+  local _force=0
   local _reset=0
   local _selection=
+  local _target_basename=
   local _target_name=
+  local _to_target_type=
 
-  for __arg in "${@:-}"
+  while ((${#}))
   do
-    case "${__arg}" in
+    local _arg="${1:-}"
+    local _val="${2:-}"
+
+    case "${_arg}" in
+      --force|-f)
+        _force=1
+        ;;
       --reset)
         _reset=1
+        ;;
+      --to-bookmark)
+        _to_target_type="bookmark"
+        ;;
+      --to-note)
+        _to_target_type="note"
         ;;
       *)
         if [[ -z "${_selection}" ]]
         then
-          _selection="${__arg}"
+          _selection="${_arg}"
         elif [[ -z "${_target_name}" ]]
         then
-          _target_name="${__arg}"
+          _target_name="${_arg}"
         fi
         ;;
     esac
+
+    shift
   done
 
   local _source_basename
@@ -5648,19 +5676,11 @@ _rename() {
     local _file_type="${NOTES_DEFAULT_EXTENSION}"
 
     # Assign filename with unicode timestamp.
-    local _target_basename
     _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
-    local _destination_path="${_NOTEBOOK_PATH}/${_target_basename}"
-
-    mv "${_source_path}" "${_destination_path}" &&
-      _index update "${_source_basename}" "${_target_basename}" &&
-      _git_checkpoint \
-        "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
-    printf "'%s' renamed to '%s'\\n" \
-      "${_source_basename}"   \
-       "${_target_basename}"
-  elif [[ -n "${_target_name}" ]]
+  elif [[ -n "${_target_name:-}"    ]] ||
+       [[ -n "${_to_target_type:-}" ]]
   then
+    local _source_file_name="${_source_basename%%.*}"
     local _source_file_type="${_source_basename#*.}"
     if [[ -z "${_source_file_type:-}" ]] ||
        [[ "${_source_file_type}" == "${_source_basename}" ]]
@@ -5672,7 +5692,7 @@ _rename() {
     local _target_file_type="${_target_name#*.}"
     if [[ -z "${_target_file_type:-}" ]] ||
        [[ "${_target_file_type}" == "${_target_name}" ]]
-    then
+    then # no file extension specified in _target_name
       if [[ -n "${_source_file_type}" ]]
       then
         _target_file_type="${_source_file_type}"
@@ -5681,28 +5701,69 @@ _rename() {
       fi
     fi
 
+    if [[ -n "${_to_target_type:-}" ]]
+    then
+      if [[ "${_to_target_type}" == "bookmark" ]]
+      then
+        _target_file_type="bookmark.md"
+      elif [[ "${_to_target_type}" == "note" ]]
+      then
+        _target_file_type="md"
+      else
+        _help "rename"
+        return 1
+      fi
+    fi
+
+    if [[ -z "${_target_file_name:-}" ]]
+    then
+      _target_file_name="${_source_file_name}"
+    fi
+
     if [[ -n "${_target_file_type:-}" ]]
     then
-      _target_name="${_target_file_name}.${_target_file_type}"
+      _target_basename="${_target_file_name}.${_target_file_type}"
+    else
+      _target_basename="${_target_name}"
     fi
 
-    if [[ -e "${_NOTEBOOK_PATH}/${_target_name}" ]]
+    if [[ -e "${_NOTEBOOK_PATH}/${_target_basename}" ]]
     then
-      printf "File already exists: '%s'\\n" "${_target_name}"
+      printf "File already exists: '%s'\\n" "${_target_basename}"
       return 1
     fi
-
-    mv "${_source_path}" "${_NOTEBOOK_PATH}/${_target_name}" &&
-      _index update "${_source_basename}" "${_target_name}" &&
-      _git_checkpoint \
-        "[NOTES] Rename: ${_source_basename} to ${_target_name}"
-    printf "'%s' renamed to '%s'\\n" \
-      "${_source_basename}"   \
-      "${_target_name}"
   else
     _help "rename"
     return 1
   fi
+
+  if ! ((_force))
+  then
+    printf "Renaming '%s' to '%s'\\n" \
+      "${_source_basename}" \
+      "${_target_basename}"
+    while true
+    do
+      read -r -p "Are you sure you want to proceed? [y/N] " __yn
+      case ${__yn} in
+        [Yy]*)
+          break
+          ;;
+        *)
+          printf "Exiting...\\n"
+          exit 0
+          ;;
+      esac
+    done
+  fi
+
+  mv "${_source_path}" "${_NOTEBOOK_PATH}/${_target_basename}" &&
+    _index update "${_source_basename}" "${_target_basename}" &&
+    _git_checkpoint \
+      "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
+  printf "'%s' renamed to '%s'\\n" \
+    "${_source_basename}"   \
+    "${_target_basename}"
 }
 
 # search ######################################################################

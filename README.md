@@ -1221,7 +1221,8 @@ Usage:
   notes open (<id> | <filename> | <path> | <title>)
   notes peek (<id> | <filename> | <path> | <title>)
   notes remote [remove | set <url> [-f | --force]]
-  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
+  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
+               --to-bookmark | --to-note) [-f | --force]
   notes search <query> [-a | --all] [--bookmarks] [--path]
   notes settings [colors [<number>] | edit | list]
   notes settings (get | unset) <setting>
@@ -1938,10 +1939,17 @@ Examples:
 
 ```text
 Usage:
-  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)
+  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
+               --to-bookmark | --to-note) [-f | --force]
 
 Options:
-  --reset  Reset the filename to the timestamp at which it was last updated.
+  -f --force     Skip the confirmation prompt.
+  --reset        Reset the filename to the timestamp at which it was last updated.
+  --to-bookmark  Preserve the existing filename and replace the extension with
+                 '.bookmark.md' to convert the note to a bookmark.
+  --to-note      Preserve the existing filename and replace the bookmark's
+                 '.bookmark.md' extension with '.md' to convert the bookmark to
+                 a Markdown note.
 
 Description:
   Rename a note. Set the filename to <name> for the specified note file. When
@@ -1956,6 +1964,9 @@ Examples:
 
   # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
   notes rename example.bookmark.md "New Name"
+
+  # Rename note 3 ('example.md') to bookmark named 'example.bookmark.md'
+  notes rename 3 --to-bookmark
 ```
 
 #### `search`

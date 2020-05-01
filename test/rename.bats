@@ -13,7 +13,7 @@ _setup_rename() {
   _setup_rename
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename
+  run "${_NOTES}" rename --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -46,7 +46,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE.org"
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.org" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -80,7 +80,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE"
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -115,7 +115,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE"
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -151,7 +151,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE.md"
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.md" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -187,7 +187,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE.bookmark.md"
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE.bookmark.md" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -223,7 +223,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE"
+  run "${_NOTES}" rename "${_filename}" "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -241,7 +241,7 @@ _setup_rename() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename 1 "EXAMPLE"
+  run "${_NOTES}" rename 1 "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -274,16 +274,16 @@ _setup_rename() {
     _setup_rename
     _original=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
     _filename="test.md"
-    "${_NOTES}" rename "${_original}" "${_filename}"
+    "${_NOTES}" rename "${_original}" "${_filename}" --force
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" --reset
+  run "${_NOTES}" rename "${_filename}" --reset --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-# Returns status 0
+  # Returns status 0
   [[ ${status} -eq 0 ]]
 
   # Renames note file
@@ -309,6 +309,161 @@ _setup_rename() {
   [[ "${output}" =~ \'test.md\'\ renamed\ to\ \'[A-Za-z0-9]+.md\' ]]
 }
 
+# <filename> --to- ############################################################
+
+@test "\`rename --to-bookmark\` with note renames without errors." {
+  {
+    "${_NOTES}" init
+    _filename="example.md"
+    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  echo "\${_filename:-}: ${_filename:-}"
+
+  run "${_NOTES}" rename "${_filename}" --to-bookmark --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${_files[0]}" =~ example.bookmark.md ]]
+  printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Rename') ]]
+
+  # Updates index
+  cat "${_NOTEBOOK_PATH}/.index"
+  "${_NOTES}" index get_id "${_files[0]}"
+  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'example.bookmark.md\' ]]
+}
+
+@test "\`rename 1 sample --to-bookmark\` with note renames without errors." {
+  {
+    "${_NOTES}" init
+    _filename="example.md"
+    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  run "${_NOTES}" rename "${_filename}" "sample" --to-bookmark --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${_files[0]}" =~ sample.bookmark.md ]]
+  printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Rename') ]]
+
+  # Updates index
+  cat "${_NOTEBOOK_PATH}/.index"
+  "${_NOTES}" index get_id "${_files[0]}"
+  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'sample.bookmark.md\' ]]
+}
+
+@test "\`rename 1 sample.demo --to-bookmark\` discards extension and renames." {
+  {
+    "${_NOTES}" init
+    _filename="example.md"
+    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  run "${_NOTES}" rename "${_filename}" "sample.demo" --to-bookmark --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${_files[0]}" =~ sample.bookmark.md ]]
+  printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Rename') ]]
+
+  # Updates index
+  cat "${_NOTEBOOK_PATH}/.index"
+  "${_NOTES}" index get_id "${_files[0]}"
+  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'sample.bookmark.md\' ]]
+}
+
+@test "\`rename --to-note\` with bookmark renames without errors." {
+  {
+    "${_NOTES}" init
+    _filename="example.bookmark.md"
+    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+  }
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  run "${_NOTES}" rename "${_filename}" --to-note --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${_files[0]}" =~ example.md ]]
+  printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Rename') ]]
+
+  # Updates index
+  cat "${_NOTEBOOK_PATH}/.index"
+  "${_NOTES}" index get_id "${_files[0]}"
+  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ \'example.bookmark.md\'\ renamed\ to\ \'example.md\' ]]
+}
+
 # help ########################################################################
 
 @test "\`help rename\` exits with status 0." {
@@ -321,5 +476,5 @@ _setup_rename() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset)" ]]
+  [[ "${lines[1]}" =~ \notes\ rename ]]
 }
