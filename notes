@@ -4974,6 +4974,11 @@ _notebook() {
     elif _command_exists "mc"
     then
       mc "${_NOTEBOOK_PATH}"
+    elif _command_exists "exa"
+    then
+      exa -lah --git "${_NOTEBOOK_PATH}"
+    else
+      ls -lah "${_NOTEBOOK_PATH}"
     fi
   else
     _dotfile_path="${_NOTEBOOK_PATH}/.archived"
@@ -6655,6 +6660,12 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif [[ -d "${_target_path}" ]] && _command_exists "mc"
     then
       mc "${_target_path}"
+    elif [[ -d "${_target_path}" ]] && _command_exists "exa"
+    then
+      exa -lah --git "${_target_path}"
+    elif [[ -d "${_target_path}" ]]
+    then
+      ls -lah "${_target_path}"
     elif _command_exists "imgcat" && _file_is_image "${_target_path}"
     then
       imgcat "${_target_path}" \
