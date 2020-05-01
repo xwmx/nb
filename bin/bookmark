@@ -65,7 +65,7 @@ _main() {
       elif [[ "${_count}" == 2 ]]
       then
         printf "%s\\n" "${__line}" \
-          | sed -e 's/-----------//'
+          | sed -e 's/------------//'
       else
         printf "%s\\n" "${__line}"
       fi
