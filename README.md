@@ -598,6 +598,9 @@ Bookmarks can also be encrypted:
 notes bookmark https://example.com --encrypt
 ```
 
+Encrypted bookmarks require a password before they can be viewed or
+opened.
+
 `notes bookmark` and `notes bookmark list` can be used to list and
 filter bookmarks:
 
@@ -605,7 +608,7 @@ filter bookmarks:
 > notes bookmark
 Add: notes bookmark <url> Help: notes help bookmark
 ---------------------------------------------------
-[3] 🔖 Example Three (example.com)
+[3] 🔖 🔒 Example Three (example.com)
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
@@ -666,7 +669,7 @@ List bookmarks with `bookmark` and `bookmark list`:
 > bookmark
 Add: bookmark <url> Help: bookmark help
 ---------------------------------------
-[3] 🔖 Example Three (example.com)
+[3] 🔖 🔒 Example Three (example.com)
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
