@@ -125,7 +125,7 @@ load test_helper
 
 # get_id #########################################################################
 
-@test "\`index get_id <filename>\` deletes an item from the index." {
+@test "\`index get_id <filename>\` returns the id for <filename>." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
@@ -151,17 +151,46 @@ load test_helper
   [[ "${lines[0]}" == "Usage:" ]]
 }
 
-@test "\`index delete <filename>\` with non-entry returns 1." {
+@test "\`index get_id <filename>\` with non-entry returns 1." {
   {
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
   }
 
-  run "${_NOTES}" index delete 'not-an-entry'
+  run "${_NOTES}" index get_id 'not-an-entry'
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${output}" == "" ]]
+}
+
+# get_max_id ##################################################################
+
+@test "\`index get_max_id\` returns the max id number." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "first.md"    --title "one"
+    "${_NOTES}" add "second.md"   --title "two"
+    "${_NOTES}" add "third.md"    --title "three"
+  }
+
+  run "${_NOTES}" index get_max_id
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "3" ]]
+}
+
+@test "\`index get_max_id\` with empty notebook returns 0." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" index get_max_id
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" == "0" ]]
 }
 
 # delete ######################################################################
