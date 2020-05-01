@@ -130,7 +130,7 @@ _debug() {
     # Prefix debug message with "bug (U+1F41B)"
     printf "🐛  %s " "${__DEBUG_COUNTER}"
     "${@}"
-    printf "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
+    printf "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
   fi
 }
 
@@ -1088,8 +1088,10 @@ _get_unique_basename() {
 #   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
   _git_checkpoint_commit() {
-    [[ -z "${1:-}" ]] && _die printf "Usage: _git_checkpoint_commit <message>"
-    _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" \
+    [[ -z "${1:-}" ]] &&
+      _die printf "Usage: _git_checkpoint_commit <message>"
+    _debug printf \
+      "_git_checkpoint() \$(ls -la): '%s'\\n" \
       "$(ls -la)"
 
     git add --all && git commit -a -m "${1}"
@@ -1144,7 +1146,8 @@ _git_checkpoint() {
     _show_spinner=1
   fi
 
-  cd "${_target_directory}" || _die printf "_git_checkpoint() \`cd\` failed.\\n"
+  cd "${_target_directory}" ||
+    _die printf "_git_checkpoint() \`cd\` failed.\\n"
 
   _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
 
@@ -2680,7 +2683,8 @@ _completions() {
     then
       local _maybe_path
       _maybe_path="$(
-        pkg-config --variable=completionsdir bash-completion 2>/dev/null || true
+        pkg-config \
+          --variable=completionsdir bash-completion 2>/dev/null || true
       )"
 
       if [[ -n "${_maybe_path:-}" ]]
@@ -4219,7 +4223,9 @@ _list() {
     _selection_basename="$(_get_selection_basename "${_selection}")"
     _set_selection_notebook "${_selection}"
   fi
-  _debug printf "list() \${_selection_basename}: '%s'\\n" "${_selection_basename}"
+  _debug printf \
+    "list() \${_selection_basename}: '%s'\\n" \
+    "${_selection_basename}"
 
   local _list_note_file_options=()
   local _filenames=()
@@ -4237,7 +4243,9 @@ _list() {
 
   local _filenames_count="${#_filenames[@]}"
 
-  _debug printf "list() \${_filenames_count}: '%s'\\n" "${_filenames_count[@]}"
+  _debug printf \
+    "list() \${_filenames_count}: '%s'\\n" \
+    "${_filenames_count[@]}"
 
   if [[ "${_filenames_count}" -eq 0 ]] && ((_bookmarks))
   then
@@ -4310,7 +4318,9 @@ HEREDOC
 
         local _difference
         _difference=$((_filenames_count-_counter))
-        printf "%s omitted. %s total.\\n" "${_difference}" "${_filenames_count}"
+        printf "%s omitted. %s total.\\n" \
+          "${_difference}" \
+          "${_filenames_count}"
         break
       fi
 
@@ -5149,7 +5159,8 @@ and the entire revision history.
 HEREDOC
       while true
       do
-        read -r -p "Please type $(_highlight "${_name}") to confirm: " __response
+        read -r -p "\
+Please type $(_highlight "${_name}") to confirm: " __response
         if [[ "${__response}" == "${_name}" ]]
         then
           break
@@ -6144,7 +6155,7 @@ $(_highlight "${_ME}") Settings
 ${_TPUT_SETAF_8}----------------${_TPUT_SGR0}
 ${_NOTES_SETTINGS_LIST}
 
-Enter the number or name of the setting you'd like to change, or $(_highlight 'q') to quit.
+Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
 HEREDOC
     local _setting_name=
 
