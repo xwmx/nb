@@ -6672,21 +6672,24 @@ Can't show archives. Export archive and expand to edit.\\n"
     if [[ -d "${_target_path}" ]] &&
        _command_exists "ranger"   &&
        {
-         [[ -z "${_tool}" ]] || [[ "${_tool}" == "ranger" ]]
+         [[ -z "${_tool}"          ]] ||
+         [[ "${_tool}" == "ranger" ]]
        }
     then
       ranger "${_target_path}"
     elif [[ -d "${_target_path}" ]] &&
          _command_exists "mc"       &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "mc" ]]
+           [[ -z "${_tool}"      ]] ||
+           [[ "${_tool}" == "mc" ]]
          }
     then
       mc "${_target_path}"
     elif [[ -d "${_target_path}" ]] &&
          _command_exists "exa"      &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "exa" ]]
+           [[ -z "${_tool}"       ]] ||
+           [[ "${_tool}" == "exa" ]]
          }
     then
       exa -lah --git "${_target_path}"
@@ -6698,7 +6701,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "imgcat"         &&
          _file_is_image "${_target_path}" &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "imgcat" ]]
+           [[ -z "${_tool}"          ]] ||
+           [[ "${_tool}" == "imgcat" ]]
          }
     then
       imgcat "${_target_path}" \
@@ -6711,7 +6715,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "icat"           &&
          _file_is_image "${_target_path}" &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "icat" ]]
+           [[ -z "${_tool}"        ]] ||
+           [[ "${_tool}" == "icat" ]]
          }
     then
       icat "${_target_path}"  \
@@ -6724,7 +6729,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "mplayer"        &&
          _file_is_audio "${_target_path}" &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "mplayer" ]]
+           [[ -z "${_tool}"           ]] ||
+           [[ "${_tool}" == "mplayer" ]]
          }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
@@ -6732,7 +6738,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "afplay"         &&
          _file_is_audio "${_target_path}" &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "afplay" ]]
+           [[ -z "${_tool}"          ]] ||
+           [[ "${_tool}" == "afplay" ]]
          }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
@@ -6741,7 +6748,8 @@ Can't show archives. Export archive and expand to edit.\\n"
          _file_is_audio "${_target_path}"           &&
          [[ "${_target_path}" =~ mp1$|mp2$|mp3$ ]]  &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "mpg123" ]]
+           [[ -z "${_tool}"          ]] ||
+           [[ "${_tool}" == "mpg123" ]]
          }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
@@ -6749,7 +6757,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "ffplay"         &&
          _file_is_audio "${_target_path}" &&
          {
-           [[ -z "${_tool}" ]] || [[ "${_tool}" == "ffplay" ]]
+           [[ -z "${_tool}"          ]] ||
+           [[ "${_tool}" == "ffplay" ]]
          }
     then
       printf "Playing audio. Press Ctrl-C to quit.\\n"
