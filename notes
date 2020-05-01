@@ -4927,12 +4927,14 @@ Subcommands:
   archive     Set the notebook to 'archived' status.
   open        Open the notebook directory in your file browser, explorer, or
               finder.
-  peek        Open the notebook directory in \`ranger\` [1] or \`mc\` [2].
+  peek        Open the notebook directory the first tool found in this list:
+              \`ranger\` [1], \`mc\` [2], \`exa\` [3] or \`ls\`.
   status      Print the archival status of the current notebook.
   unarchive   Remove 'archived' status from notebook.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
+    3. https://github.com/ogham/exa
 
 Description:
   Print, archive, or open the current notebook.
