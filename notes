@@ -2599,7 +2599,7 @@ _bookmarks() {
   then
     _list --bookmarks "${@}"
   else
-    _list --bookmarks
+    _bookmark
   fi
 }
 _alias_subcommand "bookmarks" "bs"
