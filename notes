@@ -3826,13 +3826,21 @@ _index() {
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
-        printf "%s\\n" "${_index_list[@]:-}" "${_file_list[@]:-}" | sort | uniq -u
+        printf "%s\\n"          \
+          "${_index_list[@]:-}" \
+          "${_file_list[@]:-}"  \
+          | sort                \
+          | uniq -u
       ))
 
       local -a _diff_in_index=()
       _diff_in_index=($(
-        printf "%s\\n" "${_index_list[@]:-}" "${_index_file_list_diff[@]:-}" \
-          | sort | uniq -d | uniq
+        printf "%s\\n"                    \
+          "${_index_list[@]:-}"           \
+          "${_index_file_list_diff[@]:-}" \
+          | sort                          \
+          | uniq -d                       \
+          | uniq
       ))
 
       for __item in "${_diff_in_index[@]:-}"
@@ -3846,8 +3854,12 @@ _index() {
 
       local -a _diff_in_file_list=()
       _diff_in_file_list=($(
-        printf "%s\\n" "${_file_list[@]:-}" "${_index_file_list_diff[@]:-}" \
-          | sort | uniq -d | uniq
+        printf "%s\\n"                    \
+          "${_file_list[@]:-}"            \
+          "${_index_file_list_diff[@]:-}" \
+          | sort                          \
+          | uniq -d                       \
+          | uniq
       ))
 
       for __item in "${_diff_in_file_list[@]:-}"
@@ -3894,7 +3906,11 @@ _index() {
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
-        printf "%s\\n" "${_index_list[@]:-}" "${_file_list[@]:-}" | sort | uniq -u
+        printf "%s\\n"          \
+          "${_index_list[@]:-}" \
+          "${_file_list[@]:-}"  \
+          | sort                \
+          | uniq -u
       ))
 
       if [[ -n "${_index_file_list_diff[*]:-}" ]]
