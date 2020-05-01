@@ -3692,6 +3692,7 @@ _index() {
         _help index
         return 1
       fi
+
       if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
       then
         printf "File not found: %s\\n" "${_basename}"
@@ -3803,8 +3804,10 @@ _index() {
 
         local _tmp_file
         _tmp_file="$(mktemp)"
+
         exec 3> "${_tmp_file}"
         exec 4< "${_tmp_file}"
+
         rm "${_tmp_file}"
 
         # Remove duplicates and preserve newlines.
