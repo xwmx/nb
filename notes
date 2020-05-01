@@ -2541,10 +2541,11 @@ HEREDOC
 
   if ! ((_skip_content))
   then
-    _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
     if ((_convert_content)) &&
        _command_exists "pandoc"
     then
+      _bookmark_content+="${_NEWLINE}## Markdown Content${_NEWLINE}"
+
       local _processed_content
       _processed_content="$(
         printf "%s\\n" "${_page_content}" \
@@ -2554,6 +2555,7 @@ HEREDOC
         )"
       _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
     else
+      _bookmark_content+="${_NEWLINE}## HTML Content${_NEWLINE}"
       _bookmark_content+="${_NEWLINE}${_page_content}${_NEWLINE}"
     fi
   fi
