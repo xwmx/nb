@@ -1498,7 +1498,7 @@ Usage:
   notes count
 
 Description:
-  Print the number of notes files in the current repository.
+  Print the number of items in the current notebook.
 ```
 
 #### `delete`

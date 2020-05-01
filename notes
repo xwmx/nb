@@ -2861,7 +2861,7 @@ Usage:
   ${_ME} count
 
 Description:
-  Print the number of notes files in the current notebook.
+  Print the number of items in the current notebook.
 HEREDOC
 _count() {
   _list_notes_files | wc -l
