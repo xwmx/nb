@@ -6561,7 +6561,7 @@ _show() {
           _password="${_val:-}"
           shift
         else
-          _help edit
+          _help "show"
           return 1
         fi
         ;;
