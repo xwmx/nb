@@ -6182,7 +6182,7 @@ HEREDOC
 
     cat <<HEREDOC
 
-Enter a new value, "unset" to set to the default value, or "q" to quit.
+Enter a new value, $(_highlight 'unset') to set to the default value, or $(_highlight 'q') to quit.
 HEREDOC
 
     while true
