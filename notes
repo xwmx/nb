@@ -3807,7 +3807,7 @@ _index() {
         exec 4< "${_tmp_file}"
         rm "${_tmp_file}"
 
-        # Remove duplicates
+        # Remove duplicates and preserve newlines.
         awk '!NF || !seen[$0]++' "${_reconcle_index_path}" >&3
         cat <&4 > "${_reconcle_index_path}"
 
