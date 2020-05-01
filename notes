@@ -3972,7 +3972,7 @@ HEREDOC
   elif [[ -e "${NOTES_DIR}" ]]
   then
     cat <<HEREDOC
-Unable to set up the $(_highlight "${_ME}") data directory. File already exists at:
+Unable to set up the $(_highlight "${_ME}") data directory. File exists at:
 ${NOTES_DIR}
 HEREDOC
     return 1
