@@ -568,6 +568,20 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
+List bookmarks with `notes bookmark` and `notes bookmark list`:
+
+```bash
+> notes bookmark
+Add: notes bookmark <url> Help: notes bookmark help
+---------------------------------------------------
+[3] 🔖 Example Three (example.com)
+[2] 🔖 Example Two (example.com)
+[1] 🔖 Example One (example.com)
+
+> notes bookmark list two
+[2] 🔖 Example Two (example.com)
+```
+
 Search for tagged bookmarks with `notes bookmark search`:
 
 ```bash
@@ -635,13 +649,18 @@ Bookmark a page:
 > bookmark https://example.com --tags tag1,tag2
 Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
 ```
-List bookmarks:
+List bookmarks with `bookmark` and `bookmark list`:
 
 ```bash
-> bookmark list
-[3] 🔖 Example Domain (example.com)
-[2] 🔖 Example Bookmark Two (example2.com)
-[1] 🔖 Example Bookmark One (example1.com)
+> bookmark
+Add: bookmark <url> Help: bookmark help
+---------------------------------------
+[3] 🔖 Example Three (example.com)
+[2] 🔖 Example Two (example.com)
+[1] 🔖 Example One (example.com)
+
+> bookmark list two
+[2] 🔖 Example Two (example.com)
 ```
 
 View a bookmark in your terminal web browser:
