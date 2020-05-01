@@ -1250,7 +1250,6 @@ Subcommands:
   count        Print the number of notes.
   delete       Delete a note.
   edit         Edit a note.
-  env          Print program environment variables.
   export       Export a note to a variety of different formats.
   git          Alias for `git` within the current notebook.
   help         Display this help information.
@@ -1554,7 +1553,7 @@ Usage:
   notes env
 
 Description:
-  Print program environment variables.
+  Print program environment and configuration information.
 ```
 
 #### `export`
