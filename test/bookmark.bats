@@ -87,12 +87,7 @@ load test_helper
 
 ## Content
 
-Example Domain
-==============
-
-This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
-
-[More information\...](https://www.iana.org/domains/example)"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -142,12 +137,56 @@ New comment.
 
 ## Content
 
-Example Domain
-==============
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
 
-This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Add') ]]
 
-[More information\...](https://www.iana.org/domains/example)"
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+}
+
+# --convert-content option ####################################################
+
+@test "\`bookmark --convert-content\` creates new note with converted content." {
+  {
+    run "${_NOTES}" init
+  }
+
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --convert-content
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note with bookmark filename
+  [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
+
+  # Creates new note file with content
+  [[ "${#_files[@]}" -eq 1 ]]
+  _bookmark_content="\
+# Example Domain
+
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Content
+
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -239,12 +278,7 @@ This domain is for use in illustrative examples in documents. You may use this d
 
 ## Content
 
-Example Domain
-==============
-
-This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
-
-[More information\...](https://www.iana.org/domains/example)"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -296,12 +330,7 @@ Example comment.
 
 ## Content
 
-Example Domain
-==============
-
-This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
-
-[More information\...](https://www.iana.org/domains/example)"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -347,12 +376,7 @@ This domain is for use in illustrative examples in documents. You may use this d
 
 ## Content
 
-Example Domain
-==============
-
-This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
-
-[More information\...](https://www.iana.org/domains/example)"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]

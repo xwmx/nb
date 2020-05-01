@@ -1187,9 +1187,9 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
+                 [--edit] [-e | --encrypt] [--skip-content]
+                 [--tags <tag1>,<tag2>...] [--title <title>]
   notes bookmark [list [<list options>...]]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1298,9 +1298,9 @@ Markdown files with Git-backed versioning and syncing.
 
 Usage:
   bookmark
-  bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
+                 [--edit] [-e | --encrypt] [--skip-content]
+                 [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1308,6 +1308,8 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
+  --convert-content             Convert the HTML page content to Markdown
+                                with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
   --skip-content                Omit page content from the note.
@@ -1333,9 +1335,10 @@ Subcommands:
 Description:
   Create, view, search, edit, and delete bookmarks.
 
-  By default, the page content is saved within the bookmark, making the
+  By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When `pandoc` is
-  installed, content will be converted to Markdown.
+  installed and the `--convert-content` option is used, the HTML content
+  will be converted to Markdown before saving.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within '<' and '>' characters:
@@ -1409,9 +1412,9 @@ Shortcut Alias: `a`
 ```text
 Usage:
   notes bookmark
-  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--skip-content] [--tags <tag1>,<tag2>...]
-                 [--title <title>]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
+                 [--edit] [-e | --encrypt] [--skip-content]
+                 [--tags <tag1>,<tag2>...] [--title <title>]
   notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1419,6 +1422,8 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
+  --convert-content             Convert the HTML page content to Markdown
+                                with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
   --skip-content                Omit page content from the note.
@@ -1444,9 +1449,10 @@ Subcommands:
 Description:
   Create, view, search, edit, and delete bookmarks.
 
-  By default, the page content is saved within the bookmark, making the
+  By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When `pandoc` is
-  installed, content will be converted to Markdown.
+  installed and the `--convert-content` option is used, the HTML content
+  will be converted to Markdown before saving.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within '<' and '>' characters:
