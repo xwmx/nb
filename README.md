@@ -575,13 +575,14 @@ notes bookmark search '#tagname'
 ```
 
 `notes bookmark search` has the same full text search as `notes search`.
-Search both bookmarks and notes for '#tagname' with `notes search`:
+Search both bookmarks and notes for tags with `notes search`:
 
 ```bash
 notes search '#tagname'
 ```
 
-Use `notes bookmark search` or `notes search` to search archived page content:
+`notes bookmark search` and `notes search` also automatically search archived
+page content:
 
 ```bash
 > notes bookmark search 'example query'
