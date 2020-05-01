@@ -568,7 +568,37 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-List bookmarks with `notes bookmark` and `notes bookmark list`:
+Search for tagged bookmarks with `notes bookmark search`:
+
+```bash
+notes bookmark search '#tagname'
+```
+
+`notes bookmark search` has the same full text search as `notes search`.
+Search both bookmarks and notes for '#tagname' with `notes search`:
+
+```bash
+notes search '#tagname'
+```
+
+Use `notes bookmark search` or `notes search` to search archived page content:
+
+```bash
+> notes bookmark search 'example query'
+[10] example.bookmark.md 'Example Bookmark (example.com)'
+---------------------------------------------------------
+5:Lorem ipsum example query.
+```
+
+Bookmarks can also be encrypted:
+
+```bash
+# create a new password-protected, encrypted bookmark
+notes bookmark https://example.com --encrypt
+```
+
+`notes bookmark` and `notes bookmark list` can be used to list and
+filter bookmarks:
 
 ```bash
 > notes bookmark
@@ -580,26 +610,6 @@ Add: notes bookmark <url> Help: notes help bookmark
 
 > notes bookmark list two
 [2] 🔖 Example Two (example.com)
-```
-
-Search for tagged bookmarks with `notes bookmark search`:
-
-```bash
-notes bookmark search '#tagname'
-```
-
-`notes bookmark search` has the same full text search as `notes search`.
-Search both bookmarks and notes with `notes search`:
-
-```bash
-notes search '#tagname'
-```
-
-Bookmarks can also be encrypted:
-
-```bash
-# create a new password-protected, encrypted bookmark
-notes bookmark https://example.com --encrypt
 ```
 
 #### Opening Bookmarks
