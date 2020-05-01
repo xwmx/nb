@@ -1187,8 +1187,8 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  notes bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
-                 [--edit] [-e | --encrypt] [--skip-content]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>]
   notes bookmark [list [<list options>...]]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1298,8 +1298,8 @@ Markdown files with Git-backed versioning and syncing.
 
 Usage:
   bookmark
-  bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
-                 [--edit] [-e | --encrypt] [--skip-content]
+  bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1308,10 +1308,10 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
-  --convert-content             Convert the HTML page content to Markdown
                                 with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
+  --raw-content                 Save the page content as HTML.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
@@ -1337,8 +1337,7 @@ Description:
 
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When `pandoc` is
-  installed and the `--convert-content` option is used, the HTML content
-  will be converted to Markdown before saving.
+  installed, the HTML content will be converted to Markdown before saving.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within '<' and '>' characters:
@@ -1412,8 +1411,8 @@ Shortcut Alias: `a`
 ```text
 Usage:
   notes bookmark
-  notes bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
-                 [--edit] [-e | --encrypt] [--skip-content]
+  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>]
   notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1422,10 +1421,10 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
-  --convert-content             Convert the HTML page content to Markdown
                                 with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
+  --raw-content                 Save the page content as HTML.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
@@ -1451,23 +1450,12 @@ Description:
 
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When `pandoc` is
-  installed and the `--convert-content` option is used, the HTML content
-  will be converted to Markdown before saving.
+  installed, the HTML content will be converted to Markdown before saving.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within '<' and '>' characters:
 
     <https://www.example.com>
-
-Examples:
-  notes bookmark https://example.com
-  notes bookmark https://example.com --tags example,sample,demo
-  notes bookmark https://example.com/about -c 'Example comment.'
-  notes bookmark list
-  notes bookmark search 'example query'
-  notes bookmark open 5
-
-Shortcut Alias: `b`
 ```
 
 #### `bookmarks`

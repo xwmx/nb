@@ -85,9 +85,9 @@ load test_helper
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## HTML Content
+## Markdown Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -135,9 +135,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
 
 New comment.
 
-## HTML Content
+## Markdown Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -159,14 +159,14 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
-# --convert-content option ####################################################
+# --raw-content option ########################################################
 
-@test "\`bookmark --convert-content\` creates new note with converted content." {
+@test "\`bookmark --raw-content\` creates new note with HTML content." {
   {
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --convert-content
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --raw-content
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
@@ -184,9 +184,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## Markdown Content
+## HTML Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -276,9 +276,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 #tag1 #tag2
 
-## HTML Content
+## Markdown Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -328,9 +328,9 @@ Example comment.
 
 #tag1 #tag2
 
-## HTML Content
+## Markdown Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -374,9 +374,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## HTML Content
+## Markdown Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]

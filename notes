@@ -1742,8 +1742,8 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
-                 [--edit] [-e | --encrypt] [--skip-content]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -2139,8 +2139,8 @@ _alias_subcommand "add" "new"
 desc "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--convert-content]
-                 [--edit] [-e | --encrypt] [--skip-content]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+                 [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -2149,10 +2149,10 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
-  --convert-content             Convert the HTML page content to Markdown
                                 with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
+  --raw-content                 Save the page content as HTML.
   --skip-content                Omit page content from the note.
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
@@ -2178,8 +2178,7 @@ Description:
 
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When \`pandoc\` is
-  installed and the \`--convert-content\` option is used, the HTML content
-  will be converted to Markdown before saving.
+  installed, the HTML content will be converted to Markdown before saving.
 
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
   bookmark URL is the first URL in the file within '<' and '>' characters:
@@ -2200,10 +2199,10 @@ _bookmark() {
   local _arguments=()
   local _bookmark_content=
   local _comment=
-  local _convert_content=0
   local _edit_before_save=0
   local _encrypt=0
   local _password=
+  local _raw_content=0
   local _selection=
   local _skip_content=0
   local _subcommand=
@@ -2227,9 +2226,6 @@ _bookmark() {
           return 1
         fi
         ;;
-      --convert-content)
-        _convert_content=1
-        ;;
       --edit)
         _edit_before_save=1
         ;;
@@ -2245,6 +2241,9 @@ _bookmark() {
           _help edit
           return 1
         fi
+        ;;
+      --raw-content)
+        _raw_content=1
         ;;
       --skip-content)
         _skip_content=1
@@ -2541,7 +2540,7 @@ HEREDOC
 
   if ! ((_skip_content))
   then
-    if ((_convert_content)) &&
+    if ! ((_raw_content)) &&
        _command_exists "pandoc"
     then
       _bookmark_content+="${_NEWLINE}## Markdown Content${_NEWLINE}"
