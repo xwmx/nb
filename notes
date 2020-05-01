@@ -686,7 +686,7 @@ _file_is_encrypted() {
 
   # `file` with 'soft' test is slow, so avoid calling it.
   [[ "${_file_type}" == "enc" ]]  ||
-    ! _file_is_text "${1:-}" &&
+    ! _file_is_text "${1:-}"      &&
     [[ "$(file "${_file_path:-}"  \
             --exclude=apptype     \
             --exclude=encoding    \
