@@ -85,14 +85,9 @@ load test_helper
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## Content
+## Page Content
 
-Example Domain
-==============
-
-This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.
-
-[More information\...](https://www.iana.org/domains/example)"
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
