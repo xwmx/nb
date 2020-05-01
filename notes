@@ -3786,6 +3786,7 @@ _index() {
       ;;
     get_max_id)
       wc -l < "${_index_path}" | tr -d '[:space:]'
+      printf "\\n"
       ;;
     rebuild)
       _debug printf "_index() rebuild\\n"
