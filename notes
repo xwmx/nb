@@ -639,7 +639,7 @@ _file_is_audio() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  [[ "${_file_type}" =~ ^aac|aiff|flac|m4a|mp3|ogg|wav$ ]]
+  [[ "${_file_type}" =~ ^aac$|^aiff$|^flac$|^m4a$|^mp3$|^ogg$|^wav$ ]]
 }
 
 # _file_is_bookmark()
@@ -669,8 +669,7 @@ _file_is_document() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  # Avoid calling `file` for better performance.
-  [[ "${_file_type}" =~ ^doc|docx|odt|pdf|rtf$ ]]
+  [[ "${_file_type}" =~ ^doc$|^docx$|^odt$|^pdf$|^rtf$ ]]
 }
 
 # _file_is_encrypted()
@@ -711,8 +710,26 @@ _file_is_image() {
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  [[ "${_file_type}" \
-    =~ ^png|jpg|jpeg|gif|webp|tiff|tif|psd|raw|bmp|ind|indd|ind|svg|svgz|ai$ ]]
+  local _file_types=(
+    png
+    jpg
+    jpeg
+    gif
+    webp
+    tiff
+    tif
+    psd
+    raw
+    bmp
+    ind
+    indd
+    ind
+    svg
+    svgz
+    ai
+  )
+
+  [[ "${_file_types[*]}" =~ ${_file_type} ]]
 }
 
 # _file_is_text()
@@ -728,8 +745,20 @@ _file_is_text() {
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  [[ "${_file_type}" =~ ^html|latex|md|markdown|org|rst|textile|txt$ ]] ||
+  local _file_types=(
+    html
+    latex
+    md
+    markdown
+    org
+    rst
+    textile
+    txt
+  )
+
+  [[ "${_file_types[*]}" =~ ${_file_type} ]] ||
     [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+
 }
 
 # _file_is_video()
@@ -744,7 +773,22 @@ _file_is_video() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  [[ "${_file_type}" =~ ^webm|mpg|mp2|mpeg|mp4|m4p|m4v|avi|wmv|mov|qt|flv$ ]]
+  local _file_types=(
+    webm
+    mpg
+    mp2
+    mpeg
+    mp4
+    m4p
+    m4v
+    avi
+    wmv
+    mov
+    qt
+    flv
+  )
+
+  [[ "${_file_types[*]}" =~ ${_file_type} ]]
 }
 
 # _get_first_line()
