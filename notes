@@ -630,7 +630,7 @@ _file_is_archive() {
 # _file_is_audio()
 #
 # Usage:
-#   _file_is_audio <path>
+#   _file_is_audio (<path> | <filename>)
 #
 # Returns:
 #   0  If file is an audio file.
@@ -645,7 +645,7 @@ _file_is_audio() {
 # _file_is_bookmark()
 #
 # Usage:
-#   _file_is_bookmark <path>
+#   _file_is_bookmark (<path> | <filename>)
 #
 # Returns:
 #   0 If file is a bookmark.
@@ -660,7 +660,7 @@ _file_is_bookmark() {
 # _file_is_document()
 #
 # Usage:
-#   _file_is_document <path>
+#   _file_is_document (<path> | <filename>)
 #
 # Returns:
 #   0  If file is a Word, Open Office, PDF, or other document.
@@ -700,7 +700,7 @@ _file_is_encrypted() {
 # _file_is_image()
 #
 # Usage:
-#   _file_is_image <path>
+#   _file_is_image (<path> | <filename>)
 #
 # Returns:
 #   0  If file is an image.
@@ -764,7 +764,7 @@ _file_is_text() {
 # _file_is_video()
 #
 # Usage:
-#   _file_is_video <path>
+#   _file_is_video (<path> | <filename>)
 #
 # Returns:
 #   0  If file is a video file.
