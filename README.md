@@ -48,7 +48,7 @@ features. `notes` is flexible.
   🔖
   🔒
   🔍
-  📓
+  📔
 </p>
 
 <p align="center">
@@ -2273,6 +2273,5 @@ root.
 </p>
 
 <p align="center">
-  📝🔖🔒🔍📓
-
+  📝🔖🔒🔍📔
 </p>
