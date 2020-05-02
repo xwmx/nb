@@ -1342,7 +1342,6 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
-                                with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
   --raw-content                 Save the page content as HTML.
@@ -1458,7 +1457,6 @@ Usage:
 
 Options:
   -c --comment   <comment>      A comment or description for this bookmark.
-                                with Pandoc.
   --edit                        Open the bookmark in your editor before saving.
   -e --encrypt                  Encrypt the bookmark with a password.
   --raw-content                 Save the page content as HTML.
