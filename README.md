@@ -1311,9 +1311,9 @@ Subcommands:
   version      Display version information.
 
 Program Options:
-  -i --interactive  Start the `notes` interactive shell.
-  -h --help         Display this help information.
-  --version         Display version information.
+  -i, --interactive   Start the `notes` interactive shell.
+  -h, --help          Display this help information.
+  --version           Display version information.
 ```
 
 #### `bookmark help`
@@ -1341,17 +1341,17 @@ Usage:
   bookmark search <query>
 
 Options:
-  -c --comment   <comment>      A comment or description for this bookmark.
-  --edit                        Open the bookmark in your editor before saving.
-  -e --encrypt                  Encrypt the bookmark with a password.
-  --raw-content                 Save the page content as HTML.
-  --skip-content                Omit page content from the note.
-  --tags         <tag1>,<tag2>  A comma-separated list of tags.
-  --title        <title>        The bookmark title. When not specified,
-                                `notes` will use the html <title> tag.
-  --via          <url>          A URL for the page that referred you to the
-                                bookmarked page. Multiple `--via` flags can
-                                be used in a command to save multiple URLs.
+  -c, --comment <comment>   A comment or description for this bookmark.
+  --edit                    Open the bookmark in your editor before saving.
+  -e, --encrypt             Encrypt the bookmark with a password.
+  --raw-content             Save the page content as HTML.
+  --skip-content            Omit page content from the note.
+  --tags <tag1>,<tag2>...   A comma-separated list of tags.
+  --title <title>           The bookmark title. When not specified,
+                            `notes` will use the html <title> tag.
+  --via <url>               A URL for the page that referred you to the
+                            bookmarked page. Multiple `--via` flags can
+                            be used in a command to save multiple URLs.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -1404,13 +1404,13 @@ Usage:
             [-t <title> | --title <title>] [--type <type>]
 
 Options:
-  -c --content   <content>    The content for the new note.
-  -e --encrypt                Encrypt the note with a password.
-  -f --filename  <filename>   The filename for the new note.
-  -t --title     <title>      The title for a new note. If `--title` is
+  -c, --content <content>     The content for the new note.
+  -e, --encrypt               Encrypt the note with a password.
+  -f, --filename <filename>   The filename for the new note.
+  -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename will be derived from the
                               title, unless `--filename` is specified.
-  --type         <type>       The file type for the new note, as a file
+  --type <type>               The file type for the new note, as a file
                               extension.
 
 Description:
@@ -1456,17 +1456,17 @@ Usage:
   notes bookmark search <query>
 
 Options:
-  -c --comment   <comment>      A comment or description for this bookmark.
-  --edit                        Open the bookmark in your editor before saving.
-  -e --encrypt                  Encrypt the bookmark with a password.
-  --raw-content                 Save the page content as HTML.
-  --skip-content                Omit page content from the note.
-  --tags         <tag1>,<tag2>  A comma-separated list of tags.
-  --title        <title>        The bookmark title. When not specified,
-                                `notes` will use the html <title> tag.
-  --via          <url>          A URL for the page that referred you to the
-                                bookmarked page. Multiple `--via` flags can
-                                be used in a command to save multiple URLs.
+  -c, --comment <comment>   A comment or description for this bookmark.
+  --edit                    Open the bookmark in your editor before saving.
+  -e, --encrypt             Encrypt the bookmark with a password.
+  --raw-content             Save the page content as HTML.
+  --skip-content            Omit page content from the note.
+  --tags <tag1>,<tag2>...   A comma-separated list of tags.
+  --title <title>           The bookmark title. When not specified,
+                            `notes` will use the html <title> tag.
+  --via <url>               A URL for the page that referred you to the
+                            bookmarked page. Multiple `--via` flags can
+                            be used in a command to save multiple URLs.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -1516,7 +1516,7 @@ Usage:
   notes completions (check | install [-d | --download] | uninstall)
 
 Options:
-  -d --download  Download the completion scripts and install.
+  -d, --download  Download the completion scripts and install.
 
 Description:
   Manage completion scripts. For more information, visit:
@@ -1540,7 +1540,7 @@ Usage:
   notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
 
 Options:
-  -f --force  Skip the confirmation prompt.
+  -f, --force   Skip the confirmation prompt.
 
 Description:
   Delete a note.
@@ -1561,8 +1561,8 @@ Usage:
              [-e <editor> | --editor <editor>]
 
 Options:
-  -e --editor <editor>  Edit the note with <editor>, overriding the editor
-                        specified in the `$EDITOR` environment variable.
+  -e, --editor <editor>  Edit the note with <editor>, overriding the editor
+                         specified in the `$EDITOR` environment variable.
 
 Description:
   Open the specified note in `$EDITOR` or <editor> if specified. Any data
@@ -1600,13 +1600,13 @@ Usage:
                [<pandoc options>...]
 
 Options:
-  -f --force  Skip the confirmation prompt when overwriting an existing file.
+  -f, --force   Skip the confirmation prompt when overwriting an existing file.
 
 Subcommands:
-  (default)   Export a file to <path>. If <path> has a different extension
-              than the source note, convert the note using `pandoc`.
-  pandoc      Export the file to standard output or a file using `pandoc`.
-              `export pandoc` prints to standard output by default.
+  (default)     Export a file to <path>. If <path> has a different extension
+                than the source note, convert the note using `pandoc`.
+  pandoc        Export the file to standard output or a file using `pandoc`.
+                `export pandoc` prints to standard output by default.
 
 Description:
   Export a file from the notebook.
@@ -1682,7 +1682,7 @@ Usage:
   notes import move <path>
 
 Options:
-  --convert    Convert HTML content to Markdown.
+  --convert  Convert HTML content to Markdown.
 
 Subcommands:
   (default) Copy or download the file in <path> or <url>.
@@ -1723,15 +1723,15 @@ Usage:
              [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --bookmarks            List only bookmarks.
-  -e --excerpt <length>  Print an excerpt <length> lines long under each
-                         note's filename [default: 3].
-  --filenames            Print the filename for each note.
-  --no-id                Don't print the id next to each note's filename.
-  -n           <limit>   The maximum number of notes to list.
-  --<limit>              Shortcut for `-n <limit>`.
-  -s --sort              Order notes by id.
-  -r --reverse           Order notes by id descending.
+  --bookmarks               List only bookmarks.
+  -e, --excerpt [<length>]  Print an excerpt <length> lines long under each
+                            note's filename [default: 3].
+  --filenames               Print the filename for each note.
+  --no-id                   Don't print the id next to each note's filename.
+  -n <limit>                The maximum number of notes to list.
+  --<limit>                 Shortcut for `-n <limit>`.
+  -s, --sort                Order notes by id.
+  -r, --reverse             Order notes by id descending.
 
 Description:
   List notes in the current notebook.
@@ -1768,15 +1768,15 @@ Usage:
            [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --bookmarks            List only bookmarks.
-  -e --excerpt <length>  Print an excerpt <length> lines long under each
-                         note's filename [default: 3].
-  --filenames            Print the filename for each note.
-  --no-id                Don't print the id next to each note's filename.
-  -n           <limit>   The maximum number of notes to list.
-  --<limit>              Shortcut for `-n <limit>`.
-  -s --sort              Order notes by id.
-  -r --reverse           Order notes by id descending.
+  --bookmarks               List only bookmarks.
+  -e, --excerpt [<length>]  Print an excerpt <length> lines long under each
+                            note's filename [default: 3].
+  --filenames               Print the filename for each note.
+  --no-id                   Don't print the id next to each note's filename.
+  -n <limit>                The maximum number of notes to list.
+  --<limit>                 Shortcut for `-n <limit>`.
+  -s, --sort                Order notes by id.
+  -r, --reverse             Order notes by id descending.
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -1830,7 +1830,7 @@ Usage:
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
 
 Options:
-  -f --force  Skip the confirmation prompt.
+  -f, --force   Skip the confirmation prompt.
 
 Description:
   Move the specified note to <notebook>.
@@ -1882,7 +1882,7 @@ Usage:
 
 Options:
   --achived     Only list archived notebooks.
-  -f --force    Skip the confirmation prompt.
+  -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
   --unarchived  Only list unarchived notebooks.
@@ -1952,12 +1952,12 @@ Usage:
   notes remote set <url> [-f | --force]
 
 Subcommands:
-  (default)  Print the remote URL for the notebook.
-  remove     Remove the remote URL from the notebook.
-  set        Set the remote URL for the notebook.
+  (default)     Print the remote URL for the notebook.
+  remove        Remove the remote URL from the notebook.
+  set           Set the remote URL for the notebook.
 
 Options:
-  -f --force  Skip the confirmation prompt.
+  -f, --force   Skip the confirmation prompt.
 
 Description:
   Get, set, and remove the remote repository URL for the current notebook.
@@ -1975,13 +1975,13 @@ Usage:
                --to-bookmark | --to-note) [-f | --force]
 
 Options:
-  -f --force     Skip the confirmation prompt.
-  --reset        Reset the filename to the timestamp at which it was last updated.
-  --to-bookmark  Preserve the existing filename and replace the extension with
-                 '.bookmark.md' to convert the note to a bookmark.
-  --to-note      Preserve the existing filename and replace the bookmark's
-                 '.bookmark.md' extension with '.md' to convert the bookmark to
-                 a Markdown note.
+  -f, --force     Skip the confirmation prompt.
+  --reset         Reset the filename to the last modified timestamp.
+  --to-bookmark   Preserve the existing filename and replace the extension
+                  with '.bookmark.md' to convert the note to a bookmark.
+  --to-note       Preserve the existing filename and replace the bookmark's
+                  '.bookmark.md' extension with '.md' to convert the bookmark
+                  to a Markdown note.
 
 Description:
   Rename a note. Set the filename to <name> for the specified note file. When
@@ -2008,9 +2008,9 @@ Usage:
   notes search <query> [-a | --all] [--bookmarks] [--path]
 
 Options:
-  -a --all     Search all active notebooks.
-  --bookmarks  Search only bookmarks.
-  --path       Print the full path for each file with query matches.
+  -a, --all     Search all active notebooks.
+  --bookmarks   Search only bookmarks.
+  --path        Print the full path for each file with query matches.
 
 Description:
   Search notes. Uses the first available tool in the following list:
@@ -2219,7 +2219,7 @@ Usage:
   notes sync [-a | --all]
 
 Options:
-  -a --all  Sync all active notebooks.
+  -a, --all   Sync all active notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.
