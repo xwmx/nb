@@ -8,7 +8,7 @@ __                _
 /_/  |_| |_|\___/ \__\___||___/
 ```
 
-# ❯ `notes` (+`bookmark`)
+# ❯ `notes`
 
 `notes` is a command line note-taking, bookmarking, and archiving
 tool with encryption, search, [Git](https://git-scm.com/)-backed versioning
