@@ -475,14 +475,14 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
-# --via option ###############################################################
+# --related option ############################################################
 
-@test "\`bookmark\` with invalid --via <url> argument exits with 1." {
+@test "\`bookmark\` with invalid --related <url> argument exits with 1." {
   {
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" bookmark --via
+  run "${_NOTES}" bookmark --related
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -505,12 +505,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${lines[0]}" =~ Usage ]]
 }
 
-@test "\`bookmark\` with one --via URL creates new note." {
+@test "\`bookmark\` with one --related URL creates new note." {
   {
     run "${_NOTES}" init
   }
 
-  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --via https://example.net
+  run "${_NOTES}" bookmark "${_BOOKMARK_URL}" --related https://example.net
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -525,7 +525,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## Via
+## Related
 
 - <https://example.net>
 
@@ -553,15 +553,15 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
 }
 
-@test "\`bookmark\` with three --via URLs creates new note." {
+@test "\`bookmark\` with three --related URLs creates new note." {
   {
     run "${_NOTES}" init
   }
 
   run "${_NOTES}" bookmark "${_BOOKMARK_URL}" \
-    --via https://example.net \
-    --via https://example.org \
-    --via https://example.example
+    --related https://example.net \
+    --related https://example.org \
+    --related https://example.example
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -576,7 +576,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
-## Via
+## Related
 
 - <https://example.net>
 - <https://example.org>
