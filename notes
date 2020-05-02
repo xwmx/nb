@@ -7338,9 +7338,9 @@ _SUBCOMMANDS=(
   a
   add
   b
-  bs
   bookmark
   bookmarks
+  bs
   commands
   completions
   config
@@ -7384,10 +7384,10 @@ _SUBCOMMANDS=(
   status
   subcommands
   sync
+  u
   update
   upgrade
   use
-  u
   version
 )
 
@@ -7396,17 +7396,23 @@ _SUBCOMMANDS=(
 # Primary subcommands that appear in documentation. For example, aliases are
 # omitted from this list. This list is also used for tab completion.
 _DOCUMENTED_SUBCOMMANDS=(
+  a
   add
+  b
   bookmark
   bookmarks
+  bs
   commands
   completions
   count
+  d
   delete
+  e
   edit
   export
   env
   git
+  h
   help
   history
   import
@@ -7415,19 +7421,27 @@ _DOCUMENTED_SUBCOMMANDS=(
   list
   ls
   move
+  mv
+  nb
+  nbs
   notebook
   notebooks
+  o
   open
+  p
   peek
   preview
+  q
   remote
   rename
+  s
   search
   settings
   shell
   show
   status
   sync
+  u
   update
   use
   version
