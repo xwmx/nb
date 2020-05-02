@@ -195,7 +195,7 @@ instructions](etc/README.md).
   <a href="#search">Search</a> •
   <a href="#revision-history">History</a> •
   <a href="#notebooks">Notebooks</a> •
-  <a href="#syncing-with-remotes">Git Sync</a> •
+  <a href="#git-syncing">Git Sync</a> •
   <a href="#import--export">Import / Export</a> •
   <a href="#settings">Settings</a> •
   <a href="#interactive-shell">Shell</a> •
@@ -871,7 +871,7 @@ notes example:notebook unarchive
 For more information about working with notebooks, run `notes help notebooks`
 and `notes help notebook`.
 
-### Syncing with Remotes
+### Git Syncing
 
 Each notebook can be synced with a remote git repository by setting the
 remote URL:
