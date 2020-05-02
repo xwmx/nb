@@ -1494,6 +1494,16 @@ Description:
   bookmark URL is the first URL in the file within '<' and '>' characters:
 
     <https://www.example.com>
+
+Examples:
+  notes bookmark https://example.com
+  notes bookmark https://example.com --tags example,sample,demo
+  notes bookmark https://example.com/about -c 'Example comment.'
+  notes bookmark list
+  notes bookmark search 'example query'
+  notes bookmark open 5
+
+Shortcut Alias: `b`
 ```
 
 #### `bookmarks`
