@@ -1744,7 +1744,7 @@ Usage:
             [-t <title> | --title <title>] [--type <type>]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
-                 [--tags <tag1>,<tag2>...] [--title <title>]
+                 [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -2141,7 +2141,7 @@ Usage:
   ${_ME} bookmark
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
-                 [--tags <tag1>,<tag2>...] [--title <title>]
+                 [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -2157,6 +2157,9 @@ Options:
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
                                 \`${_ME}\` will use the html <title> tag.
+  --via          <url>          A URL for the page that referred you to the
+                                bookmarked page. Multiple \`--via\` flags can
+                                be used in a command to save multiple URLs.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -2209,6 +2212,7 @@ _bookmark() {
   local _tag_list=
   local _title=
   local _url=
+  local _vias=()
 
   while ((${#}))
   do
@@ -2262,6 +2266,16 @@ _bookmark() {
         if __option_value_is_present "${_val:-}"
         then
           _title="${_val:-}"
+          shift
+        else
+          _help "bookmark"
+          return 1
+        fi
+        ;;
+      --via)
+        if __option_value_is_present "${_val:-}"
+        then
+          _vias+=("${_val:-}")
           shift
         else
           _help "bookmark"
@@ -2512,6 +2526,16 @@ HEREDOC
   fi
 
   _bookmark_content+="${_NEWLINE}<${_url}>${_NEWLINE}"
+
+  if [[ -n "${_vias[*]:-}" ]]
+  then
+    _bookmark_content+="${_NEWLINE}## Via${_NEWLINE}${_NEWLINE}"
+
+    for __via in "${_vias[@]:-}"
+    do
+      _bookmark_content+="- <${__via}>${_NEWLINE}"
+    done
+  fi
 
   if [[ -n "${_comment}" ]]
   then

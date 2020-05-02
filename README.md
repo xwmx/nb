@@ -1222,7 +1222,7 @@ Usage:
             [-t <title> | --title <title>] [--type <type>]
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
-                 [--tags <tag1>,<tag2>...] [--title <title>]
+                 [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
   notes bookmark [list [<list options>...]]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1333,7 +1333,7 @@ Usage:
   bookmark
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
-                 [--tags <tag1>,<tag2>...] [--title <title>]
+                 [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1349,6 +1349,9 @@ Options:
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
                                 `notes` will use the html <title> tag.
+  --via          <url>          A URL for the page that referred you to the
+                                bookmarked page. Multiple `--via` flags can
+                                be used in a command to save multiple URLs.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -1446,7 +1449,7 @@ Usage:
   notes bookmark
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
-                 [--tags <tag1>,<tag2>...] [--title <title>]
+                 [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
   notes bookmark list [<list options>...]
   notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1462,6 +1465,9 @@ Options:
   --tags         <tag1>,<tag2>  A comma-separated list of tags.
   --title        <title>        The bookmark title. When not specified,
                                 `notes` will use the html <title> tag.
+  --via          <url>          A URL for the page that referred you to the
+                                bookmarked page. Multiple `--via` flags can
+                                be used in a command to save multiple URLs.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
