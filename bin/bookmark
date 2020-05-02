@@ -29,7 +29,7 @@
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
 # Copyright (c) 2015-present William Melody • hi@williammelody.com
-# GPLv2 • See LICENSE for details.
+# AGPLv3 • See LICENSE for details.
 ###############################################################################
 
 export _NOTES_PATH="${_NOTES_PATH:-}"

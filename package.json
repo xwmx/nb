@@ -47,7 +47,7 @@
     "archive"
   ],
   "author": "William Melody",
-  "license": "GPL-2.0-only",
+  "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/xwmx/notes/issues"
   },
