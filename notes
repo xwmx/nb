@@ -451,7 +451,7 @@ _download_from() {
   local _downloaded=0
   local _url="${1:-}"
   if [[ -z "${_url}" ]] ||
-     [[ ! "${_url}" =~ ^ftp|http|file|mailto|news|telnet|gopher ]]
+     [[ ! "${_url}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
   then
     return 1
   fi
@@ -951,16 +951,16 @@ _get_selection_identifier() {
 # Description:
 #   Given <selection>, split on first colon.
 _get_selection_parts() {
-  local _identifier
-  local _notebook_dir
+  local _identifier=
+  local _maybe_notebook_name=
 
-  _notebook_dir=$(printf "%s\\n" "${1:-}" | cut -f 1 -d ":")
+  _maybe_notebook_name=$(printf "%s\\n" "${1:-}" | cut -f 1 -d ":")
 
   if [[ "${1:-}" =~ ':'       ]] &&
-     [[ -e "${NOTES_DIR}/${_notebook_dir}/.git" ]]
+     [[ -e "${NOTES_DIR}/${_maybe_notebook_name}/.git" ]]
   then
     _identifier=$(printf "%s\\n" "${1:-}" | cut -f 2- -d ":")
-    printf "%s\\n%s\\n" "${_notebook_dir}" "${_identifier}"
+    printf "%s\\n%s\\n" "${_maybe_notebook_name}" "${_identifier}"
   else
     printf "%s\\n" "${1:-}"
   fi
@@ -1264,9 +1264,9 @@ HEREDOC
 #   0  If an autosync should be triggered.
 #   1  If not.
 _git_should_autosync() {
-  local _current_timestamp
-  local _last_fetch_timestamp
-  local _maybe_fetch_timestamp
+  local _current_timestamp=
+  local _last_fetch_timestamp=
+  local _maybe_fetch_timestamp=
 
   if ! ((NOTES_AUTO_SYNC))
   then # autosync not enabled.
@@ -1357,7 +1357,7 @@ _highlight_syntax_if_available() {
     if _interactive_input
     then
       local _path="${1:-}"
-      local _basename
+      local _basename=
       _basename="$(basename "${_path}")"
       local _extension="${_basename##*.}"
 
