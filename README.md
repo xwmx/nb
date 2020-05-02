@@ -1220,6 +1220,7 @@ Usage:
   notes add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
+  notes bookmark [<list options>...]
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
@@ -1330,7 +1331,7 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 Usage:
-  bookmark
+  bookmark [<list options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
@@ -1446,7 +1447,7 @@ Shortcut Alias: `a`
 
 ```text
 Usage:
-  notes bookmark
+  notes bookmark [<list options>...]
   notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...

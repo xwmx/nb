@@ -1742,6 +1742,7 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
+  ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
@@ -2138,7 +2139,7 @@ _alias_subcommand "add" "new"
 
 desc "bookmark" <<HEREDOC
 Usage:
-  ${_ME} bookmark
+  ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--skip-content]
                  [--tags <tag1>,<tag2>...] [--title <title>] [--via <url>]...
@@ -2476,6 +2477,16 @@ ${_header}
 ${_TPUT_SETAF_8}---------------------------------------------------${_TPUT_SGR0}
 HEREDOC
     _bookmark list
+    return 0
+  elif [[ ! "${_url}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
+  then
+    if [[ -n "${_arguments[*]:-}" ]]
+    then
+      _arguments=("${_url}" "${_arguments[@]:-}")
+    else
+      _arguments=("${_url}")
+    fi
+    _bookmark list "${_arguments[@]}"
     return 0
   fi
 
