@@ -1664,21 +1664,6 @@ _spinner() {
 #
 # When the `--get` option is used, the description for <name> is printed, if
 # one has been set.
-#
-# NOTE:
-#
-# The `read` form of assignment is used for a balance of ease of
-# implementation and simplicity. There is an alternative assignment form
-# that could be used here:
-#
-# var="$(cat <<'HEREDOC'
-# some message
-# HEREDOC
-# )
-#
-# However, this form appears to require trailing space after backslases to
-# preserve newlines, which is unexpected. Using `read` simply requires
-# escaping backslashes, which is more common.
 desc() {
   set +e
   [[ -z "${1:-}" ]] && _die printf "desc(): No command name specified.\\n"
