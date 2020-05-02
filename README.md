@@ -663,7 +663,7 @@ Bookmark a page:
 > bookmark https://example.com --tags tag1,tag2
 Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
 ```
-List bookmarks with `bookmark` and `bookmark list`:
+List and filter bookmarks with `bookmark` and `bookmark list`:
 
 ```bash
 > bookmark
