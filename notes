@@ -7490,14 +7490,7 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
-# getopts and getopts have inconsistent behavior, so using a simple home-brewed
-# while loop. This isn't perfectly compliant with POSIX, but it's close enough
-# and this appears to be a widely used approach.
-#
-# More info:
-#   http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
-#   http://stackoverflow.com/a/14203146
-#   http://stackoverflow.com/a/7948533
+# Parse program options.
 while ((${#}))
 do
   __opt="${1}"
