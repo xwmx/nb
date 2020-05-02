@@ -105,7 +105,35 @@ then
 
   if [[ -z "${EDITOR:-}" ]]
   then
-    printf "\$EDITOR not found. Set the editor in ~/.notesrc\\n"
+    cat <<HEREDOC
+Command line text editor not found. Set the \$EDITOR variable in your
+environment or in the \`${_ME}\` configuration file located at:
+  ${NOTESRC_PATH}
+
+More information about setting \$EDITOR:
+  https://askubuntu.com/q/432524
+
+\`${_ME}\` uses text editors with command line support, such as:
+
+- Visual Studio Code
+    https://code.visualstudio.com
+- Sublime Text
+    https://www.sublimetext.com
+- Atom
+    https://atom.io
+- MacDown
+    https://macdown.uranusjr.com
+- Vim
+    https://en.wikipedia.org/wiki/Vim_(text_editor)
+- Emacs
+    https://en.wikipedia.org/wiki/Emacs
+- TextMate
+    https://macromates.com
+- nano
+    https://en.wikipedia.org/wiki/GNU_nano
+- or many of these:
+    https://en.wikipedia.org/wiki/List_of_text_editors
+HEREDOC
     exit 1
   fi
 fi
