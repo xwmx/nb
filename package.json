@@ -5,13 +5,12 @@
   "global": true,
   "install": "make install",
   "directories": {
-    "doc": "docs",
     "test": "test"
   },
   "bin": {
-    "notes": "./notes",
-    "notes.sh": "./notes",
-    "bookmark": "./bin/bookmark"
+    "notes": "notes",
+    "notes.sh": "notes",
+    "bookmark": "bin/bookmark"
   },
   "scripts": {
     "test": "bats test",
