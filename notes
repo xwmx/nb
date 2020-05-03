@@ -333,6 +333,12 @@ export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DIR}/home}"
 # The path of the local notebook, if one is found. The current working
 # directory and all parents are searched.
 export _LOCAL_NOTEBOOK_PATH=
+
+# `$_LOCAL_NOTEBOOK_NAME`
+#
+# The name of the local notebook, if one is found. The current working
+# directory and all parents are searched.
+export _LOCAL_NOTEBOOK_NAME=
 _set_notebook_path() {
   _get_local_notebook_path() {
     if [[ / == "${PWD}" ]]
@@ -353,10 +359,9 @@ _set_notebook_path() {
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
-    : # TODO
-  fi
-
-  if [[ -e "${NOTES_DIR}/.current" ]]
+    _LOCAL_NOTEBOOK_NAME="$(basename "${_LOCAL_NOTEBOOK_PATH}")"
+    _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+  elif [[ -e "${NOTES_DIR}/.current" ]]
   then
     local _current
     _current="$(cat "${NOTES_DIR}/.current")"
