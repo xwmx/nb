@@ -45,10 +45,15 @@ _VERSION="2.20.1"
 # Set to the program's basename.
 _ME="$(basename "${0}")"
 
+# $_MY_DIR
+#
+# The directory containing $_ME
+_MY_DIR=$(cd "$(dirname "$0")"; pwd)
+
 # $_MY_PATH
 #
 # Set to the program's full path.
-_MY_PATH="$(cd "$(dirname "$0")"; pwd)/$(basename "${0}")"
+_MY_PATH="${_MY_DIR}/${_ME}"
 
 # extglob
 #
