@@ -1862,8 +1862,10 @@ Subcommands:
   archive     Set the notebook to 'archived' status.
   open        Open the notebook directory in your file browser, explorer, or
               finder.
+              Shortcut Alias: `o`
   peek        Open the notebook directory the first tool found in this list:
               `ranger` [1], `mc` [2], `exa` [3] or `ls`.
+              Shortcut Alias: `p`
   status      Print the archival status of the current notebook.
   unarchive   Remove 'archived' status from notebook.
 

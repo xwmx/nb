@@ -5022,8 +5022,10 @@ Subcommands:
   archive     Set the notebook to 'archived' status.
   open        Open the notebook directory in your file browser, explorer, or
               finder.
+              Shortcut Alias: \`o\`
   peek        Open the notebook directory the first tool found in this list:
               \`ranger\` [1], \`mc\` [2], \`exa\` [3] or \`ls\`.
+              Shortcut Alias: \`p\`
   status      Print the archival status of the current notebook.
   unarchive   Remove 'archived' status from notebook.
 
@@ -5049,7 +5051,7 @@ _notebook() {
     return 0
   fi
 
-  if [[ "${_subcommand:-}" == "open" ]]
+  if [[ "${_subcommand:-}" =~ ^open$|^o$ ]]
   then
     if _command_exists "xdg-open"
     then
@@ -5063,7 +5065,7 @@ _notebook() {
         "${_ME}"
       return 1
     fi
-  elif [[ "${_subcommand:-}" == "peek" ]]
+  elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
   then
     if _command_exists "ranger"
     then
