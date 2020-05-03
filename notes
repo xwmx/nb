@@ -5323,7 +5323,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
   #   _notebooks_list [<name>] [--archived] [--names] [--no-color]
   #                            [--unarchived]
   _notebooks_list() {
-    local _notebook_directories=()
+    local _notebook_names=()
     local _no_color=0
     local _only_archived=0
     local _only_names=0
@@ -5347,22 +5347,22 @@ Please type $(_highlight "${_name}") to confirm: " __response
           _only_unarchived=1
           ;;
         *)
-          _notebook_directories+=("${__arg}")
+          _notebook_names+=("${__arg}")
           ;;
       esac
     done
 
-    if [[ -z "${_notebook_directories[*]:-}" ]]
+    if [[ -z "${_notebook_names[*]:-}" ]]
     then
-      _notebook_directories=($(ls -1 "${NOTES_DIR}"))
+      _notebook_names=($(ls -1 "${NOTES_DIR}"))
     fi
 
     _debug printf \
       "_notebooks_list() \${_only_names:-}: '%s'\\n" \
       "${_only_names:-}"
     _debug printf \
-      "_notebooks_list() \${_notebook_directories[*]}: '%s'\\n" \
-      "${_notebook_directories[*]:-}"
+      "_notebooks_list() \${_notebook_names[*]}: '%s'\\n" \
+      "${_notebook_names[*]:-}"
 
     if ! ((_no_color))
     then
@@ -5370,7 +5370,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       _current="$(_notebooks current)"
     fi
 
-    for __item in "${_notebook_directories[@]}"
+    for __item in "${_notebook_names[@]}"
     do
       if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
       then # it's a git repository.
@@ -5383,7 +5383,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         then # it's the current repository.
           _notebook_line="$(_highlight "${__item}")"
 
-          if [[ "${#_notebook_directories[@]}" -gt 1 ]]
+          if [[ "${#_notebook_names[@]}" -gt 1 ]]
           then
             _notebook_line="$(_highlight "${__item}" --underline)"
           fi
