@@ -55,6 +55,11 @@ _MY_DIR=$(cd "$(dirname "$0")"; pwd)
 # Set to the program's full path.
 _MY_PATH="${_MY_DIR}/${_ME}"
 
+# $_CURRENT_WORKING_DIR
+#
+# Set to the current working directory in which the program was invoked.
+_CURRENT_WORKING_DIR="${PWD}"
+
 # extglob
 #
 # Enable extended pattern matching operators.
@@ -243,7 +248,35 @@ fi
 #
 # Default: `$NOTES_DIR/home`
 export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DIR}/home}"
+
+# `$_LOCAL_NOTEBOOK_PATH`
+#
+# Set to the path of the local notebook, if one is found. The current working
+# directory and all parents are searched.
+export _LOCAL_NOTEBOOK_PATH=
 _set_notebook_path() {
+  _get_local_notebook_path() {
+    if [[ / == "${PWD}" ]]
+    then
+      cd "${_CURRENT_WORKING_DIR}"
+      return
+    elif [[ -d "${PWD}/.git"    ]] &&
+         [[ -f "${PWD}/.index"  ]]
+    then
+      _LOCAL_NOTEBOOK_PATH="${PWD}"
+      cd "${_CURRENT_WORKING_DIR}"
+      return
+    else
+      cd ..
+      _get_local_notebook_path
+    fi
+  } && _get_local_notebook_path
+
+  if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+  then
+    : # TODO
+  fi
+
   if [[ -e "${NOTES_DIR}/.current" ]]
   then
     local _current
