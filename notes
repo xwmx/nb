@@ -1873,7 +1873,7 @@ Usage:
                   [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
-  ${_ME} notebooks [current | use <name>]
+  ${_ME} notebooks [current [--path] | use <name>]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} open (<id> | <filename> | <path> | <title>)
@@ -5242,7 +5242,7 @@ Usage:
                   [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
-  ${_ME} notebooks current
+  ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
@@ -5254,6 +5254,7 @@ Options:
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
+  --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
 
@@ -5309,6 +5310,31 @@ _notebooks() {
         _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
+  }
+
+  # _notebooks_current()
+  #
+  # Usage:
+  #   _notebooks_current --path
+  _notebooks_current() {
+    local _path=0
+    if [[ "${1:-}" == "--path" ]]
+    then
+      _path=1
+    fi
+
+    if ((_path))
+    then
+      printf "%s\\n" "${_NOTEBOOK_PATH}"
+    else
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
+         [[ "${_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+      then
+        printf "local\\n"
+      else
+        basename "${_NOTEBOOK_PATH}"
+      fi
+    fi
   }
 
   # _notebooks_delete()
@@ -5695,7 +5721,7 @@ HEREDOC
       _notebooks_init "${_name:-}" "${3:-}"
       ;;
     current)
-      basename "${_NOTEBOOK_PATH}"
+      _notebooks_current "${_name:-}"
       ;;
     delete)
       _notebooks_delete "${_name:-}" "${3:-}"

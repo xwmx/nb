@@ -1276,7 +1276,7 @@ Usage:
                   [--no-color] [--paths] [--unarchived]
   notes notebooks add <name> [<remote-url>]
   notes notebooks init [(<name> | <path>) [<remote-url>]]
-  notes notebooks [current | use <name>]
+  notes notebooks [current [--path] | use <name>]
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
   notes open (<id> | <filename> | <path> | <title>)
@@ -1916,7 +1916,7 @@ Usage:
                   [--no-color] [--paths] [--unarchived]
   notes notebooks add <name> [<remote-url>]
   notes notebooks init [(<name> | <path>) [<remote-url>]]
-  notes notebooks current
+  notes notebooks current [--path]
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
   notes notebooks use <name>
@@ -1928,6 +1928,7 @@ Options:
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
+  --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
 
