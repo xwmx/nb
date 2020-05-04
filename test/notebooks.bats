@@ -174,7 +174,7 @@ one"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="example-local
+  _expected="local
 home
 one"
   [[ "${output}" == "${_expected}" ]]
@@ -189,12 +189,13 @@ one"
   }
 
   run "${_NOTES}" notebooks --names --no-color --local
-  [[ ${status} -eq 0 ]]
 
+  printf "\${PWD}: %s\\n" "${PWD}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="example-local"
+  [[ ${status} -eq 0 ]]
+  _expected="local"
   [[ "${output}" == "${_expected}" ]]
 }
 

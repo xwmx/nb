@@ -886,8 +886,8 @@ notebook is set as the current notebook:
 
 ```bash
 > notes ls
-example (local) · example2 · example3
--------------------------------------
+local · example2 · example3
+---------------------------
 [3] Title Three
 [2] Title Two
 [1] Title One

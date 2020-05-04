@@ -88,11 +88,10 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ "${lines[0]}" =~ example     ]]
-  [[ "${lines[0]}" =~ \(local\)   ]]
-  [[ "${lines[0]}" =~ home        ]]
-  [[ "${lines[1]}" =~ -------------------  ]]
-  [[ "${lines[2]}" =~ 0\ notes\.  ]]
+  [[ "${lines[0]}" =~ local         ]]
+  [[ "${lines[0]}" =~ home          ]]
+  [[ "${lines[1]}" =~ ------------  ]]
+  [[ "${lines[2]}" =~ 0\ notes\.    ]]
 }
 
 # `notes ls -e [<excerpt length>]` ############################################
