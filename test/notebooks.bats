@@ -780,6 +780,51 @@ one"
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 }
 
+@test "\`notebooks rename local <new-name>\` in local exits with 1." {
+  {
+    "${_NOTES}" init
+    run "${_NOTES}" notebooks add local
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+    [[ -e "${NOTES_DIR}/local" ]]
+  }
+
+  run "${_NOTES}" notebooks rename local new-name
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1 ]]
+  [[ "${lines[0]}" =~ can\ not\ be\ renamed\. ]]
+  [[ -e "${NOTES_DIR}/local" ]]
+}
+
+@test "\`notebooks rename local <new-name>\` outside local deletes." {
+  {
+    _pwd="${PWD}"
+    "${_NOTES}" init
+    run "${_NOTES}" notebooks add local
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+    cd "${_pwd}" || return 1
+    [[ -e "${NOTES_DIR}/local" ]]
+  }
+
+  run "${_NOTES}" notebooks rename local new-name
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ is\ now\ named ]]
+  [[ ! -e "${NOTES_DIR}/local" ]]
+  [[ -e "${NOTES_DIR}/new-name" ]]
+}
+
 # `notes notebooks use <name>` ################################################
 
 @test "\`notebooks use\` exits with 1 and prints error message." {

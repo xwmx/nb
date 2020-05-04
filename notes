@@ -5625,6 +5625,15 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       _help notebooks
       return 1
+    elif [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    then
+      if [[ "${_old}" == "local" ]] || [[ "${_new}" == "local" ]]
+      then
+        cat <<HEREDOC
+'local' refers to the local notbook and can not be renamed.
+HEREDOC
+        return 1
+      fi
     elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
     then
       printf "'%s' is not a valid notebook name.\\n" "${_old}"
