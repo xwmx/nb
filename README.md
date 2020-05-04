@@ -868,6 +868,31 @@ notes notebook unarchive
 notes example:notebook unarchive
 ```
 
+#### Global and Local Notebooks
+
+##### Global
+
+By default, all `notes` notebooks are global, making them always accessible in
+the terminal regardless of the current working directory. Global notebooks are
+stored in the directory [set in `NOTES_DIR`](#settings), which is `~/.notes` by
+default.
+
+#### Local
+
+`notes` also supports creating and working with local notebooks. Local
+notebooks are simply notebooks that are anywhere on the system outside
+of `NOTES_DIR`. When `notes` runs within a local notebook, the local
+notebook is set as the current notebook:
+
+```bash
+> notes ls
+example (local) · example2 · example3
+-------------------------------------
+[3] Title Three
+[2] Title Two
+[1] Title One
+```
+
 For more information about working with notebooks, run `notes help notebooks`
 and `notes help notebook`.
 
@@ -1247,8 +1272,10 @@ Usage:
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   notes notebook [archive | open | peek | status | unarchive]
-  notes notebooks [<name>] [--names] [--no-color]
+  notes notebooks [<name>] [--archived] [--global] [--local] [--names]
+                  [--no-color] [--unarchived]
   notes notebooks add <name> [<remote-url>]
+  notes notebooks init [(<name> | <path>) [<remote-url>]]
   notes notebooks [current | use <name>]
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
@@ -1885,8 +1912,10 @@ Shortcut Alias: `nb`
 
 ```text
 Usage:
-  notes notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
+  notes notebooks [<name>] [--archived] [--global] [--local] [--names]
+                  [--no-color] [--unarchived]
   notes notebooks add <name> [<remote-url>]
+  notes notebooks init [(<name> | <path>) [<remote-url>]]
   notes notebooks current
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
@@ -1894,6 +1923,8 @@ Usage:
 
 Options:
   --achived     Only list archived notebooks.
+  --global      List global notebooks.
+  --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
@@ -1901,7 +1932,8 @@ Options:
 
 Subcommands:
   (default)  List notebooks.
-  add        Create a new notebook.
+  add        Create a new global notebook.
+  init       Create a new local notebook.
   current    Print the current notebook name.
   delete     Delete a notebook.
   rename     Rename a notebook.

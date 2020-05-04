@@ -328,6 +328,17 @@ trap _notes_cleanup_on_exit EXIT
 # Default: `$NOTES_DIR/home`
 export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DIR}/home}"
 
+# `$_GLOBAL_NOTEBOOK_PATH`
+#
+# The path of the current global notebook.
+export _GLOBAL_NOTEBOOK_PATH="${_NOTEBOOK_PATH}"
+
+# `$_GLOBAL_NOTEBOOK_NAME`
+#
+# The name of the current global notebook.
+export _GLOBAL_NOTEBOOK_NAME=
+_GLOBAL_NOTEBOOK_NAME="$(basename "${_GLOBAL_NOTEBOOK_PATH}")"
+
 # `$_LOCAL_NOTEBOOK_PATH`
 #
 # The path of the local notebook, if one is found. The current working
@@ -339,8 +350,8 @@ export _LOCAL_NOTEBOOK_PATH=
 # The name of the local notebook, if one is found. The current working
 # directory and all parents are searched.
 export _LOCAL_NOTEBOOK_NAME=
-_set_notebook_path() {
-  _get_local_notebook_path() {
+__set_notebook_path() {
+  __get_local_notebook_path() {
     if [[ / == "${PWD}" ]]
     then
       cd "${_CURRENT_WORKING_DIR}"
@@ -353,24 +364,30 @@ _set_notebook_path() {
       return
     else
       cd ..
-      _get_local_notebook_path
+      __get_local_notebook_path
     fi
-  } && _get_local_notebook_path
+  } && __get_local_notebook_path
+
+  __set_global_notebook() {
+    if [[ -e "${NOTES_DIR}/.current" ]]
+    then
+      _GLOBAL_NOTEBOOK_NAME="$(cat "${NOTES_DIR}/.current")"
+
+      if [[ -d "${NOTES_DIR}/${_GLOBAL_NOTEBOOK_NAME}" ]]
+      then
+        _GLOBAL_NOTEBOOK_PATH="${NOTES_DIR}/${_GLOBAL_NOTEBOOK_NAME}"
+      fi
+    fi
+  } && __set_global_notebook
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
     _LOCAL_NOTEBOOK_NAME="$(basename "${_LOCAL_NOTEBOOK_PATH}")"
     _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-  elif [[ -e "${NOTES_DIR}/.current" ]]
-  then
-    local _current
-    _current="$(cat "${NOTES_DIR}/.current")"
-    if [[ -d "${NOTES_DIR}/${_current}" ]]
-    then
-      _NOTEBOOK_PATH="${NOTES_DIR}/${_current}"
-    fi
+  else
+    _NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
   fi
-} && _set_notebook_path
+} && __set_notebook_path
 
 ###############################################################################
 # Helpers
@@ -1844,8 +1861,10 @@ Usage:
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [archive | open | peek | status | unarchive]
-  ${_ME} notebooks [<name>] [--names] [--no-color]
+  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
+                  [--no-color] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
   ${_ME} notebooks [current | use <name>]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
@@ -4776,10 +4795,12 @@ _ls() {
     _columns="$(tput cols)"
 
     local _notebook_names_raw
-    _notebook_names_raw=($(_notebooks --names --no-color --unarchived))
+    _notebook_names_raw=($(
+      _notebooks --names --no-color --unarchived --global
+    ))
 
     local _notebook_names_hi
-    _notebook_names_hi=($(_notebooks --names  --unarchived))
+    _notebook_names_hi=($(_notebooks --names --unarchived --global))
 
     local _notebook_names_archived=
     _notebook_names_archived=($(
@@ -4798,6 +4819,19 @@ _ls() {
         "[${_archived_count} archived]"
       )
     fi
+
+    if [[ -n "${_LOCAL_NOTEBOOK_NAME:-}" ]]
+    then
+      _notebook_names_hi=(
+        "$(_highlight "${_LOCAL_NOTEBOOK_NAME:-}" --underline) (local)"
+        "${_notebook_names_hi[@]}"
+      )
+      _notebook_names_raw=(
+        "${_LOCAL_NOTEBOOK_NAME:-} (local)"
+        "${_notebook_names_raw[@]}"
+      )
+    fi
+
     local _notebooks_count="${#_notebook_names_raw[@]}"
 
     local _line_number=0
@@ -5178,7 +5212,8 @@ _alias_subcommand "notebook" "nb"
 
 desc "notebooks" <<HEREDOC
 Usage:
-  ${_ME} notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
+  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
+                  [--no-color] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
   ${_ME} notebooks current
@@ -5188,6 +5223,8 @@ Usage:
 
 Options:
   --achived     Only list archived notebooks.
+  --global      List global notebooks.
+  --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
@@ -5405,12 +5442,15 @@ Please type $(_highlight "${_name}") to confirm: " __response
   # _notebooks_list()
   #
   # Usage:
-  #   _notebooks_list [<name>] [--archived] [--names] [--no-color]
-  #                            [--unarchived]
+  #   _notebooks_list [<name>] [--archived] [--local] [--global] [--names]
+  #                   [--no-color] [--unarchived]
   _notebooks_list() {
     local _notebook_names=()
+    local _notebook_paths=()
     local _no_color=0
     local _only_archived=0
+    local _only_global=0
+    local _only_local=0
     local _only_names=0
     local _only_unarchived=0
 
@@ -5421,6 +5461,12 @@ Please type $(_highlight "${_name}") to confirm: " __response
       case "${__arg}" in
         --archived)
           _only_archived=1
+          ;;
+        --local)
+          _only_local=1
+          ;;
+        --global)
+          _only_global=1
           ;;
         --names)
           _only_names=1
@@ -5440,6 +5486,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
     if [[ -z "${_notebook_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NOTES_DIR}"))
+      set +f
+      _notebook_paths=($(ls -1 -d "${NOTES_DIR}"/*))
+      set -f
     fi
 
     _debug printf \
@@ -5448,6 +5497,47 @@ Please type $(_highlight "${_name}") to confirm: " __response
     _debug printf \
       "_notebooks_list() \${_notebook_names[*]}: '%s'\\n" \
       "${_notebook_names[*]:-}"
+    _debug printf \
+      "_notebooks_list() \${_notebook_paths[*]}: '%s'\\n" \
+      "${_notebook_paths[*]:-}"
+
+    if [[ -n "${_LOCAL_NOTEBOOK_NAME:-}" ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    then
+      if ((_only_local))
+      then
+        _notebook_names=("${_LOCAL_NOTEBOOK_NAME}")
+        _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}")
+      elif ! ((_only_global))
+      then
+        _notebook_names=("${_LOCAL_NOTEBOOK_NAME}" "${_notebook_names[@]:-}")
+        _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}" "${_notebook_paths[@]:-}")
+      fi
+    elif ((_only_local))
+    then
+      _notebook_names=()
+      _notebook_paths=()
+    fi
+
+    if [[ -z "${_notebook_names[*]:-}" ]]
+    then
+      return 1
+    fi
+
+    if [[ -z "${_notebook_paths[*]:-}" ]]
+    then
+      for ((i=0;i < "${#_notebook_names[@]}"; i++))
+      do
+        if [[ "${i}" == "0" ]] &&
+           [[ -n "${_LOCAL_NOTEBOOK_NAME:-}" ]] &&
+           [[ "${_LOCAL_NOTEBOOK_NAME}" == "${_notebook_names[0]:-}" ]]
+        then
+          _notebook_paths+=("${_LOCAL_NOTEBOOK_PATH}")
+        else
+          _notebook_paths+=("${NOTES_DIR}/${_notebook_names[i]}")
+        fi
+      done
+    fi
 
     if ! ((_no_color))
     then
@@ -5455,28 +5545,44 @@ Please type $(_highlight "${_name}") to confirm: " __response
       _current="$(_notebooks current)"
     fi
 
-    for __item in "${_notebook_names[@]}"
+    for ((i=0;i < "${#_notebook_names[@]}"; i++))
     do
-      if [[ -e "${NOTES_DIR}/${__item}/.git" ]]
+      if [[ -e "${_notebook_paths[i]}/.git" ]]
       then # it's a git repository.
         local _notebook_line=
         local _origin_url=
 
-        if ! ((_no_color)) &&
-           [[ -n "${_current}" ]] &&
-           [[ "${_current}" == "${__item}" ]]
+        if ! ((_no_color))      &&
+           ! ((_only_global))   &&
+           [[ "${i}" == "0" ]]  &&
+           [[ -n "${_LOCAL_NOTEBOOK_NAME:-}" ]] &&
+           [[ "${_LOCAL_NOTEBOOK_NAME}" == "${_notebook_names[i]}" ]]
+        then
+          _notebook_line="$(_highlight "${_notebook_names[i]}" --underline)"
+
+          if ! ((_only_names))
+          then
+            _notebook_line="${_notebook_line} (local)"
+          fi
+        elif ! ((_no_color))        &&
+             ! ((_only_local))      &&
+             [[ -n "${_current}" ]] &&
+             [[ "${_current}" == "${_notebook_names[i]}" ]] &&
+             [[ -z "${_LOCAL_NOTEBOOK_NAME:-}" ]]
         then # it's the current repository.
-          _notebook_line="$(_highlight "${__item}")"
+          _notebook_line="$(_highlight "${_notebook_names[i]}")"
 
           if [[ "${#_notebook_names[@]}" -gt 1 ]]
           then
-            _notebook_line="$(_highlight "${__item}" --underline)"
+            _notebook_line="$(
+              _highlight "${_notebook_names[i]}" --underline
+            )"
           fi
         else
-          _notebook_line="${__item}"
+          _notebook_line="${_notebook_names[i]}"
         fi
 
-        if [[ -e "${NOTES_DIR}/${__item}/.archived" ]]
+        if [[ -e "${_notebook_paths[i]}/.archived" ]]
         then
           if ((_only_unarchived))
           then
@@ -5492,7 +5598,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
         if ! ((_only_names))
         then
-          cd "${NOTES_DIR}/${__item}" ||
+          cd "${_notebook_paths[i]}" ||
             _die printf "_notebooks() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
           if [[ -n "${_origin_url:-}" ]]

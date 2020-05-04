@@ -70,6 +70,31 @@ HEREDOC
   [[ "${lines[4]}" =~ one     ]]
 }
 
+@test "\`ls\` with local includes it in notebook list." {
+  {
+    _setup_ls
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NOTES}" ls
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ \(local\)   ]]
+  [[ "${lines[0]}" =~ home        ]]
+  [[ "${lines[1]}" =~ -------------------  ]]
+  [[ "${lines[2]}" =~ 0\ notes\.  ]]
+}
+
 # `notes ls -e [<excerpt length>]` ############################################
 
 @test "\`ls -e <excerpt length>\` exits with 0 and displays excerpts." {

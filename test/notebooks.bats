@@ -160,6 +160,78 @@ one"
   [[ "${output}" == "${_expected}" ]]
 }
 
+@test "\`notebooks --names --no-color\` prints local and global." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+  }
+
+  run "${_NOTES}" notebooks --names --no-color
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="example-local
+home
+one"
+  [[ "${output}" == "${_expected}" ]]
+}
+
+@test "\`notebooks --names --no-color --local\` exits with 0 and prints local." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+  }
+
+  run "${_NOTES}" notebooks --names --no-color --local
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="example-local"
+  [[ "${output}" == "${_expected}" ]]
+}
+
+@test "\`notebooks --names --no-color --local\` with no local exits with 1." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}"
+    [[ "$(pwd)" == "${_TMP_DIR}" ]]
+  }
+
+  run "${_NOTES}" notebooks --names --no-color --local
+  [[ ${status} -eq 1 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ -z "${output}" ]]
+}
+
+@test "\`notebooks --names --no-color --global\` exits with 0 and prints global." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+  }
+
+  run "${_NOTES}" notebooks --names --no-color --global
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="home
+one"
+  [[ "${output}" == "${_expected}" ]]
+}
+
 # `notes notebooks current` ###################################################
 
 @test "\`notebooks current\` exits with 0 and prints the current notebook name." {
@@ -406,7 +478,6 @@ one"
 @test "\`notebooks init <relative path>\` with no arguments succeeds." {
   {
     _setup_notebooks
-    mkdir -p "${_TMP_DIR}/example"
     cd "${_TMP_DIR}"
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
@@ -468,9 +539,6 @@ one"
 @test "\`notebooks init <absolute path>\` with no arguments succeeds." {
   {
     _setup_notebooks
-    mkdir -p "${_TMP_DIR}/example"
-    cd "${_TMP_DIR}"
-    [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
   run "${_NOTES}" notebooks init "${_TMP_DIR}/example"

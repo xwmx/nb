@@ -113,6 +113,7 @@ _highlight() {
 #   Initialize and add initial commit to a git repository at
 #   `$_GIT_REMOTE_URL`.
 _setup_remote_repo() {
+  local _pwd="${PWD}"
   if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
      [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/notes_test ]]
   then
@@ -122,5 +123,7 @@ _setup_remote_repo() {
       touch '.index'            &&
       git add --all             &&
       git commit -a -m "Initial commit."
+
+      cd "${_pwd}" || exit
   fi
 }
