@@ -1643,8 +1643,15 @@ _set_selection_notebook() {
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
     _SCOPED=1
-    _NOTEBOOK_PATH="${NOTES_DIR}/${_parts[0]}"
-    _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+    if [[ "${_parts[0]}" == "local"       ]] &&
+       [[ -z "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+    then
+      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+      _SCOPE="local"
+    else
+      _NOTEBOOK_PATH="${NOTES_DIR}/${_parts[0]}"
+      _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+    fi
   fi
 }
 
@@ -4816,10 +4823,18 @@ _ls() {
 
     if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
     then
-      _notebook_names_hi=(
-        "$(_highlight "local" --underline)"
-        "${_notebook_names_hi[@]}"
-      )
+      if [[ "${_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+      then
+        _notebook_names_hi=(
+          "$(_highlight "local" --underline)"
+          "${_notebook_names_hi[@]}"
+        )
+      else
+        _notebook_names_hi=(
+          "local"
+          "${_notebook_names_hi[@]}"
+        )
+      fi
       _notebook_names_raw=(
         "local"
         "${_notebook_names_raw[@]}"
@@ -5539,7 +5554,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           then
             continue
           else
-            if ((_no_color))
+            if ((_no_color)) || [[ "${_SCOPE}" != "local" ]]
             then
               _notebook_line="local"
             else
@@ -5559,9 +5574,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           then
             _notebook_line="${_notebook_names[i]}"
           else
-            if [[ -n "${_current}" ]] &&
-               [[ "${_current}" == "${_notebook_names[i]}" ]] &&
-               [[ -z "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+            if [[ "${_SCOPE}" == "${_notebook_names[i]}" ]]
             then # it's the current repository.
               _notebook_line="$(_highlight "${_notebook_names[i]}")"
 
@@ -7440,9 +7453,21 @@ _notes() {
   if [[ -n "${_SCOPE}" ]]
   then
     _SCOPED=1
-    _NOTEBOOK_PATH="${NOTES_DIR}/${_SCOPE}"
+    if [[ "${_SCOPE}" == "local"          ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+    then
+      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+    else
+      _NOTEBOOK_PATH="${NOTES_DIR}/${_SCOPE}"
+    fi
   else
-    _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
+       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}" ]]
+    then
+      _SCOPE="local"
+    else
+      _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+    fi
   fi
 
   case "${_SUBCOMMAND}" in
@@ -7801,7 +7826,11 @@ do
          [[ -z "${_SUBCOMMAND:-}"   ]] &&
          [[ "${#__parts[@]}" -gt 0  ]]
       then
-        if [[ -d "${NOTES_DIR}/${__parts[0]}" ]]
+        if [[ -d "${NOTES_DIR}/${__parts[0]}" ]] ||
+           {
+             [[ "${__parts[0]}" == "local"      ]] &&
+             [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+           }
         then
           _SCOPE="${__parts[0]}"
           if _is_valid_subcommand "${__parts[1]:-}"
