@@ -273,6 +273,88 @@ _search_all_setup() {
   [[ -z "${output}" ]]
 }
 
+# `search <query> [--all]` local ##############################################
+
+# _search_all_setup() {
+#   _setup_search
+#   "${_NOTES}" notebooks add one
+#   "${_NOTES}" use one
+#   "${_NOTES}" add example.md --title "sweetish"
+#   "${_NOTES}" notebooks add two
+#   "${_NOTES}" use two
+#   "${_NOTES}" add example.md --title "sweetish"
+#   "${_NOTES}" two:notebook archive
+# }
+
+@test "\`search <query>\` in local notebook exits with status 0 and prints output." {
+  {
+    _search_all_setup &>/dev/null
+
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+    "${_NOTES}" add example-1.md --title "one" --content "sweetish"
+    "${_NOTES}" add example-2.md --title "two"
+  }
+
+  run "${_NOTES}" search 'sweetish' --use-grep
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ 1 ]]
+  [[ "${lines[0]}" =~ example-1.md\ \'one\'$ ]]
+  [[ "${lines[1]}" =~ -*- ]]
+  [[ "${lines[2]}" =~ sweetish ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+}
+
+@test "\`search <query> --all\` in local notebook exits with status 0 and prints output." {
+  {
+    _search_all_setup &>/dev/null
+
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+    "${_NOTES}" add example-1.md --title "one" --content "sweetish"
+    "${_NOTES}" add example-2.md --title "two"
+  }
+
+  run "${_NOTES}" search 'sweetish' --all --use-grep
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+  printf "\${lines[1]}: '%s'\\n" "${lines[1]}"
+  printf "\${lines[2]}: '%s'\\n" "${lines[2]}"
+  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
+  printf "\${lines[4]}: '%s'\\n" "${lines[4]}"
+  printf "\${lines[5]}: '%s'\\n" "${lines[5]}"
+  printf "\${lines[6]}: '%s'\\n" "${lines[6]}"
+  printf "\${lines[7]}: '%s'\\n" "${lines[7]}"
+  printf "\${lines[8]}: '%s'\\n" "${lines[8]}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ local:1                     ]]
+  [[ "${lines[0]}" =~ example-1.md\ \'one\'$      ]]
+  [[ "${lines[1]}" =~ -*-                         ]]
+  [[ "${lines[2]}" =~ sweetish                    ]]
+  [[ "${lines[3]}" =~ home:2                      ]]
+  [[ "${lines[3]}" =~ second\.md\ \'two\'$        ]]
+  [[ "${lines[4]}" =~ -*-                         ]]
+  [[ "${lines[5]}" =~ sweetish                    ]]
+  [[ "${lines[6]}" =~ home:3                      ]]
+  [[ "${lines[6]}" =~ third\.md\ \'three\'$       ]]
+  [[ "${lines[7]}" =~ -*-                         ]]
+  [[ "${lines[8]}" =~ sweetish                    ]]
+  [[ "${lines[9]}" =~ one:1                      ]]
+  [[ "${lines[9]}" =~ example\.md\ \'sweetish\'$ ]]
+  [[ "${#lines[@]}" -eq 12 ]]
+}
+
 # help ########################################################################
 
 @test "\`help search\` exits with status 0." {

@@ -6238,20 +6238,20 @@ _search() {
     _help "search"
     return 1
   else
-    local _target_notebooks=()
+    local _target_notebook_paths=()
 
     if ((_all))
     then
-      _target_notebooks=($(_notebooks --names --no-color --unarchived))
+      _target_notebook_paths=($(_notebooks --paths --unarchived))
     else
-      _target_notebooks=($(_notebook))
+      _target_notebook_paths=($(_notebooks current --path))
     fi
 
     _debug printf \
-      "_search() \${_target_notebooks[*]}: '%s'\\n" \
-      "${_target_notebooks[*]}"
+      "_search() \${_target_notebook_paths[*]}: '%s'\\n" \
+      "${_target_notebook_paths[*]}"
 
-    for __scope in "${_target_notebooks[@]:-}"
+    for __path in "${_target_notebook_paths[@]:-}"
     do
       if _command_exists "rg" && ! ((_use_grep))
       then
@@ -6263,7 +6263,7 @@ _search() {
           --color always  \
           --line-number   \
           --max-columns "${_max_columns}" --max-columns-preview \
-          "${_query}" "${NOTES_DIR}/${__scope}" \
+          "${_query}" "${__path}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ag" && ! ((_use_grep))
       then
@@ -6276,11 +6276,11 @@ _search() {
           --color       \
           --color-line-number '32' \
           --color-match '1;35' \
-          "${_query}" "${NOTES_DIR}/${__scope}" \
+          "${_query}" "${__path}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
-        ack "${_query}" "${NOTES_DIR}/${__scope}" \
+        ack "${_query}" "${__path}" \
           --ignore-case \
           --noheading   \
           --color-lineno='bold green'   \
@@ -6296,8 +6296,8 @@ _search() {
               --color=always  \
               --text          \
               -n "${_query}"  \
-              "${NOTES_DIR}/${__scope}"/* \
-              "${NOTES_DIR}/${__scope}"/.index /dev/null \
+              "${__path}"/* \
+              "${__path}"/.index /dev/null \
                 || return 0 # Don't fail out within a single scope.
         set -f
       fi | while read -r _line
@@ -6370,8 +6370,8 @@ _search() {
             )"
           fi
 
-          _id="$(_NOTEBOOK_PATH="${NOTES_DIR}/${__scope}" _index get_id "${_filename}")"
-          _title="$(_get_title "${NOTES_DIR}/${__scope}/${_filename}")"
+          _id="$(_NOTEBOOK_PATH="${__path}" _index get_id "${_filename}")"
+          _title="$(_get_title "${__path}/${_filename}")"
 
           if [[ -n "${_title}" ]]
           then
@@ -6384,8 +6384,17 @@ _search() {
 
           if ((_all))
           then
-            _id_filename="[${__scope}:${_id}] ${_file_info}"
-            _id_filename_color="[$(_highlight "${__scope}:${_id}")] ${_file_info_color}"
+            local _notebook_name=
+            if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"            ]] &&
+               [[ "${__path}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
+            then
+              _notebook_name="local"
+            else
+              _notebook_name="$(basename "${__path}")"
+            fi
+
+            _id_filename="[${_notebook_name}:${_id}] ${_file_info}"
+            _id_filename_color="[$(_highlight "${_notebook_name}:${_id}")] ${_file_info_color}"
           else
             _id_filename="[${_id}] ${_file_info}"
             _id_filename_color="[$(_highlight "${_id}")] ${_file_info_color}"
