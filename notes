@@ -5533,12 +5533,6 @@ Please type $(_highlight "${_name}") to confirm: " __response
       "_notebooks_list() \${_notebook_paths[*]}: '%s'\\n" \
       "${_notebook_paths[*]:-}"
 
-    if ! ((_no_color))
-    then
-      local _current
-      _current="$(_notebooks current)"
-    fi
-
     for ((i=0;i < "${#_notebook_names[@]}"; i++))
     do
       if [[ -e "${_notebook_paths[i]}/.git" ]]
