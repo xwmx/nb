@@ -349,11 +349,27 @@ _get_hash() {
   local _path="${1:-}"
   [[ -n "${_path:-}" ]] || return 1
 
-  if _command_exists "md5sum"
+  if _command_exists "shasum"
   then
     if [[ -d "${_path}" ]]
     then
-      _hash="$(tar -P -cf - "${_path}" | md5sum | awk '{ print $1 }')"
+      _hash="$(
+        tar -P -cf - "${_path}" \
+          | shasum -a 256       \
+          | awk '{ print $1 }'
+      )"
+    else
+      _hash="$(shasum -a 256 "${_path}" | awk '{print $1}')"
+    fi
+  elif _command_exists "md5sum"
+  then
+    if [[ -d "${_path}" ]]
+    then
+      _hash="$(
+        tar -P -cf - "${_path}" \
+          | md5sum              \
+          | awk '{ print $1 }'
+      )"
     else
       _hash="$(md5sum "${_path}" | awk '{ print $1 }')"
     fi
@@ -361,7 +377,11 @@ _get_hash() {
   then
     if [[ -d "${_path}" ]]
     then
-      _hash="$(tar -P -cf - "${_path}" | md5 -q | awk '{ print $1 }')"
+      _hash="$(
+        tar -P -cf - "${_path}" \
+          | md5 -q              \
+          | awk '{ print $1 }'
+      )"
     else
       _hash="$(md5 -q "${1:-}")"
     fi
