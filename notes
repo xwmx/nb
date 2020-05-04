@@ -4094,13 +4094,14 @@ HEREDOC
 _init() {
   if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
-    printf "\`init\`: %s already exists and is not a directory.\\n" \
+    printf "NOTES_DIR exists and is not a directory: %s\\n" \
       "${NOTES_DIR}"
     return 1
-  elif [[ -e "${_NOTEBOOK_PATH}" ]]
+  elif [[ -e "${NOTES_DIR}/home" ]]
   then
-    printf "Notebook already exists: %s\\n" \
-      "${_NOTEBOOK_PATH}"
+    printf "%s notebook exists: %s\\n" \
+      "$(_highlight "home")" \
+      "${NOTES_DIR}/home"
     return 1
   fi
 
@@ -4220,12 +4221,12 @@ HEREDOC
   local _repo_url="${1:-}"
   if [[ -n "${_repo_url}" ]]
   then
-    git clone "${_repo_url}" "${_NOTEBOOK_PATH}"
+    git clone "${_repo_url}" "${NOTES_DIR}/home"
   else
-    mkdir -p "${_NOTEBOOK_PATH}"
-    cd "${_NOTEBOOK_PATH}" &&
-      git init 1>/dev/null &&
-      touch "${_NOTEBOOK_PATH}/.index" &&
+    mkdir -p "${NOTES_DIR}/home"            &&
+      cd "${NOTES_DIR}/home"                &&
+      git init 1>/dev/null                  &&
+      touch "${NOTES_DIR}/home/.index"      &&
       _git_checkpoint "[NOTES] Initialize"
   fi
   printf "home\\n" > "${NOTES_DIR}/.current"
