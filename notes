@@ -1680,6 +1680,18 @@ _spinner() {
   printf "    \b\b\b\b"
 }
 
+# _string_is_url()
+#
+# Usage:
+#   _string_is_url <string>
+#
+# Returns:
+#   0  If file is a Word, Open Office, PDF, or other document.
+#   1  if not.
+_string_is_url() {
+  [[ "${1:-}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
+}
+
 ###############################################################################
 # desc
 ###############################################################################
@@ -5168,6 +5180,7 @@ desc "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--names] [--no-color] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
   ${_ME} notebooks current
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
@@ -5182,7 +5195,8 @@ Options:
 
 Subcommands:
   (default)  List notebooks.
-  add        Create a new notebook.
+  add        Create a new global notebook.
+  init       Create a new local notebook.
   current    Print the current notebook name.
   delete     Delete a notebook.
   rename     Rename a notebook.
@@ -5315,6 +5329,77 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi &&
       _clear_notes_cache &&
       printf "Notebook deleted: %s\\n" "${_name}"
+  }
+
+  # _notebooks_init()
+  #
+  # Usage:
+  #   _notebooks_init [<path> [<remote_url>]]
+  _notebooks_init() {
+    local _path=
+    local _remote_url=
+
+    for __arg in "${@:-}"
+    do
+      if _string_is_url "${__arg}" && [[ -z "${_remote_url:-}" ]]
+      then
+        _remote_url="${__arg}"
+      elif [[ -z "${_path:-}" ]]
+      then
+        _path="${__arg}"
+      fi
+    done
+
+    if [[ -n "${_remote_url:-}" ]] && [[ -z "${_path}" ]]
+    then
+      printf "Must specify a <path> when cloning from <remote-url>.\\n"
+      _help "notebooks"
+      return 1
+    fi
+
+    if [[ -n "${_path:-}" ]]
+    then
+      if [[ ! "${_path}" =~ ^/ ]]
+      then
+        _path="${_CURRENT_WORKING_DIR}/${_path}"
+      fi
+
+      if [[ ! -e "${_path}" ]]
+      then
+        mkdir -p "${_path}"
+      elif [[ -f "${_path}" ]]
+      then
+        printf "File already exists: %s\\n" "${_path}"
+        return 1
+      fi
+    else
+      _path="${_CURRENT_WORKING_DIR}"
+    fi
+
+    if [[ -d "${_path}"     ]] &&
+       [[ -d "${_path}/.git"  ]]
+    then
+      if [[ -f "${_path}/.index" ]]
+      then
+        printf "Notebook exists: %s\\n" "${_path}"
+      else
+        printf "Git repository exists: %s\\n" "${_path}"
+      fi
+
+      return 1
+    fi
+
+    if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
+       [[ -n "${_remote_url:-}" ]]
+    then
+      git clone "${_remote_url}" "${_path}"
+    else
+      cd "${_path}" &&
+        git init 1>/dev/null &&
+        touch "${_path}/.index" &&
+        _git_checkpoint "[NOTES] Initialize" "${_path}"
+    fi
+    printf "Initialized local notebook: %s\\n" "${_path}"
   }
 
   # _notebooks_list()
@@ -5460,6 +5545,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
   case "${_subcommand}" in
     add)
       _notebooks_add "${_name:-}" "${3:-}"
+      ;;
+    init)
+      _notebooks_init "${_name:-}" "${3:-}"
       ;;
     current)
       basename "${_NOTEBOOK_PATH}"

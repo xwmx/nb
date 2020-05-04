@@ -119,7 +119,7 @@ _setup_remote_repo() {
     mkdir "${_GIT_REMOTE_PATH}" &&
       cd "${_GIT_REMOTE_PATH}"  &&
       git init                  &&
-      touch '.keep'             &&
+      touch '.index'            &&
       git add --all             &&
       git commit -a -m "Initial commit."
   fi
