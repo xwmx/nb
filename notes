@@ -5760,6 +5760,21 @@ HEREDOC
         return 1
       fi
 
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH}" ]]
+      then
+        cat <<HEREDOC
+Currently in a local notebook. To run a command in a global notebook,
+add the notebook name before the command name, separated by a colon:
+  ${_ME} <notebook>:<command> [options...]
+
+Examples:
+  ${_ME} home:list
+  ${_ME} example:add --title "Example Title"
+  ${_ME} example:search 'sample query'
+HEREDOC
+        return 1
+      fi
+
       # Autocomplete can result in a trailing colon on the notebook name, so
       # remove it if present.
       if [[ "${_name}" =~ :$ ]]

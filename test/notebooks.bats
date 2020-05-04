@@ -1078,6 +1078,35 @@ ${NOTES_DIR}/one"
   [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NOTES_DIR}/one" ]]
 }
 
+@test "\`notebooks use\` in local exits with 1 and prints error message." {
+  {
+    _setup_notebooks
+
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+
+  }
+
+  run "${_NOTES}" notebooks use one
+  [[ ${status} -eq 1 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".current: %s\\n" "$(cat "${NOTES_DIR}/.current")"
+  [[ "${lines[0]}" =~ in\ a\ local\ notebook ]]
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+
+  run "${_NOTES}" env
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "'_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"
+  [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
+
+  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${_TMP_DIR}/example" ]]
+}
+
 # help ########################################################################
 
 @test "\`help notebooks\` exits with status 0." {
