@@ -5010,6 +5010,7 @@ _move() {
   local _selection=
   local _source_info_line=
   local _target_notebook=
+  local _tatget_notebook_path=
   local _title=
 
   for __arg in "${@:-}"
@@ -5048,8 +5049,16 @@ _move() {
 
   _set_selection_notebook "${_selection}"
 
+  if [[ "${_target_notebook}" == "local" ]] &&
+     [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"   ]]
+  then
+    _target_notebook_path="${_LOCAL_NOTEBOOK_PATH}"
+  else
+    _target_notebook_path="${NOTES_DIR}/${_target_notebook}"
+  fi
+
   if [[ -z "${_basename}" ]] ||
-     [[ ! -e "${NOTES_DIR}/${_target_notebook}/.git" ]]
+     [[ ! -e "${_target_notebook_path}/.git" ]]
   then
     _help "move"
     return 1
@@ -5057,7 +5066,7 @@ _move() {
   then
     printf "Not Found: %s:%s\\n" "${_SCOPE}" "${_basename}"
     return 1
-  elif [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
+  elif [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
     printf "Already exists: %s:%s\\n" "${_SCOPE}" "${_basename}"
     return 1
@@ -5111,7 +5120,7 @@ _move() {
   )"
 
   if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]] ||
-     [[ -e "${NOTES_DIR}/${_target_notebook}/${_basename}" ]]
+     [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
     printf "Moved to [%s:%s] %s:%s\\n"  \
       "${_target_notebook}" \

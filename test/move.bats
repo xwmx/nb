@@ -277,6 +277,107 @@ _setup_move() {
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:Example\ Folder ]]
 }
 
+# local #######################################################################
+
+@test "\`move\` to local with <filename> argument successfully moves note." {
+  {
+    _setup_move
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+  }
+
+  run "${_NOTES}" move "home:${_filename}" local --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
+  [[ ${status} -eq 0 ]]
+
+  # moves note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ -e "${_TMP_DIR}/example-local/${_filename}" ]]
+
+  # creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Delete') ]]
+
+  # prints output
+  [[ "${output}" =~ Moved\ to\ \[local:[A-Za-z0-9]*\]\ local:[A-Za-z0-9]+.md ]]
+}
+
+@test "\`move\` from local with <filename> argument successfully moves note." {
+  {
+    _setup_move
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    run "${_NOTES}" add "local-example.md" --content "local example content"
+    _files=($(ls "${_TMP_DIR}/example-local/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" move "${_filename}" home --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
+  [[ ${status} -eq 0 ]]
+
+  # moves note file
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_TMP_DIR}/example-local/${_filename}" ]]
+
+  # creates git commit
+  cd "${_TMP_DIR}/example-local" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Delete') ]]
+
+  # prints output
+  [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
+}
+
+@test "\`move\` from local with local:<filename> argument successfully moves note." {
+  {
+    _setup_move
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    run "${_NOTES}" add "local-example.md" --content "local example content"
+    _files=($(ls "${_TMP_DIR}/example-local/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NOTES}" move "local:${_filename}" home --force
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
+  [[ ${status} -eq 0 ]]
+
+  # moves note file
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_TMP_DIR}/example-local/${_filename}" ]]
+
+  # creates git commit
+  cd "${_TMP_DIR}/example-local" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ $(git log | grep '\[NOTES\] Delete') ]]
+
+  # prints output
+  [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
+}
+
 # help ########################################################################
 
 @test "\`help move\` exits with status 0." {
