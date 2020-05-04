@@ -416,6 +416,81 @@ one"
   [[ "$(cat "${NOTES_DIR}/.current")" == "home" ]]
 }
 
+@test "\`notebooks delete <no name>\` exits with 1." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" notebooks delete --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1 ]]
+  [[ "${lines[0]}" =~ Usage ]]
+  [[ -e "${NOTES_DIR}/home" ]]
+}
+
+@test "\`notebooks delete <not-valid>\` exits with 1." {
+  {
+    "${_NOTES}" init
+  }
+
+  run "${_NOTES}" notebooks delete not-valid --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1 ]]
+  [[ "${lines[0]}" =~ Notebook\ not\ found ]]
+  [[ -e "${NOTES_DIR}/home" ]]
+}
+
+@test "\`notebooks delete local\` in local exits with 1." {
+  {
+    "${_NOTES}" init
+    run "${_NOTES}" notebooks add local
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+    [[ -e "${NOTES_DIR}/local" ]]
+  }
+
+  run "${_NOTES}" notebooks delete local --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1 ]]
+  [[ "${lines[0]}" =~ file\ explorer ]]
+  [[ -e "${NOTES_DIR}/home" ]]
+  [[ -e "${NOTES_DIR}/local" ]]
+}
+
+@test "\`notebooks delete local\` outside local deletes." {
+  {
+    _pwd="${PWD}"
+    "${_NOTES}" init
+    run "${_NOTES}" notebooks add local
+    mkdir -p "${_TMP_DIR}/example"
+    cd "${_TMP_DIR}/example"
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+    cd "${_pwd}" || return 1
+    [[ -e "${NOTES_DIR}/local" ]]
+  }
+
+  run "${_NOTES}" notebooks delete local --force
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ Notebook\ deleted\:\ local ]]
+  [[ ! -e "${NOTES_DIR}/local" ]]
+}
+
 # `notes notebooks init` ######################################################
 
 @test "\`notebooks init\` with no arguments initializes the current directory" {
