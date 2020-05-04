@@ -233,6 +233,81 @@ one"
   [[ "${output}" == "${_expected}" ]]
 }
 
+# `notes notebooks --paths` ###################################################
+
+@test "\`notebooks --paths\` prints local and global." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+  }
+
+  run "${_NOTES}" notebooks --paths
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="${_TMP_DIR}/example-local
+${NOTES_DIR}/home
+${NOTES_DIR}/one"
+  [[ "${output}" == "${_expected}" ]]
+}
+
+@test "\`notebooks --paths --local\` exits with 0 and prints local." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}/example-local"
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+  }
+
+  run "${_NOTES}" notebooks --paths --local
+
+  printf "\${PWD}: %s\\n" "${PWD}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  _expected="${_TMP_DIR}/example-local"
+  [[ "${output}" == "${_expected}" ]]
+}
+
+@test "\`notebooks --paths --local\` with no local exits with 1." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    cd "${_TMP_DIR}"
+    [[ "$(pwd)" == "${_TMP_DIR}" ]]
+  }
+
+  run "${_NOTES}" notebooks --paths --local
+  [[ ${status} -eq 1 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ -z "${output}" ]]
+}
+
+@test "\`notebooks --paths --global\` exits with 0 and prints global." {
+  {
+    _setup_notebooks
+    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+  }
+
+  run "${_NOTES}" notebooks --paths --global
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="${NOTES_DIR}/home
+${NOTES_DIR}/one"
+  [[ "${output}" == "${_expected}" ]]
+}
+
 # `notes notebooks current` ###################################################
 
 @test "\`notebooks current\` exits with 0 and prints the current notebook name." {

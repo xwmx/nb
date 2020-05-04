@@ -1273,7 +1273,7 @@ Usage:
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   notes notebook [archive | open | peek | status | unarchive]
   notes notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--unarchived]
+                  [--no-color] [--paths] [--unarchived]
   notes notebooks add <name> [<remote-url>]
   notes notebooks init [(<name> | <path>) [<remote-url>]]
   notes notebooks [current | use <name>]
@@ -1913,7 +1913,7 @@ Shortcut Alias: `nb`
 ```text
 Usage:
   notes notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--unarchived]
+                  [--no-color] [--paths] [--unarchived]
   notes notebooks add <name> [<remote-url>]
   notes notebooks init [(<name> | <path>) [<remote-url>]]
   notes notebooks current
@@ -1928,6 +1928,7 @@ Options:
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
+  --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
 
 Subcommands:

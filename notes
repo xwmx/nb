@@ -1870,7 +1870,7 @@ Usage:
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [archive | open | peek | status | unarchive]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--unarchived]
+                  [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
   ${_ME} notebooks [current | use <name>]
@@ -5239,7 +5239,7 @@ _alias_subcommand "notebook" "nb"
 desc "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--unarchived]
+                  [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
   ${_ME} notebooks current
@@ -5254,6 +5254,7 @@ Options:
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --no-color    Print names without highlighting the current notebook.
+  --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
 
 Subcommands:
@@ -5476,7 +5477,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
   #
   # Usage:
   #   _notebooks_list [<name>] [--archived] [--local] [--global] [--names]
-  #                   [--no-color] [--unarchived]
+  #                   [--no-color] [--paths] [--unarchived]
   _notebooks_list() {
     local _notebook_names=()
     local _notebook_paths=()
@@ -5485,6 +5486,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     local _only_global=0
     local _only_local=0
     local _only_names=0
+    local _only_paths=0
     local _only_unarchived=0
 
     _debug printf "_notebooks_list() \${@:-}: '%s'\\n" "${@:-}"
@@ -5506,6 +5508,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
           ;;
         --nocolor|--no-color)
           _no_color=1
+          ;;
+        --paths)
+          _only_paths=1
           ;;
         --unarchived)
           _only_unarchived=1
@@ -5565,7 +5570,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
           then
             continue
           else
-            if ((_no_color)) || [[ "${_SCOPE}" != "local" ]]
+            if ((_only_paths))
+            then
+              _notebook_line="${_notebook_paths[i]}"
+            elif ((_no_color)) || [[ "${_SCOPE}" != "local" ]]
             then
               _notebook_line="local"
             else
@@ -5581,7 +5589,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
             continue
           fi
         else
-          if ((_no_color))
+          if ((_only_paths))
+          then
+            _notebook_line="${_notebook_paths[i]}"
+          elif ((_no_color))
           then
             _notebook_line="${_notebook_names[i]}"
           else
@@ -5606,7 +5617,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           if ((_only_unarchived))
           then
             continue
-          elif ! ((_only_names))
+          elif ! ((_only_names)) && ! ((_only_paths))
           then
             _notebook_line="${_notebook_line} (archived)"
           fi
@@ -5615,7 +5626,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           continue
         fi
 
-        if ! ((_only_names))
+        if ! ((_only_names)) && ! ((_only_paths))
         then
           cd "${_notebook_paths[i]}" ||
             _die printf "_notebooks() \`cd\` failed."
