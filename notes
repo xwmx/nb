@@ -1041,16 +1041,24 @@ _get_selection_identifier() {
 _get_selection_parts() {
   local _identifier=
   local _maybe_notebook_name=
+  local _selection="${1:-}"
+  [[ -z "${_selection:-}" ]] && return 1
 
-  _maybe_notebook_name=$(printf "%s\\n" "${1:-}" | cut -f 1 -d ":")
+  _maybe_notebook_name=$(printf "%s\\n" "${_selection}" | cut -f 1 -d ":")
 
-  if [[ "${1:-}" =~ ':'       ]] &&
-     [[ -e "${NOTES_DIR}/${_maybe_notebook_name}/.git" ]]
+  if [[ "${_selection}" =~ ':' ]] &&
+     {
+       [[ -e "${NOTES_DIR}/${_maybe_notebook_name}/.git" ]] ||
+       {
+         [[ "${_maybe_notebook_name}" == "local" ]] &&
+         [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"       ]]
+       }
+     }
   then
-    _identifier=$(printf "%s\\n" "${1:-}" | cut -f 2- -d ":")
+    _identifier=$(printf "%s\\n" "${_selection}" | cut -f 2- -d ":")
     printf "%s\\n%s\\n" "${_maybe_notebook_name}" "${_identifier}"
   else
-    printf "%s\\n" "${1:-}"
+    printf "%s\\n" "${_selection}"
   fi
 }
 
@@ -1644,7 +1652,7 @@ _set_selection_notebook() {
   then
     _SCOPED=1
     if [[ "${_parts[0]}" == "local"       ]] &&
-       [[ -z "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
       _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
       _SCOPE="local"
