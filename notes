@@ -320,6 +320,56 @@ _notes_cleanup_on_exit() {
 trap _notes_cleanup_on_exit EXIT
 
 ###############################################################################
+# Utilities
+###############################################################################
+
+# _command_exists()
+#
+# Usage:
+#   _command_exists <name>
+#
+# Takes a potential command <name> as an argument and returns whether a command
+# exists with that name.
+#
+# For information on why `hash` is used here, see:
+# http://stackoverflow.com/a/677212
+_command_exists() {
+  hash "${1}" 2>/dev/null
+}
+
+# _get_hash()
+#
+# Usage:
+#   _get_hash <path>
+#
+# Description:
+#   Generate a hash for the file at the given <path>.
+_get_hash() {
+  local _hash=
+  local _path="${1:-}"
+  [[ -n "${_path:-}" ]] || return 1
+
+  if _command_exists "md5sum"
+  then
+    if [[ -d "${_path}" ]]
+    then
+      _hash="$(tar -P -cf - "${_path}" | md5sum | awk '{ print $1 }')"
+    else
+      _hash="$(md5sum "${_path}" | awk '{ print $1 }')"
+    fi
+  elif _command_exists "md5"
+  then
+    if [[ -d "${_path}" ]]
+    then
+      _hash="$(tar -P -cf - "${_path}" | md5 -q | awk '{ print $1 }')"
+    else
+      _hash="$(md5 -q "${1:-}")"
+    fi
+  fi
+  printf "%s\\n" "${_hash}"
+}
+
+###############################################################################
 # Current Notebook
 ###############################################################################
 
@@ -426,20 +476,6 @@ _clear_notes_cache() {
   then
     rm -r "${_cache_path:?}"
   fi
-}
-
-# _command_exists()
-#
-# Usage:
-#   _command_exists <name>
-#
-# Takes a potential command <name> as an argument and returns whether a command
-# exists with that name.
-#
-# For information on why `hash` is used here, see:
-# http://stackoverflow.com/a/677212
-_command_exists() {
-  hash "${1}" 2>/dev/null
 }
 
 # _contains()
@@ -924,38 +960,6 @@ _get_first_line() {
       printf "%s\\n" "${_first_line}"
     fi
   fi
-}
-
-# _get_hash()
-#
-# Usage:
-#   _get_hash <path>
-#
-# Description:
-#   Generate a hash for the file at the given <path>.
-_get_hash() {
-  local _hash=
-  local _path="${1:-}"
-  [[ -n "${_path:-}" ]] || return 1
-
-  if _command_exists "md5sum"
-  then
-    if [[ -d "${_path}" ]]
-    then
-      _hash="$(tar -P -cf - "${_path}" | md5sum | awk '{ print $1 }')"
-    else
-      _hash="$(md5sum "${_path}" | awk '{ print $1 }')"
-    fi
-  elif _command_exists "md5"
-  then
-    if [[ -d "${_path}" ]]
-    then
-      _hash="$(tar -P -cf - "${_path}" | md5 -q | awk '{ print $1 }')"
-    else
-      _hash="$(md5 -q "${1:-}")"
-    fi
-  fi
-  printf "%s\\n" "${_hash}"
 }
 
 # _get_selection_basename()
