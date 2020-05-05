@@ -11,10 +11,10 @@ __                _
 # ❯ notes
 
 `notes` is a command line note-taking, bookmarking, and archiving
-tool with encryption, search, [Git](https://git-scm.com/)-backed versioning
-and syncing, [Pandoc](http://pandoc.org/)-backed conversion, global and local
-notebooks, tagging, and much more, all in a single portable script. `notes`
-creates notes in text-based formats like
+tool with encryption, full text search, [Git](https://git-scm.com/)-backed
+versioning and syncing, [Pandoc](http://pandoc.org/)-backed conversion, global
+and local notebooks, tagging, and much more, all in a single portable script.
+`notes` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown) and
 [Emacs Org mode](https://orgmode.org/), can organize and
 work with files in any format, and can export notes to many document formats.
