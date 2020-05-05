@@ -908,6 +908,19 @@ notes move 1 home
 notes search 'query string' --all
 ```
 
+Local notebooks can be created with [`notes notebooks init`](#notebooks-1):
+
+```bash
+# initialize the current directory as a notebook
+notes notebooks init
+
+# create a new notebook at ~/example
+notes notebooks init ~/example
+
+# clone an existing notebook to ~/example
+notes notebooks init ~/example https://github.com/example/example.git
+```
+
 For more information about working with notebooks, run `notes help notebooks`
 and `notes help notebook`.
 
