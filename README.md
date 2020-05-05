@@ -35,7 +35,7 @@ purpose syncing utility like Dropbox so notes can be edited in other apps on
 any device.
 
 `notes` is designed to be lightweight and portable, with a focus on vendor and
-tool independence, while providing a full-featured, intuitive experience in a 
+tool independence, while providing a full-featured, intuitive experience in a
 user-centric text interface. The entire program is a single well-tested script
 that can be copied or `curl`ed anywhere and just work, using a
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
