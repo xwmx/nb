@@ -7609,7 +7609,7 @@ _notes() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|help|version)
+    commands|completions|env|help|settings|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)

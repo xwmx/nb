@@ -267,6 +267,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "settings get NOTES_DIR: '%s'\\n" "$("${_NOTES}" settings get NOTES_DIR)"
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ NOTES_DIR\ set\ to\ \'/tmp/path/to/data/dir\' ]]
   [[ "$("${_NOTES}" settings get NOTES_DIR)" == '/tmp/path/to/data/dir' ]]
@@ -281,6 +282,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "settings get NOTES_DIR: '%s'\\n" "$("${_NOTES}" settings get NOTES_DIR)"
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ NOTES_DIR\ set\ to\ \'/tmp/path\ to\ data/dir\' ]]
   [[ "$("${_NOTES}" settings get NOTES_DIR)" == '/tmp/path to data/dir' ]]
