@@ -818,14 +818,14 @@ notes move 3 example-notebook
 
 #### Global and Local Notebooks
 
-##### Global
+##### Global Notebooks
 
 By default, all `notes` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
 stored in the directory [set in `NOTES_DIR`](#settings), which is `~/.notes` by
 default.
 
-#### Local
+##### Local Notebooks
 
 `notes` also supports creating and working with local notebooks. Local
 notebooks are simply notebooks that are anywhere on the system outside
