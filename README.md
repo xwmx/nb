@@ -893,6 +893,21 @@ local · example2 · example3
 [1] Title One
 ```
 
+The local notebooks is always referred to by the name 'local' and it
+otherwise behaves just like a global notebook whenever a command is run
+within it.
+
+```bash
+# move note titled 'Todos' from the home notebook to the local notebook
+notes move home:Todos local
+
+# move note 1 from the local notebook to the home notebook
+notes move 1 home
+
+# search the local notebook and all global notebooks for <query string>
+notes search 'query string' --all
+```
+
 For more information about working with notebooks, run `notes help notebooks`
 and `notes help notebook`.
 
