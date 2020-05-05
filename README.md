@@ -816,58 +816,6 @@ Notes can also be moved between notebooks:
 notes move 3 example-notebook
 ```
 
-#### Archiving Notebooks
-
-Notebooks can be archived:
-
-```bash
-# archive the current notebook
-notes notebook archive
-
-# archive the notebook named 'example'
-notes example:notebook archive
-```
-
-When a notebook is archived it is not included in `ls` output, synced
-automatically with `sync --all`, or included in `search --all`.
-
-```bash
-> notes ls
-example1 · example2 · example3 · [1 archived]
----------------------------------------------
-[3] Title Three
-[2] Title Two
-[1] Title One
-```
-
-Archived notebooks can still be used individually using normal notebook
-commands:
-
-```bash
-# switch the current notebook to the archived notebook 'example'
-notes use example
-
-# run the `list` subcommand in the archived notebook 'example'
-notes example:list
-```
-
-Check a notebook's archival status with `notes notebook status`:
-
-```bash
-> notes notebook status
-example is archived.
-```
-
-Unarchiving a notebook is simple:
-
-```bash
-# unarchive the current notebook
-notes notebook unarchive
-
-# unarchive the notebook named 'example'
-notes example:notebook unarchive
-```
-
 #### Global and Local Notebooks
 
 ##### Global
@@ -918,6 +866,58 @@ notes notebooks init ~/example
 
 # clone an existing notebook to ~/example
 notes notebooks init ~/example https://github.com/example/example.git
+```
+
+#### Archiving Notebooks
+
+Notebooks can be archived:
+
+```bash
+# archive the current notebook
+notes notebook archive
+
+# archive the notebook named 'example'
+notes example:notebook archive
+```
+
+When a notebook is archived it is not included in `ls` output, synced
+automatically with `sync --all`, or included in `search --all`.
+
+```bash
+> notes ls
+example1 · example2 · example3 · [1 archived]
+---------------------------------------------
+[3] Title Three
+[2] Title Two
+[1] Title One
+```
+
+Archived notebooks can still be used individually using normal notebook
+commands:
+
+```bash
+# switch the current notebook to the archived notebook 'example'
+notes use example
+
+# run the `list` subcommand in the archived notebook 'example'
+notes example:list
+```
+
+Check a notebook's archival status with `notes notebook status`:
+
+```bash
+> notes notebook status
+example is archived.
+```
+
+Unarchiving a notebook is simple:
+
+```bash
+# unarchive the current notebook
+notes notebook unarchive
+
+# unarchive the notebook named 'example'
+notes example:notebook unarchive
 ```
 
 For more information about working with notebooks, run `notes help notebooks`
