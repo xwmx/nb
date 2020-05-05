@@ -893,9 +893,8 @@ local · example2 · example3
 [1] Title One
 ```
 
-The local notebooks is always referred to by the name 'local' and it
-otherwise behaves just like a global notebook whenever a command is run
-within it.
+The local notebook is always referred to by the name 'local' and otherwise
+behaves just like a global notebook whenever a command is run from within it:
 
 ```bash
 # move note titled 'Todos' from the home notebook to the local notebook
