@@ -1303,7 +1303,7 @@ Usage:
   notes notebooks [<name>] [--archived] [--global] [--local] [--names]
                   [--no-color] [--paths] [--unarchived]
   notes notebooks add <name> [<remote-url>]
-  notes notebooks init [(<name> | <path>) [<remote-url>]]
+  notes notebooks init [<path> [<remote-url>]]
   notes notebooks [current [--path] | use <name>]
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
@@ -1943,7 +1943,7 @@ Usage:
   notes notebooks [<name>] [--archived] [--global] [--local] [--names]
                   [--no-color] [--paths] [--unarchived]
   notes notebooks add <name> [<remote-url>]
-  notes notebooks init [(<name> | <path>) [<remote-url>]]
+  notes notebooks init [<path> [<remote-url>]]
   notes notebooks current [--path]
   notes notebooks delete <name> [-f | --force]
   notes notebooks rename <old-name> <new-name>
@@ -1962,8 +1962,11 @@ Options:
 
 Subcommands:
   (default)  List notebooks.
-  add        Create a new global notebook.
-  init       Create a new local notebook.
+  add        Create a new global notebook. When an existing notebook's
+             <remote-url> is specified, create the new global notebook as a
+             clone of <remote-url>.
+  init       Create a new local notebook. Specify <path> or leave blank to
+             initialized the current working diretory.
   current    Print the current notebook name.
   delete     Delete a notebook.
   rename     Rename a notebook.

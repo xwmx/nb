@@ -1896,7 +1896,7 @@ Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                   [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
-  ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
+  ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks [current [--path] | use <name>]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
@@ -5283,7 +5283,7 @@ Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                   [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
-  ${_ME} notebooks init [(<name> | <path>) [<remote-url>]]
+  ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
@@ -5302,8 +5302,11 @@ Options:
 
 Subcommands:
   (default)  List notebooks.
-  add        Create a new global notebook.
-  init       Create a new local notebook.
+  add        Create a new global notebook. When an existing notebook's
+             <remote-url> is specified, create the new global notebook as a
+             clone of <remote-url>.
+  init       Create a new local notebook. Specify <path> or leave blank to
+             initialized the current working diretory.
   current    Print the current notebook name.
   delete     Delete a notebook.
   rename     Rename a notebook.
