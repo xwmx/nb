@@ -6086,6 +6086,12 @@ _rename() {
     shift
   done
 
+  if [[ -z "${_selection}" ]]
+  then
+    _help "rename"
+    return 1
+  fi
+
   local _source_basename
   _source_basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
