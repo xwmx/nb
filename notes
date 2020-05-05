@@ -4124,53 +4124,52 @@ Examples:
   ${_ME} init https://github.com/example/example.git
 HEREDOC
 _init() {
-  if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
-  then
-    printf "NOTES_DIR exists and is not a directory: %s\\n" \
-      "${NOTES_DIR}"
-    return 1
-  elif [[ -e "${NOTES_DIR}/home" ]]
-  then
-    printf "%s notebook exists: %s\\n" \
-      "$(_highlight "home")" \
-      "${NOTES_DIR}/home"
-    return 1
-  fi
+  # Usage: _init_create_home_notebook [<url>]
+  _init_create_home_notebook() {
+    local _repo_url="${1:-}"
+    if [[ -n "${_repo_url}" ]]
+    then
+      git clone "${_repo_url}" "${NOTES_DIR}/home"
+    else
+      mkdir -p "${NOTES_DIR}/home"            &&
+        cd "${NOTES_DIR}/home"                &&
+        git init 1>/dev/null                  &&
+        touch "${NOTES_DIR}/home/.index"      &&
+        _git_checkpoint "[NOTES] Initialize"
+    fi
+    printf "home\\n" > "${NOTES_DIR}/.current"
 
-  cat <<HEREDOC
-${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
-$(_highlight "Welcome") to
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
-${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
-Initializing...
-HEREDOC
-  if [[ -d "${NOTES_DIR}" ]]
-  then
-    printf "%s data directory already exists: %s\\n" \
-      "$(_highlight "${_ME}")" \
-      "${NOTES_DIR}"
-  elif [[ -e "${NOTES_DIR}" ]]
-  then
-    cat <<HEREDOC
+    printf "Created %s notebook.\\n" "$(_highlight "home")"
+  }
+
+  # Usage: _init_create_notes_dir
+  _init_create_notes_dir() {
+    if [[ -d "${NOTES_DIR}" ]]
+    then
+      printf "%s data directory already exists: %s\\n" \
+        "$(_highlight "${_ME}")" \
+        "${NOTES_DIR}"
+    elif [[ -e "${NOTES_DIR}" ]]
+    then
+      cat <<HEREDOC
 Unable to set up the $(_highlight "${_ME}") data directory. File exists at:
 ${NOTES_DIR}
 HEREDOC
-    return 1
-  else
-    mkdir -p "${NOTES_DIR}"
-    printf "Created %s\\n" "${NOTES_DIR}"
-  fi
+      return 1
+    else
+      mkdir -p "${NOTES_DIR}"
+      printf "Created %s\\n" "${NOTES_DIR}"
+    fi
+  }
 
-  if [[ -e "${NOTESRC_PATH}" ]]
-  then
-    printf "Configuration file already exists: %s\\n" \
-      "${NOTESRC_PATH}"
-  else
-    cat <<HEREDOC > "${NOTESRC_PATH}"
+  # Usage: _init_create_notesrc
+  _init_create_notesrc() {
+    if [[ -e "${NOTESRC_PATH}" ]]
+    then
+      printf "Configuration file already exists: %s\\n" \
+        "${NOTESRC_PATH}"
+    else
+      cat <<HEREDOC > "${NOTESRC_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
 # .notesrc
@@ -4247,23 +4246,42 @@ HEREDOC
 # Supported Values: [0..255+]
 # export NOTES_HIGHLIGHT_COLOR=213
 HEREDOC
-    printf "Created %s\\n" "${NOTESRC_PATH}"
-  fi
+      printf "Created %s\\n" "${NOTESRC_PATH}"
+    fi
+  }
 
-  local _repo_url="${1:-}"
-  if [[ -n "${_repo_url}" ]]
+  # Usage: _init_print_header
+  _init_print_header() {
+    cat <<HEREDOC
+${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
+$(_highlight "Welcome") to
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
+${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
+Initializing...
+HEREDOC
+  }
+
+  if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
   then
-    git clone "${_repo_url}" "${NOTES_DIR}/home"
-  else
-    mkdir -p "${NOTES_DIR}/home"            &&
-      cd "${NOTES_DIR}/home"                &&
-      git init 1>/dev/null                  &&
-      touch "${NOTES_DIR}/home/.index"      &&
-      _git_checkpoint "[NOTES] Initialize"
+    printf "NOTES_DIR exists and is not a directory: %s\\n" \
+      "${NOTES_DIR}"
+    return 1
+  elif [[ -e "${NOTES_DIR}/home" ]]
+  then
+    printf "%s notebook exists: %s\\n" \
+      "$(_highlight "home")" \
+      "${NOTES_DIR}/home"
+    return 1
   fi
-  printf "home\\n" > "${NOTES_DIR}/.current"
 
-  printf "Created %s notebook.\\n" "$(_highlight "home")"
+  _init_print_header        &&
+    _init_create_notes_dir  &&
+    _init_create_notesrc    &&
+    _init_create_home_notebook "${1:-}"
 }
 
 # list ########################################################################
