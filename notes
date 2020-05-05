@@ -416,7 +416,7 @@ _GLOBAL_NOTEBOOK_NAME="$(basename "${_GLOBAL_NOTEBOOK_PATH}")"
 export _LOCAL_NOTEBOOK_PATH=
 __set_notebook_path() {
   __set_local_notebook_path() {
-    if [[ / == "${PWD}" ]]
+    if [[ "${PWD}" == "/" ]]
     then
       cd "${_CURRENT_WORKING_DIR}"
       return
