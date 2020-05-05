@@ -5598,6 +5598,11 @@ Please type $(_highlight "${_name}") to confirm: " __response
       esac
     done
 
+    if [[ -z "${NOTES_DIR}" ]] || [[ ! -e "${NOTES_DIR}" ]]
+    then
+      return 1
+    fi
+
     if [[ -z "${_notebook_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NOTES_DIR}"))
@@ -7611,8 +7616,7 @@ _notes() {
       _git_required
 
       # Call `_init()` if configuration hasn't been initialized.
-      if [[ ! -e "${NOTES_DIR}"       ]] &&
-         [[ ! -e "${NOTESRC_PATH}"    ]] ||
+      if [[ ! -e "${NOTES_DIR}"       ]] ||
          [[ ! -e "${_NOTEBOOK_PATH}"  ]]
       then
         _git_required
