@@ -10,16 +10,17 @@ __                _
 
 # ❯ notes
 
-`notes` is a command line note-taking, bookmarking, and archiving
-tool with encryption, full-text search, [Git](https://git-scm.com/)-backed
-versioning and syncing, [Pandoc](http://pandoc.org/)-backed conversion, global
-and local notebooks, tagging, and more, all in a single portable script.
+`notes` is a command line note-taking, bookmarking, and research management
+tool with encryption, full-text search,
+[Git](https://git-scm.com/)-backed versioning and syncing,
+[Pandoc](http://pandoc.org/)-backed conversion,
+global and local notebooks, tagging, and more, all in a single portable script.
 `notes` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown) and
-[Emacs Org mode](https://orgmode.org/), can organize and
-work with files in any format, and can export notes to many document formats.
-`notes` can also create private, password-protected encrypted notes and
-bookmarks.
+[Emacs Org mode](https://orgmode.org/),
+can work with files in any format, and can export notes to many document
+formats. `notes` can also create private, password-protected encrypted
+notes and bookmarks.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
 Text, and any other text editor you prefer. `notes` works in any
