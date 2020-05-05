@@ -4270,11 +4270,16 @@ HEREDOC
     printf "NOTES_DIR exists and is not a directory: %s\\n" \
       "${NOTES_DIR}"
     return 1
-  elif [[ -e "${NOTES_DIR}/home" ]]
+  fi
+
+  if [[ -d "${_GLOBAL_NOTEBOOK_PATH}" ]]
   then
-    printf "%s notebook exists: %s\\n" \
-      "$(_highlight "home")" \
-      "${NOTES_DIR}/home"
+    cat <<HEREDOC
+$(_highlight "${_ME}") already initialized. To initialize a local notebook, use:
+  $(_highlight "${_ME} notebooks init")
+More information:
+  $(_highlight "${_ME} help notebooks")
+HEREDOC
     return 1
   fi
 

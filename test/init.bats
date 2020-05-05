@@ -26,6 +26,7 @@ load test_helper
   run "${_NOTES}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  [[ "${lines[0]}" =~ already\ initialized ]]
   [[ ${status} -eq 1 ]]
 }
 
