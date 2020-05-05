@@ -5034,7 +5034,7 @@ _move() {
   local _selection=
   local _source_info_line=
   local _target_notebook=
-  local _tatget_notebook_path=
+  local _target_notebook_path=
   local _title=
 
   for __arg in "${@:-}"
