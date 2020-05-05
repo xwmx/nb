@@ -28,7 +28,7 @@ load test_helper
   run "${_NOTES}" export 1 "${_TMP_DIR}/example.md"
   cat "${_TMP_DIR}/example.md"
   [[ -e "${_TMP_DIR}/example.md" ]]
-  [[ $(grep '# Export Example' "${_TMP_DIR}/example.md") ]]
+  grep -q '# Export Example' "${_TMP_DIR}/example.md"
 }
 
 @test "\`export\` with valid <id> and <path> with diff file type converts." {
@@ -40,7 +40,7 @@ load test_helper
   run "${_NOTES}" export 1 "${_TMP_DIR}/example.html"
   cat "${_TMP_DIR}/example.html"
   [[ -e "${_TMP_DIR}/example.html" ]]
-  [[ $(grep 'DOCTYPE html' "${_TMP_DIR}/example.html") ]]
+  grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
 }
 
 # `pandoc <id>` ###############################################################
@@ -82,5 +82,3 @@ load test_helper
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" =~ '  notes export' ]]
 }
-
-

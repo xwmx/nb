@@ -29,7 +29,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Rename') ]]
+  ! git log | grep -q '\[NOTES\] Rename'
 
   # Prints help
   [[ "${lines[0]}" == "Usage:" ]]
@@ -63,7 +63,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   [[ "$("${_NOTES}" index get_id 'EXAMPLE.org')" == '1' ]]
@@ -97,7 +97,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
@@ -132,7 +132,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   [[ "$("${_NOTES}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
@@ -168,7 +168,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
@@ -204,7 +204,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   [[ "$("${_NOTES}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
@@ -258,7 +258,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
@@ -298,7 +298,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
@@ -339,7 +339,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
@@ -377,7 +377,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
@@ -415,7 +415,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
@@ -453,7 +453,7 @@ _setup_rename() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Rename') ]]
+  git log | grep -q '\[NOTES\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"

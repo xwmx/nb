@@ -6,11 +6,11 @@ _setup_notebook() {
   {
     "${_NOTES}" init
     mkdir -p "${NOTES_DIR}/one"
-    cd "${NOTES_DIR}/one"
+    cd "${NOTES_DIR}/one" || return 1
     git init
     git remote add origin "${_GIT_REMOTE_URL}"
     mkdir -p "${NOTES_DIR}/two"
-    cd "${NOTES_DIR}"
+    cd "${NOTES_DIR}" || return 1
   } > /dev/null 2>&1
 }
 
@@ -51,7 +51,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Archived') ]]
+  git log | grep -q '\[NOTES\] Archived'
 }
 
 @test "\`notebook archive\` does not create git commit if already archived." {
@@ -75,7 +75,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Archived') ]]
+  ! git log | grep '\[NOTES\] Archived'
 }
 
 # `notes notebook unarchive` ##################################################
@@ -100,7 +100,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Unarchived') ]]
+  git log | grep '\[NOTES\] Unarchived'
 }
 
 @test "\`notebook unarchive\` does not create git commit if already unarchived." {
@@ -122,7 +122,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Unarchived') ]]
+  ! git log | grep -q '\[NOTES\] Unarchived'
 }
 
 # `notes notebook status` #####################################################

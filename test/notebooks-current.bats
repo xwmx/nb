@@ -5,12 +5,12 @@ load test_helper
 _setup_notebooks() {
   "${_NOTES}" init
   mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one"
+  cd "${NOTES_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NOTES_DIR}/one/.index"
   mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}"
+  cd "${NOTES_DIR}" || return 1
 }
 
 # `notes notebooks current` ###################################################

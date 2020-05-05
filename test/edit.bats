@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck disable=SC2030,SC2031
 
 load test_helper
 
@@ -28,7 +29,7 @@ load test_helper
   then
     sleep 1
   fi
-  [[ ! $(git log | grep '\[NOTES\] Edit') ]]
+  ! git log | grep -q '\[NOTES\] Edit'
 
   # Prints help information
   [[ "${lines[0]}" == "Usage:" ]]
@@ -114,7 +115,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-# Returns status 0
+  # Returns status 0
   [[ ${status} -eq 0 ]]
 
   # Updates note file
@@ -126,7 +127,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -144,7 +145,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-# Returns status 0
+  # Returns status 0
   [[ ${status} -eq 0 ]]
 
   # Updates note file
@@ -156,7 +157,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ Note\ name\ with\ spaces.md ]]
@@ -187,7 +188,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -218,7 +219,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -251,7 +252,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -276,8 +277,8 @@ load test_helper
 
   # Updates note file
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
-  [[ $(grep '# Example' "${_NOTEBOOK_PATH}"/*) ]]
-  [[ $(grep '## Piped' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example' "${_NOTEBOOK_PATH}"/*
+  grep -q '## Piped' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -285,7 +286,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -314,7 +315,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]

@@ -7,7 +7,6 @@ load test_helper
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf "\${_expected}: '%s'\\n" "${_expected}"
   printf "\$(tput colors): '%s'\\n" "$(tput colors)"
 
   [[ ${status}  -eq 0       ]]

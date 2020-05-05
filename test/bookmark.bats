@@ -26,7 +26,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Add') ]]
+  ! git log | grep -q '\[NOTES\] Add'
 
   # Prints help information
   [[ "${lines[0]}" =~ ^Add\: ]]
@@ -56,7 +56,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Add') ]]
+  ! git log | grep -q '\[NOTES\] Add'
 
   # Prints help information
   [[ "${lines[0]}" == "Unable to download page at 'http invalid url'" ]]
@@ -168,7 +168,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -176,7 +176,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -218,7 +218,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -226,7 +226,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -267,7 +267,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -275,7 +275,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -309,7 +309,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -317,7 +317,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -359,7 +359,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -367,7 +367,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -411,7 +411,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -419,7 +419,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -457,7 +457,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# New Title' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# New Title' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -465,7 +465,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -499,7 +499,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Add') ]]
+  ! git log | grep -q '\[NOTES\] Add'
 
   # Prints help information
   [[ "${lines[0]}" =~ Usage ]]
@@ -535,7 +535,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -543,7 +543,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -588,7 +588,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  [[ $(grep '# Example Domain' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -596,7 +596,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -657,7 +657,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -675,6 +675,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     run "${_NOTES}" init
     run "${_NOTES}" bookmark "${_BOOKMARK_URL}"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   }
 
   run "${_NOTES}" bookmark edit 1
@@ -693,7 +694,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Edit') ]]
+  git log | grep -q '\[NOTES\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]

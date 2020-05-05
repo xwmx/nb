@@ -123,6 +123,7 @@ line two
 line three
 line four
 HEREDOC
+    # shellcheck disable=SC2006
     cat <<HEREDOC | "${_NOTES}" add "twelve.md"
 [](https://example.com/example.png)
 
@@ -144,6 +145,7 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
   [[ "${lines[0]}"  == "[12] Title Twelve"           ]]
   [[ "${lines[1]}"  == "[11] Title Eleven"           ]]

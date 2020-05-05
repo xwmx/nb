@@ -184,7 +184,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf ".notesrc:\\n" "$(cat "${NOTESRC_PATH}")"
+  printf ".notesrc: '%s'\\n" "$(cat "${NOTESRC_PATH}")"
 
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ EDITOR\ set\ to\ \'example\' ]]
@@ -200,7 +200,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf ".notesrc:\\n" "$(cat "${NOTESRC_PATH}")"
+  printf ".notesrc: '%s'\\n" "$(cat "${NOTESRC_PATH}")"
 
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ EDITOR\ set\ to\ \'example\ editor\' ]]
@@ -216,7 +216,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf ".notesrc:\\n" "$(cat "${NOTESRC_PATH}")"
+  printf ".notesrc: '%s'\\n" "$(cat "${NOTESRC_PATH}")"
 
   [[ ${status} -eq 0 ]]
   [[ "${output}" =~ EDITOR\ set\ to\ \'example\' ]]
@@ -305,7 +305,7 @@ skip "Determine how to test interactive prompt."
     "${_NOTES}" init
   }
 
-  run "${_NOTES}" settings set NOTES_DIR "~/tmp/path"
+  run "${_NOTES}" settings set NOTES_DIR "${HOME}/tmp/path"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -324,7 +324,7 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ "'/' is not a valid location for NOTES_DIR." ]]
+  [[ "${output}" =~ \'\/\'\ is\ not\ a\ valid\ location\ for\ NOTES_DIR\. ]]
   [[ ! "$("${_NOTES}" settings get NOTES_DIR)" == "/" ]]
 }
 

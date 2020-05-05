@@ -5,10 +5,10 @@ load test_helper
 _setup_use() {
   "${_NOTES}" init
   mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one"
+  cd "${NOTES_DIR}/one" || return 1
   git init
   mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}"
+  cd "${NOTES_DIR}" || return 1
 }
 
 # `notes use <name>` #####################################################

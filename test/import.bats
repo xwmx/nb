@@ -22,7 +22,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Import') ]]
+  ! git log | grep -q '\[NOTES\] Import'
 }
 
 # <path> ######################################################################
@@ -36,7 +36,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Example Title' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
   [[ "${lines[0]}" =~ "Imported" ]]
 }
 
@@ -49,7 +49,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Import') ]]
+  git log | grep -q '\[NOTES\] Import'
 }
 
 # <directory path> ############################################################
@@ -66,7 +66,7 @@ load test_helper
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*) ]]
+  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
   [[ -d "${_NOTEBOOK_PATH}/Example Folder" ]]
   [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.md"       ]]
   [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html" ]]
@@ -79,7 +79,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Import') ]]
+  git log | grep -q '\[NOTES\] Import'
 }
 
 @test "\`import move\` with valid <directory path> argument moves a directory." {
@@ -97,7 +97,7 @@ load test_helper
 
   [[ ! -e "${_TMP_DIR}/Example Folder" ]]
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*) ]]
+  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
   [[ -d "${_NOTEBOOK_PATH}/Example Folder" ]]
   [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.md"       ]]
   [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html" ]]
@@ -110,7 +110,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Import') ]]
+  git log | grep -q '\[NOTES\] Import'
 }
 
 # <url> ######################################################################
@@ -124,7 +124,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep 'Example' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q 'Example' "${_NOTEBOOK_PATH}"/*
   [[ "${output}" =~ "Imported" ]]
 }
 
@@ -141,8 +141,8 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Import') ]]
-  [[ $(git log | grep 'Source') ]]
+  git log | grep -q '\[NOTES\] Import'
+  git log | grep -q 'Source'
 }
 
 # help ########################################################################

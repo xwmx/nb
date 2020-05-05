@@ -78,6 +78,7 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]

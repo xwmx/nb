@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck disable=SC2030,SC2031,SC2063
 
 load test_helper
 
@@ -16,7 +17,7 @@ load test_helper
   # Creates a new note file with $EDITOR
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# mock_editor' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -25,8 +26,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
-
+  git log | grep -q '\[NOTES\] Add'
 }
 
 # <content> argument ##########################################################
@@ -43,7 +43,7 @@ load test_helper
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Content' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Content' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -51,7 +51,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -75,7 +75,7 @@ load test_helper
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Content' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Content' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -83,7 +83,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -106,14 +106,14 @@ load test_helper
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Content' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Content' "${_NOTEBOOK_PATH}"/*
 
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 }
 
 @test "\`add\` with empty --content option exits with 1" {
@@ -146,13 +146,13 @@ load test_helper
   cd "${_NOTEBOOK_PATH}" || return 1
 
   [[ -n "$(ls example.md)" ]]
-  [[ $(grep '# mock_editor' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 }
 
 @test "\`add\` with empty --filename option exits with 1" {
@@ -187,13 +187,13 @@ load test_helper
   cd "${_NOTEBOOK_PATH}" || return 1
 
   [[ -n "$(ls Example_Title.md)" ]]
-  [[ $(grep '# mock_editor' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 }
 
 @test "\`add\` with empty --title option exits with 1" {
@@ -220,7 +220,7 @@ load test_helper
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '* Content' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '* Content' "${_NOTEBOOK_PATH}"/*
   [[ "${_files[0]}" =~ org$ ]]
 }
 
@@ -264,7 +264,7 @@ load test_helper
 
 @test "\`add\` with piped content creates new note without errors." {
   run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add'
+  run bash -c "echo '# Piped' | \"${_NOTES}\" add"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -274,7 +274,7 @@ load test_helper
   # Creates new note file
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Piped' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Piped' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -282,7 +282,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Add') ]]
+  git log | grep -q '\[NOTES\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -294,19 +294,19 @@ load test_helper
 
 @test "\`add --type org\` with piped content creates a new .org note file." {
   run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add --type org'
+  run bash -c "echo '# Piped' | \"${_NOTES}\" add --type org"
 
   [[ ${status} -eq 0 ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
-  [[ $(grep '# Piped' "${_NOTEBOOK_PATH}"/*) ]]
+  grep -q '# Piped' "${_NOTEBOOK_PATH}"/*
   [[ "${_files[0]}" =~ org$ ]]
 }
 
 @test "\`add --type ''\` with piped content exits with 1." {
   run "${_NOTES}" init
-  run bash -c 'echo "# Piped" | "${_NOTES}" add --type'
+  run bash -c "echo '# Piped' | \"${_NOTES}\" add --type"
 
   [[ ${status} -eq 1 ]]
 

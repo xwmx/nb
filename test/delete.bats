@@ -28,7 +28,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Delete') ]]
+  ! git log | grep -q '\[NOTES\] Delete'
 
   # Prints help information
   [[ "${lines[0]}" == "Usage:" ]]
@@ -115,7 +115,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -153,7 +153,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -191,7 +191,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -230,7 +230,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -268,7 +268,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]

@@ -5,12 +5,12 @@ load test_helper
 _setup_notebooks() {
   "${_NOTES}" init
   mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one"
+  cd "${NOTES_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NOTES_DIR}/one/.index"
   mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}"
+  cd "${NOTES_DIR}" || return 1
 }
 
 # `notes notebooks add <name>` ################################################
@@ -25,9 +25,11 @@ _setup_notebooks() {
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "File Count: '%s'\\n" \
+    "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)"
 
   [[ "${lines[1]}" =~ \ \ notes\ notebooks\ \[\<name\>\] ]]
-  [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 5 ]]
 }
 
 @test "\`notebooks add <existing>\` exits with 1 and prints error message." {
@@ -42,7 +44,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Already\ exists ]]
-  [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 4 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 5 ]]
 }
 
 @test "\`notebooks add <name>\` exits with 0 and adds a notebook." {
@@ -57,7 +59,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   # [[ "${output}" == "Added: example" ]]
-  [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
 }
 
 @test "\`notebooks add <name>\` creates git commit." {
@@ -79,7 +81,7 @@ _setup_notebooks() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Initialize') ]]
+  git log | grep -q '\[NOTES\] Initialize'
 }
 
 @test "\`notebooks add <name> <remote-url>\` exits with 0 and adds a notebook." {
@@ -95,9 +97,9 @@ _setup_notebooks() {
   [[ ${status} -eq 0 ]]
 
   [[ "${lines[1]}" == "Added: example" ]]
-  [[ "$(cd "${NOTES_DIR}" && ls -l | wc -l)" -eq 5 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
   [[ -d "${NOTES_DIR}/example/.git" ]]
   _origin="$(cd "${NOTES_DIR}/example" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
-  [[ "${_origin}" =~  "${_GIT_REMOTE_URL}" ]]
+  [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
 }

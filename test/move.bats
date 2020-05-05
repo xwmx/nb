@@ -32,7 +32,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ ! $(git log | grep '\[NOTES\] Delete') ]]
+  ! git log | grep '\[NOTES\] Delete'
 
   # prints help
   [[ "${lines[0]}" == "Usage:" ]]
@@ -144,7 +144,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -175,7 +175,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -206,7 +206,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -238,7 +238,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -271,7 +271,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:Example\ Folder ]]
@@ -306,7 +306,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[local:[A-Za-z0-9]*\]\ local:[A-Za-z0-9]+.md ]]
@@ -339,7 +339,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
@@ -372,7 +372,7 @@ _setup_move() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Delete') ]]
+  git log | grep -q '\[NOTES\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]

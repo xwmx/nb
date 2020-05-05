@@ -96,7 +96,7 @@ _setup_scope() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[2]}" =~ "0 notes." ]]
+  [[ "${lines[2]}" =~ 0\ notes\. ]]
 }
 
 @test "\`notes invalid:\` exits with 1 and prints error." {

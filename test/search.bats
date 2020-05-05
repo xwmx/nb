@@ -155,6 +155,7 @@ HEREDOC
   run "${_NOTES}" search 'sweetish' --bookmarks --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_filename}: '%s'\\n" "${_filename}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
   [[ ${status} -eq 0 ]]
@@ -275,6 +276,7 @@ _search_all_setup() {
 
 # `search <query> [--all]` local ##############################################
 
+# TODO
 # _search_all_setup() {
 #   _setup_search
 #   "${_NOTES}" notebooks add one

@@ -66,9 +66,9 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ -e "${NOTESRC_PATH}" ]]
-  cat "${NOTESRC_PATH}" | grep -q 'Configuration file for `notes`'
+  cat "${NOTESRC_PATH}" | grep -q "Configuration file for \`notes\`"
   printf "%s\\n" "$(cat "${NOTESRC_PATH}")"
-  cat "${NOTESRC_PATH}" | grep -q '\$NOTES_AUTO_SYNC'
+  cat "${NOTESRC_PATH}" | grep -q "\$NOTES_AUTO_SYNC"
 }
 
 @test "\`init\` creates git commit." {
@@ -80,7 +80,7 @@ load test_helper
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Initialize') ]]
+  git log | grep -q '\[NOTES\] Initialize'
 }
 
 # `notes init <remote-url>` ###################################################
@@ -94,7 +94,7 @@ load test_helper
   [[ -d "${_NOTEBOOK_PATH}/.git" ]]
   _origin="$(cd "${_NOTEBOOK_PATH}" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
-  [[ "${_origin}" =~  "${_GIT_REMOTE_URL}" ]]
+  [[ "${_origin}" =~  ${_GIT_REMOTE_URL} ]]
 }
 
 # help ########################################################################

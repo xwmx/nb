@@ -5,12 +5,12 @@ load test_helper
 _setup_notebooks() {
   "${_NOTES}" init
   mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one"
+  cd "${NOTES_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NOTES_DIR}/one/.index"
   mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}"
+  cd "${NOTES_DIR}" || return 1
 }
 
 # `notes notebooks rename` ####################################################
@@ -60,7 +60,7 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ "'invalid' is not a valid notebook name." ]]
+  [[ "${output}" =~ \'invalid\'\ is\ not\ a\ valid\ notebook\ name\. ]]
   [[ ! -e "${NOTES_DIR}/new-name/.git" ]]
   [[ -e "${NOTES_DIR}/one/.git" ]]
   [[ -e "${NOTES_DIR}/two" ]]
@@ -80,7 +80,7 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ "A notebook named 'two' already exists." ]]
+  [[ "${output}" =~ A\ notebook\ named\ \'two\'\ already\ exists\. ]]
   [[ -e "${NOTES_DIR}/one/.git" ]]
   [[ -e "${NOTES_DIR}/two" ]]
   [[ ! -e "${NOTES_DIR}/two/.git" ]]

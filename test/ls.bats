@@ -181,6 +181,7 @@ HEREDOC
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   _compare "${lines[0]}" "three"
 
   [[ "${#lines[@]}" -eq 3 ]]

@@ -5,12 +5,12 @@ load test_helper
 _setup_notebooks() {
   "${_NOTES}" init
   mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one"
+  cd "${NOTES_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NOTES_DIR}/one/.index"
   mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}"
+  cd "${NOTES_DIR}" || return 1
 }
 
 # `notes notebooks init` ######################################################
@@ -156,7 +156,7 @@ _setup_notebooks() {
   do
     sleep 1
   done
-  [[ $(git log | grep '\[NOTES\] Initialize') ]]
+  git log | grep '\[NOTES\] Initialize'
 }
 
 @test "\`notebooks init <absolute path>\` in existing notebook exits with 1." {
@@ -216,7 +216,7 @@ _setup_notebooks() {
   [[ -f "${_TMP_DIR}/example/.index"  ]]
   _origin="$(cd "${_TMP_DIR}/example" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
-  [[ "${_origin}" =~  "${_GIT_REMOTE_URL}" ]]
+  [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
 
   cd "${_TMP_DIR}/example" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
@@ -224,5 +224,5 @@ _setup_notebooks() {
   do
     sleep 1
   done
-  [[ $(git log | grep 'Initial commit.') ]]
+  git log | grep 'Initial commit.'
 }
