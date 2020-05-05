@@ -5310,8 +5310,9 @@ Subcommands:
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
-  init       Create a new local notebook. Specify <path> or leave blank to
-             initialized the current working diretory.
+  init       Create a new local notebook. Specify a <path> or omit to
+             initialize the current working directory as a local notebook.
+             Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name.
   delete     Delete a notebook.
   rename     Rename a notebook.
