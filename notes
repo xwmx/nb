@@ -8178,6 +8178,12 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
+# $_PREVIOUS_OPTION_WAS_FLAG
+#
+# Set to `1` when a flag option is found and use to avoid setting subcommand
+# to a flag argument..
+_PREVIOUS_OPTION_WAS_FLAG=0
+
 # Parse program options.
 while ((${#}))
 do
@@ -8236,10 +8242,20 @@ do
       break
       ;;
     *)
-      if [[ -z "${_SUBCOMMAND:-}" ]] && _is_valid_subcommand "${__opt}"
+      if ! ((_PREVIOUS_OPTION_WAS_FLAG))  &&
+         [[ -z "${_SUBCOMMAND:-}" ]]      &&
+         _is_valid_subcommand "${__opt}"
       then
         _SUBCOMMAND="${__opt}"
       else
+        if [[ "${__opt}" =~ ^- ]]
+        then
+          _PREVIOUS_OPTION_WAS_FLAG=1
+        elif ((_PREVIOUS_OPTION_WAS_FLAG))
+        then
+          _PREVIOUS_OPTION_WAS_FLAG=0
+        fi
+
         _ARGUMENTS+=("${__opt}")
       fi
       ;;
