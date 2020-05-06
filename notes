@@ -1635,7 +1635,7 @@ _less_prompt() {
 # _list_notes_files()
 #
 # Usage:
-#   _list_notes_files [--sort] [--reverse] [--bookmarks]
+#   _list_notes_files [--sort] [--reverse] [--type <type>]
 #
 # Description:
 #   List note files with default sorting.
@@ -1647,29 +1647,38 @@ _list_notes_files() {
   # -r  Reverse the order of the sort to get reverse order or the oldest
   #     entries first (or largest files last, combined with sort by size
 
-  local _bookmarks=0
   local _reverse=0
   local _sort=0
+  local _type=
 
-  for __arg in "${@:-}"
+  while ((${#}))
   do
+    local __arg="${1:-}"
+    local __val="${2:-}"
+
     case "${__arg}" in
-      --bookmarks)
-        _bookmarks=1
-        ;;
       --reverse)
         _reverse=1
         ;;
       --sort)
         _sort=1
         ;;
+      --type)
+        if __option_value_is_present "${__val:-}"
+        then
+          _type="${__val}"
+          shift
+        fi
+        ;;
     esac
+
+    shift
   done
 
   if ((_sort)) || ((_reverse))
   then
     local _filenames=()
-    local _index_file
+    local _index_file=
     _index_file="$(< "${_NOTEBOOK_PATH}/.index")"
 
     for __line in "${_index_file[@]}"
@@ -1685,28 +1694,19 @@ _list_notes_files() {
       printf "%s\\n" "${_filenames[@]}" | sort -r
     else
       printf "%s\\n" "${_filenames[@]}"
-    fi | if ((_bookmarks))
-         then
-           grep --color=never    \
-             -e '\.bookmark\.'   \
-             -e '\-bookmark\.'
-          else
-            cat
-          fi
+    fi
   else
-    if ((_bookmarks))
-    then
-      # Allow `ls | grep` since `-t` is used for sorting.
-      # shellcheck disable=SC2010
-      ls -t "${_NOTEBOOK_PATH}" \
-        | grep --color=never    \
+    ls -t "${_NOTEBOOK_PATH}"
+  fi |  if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
+        then
+          grep --color=never    \
             -e '\.bookmark\.'   \
             -e '\-bookmark\.'
-    else
-      ls -t "${_NOTEBOOK_PATH}"
-    fi
-  fi
+        else
+          cat
+        fi
 }
+
 
 # _print_line()
 #
@@ -4509,7 +4509,7 @@ _list() {
   local _list_note_file_options=()
   local _filenames=()
 
-  ((_bookmarks))  && _list_note_file_options+=("--bookmarks")
+  ((_bookmarks))  && _list_note_file_options+=("--type" "bookmark")
   ((_reverse))    && _list_note_file_options+=("--reverse")
   ((_sort))       && _list_note_file_options+=("--sort")
 
