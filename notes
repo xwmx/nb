@@ -1772,42 +1772,42 @@ _list_notes_files() {
     then
       for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
       do
-        _grep_patterns+=("-e" "${__extension}")
+        _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
       done
       grep --color=never "${_grep_patterns[@]}"
     elif [[ "${_type}" =~ ^audio$|^music$ ]]
     then
       for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
       do
-        _grep_patterns+=("-e" "${__extension}")
+        _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
       done
       grep --color=never "${_grep_patterns[@]}"
     elif [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]]
     then
       for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
       do
-        _grep_patterns+=("-e" "${__extension}")
+        _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
       done
       grep --color=never "${_grep_patterns[@]}"
     elif [[ "${_type}" =~ ^encrypted$ ]]
     then
       for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
       do
-        _grep_patterns+=("-e" "${__extension}")
+        _grep_patterns+=("-e" "${__extension}$")
       done
       grep --color=never "${_grep_patterns[@]}"
     elif [[ "${_type}" =~ ^image$|^images$|^pictures$ ]]
     then
       for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
       do
-        _grep_patterns+=("-e" "${__extension}")
+        _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
       done
       grep --color=never "${_grep_patterns[@]}"
     elif [[ "${_type}" =~ ^video$|^videos$ ]]
     then
       for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
       do
-        _grep_patterns+=("-e" "${__extension}")
+        _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
       done
       grep --color=never "${_grep_patterns[@]}"
     elif [[ -n "${_type}" ]]
