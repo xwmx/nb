@@ -1798,7 +1798,8 @@ Options:
   --<limit>                     Shortcut for `-n <limit>`.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
-  -t, --type <type>, --<type>   List items of <type>. Available types:
+  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
+                                extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio
 
@@ -1846,7 +1847,8 @@ Options:
   --<limit>                     Shortcut for `-n <limit>`.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
-  -t, --type <type>, --<type>   List items of <type>. Available types:
+  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
+                                extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio
 
