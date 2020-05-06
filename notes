@@ -6520,16 +6520,10 @@ _search() {
             _file_info_color="${_filename_color}"
           fi
 
-          if ((_all))
+          if ((_all)) || ((_SCOPED))
           then
             local _notebook_name=
-            if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"            ]] &&
-               [[ "${__path}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
-            then
-              _notebook_name="local"
-            else
-              _notebook_name="$(basename "${__path}")"
-            fi
+            _notebook_name="$(_get_notebook_identifier "${__path}")"
 
             _id_filename="[${_notebook_name}:${_id}] ${_file_info}"
             _id_filename_color="[$(_highlight "${_notebook_name}:${_id}")] ${_file_info_color}"
