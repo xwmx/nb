@@ -1761,7 +1761,7 @@ _list_notes_files() {
         grep --color=never    \
           -e '\.bookmark\.'   \
           -e '\-bookmark\.'
-      elif [[ "${_type}" =~ ^note$|^notes$ ]]
+      elif [[ "${_type}" =~ ^note$|^notes$|^text$ ]]
       then
         for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
         do
@@ -6640,7 +6640,7 @@ _search() {
                 [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]] &&
                 _file_is_bookmark "${_path}"
               } || {
-                [[ "${_type}" =~ ^note$|^notes$ ]] &&
+                [[ "${_type}" =~ ^note$|^notes$|^text$ ]] &&
                 _file_is_text "${_path}"
               } || {
                 [[ "${_type}" =~ ^archive$ ]] &&
