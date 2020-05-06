@@ -4552,18 +4552,6 @@ _list() {
     local _val="${2:-}"
 
     case "${_arg}" in
-      --archive|--archives)
-        _type="archive"
-        ;;
-      --audio)
-        _type="audio"
-        ;;
-      --bookmark|--bookmarks)
-        _type="bookmark"
-        ;;
-      --document|--documents)
-        _type="document"
-        ;;
       -e|--excerpt)
         _print_excerpt=1
         if __option_value_is_present "${_val:-}"
@@ -4574,9 +4562,6 @@ _list() {
         ;;
       --filenames|--filename)
         _list_filenames=1
-        ;;
-      --image|--images)
-        _type="image"
         ;;
       --no-id|--noid|--no-ids|--no-index|--noindex)
         _no_id=1
@@ -4593,9 +4578,6 @@ _list() {
           _limit="${_val:-}"
           shift
         fi
-        ;;
-      --note|--notes)
-        _type="note"
         ;;
       -s|--sort)
         _sort=1
@@ -4616,14 +4598,14 @@ _list() {
           return 1
         fi
         ;;
-      --video|--videos)
-        _type="video"
-        ;;
       *)
         _debug printf "_list() *: '%s'\\n" "${_arg:-}"
         if [[ "${_arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${_arg:-}"
+        elif [[ "${_arg:-}" =~ ^-- ]]
+        then
+          _type="${_arg:2}"
         else
           _selection="${_arg:-}"
         fi
