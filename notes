@@ -1475,13 +1475,18 @@ _highlight() {
 
   if [[ "${2:-}" == "--underline" ]]
   then
-    printf \
-      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_HIGHLIGHT_COLOR}%s${_TPUT_SGR0}\\n" \
-      "${_input}"
+    printf "%s%s%s%s%s\\n"        \
+      "${_TPUT_SGR0}"             \
+      "${_TPUT_SMUL}"             \
+      "${_TPUT_HIGHLIGHT_COLOR}"  \
+      "${_input}"                 \
+      "${_TPUT_SGR0}"
   else
-    printf \
-      "${_TPUT_SGR0}${_TPUT_HIGHLIGHT_COLOR}%s${_TPUT_SGR0}\\n" \
-      "${_input}"
+    printf "%s%s%s%s\\n"          \
+      "${_TPUT_SGR0}"             \
+      "${_TPUT_HIGHLIGHT_COLOR}"  \
+      "${_input}"                 \
+      "${_TPUT_SGR0}"
   fi
 }
 
