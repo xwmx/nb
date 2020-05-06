@@ -257,9 +257,14 @@ if [[ -z "${NOTES_DIR:?}"   ]] ||
 then
   cat <<HEREDOC
 NOTES_DIR is not valid:
-${NOTES_DIR}
-Edit the following file and remove NOTES_DIR settings:
-${NOTESRC_PATH}
+  ${NOTES_DIR}
+
+Running the following command might resolve the issue:
+  ${_ME} settings unset notes_dir
+
+Alternatively, set NOTES_DIR to a new location where you'd like to store your
+notes. For example:
+  ${_ME} settings set notes_dir ~/Documents/Notes
 HEREDOC
   exit 1
 fi
