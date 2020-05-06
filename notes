@@ -7876,12 +7876,16 @@ _GIT_SUBCOMMANDS=(
   add
   b
   bookmark
+  bookmarks
+  bs
   count
   create
   d
   delete
   e
   edit
+  export
+  import
   list
   ls
   move
@@ -7891,6 +7895,11 @@ _GIT_SUBCOMMANDS=(
   new
   notebook
   notebooks
+  o
+  open
+  p
+  peek
+  preview
   q
   rename
   s
