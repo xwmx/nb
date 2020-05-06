@@ -1933,7 +1933,7 @@ Description:
 
   Archiving a notebook hides it from `ls` output.
 
-Shortcut Alias: `nb`
+Shortcut Alias: `n`
 ```
 
 #### `notebooks`
@@ -1981,7 +1981,7 @@ Examples:
   notes notebooks add Example1
   notes notebooks add Example2 https://github.com/example/example.git
 
-Shortcut Alias: `nbs`
+Shortcut Alias: `ns`
 ```
 
 #### `open`

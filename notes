@@ -5289,7 +5289,7 @@ Description:
 
   Archiving a notebook hides it from \`ls\` output.
 
-Shortcut Alias: \`nb\`
+Shortcut Alias: \`n\`
 HEREDOC
 _notebook() {
   local _notebook_name
@@ -5364,6 +5364,7 @@ _notebook() {
     fi
   fi
 }
+_alias_subcommand "notebook" "n"
 _alias_subcommand "notebook" "nb"
 
 # notebooks ###################################################################
@@ -5411,7 +5412,7 @@ Examples:
   ${_ME} notebooks add Example1
   ${_ME} notebooks add Example2 https://github.com/example/example.git
 
-Shortcut Alias: \`nbs\`
+Shortcut Alias: \`ns\`
 HEREDOC
 _notebooks() {
   # _notebooks_add()
@@ -5913,6 +5914,7 @@ HEREDOC
       ;;
   esac
 }
+_alias_subcommand "notebooks" "ns"
 _alias_subcommand "notebooks" "nbs"
 
 # open ########################################################################
@@ -7863,11 +7865,13 @@ _SUBCOMMANDS=(
   ls
   move
   mv
+  n
   nb
   nbs
   new
   notebook
   notebooks
+  ns
   o
   open
   p
@@ -7922,10 +7926,12 @@ _DOCUMENTED_SUBCOMMANDS=(
   ls
   move
   mv
+  n
   nb
   nbs
   notebook
   notebooks
+  ns
   o
   open
   p
@@ -7969,11 +7975,13 @@ _GIT_SUBCOMMANDS=(
   ls
   move
   mv
+  n
   nb
   nbs
   new
   notebook
   notebooks
+  ns
   o
   open
   p
