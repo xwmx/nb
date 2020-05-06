@@ -295,7 +295,7 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 #   notes settings colors
 #
 # Supported Values: [0..255+]
-_set_notes_highlight_color() {
+__set_notes_highlight_color() {
   local _colors=
   _colors="$(tput colors)"
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
@@ -304,7 +304,7 @@ _set_notes_highlight_color() {
   else
     export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-4}"
   fi
-} && _set_notes_highlight_color
+} && __set_notes_highlight_color
 
 # `$NOTES_ENCRYPTION_TOOL`
 #
