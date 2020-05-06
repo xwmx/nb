@@ -544,10 +544,17 @@ _clear_notes_cache() {
 #   0  If the item is included in the list.
 #   1  If not.
 _contains() {
-  local _query_element="${1:-}"
-  local _list=(${*:2})
+  local _query="${1:-}"
+  local _list_element
 
-  [[ "$(printf '|%s|' "${_list[@]}")" =~ \|${_query_element}\| ]]
+  shift
+
+  for _list_element
+  do
+    [[ "${_list_element}" == "${_query}" ]] && return 0
+  done
+
+  return 1
 }
 
 # _decrypt_file()
