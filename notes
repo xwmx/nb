@@ -102,20 +102,39 @@ fi
 ###############################################################################
 
 # Set default $EDITOR if one has not been set.
-if [[ -z "${EDITOR:-}" ]]
-then
-  for __editor in "code" "subl" "mate" "macdown" "nano" "pico" "vim" "vi"
-  do
-    if hash "${__editor}" 2>/dev/null
-    then
-      export EDITOR="${__editor}"
-      break
-    fi
-  done
+export EDITOR="${EDITOR:-}"
+__set_editor() {
+  local _editors=(
+    code
+    subl
+    mate
+    macdown
+    nano
+    pico
+    vim
+    vi
+    emacs
+  )
 
   if [[ -z "${EDITOR:-}" ]]
   then
-    cat <<HEREDOC
+    if [[ -n "${VISUAL:-}" ]]
+    then
+      EDITOR="${VISUAL}"
+    else
+      for __editor in "${_editors[@]}"
+      do
+        if hash "${__editor}" 2>/dev/null
+        then
+          EDITOR="${__editor}"
+          break
+        fi
+      done
+    fi
+
+    if [[ -z "${EDITOR:-}" ]]
+    then
+      cat <<HEREDOC
 Command line text editor not found. Set the \$EDITOR variable in your
 environment or in the \`${_ME}\` configuration file located at:
   ${NOTESRC_PATH}
@@ -144,9 +163,10 @@ More information about setting \$EDITOR:
 - or many of these:
     https://en.wikipedia.org/wiki/List_of_text_editors
 HEREDOC
-    exit 1
+      exit 1
+    fi
   fi
-fi
+} && __set_editor
 
 ###############################################################################
 # Debug

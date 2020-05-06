@@ -12,3 +12,22 @@ load test_helper
   [[ ${status}  -eq 0       ]]
   [[ "${output}" =~ EDITOR  ]]
 }
+
+# EDITOR ######################################################################
+
+@test "\`notes\` with EDITOR sets editor." {
+  EDITOR='example-editor' run "${_NOTES}" env
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[3]}" =~ EDITOR=example-editor ]]
+}
+
+@test "\`notes\` with VISUAL sets editor." {
+  EDITOR= VISUAL='example-visual' run "${_NOTES}" env
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[*]}" "${lines[*]}"
+
+  [[ "${lines[3]}" =~ EDITOR=example-visual ]]
+}
