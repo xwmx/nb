@@ -1007,6 +1007,40 @@ _get_first_line() {
   fi
 }
 
+# _get_notebook_identifier()
+#
+# Usage:
+#   _get_notebook_identifier (<path> | <name>)
+#
+# Description:
+#   Print a copy / pastable notebooks name, with spaces escaped.
+_get_notebook_identifier() {
+  local _notebook_identifier="${1:-}"
+
+  if [[ -n "${_notebook_identifier:-}" ]]
+  then
+    if [[ "${_notebook_identifier}" =~ / ]]
+    then
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
+         [[ "${_notebook_identifier}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+      then
+        _notebook_identifier="local"
+      else
+       _notebook_identifier="$(basename "${_notebook_identifier}")"
+      fi
+    fi
+
+    if [[ "${_notebook_identifier}" =~ \  ]]
+    then
+      _notebook_identifier="$(
+        printf "%s\\n" "${_notebook_identifier}" | sed -e "s/ /\\\ /g"
+      )"
+    fi
+  fi
+
+  printf "%s\\n" "${_notebook_identifier:-}"
+}
+
 # _get_selection_basename()
 #
 # Usage:
@@ -2269,8 +2303,10 @@ _add() {
 
     if ((_SCOPED))
     then
-      _id="${_SCOPE}:${_id}"
-      _scoped_basename="${_SCOPE}:${_basename}"
+      local _notebook_identifier
+      _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+      _id="${_notebook_identifier}:${_id}"
+      _scoped_basename="${_notebook_identifier}:${_basename}"
     fi
 
     local _title
@@ -3144,8 +3180,10 @@ _delete() {
 
   if ((_SCOPED))
   then
-    _id="${_SCOPE}:${_id}"
-    _scoped_basename="${_SCOPE}:${_basename}"
+    local _notebook_identifier
+    _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+    _id="${_notebook_identifier}:${_id}"
+    _scoped_basename="${_notebook_identifier}:${_basename}"
   fi
 
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
@@ -3366,8 +3404,10 @@ _edit() {
 
       if ((_SCOPED))
       then
-        _id="${_SCOPE}:${_id}"
-        _scoped_basename="${_SCOPE}:${_basename}"
+        local _notebook_identifier
+        _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+        _id="${_notebook_identifier}:${_id}"
+        _scoped_basename="${_notebook_identifier}:${_basename}"
       fi
 
       local _title
@@ -4458,6 +4498,10 @@ _list() {
     _selection_basename="$(_get_selection_basename "${_selection}")"
     _set_selection_notebook "${_selection}"
   fi
+
+  local _notebook_identifier=
+  _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_PATH}")"
+
   _debug printf \
     "list() \${_selection_basename}: '%s'\\n" \
     "${_selection_basename}"
@@ -4621,19 +4665,28 @@ HEREDOC
       then
         # NOTE: Plain version serves as the reference version and can be used
         # for length calculations.
-        local _item_id_number
-        _item_id_number="$(_index get_id "${__basename}")"
+        local _item_identifier=
+        local _max_identifier=
+        _item_identifier="$(_index get_id "${__basename}")"
+        if ((_SCOPED))
+        then
+          _item_identifier="${_notebook_identifier}:${_item_identifier}"
+          _max_identifier="${_notebook_identifier}:${_max_id}"
+        else
+          _item_identifier="${_item_identifier}"
+          _max_identifier="${_max_id}"
+        fi
 
-        local _id_item
-        _id_item="[${_item_id_number}]"
+        local _id_item=
+        _id_item="[${_item_identifier}]"
 
-        local _id_item_color
-        _id_item_color="[$(_highlight "${_item_id_number}")]"
+        local _id_item_color=
+        _id_item_color="[$(_highlight "${_item_identifier}")]"
 
         # Use calculated number of spaces for nicer formatting.
         local _spaces=''
         local _spaces_length=1
-        _spaces_length=$(( ${#_max_id} + 3 - ${#_id_item} ))
+        _spaces_length=$(( ${#_max_identifier} + 3 - ${#_id_item} ))
         printf -v _spaces '%*s' "${_spaces_length}"
       fi
 
