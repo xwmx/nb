@@ -362,6 +362,28 @@ _command_exists() {
   hash "${1}" 2>/dev/null
 }
 
+# _contains()
+#
+# Usage:
+#   _contains "${item}" "${list[@]}"
+#
+# Returns:
+#   0  If the item is included in the list.
+#   1  If not.
+_contains() {
+  local _query="${1:-}"
+  local _list_element
+
+  shift
+
+  for _list_element
+  do
+    [[ "${_list_element}" == "${_query}" ]] && return 0
+  done
+
+  return 1
+}
+
 # _get_hash()
 #
 # Usage:
@@ -533,28 +555,6 @@ _clear_notes_cache() {
   then
     rm -r "${_cache_path:?}"
   fi
-}
-
-# _contains()
-#
-# Usage:
-#   _contains "${item}" "${list[@]}"
-#
-# Returns:
-#   0  If the item is included in the list.
-#   1  If not.
-_contains() {
-  local _query="${1:-}"
-  local _list_element
-
-  shift
-
-  for _list_element
-  do
-    [[ "${_list_element}" == "${_query}" ]] && return 0
-  done
-
-  return 1
 }
 
 # _decrypt_file()
