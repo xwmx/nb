@@ -2252,14 +2252,14 @@ _add() {
   # Parse function options.
   while ((${#}))
   do
-    local _arg="${1:-}"
-    local _val="${2:-}"
+    local __arg="${1:-}"
+    local __val="${2:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       -c|--content)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _content="${_val:-}"
+          _content="${__val:-}"
           shift
         else
           _help add
@@ -2273,9 +2273,9 @@ _add() {
         _encrypt=1
         ;;
       -f|--filename)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _filename="${_val:-}"
+          _filename="${__val:-}"
           shift
         else
           _help add
@@ -2283,9 +2283,9 @@ _add() {
         fi
         ;;
       --password)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _password="${_val:-}"
+          _password="${__val:-}"
           shift
         else
           _help add
@@ -2293,9 +2293,9 @@ _add() {
         fi
         ;;
       -t|--title)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _title="${_val:-}"
+          _title="${__val:-}"
           shift
         else
           _help add
@@ -2303,9 +2303,9 @@ _add() {
         fi
         ;;
       --type)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _file_type="${_val:-}"
+          _file_type="${__val:-}"
           shift
         else
           _help add
@@ -2315,9 +2315,9 @@ _add() {
       *)
         if [[ -z "${_maybe_filename_or_title:-}" ]]
         then
-          _maybe_filename_or_content="${_arg:-}"
+          _maybe_filename_or_content="${__arg:-}"
         else
-          _arguments+=("${_arg:-}")
+          _arguments+=("${__arg:-}")
         fi
         ;;
     esac
@@ -2526,14 +2526,14 @@ _bookmark() {
 
   while ((${#}))
   do
-    local _arg="${1:-}"
-    local _val="${2:-}"
+    local __arg="${1:-}"
+    local __val="${2:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       -c|--comment)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _comment="${_val:-}"
+          _comment="${__val:-}"
           shift
         else
           _help "bookmark"
@@ -2547,9 +2547,9 @@ _bookmark() {
         _encrypt=1
         ;;
       --password)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _password="${_val:-}"
+          _password="${__val:-}"
           shift
         else
           _help edit
@@ -2563,9 +2563,9 @@ _bookmark() {
         _skip_content=1
         ;;
       --tags)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _tag_list="${_val:-}"
+          _tag_list="${__val:-}"
           shift
         else
           _help "bookmark"
@@ -2573,9 +2573,9 @@ _bookmark() {
         fi
         ;;
       --title)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _title="${_val:-}"
+          _title="${__val:-}"
           shift
         else
           _help "bookmark"
@@ -2583,9 +2583,9 @@ _bookmark() {
         fi
         ;;
       --via|--also|--related)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _related_urls+=("${_val:-}")
+          _related_urls+=("${__val:-}")
           shift
         else
           _help "bookmark"
@@ -2593,11 +2593,11 @@ _bookmark() {
         fi
         ;;
       delete)
-        _delete "${_val:-}" "${3:-}"
+        _delete "${__val:-}" "${3:-}"
         return 0
         ;;
       edit)
-        _edit "${_val:-}"
+        _edit "${__val:-}"
         return 0
         ;;
       help)
@@ -2611,10 +2611,10 @@ _bookmark() {
         _subcommand="search"
         ;;
       open|o|peek|p|preview|url)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _subcommand="${_arg}"
-          _selection="${_val:-}"
+          _subcommand="${__arg}"
+          _selection="${__val:-}"
           shift
         else
           _help "bookmark"
@@ -2625,10 +2625,10 @@ _bookmark() {
         if [[ ! "${_subcommand:-}" =~ ^list$|^search$ ]] &&
            [[ -z "${_url:-}" ]]
         then
-          _url="${_arg:-}"
+          _url="${__arg:-}"
         elif [[ "${_subcommand:-}" =~ ^list$|^search$ ]]
         then
-          _arguments+=("${_arg}")
+          _arguments+=("${__arg}")
         fi
         ;;
     esac
@@ -3388,14 +3388,14 @@ _edit() {
   # Parse function options.
   while ((${#}))
   do
-    local _arg="${1:-}"
-    local _val="${2:-}"
+    local __arg="${1:-}"
+    local __val="${2:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       -e|--editor)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _local_editor="${_val:-}"
+          _local_editor="${__val:-}"
           shift
         else
           _help edit
@@ -3403,9 +3403,9 @@ _edit() {
         fi
         ;;
       --password)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _password="${_val:-}"
+          _password="${__val:-}"
           shift
         else
           _help edit
@@ -3415,7 +3415,7 @@ _edit() {
       *)
         if [[ -z "${_selection:-}" ]]
         then
-          _selection="${_arg:-}"
+          _selection="${__arg:-}"
         fi
         ;;
     esac
@@ -4549,15 +4549,15 @@ _list() {
   # Parse function options.
   while ((${#}))
   do
-    local _arg="${1:-}"
-    local _val="${2:-}"
+    local __arg="${1:-}"
+    local __val="${2:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       -e|--excerpt)
         _print_excerpt=1
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _excerpt_length="${_val:-}"
+          _excerpt_length="${__val:-}"
           shift
         fi
         ;;
@@ -4574,9 +4574,9 @@ _list() {
         _print_indicators=0
         ;;
       -n)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _limit="${_val:-}"
+          _limit="${__val:-}"
           shift
         fi
         ;;
@@ -4590,9 +4590,9 @@ _list() {
         : # Do nothing. This is now the default behavior. TODO: Remove.
         ;;
       -t|--type)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _type="${_val:-}"
+          _type="${__val:-}"
           shift
         else
           _help "list"
@@ -4600,15 +4600,15 @@ _list() {
         fi
         ;;
       *)
-        _debug printf "_list() *: '%s'\\n" "${_arg:-}"
-        if [[ "${_arg:-}" =~ ^--[0-9]+$ ]]
+        _debug printf "_list() *: '%s'\\n" "${__arg:-}"
+        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
-          _limit="${_arg:-}"
-        elif [[ "${_arg:-}" =~ ^-- ]]
+          _limit="${__arg:-}"
+        elif [[ "${__arg:-}" =~ ^-- ]]
         then
-          _type="${_arg:2}"
+          _type="${__arg:2}"
         else
-          _selection="${_arg:-}"
+          _selection="${__arg:-}"
         fi
         ;;
     esac
@@ -6304,10 +6304,10 @@ _rename() {
 
   while ((${#}))
   do
-    local _arg="${1:-}"
-    local _val="${2:-}"
+    local __arg="${1:-}"
+    local __val="${2:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       --force|-f)
         _force=1
         ;;
@@ -6323,10 +6323,10 @@ _rename() {
       *)
         if [[ -z "${_selection}" ]]
         then
-          _selection="${_arg}"
+          _selection="${__arg}"
         elif [[ -z "${_target_name}" ]]
         then
-          _target_name="${_arg}"
+          _target_name="${__arg}"
         fi
         ;;
     esac
@@ -7099,9 +7099,9 @@ HEREDOC
 
   while ((${#}))
   do
-    local _arg="${1:-}"
+    local __arg="${1:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       color|colors)
         _notes_settings_colors "${2:-}"
         return 0
@@ -7367,10 +7367,10 @@ _show() {
   # Parse function options.
   while ((${#}))
   do
-    local _arg="${1:-}"
-    local _val="${2:-}"
+    local __arg="${1:-}"
+    local __val="${2:-}"
 
-    case "${_arg}" in
+    case "${__arg}" in
       --dump)
         _dump=1
         ;;
@@ -7381,9 +7381,9 @@ _show() {
         _print_id=1
         ;;
       --password)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _password="${_val:-}"
+          _password="${__val:-}"
           shift
         else
           _help "show"
@@ -7397,9 +7397,9 @@ _show() {
         _render=1
         ;;
       --tool)
-        if __option_value_is_present "${_val:-}"
+        if __option_value_is_present "${__val:-}"
         then
-          _tool="${_val:-}"
+          _tool="${__val:-}"
           shift
         else
           _help "show"
@@ -7409,7 +7409,7 @@ _show() {
       *)
         if [[ -z "${_selection:-}" ]]
         then
-          _selection="${_arg}"
+          _selection="${__arg}"
         fi
         ;;
     esac
