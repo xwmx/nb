@@ -509,6 +509,33 @@ HEREDOC
   [[ "${lines[0]}" == "Note not found: 'invalid'." ]]
 }
 
+# `notes scoped:list` #########################################################
+
+@test "\`scoped:list\` exits with 0 and lists files in reverse order." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" notebooks add "one"
+    "${_NOTES}" one:add "one.md" --title "one"
+    "${_NOTES}" one:add "two.md" --title "two"
+    "${_NOTES}" one:add "three.md" --title "three"
+    _files=($(ls "${NOTES_DIR}/one/"))
+  }
+
+  run "${_NOTES}" one:list
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ "${lines[0]}" =~ one:3   ]]
+  [[ "${lines[0]}" =~ three   ]]
+  [[ "${lines[1]}" =~ one:2   ]]
+  [[ "${lines[1]}" =~ two     ]]
+  [[ "${lines[2]}" =~ one:1   ]]
+  [[ "${lines[2]}" =~ one     ]]
+}
+
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
