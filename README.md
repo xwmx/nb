@@ -1294,9 +1294,10 @@ Usage:
   notes history [<id> | <filename> | <path> | <title>]
   notes import [copy | download | move] (<path> | <url>) [--convert]
   notes init [<remote-url>]
-  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
-             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
-             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
+  notes list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [-t <type> | --type <type> | --<type>]
+             [<id> | <filename> | <path> | <title> | <query>]
   notes ls [<list options>...]
   notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   notes notebook [archive | open | peek | status | unarchive]
@@ -1783,20 +1784,23 @@ Examples:
 
 ```text
 Usage:
-  notes list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
-             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
-             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
+  notes list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [-t <type> | --type <type> | --<type>]
+             [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --bookmarks               List only bookmarks.
-  -e, --excerpt [<length>]  Print an excerpt <length> lines long under each
-                            note's filename [default: 3].
-  --filenames               Print the filename for each note.
-  --no-id                   Don't print the id next to each note's filename.
-  -n <limit>                The maximum number of notes to list.
-  --<limit>                 Shortcut for `-n <limit>`.
-  -s, --sort                Order notes by id.
-  -r, --reverse             Order notes by id descending.
+  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
+                                each note's filename [default: 3].
+  --filenames                   Print the filename for each note.
+  --no-id                       Don't include the id in list items.
+  -n <limit>                    The maximum number of notes to list.
+  --<limit>                     Shortcut for `-n <limit>`.
+  -s, --sort                    Order notes by id.
+  -r, --reverse                 Order notes by id descending.
+  -t, --type <type>, --<type>   List items of <type>. Available types:
+                                note, bookmark, document, archive, image,
+                                video, audio
 
 Description:
   List notes in the current notebook.
@@ -1828,20 +1832,23 @@ Examples:
 
 ```text
 Usage:
-  notes ls [--bookmarks] [-e [<length>] | --excerpt [<length>]]
-           [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
-           [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
+  notes ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+           [-t <type> | --type <type> | --<type>]
+           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --bookmarks               List only bookmarks.
-  -e, --excerpt [<length>]  Print an excerpt <length> lines long under each
-                            note's filename [default: 3].
-  --filenames               Print the filename for each note.
-  --no-id                   Don't print the id next to each note's filename.
-  -n <limit>                The maximum number of notes to list.
-  --<limit>                 Shortcut for `-n <limit>`.
-  -s, --sort                Order notes by id.
-  -r, --reverse             Order notes by id descending.
+  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
+                                each note's filename [default: 3].
+  --filenames                   Print the filename for each note.
+  --no-id                       Don't include the id in list items.
+  -n <limit>                    The maximum number of notes to list.
+  --<limit>                     Shortcut for `-n <limit>`.
+  -s, --sort                    Order notes by id.
+  -r, --reverse                 Order notes by id descending.
+  -t, --type <type>, --<type>   List items of <type>. Available types:
+                                note, bookmark, document, archive, image,
+                                video, audio
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles

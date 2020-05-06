@@ -1751,14 +1751,69 @@ _list_notes_files() {
     fi
   else
     ls -t "${_NOTEBOOK_PATH}"
-  fi |  if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
-        then
-          grep --color=never    \
+  fi | {
+    local _grep_patterns=()
+    if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
+    then
+      grep --color=never    \
+        -e '\.bookmark\.'   \
+        -e '\-bookmark\.'
+    elif [[ "${_type}" =~ ^note$|^notes$ ]]
+    then
+      for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}" \
+        | grep --color=never -v \
             -e '\.bookmark\.'   \
             -e '\-bookmark\.'
-        else
-          cat
-        fi
+    elif [[ "${_type}" =~ ^archive$ ]]
+    then
+      for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}"
+    elif [[ "${_type}" =~ ^audio$|^music$ ]]
+    then
+      for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}"
+    elif [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]]
+    then
+      for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}"
+    elif [[ "${_type}" =~ ^encrypted$ ]]
+    then
+      for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}"
+    elif [[ "${_type}" =~ ^image$|^images$|^pictures$ ]]
+    then
+      for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}"
+    elif [[ "${_type}" =~ ^video$|^videos$ ]]
+    then
+      for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
+      do
+        _grep_patterns+=("-e" "${__extension}")
+      done
+      grep --color=never "${_grep_patterns[@]}"
+    else
+      cat
+    fi
+  }
 }
 
 
@@ -2007,9 +2062,10 @@ Usage:
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
-  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
-             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
-             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [-t <type> | --type <type> | --<type>]
+             [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [archive | open | peek | status | unarchive]
@@ -4419,20 +4475,23 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [--bookmarks] [-e [<length>] | --excerpt [<length>]]
-             [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
-             [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+             [-t <type> | --type <type> | --<type>]
+             [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --bookmarks               List only bookmarks.
-  -e, --excerpt [<length>]  Print an excerpt <length> lines long under each
-                            note's filename [default: 3].
-  --filenames               Print the filename for each note.
-  --no-id                   Don't print the id next to each note's filename.
-  -n <limit>                The maximum number of notes to list.
-  --<limit>                 Shortcut for \`-n <limit>\`.
-  -s, --sort                Order notes by id.
-  -r, --reverse             Order notes by id descending.
+  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
+                                each note's filename [default: 3].
+  --filenames                   Print the filename for each note.
+  --no-id                       Don't include the id in list items.
+  -n <limit>                    The maximum number of notes to list.
+  --<limit>                     Shortcut for \`-n <limit>\`.
+  -s, --sort                    Order notes by id.
+  -r, --reverse                 Order notes by id descending.
+  -t, --type <type>, --<type>   List items of <type>. Available types:
+                                note, bookmark, document, archive, image,
+                                video, audio
 
 Description:
   List notes in the current notebook.
@@ -4464,7 +4523,6 @@ _list() {
   _debug printf "_list() \${2:-}: '%s'\\n" "${2:-}"
   _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
 
-  local _bookmarks=0
   local _columns
   _columns="$(tput cols)"
   local _excerpt_length=3
@@ -4477,6 +4535,7 @@ _list() {
   local _reverse=0
   local _selection
   local _sort=0
+  local _type=
 
   _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
@@ -4487,8 +4546,17 @@ _list() {
     local _val="${2:-}"
 
     case "${_arg}" in
-      --bookmarks)
-        _bookmarks=1
+      --archive|--archives)
+        _type="archive"
+        ;;
+      --audio)
+        _type="audio"
+        ;;
+      --bookmark|--bookmarks)
+        _type="bookmark"
+        ;;
+      --document|--documents)
+        _type="document"
         ;;
       -e|--excerpt)
         _print_excerpt=1
@@ -4500,6 +4568,9 @@ _list() {
         ;;
       --filenames|--filename)
         _list_filenames=1
+        ;;
+      --image|--images)
+        _type="image"
         ;;
       --no-id|--noid|--no-ids|--no-index|--noindex)
         _no_id=1
@@ -4517,6 +4588,9 @@ _list() {
           shift
         fi
         ;;
+      --note|--notes)
+        _type="note"
+        ;;
       -s|--sort)
         _sort=1
         ;;
@@ -4525,6 +4599,19 @@ _list() {
         ;;
       --titles)
         : # Do nothing. This is now the default behavior. TODO: Remove.
+        ;;
+      -t|--type)
+        if __option_value_is_present "${_val:-}"
+        then
+          _type="${_val:-}"
+          shift
+        else
+          _help "list"
+          return 1
+        fi
+        ;;
+      --video|--videos)
+        _type="video"
         ;;
       *)
         _debug printf "_list() *: '%s'\\n" "${_arg:-}"
@@ -4536,15 +4623,16 @@ _list() {
         fi
         ;;
     esac
+
     shift
   done
 
-  _debug printf "_list() \${_bookmarks}: '%s'\\n" "${_bookmarks:-}"
   _debug printf "_list() \${_limit}: '%s'\\n" "${_limit:-}"
   _debug printf "_list() \${_print_excerpt}: '%s'\\n" "${_print_excerpt:-}"
   _debug printf "_list() \${_excerpt_length}: '%s'\\n" "${_excerpt_length:-}"
   _debug printf "_list() \${_selection}: '%s'\\n" "${_selection:-}"
   _debug printf "_list() \${_sort}: '%s'\\n" "${_sort:-}"
+  _debug printf "_list() \${_type}: '%s'\\n" "${_type:-}"
 
   local _selection_basename=
   if [[ -n "${_selection:-}" ]]
@@ -4563,9 +4651,9 @@ _list() {
   local _list_note_file_options=()
   local _filenames=()
 
-  ((_bookmarks))  && _list_note_file_options+=("--type" "bookmark")
-  ((_reverse))    && _list_note_file_options+=("--reverse")
-  ((_sort))       && _list_note_file_options+=("--sort")
+  [[ -n "${_type:-}" ]] && _list_note_file_options+=("--type" "${_type}")
+  ((_reverse))          && _list_note_file_options+=("--reverse")
+  ((_sort))             && _list_note_file_options+=("--sort")
 
   if [[ -n "${_list_note_file_options[*]:-}" ]]
   then
@@ -4580,7 +4668,8 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
-  if [[ "${_filenames_count}" -eq 0 ]] && ((_bookmarks))
+  if [[ "${_filenames_count}" -eq 0 ]] &&
+     [[ "${_type}" == "bookmark"    ]]
   then
     cat <<HEREDOC
 0 bookmarks.
@@ -4589,6 +4678,17 @@ Add a bookmark:
   $(_highlight "${_ME} bookmark <url>")
 Help information:
   $(_highlight "${_ME} help bookmark")
+HEREDOC
+  elif [[ "${_filenames_count}" -eq 0 ]] &&
+       [[ "${_type}" =~ ^archive$|^audio$|^document$|^image$|^video$ ]]
+  then
+    cat <<HEREDOC
+0 ${_type} files.
+
+Import a file:
+  $(_highlight "${_ME} import (<path> | <url>)")
+Help information:
+  $(_highlight "${_ME} help import")
 HEREDOC
   elif [[ "${_filenames_count}" -eq 0 ]]
   then # no files in `$_NOTEBOOK_PATH`
@@ -4856,20 +4956,23 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [--bookmarks] [-e [<length>] | --excerpt [<length>]]
-           [--filenames] [--no-id] [-n <limit> | --<limit>] [-s | --sort]
-           [-r | --reverse] [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+           [-t <type> | --type <type> | --<type>]
+           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --bookmarks               List only bookmarks.
-  -e, --excerpt [<length>]  Print an excerpt <length> lines long under each
-                            note's filename [default: 3].
-  --filenames               Print the filename for each note.
-  --no-id                   Don't print the id next to each note's filename.
-  -n <limit>                The maximum number of notes to list.
-  --<limit>                 Shortcut for \`-n <limit>\`.
-  -s, --sort                Order notes by id.
-  -r, --reverse             Order notes by id descending.
+  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
+                                each note's filename [default: 3].
+  --filenames                   Print the filename for each note.
+  --no-id                       Don't include the id in list items.
+  -n <limit>                    The maximum number of notes to list.
+  --<limit>                     Shortcut for \`-n <limit>\`.
+  -s, --sort                    Order notes by id.
+  -r, --reverse                 Order notes by id descending.
+  -t, --type <type>, --<type>   List items of <type>. Available types:
+                                note, bookmark, document, archive, image,
+                                video, audio
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
