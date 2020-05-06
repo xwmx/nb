@@ -1,7 +1,7 @@
 {
   "name": "notes.sh",
   "version": "2.20.1",
-  "description": "CLI note-taking, bookmarking, and research management with encryption, search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
+  "description": "CLI note-taking, bookmarking, and archiving with encryption, search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "global": true,
   "install": "make install",
   "directories": {
