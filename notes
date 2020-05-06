@@ -808,8 +808,32 @@ _encrypt_file() {
 # Returns:
 #   0  If file is an archive.
 #   1  if not.
+export _ARCHIVE_FILE_EXTENSIONS=(
+  7z
+  apk
+  bz2
+  dmg
+  gz
+  rar
+  s7z
+  sit
+  sitx
+  tar
+  tar.gz
+  tgz
+  tar.Z
+  tar.bz2
+  tbz2
+  tar.lz
+  tlz.
+  tar.xz
+  txz
+  zip
+  zipx
+)
 _file_is_archive() {
-  [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
+  _contains "${_file_type}" "${_ARCHIVE_FILE_EXTENSIONS[@]}" ||
+    [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
 
 # _file_is_audio()
@@ -820,11 +844,20 @@ _file_is_archive() {
 # Returns:
 #   0  If file is an audio file.
 #   1  if not.
+export _AUDIO_FILE_EXTENSIONS=(
+  aac
+  aiff
+  flac
+  m4a
+  mp3
+  ogg
+  wav
+)
 _file_is_audio() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  [[ "${_file_type}" =~ ^aac$|^aiff$|^flac$|^m4a$|^mp3$|^ogg$|^wav$ ]]
+  _contains "${_file_type}" "${_AUDIO_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_bookmark()
@@ -835,7 +868,12 @@ _file_is_audio() {
 # Returns:
 #   0 If file is a bookmark.
 #   1 if not.
+export _BOOKMARK_FILE_EXTENSIONS=(
+  bookmark.md
+  bookmark.md.enc
+)
 _file_is_bookmark() {
+  # Use explicit matching for legacy bookmark name support.
   [[ "${1:-}" =~ .bookmark.md$      ]] ||
   [[ "${1:-}" =~ .bookmark.md.enc$  ]] ||
   [[ "${1:-}" =~ -bookmark.md$      ]] ||
@@ -850,11 +888,18 @@ _file_is_bookmark() {
 # Returns:
 #   0  If file is a Word, Open Office, PDF, or other document.
 #   1  if not.
+export _DOCUMENT_FILE_EXTENSIONS=(
+  doc
+  docx
+  odt
+  pdf
+  rtf
+)
 _file_is_document() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  [[ "${_file_type}" =~ ^doc$|^docx$|^odt$|^pdf$|^rtf$ ]]
+  _contains "${_file_type}" "${_DOCUMENT_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_encrypted()
@@ -865,12 +910,15 @@ _file_is_document() {
 # Returns:
 #   0  If file is encrypted.
 #   1  if not.
+export _ENCRYPTED_FILE_EXTENSIONS=(
+  enc
+)
 _file_is_encrypted() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
   # `file` with 'soft' test is slow, so avoid calling it.
-  [[ "${_file_type}" == "enc" ]]  ||
+  _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}" ||
     ! _file_is_text "${1:-}"      &&
     [[ "$(file "${_file_path:-}"  \
             --exclude=apptype     \
@@ -890,31 +938,29 @@ _file_is_encrypted() {
 # Returns:
 #   0  If file is an image.
 #   1  if not.
+export _IMAGE_FILE_EXTENSIONS=(
+  png
+  jpg
+  jpeg
+  gif
+  webp
+  tiff
+  tif
+  psd
+  raw
+  bmp
+  ind
+  indd
+  ind
+  svg
+  svgz
+  ai
+)
 _file_is_image() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  # Avoid calling `file` for better performance.
-  local _file_types=(
-    png
-    jpg
-    jpeg
-    gif
-    webp
-    tiff
-    tif
-    psd
-    raw
-    bmp
-    ind
-    indd
-    ind
-    svg
-    svgz
-    ai
-  )
-
-  [[ "${_file_types[*]}" =~ ${_file_type} ]]
+  _contains "${_file_type}" "${_IMAGE_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_text()
@@ -925,26 +971,25 @@ _file_is_image() {
 # Returns:
 #   0  If file is text.
 #   1  if not.
+export _TEXT_FILE_EXTENSIONS=(
+  bib
+  html
+  latex
+  md
+  markdown
+  org
+  rst
+  tex
+  textile
+  txt
+  xml
+)
 _file_is_text() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  local _file_types=(
-    bib
-    html
-    latex
-    md
-    markdown
-    org
-    rst
-    tex
-    textile
-    txt
-    xml
-  )
-
-  [[ "${_file_types[*]}" =~ ${_file_type} ]] ||
+  _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
     [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
 
 }
@@ -957,26 +1002,25 @@ _file_is_text() {
 # Returns:
 #   0  If file is a video file.
 #   1  if not.
+export _VIDEO_FILE_EXTENSIONS=(
+  webm
+  mpg
+  mp2
+  mpeg
+  mp4
+  m4p
+  m4v
+  avi
+  wmv
+  mov
+  qt
+  flv
+)
 _file_is_video() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  local _file_types=(
-    webm
-    mpg
-    mp2
-    mpeg
-    mp4
-    m4p
-    m4v
-    avi
-    wmv
-    mov
-    qt
-    flv
-  )
-
-  [[ "${_file_types[*]}" =~ ${_file_type} ]]
+  _contains "${_file_type}" "${_VIDEO_FILE_EXTENSIONS[@]}"
 }
 
 # _get_first_line()
