@@ -1313,7 +1313,8 @@ Usage:
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
                --to-bookmark | --to-note) [-f | --force]
-  notes search <query> [-a | --all] [--bookmarks] [--path]
+  notes search <query> [--path] [-t <type> | --type <type> | --<type>]
+                       [-a | --all]
   notes settings [colors [<number>] | edit | list]
   notes settings (get | unset) <setting>
   notes settings set <setting> <value>
@@ -2092,13 +2093,16 @@ Examples:
 
 ```text
 Usage:
-  notes search <query> [-a | --all] [--bookmarks] [--path]
+  notes search <query> [--path] [-t <type> | --type <type> | --<type>]
+                       [-a | --all]
 
 Options:
-  -a, --all     Search all active notebooks.
-  --bookmarks   Search only bookmarks.
-  --path        Print the full path for each file with query matches.
-
+  -a, --all                     Search all active notebooks.
+  --path                        Print the full path for each matching file.
+  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
+                                extension or one of the following types:
+                                note, bookmark, document, archive, image,
+                                video, audio
 Description:
   Search notes. Uses the first available tool in the following list:
     1. `rg`    https://github.com/BurntSushi/ripgrep
@@ -2117,7 +2121,7 @@ Examples:
   notes search 'Example|Sample'
 
   # search for bookmarks containing the hashtag '#example'
-  notes search '#example' --bookmarks
+  notes search '#example' --type bookmark
 
   # search with a regular expression for notes containing phone numbers
   notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'

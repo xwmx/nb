@@ -1799,7 +1799,7 @@ _list_notes_files() {
           _grep_patterns+=("-e" "${__extension}$")
         done
         grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^image$|^images$|^pictures$ ]]
+      elif [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$ ]]
       then
         for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
         do
@@ -2086,7 +2086,8 @@ Usage:
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
                --to-bookmark | --to-note) [-f | --force]
-  ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
+  ${_ME} search <query> [--path] [-t <type> | --type <type> | --<type>]
+                       [-a | --all]
   ${_ME} settings [colors [<number>] | edit | list]
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
@@ -6451,13 +6452,16 @@ _rename() {
 
 desc "search" <<HEREDOC
 Usage:
-  ${_ME} search <query> [-a | --all] [--bookmarks] [--path]
+  ${_ME} search <query> [--path] [-t <type> | --type <type> | --<type>]
+                       [-a | --all]
 
 Options:
-  -a, --all     Search all active notebooks.
-  --bookmarks   Search only bookmarks.
-  --path        Print the full path for each file with query matches.
-
+  -a, --all                     Search all active notebooks.
+  --path                        Print the full path for each matching file.
+  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
+                                extension or one of the following types:
+                                note, bookmark, document, archive, image,
+                                video, audio
 Description:
   Search notes. Uses the first available tool in the following list:
     1. \`rg\`    https://github.com/BurntSushi/ripgrep
@@ -6476,7 +6480,7 @@ Examples:
   ${_ME} search 'Example|Sample'
 
   # search for bookmarks containing the hashtag '#example'
-  ${_ME} search '#example' --bookmarks
+  ${_ME} search '#example' --type bookmark
 
   # search with a regular expression for notes containing phone numbers
   ${_ME} search '^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$'
@@ -6485,25 +6489,34 @@ Shortcut Alias: \`q\`
 HEREDOC
 _search() {
   local _all=0
-  local _arguments=("${@}")
   local _last_path=
   local _max_columns="2000"
-  local _only_bookmarks=0
   local _print_paths=0
   local _query=
+  local _type=
   local _use_grep=0
 
-  for __arg in "${_arguments[@]:-}"
+  while ((${#}))
   do
+    local __arg="${1:-}"
+    local __val="${2:-}"
+
     case "${__arg}" in
       -a|--all)
         _all=1
         ;;
-      --bookmarks)
-        _only_bookmarks=1
-        ;;
       --path)
         _print_paths=1
+        ;;
+      --type)
+        if __option_value_is_present "${__val:-}"
+        then
+          _type="${__val:-}"
+          shift
+        else
+          _help "search"
+          return 1
+        fi
         ;;
       --use-grep)
         # The `--use-grep` option bypasses other search tools. Intended to be
@@ -6511,12 +6524,17 @@ _search() {
         _use_grep=1
         ;;
       *)
-        if [[ -z "${_query}" ]]
+        if [[ "${__arg:-}" =~ ^-- ]]
+        then
+          _type="${__arg:2}"
+        elif [[ -z "${_query}" ]]
         then
           _query="${__arg}"
         fi
         ;;
     esac
+
+    shift
   done
 
   if [[ -z "${_query:-}" ]]
@@ -6613,12 +6631,41 @@ _search() {
 
         if [[ "${_last_path}" != "${_path}" ]]
         then
-          if ((_only_bookmarks)) && [[ "${_path}" =~ bookmark.md$ ]]
+          if [[ -n "${_type:-}" ]]
           then
-            _skip=0
-          elif ((_only_bookmarks))
-          then
-            _skip=1
+            if [[ "${_path}" =~ ${_type}$ ]]
+            then
+              _skip=0
+            elif {
+                [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]] &&
+                _file_is_bookmark "${_path}"
+              } || {
+                [[ "${_type}" =~ ^note$|^notes$ ]] &&
+                _file_is_text "${_path}"
+              } || {
+                [[ "${_type}" =~ ^archive$ ]] &&
+                _file_is_archive "${_path}"
+              } || {
+                [[ "${_type}" =~ ^audio$|^music$ ]] &&
+                _file_is_audio "${_path}"
+              } || {
+                [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]] &&
+                _file_is_document "${_path}"
+              } || {
+                [[ "${_type}" =~ ^encrypted$ ]] &&
+                _file_is_encrypted "${_path}"
+              } || {
+                [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$ ]] &&
+                _file_is_image "${_path}"
+              }  || {
+                [[ "${_type}" =~ ^video$|^videos$ ]] &&
+                _file_is_video "${_path}"
+              }
+            then
+              _skip=0
+            else
+              _skip=1
+            fi
           fi
         fi
 

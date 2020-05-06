@@ -32,7 +32,7 @@ HEREDOC
 
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--bookmarks] [--path]" ]]
+  [[ "${lines[1]}" =~ notes\ search\ \<query\> ]]
 }
 
 # `search <no match>` #########################################################
@@ -369,5 +369,5 @@ _search_all_setup() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes search <query> [-a | --all] [--bookmarks] [--path]" ]]
+  [[ "${lines[1]}" =~ notes\ search\ \<query\> ]]
 }
