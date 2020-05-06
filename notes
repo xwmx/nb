@@ -2056,8 +2056,8 @@ HEREDOC
 
     printf "%s\\n" "${_help_text}" \
       | if [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
-           [[ -n "${PAGER:-}" ]] &&
-           [[ ! "${PAGER:-}" =~ less ]]
+           [[ -n "${PAGER:-}"                           ]] &&
+           [[ ! "${PAGER:-}" =~ less                    ]]
         then
           "${PAGER}"
         elif [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
@@ -2553,7 +2553,7 @@ _bookmark() {
 
     if [[ "${_subcommand}" =~ ^open$|^o$|^peek$|^p$|^preview$ ]]
     then
-      if [[ ! "${_basename}" =~ .bookmark\.md$ ]] &&
+      if [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
          [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
       then
         if [[ "${_subcommand}" =~ ^open$|^o$ ]]
@@ -3870,8 +3870,8 @@ ${_url}
       _basename="$(basename -- "${_path}")"
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}" &&
-        _index add "${_basename}" &&
+      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"    &&
+        _index add "${_basename}"                       &&
         _git_checkpoint "[NOTES] Import: ${_basename}"
       printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
       ;;
@@ -3924,7 +3924,7 @@ _index() {
   local _subcommand="${1:-}"
   local _index_path="${_NOTEBOOK_PATH}/.index"
 
-  if [[ ! -e "${_index_path}" ]] &&
+  if [[ ! -e "${_index_path}"           ]] &&
      [[ ! "${_subcommand}" == "rebuild" ]]
   then
     _index rebuild
@@ -5439,10 +5439,10 @@ _notebooks() {
       printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
     else
       mkdir -p "${NOTES_DIR}/${_name}"
-      cd "${NOTES_DIR}/${_name}" &&
-        git init 1>/dev/null &&
-        touch "${NOTES_DIR}/${_name}/.index" &&
-        _clear_notes_cache &&
+      cd "${NOTES_DIR}/${_name}"              &&
+        git init 1>/dev/null                  &&
+        touch "${NOTES_DIR}/${_name}/.index"  &&
+        _clear_notes_cache                    &&
         _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
@@ -5609,7 +5609,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       _path="${_CURRENT_WORKING_DIR}"
     fi
 
-    if [[ -d "${_path}"     ]] &&
+    if [[ -d "${_path}"       ]] &&
        [[ -d "${_path}/.git"  ]]
     then
       if [[ -f "${_path}/.index" ]]
@@ -5627,8 +5627,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       git clone "${_remote_url}" "${_path}"
     else
-      cd "${_path}" &&
-        git init 1>/dev/null &&
+      cd "${_path}"             &&
+        git init 1>/dev/null    &&
         touch "${_path}/.index" &&
         _git_checkpoint "[NOTES] Initialize" "${_path}"
     fi
@@ -6090,11 +6090,11 @@ _remote() {
           done
         fi
 
-        git remote set-url origin "${_url}" &&
-          printf "Remote set to '%s'\\n" "${_url}" &&
+        git remote set-url origin "${_url}"         &&
+          printf "Remote set to '%s'\\n" "${_url}"  &&
           return 0
       else
-        git remote add origin "${_url}"  &&
+        git remote add origin "${_url}"            &&
           printf "Remote set to '%s'\\n" "${_url}" &&
           return 0
       fi
@@ -6290,8 +6290,8 @@ _rename() {
     done
   fi
 
-  mv "${_source_path}" "${_NOTEBOOK_PATH}/${_target_basename}" &&
-    _index update "${_source_basename}" "${_target_basename}" &&
+  mv "${_source_path}" "${_NOTEBOOK_PATH}/${_target_basename}"  &&
+    _index update "${_source_basename}" "${_target_basename}"   &&
     _git_checkpoint \
       "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
   printf "'%s' renamed to '%s'\\n" \
@@ -6716,8 +6716,8 @@ _settings() {
     local _stripped=
     local _value=
 
-    _setting_name="$(_notes_settings_get_name "${1:-}")" &&
-      _notes_settings_validate_value "${_setting_name}" "${2:-}" &&
+    _setting_name="$(_notes_settings_get_name "${1:-}")"          &&
+      _notes_settings_validate_value "${_setting_name}" "${2:-}"  &&
       {
         _value="${2:-}"
         if [[ "${_value}" =~ ^~ ]]
@@ -6728,7 +6728,7 @@ _settings() {
       } &&
       _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
       _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
-      printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}" &&
+      printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}"        &&
       printf "%s set to '%s'\\n" "${_setting_name}" "${_value}"
   }
 
@@ -7429,20 +7429,20 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       open "${_target_path}"
     fi
-  elif ((_render)) &&
-       ((_dump))   &&
+  elif ((_render))              &&
+       ((_dump))                &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
   then # `notes show --render --dump` with `pandoc` and `w3m` available.
     pandoc "${_target_path}" \
       | w3m -dump -T text/html
-  elif ((_render)) &&
+  elif ((_render))              &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
   then # `notes show --render` with `pandoc` and `w3m` available.
     pandoc "${_target_path}" \
       | w3m -T text/html
-  elif ((_render)) &&
+  elif ((_render))              &&
        _command_exists "pandoc" &&
        _command_exists "lynx"
   then # `notes show --render` with `pandoc` and `lynx` available.
@@ -7550,16 +7550,16 @@ _update() {
       _current_path="$(realpath "${_current_path}")"
     fi
 
-  if hash npm 2>/dev/null &&
-     npm list | grep -q notes.sh &&
+  if hash npm 2>/dev/null         &&
+     npm list | grep -q notes.sh  &&
      [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
     cat <<'HEREDOC'
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
-  elif [[ "${OSTYPE}" =~ ^darwin ]] &&
-       [[ "${_current_path}" =~ Cellar ]]
+  elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
+       [[ "${_current_path}" =~ Cellar  ]]
   then
     cat <<'HEREDOC'
 Installed with Homebrew. To update, run:
