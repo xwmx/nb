@@ -832,8 +832,11 @@ export _ARCHIVE_FILE_EXTENSIONS=(
   zipx
 )
 _file_is_archive() {
+  local _file_path="${1:-}"
+  local _file_type="${_file_path##*.}"
+
   _contains "${_file_type}" "${_ARCHIVE_FILE_EXTENSIONS[@]}" ||
-    [[ "$(file "${1:-}" | cut -d: -f2)" =~ archive|compressed ]]
+    [[ "$(file "${_file_path:-}" | cut -d: -f2)" =~ archive|compressed ]]
 }
 
 # _file_is_audio()
