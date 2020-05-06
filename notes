@@ -1371,6 +1371,7 @@ Welcome to $(_highlight "notes")!
 
 Git requires some additional setup before using $(_highlight "notes").
 Enter the name and email address you'd like to use with Git.
+Edits you make will be attributed to this name and email address.
 HEREDOC
     if [[ -z "${_git_name}" ]]
     then
