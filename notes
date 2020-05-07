@@ -6471,7 +6471,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio
+                                video, audio, folder
 Description:
   Search notes. Uses the first available tool in the following list:
     1. \`rg\`    https://github.com/BurntSushi/ripgrep
