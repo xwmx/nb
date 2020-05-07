@@ -6565,7 +6565,7 @@ _search() {
       "_search() \${_target_notebook_paths[*]}: '%s'\\n" \
       "${_target_notebook_paths[*]}"
 
-    for __path in "${_target_notebook_paths[@]:-}"
+    for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
       if _command_exists "rg" && ! ((_use_grep))
       then
@@ -6577,7 +6577,7 @@ _search() {
           --color always  \
           --line-number   \
           --max-columns "${_max_columns}" --max-columns-preview \
-          "${_query}" "${__path}" \
+          "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ag" && ! ((_use_grep))
       then
@@ -6590,11 +6590,11 @@ _search() {
           --color       \
           --color-line-number '32' \
           --color-match '1;35' \
-          "${_query}" "${__path}" \
+          "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
-        ack "${_query}" "${__path}" \
+        ack "${_query}" "${__notebook_path}" \
           --ignore-case \
           --noheading   \
           --color-lineno='bold green'   \
@@ -6610,8 +6610,8 @@ _search() {
               --color=always  \
               --text          \
               -n "${_query}"  \
-              "${__path}"/* \
-              "${__path}"/.index /dev/null \
+              "${__notebook_path}"/* \
+              "${__notebook_path}"/.index /dev/null \
                 || return 0 # Don't fail out within a single scope.
         set -f
       fi | while read -r _line
@@ -6654,7 +6654,7 @@ _search() {
                 _file_is_text "${_path}"
               } || {
                 [[ "${_type}" =~ ^folder$|^folders$ ]] &&
-                [[ "$(dirname "${_path}")" != "${__path}" ]]
+                [[ "$(dirname "${_path}")" != "${__notebook_path}" ]]
               } || {
                 [[ "${_type}" =~ ^archive$ ]] &&
                 _file_is_archive "${_path}"
@@ -6717,13 +6717,13 @@ _search() {
           fi
 
           _filename_for_id="${_filename}"
-          if [[ "${__path}/${_filename}" != "${_path}" ]]
+          if [[ "${__notebook_path}/${_filename}" != "${_path}" ]]
           then
             _filename_for_id="$(basename "$(dirname "${_path}")")"
           fi
 
-          _id="$(_NOTEBOOK_PATH="${__path}" _index get_id "${_filename_for_id}")"
-          _title="$(_get_title "${__path}/${_filename}")"
+          _id="$(_NOTEBOOK_PATH="${__notebook_path}" _index get_id "${_filename_for_id}")"
+          _title="$(_get_title "${__notebook_path}/${_filename}")"
 
           if [[ -n "${_title}" ]]
           then
@@ -6737,7 +6737,7 @@ _search() {
           if ((_all)) || ((_SCOPED))
           then
             local _notebook_name=
-            _notebook_name="$(_get_notebook_identifier "${__path}")"
+            _notebook_name="$(_get_notebook_identifier "${__notebook_path}")"
 
             _id_filename="[${_notebook_name}:${_id}] ${_file_info}"
             _id_filename_color="[$(_highlight "${_notebook_name}:${_id}")] ${_file_info_color}"
