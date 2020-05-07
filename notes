@@ -6716,14 +6716,25 @@ _search() {
             )"
           fi
 
-          _filename_for_id="${_filename}"
-          if [[ "${__notebook_path}/${_filename}" != "${_path}" ]]
+          local _filename_for_id="${_filename}"
+
+          if [[ "${__notebook_path}/${_filename}" != "${_path}" ]] &&
+             [[ ! "${_path:-}" =~ \.index$                      ]]
           then
-            _filename_for_id="$(basename "$(dirname "${_path}")")"
+            local _parent_dirname=
+            _parent_dirname="$(dirname "${_path}")"
+
+            _filename_for_id="$(basename "${_parent_dirname}")"
+
+            local _relative_parent_dirname=
+            _relative_parent_dirname="${_parent_dirname#${__notebook_path}/}"
+
+            _filename="${_relative_parent_dirname}/${_filename}"
+            _filename_color="${_relative_parent_dirname}/${_filename_color}"
           fi
 
           _id="$(_NOTEBOOK_PATH="${__notebook_path}" _index get_id "${_filename_for_id}")"
-          _title="$(_get_title "${__notebook_path}/${_filename}")"
+          _title="$(_get_title "${_path}")"
 
           if [[ -n "${_title}" ]]
           then
