@@ -942,22 +942,21 @@ _file_is_encrypted() {
 #   0  If file is an image.
 #   1  if not.
 export _IMAGE_FILE_EXTENSIONS=(
-  png
-  jpg
-  jpeg
-  gif
-  webp
-  tiff
-  tif
-  psd
-  raw
+  ai
   bmp
+  gif
   ind
   indd
-  ind
+  jpg
+  jpeg
+  png
+  psd
+  raw
   svg
   svgz
-  ai
+  tif
+  tiff
+  webp
 )
 _file_is_image() {
   local _file_path="${1:-}"
@@ -1006,18 +1005,18 @@ _file_is_text() {
 #   0  If file is a video file.
 #   1  if not.
 export _VIDEO_FILE_EXTENSIONS=(
-  webm
-  mpg
-  mp2
-  mpeg
-  mp4
+  avi
+  flv
   m4p
   m4v
-  avi
-  wmv
+  mp2
+  mp4
   mov
+  mpeg
+  mpg
   qt
-  flv
+  webm
+  wmv
 )
 _file_is_video() {
   local _file_path="${1:-}"
