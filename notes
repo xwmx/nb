@@ -6733,7 +6733,10 @@ _search() {
             _filename_color="${_relative_parent_dirname}/${_filename_color}"
           fi
 
-          _id="$(_NOTEBOOK_PATH="${__notebook_path}" _index get_id "${_filename_for_id}")"
+          _id="$(
+            _NOTEBOOK_PATH="${__notebook_path}" \
+              _index get_id "${_filename_for_id}"
+          )"
           _title="$(_get_title "${_path}")"
 
           if [[ -n "${_title}" ]]
