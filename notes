@@ -1770,6 +1770,15 @@ _list_notes_files() {
           | grep --color=never -v \
               -e '\.bookmark\.'   \
               -e '\-bookmark\.'
+      elif [[ "${_type}" =~ ^folder$|^folders$|^directory$|^directories$ ]]
+      then
+        while read -r __line
+        do
+          if [[ -d "${_NOTEBOOK_PATH}/${__line}" ]]
+          then
+            printf "%s\\n" "${__line}"
+          fi
+        done
       elif [[ "${_type}" =~ ^archive$ ]]
       then
         for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
@@ -4497,7 +4506,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio
+                                video, audio, folder
 
 Description:
   List notes in the current notebook.
@@ -4962,7 +4971,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio
+                                video, audio, folder
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
