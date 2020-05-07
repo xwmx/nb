@@ -54,7 +54,7 @@ features. `notes` is flexible.
 
 <p align="center">
   <a href="#installation">Installation</a> •
-  <a href="#usage">Usage</a> •
+  <a href="#overview">Overview</a> •
   <a href="#help">Help</a>
 </p>
 
@@ -188,7 +188,7 @@ permissions or installed with `sudo`. If completion isn't working after
 installing `notes`, see the [completion installation
 instructions](etc/README.md).
 
-## Usage
+## Overview
 
 <p align="center">
   <a href="#working-with-notes">Notes</a> •
