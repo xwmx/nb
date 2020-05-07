@@ -6515,7 +6515,7 @@ _search() {
       -a|--all)
         _all=1
         ;;
-      --path)
+      --path|--paths)
         _print_paths=1
         ;;
       --type)
