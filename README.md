@@ -1147,6 +1147,11 @@ $
 The `notes` shell recognizes all `notes` subcommands and options,
 providing a streamlined, distraction-free approach for working with `notes`.
 
+### Shell Theme Support
+
+- [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
+    current notebook name in the context line of the prompt.
+
 ### Shortcut Aliases
 
 Several core `notes` subcommands have single-character aliases to make
