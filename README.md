@@ -724,6 +724,9 @@ notes search '#example'
 
 # search with a regular expression for notes containing phone numbers
 notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
+
+# search bookmarks for 'example'
+notes search 'example' --type bookmark
 ```
 
 `notes search` prints the id number, filename, and title of each matched
@@ -1828,6 +1831,7 @@ Examples:
   notes list --filenames --reverse
   notes list '^Example.*'
   notes list --10
+  notes list --type document
 ```
 
 #### `ls`
@@ -1894,8 +1898,9 @@ Examples:
   notes ls example.md -e 10
   notes ls --excerpt --no-id
   notes ls --reverse
-  notes list '^Example.*'
-  notes list --10
+  notes ls '^Example.*'
+  notes ls --10
+  notes ls --type document
 ```
 
 #### `move`

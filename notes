@@ -4524,6 +4524,7 @@ Examples:
   ${_ME} list --filenames --reverse
   ${_ME} list '^Example.*'
   ${_ME} list --10
+  ${_ME} list --type document
 HEREDOC
 _list() {
   _debug printf "_list() \${1:-}: '%s'\\n" "${1:-}"
@@ -5005,8 +5006,9 @@ Examples:
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
   ${_ME} ls --reverse
-  ${_ME} list '^Example.*'
-  ${_ME} list --10
+  ${_ME} ls '^Example.*'
+  ${_ME} ls --10
+  ${_ME} ls --type document
 HEREDOC
 _ls() {
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
