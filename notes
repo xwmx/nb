@@ -2094,8 +2094,8 @@ Usage:
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
                --to-bookmark | --to-note) [-f | --force]
-  ${_ME} search <query> [--path] [-t <type> | --type <type> | --<type>]
-                       [-a | --all]
+  ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+                       [-l | --list] [--path]
   ${_ME} settings [colors [<number>] | edit | list]
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
@@ -6462,11 +6462,13 @@ _rename() {
 
 desc "search" <<HEREDOC
 Usage:
-  ${_ME} search <query> [--path] [-t <type> | --type <type> | --<type>]
-                       [-a | --all]
+  ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+                       [-l | --list] [--path]
 
 Options:
   -a, --all                     Search all active notebooks.
+  -l, --list                    Print the id, filename, and title listing for
+                                each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
@@ -6500,6 +6502,7 @@ HEREDOC
 _search() {
   local _all=0
   local _last_path=
+  local _only_list=0
   local _max_columns="2000"
   local _print_paths=0
   local _query=
@@ -6514,6 +6517,9 @@ _search() {
     case "${__arg}" in
       -a|--all)
         _all=1
+        ;;
+      -l|--list)
+        _only_list=1
         ;;
       --path|--paths)
         _print_paths=1
@@ -6763,7 +6769,19 @@ _search() {
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
             printf '\033[?7l'
-            printf "%s\\n" "${_id_filename_color}"
+            printf "%s" "${_id_filename_color}"
+            printf '\033[?7h'
+            printf "\\n"
+          fi
+
+          if ((_only_list))
+          then
+            continue
+          fi
+
+          if [[ "${_last_path}" != "${_path}" ]]
+          then # match is in a different file than the last match
+            printf '\033[?7l'
             _print_line "${_id_filename}"
             printf '\033[?7h'
           fi

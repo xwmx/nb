@@ -1321,8 +1321,8 @@ Usage:
   notes remote [remove | set <url> [-f | --force]]
   notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
                --to-bookmark | --to-note) [-f | --force]
-  notes search <query> [--path] [-t <type> | --type <type> | --<type>]
-                       [-a | --all]
+  notes search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+                       [-l | --list] [--path]
   notes settings [colors [<number>] | edit | list]
   notes settings (get | unset) <setting>
   notes settings set <setting> <value>
@@ -2103,11 +2103,13 @@ Examples:
 
 ```text
 Usage:
-  notes search <query> [--path] [-t <type> | --type <type> | --<type>]
-                       [-a | --all]
+  notes search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+                       [-l | --list] [--path]
 
 Options:
   -a, --all                     Search all active notebooks.
+  -l, --list                    Print the id, filename, and title listing for
+                                each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
