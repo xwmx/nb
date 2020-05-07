@@ -6653,6 +6653,9 @@ _search() {
                 [[ "${_type}" =~ ^note$|^notes$|^text$ ]] &&
                 _file_is_text "${_path}"
               } || {
+                [[ "${_type}" =~ ^folder$|^folders$ ]] &&
+                [[ "$(dirname "${_path}")" != "${__path}" ]]
+              } || {
                 [[ "${_type}" =~ ^archive$ ]] &&
                 _file_is_archive "${_path}"
               } || {
@@ -6713,7 +6716,13 @@ _search() {
             )"
           fi
 
-          _id="$(_NOTEBOOK_PATH="${__path}" _index get_id "${_filename}")"
+          _filename_for_id="${_filename}"
+          if [[ "${__path}/${_filename}" != "${_path}" ]]
+          then
+            _filename_for_id="$(basename "$(dirname "${_path}")")"
+          fi
+
+          _id="$(_NOTEBOOK_PATH="${__path}" _index get_id "${_filename_for_id}")"
           _title="$(_get_title "${__path}/${_filename}")"
 
           if [[ -n "${_title}" ]]
