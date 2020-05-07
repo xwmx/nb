@@ -4657,8 +4657,8 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
-  if [[ "${_filenames_count}" -eq 0 ]] &&
-     [[ "${_type}" == "bookmark"    ]]
+  if [[ "${_filenames_count}" -eq 0           ]] &&
+     [[ "${_type}" =~ ^bookmark$|^bookmarks$  ]]
   then
     cat <<HEREDOC
 0 bookmarks.
