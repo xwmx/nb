@@ -95,6 +95,7 @@ Recommended:
 Also supported for various enhancements:
 
 [Ack](http://beyondgrep.com/),
+[`afplay`](https://ss64.com/osx/afplay.html),
 [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
 [`exa`](https://github.com/ogham/exa),
 [`ffplay`](http://ffmpeg.org/ffplay.html),
