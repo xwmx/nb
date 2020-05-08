@@ -4189,7 +4189,7 @@ _index() {
         exec 4<&-
       }
 
-    local -a _index_list=()
+      local -a _index_list=()
       _index_list=($(<"${_index_path}"))
 
       local -a _file_list=()
