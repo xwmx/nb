@@ -470,23 +470,23 @@ __option_value_is_present() {
 # Current Notebook
 ###############################################################################
 
-# `$_NOTEBOOK_PATH`
+# $_NOTEBOOK_PATH
 #
 # Default: `$NOTES_DIR/home`
 export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DIR}/home}"
 
-# `$_GLOBAL_NOTEBOOK_PATH`
+# $_GLOBAL_NOTEBOOK_PATH
 #
 # The path of the current global notebook.
 export _GLOBAL_NOTEBOOK_PATH="${_NOTEBOOK_PATH}"
 
-# `$_GLOBAL_NOTEBOOK_NAME`
+# $_GLOBAL_NOTEBOOK_NAME
 #
 # The name of the current global notebook.
 export _GLOBAL_NOTEBOOK_NAME=
 _GLOBAL_NOTEBOOK_NAME="$(basename "${_GLOBAL_NOTEBOOK_PATH}")"
 
-# `$_LOCAL_NOTEBOOK_PATH`
+# $_LOCAL_NOTEBOOK_PATH
 #
 # The path of the local notebook, if one is found. The current working
 # directory and all parents are searched.
