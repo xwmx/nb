@@ -1119,13 +1119,13 @@ _get_notebook_identifier() {
 #   by the given <id>, <filename>, <path>, or <title>.
 _get_selection_basename() {
   local _basename=
-  local _selection="${1:-}"
   local _identifier=
+
+  local _selection="${1:-}"
   if [[ -z "${_selection}" ]]
-  then  # <selection> is blank.
+  then
     _basename=
   else
-
     _set_selection_notebook "${_selection}"
     _identifier="$(_get_selection_identifier "${_selection}")"
 
@@ -1140,10 +1140,10 @@ _get_selection_basename() {
     then # <selection> is an id.
       _basename="$(_index get_basename "${_identifier}")"
     else # <selection> might be a title.
-      local _title
-      local _filenames
-
+      local _title=
+      local _filenames=
       _filenames=($(_list_notes_files))
+
       for __file in "${_filenames[@]:-}"
       do
         _title="$(_get_title "${_NOTEBOOK_PATH}/${__file}")"
