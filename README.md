@@ -22,7 +22,8 @@ can work with files in any format, and can export notes to many document
 formats. `notes` includes `bookmark`, a full-featured CLI bookmarking system
 with local full-text search of cached page content, tagging, easy viewing
 of bookmarks in the terminal and your regular web browser,
-and information saved in normal Markdown documents made for humans.
+and page information automatically compiled and saved in normal
+Markdown documents made for humans.
 `notes` can also create private, password-protected encrypted notes and
 bookmarks.
 
