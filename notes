@@ -7629,6 +7629,20 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
+    elif _command_exists "magick"         &&
+         _file_is_image "${_target_path}" &&
+         {
+           [[ -z "${_tool}"          ]] ||
+           [[ "${_tool}" == "magick" ]]
+         }
+    then
+      magick "${_target_path}" sixel:- \
+        | if _command_exists "less" && ! ((_dump))
+          then
+            less -r --prompt="$(_less_prompt)"
+          else
+            cat
+          fi
     elif _command_exists "mplayer"        &&
          _file_is_audio "${_target_path}" &&
          {
