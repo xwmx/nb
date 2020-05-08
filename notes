@@ -83,6 +83,16 @@ else # macOS
   export _SED_I_COMMAND=(sed -i '')
 fi
 
+# $_REPO
+#
+# The <user>/<repo> identifier for the git repository.
+_REPO="xwmx/notes"
+
+# $_REPO_RAW_URL
+#
+# The base URL for raw files.
+_REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/master"
+
 ###############################################################################
 # .notesrc
 ###############################################################################
@@ -2018,7 +2028,7 @@ _help() {
   if [[ -n "${1:-}" ]] && [[ "${1:-}" =~ ^readme$|^README$|^\-\-readme$ ]]
   then
     _download_from \
-      "https://raw.githubusercontent.com/xwmx/notes/master/README.md" \
+      "${_REPO_RAW_URL}/README.md" \
       | if _command_exists "pandoc" && _command_exists "w3m"
         then
           pandoc --from markdown --to html \
@@ -2113,7 +2123,7 @@ Help:
   ${_ME} help --readme      Download and view the \`${_ME}\` README file.
 
 More Information:
-  https://github.com/xwmx/notes
+  https://github.com/${_REPO}
 HEREDOC
 
     if [[ ! "${1:-}" =~ ^\-s$|^\-\-short$ ]]
@@ -2985,7 +2995,7 @@ Options:
 
 Description:
   Manage completion scripts. For more information, visit:
-  https://github.com/xwmx/notes/blob/master/etc/README.md
+  https://github.com/${_REPO}/blob/master/etc/README.md
 HEREDOC
 _completions() {
   local _BASH_COMP_NAME="notes"
@@ -3089,7 +3099,11 @@ _completions() {
       exit 1
     fi
 
-    local _my_raw_url="https://raw.githubusercontent.com/xwmx/notes/master"
+    if [[ -z "${_REPO:-}" ]] || [[ -z "${_REPO_RAW_URL:-}" ]]
+    then
+      printf "Source Git repository not configured.\\n"
+      return 1
+    fi
 
     for _shell in bash zsh
     do
@@ -3100,7 +3114,7 @@ _completions() {
         if [[ ! -f "${_completion_source}" ]]
         then
           _completion_source="$(mktemp)"
-          local _completion_url="${_my_raw_url}/etc/notes-completion.${_shell}"
+          local _completion_url="${_REPO_RAW_URL}/etc/notes-completion.${_shell}"
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
           then
@@ -3120,7 +3134,7 @@ be necessary):
   notes completions install --download
 
 More information: ${_shell}
-  https://github.com/xwmx/notes/blob/master/etc/README.md
+  https://github.com/${_REPO}/blob/master/etc/README.md
 HEREDOC
       else
         local _completion_path=
@@ -4377,7 +4391,7 @@ HEREDOC
 # Edit this file manually or manage settings using the \`notes settings\`
 # subcommand.
 #
-# https://github.com/xwmx/notes
+# https://github.com/${_REPO}
 ###############################################################################
 
 # \$EDITOR
@@ -7812,7 +7826,7 @@ Installed with Homebrew. To update, run:
   brew upgrade xwmx/taps/notes
 HEREDOC
   else
-    local _notes_url="https://raw.githubusercontent.com/xwmx/notes/master/notes"
+    local _notes_url="${_REPO_RAW_URL}/notes"
 
     local _temp_file
     _temp_file="$(mktemp)"
