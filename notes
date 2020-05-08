@@ -400,50 +400,43 @@ _contains() {
 #   _get_hash <path>
 #
 # Description:
-#   Generate a hash for the file at the given <path>.
+#   Generate a hash for the file or directory at <path>.
 _get_hash() {
-  local _hash=
+  # Usage: _get_hash_with_command <path> <command>
+  _get_hash_with_command() {
+    local _command=
+    IFS=' ' read -ra _command <<< "${2:-}"
+
+    local _path="${1:-}"
+
+    [[ -n "${_command[*]:-}" ]] && [[ -n "${_path}" ]] || return 1
+
+    if [[ -d "${_path}" ]]
+    then
+      tar -P -cf - "${_path}" \
+        | "${_command[@]}"    \
+        | awk '{ print $1 }'
+    else
+      "${_command[@]}" "${_path}" \
+        | awk '{print $1}'
+    fi
+  }
+
   local _path="${1:-}"
   [[ -n "${_path:-}" ]] || return 1
 
   if _command_exists "shasum"
   then
-    if [[ -d "${_path}" ]]
-    then
-      _hash="$(
-        tar -P -cf - "${_path}" \
-          | shasum -a 256       \
-          | awk '{ print $1 }'
-      )"
-    else
-      _hash="$(shasum -a 256 "${_path}" | awk '{print $1}')"
-    fi
+    _get_hash_with_command "${_path}" "shasum -a 256"
   elif _command_exists "md5sum"
   then
-    if [[ -d "${_path}" ]]
-    then
-      _hash="$(
-        tar -P -cf - "${_path}" \
-          | md5sum              \
-          | awk '{ print $1 }'
-      )"
-    else
-      _hash="$(md5sum "${_path}" | awk '{ print $1 }')"
-    fi
+    _get_hash_with_command "${_path}" "md5sum"
   elif _command_exists "md5"
   then
-    if [[ -d "${_path}" ]]
-    then
-      _hash="$(
-        tar -P -cf - "${_path}" \
-          | md5 -q              \
-          | awk '{ print $1 }'
-      )"
-    else
-      _hash="$(md5 -q "${1:-}")"
-    fi
+    _get_hash_with_command "${_path}" "md5 -q"
+  else
+    _die printf "No hashing tool found.\\n"
   fi
-  printf "%s\\n" "${_hash}"
 }
 
 # __option_value_is_present()
