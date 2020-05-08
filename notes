@@ -7628,22 +7628,6 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
-    elif _command_exists "icat"                   &&
-         _file_is_image "${_target_path}"         &&
-         [[ -n "${TERM_PROGRAM:-}"            ]]  &&
-         [[ "${TERM_PROGRAM}" == "iTerm.app"  ]]  &&
-         {
-           [[ -z "${_tool}"        ]] ||
-           [[ "${_tool}" == "icat" ]]
-         }
-    then
-      icat "${_target_path}"  \
-        | if _command_exists "less" && ! ((_dump))
-          then
-            less -r --prompt="$(_less_prompt)"
-          else
-            cat
-          fi
     elif _command_exists "mplayer"        &&
          _file_is_audio "${_target_path}" &&
          {
