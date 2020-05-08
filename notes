@@ -7615,6 +7615,24 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
+    elif _command_exists "magick"         &&
+         _file_is_image "${_target_path}" &&
+         {
+           # Detect sixel support. Via: https://git.io/JfCel
+           IFS=";" read -ra __reply -s -t 1 -d "c" -p $'\e[c' >&2
+           [[ "${__reply[*]}" =~ 4 ]] || [[ "$TERM" == yaft* ]]
+         } && {
+           [[ -z "${_tool}"          ]] ||
+           [[ "${_tool}" == "magick" ]]
+         }
+    then
+      magick "${_target_path}" sixel:- \
+        | if _command_exists "less" && ! ((_dump))
+          then
+            less -r --prompt="$(_less_prompt)"
+          else
+            cat
+          fi
     elif [[ -n "${KITTY_WINDOW_ID:-}" ]]  &&
          _file_is_image "${_target_path}" &&
          {
@@ -7623,20 +7641,6 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       kitty +kitten icat "${_target_path}" \
-        | if _command_exists "less" && ! ((_dump))
-          then
-            less -r --prompt="$(_less_prompt)"
-          else
-            cat
-          fi
-    elif _command_exists "magick"         &&
-         _file_is_image "${_target_path}" &&
-         {
-           [[ -z "${_tool}"          ]] ||
-           [[ "${_tool}" == "magick" ]]
-         }
-    then
-      magick "${_target_path}" sixel:- \
         | if _command_exists "less" && ! ((_dump))
           then
             less -r --prompt="$(_less_prompt)"
