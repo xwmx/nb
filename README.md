@@ -100,7 +100,7 @@ Also supported for various enhancements:
 [`ffplay`](http://ffmpeg.org/ffplay.html),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
-[Kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
+[kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
 [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
