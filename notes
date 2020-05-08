@@ -7570,11 +7570,11 @@ Can't show archives. Export archive and expand to edit.\\n"
 
   if ! _file_is_text "${_target_path}"
   then
-    if [[ -d "${_target_path}" ]] &&
-       _command_exists "ranger"   &&
+    if [[ -d "${_target_path}"      ]] &&
+       _command_exists "ranger"        &&
        {
-         [[ -z "${_tool}"          ]] ||
-         [[ "${_tool}" == "ranger" ]]
+         [[ -z "${_tool}"           ]] ||
+         [[ "${_tool}" == "ranger"  ]]
        }
     then
       ranger "${_target_path}"
@@ -7586,8 +7586,8 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       mc "${_target_path}"
-    elif [[ -d "${_target_path}" ]] &&
-         _command_exists "exa"      &&
+    elif [[ -d "${_target_path}"  ]] &&
+         _command_exists "exa"       &&
          {
            [[ -z "${_tool}"       ]] ||
            [[ "${_tool}" == "exa" ]]
