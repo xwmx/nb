@@ -6803,6 +6803,7 @@ _search() {
 
           if ((_only_list))
           then
+            [[ -n "${_path}" ]] && _last_path="${_path}"
             continue
           fi
 
@@ -6846,7 +6847,7 @@ _search() {
           printf "%s\\n\\n" "${_content_line_with_hit}"
         fi
 
-        _last_path="${_path}"
+        [[ -n "${_path}" ]] && _last_path="${_path}"
       done
     done | if read -r _line
     then # output is present
