@@ -610,11 +610,11 @@ _decrypt_file() {
   then
     if _command_exists "gpg"
     then
-      printf "%s\\n" "${_password}" \
-        | gpg               \
-          --quiet           \
-          --batch           \
-          --passphrase-fd 0 \
+      printf "%s\\n" "${_password}"       \
+        | gpg                             \
+          --quiet                         \
+          --batch                         \
+          --passphrase-fd 0               \
           --output "${_unencrypted_path}" \
           --decrypt "${_encrypted_path}"
     else
@@ -624,10 +624,13 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
   then
-    openssl enc -d -aes-256-cbc \
-      -in "${_encrypted_path}" -out "${_unencrypted_path}" \
+    openssl enc                   \
+      -d                          \
+      -aes-256-cbc                \
+      -in "${_encrypted_path}"    \
+      -out "${_unencrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
-      rm "${_unencrypted_path}"
+        rm "${_unencrypted_path}"
   else
     printf "Unable to decrypt file.\\n"
     return 1
@@ -791,18 +794,19 @@ _encrypt_file() {
 
   if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
   then
-    printf "%s\\n" "${_password}" \
-      | gpg                   \
-        --quiet               \
-        --batch               \
-        --passphrase-fd 0     \
-        --symmetric           \
-        --cipher-algo AES256  \
+    printf "%s\\n" "${_password}"     \
+      | gpg                           \
+        --quiet                       \
+        --batch                       \
+        --passphrase-fd 0             \
+        --symmetric                   \
+        --cipher-algo AES256          \
         --output "${_encrypted_path}" \
         "${_decrypted_path}"
   elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
   then
-    openssl enc -aes-256-cbc    \
+    openssl enc                 \
+      -aes-256-cbc              \
       -in "${_decrypted_path}"  \
       -out "${_encrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
