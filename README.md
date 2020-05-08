@@ -36,10 +36,11 @@ any device.
 
 `notes` includes `bookmark`, a full-featured, intuitive CLI bookmarking system
 with local full-text search of cached page content, tagging, related URLs,
-and easy viewing of bookmarks in the terminal and your regular web browser.
-Page information is automatically downloaded, compiled, and saved into normal
-Markdown documents made for humans, so bookmarks are easy to edit just like
-every other note.
+convenient filtering and listing, and easy viewing of bookmarks in the
+terminal and your regular web browser. Page information is automatically
+downloaded, compiled, and saved into normal
+Markdown documents made for humans, so bookmarks are easy to edit
+just like any other note.
 
 `notes` is designed to be lightweight and portable, with a focus on vendor and
 tool independence, while providing a full-featured, intuitive experience in a
