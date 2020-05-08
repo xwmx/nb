@@ -381,14 +381,18 @@ _command_exists() {
 #   0  If the item is included in the list.
 #   1  If not.
 _contains() {
-  local _list_element
   local _query="${1:-}"
-
   shift
 
-  for _list_element
+  if [[ -z "${_query}"  ]] ||
+     [[ -z "${*:-}"     ]]
+  then
+    return 1
+  fi
+
+  for __element in "${@}"
   do
-    [[ "${_list_element}" == "${_query}" ]] && return 0
+    [[ "${__element}" == "${_query}" ]] && return 0
   done
 
   return 1
