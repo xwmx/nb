@@ -428,8 +428,8 @@ _get_hash() {
 
     if [[ -d "${_path}" ]]
     then
-      tar -P -cf - "${_path}" \
-        | "${_command[@]}"    \
+      tar -P -cf - "${_path}"     \
+        | "${_command[@]}"        \
         | awk '{ print $1 }'
     else
       "${_command[@]}" "${_path}" \
@@ -1262,7 +1262,7 @@ _get_title() {
            ! ((_in_code_block))
         then # first line starts with an H1
           _title="$(
-            printf "%s\\n" "${__line}" \
+            printf "%s\\n" "${__line}"    \
               | sed 's/^[[:space:]]*# //' \
               | sed 's/ #$//'
             )"
@@ -1340,7 +1340,7 @@ _get_unique_basename() {
   while [[ -e "${_NOTEBOOK_PATH}/${_unique_filename}.${_file_type}" ]]
   do
     printf -v _unique_filename -- "%s-%02d" \
-      "${_file_name}" \
+      "${_file_name}"                       \
       "$(( ++_uniqueness_counter ))"
   done
   printf "%s\\n" "${_unique_filename}.${_file_type}"
@@ -2459,13 +2459,13 @@ _add() {
     _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added [%s] %s '%s'\\n" \
-        "${_id}" \
-        "${_scoped_basename}" \
+      printf "Added [%s] %s '%s'\\n"  \
+        "${_id}"                      \
+        "${_scoped_basename}"         \
         "${_title}"
     else
       printf "Added [%s] %s\\n" \
-        "${_id}" \
+        "${_id}"                \
         "${_scoped_basename}"
     fi
   fi &&
@@ -2848,11 +2848,11 @@ HEREDOC
   if [[ -z "${_title}" ]]
   then
     _title="$(
-      printf "%s\\n" "${_page_content}" \
-        | grep -o -E -i '.*<title[^>]*>.*</title>' \
-        | sed 's/.*<title[^>]*>//' \
-        | sed 's/.*<TITLE[^>]*>//' \
-        | sed 's/<\/title>.*//'    \
+      printf "%s\\n" "${_page_content}"             \
+        | grep -o -E -i '.*<title[^>]*>.*</title>'  \
+        | sed 's/.*<title[^>]*>//'                  \
+        | sed 's/.*<TITLE[^>]*>//'                  \
+        | sed 's/<\/title>.*//'                     \
         | sed 's/<\/TITLE>.*//'
     )" || : # TODO: pipeline returns error status but still returns title
     local _domain
@@ -2925,9 +2925,9 @@ HEREDOC
 
       local _processed_content
       _processed_content="$(
-        printf "%s\\n" "${_page_content}" \
-          | pandoc \
-            --from html-native_divs-native_spans \
+        printf "%s\\n" "${_page_content}"         \
+          | pandoc                                \
+            --from html-native_divs-native_spans  \
             --to markdown-grid_tables --wrap=none
         )"
       _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
@@ -3564,13 +3564,13 @@ _edit() {
       _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated [%s] %s '%s'\\n" \
-          "${_id}" \
-          "${_scoped_basename}" \
+        printf "Updated [%s] %s '%s'\\n"  \
+          "${_id}"                        \
+          "${_scoped_basename}"           \
           "${_title}"
       else
         printf "Updated [%s] %s\\n" \
-          "${_id}" \
+          "${_id}"                  \
           "${_scoped_basename}"
       fi
     fi
@@ -3796,15 +3796,15 @@ _export() {
       _debug printf "_export() \${_args}: %s\\n" "${_args[*]:-}"
       if [[ -n "${_args[*]:-}" ]]
       then
-        pandoc \
-          -o "${_target_path}" \
-          --standalone \
-          "${_NOTEBOOK_PATH}/${_basename}" \
+        pandoc                              \
+          -o "${_target_path}"              \
+          --standalone                      \
+          "${_NOTEBOOK_PATH}/${_basename}"  \
           "${_args[@]:-}"
       else
-        pandoc \
-          -o "${_target_path}" \
-          --standalone \
+        pandoc                  \
+          -o "${_target_path}"  \
+          --standalone          \
           "${_NOTEBOOK_PATH}/${_basename}"
       fi
     else
@@ -3991,9 +3991,9 @@ _import() {
       if ((_convert))
       then
         if ! _download_from "${_url}" \
-            | pandoc \
-              --from html \
-              --to markdown \
+            | pandoc                  \
+              --from html             \
+              --to markdown           \
               -o "${_NOTEBOOK_PATH}/${_basename}"
         then
           printf "Unable to download: %s\\n" "${_url}"
@@ -5399,8 +5399,8 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving %s to '%s'\\n"  \
-      "${_source_info_line}"    \
+    printf "Moving %s to '%s'\\n"   \
+      "${_source_info_line}"        \
       "${_target_notebook}"
     while true
     do
@@ -5438,9 +5438,9 @@ _move() {
      [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
     printf "Moved to [%s:%s] %s:%s\\n"  \
-      "${_target_notebook}" \
-      "${_id}" \
-      "${_target_notebook}"        \
+      "${_target_notebook}"             \
+      "${_id}"                          \
+      "${_target_notebook}"             \
       "${_basename}"
   fi
 }
@@ -6458,7 +6458,7 @@ _rename() {
   if ! ((_force))
   then
     printf "Renaming '%s' to '%s'\\n" \
-      "${_source_basename}" \
+      "${_source_basename}"           \
       "${_target_basename}"
     while true
     do
@@ -6479,8 +6479,8 @@ _rename() {
     _index update "${_source_basename}" "${_target_basename}"   &&
     _git_checkpoint \
       "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
-  printf "'%s' renamed to '%s'\\n" \
-    "${_source_basename}"   \
+  printf "'%s' renamed to '%s'\\n"  \
+    "${_source_basename}"           \
     "${_target_basename}"
 }
 
@@ -6667,7 +6667,7 @@ _search() {
         # http://unix.stackexchange.com/a/140255
         _path="$(
           printf "%s\\n" "${_line}" \
-            | cut -d: -f 1 \
+            | cut -d: -f 1          \
             | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
         )"
 
@@ -6950,7 +6950,7 @@ _settings() {
         for __color_number
         do
           printf '\e[38;5;%dm %3d ' \
-            "${__color_number}" \
+            "${__color_number}"     \
             "${__color_number}"
         done
         printf '\e[0m \n'
@@ -7051,7 +7051,7 @@ HEREDOC
     done
 
     printf "%s is currently set to '%s'\\n" \
-      "${_setting_name}" \
+      "${_setting_name}"                    \
       "$(_notes_settings_get_value "${_setting_name}")"
 
     cat <<HEREDOC
@@ -7141,7 +7141,7 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NOTES_DIR' ]]
     then
-      if [[ -z "${2:-}"     ]] ||
+      if [[ -z "${2:-}"   ]] ||
          [[ "${2}" == "/" ]] ||
          {
           [[ -e "${2}"   ]] &&
@@ -7681,8 +7681,8 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ docx$ ]] && _command_exists "pandoc"
     then
-      pandoc --from docx --to markdown "${_target_path}"   \
-        | _highlight_syntax_if_available  \
+      pandoc --from docx --to markdown "${_target_path}" \
+        | _highlight_syntax_if_available \
         | if [[ -n "${PAGER:-}"      ]] &&
              [[ ! "${PAGER}" =~ less ]] &&
              ! ((_dump))
