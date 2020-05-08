@@ -993,7 +993,6 @@ _file_is_text() {
   # Avoid calling `file` for better performance.
   _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
     [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
-
 }
 
 # _file_is_video()
