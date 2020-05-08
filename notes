@@ -2734,7 +2734,7 @@ _bookmark() {
       }' "${_target_path}"
     )"
 
-    if [[ "${_subcommand}" =~ ^peek$|^p$|^preview$  ]]
+    if [[ "${_subcommand}" =~ ^peek$|^p$|^preview$ ]]
     then
       if _command_exists 'w3m'
       then
