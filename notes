@@ -371,8 +371,8 @@ _command_exists() {
 #   0  If the item is included in the list.
 #   1  If not.
 _contains() {
-  local _query="${1:-}"
   local _list_element
+  local _query="${1:-}"
 
   shift
 
@@ -1033,8 +1033,8 @@ _file_is_video() {
 # Description:
 #   Print the first line of the file at <path>, skipping any front matter.
 _get_first_line() {
-  local _in_front_matter=0
   local _first_line=
+  local _in_front_matter=0
   local _path="${1:-}"
 
   if [[ -z "${_path}" ]]
@@ -1171,6 +1171,7 @@ _get_selection_basename() {
 _get_selection_identifier() {
   local _parts=()
   _parts=($(_get_selection_parts "${1:-}"))
+
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
     printf "%s\\n" "${_parts[1]:-}"
@@ -1842,10 +1843,9 @@ _list_notes_files() {
 #   http://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
   local _text="${1:-}"
-  local _text_length=0
+  local _text_length="${#_text}"
   local _line=
-  _text_length=${#_text}
-  printf -v _line '%*s' "${_text_length}"
+  printf -v _line "%*s" "${_text_length}"
   printf "%s%s%s\\n" "${_TPUT_SETAF_8}" "${_line// /-}" "${_TPUT_SGR0}"
 }
 
@@ -1860,6 +1860,7 @@ _print_line() {
 _set_selection_notebook() {
   local _parts=()
   _parts=($(_get_selection_parts "${1:-}"))
+
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
     _SCOPED=1
@@ -1897,8 +1898,8 @@ _set_selection_notebook() {
 # More Information:
 #   http://fitnr.com/showing-a-bash-spinner.html
 _spinner() {
-  local _pid="${1:-}"
   local _delay=0.75
+  local _pid="${1:-}"
   local _spin_string="|/-\\"
 
   if [[ -z "${_pid}" ]]
