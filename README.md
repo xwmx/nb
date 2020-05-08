@@ -475,7 +475,8 @@ and file types include:
   [`afplay`](https://ss64.com/osx/afplay.html),
   [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
   [`ffplay`](http://ffmpeg.org/ffplay.html) - Audio files
-- [`imgcat`](https://www.iterm2.com/documentation-images.html) - Images
+- [`imgcat`](https://www.iterm2.com/documentation-images.html),
+  [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html) - Images
 - [`ranger`](https://ranger.github.io/),
   [`mc`](https://en.wikipedia.org/wiki/Midnight_Commander) - Folders /
   Directories
