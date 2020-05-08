@@ -7615,9 +7615,10 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
-    elif [[ -n "${KITTY_WINDOW_ID:-}" ]] &&
+    elif [[ -n "${KITTY_WINDOW_ID:-}" ]]  &&
+         _file_is_image "${_target_path}" &&
          {
-           [[ -z "${_tool}"           ]] ||
+           [[ -z "${_tool}"           ]]  ||
            [[ "${_tool}" == "icat"    ]]
          }
     then
