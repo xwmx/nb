@@ -3860,6 +3860,9 @@ _history() {
   _basename="$(_get_selection_basename "${_selection}")"
   _set_selection_notebook "${_selection}"
   _debug printf "_history() \${_basename}: '%s'\\n" "${_basename}"
+  _debug printf "_history() \${_NOTEBOOK_PATH}: '%s'\\n" "${_NOTEBOOK_PATH}"
+
+  cd "${_NOTEBOOK_PATH}" || return 1
 
   if [[ -n "${_basename}" ]] && [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
