@@ -19,12 +19,7 @@ global and local notebooks, tagging, and more, all in a single portable script.
 [Markdown](https://en.wikipedia.org/wiki/Markdown) and
 [Emacs Org mode](https://orgmode.org/),
 can work with files in any format, and can export notes to many document
-formats. `notes` includes `bookmark`, a full-featured CLI bookmarking system
-with local full-text search of cached page content, tagging, easy viewing
-of bookmarks in the terminal and your regular web browser,
-and page information automatically downloaded, compiled, and saved into normal
-Markdown documents made for humans.
-`notes` can also create private, password-protected encrypted notes and
+formats. `notes` can also create private, password-protected encrypted notes and
 bookmarks.
 
 With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
@@ -38,6 +33,12 @@ record changes and sync with a remote repository, if one has been configured.
 `notes` can also be configured to save notes in a location used by a general
 purpose syncing utility like Dropbox so notes can be edited in other apps on
 any device.
+
+`notes` includes `bookmark`, a full-featured, intuitive CLI bookmarking system
+with local full-text search of cached page content, tagging, related URLs,
+and easy viewing of bookmarks in the terminal and your regular web browser.
+Page information is automatically downloaded, compiled, and saved into normal
+Markdown documents made for humans.
 
 `notes` is designed to be lightweight and portable, with a focus on vendor and
 tool independence, while providing a full-featured, intuitive experience in a
