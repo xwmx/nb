@@ -249,9 +249,11 @@ die() {
 # Configuration
 ###############################################################################
 
-# `$NOTES_DIR`
+# $NOTES_DIR
 #
 # Default: `$HOME/.notes`
+#
+# The location of the directory that contains the notebooks.
 export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
 if [[ -L "${NOTES_DIR}" ]]
 then
@@ -279,7 +281,7 @@ HEREDOC
   exit 1
 fi
 
-# `$NOTES_AUTO_SYNC`
+# $NOTES_AUTO_SYNC
 #
 # Default: 1
 #
@@ -294,7 +296,7 @@ export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-1}"
 # Example Values: 'md' 'org'
 export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 
-# `$NOTES_HIGHLIGHT_COLOR`
+# $NOTES_HIGHLIGHT_COLOR
 #
 # Default: Value depends on terminal capabilities.
 #
@@ -316,14 +318,14 @@ __set_notes_highlight_color() {
   fi
 } && __set_notes_highlight_color
 
-# `$NOTES_ENCRYPTION_TOOL`
+# $NOTES_ENCRYPTION_TOOL
 #
 # Default: 'openssl'
 #
 # Supported Values: 'gpg' 'openssl'
 export NOTES_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL:-openssl}"
 
-# `$NOTES_INDICATORS_ENABLED`
+# $NOTES_INDICATORS_ENABLED
 #
 # Default: 1
 #
@@ -334,10 +336,19 @@ export NOTES_INDICATORS_ENABLED="${NOTES_INDICATORS_ENABLED:-1}"
 # Temp Directory
 ###############################################################################
 
+# $_NOTES_TEMP_DIRECTORY
+#
+# The full path to the temp directory.
 export _NOTES_TEMP_DIRECTORY
 _NOTES_TEMP_DIRECTORY="$(mktemp -d)"
 
-# Usage: _tempfile_path <basename>
+# _tempfile_path()
+#
+# Usage:
+#   _tempfile_path <basename>
+#
+# Description:
+#   Print the full path for <basename> within the temp directory.
 _tempfile_path() {
   [[ -z "${1:-}" ]] && return 1
   printf "%s/%s" "${_NOTES_TEMP_DIRECTORY}" "${1:-}"
