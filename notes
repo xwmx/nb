@@ -6666,12 +6666,13 @@ _search() {
         local _skip=0
         local _title=
 
-        # Use `sed` to remove color from output.
+        # Use `sed` to remove color and 'matches' suffix from output.
         # http://unix.stackexchange.com/a/140255
         _path="$(
-          printf "%s\\n" "${_line}" \
-            | cut -d: -f 1          \
-            | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
+          printf "%s\\n" "${_line}"                         \
+            | cut -d: -f 1                                  \
+            | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
+            | sed -e 's/ matches//g'
         )"
 
         if [[ "${_last_path}" != "${_path}" ]]
@@ -6733,9 +6734,6 @@ _search() {
           then
             continue
           fi
-
-          # Remove ' matches' from the end of some grep matches.
-          _path="$(printf "%s\\n" "${_path}" | sed -e 's/ matches//g')"
 
           _filename="$(basename "${_path}")"
           _filename_color="${_filename}"
