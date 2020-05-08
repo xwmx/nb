@@ -7599,8 +7599,10 @@ Can't show archives. Export archive and expand to edit.\\n"
       # gnu || bsd
       ls -lah --color=always "${_target_path}" 2>/dev/null ||
         ls -lah -G "${_target_path}"
-    elif _command_exists "imgcat"         &&
-         _file_is_image "${_target_path}" &&
+    elif _command_exists "imgcat"                 &&
+         _file_is_image "${_target_path}"         &&
+         [[ -n "${TERM_PROGRAM:-}"            ]]  &&
+         [[ "${TERM_PROGRAM}" == "iTerm.app"  ]]
          {
            [[ -z "${_tool}"          ]] ||
            [[ "${_tool}" == "imgcat" ]]
