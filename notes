@@ -2671,6 +2671,7 @@ _bookmark() {
     shift
   done
 
+  # `bookmark list`
   if [[ "${_subcommand}" == "list" ]]
   then
     if [[ -n "${_arguments[*]:-}" ]]
@@ -2683,12 +2684,14 @@ _bookmark() {
     fi
   fi
 
+  # `bookmark search`
   if [[ "${_subcommand}" == "search" ]]
   then
     _search --bookmarks "${_arguments[@]}"
     return 0
   fi
 
+  # `bookmark open`, `bookmark peek`, `bookmark url`
   if [[ "${_subcommand}" =~ ^open$|^o$|^peek$|^p$|^preview$|^url$ ]]
   then
     local _basename
@@ -2702,6 +2705,7 @@ _bookmark() {
 
     local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
+    # handle non-bookmarks
     if [[ "${_subcommand}" =~ ^open$|^o$|^peek$|^p$|^preview$ ]]
     then
       if [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
@@ -2761,6 +2765,7 @@ _bookmark() {
       }' "${_target_path}"
     )"
 
+    # `bookmark peek`
     if [[ "${_subcommand}" =~ ^peek$|^p$|^preview$ ]]
     then
       if _command_exists 'w3m'
@@ -2789,7 +2794,7 @@ _bookmark() {
         printf "Terminal web browser not detected.\\n"
         return 1
       fi
-
+    # `bookmark open`
     elif [[ "${_subcommand}" =~ ^open$|^o$ ]]
     then
       if _command_exists "xdg-open"
@@ -2804,6 +2809,7 @@ _bookmark() {
         printf "notes doesn't know how to open URLs on your system.\\n"
         return 1
       fi
+    # `bookmark url`
     elif [[ "${_subcommand}" == "url" ]]
     then
       printf "%s\\n" "${_target_url}"
@@ -2811,6 +2817,7 @@ _bookmark() {
     fi
   fi
 
+  # `bookmark`
   if [[ -z "${_url:-}" ]]
   then
     local _header=
@@ -2834,6 +2841,7 @@ HEREDOC
     return 0
   fi
 
+  # `bookmark <url>`
   local _basename
   _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S').bookmark.md")"
 
