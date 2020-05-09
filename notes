@@ -2989,7 +2989,7 @@ HEREDOC
     _description="$(
       printf "%s\\n" "${_page_content}" \
         | "${_sed_re_command[@]}"       \
-          's/.*<meta .*property=.og:description".[^>]*content="([^"]+)".*/\1/p'
+          's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p'
     )"
   fi
 
