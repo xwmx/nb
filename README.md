@@ -20,8 +20,8 @@ standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `notes` works great without them.
 
-`notes` includes `bookmark`, a full-featured, intuitive CLI bookmarking system
-with local full-text search of cached page content, tagging,
+`notes` includes `bookmark`, a powerful, full-featured, and intuitive CLI
+bookmarking system with local full-text search of cached page content, tagging,
 convenient filtering and listing, Wayback Machine snapshot lookup
 for broken links, and easy viewing of bookmarked pages in the
 terminal and your regular web browser. Page information is automatically
@@ -647,6 +647,10 @@ When used with bookmarks, `notes open` and `notes peek` are aliases for
 
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `notes` will simply prompt you for the bookmark's password.
+
+`open` and `peek` automatically check whether the URL is still valid.
+If the page has been removed, `notes` can check the [Internet Archive
+Wayback Machine](https://archive.org/web/) for an archived copy.
 
 #### Bookmark File Format
 
