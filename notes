@@ -2725,7 +2725,7 @@ _bookmark() {
   # `bookmark open`, `bookmark peek`, `bookmark url`
   if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
   then
-    local _basename
+    local _basename=
     _basename="$(_get_selection_basename "${_selection}")"
     if [[ -z "${_basename}" ]]
     then
@@ -2766,7 +2766,7 @@ _bookmark() {
 
     if _file_is_encrypted "${_target_path}"
     then
-      local _encrypted_path
+      local _encrypted_path=
       _encrypted_path="${_target_path}"
 
       if [[ -z "${_password}" ]]
@@ -2783,18 +2783,68 @@ _bookmark() {
         return 1
       fi
 
-      local _decrypted_path
+      local _decrypted_path=
       _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
       _target_path="${_decrypted_path}"
     fi
 
-    local _target_url
+    local _target_url=
     _target_url="$(
       awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
         print substr($0, RSTART+1, RLENGTH-2); exit
       }' "${_target_path}"
     )"
+
+    if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+    then
+      local _check_wayback=0
+      local _http_error_codes=(
+        404 408 410 451 500 502 503 504 509 520 521 523 524 525 526
+      )
+      local _http_status=
+      _http_status="$(_get_http_status "${_target_url}")"
+
+      if _contains "${_http_status}" "${_http_error_codes[@]}"
+      then
+        printf "Page no longer available: %s\\n" "${_target_url}"
+        while true
+        do
+          read -r -p "\
+Check the Wayback Machine for an archived version? [y/N] " __yn
+          case ${__yn} in
+            [Yy]*)
+              _check_wayback=1
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      if ((_check_wayback))
+      then
+        local _wayback_response
+        _wayback_response="$(
+          _download_from \
+            "https://archive.org/wayback/available?url=${_target_url}"  \
+            | grep --color=never 'closest'                              \
+            | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
+            | sed -E 's/.*"url": "([^"]+)".*/\1/g'
+
+        )"
+        if [[ -n "${_wayback_response:-}" ]]
+        then
+          _target_url="${_wayback_response}"
+        else
+          printf "Sorry, no saved version available.\\n"
+          return 1
+        fi
+      fi
+    fi
 
     # `bookmark peek`
     if [[ "${_subcommand}" == "peek" ]]
