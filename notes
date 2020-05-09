@@ -1262,7 +1262,7 @@ _get_title() {
       do
         if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
            ! ((_in_code_block))
-        then # first line starts with an H1
+        then # line starts with an atx-style H1
           _title="$(
             printf "%s\\n" "${__line}"    \
               | sed 's/^[[:space:]]*# //' \
@@ -1270,7 +1270,7 @@ _get_title() {
             )"
           break
         elif [[ "${__line}" =~ ^---$ ]]
-        then
+        then # start or end of front matter block
           if ((_in_front_matter))
           then
             _in_front_matter=0
@@ -1278,7 +1278,7 @@ _get_title() {
             _in_front_matter=1
           fi
         elif [[ "${__line}" =~ ^\`\`\` ]]
-        then
+        then # start or end of code block
           if ((_in_code_block))
           then
             _in_code_block=0
@@ -1286,23 +1286,23 @@ _get_title() {
             _in_code_block=1
           fi
         elif [[ "${__line}" =~ ^title\: ]]
-        then
+        then # front matter title
           _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
-        then
+        then # potential setext-style H1
           if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
           then
             _maybe_title="${__line}"
           elif [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
-          then
+          then # underline for setext-style H1 on previous line
             _title="$(
               printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
             )"
             break
           elif [[ -n "${_maybe_title}"       ]] &&
                [[ ! "${_maybe_title}" =~ ^\[ ]]
-          then
+          then # in normal content, title not found
             break
           else
             continue
@@ -8320,7 +8320,7 @@ _is_valid_subcommand() {
 # $_PREVIOUS_OPTION_WAS_FLAG
 #
 # Set to `1` when a flag option is found and use to avoid setting subcommand
-# to a flag argument..
+# to a flag argument.
 _PREVIOUS_OPTION_WAS_FLAG=0
 
 # Parse program options.
@@ -8416,7 +8416,7 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
 # Usage:
 #   _main "$@"
 #
-# Describe:
+# Description:
 #   Primary entry point for the program logic. Call this function at the end
 #   of the script after everything has been defined.
 _main() {
