@@ -2668,8 +2668,19 @@ _bookmark() {
       open|o|peek|p|preview|url)
         if __option_value_is_present "${__val:-}"
         then
-          _subcommand="${__arg}"
+          if [[ "${__arg}" =~ ^open$|^o$ ]]
+          then
+            _subcommand="open"
+          elif [[ "${__arg}" =~ ^peek$|^p$|^preview$ ]]
+          then
+            _subcommand="peek"
+          elif [[ "${__arg}" == "url" ]]
+          then
+            _subcommand="url"
+          fi
+
           _selection="${__val:-}"
+
           shift
         else
           _help "bookmark"
@@ -2712,7 +2723,7 @@ _bookmark() {
   fi
 
   # `bookmark open`, `bookmark peek`, `bookmark url`
-  if [[ "${_subcommand}" =~ ^open$|^o$|^peek$|^p$|^preview$|^url$ ]]
+  if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
   then
     local _basename
     _basename="$(_get_selection_basename "${_selection}")"
@@ -2726,12 +2737,12 @@ _bookmark() {
     local _target_path="${_NOTEBOOK_PATH}/${_basename}"
 
     # handle non-bookmarks
-    if [[ "${_subcommand}" =~ ^open$|^o$|^peek$|^p$|^preview$ ]]
+    if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
     then
       if [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
          [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
       then
-        if [[ "${_subcommand}" =~ ^open$|^o$ ]]
+        if [[ "${_subcommand}" == "open" ]]
         then
           if [[ -n "${_password}" ]]
           then
@@ -2739,7 +2750,7 @@ _bookmark() {
           else
             _edit "${_selection}"
           fi
-        elif [[ "${_subcommand}" =~ ^peek$|^p$|^preview$ ]]
+        elif [[ "${_subcommand}" == "peek" ]]
         then
           if [[ -n "${_password}" ]]
           then
@@ -2786,7 +2797,7 @@ _bookmark() {
     )"
 
     # `bookmark peek`
-    if [[ "${_subcommand}" =~ ^peek$|^p$|^preview$ ]]
+    if [[ "${_subcommand}" == "peek" ]]
     then
       if _command_exists 'w3m'
       then
@@ -2815,7 +2826,7 @@ _bookmark() {
         return 1
       fi
     # `bookmark open`
-    elif [[ "${_subcommand}" =~ ^open$|^o$ ]]
+    elif [[ "${_subcommand}" == "open" ]]
     then
       if _command_exists "xdg-open"
       then
