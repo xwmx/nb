@@ -1285,16 +1285,17 @@ _get_title() {
           else
             _in_code_block=1
           fi
-        elif [[ "${__line}" =~ ^title\: ]]
+        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\: ]]
         then # front matter title
           _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
-        then # potential setext-style H1
+        then
           if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
-          then
+          then  # potential setext-style H1
             _maybe_title="${__line}"
-          elif [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
+          elif [[ -n "${_maybe_title}"             ]] &&
+               [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
           then # underline for setext-style H1 on previous line
             _title="$(
               printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
