@@ -1094,6 +1094,26 @@ _get_first_line() {
   fi
 }
 
+# _get_http_status()
+#
+# Usage:
+#   _get_http_status <url>
+#
+# Description:
+#   Print the http status response code for <url>.
+_get_http_status() {
+  local _url="${1:-}"
+  [[ -n "${_url:-}" ]] || return 1
+
+  if _command_exists "curl"
+  then
+    curl -s -o /dev/null -w "%{http_code}\\n" "${_url}"
+  elif _command_exists "wget"
+  then
+    wget -S "${_url}" 2>&1 | grep "HTTP/" | awk '{print $2}'
+  fi
+}
+
 # _get_notebook_identifier()
 #
 # Usage:
