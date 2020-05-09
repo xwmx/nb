@@ -2969,18 +2969,10 @@ HEREDOC
 
   _bookmark_content+="${_NEWLINE}<${_url}>${_NEWLINE}"
 
-  local _sed_re_command=
-  if sed --help >/dev/null 2>&1
-  then # GNU
-    _sed_re_command=(sed -r -n)
-  else # BSD
-    _sed_re_command=(sed -E -n)
-  fi
-
   local _description=
   _description="$(
     printf "%s\\n" "${_page_content}" \
-      | "${_sed_re_command[@]}"       \
+      | sed -E -n                     \
         's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
   )"
 
@@ -2988,7 +2980,7 @@ HEREDOC
   then
     _description="$(
       printf "%s\\n" "${_page_content}" \
-        | "${_sed_re_command[@]}"       \
+        | sed -E -n                     \
           's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p'
     )"
   fi
