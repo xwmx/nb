@@ -549,6 +549,7 @@ _NEWLINE=$'\n'
 _alias_subcommand() {
   local _subcommand="${1:-}"
   local _alias="${2:-}"
+
   if [[ -z "${_subcommand}" ]] || [[ -z "${_alias}" ]]
   then
     return 1
@@ -1141,8 +1142,8 @@ _get_notebook_identifier() {
 _get_selection_basename() {
   local _basename=
   local _identifier=
-
   local _selection="${1:-}"
+
   if [[ -z "${_selection}" ]]
   then
     _basename=
@@ -1212,6 +1213,7 @@ _get_selection_parts() {
   local _identifier=
   local _maybe_notebook_name=
   local _selection="${1:-}"
+
   if [[ -n "${_selection:-}" ]]
   then
     _maybe_notebook_name=$(printf "%s\\n" "${_selection}" | cut -f 1 -d ":")
@@ -1322,8 +1324,8 @@ _get_title() {
 #   Get a unique basename that doesn't conflict with any existing file.
 _get_unique_basename() {
   local _file_basename="${1:-}"
-
   local _file_name="${_file_basename%%.*}"
+
   if [[ -z "${_file_name}" ]]
   then
     _file_name="$(date -u "+%Y%m%d%H%M%S")"
@@ -1451,6 +1453,7 @@ _git_checkpoint() {
 #   1  If the `$_NOTEBOOK_PATH` repository is clean.
 _git_index_is_dirty() {
   local _target_directory="${1:-}"
+
   if [[ -z "${_target_directory}" ]]
   then
     _target_directory="${_NOTEBOOK_PATH}"
@@ -1481,9 +1484,10 @@ HEREDOC
     return 1
   fi
 
-  local _git_name
+  local _git_name=
   _git_name="$(git config user.name || printf '')"
-  local _git_email
+
+  local _git_email=
   _git_email="$(git config user.email || printf '')"
 
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
