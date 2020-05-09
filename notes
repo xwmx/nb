@@ -2939,11 +2939,12 @@ HEREDOC
   if [[ -z "${_title}" ]]
   then
     _title="$(
-      printf "%s\\n" "${_page_content}"             \
-        | grep -o -E -i '.*<title[^>]*>.*</title>'  \
-        | sed 's/.*<title[^>]*>//'                  \
-        | sed 's/.*<TITLE[^>]*>//'                  \
-        | sed 's/<\/title>.*//'                     \
+      printf "%s\\n" "${_page_content}"                 \
+        | grep -o -E -i '.*<title[^>]*>[^<]*</title>'   \
+        | head -1                                       \
+        | sed 's/.*<title[^>]*>//'                      \
+        | sed 's/.*<TITLE[^>]*>//'                      \
+        | sed 's/<\/title>.*//'                         \
         | sed 's/<\/TITLE>.*//'
     )" || : # TODO: pipeline returns error status but still returns title
     local _domain
@@ -2982,6 +2983,15 @@ HEREDOC
       | "${_sed_re_command[@]}"       \
         's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
   )"
+
+  if [[ -z "${_description:-}" ]]
+  then
+    _description="$(
+      printf "%s\\n" "${_page_content}" \
+        | "${_sed_re_command[@]}"       \
+          's/.*<meta .*property=.og:description".[^>]*content="([^"]+)".*/\1/p'
+    )"
+  fi
 
   if [[ -n "${_description}" ]]
   then
