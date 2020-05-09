@@ -531,6 +531,10 @@ notes bookmark https://example.com
 
 <https://example.com>
 
+## Description
+
+Example meta description.
+
 ## Content
 
 Example Domain
@@ -557,6 +561,10 @@ notes bookmark https://example.com --tags tag1,tag2
 # Example Domain (example.com)
 
 <https://example.com>
+
+## Description
+
+Example meta description.
 
 ## Tags
 
