@@ -2968,6 +2968,34 @@ HEREDOC
 
   _bookmark_content+="${_NEWLINE}<${_url}>${_NEWLINE}"
 
+  local _sed_re_command=
+  if sed --help >/dev/null 2>&1
+  then # GNU
+    _sed_re_command=(sed -r -n)
+  else # BSD
+    _sed_re_command=(sed -E -n)
+  fi
+
+  local _description=
+  _description="$(
+    printf "%s\\n" "${_page_content}" \
+      | "${_sed_re_command[@]}"       \
+        's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
+  )"
+
+  if [[ -n "${_description}" ]]
+  then
+    if _command_exists "w3m"
+    then # convert html entities
+      _description="$(
+        printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 1000
+      )"
+    fi
+
+    _bookmark_content+="${_NEWLINE}## Description${_NEWLINE}"
+    _bookmark_content+="${_NEWLINE}${_description}${_NEWLINE}"
+  fi
+
   if [[ -n "${_related_urls[*]:-}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"

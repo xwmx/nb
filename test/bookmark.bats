@@ -162,6 +162,10 @@ HEREDOC
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
+## Description
+
+Example description.
+
 ## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
@@ -207,6 +211,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # Example Domain
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
 
 ## Comment
 
@@ -261,6 +269,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
+## Description
+
+Example description.
+
 ## Page Content (HTML)
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
@@ -305,7 +317,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>"
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description."
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -348,6 +364,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
 # Example Domain
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
 
 ## Tags
 
@@ -396,6 +416,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # Example Domain
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
 
 ## Comment
 
@@ -450,6 +474,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # New Title
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
 
 ## Page Content
 
@@ -525,6 +553,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
+## Description
+
+Example description.
+
 ## Related
 
 - <https://example.net>
@@ -575,6 +607,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # Example Domain
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
 
 ## Related
 
