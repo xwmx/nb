@@ -2783,10 +2783,7 @@ _bookmark() {
         return 1
       fi
 
-      local _decrypted_path=
-      _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
-
-      _target_path="${_decrypted_path}"
+      _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
     fi
 
     local _target_url=
