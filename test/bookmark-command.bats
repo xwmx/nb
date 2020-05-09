@@ -162,6 +162,10 @@ HEREDOC
 
 <file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
 
+## Description
+
+Example description.
+
 ## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
