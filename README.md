@@ -1,8 +1,6 @@
 [![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
 
-<h1 align="center">
- <code>❯ notes</code>
-</h1>
+# `❯ notes`
 
 `notes` is a command line note-taking, bookmarking, archiving, and research
 management tool with encryption, advanced search,
