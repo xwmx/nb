@@ -1987,7 +1987,7 @@ Usage:
   notes notebooks use <name>
 
 Options:
-  --achived     Only list archived notebooks.
+  --archived    Only list archived notebooks.
   --global      List global notebooks.
   --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
