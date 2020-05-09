@@ -1107,10 +1107,10 @@ _get_http_status() {
 
   if _command_exists "curl"
   then
-    curl -s -o /dev/null -w "%{http_code}\\n" "${_url}"
+    curl -I -s -o /dev/null -w "%{http_code}\\n" "${_url}"
   elif _command_exists "wget"
   then
-    wget -S "${_url}" 2>&1 | grep "HTTP/" | awk '{print $2}'
+    wget -S "${_url}" 2>&1 | grep "HTTP/" | awk '{print $2}' || return 0
   fi
 }
 
@@ -2833,7 +2833,7 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
             "https://archive.org/wayback/available?url=${_target_url}"  \
             | grep --color=never 'closest'                              \
             | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
-            | sed -E 's/.*"url": "([^"]+)".*/\1/g'
+            | sed -E 's/.*"url": "([^"]+)".*/\1/g' || printf ""
 
         )"
         if [[ -n "${_wayback_response:-}" ]]
