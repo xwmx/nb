@@ -2837,7 +2837,7 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
         then
           _target_url="${_wayback_response}"
         else
-          printf "Sorry, no saved version available.\\n"
+          printf "No archived version available from the Wayback Machine.\\n"
           return 1
         fi
       fi
