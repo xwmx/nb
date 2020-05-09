@@ -29,7 +29,7 @@ standard Linux / Unix environment, including macOS and Windows via WSL.
 but `notes` works great without them.
 
 `notes` includes `bookmark`, a full-featured, intuitive CLI bookmarking system
-with local full-text search of cached page content, tagging, related URLs,
+with local full-text search of cached page content, tagging,
 convenient filtering and listing, and easy viewing of bookmarked pages in the
 terminal and your regular web browser. Page information is automatically
 downloaded, compiled, and saved into normal
