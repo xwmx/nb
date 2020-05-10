@@ -7166,8 +7166,9 @@ HEREDOC
             return 0
             ;;
           *)
-            _setting_name="$(_notes_settings_get_name "${__setting}")" &&
-              break
+            _setting_name="$(
+              _notes_settings_get_name "${__setting}"
+            )" && break
             ;;
         esac
       fi
