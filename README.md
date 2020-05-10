@@ -21,7 +21,7 @@ standard Linux / Unix environment, including macOS and Windows via WSL.
 but `notes` works great without them.
 
 `notes` includes `bookmark`, a powerful text-based CLI bookmarking system with
-local full-text search of cached page content with fuzzy matching and regular
+local full-text search of cached page content and regular
 expression support, tagging, convenient filtering and listing, Wayback Machine
 snapshot lookup for broken links, and easy viewing of bookmarked pages in the
 terminal and your regular web browser. Page information is automatically
