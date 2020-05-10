@@ -20,8 +20,8 @@ standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `notes` works great without them.
 
-`notes` includes `bookmark`, a powerful text-based CLI bookmarking system with
-local full-text search of cached page content with regular
+`notes` includes `bookmark`, a powerful text-based CLI bookmarking system
+that includes local full-text search of cached page content with regular
 expression support, tagging, convenient filtering and listing, Wayback Machine
 snapshot lookup for broken links, and easy viewing of bookmarked pages in the
 terminal and your regular web browser. Page information is automatically
