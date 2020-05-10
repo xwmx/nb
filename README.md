@@ -20,8 +20,8 @@ standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `notes` works great without them.
 
-`notes` includes `bookmark`, a powerful and intuitive CLI
-bookmarking system with local full-text search of cached page content, tagging,
+`notes` includes `bookmark`, a powerful CLI bookmarking system with local
+full-text search of cached page content, tagging,
 convenient filtering and listing, Wayback Machine snapshot lookup
 for broken links, and easy viewing of bookmarked pages in the
 terminal and your regular web browser. Page information is automatically
@@ -34,12 +34,13 @@ record changes and sync with a remote repository, if one has been configured.
 purpose syncing utility like Dropbox so notes can be edited in other apps on
 any device.
 
-`notes` is designed to be lightweight and portable, with a focus on vendor and
-tool independence, while providing a full-featured, intuitive experience in a
-user-centric text interface. The entire program is a single well-tested script
-that can be copied or `curl`ed anywhere and just work, using a
-[progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
-approach for various experience improvements in more capable environments.
+`notes` is designed to be portable, future-focused, and vendor independent,
+providing a full-featured, intuitive, and enjoyable experience within a
+carefully crafted user-centric text interface.
+The entire program is a single well-tested script
+that can be copied or `curl`ed anywhere and Just Work, using
+[progressive enhancement](https://en.wikipedi.org/wiki/Progressive_enhancement)
+for various experience improvements in more capable environments.
 `notes` makes it easy to incorporate other tools, writing apps, and workflows.
 `notes` can be used a little, a lot, once in a while, or for just a subset of
 features. `notes` is flexible.
