@@ -29,7 +29,8 @@ _setup_notebooks() {
     "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)"
 
   [[ "${lines[1]}" =~ \ \ notes\ notebooks\ \[\<name\>\] ]]
-  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 5 ]]
+  printf "%s\\n" "$(cd "${NOTES_DIR}" && find . -maxdepth 1)"
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
 }
 
 @test "\`notebooks add <existing>\` exits with 1 and prints error message." {
@@ -44,7 +45,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Already\ exists ]]
-  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 5 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
 }
 
 @test "\`notebooks add <name>\` exits with 0 and adds a notebook." {
@@ -59,7 +60,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   # [[ "${output}" == "Added: example" ]]
-  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
 }
 
 @test "\`notebooks add <name>\` creates git commit." {
@@ -97,7 +98,7 @@ _setup_notebooks() {
   [[ ${status} -eq 0 ]]
 
   [[ "${lines[1]}" == "Added: example" ]]
-  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
+  [[ "$(cd "${NOTES_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
   [[ -d "${NOTES_DIR}/example/.git" ]]
   _origin="$(cd "${NOTES_DIR}/example" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
