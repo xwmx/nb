@@ -4421,6 +4421,7 @@ _index() {
       fi
       ;;
     verify)
+      local _valid=1
       local -a _index_list=()
       _index_list=($(<"${_index_path}"))
       local -a _file_list=()
@@ -4443,6 +4444,22 @@ _index() {
       ))
 
       if [[ -n "${_index_file_list_diff[*]:-}" ]]
+      then
+        _valid=0
+      fi
+
+      for __item in $(printf "%s\\n" "${_index_list[@]:-}" | uniq -c)
+      do
+        local _count
+        _count="$(printf "%s\\n" "${__item}" | awk '{print $1}')"
+        if [[ "${_count}" -gt 1 ]]
+        then
+          _valid=0
+          break
+        fi
+      done
+
+      if ! ((_valid))
       then
         printf "Index corrupted. To fix, run:\\n  %s index reconcile\\n" \
           "${_ME}"

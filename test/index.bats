@@ -464,7 +464,22 @@ load test_helper
     "${_NOTES}" init
     "${_NOTES}" add "first.md"  --title "one"
     "${_NOTES}" add "second.md" --title "two"
-    printf "not-a-file\n" >> "${_NOTEBOOK_PATH}/.index"
+    printf "not-a-file\\n" >> "${_NOTEBOOK_PATH}/.index"
+    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
+  }
+
+  run "${_NOTES}" index verify
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+}
+
+@test "\`index verify\` returns 1 with a duplicates." {
+  {
+    "${_NOTES}" init
+    "${_NOTES}" add "first.md"  --title "one"
+    "${_NOTES}" add "second.md" --title "two"
+    printf "second.md\\n" >> "${_NOTEBOOK_PATH}/.index"
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
   }
 
