@@ -20,7 +20,8 @@ load test_helper
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ ! -e "${NOTES_DIR}/.cache" ]]
+  [[ -e "${NOTES_DIR}/.cache" ]]
+  [[ -z "$(ls -A "${NOTES_DIR}/.cache")" ]]
 }
 
 # `_get_title()` ##############################################################
