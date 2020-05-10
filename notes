@@ -7192,6 +7192,7 @@ HEREDOC
       then
         case "${__setting}" in
           q|quit|exit)
+            printf "Exiting...\\n"
             return 0
             ;;
           *)
@@ -7224,6 +7225,7 @@ HEREDOC
       then
         case "${__value}" in
           q|quit|exit)
+            printf "Exiting...\\n"
             return 0
             ;;
           reset|unset)
