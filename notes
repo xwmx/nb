@@ -7177,6 +7177,11 @@ HEREDOC
       "${_setting_name}"                    \
       "$(_notes_settings_get_value "${_setting_name}")"
 
+    if [[ "${_setting_name}" == "NOTES_HIGHLIGHT_COLOR" ]]
+    then
+      printf "%s\\n" "$(_notes_settings_colors)"
+    fi
+
     cat <<HEREDOC
 
 Enter a new value, $(_highlight 'unset') to set to the default value, or $(_highlight 'q') to quit.
