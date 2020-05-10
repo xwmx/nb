@@ -39,7 +39,7 @@ providing a full-featured, intuitive, and enjoyable experience within a
 carefully crafted user-centric text interface.
 The entire program is a single well-tested script
 that can be copied or `curl`ed anywhere and Just Work, using
-[progressive enhancement](https://en.wikipedi.org/wiki/Progressive_enhancement)
+[progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
 `notes` makes it easy to incorporate other tools, writing apps, and workflows.
 `notes` can be used a little, a lot, once in a while, or for just a subset of
