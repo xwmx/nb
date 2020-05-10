@@ -340,7 +340,7 @@ export NOTES_INDICATORS_ENABLED="${NOTES_INDICATORS_ENABLED:-1}"
 #
 # The full path to the cache directory.
 export _NOTES_CACHE_PATH="${NOTES_DIR}/.cache"
-if [[ ! -e "${_NOTES_CACHE_PATH}" ]]
+if [[ -d "${NOTES_DIR}" ]] && [[ ! -e "${_NOTES_CACHE_PATH}" ]]
 then
   mkdir -p "${_NOTES_CACHE_PATH}"
 fi
