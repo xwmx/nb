@@ -7141,6 +7141,10 @@ _settings() {
       _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
       _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}"        &&
+      if [[ "${_setting_name}" == "NOTES_HIGHLIGHT_COLOR" ]]
+      then
+        _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
+      fi &&
       printf "%s set to '%s'\\n" "${_setting_name}" "${_value}"
   }
 

@@ -374,7 +374,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NOTES_HIGHLIGHT_COLOR\ set\ to\ \'123\' ]]
+  [[ "${output}" =~ NOTES_HIGHLIGHT_COLOR\ set\ to\ \' ]]
+  [[ "${output}" =~ '123' ]]
   [[ "$("${_NOTES}" settings get NOTES_HIGHLIGHT_COLOR)" == '123' ]]
 }
 
@@ -384,7 +385,10 @@ skip "Determine how to test interactive prompt."
   }
 
   run "${_NOTES}" settings set NOTES_HIGHLIGHT_COLOR 123
-  [[ "${output}" =~ NOTES_HIGHLIGHT_COLOR\ set\ to\ \'123\' ]]
+  [[ "${output}" =~ NOTES_HIGHLIGHT_COLOR\ set\ to\ \' ]]
+  [[ "${output}" =~ '123' ]]
+  [[ "$("${_NOTES}" settings get NOTES_HIGHLIGHT_COLOR)" == '123' ]]
+
   run "${_NOTES}" settings set NOTES_HIGHLIGHT_COLOR invalid-color
 
   printf "\${status}: %s\\n" "${status}"
