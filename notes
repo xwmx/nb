@@ -333,8 +333,33 @@ export NOTES_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL:-openssl}"
 export NOTES_INDICATORS_ENABLED="${NOTES_INDICATORS_ENABLED:-1}"
 
 ###############################################################################
-# Temp Directory
+# Cache & Temp Directories
 ###############################################################################
+
+# $_NOTES_CACHE_PATH
+#
+# The full path to the cache directory.
+export _NOTES_CACHE_PATH="${NOTES_DIR}/.cache"
+if [[ ! -e "${_NOTES_CACHE_PATH}" ]]
+then
+  mkdir -p "${_NOTES_CACHE_PATH}"
+fi
+
+# _clear_notes_cache()
+#
+# Usage:
+#   _clear_notes_cache
+#
+# Description:
+#   Clear the notes cache.
+_clear_notes_cache() {
+  if [[ -e "${_NOTES_CACHE_PATH}" ]] &&
+     [[ -d "${_NOTES_CACHE_PATH}" ]]
+  then
+    rm -r "${_NOTES_CACHE_PATH:?}"
+    mkdir -p "${_NOTES_CACHE_PATH}"
+  fi
+}
 
 # $_NOTES_TEMP_DIRECTORY
 #
@@ -557,23 +582,6 @@ _alias_subcommand() {
 
   eval "desc \"${_alias}\" \"\$___desc_${_subcommand}\""
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
-}
-
-# _clear_notes_cache()
-#
-# Usage:
-#   _clear_notes_cache
-#
-# Description:
-#   Clear the notes cache.
-_clear_notes_cache() {
-  local _cache_path="${NOTES_DIR:?}/.cache"
-
-  if [[ -e "${_cache_path}" ]] &&
-     [[ -d "${_cache_path}" ]]
-  then
-    rm -r "${_cache_path:?}"
-  fi
 }
 
 # _decrypt_file()
