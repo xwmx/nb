@@ -5199,12 +5199,18 @@ _ls() {
   local _args=()
   local _auto_align=1 # auto-align by default.
   local _centered=0
+  local _columns
+  _columns="$(tput cols)"
   local _justified=0
+  local _limit=30
   local _maybe_notebook_list=
   local _plain=0
 
-  for __arg in "${@:-}"
+  while ((${#}))
   do
+    local __arg="${1:-}"
+    local __val="${2:-}"
+
     case "${__arg}" in
       --auto-align)
         _auto_align=1
@@ -5218,13 +5224,28 @@ _ls() {
       --plain)
         _plain=1
         ;;
+      -n)
+        if __option_value_is_present "${__val:-}"
+        then
+          _limit="${__val:-}"
+        fi
+
+        shift
+        ;;
       -l|-a)
         : # Ignore accidental ls -l and -a flags due to muscle memory.
         ;;
       *)
-        _args+=("${__arg}")
+        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
+        then
+          _limit="${__arg:-}"
+        else
+          _args+=("${__arg}")
+        fi
         ;;
     esac
+
+    shift
   done
 
   _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
@@ -5263,9 +5284,6 @@ _ls() {
     then
       _separator=" ·"
     fi
-
-    local _columns
-    _columns="$(tput cols)"
 
     local _notebook_names_raw
     _notebook_names_raw=($(
@@ -5427,7 +5445,8 @@ _ls() {
     )"
   fi
 
-  if [[ "${_notes_count_local}" -gt $((_lines-4)) ]]
+  if [[ "${_notes_count_local}" -gt $((_lines-4))           ]] &&
+     [[ "${_limit}"             -gt "${_notes_count_local}"  ]]
   then
     _use_pager=1
   fi
@@ -5436,17 +5455,49 @@ _ls() {
   then
     {
       printf "%s" "${_maybe_notebook_list}"
-      _list "${_args[@]:-}"
+      _list -n "${_limit}" "${_args[@]:-}"
     } | "${PAGER}"
   elif ((_use_pager)) && _command_exists "less"
   then
     {
       printf "%s" "${_maybe_notebook_list}"
-      _list "${_args[@]:-}"
+      _list -n "${_limit}" "${_args[@]:-}"
     } | less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
   else
     printf "%s" "${_maybe_notebook_list}"
-    _list "${_args[@]:-}"
+    _list -n "${_limit}" "${_args[@]:-}"
+
+    local _scope=
+    if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
+    then
+      _scope="${_SCOPE}:"
+    fi
+
+    _highlight() {
+      printf "%s%s%s\\n" "${_TPUT_SETAF_8}" "${1}" "${_TPUT_SGR0}"
+    }
+
+    local _list_hi=
+    _list_hi="$(_highlight "${_ME} ${_scope}list")"
+    local _add_hi=
+    _add_hi="$(_highlight "${_ME} ${_scope}add")"
+    local _b_hi=
+    _b_hi="$(_highlight "${_ME} ${_scope}b <url>")"
+    local _edit_hi=
+    _edit_hi="$(_highlight "${_ME} edit ${_scope}<id>")"
+    local _search_hi=
+    _search_hi="$(_highlight "${_ME} ${_scope}search <query>")"
+    local _help_hi=
+    _help_hi="$(_highlight "${_ME} help")"
+
+    printf '\033[?7l'
+    _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+    printf "%s" "${_TPUT_SGR0}"
+    printf '\033[?7h'
+    printf '\n'
+    cat <<HEREDOC
+❯ ${_list_hi} · ${_add_hi} · ${_b_hi} · ${_edit_hi} · ${_search_hi} · ${_help_hi}
+HEREDOC
   fi
 }
 
