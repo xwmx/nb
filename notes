@@ -5489,18 +5489,71 @@ _ls() {
       printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${1}" "${_TPUT_SGR0}"
     }
 
-    local _list_hi=
-    _list_hi="$(_highlight "${_ME} ${_scope}list")"
-    local _add_hi=
-    _add_hi="$(_highlight "${_ME} ${_scope}add")"
-    local _b_hi=
-    _b_hi="$(_highlight "${_ME} ${_scope}b <url>")"
-    local _edit_hi=
-    _edit_hi="$(_highlight "${_ME} edit ${_scope}<id>")"
-    local _search_hi=
-    _search_hi="$(_highlight "${_ME} ${_scope}search <query>")"
-    local _help_hi=
-    _help_hi="$(_highlight "${_ME} help")"
+    _commands_raw=(
+      "❯ ${_ME} ${_scope}list"
+      "${_ME} ${_scope}add"
+      "${_ME} ${_scope}b <url>"
+      "${_ME} edit ${_scope}<id>"
+      "${_ME} ${_scope}search <query>"
+      "${_ME} help"
+    )
+
+    _commands_hi=(
+      "❯ $(_highlight "${_ME} ${_scope}list")"
+      "$(_highlight "${_ME} ${_scope}add")"
+      "$(_highlight "${_ME} ${_scope}b <url>")"
+      "$(_highlight "${_ME} edit ${_scope}<id>")"
+      "$(_highlight "${_ME} ${_scope}search <query>")"
+      "$(_highlight "${_ME} help")"
+    )
+
+    local _line_hi=
+    local _line_number=0
+    local _line_raw=
+    local _output_raw=
+    local _output_hi=
+    local _separator_raw=" ·"
+    local _separator_hi=
+    _separator_hi="$(_highlight "${_separator_raw}")"
+    local _test_line=
+
+    for ((i=0;i < "${#_commands_raw[@]}"; i++))
+    do
+      if [[ -z "${_test_line}" ]]
+      then # first item in line
+        _test_line="${_commands_raw[i]}"
+      else
+        _test_line="${_test_line}${_separator_raw} ${_commands_raw[i]}"
+      fi
+
+      if [[ "${#_test_line}" -gt "${_columns}" ]]
+      then # wrap to next line
+        _output_hi="${_output_hi}${_line_hi}${_NEWLINE}"
+        _output_raw="${_output_raw}${_line_raw}${_NEWLINE}"
+        _line_number=$((_line_number + 1))
+
+        # Start the line for the next iteration using the current name.
+        _test_line="${_commands_raw[i]}"
+        _line_hi="${_commands_hi[i]:-}"
+        _line_raw="${_commands_raw[i]}"
+      else # add to line
+        if [[ -z "${_line_hi}" ]]
+        then # first item in highlighted line
+          _line_hi="${_commands_hi[i]:-}"
+          _line_raw="${_commands_raw[i]}"
+        else
+          _line_hi="${_line_hi}${_separator_hi} ${_commands_hi[i]:-}"
+          _line_raw="${_line_raw}${_separator_raw} ${_commands_raw[i]}"
+        fi
+      fi
+
+      if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
+      then # end of list
+        _output_hi="${_output_hi}${_line_hi}"
+        _output_raw="${_output_raw}${_line_raw}"
+        _line_number=$((_line_number + 1))
+      fi
+    done
 
     printf '\033[?7l'
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
@@ -5508,7 +5561,7 @@ _ls() {
     printf '\033[?7h'
     printf '\n'
     cat <<HEREDOC
-❯ ${_list_hi} · ${_add_hi} · ${_b_hi} · ${_edit_hi} · ${_search_hi} · ${_help_hi}
+${_output_hi}
 HEREDOC
   fi
 }
