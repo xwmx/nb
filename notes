@@ -107,6 +107,8 @@ then
   source "${NOTESRC_PATH}"
 fi
 
+export _RC_FILE_PATH="${NOTESRC_PATH}"
+
 ###############################################################################
 # $EDITOR
 ###############################################################################
@@ -147,7 +149,7 @@ __set_editor() {
       cat <<HEREDOC
 Command line text editor not found. Set the \$EDITOR variable in your
 environment or in the \`${_ME}\` configuration file located at:
-  ${NOTESRC_PATH}
+  ${_RC_FILE_PATH}
 
 More information about setting \$EDITOR:
   https://askubuntu.com/q/432524
@@ -3771,7 +3773,7 @@ _env() {
     printf "NOTES_DEFAULT_EXTENSION=%s\\n" "${NOTES_DEFAULT_EXTENSION:-}"
     printf "NOTES_ENCRYPTION_TOOL=%s\\n" "${NOTES_ENCRYPTION_TOOL:-}"
     printf "NOTES_HIGHLIGHT_COLOR=%s\\n" "${NOTES_HIGHLIGHT_COLOR:-}"
-    printf "NOTESRC_PATH=%s\\n" "${NOTESRC_PATH:-}"
+    printf "_RC_FILE_PATH=%s\\n" "${_RC_FILE_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
     printf "code:     %s\\n" "$(command -v code)"
@@ -4501,8 +4503,8 @@ Usage:
   ${_ME} init [<remote-url>]
 
 Description:
-  Initialize the local data directory and generate a ~/.notesrc configuration
-  file if it doesn't exist.
+  Initialize the local data directory and generate a \`${_ME}\`
+  configuration file if it doesn't exist at ${_RC_FILE_PATH}
 
 Examples:
   ${_ME} init
@@ -4547,14 +4549,14 @@ HEREDOC
     fi
   }
 
-  # Usage: _init_create_notesrc
-  _init_create_notesrc() {
-    if [[ -e "${NOTESRC_PATH}" ]]
+  # Usage: _init_create_rc_file
+  _init_create_rc_file() {
+    if [[ -e "${_RC_FILE_PATH}" ]]
     then
       printf "Configuration file already exists: %s\\n" \
-        "${NOTESRC_PATH}"
+        "${_RC_FILE_PATH}"
     else
-      cat <<HEREDOC > "${NOTESRC_PATH}"
+      cat <<HEREDOC > "${_RC_FILE_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
 # .notesrc
@@ -4631,7 +4633,7 @@ HEREDOC
 # Supported Values: [0..255+]
 # export NOTES_HIGHLIGHT_COLOR=213
 HEREDOC
-      printf "Created %s\\n" "${NOTESRC_PATH}"
+      printf "Created %s\\n" "${_RC_FILE_PATH}"
     fi
   }
 
@@ -4670,7 +4672,7 @@ HEREDOC
 
   _init_print_header        &&
     _init_create_notes_dir  &&
-    _init_create_notesrc    &&
+    _init_create_rc_file    &&
     _init_create_home_notebook "${1:-}"
 }
 
@@ -7193,7 +7195,7 @@ Subcommands:
   (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
-  edit       Open the ~/.notesrc configuration file in \`\$EDITOR\`.
+  edit       Open the \`${_ME}\` configuration file in \`\$EDITOR\`.
   get        Print the value of a setting.
   list       List information about available settings.
   set        Assign <value> to a setting.
@@ -7268,7 +7270,7 @@ _settings() {
       } &&
       _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
       _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
-      printf "\\n%s\\n" "${_entry}" >> "${NOTESRC_PATH}"        &&
+      printf "\\n%s\\n" "${_entry}" >> "${_RC_FILE_PATH}"        &&
       if [[ "${_setting_name}" == "NOTES_HIGHLIGHT_COLOR" ]]
       then
         _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
@@ -7284,10 +7286,10 @@ _settings() {
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
         -e "s/^export ${_setting_name}.*Set by.*$//g" \
-        "${NOTESRC_PATH}" &&
+        "${_RC_FILE_PATH}" &&
         {
-          _stripped=$(<"${NOTESRC_PATH}")
-          printf "%s\\n" "${_stripped}" > "${NOTESRC_PATH}"
+          _stripped=$(<"${_RC_FILE_PATH}")
+          printf "%s\\n" "${_stripped}" > "${_RC_FILE_PATH}"
         } &&
         printf "%s restored to the default: '%s'\\n" \
           "${_setting_name}" \
@@ -7464,7 +7466,7 @@ HEREDOC
         return 0
         ;;
       edit)
-        _edit_file "${NOTESRC_PATH}" --no-wait
+        _edit_file "${_RC_FILE_PATH}" --no-wait
         return 0
         ;;
       get)
