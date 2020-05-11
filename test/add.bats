@@ -6,8 +6,8 @@ load test_helper
 # no argument #################################################################
 
 @test "\`add\` with no arguments creates new note file created with \$EDITOR." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add
+  run "${_NB}" init
+  run "${_NB}" add
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -26,14 +26,14 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 }
 
 # <content> argument ##########################################################
 
 @test "\`add\` with content argument creates new note without errors." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add "# Content"
+  run "${_NB}" init
+  run "${_NB}" add "# Content"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -51,7 +51,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -62,10 +62,10 @@ load test_helper
 }
 
 @test "\`add\` with scope creates new note without errors." {
-  run "${_NOTES}" init
-  run "${_NOTES}" notebooks add Example
-  run "${_NOTES}" Example:add "# Content"
-  _NOTEBOOK_PATH="${NOTES_DIR}/Example"
+  run "${_NB}" init
+  run "${_NB}" notebooks add Example
+  run "${_NB}" Example:add "# Content"
+  _NOTEBOOK_PATH="${NB_DIR}/Example"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -83,7 +83,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -97,8 +97,8 @@ load test_helper
 
 
 @test "\`add\` with --content option exits with 0, creates new note, creates commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add --content "# Content"
+  run "${_NB}" init
+  run "${_NB}" add --content "# Content"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -113,12 +113,12 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 }
 
 @test "\`add\` with empty --content option exits with 1" {
-  run "${_NOTES}" init
-  run "${_NOTES}" add --content
+  run "${_NB}" init
+  run "${_NB}" add --content
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -132,8 +132,8 @@ load test_helper
 
 
 @test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add --filename example.md
+  run "${_NB}" init
+  run "${_NB}" add --filename example.md
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -152,12 +152,12 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 }
 
 @test "\`add\` with empty --filename option exits with 1" {
-  run "${_NOTES}" init
-  run "${_NOTES}" add --filename
+  run "${_NB}" init
+  run "${_NB}" add --filename
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -173,8 +173,8 @@ load test_helper
 
 
 @test "\`add\` with --title option exits with 0, creates new note, creates commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add --title "Example Title"
+  run "${_NB}" init
+  run "${_NB}" add --title "Example Title"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -193,12 +193,12 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 }
 
 @test "\`add\` with empty --title option exits with 1" {
-  run "${_NOTES}" init
-  run "${_NOTES}" add --title
+  run "${_NB}" init
+  run "${_NB}" add --title
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -213,8 +213,8 @@ load test_helper
 # --type option ###############################################################
 
 @test "\`add --type org\` with content argument creates a new .org note file." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add  "* Content" --type org
+  run "${_NB}" init
+  run "${_NB}" add  "* Content" --type org
 
   [[ ${status} -eq 0 ]]
 
@@ -225,8 +225,8 @@ load test_helper
 }
 
 @test "\`add --type ''\` without argument exits with 1." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add  "* Content" --type
+  run "${_NB}" init
+  run "${_NB}" add  "* Content" --type
 
   [[ ${status} -eq 1 ]]
 
@@ -237,8 +237,8 @@ load test_helper
 # --encrypt option ############################################################
 
 @test "\`add --encrypt\` with content argument creates a new .enc note file." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add  "* Content" --encrypt --password=example
+  run "${_NB}" init
+  run "${_NB}" add  "* Content" --encrypt --password=example
 
   [[ ${status} -eq 0 ]]
 
@@ -251,8 +251,8 @@ load test_helper
 # --password option ###########################################################
 
 @test "\`add --password\` without argument exits with 1." {
-  run "${_NOTES}" init
-  run "${_NOTES}" add  "* Content" --encrypt --password
+  run "${_NB}" init
+  run "${_NB}" add  "* Content" --encrypt --password
 
   [[ ${status} -eq 1 ]]
 
@@ -263,8 +263,8 @@ load test_helper
 # piped #######################################################################
 
 @test "\`add\` with piped content creates new note without errors." {
-  run "${_NOTES}" init
-  run bash -c "echo '# Piped' | \"${_NOTES}\" add"
+  run "${_NB}" init
+  run bash -c "echo '# Piped' | \"${_NB}\" add"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -282,7 +282,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -293,8 +293,8 @@ load test_helper
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {
-  run "${_NOTES}" init
-  run bash -c "echo '# Piped' | \"${_NOTES}\" add --type org"
+  run "${_NB}" init
+  run bash -c "echo '# Piped' | \"${_NB}\" add --type org"
 
   [[ ${status} -eq 0 ]]
 
@@ -305,8 +305,8 @@ load test_helper
 }
 
 @test "\`add --type ''\` with piped content exits with 1." {
-  run "${_NOTES}" init
-  run bash -c "echo '# Piped' | \"${_NOTES}\" add --type"
+  run "${_NB}" init
+  run bash -c "echo '# Piped' | \"${_NB}\" add --type"
 
   [[ ${status} -eq 1 ]]
 
@@ -317,14 +317,14 @@ load test_helper
 # help ########################################################################
 
 @test "\`help add\` exits with status 0." {
-  run "${_NOTES}" help add
+  run "${_NB}" help add
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help add\` returns usage information." {
-  run "${_NOTES}" help add
+  run "${_NB}" help add
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~  notes\ add ]]
+  [[ "${lines[1]}" =~  nb\ add ]]
 }

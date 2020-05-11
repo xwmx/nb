@@ -5,8 +5,8 @@ load test_helper
 # no argument #################################################################
 
 @test "\`import\` with no arguments exits with status 1 and prints help." {
-  run "${_NOTES}" init
-  run "${_NOTES}" import
+  run "${_NB}" init
+  run "${_NB}" import
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -14,23 +14,23 @@ load test_helper
 }
 
 @test "\`import\` with no arguments does not create git commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" import
+  run "${_NB}" init
+  run "${_NB}" import
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
-  ! git log | grep -q '\[NOTES\] Import'
+  ! git log | grep -q '\[nb\] Import'
 }
 
 # <path> ######################################################################
 
 @test "\`import\` with valid <path> argument creates a new note file." {
-  run "${_NOTES}" init
+  run "${_NB}" init
 
-  run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -41,23 +41,23 @@ load test_helper
 }
 
 @test "\`import\` with valid <path> argument creates git commit." {
-  run "${_NOTES}" init
-  run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+  run "${_NB}" init
+  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Import'
+  git log | grep -q '\[nb\] Import'
 }
 
 # <directory path> ############################################################
 
 @test "\`import\` with valid <directory path> argument imports a directory." {
-  run "${_NOTES}" init
+  run "${_NB}" init
 
-  run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
   IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
 
@@ -79,15 +79,15 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Import'
+  git log | grep -q '\[nb\] Import'
 }
 
 @test "\`import move\` with valid <directory path> argument moves a directory." {
-  run "${_NOTES}" init
+  run "${_NB}" init
   cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_TMP_DIR}"
   [[ -e "${_TMP_DIR}/Example Folder" ]]
 
-  run "${_NOTES}" import move "${_TMP_DIR}/Example Folder"
+  run "${_NB}" import move "${_TMP_DIR}/Example Folder"
 
   IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
 
@@ -110,15 +110,15 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Import'
+  git log | grep -q '\[nb\] Import'
 }
 
 # <url> ######################################################################
 
 @test "\`import\` with valid <url> argument creates a new note file." {
-  run "${_NOTES}" init
+  run "${_NB}" init
 
-  run "${_NOTES}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  run "${_NB}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -129,9 +129,9 @@ load test_helper
 }
 
 @test "\`import\` with valid <url> argument creates git commit." {
-  run "${_NOTES}" init
+  run "${_NB}" init
 
-  run "${_NOTES}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  run "${_NB}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -141,18 +141,18 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Import'
+  git log | grep -q '\[nb\] Import'
   git log | grep -q 'Source'
 }
 
 # help ########################################################################
 
 @test "\`help import\` returns usage information." {
-  run "${_NOTES}" help import
+  run "${_NB}" help import
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes import (<path> | <url>)" ]]
+  [[ "${lines[1]}" == "  nb import (<path> | <url>)" ]]
 }
 

@@ -1,26 +1,26 @@
 [![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
 
-# `❯ notes`
+# `❯ nb` · `notes` + `bookmark`
 
-`notes` is a command line note-taking, bookmarking, archiving, and research
+`nb` is a command line note-taking, bookmarking, archiving, and research
 management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
 [Pandoc](http://pandoc.org/)-backed conversion,
 global and local notebooks, tagging, and more, all in a single portable script.
-`notes` creates notes in text-based formats like
+`nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown) and
 [Emacs Org mode](https://orgmode.org/),
 can work with files in any format, and can export notes to many document
-formats. `notes` can also create private, password-protected encrypted notes and
+formats. `nb` can also create private, password-protected encrypted notes and
 bookmarks.
 
-With `notes`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
-Text, and any other text editor you prefer. `notes` works in any
+With `nb`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
+Text, and any other text editor you prefer. `nb` works in any
 standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
-but `notes` works great without them.
+but `nb` works great without them.
 
-`notes` includes `bookmark`, a powerful text-based CLI bookmarking system
+`nb` includes `bookmark`, a powerful text-based CLI bookmarking system
 that includes local full-text search of cached page content with regular
 expression support, tagging, convenient filtering and listing, Wayback Machine
 snapshot lookup for broken links, and easy viewing of bookmarked pages in the
@@ -28,22 +28,22 @@ terminal and your regular web browser. Page information is automatically
 downloaded, compiled, and saved into normal Markdown documents made for humans,
 so bookmarks are easy to edit just like any other note.
 
-`notes` uses [Git](https://git-scm.com/) in the background to automatically
+`nb` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync with a remote repository, if one has been configured.
-`notes` can also be configured to save notes in a location used by a general
+`nb` can also be configured to save notes in a location used by a general
 purpose syncing utility like Dropbox so notes can be edited in other apps on
 any device.
 
-`notes` is designed to be portable, future-focused, and vendor independent,
+`nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured, intuitive, and enjoyable experience within a
 carefully crafted user-centric text interface.
 The entire program is a single well-tested script
 that can be copied or `curl`ed anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
-`notes` makes it easy to incorporate other tools, writing apps, and workflows.
-`notes` can be used a little, a lot, once in a while, or for just a subset of
-features. `notes` is flexible.
+`nb` makes it easy to incorporate other tools, writing apps, and workflows.
+`nb` can be used a little, a lot, once in a while, or for just a subset of
+features. `nb` is flexible.
 
 <p align="center">
   📝
@@ -64,7 +64,7 @@ features. `notes` is flexible.
 ##### Required
 
 - [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-  - `notes` works perfectly with Zsh, fish, and any other shell set as your
+  - `nb` works perfectly with Zsh, fish, and any other shell set as your
     primary login shell, the system just needs to have Bash available on it.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
@@ -80,8 +80,8 @@ features. `notes` is flexible.
 
 ##### Optional
 
-`notes` leverages standard command line tools and works in standard
-Linux / Unix environments. `notes` also checks the environment for some
+`nb` leverages standard command line tools and works in standard
+Linux / Unix environments. `nb` also checks the environment for some
 additional optional tools and uses them to enhance the experience whenever
 they are available.
 
@@ -121,7 +121,7 @@ To install with [Homebrew](http://brew.sh/):
 brew install xwmx/taps/notes
 ```
 
-Installing `notes` with Homebrew also installs the recommended dependencies
+Installing `nb` with Homebrew also installs the recommended dependencies
 above.
 
 #### npm
@@ -137,7 +137,7 @@ npm install --global notes.sh
 To install with [bpkg](https://github.com/bpkg/bpkg):
 
 ```bash
-bpkg install xwmx/notes
+bpkg install xwmx/nb
 ```
 
 #### Make
@@ -162,34 +162,34 @@ commands:
 
 ```bash
 # install using curl
-sudo curl -L https://raw.github.com/xwmx/notes/master/notes -o /usr/local/bin/notes &&
-  sudo chmod +x /usr/local/bin/notes &&
-  sudo notes completions install --download
+sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
+  sudo chmod +x /usr/local/bin/nb &&
+  sudo nb completions install --download
 
 # install using wget
-sudo wget https://raw.github.com/xwmx/notes/master/notes -O /usr/local/bin/notes &&
-  sudo chmod +x /usr/local/bin/notes &&
-  sudo notes completions install --download
+sudo wget https://raw.github.com/xwmx/nb/master/nb -O /usr/local/bin/nb &&
+  sudo chmod +x /usr/local/bin/nb &&
+  sudo nb completions install --download
 ```
 
-To install as a user, simply add the `notes` script to your `$PATH`. If
+To install as a user, simply add the `nb` script to your `$PATH`. If
 you already have a `~/bin` directory, for example, you can use one of the
 following commands:
 
 ```bash
 # download with curl
-curl -L https://raw.github.com/xwmx/notes/master/notes -o ~/bin/notes && chmod +x ~/bin/notes
+curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb && chmod +x ~/bin/nb
 
 # download with wget
-wget https://raw.github.com/xwmx/notes/master/notes -O ~/bin/notes && chmod +x ~/bin/notes
+wget https://raw.github.com/xwmx/nb/master/nb -O ~/bin/nb && chmod +x ~/bin/nb
 ```
 
 #### Tab Completion
 
-Bash and Zsh tab completion should be enabled when `notes` is installed using
+Bash and Zsh tab completion should be enabled when `nb` is installed using
 Homebrew, npm, bpkg, or Make, assuming you have the appropriate system
 permissions or installed with `sudo`. If completion isn't working after
-installing `notes`, see the [completion installation
+installing `nb`, see the [completion installation
 instructions](etc/README.md).
 
 ## Overview
@@ -211,54 +211,54 @@ instructions](etc/README.md).
 To get started, simply run:
 
 ```bash
-notes
+nb
 ```
 
-`notes` sets up your initial "home" notebook the first time it runs.
+`nb` sets up your initial "home" notebook the first time it runs.
 Now it's ready for you to start adding notes.
 
 ### Working with Notes
 
 #### Adding Notes
 
-Use `notes add` to create new notes:
+Use `nb add` to create new notes:
 
 ```bash
 # create a new note in your text editor
-notes add
+nb add
 
 # create a new note with the filename 'example.md'
-notes add example.md
+nb add example.md
 
 # create a new note containing "This is a note."
-notes add "This is a note."
+nb add "This is a note."
 
 # create a new note with piped content
-echo "Note content." | notes add
+echo "Note content." | nb add
 
 # create a new password-protected, encrypted note
-notes add --title "Secret Document" --encrypt
+nb add --title "Secret Document" --encrypt
 ```
 
-`notes add` with no arguments or input will open the new, blank note in your
+`nb add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-`$EDITOR` environment variable or [`notes settings`](#settings).
+`$EDITOR` environment variable or [`nb settings`](#settings).
 
-`notes` files are [Markdown](https://daringfireball.net/projects/markdown/)
-files by default. To change the file type, see `notes help add`.
+`nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
+files by default. To change the file type, see `nb help add`.
 
 Password-protected notes are encrypted with AES-256 using OpenSSL by
-default. GPG is also supported and can be configured in `notes settings`.
+default. GPG is also supported and can be configured in `nb settings`.
 Encrypted notes can be decrypted using the OpenSSL and GPG command line
-tools directly, so you aren't dependent on `notes` to decrypt your
+tools directly, so you aren't dependent on `nb` to decrypt your
 files.
 
 #### Listing Notes
 
-To list notes and notebooks, run `notes ls`:
+To list notes and notebooks, run `nb ls`:
 
 ```bash
-> notes ls
+> nb ls
 home
 ----
 [3] example.md · "Example content."
@@ -291,10 +291,10 @@ title: Ideas
 ```
 
 Once defined, titles will be displayed in place of the filename and first line
-in the output of `notes ls`:
+in the output of `nb ls`:
 
 ```bash
-> notes ls
+> nb ls
 home
 ----
 [3] Example Title
@@ -305,20 +305,20 @@ home
 Pass an id, filename, or title to view the listing for that note:
 
 ```bash
-> notes ls Todos
+> nb ls Todos
 [2] Todos
 ```
 
 ```bash
-> notes ls 3
+> nb ls 3
 [3] Example Title
 ```
 
-If there is no immediate match, `notes` will list items with titles and
+If there is no immediate match, `nb` will list items with titles and
 filenames that fuzzy match the query:
 
 ```bash
-> notes ls 'idea'
+> nb ls 'idea'
 [1] Ideas
 ```
 
@@ -326,16 +326,16 @@ A case-insensitive regular expression can also be to filter filenames and
 titles:
 
 ```bash
-> notes ls '^example.*'
+> nb ls '^example.*'
 [3] Example Title
 ```
 
-For full text search, see `notes help search`.
+For full text search, see `nb help search`.
 
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
 ```bash
-> notes ls 3 --excerpt
+> nb ls 3 --excerpt
 [3] Example Title
 -----------------
 # Example Title
@@ -347,7 +347,7 @@ Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
 easily identifiable in lists:
 
 ```bash
-> notes ls
+> nb ls
 home
 ----
 [4] Example Note
@@ -356,21 +356,21 @@ home
 [1] 🔖 🔒 example-encrypted.bookmark.md.enc
 ```
 
-`notes` with no subcommand is an alias for `notes ls`, so the examples above
+`nb` with no subcommand is an alias for `nb ls`, so the examples above
 can be run without the `ls`:
 
 ```bash
-> notes
+> nb
 home
 ----
 [3] Example Title
 [2] Todos
 [1] Ideas
 
-> notes '^example.*'
+> nb '^example.*'
 [3] Example Title
 
-> notes 3 --excerpt
+> nb 3 --excerpt
 [3] Example Title
 -----------------
 # Example Title
@@ -379,7 +379,7 @@ This is an example excerpt
 ```
 
 On most systems, when the list of notes is longer than the terminal
-can display on one screen, `notes ls` will open the list in
+can display on one screen, `nb ls` will open the list in
 [`less`](https://en.wikipedia.org/wiki/Less_(Unix)). Use the following
 keys to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
 for more information):
@@ -396,11 +396,11 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-`notes ls` is a combination of `notes notebooks` and `notes list` in one view
-and accepts the same arguments as `notes list`, which lists only notes.
+`nb ls` is a combination of `nb notebooks` and `nb list` in one view
+and accepts the same arguments as `nb list`, which lists only notes.
 
-For more information about options for listing notes, run `notes help ls` and
-`notes help list`.
+For more information about options for listing notes, run `nb help ls` and
+`nb help list`.
 
 #### Editing Notes
 
@@ -408,45 +408,45 @@ You can edit a note in your editor using its id, filename, or title:
 
 ```bash
 # edit note by id
-notes edit 3
+nb edit 3
 
 # edit note by filename
-notes edit example.md
+nb edit example.md
 
 # edit note by title
-notes edit 'A Document Title'
+nb edit 'A Document Title'
 ```
 
-`notes edit` can also receive piped content, which it will append to the
+`nb edit` can also receive piped content, which it will append to the
 specified note:
 
 ```bash
-echo "Content to append." | notes edit 1
+echo "Content to append." | nb edit 1
 ```
 
-When a note is encrypted, `notes edit` will prompt you for the note password,
+When a note is encrypted, `nb edit` will prompt you for the note password,
 open the unencrypted content in your editor, and then automatically reencrypt
 the note when you are done editing.
 
 #### Viewing Notes
 
-Notes can be viewed using `notes show`:
+Notes can be viewed using `nb show`:
 
 ```bash
 # show note by id
-notes show 3
+nb show 3
 
 # show note by filename
-notes show example.md
+nb show example.md
 
 # show note by title
-notes show 'A Document Title'
+nb show 'A Document Title'
 ```
 
-By default, `notes show` will open the note in
+By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
 [Pygments](http://pygments.org/) is installed, and you can navigate with the
-same keys used in `notes ls`:
+same keys used in `nb ls`:
 
 ```text
 Key               Function
@@ -464,11 +464,11 @@ When [Pandoc](http://pandoc.org/) is available, use the `--render` option to
 render the note to HTML and open it in your terminal browser:
 
 ```bash
-notes show example.md --render
+nb show example.md --render
 # opens example.md as an HTML page in w3m or lynx
 ```
 
-`notes show` also supports previewing other file types in the terminal,
+`nb show` also supports previewing other file types in the terminal,
 depending on the tools available in the environment. Supported tools
 and file types include:
 
@@ -484,13 +484,13 @@ and file types include:
   [`mc`](https://en.wikipedia.org/wiki/Midnight_Commander) - Folders /
   Directories
 
-When using `notes show` with other file types or if the above tools are not
-available, `notes show` will open files in your system's preferred application
+When using `nb show` with other file types or if the above tools are not
+available, `nb show` will open files in your system's preferred application
 for each type.
 
-`notes show` is primarily intended for previewing notes and files within
+`nb show` is primarily intended for previewing notes and files within
 the terminal. To view files in the system's preferred GUI application,
-use [`notes open`](#import--export).
+use [`nb open`](#import--export).
 
 #### Deleting Notes
 
@@ -499,33 +499,33 @@ specify the note:
 
 ```bash
 # delete note by id
-notes delete 3
+nb delete 3
 
 # delete note by filename
-notes delete example.md
+nb delete example.md
 
 # delete note by title
-notes delete 'A Document Title'
+nb delete 'A Document Title'
 ```
 
-By default, `notes delete` will display a confirmation prompt. To skip, use the
+By default, `nb delete` will display a confirmation prompt. To skip, use the
 `--force` / `-f` option:
 
 ```bash
-notes delete 3 --force
+nb delete 3 --force
 ```
 
 ### Bookmarks
 
-Use `notes bookmark` to create, view, and search bookmarks, links, and
+Use `nb bookmark` to create, view, and search bookmarks, links, and
 online references. Bookmarks are Markdown notes containing information about
 the bookmarked page. To create a new bookmark:
 
 ```bash
-notes bookmark https://example.com
+nb bookmark https://example.com
 ```
 
-`notes` automatically generates a bookmark using information from the page:
+`nb` automatically generates a bookmark using information from the page:
 
 ```markdown
 # Example Domain (example.com)
@@ -548,15 +548,15 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-`notes` embeds the page content in the bookmark, making it available for full
-text search with `notes search` and `notes bookmark search`. When `pandoc` is
+`nb` embeds the page content in the bookmark, making it available for full
+text search with `nb search` and `nb bookmark search`. When `pandoc` is
 installed, the HTML page content will be converted to Markdown.
 
 Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
 
 ```bash
-notes bookmark https://example.com --tags tag1,tag2
+nb bookmark https://example.com --tags tag1,tag2
 ```
 ```markdown
 # Example Domain (example.com)
@@ -583,24 +583,24 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with `notes bookmark search`:
+Search for tagged bookmarks with `nb bookmark search`:
 
 ```bash
-notes bookmark search '#tagname'
+nb bookmark search '#tagname'
 ```
 
-`notes bookmark search` has the same full text search as `notes search`.
-Search both bookmarks and notes for tags with `notes search`:
+`nb bookmark search` has the same full text search as `nb search`.
+Search both bookmarks and notes for tags with `nb search`:
 
 ```bash
-notes search '#tagname'
+nb search '#tagname'
 ```
 
-`notes bookmark search` and `notes search` also automatically search archived
+`nb bookmark search` and `nb search` also automatically search archived
 page content:
 
 ```bash
-> notes bookmark search 'example query'
+> nb bookmark search 'example query'
 [10] example.bookmark.md 'Example Bookmark (example.com)'
 ---------------------------------------------------------
 5:Lorem ipsum example query.
@@ -610,70 +610,70 @@ Bookmarks can also be encrypted:
 
 ```bash
 # create a new password-protected, encrypted bookmark
-notes bookmark https://example.com --encrypt
+nb bookmark https://example.com --encrypt
 ```
 
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
-`notes bookmark` and `notes bookmark list` can be used to list and
+`nb bookmark` and `nb bookmark list` can be used to list and
 filter bookmarks:
 
 ```bash
-> notes bookmark
-Add: notes bookmark <url> Help: notes help bookmark
----------------------------------------------------
+> nb bookmark
+Add: nb bookmark <url> Help: nb help bookmark
+---------------------------------------------
 [3] 🔖 🔒 Example Three (example.com)
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
-> notes bookmark list two
+> nb bookmark list two
 [2] 🔖 Example Two (example.com)
 ```
 
 #### Opening Bookmarks
 
-`notes` provides multiple ways to view bookmarked web pages.
+`nb` provides multiple ways to view bookmarked web pages.
 
-`notes bookmark open` and `notes open` open the bookmarked page in your
+`nb bookmark open` and `nb open` open the bookmarked page in your
 system's primary web browser:
 
 ```bash
 # open bookmark by id
-notes open 3
+nb open 3
 ```
 
-`notes bookmark peek` and `notes peek` open the bookmarked page in your
+`nb bookmark peek` and `nb peek` open the bookmarked page in your
 terminal web browser:
 
 ```bash
 # peek bookmark by id
-notes peek 12
+nb peek 12
 ```
 
-When used with bookmarks, `notes open` and `notes peek` are aliases for
-`notes bookmark open` and `notes bookmark peek`.
+When used with bookmarks, `nb open` and `nb peek` are aliases for
+`nb bookmark open` and `nb bookmark peek`.
 
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
-`notes` will simply prompt you for the bookmark's password.
+`nb` will simply prompt you for the bookmark's password.
 
 `open` and `peek` automatically check whether the URL is still valid.
-If the page has been removed, `notes` can check the [Internet Archive
+If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
 #### Bookmark File Format
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
-To create a minimal valid bookmark file with `notes add`:
+To create a minimal valid bookmark file with `nb add`:
 
 ```bash
-notes add example.bookmark.md --content "<https://example.com>"
+nb add example.bookmark.md --content "<https://example.com>"
 ```
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`notes` includes `bookmark`, a full-featured, streamlined command line
+`nb` includes `bookmark`, a full-featured, streamlined command line
 interface for creating, viewing, searching, and editing bookmarks.
 
 Bookmark a page:
@@ -717,42 +717,42 @@ Perform a full text search of bookmarks and archived page content:
 5:Lorem ipsum example query.
 ```
 
-`bookmark` is simply a shortcut for `notes bookmark`, accepts all of the same
+`bookmark` is simply a shortcut for `nb bookmark`, accepts all of the same
 subcommands and options, and behaves identically.
 
 See [`bookmark help`](#bookmark-help) for more information.
 
 ### Search
 
-Use `notes search` to search your notes, with support for regular
+Use `nb search` to search your notes, with support for regular
 expressions and tags:
 
 ```bash
 # search current notebook for 'example query'
-notes search 'example query'
+nb search 'example query'
 
 # search all notebooks for 'example query'
-notes search 'example query' --all
+nb search 'example query' --all
 
-# search notes for 'Example' OR 'Sample'
-notes search 'Example|Sample'
+# search nb for 'Example' OR 'Sample'
+nb search 'Example|Sample'
 
-# search for notes containing the hashtag '#example'
-notes search '#example'
+# search for nb containing the hashtag '#example'
+nb search '#example'
 
-# search with a regular expression for notes containing phone numbers
-notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
+# search with a regular expression for nb containing phone numbers
+nb search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
 # search bookmarks for 'example'
-notes search 'example' --type bookmark
+nb search 'example' --type bookmark
 ```
 
-`notes search` prints the id number, filename, and title of each matched
+`nb search` prints the id number, filename, and title of each matched
 file, followed by each search query match and its line number, with color
 highlighting:
 
 ```bash
-> notes search 'example'
+> nb search 'example'
 [314] example.bookmark.md 'Example Bookmark (example.com)'
 ----------------------------------------------------------
 1:# Example Bookmark (example.com)
@@ -764,36 +764,36 @@ highlighting:
 1:# Example Note
 ```
 
-`notes search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
+`nb search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
 [`ag`](https://github.com/ggreer/the_silver_searcher),
 [`ack`](http://beyondgrep.com/), and
 [`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
-performs searches using the first tool it finds. `notes search` works
+performs searches using the first tool it finds. `nb search` works
 mostly the same regardless of which tool is found and is perfectly fine using
 the environment's built-in `grep`. `rg`, `ag`, and `ack` are faster and there
 are some subtle differences in color highlighting.
 
 ### Revision History
 
-Whenever a note is added, modified, or deleted, `notes` automatically commits
+Whenever a note is added, modified, or deleted, `nb` automatically commits
 the change to git transparently in the background. You can view the history of
 the notebook or an individual note with:
 
 ```bash
 # show history for current notebook
-notes history
+nb history
 
 # show history for note number 4
-notes history 4
+nb history 4
 
 # show history for note with filename example.md
-notes history example.md
+nb history example.md
 
 # show history for note titled 'Example'
-notes history Example
+nb history Example
 ```
 
-`notes history` uses `git log` by default and prefers
+`nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
 ### Notebooks
@@ -804,14 +804,14 @@ Create a new notebook:
 
 ```bash
 # add a notebook named example-notebook
-notes notebooks add example-notebook
+nb notebooks add example-notebook
 ```
 
 Switch to a notebook:
 
 ```bash
 # switch to example-notebook
-notes use example-notebook
+nb use example-notebook
 ```
 
 If you are in one notebook and you want to perform a command in a
@@ -820,7 +820,7 @@ colon before the command name:
 
 ```bash
 # show note 5 in example-notebook
-notes example-notebook:show 5
+nb example-notebook:show 5
 ```
 
 You can similarly set the notebook name as a modifier to the id, filename, or
@@ -828,34 +828,34 @@ title:
 
 ```bash
 # edit note 12 in example-notebook
-notes edit example-notebook:12
+nb edit example-notebook:12
 ```
 
 Notes can also be moved between notebooks:
 
 ```bash
 # move note 3 from the current notebook to example-notebook
-notes move 3 example-notebook
+nb move 3 example-notebook
 ```
 
 #### Global and Local Notebooks
 
 ##### Global Notebooks
 
-By default, all `notes` notebooks are global, making them always accessible in
+By default, all `nb` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
-stored in the directory configured in [`NOTES_DIR`](#settings-list), which is
-`~/.notes` by default.
+stored in the directory configured in [`NB_DIR`](#settings-list), which is
+`~/Notebooks` by default.
 
 ##### Local Notebooks
 
-`notes` also supports creating and working with local notebooks. Local
+`nb` also supports creating and working with local notebooks. Local
 notebooks are simply notebooks that are anywhere on the system outside
-of `NOTES_DIR`. When `notes` runs within a local notebook, the local
+of `NB_DIR`. When `nb` runs within a local notebook, the local
 notebook is set as the current notebook:
 
 ```bash
-> notes ls
+> nb ls
 local · example2 · example3
 ---------------------------
 [3] Title Three
@@ -868,26 +868,26 @@ behaves just like a global notebook whenever a command is run from within it:
 
 ```bash
 # move note titled 'Todos' from the home notebook to the local notebook
-notes move home:Todos local
+nb move home:Todos local
 
 # move note 1 from the local notebook to the home notebook
-notes move 1 home
+nb move 1 home
 
 # search the local notebook and all global notebooks for <query string>
-notes search 'query string' --all
+nb search 'query string' --all
 ```
 
-Local notebooks can be created with [`notes notebooks init`](#notebooks-1):
+Local notebooks can be created with [`nb notebooks init`](#notebooks-1):
 
 ```bash
 # initialize the current directory as a notebook
-notes notebooks init
+nb notebooks init
 
 # create a new notebook at ~/example
-notes notebooks init ~/example
+nb notebooks init ~/example
 
 # clone an existing notebook to ~/example
-notes notebooks init ~/example https://github.com/example/example.git
+nb notebooks init ~/example https://github.com/example/example.git
 ```
 
 #### Archiving Notebooks
@@ -896,17 +896,17 @@ Notebooks can be archived:
 
 ```bash
 # archive the current notebook
-notes notebook archive
+nb notebook archive
 
 # archive the notebook named 'example'
-notes example:notebook archive
+nb example:notebook archive
 ```
 
 When a notebook is archived it is not included in `ls` output, synced
 automatically with `sync --all`, or included in `search --all`.
 
 ```bash
-> notes ls
+> nb ls
 example1 · example2 · example3 · [1 archived]
 ---------------------------------------------
 [3] Title Three
@@ -919,16 +919,16 @@ commands:
 
 ```bash
 # switch the current notebook to the archived notebook 'example'
-notes use example
+nb use example
 
 # run the `list` subcommand in the archived notebook 'example'
-notes example:list
+nb example:list
 ```
 
-Check a notebook's archival status with `notes notebook status`:
+Check a notebook's archival status with `nb notebook status`:
 
 ```bash
-> notes notebook status
+> nb notebook status
 example is archived.
 ```
 
@@ -936,14 +936,14 @@ Unarchiving a notebook is simple:
 
 ```bash
 # unarchive the current notebook
-notes notebook unarchive
+nb notebook unarchive
 
 # unarchive the notebook named 'example'
-notes example:notebook unarchive
+nb example:notebook unarchive
 ```
 
-For more information about working with notebooks, run `notes help notebooks`
-and `notes help notebook`.
+For more information about working with notebooks, run `nb help notebooks`
+and `nb help notebook`.
 
 ### Git Sync
 
@@ -952,14 +952,14 @@ remote URL:
 
 ```bash
 # set the current notebook's remote to a private GitHub repository
-notes remote set https://github.com/example/example.git
+nb remote set https://github.com/example/example.git
 ```
 
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
-When you use `notes` on multiple systems, you can set a notebook on both
-systems to the same remote and `notes` will keep everything in sync in the
+When you use `nb` on multiple systems, you can set a notebook on both
+systems to the same remote and `nb` will keep everything in sync in the
 background every time there's a change in that notebook.
 
 Since each notebook has its own git history, you can have some notebooks
@@ -967,65 +967,65 @@ syncing with remotes while other notebooks are only available locally on that
 system.
 
 Many services provide free private git repositories, so git syncing with
-`notes` is easy, free, and vendor-independent. You can also sync your notes
+`nb` is easy, free, and vendor-independent. You can also sync your notes
 using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
-your `notes` directory in `notes settings` and git syncing will still work
+your `nb` directory in `nb settings` and git syncing will still work
 simultaneously.
 
-When you have an existing `notes` notebook in a git repository, simply
-pass the URL to `notes notebooks add` and `notes` will clone your
+When you have an existing `nb` notebook in a git repository, simply
+pass the URL to `nb notebooks add` and `nb` will clone your
 existing notebook and start syncing changes automatically:
 
 ```bash
 # create a new notebook named Example cloned from a private GitLab repository
-notes notebooks add Example https://gitlab.com/example/example.git
+nb notebooks add Example https://gitlab.com/example/example.git
 ```
 
 Turn off syncing for a notebook by simply removing the remote:
 
 ```bash
 # remove the current remote from the current notebook
-notes remote remove
+nb remote remove
 ```
 
-You can also turn off autosync in `notes settings` and sync manually with
-`notes sync`.
+You can also turn off autosync in `nb settings` and sync manually with
+`nb sync`.
 
 ### Import / Export
 
-Files of any type can be imported into a notebook. `notes edit` and `notes
+Files of any type can be imported into a notebook. `nb edit` and `nb
 open` will open files in your system's default application for that file type.
 
 ```bash
 # import an image file
-notes import ~/Pictures/example.png
+nb import ~/Pictures/example.png
 
 # open image in your default image viewer
-notes open example.png
+nb open example.png
 
 # import a .docx file
-notes import ~/Documents/example.docx
+nb import ~/Documents/example.docx
 
 # open .docx file in Word or your system's .docx viewer
-notes open example.docx
+nb open example.docx
 ```
 
-`notes import` can also download and import files directly from the web:
+`nb import` can also download and import files directly from the web:
 
 ```bash
 # import a PDF file from the web
-notes import https://example.com/example.pdf
+nb import https://example.com/example.pdf
 # Imported 'https://example.com/example.pdf' to 'example.pdf'
 
 # open example.pdf in your system's PDF viewer
-notes open example.pdf
+nb open example.pdf
 ```
 
 Some imported file types have indicators to make them easier to identify in
 lists:
 
 ```bash
-> notes ls
+> nb ls
 home
 ----
 [5] 🌄 example-picture.png
@@ -1042,101 +1042,101 @@ By default, the output format is determined by the file extension:
 
 ```bash
 # Export a Markdown note to a .docx Microsoft Office Word document
-notes export example.md /path/to/example.docx
+nb export example.md /path/to/example.docx
 
 # Export a note titled 'Movies' to an HTML web page.
-notes export Movies /path/to/example.html
+nb export Movies /path/to/example.html
 ```
 
 ### Settings
 
-`notes settings` opens the settings prompt, which provides an easy way to
-change your `notes` settings. To print a list of available settings, see
-[`notes help settings`](#settings-1).
+`nb settings` opens the settings prompt, which provides an easy way to
+change your `nb` settings. To print a list of available settings, see
+[`nb help settings`](#settings-1).
 
 ```bash
-notes settings
+nb settings
 ```
 
 To update a setting in the prompt, enter the setting name or number,
-then enter the new value, and `notes` will add the setting to your
-`~/.notesrc` configuration file.
+then enter the new value, and `nb` will add the setting to your
+`~/.nbrc` configuration file.
 
 #### Example: Highlight Color
 
-`notes` has a minimal text interface and uses color (blue, by default) to
+`nb` has a minimal text interface and uses color (blue, by default) to
 highlight certain elements like ids, the current notebook name, and the shell
 prompt.
 
-You can update a setting without the prompt using `notes settings set`:
+You can update a setting without the prompt using `nb settings set`:
 
 ```bash
 # set highlight color with name
-> notes settings set notes_highlight_color 105
-NOTES_HIGHLIGHT_COLOR set to '105'
+> nb settings set nb_highlight_color 105
+NB_HIGHLIGHT_COLOR set to '105'
 
 # set highlight color with setting number (6)
-> notes setting set 6 105
-NOTES_HIGHLIGHT_COLOR set to '105'
+> nb setting set 6 105
+NB_HIGHLIGHT_COLOR set to '105'
 ```
 
-`notes_highlight_color` expects an xterm color number between 0 and 255,
+`nb_highlight_color` expects an xterm color number between 0 and 255,
 and can support higher values for terminals that support many colors.
 Print a table of common colors and numbers with:
 
 ```bash
-notes settings colors
+nb settings colors
 ```
 
 Print the value of a setting:
 
 ```bash
-> notes settings get notes_highlight_color
+> nb settings get nb_highlight_color
 105
 
-> notes settings get 6
+> nb settings get 6
 105
 ```
 
 Unset a setting and revert to default:
 
 ```bash
-> notes settings unset notes_highlight_color
-NOTES_HIGHLIGHT_COLOR restored to the default: '4'
+> nb settings unset nb_highlight_color
+NB_HIGHLIGHT_COLOR restored to the default: '4'
 
-> notes settings get notes_highlight_color
+> nb settings get nb_highlight_color
 4
 ```
 
 ### Interactive Shell
 
-`notes` has an interactive shell that can be started with `notes shell`,
-`notes -i`, or `notes --interactive`:
+`nb` has an interactive shell that can be started with `nb shell`,
+`nb -i`, or `nb --interactive`:
 
 ```bash
-$ notes -i
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \
-/_/  |_| |_|\___/ \__\___||___/
--------------------------------
-notes shell started. Enter ls to list notes and notebooks.
+$ nb -i
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
+------------------
+nb shell started. Enter ls to list notes and notebooks.
 Enter help for a list of subcommands. Enter exit to exit.
-notes> ls
+nb> ls
 home
 ----
 [3] Example
 [2] Sample
 [1] Demo
 
-notes> edit 3 --content "New content."
+nb> edit 3 --content "New content."
 Updated [3] Example
 
-notes> bookmark https://example.com
+nb> bookmark https://example.com
 Added [4] example.bookmark.md 'Example Domain (example.com)'
 
-notes> ls
+nb> ls
 home
 ----
 [4] 🔖 Example Domain (example.com)
@@ -1144,10 +1144,10 @@ home
 [2] Sample
 [1] Demo
 
-notes> bookmark url 4
+nb> bookmark url 4
 https://example.com
 
-notes> search 'example'
+nb> search 'example'
 [4] example.bookmark.md 'Example (example.com)'
 -----------------------------------------------
 1:# Example (example.com)
@@ -1158,12 +1158,12 @@ notes> search 'example'
 ------------------------
 1:# Example
 
-notes> exit
+nb> exit
 $
 ```
 
-The `notes` shell recognizes all `notes` subcommands and options,
-providing a streamlined, distraction-free approach for working with `notes`.
+The `nb` shell recognizes all `nb` subcommands and options,
+providing a streamlined, distraction-free approach for working with `nb`.
 
 ### Shell Theme Support
 
@@ -1172,62 +1172,43 @@ providing a streamlined, distraction-free approach for working with `notes`.
 
 ### Shortcut Aliases
 
-Several core `notes` subcommands have single-character aliases to make
+Several core `nb` subcommands have single-character aliases to make
 them faster to work with:
 
 ```bash
 # `a` (add): add a new note named 'example.md'
-notes a example.md
+nb a example.md
 
 # `b` (bookmark): add a new bookmark for https://example.com
-notes b https://example.com
+nb b https://example.com
 
 # `o` (open): open bookmark 12 in your web browser
-notes o 12
+nb o 12
 
 # `p` (peek): open bookmark 6 in your terminal browser
-notes p 6
+nb p 6
 
 # `e` (edit): edit note 5
-notes e 5
+nb e 5
 
 # `d` (delete): delete note 19
-notes d 19
+nb d 19
 
 # `s` (show): show note 27
-notes s 27
+nb s 27
 
 # `q` (search): search notes for 'example query'
-notes q 'example query'
+nb q 'example query'
 
 # `h` (help): display the help information for the `add` subcommand
-notes h add
+nb h add
 
 # `u` (use): switch to example-notebook
-notes u example-notebook
+nb u example-notebook
 ```
 
-If `n` is available on your system, you can add `alias n="notes"` to your
+If `b` is available on your system, you can add `alias b="bookmark"` to your
 `~/.bashrc` or equivalent, which will enable you to:
-
-```bash
-# add a new note
-n a
-
-# add a new bookmark for example.com
-n b https://example.com
-
-# open bookmark 12 in your web browser
-n o 12
-
-# edit note 5
-n e 5
-
-# search notes for the hashtag '#example'
-n q '#example'
-```
-
-Similarly, you can `alias b="bookmark"` and do:
 
 ```bash
 # add a new bookmark
@@ -1236,16 +1217,19 @@ b http://example.com
 # open bookmark 12
 b o 12
 
+# edit bookmark 5
+b e 5
+
 # search bookmarks
 b q '#example'
 ```
 
-For more commands and options, run `notes help` or `notes help <subcommand>`
+For more commands and options, run `nb help` or `nb help <subcommand>`
 
 ### Help
 
 <p align="center">
-  <a href="#notes-help">notes</a> •
+  <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a>
   </br>---</br>
   <a href="#add">add</a> •
@@ -1281,87 +1265,89 @@ For more commands and options, run `notes help` or `notes help <subcommand>`
   <a href="#version">version</a>
 </p>
 
-#### `notes help`
+#### `nb help`
 
 ```text
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \
-/_/  |_| |_|\___/ \__\___||___/
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
+
+`nb` · `notes` && `bookmark`
 
 Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
 Usage:
-  notes [<id> | <filename> | <path> | <title>] [<list options>...]
-  notes add [<filename> | <content>] [-c <content> | --content <content>]
+  nb [<id> | <filename> | <path> | <title>] [<list options>...]
+  nb add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
-  notes bookmark [<list options>...]
-  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+  nb bookmark [<list options>...]
+  nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--related <url>]...
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
-  notes bookmark [list [<list options>...]]
-  notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
-  notes bookmark search <query>
-  notes bookmarks [<list options>...]
-  notes completions (check | install [-d | --download] | uninstall)
-  notes count
-  notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
-  notes edit (<id> | <filename> | <path> | <title>)
+  nb bookmark [list [<list options>...]]
+  nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  nb bookmark search <query>
+  nb bookmarks [<list options>...]
+  nb completions (check | install [-d | --download] | uninstall)
+  nb count
+  nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  nb edit (<id> | <filename> | <path> | <title>)
              [-e <editor> | --editor <editor>]
-  notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
+  nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
-  notes git <git options>...
-  notes help [<subcommand> | --readme]
-  notes history [<id> | <filename> | <path> | <title>]
-  notes import [copy | download | move] (<path> | <url>) [--convert]
-  notes init [<remote-url>]
-  notes list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+  nb git <git options>...
+  nb help [<subcommand> | --readme]
+  nb history [<id> | <filename> | <path> | <title>]
+  nb import [copy | download | move] (<path> | <url>) [--convert]
+  nb init [<remote-url>]
+  nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
              [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
              [-t <type> | --type <type> | --<type>]
              [<id> | <filename> | <path> | <title> | <query>]
-  notes ls [<list options>...]
-  notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  notes notebook [archive | open | peek | status | unarchive]
-  notes notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb ls [<list options>...]
+  nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+  nb notebook [archive | open | peek | status | unarchive]
+  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                   [--no-color] [--paths] [--unarchived]
-  notes notebooks add <name> [<remote-url>]
-  notes notebooks init [<path> [<remote-url>]]
-  notes notebooks [current [--path] | use <name>]
-  notes notebooks delete <name> [-f | --force]
-  notes notebooks rename <old-name> <new-name>
-  notes open (<id> | <filename> | <path> | <title>)
-  notes peek (<id> | <filename> | <path> | <title>)
-  notes remote [remove | set <url> [-f | --force]]
-  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
+  nb notebooks add <name> [<remote-url>]
+  nb notebooks init [<path> [<remote-url>]]
+  nb notebooks [current [--path] | use <name>]
+  nb notebooks delete <name> [-f | --force]
+  nb notebooks rename <old-name> <new-name>
+  nb open (<id> | <filename> | <path> | <title>)
+  nb peek (<id> | <filename> | <path> | <title>)
+  nb remote [remove | set <url> [-f | --force]]
+  nb rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
                --to-bookmark | --to-note) [-f | --force]
-  notes search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+  nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                        [-l | --list] [--path]
-  notes settings [colors [<number>] | edit | list]
-  notes settings (get | unset) <setting>
-  notes settings set <setting> <value>
-  notes shell [<subcommand> [<options>...] | --clear-history]
-  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
+  nb settings [colors [<number>] | edit | list]
+  nb settings (get | unset) <setting>
+  nb settings set <setting> <value>
+  nb shell [<subcommand> [<options>...] | --clear-history]
+  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
-  notes sync [-a | --all]
-  notes use <notebook>
-  notes -i | --interactive [<subcommand> [<options>...]]
-  notes -h | --help | help [<subcommand> | --readme]
-  notes --version | version
+  nb sync [-a | --all]
+  nb use <notebook>
+  nb -i | --interactive [<subcommand> [<options>...]]
+  nb -h | --help | help [<subcommand> | --readme]
+  nb --version | version
 
 Help:
-  notes help <subcommand>  View help information for <subcommand>
-  notes help --readme      Download and view the `notes` README file.
+  nb help <subcommand>  View help information for <subcommand>
+  nb help --readme      Download and view the `nb` README file.
 
 More Information:
-  https://github.com/xwmx/notes
+  https://github.com/xwmx/nb
 
 Subcommands:
-  (default)    List notes and notebooks. This is an alias for `notes ls`.
+  (default)    List notes and notebooks. This is an alias for `nb ls`.
   add          Add a new note.
   bookmark     Add, open, list, and search bookmarks.
   bookmarks    List bookmarks.
@@ -1386,7 +1372,7 @@ Subcommands:
   rename       Rename a note.
   search       Search notes.
   settings     Edit configuration settings.
-  shell        Start the `notes` interactive shell.
+  shell        Start the `nb` interactive shell.
   show         Show a note.
   status       Run `git status` in the current notebook.
   sync         Sync local notebook with the remote repository.
@@ -1394,7 +1380,7 @@ Subcommands:
   version      Display version information.
 
 Program Options:
-  -i, --interactive   Start the `notes` interactive shell.
+  -i, --interactive   Start the `nb` interactive shell.
   -h, --help          Display this help information.
   --version           Display version information.
 ```
@@ -1434,7 +1420,7 @@ Options:
   --skip-content            Omit page content from the note.
   --tags <tag1>,<tag2>...   A comma-separated list of tags.
   --title <title>           The bookmark title. When not specified,
-                            `notes` will use the html <title> tag.
+                            `nb` will use the html <title> tag.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -1472,8 +1458,8 @@ Examples:
   bookmark open 5
 
 ------------------------------------------------
-Part of `notes` (https://github.com/xwmx/notes).
-For more information, see: `notes help`.
+Part of `nb` (https://github.com/xwmx/nb).
+For more information, see: `nb help`.
 ```
 
 ### Subcommands
@@ -1482,7 +1468,7 @@ For more information, see: `notes help`.
 
 ```text
 Usage:
-  notes add [<filename> | <content>] [-c <content> | --content <content>]
+  nb add [<filename> | <content>] [-c <content> | --content <content>]
             [-e | --encrypt] [-f <filename> | --filename <filename>]
             [-t <title> | --title <title>] [--type <type>]
 
@@ -1500,27 +1486,27 @@ Description:
   Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`. If a non-option argument is passed, `notes` will treat it
+  `$EDITOR`. If a non-option argument is passed, `nb` will treat it
   as a <filename≥ if a file extension is found. If no file extension is
-  found, `notes` will treat the string as <content> and will create a
-  new note without opening the editor. `notes add` can also create a new
+  found, `nb` will treat the string as <content> and will create a
+  new note without opening the editor. `nb add` can also create a new
   note with piped content.
 
-  `notes` creates Markdown files by default. To create a note with a
+  `nb` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the `--type`
-  option. To change the default file type, use `notes settings`.
+  option. To change the default file type, use `nb settings`.
 
-  When the `-e` / `--encrypt` option is used, `notes` will encrypt the
+  When the `-e` / `--encrypt` option is used, `nb` will encrypt the
   note with AES-256 using OpenSSL by default, or GPG, if configured in
-  `notes settings`.
+  `nb settings`.
 
 Examples:
-  notes add
-  notes add example.md
-  notes add "Note content."
-  notes add example.md --title "Example Title" --content "Example content."
-  echo "Note content." | notes add
-  notes add -t "Secret Document" --encrypt
+  nb add
+  nb add example.md
+  nb add "Note content."
+  nb add example.md --title "Example Title" --content "Example content."
+  echo "Note content." | nb add
+  nb add -t "Secret Document" --encrypt
 
 Shortcut Alias: `a`
 ```
@@ -1529,14 +1515,14 @@ Shortcut Alias: `a`
 
 ```text
 Usage:
-  notes bookmark [<list options>...]
-  notes bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+  nb bookmark [<list options>...]
+  nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
                  [-e | --encrypt] [--raw-content] [--related <url>]...
                  [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
-  notes bookmark list [<list options>...]
-  notes bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  notes bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
-  notes bookmark search <query>
+  nb bookmark list [<list options>...]
+  nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  nb bookmark search <query>
 
 Options:
   -c, --comment <comment>   A comment or description for this bookmark.
@@ -1549,7 +1535,7 @@ Options:
   --skip-content            Omit page content from the note.
   --tags <tag1>,<tag2>...   A comma-separated list of tags.
   --title <title>           The bookmark title. When not specified,
-                            `notes` will use the html <title> tag.
+                            `nb` will use the html <title> tag.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -1579,12 +1565,12 @@ Description:
     <https://www.example.com>
 
 Examples:
-  notes bookmark https://example.com
-  notes bookmark https://example.com --tags example,sample,demo
-  notes bookmark https://example.com/about -c 'Example comment.'
-  notes bookmark list
-  notes bookmark search 'example query'
-  notes bookmark open 5
+  nb bookmark https://example.com
+  nb bookmark https://example.com --tags example,sample,demo
+  nb bookmark https://example.com/about -c 'Example comment.'
+  nb bookmark list
+  nb bookmark search 'example query'
+  nb bookmark open 5
 
 Shortcut Alias: `b`
 ```
@@ -1593,11 +1579,11 @@ Shortcut Alias: `b`
 
 ```text
 Usage:
-  notes bookmarks [<list options>...]
+  nb bookmarks [<list options>...]
 
 Description:
-  List bookmarks with titles. All `notes list` options are supported.
-  For more information, see `notes help list`.
+  List bookmarks with titles. All `nb list` options are supported.
+  For more information, see `nb help list`.
 
 Shortcut Alias: `bs`
 ```
@@ -1606,21 +1592,21 @@ Shortcut Alias: `bs`
 
 ```text
 Usage:
-  notes completions (check | install [-d | --download] | uninstall)
+  nb completions (check | install [-d | --download] | uninstall)
 
 Options:
   -d, --download  Download the completion scripts and install.
 
 Description:
   Manage completion scripts. For more information, visit:
-  https://github.com/xwmx/notes/blob/master/etc/README.md
+  https://github.com/xwmx/nb/blob/master/etc/README.md
 ```
 
 #### `count`
 
 ```text
 Usage:
-  notes count
+  nb count
 
 Description:
   Print the number of items in the current notebook.
@@ -1630,7 +1616,7 @@ Description:
 
 ```text
 Usage:
-  notes delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
 
 Options:
   -f, --force   Skip the confirmation prompt.
@@ -1639,9 +1625,9 @@ Description:
   Delete a note.
 
 Examples:
-  notes delete 3
-  notes delete example.md
-  notes delete 'A Document Title'
+  nb delete 3
+  nb delete example.md
+  nb delete 'A Document Title'
 
 Shortcut Alias: `d`
 ```
@@ -1650,7 +1636,7 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
-  notes edit (<id> | <filename> | <path> | <title>)
+  nb edit (<id> | <filename> | <path> | <title>)
              [-e <editor> | --editor <editor>]
 
 Options:
@@ -1659,16 +1645,16 @@ Options:
 
 Description:
   Open the specified note in `$EDITOR` or <editor> if specified. Any data
-  piped to `notes edit` will be appended to the file.
+  piped to `nb edit` will be appended to the file.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
 
 Examples:
-  notes edit 3
-  notes edit example.md
-  notes edit 'A Document Title'
-  echo "Content to append." | notes edit 1
+  nb edit 3
+  nb edit example.md
+  nb edit 'A Document Title'
+  echo "Content to append." | nb edit 1
 
 Shortcut Alias: `e`
 ```
@@ -1677,7 +1663,7 @@ Shortcut Alias: `e`
 
 ```text
 Usage:
-  notes env
+  nb env
 
 Description:
   Print program environment and configuration information.
@@ -1687,9 +1673,9 @@ Description:
 
 ```text
 Usage:
-  notes export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
+  nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
                [<pandoc options>...]
-  notes export pandoc (<id> | <filename> | <path> | <title>)
+  nb export pandoc (<id> | <filename> | <path> | <title>)
                [<pandoc options>...]
 
 Options:
@@ -1713,20 +1699,20 @@ Description:
 
 Examples:
   # Export an Emacs Org mode note
-  notes export example.org /path/to/example.org
+  nb export example.org /path/to/example.org
 
   # Export a Markdown note to HTML and print to standard output
-  notes export pandoc example.md --from=markdown_strict --to=html
+  nb export pandoc example.md --from=markdown_strict --to=html
 
   # Export a Markdown note to a .docx Microsoft Office Word document
-  notes export example.md /path/to/example.docx
+  nb export example.md /path/to/example.docx
 ```
 
 #### `git`
 
 ```text
 Usage:
-  notes git <git options>...
+  nb git <git options>...
 
 Description:
   Alias for `git` within the current notebook.
@@ -1736,10 +1722,10 @@ Description:
 
 ```text
 Usage:
-  notes help [<subcommand> | --readme]
+  nb help [<subcommand> | --readme]
 
 Options:
-  --readme   Download and view the `notes` README file.
+  --readme   Download and view the `nb` README file.
 
 Description:
   Print the program help information. When a subcommand name is passed, print
@@ -1752,7 +1738,7 @@ Shortcut Alias: `h`
 
 ```text
 Usage:
-  notes history [<id> | <filename> | <path> | <title>]
+  nb history [<id> | <filename> | <path> | <title>]
 
 Description:
   Display notebook history using `tig` [1] (if available) or `git log`.
@@ -1761,18 +1747,18 @@ Description:
     1. https://github.com/jonas/tig
 
 Examples:
-  notes history
-  notes history example.md
+  nb history
+  nb history example.md
 ```
 
 #### `import`
 
 ```text
 Usage:
-  notes import (<path> | <url>)
-  notes import copy <path>
-  notes import download <url> [--convert]
-  notes import move <path>
+  nb import (<path> | <url>)
+  nb import copy <path>
+  nb import download <url> [--convert]
+  nb import move <path>
 
 Options:
   --convert  Convert HTML content to Markdown.
@@ -1787,31 +1773,31 @@ Description:
   Copy, move, or download a file into the current notebook.
 
 Examples:
-  notes import ~/Pictures/example.png
-  notes import ~/Documents/example.docx
-  notes import https://example.com/example.pdf
+  nb import ~/Pictures/example.png
+  nb import ~/Documents/example.docx
+  nb import https://example.com/example.pdf
 ```
 
 #### `init`
 
 ```text
 Usage:
-  notes init [<remote-url>]
+  nb init [<remote-url>]
 
 Description:
-  Initialize the local data directory and generate a ~/.notesrc configuration
+  Initialize the local data directory and generate a ~/.nbrc configuration
   file if it doesn't exist.
 
 Examples:
-  notes init
-  notes init https://github.com/example/example.git
+  nb init
+  nb init https://github.com/example/example.git
 ```
 
 #### `list`
 
 ```text
 Usage:
-  notes list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+  nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
              [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
              [-t <type> | --type <type> | --<type>]
              [<id> | <filename> | <path> | <title> | <query>]
@@ -1848,20 +1834,20 @@ Indicators:
   📂  Folder
 
 Examples:
-  notes list
-  notes list example.md -e 10
-  notes list --excerpt --no-id
-  notes list --filenames --reverse
-  notes list '^Example.*'
-  notes list --10
-  notes list --type document
+  nb list
+  nb list example.md -e 10
+  nb list --excerpt --no-id
+  nb list --filenames --reverse
+  nb list '^Example.*'
+  nb list --10
+  nb list --type document
 ```
 
 #### `ls`
 
 ```text
 Usage:
-  notes ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
+  nb ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
            [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
            [-t <type> | --type <type> | --<type>]
            [<id> | <filename> | <path> | <title> | <query>]
@@ -1882,8 +1868,8 @@ Options:
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
-  when available. `notes ls` is a combination of `notes notebooks` and
-  `notes list` in one view.
+  when available. `nb ls` is a combination of `nb notebooks` and
+  `nb list` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
   matching note will be displayed. When no match is found, titles and
@@ -1905,7 +1891,7 @@ Description:
     q                 Quit
 
   Options are passed through to `list`. For more information, see
-  `notes help list`.
+  `nb help list`.
 
 Indicators:
   🔖  Bookmark
@@ -1917,20 +1903,20 @@ Indicators:
   📂  Folder
 
 Examples:
-  notes ls
-  notes ls example.md -e 10
-  notes ls --excerpt --no-id
-  notes ls --reverse
-  notes ls '^Example.*'
-  notes ls --10
-  notes ls --type document
+  nb ls
+  nb ls example.md -e 10
+  nb ls --excerpt --no-id
+  nb ls --reverse
+  nb ls '^Example.*'
+  nb ls --10
+  nb ls --type document
 ```
 
 #### `move`
 
 ```text
 Usage:
-  notes move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+  nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
 
 Options:
   -f, --force   Skip the confirmation prompt.
@@ -1939,8 +1925,8 @@ Description:
   Move the specified note to <notebook>.
 
 Examples:
-  notes move 1 example-notebook
-  notes move example.md example-notebook
+  nb move 1 example-notebook
+  nb move example.md example-notebook
 
 Shortcut Alias: `mv`
 ```
@@ -1949,7 +1935,7 @@ Shortcut Alias: `mv`
 
 ```text
 Usage:
-  notes notebook [archive | open | peek | status | unarchive]
+  nb notebook [archive | open | peek | status | unarchive]
 
 Subcommands:
   archive     Set the notebook to 'archived' status.
@@ -1978,14 +1964,14 @@ Shortcut Alias: `n`
 
 ```text
 Usage:
-  notes notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                   [--no-color] [--paths] [--unarchived]
-  notes notebooks add <name> [<remote-url>]
-  notes notebooks init [<path> [<remote-url>]]
-  notes notebooks current [--path]
-  notes notebooks delete <name> [-f | --force]
-  notes notebooks rename <old-name> <new-name>
-  notes notebooks use <name>
+  nb notebooks add <name> [<remote-url>]
+  nb notebooks init [<path> [<remote-url>]]
+  nb notebooks current [--path]
+  nb notebooks delete <name> [-f | --force]
+  nb notebooks rename <old-name> <new-name>
+  nb notebooks use <name>
 
 Options:
   --archived    Only list archived notebooks.
@@ -2015,9 +2001,9 @@ Description:
   Manage notebooks.
 
 Examples:
-  notes notebooks --names
-  notes notebooks add Example1
-  notes notebooks add Example2 https://github.com/example/example.git
+  nb notebooks --names
+  nb notebooks add Example1
+  nb notebooks add Example2 https://github.com/example/example.git
 
 Shortcut Alias: `ns`
 ```
@@ -2026,7 +2012,7 @@ Shortcut Alias: `ns`
 
 ```text
 Usage:
-  notes open (<id> | <filename> | <path> | <title>)
+  nb open (<id> | <filename> | <path> | <title>)
 
 Description:
   Open the note file. When the note is a bookmark, open the bookmarked page in
@@ -2034,8 +2020,8 @@ Description:
   other file type, `open` is the equivalent of `edit`.
 
 See also:
-  notes help bookmark
-  notes help edit
+  nb help bookmark
+  nb help edit
 
 Shortcut Alias: `o`
 ```
@@ -2044,7 +2030,7 @@ Shortcut Alias: `o`
 
 ```text
 Usage:
-  notes peek (<id> | <filename> | <path> | <title>)
+  nb peek (<id> | <filename> | <path> | <title>)
 
 Description:
   When the note is a bookmark, view the bookmarked page in your terminal web
@@ -2052,8 +2038,8 @@ Description:
   is the equivalent of `show`.
 
 See also:
-  notes help bookmark
-  notes help show
+  nb help bookmark
+  nb help show
 
 Alias: `preview`
 Shortcut Alias: `p`
@@ -2063,9 +2049,9 @@ Shortcut Alias: `p`
 
 ```text
 Usage:
-  notes remote
-  notes remote remove
-  notes remote set <url> [-f | --force]
+  nb remote
+  nb remote remove
+  nb remote set <url> [-f | --force]
 
 Subcommands:
   (default)     Print the remote URL for the notebook.
@@ -2079,15 +2065,15 @@ Description:
   Get, set, and remove the remote repository URL for the current notebook.
 
 Examples:
-  notes remote set https://github.com/example/example.git
-  notes remove remove
+  nb remote set https://github.com/example/example.git
+  nb remove remove
 ```
 
 #### `rename`
 
 ```text
 Usage:
-  notes rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
+  nb rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
                --to-bookmark | --to-note) [-f | --force]
 
 Options:
@@ -2105,23 +2091,23 @@ Description:
 
 Examples:
   # Rename 'example.md' to 'example.org'
-  notes rename example.md example.org
+  nb rename example.md example.org
 
   # Rename note 3 (example.md) to "New Name.md"
-  notes rename 3 "New Name"
+  nb rename 3 "New Name"
 
   # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
-  notes rename example.bookmark.md "New Name"
+  nb rename example.bookmark.md "New Name"
 
   # Rename note 3 ('example.md') to bookmark named 'example.bookmark.md'
-  notes rename 3 --to-bookmark
+  nb rename 3 --to-bookmark
 ```
 
 #### `search`
 
 ```text
 Usage:
-  notes search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+  nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                        [-l | --list] [--path]
 
 Options:
@@ -2142,19 +2128,19 @@ Description:
 
 Examples:
   # search current notebook for 'example query'
-  notes search 'example query'
+  nb search 'example query'
 
   # search all notebooks for 'example query'
-  notes search 'example query' --all
+  nb search 'example query' --all
 
   # search notes for 'Example' OR 'Sample'
-  notes search 'Example|Sample'
+  nb search 'Example|Sample'
 
   # search for bookmarks containing the hashtag '#example'
-  notes search '#example' --type bookmark
+  nb search '#example' --type bookmark
 
   # search with a regular expression for notes containing phone numbers
-  notes search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
+  nb search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
 Shortcut Alias: `q`
 ```
@@ -2163,35 +2149,35 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  notes settings
-  notes settings colors [<number>]
-  notes settings edit
-  notes settings get   (<number> | <name>)
-  notes settings list
-  notes settings set   (<number> | <name>) <value>
-  notes settings unset (<number> | <name>)
+  nb settings
+  nb settings colors [<number>]
+  nb settings edit
+  nb settings get   (<number> | <name>)
+  nb settings list
+  nb settings set   (<number> | <name>) <value>
+  nb settings unset (<number> | <name>)
 
 Subcommands:
   (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
-  edit       Open the ~/.notesrc configuration file in `$EDITOR`.
+  edit       Open the ~/.nbrc configuration file in `$EDITOR`.
   get        Print the value of a setting.
   list       List information about available settings.
   set        Assign <value> to a setting.
   unset      Unset a setting, returning it to the default value.
 
 Description:
-  Configure `notes`. Use `notes settings set` to customize a setting and
-  `notes settings unset` to restore the default for a setting.
+  Configure `nb`. Use `nb settings set` to customize a setting and
+  `nb settings unset` to restore the default for a setting.
 
 Examples:
-  notes settings
-  notes settings set 3 'org'
-  notes settings set notes_highlight_color 105
-  notes settings unset notes_highlight_color
-  notes settings colors
-  notes settings colors 105
+  nb settings
+  nb settings set 3 'org'
+  nb settings set nb_highlight_color 105
+  nb settings unset nb_highlight_color
+  nb settings colors
+  nb settings colors 105
 ```
 
 ##### `settings list`
@@ -2199,42 +2185,42 @@ Examples:
 ```text
 [1] editor
     ------
-    The command line text editor to use with `notes`.
+    The command line text editor to use with `nb`.
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
 
-[2] notes_auto_sync
+[2] nb_auto_sync
     ---------------
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
       • Default Value: '1'
 
-[3] notes_default_extension
+[3] nb_default_extension
     -----------------------
-    The default extension to use for notes files. Change to 'org' for Emacs
+    The default extension to use for `nb` files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
       • Default Value: 'md'
 
-[4] notes_dir
+[4] nb_dir
     ---------
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    `notes settings set NOTES_DIR ~/Dropbox/Notes`
-      • Default Value: '~/.notes'
+    `nb settings set NB_DIR ~/Dropbox/Notes`
+      • Default Value: '~/Notebooks'
 
-[5] notes_encryption_tool
+[5] nb_encryption_tool
     ---------------------
     The tool used for encrypting notes.
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
 
-[6] notes_highlight_color
+[6] nb_highlight_color
     ---------------------
     Set highlighting color. Often this can be set to an xterm color number
     between 0 and 255. Some terminals support many more colors. To view a
-    table of 256 common colors and numbers, run: `notes settings colors`
-    To view a color for a number, run: `notes settings colors <number>`
+    table of 256 common colors and numbers, run: `nb settings colors`
+    To view a color for a number, run: `nb settings colors <number>`
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.
 ```
@@ -2243,31 +2229,31 @@ Examples:
 
 ```text
 Usage:
-  notes shell [<subcommand> [<options>...] | --clear-history]
+  nb shell [<subcommand> [<options>...] | --clear-history]
 
 Optons:
-  --clear-history  Clear the `notes` shell history.
+  --clear-history  Clear the `nb` shell history.
 
 Description:
-  Start the `notes` interactive shell. Type 'exit' to exit.
+  Start the `nb` interactive shell. Type 'exit' to exit.
 
-  `notes shell` recognizes all `notes` subcommands and options, providing
-  a streamlined, distraction-free approach for working with `notes`.
+  `nb shell` recognizes all `nb` subcommands and options, providing
+  a streamlined, distraction-free approach for working with `nb`.
 
   When <subcommand> is present, the command will run as the shell is opened.
 
 Example:
-  $ notes shell
-  notes> ls 3
+  $ nb shell
+  nb> ls 3
   [3] Example
 
-  notes> edit 3 --content "New content."
+  nb> edit 3 --content "New content."
   Updated [3] Example
 
-  notes> notebook
+  nb> notebook
   home
 
-  notes> exit
+  nb> exit
   $
 ```
 
@@ -2275,7 +2261,7 @@ Example:
 
 ```text
 Usage:
-  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
+  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
              [--dump [--no-color]]
 
 Options:
@@ -2316,9 +2302,9 @@ Description:
     4. http://pygments.org/
 
 Examples:
-  notes show 1
-  notes show example.md --render
-  notes show 'A Document Title' --dump --no-color
+  nb show 1
+  nb show example.md --render
+  nb show 'A Document Title' --dump --no-color
 
 Shortcut Alias: `s`
 ```
@@ -2327,7 +2313,7 @@ Shortcut Alias: `s`
 
 ```text
 Usage:
-  notes status
+  nb status
 
 Description:
   Run `git status` the current notebook.
@@ -2337,7 +2323,7 @@ Description:
 
 ```text
 Usage:
-  notes sync [-a | --all]
+  nb sync [-a | --all]
 
 Options:
   -a, --all   Sync all active notebooks.
@@ -2350,10 +2336,10 @@ Description:
 
 ```text
 Usage:
-  notes use <notebook>
+  nb use <notebook>
 
 Description:
-  Switch to the specified notebook. Shortcut for `notes notebooks use`.
+  Switch to the specified notebook. Shortcut for `nb notebooks use`.
 
 Shortcut Alias: `u`
 ```
@@ -2362,7 +2348,7 @@ Shortcut Alias: `u`
 
 ```text
 Usage:
-  notes version
+  nb version
 
 Description:
   Display version information.
@@ -2380,7 +2366,7 @@ root.
 </p>
 
 <p align="center">
-  <a href="https://github.com/xwmx/notes">github.com/xwmx/notes</a>
+  <a href="https://github.com/xwmx/nb">github.com/xwmx/nb</a>
 </p>
 
 <p align="center">

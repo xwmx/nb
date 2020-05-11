@@ -3,9 +3,9 @@
 load test_helper
 
 _setup_move() {
-  run "${_NOTES}" init
-  run "${_NOTES}" add
-  run "${_NOTES}" notebooks add "destination"
+  run "${_NB}" init
+  run "${_NB}" add
+  run "${_NB}" notebooks add "destination"
 }
 
 # no argument #################################################################
@@ -16,7 +16,7 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move --force
+  run "${_NB}" move --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -32,26 +32,26 @@ _setup_move() {
   do
     sleep 1
   done
-  ! git log | grep '\[NOTES\] Delete'
+  ! git log | grep '\[nb\] Delete'
 
   # prints help
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ move ]]
+  [[ "${lines[1]}" =~ nb\ move ]]
 }
 
 # <selector> ##################################################################
 
 @test "\`move <selector> <notebook>\` with empty repo exits with 1 and prints help." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
-  run "${_NOTES}" move 0 "destination"
+  run "${_NB}" move 0 "destination"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ move ]]
+  [[ "${lines[1]}" =~ nb\ move ]]
 
 }
 
@@ -61,12 +61,12 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "invalid" "destination" --force
+  run "${_NB}" move "invalid" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ move ]]
+  [[ "${lines[1]}" =~ nb\ move ]]
 }
 
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
@@ -75,12 +75,12 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move 0 "invalid" --force
+  run "${_NB}" move 0 "invalid" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ move ]]
+  [[ "${lines[1]}" =~ nb\ move ]]
 }
 
 @test "\`move <selector> <notebook> (no force)\` returns 0 and moves note." {
@@ -91,7 +91,7 @@ _setup_move() {
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" move "${_filename}" "destination"
+  run "${_NB}" move "${_filename}" "destination"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -102,18 +102,18 @@ _setup_move() {
 
 @test "\`move <scope>:<selector> <notebook>\` with <filename> argument moves note." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" notebooks add "one"
-    run "${_NOTES}" use "one"
-    run "${_NOTES}" add
-    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" use "one"
+    run "${_NB}" add
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
-    run "${_NOTES}" use "home"
+    run "${_NB}" use "home"
   }
   [[ -n "${_filename}" ]]
-  [[ -e "${NOTES_DIR}/one/${_filename}" ]]
+  [[ -e "${NB_DIR}/one/${_filename}" ]]
 
-  run "${_NOTES}" move one:"${_filename}" "home" --force
+  run "${_NB}" move one:"${_filename}" "home" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:[A-Za-z0-9]+.md ]]
@@ -127,7 +127,7 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "${_filename}" "destination" --force
+  run "${_NB}" move "${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -136,7 +136,7 @@ _setup_move() {
 
   # moves note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
+  [[ -e "${NB_DIR}/destination/${_filename}" ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -144,7 +144,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -158,7 +158,7 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move 1 "destination" --force
+  run "${_NB}" move 1 "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -167,7 +167,7 @@ _setup_move() {
 
   # moves note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
+  [[ -e "${NB_DIR}/destination/${_filename}" ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -175,7 +175,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -189,7 +189,7 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "${_NOTEBOOK_PATH}/${_filename}" "destination" --force
+  run "${_NB}" move "${_NOTEBOOK_PATH}/${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -198,7 +198,7 @@ _setup_move() {
 
   # moves note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
+  [[ -e "${NB_DIR}/destination/${_filename}" ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -206,7 +206,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -221,7 +221,7 @@ _setup_move() {
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" move "${_title}" "destination" --force
+  run "${_NB}" move "${_title}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -230,7 +230,7 @@ _setup_move() {
 
   # moves note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
+  [[ -e "${NB_DIR}/destination/${_filename}" ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -238,7 +238,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
@@ -248,13 +248,13 @@ _setup_move() {
 
 @test "\`move\` with <folder> argument successfully moves note." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" notebooks add "destination"
-    run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    run "${_NB}" init
+    run "${_NB}" notebooks add "destination"
+    run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
     IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "${_filename}" "destination" --force
+  run "${_NB}" move "${_filename}" "destination" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -263,7 +263,7 @@ _setup_move() {
 
   # moves note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NOTES_DIR}/destination/${_filename}" ]]
+  [[ -e "${NB_DIR}/destination/${_filename}" ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -271,7 +271,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:Example\ Folder ]]
@@ -284,12 +284,12 @@ _setup_move() {
     _setup_move
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
-  run "${_NOTES}" move "home:${_filename}" local --force
+  run "${_NB}" move "home:${_filename}" local --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -306,7 +306,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[local:[A-Za-z0-9]*\]\ local:[A-Za-z0-9]+.md ]]
@@ -315,14 +315,14 @@ _setup_move() {
 @test "\`move\` from local with <filename> argument successfully moves note." {
   {
     _setup_move
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
-    run "${_NOTES}" add "local-example.md" --content "local example content"
+    run "${_NB}" add "local-example.md" --content "local example content"
     _files=($(ls "${_TMP_DIR}/example-local/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "${_filename}" home --force
+  run "${_NB}" move "${_filename}" home --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -339,7 +339,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
@@ -348,14 +348,14 @@ _setup_move() {
 @test "\`move\` from local with local:<filename> argument successfully moves note." {
   {
     _setup_move
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
-    run "${_NOTES}" add "local-example.md" --content "local example content"
+    run "${_NB}" add "local-example.md" --content "local example content"
     _files=($(ls "${_TMP_DIR}/example-local/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" move "local:${_filename}" home --force
+  run "${_NB}" move "local:${_filename}" home --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -372,7 +372,7 @@ _setup_move() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # prints output
   [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
@@ -381,14 +381,14 @@ _setup_move() {
 # help ########################################################################
 
 @test "\`help move\` exits with status 0." {
-  run "${_NOTES}" help move
+  run "${_NB}" help move
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help move\` prints help information." {
-  run "${_NOTES}" help move
+  run "${_NB}" help move
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ move ]]
+  [[ "${lines[1]}" =~ nb\ move ]]
 }

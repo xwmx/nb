@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 ###############################################################################
-# __                _
-# \ \   _ __   ___ | |_ ___  ___
-#  \ \ | '_ \ / _ \| __/ _ \/ __|
-#  / / | | | | (_) | ||  __/\__ \
-# /_/  |_| |_|\___/ \__\___||___/
+# __          _
+# \ \   _ __ | |__
+#  \ \ | '_ \| '_ \
+#  / / | | | | |_) |
+# /_/  |_| |_|_.__/
+#
+# `nb` · `notes` && `bookmark`
 #
 # Command line note-taking, bookmarking, and archiving with encryption, search,
 # Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 # in a single portable script.
 #
-# https://github.com/xwmx/notes
+# https://github.com/xwmx/nb
 #
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
@@ -86,7 +88,7 @@ fi
 # $_REPO
 #
 # The <user>/<repo> identifier for the git repository.
-_REPO="xwmx/notes"
+_REPO="xwmx/nb"
 
 # $_REPO_RAW_URL
 #
@@ -94,25 +96,38 @@ _REPO="xwmx/notes"
 _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/master"
 
 ###############################################################################
-# .notesrc
+# Configuration File
 ###############################################################################
 
-# .notesrc
+# .nbrc
 #
-# If a `.notesrc` file exists in `$HOME`, source it.
-export NOTESRC_PATH="${NOTESRC_PATH:-${HOME}/.notesrc}"
-
-if [[ -L "${NOTESRC_PATH}" ]]
+# If a `.nbrc` file exists in `$HOME`, source it.
+if [[ -n "${NBRC_PATH:-}" ]]
 then
-  NOTESRC_PATH="$(realpath "${NOTESRC_PATH}")"
+  export NBRC_PATH="${NBRC_PATH}"
+elif [[ -n "${NOTESRC_PATH:-}" ]]
+then # Use legacy NOTESRC_PATH environment variable.
+  export NBRC_PATH="${NOTESRC_PATH}"
+elif [[ -e "${HOME}/.notesrc" ]]
+then # Use legacy ~/.notesrc
+  export NBRC_PATH="${HOME}/.notesrc"
+else
+  export NBRC_PATH="${HOME}/.nbrc"
 fi
 
-if [[ -e "${NOTESRC_PATH}" ]]
+export _RC_FILE_PATH="${NBRC_PATH}"
+
+# Handle symlinked NBRC_PATH
+if [[ -L "${_RC_FILE_PATH}" ]]
 then
-  source "${NOTESRC_PATH}"
+  _RC_FILE_PATH="$(realpath "${_RC_FILE_PATH}")"
 fi
 
-export _RC_FILE_PATH="${NOTESRC_PATH}"
+# Source rc file.
+if [[ -e "${_RC_FILE_PATH}" ]]
+then
+  source "${_RC_FILE_PATH}"
+fi
 
 ###############################################################################
 # $EDITOR
@@ -256,134 +271,154 @@ die() {
 # Configuration
 ###############################################################################
 
-# $NOTES_DIR
+# $NB_DIR
 #
-# Default: `$HOME/.notes`
+# Default: `$HOME/Notebooks`
 #
 # The location of the directory that contains the notebooks.
-export NOTES_DIR="${NOTES_DIR:-${HOME}/.notes}"
-if [[ -L "${NOTES_DIR}" ]]
+if [[ -n "${NB_DIR:-}" ]]
 then
-  NOTES_DIR="$(realpath "${NOTES_DIR}")"
+  export NB_DIR="${NB_DIR}"
+elif [[ -n "${NOTES_DIR}" ]]
+then # Use legacy NOTES_DIR environment variable.
+  export NB_DIR="${NOTES_DIR}"
+elif [[ -e "${HOME}/.notes" ]]
+then # Use legacy ~/.notes directory.
+  export NB_DIR="${HOME}/.notes"
+else
+  export NB_DIR="${HOME}/Notebooks"
 fi
 
-if [[ -z "${NOTES_DIR:?}"   ]] ||
-   [[ "${NOTES_DIR}" == "/" ]] ||
+if [[ -L "${NB_DIR:-}" ]]
+then
+  NB_DIR="$(realpath "${NB_DIR}")"
+fi
+
+if [[ -z "${NB_DIR:?}"   ]] ||
+   [[ "${NB_DIR}" == "/" ]] ||
    {
-     [[ -e "${NOTES_DIR}"   ]] &&
-     [[ ! -w "${NOTES_DIR}" ]]
+     [[ -e "${NB_DIR}"   ]] &&
+     [[ ! -w "${NB_DIR}" ]]
    }
 then
   cat <<HEREDOC
-NOTES_DIR is not valid:
-  ${NOTES_DIR}
+NB_DIR is not valid:
+  ${NB_DIR}
 
 Running the following command might resolve the issue:
-  ${_ME} settings unset notes_dir
+  ${_ME} settings unset nb_dir
 
-Alternatively, set NOTES_DIR to a new location where you'd like to store your
-notes. For example:
-  ${_ME} settings set notes_dir ~/Documents/Notes
+Alternatively, set NB_DIR to a new location where you'd like to store your
+notes and bookmarks. For example:
+  ${_ME} settings set nb_dir ~/Documents/Notebooks
 HEREDOC
   exit 1
 fi
 
-# $NOTES_AUTO_SYNC
+# $NB_AUTO_SYNC
 #
 # Default: 1
 #
 # When set to '1', each `_git_checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
-export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-1}"
+[[ -n "${NOTES_AUTO_SYNC:-}" ]] &&
+  NB_AUTO_SYNC="${NOTES_AUTO_SYNC}"
+export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
-# `$NOTES_DEFAULT_EXTENSION`
+# `$NB_DEFAULT_EXTENSION`
 #
 # Default: 'md'
 #
 # Example Values: 'md' 'org'
-export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
+[[ -n "${NOTES_DEFAULT_EXTENSION:-}" ]] &&
+  NB_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION}"
+export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 
-# $NOTES_ACCENT_COLOR
+# $NB_ACCENT_COLOR
 #
 # Default: 8
 #
 # Color for lines and other accents. This should be set to an xterm color
 # number, usually a value between 1 and 256. For a table of common colors and
 # their numbers, run:
-#   notes settings colors
+#   nb settings colors
 #
 # Supported Values: [0..255+]
-export NOTES_ACCENT_COLOR="${NOTES_ACCENT_COLOR:-8}"
+export NB_ACCENT_COLOR="${NB_ACCENT_COLOR:-8}"
 
-# $NOTES_HIGHLIGHT_COLOR
+# $NB_HIGHLIGHT_COLOR
 #
 # Default: Value depends on terminal capabilities.
 #
 # Set highlighting color. This should be set to an xterm color number, usually
 # a value between 1 and 256. For a table of common colors and their numbers
 # run:
-#   notes settings colors
+#   nb settings colors
 #
 # Supported Values: [0..255+]
-__set_notes_highlight_color() {
+[[ -n "${NOTES_HIGHLIGHT_COLOR:-}" ]] &&
+  NB_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR}"
+__set_nb_highlight_color() {
   local _colors=
   _colors="$(tput colors)"
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
-    export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-68}"
+    export NB_HIGHLIGHT_COLOR="${NB_HIGHLIGHT_COLOR:-68}"
   else
-    export NOTES_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR:-4}"
+    export NB_HIGHLIGHT_COLOR="${NB_HIGHLIGHT_COLOR:-4}"
   fi
-} && __set_notes_highlight_color
+} && __set_nb_highlight_color
 
-# $NOTES_ENCRYPTION_TOOL
+# $NB_ENCRYPTION_TOOL
 #
 # Default: 'openssl'
 #
 # Supported Values: 'gpg' 'openssl'
-export NOTES_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL:-openssl}"
+[[ -n "${NOTES_ENCRYPTION_TOOL:-}" ]] &&
+  NB_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL}"
+export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
 # $NOTES_INDICATORS_ENABLED
 #
 # Default: 1
 #
 # Supported Values: 0, 1
-export NOTES_INDICATORS_ENABLED="${NOTES_INDICATORS_ENABLED:-1}"
+export NB_INDICATORS_ENABLED="${NB_INDICATORS_ENABLED:-1}"
 
 ###############################################################################
 # Cache & Temp Directories
 ###############################################################################
 
-# $_NOTES_CACHE_PATH
+# $_NB_CACHE_PATH
 #
 # The full path to the cache directory.
-export _NOTES_CACHE_PATH="${NOTES_DIR}/.cache"
-if [[ -d "${NOTES_DIR}" ]] && [[ ! -e "${_NOTES_CACHE_PATH}" ]]
+export _NB_CACHE_PATH="${NB_DIR}/.cache"
+if [[ -d "${NB_DIR}" ]] && [[ ! -e "${_NB_CACHE_PATH}" ]]
 then
-  mkdir -p "${_NOTES_CACHE_PATH}"
+  mkdir -p "${_NB_CACHE_PATH}"
 fi
 
-# _clear_notes_cache()
+# _clear_cache()
 #
 # Usage:
-#   _clear_notes_cache
+#   _clear_cache
 #
 # Description:
-#   Clear the notes cache.
-_clear_notes_cache() {
-  if [[ -e "${_NOTES_CACHE_PATH}" ]] &&
-     [[ -d "${_NOTES_CACHE_PATH}" ]]
+#   Clear the cache.
+_clear_cache() {
+  if [[ -e "${_NB_CACHE_PATH}" ]] &&
+     [[ -d "${_NB_CACHE_PATH}" ]]
   then
-    rm -r "${_NOTES_CACHE_PATH:?}"
-    mkdir -p "${_NOTES_CACHE_PATH}"
+    rm -r "${_NB_CACHE_PATH:?}"
+    mkdir -p "${_NB_CACHE_PATH}"
   fi
 }
 
-# $_NOTES_TEMP_DIRECTORY
+# $_NB_TEMP_DIRECTORY
 #
 # The full path to the temp directory.
-export _NOTES_TEMP_DIRECTORY
-_NOTES_TEMP_DIRECTORY="$(mktemp -d)"
+export _NB_TEMP_DIRECTORY
+_NB_TEMP_DIRECTORY="$(mktemp -d)"
 
 # _tempfile_path()
 #
@@ -394,19 +429,19 @@ _NOTES_TEMP_DIRECTORY="$(mktemp -d)"
 #   Print the full path for <basename> within the temp directory.
 _tempfile_path() {
   [[ -z "${1:-}" ]] && return 1
-  printf "%s/%s" "${_NOTES_TEMP_DIRECTORY}" "${1:-}"
+  printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${1:-}"
 }
 
-# Usage: _notes_cleanup_on_exit
-_notes_cleanup_on_exit() {
-  if [[ -n "${_NOTES_TEMP_DIRECTORY:-}" ]] &&
-     [[ -e "${_NOTES_TEMP_DIRECTORY}"   ]]
+# Usage: _nb_cleanup_on_exit
+_nb_cleanup_on_exit() {
+  if [[ -n "${_NB_TEMP_DIRECTORY:-}" ]] &&
+     [[ -e "${_NB_TEMP_DIRECTORY}"   ]]
   then
-    rm -rf "${_NOTES_TEMP_DIRECTORY}"
+    rm -rf "${_NB_TEMP_DIRECTORY}"
   fi
 }
 
-trap _notes_cleanup_on_exit EXIT
+trap _nb_cleanup_on_exit EXIT
 
 ###############################################################################
 # Utilities
@@ -515,8 +550,8 @@ __option_value_is_present() {
 
 # $_NOTEBOOK_PATH
 #
-# Default: `$NOTES_DIR/home`
-export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NOTES_DIR}/home}"
+# Default: `$NB_DIR/home`
+export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NB_DIR}/home}"
 
 # $_GLOBAL_NOTEBOOK_PATH
 #
@@ -553,13 +588,13 @@ __set_notebook_path() {
   } && __set_local_notebook_path
 
   __set_global_notebook() {
-    if [[ -e "${NOTES_DIR}/.current" ]]
+    if [[ -e "${NB_DIR}/.current" ]]
     then
-      _GLOBAL_NOTEBOOK_NAME="$(cat "${NOTES_DIR}/.current")"
+      _GLOBAL_NOTEBOOK_NAME="$(cat "${NB_DIR}/.current")"
 
-      if [[ -d "${NOTES_DIR}/${_GLOBAL_NOTEBOOK_NAME}" ]]
+      if [[ -d "${NB_DIR}/${_GLOBAL_NOTEBOOK_NAME}" ]]
       then
-        _GLOBAL_NOTEBOOK_PATH="${NOTES_DIR}/${_GLOBAL_NOTEBOOK_NAME}"
+        _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_GLOBAL_NOTEBOOK_NAME}"
       fi
     fi
   } && __set_global_notebook
@@ -819,7 +854,7 @@ _encrypt_file() {
     return 1
   fi
 
-  if [[ "${NOTES_ENCRYPTION_TOOL}" == "gpg" ]]
+  if [[ "${NB_ENCRYPTION_TOOL}" == "gpg" ]]
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
@@ -830,7 +865,7 @@ _encrypt_file() {
         --cipher-algo AES256          \
         --output "${_encrypted_path}" \
         "${_decrypted_path}"
-  elif [[ "${NOTES_ENCRYPTION_TOOL}" == "openssl" ]]
+  elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl" ]]
   then
     openssl enc                 \
       -aes-256-cbc              \
@@ -838,7 +873,7 @@ _encrypt_file() {
       -out "${_encrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
-    printf "\$NOTES_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
+    printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
     return 1
   fi
 
@@ -1210,7 +1245,7 @@ _get_selection_basename() {
     else # <selection> might be a title.
       local _title=
       local _filenames=
-      _filenames=($(_list_notes_files))
+      _filenames=($(_list_nb_files))
 
       for __file in "${_filenames[@]:-}"
       do
@@ -1266,7 +1301,7 @@ _get_selection_parts() {
 
     if [[ "${_selection}" =~ ':' ]] &&
        {
-         [[ -e "${NOTES_DIR}/${_maybe_notebook_name}/.git" ]] ||
+         [[ -e "${NB_DIR}/${_maybe_notebook_name}/.git" ]] ||
          {
            [[ "${_maybe_notebook_name}" == "local" ]] &&
            [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"       ]]
@@ -1467,7 +1502,7 @@ _git_checkpoint() {
 
   _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
 
-  if ((NOTES_AUTO_SYNC))
+  if ((NB_AUTO_SYNC))
   then
     (
       # Only sync when the index is dirty to avoid fetching from and pushing
@@ -1522,7 +1557,7 @@ _git_required() {
   if ! _command_exists "git"
   then
     cat <<HEREDOC
-Welcome to $(_highlight "notes")!
+Welcome to $(_highlight "${_ME}")!
 
 Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
 
@@ -1540,9 +1575,9 @@ HEREDOC
   if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
   then
     cat <<HEREDOC
-Welcome to $(_highlight "notes")!
+Welcome to $(_highlight "${_ME}")!
 
-Git requires some additional setup before using $(_highlight "notes").
+Git requires some additional setup before using $(_highlight "${_ME}").
 Enter the name and email address you'd like to use with Git.
 Edits you make will be attributed to this name and email address.
 HEREDOC
@@ -1587,7 +1622,7 @@ _git_should_autosync() {
   local _last_fetch_timestamp=
   local _maybe_fetch_timestamp=
 
-  if ! ((NOTES_AUTO_SYNC))
+  if ! ((NB_AUTO_SYNC))
   then # autosync not enabled.
     return 1
   fi
@@ -1639,7 +1674,7 @@ export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
 
 export _TPUT_HIGHLIGHT_COLOR=
-_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NOTES_HIGHLIGHT_COLOR}")"
+_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NB_HIGHLIGHT_COLOR}")"
 _highlight() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
@@ -1672,7 +1707,7 @@ _highlight() {
 # Description:
 #   Highlight the given string using the accent color.
 export _TPUT_ACCENT_COLOR=
-_TPUT_ACCENT_COLOR="$(tput setaf "${NOTES_ACCENT_COLOR}")"
+_TPUT_ACCENT_COLOR="$(tput setaf "${NB_ACCENT_COLOR}")"
 _highlight_accent() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
@@ -1777,14 +1812,14 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _list_notes_files()
+# _list_nb_files()
 #
 # Usage:
-#   _list_notes_files [--sort] [--reverse] [--type <type>]
+#   _list_nb_files [--sort] [--reverse] [--type <type>]
 #
 # Description:
 #   List note files with default sorting.
-_list_notes_files() {
+_list_nb_files() {
   # Relevant `ls` options:
   # --  Default sort order.
   # -t  Sort by time modified (most recently modified first) before sorting
@@ -1961,7 +1996,7 @@ _set_selection_notebook() {
       _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
       _SCOPE="local"
     else
-      _NOTEBOOK_PATH="${NOTES_DIR}/${_parts[0]}"
+      _NOTEBOOK_PATH="${NB_DIR}/${_parts[0]}"
       _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
     fi
   fi
@@ -2131,11 +2166,13 @@ _help() {
   then
     {
       cat <<HEREDOC
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \\
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
+
+\`nb\` · \`notes\` && \`bookmark\`
 
 Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
@@ -2213,7 +2250,7 @@ HEREDOC
       cat <<HEREDOC
 
 Subcommands:
-  (default)    List notes and notebooks. This is an alias for \`notes ls\`.
+  (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
   add          Add a new note.
   bookmark     Add, open, list, and search bookmarks.
   bookmarks    List bookmarks.
@@ -2317,15 +2354,15 @@ Description:
   passed, \`${_ME}\` will treat it as a <filename≥ if a file extension is found.
   If no file extension is found, \`${_ME}\` will treat the string as
   <content> and will create a new note without opening the editor.
-  \`notes add\` can also create a new note with piped content.
+  \`${_ME} add\` can also create a new note with piped content.
 
   \`${_ME}\` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the \`--type\`
-  option. To change the default file type, use \`notes settings\`.
+  option. To change the default file type, use \`${_ME} settings\`.
 
   When the \`-e\` / \`--encrypt\` option is used, \`${_ME}\` will encrypt the
   note with AES-256 using OpenSSL by default, or GPG, if configured in
-  \`notes settings\`.
+  \`${_ME} settings\`.
 
 Examples:
   ${_ME} add
@@ -2344,7 +2381,7 @@ _add() {
   local _edit_before_save=0
   local _encrypt=0
   local _filename=
-  local _file_type="${NOTES_DEFAULT_EXTENSION}"
+  local _file_type="${NB_DEFAULT_EXTENSION}"
   local _maybe_filename_or_content=
   local _password=
   local _title=
@@ -2539,7 +2576,7 @@ _add() {
         "${_scoped_basename}"
     fi
   fi &&
-    _git_checkpoint "[NOTES] Add: ${_basename}"
+    _git_checkpoint "[nb] Add: ${_basename}"
 }
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
@@ -2929,7 +2966,9 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
         open "${_target_url}"
         return 0
       else
-        printf "notes doesn't know how to open URLs on your system.\\n"
+        printf \
+          "\`%s\` doesn't know how to open URLs on your system.\\n" \
+          "${_ME}"
         return 1
       fi
     # `bookmark url`
@@ -3176,8 +3215,8 @@ Description:
   https://github.com/${_REPO}/blob/master/etc/README.md
 HEREDOC
 _completions() {
-  local _BASH_COMP_NAME="notes"
-  local _ZSH_COMP_NAME="_notes"
+  local _BASH_COMP_NAME="nb"
+  local _ZSH_COMP_NAME="_nb"
 
   # Usage: _completions_check
   _completions_check() {
@@ -3207,7 +3246,7 @@ _completions() {
     then
       if [[ -w "${_zsh_completion_path}" ]]
       then
-        if [[ -e "${_zsh_completion_path}/_notes" ]]
+        if [[ -e "${_zsh_completion_path}/${_ZSH_COMP_NAME}" ]]
         then
           _exists=1
           printf "Exists: %s\\n" "${_zsh_completion_path}/${_ZSH_COMP_NAME}"
@@ -3285,14 +3324,14 @@ _completions() {
 
     for _shell in bash zsh
     do
-      local _completion_source="${_my_dir}/etc/notes-completion.${_shell}"
+      local _completion_source="${_my_dir}/etc/${_ME}-completion.${_shell}"
 
       if ((_download))
       then
         if [[ ! -f "${_completion_source}" ]]
         then
           _completion_source="$(mktemp)"
-          local _completion_url="${_REPO_RAW_URL}/etc/notes-completion.${_shell}"
+          local _completion_url="${_REPO_RAW_URL}/etc/${_ME}-completion.${_shell}"
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
           then
@@ -3309,7 +3348,7 @@ _completions() {
 Unable to find source ${_shell} completion script. You can try downloading
 and installing the latest version with the following command (\`sudo\` might
 be necessary):
-  notes completions install --download
+  ${_ME} completions install --download
 
 More information: ${_shell}
   https://github.com/${_REPO}/blob/master/etc/README.md
@@ -3421,7 +3460,7 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  _list_notes_files | wc -l
+  _list_nb_files | wc -l
 }
 
 # delete ############################################################### delete
@@ -3543,7 +3582,7 @@ _delete() {
     if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
     then
       _index delete "${_basename}"
-      _git_checkpoint "[NOTES] Delete: ${_basename}"
+      _git_checkpoint "[nb] Delete: ${_basename}"
       printf "Deleted %s\\n" "${_note_info_line}"
     fi
   else
@@ -3566,7 +3605,7 @@ Options:
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}', or
-  <editor> if specified. Any data piped to \`notes edit\` will be appended to
+  <editor> if specified. Any data piped to \`${_ME} edit\` will be appended to
   the file.
 
   Non-text files will be opened in your system's preferred app or program for
@@ -3709,7 +3748,7 @@ _edit() {
       rm "${_decrypted_path}"
     fi
 
-    _git_checkpoint "[NOTES] Edit: ${_basename}"
+    _git_checkpoint "[nb] Edit: ${_basename}"
 
     if [[ "${_before}" != "${_after}" ]]
     then
@@ -3789,11 +3828,11 @@ _env() {
     printf "_NOTEBOOK_PATH=%s\\n" "${_NOTEBOOK_PATH:-}"
     printf "EDITOR=%s\\n" "${EDITOR:-}"
     printf "PAGER=%s\\n" "${PAGER:-}"
-    printf "NOTES_AUTO_SYNC=%s\\n" "${NOTES_AUTO_SYNC:-}"
-    printf "NOTES_DIR=%s\\n" "${NOTES_DIR:-}"
-    printf "NOTES_DEFAULT_EXTENSION=%s\\n" "${NOTES_DEFAULT_EXTENSION:-}"
-    printf "NOTES_ENCRYPTION_TOOL=%s\\n" "${NOTES_ENCRYPTION_TOOL:-}"
-    printf "NOTES_HIGHLIGHT_COLOR=%s\\n" "${NOTES_HIGHLIGHT_COLOR:-}"
+    printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
+    printf "NB_DIR=%s\\n" "${NB_DIR:-}"
+    printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
+    printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
+    printf "NB_HIGHLIGHT_COLOR=%s\\n" "${NB_HIGHLIGHT_COLOR:-}"
     printf "_RC_FILE_PATH=%s\\n" "${_RC_FILE_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -4146,7 +4185,7 @@ _import() {
         cp "${_path}" "${_NOTEBOOK_PATH}/${_basename}"
       fi &&
         _index add "${_basename}" &&
-        _git_checkpoint "[NOTES] Import: ${_basename}"
+        _git_checkpoint "[nb] Import: ${_basename}"
       printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
       ;;
     download)
@@ -4177,7 +4216,7 @@ _import() {
       fi &&
         _index add "${_basename}" &&
         _git_checkpoint "\
-[NOTES] Import: ${_basename}
+[nb] Import: ${_basename}
 
 Source:
 ${_url}
@@ -4191,7 +4230,7 @@ ${_url}
 
       mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"    &&
         _index add "${_basename}"                       &&
-        _git_checkpoint "[NOTES] Import: ${_basename}"
+        _git_checkpoint "[nb] Import: ${_basename}"
       printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
       ;;
     *)
@@ -4360,7 +4399,7 @@ _index() {
         "_index() rebuild: \`ls \${_NOTEBOOK_PATH}\`: '%s'\\n" \
         "$(ls "${_NOTEBOOK_PATH}")"
       ls "${_NOTEBOOK_PATH}" > "${_index_path}" &&
-        _git_checkpoint "[NOTES] Rebuild Index"
+        _git_checkpoint "[nb] Rebuild Index"
       ;;
     reconcile)
       _index_reconcile_remove_duplicates() {
@@ -4537,36 +4576,36 @@ _init() {
     local _repo_url="${1:-}"
     if [[ -n "${_repo_url}" ]]
     then
-      git clone "${_repo_url}" "${NOTES_DIR}/home"
+      git clone "${_repo_url}" "${NB_DIR}/home"
     else
-      mkdir -p "${NOTES_DIR}/home"            &&
-        cd "${NOTES_DIR}/home"                &&
-        git init 1>/dev/null                  &&
-        touch "${NOTES_DIR}/home/.index"      &&
-        _git_checkpoint "[NOTES] Initialize"
+      mkdir -p "${NB_DIR}/home"            &&
+        cd "${NB_DIR}/home"                &&
+        git init 1>/dev/null               &&
+        touch "${NB_DIR}/home/.index"      &&
+        _git_checkpoint "[nb] Initialize"
     fi
-    printf "home\\n" > "${NOTES_DIR}/.current"
+    printf "home\\n" > "${NB_DIR}/.current"
 
     printf "Created %s notebook.\\n" "$(_highlight "home")"
   }
 
-  # Usage: _init_create_notes_dir
-  _init_create_notes_dir() {
-    if [[ -d "${NOTES_DIR}" ]]
+  # Usage: _init_create_nb_dir
+  _init_create_nb_dir() {
+    if [[ -d "${NB_DIR}" ]]
     then
       printf "%s data directory already exists: %s\\n" \
         "$(_highlight "${_ME}")" \
-        "${NOTES_DIR}"
-    elif [[ -e "${NOTES_DIR}" ]]
+        "${NB_DIR}"
+    elif [[ -e "${NB_DIR}" ]]
     then
       cat <<HEREDOC
 Unable to set up the $(_highlight "${_ME}") data directory. File exists at:
-${NOTES_DIR}
+${NB_DIR}
 HEREDOC
       return 1
     else
-      mkdir -p "${NOTES_DIR}"
-      printf "Created %s\\n" "${NOTES_DIR}"
+      mkdir -p "${NB_DIR}"
+      printf "Created %s\\n" "${NB_DIR}"
     fi
   }
 
@@ -4580,13 +4619,13 @@ HEREDOC
       cat <<HEREDOC > "${_RC_FILE_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
-# .notesrc
+# .nbrc
 #
 # Configuration file for \`${_ME}\`, a command line note-taking and document
 # management tool with encryption, search, Git-backed syncing, and more in a
 # single portable script.
 #
-# Edit this file manually or manage settings using the \`notes settings\`
+# Edit this file manually or manage settings using the \`${_ME} settings\`
 # subcommand.
 #
 # https://github.com/${_REPO}
@@ -4596,13 +4635,13 @@ HEREDOC
 #
 # Default: inherits the global \`\$EDITOR\` value.
 #
-# Reassign \`\$EDITOR\` to use a specific editor with notes, overriding the
-# global \`\$EDITOR\` setting.
+# Reassign \`\$EDITOR\` to use a specific editor with \`${_ME}\`, overriding
+# the global \`\$EDITOR\` setting.
 #
 # Example Values: 'vim' 'emacs' 'subl' 'atom' 'code' 'macdown'
 # export EDITOR="code"
 
-# \$NOTES_AUTO_SYNC
+# \$NB_AUTO_SYNC
 #
 # Default: 1
 #
@@ -4611,48 +4650,48 @@ HEREDOC
 # one is set.
 #
 # To disable this behavior, uncomment the following line.
-# export NOTES_AUTO_SYNC=0
+# export NB_AUTO_SYNC=0
 
-# \$NOTES_DEFAULT_EXTENSION
+# \$NB_DEFAULT_EXTENSION
 #
 # Default: 'md'
 #
-# The default extension to use for notes files. Change to 'org' for Emacs Org
-# mode files, 'rst' for reStructuredText, 'txt' for plain text, or whatever
-# you prefer.
+# The default extension to use for \`${_ME}\` files. Change to 'org' for
+# Emacs Org mode files, 'rst' for reStructuredText, 'txt' for plain text,
+# or whatever you prefer.
 
 # Example Values: 'md' 'org' 'txt' 'rst'
-# export NOTES_DEFAULT_EXTENSION="org"
+# export NB_DEFAULT_EXTENSION="org"
 
-# \$NOTES_DIR
+# \$NB_DIR
 #
-# Default: "\$HOME/.notes"
+# Default: "\$HOME/Notebooks"
 #
 # The location of the directory that contains the notebooks.
-# export NOTES_DIR="\$HOME/.notes"
+# export NB_DIR="\$HOME/Notebooks"
 
-# \$NOTES_ENCRYPTION_TOOL
+# \$NB_ENCRYPTION_TOOL
 #
 # Default: 'openssl'
 #
 # The tool used for encrypting notes.
 #
 # Supported Values: 'openssl' 'gpg'
-# export NOTES_ENCRYPTION_TOOL="gpg"
+# export NB_ENCRYPTION_TOOL="gpg"
 
-# \$NOTES_HIGHLIGHT_COLOR
+# \$NB_HIGHLIGHT_COLOR
 #
 # Default: Varies depending on terminal capabilities.
 #
 # Set highlighting color. Often this can be set to an xterm color number
 # between 0 and 255. Some terminals support many more colors. To view a
 # table of common colors and numbers, run:
-#   notes settings colors
+#   ${_ME} settings colors
 # To view a color for a number, run:
-#   notes settings colors <number>
+#   ${_ME} settings colors <number>
 #
 # Supported Values: [0..255+]
-# export NOTES_HIGHLIGHT_COLOR=213
+# export NB_HIGHLIGHT_COLOR=213
 HEREDOC
       printf "Created %s\\n" "${_RC_FILE_PATH}"
     fi
@@ -4663,20 +4702,20 @@ HEREDOC
     cat <<HEREDOC
 ${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
 $(_highlight "Welcome") to
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \\
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
 ${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
 Initializing...
 HEREDOC
   }
 
-  if [[ -e "${NOTES_DIR}" ]] && [[ ! -d "${NOTES_DIR}" ]]
+  if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
   then
-    printf "NOTES_DIR exists and is not a directory: %s\\n" \
-      "${NOTES_DIR}"
+    printf "NB_DIR exists and is not a directory: %s\\n" \
+      "${NB_DIR}"
     return 1
   fi
 
@@ -4692,7 +4731,7 @@ HEREDOC
   fi
 
   _init_print_header        &&
-    _init_create_notes_dir  &&
+    _init_create_nb_dir     &&
     _init_create_rc_file    &&
     _init_create_home_notebook "${1:-}"
 }
@@ -4759,7 +4798,7 @@ _list() {
   local _no_color=0
   local _no_id=0
   local _print_excerpt=0
-  local _print_indicators="${NOTES_INDICATORS_ENABLED:-1}"
+  local _print_indicators="${NB_INDICATORS_ENABLED:-1}"
   local _reverse=0
   local _selection
   local _sort=0
@@ -4858,18 +4897,18 @@ _list() {
     "list() \${_selection_basename}: '%s'\\n" \
     "${_selection_basename}"
 
-  local _list_note_file_options=()
+  local _list_file_options=()
   local _filenames=()
 
-  [[ -n "${_type:-}" ]] && _list_note_file_options+=("--type" "${_type}")
-  ((_reverse))          && _list_note_file_options+=("--reverse")
-  ((_sort))             && _list_note_file_options+=("--sort")
+  [[ -n "${_type:-}" ]] && _list_file_options+=("--type" "${_type}")
+  ((_reverse))          && _list_file_options+=("--reverse")
+  ((_sort))             && _list_file_options+=("--sort")
 
-  if [[ -n "${_list_note_file_options[*]:-}" ]]
+  if [[ -n "${_list_file_options[*]:-}" ]]
   then
-    _filenames=($(_list_notes_files "${_list_note_file_options[@]}")) || :
+    _filenames=($(_list_nb_files "${_list_file_options[@]}")) || :
   else
-    _filenames=($(_list_notes_files)) || :
+    _filenames=($(_list_nb_files)) || :
   fi
 
   local _filenames_count="${#_filenames[@]}"
@@ -5653,7 +5692,7 @@ _move() {
   then
     _target_notebook_path="${_LOCAL_NOTEBOOK_PATH}"
   else
-    _target_notebook_path="${NOTES_DIR}/${_target_notebook}"
+    _target_notebook_path="${NB_DIR}/${_target_notebook}"
   fi
 
   if [[ -z "${_basename}" ]] ||
@@ -5807,7 +5846,7 @@ _notebook() {
       if [[ ! -e "${_dotfile_path}" ]]
       then
         touch "${_dotfile_path}" &&
-          _git_checkpoint "[NOTES] Archived"
+          _git_checkpoint "[nb] Archived"
       fi
 
       printf "%s archived.\\n" "${_notebook_name}"
@@ -5824,7 +5863,7 @@ _notebook() {
       if [[ -e "${_dotfile_path}" ]]
       then
         rm "${_dotfile_path}" &&
-          _git_checkpoint "[NOTES] Unarchived"
+          _git_checkpoint "[nb] Unarchived"
       fi
 
       printf "%s unarchived.\\n" "${_notebook_name}"
@@ -5894,7 +5933,7 @@ _notebooks() {
       return 1
     fi
 
-    if [[ -e "${NOTES_DIR}/${_name}" ]]
+    if [[ -e "${NB_DIR}/${_name}" ]]
     then
       printf "Already exists: %s\\n" "${_name}"
       return 1
@@ -5903,15 +5942,15 @@ _notebooks() {
     local _repo_url="${2:-}"
     if [[ -n "${_repo_url}" ]]
     then
-      git clone "${_repo_url}" "${NOTES_DIR}/${_name}"
-      printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
+      git clone "${_repo_url}" "${NB_DIR}/${_name}"
+      printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
-      mkdir -p "${NOTES_DIR}/${_name}"
-      cd "${NOTES_DIR}/${_name}"              &&
-        git init 1>/dev/null                  &&
-        touch "${NOTES_DIR}/${_name}/.index"  &&
-        _clear_notes_cache                    &&
-        _git_checkpoint "[NOTES] Initialize" "${NOTES_DIR}/${_name}"
+      mkdir -p "${NB_DIR}/${_name}"
+      cd "${NB_DIR}/${_name}"              &&
+        git init 1>/dev/null               &&
+        touch "${NB_DIR}/${_name}/.index"  &&
+        _clear_cache                       &&
+        _git_checkpoint "[nb] Initialize" "${NB_DIR}/${_name}"
     fi
     printf "Added: %s\\n" "${_name}"
   }
@@ -5966,9 +6005,9 @@ HEREDOC
       _force=1
     fi
 
-    if [[ ! -d "${NOTES_DIR}/${_name}"        ]] ||
-       [[ ! -e "${NOTES_DIR}/${_name}/.git"   ]] ||
-       [[ ! -e "${NOTES_DIR}/${_name}/.index" ]]
+    if [[ ! -d "${NB_DIR}/${_name}"        ]] ||
+       [[ ! -e "${NB_DIR}/${_name}/.git"   ]] ||
+       [[ ! -e "${NB_DIR}/${_name}/.index" ]]
     then
       printf "Notebook not found: %s\\n" "${_name}"
       return 1
@@ -6024,11 +6063,11 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
     then
-      trash "${NOTES_DIR:?}/${_name}"
+      trash "${NB_DIR:?}/${_name}"
     else
-      rm -r -f "${NOTES_DIR:?}/${_name}"
+      rm -r -f "${NB_DIR:?}/${_name}"
     fi &&
-      _clear_notes_cache &&
+      _clear_cache &&
       printf "Notebook deleted: %s\\n" "${_name}"
   }
 
@@ -6098,7 +6137,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       cd "${_path}"             &&
         git init 1>/dev/null    &&
         touch "${_path}/.index" &&
-        _git_checkpoint "[NOTES] Initialize" "${_path}"
+        _git_checkpoint "[nb] Initialize" "${_path}"
     fi
     printf "Initialized local notebook: %s\\n" "${_path}"
   }
@@ -6151,16 +6190,16 @@ Please type $(_highlight "${_name}") to confirm: " __response
       esac
     done
 
-    if [[ -z "${NOTES_DIR}" ]] || [[ ! -e "${NOTES_DIR}" ]]
+    if [[ -z "${NB_DIR}" ]] || [[ ! -e "${NB_DIR}" ]]
     then
       return 1
     fi
 
     if [[ -z "${_notebook_names[*]:-}" ]]
     then
-      _notebook_names=($(ls -1 "${NOTES_DIR}"))
+      _notebook_names=($(ls -1 "${NB_DIR}"))
       set +f
-      _notebook_paths=($(ls -1 -d "${NOTES_DIR}"/*))
+      _notebook_paths=($(ls -1 -d "${NB_DIR}"/*))
       set -f
 
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
@@ -6175,7 +6214,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         then
           _notebook_paths+=("${_LOCAL_NOTEBOOK_PATH}")
         else
-          _notebook_paths+=("${NOTES_DIR}/${__name}")
+          _notebook_paths+=("${NB_DIR}/${__name}")
         fi
       done
     fi
@@ -6298,24 +6337,24 @@ Please type $(_highlight "${_name}") to confirm: " __response
 HEREDOC
         return 1
       fi
-    elif [[ ! -d "${NOTES_DIR}/${_old}" ]]
+    elif [[ ! -d "${NB_DIR}/${_old}" ]]
     then
       printf "'%s' is not a valid notebook name.\\n" "${_old}"
       return 1
-    elif [[ -e "${NOTES_DIR}/${_new}" ]]
+    elif [[ -e "${NB_DIR}/${_new}" ]]
     then
       printf "A notebook named '%s' already exists.\\n" "${_new}"
       return 1
     fi
 
-    mv "${NOTES_DIR}/${_old}" "${NOTES_DIR}/${_new}"
+    mv "${NB_DIR}/${_old}" "${NB_DIR}/${_new}"
 
-    if [[ "$(cat "${NOTES_DIR}/.current")" == "${_old}" ]]
+    if [[ "$(cat "${NB_DIR}/.current")" == "${_old}" ]]
     then
-      printf "%s\\n" "${_new}" > "${NOTES_DIR}/.current"
+      printf "%s\\n" "${_new}" > "${NB_DIR}/.current"
     fi
 
-    _clear_notes_cache
+    _clear_cache
     printf "'%s' is now named '%s'\\n" "${_old}" "${_new}"
   }
 
@@ -6367,9 +6406,9 @@ HEREDOC
         _name=$(printf "%s\\n" "${_name}" | cut -f 1 -d ":")
       fi
 
-      if [[ -d "${NOTES_DIR}/${_name}/.git" ]]
+      if [[ -d "${NB_DIR}/${_name}/.git" ]]
       then
-        printf "%s\\n" "${_name}" > "${NOTES_DIR}/.current"
+        printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
         printf "Now using %s.\\n" "$(_highlight "${_name}")"
       else
         printf "Not found: %s\\n" "${_name}"
@@ -6675,7 +6714,7 @@ _rename() {
 
   if ((_reset))
   then
-    local _file_type="${NOTES_DEFAULT_EXTENSION}"
+    local _file_type="${NB_DEFAULT_EXTENSION}"
 
     # Assign filename with unicode timestamp.
     _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
@@ -6762,7 +6801,7 @@ _rename() {
   mv "${_source_path}" "${_NOTEBOOK_PATH}/${_target_basename}"  &&
     _index update "${_source_basename}" "${_target_basename}"   &&
     _git_checkpoint \
-      "[NOTES] Rename: ${_source_basename} to ${_target_basename}"
+      "[nb] Rename: ${_source_basename} to ${_target_basename}"
   printf "'%s' renamed to '%s'\\n"  \
     "${_source_basename}"           \
     "${_target_basename}"
@@ -7145,46 +7184,46 @@ _alias_subcommand "search" "q"
 
 # settings ########################################################### settings
 
-export _NOTES_SETTINGS_LIST
-_NOTES_SETTINGS_LIST="\
+export _NB_SETTINGS_LIST
+_NB_SETTINGS_LIST="\
 [$(_highlight '1')] editor
     ${_TPUT_ACCENT_COLOR}------${_TPUT_SGR0}
     The command line text editor to use with \`${_ME}\`.
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
       • Current Value:  '${EDITOR}'
 
-[$(_highlight '2')] notes_auto_sync
+[$(_highlight '2')] nb_auto_sync
     ${_TPUT_ACCENT_COLOR}---------------${_TPUT_SGR0}
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
       • Default Value: '1'
-      • Current Value: '${NOTES_AUTO_SYNC}'
+      • Current Value: '${NB_AUTO_SYNC}'
 
-[$(_highlight '3')] notes_default_extension
+[$(_highlight '3')] nb_default_extension
     ${_TPUT_ACCENT_COLOR}-----------------------${_TPUT_SGR0}
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
       • Default Value: 'md'
-      • Current Value: '${NOTES_DEFAULT_EXTENSION}'
+      • Current Value: '${NB_DEFAULT_EXTENSION}'
 
-[$(_highlight '4')] notes_dir
+[$(_highlight '4')] nb_dir
     ${_TPUT_ACCENT_COLOR}---------${_TPUT_SGR0}
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    \`${_ME} settings set NOTES_DIR ~/Dropbox/Notes\`
-      • Default Value: '~/.notes'
-      • Current Value: '${NOTES_DIR}'
+    \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
+      • Default Value: '~/Notebooks'
+      • Current Value: '${NB_DIR}'
 
-[$(_highlight '5')] notes_encryption_tool
+[$(_highlight '5')] nb_encryption_tool
     ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
     The tool used for encrypting notes.
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
-      • Current Value:    '${NOTES_ENCRYPTION_TOOL}'
+      • Current Value:    '${NB_ENCRYPTION_TOOL}'
 
-[$(_highlight '6')] notes_highlight_color
+[$(_highlight '6')] nb_highlight_color
     ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
     Set highlighting color. Often this can be set to an xterm color number
     between 0 and 255. Some terminals support many more colors. To view a
@@ -7192,7 +7231,7 @@ _NOTES_SETTINGS_LIST="\
     To view a color for a number, run: \`${_ME} settings colors <number>\`
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.
-      • Current Value: '${NOTES_HIGHLIGHT_COLOR}'"
+      • Current Value: '${NB_HIGHLIGHT_COLOR}'"
 
 desc "settings" <<HEREDOC
 Usage:
@@ -7221,15 +7260,15 @@ Description:
 Examples:
   ${_ME} settings
   ${_ME} settings set 3 'org'
-  ${_ME} settings set notes_highlight_color 105
-  ${_ME} settings unset notes_highlight_color
+  ${_ME} settings set nb_highlight_color 105
+  ${_ME} settings unset nb_highlight_color
   ${_ME} settings colors
   ${_ME} settings colors 105
 HEREDOC
 _settings() {
-  # Usage: _notes_settings_colors
-  _notes_settings_colors() {
-    _notes_settings_colors_print(){
+  # Usage: _nb_settings_colors
+  _nb_settings_colors() {
+    _nb_settings_colors_print(){
         for __color_number
         do
           printf '\e[38;5;%dm %3d ' \
@@ -7242,37 +7281,37 @@ _settings() {
 
     if [[ -n "${1:-}" ]]
     then
-      _notes_settings_colors_print "${1:-}"
+      _nb_settings_colors_print "${1:-}"
     else
-      _notes_settings_colors_print {0..15}
+      _nb_settings_colors_print {0..15}
 
       for ((_i=0;_i<6;_i++))
       do
-        _notes_settings_colors_print $(seq $((_i*36+16)) $((_i*36+51)))
+        _nb_settings_colors_print $(seq $((_i*36+16)) $((_i*36+51)))
       done
 
-      _notes_settings_colors_print {232..255}
+      _nb_settings_colors_print {232..255}
 
       printf "\\n"
     fi
   }
 
-  # Usage: _notes_settings_get_value (<number> | <name>)
-  _notes_settings_get_value() {
+  # Usage: _nb_settings_get_value (<number> | <name>)
+  _nb_settings_get_value() {
     local _setting_name=
-    _setting_name="$(_notes_settings_get_name "${1:-}")" &&
+    _setting_name="$(_nb_settings_get_name "${1:-}")" &&
       _env | grep "${_setting_name}" | cut -d= -f2
   }
 
-  # Usage: _notes_settings_set (<number> | <name>) <value>
-  _notes_settings_set() {
+  # Usage: _nb_settings_set (<number> | <name>) <value>
+  _nb_settings_set() {
     local _entry=
     local _setting_name=
     local _stripped=
     local _value=
 
-    _setting_name="$(_notes_settings_get_name "${1:-}")"          &&
-      _notes_settings_validate_value "${_setting_name}" "${2:-}"  &&
+    _setting_name="$(_nb_settings_get_name "${1:-}")"          &&
+      _nb_settings_validate_value "${_setting_name}" "${2:-}"  &&
       {
         _value="${2:-}"
         if [[ "${_value}" =~ ^~ ]]
@@ -7282,20 +7321,20 @@ _settings() {
         fi
       } &&
       _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
-      _notes_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
+      _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${_RC_FILE_PATH}"        &&
-      if [[ "${_setting_name}" == "NOTES_HIGHLIGHT_COLOR" ]]
+      if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
       then
         _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
       fi &&
       printf "%s set to '%s'\\n" "${_setting_name}" "${_value}"
   }
 
-  # Usage: _notes_settings_unset (<number> | <name>)
-  _notes_settings_unset() {
+  # Usage: _nb_settings_unset (<number> | <name>)
+  _nb_settings_unset() {
     local _setting_name=
 
-    _setting_name="$(_notes_settings_get_name "${1:-}")" &&
+    _setting_name="$(_nb_settings_get_name "${1:-}")" &&
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
         -e "s/^export ${_setting_name}.*Set by.*$//g" \
@@ -7309,12 +7348,12 @@ _settings() {
           "$(eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}")"
   }
 
-  # Usage: _notes_settings_prompt
-  _notes_settings_prompt() {
+  # Usage: _nb_settings_prompt
+  _nb_settings_prompt() {
     cat <<HEREDOC
 $(_highlight "${_ME}") Settings
 ${_TPUT_ACCENT_COLOR}----------------${_TPUT_SGR0}
-${_NOTES_SETTINGS_LIST}
+${_NB_SETTINGS_LIST}
 
 Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
 HEREDOC
@@ -7332,7 +7371,7 @@ HEREDOC
             ;;
           *)
             _setting_name="$(
-              _notes_settings_get_name "${__setting}"
+              _nb_settings_get_name "${__setting}"
             )" && break
             ;;
         esac
@@ -7341,11 +7380,11 @@ HEREDOC
 
     printf "%s is currently set to '%s'\\n" \
       "${_setting_name}"                    \
-      "$(_notes_settings_get_value "${_setting_name}")"
+      "$(_nb_settings_get_value "${_setting_name}")"
 
-    if [[ "${_setting_name}" == "NOTES_HIGHLIGHT_COLOR" ]]
+    if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
     then
-      printf "%s\\n" "$(_notes_settings_colors)"
+      printf "%s\\n" "$(_nb_settings_colors)"
     fi
 
     cat <<HEREDOC
@@ -7364,11 +7403,11 @@ HEREDOC
             return 0
             ;;
           reset|unset)
-            _notes_settings_unset "${_setting_name}" || continue
+            _nb_settings_unset "${_setting_name}" || continue
             break
             ;;
           *)
-            _notes_settings_set "${_setting_name}" "${__value}" || continue
+            _nb_settings_set "${_setting_name}" "${__value}" || continue
             break
             ;;
         esac
@@ -7376,8 +7415,8 @@ HEREDOC
     done
   }
 
-  # Usage: _notes_settings_get_name (<number> | <name>)
-  _notes_settings_get_name() {
+  # Usage: _nb_settings_get_name (<number> | <name>)
+  _nb_settings_get_name() {
     local _id_or_name="${1:-}"
     [[ -n "${_id_or_name:-}" ]] || return 1
 
@@ -7386,24 +7425,24 @@ HEREDOC
         printf "EDITOR"
         return 0
         ;;
-      2|NOTES_AUTO_SYNC|notes_auto_sync)
-        printf "NOTES_AUTO_SYNC"
+      2|NB_AUTO_SYNC|nb_auto_sync)
+        printf "NB_AUTO_SYNC"
         return 0
         ;;
-      3|NOTES_DEFAULT_EXTENSION|notes_default_extension)
-        printf "NOTES_DEFAULT_EXTENSION"
+      3|NB_DEFAULT_EXTENSION|nb_default_extension)
+        printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      4|NOTES_DIR|notes_dir)
-        printf "NOTES_DIR"
+      4|NB_DIR|nb_dir)
+        printf "NB_DIR"
         return 0
         ;;
-      5|NOTES_ENCRYPTION_TOOL|notes_encryption_tool)
-       printf "NOTES_ENCRYPTION_TOOL"
+      5|NB_ENCRYPTION_TOOL|nb_encryption_tool)
+       printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      6|NOTES_HIGHLIGHT_COLOR|notes_highlight_color)
-        printf "NOTES_HIGHLIGHT_COLOR"
+      6|NB_HIGHLIGHT_COLOR|nb_highlight_color)
+        printf "NB_HIGHLIGHT_COLOR"
         return 0
         ;;
       *)
@@ -7413,10 +7452,10 @@ HEREDOC
     esac
   }
 
-  # Usage: _notes_settings_validate_value (<number> | <name>) <value>
-  _notes_settings_validate_value() {
+  # Usage: _nb_settings_validate_value (<number> | <name>) <value>
+  _nb_settings_validate_value() {
     if [[ "${1:-}" == 'EDITOR' ]] ||
-       [[ "${1:-}" == 'NOTES_DEFAULT_EXTENSION' ]]
+       [[ "${1:-}" == 'NB_DEFAULT_EXTENSION' ]]
     then
       if [[ -n "${2:-}" ]]
       then
@@ -7425,16 +7464,16 @@ HEREDOC
         printf "%s requires a value.\\n" "${1:-}"
         return 1
       fi
-    elif [[ "${1:-}" == 'NOTES_AUTO_SYNC' ]]
+    elif [[ "${1:-}" == 'NB_AUTO_SYNC' ]]
     then
       if [[ "${2:-}" =~ ^0|1$ ]]
       then
         return 0
       else
-        printf "NOTES_AUTO_SYNC must be either '0' or '1'.\\n"
+        printf "NB_AUTO_SYNC must be either '0' or '1'.\\n"
         return 1
       fi
-    elif [[ "${1:-}" == 'NOTES_DIR' ]]
+    elif [[ "${1:-}" == 'NB_DIR' ]]
     then
       if [[ -z "${2:-}"   ]] ||
          [[ "${2}" == "/" ]] ||
@@ -7443,25 +7482,25 @@ HEREDOC
           [[ ! -w "${2}" ]]
          }
       then
-        printf "'%s' is not a valid location for NOTES_DIR.\\n" "${2:-}"
+        printf "'%s' is not a valid location for NB_DIR.\\n" "${2:-}"
         return 1
       fi
-    elif [[ "${1:-}" == 'NOTES_ENCRYPTION_TOOL' ]]
+    elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL' ]]
     then
       if [[ "${2:-}" =~ ^openssl|gpg$ ]]
       then
         return 0
       else
-        printf "NOTES_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
+        printf "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
         return 1
       fi
-    elif [[ "${1:-}" == 'NOTES_HIGHLIGHT_COLOR' ]]
+    elif [[ "${1:-}" == 'NB_HIGHLIGHT_COLOR' ]]
     then
       if [[ "${2:-}" =~ ^[0-9] ]]
       then
         return 0
       else
-        printf "NOTES_HIGHLIGHT_COLOR must be a number.\\n"
+        printf "NB_HIGHLIGHT_COLOR must be a number.\\n"
         return 1
       fi
     else
@@ -7475,7 +7514,7 @@ HEREDOC
 
     case "${__arg}" in
       color|colors)
-        _notes_settings_colors "${2:-}"
+        _nb_settings_colors "${2:-}"
         return 0
         ;;
       edit)
@@ -7489,11 +7528,11 @@ HEREDOC
           return 1
         fi
 
-        _notes_settings_get_value "${2:-}"
+        _nb_settings_get_value "${2:-}"
         return 0
         ;;
       list)
-        printf "%s\\n" "${_NOTES_SETTINGS_LIST}"
+        printf "%s\\n" "${_NB_SETTINGS_LIST}"
         return 0
         ;;
       set)
@@ -7503,7 +7542,7 @@ HEREDOC
             return 1
         fi
 
-        _notes_settings_set "${2:-}" "${3:-}"
+        _nb_settings_set "${2:-}" "${3:-}"
         return 0
         ;;
       reset|unset)
@@ -7513,11 +7552,11 @@ HEREDOC
           return 1
         fi
 
-        _notes_settings_unset "${2:-}"
+        _nb_settings_unset "${2:-}"
         return 0
         ;;
       *)
-        _notes_settings_prompt
+        _nb_settings_prompt
         return 0
         ;;
     esac
@@ -7590,12 +7629,12 @@ _shell() {
     "${_initial_command:-}"
 
   cat <<HEREDOC
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
-${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
+${_TPUT_HIGHLIGHT_COLOR}__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \\
+ / / | | | | |_) |
+/_/  |_| |_|_.__/${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}------------------${_TPUT_SGR0}
 $(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
 Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
 HEREDOC
@@ -7614,12 +7653,14 @@ HEREDOC
       then
        return 0
       else
-        # Strip leading 'notes' or 'n'.
+        # Strip leading 'n', 'nb', or 'notes'.
         local _normalized_input=
         _normalized_input="$(
           printf "%s\\n" "${__input}" \
             | sed -e 's/^n$//'        \
             | sed -e 's/^n //'        \
+            | sed -e 's/^nb$//'       \
+            | sed -e 's/^nb //'       \
             | sed -e 's/^notes$//'    \
             | sed -e 's/^notes //'
         )"
@@ -7627,14 +7668,14 @@ HEREDOC
         if [[ "${_normalized_input}" =~ ^help   ]] ||
            [[ "${_normalized_input}" =~ ^help\  ]]
         then
-          # Strip 'notes' command name from help output.
+          # Strip 'nb' command name from help output.
           local _output=
           local _processed_output=
 
           _output="$(eval "\"${_MY_PATH}\" ${_normalized_input}" || :)"
           _processed_output="$(
             printf "%s\\n" "${_output}" \
-              | sed -e "s/^  notes /  /"
+              | sed -e "s/^  nb /  /"
           )"
           printf "%s\\n" "${_processed_output}"
         elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
@@ -7817,7 +7858,7 @@ _show() {
   fi
 
   if ((_print_path))
-  then # `notes show --path`
+  then # `show --path`
     printf "%s/%s\\n" "${_NOTEBOOK_PATH}" "${_basename}"
     return 0
   fi
@@ -8020,30 +8061,30 @@ Can't show archives. Export archive and expand to edit.\\n"
        ((_dump))                &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
-  then # `notes show --render --dump` with `pandoc` and `w3m` available.
+  then # `show --render --dump` with `pandoc` and `w3m` available.
     pandoc "${_target_path}" \
       | w3m -dump -T text/html
   elif ((_render))              &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
-  then # `notes show --render` with `pandoc` and `w3m` available.
+  then # `show --render` with `pandoc` and `w3m` available.
     pandoc "${_target_path}" \
       | w3m -T text/html
   elif ((_render))              &&
        _command_exists "pandoc" &&
        _command_exists "lynx"
-  then # `notes show --render` with `pandoc` and `lynx` available.
+  then # `show --render` with `pandoc` and `lynx` available.
     pandoc "${_target_path}" | lynx -stdin
   else # default
     if ((_dump))
-    then # `notes show --dump [--no-color]`
+    then # `show --dump [--no-color]`
       if ((_print_no_color))
-      then # `notes show --dump --no-color`
+      then # `show --dump --no-color`
         cat "${_target_path}"
-      else # `notes show --dump`
+      else # `show --dump`
         _highlight_syntax_if_available "${_target_path}"
       fi
-    else # `notes show`
+    else # `show`
       if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
       then
         _highlight_syntax_if_available "${_target_path}" \
@@ -8113,8 +8154,8 @@ _sync() {
   for __notebook in "${_notebooks[@]:-}"
   do
     printf "%s..." "${__notebook}"
-    _NOTEBOOK_PATH="${NOTES_DIR}/${__notebook}"
-    (NOTES_AUTO_SYNC=1 _git_checkpoint "[NOTES] Sync" --spinner)
+    _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
+    (NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner)
   done &&
     printf "Done!\\n" ||
       printf "Syncing failed!\\n"
@@ -8153,12 +8194,12 @@ Installed with Homebrew. To update, run:
   brew upgrade xwmx/taps/notes
 HEREDOC
   else
-    local _notes_url="${_REPO_RAW_URL}/notes"
+    local _nb_url="${_REPO_RAW_URL}/nb"
 
     local _temp_file
     _temp_file="$(mktemp)"
 
-    if ! _download_from "${_notes_url}" "${_temp_file}"
+    if ! _download_from "${_nb_url}" "${_temp_file}"
     then
       printf "Unable to download update.\\n"
       return 1
@@ -8203,7 +8244,7 @@ Usage:
   ${_ME} use <notebook>
 
 Description:
-  Switch to the specified notebook. Shortcut for \`notes notebooks use\`.
+  Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
 
 Shortcut Alias: \`u\`
 HEREDOC
@@ -8232,17 +8273,17 @@ _version() {
 }
 
 ###############################################################################
-# _notes()
+# _nb_main()
 ###############################################################################
 
-# _notes()
+# _nb_main()
 #
 # Description:
 #   Call the appropriate subcommand.
-_notes() {
-  _debug printf "_notes() >> start\\n"
-  _debug printf "_notes() \${@}: '%s'\\n" "${@}"
-  _debug printf "_notes() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
+_nb_main() {
+  _debug printf "_nb_main() >> start\\n"
+  _debug printf "_nb_main() \${@}: '%s'\\n" "${@}"
+  _debug printf "_nb_main() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
 
   # Set `$_SUBCOMMAND` if it's still blank.
   if [[ -z "${_SUBCOMMAND:-}" ]]
@@ -8258,7 +8299,7 @@ _notes() {
     then
       _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
     else
-      _NOTEBOOK_PATH="${NOTES_DIR}/${_SCOPE}"
+      _NOTEBOOK_PATH="${NB_DIR}/${_SCOPE}"
     fi
   else
     if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
@@ -8282,7 +8323,7 @@ _notes() {
       _git_required
 
       # Call `_init()` if configuration hasn't been initialized.
-      if [[ ! -e "${NOTES_DIR}"       ]] ||
+      if [[ ! -e "${NB_DIR}"       ]] ||
          [[ ! -e "${_NOTEBOOK_PATH}"  ]]
       then
         _git_required
@@ -8304,17 +8345,17 @@ _notes() {
           if _git_should_autosync
           then
             _debug \
-              printf "_notes(): _git_index_is_dirty && ((NOTES_AUTO_SYNC))\\n"
+              printf "_nb_main(): _git_index_is_dirty && ((NB_AUTO_SYNC))\\n"
             "${_MY_PATH}" sync
           else
             _debug \
-              printf "_notes(): _git_index_is_dirty && ! ((NOTES_AUTO_SYNC))\\n"
-            _git_checkpoint "[NOTES] Commit" --spinner
+              printf "_nb_main(): _git_index_is_dirty && ! ((NB_AUTO_SYNC))\\n"
+            _git_checkpoint "[nb] Commit" --spinner
           fi
         elif _git_should_autosync
         then
           _debug \
-            printf "_notes(): ! _git_index_is_dirty\\n"
+            printf "_nb_main(): ! _git_index_is_dirty\\n"
           ("${_MY_PATH}" sync &>/dev/null) &
         fi
       fi
@@ -8646,7 +8687,7 @@ do
          [[ -z "${_SUBCOMMAND:-}"   ]] &&
          [[ "${#__parts[@]}" -gt 0  ]]
       then
-        if [[ -d "${NOTES_DIR}/${__parts[0]}" ]] ||
+        if [[ -d "${NB_DIR}/${__parts[0]}" ]] ||
            {
              [[ "${__parts[0]}" == "local"      ]] &&
              [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
@@ -8716,7 +8757,7 @@ _main() {
   then
     _version
   else
-    _notes "${_ARGUMENTS[@]:-}"
+    _nb_main "${_ARGUMENTS[@]:-}"
   fi
 }
 

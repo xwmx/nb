@@ -2,52 +2,52 @@
 
 load test_helper
 
-# `_clear_notes_cache()` ######################################################
+# `_clear_cache()` ############################################################
 
-@test "\`_clear_notes_cache()\` clears the notes cache." {
+@test "\`_clear_cache()\` clears the cache." {
   {
-    "${_NOTES}" init
-    mkdir -p "${NOTES_DIR}/.cache"
-    echo "Example" > "${NOTES_DIR}/.cache/example"
-    [[ -e "${NOTES_DIR}/.cache" ]]
+    "${_NB}" init
+    mkdir -p "${NB_DIR}/.cache"
+    echo "Example" > "${NB_DIR}/.cache/example"
+    [[ -e "${NB_DIR}/.cache" ]]
   }
 
 
-  run "${_NOTES}" notebooks add "example"
+  run "${_NB}" notebooks add "example"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0 ]]
-  [[ -e "${NOTES_DIR}/.cache" ]]
-  [[ -z "$(ls -A "${NOTES_DIR}/.cache")" ]]
+  [[ -e "${NB_DIR}/.cache" ]]
+  [[ -z "$(ls -A "${NB_DIR}/.cache")" ]]
 }
 
 # `_get_title()` ##############################################################
 
 @test "\`_get_title()\` detects and returns Markdown title formats." {
   {
-    "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add "one.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "one.md"
 # Title One
 line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "two.md"
+    cat <<HEREDOC | "${_NB}" add "two.md"
 line one
 line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "three.md"
+    cat <<HEREDOC | "${_NB}" add "three.md"
 # Title Three
 line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "four.md"
+    cat <<HEREDOC | "${_NB}" add "four.md"
 ---
 summary: Example Summary
 custom: variable
@@ -57,7 +57,7 @@ line six
 line seven
 line eight
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "five.md"
+    cat <<HEREDOC | "${_NB}" add "five.md"
 ---
 summary: Example Summary
 title: Title Five
@@ -68,7 +68,7 @@ line seven
 line eight
 line nine
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "six.md"
+    cat <<HEREDOC | "${_NB}" add "six.md"
 ---
 summary: Example Summary
 custom: variable
@@ -77,7 +77,7 @@ line five
 line six
 line seven
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "seven.md"
+    cat <<HEREDOC | "${_NB}" add "seven.md"
 Title Seven
 ===========
 
@@ -85,7 +85,7 @@ line four
 line five
 line six
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "eight.md"
+    cat <<HEREDOC | "${_NB}" add "eight.md"
 ---
 summary: Example Summary
 custom: variable
@@ -98,7 +98,7 @@ line nine
 line ten
 line eleven
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "nine.md"
+    cat <<HEREDOC | "${_NB}" add "nine.md"
 ---
 summary: Example Summary
 custom: variable
@@ -110,13 +110,13 @@ line nine
 line ten
 line eleven
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "ten.md"
+    cat <<HEREDOC | "${_NB}" add "ten.md"
 # Title Ten #
 line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NOTES}" add "eleven.md"
+    cat <<HEREDOC | "${_NB}" add "eleven.md"
 [](https://example.com/example.png)
 
 # Title Eleven
@@ -125,7 +125,7 @@ line three
 line four
 HEREDOC
     # shellcheck disable=SC2006
-    cat <<HEREDOC | "${_NOTES}" add "twelve.md"
+    cat <<HEREDOC | "${_NB}" add "twelve.md"
 [](https://example.com/example.png)
 
 ```text
@@ -140,7 +140,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" list --no-color
+  run "${_NB}" list --no-color
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -166,11 +166,11 @@ HEREDOC
 
 @test "\`_get_unique_basename()\` works for notes" {
   {
-    "${_NOTES}" init
-    "${_NOTES}" add "example.md" --content "Example"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example"
   }
 
-  run "${_NOTES}" add "example.md" --content "Example"
+  run "${_NB}" add "example.md" --content "Example"
 
   [[ ${status} -eq 0 ]]
 
@@ -180,7 +180,7 @@ HEREDOC
 
   [[ "${lines[0]}" =~ example-01.md ]]
 
-  run "${_NOTES}" add "example.md" --content "Example"
+  run "${_NB}" add "example.md" --content "Example"
 
   [[ ${status} -eq 0 ]]
 
@@ -193,11 +193,11 @@ HEREDOC
 
 @test "\`_get_unique_basename()\` works for bookmarks" {
   {
-    "${_NOTES}" init
-    "${_NOTES}" add "example.bookmark.md" --content "<https://example.com>"
+    "${_NB}" init
+    "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
   }
 
-  run "${_NOTES}" add "example.bookmark.md" --content "<https://example.com>"
+  run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
   [[ ${status} -eq 0 ]]
 
@@ -207,7 +207,7 @@ HEREDOC
 
   [[ "${lines[0]}" =~ example-01.bookmark.md ]]
 
-  run "${_NOTES}" add "example.bookmark.md" --content "<https://example.com>"
+  run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
   [[ ${status} -eq 0 ]]
 

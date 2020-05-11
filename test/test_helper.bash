@@ -7,25 +7,34 @@
 ###############################################################################
 
 setup() {
+  # `$_NB`
+  #
+  # The location of the `nb` script being tested.
+  export _NB="${BATS_TEST_DIRNAME}/../nb"
+
+  # `$_NB_PATH`
+  #
+  # Used by `bookmark` and `notes` for testing.
+  export _NB_PATH="${_NB}"
+
+  # `$_BOOKMARK`
+  #
+  # The location of the `bookmark` script being tested.
+  export _BOOKMARK="${BATS_TEST_DIRNAME}/../bin/bookmark"
+
   # `$_NOTES`
   #
   # The location of the `notes` script being tested.
-  export _NOTES="${BATS_TEST_DIRNAME}/../notes"
-
-    # `$_BOOKMARK`
-  #
-  # The location of the `notes` script being tested.
-  export _BOOKMARK="${BATS_TEST_DIRNAME}/../bin/bookmark"
-  export _NOTES_PATH="${_NOTES}"
+  export _NOTES="${BATS_TEST_DIRNAME}/../bin/notes"
 
   export _TMP_DIR
-  _TMP_DIR="$(mktemp -d /tmp/notes_test.XXXXXX)" || exit 1
+  _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
 
-  export NOTES_DIR="${_TMP_DIR}/.notes"
-  export _NOTEBOOK_PATH="${NOTES_DIR}/home"
-  export NOTESRC_PATH="${_TMP_DIR}/.notesrc"
-  export NOTES_HIGHLIGHT_COLOR=3
-  export NOTES_AUTO_SYNC=0
+  export NB_DIR="${_TMP_DIR}/notebooks"
+  export _NOTEBOOK_PATH="${NB_DIR}/home"
+  export NBRC_PATH="${_TMP_DIR}/.notesrc"
+  export NB_HIGHLIGHT_COLOR=3
+  export NB_AUTO_SYNC=0
 
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
@@ -41,9 +50,9 @@ setup() {
   # being available in `$PATH`.
   export PATH="${BATS_TEST_DIRNAME}/fixtures/bin:${PATH}"
 
-  if [[ ! "${NOTES_DIR}"      =~ ^/tmp/notes_test ]] ||
-     [[ ! "${_NOTEBOOK_PATH}" =~ ^/tmp/notes_test ]] ||
-     [[ ! "${NOTESRC_PATH}"   =~ ^/tmp/notes_test ]]
+  if [[ ! "${NB_DIR}"         =~ ^/tmp/nb_test ]] ||
+     [[ ! "${_NOTEBOOK_PATH}" =~ ^/tmp/nb_test ]] ||
+     [[ ! "${NBRC_PATH}"      =~ ^/tmp/nb_test ]]
   then
     exit 1
   fi
@@ -52,7 +61,7 @@ setup() {
 teardown() {
   if [[ -n "${_TMP_DIR:-}" ]] &&
      [[ -e "${_TMP_DIR}"   ]] &&
-     [[ "${_TMP_DIR}" =~ ^/tmp/notes_test ]]
+     [[ "${_TMP_DIR}" =~ ^/tmp/nb_test ]]
   then
     rm -rf "${_TMP_DIR}"
   fi
@@ -115,7 +124,7 @@ _highlight() {
 _setup_remote_repo() {
   local _pwd="${PWD}"
   if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
-     [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/notes_test ]]
+     [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/nb_test ]]
   then
     mkdir "${_GIT_REMOTE_PATH}" &&
       cd "${_GIT_REMOTE_PATH}"  &&

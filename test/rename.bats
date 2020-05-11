@@ -3,8 +3,8 @@
 load test_helper
 
 _setup_rename() {
-  run "${_NOTES}" init
-  run "${_NOTES}" add "initial example name.md"
+  run "${_NB}" init
+  run "${_NB}" add "initial example name.md"
 }
 
 # no argument #################################################################
@@ -13,7 +13,7 @@ _setup_rename() {
   _setup_rename
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename --force
+  run "${_NB}" rename --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -29,11 +29,11 @@ _setup_rename() {
   do
     sleep 1
   done
-  ! git log | grep -q '\[NOTES\] Rename'
+  ! git log | grep -q '\[nb\] Rename'
 
   # Prints help
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ "  notes rename" ]]
+  [[ "${lines[1]}" =~ "  nb rename" ]]
 }
 
 # <filename> ##################################################################
@@ -41,12 +41,12 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument renames without errors." {
   {
     _setup_rename
-    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE.org" --force
+  run "${_NB}" rename "${_filename}" "EXAMPLE.org" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -63,10 +63,10 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
-  [[ "$("${_NOTES}" index get_id 'EXAMPLE.org')" == '1' ]]
+  [[ "$("${_NB}" index get_id 'EXAMPLE.org')" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'initial\ example\ name.md\'\ renamed\ to\ \'EXAMPLE.org\' ]]
@@ -75,12 +75,12 @@ _setup_rename() {
 @test "\`rename\` with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
-    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE" --force
+  run "${_NB}" rename "${_filename}" "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -97,10 +97,10 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
-  [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'initial\ example\ name.md\'\ renamed\ to\ \'EXAMPLE.md\' ]]
@@ -108,14 +108,14 @@ _setup_rename() {
 
 @test "\`rename\` bookmark with extension-less <filename> argument uses source extension." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="initial sample name.bookmark.md"
-    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    "${_NB}" add "${_filename}" --content "<https://example.com>"
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE" --force
+  run "${_NB}" rename "${_filename}" "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -132,10 +132,10 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
-  [[ "$("${_NOTES}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
+  [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'initial\ sample\ name.bookmark.md\' ]]
@@ -144,14 +144,14 @@ _setup_rename() {
 
 @test "\`rename\` bookmark with extension <filename> argument uses target extension." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="initial sample name.bookmark.md"
-    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    "${_NB}" add "${_filename}" --content "<https://example.com>"
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE.md" --force
+  run "${_NB}" rename "${_filename}" "EXAMPLE.md" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -168,26 +168,26 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
-  [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'initial\ sample\ name.bookmark.md\' ]]
   [[ "${output}" =~ renamed\ to\ \'EXAMPLE.md\'   ]]
 }
 
-@test "\`rename\` notes with bookmark extension <filename> argument uses target extension." {
+@test "\`rename\` note with bookmark extension <filename> argument uses target extension." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="initial sample name.md"
-    "${_NOTES}" add "${_filename}"
+    "${_NB}" add "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE.bookmark.md" --force
+  run "${_NB}" rename "${_filename}" "EXAMPLE.bookmark.md" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -204,10 +204,10 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
-  [[ "$("${_NOTES}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
+  [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'initial\ sample\ name.md\' ]]
@@ -217,13 +217,13 @@ _setup_rename() {
 @test "\`rename\` with existing <filename> exits with status 1." {
   {
     _setup_rename
-    run "${_NOTES}" add "EXAMPLE.org"
-    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    run "${_NB}" add "EXAMPLE.org"
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "EXAMPLE" --force
+  run "${_NB}" rename "${_filename}" "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -236,12 +236,12 @@ _setup_rename() {
 @test "\`rename <id>\` with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
-    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename 1 "EXAMPLE" --force
+  run "${_NB}" rename 1 "EXAMPLE" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -258,10 +258,10 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
-  [[ "$("${_NOTES}" index get_id 'EXAMPLE.md')" == '1' ]]
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'initial\ example\ name.md\'\ renamed\ to\ \'EXAMPLE.md\' ]]
@@ -272,14 +272,14 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument renames without errors." {
   {
     _setup_rename
-    _original=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    _original=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     _filename="test.md"
-    "${_NOTES}" rename "${_original}" "${_filename}" --force
+    "${_NB}" rename "${_original}" "${_filename}" --force
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" --reset --force
+  run "${_NB}" rename "${_filename}" --reset --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -298,12 +298,12 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
-  "${_NOTES}" index get_id "${_files[0]}"
-  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+  "${_NB}" index get_id "${_files[0]}"
+  [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'test.md\'\ renamed\ to\ \'[A-Za-z0-9]+.md\' ]]
@@ -313,14 +313,14 @@ _setup_rename() {
 
 @test "\`rename --to-bookmark\` with note renames without errors." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="example.md"
-    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    "${_NB}" add "${_filename}" --content "<https://example.com>"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   echo "\${_filename:-}: ${_filename:-}"
 
-  run "${_NOTES}" rename "${_filename}" --to-bookmark --force
+  run "${_NB}" rename "${_filename}" --to-bookmark --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -339,12 +339,12 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
-  "${_NOTES}" index get_id "${_files[0]}"
-  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+  "${_NB}" index get_id "${_files[0]}"
+  [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'example.bookmark.md\' ]]
@@ -352,13 +352,13 @@ _setup_rename() {
 
 @test "\`rename 1 sample --to-bookmark\` with note renames without errors." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="example.md"
-    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    "${_NB}" add "${_filename}" --content "<https://example.com>"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "sample" --to-bookmark --force
+  run "${_NB}" rename "${_filename}" "sample" --to-bookmark --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -377,12 +377,12 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
-  "${_NOTES}" index get_id "${_files[0]}"
-  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+  "${_NB}" index get_id "${_files[0]}"
+  [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'sample.bookmark.md\' ]]
@@ -390,13 +390,13 @@ _setup_rename() {
 
 @test "\`rename 1 sample.demo --to-bookmark\` discards extension and renames." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="example.md"
-    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    "${_NB}" add "${_filename}" --content "<https://example.com>"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" "sample.demo" --to-bookmark --force
+  run "${_NB}" rename "${_filename}" "sample.demo" --to-bookmark --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -415,12 +415,12 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
-  "${_NOTES}" index get_id "${_files[0]}"
-  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+  "${_NB}" index get_id "${_files[0]}"
+  [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'sample.bookmark.md\' ]]
@@ -428,13 +428,13 @@ _setup_rename() {
 
 @test "\`rename --to-note\` with bookmark renames without errors." {
   {
-    "${_NOTES}" init
+    "${_NB}" init
     _filename="example.bookmark.md"
-    "${_NOTES}" add "${_filename}" --content "<https://example.com>"
+    "${_NB}" add "${_filename}" --content "<https://example.com>"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" rename "${_filename}" --to-note --force
+  run "${_NB}" rename "${_filename}" --to-note --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -453,12 +453,12 @@ _setup_rename() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Rename'
+  git log | grep -q '\[nb\] Rename'
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
-  "${_NOTES}" index get_id "${_files[0]}"
-  [[ "$("${_NOTES}" index get_id "${_files[0]}")" == '1' ]]
+  "${_NB}" index get_id "${_files[0]}"
+  [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ \'example.bookmark.md\'\ renamed\ to\ \'example.md\' ]]
@@ -467,14 +467,14 @@ _setup_rename() {
 # help ########################################################################
 
 @test "\`help rename\` exits with status 0." {
-  run "${_NOTES}" help rename
+  run "${_NB}" help rename
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help rename\` prints help information." {
-  run "${_NOTES}" help rename
+  run "${_NB}" help rename
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ \notes\ rename ]]
+  [[ "${lines[1]}" =~ \nb\ rename ]]
 }

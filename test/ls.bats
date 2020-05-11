@@ -4,20 +4,20 @@ load test_helper
 
 
 _setup_ls() {
-  "${_NOTES}" init
-  cat <<HEREDOC | "${_NOTES}" add "first.md"
+  "${_NB}" init
+  cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "second.md"
+  cat <<HEREDOC | "${_NB}" add "second.md"
 # two
 line two
 line three
 line four
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "third.md"
+  cat <<HEREDOC | "${_NB}" add "third.md"
 # three
 line two
 line three
@@ -33,7 +33,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls
+  run "${_NB}" ls
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -50,12 +50,12 @@ HEREDOC
 @test "\`ls\` exits with 0 and includes archive count." {
   {
     _setup_ls
-    "${_NOTES}" notebooks add one
-    "${_NOTES}" one:notebook archive
+    "${_NB}" notebooks add one
+    "${_NB}" one:notebook archive
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls
+  run "${_NB}" ls
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -81,7 +81,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls
+  run "${_NB}" ls
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -102,7 +102,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls -e 5
+  run "${_NB}" ls -e 5
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -120,7 +120,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls -n 0
+  run "${_NB}" ls -n 0
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -137,7 +137,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls -n 1
+  run "${_NB}" ls -n 1
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -156,7 +156,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls -n 2
+  run "${_NB}" ls -n 2
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -176,7 +176,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" ls -n 3
+  run "${_NB}" ls -n 3
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"

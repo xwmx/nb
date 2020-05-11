@@ -7,13 +7,13 @@ load test_helper
 
 @test "\`edit\` with no argument exits and prints help." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
 
-  run "${_NOTES}" edit
+  run "${_NB}" edit
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -29,21 +29,21 @@ load test_helper
   then
     sleep 1
   fi
-  ! git log | grep -q '\[NOTES\] Edit'
+  ! git log | grep -q '\[nb\] Edit'
 
   # Prints help information
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  nb edit (<id> | <filename> | <path> | <title>)" ]]
 }
 
 # <selector> ##################################################################
 
 @test "\`edit <selector>\` with empty repo exits with 1 and prints message." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
-  run "${_NOTES}" edit 1
+  run "${_NB}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -54,16 +54,16 @@ load test_helper
 
 @test "\`edit <scope>:<selector>\` with <filename> argument prints scoped output." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" notebooks add "one"
-    run "${_NOTES}" one:add
-    _filename=$("${_NOTES}" one:list -n 1 --no-id --filenames | head -1)
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
   }
   [[ -n "${_filename}" ]]
-  [[ -e "${NOTES_DIR}/one/${_filename}" ]]
+  [[ -e "${NB_DIR}/one/${_filename}" ]]
 
-  run "${_NOTES}" edit one:"${_filename}"
+  run "${_NB}" edit one:"${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Updated\ \[one:[0-9]+\]\ one:[A-Za-z0-9]+.md ]]
@@ -73,13 +73,13 @@ load test_helper
 
 @test "\`edit\` with no changes does not print output." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "example.md" --content "Example content."
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --content "Example content."
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
-    run "${_NOTES}" edit "${_filename}"
+    run "${_NB}" edit "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -88,14 +88,14 @@ load test_helper
 
 @test "\`edit\` encrypted with no changes does not print output." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "example.md" --content "Example content." \
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --content "Example content." \
       --encrypt --password example
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
   export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
-    run "${_NOTES}" edit "${_filename}" --password example
+    run "${_NB}" edit "${_filename}" --password example
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -106,12 +106,12 @@ load test_helper
 
 @test "\`edit\` with <filename> argument edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit "${_filename}"
+  run "${_NB}" edit "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -127,7 +127,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -135,13 +135,13 @@ load test_helper
 
 @test "\`edit\` with <filename> with spaces edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "Note name with spaces.md"
+    run "${_NB}" init
+    run "${_NB}" add "Note name with spaces.md"
     _filename="Note name with spaces.md"
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
-  run "${_NOTES}" edit "${_filename}"
+  run "${_NB}" edit "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -157,7 +157,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ Note\ name\ with\ spaces.md ]]
@@ -167,12 +167,12 @@ load test_helper
 
 @test "\`edit\` with <id> argument edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit 1
+  run "${_NB}" edit 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -188,7 +188,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -198,12 +198,12 @@ load test_helper
 
 @test "\`edit\` with <path> argument edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit "${_NOTEBOOK_PATH}/${_filename}"
+  run "${_NB}" edit "${_NOTEBOOK_PATH}/${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -219,7 +219,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -230,13 +230,13 @@ load test_helper
 
 @test "\`edit\` with <title> argument edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" edit "${_title}"
+  run "${_NB}" edit "${_title}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -252,7 +252,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -262,12 +262,12 @@ load test_helper
 
 @test "\`edit\` with piped content edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run bash -c "echo '## Piped' | ${_NOTES} edit 1"
+  run bash -c "echo '## Piped' | ${_NB} edit 1"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -286,7 +286,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -296,12 +296,12 @@ load test_helper
 
 @test "\`edit\` with encrypted file edits properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Content" --encrypt --password=example
+    run "${_NB}" init
+    run "${_NB}" add "# Content" --encrypt --password=example
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" edit 1 --password=example
+  run "${_NB}" edit 1 --password=example
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -315,7 +315,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Edit'
+  git log | grep -q '\[nb\] Edit'
 
   # Prints output
   [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
@@ -324,10 +324,10 @@ load test_helper
 # help ########################################################################
 
 @test "\`help edit\` exits with status 0 and prints help information." {
-  run "${_NOTES}" help edit
+  run "${_NB}" help edit
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes edit (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" == "  nb edit (<id> | <filename> | <path> | <title>)" ]]
 }

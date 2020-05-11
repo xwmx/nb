@@ -1,22 +1,20 @@
-#compdef notes
-
-_notes_subcommands() {
+_nb_subcommands() {
   # _cache_completions()
   #
   # Usage:
   #   _cache_completions <path>
   #
   # Description:
-  #   Cache completions for `notes`. Generating completions can be slow and
+  #   Cache completions for `nb`. Generating completions can be slow and
   #   native shell caching doesn't appear to help.
   _cache_completions() {
     local _cache_path="${1:-}"
 
     local _commands
-    IFS=$'\n' _commands=($(notes commands))
+    IFS=$'\n' _commands=($(nb commands))
 
     local _notebooks
-    IFS=$'\n' _notebooks=($(notes notebooks --names --no-color --unarchived))
+    IFS=$'\n' _notebooks=($(nb notebooks --names --no-color --unarchived))
 
     local _completions=()
     IFS=$'\n' _completions=(${_commands[@]})
@@ -74,24 +72,24 @@ _notes_subcommands() {
   }
 
 
-  local _notes_dir=
-  _notes_dir="$(notes env | grep 'NOTES_DIR' | cut -d = -f 2)"
+  local _nb_dir=
+  _nb_dir="$(nb env | grep 'NB_DIR' | cut -d = -f 2)"
 
-  if [[ -z "${_notes_dir:?}"  ]] ||
-     [[ ! -e "${_notes_dir}"  ]]
+  if [[ -z "${_nb_dir:?}"  ]] ||
+     [[ ! -e "${_nb_dir}"  ]]
   then
     return 0
-  elif [[ -L "${_notes_dir}" ]]
+  elif [[ -L "${_nb_dir}" ]]
   then
-    _notes_dir="$(realpath "${_notes_dir}")"
+    _nb_dir="$(realpath "${_nb_dir}")"
   fi
 
-  if [[ ! -d "${_notes_dir}"  ]]
+  if [[ ! -d "${_nb_dir}"  ]]
   then
     return 0
   fi
 
-  local _cache_path="${_notes_dir}/.cache/notes-completion-cache-zsh"
+  local _cache_path="${_nb_dir}/.cache/nb-completion-cache-zsh"
   local _completions_cached=()
 
   if [[ ! -e "${_cache_path}" ]]
@@ -116,13 +114,10 @@ _notes_subcommands() {
     (_cache_completions "${_cache_path}" &)
   fi
 
-  if [[ "${?}" -eq 0 ]]
-  then
-    compadd -- "${_completions_cached[@]}"
-    return 0
-  else
-    return 1
-  fi
+  local _current="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=()
+
+  COMPREPLY=($(compgen -W "${_completions_cached[*]}" -- "${_current}"))
 }
 
-_notes_subcommands "$@"
+complete -F _nb_subcommands nb

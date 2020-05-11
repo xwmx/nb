@@ -2,25 +2,25 @@
 
 load test_helper
 
-@test "\`notes version\` returns with 0 status." {
-  run "${_NOTES}" --version
+@test "\`version\` returns with 0 status." {
+  run "${_NB}" --version
   [[ "${status}" -eq 0 ]]
 }
 
-@test "\`notes version\` prints a version number." {
-  run "${_NOTES}" --version
+@test "\`version\` prints a version number." {
+  run "${_NB}" --version
   printf "'%s'" "${output}"
   echo "${output}" \
     | grep -q '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+'
 }
 
-@test "\`notes --version\` returns with 0 status." {
-  run "${_NOTES}" --version
+@test "\`--version\` returns with 0 status." {
+  run "${_NB}" --version
   [[ "${status}" -eq 0 ]]
 }
 
-@test "\`notes --version\` prints a version number." {
-  run "${_NOTES}" --version
+@test "\`--version\` prints a version number." {
+  run "${_NB}" --version
   printf "'%s'" "${output}"
   echo "${output}" \
     | grep -q '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+'

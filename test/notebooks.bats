@@ -3,14 +3,14 @@
 load test_helper
 
 _setup_notebooks() {
-  "${_NOTES}" init
-  mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one" || return 1
+  "${_NB}" init
+  mkdir -p "${NB_DIR}/one"
+  cd "${NB_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
-  touch "${NOTES_DIR}/one/.index"
-  mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}" || return 1
+  touch "${NB_DIR}/one/.index"
+  mkdir -p "${NB_DIR}/two"
+  cd "${NB_DIR}" || return 1
 }
 
 # `notebooks` #################################################################
@@ -22,7 +22,7 @@ _setup_notebooks() {
 one (${_GIT_REMOTE_URL})"
   }
 
-  NOTES_HIGHLIGHT_COLOR=3 run "${_NOTES}" notebooks
+  NB_HIGHLIGHT_COLOR=3 run "${_NB}" notebooks
   [[ ${status} -eq 0 ]]
 
 
@@ -38,7 +38,7 @@ one (${_GIT_REMOTE_URL})"
     _setup_notebooks
   }
 
-  run "${_NOTES}" notebooks one
+  run "${_NB}" notebooks one
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -54,7 +54,7 @@ one (${_GIT_REMOTE_URL})"
     _expected="$(_highlight 'home')"
   }
 
-  run "${_NOTES}" notebooks home --names
+  run "${_NB}" notebooks home --names
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -71,7 +71,7 @@ one (${_GIT_REMOTE_URL})"
 one"
   }
 
-  run "${_NOTES}" notebooks --names
+  run "${_NB}" notebooks --names
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -86,7 +86,7 @@ one"
     _setup_notebooks
   }
 
-  run "${_NOTES}" notebooks --no-color
+  run "${_NB}" notebooks --no-color
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -102,7 +102,7 @@ one (${_GIT_REMOTE_URL})"
     _setup_notebooks
   }
 
-  run "${_NOTES}" notebooks home --no-color
+  run "${_NB}" notebooks home --no-color
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -117,7 +117,7 @@ one (${_GIT_REMOTE_URL})"
     _setup_notebooks
   }
 
-  run "${_NOTES}" notebooks --names --no-color
+  run "${_NB}" notebooks --names --no-color
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -131,10 +131,10 @@ one"
 @test "\`notebooks --names --no-color --archived\` exits with 0 and prints archived." {
   {
     _setup_notebooks
-    run "${_NOTES}" one:notebook archive
+    run "${_NB}" one:notebook archive
   }
 
-  run "${_NOTES}" notebooks --names --no-color --archived
+  run "${_NB}" notebooks --names --no-color --archived
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -147,10 +147,10 @@ one"
 @test "\`notebooks --names --no-color --unarchived\` exits with 0 and prints unarchived." {
   {
     _setup_notebooks
-    run "${_NOTES}" one:notebook archive
+    run "${_NB}" one:notebook archive
   }
 
-  run "${_NOTES}" notebooks --names --no-color --unarchived
+  run "${_NB}" notebooks --names --no-color --unarchived
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -163,12 +163,12 @@ one"
 @test "\`notebooks --names --no-color\` prints local and global." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
-  run "${_NOTES}" notebooks --names --no-color
+  run "${_NB}" notebooks --names --no-color
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -183,12 +183,12 @@ one"
 @test "\`notebooks --names --no-color --local\` exits with 0 and prints local." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
-  run "${_NOTES}" notebooks --names --no-color --local
+  run "${_NB}" notebooks --names --no-color --local
 
   printf "\${PWD}: %s\\n" "${PWD}"
   printf "\${status}: %s\\n" "${status}"
@@ -202,12 +202,12 @@ one"
 @test "\`notebooks --names --no-color --local\` with no local exits with 1." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}"
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
-  run "${_NOTES}" notebooks --names --no-color --local
+  run "${_NB}" notebooks --names --no-color --local
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -219,10 +219,10 @@ one"
 @test "\`notebooks --names --no-color --global\` exits with 0 and prints global." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
   }
 
-  run "${_NOTES}" notebooks --names --no-color --global
+  run "${_NB}" notebooks --names --no-color --global
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -238,32 +238,32 @@ one"
 @test "\`notebooks --paths\` prints local and global." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
-  run "${_NOTES}" notebooks --paths
+  run "${_NB}" notebooks --paths
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="${_TMP_DIR}/example-local
-${NOTES_DIR}/home
-${NOTES_DIR}/one"
+${NB_DIR}/home
+${NB_DIR}/one"
   [[ "${output}" == "${_expected}" ]]
 }
 
 @test "\`notebooks --paths --local\` exits with 0 and prints local." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}/example-local"
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
-  run "${_NOTES}" notebooks --paths --local
+  run "${_NB}" notebooks --paths --local
 
   printf "\${PWD}: %s\\n" "${PWD}"
   printf "\${status}: %s\\n" "${status}"
@@ -277,12 +277,12 @@ ${NOTES_DIR}/one"
 @test "\`notebooks --paths --local\` with no local exits with 1." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
     cd "${_TMP_DIR}"
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
-  run "${_NOTES}" notebooks --paths --local
+  run "${_NB}" notebooks --paths --local
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -294,31 +294,31 @@ ${NOTES_DIR}/one"
 @test "\`notebooks --paths --global\` exits with 0 and prints global." {
   {
     _setup_notebooks
-    run "${_NOTES}" notebooks init "${_TMP_DIR}/example-local"
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
   }
 
-  run "${_NOTES}" notebooks --paths --global
+  run "${_NB}" notebooks --paths --global
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="${NOTES_DIR}/home
-${NOTES_DIR}/one"
+  _expected="${NB_DIR}/home
+${NB_DIR}/one"
   [[ "${output}" == "${_expected}" ]]
 }
 
 # help ########################################################################
 
 @test "\`help notebooks\` exits with status 0." {
-  run "${_NOTES}" help notebooks
+  run "${_NB}" help notebooks
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help notebooks\` prints help information." {
-  run "${_NOTES}" help notebooks
+  run "${_NB}" help notebooks
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ \ \ notes\ notebooks\ \[\<name\>\] ]]
+  [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\] ]]
 }

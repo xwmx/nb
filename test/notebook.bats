@@ -4,13 +4,13 @@ load test_helper
 
 _setup_notebook() {
   {
-    "${_NOTES}" init
-    mkdir -p "${NOTES_DIR}/one"
-    cd "${NOTES_DIR}/one" || return 1
+    "${_NB}" init
+    mkdir -p "${NB_DIR}/one"
+    cd "${NB_DIR}/one" || return 1
     git init
     git remote add origin "${_GIT_REMOTE_URL}"
-    mkdir -p "${NOTES_DIR}/two"
-    cd "${NOTES_DIR}" || return 1
+    mkdir -p "${NB_DIR}/two"
+    cd "${NB_DIR}" || return 1
   } > /dev/null 2>&1
 }
 
@@ -21,7 +21,7 @@ _setup_notebook() {
     _setup_notebook
   }
 
-  run "${_NOTES}" notebook
+  run "${_NB}" notebook
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -37,7 +37,7 @@ _setup_notebook() {
     _setup_notebook
   }
 
-  run "${_NOTES}" notebook archive
+  run "${_NB}" notebook archive
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -51,7 +51,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Archived'
+  git log | grep -q '\[nb\] Archived'
 }
 
 @test "\`notebook archive\` does not create git commit if already archived." {
@@ -60,7 +60,7 @@ _setup_notebook() {
     touch "${_NOTEBOOK_PATH}/.archived"
   }
 
-  run "${_NOTES}" notebook archive
+  run "${_NB}" notebook archive
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -75,7 +75,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  ! git log | grep '\[NOTES\] Archived'
+  ! git log | grep '\[nb\] Archived'
 }
 
 # `notebook unarchive` ########################################################
@@ -83,10 +83,10 @@ _setup_notebook() {
 @test "\`notebook unarchive\` exits with 0 and unarchives." {
   {
     _setup_notebook
-    run "${_NOTES}" notebook archive
+    run "${_NB}" notebook archive
   }
 
-  run "${_NOTES}" notebook unarchive
+  run "${_NB}" notebook unarchive
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -100,7 +100,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  git log | grep '\[NOTES\] Unarchived'
+  git log | grep '\[nb\] Unarchived'
 }
 
 @test "\`notebook unarchive\` does not create git commit if already unarchived." {
@@ -108,7 +108,7 @@ _setup_notebook() {
     _setup_notebook
   }
 
-  run "${_NOTES}" notebook unarchive
+  run "${_NB}" notebook unarchive
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -122,7 +122,7 @@ _setup_notebook() {
   do
     sleep 1
   done
-  ! git log | grep -q '\[NOTES\] Unarchived'
+  ! git log | grep -q '\[nb\] Unarchived'
 }
 
 # `notebook status` ###########################################################
@@ -132,7 +132,7 @@ _setup_notebook() {
     _setup_notebook
   }
 
-  run "${_NOTES}" notebook status
+  run "${_NB}" notebook status
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -140,8 +140,8 @@ _setup_notebook() {
   [[ ${status} -eq 0 ]]
   [[ "${output}" == "home is not archived." ]]
 
-  run "${_NOTES}" notebook archive
-  run "${_NOTES}" notebook status
+  run "${_NB}" notebook archive
+  run "${_NB}" notebook status
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -153,14 +153,14 @@ _setup_notebook() {
 # help ########################################################################
 
 @test "\`help notebook\` exits with status 0." {
-  run "${_NOTES}" help notebook
+  run "${_NB}" help notebook
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help notebook\` prints help information." {
-  run "${_NOTES}" help notebook
+  run "${_NB}" help notebook
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ notebook ]]
+  [[ "${lines[1]}" =~ nb\ notebook ]]
 }

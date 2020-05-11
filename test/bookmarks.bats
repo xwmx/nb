@@ -6,23 +6,23 @@ load test_helper
 
 @test "\`bookmarks\` exits with 0 and displays a list of bookmarks with titles." {
   {
-    "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add "first.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
-    cat <<HEREDOC | "${_NOTES}" add "third.md"
+    "${_NB}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
+    cat <<HEREDOC | "${_NB}" add "third.md"
 line one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
+    "${_NB}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
       --title "Example Bookmark Title"
-    cat <<HEREDOC | "${_NOTES}" add "fifth.md"
+    cat <<HEREDOC | "${_NB}" add "fifth.md"
 # three
 line two
 line three
@@ -31,7 +31,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" bookmarks
+  run "${_NB}" bookmarks
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -48,23 +48,23 @@ HEREDOC
 
 @test "\`bookmarks --sort\` exits with 0 and displays a sorted list of bookmarks." {
   {
-    "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add "first.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
-    cat <<HEREDOC | "${_NOTES}" add "third.md"
+    "${_NB}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
+    cat <<HEREDOC | "${_NB}" add "third.md"
 line one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
+    "${_NB}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
       --title "Example Bookmark Title"
-    cat <<HEREDOC | "${_NOTES}" add "fifth.md"
+    cat <<HEREDOC | "${_NB}" add "fifth.md"
 # three
 line two
 line three
@@ -73,7 +73,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NOTES}" bookmarks --sort
+  run "${_NB}" bookmarks --sort
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

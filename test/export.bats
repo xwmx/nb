@@ -6,26 +6,26 @@ load test_helper
 
 @test "\`export\` with no arguments exits with status 1 and prints help." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
   }
 
-  run "${_NOTES}" export
+  run "${_NB}" export
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[1]}" =~ '  notes export' ]]
+  [[ "${lines[1]}" =~ '  nb export' ]]
 }
 
 # <id> ######################################################################
 
 @test "\`export\` with valid <id> and <path> exports a new note file." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Export Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example"
   }
 
-  run "${_NOTES}" export 1 "${_TMP_DIR}/example.md"
+  run "${_NB}" export 1 "${_TMP_DIR}/example.md"
   cat "${_TMP_DIR}/example.md"
   [[ -e "${_TMP_DIR}/example.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
@@ -33,11 +33,11 @@ load test_helper
 
 @test "\`export\` with valid <id> and <path> with diff file type converts." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Export Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example"
   }
 
-  run "${_NOTES}" export 1 "${_TMP_DIR}/example.html"
+  run "${_NB}" export 1 "${_TMP_DIR}/example.html"
   cat "${_TMP_DIR}/example.html"
   [[ -e "${_TMP_DIR}/example.html" ]]
   grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
@@ -47,11 +47,11 @@ load test_helper
 
 @test "\`export pandoc\` with valid <id> and <path> exports a new note file." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Export Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example"
   }
 
-  run "${_NOTES}" export pandoc 1
+  run "${_NB}" export pandoc 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -61,10 +61,10 @@ load test_helper
 
 @test "\`export pandoc\` with invalid <id> returns error." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
-  run "${_NOTES}" export pandoc 100
+  run "${_NB}" export pandoc 100
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -75,10 +75,10 @@ load test_helper
 # help ########################################################################
 
 @test "\`help export\` returns usage information." {
-  run "${_NOTES}" help export
+  run "${_NB}" help export
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ '  notes export' ]]
+  [[ "${lines[1]}" =~ '  nb export' ]]
 }

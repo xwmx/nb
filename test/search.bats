@@ -3,16 +3,16 @@
 load test_helper
 
 _setup_search() {
-  "${_NOTES}" init &>/dev/null
-  cat <<HEREDOC | "${_NOTES}" add "first.md"
+  "${_NB}" init &>/dev/null
+  cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 idyl
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "second.md"
+  cat <<HEREDOC | "${_NB}" add "second.md"
 # two
 sweetish
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "third.md"
+  cat <<HEREDOC | "${_NB}" add "third.md"
 # three
 sweetish
 HEREDOC
@@ -26,13 +26,13 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search
+  run "${_NB}" search
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ search\ \<query\> ]]
+  [[ "${lines[1]}" =~ nb\ search\ \<query\> ]]
 }
 
 # `search <no match>` #########################################################
@@ -43,7 +43,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'no match'
+  run "${_NB}" search 'no match'
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -58,7 +58,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'idyl'
+  run "${_NB}" search 'idyl'
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -75,7 +75,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'idyl' --path
+  run "${_NB}" search 'idyl' --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -89,7 +89,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'idyl' --list
+  run "${_NB}" search 'idyl' --list
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -105,7 +105,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'sweetish' --use-grep
+  run "${_NB}" search 'sweetish' --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
@@ -126,7 +126,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'sweetish' --path --use-grep
+  run "${_NB}" search 'sweetish' --path --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -143,7 +143,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'sweetish' --list --use-grep
+  run "${_NB}" search 'sweetish' --list --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -159,21 +159,21 @@ HEREDOC
 @test "\`search --bookmarks\` exits with status 0 and prints output." {
   {
     _setup_search
-  cat <<HEREDOC | "${_NOTES}" add "fourth.bookmark.md"
+  cat <<HEREDOC | "${_NB}" add "fourth.bookmark.md"
 # four
 
 <https://example.com/>
 
 sweetish
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "fifth.bookmark.md"
+  cat <<HEREDOC | "${_NB}" add "fifth.bookmark.md"
 # five
 
 <https://example.com/>
 
 idyl
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "sixth.bookmark.md"
+  cat <<HEREDOC | "${_NB}" add "sixth.bookmark.md"
 # six
 
 <https://example.com/>
@@ -183,7 +183,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" search 'sweetish' --bookmarks --use-grep
+  run "${_NB}" search 'sweetish' --bookmarks --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_filename}: '%s'\\n" "${_filename}"
@@ -203,13 +203,13 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
-  "${_NOTES}" notebooks add one
-  "${_NOTES}" use one
-  "${_NOTES}" add example.md --title "sweetish"
-  "${_NOTES}" notebooks add two
-  "${_NOTES}" use two
-  "${_NOTES}" add example.md --title "sweetish"
-  "${_NOTES}" two:notebook archive
+  "${_NB}" notebooks add one
+  "${_NB}" use one
+  "${_NB}" add example.md --title "sweetish"
+  "${_NB}" notebooks add two
+  "${_NB}" use two
+  "${_NB}" add example.md --title "sweetish"
+  "${_NB}" two:notebook archive
 }
 
 @test "\`search <query> --all\` exits with status 0 and prints output." {
@@ -217,7 +217,7 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
   }
 
-  run "${_NOTES}" search 'sweetish' --all --use-grep
+  run "${_NB}" search 'sweetish' --all --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -241,7 +241,7 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
   }
 
-  run "${_NOTES}" search 'sweetish' -a --use-grep
+  run "${_NB}" search 'sweetish' -a --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -265,7 +265,7 @@ _search_all_setup() {
     _search_all_setup  &>/dev/null
   }
 
-  run "${_NOTES}" search 'no match' --all
+  run "${_NB}" search 'no match' --all
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
@@ -279,7 +279,7 @@ _search_all_setup() {
     _search_all_setup  &>/dev/null
   }
 
-  run "${_NOTES}" search 'sweetish' --all --path
+  run "${_NB}" search 'sweetish' --all --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -296,7 +296,7 @@ _search_all_setup() {
     _search_all_setup  &>/dev/null
   }
 
-  run "${_NOTES}" search 'no match' --all --path
+  run "${_NB}" search 'no match' --all --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -310,13 +310,13 @@ _search_all_setup() {
 # TODO
 # _search_all_setup() {
 #   _setup_search
-#   "${_NOTES}" notebooks add one
-#   "${_NOTES}" use one
-#   "${_NOTES}" add example.md --title "sweetish"
-#   "${_NOTES}" notebooks add two
-#   "${_NOTES}" use two
-#   "${_NOTES}" add example.md --title "sweetish"
-#   "${_NOTES}" two:notebook archive
+#   "${_NB}" notebooks add one
+#   "${_NB}" use one
+#   "${_NB}" add example.md --title "sweetish"
+#   "${_NB}" notebooks add two
+#   "${_NB}" use two
+#   "${_NB}" add example.md --title "sweetish"
+#   "${_NB}" two:notebook archive
 # }
 
 @test "\`search <query>\` in local notebook exits with status 0 and prints output." {
@@ -327,11 +327,11 @@ _search_all_setup() {
     cd "${_TMP_DIR}/example"
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
-    "${_NOTES}" add example-1.md --title "one" --content "sweetish"
-    "${_NOTES}" add example-2.md --title "two"
+    "${_NB}" add example-1.md --title "one" --content "sweetish"
+    "${_NB}" add example-2.md --title "two"
   }
 
-  run "${_NOTES}" search 'sweetish' --use-grep
+  run "${_NB}" search 'sweetish' --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -352,11 +352,11 @@ _search_all_setup() {
     cd "${_TMP_DIR}/example"
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
-    "${_NOTES}" add example-1.md --title "one" --content "sweetish"
-    "${_NOTES}" add example-2.md --title "two"
+    "${_NB}" add example-1.md --title "one" --content "sweetish"
+    "${_NB}" add example-2.md --title "two"
   }
 
-  run "${_NOTES}" search 'sweetish' --all --use-grep
+  run "${_NB}" search 'sweetish' --all --use-grep
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -391,14 +391,14 @@ _search_all_setup() {
 # help ########################################################################
 
 @test "\`help search\` exits with status 0." {
-  run "${_NOTES}" help search
+  run "${_NB}" help search
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help search\` prints help information." {
-  run "${_NOTES}" help search
+  run "${_NB}" help search
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ search\ \<query\> ]]
+  [[ "${lines[1]}" =~ nb\ search\ \<query\> ]]
 }

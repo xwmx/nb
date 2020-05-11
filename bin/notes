@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 ###############################################################################
-# Part of:
 # __                _
 # \ \   _ __   ___ | |_ ___  ___
 #  \ \ | '_ \ / _ \| __/ _ \/ __|
@@ -9,11 +8,20 @@
 #
 # `notes`
 #
+# Part of:
+# __          _
+# \ \   _ __ | |__
+#  \ \ | '_ \| '_ \
+#  / / | | | | |_) |
+# /_/  |_| |_|_.__/
+#
+# `nb` · `notes` && `bookmark`
+#
 # Command line note-taking, bookmarking, and archiving with encryption, search,
 # Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 # in a single portable script.
 #
-# https://github.com/xwmx/notes
+# https://github.com/xwmx/nb
 #
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
@@ -21,14 +29,94 @@
 # AGPLv3 • See LICENSE for details.
 ###############################################################################
 
-export __THIS_PATH="$0"
+export _NB_PATH="${_NB_PATH:-}"
 
-if [[ -L "${__THIS_PATH}" ]]
+if [[ -z "${_NB_PATH:-}" ]]
 then
-  __THIS_PATH="$(realpath "${__THIS_PATH}")"
+  _NB_PATH="$(command -v nb)"
 fi
 
-export __THIS_DIR=
-__THIS_DIR="$(cd "$(dirname "${__THIS_PATH}")" || :; pwd)"
+if [[ -z "${_NB_PATH:-}" ]]
+then
+  cat <<HEREDOC
+\`notes\` is part of \`nb\`. To install \`nb\`, see:
+  https://github.com/xwmx/nb
+HEREDOC
+fi
 
-source "${__THIS_DIR}/../notes"
+_main() {
+  if [[ -z "${1:-}" ]]
+  then
+    local _count=0
+    local _in_footer=0
+    local _in_list=0
+
+    while IFS= read -r __line
+    do
+      _count=$((_count+1))
+
+      if ((_in_footer))
+      then
+        printf "%s\\n" "${__line}" | sed -e 's/nb/notes/g'
+      elif [[ "${__line}" =~ ------------ ]]
+      then
+        if ! ((_in_list))
+        then
+          _in_list=1
+        else
+          _in_footer=1
+        fi
+
+        printf "%s\\n" "${__line}"
+      else
+        printf "%s\\n" "${__line}"
+      fi
+    done < <("${_NB_PATH:-}")
+  elif [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
+     {
+       [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
+     }
+  then
+    {
+
+      shift
+
+      if [[ -n "${*:-}" ]]
+      then
+        "${_NB_PATH:-}" help "${@}"
+      else
+        cat <<HEREDOC
+__                _
+\ \   _ __   ___ | |_ ___  ___
+ \ \ | '_ \ / _ \| __/ _ \/ __|
+ / / | | | | (_) | ||  __/\__ \\
+/_/  |_| |_|\___/ \__\___||___/
+
+Part of
+HEREDOC
+        "${_NB_PATH:-}" help | sed -e '1,5d'
+      fi  | sed -e "s/  nb / notes /g"                            \
+          | sed -e "s/\`nb/\`notes/g"                             \
+          | sed -e "s/\`notes\` · \`notes\`/\`nb\` · \`notes\`/g" \
+          | sed -e '$ d'
+
+      cat <<HEREDOC
+------------------------------------------------
+Part of \`nb\` (https://github.com/xwmx/nb).
+For more information, see: \`nb help\`.
+HEREDOC
+    } | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+        then
+          "${PAGER}"
+        elif hash "less" 2>/dev/null
+        then
+          less \
+            --CLEAR-SCREEN \
+            --prompt="> scroll for more, h for help, or q to quit"
+        else
+          cat
+        fi
+  else
+    "${_NB_PATH}" "${@:-}"
+  fi
+} && _main "${@:-}"

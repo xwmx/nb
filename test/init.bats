@@ -5,16 +5,16 @@ load test_helper
 # `init` ######################################################################
 
 @test "\`init\` exits with status 0." {
-  run "${_NOTES}" init
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`init\` exits with status 1 when \`\$NOTES_DIR\` exists as a file." {
-  touch "${NOTES_DIR}"
-  [[ -e "${NOTES_DIR}" ]]
-  run "${_NOTES}" init
+@test "\`init\` exits with status 1 when \`\$NB_DIR\` exists as a file." {
+  touch "${NB_DIR}"
+  [[ -e "${NB_DIR}" ]]
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -23,57 +23,57 @@ load test_helper
 @test "\`init\` exits with status 1 when \`\$_NOTEBOOK_PATH\` exists." {
   mkdir -p "${_NOTEBOOK_PATH}"
   [[ -e "${_NOTEBOOK_PATH}" ]]
-  run "${_NOTES}" init
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" =~ already\ initialized ]]
   [[ ${status} -eq 1 ]]
 }
 
-@test "\`init\` creates \`\$NOTES_DIR\` and \`\$_NOTEBOOK_PATH\` directories." {
-  run "${_NOTES}" init
+@test "\`init\` creates \`\$NB_DIR\` and \`\$_NOTEBOOK_PATH\` directories." {
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ -d "${NOTES_DIR}" ]]
+  [[ -d "${NB_DIR}" ]]
   [[ -d "${_NOTEBOOK_PATH}" ]]
 }
 
 @test "\`init\` creates a git directory in \`\$_NOTEBOOK_PATH\`." {
-  run "${_NOTES}" init
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ -d "${_NOTEBOOK_PATH}/.git" ]]
 }
 
 @test "\`init\` creates an .index \`\$_NOTEBOOK_PATH\`." {
-  run "${_NOTES}" init
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
 }
 
-@test "\`init\` exits with status 0 when \$NOTESRC_PATH\` exists." {
-  touch "${NOTESRC_PATH}"
-  [[ -e "${NOTESRC_PATH}" ]]
-  run "${_NOTES}" init
+@test "\`init\` exits with status 0 when \$NBRC_PATH\` exists." {
+  touch "${NBRC_PATH}"
+  [[ -e "${NBRC_PATH}" ]]
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`init\` creates a .notesrc file at \`\$NOTESRC_PATH\`." {
-  [[ ! -e "${NOTESRC_PATH}" ]]
-  run "${_NOTES}" init
+@test "\`init\` creates a .nbrc file at \`\$NBRC_PATH\`." {
+  [[ ! -e "${NBRC_PATH}" ]]
+  run "${_NB}" init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ -e "${NOTESRC_PATH}" ]]
-  cat "${NOTESRC_PATH}" | grep -q "Configuration file for \`notes\`"
-  printf "%s\\n" "$(cat "${NOTESRC_PATH}")"
-  cat "${NOTESRC_PATH}" | grep -q "\$NOTES_AUTO_SYNC"
+  [[ -e "${NBRC_PATH}" ]]
+  cat "${NBRC_PATH}" | grep -q "Configuration file for \`nb\`"
+  printf "%s\\n" "$(cat "${NBRC_PATH}")"
+  cat "${NBRC_PATH}" | grep -q "\$NB_AUTO_SYNC"
 }
 
 @test "\`init\` creates git commit." {
-  run "${_NOTES}" init
+  run "${_NB}" init
 
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
@@ -81,14 +81,14 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Initialize'
+  git log | grep -q '\[nb\] Initialize'
 }
 
 # `init <remote-url>` #########################################################
 
 @test "\`init <remote-url>\` creates a clone in \`\$_NOTEBOOK_PATH\`." {
   _setup_remote_repo
-  run "${_NOTES}" init "${_GIT_REMOTE_URL}"
+  run "${_NB}" init "${_GIT_REMOTE_URL}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -101,14 +101,14 @@ load test_helper
 # help ########################################################################
 
 @test "\`help init\` exits with status 0." {
-  run "${_NOTES}" help init
+  run "${_NB}" help init
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help init\` prints help information." {
-  run "${_NOTES}" help init
+  run "${_NB}" help init
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes init [<remote-url>]" ]]
+  [[ "${lines[1]}" == "  nb init [<remote-url>]" ]]
 }

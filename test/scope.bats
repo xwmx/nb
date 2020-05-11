@@ -3,22 +3,22 @@
 load test_helper
 
 _setup_scope() {
-  "${_NOTES}" init
-  "${_NOTES}" notebooks add one
-  "${_NOTES}" use one
-  "${_NOTES}" add "# first"
-  "${_NOTES}" use home
-  "${_NOTES}" notebooks add two
+  "${_NB}" init
+  "${_NB}" notebooks add one
+  "${_NB}" use one
+  "${_NB}" add "# first"
+  "${_NB}" use home
+  "${_NB}" notebooks add two
 }
 
-# `notes <name>:notebook` #####################################################
+# `nb <name>:notebook` #####################################################
 
-@test "\`notes one:notebook\` exits with 0 and scoped \`notebook\` output." {
+@test "\`nb one:notebook\` exits with 0 and scoped \`notebook\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" one:notebook
+  run "${_NB}" one:notebook
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -27,12 +27,12 @@ _setup_scope() {
   [[ "${output}" =~ "one" ]]
 }
 
-@test "\`notes two:notebook\` exits with 0 and scoped \`notebook\` output." {
+@test "\`nb two:notebook\` exits with 0 and scoped \`notebook\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" two:notebook
+  run "${_NB}" two:notebook
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -41,12 +41,12 @@ _setup_scope() {
   [[ "${output}" =~ "two" ]]
 }
 
-@test "\`notes one:invalid\` exits with 0 and scoped \`ls\` output." {
+@test "\`nb one:invalid\` exits with 0 and scoped \`ls\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" one:invalid
+  run "${_NB}" one:invalid
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -55,14 +55,14 @@ _setup_scope() {
   [[ "${lines[2]}" =~ "first" ]]
 }
 
-# `notes <name>:` #########################################################
+# `nb <name>:` #########################################################
 
-@test "\`notes one:\` exits with 0 and scoped \`ls\` output." {
+@test "\`nb one:\` exits with 0 and scoped \`ls\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" one:
+  run "${_NB}" one:
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -71,12 +71,12 @@ _setup_scope() {
   [[ "${lines[2]}" =~ "first" ]]
 }
 
-@test "\`notes one: --no-id\` exits with 0 and scoped \`ls\` output." {
+@test "\`nb one: --no-id\` exits with 0 and scoped \`ls\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" one: --no-id
+  run "${_NB}" one: --no-id
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -85,12 +85,12 @@ _setup_scope() {
   [[ "${lines[0]}" = "first" ]]
 }
 
-@test "\`notes two:\` exits with 0 and scoped \`ls\` output." {
+@test "\`nb two:\` exits with 0 and scoped \`ls\` output." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" two:
+  run "${_NB}" two:
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -99,12 +99,12 @@ _setup_scope() {
   [[ "${lines[2]}" =~ 0\ notes\. ]]
 }
 
-@test "\`notes invalid:\` exits with 1 and prints error." {
+@test "\`nb invalid:\` exits with 1 and prints error." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" invalid:
+  run "${_NB}" invalid:
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -113,14 +113,14 @@ _setup_scope() {
   [[ "${lines[0]}" =~ "Notebook not found: invalid" ]]
 }
 
-# `notes show <notebook>:<identifier>` ########################################
+# `nb show <notebook>:<identifier>` ########################################
 
-@test "\`notes show one:first --dump\` exits with 0 and prints scoped file content." {
+@test "\`nb show one:first --dump\` exits with 0 and prints scoped file content." {
   {
     _setup_scope &>/dev/null
   }
 
-  run "${_NOTES}" show one:first --dump
+  run "${_NB}" show one:first --dump
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"

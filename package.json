@@ -8,9 +8,10 @@
     "test": "test"
   },
   "bin": {
-    "notes": "notes",
-    "notes.sh": "notes",
-    "bookmark": "bin/bookmark"
+    "nb": "nb",
+    "notes.sh": "nb",
+    "bookmark": "bin/bookmark",
+    "notes": "bin/notes"
   },
   "scripts": {
     "test": "bats test",

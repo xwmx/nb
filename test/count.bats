@@ -3,20 +3,20 @@
 load test_helper
 
 _setup_count() {
-  "${_NOTES}" init
-  cat <<HEREDOC | "${_NOTES}" add "first.md"
+  "${_NB}" init
+  cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "second.md"
+  cat <<HEREDOC | "${_NB}" add "second.md"
 # two
 line two
 line three
 line four
 HEREDOC
-  cat <<HEREDOC | "${_NOTES}" add "third.md"
+  cat <<HEREDOC | "${_NB}" add "third.md"
 # three
 line two
 line three
@@ -31,7 +31,7 @@ HEREDOC
     _setup_count
   }
 
-  run "${_NOTES}" count
+  run "${_NB}" count
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -44,14 +44,14 @@ HEREDOC
 # help ########################################################################
 
 @test "\`help count\` exits with status 0." {
-  run "${_NOTES}" help count
+  run "${_NB}" help count
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help count\` prints help information." {
-  run "${_NOTES}" help count
+  run "${_NB}" help count
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes count" ]]
+  [[ "${lines[1]}" == "  nb count" ]]
 }

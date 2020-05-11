@@ -3,14 +3,14 @@
 load test_helper
 
 _setup_notebooks() {
-  "${_NOTES}" init
-  mkdir -p "${NOTES_DIR}/one"
-  cd "${NOTES_DIR}/one" || return 1
+  "${_NB}" init
+  mkdir -p "${NB_DIR}/one"
+  cd "${NB_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
-  touch "${NOTES_DIR}/one/.index"
-  mkdir -p "${NOTES_DIR}/two"
-  cd "${NOTES_DIR}" || return 1
+  touch "${NB_DIR}/one/.index"
+  mkdir -p "${NB_DIR}/two"
+  cd "${NB_DIR}" || return 1
 }
 
 # `notebooks init` ############################################################
@@ -23,7 +23,7 @@ _setup_notebooks() {
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
   }
 
-  run "${_NOTES}" notebooks init
+  run "${_NB}" notebooks init
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -44,7 +44,7 @@ _setup_notebooks() {
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
   }
 
-  run "${_NOTES}" notebooks init
+  run "${_NB}" notebooks init
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -63,7 +63,7 @@ _setup_notebooks() {
     git init 1>/dev/null
   }
 
-  run "${_NOTES}" notebooks init
+  run "${_NB}" notebooks init
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -80,7 +80,7 @@ _setup_notebooks() {
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
-  run "${_NOTES}" notebooks init example
+  run "${_NB}" notebooks init example
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -103,7 +103,7 @@ _setup_notebooks() {
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
-  run "${_NOTES}" notebooks init example
+  run "${_NB}" notebooks init example
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -124,7 +124,7 @@ _setup_notebooks() {
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
-  run "${_NOTES}" notebooks init example
+  run "${_NB}" notebooks init example
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -139,7 +139,7 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "${_NOTES}" notebooks init "${_TMP_DIR}/example"
+  run "${_NB}" notebooks init "${_TMP_DIR}/example"
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -156,7 +156,7 @@ _setup_notebooks() {
   do
     sleep 1
   done
-  git log | grep '\[NOTES\] Initialize'
+  git log | grep '\[nb\] Initialize'
 }
 
 @test "\`notebooks init <absolute path>\` in existing notebook exits with 1." {
@@ -168,7 +168,7 @@ _setup_notebooks() {
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
   }
 
-  run "${_NOTES}" notebooks init "${_TMP_DIR}/example"
+  run "${_NB}" notebooks init "${_TMP_DIR}/example"
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -187,7 +187,7 @@ _setup_notebooks() {
     git init 1>/dev/null
   }
 
-  run "${_NOTES}" notebooks init "${_TMP_DIR}/example"
+  run "${_NB}" notebooks init "${_TMP_DIR}/example"
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -203,7 +203,7 @@ _setup_notebooks() {
     _setup_remote_repo
   }
 
-  run "${_NOTES}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"

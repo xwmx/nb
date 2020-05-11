@@ -6,29 +6,29 @@ load test_helper
 
 @test "\`show\` with no argument exits with status 1 and prints help." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show
+  run "${_NB}" show
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
 
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[1]}" == "  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }
 
 @test "\`show\` with no argument does not show the note file." {
   skip "TODO: Determine how to test for \`\$PAGER\`."
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show
+  run "${_NB}" show
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 }
@@ -37,12 +37,12 @@ load test_helper
 
 @test "\`show --dump\` with argument exits with 0 and prints note with highlighting." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --dump
+  run "${_NB}" show 1 --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -52,12 +52,12 @@ load test_helper
 
 @test "\`show --dump --no-color\` with argument exits with 0 and prints note without highlighting." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --dump --no-color
+  run "${_NB}" show 1 --dump --no-color
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -66,12 +66,12 @@ load test_helper
 
 @test "\`show --dump\` with no argument exits with 1 and prints help." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Example"
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show --dump
+  run "${_NB}" show --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -79,17 +79,17 @@ load test_helper
   [[ ! "${output}" =~ mock_editor ]]
 
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[1]}" == "  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }
 
 # <selector> ##################################################################
 
 @test "\`show <selector>\` with empty repo exits with 1 and prints help." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
-  run "${_NOTES}" show 1
+  run "${_NB}" show 1
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -100,12 +100,12 @@ load test_helper
 
 @test "\`show <filename> --dump\` exits with status 0 and dumps note file." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_filename}" --dump
+  run "${_NB}" show "${_filename}" --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -116,12 +116,12 @@ load test_helper
 
 @test "\`show <id> --dump\` exits with status 0 and dumps note file." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --dump
+  run "${_NB}" show 1 --dump
   printf "\${_filename}: %s\\n" "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -133,12 +133,12 @@ load test_helper
 
 @test "\`show <path> --dump\` exits with status 0 and dumps note file." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -149,13 +149,13 @@ load test_helper
 
 @test "\`show <title> --dump\` exits with status 0 and dumps note file." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" show "${_title}" --dump
+  run "${_NB}" show "${_title}" --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -166,12 +166,12 @@ load test_helper
 
 @test "\`show <filename> --path\` exits with status 0 and prints note path." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_filename}" --path
+  run "${_NB}" show "${_filename}" --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -182,12 +182,12 @@ load test_helper
 
 @test "\`show <id> --path\` exits with status 0 and prints note path." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --path
+  run "${_NB}" show 1 --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -199,12 +199,12 @@ load test_helper
 
 @test "\`show <path> --path\` exits with status 0 and prints note path." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --path
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -215,13 +215,13 @@ load test_helper
 
 @test "\`show <title> --path\` exits with status 0 and prints note path." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" show "${_title}" --path
+  run "${_NB}" show "${_title}" --path
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -232,12 +232,12 @@ load test_helper
 
 @test "\`show <filename> --id\` exits with status 0 and prints note id." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_filename}" --id
+  run "${_NB}" show "${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -248,12 +248,12 @@ load test_helper
 
 @test "\`show <id> --id\` exits with status 0 and prints note id." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --id
+  run "${_NB}" show 1 --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -264,12 +264,12 @@ load test_helper
 
 @test "\`show <path> --id\` exits with status 0 and prints note id." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -280,13 +280,13 @@ load test_helper
 
 @test "\`show <title> --id\` exits with status 0 and prints note id." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-  run "${_NOTES}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -297,12 +297,12 @@ load test_helper
 
 @test "\`show\` with encrypted file show properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add "# Content" --encrypt --password=example
+    run "${_NB}" init
+    run "${_NB}" add "# Content" --encrypt --password=example
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NOTES}" show 1 --password=example --dump
+  run "${_NB}" show 1 --password=example --dump
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -316,14 +316,14 @@ load test_helper
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
-  run "${_NOTES}" help show
+  run "${_NB}" help show
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help show\` prints help information." {
-  run "${_NOTES}" help show
+  run "${_NB}" help show
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  notes show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[1]}" == "  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
 }

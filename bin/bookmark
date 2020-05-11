@@ -12,19 +12,19 @@
 # Markdown files with Git-backed versioning and syncing.
 #
 # Part of:
-# __                _
-# \ \   _ __   ___ | |_ ___  ___
-#  \ \ | '_ \ / _ \| __/ _ \/ __|
-#  / / | | | | (_) | ||  __/\__ \
-# /_/  |_| |_|\___/ \__\___||___/
+# __          _
+# \ \   _ __ | |__
+#  \ \ | '_ \| '_ \
+#  / / | | | | |_) |
+# /_/  |_| |_|_.__/
 #
-# `notes`
+# `nb` • `notes` && `bookmark`
 #
 # Command line note-taking, bookmarking, and archiving with encryption, search,
 # Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 # in a single portable script.
 #
-# https://github.com/xwmx/notes
+# https://github.com/xwmx/nb
 #
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
@@ -32,17 +32,17 @@
 # AGPLv3 • See LICENSE for details.
 ###############################################################################
 
-export _NOTES_PATH="${_NOTES_PATH:-}"
+export _NB_PATH="${_NB_PATH:-}"
 
-if [[ -z "${_NOTES_PATH:-}" ]]
+if [[ -z "${_NB_PATH:-}" ]]
 then
-  _NOTES_PATH="$(command -v notes)"
+  _NB_PATH="$(command -v nb)"
 fi
 
-if [[ -z "${_NOTES_PATH:-}" ]]
+if [[ -z "${_NB_PATH:-}" ]]
 then
   cat <<HEREDOC
-\`bookmark\` is part of \`notes\`. To install \`notes\`, see:
+\`bookmark\` is part of \`nb\`. To install \`nb\`, see:
   https://github.com/xwmx/notes
 HEREDOC
 fi
@@ -60,8 +60,8 @@ _main() {
          [[ "${_count}" == 8 ]]
       then
         printf "%s\\n" "${__line}" \
-          | sed -e 's/notes bookmark/bookmark/' \
-          | sed -e 's/notes help bookmark/bookmark help/'
+          | sed -e 's/nb bookmark/bookmark/' \
+          | sed -e 's/nb help bookmark/bookmark help/'
       elif [[ "${_count}" == 2 ]]
       then
         printf "%s\\n" "${__line}" \
@@ -69,7 +69,7 @@ _main() {
       else
         printf "%s\\n" "${__line}"
       fi
-    done < <("${_NOTES_PATH:-}" bookmark)
+    done < <("${_NB_PATH:-}" bookmark)
   elif [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
      {
        [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
@@ -89,15 +89,15 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 HEREDOC
-      "${_NOTES_PATH:-}" help bookmark        \
-        | sed -e "s/  notes /  /"             \
+      "${_NB_PATH:-}" help bookmark        \
+        | sed -e "s/  nb /  /"             \
         | sed -e "s/Shortcut Alias: \`b\`//"  \
         | sed -e '$ d'
 
       cat <<HEREDOC
 ------------------------------------------------
-Part of \`notes\` (https://github.com/xwmx/notes).
-For more information, see: \`notes help\`.
+Part of \`nb\` (https://github.com/xwmx/nb).
+For more information, see: \`nb help\`.
 HEREDOC
     } | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
         then
@@ -111,6 +111,6 @@ HEREDOC
           cat
         fi
   else
-    "${_NOTES_PATH}" bookmark "${@:-}"
+    "${_NB_PATH}" bookmark "${@:-}"
   fi
 } && _main "${@:-}"

@@ -6,13 +6,13 @@ load test_helper
 
 @test "\`delete\` with no argument exits with 1, prints help, and does not delete." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" delete --force
+  run "${_NB}" delete --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -28,21 +28,21 @@ load test_helper
   do
     sleep 1
   done
-  ! git log | grep -q '\[NOTES\] Delete'
+  ! git log | grep -q '\[nb\] Delete'
 
   # Prints help information
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ delete ]]
+  [[ "${lines[1]}" =~ nb\ delete ]]
 }
 
 # <selector> ##################################################################
 
 @test "\`delete <selector>\` with empty repo exits with 1 and prints message." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
-  run "${_NOTES}" delete 1 --force
+  run "${_NB}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
@@ -52,13 +52,13 @@ load test_helper
 @test "\`delete <selector> (no force)\` returns 0 and deletes note." {
   skip "Determine how to test interactive prompt."
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
-  run "${_NOTES}" delete "${_filename}" --force
+  run "${_NB}" delete "${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
@@ -69,20 +69,20 @@ load test_helper
 
 @test "\`delete <scope>:<selector>\` with <filename> argument prints scoped output." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" notebooks add "one"
-    run "${_NOTES}" use "one"
-    run "${_NOTES}" add
-    _filename=$("${_NOTES}" list -n 1 --no-id --filenames | head -1)
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" use "one"
+    run "${_NB}" add
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: '${_filename:-}'"
-    printf "home:list\\n" && "${_NOTES}" home:list --no-id --filenames
-    printf "one:list\\n"  && "${_NOTES}" one:list --no-id --filenames
-    run "${_NOTES}" use "home"
+    printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
+    printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
+    run "${_NB}" use "home"
   }
   [[ -n "${_filename}" ]]
-  [[ -e "${NOTES_DIR}/one/${_filename}" ]]
+  [[ -e "${NB_DIR}/one/${_filename}" ]]
 
-  run "${_NOTES}" delete one:"${_filename}" --force
+  run "${_NB}" delete one:"${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${output}" =~ Deleted\ \[one:[A-Za-z0-9]+\]\ one:[A-Za-z0-9]+.md ]]
@@ -92,14 +92,14 @@ load test_helper
 
 @test "\`delete\` with <filename> argument deletes properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-  run "${_NOTES}" delete "${_filename}" --force
+  run "${_NB}" delete "${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -115,7 +115,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -130,14 +130,14 @@ load test_helper
 
 @test "\`delete\` with <id> argument deletes properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-  run "${_NOTES}" delete 1 --force
+  run "${_NB}" delete 1 --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -153,7 +153,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -168,14 +168,14 @@ load test_helper
 
 @test "\`delete\` with <path> argument deletes properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-  run "${_NOTES}" delete "${_NOTEBOOK_PATH}/${_filename}" --force
+  run "${_NB}" delete "${_NOTEBOOK_PATH}/${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -191,7 +191,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -206,15 +206,15 @@ load test_helper
 
 @test "\`delete\` with <title> argument deletes properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" add
+    run "${_NB}" init
+    run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-  run "${_NOTES}" delete "${_title}" --force
+  run "${_NB}" delete "${_title}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -230,7 +230,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -245,14 +245,14 @@ load test_helper
 
 @test "\`delete\` with <folder> argument deletes properly without errors." {
   {
-    run "${_NOTES}" init
-    run "${_NOTES}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    run "${_NB}" init
+    run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
     IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-  run "${_NOTES}" delete "${_filename}" --force
+  run "${_NB}" delete "${_filename}" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -268,7 +268,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Delete'
+  git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -282,14 +282,14 @@ load test_helper
 # help ########################################################################
 
 @test "\`help delete\` exits with status 0." {
-  run "${_NOTES}" help delete
+  run "${_NB}" help delete
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help delete\` prints help information." {
-  run "${_NOTES}" help delete
+  run "${_NB}" help delete
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ notes\ delete ]]
+  [[ "${lines[1]}" =~ nb\ delete ]]
 }

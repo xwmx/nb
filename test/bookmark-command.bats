@@ -6,7 +6,7 @@ load test_helper
 
 @test "\`bookmark\` with no argument exits with 0, prints message, and lists." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
   run "${_BOOKMARK}"
@@ -26,7 +26,7 @@ load test_helper
   do
     sleep 1
   done
-  ! git log | grep -q '\[NOTES\] Add'
+  ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
   [[ "${lines[0]}" =~ ^Add ]]
@@ -36,7 +36,7 @@ load test_helper
 
 @test "\`bookmark\` with invalid <url> argument exits with 1." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
   run "${_BOOKMARK}" 'http invalid url'
@@ -56,7 +56,7 @@ load test_helper
   do
     sleep 1
   done
-  ! git log | grep -q '\[NOTES\] Add'
+  ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
   [[ "${lines[0]}" == "Unable to download page at 'http invalid url'" ]]
@@ -64,24 +64,24 @@ load test_helper
 
 @test "\`bookmark <query>\` exits with 0 and displays a list of bookmarks with titles." {
   {
-    "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add "first.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
-    cat <<HEREDOC | "${_NOTES}" add "third.md"
+    "${_NB}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
+    cat <<HEREDOC | "${_NB}" add "third.md"
 line one
 line two
 line three
 line four
 line example
 HEREDOC
-    "${_NOTES}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
+    "${_NB}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
       --title "Example Bookmark Title"
-    cat <<HEREDOC | "${_NOTES}" add "fifth.md"
+    cat <<HEREDOC | "${_NB}" add "fifth.md"
 # three
 line two
 line three
@@ -103,23 +103,23 @@ HEREDOC
 
 @test "\`bookmark --sort\` exits with 0 and displays a sorted list of bookmarks." {
   {
-    "${_NOTES}" init
-    cat <<HEREDOC | "${_NOTES}" add "first.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
-    cat <<HEREDOC | "${_NOTES}" add "third.md"
+    "${_NB}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
+    cat <<HEREDOC | "${_NB}" add "third.md"
 line one
 line two
 line three
 line four
 HEREDOC
-    "${_NOTES}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
+    "${_NB}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
       --title "Example Bookmark Title"
-    cat <<HEREDOC | "${_NOTES}" add "fifth.md"
+    cat <<HEREDOC | "${_NB}" add "fifth.md"
 # three
 line two
 line three
@@ -141,7 +141,7 @@ HEREDOC
 
 @test "\`bookmark\` with valid <url> argument creates new note without errors." {
   {
-    run "${_NOTES}" init
+    run "${_NB}" init
   }
 
   run "${_BOOKMARK}" "${_BOOKMARK_URL}"
@@ -180,7 +180,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  git log | grep -q '\[NOTES\] Add'
+  git log | grep -q '\[nb\] Add'
 
   # Adds to index
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
