@@ -1631,18 +1631,15 @@ _git_should_autosync() {
 # _highlight()
 #
 # Usage:
-#   _highlight <string>
+#   _highlight <string> [--underline]
 #
 # Description:
 #   Use `tput` to highlight the given string.
-export _TPUT_HIGHLIGHT_COLOR=
-_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NOTES_HIGHLIGHT_COLOR}")"
-
-export _TPUT_ACCENT_COLOR=
-_TPUT_ACCENT_COLOR="$(tput setaf "${NOTES_ACCENT_COLOR}")"
-
 export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
+
+export _TPUT_HIGHLIGHT_COLOR=
+_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NOTES_HIGHLIGHT_COLOR}")"
 _highlight() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
@@ -1665,6 +1662,25 @@ _highlight() {
       "${_input}"                 \
       "${_TPUT_SGR0}"
   fi
+}
+
+# _highlight_accent()
+#
+# Usage:
+#   _highlight_accent <string>
+#
+# Description:
+#   Highlight the given string using the accent color.
+export _TPUT_ACCENT_COLOR=
+_TPUT_ACCENT_COLOR="$(tput setaf "${NOTES_ACCENT_COLOR}")"
+_highlight_accent() {
+  local _input="${1:-}"
+  if [[ -z "${_input}" ]]
+  then
+    _die printf "Usage: _highlight_accent <string>"
+  fi
+
+  printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
 }
 
 # _highlight_syntax_if_available()
@@ -5480,10 +5496,6 @@ _ls() {
       _scope="${_SCOPE}:"
     fi
 
-    _accent() {
-      printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${1}" "${_TPUT_SGR0}"
-    }
-
     _commands_raw=(
       "❯ ${_ME} ${_scope}list"
       "${_ME} ${_scope}add"
@@ -5496,14 +5508,14 @@ _ls() {
     )
 
     _commands_hi=(
-      "❯ $(_accent "${_ME} ${_scope}list")"
-        "$(_accent "${_commands_raw[1]}")"
-        "$(_accent "${_commands_raw[2]}")"
-        "$(_accent "${_commands_raw[3]}")"
-        "$(_accent "${_commands_raw[4]}")"
-        "$(_accent "${_commands_raw[5]}")"
-        "$(_accent "${_commands_raw[6]}")"
-        "$(_accent "${_commands_raw[7]}")"
+      "❯ $(_highlight_accent "${_ME} ${_scope}list")"
+        "$(_highlight_accent "${_commands_raw[1]}")"
+        "$(_highlight_accent "${_commands_raw[2]}")"
+        "$(_highlight_accent "${_commands_raw[3]}")"
+        "$(_highlight_accent "${_commands_raw[4]}")"
+        "$(_highlight_accent "${_commands_raw[5]}")"
+        "$(_highlight_accent "${_commands_raw[6]}")"
+        "$(_highlight_accent "${_commands_raw[7]}")"
     )
 
     local _line_hi=
