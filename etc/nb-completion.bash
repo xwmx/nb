@@ -1,3 +1,19 @@
+###############################################################################
+# __          _
+# \ \   _ __ | |__
+#  \ \ | '_ \| '_ \
+#  / / | | | | |_) |
+# /_/  |_| |_|_.__/
+#
+# `nb` · `notes` && `bookmark`
+#
+# Command line note-taking, bookmarking, and archiving with encryption, search,
+# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
+# in a single portable script.
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
 _nb_subcommands() {
   # _cache_completions()
   #
