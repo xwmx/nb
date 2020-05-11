@@ -101,9 +101,14 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/master"
 #
 # If a `.notesrc` file exists in `$HOME`, source it.
 export NOTESRC_PATH="${NOTESRC_PATH:-${HOME}/.notesrc}"
+
 if [[ -L "${NOTESRC_PATH}" ]]
 then
   NOTESRC_PATH="$(realpath "${NOTESRC_PATH}")"
+fi
+
+if [[ -e "${NOTESRC_PATH}" ]]
+then
   source "${NOTESRC_PATH}"
 fi
 
