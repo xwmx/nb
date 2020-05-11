@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+###############################################################################
+# Part of:
+# __                _
+# \ \   _ __   ___ | |_ ___  ___
+#  \ \ | '_ \ / _ \| __/ _ \/ __|
+#  / / | | | | (_) | ||  __/\__ \
+# /_/  |_| |_|\___/ \__\___||___/
+#
+# `notes`
+#
+# Command line note-taking, bookmarking, and archiving with encryption, search,
+# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
+# in a single portable script.
+#
+# https://github.com/xwmx/notes
+#
+# Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
+#
+# Copyright (c) 2015-present William Melody • hi@williammelody.com
+# AGPLv3 • See LICENSE for details.
+###############################################################################
+
+export __THIS_PATH="$0"
+
+if [[ -L "${__THIS_PATH}" ]]
+then
+  __THIS_PATH="$(realpath "${__THIS_PATH}")"
+fi
+
+export __THIS_DIR=
+__THIS_DIR="$(cd "$(dirname "${__THIS_PATH}")" || :; pwd)"
+
+source "${__THIS_DIR}/../notes"
