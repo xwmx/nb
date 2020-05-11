@@ -20,7 +20,7 @@ standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
-`nb` includes `bookmark`, a powerful text-based CLI bookmarking system
+`nb` is also a powerful text-based CLI bookmarking system
 that includes local full-text search of cached page content with regular
 expression support, tagging, convenient filtering and listing, Wayback Machine
 snapshot lookup for broken links, and easy viewing of bookmarked pages in the
@@ -1114,7 +1114,7 @@ NB_HIGHLIGHT_COLOR restored to the default: '4'
 `nb -i`, or `nb --interactive`:
 
 ```bash
-$ nb -i
+$ nb shell
 __          _
 \ \   _ __ | |__
  \ \ | '_ \| '_ \
