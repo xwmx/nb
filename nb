@@ -7603,7 +7603,7 @@ _shell() {
 
   local _initial_command=
   local _prompt=
-  _prompt="$(_highlight "${_ME}")> "
+  _prompt="$(_highlight "${_ME}")${_TPUT_ACCENT_COLOR}>${_TPUT_SGR0} "
 
   for __arg in "${@:-}"
   do
@@ -7628,12 +7628,13 @@ _shell() {
   _debug printf "_shell() \${_initial_command:-}: '%s'\\n" \
     "${_initial_command:-}"
 
+  printf "%s" "${_TPUT_HIGHLIGHT_COLOR}"
   cat <<HEREDOC
-${_TPUT_HIGHLIGHT_COLOR}__          _
+__          _
 \ \   _ __ | |__
  \ \ | '_ \| '_ \\
  / / | | | | |_) |
-/_/  |_| |_|_.__/${_TPUT_SGR0}
+/_/  |_| |_|_.__/
 ${_TPUT_ACCENT_COLOR}------------------${_TPUT_SGR0}
 $(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
 Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
