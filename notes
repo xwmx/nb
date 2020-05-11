@@ -5495,16 +5495,20 @@ _ls() {
       "${_ME} ${_scope}b <url>"
       "${_ME} edit ${_scope}<id>"
       "${_ME} ${_scope}search <query>"
+      "${_ME} notebooks add <name>"
+      "${_ME} settings"
       "${_ME} help"
     )
 
     _commands_hi=(
       "❯ $(_highlight "${_ME} ${_scope}list")"
-      "$(_highlight "${_ME} ${_scope}add")"
-      "$(_highlight "${_ME} ${_scope}b <url>")"
-      "$(_highlight "${_ME} edit ${_scope}<id>")"
-      "$(_highlight "${_ME} ${_scope}search <query>")"
-      "$(_highlight "${_ME} help")"
+        "$(_highlight "${_commands_raw[1]}")"
+        "$(_highlight "${_commands_raw[2]}")"
+        "$(_highlight "${_commands_raw[3]}")"
+        "$(_highlight "${_commands_raw[4]}")"
+        "$(_highlight "${_commands_raw[5]}")"
+        "$(_highlight "${_commands_raw[6]}")"
+        "$(_highlight "${_commands_raw[7]}")"
     )
 
     local _line_hi=
