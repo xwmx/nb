@@ -296,6 +296,18 @@ export NOTES_AUTO_SYNC="${NOTES_AUTO_SYNC:-1}"
 # Example Values: 'md' 'org'
 export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 
+# $NOTES_ACCENT_COLOR
+#
+# Default: 8
+#
+# Color for lines and other accents. This should be set to an xterm color
+# number, usually a value between 1 and 256. For a table of common colors and
+# their numbers, run:
+#   notes settings colors
+#
+# Supported Values: [0..255+]
+export NOTES_ACCENT_COLOR="${NOTES_ACCENT_COLOR:-8}"
+
 # $NOTES_HIGHLIGHT_COLOR
 #
 # Default: Value depends on terminal capabilities.
@@ -303,7 +315,6 @@ export NOTES_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION:-md}"
 # Set highlighting color. This should be set to an xterm color number, usually
 # a value between 1 and 256. For a table of common colors and their numbers
 # run:
-#
 #   notes settings colors
 #
 # Supported Values: [0..255+]
@@ -1617,9 +1628,12 @@ _git_should_autosync() {
 #
 # Description:
 #   Use `tput` to highlight the given string.
-export _TPUT_HIGHLIGHT_COLOR
+export _TPUT_HIGHLIGHT_COLOR=
 _TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NOTES_HIGHLIGHT_COLOR}")"
-export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
+
+export _TPUT_ACCENT_COLOR=
+_TPUT_ACCENT_COLOR="$(tput setaf "${NOTES_ACCENT_COLOR}")"
+
 export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
 _highlight() {
@@ -1900,7 +1914,7 @@ _print_line() {
   local _text_length="${#_text}"
   local _line=
   printf -v _line "%*s" "${_text_length}"
-  printf "%s%s%s\\n" "${_TPUT_SETAF_8}" "${_line// /-}" "${_TPUT_SGR0}"
+  printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_line// /-}" "${_TPUT_SGR0}"
 }
 
 # _set_selection_notebook()
@@ -2911,7 +2925,7 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
     _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
 cat <<HEREDOC
 ${_header}
-${_TPUT_SETAF_8}---------------------------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}---------------------------------------------------${_TPUT_SGR0}
 HEREDOC
     _bookmark list
     return 0
@@ -4624,14 +4638,14 @@ HEREDOC
   # Usage: _init_print_header
   _init_print_header() {
     cat <<HEREDOC
-${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
 $(_highlight "Welcome") to
 __                _
 \ \   _ __   ___ | |_ ___  ___
  \ \ | '_ \ / _ \| __/ _ \/ __|
  / / | | | | (_) | ||  __/\__ \\
 /_/  |_| |_|\___/ \__\___||___/
-${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
 Initializing...
 HEREDOC
   }
@@ -5474,7 +5488,7 @@ _ls() {
     fi
 
     _highlight() {
-      printf "%s%s%s\\n" "${_TPUT_SETAF_8}" "${1}" "${_TPUT_SGR0}"
+      printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${1}" "${_TPUT_SGR0}"
     }
 
     local _list_hi=
@@ -7064,13 +7078,13 @@ _alias_subcommand "search" "q"
 export _NOTES_SETTINGS_LIST
 _NOTES_SETTINGS_LIST="\
 [$(_highlight '1')] editor
-    ${_TPUT_SETAF_8}------${_TPUT_SGR0}
+    ${_TPUT_ACCENT_COLOR}------${_TPUT_SGR0}
     The command line text editor to use with \`${_ME}\`.
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
       • Current Value:  '${EDITOR}'
 
 [$(_highlight '2')] notes_auto_sync
-    ${_TPUT_SETAF_8}---------------${_TPUT_SGR0}
+    ${_TPUT_ACCENT_COLOR}---------------${_TPUT_SGR0}
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
@@ -7078,7 +7092,7 @@ _NOTES_SETTINGS_LIST="\
       • Current Value: '${NOTES_AUTO_SYNC}'
 
 [$(_highlight '3')] notes_default_extension
-    ${_TPUT_SETAF_8}-----------------------${_TPUT_SGR0}
+    ${_TPUT_ACCENT_COLOR}-----------------------${_TPUT_SGR0}
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
@@ -7086,7 +7100,7 @@ _NOTES_SETTINGS_LIST="\
       • Current Value: '${NOTES_DEFAULT_EXTENSION}'
 
 [$(_highlight '4')] notes_dir
-    ${_TPUT_SETAF_8}---------${_TPUT_SGR0}
+    ${_TPUT_ACCENT_COLOR}---------${_TPUT_SGR0}
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     \`${_ME} settings set NOTES_DIR ~/Dropbox/Notes\`
@@ -7094,14 +7108,14 @@ _NOTES_SETTINGS_LIST="\
       • Current Value: '${NOTES_DIR}'
 
 [$(_highlight '5')] notes_encryption_tool
-    ${_TPUT_SETAF_8}---------------------${_TPUT_SGR0}
+    ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
     The tool used for encrypting notes.
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
       • Current Value:    '${NOTES_ENCRYPTION_TOOL}'
 
 [$(_highlight '6')] notes_highlight_color
-    ${_TPUT_SETAF_8}---------------------${_TPUT_SGR0}
+    ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
     Set highlighting color. Often this can be set to an xterm color number
     between 0 and 255. Some terminals support many more colors. To view a
     table of 256 common colors and numbers, run: \`${_ME} settings colors\`
@@ -7229,7 +7243,7 @@ _settings() {
   _notes_settings_prompt() {
     cat <<HEREDOC
 $(_highlight "${_ME}") Settings
-${_TPUT_SETAF_8}----------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}----------------${_TPUT_SGR0}
 ${_NOTES_SETTINGS_LIST}
 
 Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
@@ -7511,7 +7525,7 @@ __                _
  \ \ | '_ \ / _ \| __/ _ \/ __|
  / / | | | | (_) | ||  __/\__ \\
 /_/  |_| |_|\___/ \__\___||___/
-${_TPUT_SETAF_8}-------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
 $(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
 Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
 HEREDOC
