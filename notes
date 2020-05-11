@@ -5470,19 +5470,7 @@ _ls() {
     _use_pager=1
   fi
 
-  if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
-  then
-    {
-      printf "%s" "${_maybe_notebook_list}"
-      _list -n "${_limit}" "${_args[@]:-}"
-    } | "${PAGER}"
-  elif ((_use_pager)) && _command_exists "less"
-  then
-    {
-      printf "%s" "${_maybe_notebook_list}"
-      _list -n "${_limit}" "${_args[@]:-}"
-    } | less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
-  else
+  {
     printf "%s" "${_maybe_notebook_list}"
     _list -n "${_limit}" "${_args[@]:-}"
 
@@ -5492,7 +5480,7 @@ _ls() {
       _scope="${_SCOPE}:"
     fi
 
-    _highlight() {
+    _accent() {
       printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${1}" "${_TPUT_SGR0}"
     }
 
@@ -5508,14 +5496,14 @@ _ls() {
     )
 
     _commands_hi=(
-      "❯ $(_highlight "${_ME} ${_scope}list")"
-        "$(_highlight "${_commands_raw[1]}")"
-        "$(_highlight "${_commands_raw[2]}")"
-        "$(_highlight "${_commands_raw[3]}")"
-        "$(_highlight "${_commands_raw[4]}")"
-        "$(_highlight "${_commands_raw[5]}")"
-        "$(_highlight "${_commands_raw[6]}")"
-        "$(_highlight "${_commands_raw[7]}")"
+      "❯ $(_accent "${_ME} ${_scope}list")"
+        "$(_accent "${_commands_raw[1]}")"
+        "$(_accent "${_commands_raw[2]}")"
+        "$(_accent "${_commands_raw[3]}")"
+        "$(_accent "${_commands_raw[4]}")"
+        "$(_accent "${_commands_raw[5]}")"
+        "$(_accent "${_commands_raw[6]}")"
+        "$(_accent "${_commands_raw[7]}")"
     )
 
     local _line_hi=
@@ -5574,7 +5562,15 @@ _ls() {
     cat <<HEREDOC
 ${_output_hi}
 HEREDOC
-  fi
+  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
+      then
+        "${PAGER}"
+      elif ((_use_pager)) && _command_exists "less"
+      then
+        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+      else
+        cat
+      fi
 }
 
 # move ################################################################### move
