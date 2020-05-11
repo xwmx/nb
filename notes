@@ -5415,24 +5415,24 @@ _ls() {
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
     done < <({
-        printf "%b" "${_output_hi}"
+      printf "%b" "${_output_hi}"
 
-        # Use control characters to disable wrapping for long lines.
-        # Source: http://superuser.com/a/189068
-        printf '\033[?7l'
-        if ((_centered))
-        then # print full-width line.
-          _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-        else # print line the length of the first line.
-          _print_line "$(
-            # $_output_raw generates a line 2 characters too long. TODO: Review
-            printf "%s" "${_output_raw}" | sed 's/..$//'
-          )" | tr -d '\n'
-        fi
-        printf "%s" "${_TPUT_SGR0}"
-        printf '\033[?7h'
-        printf '\n'
-      })
+      # Use control characters to disable wrapping for long lines.
+      # Source: http://superuser.com/a/189068
+      printf '\033[?7l'
+      if ((_centered))
+      then # print full-width line.
+        _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+      else # print line the length of the first line.
+        _print_line "$(
+          # $_output_raw generates a line 2 characters too long. TODO: Review
+          printf "%s" "${_output_raw}" | sed 's/..$//'
+        )" | tr -d '\n'
+      fi
+      printf "%s" "${_TPUT_SGR0}"
+      printf '\033[?7h'
+      printf '\n'
+    })
   fi
 
   local _notes_count_local=0
