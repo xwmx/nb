@@ -13,7 +13,7 @@ _setup_notebooks() {
   cd "${NOTES_DIR}" || return 1
 }
 
-# `notes notebooks init` ######################################################
+# `notebooks init` ############################################################
 
 @test "\`notebooks init\` with no arguments initializes the current directory" {
   {

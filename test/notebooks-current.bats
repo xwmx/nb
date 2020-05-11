@@ -13,7 +13,7 @@ _setup_notebooks() {
   cd "${NOTES_DIR}" || return 1
 }
 
-# `notes notebooks current` ###################################################
+# `notebooks current` #########################################################
 
 @test "\`notebooks current\` exits with 0 and prints the current notebook name." {
   {

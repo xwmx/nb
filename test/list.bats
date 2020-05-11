@@ -2,7 +2,7 @@
 
 load test_helper
 
-# `notes list` (empty) ########################################################
+# `list` (empty) ##############################################################
 
 @test "\`list\` (empty) exits with 0 and lists files." {
   run "${_NOTES}" init
@@ -21,7 +21,7 @@ Help information:
   [[ "${_expected}" == "${output}" ]]
 }
 
-# `notes list` ################################################################
+# `list` ######################################################################
 
 @test "\`list\` exits with 0 and lists files in reverse order." {
   {
@@ -44,7 +44,7 @@ Help information:
   [[ "${lines[2]}" =~ one    ]]
 }
 
-# `notes list --no-id` ########################################################
+# `list --no-id` ##############################################################
 
 @test "\`list --no-id\` exits with 0 and lists files in reverse order." {
   {
@@ -67,7 +67,7 @@ Help information:
   [[ "${lines[2]}" =~ one    ]]
 }
 
-# `notes list --no-color` #####################################################
+# `list --no-color` ###########################################################
 
 @test "\`list --no-color\` exits with 0 and lists files in reverse order." {
   {
@@ -90,7 +90,7 @@ Help information:
   [[ "${lines[2]}" =~ one    ]]
 }
 
-# `notes list (-e | --excerpt)` ###############################################
+# `list (-e | --excerpt)` #####################################################
 
 _setup_list_excerpt() {
   "${_NOTES}" init
@@ -210,7 +210,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
-# `notes list -n <limit>` #####################################################
+# `list -n <limit>` ###########################################################
 
 _setup_list_limit() {
   "${_NOTES}" init
@@ -286,7 +286,7 @@ HEREDOC
   [[ "${lines[2]}" == "1 omitted. 3 total." ]]
 }
 
-# `notes list --titles` #######################################################
+# `list --titles` #############################################################
 
 @test "\`list --titles\` exits with 0 and displays a list of titles." {
   {
@@ -327,7 +327,7 @@ HEREDOC
   [[ "${lines[2]}" =~ one       ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
-# `notes list --filenames` ####################################################
+# `list --filenames` ##########################################################
 
 @test "\`list --filenames\` exits with 0 and displays a list of filenames." {
   {
@@ -365,7 +365,7 @@ HEREDOC
   [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
-# `notes list --bookmarks` #######################################################
+# `list --bookmarks` ##########################################################
 
 @test "\`list --bookmarks\` exits with 0 and displays a list of bookmarks." {
   {
@@ -404,7 +404,7 @@ HEREDOC
   [[ "${lines[1]}" =~ second.bookmark.md  ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
-# `notes list <selection>` ####################################################
+# `list <selection>` ##########################################################
 
 @test "\`list <selection>\` exits with 0 and displays the selection." {
   {
@@ -509,7 +509,7 @@ HEREDOC
   [[ "${lines[0]}" == "Note not found: 'invalid'." ]]
 }
 
-# `notes scoped:list` #########################################################
+# `scoped:list` ###############################################################
 
 @test "\`scoped:list\` exits with 0 and lists files in reverse order." {
   {

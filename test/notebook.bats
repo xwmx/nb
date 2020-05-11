@@ -14,7 +14,7 @@ _setup_notebook() {
   } > /dev/null 2>&1
 }
 
-# `notes notebook` ############################################################
+# `notebook` ##################################################################
 
 @test "\`notebook\` exits with 0 and prints current notebook name." {
   {
@@ -30,7 +30,7 @@ _setup_notebook() {
   [[ "${output}" == "home" ]]
 }
 
-# `notes notebook archive` ####################################################
+# `notebook archive` ##########################################################
 
 @test "\`notebook archive\` exits with 0 and archives." {
   {
@@ -78,7 +78,7 @@ _setup_notebook() {
   ! git log | grep '\[NOTES\] Archived'
 }
 
-# `notes notebook unarchive` ##################################################
+# `notebook unarchive` ########################################################
 
 @test "\`notebook unarchive\` exits with 0 and unarchives." {
   {
@@ -125,7 +125,7 @@ _setup_notebook() {
   ! git log | grep -q '\[NOTES\] Unarchived'
 }
 
-# `notes notebook status` #####################################################
+# `notebook status` ###########################################################
 
 @test "\`notebook status\` exits with 0 and prints status." {
   {

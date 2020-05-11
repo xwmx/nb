@@ -813,7 +813,7 @@ https://example.com
   [[ "${output}" == "${_BOOKMARK_URL}" ]]
 }
 
-# `notes bookmark list` #######################################################
+# `bookmark list` #############################################################
 
 @test "\`bookmark list\` exits with 0 and displays a list of bookmarks with titles." {
   {
@@ -875,7 +875,7 @@ Help information:
   [[ "${_expected}" == "${output}" ]]
 }
 
-# `notes bookmark list --sort` ################################################
+# `bookmark list --sort` ######################################################
 
 @test "\`bookmark list --sort\` exits with 0 and displays a sorted list of bookmarks." {
   {

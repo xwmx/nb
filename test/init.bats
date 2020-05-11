@@ -2,7 +2,7 @@
 
 load test_helper
 
-# `notes init` ################################################################
+# `init` ######################################################################
 
 @test "\`init\` exits with status 0." {
   run "${_NOTES}" init
@@ -84,7 +84,7 @@ load test_helper
   git log | grep -q '\[NOTES\] Initialize'
 }
 
-# `notes init <remote-url>` ###################################################
+# `init <remote-url>` #########################################################
 
 @test "\`init <remote-url>\` creates a clone in \`\$_NOTEBOOK_PATH\`." {
   _setup_remote_repo

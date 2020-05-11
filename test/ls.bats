@@ -25,7 +25,7 @@ line four
 HEREDOC
 }
 
-# `notes ls` ################################################################
+# `ls` ########################################################################
 
 @test "\`ls\` exits with 0 and lists files." {
   {
@@ -94,7 +94,7 @@ HEREDOC
   [[ "${lines[2]}" =~ 0\ notes\.    ]]
 }
 
-# `notes ls -e [<excerpt length>]` ############################################
+# `ls -e [<excerpt length>]` ##################################################
 
 @test "\`ls -e <excerpt length>\` exits with 0 and displays excerpts." {
   {
@@ -112,7 +112,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 21 ]]
 }
 
-# `notes ls -n <number>` ######################################################
+# `ls -n <number>` ############################################################
 
 @test "\`ls -n 0\` exits with 0 and lists 0 files." {
   {

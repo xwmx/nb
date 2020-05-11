@@ -13,7 +13,7 @@ _setup_notebooks() {
   cd "${NOTES_DIR}" || return 1
 }
 
-# `notes notebooks delete` ####################################################
+# `notebooks delete` ##########################################################
 
 @test "\`notebooks delete <valid>\` exits with 0 and deletes notebook." {
   {

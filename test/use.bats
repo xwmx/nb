@@ -11,7 +11,7 @@ _setup_use() {
   cd "${NOTES_DIR}" || return 1
 }
 
-# `notes use <name>` #####################################################
+# `use <name>` ################################################################
 
 @test "\`use\` exits with 1 and prints error message." {
   {

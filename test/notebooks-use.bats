@@ -13,7 +13,7 @@ _setup_notebooks() {
   cd "${NOTES_DIR}" || return 1
 }
 
-# `notes notebooks use <name>` ################################################
+# `notebooks use <name>` ######################################################
 
 @test "\`notebooks use\` exits with 1 and prints error message." {
   {

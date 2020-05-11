@@ -13,7 +13,7 @@ _setup_notebooks() {
   cd "${NOTES_DIR}" || return 1
 }
 
-# `notes notebooks` ######################################################
+# `notebooks` #################################################################
 
 @test "\`notebooks\` exits with 0 and prints all notebook names." {
   {
@@ -233,7 +233,7 @@ one"
   [[ "${output}" == "${_expected}" ]]
 }
 
-# `notes notebooks --paths` ###################################################
+# `notebooks --paths` #########################################################
 
 @test "\`notebooks --paths\` prints local and global." {
   {

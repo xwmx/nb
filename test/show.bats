@@ -2,7 +2,7 @@
 
 load test_helper
 
-# `notes show` ################################################################
+# `show` ######################################################################
 
 @test "\`show\` with no argument exits with status 1 and prints help." {
   {
@@ -33,7 +33,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 }
 
-# `notes show --dump` #########################################################
+# `show --dump` ###############################################################
 
 @test "\`show --dump\` with argument exits with 0 and prints note with highlighting." {
   {
@@ -96,7 +96,7 @@ load test_helper
   [[ "${lines[0]}" == "Note not found: '1'." ]]
 }
 
-# `notes show <filename> --dump` ##############################################
+# `show <filename> --dump` ####################################################
 
 @test "\`show <filename> --dump\` exits with status 0 and dumps note file." {
   {
@@ -112,7 +112,7 @@ load test_helper
   [[ "${output}" =~ mock_editor ]]
 }
 
-# `notes show <id> --dump` ####################################################
+# `show <id> --dump` ##########################################################
 
 @test "\`show <id> --dump\` exits with status 0 and dumps note file." {
   {
@@ -129,7 +129,7 @@ load test_helper
   [[ "${output}" =~ mock_editor ]]
 }
 
-# `notes show <path> --dump` #################################################
+# `show <path> --dump` #######################################################
 
 @test "\`show <path> --dump\` exits with status 0 and dumps note file." {
   {
@@ -145,7 +145,7 @@ load test_helper
   [[ "${output}" =~ mock_editor ]]
 }
 
-# `notes show <title> --dump` #################################################
+# `show <title> --dump` #######################################################
 
 @test "\`show <title> --dump\` exits with status 0 and dumps note file." {
   {
@@ -162,7 +162,7 @@ load test_helper
   [[ "${output}" =~ mock_editor ]]
 }
 
-# `notes show <filename> --path` ##############################################
+# `show <filename> --path` ####################################################
 
 @test "\`show <filename> --path\` exits with status 0 and prints note path." {
   {
@@ -178,7 +178,7 @@ load test_helper
   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
-# `notes show <id> --path` ####################################################
+# `show <id> --path` ##########################################################
 
 @test "\`show <id> --path\` exits with status 0 and prints note path." {
   {
@@ -195,7 +195,7 @@ load test_helper
 }
 
 
-# `notes show <path> --path` #################################################
+# `show <path> --path` #######################################################
 
 @test "\`show <path> --path\` exits with status 0 and prints note path." {
   {
@@ -211,7 +211,7 @@ load test_helper
   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
-# `notes show <title> --path` #################################################
+# `show <title> --path` #######################################################
 
 @test "\`show <title> --path\` exits with status 0 and prints note path." {
   {
@@ -228,7 +228,7 @@ load test_helper
   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
 }
 
-# `notes show <filename> --id` ################################################
+# `show <filename> --id` ######################################################
 
 @test "\`show <filename> --id\` exits with status 0 and prints note id." {
   {
@@ -244,7 +244,7 @@ load test_helper
   [[ "${output}" == "1" ]]
 }
 
-# `notes show <id> --id` ######################################################
+# `show <id> --id` ############################################################
 
 @test "\`show <id> --id\` exits with status 0 and prints note id." {
   {
@@ -260,7 +260,7 @@ load test_helper
   [[ "${output}" == "1" ]]
 }
 
-# `notes show <path> --id` ####################################################
+# `show <path> --id` ##########################################################
 
 @test "\`show <path> --id\` exits with status 0 and prints note id." {
   {
@@ -276,7 +276,7 @@ load test_helper
   [[ "${output}" == "1" ]]
 }
 
-# `notes show <title> --id` ###################################################
+# `show <title> --id` #########################################################
 
 @test "\`show <title> --id\` exits with status 0 and prints note id." {
   {

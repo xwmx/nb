@@ -2,7 +2,7 @@
 
 load test_helper
 
-# `notes bookmarks` ###########################################################
+# `bookmarks` #################################################################
 
 @test "\`bookmarks\` exits with 0 and displays a list of bookmarks with titles." {
   {
@@ -44,7 +44,7 @@ HEREDOC
   [[ "${lines[3]}" =~ second.bookmark.md       ]] && [[ "${lines[3]}" =~ 2 ]]
 }
 
-# `notes bookmarks --sort` ####################################################
+# `bookmarks --sort` ##########################################################
 
 @test "\`bookmarks --sort\` exits with 0 and displays a sorted list of bookmarks." {
   {
