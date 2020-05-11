@@ -5345,8 +5345,6 @@ _ls() {
       )
     fi
 
-    local _notebooks_count="${#_notebook_names_raw[@]}"
-
     local _line_number=0
     local _padding=
 
@@ -5356,7 +5354,7 @@ _ls() {
     local _output_raw=
     local _output_hi=
 
-    for ((i=0;i < "${_notebooks_count}"; i++))
+    for ((i=0;i < "${#_notebook_names_raw[@]}"; i++))
     do
       if [[ -z "${_test_line}" ]]
       then # first item in line
