@@ -224,18 +224,6 @@ _debug() {
   fi
 }
 
-# debug()
-#
-# Usage:
-#   debug "Debug info. Variable: $0"
-#
-# Print the specified message if the `$_USE_DEBUG` variable has been set.
-#
-# This is a shortcut for the _debug() function that simply echos the message.
-debug() {
-  _debug echo "${@}"
-}
-
 ###############################################################################
 # Die
 ###############################################################################
@@ -253,18 +241,6 @@ _die() {
   printf "❌  "
   "${@}" 1>&2
   exit 1
-}
-
-# die()
-#
-# Usage:
-#   die "Error message. Variable: $0"
-#
-# Exit with an error and print the specified message.
-#
-# This is a shortcut for the _die() function that simply echos the message.
-die() {
-  _die echo "${@}"
 }
 
 ###############################################################################
