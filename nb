@@ -1848,29 +1848,20 @@ _list_nb_files() {
     shift
   done
 
-  if ((_sort)) || ((_reverse))
+  if ((_sort))
   then
-    local _filenames=()
-    local _index_file=
-    _index_file="$(< "${_NOTEBOOK_PATH}/.index")"
-
-    for __line in "${_index_file[@]}"
-    do
-      if [[ -n "${__line}" ]]
-      then
-        _filenames+=("${__line}")
-      fi
-    done
-
-    if ((_reverse))
-    then
-      printf "%s\\n" "${_filenames[@]}" | sort -r
-    else
-      printf "%s\\n" "${_filenames[@]}"
-    fi
+    cat "${_NOTEBOOK_PATH}/.index"
   else
     ls -t -1 "${_NOTEBOOK_PATH}"
   fi | {
+    if ((_reverse))
+    then
+      # https://stackoverflow.com/a/744093
+      sed '1!G;h;$!d'
+    else
+      cat
+    fi
+  } | {
     if [[ -n "${_type:-}" ]]
     then
       local _grep_patterns=()
