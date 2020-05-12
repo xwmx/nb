@@ -15,8 +15,8 @@
   },
   "scripts": {
     "test": "bats test",
-    "postinstall": "./notes completions install",
-    "preuninstall": "./notes completions uninstall"
+    "postinstall": "./nb completions install",
+    "preuninstall": "./nb completions uninstall"
   },
   "repository": {
     "type": "git",
