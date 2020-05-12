@@ -6267,6 +6267,51 @@ HEREDOC
     printf "'%s' is now named '%s'\\n" "${_old}" "${_new}"
   }
 
+  # _notebooks_use()
+  #
+  # Usage:
+  #   _notebooks_use <name>
+  _notebooks_use() {
+    local _name="${1:-}"
+
+    if [[ -z "${_name}" ]]
+    then
+      _help notebooks
+      return 1
+    fi
+
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH}" ]]
+    then
+      cat <<HEREDOC
+Currently in a local notebook. To run a command in a global notebook,
+add the notebook name before the command name, separated by a colon:
+  ${_ME} <notebook>:<command> [options...]
+
+Examples:
+  ${_ME} home:list
+  ${_ME} example:add --title "Example Title"
+  ${_ME} example:search 'sample query'
+HEREDOC
+      return 1
+    fi
+
+    # Autocomplete can result in a trailing colon on the notebook name, so
+    # remove it if present.
+    if [[ "${_name}" =~ :$ ]]
+    then
+      _name=$(printf "%s\\n" "${_name}" | cut -f 1 -d ":")
+    fi
+
+    if [[ -d "${NB_DIR}/${_name}/.git" ]]
+    then
+      printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
+      printf "Now using %s.\\n" "$(_highlight "${_name}")"
+    else
+      printf "Not found: %s\\n" "${_name}"
+      return 1
+    fi
+  }
+
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
@@ -6287,42 +6332,7 @@ HEREDOC
       _notebooks_rename "${_name:-}" "${3:-}"
       ;;
     use)
-      if [[ -z "${_name}" ]]
-      then
-        _help notebooks
-        return 1
-      fi
-
-      if [[ -n "${_LOCAL_NOTEBOOK_PATH}" ]]
-      then
-        cat <<HEREDOC
-Currently in a local notebook. To run a command in a global notebook,
-add the notebook name before the command name, separated by a colon:
-  ${_ME} <notebook>:<command> [options...]
-
-Examples:
-  ${_ME} home:list
-  ${_ME} example:add --title "Example Title"
-  ${_ME} example:search 'sample query'
-HEREDOC
-        return 1
-      fi
-
-      # Autocomplete can result in a trailing colon on the notebook name, so
-      # remove it if present.
-      if [[ "${_name}" =~ :$ ]]
-      then
-        _name=$(printf "%s\\n" "${_name}" | cut -f 1 -d ":")
-      fi
-
-      if [[ -d "${NB_DIR}/${_name}/.git" ]]
-      then
-        printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
-        printf "Now using %s.\\n" "$(_highlight "${_name}")"
-      else
-        printf "Not found: %s\\n" "${_name}"
-        return 1
-      fi
+      _notebooks_use "${_name:-}"
       ;;
     *)
       _notebooks_list "${@}"
