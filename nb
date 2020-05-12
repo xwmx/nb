@@ -8472,7 +8472,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   help
   history
   import
-  index
   init
   list
   ls
