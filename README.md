@@ -1293,7 +1293,6 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb bookmarks [<list options>...]
   nb completions (check | install [-d | --download] | uninstall)
   nb count
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -1350,7 +1349,6 @@ Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
   add          Add a new note.
   bookmark     Add, open, list, and search bookmarks.
-  bookmarks    List bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
   delete       Delete a note.
@@ -1573,19 +1571,6 @@ Examples:
   nb bookmark open 5
 
 Shortcut Alias: `b`
-```
-
-#### `bookmarks`
-
-```text
-Usage:
-  nb bookmarks [<list options>...]
-
-Description:
-  List bookmarks with titles. All `nb list` options are supported.
-  For more information, see `nb help list`.
-
-Shortcut Alias: `bs`
 ```
 
 #### `completions`
