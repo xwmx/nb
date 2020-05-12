@@ -2987,7 +2987,7 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
     _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
 cat <<HEREDOC
 ${_header}
-${_TPUT_ACCENT_COLOR}---------------------------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}---------------------------------------------${_TPUT_SGR0}
 HEREDOC
     _bookmark list
     return 0
