@@ -2252,7 +2252,6 @@ Subcommands:
   list         List notes in the current notebook.
   ls           List notebooks and notes in the current notebook.
   move         Move a note to a different notebook.
-  notebook     Manage the current notebook.
   notebooks    Manage notebooks.
   open         Open a bookmark in the primary web browser or edit a note.
   peek         View a bookmark in the terminal web browser or show a note.
