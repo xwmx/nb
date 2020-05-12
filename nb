@@ -4826,7 +4826,7 @@ _list() {
       --no-indicators|--noindicators|--no-indicator|--noindicator)
         _print_indicators=0
         ;;
-      -n)
+      -n|--limit)
         if __option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
@@ -5293,7 +5293,7 @@ _ls() {
       --plain)
         _plain=1
         ;;
-      -n)
+      -n|--limit)
         if __option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
