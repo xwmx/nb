@@ -2195,14 +2195,15 @@ Usage:
           [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  ${_ME} notebook [archive | open | peek | status | unarchive]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks init [<path> [<remote-url>]]
-  ${_ME} notebooks [current [--path] | use <name>]
+  ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks rename <old-name> <new-name>
+  ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title>)
   ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
@@ -5678,110 +5679,6 @@ _move() {
 }
 _alias_subcommand "move" "mv"
 
-# notebook ########################################################### notebook
-
-desc "notebook" <<HEREDOC
-Usage:
-  ${_ME} notebook [archive | open | peek | status | unarchive]
-
-Subcommands:
-  archive     Set the notebook to 'archived' status.
-  open        Open the notebook directory in your file browser, explorer, or
-              finder.
-              Shortcut Alias: \`o\`
-  peek        Open the notebook directory the first tool found in this list:
-              \`ranger\` [1], \`mc\` [2], \`exa\` [3] or \`ls\`.
-              Shortcut Alias: \`p\`
-  status      Print the archival status of the current notebook.
-  unarchive   Remove 'archived' status from notebook.
-
-    1. https://ranger.github.io/
-    2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
-
-Description:
-  Print, archive, or open the current notebook.
-
-  Archiving a notebook hides it from \`ls\` output.
-
-Shortcut Alias: \`n\`
-HEREDOC
-_notebook() {
-  local _notebook_name
-  _notebook_name="$(_notebooks current)"
-  local _subcommand="${1:-}"
-
-  if [[ -z "${_subcommand}" ]]
-  then
-    printf "%s\\n" "${_notebook_name}"
-    return 0
-  fi
-
-  if [[ "${_subcommand:-}" =~ ^open$|^o$ ]]
-  then
-    if _command_exists "xdg-open"
-    then
-      xdg-open "${_NOTEBOOK_PATH}"
-    elif _command_exists "open"
-    then
-      open "${_NOTEBOOK_PATH}"
-    else
-      printf \
-        "%s doesn't know how to open directories on your system.\\n" \
-        "${_ME}"
-      return 1
-    fi
-  elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
-  then
-    if _command_exists "ranger"
-    then
-      ranger "${_NOTEBOOK_PATH}"
-    elif _command_exists "mc"
-    then
-      mc "${_NOTEBOOK_PATH}"
-    elif _command_exists "exa"
-    then
-      exa -lah --git "${_NOTEBOOK_PATH}"
-    else
-      # gnu || bsd
-      ls -lah --color=always "${_NOTEBOOK_PATH}" 2>/dev/null ||
-        ls -lah -G "${_NOTEBOOK_PATH}"
-    fi
-  else
-    _dotfile_path="${_NOTEBOOK_PATH}/.archived"
-
-    if [[ "${_subcommand}" == "archive" ]]
-    then
-      if [[ ! -e "${_dotfile_path}" ]]
-      then
-        touch "${_dotfile_path}" &&
-          _git_checkpoint "[nb] Archived"
-      fi
-
-      printf "%s archived.\\n" "${_notebook_name}"
-    elif [[ "${_subcommand}" == "status" ]]
-    then
-      if [[ -e "${_dotfile_path}" ]]
-      then
-        printf "%s is archived.\\n" "${_notebook_name}"
-      else
-        printf "%s is not archived.\\n" "${_notebook_name}"
-      fi
-    elif [[ "${_subcommand}" == "unarchive" ]]
-    then
-      if [[ -e "${_dotfile_path}" ]]
-      then
-        rm "${_dotfile_path}" &&
-          _git_checkpoint "[nb] Unarchived"
-      fi
-
-      printf "%s unarchived.\\n" "${_notebook_name}"
-    fi
-  fi
-}
-_alias_subcommand "notebook" "n"
-_alias_subcommand "notebook" "nb"
-
 # notebooks ######################################################### notebooks
 
 desc "notebooks" <<HEREDOC
@@ -5789,6 +5686,7 @@ Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
@@ -5811,13 +5709,28 @@ Subcommands:
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
+  archive    Set the current notebook or notebook <name> to 'archived' status.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name.
   delete     Delete a notebook.
+  open       Open the current notebook directory or notebook <name> in your
+             file browser, explorer, or finder.
+             Shortcut Alias: \`o\`
+  peek       Open the current notebook directory or notebook <name> in the
+             first tool found in this list:
+             \`ranger\` [1], \`mc\` [2], \`exa\` [3] or \`ls\`.
+             Shortcut Alias: \`p\`
   rename     Rename a notebook.
+  status     Print the archival status of the current notebook or
+             notebook <name>.
+  unarchive  Remove 'archived' status from current notebook or notebook <name>.
   use        Switch to a notebook.
+
+    1. https://ranger.github.io/
+    2. https://en.wikipedia.org/wiki/Midnight_Commander
+    3. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
@@ -5827,7 +5740,7 @@ Examples:
   ${_ME} notebooks add Example1
   ${_ME} notebooks add Example2 https://github.com/example/example.git
 
-Shortcut Alias: \`ns\`
+Shortcut Alias: \`n\`
 HEREDOC
 _notebooks() {
   # _notebooks_add()
@@ -6225,6 +6138,97 @@ Please type $(_highlight "${_name}") to confirm: " __response
     done
   }
 
+  # _notebooks_notebook()
+  #
+  # Usage:
+  #   _notebooks_notebook <subcommand> <name>
+  _notebooks_notebook() {
+    local _subcommand="${1:-}"
+
+    local _notebook_name="${2:-}"
+    if [[ -n "${_notebook_name:-}" ]]
+    then
+      _NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"
+    else
+      _notebook_name="$(_notebooks current)"
+    fi
+
+    if [[ -z "${_notebook_name:-}" ]]
+    then
+      _die printf "Unable to determine notebook name.\\n"
+    fi
+
+    local _notebook_path="${_NOTEBOOK_PATH}"
+
+    if [[ -z "${_subcommand}" ]]
+    then
+      printf "%s\\n" "${_notebook_name}"
+      return 0
+    fi
+
+    if [[ "${_subcommand:-}" =~ ^open$|^o$ ]]
+    then
+      if _command_exists "xdg-open"
+      then
+        xdg-open "${_NOTEBOOK_PATH}"
+      elif _command_exists "open"
+      then
+        open "${_NOTEBOOK_PATH}"
+      else
+        printf \
+          "%s doesn't know how to open directories on your system.\\n" \
+          "${_ME}"
+        return 1
+      fi
+    elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
+    then
+      if _command_exists "ranger"
+      then
+        ranger "${_NOTEBOOK_PATH}"
+      elif _command_exists "mc"
+      then
+        mc "${_NOTEBOOK_PATH}"
+      elif _command_exists "exa"
+      then
+        exa -lah --git "${_NOTEBOOK_PATH}"
+      else
+        # gnu || bsd
+        ls -lah --color=always "${_NOTEBOOK_PATH}" 2>/dev/null ||
+          ls -lah -G "${_NOTEBOOK_PATH}"
+      fi
+    else
+      local _dotfile_path="${_NOTEBOOK_PATH}/.archived"
+
+      if [[ "${_subcommand}" == "archive" ]]
+      then
+        if [[ ! -e "${_dotfile_path}" ]]
+        then
+          touch "${_dotfile_path}" &&
+            _git_checkpoint "[nb] Archived"
+        fi
+
+        printf "%s archived.\\n" "${_notebook_name}"
+      elif [[ "${_subcommand}" == "status" ]]
+      then
+        if [[ -e "${_dotfile_path}" ]]
+        then
+          printf "%s is archived.\\n" "${_notebook_name}"
+        else
+          printf "%s is not archived.\\n" "${_notebook_name}"
+        fi
+      elif [[ "${_subcommand}" == "unarchive" ]]
+      then
+        if [[ -e "${_dotfile_path}" ]]
+        then
+          rm "${_dotfile_path}" &&
+            _git_checkpoint "[nb] Unarchived"
+        fi
+
+        printf "%s unarchived.\\n" "${_notebook_name}"
+      fi
+    fi
+  }
+
   # _notebooks_rename()
   #
   # Usage:
@@ -6334,13 +6338,19 @@ HEREDOC
     use)
       _notebooks_use "${_name:-}"
       ;;
+    archive|open|peek|status|unarchive)
+      _notebooks_notebook "${_subcommand}" "${_name:-}"
+      ;;
     *)
       _notebooks_list "${@}"
       ;;
   esac
 }
-_alias_subcommand "notebooks" "ns"
+_alias_subcommand "notebooks" "n"
+_alias_subcommand "notebooks" "nb"
 _alias_subcommand "notebooks" "nbs"
+_alias_subcommand "notebooks" "notebook"
+_alias_subcommand "notebooks" "ns"
 
 # open ################################################################### open
 
@@ -8471,9 +8481,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   move
   mv
   n
-  nb
-  nbs
-  notebook
   notebooks
   ns
   o

@@ -896,10 +896,10 @@ Notebooks can be archived:
 
 ```bash
 # archive the current notebook
-nb notebook archive
+nb notebooks archive
 
 # archive the notebook named 'example'
-nb example:notebook archive
+nb notebooks archive example
 ```
 
 When a notebook is archived it is not included in `ls` output, synced
@@ -925,10 +925,10 @@ nb use example
 nb example:list
 ```
 
-Check a notebook's archival status with `nb notebook status`:
+Check a notebook's archival status with `nb notebooks status`:
 
 ```bash
-> nb notebook status
+> nb notebooks status example
 example is archived.
 ```
 
@@ -936,14 +936,13 @@ Unarchiving a notebook is simple:
 
 ```bash
 # unarchive the current notebook
-nb notebook unarchive
+nb notebooks unarchive
 
 # unarchive the notebook named 'example'
-nb example:notebook unarchive
+nb notebooks unarchive example
 ```
 
-For more information about working with notebooks, run `nb help notebooks`
-and `nb help notebook`.
+For more information about working with notebooks, run `nb help notebooks`.
 
 ### Git Sync
 
@@ -1311,14 +1310,15 @@ Usage:
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
-  nb notebook [archive | open | peek | status | unarchive]
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
+  nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks init [<path> [<remote-url>]]
-  nb notebooks [current [--path] | use <name>]
+  nb notebooks current [--path]
   nb notebooks delete <name> [-f | --force]
   nb notebooks rename <old-name> <new-name>
+  nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title>)
   nb peek (<id> | <filename> | <path> | <title>)
   nb remote [remove | set <url> [-f | --force]]
@@ -1916,35 +1916,6 @@ Examples:
 Shortcut Alias: `mv`
 ```
 
-#### `notebook`
-
-```text
-Usage:
-  nb notebook [archive | open | peek | status | unarchive]
-
-Subcommands:
-  archive     Set the notebook to 'archived' status.
-  open        Open the notebook directory in your file browser, explorer, or
-              finder.
-              Shortcut Alias: `o`
-  peek        Open the notebook directory the first tool found in this list:
-              `ranger` [1], `mc` [2], `exa` [3] or `ls`.
-              Shortcut Alias: `p`
-  status      Print the archival status of the current notebook.
-  unarchive   Remove 'archived' status from notebook.
-
-    1. https://ranger.github.io/
-    2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
-
-Description:
-  Print, archive, or open the current notebook.
-
-  Archiving a notebook hides it from `ls` output.
-
-Shortcut Alias: `n`
-```
-
 #### `notebooks`
 
 ```text
@@ -1952,6 +1923,7 @@ Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
+  nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks current [--path]
   nb notebooks delete <name> [-f | --force]
@@ -1974,13 +1946,28 @@ Subcommands:
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
+  archive    Set the current notebook or notebook <name> to 'archived' status.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name.
   delete     Delete a notebook.
+  open       Open the current notebook directory or notebook <name> in your
+             file browser, explorer, or finder.
+             Shortcut Alias: `o`
+  peek       Open the current notebook directory or notebook <name> in the
+             first tool found in this list:
+             `ranger` [1], `mc` [2], `exa` [3] or `ls`.
+             Shortcut Alias: `p`
   rename     Rename a notebook.
+  status     Print the archival status of the current notebook or
+             notebook <name>.
+  unarchive  Remove 'archived' status from current notebook or notebook <name>.
   use        Switch to a notebook.
+
+    1. https://ranger.github.io/
+    2. https://en.wikipedia.org/wiki/Midnight_Commander
+    3. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
@@ -1990,7 +1977,7 @@ Examples:
   nb notebooks add Example1
   nb notebooks add Example2 https://github.com/example/example.git
 
-Shortcut Alias: `ns`
+Shortcut Alias: `n`
 ```
 
 #### `open`
