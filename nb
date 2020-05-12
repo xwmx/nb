@@ -1339,7 +1339,7 @@ _get_title() {
     if _file_is_text "${_path}"
     then
 
-      while IFS= read -r __line
+      while IFS= read -r __line || [[ -n "${__line}" ]]
       do
         if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
            ! ((_in_code_block))
