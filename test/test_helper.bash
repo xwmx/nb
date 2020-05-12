@@ -14,7 +14,7 @@ setup() {
 
   # `$_NB_PATH`
   #
-  # Used by `bookmark` and `notes` for testing.
+  # Used by `bookmark` and `nb` for testing.
   export _NB_PATH="${_NB}"
 
   # `$_BOOKMARK`
@@ -46,7 +46,7 @@ setup() {
     export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor"
   fi
 
-  # Use empty `notes` script in environment to avoid depending on `notes`
+  # Use empty `nb` script in environment to avoid depending on `nb`
   # being available in `$PATH`.
   export PATH="${BATS_TEST_DIRNAME}/fixtures/bin:${PATH}"
 
