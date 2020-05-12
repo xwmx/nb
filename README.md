@@ -118,7 +118,7 @@ Also supported for various enhancements:
 To install with [Homebrew](http://brew.sh/):
 
 ```bash
-brew install xwmx/taps/notes
+brew install xwmx/taps/nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
