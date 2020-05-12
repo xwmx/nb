@@ -2186,8 +2186,8 @@ Usage:
   ${_ME} open (<id> | <filename> | <path> | <title>)
   ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
-  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-            --to-bookmark | --to-note) [-f | --force]
+  ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
+            (<name> | --reset | --to-bookmark | --to-note)
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   ${_ME} settings [colors [<number>] | edit | list]
@@ -6529,8 +6529,8 @@ _remote() {
 
 desc "rename" <<HEREDOC
 Usage:
-  ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-            --to-bookmark | --to-note) [-f | --force]
+  ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
+            (<name> | --reset | --to-bookmark | --to-note)
 
 Options:
   -f, --force     Skip the confirmation prompt.

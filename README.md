@@ -1320,8 +1320,8 @@ Usage:
   nb open (<id> | <filename> | <path> | <title>)
   nb peek (<id> | <filename> | <path> | <title>)
   nb remote [remove | set <url> [-f | --force]]
-  nb rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-            --to-bookmark | --to-note) [-f | --force]
+  nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
+            (<name> | --reset | --to-bookmark | --to-note)
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   nb settings [colors [<number>] | edit | list]
@@ -2042,8 +2042,8 @@ Examples:
 
 ```text
 Usage:
-  nb rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-            --to-bookmark | --to-note) [-f | --force]
+  nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
+            (<name> | --reset | --to-bookmark | --to-note)
 
 Options:
   -f, --force     Skip the confirmation prompt.
