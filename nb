@@ -8480,7 +8480,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   mv
   n
   notebooks
-  ns
   o
   open
   p
