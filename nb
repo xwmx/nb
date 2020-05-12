@@ -6158,8 +6158,6 @@ Please type $(_highlight "${_name}") to confirm: " __response
       _die printf "Unable to determine notebook name.\\n"
     fi
 
-    local _notebook_path="${_NOTEBOOK_PATH}"
-
     if [[ -z "${_subcommand}" ]]
     then
       printf "%s\\n" "${_notebook_name}"
