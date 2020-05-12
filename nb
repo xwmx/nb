@@ -5536,10 +5536,12 @@ _ls() {
     fi
 
     _commands_raw=(
-      "❯ ${_ME} ${_scope}list"
+      "❯ ${_ME} ${_scope}ls"
       "${_ME} ${_scope}add"
       "${_ME} ${_scope}b <url>"
       "${_ME} edit ${_scope}<id>"
+      "${_ME} show ${_scope}<id>"
+      "${_ME} open ${_scope}<id>"
       "${_ME} ${_scope}search <query>"
       "${_ME} notebooks add <name>"
       "${_ME} settings"
@@ -5547,7 +5549,7 @@ _ls() {
     )
 
     _commands_hi=(
-      "❯ $(_highlight_accent "${_ME} ${_scope}list")"
+      "❯ $(_highlight_accent "${_ME} ${_scope}ls")"
         "$(_highlight_accent "${_commands_raw[1]}")"
         "$(_highlight_accent "${_commands_raw[2]}")"
         "$(_highlight_accent "${_commands_raw[3]}")"
@@ -5555,6 +5557,8 @@ _ls() {
         "$(_highlight_accent "${_commands_raw[5]}")"
         "$(_highlight_accent "${_commands_raw[6]}")"
         "$(_highlight_accent "${_commands_raw[7]}")"
+        "$(_highlight_accent "${_commands_raw[8]}")"
+        "$(_highlight_accent "${_commands_raw[9]}")"
     )
 
     local _line_hi=
