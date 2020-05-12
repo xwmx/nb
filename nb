@@ -4938,11 +4938,13 @@ HEREDOC
     local _counter=0
     local _max_id
     _max_id="$(_index get_max_id)"
-    local _maybe_title=
 
     for __basename in "${_filenames[@]}"
     do
       _debug printf "list() \${__basename}: '%s'\\n" "${__basename}"
+
+      local _maybe_title=
+
       if [[ -n "${_selection:-}" ]]
       then
         # If a valid <selection> has been specified, skip the rest of the loop
@@ -5039,7 +5041,11 @@ HEREDOC
       local _title_or_basename="${__basename}"
       if ! ((_list_filenames))
       then
-        _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
+        if [[ -z "${_maybe_title}" ]]
+        then
+          _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
+        fi
+
         if [[ -n "${_maybe_title}" ]]
         then # note file has title.
           _title_or_basename="${_maybe_title}"
