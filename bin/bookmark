@@ -95,7 +95,7 @@ HEREDOC
         | sed -e '$ d'
 
       cat <<HEREDOC
-------------------------------------------------
+--------------------------------------------
 Part of \`nb\` (https://github.com/xwmx/nb).
 For more information, see: \`nb help\`.
 HEREDOC

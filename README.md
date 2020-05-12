@@ -1283,12 +1283,12 @@ in a single portable script.
 Usage:
   nb [<id> | <filename> | <path> | <title>] [<list options>...]
   nb add [<filename> | <content>] [-c <content> | --content <content>]
-            [-e | --encrypt] [-f <filename> | --filename <filename>]
-            [-t <title> | --title <title>] [--type <type>]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [-t <title> | --title <title>] [--type <type>]
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--raw-content] [--related <url>]...
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1298,23 +1298,23 @@ Usage:
   nb count
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
   nb edit (<id> | <filename> | <path> | <title>)
-             [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>]
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-               [<pandoc options>...]
+            [<pandoc options>...]
   nb git <git options>...
   nb help [<subcommand> | --readme]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [-t <type> | --type <type> | --<type>]
-             [<id> | <filename> | <path> | <title> | <query>]
+          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
+          [<id> | <filename> | <path> | <title> | <query>]
   nb ls [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebook [archive | open | peek | status | unarchive]
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--paths] [--unarchived]
+               [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks [current [--path] | use <name>]
@@ -1324,15 +1324,15 @@ Usage:
   nb peek (<id> | <filename> | <path> | <title>)
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-               --to-bookmark | --to-note) [-f | --force]
+            --to-bookmark | --to-note) [-f | --force]
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                       [-l | --list] [--path]
+                    [-l | --list] [--path]
   nb settings [colors [<number>] | edit | list]
   nb settings (get | unset) <setting>
   nb settings set <setting> <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-             [--dump [--no-color]]
+          [--dump [--no-color]]
   nb sync [-a | --all]
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
@@ -1457,7 +1457,7 @@ Examples:
   bookmark search 'example query'
   bookmark open 5
 
-------------------------------------------------
+------------------------------------------
 Part of `nb` (https://github.com/xwmx/nb).
 For more information, see: `nb help`.
 ```
@@ -1469,8 +1469,8 @@ For more information, see: `nb help`.
 ```text
 Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
-            [-e | --encrypt] [-f <filename> | --filename <filename>]
-            [-t <title> | --title <title>] [--type <type>]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c, --content <content>     The content for the new note.
@@ -1486,11 +1486,11 @@ Description:
   Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`. If a non-option argument is passed, `nb` will treat it
-  as a <filename≥ if a file extension is found. If no file extension is
-  found, `nb` will treat the string as <content> and will create a
-  new note without opening the editor. `nb add` can also create a new
-  note with piped content.
+  `$EDITOR`, currently set to 'code'. If a non-option argument is
+  passed, `nb` will treat it as a <filename≥ if a file extension is found.
+  If no file extension is found, `nb` will treat the string as
+  <content> and will create a new note without opening the editor.
+  `nb add` can also create a new note with piped content.
 
   `nb` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the `--type`
@@ -1517,8 +1517,8 @@ Shortcut Alias: `a`
 Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--raw-content] [--related <url>]...
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1637,7 +1637,7 @@ Shortcut Alias: `d`
 ```text
 Usage:
   nb edit (<id> | <filename> | <path> | <title>)
-             [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>]
 
 Options:
   -e, --editor <editor>  Edit the note with <editor>, overriding the editor
@@ -1674,9 +1674,9 @@ Description:
 ```text
 Usage:
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-               [<pandoc options>...]
+            [<pandoc options>...]
   nb export pandoc (<id> | <filename> | <path> | <title>)
-               [<pandoc options>...]
+            [<pandoc options>...]
 
 Options:
   -f, --force   Skip the confirmation prompt when overwriting an existing file.
@@ -1798,9 +1798,9 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [-t <type> | --type <type> | --<type>]
-             [<id> | <filename> | <path> | <title> | <query>]
+          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
+          [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
@@ -1848,9 +1848,9 @@ Examples:
 ```text
 Usage:
   nb ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-           [-t <type> | --type <type> | --<type>]
-           [<id> | <filename> | <path> | <title> | <query>]
+        [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
+        [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
@@ -1965,7 +1965,7 @@ Shortcut Alias: `n`
 ```text
 Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--paths] [--unarchived]
+               [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks current [--path]
@@ -2074,7 +2074,7 @@ Examples:
 ```text
 Usage:
   nb rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-               --to-bookmark | --to-note) [-f | --force]
+            --to-bookmark | --to-note) [-f | --force]
 
 Options:
   -f, --force     Skip the confirmation prompt.
@@ -2108,7 +2108,7 @@ Examples:
 ```text
 Usage:
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                       [-l | --list] [--path]
+                    [-l | --list] [--path]
 
 Options:
   -a, --all                     Search all active notebooks.
@@ -2262,7 +2262,7 @@ Example:
 ```text
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-             [--dump [--no-color]]
+          [--dump [--no-color]]
 
 Options:
   --dump      Print to standard output.

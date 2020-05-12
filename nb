@@ -2181,12 +2181,12 @@ in a single portable script.
 Usage:
   ${_ME} [<id> | <filename> | <path> | <title>] [<list options>...]
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
-            [-e | --encrypt] [-f <filename> | --filename <filename>]
-            [-t <title> | --title <title>] [--type <type>]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [-t <title> | --title <title>] [--type <type>]
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--raw-content] [--related <url>]...
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -2196,23 +2196,23 @@ Usage:
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
-             [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-               [<pandoc options>...]
+            [<pandoc options>...]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand> | --readme]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [-t <type> | --type <type> | --<type>]
-             [<id> | <filename> | <path> | <title> | <query>]
+          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
+          [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebook [archive | open | peek | status | unarchive]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--paths] [--unarchived]
+               [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks [current [--path] | use <name>]
@@ -2222,15 +2222,15 @@ Usage:
   ${_ME} peek (<id> | <filename> | <path> | <title>)
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-               --to-bookmark | --to-note) [-f | --force]
+            --to-bookmark | --to-note) [-f | --force]
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                       [-l | --list] [--path]
+                    [-l | --list] [--path]
   ${_ME} settings [colors [<number>] | edit | list]
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-             [--dump [--no-color]]
+          [--dump [--no-color]]
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
@@ -2333,8 +2333,8 @@ _alias_subcommand "help" "h"
 desc "add" <<HEREDOC
 Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
-            [-e | --encrypt] [-f <filename> | --filename <filename>]
-            [-t <title> | --title <title>] [--type <type>]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c, --content <content>     The content for the new note.
@@ -2588,8 +2588,8 @@ desc "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--raw-content] [--related <url>]...
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3597,7 +3597,7 @@ _alias_subcommand "delete" "d"
 desc "edit" <<HEREDOC
 Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
-             [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>]
 
 Options:
   -e, --editor <editor>  Edit the note with <editor>, overriding the editor
@@ -3867,9 +3867,9 @@ _env() {
 desc "export" <<HEREDOC
 Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-               [<pandoc options>...]
+            [<pandoc options>...]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
-               [<pandoc options>...]
+            [<pandoc options>...]
 
 Options:
   -f, --force   Skip the confirmation prompt when overwriting an existing file.
@@ -4741,9 +4741,9 @@ HEREDOC
 desc "list" <<HEREDOC
 Usage:
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-             [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-             [-t <type> | --type <type> | --<type>]
-             [<id> | <filename> | <path> | <title> | <query>]
+          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
+          [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
@@ -5206,9 +5206,9 @@ HEREDOC
 desc "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-           [-t <type> | --type <type> | --<type>]
-           [<id> | <filename> | <path> | <title> | <query>]
+        [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
+        [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
@@ -5882,7 +5882,7 @@ _alias_subcommand "notebook" "nb"
 desc "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-                  [--no-color] [--paths] [--unarchived]
+               [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
@@ -6629,7 +6629,7 @@ _remote() {
 desc "rename" <<HEREDOC
 Usage:
   ${_ME} rename (<id> | <filename> | <path> | <title>) (<name> | --reset |
-               --to-bookmark | --to-note) [-f | --force]
+            --to-bookmark | --to-note) [-f | --force]
 
 Options:
   -f, --force     Skip the confirmation prompt.
@@ -6816,7 +6816,7 @@ _rename() {
 desc "search" <<HEREDOC
 Usage:
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                       [-l | --list] [--path]
+                    [-l | --list] [--path]
 
 Options:
   -a, --all                     Search all active notebooks.
@@ -7722,7 +7722,7 @@ HEREDOC
 desc "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-             [--dump [--no-color]]
+          [--dump [--no-color]]
 
 Options:
   --dump      Print to standard output.
