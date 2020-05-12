@@ -45,34 +45,7 @@ HEREDOC
 fi
 
 _main() {
-  if [[ -z "${1:-}" ]]
-  then
-    local _count=0
-    local _in_footer=0
-    local _in_list=0
-
-    while IFS= read -r __line
-    do
-      _count=$((_count+1))
-
-      if ((_in_footer))
-      then
-        printf "%s\\n" "${__line}" | sed -e 's/nb/notes/g'
-      elif [[ "${__line}" =~ ------------ ]]
-      then
-        if ! ((_in_list))
-        then
-          _in_list=1
-        else
-          _in_footer=1
-        fi
-
-        printf "%s\\n" "${__line}"
-      else
-        printf "%s\\n" "${__line}"
-      fi
-    done < <("${_NB_PATH:-}")
-  elif [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
+  if [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
      {
        [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
      }
