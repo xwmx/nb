@@ -69,7 +69,7 @@ load test_helper
   [[ -e "${NBRC_PATH}" ]]
   cat "${NBRC_PATH}" | grep -q "Configuration file for \`nb\`"
   printf "%s\\n" "$(cat "${NBRC_PATH}")"
-  cat "${NBRC_PATH}" | grep -q "\$NB_AUTO_SYNC"
+  cat "${NBRC_PATH}" | grep -q "NB_ENCRYPTION_TOOL"
 }
 
 @test "\`init\` creates git commit." {
