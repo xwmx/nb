@@ -4589,72 +4589,11 @@ HEREDOC
 # single portable script.
 #
 # Edit this file manually or manage settings using the \`${_ME} settings\`
-# subcommand.
+# subcommand. Configuration options are set as environment variables, eg:
+#   export NB_ENCRYPTION_TOOL=gpg
 #
 # https://github.com/${_REPO}
 ###############################################################################
-
-# \$EDITOR
-#
-# Default: inherits the global \`\$EDITOR\` value.
-#
-# Reassign \`\$EDITOR\` to use a specific editor with \`${_ME}\`, overriding
-# the global \`\$EDITOR\` setting.
-#
-# Example Values: 'vim' 'emacs' 'subl' 'atom' 'code' 'macdown'
-# export EDITOR="code"
-
-# \$NB_AUTO_SYNC
-#
-# Default: 1
-#
-# By default, operations that trigger a git commit like \`add\`, \`edit\`,
-# and \`delete\` will sync notebook changes to the remote repository, if
-# one is set.
-#
-# To disable this behavior, uncomment the following line.
-# export NB_AUTO_SYNC=0
-
-# \$NB_DEFAULT_EXTENSION
-#
-# Default: 'md'
-#
-# The default extension to use for \`${_ME}\` files. Change to 'org' for
-# Emacs Org mode files, 'rst' for reStructuredText, 'txt' for plain text,
-# or whatever you prefer.
-
-# Example Values: 'md' 'org' 'txt' 'rst'
-# export NB_DEFAULT_EXTENSION="org"
-
-# \$NB_DIR
-#
-# Default: "\$HOME/Notebooks"
-#
-# The location of the directory that contains the notebooks.
-# export NB_DIR="\$HOME/Notebooks"
-
-# \$NB_ENCRYPTION_TOOL
-#
-# Default: 'openssl'
-#
-# The tool used for encrypting notes.
-#
-# Supported Values: 'openssl' 'gpg'
-# export NB_ENCRYPTION_TOOL="gpg"
-
-# \$NB_HIGHLIGHT_COLOR
-#
-# Default: Varies depending on terminal capabilities.
-#
-# Set highlighting color. Often this can be set to an xterm color number
-# between 0 and 255. Some terminals support many more colors. To view a
-# table of common colors and numbers, run:
-#   ${_ME} settings colors
-# To view a color for a number, run:
-#   ${_ME} settings colors <number>
-#
-# Supported Values: [0..255+]
-# export NB_HIGHLIGHT_COLOR=213
 HEREDOC
       printf "Created %s\\n" "${_RC_FILE_PATH}"
     fi
