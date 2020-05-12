@@ -5555,7 +5555,6 @@ _ls() {
     )
 
     local _line_hi=
-    local _line_number=0
     local _line_raw=
     local _output_raw=
     local _output_hi=
@@ -5577,7 +5576,6 @@ _ls() {
       then # wrap to next line
         _output_hi="${_output_hi}${_line_hi}${_NEWLINE}"
         _output_raw="${_output_raw}${_line_raw}${_NEWLINE}"
-        _line_number=$((_line_number + 1))
 
         # Start the line for the next iteration using the current name.
         _test_line="${_commands_raw[i]}"
@@ -5598,7 +5596,6 @@ _ls() {
       then # end of list
         _output_hi="${_output_hi}${_line_hi}"
         _output_raw="${_output_raw}${_line_raw}"
-        _line_number=$((_line_number + 1))
       fi
     done
 
