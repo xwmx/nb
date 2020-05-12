@@ -1328,8 +1328,8 @@ Usage:
   nb settings (get | unset) <setting>
   nb settings set <setting> <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-          [--dump [--no-color]]
+  nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+          [--id | --path | --render]
   nb sync [-a | --all]
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
@@ -2230,8 +2230,8 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-          [--dump [--no-color]]
+  nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+          [--id | --path | --render]
 
 Options:
   --dump      Print to standard output.

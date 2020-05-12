@@ -2194,8 +2194,8 @@ Usage:
   ${_ME} settings (get | unset) <setting>
   ${_ME} settings set <setting> <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-          [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+          [--id | --path | --render]
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
@@ -7622,8 +7622,8 @@ HEREDOC
 
 desc "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--id | --path | --render]
-          [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+          [--id | --path | --render]
 
 Options:
   --dump      Print to standard output.
