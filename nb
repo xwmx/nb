@@ -1409,6 +1409,7 @@ _get_unique_basename() {
 # Description:
 #   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
+  # Usage: _git_checkpoint_commit <message>
   _git_checkpoint_commit() {
     [[ -z "${1:-}" ]] &&
       _die printf "Usage: _git_checkpoint_commit <message>"
@@ -1418,6 +1419,8 @@ _git_checkpoint() {
 
     git add --all && git commit -a -m "${1}"
   }
+
+  # Usage: _git_checkpoint_sync
   _git_checkpoint_sync() {
     if git show-branch remotes/origin/master > /dev/null 2>&1
     then
