@@ -1233,7 +1233,6 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   </br>---</br>
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
-  <a href="#bookmarks-1">bookmarks</a> •
   <a href="#completions">completions</a> •
   <a href="#count">count</a> •
   <a href="#delete">delete</a> •
@@ -1248,7 +1247,6 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#list">list</a> •
   <a href="#ls">ls</a> •
   <a href="#move">move</a> •
-  <a href="#notebook">notebook</a> •
   <a href="#notebooks-1">notebooks</a> •
   <a href="#open">open</a> •
   <a href="#peek">peek</a> •
