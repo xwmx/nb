@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/xwmx/notes.svg?branch=master)](https://travis-ci.org/xwmx/notes)
+[![Build Status](https://travis-ci.org/xwmx/nb.svg?branch=master)](https://travis-ci.org/xwmx/nb)
 
 # `❯ nb` · `notes` + `bookmark`
 
