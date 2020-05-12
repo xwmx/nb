@@ -1940,6 +1940,26 @@ _print_line() {
   printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_line// /-}" "${_TPUT_SGR0}"
 }
 
+# _print_welcome()
+#
+# Usage:
+#   _print_welcome
+#
+# Description:
+#   Print the welcome message.
+_print_welcome() {
+    cat <<HEREDOC
+${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
+$(_highlight "Welcome") to
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \\
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
+${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
+HEREDOC
+}
+
 # _set_selection_notebook()
 #
 # Usage:
@@ -4580,17 +4600,8 @@ HEREDOC
 
   # Usage: _init_print_header
   _init_print_header() {
-    cat <<HEREDOC
-${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
-$(_highlight "Welcome") to
-__          _
-\ \   _ __ | |__
- \ \ | '_ \| '_ \\
- / / | | | | |_) |
-/_/  |_| |_|_.__/
-${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
-Initializing...
-HEREDOC
+    _print_welcome &&
+      printf "Initializing...\\n"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
@@ -8601,6 +8612,9 @@ do
       ;;
     -i|--interactive)
       _SUBCOMMAND="shell"
+      ;;
+    --welcome)
+      _print_welcome
       ;;
     *:*)
       __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
