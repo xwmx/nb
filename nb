@@ -1869,7 +1869,7 @@ _list_nb_files() {
       printf "%s\\n" "${_filenames[@]}"
     fi
   else
-    ls -t "${_NOTEBOOK_PATH}"
+    ls -t -1 "${_NOTEBOOK_PATH}"
   fi | {
     if [[ -n "${_type:-}" ]]
     then
