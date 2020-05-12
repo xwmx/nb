@@ -17,7 +17,7 @@ load test_helper
   [[ ${status} -eq 1 ]]
 
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[1]}" =~ '  nb show' ]]
 }
 
 @test "\`show\` with no argument does not show the note file." {
@@ -79,7 +79,8 @@ load test_helper
   [[ ! "${output}" =~ mock_editor ]]
 
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[1]}" =~ '  nb show' ]]
+
 }
 
 # <selector> ##################################################################
@@ -313,6 +314,38 @@ load test_helper
   [[ "${output}" =~ Content ]]
 }
 
+# `show <id> --filename` ######################################################
+
+@test "\`show <id> --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --filename
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "example.md" ]]
+}
+
+# `show <id> --title` #########################################################
+
+@test "\`show <id> --title\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --title
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "Example Title" ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
@@ -325,5 +358,6 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb show (<id> | <filename> | <path> | <title>) [--id | --path | --render]" ]]
+  [[ "${lines[1]}" =~ '  nb show' ]]
+
 }

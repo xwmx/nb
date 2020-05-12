@@ -1329,7 +1329,7 @@ Usage:
   nb settings set <setting> <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
-          [--id | --path | --render]
+          [--filename | --id | --path | --render | --title]
   nb sync [-a | --all]
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
@@ -2231,16 +2231,18 @@ Example:
 ```text
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
-          [--id | --path | --render]
+          [--filename | --id | --path | --render | --title]
 
 Options:
   --dump      Print to standard output.
-  --id        Print the id number of the note file.
-  --path      Print the full path of the note file.
+  --filename  Print the filename of the item.
+  --id        Print the id number of the item.
+  --path      Print the full path of the item.
   --no-color  When used with `--dump`, print the note without highlighting.
   --render    Use `pandoc` [1] to render the file to HTML and display with
               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
               available, `--render` is ignored.
+  --title     Print the title of the note.
 
 Description:
   Show a note. Notes in text file formats can be rendered or dumped to

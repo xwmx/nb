@@ -2195,7 +2195,7 @@ Usage:
   ${_ME} settings set <setting> <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
-          [--id | --path | --render]
+          [--filename | --id | --path | --render | --title]
   ${_ME} sync [-a | --all]
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
@@ -7623,16 +7623,18 @@ HEREDOC
 desc "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
-          [--id | --path | --render]
+          [--filename | --id | --path | --render | --title]
 
 Options:
   --dump      Print to standard output.
-  --id        Print the id number of the note file.
-  --path      Print the full path of the note file.
+  --filename  Print the filename of the item.
+  --id        Print the id number of the item.
+  --path      Print the full path of the item.
   --no-color  When used with \`--dump\`, print the note without highlighting.
   --render    Use \`pandoc\` [1] to render the file to HTML and display with
               \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is not
               available, \`--render\` is ignored.
+  --title     Print the title of the note.
 
 Description:
   Show a note. Notes in text file formats can be rendered or dumped to
@@ -7676,11 +7678,13 @@ _show() {
 
   local _dump=0
   local _password=
+  local _print_filename=0
   local _print_id=0
   local _print_no_color=0
   local _print_path=0
   local _render=0
   local _selection=
+  local _print_title=0
   local _tool=
 
   # Parse function options.
@@ -7695,6 +7699,9 @@ _show() {
         ;;
       --path)
         _print_path=1
+        ;;
+      --filename)
+        _print_filename=1
         ;;
       --id|--index)
         _print_id=1
@@ -7714,6 +7721,9 @@ _show() {
         ;;
       --render|-r)
         _render=1
+        ;;
+      --title)
+        _print_title=1
         ;;
       --tool)
         if __option_value_is_present "${__val:-}"
@@ -7769,11 +7779,23 @@ _show() {
     return 0
   fi
 
+  if ((_print_filename))
+  then
+    printf "%s\\n" "${_basename}"
+    return 0
+  fi
+
   if ((_print_id))
   then
     local _id
     _id="$(_index get_id "${_basename}")"
     printf "%s\\n" "${_id}"
+    return 0
+  fi
+
+  if ((_print_title))
+  then
+    _get_title "${_NOTEBOOK_PATH}/${_basename}"
     return 0
   fi
 
