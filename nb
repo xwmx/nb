@@ -1949,14 +1949,14 @@ _print_line() {
 #   Print the welcome message.
 _print_welcome() {
     cat <<HEREDOC
-${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}------------------${_TPUT_SGR0}
 $(_highlight "Welcome") to
 __          _
 \ \   _ __ | |__
  \ \ | '_ \| '_ \\
  / / | | | | |_) |
 /_/  |_| |_|_.__/
-${_TPUT_ACCENT_COLOR}-------------------------------${_TPUT_SGR0}
+${_TPUT_ACCENT_COLOR}------------------${_TPUT_SGR0}
 HEREDOC
 }
 
