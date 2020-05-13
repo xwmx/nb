@@ -115,18 +115,16 @@ else
   export NBRC_PATH="${HOME}/.nbrc"
 fi
 
-export _RC_FILE_PATH="${NBRC_PATH}"
-
 # Handle symlinked NBRC_PATH
-if [[ -L "${_RC_FILE_PATH}" ]]
+if [[ -L "${NBRC_PATH}" ]]
 then
-  _RC_FILE_PATH="$(realpath "${_RC_FILE_PATH}")"
+  NBRC_PATH="$(realpath "${NBRC_PATH}")"
 fi
 
 # Source rc file.
-if [[ -e "${_RC_FILE_PATH}" ]]
+if [[ -e "${NBRC_PATH}" ]]
 then
-  source "${_RC_FILE_PATH}"
+  source "${NBRC_PATH}"
 fi
 
 ###############################################################################
@@ -169,7 +167,7 @@ __set_editor() {
       cat <<HEREDOC
 Command line text editor not found. Set the \$EDITOR variable in your
 environment or in the \`${_ME}\` configuration file located at:
-  ${_RC_FILE_PATH}
+  ${NBRC_PATH}
 
 More information about setting \$EDITOR:
   https://askubuntu.com/q/432524
@@ -3795,7 +3793,7 @@ _env() {
     printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
     printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
     printf "NB_HIGHLIGHT_COLOR=%s\\n" "${NB_HIGHLIGHT_COLOR:-}"
-    printf "_RC_FILE_PATH=%s\\n" "${_RC_FILE_PATH:-}"
+    printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
     printf "code:     %s\\n" "$(command -v code)"
@@ -4526,7 +4524,7 @@ Usage:
 
 Description:
   Initialize the local data directory and generate a \`${_ME}\`
-  configuration file if it doesn't exist at ${_RC_FILE_PATH}
+  configuration file if it doesn't exist at ${NBRC_PATH}
 
 Examples:
   ${_ME} init
@@ -4573,12 +4571,12 @@ HEREDOC
 
   # Usage: _init_create_rc_file
   _init_create_rc_file() {
-    if [[ -e "${_RC_FILE_PATH}" ]]
+    if [[ -e "${NBRC_PATH}" ]]
     then
       printf "Configuration file already exists: %s\\n" \
-        "${_RC_FILE_PATH}"
+        "${NBRC_PATH}"
     else
-      cat <<HEREDOC > "${_RC_FILE_PATH}"
+      cat <<HEREDOC > "${NBRC_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
 # .nbrc
@@ -4594,7 +4592,7 @@ HEREDOC
 # https://github.com/${_REPO}
 ###############################################################################
 HEREDOC
-      printf "Created %s\\n" "${_RC_FILE_PATH}"
+      printf "Created %s\\n" "${NBRC_PATH}"
     fi
   }
 
@@ -7242,7 +7240,7 @@ _settings() {
       } &&
       _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
       _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
-      printf "\\n%s\\n" "${_entry}" >> "${_RC_FILE_PATH}"        &&
+      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
       if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
       then
         _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
@@ -7258,10 +7256,10 @@ _settings() {
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
         -e "s/^export ${_setting_name}.*Set by.*$//g" \
-        "${_RC_FILE_PATH}" &&
+        "${NBRC_PATH}" &&
         {
-          _stripped=$(<"${_RC_FILE_PATH}")
-          printf "%s\\n" "${_stripped}" > "${_RC_FILE_PATH}"
+          _stripped=$(<"${NBRC_PATH}")
+          printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
         } &&
         printf "%s restored to the default: '%s'\\n" \
           "${_setting_name}" \
@@ -7438,7 +7436,7 @@ HEREDOC
         return 0
         ;;
       edit)
-        _edit_file "${_RC_FILE_PATH}" --no-wait
+        _edit_file "${NBRC_PATH}" --no-wait
         return 0
         ;;
       get)
