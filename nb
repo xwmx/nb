@@ -1425,7 +1425,7 @@ _get_unique_basename() {
   local _unique_filename="${_file_name}"
   while [[ -e "${_NOTEBOOK_PATH}/${_unique_filename}.${_file_type}" ]]
   do
-    printf -v _unique_filename -- "%s-%02d" \
+    printf -v _unique_filename -- "%s-%01d" \
       "${_file_name}"                       \
       "$(( ++_uniqueness_counter ))"
   done

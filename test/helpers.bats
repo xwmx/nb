@@ -178,7 +178,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-01.md ]]
+  [[ "${lines[0]}" =~ example-1.md ]]
 
   run "${_NB}" add "example.md" --content "Example"
 
@@ -188,7 +188,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-02.md ]]
+  [[ "${lines[0]}" =~ example-2.md ]]
 }
 
 @test "\`_get_unique_basename()\` works for bookmarks" {
@@ -205,7 +205,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-01.bookmark.md ]]
+  [[ "${lines[0]}" =~ example-1.bookmark.md ]]
 
   run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
@@ -215,5 +215,5 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-02.bookmark.md ]]
+  [[ "${lines[0]}" =~ example-2.bookmark.md ]]
 }
