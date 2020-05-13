@@ -253,14 +253,33 @@ _die() {
 if [[ -n "${NB_DIR:-}" ]]
 then
   export NB_DIR="${NB_DIR}"
-elif [[ -n "${NOTES_DIR}" ]]
+elif [[ -n "${NOTES_DIR:-}" ]]
 then # Use legacy NOTES_DIR environment variable.
   export NB_DIR="${NOTES_DIR}"
-elif [[ -e "${HOME}/.notes" ]]
-then # Use legacy ~/.notes directory.
-  export NB_DIR="${HOME}/.notes"
 else
-  export NB_DIR="${HOME}/Notebooks"
+  export NB_DIR="${HOME}/.nb"
+fi
+
+if [[ -d "${HOME}/.notes/home/.git"   ]] &&
+   [[ -f "${HOME}/.notes/home/.index" ]] &&
+   [[ ! -e "${HOME}/.nb"              ]] &&
+   {
+     [[ -z "${NOTES_DIR:-}"                ]] ||
+     [[ "${NOTES_DIR}" != "${HOME}/.notes" ]]
+   }
+then # Migrate legacy ~/.notes directory.
+  mv "${HOME}/.notes" "${HOME}/.nb"
+  printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
+elif [[ -d "${HOME}/Notebooks/home/.git"   ]] &&
+     [[ -f "${HOME}/Notebooks/home/.index" ]] &&
+     [[ ! -e "${HOME}/.nb"                 ]] &&
+     {
+       [[ -z "${NOTES_DIR:-}"                   ]] ||
+       [[ "${NOTES_DIR}" != "${HOME}/Notebooks" ]]
+     }
+then # Migrate legacy ~/.notes directory.
+  mv "${HOME}/Notebooks" "${HOME}/.nb"
+  printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
 fi
 
 if [[ -L "${NB_DIR:-}" ]]
