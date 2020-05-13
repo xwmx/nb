@@ -2332,10 +2332,10 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
+  ${_ME} notebooks (export <name> [<path>] | import <path>)
+  ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title>)
@@ -5815,10 +5815,10 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
+  ${_ME} notebooks (export <name> [<path>] | import <path>)
+  ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
 

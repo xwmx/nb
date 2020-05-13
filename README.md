@@ -1326,10 +1326,10 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks (export <name> [<path>] | import <path>)
-  nb notebooks init [<path> [<remote-url>]]
   nb notebooks current [--path]
   nb notebooks delete <name> [-f | --force]
+  nb notebooks (export <name> [<path>] | import <path>)
+  nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title>)
@@ -1936,10 +1936,10 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks (export <name> [<path>] | import <path>)
-  nb notebooks init [<path> [<remote-url>]]
   nb notebooks current [--path]
   nb notebooks delete <name> [-f | --force]
+  nb notebooks (export <name> [<path>] | import <path>)
+  nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks use <name>
 
