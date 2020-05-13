@@ -341,6 +341,19 @@ export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
   NB_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION}"
 export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 
+# $NB_ENCRYPTION_TOOL
+#
+# Default: 'openssl'
+#
+# Supported Values: 'gpg' 'openssl'
+[[ -n "${NOTES_ENCRYPTION_TOOL:-}" ]] &&
+  NB_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL}"
+export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
+
+###############################################################################
+# Colors
+###############################################################################
+
 # $NB_ACCENT_COLOR
 #
 # Default: 8
@@ -375,15 +388,6 @@ __set_nb_highlight_color() {
     export NB_HIGHLIGHT_COLOR="${NB_HIGHLIGHT_COLOR:-4}"
   fi
 } && __set_nb_highlight_color
-
-# $NB_ENCRYPTION_TOOL
-#
-# Default: 'openssl'
-#
-# Supported Values: 'gpg' 'openssl'
-[[ -n "${NOTES_ENCRYPTION_TOOL:-}" ]] &&
-  NB_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL}"
-export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
 ###############################################################################
 # Cache & Temp Directories
