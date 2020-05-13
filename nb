@@ -260,6 +260,7 @@ else
   export NB_DIR="${HOME}/.nb"
 fi
 
+# TODO: Remove legacy migrations.
 if [[ -d "${HOME}/.notes/home/.git"   ]] &&
    [[ -f "${HOME}/.notes/home/.index" ]] &&
    [[ ! -e "${HOME}/.nb"              ]] &&
@@ -277,7 +278,7 @@ elif [[ -d "${HOME}/Notebooks/home/.git"   ]] &&
        [[ -z "${NOTES_DIR:-}"                   ]] ||
        [[ "${NOTES_DIR}" != "${HOME}/Notebooks" ]]
      }
-then # Migrate legacy ~/.notes directory.
+then # Migrate legacy ~/Notebooks directory.
   mv "${HOME}/Notebooks" "${HOME}/.nb"
   printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
 fi
