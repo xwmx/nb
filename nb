@@ -108,9 +108,20 @@ then
 elif [[ -n "${NOTESRC_PATH:-}" ]]
 then # Use legacy NOTESRC_PATH environment variable.
   export NBRC_PATH="${NOTESRC_PATH}"
-elif [[ -e "${HOME}/.notesrc" ]]
-then # Use legacy ~/.notesrc
-  export NBRC_PATH="${HOME}/.notesrc"
+elif [[ -e "${HOME}/.notesrc" ]] &&
+     grep -q -e "xwmx" -e "alphabetum" "${HOME}/.notesrc"
+then # Migrate legacy .notesrc TODO: remove.
+  mv "${HOME}/.notesrc" "${HOME}/.nbrc"
+  "${_SED_I_COMMAND[@]}"                              \
+    -e "s/NOTES_/NB_/g"                               \
+    -e "s/notesrc/nbrc/g"                             \
+    -e "s/alphabetum/xwmx/g"                          \
+    -e "s/\/notes/\/nb/g"                             \
+    -e "s/\.notes/\.nb/g"                             \
+    -e "s/by \`notes\`/by \`notes\` (now \`nb\`)/g"   \
+    -e "s/file for notes/file for \`nb\`/g"           \
+    "${HOME}/.nbrc"
+  export NBRC_PATH="${HOME}/.nbrc"
 else
   export NBRC_PATH="${HOME}/.nbrc"
 fi
