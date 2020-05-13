@@ -26,6 +26,11 @@ load test_helper
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.md"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_TMP_DIR}"
+
   cat "${_TMP_DIR}/example.md"
   [[ -e "${_TMP_DIR}/example.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/example.md"

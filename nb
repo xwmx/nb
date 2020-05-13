@@ -1484,24 +1484,21 @@ _get_title() {
 _get_unique_basename() {
   local _file_basename="${1:-}"
   local _file_name="${_file_basename%%.*}"
-  local _file_type=
 
   if [[ -z "${_file_name}" ]]
   then
     _file_name="$(date -u "+%Y%m%d%H%M%S")"
   fi
 
-  if [[ "${_file_name}" =~ \. ]]
-  then
-    local _file_type="${_file_basename#*.}"
-  fi
-
+  local _file_type="${_file_basename#*.}"
   if [[ -z "${_file_type}" ]]
   then
      _file_type="md"
   fi
 
-  _get_unique_path "${_NOTEBOOK_PATH}/${_file_name}.${_file_type}"
+  basename "$(
+    _get_unique_path "${_NOTEBOOK_PATH}/${_file_name}.${_file_type}"
+  )"
 
 }
 
@@ -1515,24 +1512,38 @@ _get_unique_basename() {
 _get_unique_path() {
   local _path="${1:-}"
 
+  local _dir_path=
+  _dir_path="$(dirname "${_path}")"
+
   local _basename=
   _basename="$(basename "${_path}")"
 
-  local _unique_basename="${_basename}"
+  local _file_name="${_basename%%.*}"
+  local _file_extension="${_basename#*.}"
 
-  local _dir_path=
-  _dir_path="$(cd "$(dirname "${_path}")"; pwd)"
+  if [[ -n "${_file_extension:-}"               ]] &&
+     [[ "${_basename}" =~ \.                    ]] &&
+     [[ "${_file_name}" != "${_file_extension}" ]]
+  then
+    _file_extension=".${_file_extension}"
+  else
+    _file_extension=
+  fi
+
+  local _unique_file_name="${_file_name}"
 
   local _uniqueness_counter=0
 
-  while [[ -e "${_dir_path}/${_unique_basename}" ]]
+  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}" ]]
   do
-    printf -v _unique_basename -- "%s-%01d"      \
-      "${_basename}"                      \
-      "$(( ++_uniqueness_counter ))"
+    _uniqueness_counter="$((_uniqueness_counter+1))"
+
+    printf -v _unique_file_name -- "%s-%01d"   \
+      "${_file_name}"                          \
+      "${_uniqueness_counter}"
   done
 
-  printf "%s\\n" "${_dir_path}/${_unique_basename}"
+  printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
 }
 
 # _git_checkpoint()
