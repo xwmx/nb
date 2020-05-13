@@ -8166,12 +8166,12 @@ Description:
   Update ${_ME} to the latest version.
 HEREDOC
 _update() {
-    local _current_path
-    _current_path="${BASH_SOURCE[0]}"
-    if [[ -n "${_current_path}" ]]
-    then
-      _current_path="$(realpath "${_current_path}")"
-    fi
+  local _current_path
+  _current_path="${BASH_SOURCE[0]}"
+  if [[ -n "${_current_path}" ]]
+  then
+    _current_path="$(realpath "${_current_path}")"
+  fi
 
   if hash npm 2>/dev/null         &&
      npm list | grep -q notes.sh  &&
