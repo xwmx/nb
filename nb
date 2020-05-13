@@ -354,6 +354,77 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # Colors
 ###############################################################################
 
+# $NB_THEME
+#
+# Default: nb
+#
+# The color theme.
+export NB_THEME="${NB_THEME:-nb}"
+
+
+if [[ "${NB_THEME}" == "blacklight" ]]
+then
+  export NB_ACCENT_COLOR=56
+  export NB_HIGHLIGHT_COLOR=39
+fi
+
+if [[ "${NB_THEME}" == "desert" ]]
+then
+  export NB_ACCENT_COLOR=94
+  export NB_HIGHLIGHT_COLOR=179
+fi
+
+if [[ "${NB_THEME}" == "electron" ]]
+then
+  export NB_ACCENT_COLOR=27
+  export NB_HIGHLIGHT_COLOR=165
+fi
+
+if [[ "${NB_THEME}" == "forest" ]]
+then
+  export NB_ACCENT_COLOR=22
+  export NB_HIGHLIGHT_COLOR=40
+fi
+
+if [[ "${NB_THEME}" == "nb" ]]
+then
+  export NB_ACCENT_COLOR=8
+  export NB_HIGHLIGHT_COLOR=68
+fi
+
+if [[ "${NB_THEME}" == "ocean" ]]
+then
+  export NB_ACCENT_COLOR=26
+  export NB_HIGHLIGHT_COLOR=45
+fi
+
+if [[ "${NB_THEME}" == "raspberry" ]]
+then
+  export NB_ACCENT_COLOR=90
+  export NB_HIGHLIGHT_COLOR=162
+fi
+
+export _NB_THEMES=(
+  blacklight
+  desert
+  electron
+  forest
+  nb
+  ocean
+  raspberry
+)
+
+if [[ -d "${NB_DIR}/.themes" ]]
+then
+  set +f
+  for __file in "${NB_DIR}/.themes"/*.nb-theme*
+  do
+    _NB_THEMES=("${_NB_THEMES[@]}" "$(basename "${__file}")")
+    source "${__file}"
+  done
+  set -f
+fi
+
 # $NB_ACCENT_COLOR
 #
 # Default: 8
