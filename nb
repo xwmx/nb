@@ -264,6 +264,7 @@ fi
 if [[ -d "${HOME}/.notes/home/.git"   ]] &&
    [[ -f "${HOME}/.notes/home/.index" ]] &&
    [[ ! -e "${HOME}/.nb"              ]] &&
+   [[ "${NB_DIR}" != "${HOME}/.notes" ]] &&
    {
      [[ -z "${NOTES_DIR:-}"                ]] ||
      [[ "${NOTES_DIR}" != "${HOME}/.notes" ]]
@@ -274,6 +275,7 @@ then # Migrate legacy ~/.notes directory.
 elif [[ -d "${HOME}/Notebooks/home/.git"   ]] &&
      [[ -f "${HOME}/Notebooks/home/.index" ]] &&
      [[ ! -e "${HOME}/.nb"                 ]] &&
+     [[ "${NB_DIR}" != "${HOME}/Notebooks" ]] &&
      {
        [[ -z "${NOTES_DIR:-}"                   ]] ||
        [[ "${NOTES_DIR}" != "${HOME}/Notebooks" ]]
