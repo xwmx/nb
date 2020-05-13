@@ -845,7 +845,7 @@ nb move 3 example-notebook
 By default, all `nb` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
 stored in the directory configured in [`NB_DIR`](#settings-list), which is
-`~/Notebooks` by default.
+`~/.nb` by default.
 
 ##### Local Notebooks
 
@@ -2176,7 +2176,7 @@ Examples:
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     `nb settings set NB_DIR ~/Dropbox/Notes`
-      • Default Value: '~/Notebooks'
+      • Default Value: '~/.nb'
 
 [5] nb_encryption_tool
     ---------------------

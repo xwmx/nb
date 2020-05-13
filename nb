@@ -247,7 +247,7 @@ _die() {
 
 # $NB_DIR
 #
-# Default: `$HOME/Notebooks`
+# Default: `$HOME/.nb`
 #
 # The location of the directory that contains the notebooks.
 if [[ -n "${NB_DIR:-}" ]]
@@ -303,7 +303,7 @@ Running the following command might resolve the issue:
 
 Alternatively, set NB_DIR to a new location where you'd like to store your
 notes and bookmarks. For example:
-  ${_ME} settings set nb_dir ~/Documents/Notebooks
+  ${_ME} settings set nb_dir ~/Notebooks
 HEREDOC
   exit 1
 fi
@@ -7171,7 +7171,7 @@ _NB_SETTINGS_LIST="\
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
-      • Default Value: '~/Notebooks'
+      • Default Value: '~/.nb'
       • Current Value: '${NB_DIR}'
 
 [$(_highlight '5')] nb_encryption_tool
