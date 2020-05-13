@@ -6324,6 +6324,27 @@ HEREDOC
     fi
   }
 
+  _notebooks_add_new() {
+    local _notebook_list=
+    _notebook_list=($(
+      find "${NB_DIR}" -mindepth 1 -maxdepth 1 -type d | grep -v '/\.'
+    ))
+
+    for __notebook_path in "${_notebook_list[@]}"
+    do
+      if [[ ! -d "${__notebook_path}/.git" ]]
+      then
+        cd "${__notebook_path}"             &&
+          git init 1>/dev/null              &&
+          touch "${__notebook_path}/.index" &&
+          _clear_cache                      &&
+          _git_checkpoint "[nb] Initialize" "${__notebook_path}"
+      fi
+    done
+  }
+
+  _notebooks_add_new
+
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
