@@ -1484,27 +1484,55 @@ _get_title() {
 _get_unique_basename() {
   local _file_basename="${1:-}"
   local _file_name="${_file_basename%%.*}"
+  local _file_type=
 
   if [[ -z "${_file_name}" ]]
   then
     _file_name="$(date -u "+%Y%m%d%H%M%S")"
   fi
 
-  local _file_type="${_file_basename#*.}"
+  if [[ "${_file_name}" =~ \. ]]
+  then
+    local _file_type="${_file_basename#*.}"
+  fi
+
   if [[ -z "${_file_type}" ]]
   then
      _file_type="md"
   fi
 
+  _get_unique_path "${_NOTEBOOK_PATH}/${_file_name}.${_file_type}"
+
+}
+
+# _get_unique_path()
+#
+# Usage:
+#   _get_unique_path <path>
+#
+# Description:
+#   Get a unique full path that doesn't conflict with any existing file.
+_get_unique_path() {
+  local _path="${1:-}"
+
+  local _basename=
+  _basename="$(basename "${_path}")"
+
+  local _unique_basename="${_basename}"
+
+  local _dir_path=
+  _dir_path="$(cd "$(dirname "${_path}")"; pwd)"
+
   local _uniqueness_counter=0
-  local _unique_filename="${_file_name}"
-  while [[ -e "${_NOTEBOOK_PATH}/${_unique_filename}.${_file_type}" ]]
+
+  while [[ -e "${_dir_path}/${_unique_basename}" ]]
   do
-    printf -v _unique_filename -- "%s-%01d" \
-      "${_file_name}"                       \
+    printf -v _unique_basename -- "%s-%01d"      \
+      "${_basename}"                      \
       "$(( ++_uniqueness_counter ))"
   done
-  printf "%s\\n" "${_unique_filename}.${_file_type}"
+
+  printf "%s\\n" "${_dir_path}/${_unique_basename}"
 }
 
 # _git_checkpoint()
@@ -2304,6 +2332,7 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
+  ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
@@ -5786,6 +5815,7 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
+  ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks current [--path]
   ${_ME} notebooks delete <name> [-f | --force]
@@ -5809,6 +5839,9 @@ Subcommands:
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
   archive    Set the current notebook or notebook <name> to 'archived' status.
+  export     Export the notebook <name> to the current directory or <path>,
+             making it usable as a local notebook.
+  import     Import the local notebook at <path> to make it global.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
@@ -5990,6 +6023,92 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi &&
       _clear_cache &&
       printf "Notebook deleted: %s\\n" "${_name}"
+  }
+
+  # _notebooks_export()
+  #
+  # Usage:
+  #   _notebooks_export <name> [<path>]
+  _notebooks_export() {
+    local _name="${1:-}"
+    if [[ -z "${_name:-}" ]]
+    then
+      _help "notebooks" && return 1
+    fi
+
+    if [[ ! -d "${NB_DIR}/${_name}" ]]
+    then
+      printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
+      return 1
+    fi
+
+    local _target_path="${2:-}"
+
+    if [[ -n "${_target_path:-}" ]] && [[ ! "${_target_path}" =~ ^/ ]]
+    then
+      _target_path="${_CURRENT_WORKING_DIR}/${_target_path}"
+    fi
+
+
+    if [[ -n "${_target_path:-}"            ]] &&
+       [[ -d "${_target_path}"              ]] &&
+       [[ ! "${_target_path}" =~ \/${_name}$  ]]
+    then
+      _target_path="${_target_path}/${_name}"
+    fi
+
+    if [[ -z "${_target_path}" ]]
+    then
+      _target_path="${_CURRENT_WORKING_DIR}/${_name}"
+    fi
+
+    _target_path="$(_get_unique_path "${_target_path}")"
+
+    cp -R "${NB_DIR}/${_name}" "${_target_path}"  &&
+      _clear_cache                                &&
+      printf "Exported notebook %s to %s\\n"  \
+        "$(_highlight "${_name}")"            \
+        "$(_highlight "${_target_path}")"
+  }
+
+  # _notebooks_import()
+  #
+  # Usage:
+  #   _notebooks_import <path> [<name>]
+  _notebooks_import() {
+    local _path="${1:-}"
+    if [[ -z "${_path:-}" ]]
+    then
+      _help "notebooks" && return 1
+    fi
+
+    local _basename=
+    _basename="$(basename "${_path}")"
+
+    if [[ ! "${_path}" =~ ^/ ]]
+    then
+      _path="${_CURRENT_WORKING_DIR}/${_path}"
+    fi
+
+    if [[ ! -d "${_path}" ]]
+    then
+      printf "Not a directory %s" "$(_highlight "${_path}")"
+      return 1
+    fi
+
+    local _target_basename="${2:-}"
+    if [[ -z "${_target_basename:-}" ]]
+    then
+      _target_basename="${_basename}"
+    fi
+
+    local _target_path=
+    _target_path="$(_get_unique_path "${NB_DIR}/${_target_basename}")"
+
+    cp -R "${_path}" "${_target_path}"  &&
+      _clear_cache                      &&
+      printf "Imported notebook %s\\n" \
+        "$(_highlight "$(basename "${_target_path}")")"
   }
 
   # _notebooks_init()
@@ -6440,6 +6559,12 @@ HEREDOC
   case "${_subcommand}" in
     add)
       _notebooks_add "${_name:-}" "${3:-}"
+      ;;
+    export)
+      _notebooks_export "${2:-}" "${3:-}"
+      ;;
+    import)
+      _notebooks_import "${2:-}" "${3:-}"
       ;;
     init)
       _notebooks_init "${_name:-}" "${3:-}"

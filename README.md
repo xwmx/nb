@@ -890,6 +890,20 @@ nb notebooks init ~/example
 nb notebooks init ~/example https://github.com/example/example.git
 ```
 
+Local notebooks can also be created by exporting a global notebook:
+
+```bash
+# export global notebook named 'example' to '../path/to/destination'
+nb notebooks export example ../path/to/destination
+```
+
+Local notebooks can also be imported, making them global:
+
+```bash
+# import notebook or folder at '../path/to/notebook'
+nb notebooks import ../path/to/notebook
+```
+
 #### Archiving Notebooks
 
 Notebooks can be archived:
@@ -1312,6 +1326,7 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
+  nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks current [--path]
   nb notebooks delete <name> [-f | --force]
@@ -1921,6 +1936,7 @@ Usage:
                [--no-color] [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
+  nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks current [--path]
   nb notebooks delete <name> [-f | --force]
@@ -1944,6 +1960,9 @@ Subcommands:
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
   archive    Set the current notebook or notebook <name> to 'archived' status.
+  export     Export the notebook <name> to the current directory or <path>,
+             making it usable as a local notebook.
+  import     Import the local notebook at <path> to make it global.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
