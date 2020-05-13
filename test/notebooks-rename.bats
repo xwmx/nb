@@ -4,12 +4,18 @@ load test_helper
 
 _setup_notebooks() {
   "${_NB}" init
+
   mkdir -p "${NB_DIR}/one"
   cd "${NB_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NB_DIR}/one/.index"
+
   mkdir -p "${NB_DIR}/two"
+  cd "${NB_DIR}/two" || return 1
+  git init
+  touch "${NB_DIR}/two/.index"
+
   cd "${NB_DIR}" || return 1
 }
 
@@ -64,7 +70,7 @@ _setup_notebooks() {
   [[ ! -e "${NB_DIR}/new-name/.git" ]]
   [[ -e "${NB_DIR}/one/.git" ]]
   [[ -e "${NB_DIR}/two" ]]
-  [[ ! -e "${NB_DIR}/two/.git" ]]
+  [[ -e "${NB_DIR}/two/.git" ]]
   [[ -e "${NB_DIR}/home/.git" ]]
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
 }
@@ -83,7 +89,7 @@ _setup_notebooks() {
   [[ "${output}" =~ A\ notebook\ named\ \'two\'\ already\ exists\. ]]
   [[ -e "${NB_DIR}/one/.git" ]]
   [[ -e "${NB_DIR}/two" ]]
-  [[ ! -e "${NB_DIR}/two/.git" ]]
+  [[ -e "${NB_DIR}/two/.git" ]]
   [[ -e "${NB_DIR}/home/.git" ]]
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
 }

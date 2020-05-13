@@ -9,7 +9,6 @@ _setup_notebooks() {
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NB_DIR}/one/.index"
-  mkdir -p "${NB_DIR}/two"
   cd "${NB_DIR}" || return 1
 }
 
