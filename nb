@@ -4838,6 +4838,10 @@ HEREDOC
 
 Add a note:
   $(_highlight "${_ME} add")
+Add a bookmark:
+  $(_highlight "${_ME} bookmark <url>")
+Import a file:
+  $(_highlight "${_ME} import (<path> | <url>)")
 Help information:
   $(_highlight "${_ME} help")
 HEREDOC
