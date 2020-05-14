@@ -32,10 +32,12 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" == "'one' is now named 'new-name'" ]]
-  [[ -e "${NB_DIR}/new-name/.git" ]]
-  [[ ! -e "${NB_DIR}/one" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "${output}" =~ one                       ]]
+  [[ "${output}" =~ is\ now\ named            ]]
+  [[ "${output}" =~ new-name                  ]]
+  [[ -e "${NB_DIR}/new-name/.git"             ]]
+  [[ ! -e "${NB_DIR}/one"                     ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
 @test "\`notebooks rename home <valid-new>\` exits with 0,  renames notebook, and updates .current." {
@@ -49,10 +51,12 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ "'home' is now named 'new-name'" ]]
-  [[ -e "${NB_DIR}/new-name/.git" ]]
-  [[ ! -e "${NB_DIR}/home" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "new-name" ]]
+  [[ "${output}" =~ home                          ]]
+  [[ "${output}" =~ is\ now\ named                ]]
+  [[ "${output}" =~ new-name                      ]]
+  [[ -e "${NB_DIR}/new-name/.git"                 ]]
+  [[ ! -e "${NB_DIR}/home"                        ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "new-name"  ]]
 }
 
 @test "\`notebooks rename <invalid-old> <valid-new>\` exits with 1 and does not rename notebook." {
@@ -66,13 +70,14 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ \'invalid\'\ is\ not\ a\ valid\ notebook\ name\. ]]
-  [[ ! -e "${NB_DIR}/new-name/.git" ]]
-  [[ -e "${NB_DIR}/one/.git" ]]
-  [[ -e "${NB_DIR}/two" ]]
-  [[ -e "${NB_DIR}/two/.git" ]]
-  [[ -e "${NB_DIR}/home/.git" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "${output}" =~ invalid                             ]]
+  [[ "${output}" =~ is\ not\ a\ valid\ notebook\ name\. ]]
+  [[ ! -e "${NB_DIR}/new-name/.git"                     ]]
+  [[ -e "${NB_DIR}/one/.git"                            ]]
+  [[ -e "${NB_DIR}/two"                                 ]]
+  [[ -e "${NB_DIR}/two/.git"                            ]]
+  [[ -e "${NB_DIR}/home/.git"                           ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"            ]]
 }
 
 @test "\`notebooks rename <valid-old> <invalid-new>\` exits with 1 and does not rename notebook." {
@@ -86,12 +91,14 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ A\ notebook\ named\ \'two\'\ already\ exists\. ]]
-  [[ -e "${NB_DIR}/one/.git" ]]
-  [[ -e "${NB_DIR}/two" ]]
-  [[ -e "${NB_DIR}/two/.git" ]]
-  [[ -e "${NB_DIR}/home/.git" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "${output}" =~ A\ notebook\ named        ]]
+  [[ "${output}" =~ two                       ]]
+  [[ "${output}" =~ lready\ exists\.          ]]
+  [[ -e "${NB_DIR}/one/.git"                  ]]
+  [[ -e "${NB_DIR}/two"                       ]]
+  [[ -e "${NB_DIR}/two/.git"                  ]]
+  [[ -e "${NB_DIR}/home/.git"                 ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
 @test "\`notebooks rename local <new-name>\` in local exits with 1." {
@@ -134,7 +141,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ is\ now\ named ]]
-  [[ ! -e "${NB_DIR}/local" ]]
-  [[ -e "${NB_DIR}/new-name" ]]
+  [[ "${lines[0]}" =~ is\ now\ named  ]]
+  [[ ! -e "${NB_DIR}/local"           ]]
+  [[ -e "${NB_DIR}/new-name"          ]]
 }

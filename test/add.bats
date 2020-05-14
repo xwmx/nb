@@ -58,7 +58,9 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 @test "\`add\` with scope creates new note without errors." {
@@ -90,7 +92,9 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[Example:[0-9]+\]\ Example:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\                  ]]
+  [[ "${output}" =~ Example:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
 }
 
 # --content option ############################################################
@@ -289,7 +293,9 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 @test "\`add --type org\` with piped content creates a new .org note file." {

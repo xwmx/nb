@@ -509,8 +509,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 3 ]]
-  [[ "${lines[0]}" == "Note not found: 'invalid'." ]]
+  [[ "${#lines[@]}" -eq 1 ]]
+  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ invalid             ]]
 }
 
 # `scoped:list` ###############################################################

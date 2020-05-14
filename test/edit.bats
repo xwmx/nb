@@ -32,8 +32,8 @@ load test_helper
   ! git log | grep -q '\[nb\] Edit'
 
   # Prints help information
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb edit (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }
 
 # <selector> ##################################################################
@@ -47,7 +47,8 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Note not found: '1'." ]]
+  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ 1                   ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -66,7 +67,9 @@ load test_helper
   run "${_NB}" edit one:"${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Updated\ \[one:[0-9]+\]\ one:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ one\:[0-9]+         ]]
+  [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
 # <selector> (no changes) #####################################################
@@ -130,7 +133,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 @test "\`edit\` with <filename> with spaces edits properly without errors." {
@@ -160,7 +165,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ Note\ name\ with\ spaces.md ]]
+  [[ "${output}" =~ Updated\                    ]]
+  [[ "${output}" =~ [0-9]+                      ]]
+  [[ "${output}" =~ Note\ name\ with\ spaces.md ]]
 }
 
 # <id> ########################################################################
@@ -191,7 +198,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -222,7 +231,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 
 }
 
@@ -255,7 +266,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # piped #######################################################################
@@ -289,7 +302,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # encrypted ###################################################################
@@ -318,7 +333,9 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # help ########################################################################
@@ -329,5 +346,5 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb edit (<id> | <filename> | <path> | <title>)" ]]
+  [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }

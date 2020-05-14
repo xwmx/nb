@@ -25,9 +25,10 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "Notebook deleted: one" ]]
-  [[ ! -e "${NB_DIR}/one" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "${output}" =~ Notebook\ deleted\:       ]]
+  [[ "${output}" =~ one                       ]]
+  [[ ! -e "${NB_DIR}/one"                     ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
 @test "\`notebooks delete <current>\` exits with 0 and deletes notebook." {
@@ -43,11 +44,12 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Now\ using ]]
-  [[ "${lines[0]}" =~ home ]]
-  [[ "${lines[1]}" == "Notebook deleted: one" ]]
-  [[ ! -e "${NB_DIR}/one" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "${lines[0]}" =~ Now\ using              ]]
+  [[ "${lines[0]}" =~ home                    ]]
+  [[ "${lines[1]}" =~ Notebook\ deleted\:     ]]
+  [[ "${lines[1]}" =~ one                     ]]
+  [[ ! -e "${NB_DIR}/one"                     ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
 @test "\`notebooks delete <home>\` exits with 0 and deletes notebook." {
@@ -62,11 +64,12 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Now\ using ]]
-  [[ "${lines[0]}" =~ one ]]
-  [[ "${lines[1]}" == "Notebook deleted: home" ]]
-  [[ ! -e "${NB_DIR}/home" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "one" ]]
+  [[ "${lines[0]}" =~ Now\ using                ]]
+  [[ "${lines[0]}" =~ one                       ]]
+  [[ "${lines[1]}" =~ Notebook\ deleted\:       ]]
+  [[ "${lines[1]}" =~ home                      ]]
+  [[ ! -e "${NB_DIR}/home"                      ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "one"     ]]
 }
 
 @test "\`notebooks delete <home>\` last notebook exits with 0 and deletes notebook." {
@@ -84,9 +87,10 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" == "Notebook deleted: home" ]]
-  [[ ! -e "${NB_DIR}/home" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "${lines[0]}" =~ Notebook\ deleted\:     ]]
+  [[ "${lines[0]}" =~ home                    ]]
+  [[ ! -e "${NB_DIR}/home"                    ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
 @test "\`notebooks delete <no name>\` exits with 1." {
@@ -101,7 +105,7 @@ _setup_notebooks() {
 
   [[ ${status} -eq 1 ]]
   [[ "${lines[0]}" =~ Usage ]]
-  [[ -e "${NB_DIR}/home" ]]
+  [[ -e "${NB_DIR}/home"    ]]
 }
 
 @test "\`notebooks delete <not-valid>\` exits with 1." {
@@ -115,8 +119,8 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" =~ Notebook\ not\ found ]]
-  [[ -e "${NB_DIR}/home" ]]
+  [[ "${lines[0]}" =~ Notebook\ not\ found  ]]
+  [[ -e "${NB_DIR}/home"                    ]]
 }
 
 @test "\`notebooks delete local\` in local exits with 1." {
@@ -136,9 +140,9 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" =~ file\ explorer ]]
-  [[ -e "${NB_DIR}/home" ]]
-  [[ -e "${NB_DIR}/local" ]]
+  [[ "${lines[0]}" =~ file\ explorer  ]]
+  [[ -e "${NB_DIR}/home"              ]]
+  [[ -e "${NB_DIR}/local"             ]]
 }
 
 @test "\`notebooks delete local\` outside local deletes." {
@@ -160,6 +164,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Notebook\ deleted\:\ local ]]
-  [[ ! -e "${NB_DIR}/local" ]]
+  [[ "${lines[0]}" =~ Notebook\ deleted\: ]]
+  [[ "${lines[0]}" =~ local               ]]
+  [[ ! -e "${NB_DIR}/local"               ]]
 }

@@ -46,7 +46,8 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Note not found: '1'." ]]
+  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ 1                   ]]
 }
 
 @test "\`delete <selector> (no force)\` returns 0 and deletes note." {
@@ -83,9 +84,13 @@ load test_helper
   [[ -e "${NB_DIR}/one/${_filename}" ]]
 
   run "${_NB}" delete one:"${_filename}" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Deleted\ \[one:[A-Za-z0-9]+\]\ one:[A-Za-z0-9]+.md ]]
+
+  [[ "${output}" =~ Deleted\            ]]
+  [[ "${output}" =~ one:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
 # <filename> ##################################################################
@@ -123,7 +128,9 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
@@ -161,7 +168,9 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -199,7 +208,9 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
@@ -238,7 +249,9 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # <folder> #################################################################
@@ -276,7 +289,9 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ Example\ Folder ]]
+  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ Example\ Folder ]]
 }
 
 # help ########################################################################

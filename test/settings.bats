@@ -89,7 +89,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ Setting\ not\ found\:\ \'EXAMPLE\' ]]
+  [[ "${output}" =~ Setting\ not\ found\: ]]
+  [[ "${output}" =~ EXAMPLE               ]]
 }
 
 @test "\`settings get\` with argument exits and prints." {
@@ -159,7 +160,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ Setting\ not\ found\:\ \'EXAMPLE\' ]]
+  [[ "${output}" =~ Setting\ not\ found\: ]]
+  [[ "${output}" =~ EXAMPLE               ]]
 }
 
 @test "\`settings set\` with one argument exits with error." {
@@ -187,7 +189,9 @@ skip "Determine how to test interactive prompt."
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ EDITOR\ set\ to\ \'example\' ]]
+  [[ "${output}" =~ EDITOR    ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ example   ]]
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
@@ -203,7 +207,9 @@ skip "Determine how to test interactive prompt."
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ EDITOR\ set\ to\ \'example\ editor\' ]]
+  [[ "${output}" =~ EDITOR            ]]
+  [[ "${output}" =~ set\ to\          ]]
+  [[ "${output}" =~ example\ editor   ]]
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example editor"' ]]
 }
 
@@ -219,7 +225,9 @@ skip "Determine how to test interactive prompt."
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ EDITOR\ set\ to\ \'example\' ]]
+  [[ "${output}" =~ EDITOR    ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ example   ]]
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
@@ -236,7 +244,9 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_AUTO_SYNC\ set\ to\ \'0\' ]]
+  [[ "${output}" =~ NB_AUTO_SYNC  ]]
+  [[ "${output}" =~ set\ to\      ]]
+  [[ "${output}" =~ '0'           ]]
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
 }
 
@@ -246,13 +256,19 @@ skip "Determine how to test interactive prompt."
   }
 
   run "${_NB}" settings set NB_AUTO_SYNC '0'
-  [[ "${output}" =~ NB_AUTO_SYNC\ set\ to\ \'0\' ]]
+
+  [[ "${output}" =~ NB_AUTO_SYNC  ]]
+  [[ "${output}" =~ set\ to\      ]]
+  [[ "${output}" =~ '0'           ]]
+
   run "${_NB}" settings set NB_AUTO_SYNC example
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
+  # [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
+  [[ "${output}" =~ NB_AUTO_SYNC        ]]
+  [[ "${output}" =~ must\ be\ either    ]]
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
 }
 
@@ -269,7 +285,9 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf "settings get NB_DIR: '%s'\\n" "$("${_NB}" settings get NB_DIR)"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_DIR\ set\ to\ \'/tmp/path/to/data/dir\' ]]
+  [[ "${output}" =~ NB_DIR                ]]
+  [[ "${output}" =~ set\ to               ]]
+  [[ "${output}" =~ /tmp/path/to/data/dir ]]
   [[ "$("${_NB}" settings get NB_DIR)" == '/tmp/path/to/data/dir' ]]
 }
 
@@ -284,7 +302,9 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf "settings get NB_DIR: '%s'\\n" "$("${_NB}" settings get NB_DIR)"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_DIR\ set\ to\ \'/tmp/path\ to\ data/dir\' ]]
+  [[ "${output}" =~ NB_DIR                  ]]
+  [[ "${output}" =~ set\ to                 ]]
+  [[ "${output}" =~ /tmp/path\ to\ data/dir ]]
   [[ "$("${_NB}" settings get NB_DIR)" == '/tmp/path to data/dir' ]]
 }
 
@@ -298,7 +318,9 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_DIR\ set\ to\ \'${HOME}/tmp/path\' ]]
+  [[ "${output}" =~ NB_DIR            ]]
+  [[ "${output}" =~ set\ to           ]]
+  [[ "${output}" =~ ${HOME}/tmp/path  ]]
   [[ "$("${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path" ]]
 }
 
@@ -312,7 +334,9 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_DIR\ set\ to\ \'${HOME}/tmp/path\' ]]
+  [[ "${output}" =~ NB_DIR            ]]
+  [[ "${output}" =~ set\ to           ]]
+  [[ "${output}" =~ ${HOME}/tmp/path  ]]
   [[ "$("${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path" ]]
 }
 
@@ -342,7 +366,9 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_ENCRYPTION_TOOL\ set\ to\ \'gpg\' ]]
+  [[ "${output}" =~ NB_ENCRYPTION_TOOL  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ gpg                 ]]
   [[ "$("${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
@@ -352,13 +378,19 @@ skip "Determine how to test interactive prompt."
   }
 
   run "${_NB}" settings set NB_ENCRYPTION_TOOL 'gpg'
-  [[ "${output}" =~ NB_ENCRYPTION_TOOL\ set\ to\ \'gpg\' ]]
+
+  [[ "${output}" =~ NB_ENCRYPTION_TOOL  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ gpg                 ]]
+
   run "${_NB}" settings set NB_ENCRYPTION_TOOL example
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" == "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'." ]]
+  [[ "${output}" =~ NB_ENCRYPTION_TOOL        ]]
+  [[ "${output}" =~ must\ be\ either          ]]
+  [[ "${output}" =~ \'openssl\'\ or\ \'gpg\'  ]]
   [[ "$("${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
@@ -374,8 +406,9 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_HIGHLIGHT_COLOR\ set\ to\ \' ]]
-  [[ "${output}" =~ '123' ]]
+  [[ "${output}" =~ NB_HIGHLIGHT_COLOR  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
   printf "NB_HIGHLIGHT_COLOR: %s\\n" "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)"
   [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 }
@@ -386,8 +419,10 @@ skip "Determine how to test interactive prompt."
   }
 
   run "${_NB}" settings set NB_HIGHLIGHT_COLOR 123
-  [[ "${output}" =~ NB_HIGHLIGHT_COLOR\ set\ to\ \' ]]
-  [[ "${output}" =~ '123' ]]
+
+  [[ "${output}" =~ NB_HIGHLIGHT_COLOR  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
   [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 
   run "${_NB}" settings set NB_HIGHLIGHT_COLOR invalid-color
@@ -425,7 +460,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ Setting\ not\ found\:\ \'EXAMPLE\' ]]
+  [[ "${output}" =~ Setting\ not\ found\: ]]
+  [[ "${output}" =~ EXAMPLE               ]]
 }
 
 @test "\`settings unset\` with argument unset, prints, and exits." {

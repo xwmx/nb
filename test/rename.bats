@@ -69,7 +69,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.org')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'initial\ example\ name.md\'\ renamed\ to\ \'EXAMPLE.org\' ]]
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.org               ]]
 }
 
 @test "\`rename\` with extension-less <filename> argument uses source extension." {
@@ -103,7 +105,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'initial\ example\ name.md\'\ renamed\ to\ \'EXAMPLE.md\' ]]
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
 }
 
 @test "\`rename\` bookmark with extension-less <filename> argument uses source extension." {
@@ -138,8 +142,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'initial\ sample\ name.bookmark.md\' ]]
-  [[ "${output}" =~ renamed\ to\ \'EXAMPLE.bookmark.md\'   ]]
+  [[ "${output}" =~ initial\ sample\ name.bookmark.md ]]
+  [[ "${output}" =~ renamed\ to                       ]]
+  [[ "${output}" =~ EXAMPLE.bookmark.md               ]]
 }
 
 @test "\`rename\` bookmark with extension <filename> argument uses target extension." {
@@ -174,8 +179,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'initial\ sample\ name.bookmark.md\' ]]
-  [[ "${output}" =~ renamed\ to\ \'EXAMPLE.md\'   ]]
+  [[ "${output}" =~ initial\ sample\ name.bookmark.md ]]
+  [[ "${output}" =~ renamed\ to                       ]]
+  [[ "${output}" =~ EXAMPLE.md                        ]]
 }
 
 @test "\`rename\` note with bookmark extension <filename> argument uses target extension." {
@@ -210,8 +216,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'initial\ sample\ name.md\' ]]
-  [[ "${output}" =~ renamed\ to\ \'EXAMPLE.bookmark.md\'   ]]
+  [[ "${output}" =~ initial\ sample\ name.md ]]
+  [[ "${output}" =~ renamed\ to                       ]]
+  [[ "${output}" =~ EXAMPLE.bookmark.md               ]]
 }
 
 @test "\`rename\` with existing <filename> exits with status 1." {
@@ -264,7 +271,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'initial\ example\ name.md\'\ renamed\ to\ \'EXAMPLE.md\' ]]
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
 }
 
 # <filename> --reset ##########################################################
@@ -306,7 +315,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'test.md\'\ renamed\ to\ \'[A-Za-z0-9]+.md\' ]]
+  [[ "${output}" =~ test.md         ]]
+  [[ "${output}" =~ renamed\ to     ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
 # <filename> --to- ############################################################
@@ -347,7 +358,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'example.bookmark.md\' ]]
+  [[ "${output}" =~ example.md          ]]
+  [[ "${output}" =~ renamed\ to         ]]
+  [[ "${output}" =~ example.bookmark.md ]]
 }
 
 @test "\`rename 1 sample --to-bookmark\` with note renames without errors." {
@@ -385,7 +398,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'sample.bookmark.md\' ]]
+  [[ "${output}" =~ example.md          ]]
+  [[ "${output}" =~ renamed\ to         ]]
+  [[ "${output}" =~ sample.bookmark.md  ]]
 }
 
 @test "\`rename 1 sample.demo --to-bookmark\` discards extension and renames." {
@@ -423,7 +438,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'example.md\'\ renamed\ to\ \'sample.bookmark.md\' ]]
+  [[ "${output}" =~ example.md          ]]
+  [[ "${output}" =~ renamed\ to         ]]
+  [[ "${output}" =~ sample.bookmark.md  ]]
 }
 
 @test "\`rename --to-note\` with bookmark renames without errors." {
@@ -461,7 +478,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ \'example.bookmark.md\'\ renamed\ to\ \'example.md\' ]]
+  [[ "${output}" =~ example.bookmark.md ]]
+  [[ "${output}" =~ renamed\ to         ]]
+  [[ "${output}" =~ example.md          ]]
 }
 
 # help ########################################################################

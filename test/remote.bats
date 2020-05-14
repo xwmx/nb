@@ -36,8 +36,10 @@ _setup_remote() {
   run "${_NB}" init
 
   run "${_NB}" remote remove
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${lines[0]}" == "No remote configured." ]]
   [[ ${status} -eq 1 ]]
 }
@@ -48,9 +50,12 @@ _setup_remote() {
     git remote add origin "https://example.com/example.git"
 
   run "${_NB}" remote remove --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Removed remote 'https://example.com/example.git'" ]]
+
+  [[ "${lines[0]}" =~ Removed\ remote                   ]]
+  [[ "${lines[0]}" =~ https\://example.com/example.git  ]]
   [[ ${status} -eq 0 ]]
 }
 
@@ -60,8 +65,10 @@ _setup_remote() {
   run "${_NB}" init
 
   run "${_NB}" remote set --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${lines[0]}" == "Usage:" ]]
   [[ ${status} -eq 1 ]]
 }
@@ -70,9 +77,12 @@ _setup_remote() {
   run "${_NB}" init
 
   run "${_NB}" remote set "https://example.com/example.git" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Remote set to 'https://example.com/example.git'" ]]
+
+  [[ "${lines[0]}" =~ Remote\ set\ to                   ]]
+  [[ "${lines[0]}" =~ https\://example.com/example.git  ]]
   [[ ${status} -eq 0 ]]
 }
 
@@ -82,10 +92,12 @@ _setup_remote() {
     git remote add origin "https://example.com/example.git"
 
   run "${_NB}" remote set "https://example.com/example2.git" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Remote set to 'https://example.com/example2.git'" ]]
 
+  [[ "${lines[0]}" =~ Remote\ set\ to                   ]]
+  [[ "${lines[0]}" =~ https\://example.com/example2.git ]]
   [[ ${status} -eq 0 ]]
 }
 
@@ -95,9 +107,12 @@ _setup_remote() {
     git remote add origin "https://example.com/example.git"
 
   run "${_NB}" remote set "https://example.com/example.git" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Remote already set to 'https://example.com/example.git'" ]]
+
+  [[ "${lines[0]}" =~ Remote\ already\ set\ to        ]]
+  [[ "${lines[0]}" =~ https://example.com/example.git ]]
 
   [[ ${status} -eq 1 ]]
 }

@@ -2717,14 +2717,14 @@ _add() {
     _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added %s %s '%s'\\n"        \
-        "$(_id_brackets_color "${_id}")"  \
-        "${_scoped_basename}"             \
+      printf "Added %s %s '%s'\\n"            \
+        "$(_id_brackets_color "${_id}")"      \
+        "$(_highlight "${_scoped_basename}")" \
         "${_title}"
     else
-      printf "Added %s %s\\n"             \
-        "$(_id_brackets_color "${_id}")"  \
-        "${_scoped_basename}"
+      printf "Added %s %s\\n"                 \
+        "$(_id_brackets_color "${_id}")"      \
+        "$(_highlight "${_scoped_basename}")"
     fi
   fi &&
     _git_checkpoint "[nb] Add: ${_basename}"
@@ -2962,7 +2962,7 @@ _bookmark() {
     _basename="$(_get_selection_basename "${_selection}")"
     if [[ -z "${_basename}" ]]
     then
-      printf "Note not found: '%s'.\\n" "${_selection}"
+      printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
       return 1
     fi
     _set_selection_notebook "${_selection}"
@@ -3037,7 +3037,8 @@ _bookmark() {
 
       if _contains "${_http_status}" "${_http_error_codes[@]}"
       then
-        printf "Page no longer available: %s\\n" "${_target_url}"
+        printf "Page no longer available: %s\\n" \
+          "$(_highlight "${_target_url}")"
         while true
         do
           read -r -p "\
@@ -3118,8 +3119,8 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
         return 0
       else
         printf \
-          "\`%s\` doesn't know how to open URLs on your system.\\n" \
-          "${_ME}"
+          "%s doesn't know how to open URLs on your system.\\n" \
+          "$(_highlight "${_ME}")"
         return 1
       fi
     # `bookmark url`
@@ -3167,7 +3168,7 @@ HEREDOC
   if ! _page_content="$(_download_from "${_url}")" &&
      [[ -z "${_page_content:-}" ]]
   then
-    printf "Unable to download page at '%s'\\n" "${_url}"
+    printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
     return 1
   fi
 
@@ -3645,7 +3646,7 @@ _delete() {
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
-    printf "Note not found: '%s'.\\n" "${_selection}"
+    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     return 1
   fi
 
@@ -3803,7 +3804,7 @@ _edit() {
   _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
-    printf "Note not found: '%s'.\\n" "${_selection}"
+    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     return 1
   fi
 
@@ -3899,14 +3900,14 @@ _edit() {
       _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated %s %s '%s'\\n"      \
-          "$(_id_brackets_color "${_id}")"  \
-          "${_scoped_basename}"             \
+        printf "Updated %s %s '%s'\\n"          \
+          "$(_id_brackets_color "${_id}")"      \
+          "$(_highlight "${_scoped_basename}")" \
           "${_title}"
       else
-        printf "Updated %s %s\\n"           \
-          "$(_id_brackets_color "${_id}")"  \
-          "${_scoped_basename}"
+        printf "Updated %s %s\\n"               \
+          "$(_id_brackets_color "${_id}")"      \
+          "$(_highlight "${_scoped_basename}")"
       fi
     fi
   else
@@ -4086,7 +4087,7 @@ _export() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_NOTEBOOK_PATH}/${_basename:-}" ]]
   then
-    printf "Note not found: '%s'.\\n" "${_selection}"
+    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     return 1
   fi
   _debug printf "_export() \${_basename}: %s\\n" "${_basename}"
@@ -4117,8 +4118,7 @@ _export() {
     then
       if ! ((_force))
       then
-        printf "File exists at '%s'\\n"  \
-          "${_target_path}"
+        printf "File exists at %s\\n" "$(_highlight "${_target_path}")"
         while true
         do
           read -r -p "Overwrite existing file? [y/N] " __yn
@@ -4158,7 +4158,9 @@ _export() {
     else
       cp "${_NOTEBOOK_PATH}/${_basename}" "${_target_path}"
     fi &&
-      printf "Exported '%s' to '%s'\\n" "${_selection}" "${_target_path}"
+      printf "Exported %s to %s\\n"         \
+          "$(_highlight "${_selection}")"   \
+          "$(_highlight "${_target_path}")"
   fi
 }
 
@@ -4340,7 +4342,9 @@ _import() {
       fi &&
         _index add "${_basename}" &&
         _git_checkpoint "[nb] Import: ${_basename}"
-      printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
+      printf "Imported '%s' to '%s'\\n" \
+        "$(_highlight "${_path}")"      \
+        "$(_highlight "${_basename}")"
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -4375,7 +4379,9 @@ _import() {
 Source:
 ${_url}
 "
-      printf "Imported '%s' to '%s'\\n" "${_url}" "${_basename}"
+      printf "Imported %s to %s\\n"     \
+        "$(_highlight "${_url}")"       \
+        "$(_highlight "${_basename}")"
       ;;
     move)
       _import_validate_path "${_path:-}"
@@ -4385,7 +4391,9 @@ ${_url}
       mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"    &&
         _index add "${_basename}"                       &&
         _git_checkpoint "[nb] Import: ${_basename}"
-      printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
+      printf "Imported %s to %s\\n"     \
+        "$(_highlight "${_path}")"      \
+        "$(_highlight "${_basename}")"
       ;;
     notebook)
       _notebooks import "${_path:-}" "${_notebook_name:-}"
@@ -5291,9 +5299,7 @@ HEREDOC
 
     if ! ((_counter)) && [[ -n "${_selection:-}" ]]
     then
-      printf "Note not found: '%s'.\\n" "${_selection}"
-      printf "Help & Usage Info:\\n"
-      printf "  %s help\\n" "${_ME}"
+      printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
       return 1
     fi
   fi
@@ -5801,11 +5807,11 @@ _move() {
     return 1
   elif [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then
-    printf "Not Found: %s:%s\\n" "${_SCOPE}" "${_basename}"
+    printf "Not Found: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
     return 1
   elif [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
-    printf "Already exists: %s:%s\\n" "${_SCOPE}" "${_basename}"
+    printf "Already exists: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
     return 1
   fi
 
@@ -5821,9 +5827,9 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving %s to '%s'\\n"   \
-      "${_source_info_line}"        \
-      "${_target_notebook}"
+    printf "Moving %s to notebook %s\\n"      \
+      "$(_highlight "${_source_info_line}")"  \
+      "$(_highlight "${_target_notebook}")"
     while true
     do
       read -r -p "Are you sure you want to proceed? [y/N] " __yn
@@ -5859,10 +5865,9 @@ _move() {
   if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}"       ]] ||
      [[ -e "${_target_notebook_path}/${_basename}"  ]]
   then
-    printf "Moved to %s %s:%s\\n"                           \
+    printf "Moved to %s %s\\n"                              \
       "$(_id_brackets_color "${_target_notebook}:${_id}")"  \
-      "${_target_notebook}"                                 \
-      "${_basename}"
+      "$(_highlight "${_target_notebook}:${_basename}")"
   fi
 }
 _alias_subcommand "move" "mv"
@@ -5949,7 +5954,7 @@ _notebooks() {
 
     if [[ -e "${NB_DIR}/${_name}" ]]
     then
-      printf "Already exists: %s\\n" "${_name}"
+      printf "Already exists: %s\\n" "$(_highlight "${_name}")"
       return 1
     fi
 
@@ -5966,7 +5971,7 @@ _notebooks() {
         _clear_cache                       &&
         _git_checkpoint "[nb] Initialize" "${NB_DIR}/${_name}"
     fi
-    printf "Added: %s\\n" "${_name}"
+    printf "Added: %s\\n" "$(_highlight "${_name}")"
   }
 
   # _notebooks_current()
@@ -6023,7 +6028,7 @@ HEREDOC
        [[ ! -e "${NB_DIR}/${_name}/.git"   ]] ||
        [[ ! -e "${NB_DIR}/${_name}/.index" ]]
     then
-      printf "Notebook not found: %s\\n" "${_name}"
+      printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
       return 1
     fi
 
@@ -6082,7 +6087,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       rm -r -f "${NB_DIR:?}/${_name}"
     fi &&
       _clear_cache &&
-      printf "Notebook deleted: %s\\n" "${_name}"
+      printf "Notebook deleted: %s\\n" "$(_highlight "${_name}")"
   }
 
   # _notebooks_export()
@@ -6208,7 +6213,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         mkdir -p "${_path}"
       elif [[ -f "${_path}" ]]
       then
-        printf "File already exists: %s\\n" "${_path}"
+        printf "File already exists: %s\\n" "$(_highlight "${_path}")"
         return 1
       fi
     else
@@ -6220,9 +6225,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       if [[ -f "${_path}/.index" ]]
       then
-        printf "Notebook exists: %s\\n" "${_path}"
+        printf "Notebook exists: %s\\n" "$(_highlight "${_path}")"
       else
-        printf "Git repository exists: %s\\n" "${_path}"
+        printf "Git repository exists: %s\\n" "$(_highlight "${_path}")"
       fi
 
       return 1
@@ -6238,7 +6243,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         touch "${_path}/.index" &&
         _git_checkpoint "[nb] Initialize" "${_path}"
     fi
-    printf "Initialized local notebook: %s\\n" "${_path}"
+    printf "Initialized local notebook: %s\\n" "$(_highlight "${_path}")"
   }
 
   # _notebooks_list()
@@ -6452,7 +6457,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       else
         printf \
           "%s doesn't know how to open directories on your system.\\n" \
-          "${_ME}"
+          "$(_highlight "${_ME}")"
         return 1
       fi
     elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
@@ -6482,14 +6487,14 @@ Please type $(_highlight "${_name}") to confirm: " __response
             _git_checkpoint "[nb] Archived"
         fi
 
-        printf "%s archived.\\n" "${_notebook_name}"
+        printf "%s archived.\\n" "$(_highlight "${_notebook_name}")"
       elif [[ "${_subcommand}" == "status" ]]
       then
         if [[ -e "${_dotfile_path}" ]]
         then
-          printf "%s is archived.\\n" "${_notebook_name}"
+          printf "%s is archived.\\n" "$(_highlight "${_notebook_name}")"
         else
-          printf "%s is not archived.\\n" "${_notebook_name}"
+          printf "%s is not archived.\\n" "$(_highlight "${_notebook_name}")"
         fi
       elif [[ "${_subcommand}" == "unarchive" ]]
       then
@@ -6499,7 +6504,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
             _git_checkpoint "[nb] Unarchived"
         fi
 
-        printf "%s unarchived.\\n" "${_notebook_name}"
+        printf "%s unarchived.\\n" "$(_highlight "${_notebook_name}")"
       fi
     fi
   }
@@ -6527,11 +6532,13 @@ HEREDOC
       fi
     elif [[ ! -d "${NB_DIR}/${_old}" ]]
     then
-      printf "'%s' is not a valid notebook name.\\n" "${_old}"
+      printf "%s is not a valid notebook name.\\n" \
+        "$(_highlight "${_old}")"
       return 1
     elif [[ -e "${NB_DIR}/${_new}" ]]
     then
-      printf "A notebook named '%s' already exists.\\n" "${_new}"
+      printf "A notebook named '%s' already exists.\\n" \
+        "$(_highlight "${_new}")"
       return 1
     fi
 
@@ -6543,7 +6550,9 @@ HEREDOC
     fi
 
     _clear_cache
-    printf "'%s' is now named '%s'\\n" "${_old}" "${_new}"
+    printf "%s is now named %s\\n" \
+      "$(_highlight "${_old}")"    \
+      "$(_highlight "${_new}")"
   }
 
   # _notebooks_use()
@@ -6586,7 +6595,7 @@ HEREDOC
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
       printf "Now using %s.\\n" "$(_highlight "${_name}")"
     else
-      printf "Not found: %s\\n" "${_name}"
+      printf "Not found: %s\\n" "$(_highlight "${_name}")"
       return 1
     fi
   }
@@ -6772,8 +6781,7 @@ _remote() {
         then
           while true
           do
-            printf "Removing remote '%s'\\n" \
-              "${_existing_url}"
+            printf "Removing remote %s\\n" "$(_highlight "${_existing_url}")"
             read -r -p "Do you want to proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
@@ -6788,7 +6796,7 @@ _remote() {
         fi
 
         git remote rm origin &&
-          printf "Removed remote '%s'\\n" "${_existing_url}" &&
+          printf "Removed remote %s\\n" "$(_highlight "${_existing_url}")" &&
           return 0
       else
         printf "No remote configured.\\n"
@@ -6806,7 +6814,7 @@ _remote() {
       then
         if [[ "${_existing_url}" == "${_url}" ]]
         then
-          printf "Remote already set to '%s'\\n" "${_url}"
+          printf "Remote already set to %s\\n" "$(_highlight "${_url}")"
           return 1
         fi
 
@@ -6814,8 +6822,9 @@ _remote() {
         then
           while true
           do
-            printf "Updating remote from '%s' to '%s'\\n" \
-              "${_existing_url}" "${_url}"
+            printf "Updating remote from %s to %s\\n" \
+              "$(_highlight "${_existing_url}")"      \
+              "$(_highlight "${_url}")"
             read -r -p "Do you want to proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
@@ -6829,12 +6838,12 @@ _remote() {
           done
         fi
 
-        git remote set-url origin "${_url}"         &&
-          printf "Remote set to '%s'\\n" "${_url}"  &&
+        git remote set-url origin "${_url}"                       &&
+          printf "Remote set to %s\\n" "$(_highlight "${_url}")"  &&
           return 0
       else
-        git remote add origin "${_url}"            &&
-          printf "Remote set to '%s'\\n" "${_url}" &&
+        git remote add origin "${_url}"                             &&
+          printf "Remote set to %s\\n" "$(_highlight "${_url}")"  &&
           return 0
       fi
       ;;
@@ -7001,7 +7010,8 @@ _rename() {
 
     if [[ -e "${_NOTEBOOK_PATH}/${_target_basename}" ]]
     then
-      printf "File already exists: '%s'\\n" "${_target_basename}"
+      printf "File already exists: %s\\n" \
+        "$(_highlight "${_target_basename}")"
       return 1
     fi
   else
@@ -7011,9 +7021,9 @@ _rename() {
 
   if ! ((_force))
   then
-    printf "Renaming '%s' to '%s'\\n" \
-      "${_source_basename}"           \
-      "${_target_basename}"
+    printf "Renaming %s to %s\\n"           \
+      "$(_highlight "${_source_basename}")" \
+      "$(_highlight "${_target_basename}")"
     while true
     do
       read -r -p "Are you sure you want to proceed? [y/N] " __yn
@@ -7033,9 +7043,9 @@ _rename() {
     _index update "${_source_basename}" "${_target_basename}"   &&
     _git_checkpoint \
       "[nb] Rename: ${_source_basename} to ${_target_basename}"
-  printf "'%s' renamed to '%s'\\n"  \
-    "${_source_basename}"           \
-    "${_target_basename}"
+  printf "%s renamed to %s\\n"            \
+    "$(_highlight "${_source_basename}")" \
+    "$(_highlight "${_target_basename}")"
 }
 
 # search ############################################################### search
@@ -7558,12 +7568,15 @@ _settings() {
       then
         _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
       fi &&
-      printf "%s set to '%s'\\n" "${_setting_name}" "${_value}"
+      printf "%s set to %s\\n"              \
+        "$(_highlight "${_setting_name}")"  \
+        "$(_highlight "${_value}")"
   }
 
   # Usage: _nb_settings_unset (<number> | <name>)
   _nb_settings_unset() {
     local _setting_name=
+    local _default_value=
 
     _setting_name="$(_nb_settings_get_name "${1:-}")" &&
       "${_SED_I_COMMAND[@]}" \
@@ -7573,10 +7586,21 @@ _settings() {
         {
           _stripped=$(<"${NBRC_PATH}")
           printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
+        } && {
+          _default_value="$(
+            eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
+          )"
+
+          if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
+          then
+            _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+          else
+            _default_value="$(_highlight "${_default_value}")"
+          fi
         } &&
-        printf "%s restored to the default: '%s'\\n" \
-          "${_setting_name}" \
-          "$(eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}")"
+        printf "%s restored to the default: %s\\n"  \
+          "${_setting_name}"                        \
+          "${_default_value}"
   }
 
   # Usage: _nb_settings_prompt
@@ -7609,9 +7633,9 @@ HEREDOC
       fi
     done
 
-    printf "%s is currently set to '%s'\\n" \
-      "${_setting_name}"                    \
-      "$(_nb_settings_get_value "${_setting_name}")"
+    printf "%s is currently set to %s\\n" \
+      "$(_highlight "${_setting_name}")"  \
+      "$(_highlight "$(_nb_settings_get_value "${_setting_name}")")"
 
     if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
     then
@@ -7677,7 +7701,7 @@ HEREDOC
         return 0
         ;;
       *)
-        printf "Setting not found: '%s'\\n" "${_id_or_name}" >&2
+        printf "Setting not found: %s\\n" "$(_highlight "${_id_or_name}")" >&2
         return 1
         ;;
     esac
@@ -8086,7 +8110,7 @@ _show() {
   _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
-    printf "Note not found: '%s'.\\n" "${_selection}"
+    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     return 1
   fi
   _set_selection_notebook "${_selection}"
@@ -8244,7 +8268,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "mplayer" ]]
          }
     then
-      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
       mplayer "${_target_path}"
     elif _command_exists "afplay"         &&
          _file_is_audio "${_target_path}" &&
@@ -8253,7 +8277,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "afplay" ]]
          }
     then
-      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
       afplay "${_target_path}"
     elif _command_exists "mpg123"                   &&
          _file_is_audio "${_target_path}"           &&
@@ -8263,7 +8287,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "mpg123" ]]
          }
     then
-      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
       mpg123 "${_target_path}"
     elif _command_exists "ffplay"         &&
          _file_is_audio "${_target_path}" &&
@@ -8272,7 +8296,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "ffplay" ]]
          }
     then
-      printf "Playing audio. Press Ctrl-C to quit.\\n"
+      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
       ffplay -loglevel quiet "${_target_path}"
     elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
     then
@@ -8463,7 +8487,7 @@ HEREDOC
     then
       while true
       do
-        printf "Updating \`%s\` in place. " "${_ME}"
+        printf "Updating %s in place. " "$(_highlight "${_ME}")"
         read -r -p "Are you sure you want to proceed? [y/N] " __yn
         case ${__yn} in
           [Yy]*)
@@ -8477,7 +8501,7 @@ HEREDOC
       done
 
       cat  "${_temp_file}" > "${_current_path}"
-      printf "\`%s\` updated to the latest version.\\n" "${_ME}"
+      printf "%s updated to the latest version.\\n" "$(_highlight "${_ME}")"
       exit 0
     else
       printf "Already at the latest version.\\n"

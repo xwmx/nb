@@ -116,7 +116,9 @@ _setup_move() {
   run "${_NB}" move one:"${_filename}" "home" --force
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
 # <filename> ##################################################################
@@ -147,7 +149,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <id> ########################################################################
@@ -178,7 +182,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <path> ######################################################################
@@ -209,7 +215,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <title> #####################################################################
@@ -241,7 +249,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
 }
 
 # <folder> ####################################################################
@@ -274,7 +284,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[destination:[A-Za-z0-9]*\]\ destination:Example\ Folder ]]
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ destination:Example\ Folder ]]
 }
 
 # local #######################################################################
@@ -309,7 +321,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[local:[A-Za-z0-9]*\]\ local:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ local:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ local:[A-Za-z0-9]+.md ]]
 }
 
 @test "\`move\` from local with <filename> argument successfully moves note." {
@@ -342,7 +356,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
+  [[ "${output}" =~ home:local-example.md ]]
 }
 
 @test "\`move\` from local with local:<filename> argument successfully moves note." {
@@ -375,7 +391,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to\ \[home:[A-Za-z0-9]*\]\ home:local-example.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
+  [[ "${output}" =~ home:local-example.md ]]
 }
 
 # help ########################################################################

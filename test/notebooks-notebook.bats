@@ -27,7 +27,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "home archived." ]]
+  [[ "${output}" == "$(_highlight "home") archived." ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -49,7 +49,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "one archived." ]]
+  [[ "${output}" == "$(_highlight "one") archived." ]]
 
   # Creates git commit
   cd "${NB_DIR}/one" || return 1
@@ -76,7 +76,8 @@ _setup_notebook() {
 
   [[ ${status} -eq 0 ]]
   # Spinner changes output in unexpected ways.
-  [[ "${output}" =~ home\ archived\.$ ]]
+  [[ "${output}" =~ home        ]]
+  [[ "${output}" =~ archived\.$ ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -101,7 +102,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "home unarchived." ]]
+  [[ "${output}" == "$(_highlight "home") unarchived." ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -124,7 +125,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "one unarchived." ]]
+  [[ "${output}" == "$(_highlight "one") unarchived." ]]
 
   # Creates git commit
   cd "${NB_DIR}/one" || return 1
@@ -146,7 +147,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "home unarchived." ]]
+  [[ "${output}" == "$(_highlight "home") unarchived." ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -170,7 +171,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "home is not archived." ]]
+  [[ "${output}" == "$(_highlight "home") is not archived." ]]
 
   run "${_NB}" notebooks archive
   run "${_NB}" notebooks status
@@ -179,7 +180,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "home is archived." ]]
+  [[ "${output}" == "$(_highlight "home") is archived." ]]
 }
 
 @test "\`notebooks status <name>\` exits with 0 and prints status." {
@@ -193,7 +194,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "one is not archived." ]]
+  [[ "${output}" == "$(_highlight "one") is not archived." ]]
 
   run "${_NB}" notebooks archive one
   run "${_NB}" notebooks status one
@@ -202,7 +203,7 @@ _setup_notebook() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${output}" == "one is archived." ]]
+  [[ "${output}" == "$(_highlight "one") is archived." ]]
 }
 
 # help ########################################################################

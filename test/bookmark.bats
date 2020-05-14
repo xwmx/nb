@@ -59,7 +59,7 @@ load test_helper
   ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
-  [[ "${lines[0]}" == "Unable to download page at 'http invalid url'" ]]
+  [[ "${lines[0]}" == "Unable to download page at $(_highlight "http invalid url")" ]]
 }
 
 @test "\`bookmark <query>\` exits with 0 and displays a list of bookmarks with titles." {
@@ -187,7 +187,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --comment option ############################################################
@@ -241,7 +243,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --raw-content option ########################################################
@@ -294,7 +298,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --skip-content option #######################################################
@@ -340,7 +346,9 @@ Example description."
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --tags option ###############################################################
@@ -394,7 +402,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 @test "\`bookmark\` with --tags option and hashtags creates new note with tags." {
@@ -450,7 +460,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --title option ##############################################################
@@ -500,7 +512,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --related option ############################################################
@@ -582,7 +596,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 @test "\`bookmark\` with three --related URLs creates new note." {
@@ -639,7 +655,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # --encrypt option ############################################################
@@ -701,7 +719,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Deleted\                  ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # `bookmark edit` #############################################################
@@ -733,7 +753,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\ \[[0-9]+\]\ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Updated\                  ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
 # `bookmark url` ##############################################################

@@ -97,7 +97,8 @@ _setup_notebooks() {
   printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"
   [[ ${status} -eq 0 ]]
 
-  [[ "${lines[1]}" == "Added: example" ]]
+  [[ "${lines[1]}" =~ Added\: ]]
+  [[ "${lines[1]}" =~ example ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
   [[ -d "${NB_DIR}/example/.git" ]]
   _origin="$(cd "${NB_DIR}/example" && git config --get remote.origin.url)"

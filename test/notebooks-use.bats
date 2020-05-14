@@ -48,7 +48,9 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
-  [[ "${lines[0]}" == "Not found: not-a-notebook" ]]
+
+  [[ "${lines[0]}" =~ Not\ found      ]]
+  [[ "${lines[0]}" =~ not-a-notebook  ]]
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
 
   run "${_NB}" env
