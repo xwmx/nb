@@ -4261,7 +4261,6 @@ _import() {
 
   local _basename=
   local _convert=0
-  local _notebook_import=0
   local _notebook_name=
   local _path=
   local _subcommand=
