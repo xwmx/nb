@@ -2102,7 +2102,7 @@ _print_line() {
   local _text_length="${#_text}"
   local _line=
   printf -v _line "%*s" "${_text_length}"
-  printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_line// /-}" "${_TPUT_SGR0}"
+  _highlight_accent "${_line// /-}"
 }
 
 # _print_welcome()
@@ -2114,14 +2114,14 @@ _print_line() {
 #   Print the welcome message.
 _print_welcome() {
     cat <<HEREDOC
-${_TPUT_ACCENT_COLOR}·----------------·${_TPUT_SGR0}
+$(_highlight_accent "·----------------·")
 $(_highlight "Welcome") to
 __          _
 \ \   _ __ | |__
  \ \ | '_ \| '_ \\
  / / | | | | |_) |
 /_/  |_| |_|_.__/
-${_TPUT_ACCENT_COLOR}·----------------·${_TPUT_SGR0}
+$(_highlight_accent "·----------------·")
 HEREDOC
 }
 
@@ -3139,7 +3139,7 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
     _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
 cat <<HEREDOC
 ${_header}
-${_TPUT_ACCENT_COLOR}---------------------------------------------${_TPUT_SGR0}
+$(_highlight_accent "---------------------------------------------")
 HEREDOC
     _bookmark list
     return 0
@@ -7428,13 +7428,13 @@ _alias_subcommand "search" "q"
 export _NB_SETTINGS_LIST
 _NB_SETTINGS_LIST="\
 $(_id_brackets_color '1') editor
-    ${_TPUT_ACCENT_COLOR}------${_TPUT_SGR0}
+    $(_highlight_accent "------")
     The command line text editor to use with \`${_ME}\`.
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
       • Current Value:  '${EDITOR}'
 
 $(_id_brackets_color '2') nb_auto_sync
-    ${_TPUT_ACCENT_COLOR}---------------${_TPUT_SGR0}
+    $(_highlight_accent "---------------")
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
@@ -7442,7 +7442,7 @@ $(_id_brackets_color '2') nb_auto_sync
       • Current Value: '${NB_AUTO_SYNC}'
 
 $(_id_brackets_color '3') nb_default_extension
-    ${_TPUT_ACCENT_COLOR}-----------------------${_TPUT_SGR0}
+    $(_highlight_accent "-----------------------")
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
@@ -7450,7 +7450,7 @@ $(_id_brackets_color '3') nb_default_extension
       • Current Value: '${NB_DEFAULT_EXTENSION}'
 
 $(_id_brackets_color '4') nb_dir
-    ${_TPUT_ACCENT_COLOR}---------${_TPUT_SGR0}
+    $(_highlight_accent "---------")
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
@@ -7458,14 +7458,14 @@ $(_id_brackets_color '4') nb_dir
       • Current Value: '${NB_DIR}'
 
 $(_id_brackets_color '5') nb_encryption_tool
-    ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
+    $(_highlight_accent "---------------------")
     The tool used for encrypting notes.
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
       • Current Value:    '${NB_ENCRYPTION_TOOL}'
 
 $(_id_brackets_color '6') nb_highlight_color
-    ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
+    $(_highlight_accent "---------------------")
     Set highlighting color. Often this can be set to an xterm color number
     between 0 and 255. Some terminals support many more colors. To view a
     table of 256 common colors and numbers, run: \`${_ME} settings colors\`
@@ -7607,7 +7607,7 @@ _settings() {
   _nb_settings_prompt() {
     cat <<HEREDOC
 $(_highlight "${_ME}") Settings
-${_TPUT_ACCENT_COLOR}----------------${_TPUT_SGR0}
+$(_highlight_accent "----------------")
 ${_NB_SETTINGS_LIST}
 
 Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
@@ -7858,7 +7858,7 @@ _shell() {
 
   local _initial_command=
   local _prompt=
-  _prompt="$(_highlight "${_ME}")${_TPUT_ACCENT_COLOR}>${_TPUT_SGR0} "
+  _prompt="$(_highlight "${_ME}")$(_highlight_accent ">") "
 
   for __arg in "${@:-}"
   do
@@ -7890,7 +7890,7 @@ __          _
  \ \ | '_ \| '_ \\
  / / | | | | |_) |
 /_/  |_| |_|_.__/
-${_TPUT_ACCENT_COLOR}------------------${_TPUT_SGR0}
+$(_highlight_accent "------------------")
 $(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
 Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
 HEREDOC
