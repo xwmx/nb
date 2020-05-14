@@ -459,6 +459,62 @@ __set_nb_highlight_color() {
   fi
 } && __set_nb_highlight_color
 
+
+# _highlight()
+#
+# Usage:
+#   _highlight <string> [--underline]
+#
+# Description:
+#   Use `tput` to highlight the given string.
+export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
+
+export _TPUT_HIGHLIGHT_COLOR=
+_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NB_HIGHLIGHT_COLOR}")"
+_highlight() {
+  local _input="${1:-}"
+  if [[ -z "${_input}" ]]
+  then
+    _die printf "Usage: _highlight <string> [--underline]"
+  fi
+
+  if [[ "${2:-}" == "--underline" ]]
+  then
+    printf "%s%s%s%s%s\\n"        \
+      "${_TPUT_SGR0}"             \
+      "${_TPUT_SMUL}"             \
+      "${_TPUT_HIGHLIGHT_COLOR}"  \
+      "${_input}"                 \
+      "${_TPUT_SGR0}"
+  else
+    printf "%s%s%s%s\\n"          \
+      "${_TPUT_SGR0}"             \
+      "${_TPUT_HIGHLIGHT_COLOR}"  \
+      "${_input}"                 \
+      "${_TPUT_SGR0}"
+  fi
+}
+
+# _highlight_accent()
+#
+# Usage:
+#   _highlight_accent <string>
+#
+# Description:
+#   Highlight the given string using the accent color.
+export _TPUT_ACCENT_COLOR=
+_TPUT_ACCENT_COLOR="$(tput setaf "${NB_ACCENT_COLOR}")"
+_highlight_accent() {
+  local _input="${1:-}"
+  if [[ -z "${_input}" ]]
+  then
+    _die printf "Usage: _highlight_accent <string>"
+  fi
+
+  printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
+}
+
 ###############################################################################
 # Cache & Temp Directories
 ###############################################################################
@@ -1779,61 +1835,6 @@ _git_should_autosync() {
     "${_diff}"
 
   [[ "${_diff}" -gt 300 ]]
-}
-
-# _highlight()
-#
-# Usage:
-#   _highlight <string> [--underline]
-#
-# Description:
-#   Use `tput` to highlight the given string.
-export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
-export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
-
-export _TPUT_HIGHLIGHT_COLOR=
-_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NB_HIGHLIGHT_COLOR}")"
-_highlight() {
-  local _input="${1:-}"
-  if [[ -z "${_input}" ]]
-  then
-    _die printf "Usage: _highlight <string> [--underline]"
-  fi
-
-  if [[ "${2:-}" == "--underline" ]]
-  then
-    printf "%s%s%s%s%s\\n"        \
-      "${_TPUT_SGR0}"             \
-      "${_TPUT_SMUL}"             \
-      "${_TPUT_HIGHLIGHT_COLOR}"  \
-      "${_input}"                 \
-      "${_TPUT_SGR0}"
-  else
-    printf "%s%s%s%s\\n"          \
-      "${_TPUT_SGR0}"             \
-      "${_TPUT_HIGHLIGHT_COLOR}"  \
-      "${_input}"                 \
-      "${_TPUT_SGR0}"
-  fi
-}
-
-# _highlight_accent()
-#
-# Usage:
-#   _highlight_accent <string>
-#
-# Description:
-#   Highlight the given string using the accent color.
-export _TPUT_ACCENT_COLOR=
-_TPUT_ACCENT_COLOR="$(tput setaf "${NB_ACCENT_COLOR}")"
-_highlight_accent() {
-  local _input="${1:-}"
-  if [[ -z "${_input}" ]]
-  then
-    _die printf "Usage: _highlight_accent <string>"
-  fi
-
-  printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
 }
 
 # _highlight_syntax_if_available()
