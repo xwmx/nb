@@ -361,7 +361,6 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # The color theme.
 export NB_THEME="${NB_THEME:-}"
 
-
 if [[ "${NB_THEME}" == "blacklight" ]]
 then
   export NB_ACCENT_COLOR=56
@@ -1271,7 +1270,7 @@ _get_notebook_identifier() {
       then
         _notebook_identifier="local"
       else
-       _notebook_identifier="$(basename "${_notebook_identifier}")"
+        _notebook_identifier="$(basename "${_notebook_identifier}")"
       fi
     fi
 
@@ -1493,7 +1492,7 @@ _get_unique_basename() {
   local _file_type="${_file_basename#*.}"
   if [[ -z "${_file_type}" ]]
   then
-     _file_type="md"
+    _file_type="md"
   fi
 
   basename "$(
@@ -5836,8 +5835,8 @@ _move() {
     "${_MY_PATH}" "${_target_notebook}:index" get_id "${_basename}"
   )"
 
-  if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]] ||
-     [[ -e "${_target_notebook_path}/${_basename}" ]]
+  if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}"       ]] ||
+     [[ -e "${_target_notebook_path}/${_basename}"  ]]
   then
     printf "Moved to [%s:%s] %s:%s\\n"  \
       "${_target_notebook}"             \
@@ -5965,8 +5964,8 @@ _notebooks() {
     then
       printf "%s\\n" "${_NOTEBOOK_PATH}"
     else
-      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
-         [[ "${_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
+         [[ "${_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
       then
         printf "local\\n"
       else
@@ -6039,7 +6038,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi
 
     if [[ "$(_notebooks current)" == "${_name}" ]] &&
-       [[ "${_notebook_count}" -gt 1 ]]
+       [[ "${_notebook_count}" -gt 1            ]]
     then
       if [[ "${_name}" != "home" ]]
       then
@@ -6090,9 +6089,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
       _target_path="${_CURRENT_WORKING_DIR}/${_target_path}"
     fi
 
-
-    if [[ -n "${_target_path:-}"            ]] &&
-       [[ -d "${_target_path}"              ]] &&
+    if [[ -n "${_target_path:-}"              ]] &&
+       [[ -d "${_target_path}"                ]] &&
        [[ ! "${_target_path}" =~ \/${_name}$  ]]
     then
       _target_path="${_target_path}/${_name}"
@@ -7651,7 +7649,7 @@ HEREDOC
         return 0
         ;;
       5|NB_ENCRYPTION_TOOL|nb_encryption_tool)
-       printf "NB_ENCRYPTION_TOOL"
+        printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
       6|NB_HIGHLIGHT_COLOR|nb_highlight_color)
@@ -7865,7 +7863,7 @@ HEREDOC
       history -s "${__input}"
       if [[ "${__input}" =~ ^exit|quit$ ]]
       then
-       return 0
+        return 0
       else
         # Strip leading 'n', 'nb', or 'notes'.
         local _normalized_input=
@@ -8415,8 +8413,8 @@ _update() {
   fi
 
   if hash npm 2>/dev/null         &&
-     npm list | grep -q notes.sh  &&
-     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+    npm list | grep -q notes.sh   &&
+    [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
     cat <<'HEREDOC'
 Installed with npm. To update, run:
@@ -8538,8 +8536,8 @@ _nb_main() {
       _NOTEBOOK_PATH="${NB_DIR}/${_SCOPE}"
     fi
   else
-    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
-       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}" ]]
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
+       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}"  ]]
     then
       _SCOPE="local"
     else
@@ -8559,7 +8557,7 @@ _nb_main() {
       _git_required
 
       # Call `_init()` if configuration hasn't been initialized.
-      if [[ ! -e "${NB_DIR}"       ]] ||
+      if [[ ! -e "${NB_DIR}"          ]] ||
          [[ ! -e "${_NOTEBOOK_PATH}"  ]]
       then
         _git_required
@@ -8919,7 +8917,7 @@ do
          [[ -z "${_SUBCOMMAND:-}"   ]] &&
          [[ "${#__parts[@]}" -gt 0  ]]
       then
-        if [[ -d "${NB_DIR}/${__parts[0]}" ]] ||
+        if [[ -d "${NB_DIR}/${__parts[0]}"      ]] ||
            {
              [[ "${__parts[0]}" == "local"      ]] &&
              [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
