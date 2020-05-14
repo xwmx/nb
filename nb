@@ -469,6 +469,8 @@ __set_nb_highlight_color() {
 #   Use `tput` to highlight the given string.
 export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
+export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
+
 
 export _TPUT_HIGHLIGHT_COLOR=
 _TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NB_HIGHLIGHT_COLOR}")"
@@ -513,6 +515,24 @@ _highlight_accent() {
   fi
 
   printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
+}
+
+# _id_brackets_color()
+#
+# Usage:
+#   _id_brackets_color <id>
+#
+# Description:
+#   Print <id> with surrounding color brackets.
+_id_brackets_color() {
+  printf \
+    "%s%s[%s%s%s]%s"            \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_HIGHLIGHT_COLOR}"  \
+    "${1:-}"                    \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_SGR0}"
 }
 
 ###############################################################################
@@ -2697,13 +2717,13 @@ _add() {
     _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added [%s] %s '%s'\\n"  \
-        "${_id}"                      \
-        "${_scoped_basename}"         \
+      printf "Added %s %s '%s'\\n"        \
+        "$(_id_brackets_color "${_id}")"  \
+        "${_scoped_basename}"             \
         "${_title}"
     else
-      printf "Added [%s] %s\\n" \
-        "${_id}"                \
+      printf "Added %s %s\\n"             \
+        "$(_id_brackets_color "${_id}")"  \
         "${_scoped_basename}"
     fi
   fi &&
@@ -3654,9 +3674,9 @@ _delete() {
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
-    _note_info_line="[${_id}] ${_scoped_basename} '${_title}'"
+    _note_info_line="$(_id_brackets_color "${_id}") ${_scoped_basename} '${_title}'"
   else
-    _note_info_line="[${_id}] ${_scoped_basename}"
+    _note_info_line="$(_id_brackets_color "${_id}") ${_scoped_basename}"
   fi
 
   if ! ((_force))
@@ -3879,13 +3899,13 @@ _edit() {
       _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated [%s] %s '%s'\\n"  \
-          "${_id}"                        \
-          "${_scoped_basename}"           \
+        printf "Updated %s %s '%s'\\n"      \
+          "$(_id_brackets_color "${_id}")"  \
+          "${_scoped_basename}"             \
           "${_title}"
       else
-        printf "Updated [%s] %s\\n" \
-          "${_id}"                  \
+        printf "Updated %s %s\\n"           \
+          "$(_id_brackets_color "${_id}")"  \
           "${_scoped_basename}"
       fi
     fi
@@ -5162,7 +5182,7 @@ HEREDOC
         _id_item="[${_item_identifier}]"
 
         local _id_item_color=
-        _id_item_color="[$(_highlight "${_item_identifier}")]"
+        _id_item_color="$(_id_brackets_color "${_item_identifier}")"
 
         # Use calculated number of spaces for nicer formatting.
         local _spaces=''
@@ -5839,10 +5859,9 @@ _move() {
   if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}"       ]] ||
      [[ -e "${_target_notebook_path}/${_basename}"  ]]
   then
-    printf "Moved to [%s:%s] %s:%s\\n"  \
-      "${_target_notebook}"             \
-      "${_id}"                          \
-      "${_target_notebook}"             \
+    printf "Moved to %s %s:%s\\n"                           \
+      "$(_id_brackets_color "${_target_notebook}:${_id}")"  \
+      "${_target_notebook}"                                 \
       "${_basename}"
   fi
 }
@@ -7319,10 +7338,10 @@ _search() {
             _notebook_name="$(_get_notebook_identifier "${__notebook_path}")"
 
             _id_filename="[${_notebook_name}:${_id}] ${_file_info}"
-            _id_filename_color="[$(_highlight "${_notebook_name}:${_id}")] ${_file_info_color}"
+            _id_filename_color="$(_id_brackets_color "${_notebook_name}:${_id}") ${_file_info_color}"
           else
             _id_filename="[${_id}] ${_file_info}"
-            _id_filename_color="[$(_highlight "${_id}")] ${_file_info_color}"
+            _id_filename_color="$(_id_brackets_color "${_id}") ${_file_info_color}"
           fi
 
           if [[ "${_last_path}" != "${_path}" ]]
@@ -7398,13 +7417,13 @@ _alias_subcommand "search" "q"
 
 export _NB_SETTINGS_LIST
 _NB_SETTINGS_LIST="\
-[$(_highlight '1')] editor
+$(_id_brackets_color '1') editor
     ${_TPUT_ACCENT_COLOR}------${_TPUT_SGR0}
     The command line text editor to use with \`${_ME}\`.
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
       • Current Value:  '${EDITOR}'
 
-[$(_highlight '2')] nb_auto_sync
+$(_id_brackets_color '2') nb_auto_sync
     ${_TPUT_ACCENT_COLOR}---------------${_TPUT_SGR0}
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
@@ -7412,7 +7431,7 @@ _NB_SETTINGS_LIST="\
       • Default Value: '1'
       • Current Value: '${NB_AUTO_SYNC}'
 
-[$(_highlight '3')] nb_default_extension
+$(_id_brackets_color '3') nb_default_extension
     ${_TPUT_ACCENT_COLOR}-----------------------${_TPUT_SGR0}
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
@@ -7420,7 +7439,7 @@ _NB_SETTINGS_LIST="\
       • Default Value: 'md'
       • Current Value: '${NB_DEFAULT_EXTENSION}'
 
-[$(_highlight '4')] nb_dir
+$(_id_brackets_color '4') nb_dir
     ${_TPUT_ACCENT_COLOR}---------${_TPUT_SGR0}
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
@@ -7428,14 +7447,14 @@ _NB_SETTINGS_LIST="\
       • Default Value: '~/.nb'
       • Current Value: '${NB_DIR}'
 
-[$(_highlight '5')] nb_encryption_tool
+$(_id_brackets_color '5') nb_encryption_tool
     ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
     The tool used for encrypting notes.
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
       • Current Value:    '${NB_ENCRYPTION_TOOL}'
 
-[$(_highlight '6')] nb_highlight_color
+$(_id_brackets_color '6') nb_highlight_color
     ${_TPUT_ACCENT_COLOR}---------------------${_TPUT_SGR0}
     Set highlighting color. Often this can be set to an xterm color number
     between 0 and 255. Some terminals support many more colors. To view a
