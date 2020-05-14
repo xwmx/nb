@@ -145,6 +145,25 @@ load test_helper
   git log | grep -q 'Source'
 }
 
+# `notebook` ##################################################################
+
+@test "\`import notebook\` with valid <path> and <name> imports." {
+  run "${_NB}" init
+
+  run "${_NB}" import notebook                      \
+    "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
+    "example"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${NB_DIR}"
+
+  [[ ${status} -eq 0                ]]
+  [[ -d "${NB_DIR}/example"         ]]
+  [[ "${lines[0]}" =~ "Imported"    ]]
+  "${_NB}" notebooks | grep -q 'example'
+}
+
 # help ########################################################################
 
 @test "\`help import\` returns usage information." {

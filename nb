@@ -2328,10 +2328,12 @@ Usage:
           [-e <editor> | --editor <editor>]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
+  ${_ME} export notebook <name> [<path>]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand> | --readme]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
+  ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
@@ -3976,6 +3978,7 @@ desc "export" <<HEREDOC
 Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
+  ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
 
@@ -3985,11 +3988,13 @@ Options:
 Subcommands:
   (default)     Export a file to <path>. If <path> has a different extension
                 than the source note, convert the note using \`pandoc\`.
+  notebook      Export the notebook <name> to the current directory or <path>.
+                Alias for \`${_ME} notebooks export\`.
   pandoc        Export the file to standard output or a file using \`pandoc\`.
                 \`export pandoc\` prints to standard output by default.
 
 Description:
-  Export a file from the notebook.
+  Export a file or notebook.
 
   If Pandoc [1] is available, convert the note from its current format
   to the format of the output file as indicated by the file extension
@@ -4011,6 +4016,7 @@ HEREDOC
 _export() {
   local _args=()
   local _force=0
+  local _notebook_export=0
   local _pandoc_only=0
   local _selection=
   local _target_path=
@@ -4018,6 +4024,9 @@ _export() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
+      notebook|notebooks)
+        _notebook_export=1
+        ;;
       pandoc)
         _pandoc_only=1
         ;;
@@ -4044,6 +4053,12 @@ _export() {
     return 1
   fi
   _debug printf "_export() \${_selection}: %s\\n" "${_selection}"
+
+  if ((_notebook_export))
+  then
+    _notebooks export "${_selection:-}" "${_target_path:-}"
+    return 0
+  fi
 
   local _basename
   _basename="$(_get_selection_basename "${_selection}")"
@@ -4193,6 +4208,7 @@ Usage:
   ${_ME} import copy <path>
   ${_ME} import download <url> [--convert]
   ${_ME} import move <path>
+  ${_ME} import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
@@ -4202,9 +4218,11 @@ Subcommands:
   copy      Copy the file at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
   move      Copy the file at <path> into the current notebook.
+  notebook  Import the local notebook at <path> to make it global.
 
 Description:
-  Copy, move, or download a file into the current notebook.
+  Copy, move, or download files into the current notebook or import
+  a local notebook to make it global.
 
 Examples:
   ${_ME} import ~/Pictures/example.png
@@ -4243,6 +4261,8 @@ _import() {
 
   local _basename=
   local _convert=0
+  local _notebook_import=0
+  local _notebook_name=
   local _path=
   local _subcommand=
   local _url=
@@ -4253,6 +4273,9 @@ _import() {
       copy|download|move)
         _subcommand="${__arg}"
         ;;
+      notebook|notebooks)
+        _subcommand="notebook"
+        ;;
       --convert)
         _convert=1
         ;;
@@ -4262,6 +4285,10 @@ _import() {
           if [[ "${_subcommand}" == "download" ]]
           then
             _url="${__arg:-}"
+          elif [[ "${_subcommand}" == "notebook"  ]] &&
+               [[ -n "${_path:-}"                 ]]
+          then
+            _notebook_name="${__arg:-}"
           else
             _path="${__arg:-}"
           fi
@@ -4340,6 +4367,10 @@ ${_url}
         _index add "${_basename}"                       &&
         _git_checkpoint "[nb] Import: ${_basename}"
       printf "Imported '%s' to '%s'\\n" "${_path}" "${_basename}"
+      ;;
+    notebook)
+      _notebooks import "${_path:-}" "${_notebook_name:-}"
+      return 0
       ;;
     *)
       _help import

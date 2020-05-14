@@ -48,6 +48,26 @@ load test_helper
   grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
 }
 
+# `notebook` ##################################################################
+
+@test "\`export notebook\` with valid <name> and <path> exports." {
+  run "${_NB}" init
+  run "${_NB}" notebooks add "example"
+  [[ -d "${NB_DIR}/example" ]]
+  [[ ! -d "${_TMP_DIR}/example" ]]
+
+  run "${_NB}" export notebook "example" "${_TMP_DIR}/example"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_TMP_DIR}"
+
+  [[ ${status} -eq 0                ]]
+  [[ -d "${_TMP_DIR}/example"       ]]
+  [[ -d "${_TMP_DIR}/example/.git"  ]]
+  [[ "${lines[0]}" =~ "Exported"    ]]
+}
+
 # `pandoc <id>` ###############################################################
 
 @test "\`export pandoc\` with valid <id> and <path> exports a new note file." {

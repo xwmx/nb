@@ -1311,10 +1311,12 @@ Usage:
           [-e <editor> | --editor <editor>]
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
+  nb export notebook <name> [<path>]
   nb git <git options>...
   nb help [<subcommand> | --readme]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
+  nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
@@ -1672,6 +1674,7 @@ Description:
 Usage:
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
+  nb export notebook <name> [<path>]
   nb export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
 
@@ -1681,11 +1684,13 @@ Options:
 Subcommands:
   (default)     Export a file to <path>. If <path> has a different extension
                 than the source note, convert the note using `pandoc`.
+  notebook      Export the notebook <name> to the current directory or <path>.
+                Alias for `nb notebooks export`.
   pandoc        Export the file to standard output or a file using `pandoc`.
                 `export pandoc` prints to standard output by default.
 
 Description:
-  Export a file from the notebook.
+  Export a file or notebook.
 
   If Pandoc [1] is available, convert the note from its current format
   to the format of the output file as indicated by the file extension
@@ -1756,6 +1761,7 @@ Usage:
   nb import copy <path>
   nb import download <url> [--convert]
   nb import move <path>
+  nb import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
@@ -1765,9 +1771,11 @@ Subcommands:
   copy      Copy the file at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
   move      Copy the file at <path> into the current notebook.
+  notebook  Import the local notebook at <path> to make it global.
 
 Description:
-  Copy, move, or download a file into the current notebook.
+  Copy, move, or download files into the current notebook or import
+  a local notebook to make it global.
 
 Examples:
   nb import ~/Pictures/example.png
