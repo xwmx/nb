@@ -359,7 +359,7 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # Default: nb
 #
 # The color theme.
-export NB_THEME="${NB_THEME:-nb}"
+export NB_THEME="${NB_THEME:-}"
 
 
 if [[ "${NB_THEME}" == "blacklight" ]]
