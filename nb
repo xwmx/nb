@@ -7554,11 +7554,21 @@ HEREDOC
       if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
          [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
       then
-        _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
+        _setting_name="$(tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
+               _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
+      elif [[ "${_setting_name}" == "NB_THEME" ]]
+      then
+        local _new_color=
+        _new_color="$(NB_THEME='' "${_MY_PATH}" settings get NB_HIGHLIGHT_COLOR)"
+        _setting_name="$(tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
+               _value="$(tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
+      else
+        _setting_name="$(_highlight "${_setting_name}")"  \
+               _value="$(_highlight "${_value}")"
       fi &&
-      printf "%s set to %s\\n"              \
-        "$(_highlight "${_setting_name}")"  \
-        "$(_highlight "${_value}")"
+      printf "%s set to %s\\n"  \
+        "${_setting_name}"      \
+        "${_value}"
   }
 
   # Usage: _nb_settings_unset (<number> | <name>)
@@ -7579,14 +7589,27 @@ HEREDOC
             eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
           )"
 
-          if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
-             [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
+          if [[ "${_setting_name}" == "NB_ACCENT_COLOR" ]]
           then
+            _setting_name="$(_highlight "${_setting_name}")"
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+          elif [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
+          then
+            _setting_name="$(tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
+            _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+          elif [[ "${_setting_name}" == "NB_THEME" ]]
+          then
+            _new_hi_color="$(
+              NB_THEME="nb" NB_HIGHLIGHT_COLOR='' \
+                "${_MY_PATH}" settings get NB_HIGHLIGHT_COLOR
+            )"
+
+            _setting_name="$(tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
+            _default_value="$(tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
           else
+            _setting_name="$(_highlight "${_setting_name}")"
             _default_value="$(_highlight "${_default_value}")"
           fi
-          _setting_name="$(_highlight "${_setting_name}")"
         } &&
         printf "%s restored to the default: %s\\n"  \
           "${_setting_name}"                        \
