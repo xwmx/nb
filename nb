@@ -7488,73 +7488,57 @@ _settings() {
     fi
   }
 
+  # Usage: _nb_settings_get_name (<number> | <name>)
+  _nb_settings_get_name() {
+    local _id_or_name="${1:-}"
+    [[ -n "${_id_or_name:-}" ]] || return 1
+
+    case "${_id_or_name}" in
+      1|EDITOR|editor)
+        printf "EDITOR"
+        return 0
+        ;;
+      2|NB_AUTO_SYNC|nb_auto_sync)
+        printf "NB_AUTO_SYNC"
+        return 0
+        ;;
+      3|NB_DEFAULT_EXTENSION|nb_default_extension)
+        printf "NB_DEFAULT_EXTENSION"
+        return 0
+        ;;
+      4|NB_DIR|nb_dir)
+        printf "NB_DIR"
+        return 0
+        ;;
+      5|NB_ENCRYPTION_TOOL|nb_encryption_tool)
+        printf "NB_ENCRYPTION_TOOL"
+        return 0
+        ;;
+      6|NB_HIGHLIGHT_COLOR|nb_highlight_color)
+        printf "NB_HIGHLIGHT_COLOR"
+        return 0
+        ;;
+      7|NB_ACCENT_COLOR|nb_accent_color)
+        printf "NB_ACCENT_COLOR"
+        return 0
+        ;;
+      8|NB_THEME|nb_theme)
+        printf "NB_THEME"
+        return 0
+        ;;
+      *)
+        _return_1 \
+          printf "Setting not found: %s\\n" \
+          "$(_highlight "${_id_or_name}")"
+        ;;
+    esac
+  }
+
   # Usage: _nb_settings_get_value (<number> | <name>)
   _nb_settings_get_value() {
     local _setting_name=
     _setting_name="$(_nb_settings_get_name "${1:-}")" &&
       _env | grep "${_setting_name}" | cut -d= -f2
-  }
-
-  # Usage: _nb_settings_set (<number> | <name>) <value>
-  _nb_settings_set() {
-    local _entry=
-    local _setting_name=
-    local _stripped=
-    local _value=
-
-    _setting_name="$(_nb_settings_get_name "${1:-}")"          &&
-      _nb_settings_validate_value "${_setting_name}" "${2:-}"  &&
-      {
-        _value="${2:-}"
-        if [[ "${_value}" =~ ^~ ]]
-        then
-          # shellcheck disable=SC2016
-          _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
-        fi
-      } &&
-      _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
-      _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
-      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
-      if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
-         [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
-      then
-        _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
-      fi &&
-      printf "%s set to %s\\n"              \
-        "$(_highlight "${_setting_name}")"  \
-        "$(_highlight "${_value}")"
-  }
-
-  # Usage: _nb_settings_unset (<number> | <name>)
-  _nb_settings_unset() {
-    local _setting_name=
-    local _default_value=
-
-    _setting_name="$(_nb_settings_get_name "${1:-}")" &&
-      "${_SED_I_COMMAND[@]}" \
-        -e "s/^export ${_setting_name}.*Added by.*$//g" \
-        -e "s/^export ${_setting_name}.*Set by.*$//g" \
-        "${NBRC_PATH}" &&
-        {
-          _stripped=$(<"${NBRC_PATH}")
-          printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
-        } && {
-          _default_value="$(
-            eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
-          )"
-
-          if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
-             [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
-          then
-            _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          else
-            _default_value="$(_highlight "${_default_value}")"
-          fi
-          _setting_name="$(_highlight "${_setting_name}")"
-        } &&
-        printf "%s restored to the default: %s\\n"  \
-          "${_setting_name}"                        \
-          "${_default_value}"
   }
 
   # Usage: _nb_settings_prompt
@@ -7624,50 +7608,66 @@ HEREDOC
     done
   }
 
-  # Usage: _nb_settings_get_name (<number> | <name>)
-  _nb_settings_get_name() {
-    local _id_or_name="${1:-}"
-    [[ -n "${_id_or_name:-}" ]] || return 1
+  # Usage: _nb_settings_set (<number> | <name>) <value>
+  _nb_settings_set() {
+    local _entry=
+    local _setting_name=
+    local _stripped=
+    local _value=
 
-    case "${_id_or_name}" in
-      1|EDITOR|editor)
-        printf "EDITOR"
-        return 0
-        ;;
-      2|NB_AUTO_SYNC|nb_auto_sync)
-        printf "NB_AUTO_SYNC"
-        return 0
-        ;;
-      3|NB_DEFAULT_EXTENSION|nb_default_extension)
-        printf "NB_DEFAULT_EXTENSION"
-        return 0
-        ;;
-      4|NB_DIR|nb_dir)
-        printf "NB_DIR"
-        return 0
-        ;;
-      5|NB_ENCRYPTION_TOOL|nb_encryption_tool)
-        printf "NB_ENCRYPTION_TOOL"
-        return 0
-        ;;
-      6|NB_HIGHLIGHT_COLOR|nb_highlight_color)
-        printf "NB_HIGHLIGHT_COLOR"
-        return 0
-        ;;
-      7|NB_ACCENT_COLOR|nb_accent_color)
-        printf "NB_ACCENT_COLOR"
-        return 0
-        ;;
-      8|NB_THEME|nb_theme)
-        printf "NB_THEME"
-        return 0
-        ;;
-      *)
-        _return_1 \
-          printf "Setting not found: %s\\n" \
-          "$(_highlight "${_id_or_name}")"
-        ;;
-    esac
+    _setting_name="$(_nb_settings_get_name "${1:-}")"          &&
+      _nb_settings_validate_value "${_setting_name}" "${2:-}"  &&
+      {
+        _value="${2:-}"
+        if [[ "${_value}" =~ ^~ ]]
+        then
+          # shellcheck disable=SC2016
+          _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
+        fi
+      } &&
+      _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
+      _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
+      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
+      if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
+         [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
+      then
+        _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
+      fi &&
+      printf "%s set to %s\\n"              \
+        "$(_highlight "${_setting_name}")"  \
+        "$(_highlight "${_value}")"
+  }
+
+  # Usage: _nb_settings_unset (<number> | <name>)
+  _nb_settings_unset() {
+    local _setting_name=
+    local _default_value=
+
+    _setting_name="$(_nb_settings_get_name "${1:-}")" &&
+      "${_SED_I_COMMAND[@]}" \
+        -e "s/^export ${_setting_name}.*Added by.*$//g" \
+        -e "s/^export ${_setting_name}.*Set by.*$//g" \
+        "${NBRC_PATH}" &&
+        {
+          _stripped=$(<"${NBRC_PATH}")
+          printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
+        } && {
+          _default_value="$(
+            eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
+          )"
+
+          if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
+             [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
+          then
+            _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+          else
+            _default_value="$(_highlight "${_default_value}")"
+          fi
+          _setting_name="$(_highlight "${_setting_name}")"
+        } &&
+        printf "%s restored to the default: %s\\n"  \
+          "${_setting_name}"                        \
+          "${_default_value}"
   }
 
   # Usage: _nb_settings_validate_value (<number> | <name>) <value>
