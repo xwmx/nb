@@ -8285,7 +8285,7 @@ _sync() {
     _debug printf "_sync() -a|--all\\n"
     _notebooks=($(_notebooks --names --no-color --unarchived))
   else
-    _notebooks=($(_notebook))
+    _notebooks=($(_notebooks current))
   fi
 
   _debug printf "_sync() \${_notebooks[*]:-}: '%s'\\n" "${_notebooks[*]:-}"
