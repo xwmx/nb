@@ -7391,8 +7391,37 @@ $(_id_brackets_color '7') nb_accent_color
 
 $(_id_brackets_color '8') nb_theme
     $(_highlight_accent "--------")
-    The color theme. Available themes:
-      ${_NB_THEMES[@]}
+    The color theme. \`${_ME}\` has several built-in themes user defined
+    themes can be installed in the \$NB_DIR/.themes directory. Themes have
+    an .nb-theme or .nb-theme.sh extension and contain a single if statment
+    assigning the color environment variables to tput ANSI color numbers.
+      Example:
+
+        # filename: ~/.nb/.themes/example-theme-name.nb-theme.sh
+        if [[ \"\${NB_THEME}\" == \"example-theme-name\" ]]
+        then
+          export NB_ACCENT_COLOR=8
+          export NB_HIGHLIGHT_COLOR=68
+        fi
+
+    To view a list of available color numbers, run \`nb settings colors\`
+    Available themes:
+      $(__list_themes() {
+          local _line=
+          for __theme in "${_NB_THEMES[@]}"
+          do
+            local _test_line="${_line} ${__theme}"
+            if [[ "${#_test_line}" -gt 65 ]]
+            then
+              printf "%s\\n" "${_line}"
+              _line="       ${__theme}"
+            else
+              _line="${_line} ${__theme}"
+            fi
+          done
+          printf "%s\\n" "${_line}"
+        } && __list_themes)
+
       • Default Value: 'nb'
       • Current Value: '${NB_THEME}'"
 
