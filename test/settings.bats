@@ -131,7 +131,25 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ editor ]]
+  [[ "${lines[0]}" =~ 1             ]]
+  [[ "${lines[0]}" =~ editor        ]]
+  [[ "${lines[1]}" =~ 2             ]]
+  [[ "${lines[1]}" =~ nb_auto_sync  ]]
+}
+
+@test "\`settings list --long\` lists available settings with \`show\`." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings list --long
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ 1             ]]
+  [[ "${lines[0]}" =~ editor        ]]
+  [[ "${lines[1]}" =~ ------        ]]
 }
 
 # `set` #######################################################################
@@ -515,6 +533,50 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'NB_THEME must be one of the available themes.' ]]
   printf "NB_THEME: %s\\n" "$("${_NB}" settings get NB_THEME)"
   [[ "$("${_NB}" settings get NB_THEME)" == 'forest' ]]
+}
+
+# `list` ######################################################################
+
+@test "\`settings show <name>\` in lowercase shows setting." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings show nb_auto_sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ nb_auto_sync ]]
+  [[ "${lines[1]}" =~ ------------ ]]
+}
+
+@test "\`settings show <name>\` in uppercase shows setting." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings show NB_THEME
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ nb_theme ]]
+  [[ "${lines[1]}" =~ -------- ]]
+}
+
+@test "\`settings show <id>\` shows setting." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings show 3
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ nb_default_extension ]]
+  [[ "${lines[1]}" =~ -------------------- ]]
 }
 
 # `unset` #####################################################################

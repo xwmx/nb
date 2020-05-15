@@ -7330,109 +7330,15 @@ _alias_subcommand "search" "q"
 
 # settings ########################################################### settings
 
-export _NB_SETTINGS_LIST
-_NB_SETTINGS_LIST="\
-$(_id_brackets_color '1') editor
-    $(_highlight_accent "------")
-    The command line text editor to use with \`${_ME}\`.
-      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
-      • Current Value:  '${EDITOR}'
-
-$(_id_brackets_color '2') nb_auto_sync
-    $(_highlight_accent "------------")
-    By default, operations that trigger a git commit like \`add\`, \`edit\`,
-    and \`delete\` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to '0'.
-      • Default Value: '1'
-      • Current Value: '${NB_AUTO_SYNC}'
-
-$(_id_brackets_color '3') nb_default_extension
-    $(_highlight_accent "--------------------")
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
-    whatever you prefer.
-      • Default Value: 'md'
-      • Current Value: '${NB_DEFAULT_EXTENSION}'
-
-$(_id_brackets_color '4') nb_dir
-    $(_highlight_accent "------")
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
-      • Default Value: '~/.nb'
-      • Current Value: '${NB_DIR}'
-
-$(_id_brackets_color '5') nb_encryption_tool
-    $(_highlight_accent "------------------")
-    The tool used for encrypting notes.
-      • Supported Values: 'openssl', 'gpg'
-      • Default Value:    'openssl'
-      • Current Value:    '${NB_ENCRYPTION_TOOL}'
-
-$(_id_brackets_color '6') nb_highlight_color
-    $(_highlight_accent "------------------")
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors. To view a table of 256 common colors and numbers,
-    run: \`${_ME} settings colors\`
-    To view a color for a number, run: \`${_ME} settings colors <number>\`
-      • Default Value: '68' (blue) for 256 color terminals,
-                       '4'  (blue) for  8  color terminals.
-      • Current Value: '${NB_HIGHLIGHT_COLOR}'
-
-$(_id_brackets_color '7') nb_accent_color
-    $(_highlight_accent "---------------")
-    The color used for lines and footer elements. Like nb_highlight_color,
-    this can often be set to an xterm color number between 0 and 255. view a
-    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
-    To view a color for a number, run: \`${_ME} settings colors <number>\`
-      • Default Value: '8'
-      • Current Value: '${NB_ACCENT_COLOR}'
-
-$(_id_brackets_color '8') nb_theme
-    $(_highlight_accent "--------")
-    The color theme. \`${_ME}\` has several built-in themes user defined
-    themes can be installed in the \$NB_DIR/.themes directory. Themes have
-    an .nb-theme or .nb-theme.sh extension and contain a single if statment
-    assigning the color environment variables to tput ANSI color numbers.
-      Example:
-
-        # filename: ~/.nb/.themes/example-theme-name.nb-theme.sh
-        if [[ \"\${NB_THEME}\" == \"example-theme-name\" ]]
-        then
-          export NB_ACCENT_COLOR=8
-          export NB_HIGHLIGHT_COLOR=68
-        fi
-
-    To view a list of available color numbers, run \`nb settings colors\`
-    Available themes:
-      $(__list_themes() {
-          local _line=
-          for __theme in "${_NB_THEMES[@]}"
-          do
-            local _test_line="${_line} ${__theme}"
-            if [[ "${#_test_line}" -gt 65 ]]
-            then
-              printf "%s\\n" "${_line}"
-              _line="       ${__theme}"
-            else
-              _line="${_line} ${__theme}"
-            fi
-          done
-          printf "%s\\n" "${_line}"
-        } && __list_themes)
-
-      • Default Value: 'nb'
-      • Current Value: '${NB_THEME}'"
-
 desc "settings" <<HEREDOC
 Usage:
   ${_ME} settings
   ${_ME} settings colors [<number>]
   ${_ME} settings edit
   ${_ME} settings get   (<number> | <name>)
-  ${_ME} settings list
+  ${_ME} settings list  [--long]
   ${_ME} settings set   (<number> | <name>) <value>
+  ${_ME} settings show  (<number> | <name>)
   ${_ME} settings unset (<number> | <name>)
 
 Subcommands:
@@ -7443,6 +7349,7 @@ Subcommands:
   get        Print the value of a setting.
   list       List information about available settings.
   set        Assign <value> to a setting.
+  show       Print the help information and current value of a setting.
   unset      Unset a setting, returning it to the default value.
 
 Description:
@@ -7488,42 +7395,61 @@ _settings() {
     fi
   }
 
-  # Usage: _nb_settings_get_name (<number> | <name>)
-  _nb_settings_get_name() {
-    local _id_or_name="${1:-}"
-    [[ -n "${_id_or_name:-}" ]] || return 1
+  # Usage: _nb_settings_get_value (<number> | <name>)
+  _nb_settings_get_value() {
+    local _setting_name=
+    _setting_name="$(_nb_settings_identify "${1:-}")" &&
+      _env | grep "${_setting_name}" | cut -d= -f2
+  }
+
+  # Usage: _nb_settings_identify [--id] (<number> | <name>)
+  _nb_settings_identify() {
+    local _get_id=0
+    local _id_or_name=
+
+    if [[ -z "${1:-}" ]]
+    then
+      return 1
+    elif [[ "${1}" == "--id" ]]
+    then
+      _get_id=1
+      [[ -z "${2:-}" ]] && return 1
+      _id_or_name="${2:-}"
+    else
+      _id_or_name="${1}"
+    fi
 
     case "${_id_or_name}" in
       1|EDITOR|editor)
-        printf "EDITOR"
+        ((_get_id)) && printf "1" || printf "EDITOR"
         return 0
         ;;
       2|NB_AUTO_SYNC|nb_auto_sync)
-        printf "NB_AUTO_SYNC"
+        ((_get_id)) && printf "2" || printf "NB_AUTO_SYNC"
         return 0
         ;;
       3|NB_DEFAULT_EXTENSION|nb_default_extension)
-        printf "NB_DEFAULT_EXTENSION"
+        ((_get_id)) && printf "3" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
       4|NB_DIR|nb_dir)
-        printf "NB_DIR"
+        ((_get_id)) && printf "4" || printf "NB_DIR"
         return 0
         ;;
       5|NB_ENCRYPTION_TOOL|nb_encryption_tool)
-        printf "NB_ENCRYPTION_TOOL"
+        ((_get_id)) && printf "5" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
       6|NB_HIGHLIGHT_COLOR|nb_highlight_color)
-        printf "NB_HIGHLIGHT_COLOR"
+        ((_get_id)) && printf "6" || printf "NB_HIGHLIGHT_COLOR"
         return 0
         ;;
       7|NB_ACCENT_COLOR|nb_accent_color)
-        printf "NB_ACCENT_COLOR"
+        ((_get_id)) && printf "7" || printf "NB_ACCENT_COLOR"
         return 0
         ;;
       8|NB_THEME|nb_theme)
-        printf "NB_THEME"
+        ((_get_id)) && printf "8" || printf "NB_THEME"
         return 0
         ;;
       *)
@@ -7534,19 +7460,12 @@ _settings() {
     esac
   }
 
-  # Usage: _nb_settings_get_value (<number> | <name>)
-  _nb_settings_get_value() {
-    local _setting_name=
-    _setting_name="$(_nb_settings_get_name "${1:-}")" &&
-      _env | grep "${_setting_name}" | cut -d= -f2
-  }
-
   # Usage: _nb_settings_prompt
   _nb_settings_prompt() {
     cat <<HEREDOC
 $(_highlight "${_ME}") Settings
-$(_highlight_accent "----------------")
-${_NB_SETTINGS_LIST}
+$(_highlight_accent "-----------")
+$(_settings list)
 
 Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
 HEREDOC
@@ -7564,25 +7483,27 @@ HEREDOC
             ;;
           *)
             _setting_name="$(
-              _nb_settings_get_name "${__setting}"
+              _nb_settings_identify "${__setting}"
             )" && break
             ;;
         esac
       fi
     done
 
-    printf "%s is currently set to %s\\n" \
-      "$(_highlight "${_setting_name}")"  \
-      "$(_highlight "$(_nb_settings_get_value "${_setting_name}")")"
-
-    if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
+    if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
+       [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
     then
       printf "%s\\n" "$(_nb_settings_colors)"
     fi
 
+    _settings show "${_setting_name}"
+
+    local _hi_unset= && _hi_unset="$(_highlight 'unset')"
+    local _hi_q=     && _hi_q="$(_highlight 'q')"
+
     cat <<HEREDOC
 
-Enter a new value, $(_highlight 'unset') to set to the default value, or $(_highlight 'q') to quit.
+Enter a new value, ${_hi_unset} to set to the default value, or ${_hi_q} to quit.
 HEREDOC
 
     while true
@@ -7615,8 +7536,8 @@ HEREDOC
     local _stripped=
     local _value=
 
-    _setting_name="$(_nb_settings_get_name "${1:-}")"          &&
-      _nb_settings_validate_value "${_setting_name}" "${2:-}"  &&
+    _setting_name="$(_nb_settings_identify "${1:-}")"  &&
+      _nb_settings_validate_value "${_setting_name}" "${2:-}" &&
       {
         _value="${2:-}"
         if [[ "${_value}" =~ ^~ ]]
@@ -7643,7 +7564,7 @@ HEREDOC
     local _setting_name=
     local _default_value=
 
-    _setting_name="$(_nb_settings_get_name "${1:-}")" &&
+    _setting_name="$(_nb_settings_identify "${1:-}")" &&
       "${_SED_I_COMMAND[@]}" \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
         -e "s/^export ${_setting_name}.*Set by.*$//g" \
@@ -7731,6 +7652,116 @@ HEREDOC
     fi
   }
 
+  local _settings_list_items=()
+  local _settings_help_items=()
+
+  _settings_list_items+=("$(_id_brackets_color '1') editor")
+  _settings_help_items+=("\
+    $(_highlight_accent "------")
+    The command line text editor to use with \`${_ME}\`.
+
+      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'")
+
+  _settings_list_items+=("$(_id_brackets_color '2') nb_auto_sync")
+  _settings_help_items+=("\
+    $(_highlight_accent "------------")
+    By default, operations that trigger a git commit like \`add\`, \`edit\`,
+    and \`delete\` will sync notebook changes to the remote repository, if
+    one is set. To disable this behavior, set this to '0'.
+
+      • Default Value: '1'")
+
+  _settings_list_items+=("$(_id_brackets_color '3') nb_default_extension")
+  _settings_help_items+=("\
+    $(_highlight_accent "--------------------")
+    The default extension to use for notes files. Change to 'org' for Emacs
+    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    whatever you prefer.
+
+      • Default Value: 'md'")
+
+  _settings_list_items+=("$(_id_brackets_color '4') nb_dir")
+  _settings_help_items+=("\
+    $(_highlight_accent "------")
+    The location of the directory that contains the notebooks. To sync with
+    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
+    \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
+
+      • Default Value: '~/.nb'")
+
+  _settings_list_items+=("$(_id_brackets_color '5') nb_encryption_tool")
+  _settings_help_items+=("\
+    $(_highlight_accent "------------------")
+    The tool used for encrypting notes.
+
+      • Supported Values: 'openssl', 'gpg'
+      • Default Value:    'openssl'")
+
+  _settings_list_items+=("$(_id_brackets_color '6') nb_highlight_color")
+  _settings_help_items+=("\
+    $(_highlight_accent "------------------")
+    The primary color used to highlight identifiers and messages. Often this
+    can be set to an xterm color number between 0 and 255. Some terminals
+    support many more colors. To view a table of 256 common colors and numbers,
+    run: \`${_ME} settings colors\`
+    To view a color for a number, run: \`${_ME} settings colors <number>\`
+
+      • Default Value: '68' (blue) for 256 color terminals,
+                       '4'  (blue) for  8  color terminals.")
+
+  _settings_list_items+=("$(_id_brackets_color '7') nb_accent_color")
+  _settings_help_items+=("\
+    $(_highlight_accent "---------------")
+    The color used for lines and footer elements. Like nb_highlight_color,
+    this can often be set to an xterm color number between 0 and 255. view a
+    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
+    To view a color for a number, run: \`${_ME} settings colors <number>\`
+
+      • Default Value: '8'")
+
+  _settings_list_items+=("$(_id_brackets_color '8') nb_theme")
+  _settings_help_items+=("\
+    $(_highlight_accent "--------")
+    The color theme. \`${_ME}\` has several built-in themes user defined
+    themes can be installed in the \$NB_DIR/.themes directory. Themes have
+    an .nb-theme or .nb-theme.sh extension and contain a single if statment
+    assigning the color environment variables to tput ANSI color numbers.
+
+      Example:
+
+        # filename: ~/.nb/.themes/example-theme-name.nb-theme.sh
+        if [[ \"\${NB_THEME}\" == \"example-theme-name\" ]]
+        then
+          export NB_ACCENT_COLOR=8
+          export NB_HIGHLIGHT_COLOR=68
+        fi
+
+    To view a list of available color numbers, run \`nb settings colors\`
+    Available themes:
+      $(__list_themes() {
+          local _line=
+          local _line_color=
+
+          for __theme in "${_NB_THEMES[@]}"
+          do
+            local _test_line="${_line} ${__theme}"
+
+            if [[ "${#_test_line}" -gt 65 ]]
+            then
+              printf "%s\\n" "${_line_color}" | sed 's/,*$//g'
+                    _line="       ${__theme},"
+              _line_color="       $(_highlight "${__theme}"),"
+            else
+                    _line="${_line} ${__theme},"
+              _line_color="${_line_color} $(_highlight "${__theme}"),"
+            fi
+          done
+
+          printf "%s\\n" "${_line_color}" | sed 's/,*$//g'
+        } && __list_themes)
+
+      • Default Value: 'nb'")
+
   while ((${#}))
   do
     local __arg="${1:-}"
@@ -7754,7 +7785,21 @@ HEREDOC
         return 0
         ;;
       list)
-        printf "%s\\n" "${_NB_SETTINGS_LIST}"
+        if [[ "${2:-}" == "--long" ]]
+        then
+          local _counter=0
+
+          for __setting in "${_settings_list_items[@]}"
+          do
+            ((_counter)) && printf "\\n"
+            _counter="$((_counter+1))"
+
+            _settings show "${_counter}"
+          done
+        else
+          printf "%s\\n" "${_settings_list_items[@]}"
+        fi
+
         return 0
         ;;
       set)
@@ -7764,6 +7809,30 @@ HEREDOC
         fi
 
         _nb_settings_set "${2:-}" "${3:-}"
+        return 0
+        ;;
+      show|help|about|info|more)
+        if [[ -z "${2:-}" ]]
+        then
+          _exit_1 _help "settings"
+        fi
+
+        local _setting_id=
+        _setting_id="$(_nb_settings_identify --id "${2:-}")"
+
+        local _setting_name=
+        _setting_name="$(_nb_settings_identify "${2:-}")"
+
+        local _index=
+        _index="$((_setting_id-1))"
+
+        printf "%s\\n%s\\n"                     \
+          "${_settings_list_items[${_index}]}"  \
+          "${_settings_help_items[${_index}]}"
+
+        printf "\\n%s is currently set to %s\\n"  \
+          "$(_highlight "${_setting_name}")"      \
+          "$(_highlight "$(_nb_settings_get_value "${_setting_name}")")"
         return 0
         ;;
       reset|unset)
