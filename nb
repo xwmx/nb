@@ -247,8 +247,10 @@ _debug() {
 #   to standard error. The command is expected to print a message and should
 #   typically be either `echo`, `printf`, or `cat`.
 _exit_1() {
-  printf "%s " "$(tput setaf 1)!$(tput sgr0)"
-  "${@}" 1>&2
+  {
+    printf "%s " "$(tput setaf 1)!$(tput sgr0)"
+    "${@}"
+  } 1>&2
   exit 1
 }
 
@@ -262,8 +264,10 @@ _exit_1() {
 #   to standard error. The command is expected to print a message and should
 #   typically be either `echo`, `printf`, or `cat`.
 _return_1() {
-  printf "%s " "$(tput setaf 1)!$(tput sgr0)"
-  "${@}" 1>&2
+  {
+    printf "%s " "$(tput setaf 1)!$(tput sgr0)"
+    "${@}"
+  } 1>&2
   return 1
 }
 
