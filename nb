@@ -7531,6 +7531,8 @@ HEREDOC
 
   # Usage: _nb_settings_set (<number> | <name>) <value>
   _nb_settings_set() {
+    local _attribution=
+    _attribution="# Set by \`${_ME}\` • $(date)"
     local _entry=
     local _setting_name=
     local _stripped=
@@ -7546,7 +7548,7 @@ HEREDOC
           _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
         fi
       } &&
-      _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
+      _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}" &&
       _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
       if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||

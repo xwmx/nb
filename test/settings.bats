@@ -210,7 +210,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR    ]]
   [[ "${output}" =~ set\ to\  ]]
   [[ "${output}" =~ example   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example}"' ]]
 }
 
 @test "\`settings set\` with multi-word argument exits and sets." {
@@ -228,7 +228,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR            ]]
   [[ "${output}" =~ set\ to\          ]]
   [[ "${output}" =~ example\ editor   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example editor"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example editor}"' ]]
 }
 
 @test "\`settings set\` with lowercase setting name exits and sets." {
@@ -246,7 +246,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR    ]]
   [[ "${output}" =~ set\ to\  ]]
   [[ "${output}" =~ example   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example}"' ]]
 }
 
 # `set NB_AUTO_SYNC` #######################################################
@@ -287,6 +287,8 @@ skip "Determine how to test interactive prompt."
   # [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
   [[ "${output}" =~ NB_AUTO_SYNC        ]]
   [[ "${output}" =~ must\ be\ either    ]]
+
+  printf "get NB_AUTO_SYNC: '%s'\\n" "$("${_NB}" settings get NB_AUTO_SYNC)"
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
 }
 
@@ -306,7 +308,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_DIR                ]]
   [[ "${output}" =~ set\ to               ]]
   [[ "${output}" =~ /tmp/path/to/data/dir ]]
-  [[ "$("${_NB}" settings get NB_DIR)" == '/tmp/path/to/data/dir' ]]
+  [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == '/tmp/path/to/data/dir' ]]
 }
 
 @test "\`settings set NB_DIR\` with spaces sets and exits." {
@@ -323,7 +325,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_DIR                  ]]
   [[ "${output}" =~ set\ to                 ]]
   [[ "${output}" =~ /tmp/path\ to\ data/dir ]]
-  [[ "$("${_NB}" settings get NB_DIR)" == '/tmp/path to data/dir' ]]
+  [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == '/tmp/path to data/dir' ]]
 }
 
 @test "\`settings set NB_DIR\` with unquoted ~/ sets with \$HOME." {
@@ -339,7 +341,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_DIR            ]]
   [[ "${output}" =~ set\ to           ]]
   [[ "${output}" =~ ${HOME}/tmp/path  ]]
-  [[ "$("${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path" ]]
+  [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path" ]]
 }
 
 @test "\`settings set NB_DIR\` with quoted ~/ sets with \$HOME." {
@@ -355,7 +357,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_DIR            ]]
   [[ "${output}" =~ set\ to           ]]
   [[ "${output}" =~ ${HOME}/tmp/path  ]]
-  [[ "$("${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path" ]]
+  [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path" ]]
 }
 
 @test "\`settings set NB_DIR\` with invalid directory exits with error." {
@@ -369,7 +371,7 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   [[ "${output}" =~ \'\/\'\ is\ not\ a\ valid\ location\ for\ NB_DIR\. ]]
-  [[ ! "$("${_NB}" settings get NB_DIR)" == "/" ]]
+  [[ ! "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == "/" ]]
 }
 
 # `set NB_ENCRYPTION_TOOL` #################################################
@@ -387,7 +389,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_ENCRYPTION_TOOL  ]]
   [[ "${output}" =~ set\ to             ]]
   [[ "${output}" =~ gpg                 ]]
-  [[ "$("${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
+  [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
 @test "\`settings set NB_ENCRYPTION_TOOL\` with invalid argument exits with error." {
@@ -409,7 +411,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_ENCRYPTION_TOOL        ]]
   [[ "${output}" =~ must\ be\ either          ]]
   [[ "${output}" =~ \'openssl\'\ or\ \'gpg\'  ]]
-  [[ "$("${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
+  [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
 # `set NB_ACCENT_COLOR` #######################################################
@@ -428,7 +430,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to             ]]
   [[ "${output}" =~ 123                 ]]
   printf "NB_ACCENT_COLOR: %s\\n" "$("${_NB}" settings get NB_ACCENT_COLOR)"
-  [[ "$("${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
+  [[ "$(NB_ACCENT_COLOR='' "${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
 }
 
 @test "\`settings set NB_ACCENT_COLOR\` with invalid argument exits with error." {
@@ -441,7 +443,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_ACCENT_COLOR     ]]
   [[ "${output}" =~ set\ to             ]]
   [[ "${output}" =~ 123                 ]]
-  [[ "$("${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
+  [[ "$(NB_ACCENT_COLOR='' "${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
 
   run "${_NB}" settings set NB_ACCENT_COLOR invalid-color
 
@@ -450,7 +452,7 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 1 ]]
   [[ "${output}" =~ 'NB_ACCENT_COLOR must be a number.' ]]
   printf "NB_ACCENT_COLOR: %s\\n" "$("${_NB}" settings get NB_ACCENT_COLOR)"
-  [[ "$("${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
+  [[ "$(NB_ACCENT_COLOR='' "${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
 }
 
 # `set NB_HIGHLIGHT_COLOR` #################################################
@@ -469,7 +471,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to             ]]
   [[ "${output}" =~ 123                 ]]
   printf "NB_HIGHLIGHT_COLOR: %s\\n" "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)"
-  [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
+  [[ "$(NB_HIGHLIGHT_COLOR='' "${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 }
 
 @test "\`settings set NB_HIGHLIGHT_COLOR\` with invalid argument exits with error." {
@@ -482,7 +484,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_HIGHLIGHT_COLOR  ]]
   [[ "${output}" =~ set\ to             ]]
   [[ "${output}" =~ 123                 ]]
-  [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
+  [[ "$(NB_HIGHLIGHT_COLOR='' "${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 
   run "${_NB}" settings set NB_HIGHLIGHT_COLOR invalid-color
 
@@ -491,7 +493,7 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 1 ]]
   [[ "${output}" =~ 'NB_HIGHLIGHT_COLOR must be a number.' ]]
   printf "NB_HIGHLIGHT_COLOR: %s\\n" "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)"
-  [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
+  [[ "$(NB_HIGHLIGHT_COLOR='' "${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 }
 
 # `set NB_THEME` ##############################################################
@@ -510,7 +512,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to   ]]
   [[ "${output}" =~ console   ]]
   printf "NB_THEME: %s\\n" "$("${_NB}" settings get NB_THEME)"
-  [[ "$("${_NB}" settings get NB_THEME)" == 'console' ]]
+  [[ "$(NB_THEME='' "${_NB}" settings get NB_THEME)" == 'console' ]]
 }
 
 @test "\`settings set NB_THEME\` with invalid argument exits with error." {
@@ -523,7 +525,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_THEME                          ]]
   [[ "${output}" =~ set\ to                           ]]
   [[ "${output}" =~ forest                            ]]
-  [[ "$("${_NB}" settings get NB_THEME)" == 'forest'  ]]
+  [[ "$(NB_THEME='' "${_NB}" settings get NB_THEME)" == 'forest'  ]]
 
   run "${_NB}" settings set NB_THEME invalid-theme
 
@@ -532,7 +534,7 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 1 ]]
   [[ "${output}" =~ 'NB_THEME must be one of the available themes.' ]]
   printf "NB_THEME: %s\\n" "$("${_NB}" settings get NB_THEME)"
-  [[ "$("${_NB}" settings get NB_THEME)" == 'forest' ]]
+  [[ "$(NB_THEME='' "${_NB}" settings get NB_THEME)" == 'forest' ]]
 }
 
 # `list` ######################################################################
@@ -612,8 +614,8 @@ skip "Determine how to test interactive prompt."
   {
     "${_NB}" init
     run "${_NB}" settings set EDITOR sample
-    [[ "$("${_NB}" settings get EDITOR)" == 'sample'  ]]
-    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'   ]]
+    [[ "$(EDITOR='' "${_NB}" settings get EDITOR)" == 'sample'  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-sample}"'  ]]
   }
 
   run "${_NB}" settings unset EDITOR
@@ -622,8 +624,9 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
   [[ ${status} -eq 0 ]]
-  [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"' ]]
-  [[ "${output}" =~ EDITOR                          ]]
-  [[ "${output}" =~ restored\ to\ the\ default      ]]
-  [[ ! "${output}" =~ sample                        ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'             ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-sample}"'  ]]
+  [[ "${output}" =~ EDITOR                                      ]]
+  [[ "${output}" =~ restored\ to\ the\ default                  ]]
+  [[ ! "${output}" =~ sample                                    ]]
 }
