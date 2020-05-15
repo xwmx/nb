@@ -385,13 +385,19 @@ then
   export NB_HIGHLIGHT_COLOR=39
 fi
 
+if [[ "${NB_THEME}" == "console" ]]
+then
+  export NB_ACCENT_COLOR=22
+  export NB_HIGHLIGHT_COLOR=40
+fi
+
 if [[ "${NB_THEME}" == "desert" ]]
 then
   export NB_ACCENT_COLOR=94
   export NB_HIGHLIGHT_COLOR=179
 fi
 
-if [[ "${NB_THEME}" == "electron" ]]
+if [[ "${NB_THEME}" == "electro" ]]
 then
   export NB_ACCENT_COLOR=27
   export NB_HIGHLIGHT_COLOR=165
@@ -399,11 +405,11 @@ fi
 
 if [[ "${NB_THEME}" == "forest" ]]
 then
-  export NB_ACCENT_COLOR=22
-  export NB_HIGHLIGHT_COLOR=40
+  export NB_ACCENT_COLOR=94
+  export NB_HIGHLIGHT_COLOR=29
 fi
 
-if [[ "${NB_THEME}" == "nb" ]]
+if [[ "${NB_THEME}" == "default" ]]
 then
   export NB_ACCENT_COLOR=8
   export NB_HIGHLIGHT_COLOR=68
@@ -423,6 +429,7 @@ fi
 
 export _NB_THEMES=(
   blacklight
+  console
   desert
   electron
   forest
@@ -431,6 +438,19 @@ export _NB_THEMES=(
   raspberry
 )
 
+# User defined themes can be installed in the $NB_DIR/.themes directory.
+# Themes have an .nb-theme or .nb-theme.sh extension and contain a single
+# if statment assigning the color environment variables to tput ANSI color
+# numbers. Example:
+#
+#     # filename: ~/.nb/.themes/example-theme-name.nb-theme.sh
+#     if [[ "${NB_THEME}" == "example-theme-name" ]]
+#     then
+#       export NB_ACCENT_COLOR=8
+#       export NB_HIGHLIGHT_COLOR=68
+#     fi
+#
+#  To view a list of available color numbers, run `nb settings colors`
 if [[ -d "${NB_DIR}/.themes" ]]
 then
   set +f
