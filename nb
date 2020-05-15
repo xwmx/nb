@@ -1514,7 +1514,7 @@ _get_title() {
 
   if [[ -z "${_path}" ]]
   then
-    _exit_1 printf "Usage: _get_title <path>\\n"
+    return 1
   elif [[ -e "${_path}" ]]
   then
     if _file_is_text "${_path}"
