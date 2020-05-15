@@ -1320,7 +1320,7 @@ _get_first_line() {
 
   if [[ -z "${_path}" ]]
   then
-    _exit_1 printf "Usage: _get_first_line <path>\\n"
+    return 1
   elif [[ -e "${_path}" ]]
   then
     if _file_is_text "${_path}"
