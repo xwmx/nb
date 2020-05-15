@@ -41,6 +41,12 @@ setup() {
 
   export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
+  # `$_ERROR_PREFIX`
+  #
+  # The color string added to error messages by `_exit_1` and `_return_1`.
+  export _ERROR_PREFIX=
+  _ERROR_PREFIX="$(tput setaf 1)!$(tput sgr0)"
+
   if [[ -z "${EDITOR:-}" ]] || [[ ! "${EDITOR:-}" =~ mock_editor ]]
   then
     export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor"

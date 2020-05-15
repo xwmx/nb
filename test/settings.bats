@@ -430,7 +430,7 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" == 'NB_HIGHLIGHT_COLOR must be a number.' ]]
+  [[ "${output}" =~ 'NB_HIGHLIGHT_COLOR must be a number.' ]]
   printf "NB_HIGHLIGHT_COLOR: %s\\n" "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)"
   [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 }

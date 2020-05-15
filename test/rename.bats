@@ -32,7 +32,7 @@ _setup_rename() {
   ! git log | grep -q '\[nb\] Rename'
 
   # Prints help
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:       ]]
   [[ "${lines[1]}" =~ "  nb rename" ]]
 }
 
@@ -494,6 +494,6 @@ _setup_rename() {
   run "${_NB}" help rename
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ \nb\ rename ]]
 }

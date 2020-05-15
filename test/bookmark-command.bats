@@ -59,7 +59,8 @@ load test_helper
   ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
-  [[ "${lines[0]}" == "Unable to download page at $(_highlight "http invalid url")" ]]
+  _message="${_ERROR_PREFIX} Unable to download page at $(_highlight "http invalid url")"
+  [[ "${lines[0]}" == "${_message}" ]]
 }
 
 @test "\`bookmark <query>\` command exits with 0 and displays a list of bookmarks with titles." {

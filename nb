@@ -234,22 +234,37 @@ _debug() {
 }
 
 ###############################################################################
-# Die
+# Error Messaging
 ###############################################################################
 
-# _die()
+# _exit_1()
 #
 # Usage:
-#   _die printf "Error message. Variable: %s\\n" "$0"
+#   _exit_1 <command>
 #
-# A simple function for exiting with an error after executing the specified
-# command. The command is expected to print a message and should typically
-# be either `echo`, `printf`, or `cat`.
-_die() {
-  # Prefix die message with "cross mark (U+274C)", often displayed as a red x.
-  printf "❌  "
+# Description:
+#   Exit with status 1 after executing the specified with output redirected
+#   to standard error. The command is expected to print a message and should
+#   typically be either `echo`, `printf`, or `cat`.
+_exit_1() {
+  printf "%s " "$(tput setaf 1)!$(tput sgr0)"
   "${@}" 1>&2
   exit 1
+}
+
+# _return_1()
+#
+# Usage:
+#   _return_1 <command>
+#
+# Description:
+#   Return with status 1 after executing the specified with output redirected
+#   to standard error. The command is expected to print a message and should
+#   typically be either `echo`, `printf`, or `cat`.
+_return_1() {
+  printf "%s " "$(tput setaf 1)!$(tput sgr0)"
+  "${@}" 1>&2
+  return 1
 }
 
 ###############################################################################
@@ -308,7 +323,7 @@ if [[ -z "${NB_DIR:?}"   ]] ||
      [[ ! -w "${NB_DIR}" ]]
    }
 then
-  cat <<HEREDOC
+  _exit_1 cat <<HEREDOC
 NB_DIR is not valid:
   ${NB_DIR}
 
@@ -319,7 +334,6 @@ Alternatively, set NB_DIR to a new location where you'd like to store your
 notes and bookmarks. For example:
   ${_ME} settings set nb_dir ~/Notebooks
 HEREDOC
-  exit 1
 fi
 
 # $NB_AUTO_SYNC
@@ -478,7 +492,7 @@ _highlight() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
   then
-    _die printf "Usage: _highlight <string> [--underline]"
+    _exit_1 printf "Usage: _highlight <string> [--underline]"
   fi
 
   if [[ "${2:-}" == "--underline" ]]
@@ -511,7 +525,7 @@ _highlight_accent() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
   then
-    _die printf "Usage: _highlight_accent <string>"
+    _exit_1 printf "Usage: _highlight_accent <string>"
   fi
 
   printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
@@ -678,7 +692,7 @@ _get_hash() {
   then
     _get_hash_with_command "${_path}" "md5 -q"
   else
-    _die printf "No hashing tool found.\\n"
+    _exit_1 printf "No hashing tool found.\\n"
   fi
 }
 
@@ -692,6 +706,26 @@ _get_hash() {
 #   1  The argument is blank or matches as an option flag.
 __option_value_is_present() {
   [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+}
+
+# __option_get_value()
+#
+# Usage:
+#   __option_get_value <option> <value>
+#
+# Description:
+#  Given a flag (e.g., -e | --example) return the value or exit 1 if value
+#  is blank or appears to be another option.
+__option_get_value() {
+  local __arg="${1:-}"
+  local __val="${2:-}"
+
+  if [[ -n "${__val:-}" ]] && [[ ! "${__val:-}" =~ ^- ]]
+  then
+    printf "%s\\n" "${__val}"
+  else
+    _exit_1 printf "%s requires a valid argument.\\n" "$(_highlight "${__arg}")"
+  fi
 }
 
 ###############################################################################
@@ -797,8 +831,7 @@ _decrypt_file() {
 
   if [[ -z "${_password}" ]]
   then
-    printf "Password required.\\n"
-    return 1
+    _return_1 printf "Password required.\\n"
   fi
 
   if [[ -z "${_encrypted_path}" ]]
@@ -830,9 +863,8 @@ _decrypt_file() {
           --output "${_unencrypted_path}" \
           --decrypt "${_encrypted_path}"
     else
-      printf "\
+      _return_1 printf "\
 This note was encrypted with GPG, but the GPG command was not found.\\n"
-      return 1
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
   then
@@ -844,14 +876,12 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
         rm "${_unencrypted_path}"
   else
-    printf "Unable to decrypt file.\\n"
-    return 1
+    _return_1 printf "Unable to decrypt file.\\n"
   fi
 
   if [[ ! -e "${_unencrypted_path}" ]]
   then
-    printf "Decryption error.\\n" 1>&2
-    return 1
+    _return_1 printf "Decryption error.\\n" 1>&2
   fi
 
   printf "%s\\n" "${_unencrypted_path}"
@@ -942,17 +972,15 @@ _edit_file() {
 
   if _file_is_encrypted "${_file_path}"
   then
-    printf "\
+    _exit_1 printf "\
 File must be decrypted before editing.\\n"
-    exit 1
   fi
 
   if _file_is_archive "${_file_path}" &&
      [[ ! "${_file_path}" =~ docx$ ]]
   then
-    printf "\
+    _exit_1 printf "\
 Can't edit archives. Export archive and expand to edit.\\n"
-    exit 1
   fi
 
   if ! _file_is_text "${_file_path}"
@@ -993,15 +1021,13 @@ _encrypt_file() {
 
   if [[ -z "${_password}" ]]
   then
-    printf "Password required.\\n"
-    return 1
+    _return_1 printf "Password required.\\n"
   fi
 
   if [[ -z "${_decrypted_path}" ]] ||
      [[ -z "${_encrypted_path}" ]]
   then
-    printf "Encrypted and decripted paths required.\\n"
-    return 1
+    _return_1 printf "Encrypted and decripted paths required.\\n"
   fi
 
   if [[ "${NB_ENCRYPTION_TOOL}" == "gpg" ]]
@@ -1023,14 +1049,13 @@ _encrypt_file() {
       -out "${_encrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
-    printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
-    return 1
+    _return_1 \
+      printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
   then
-    printf "Encryption error.\\n"
-    return 1
+    _return_1 printf "Encryption error.\\n"
   fi
 }
 
@@ -1274,7 +1299,7 @@ _get_first_line() {
 
   if [[ -z "${_path}" ]]
   then
-    _die printf "Usage: _get_first_line <path>\\n"
+    _exit_1 printf "Usage: _get_first_line <path>\\n"
   elif [[ -e "${_path}" ]]
   then
     if _file_is_text "${_path}"
@@ -1485,7 +1510,7 @@ _get_title() {
 
   if [[ -z "${_path}" ]]
   then
-    _die printf "Usage: _get_title <path>\\n"
+    _exit_1 printf "Usage: _get_title <path>\\n"
   elif [[ -e "${_path}" ]]
   then
     if _file_is_text "${_path}"
@@ -1632,7 +1657,7 @@ _git_checkpoint() {
   # Usage: _git_checkpoint_commit <message>
   _git_checkpoint_commit() {
     [[ -z "${1:-}" ]] &&
-      _die printf "Usage: _git_checkpoint_commit <message>"
+      _exit_1 printf "Usage: _git_checkpoint_commit <message>"
     _debug printf \
       "_git_checkpoint() \$(ls -la): '%s'\\n" \
       "$(ls -la)"
@@ -1682,8 +1707,7 @@ _git_checkpoint() {
 
   if [[ -z "${_message}" ]]
   then
-    _die printf "Usage: _git_checkpoint <message>\\n"
-    return 1
+    _exit_1 printf "Usage: _git_checkpoint <message>\\n"
   fi
 
   if [[ -n "${2:-}" ]] && [[ "${2}" == "--spinner" ]]
@@ -1692,7 +1716,7 @@ _git_checkpoint() {
   fi
 
   cd "${_target_directory}" ||
-    _die printf "_git_checkpoint() \`cd\` failed.\\n"
+    _exit_1 printf "_git_checkpoint() \`cd\` failed.\\n"
 
   _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
 
@@ -1736,7 +1760,7 @@ _git_index_is_dirty() {
   fi
 
   cd "${_target_directory}" ||
-    _die printf "_git_index_is_dirty() \`cd\` failed.\\n"
+    _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
   [[ -n "$(git status --porcelain)" ]]
 }
 
@@ -1746,18 +1770,17 @@ _git_index_is_dirty() {
 #   _git_required
 #
 # Description:
-#   Exit with `_die` if `git` isn't found.
+#   Exit with `_exit_1` if `git` isn't found.
 _git_required() {
   if ! _command_exists "git"
   then
-    cat <<HEREDOC
+    _exit_1 cat <<HEREDOC
 Welcome to $(_highlight "${_ME}")!
 
 Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
 
 About Git: https://git-scm.com/
 HEREDOC
-    return 1
   fi
 
   local _git_name=
@@ -1821,7 +1844,7 @@ _git_should_autosync() {
     return 1
   fi
 
-  cd "${_NOTEBOOK_PATH}" || _die printf "\`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "\`cd\` failed.\\n"
   if ! git config --get remote.origin.url &>/dev/null
   then # there is no remote configured.
     return 1
@@ -2180,7 +2203,7 @@ _spinner() {
 
   if [[ -z "${_pid}" ]]
   then
-    _die printf "Usage: _spinner <pid>\\n"
+    _exit_1 printf "Usage: _spinner <pid>\\n"
   fi
 
   while ps a | awk '{print $1}' | grep -q "${_pid}"
@@ -2242,11 +2265,11 @@ _string_is_url() {
 # one has been set.
 desc() {
   set +e
-  [[ -z "${1:-}" ]] && _die printf "desc(): No command name specified.\\n"
+  [[ -z "${1:-}" ]] && _exit_1 printf "desc(): No command name specified.\\n"
 
   if [[ "${1}" == "--get" ]]
   then # get ------------------------------------------------------------------
-    [[ -z "${2:-}" ]] && _die printf "desc(): No command name specified.\\n"
+    [[ -z "${2:-}" ]] && _exit_1 printf "desc(): No command name specified.\\n"
 
     local _name="${2:-}"
     local _desc_var="___desc_${_name}"
@@ -2545,14 +2568,8 @@ _add() {
 
     case "${__arg}" in
       -c|--content)
-        if __option_value_is_present "${__val:-}"
-        then
-          _content="${__val:-}"
-          shift
-        else
-          _help add
-          return 1
-        fi
+        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --edit)
         _edit_before_save=1
@@ -2561,44 +2578,20 @@ _add() {
         _encrypt=1
         ;;
       -f|--filename)
-        if __option_value_is_present "${__val:-}"
-        then
-          _filename="${__val:-}"
-          shift
-        else
-          _help add
-          return 1
-        fi
+        _filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --password)
-        if __option_value_is_present "${__val:-}"
-        then
-          _password="${__val:-}"
-          shift
-        else
-          _help add
-          return 1
-        fi
+        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       -t|--title)
-        if __option_value_is_present "${__val:-}"
-        then
-          _title="${__val:-}"
-          shift
-        else
-          _help add
-          return 1
-        fi
+        _title="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --type)
-        if __option_value_is_present "${__val:-}"
-        then
-          _file_type="${__val:-}"
-          shift
-        else
-          _help add
-          return 1
-        fi
+        _file_type="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       *)
         if [[ -z "${_maybe_filename_or_title:-}" ]]
@@ -2648,8 +2641,7 @@ _add() {
 
       if [[ -z "${_password:-}" ]]
       then
-        printf "Password required.\\n"
-        return 1
+        _exit_1 printf "Password required.\\n"
       fi
     fi
 
@@ -2819,14 +2811,8 @@ _bookmark() {
 
     case "${__arg}" in
       -c|--comment)
-        if __option_value_is_present "${__val:-}"
-        then
-          _comment="${__val:-}"
-          shift
-        else
-          _help "bookmark"
-          return 1
-        fi
+        _comment="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --edit)
         _edit_before_save=1
@@ -2835,14 +2821,8 @@ _bookmark() {
         _encrypt=1
         ;;
       --password)
-        if __option_value_is_present "${__val:-}"
-        then
-          _password="${__val:-}"
-          shift
-        else
-          _help edit
-          return 1
-        fi
+        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --raw-content)
         _raw_content=1
@@ -2851,34 +2831,16 @@ _bookmark() {
         _skip_content=1
         ;;
       --tags)
-        if __option_value_is_present "${__val:-}"
-        then
-          _tag_list="${__val:-}"
-          shift
-        else
-          _help "bookmark"
-          return 1
-        fi
+        _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --title)
-        if __option_value_is_present "${__val:-}"
-        then
-          _title="${__val:-}"
-          shift
-        else
-          _help "bookmark"
-          return 1
-        fi
+        _title="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --via|--also|--related)
-        if __option_value_is_present "${__val:-}"
-        then
-          _related_urls+=("${__val:-}")
-          shift
-        else
-          _help "bookmark"
-          return 1
-        fi
+        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
+        shift
         ;;
       delete)
         _delete "${__val:-}" "${3:-}"
@@ -2916,8 +2878,9 @@ _bookmark() {
 
           shift
         else
-          _help "bookmark"
-          return 1
+          _exit_1 \
+            printf "%s requires a valid argument.\\n"  \
+            "$(_highlight "bookmark ${__arg}")"
         fi
         ;;
       *)
@@ -2962,8 +2925,7 @@ _bookmark() {
     _basename="$(_get_selection_basename "${_selection}")"
     if [[ -z "${_basename}" ]]
     then
-      printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-      return 1
+      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     fi
     _set_selection_notebook "${_selection}"
 
@@ -3012,8 +2974,7 @@ _bookmark() {
 
       if [[ -z "${_password}" ]]
       then
-        printf "Password required.\\n"
-        return 1
+        _exit_1 printf "Password required.\\n"
       fi
 
       _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
@@ -3071,8 +3032,8 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
         then
           _target_url="${_wayback_response}"
         else
-          printf "No archived version available from the Wayback Machine.\\n"
-          return 1
+          _exit_1 \
+            printf "No archived version available from the Wayback Machine.\\n"
         fi
       fi
     fi
@@ -3103,8 +3064,7 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
 
         return 0
       else
-        printf "Terminal web browser not detected.\\n"
-        return 1
+        _exit_1 printf "Terminal web browser not detected.\\n"
       fi
     # `bookmark open`
     elif [[ "${_subcommand}" == "open" ]]
@@ -3118,10 +3078,9 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
         open "${_target_url}"
         return 0
       else
-        printf \
+        _exit_1 printf \
           "%s doesn't know how to open URLs on your system.\\n" \
           "$(_highlight "${_ME}")"
-        return 1
       fi
     # `bookmark url`
     elif [[ "${_subcommand}" == "url" ]]
@@ -3168,8 +3127,8 @@ HEREDOC
   if ! _page_content="$(_download_from "${_url}")" &&
      [[ -z "${_page_content:-}" ]]
   then
-    printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
-    return 1
+    _exit_1 \
+      printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
   fi
 
   if [[ -z "${_title}" ]]
@@ -3389,8 +3348,7 @@ _completions() {
 
     if ! ((_exists))
     then
-      printf "Completion scripts not found.\\n"
-      return 1
+      _exit_1 printf "Completion scripts not found.\\n"
     fi
   }
 
@@ -3449,8 +3407,7 @@ _completions() {
 
     if [[ -z "${_REPO:-}" ]] || [[ -z "${_REPO_RAW_URL:-}" ]]
     then
-      printf "Source Git repository not configured.\\n"
-      return 1
+      _exit_1 printf "Source Git repository not configured.\\n"
     fi
 
     for _shell in bash zsh
@@ -3466,9 +3423,8 @@ _completions() {
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
           then
-            printf "Unable to download Completion script from %s\\n" \
+            _exit_1 printf "Unable to download Completion script from %s\\n" \
               "${_completion_source}"
-            return 1
           fi
         fi
       fi
@@ -3638,26 +3594,17 @@ _delete() {
   _debug printf "_delete() \${_selection}: '%s'\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    _help "delete"
-    return 1
+    _exit_1 _help "delete"
   fi
 
   _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
-    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-    return 1
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
   fi
 
   _set_selection_notebook "${_selection}"
-
-  if [[ -z "${_basename}" ]]
-  then
-    _help "delete"
-    return 1
-  fi
-  _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
 
   local _id
   _id="$(_index get_id "${_basename}")"
@@ -3700,7 +3647,7 @@ _delete() {
 
   if [[ -n "${_basename}" ]] && [[ -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then # `$_basename` is assigned and a note exists with that name.
-    cd "${_NOTEBOOK_PATH}" || _die printf "_delete() \`cd\` failed.\\n"
+    cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_delete() \`cd\` failed.\\n"
 
     if [[ -d "${_NOTEBOOK_PATH}/${_basename}" ]] &&
        [[ -z "$(ls -A "${_NOTEBOOK_PATH}/${_basename}")" ]]
@@ -3717,8 +3664,7 @@ _delete() {
       printf "Deleted %s\\n" "${_note_info_line}"
     fi
   else
-    printf "Selection not found.\\n"
-    return 1
+    _exit_1 printf "Selection not found.\\n"
   fi
 }
 _alias_subcommand "delete" "d"
@@ -3763,24 +3709,12 @@ _edit() {
 
     case "${__arg}" in
       -e|--editor)
-        if __option_value_is_present "${__val:-}"
-        then
-          _local_editor="${__val:-}"
-          shift
-        else
-          _help edit
-          return 1
-        fi
+        _local_editor="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --password)
-        if __option_value_is_present "${__val:-}"
-        then
-          _password="${__val:-}"
-          shift
-        else
-          _help edit
-          return 1
-        fi
+        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       *)
         if [[ -z "${_selection:-}" ]]
@@ -3796,16 +3730,14 @@ _edit() {
   _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
   if [[ -z "${_selection:-}" ]]
   then
-    _help "edit"
-    return 1
+    _exit_1 _help "edit"
   fi
 
   _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
-    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-    return 1
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
   fi
 
   _set_selection_notebook "${_selection}"
@@ -3911,8 +3843,7 @@ _edit() {
       fi
     fi
   else
-    printf "Selection not found.\\n"
-    return 1
+    _exit_1 printf "Selection not found.\\n"
   fi
 }
 _alias_subcommand "edit" "e"
@@ -4070,8 +4001,7 @@ _export() {
 
   if [[ -z "${_selection:-}" ]]
   then
-    _help "export"
-    return 1
+    _exit_1 _help "export"
   fi
   _debug printf "_export() \${_selection}: %s\\n" "${_selection}"
 
@@ -4087,8 +4017,7 @@ _export() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_NOTEBOOK_PATH}/${_basename:-}" ]]
   then
-    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-    return 1
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
   fi
   _debug printf "_export() \${_basename}: %s\\n" "${_basename}"
 
@@ -4103,14 +4032,12 @@ _export() {
         pandoc "${_NOTEBOOK_PATH}/${_basename}"
       fi
     else
-      printf "Pandoc required. http://pandoc.org/\\n"
-      return 1
+      _exit_1 printf "Pandoc required. http://pandoc.org/\\n"
     fi
   else
     if [[ -z "${_target_path:-}" ]]
     then
-      _help "export"
-      return 1
+      _exit_1 _help "export"
     fi
     _debug printf "_export() \${target_path}: %s\\n" "${_target_path}"
 
@@ -4174,7 +4101,7 @@ Description:
   Alias for \`git\` within the current notebook.
 HEREDOC
 _git() {
-  cd "${_NOTEBOOK_PATH}" || _die printf "_git() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_git() \`cd\` failed.\\n"
   git "${@}"
 }
 
@@ -4195,7 +4122,7 @@ Examples:
   ${_ME} history example.md
 HEREDOC
 _history() {
-  cd "${_NOTEBOOK_PATH}" || _die printf "_history() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
   local _log_command="git log"
   if _command_exists "tig"
@@ -4259,12 +4186,10 @@ _import() {
   _import_validate_path() {
     if [[ -z "${1:-}" ]]
     then
-      _help import
-      return 1
+      _exit_1 _help "import"
     elif [[ ! -e "${1:-}" ]]
     then
-      printf "File not found: %s\\n" "${1:-}"
-      return 1
+      _exit_1 printf "File not found: %s\\n" "${1:-}"
     fi
   }
 
@@ -4362,14 +4287,12 @@ _import() {
               --to markdown           \
               -o "${_NOTEBOOK_PATH}/${_basename}"
         then
-          printf "Unable to download: %s\\n" "${_url}"
-          return 1
+          _exit_1 printf "Unable to download: %s\\n" "${_url}"
         fi
       else
         if ! _download_from "${_url}" "${_NOTEBOOK_PATH}/${_basename}"
         then
-          printf "Unable to download: %s\\n" "${_url}"
-          return 1
+          _exit_1 printf "Unable to download: %s\\n" "${_url}"
         fi
       fi &&
         _index add "${_basename}" &&
@@ -4400,8 +4323,7 @@ ${_url}
       return 0
       ;;
     *)
-      _help import
-      return 1
+      _exit_1 _help "import"
       ;;
   esac
 }
@@ -4459,14 +4381,12 @@ _index() {
       local _basename="${2:-}"
       if [[ -z "${_basename}" ]]
       then
-        _help index
-        return 1
+        _exit_1 _help index
       fi
 
       if [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
       then
-        printf "File not found: %s\\n" "${_basename}"
-        return 1
+        _exit_1 printf "File not found: %s\\n" "${_basename}"
       fi
 
       if ! grep -q "^${_basename}$" "${_index_path}"
@@ -4481,8 +4401,7 @@ _index() {
 
       if [[ -z "${_basename}" ]]
       then
-        _help index
-        return 1
+        _exit_1 _help index
       fi
 
       if grep -q "^${_basename}$" "${_index_path}"
@@ -4506,8 +4425,7 @@ _index() {
       local _id_number="${2:-}"
       if [[ -z "${_id_number}" ]]
       then
-        _help index
-        return 1
+        _exit_1 _help index
       fi
 
       local _basename
@@ -4658,8 +4576,7 @@ _index() {
       local _new_basename="${3:-}"
       if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
       then
-        _help index
-        return 1
+        _exit_1 _help index
       fi
 
       if grep -q "^${_old_basename}$" "${_index_path}"
@@ -4711,9 +4628,9 @@ _index() {
 
       if ! ((_valid))
       then
-        printf "Index corrupted. To fix, run:\\n  %s index reconcile\\n" \
+        _exit_1 \
+          printf "Index corrupted. To fix, run:\\n  %s index reconcile\\n" \
           "${_ME}"
-        return 1
       fi
       ;;
     *)
@@ -4764,11 +4681,10 @@ _init() {
         "${NB_DIR}"
     elif [[ -e "${NB_DIR}" ]]
     then
-      cat <<HEREDOC
+      _exit_1 cat <<HEREDOC
 Unable to set up the $(_highlight "${_ME}") data directory. File exists at:
 ${NB_DIR}
 HEREDOC
-      return 1
     else
       mkdir -p "${NB_DIR}"
       printf "Created %s\\n" "${NB_DIR}"
@@ -4810,20 +4726,18 @@ HEREDOC
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
   then
-    printf "NB_DIR exists and is not a directory: %s\\n" \
+    _exit_1 printf "NB_DIR exists and is not a directory: %s\\n" \
       "${NB_DIR}"
-    return 1
   fi
 
   if [[ -d "${_GLOBAL_NOTEBOOK_PATH}" ]]
   then
-    cat <<HEREDOC
+    _exit_1 cat <<HEREDOC
 $(_highlight "${_ME}") already initialized. To initialize a local notebook, use:
   $(_highlight "${_ME} notebooks init")
 More information:
   $(_highlight "${_ME} help notebooks")
 HEREDOC
-    return 1
   fi
 
   _init_print_header        &&
@@ -4946,14 +4860,8 @@ _list() {
         : # Do nothing. This is now the default behavior. TODO: Remove.
         ;;
       -t|--type)
-        if __option_value_is_present "${__val:-}"
-        then
-          _type="${__val:-}"
-          shift
-        else
-          _help "list"
-          return 1
-        fi
+        _type="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       *)
         _debug printf "_list() *: '%s'\\n" "${__arg:-}"
@@ -5299,8 +5207,7 @@ HEREDOC
 
     if ! ((_counter)) && [[ -n "${_selection:-}" ]]
     then
-      printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-      return 1
+      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     fi
   fi
 }
@@ -5778,8 +5685,7 @@ _move() {
   _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
   if [[ -z "${_selection:-}" ]] || [[ -z "${_target_notebook:-}" ]]
   then
-    _help "move"
-    return 1
+    _exit_1 _help "move"
   fi
 
   if [[ "${_target_notebook}" =~ :$ ]]
@@ -5803,16 +5709,13 @@ _move() {
   if [[ -z "${_basename}" ]] ||
      [[ ! -e "${_target_notebook_path}/.git" ]]
   then
-    _help "move"
-    return 1
+    _exit_1 _help "move"
   elif [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then
-    printf "Not Found: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
-    return 1
+    _exit_1 printf "Not Found: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
   elif [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
-    printf "Already exists: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
-    return 1
+    _exit_1 printf "Already exists: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
   fi
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
@@ -5948,14 +5851,12 @@ _notebooks() {
     local _name="${1:-}"
     if [[ -z "${_name}" ]]
     then
-      _help notebooks
-      return 1
+      _exit_1 _help notebooks
     fi
 
     if [[ -e "${NB_DIR}/${_name}" ]]
     then
-      printf "Already exists: %s\\n" "$(_highlight "${_name}")"
-      return 1
+      _exit_1 printf "Already exists: %s\\n" "$(_highlight "${_name}")"
     fi
 
     local _repo_url="${2:-}"
@@ -6007,15 +5908,13 @@ _notebooks() {
     local _name="${1:-}"
     if [[ -z "${_name}" ]] || [[ "${_name}" =~ ^\-f$|^\-\-force$ ]]
     then
-      _help notebooks
-      return 1
+      _exit_1 _help notebooks
     elif [[ "${_name}" == "local"          ]] &&
          [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
     then
-      cat <<HEREDOC
+      _exit_1 cat <<HEREDOC
 Use your system's shell or file explorer to delete local notebook directories.
 HEREDOC
-      return 1
     fi
 
     local _force=0
@@ -6028,8 +5927,7 @@ HEREDOC
        [[ ! -e "${NB_DIR}/${_name}/.git"   ]] ||
        [[ ! -e "${NB_DIR}/${_name}/.index" ]]
     then
-      printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
-      return 1
+      _exit_1 printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
     fi
 
     local _notebook_names=
@@ -6098,13 +5996,12 @@ Please type $(_highlight "${_name}") to confirm: " __response
     local _name="${1:-}"
     if [[ -z "${_name:-}" ]]
     then
-      _help "notebooks" && return 1
+      _exit_1 _help "notebooks"
     fi
 
     if [[ ! -d "${NB_DIR}/${_name}" ]]
     then
-      printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
-      return 1
+      _exit_1 printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
     fi
 
     local _target_path="${2:-}"
@@ -6143,7 +6040,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     local _path="${1:-}"
     if [[ -z "${_path:-}" ]]
     then
-      _help "notebooks" && return 1
+      _exit_1 _help "notebooks"
     fi
 
     local _basename=
@@ -6156,8 +6053,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ ! -d "${_path}" ]]
     then
-      printf "Not a directory %s" "$(_highlight "${_path}")"
-      return 1
+      _exit_1 printf "Not a directory %s" "$(_highlight "${_path}")"
     fi
 
     local _target_basename="${2:-}"
@@ -6196,9 +6092,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ -n "${_remote_url:-}" ]] && [[ -z "${_path}" ]]
     then
-      printf "Must specify a <path> when cloning from <remote-url>.\\n"
-      _help "notebooks"
-      return 1
+      _exit_1 printf \
+        "Must specify a <path> when cloning from <remote-url>.\\n%s\\n" \
+        "$(_help "notebooks")"
     fi
 
     if [[ -n "${_path:-}" ]]
@@ -6213,8 +6109,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         mkdir -p "${_path}"
       elif [[ -f "${_path}" ]]
       then
-        printf "File already exists: %s\\n" "$(_highlight "${_path}")"
-        return 1
+        _exit_1 printf "File already exists: %s\\n" "$(_highlight "${_path}")"
       fi
     else
       _path="${_CURRENT_WORKING_DIR}"
@@ -6223,14 +6118,16 @@ Please type $(_highlight "${_name}") to confirm: " __response
     if [[ -d "${_path}"       ]] &&
        [[ -d "${_path}/.git"  ]]
     then
+      local _error_message=
       if [[ -f "${_path}/.index" ]]
       then
         printf "Notebook exists: %s\\n" "$(_highlight "${_path}")"
+        _error_message="Notebook exists: $(_highlight "${_path}")"
       else
-        printf "Git repository exists: %s\\n" "$(_highlight "${_path}")"
+        _error_message="Git repository exists: $(_highlight "${_path}")"
       fi
 
-      return 1
+      _exit_1 printf "%s\\n" "${_error_message}"
     fi
 
     if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
@@ -6296,7 +6193,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ -z "${NB_DIR}" ]] || [[ ! -e "${NB_DIR}" ]]
     then
-      return 1
+      exit 1
     fi
 
     if [[ -z "${_notebook_names[*]:-}" ]]
@@ -6407,7 +6304,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         if ! ((_only_names)) && ! ((_only_paths))
         then
           cd "${_notebook_paths[i]}" ||
-            _die printf "_notebooks() \`cd\` failed."
+            _exit_1 printf "_notebooks() \`cd\` failed."
           _origin_url="$(git config --get remote.origin.url || echo '')"
           if [[ -n "${_origin_url:-}" ]]
           then
@@ -6437,7 +6334,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ -z "${_notebook_name:-}" ]]
     then
-      _die printf "Unable to determine notebook name.\\n"
+      _exit_1 printf "Unable to determine notebook name.\\n"
     fi
 
     if [[ -z "${_subcommand}" ]]
@@ -6455,10 +6352,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
       then
         open "${_NOTEBOOK_PATH}"
       else
-        printf \
+        _exit_1 printf \
           "%s doesn't know how to open directories on your system.\\n" \
           "$(_highlight "${_ME}")"
-        return 1
       fi
     elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
     then
@@ -6519,27 +6415,23 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ -z "${_old}" ]] || [[ -z "${_new}" ]]
     then
-      _help notebooks
-      return 1
+      _exit_1 _help notebooks
     elif [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
     then
       if [[ "${_old}" == "local" ]] || [[ "${_new}" == "local" ]]
       then
-        cat <<HEREDOC
+        _exit_1 cat <<HEREDOC
 'local' refers to the local notbook and can not be renamed.
 HEREDOC
-        return 1
       fi
     elif [[ ! -d "${NB_DIR}/${_old}" ]]
     then
-      printf "%s is not a valid notebook name.\\n" \
+      _exit_1 printf "%s is not a valid notebook name.\\n" \
         "$(_highlight "${_old}")"
-      return 1
     elif [[ -e "${NB_DIR}/${_new}" ]]
     then
-      printf "A notebook named '%s' already exists.\\n" \
+      _exit_1 printf "A notebook named '%s' already exists.\\n" \
         "$(_highlight "${_new}")"
-      return 1
     fi
 
     mv "${NB_DIR}/${_old}" "${NB_DIR}/${_new}"
@@ -6564,13 +6456,12 @@ HEREDOC
 
     if [[ -z "${_name}" ]]
     then
-      _help notebooks
-      return 1
+      _exit_1 _help notebooks
     fi
 
     if [[ -n "${_LOCAL_NOTEBOOK_PATH}" ]]
     then
-      cat <<HEREDOC
+      _exit_1 cat <<HEREDOC
 Currently in a local notebook. To run a command in a global notebook,
 add the notebook name before the command name, separated by a colon:
   ${_ME} <notebook>:<command> [options...]
@@ -6580,7 +6471,6 @@ Examples:
   ${_ME} example:add --title "Example Title"
   ${_ME} example:search 'sample query'
 HEREDOC
-      return 1
     fi
 
     # Autocomplete can result in a trailing colon on the notebook name, so
@@ -6595,8 +6485,7 @@ HEREDOC
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
       printf "Now using %s.\\n" "$(_highlight "${_name}")"
     else
-      printf "Not found: %s\\n" "$(_highlight "${_name}")"
-      return 1
+      _exit_1 printf "Not found: %s\\n" "$(_highlight "${_name}")"
     fi
   }
 
@@ -6681,7 +6570,11 @@ See also:
 Shortcut Alias: \`o\`
 HEREDOC
 _open() {
-  [[ -z "${1:-}" ]] && _help "open" && return 1
+  if [[ -z "${1:-}" ]]
+  then
+    _exit_1 _help "open"
+  fi
+
   _bookmark open "${@}"
 }
 _alias_subcommand "open" "o"
@@ -6705,7 +6598,11 @@ Alias: \`preview\`
 Shortcut Alias: \`p\`
 HEREDOC
 _peek() {
-  [[ -z "${1:-}" ]] && _help "peek" && return 1
+  if [[ -z "${1:-}" ]]
+  then
+    _exit_1 _help "peek"
+  fi
+
   _bookmark peek "${@}"
 }
 _alias_subcommand "peek" "p"
@@ -6762,7 +6659,7 @@ _remote() {
   _debug printf "_remote() \${_subcommand}: '%s'\\n" "${_subcommand}"
   _debug printf "_remote() \${_url}: '%s'\\n" "${_url}"
 
-  cd "${_NOTEBOOK_PATH}" || _die printf "_git() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_git() \`cd\` failed.\\n"
 
   if [[ "$(git remote get-url origin 2>/dev/null)" ]]
   then
@@ -6799,23 +6696,20 @@ _remote() {
           printf "Removed remote %s\\n" "$(_highlight "${_existing_url}")" &&
           return 0
       else
-        printf "No remote configured.\\n"
-        return 1
+        _exit_1 printf "No remote configured.\\n"
       fi
       ;;
     set|add)
       if [[ -z "${_url}" ]]
       then
-        _help remote
-        return 1
+        _exit_1 _help "remote"
       fi
 
       if ((_remote_exists))
       then
         if [[ "${_existing_url}" == "${_url}" ]]
         then
-          printf "Remote already set to %s\\n" "$(_highlight "${_url}")"
-          return 1
+          _exit_1 printf "Remote already set to %s\\n" "$(_highlight "${_url}")"
         fi
 
         if ! ((_force))
@@ -6935,8 +6829,7 @@ _rename() {
 
   if [[ -z "${_selection}" ]]
   then
-    _help "rename"
-    return 1
+    _exit_1 _help "rename"
   fi
 
   local _source_basename
@@ -6946,8 +6839,7 @@ _rename() {
 
   if [[ -z "${_source_basename}" ]]
   then
-    _help "rename"
-    return 1
+    _exit_1 _help "rename"
   fi
   _debug printf "_rename() \${_source_basename}: '%s'\\n" \
     "${_source_basename}"
@@ -6991,8 +6883,7 @@ _rename() {
       then
         _target_file_type="md"
       else
-        _help "rename"
-        return 1
+        _exit_1 _help "rename"
       fi
     fi
 
@@ -7010,13 +6901,11 @@ _rename() {
 
     if [[ -e "${_NOTEBOOK_PATH}/${_target_basename}" ]]
     then
-      printf "File already exists: %s\\n" \
+      _exit_1 printf "File already exists: %s\\n" \
         "$(_highlight "${_target_basename}")"
-      return 1
     fi
   else
-    _help "rename"
-    return 1
+    _exit_1 _help "rename"
   fi
 
   if ! ((_force))
@@ -7115,14 +7004,8 @@ _search() {
         _print_paths=1
         ;;
       --type)
-        if __option_value_is_present "${__val:-}"
-        then
-          _type="${__val:-}"
-          shift
-        else
-          _help "search"
-          return 1
-        fi
+        _type="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --use-grep)
         # The `--use-grep` option bypasses other search tools. Intended to be
@@ -7145,8 +7028,7 @@ _search() {
 
   if [[ -z "${_query:-}" ]]
   then
-    _help "search"
-    return 1
+    _exit_1 _help "search"
   else
     local _target_notebook_paths=()
 
@@ -7701,8 +7583,9 @@ HEREDOC
         return 0
         ;;
       *)
-        printf "Setting not found: %s\\n" "$(_highlight "${_id_or_name}")" >&2
-        return 1
+        _return_1 \
+          printf "Setting not found: %s\\n" \
+          "$(_highlight "${_id_or_name}")"
         ;;
     esac
   }
@@ -7716,8 +7599,7 @@ HEREDOC
       then
         return 0
       else
-        printf "%s requires a value.\\n" "${1:-}"
-        return 1
+        _return_1 printf "%s requires a value.\\n" "${1:-}"
       fi
     elif [[ "${1:-}" == 'NB_AUTO_SYNC' ]]
     then
@@ -7725,8 +7607,7 @@ HEREDOC
       then
         return 0
       else
-        printf "NB_AUTO_SYNC must be either '0' or '1'.\\n"
-        return 1
+        _return_1 printf "NB_AUTO_SYNC must be either '0' or '1'.\\n"
       fi
     elif [[ "${1:-}" == 'NB_DIR' ]]
     then
@@ -7737,8 +7618,7 @@ HEREDOC
           [[ ! -w "${2}" ]]
          }
       then
-        printf "'%s' is not a valid location for NB_DIR.\\n" "${2:-}"
-        return 1
+        _return_1 printf "'%s' is not a valid location for NB_DIR.\\n" "${2:-}"
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL' ]]
     then
@@ -7746,8 +7626,8 @@ HEREDOC
       then
         return 0
       else
-        printf "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
-        return 1
+        _return_1 \
+          printf "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
       fi
     elif [[ "${1:-}" == 'NB_HIGHLIGHT_COLOR' ]]
     then
@@ -7755,8 +7635,7 @@ HEREDOC
       then
         return 0
       else
-        printf "NB_HIGHLIGHT_COLOR must be a number.\\n"
-        return 1
+        _return_1 printf "NB_HIGHLIGHT_COLOR must be a number.\\n"
       fi
     else
       return 0
@@ -7779,8 +7658,7 @@ HEREDOC
       get)
         if [[ -z "${2:-}" ]]
         then
-          _help settings
-          return 1
+          _exit_1 _help settings
         fi
 
         _nb_settings_get_value "${2:-}"
@@ -7793,8 +7671,7 @@ HEREDOC
       set)
         if [[ -z "${2:-}" ]] || [[ -z "${3:-}" ]]
         then
-            _help settings
-            return 1
+          _exit_1 _help "settings"
         fi
 
         _nb_settings_set "${2:-}" "${3:-}"
@@ -7803,8 +7680,7 @@ HEREDOC
       reset|unset)
         if [[ -z "${2:-}" ]]
         then
-          _help settings
-          return 1
+          _exit_1 _help "settings"
         fi
 
         _nb_settings_unset "${2:-}"
@@ -8057,14 +7933,8 @@ _show() {
         _print_id=1
         ;;
       --password)
-        if __option_value_is_present "${__val:-}"
-        then
-          _password="${__val:-}"
-          shift
-        else
-          _help "show"
-          return 1
-        fi
+        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --raw|--no-color|--nocolor)
         _print_no_color=1
@@ -8076,14 +7946,8 @@ _show() {
         _print_title=1
         ;;
       --tool)
-        if __option_value_is_present "${__val:-}"
-        then
-          _tool="${__val:-}"
-          shift
-        else
-          _help "show"
-          return 1
-        fi
+        _tool="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       *)
         if [[ -z "${_selection:-}" ]]
@@ -8101,8 +7965,7 @@ _show() {
 
   if [[ -z "${_selection:-}" ]]
   then
-    _help "show"
-    return 1
+    _exit_1 _help "show"
   fi
 
   local _basename
@@ -8110,8 +7973,7 @@ _show() {
   _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
-    printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-    return 1
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
   fi
   _set_selection_notebook "${_selection}"
 
@@ -8119,8 +7981,7 @@ _show() {
 
   if [[ -z "${_basename:-}" ]] && [[ ! -e "${_target_path}" ]]
   then
-    printf "Selection not found.\\n"
-    return 1
+    _exit_1 printf "Selection not found.\\n"
   fi
 
   if ((_print_path))
@@ -8164,8 +8025,7 @@ _show() {
 
     if [[ -z "${_password}" ]]
     then
-      printf "Password required.\\n"
-      return 1
+      _exit_1 printf "Password required.\\n"
     fi
 
     local _decrypted_path
@@ -8177,9 +8037,8 @@ _show() {
   if _file_is_archive "${_target_path}" &&
      [[ ! "${_target_path}" =~ docx$ ]]
   then
-    printf "\
+    _exit_1 printf "\
 Can't show archives. Export archive and expand to edit.\\n"
-    return 1
   fi
 
   if ! _file_is_text "${_target_path}"
@@ -8397,7 +8256,7 @@ Description:
   Run \`git status\` in the current notebook.
 HEREDOC
 _status() {
-  cd "${_NOTEBOOK_PATH}" || _die printf "_status() \`cd\` failed.\\n"
+  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_status() \`cd\` failed.\\n"
   git status
 }
 
@@ -8479,8 +8338,7 @@ HEREDOC
 
     if ! _download_from "${_nb_url}" "${_temp_file}"
     then
-      printf "Unable to download update.\\n"
-      return 1
+      _exit_1 printf "Unable to download update.\\n"
     fi
 
     if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${_current_path}")" ]]
@@ -8530,8 +8388,7 @@ _use() {
   local _name="${1:-}"
   if [[ -z "${_name}" ]]
   then
-    _help use
-    return 1
+    _exit_1 _help use
   fi
   _notebooks use "${_name}"
 }
@@ -8973,8 +8830,7 @@ do
             _SUBCOMMAND="${__parts[1]:-}"
           fi
         else
-          printf "Notebook not found: %s\\n" "${__parts[0]}"
-          exit 1
+          _exit_1 printf "Notebook not found: %s\\n" "${__parts[0]}"
         fi
       else
         _ARGUMENTS+=("${__opt}")

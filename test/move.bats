@@ -35,7 +35,7 @@ _setup_move() {
   ! git log | grep '\[nb\] Delete'
 
   # prints help
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:  ]]
   [[ "${lines[1]}" =~ nb\ move ]]
 }
 
@@ -50,7 +50,7 @@ _setup_move() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:  ]]
   [[ "${lines[1]}" =~ nb\ move ]]
 
 }
@@ -65,7 +65,7 @@ _setup_move() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:  ]]
   [[ "${lines[1]}" =~ nb\ move ]]
 }
 
@@ -79,7 +79,7 @@ _setup_move() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:  ]]
   [[ "${lines[1]}" =~ nb\ move ]]
 }
 
@@ -407,6 +407,6 @@ _setup_move() {
   run "${_NB}" help move
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:  ]]
   [[ "${lines[1]}" =~ nb\ move ]]
 }

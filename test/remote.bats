@@ -14,7 +14,7 @@ _setup_remote() {
   run "${_NB}" remote
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "No remote configured." ]]
+  [[ "${lines[0]}" =~ No\ remote\ configured ]]
   [[ ${status} -eq 0 ]]
 }
 
@@ -40,7 +40,7 @@ _setup_remote() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "No remote configured." ]]
+  [[ "${lines[0]}" =~ No\ remote\ configured ]]
   [[ ${status} -eq 1 ]]
 }
 
@@ -69,7 +69,7 @@ _setup_remote() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\: ]]
   [[ ${status} -eq 1 ]]
 }
 
@@ -124,6 +124,6 @@ _setup_remote() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb remote" ]]
+  [[ "${lines[0]}" =~ Usage\:         ]]
+  [[ "${lines[1]}" =~ \ \ nb\ remote  ]]
 }

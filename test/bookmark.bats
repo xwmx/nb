@@ -59,7 +59,8 @@ load test_helper
   ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
-  [[ "${lines[0]}" == "Unable to download page at $(_highlight "http invalid url")" ]]
+  _message="${_ERROR_PREFIX} Unable to download page at $(_highlight "http invalid url")"
+  [[ "${lines[0]}" == "${_message}" ]]
 }
 
 @test "\`bookmark <query>\` exits with 0 and displays a list of bookmarks with titles." {
@@ -544,7 +545,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
-  [[ "${lines[0]}" =~ Usage ]]
+  [[ "${lines[0]}" =~ requires\ a\ valid\ argument ]]
 }
 
 @test "\`bookmark\` with one --related URL creates new note." {

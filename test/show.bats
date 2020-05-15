@@ -16,7 +16,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
 
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
 }
 
@@ -78,7 +78,7 @@ load test_helper
 
   [[ ! "${output}" =~ mock_editor ]]
 
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
 
 }
@@ -94,7 +94,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Note not found: $(_highlight "1")" ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_highlight "1")" ]]
 }
 
 # `show <filename> --dump` ####################################################
@@ -357,7 +357,6 @@ load test_helper
   run "${_NB}" help show
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
-
 }

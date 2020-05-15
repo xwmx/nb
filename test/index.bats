@@ -50,7 +50,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:                     ]]
   [[ "${lines[1]}" == "  nb index add <filename>" ]]
 }
 
@@ -120,7 +120,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\: ]]
 }
 
 # get_id #########################################################################
@@ -148,7 +148,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\: ]]
 }
 
 @test "\`index get_id <filename>\` with non-entry returns 1." {
@@ -218,7 +218,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\: ]]
 }
 
 @test "\`index delete <filename>\` with non-file returns 1 and prints message." {
@@ -423,7 +423,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\: ]]
 }
 
 @test "\`index update\` with first argument returns 1 and prints help." {
@@ -436,7 +436,7 @@ load test_helper
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\: ]]
 }
 
 # verify ######################################################################
@@ -500,6 +500,6 @@ load test_helper
   run "${_NB}" help index
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ "${lines[0]}" =~ Usage\:                     ]]
   [[ "${lines[1]}" == "  nb index add <filename>" ]]
 }

@@ -32,7 +32,7 @@ load test_helper
   ! git log | grep -q '\[nb\] Edit'
 
   # Prints help information
-  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[0]}" =~ Usage\:       ]]
   [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }
 

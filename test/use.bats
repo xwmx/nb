@@ -46,7 +46,7 @@ _setup_use() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
-  [[ "${lines[0]}" == "Not found: $(_highlight "not-a-repo")"   ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Not found: $(_highlight "not-a-repo")"   ]]
   [[ "$(cat "${NB_DIR}/.current")" == "home"                    ]]
 
   run "${_NB}" env

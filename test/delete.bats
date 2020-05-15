@@ -31,8 +31,8 @@ load test_helper
   ! git log | grep -q '\[nb\] Delete'
 
   # Prints help information
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ nb\ delete ]]
+  [[ "${lines[0]}" =~ Usage\:         ]]
+  [[ "${lines[1]}" =~ \ \ nb\ delete  ]]
 }
 
 # <selector> ##################################################################
