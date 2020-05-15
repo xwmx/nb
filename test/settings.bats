@@ -394,6 +394,47 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
+# `set NB_ACCENT_COLOR` #######################################################
+
+@test "\`settings set NB_ACCENT_COLOR\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_ACCENT_COLOR 123
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_ACCENT_COLOR     ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  printf "NB_ACCENT_COLOR: %s\\n" "$("${_NB}" settings get NB_ACCENT_COLOR)"
+  [[ "$("${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
+}
+
+@test "\`settings set NB_ACCENT_COLOR\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_ACCENT_COLOR 123
+
+  [[ "${output}" =~ NB_ACCENT_COLOR     ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  [[ "$("${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
+
+  run "${_NB}" settings set NB_ACCENT_COLOR invalid-color
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ 'NB_ACCENT_COLOR must be a number.' ]]
+  printf "NB_ACCENT_COLOR: %s\\n" "$("${_NB}" settings get NB_ACCENT_COLOR)"
+  [[ "$("${_NB}" settings get NB_ACCENT_COLOR)" == '123' ]]
+}
+
 # `set NB_HIGHLIGHT_COLOR` #################################################
 
 @test "\`settings set NB_HIGHLIGHT_COLOR\` with valid argument sets and exits." {
@@ -435,6 +476,47 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_HIGHLIGHT_COLOR)" == '123' ]]
 }
 
+# `set NB_THEME` ##############################################################
+
+@test "\`settings set NB_THEME\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_THEME "console"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_THEME  ]]
+  [[ "${output}" =~ set\ to   ]]
+  [[ "${output}" =~ console   ]]
+  printf "NB_THEME: %s\\n" "$("${_NB}" settings get NB_THEME)"
+  [[ "$("${_NB}" settings get NB_THEME)" == 'console' ]]
+}
+
+@test "\`settings set NB_THEME\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_THEME "forest"
+
+  [[ "${output}" =~ NB_THEME                          ]]
+  [[ "${output}" =~ set\ to                           ]]
+  [[ "${output}" =~ forest                            ]]
+  [[ "$("${_NB}" settings get NB_THEME)" == 'forest'  ]]
+
+  run "${_NB}" settings set NB_THEME invalid-theme
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ 'NB_THEME must be one of the available themes.' ]]
+  printf "NB_THEME: %s\\n" "$("${_NB}" settings get NB_THEME)"
+  [[ "$("${_NB}" settings get NB_THEME)" == 'forest' ]]
+}
+
 # `unset` #####################################################################
 
 @test "\`settings unset\` with no argument exits with error." {
@@ -468,8 +550,8 @@ skip "Determine how to test interactive prompt."
   {
     "${_NB}" init
     run "${_NB}" settings set EDITOR sample
-    [[ "$("${_NB}" settings get EDITOR)" == 'sample' ]]
-    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"' ]]
+    [[ "$("${_NB}" settings get EDITOR)" == 'sample'  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'   ]]
   }
 
   run "${_NB}" settings unset EDITOR
@@ -479,6 +561,7 @@ skip "Determine how to test interactive prompt."
   printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
   [[ ${status} -eq 0 ]]
   [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"' ]]
-  [[ "${output}" =~ EDITOR\ restored\ to\ the\ default ]]
-  [[ ! "${output}" =~ sample ]]
+  [[ "${output}" =~ EDITOR                          ]]
+  [[ "${output}" =~ restored\ to\ the\ default      ]]
+  [[ ! "${output}" =~ sample                        ]]
 }

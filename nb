@@ -377,7 +377,7 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # Default: nb
 #
 # The color theme.
-export NB_THEME="${NB_THEME:-}"
+export NB_THEME="${NB_THEME:-nb}"
 
 if [[ "${NB_THEME}" == "blacklight" ]]
 then
@@ -409,10 +409,10 @@ then
   export NB_HIGHLIGHT_COLOR=29
 fi
 
-if [[ "${NB_THEME}" == "default" ]]
+if [[ "${NB_THEME}" == "nb" ]]
 then
-  export NB_ACCENT_COLOR=8
-  export NB_HIGHLIGHT_COLOR=68
+  # See default values below.
+  :
 fi
 
 if [[ "${NB_THEME}" == "ocean" ]]
@@ -431,7 +431,7 @@ export _NB_THEMES=(
   blacklight
   console
   desert
-  electron
+  electro
   forest
   nb
   ocean
@@ -451,16 +451,22 @@ export _NB_THEMES=(
 #     fi
 #
 #  To view a list of available color numbers, run `nb settings colors`
-if [[ -d "${NB_DIR}/.themes" ]]
-then
-  set +f
-  for __file in "${NB_DIR}/.themes"/*.nb-theme*
-  do
-    _NB_THEMES=("${_NB_THEMES[@]}" "$(basename "${__file}")")
-    source "${__file}"
-  done
-  set -f
-fi
+_load_themes() {
+  if [[ -d "${NB_DIR}/.themes" ]]
+  then
+    set +f
+    for __file in "${NB_DIR}/.themes"/*.nb-theme*
+    do
+      local _name=
+      _name="$(basename "${__file}")"
+      _name="${_name%%.*}"
+
+      _NB_THEMES=("${_NB_THEMES[@]}" "${_name}")
+      source "${__file}"
+    done
+    set -f
+  fi
+} && _load_themes
 
 # $NB_ACCENT_COLOR
 #
@@ -513,10 +519,6 @@ export _TPUT_HIGHLIGHT_COLOR=
 _TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NB_HIGHLIGHT_COLOR}")"
 _highlight() {
   local _input="${1:-}"
-  if [[ -z "${_input}" ]]
-  then
-    _exit_1 printf "Usage: _highlight <string> [--underline]"
-  fi
 
   if [[ "${2:-}" == "--underline" ]]
   then
@@ -546,10 +548,6 @@ export _TPUT_ACCENT_COLOR=
 _TPUT_ACCENT_COLOR="$(tput setaf "${NB_ACCENT_COLOR}")"
 _highlight_accent() {
   local _input="${1:-}"
-  if [[ -z "${_input}" ]]
-  then
-    _exit_1 printf "Usage: _highlight_accent <string>"
-  fi
 
   printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
 }
@@ -3918,6 +3916,8 @@ _env() {
     printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
     printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
     printf "NB_HIGHLIGHT_COLOR=%s\\n" "${NB_HIGHLIGHT_COLOR:-}"
+    printf "NB_ACCENT_COLOR=%s\\n" "${NB_ACCENT_COLOR:-}"
+    printf "NB_THEME=%s\\n" "${NB_THEME:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -7339,7 +7339,7 @@ $(_id_brackets_color '1') editor
       • Current Value:  '${EDITOR}'
 
 $(_id_brackets_color '2') nb_auto_sync
-    $(_highlight_accent "---------------")
+    $(_highlight_accent "------------")
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
@@ -7347,7 +7347,7 @@ $(_id_brackets_color '2') nb_auto_sync
       • Current Value: '${NB_AUTO_SYNC}'
 
 $(_id_brackets_color '3') nb_default_extension
-    $(_highlight_accent "-----------------------")
+    $(_highlight_accent "--------------------")
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
@@ -7355,7 +7355,7 @@ $(_id_brackets_color '3') nb_default_extension
       • Current Value: '${NB_DEFAULT_EXTENSION}'
 
 $(_id_brackets_color '4') nb_dir
-    $(_highlight_accent "---------")
+    $(_highlight_accent "------")
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
@@ -7363,21 +7363,38 @@ $(_id_brackets_color '4') nb_dir
       • Current Value: '${NB_DIR}'
 
 $(_id_brackets_color '5') nb_encryption_tool
-    $(_highlight_accent "---------------------")
+    $(_highlight_accent "------------------")
     The tool used for encrypting notes.
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
       • Current Value:    '${NB_ENCRYPTION_TOOL}'
 
 $(_id_brackets_color '6') nb_highlight_color
-    $(_highlight_accent "---------------------")
-    Set highlighting color. Often this can be set to an xterm color number
-    between 0 and 255. Some terminals support many more colors. To view a
-    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
+    $(_highlight_accent "------------------")
+    The primary color used to highlight identifiers and messages. Often this
+    can be set to an xterm color number between 0 and 255. Some terminals
+    support many more colors. To view a table of 256 common colors and numbers,
+    run: \`${_ME} settings colors\`
     To view a color for a number, run: \`${_ME} settings colors <number>\`
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.
-      • Current Value: '${NB_HIGHLIGHT_COLOR}'"
+      • Current Value: '${NB_HIGHLIGHT_COLOR}'
+
+$(_id_brackets_color '7') nb_accent_color
+    $(_highlight_accent "---------------")
+    The color used for lines and footer elements. Like nb_highlight_color,
+    this can often be set to an xterm color number between 0 and 255. view a
+    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
+    To view a color for a number, run: \`${_ME} settings colors <number>\`
+      • Default Value: '8'
+      • Current Value: '${NB_ACCENT_COLOR}'
+
+$(_id_brackets_color '8') nb_theme
+    $(_highlight_accent "--------")
+    The color theme. Available themes:
+      ${_NB_THEMES[@]}
+      • Default Value: 'nb'
+      • Current Value: '${NB_THEME}'"
 
 desc "settings" <<HEREDOC
 Usage:
@@ -7469,7 +7486,8 @@ _settings() {
       _entry="export ${_setting_name}=\"${_value}\" # Set by \`${_ME}\` • $(date)" &&
       _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
-      if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
+      if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
+         [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
       then
         _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
       fi &&
@@ -7496,12 +7514,14 @@ _settings() {
             eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
           )"
 
-          if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
+          if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
+             [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
           then
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
           else
             _default_value="$(_highlight "${_default_value}")"
           fi
+          _setting_name="$(_highlight "${_setting_name}")"
         } &&
         printf "%s restored to the default: %s\\n"  \
           "${_setting_name}"                        \
@@ -7605,6 +7625,14 @@ HEREDOC
         printf "NB_HIGHLIGHT_COLOR"
         return 0
         ;;
+      7|NB_ACCENT_COLOR|nb_accent_color)
+        printf "NB_ACCENT_COLOR"
+        return 0
+        ;;
+      8|NB_THEME|nb_theme)
+        printf "NB_THEME"
+        return 0
+        ;;
       *)
         _return_1 \
           printf "Setting not found: %s\\n" \
@@ -7652,13 +7680,22 @@ HEREDOC
         _return_1 \
           printf "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
       fi
-    elif [[ "${1:-}" == 'NB_HIGHLIGHT_COLOR' ]]
+    elif [[ "${1:-}" == 'NB_HIGHLIGHT_COLOR' ]] ||
+         [[ "${1:-}" == 'NB_ACCENT_COLOR'    ]]
     then
       if [[ "${2:-}" =~ ^[0-9] ]]
       then
         return 0
       else
-        _return_1 printf "NB_HIGHLIGHT_COLOR must be a number.\\n"
+        _return_1 printf "%s must be a number.\\n" "${1}"
+      fi
+    elif [[ "${1:-}" == 'NB_THEME' ]]
+    then
+      if _contains "${2:-}" "${_NB_THEMES[@]}"
+      then
+        return 0
+      else
+        _return_1 printf "%s must be one of the available themes.\\n" "${1}"
       fi
     else
       return 0
