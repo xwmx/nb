@@ -7471,11 +7471,11 @@ _settings() {
         ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|NB_COLOR_PRIMARY|COLOR_PRIMARY|nb_color_primary|color_primary)
+      2|NB_COLOR_PRIMARY|COLOR_PRIMARY|nb_color_primary|color_primary|primary_color)
         ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|NB_COLOR_SECONDARY|COLOR_SECONDARY|nb_color_secondary|color_secondary)
+      3|NB_COLOR_SECONDARY|COLOR_SECONDARY|nb_color_secondary|color_secondary|secondary_color)
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
