@@ -385,43 +385,43 @@ then
   export NB_COLOR_HIGHLIGHT=39
 fi
 
-if [[ "${NB_COLOR_THEME}" == "console" ]]
+if [[ "${NB_COLOR_THEME}" == "console"    ]]
 then
   export NB_COLOR_ACCENT=22
   export NB_COLOR_HIGHLIGHT=40
 fi
 
-if [[ "${NB_COLOR_THEME}" == "desert" ]]
+if [[ "${NB_COLOR_THEME}" == "desert"     ]]
 then
   export NB_COLOR_ACCENT=94
   export NB_COLOR_HIGHLIGHT=179
 fi
 
-if [[ "${NB_COLOR_THEME}" == "electro" ]]
+if [[ "${NB_COLOR_THEME}" == "electro"    ]]
 then
   export NB_COLOR_ACCENT=27
   export NB_COLOR_HIGHLIGHT=165
 fi
 
-if [[ "${NB_COLOR_THEME}" == "forest" ]]
+if [[ "${NB_COLOR_THEME}" == "forest"     ]]
 then
   export NB_COLOR_ACCENT=94
   export NB_COLOR_HIGHLIGHT=29
 fi
 
-if [[ "${NB_COLOR_THEME}" == "nb" ]]
+if [[ "${NB_COLOR_THEME}" == "nb"         ]]
 then
   # See default values below.
   :
 fi
 
-if [[ "${NB_COLOR_THEME}" == "ocean" ]]
+if [[ "${NB_COLOR_THEME}" == "ocean"      ]]
 then
   export NB_COLOR_ACCENT=26
   export NB_COLOR_HIGHLIGHT=45
 fi
 
-if [[ "${NB_COLOR_THEME}" == "raspberry" ]]
+if [[ "${NB_COLOR_THEME}" == "raspberry"  ]]
 then
   export NB_COLOR_ACCENT=90
   export NB_COLOR_HIGHLIGHT=162
