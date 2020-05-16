@@ -1105,7 +1105,7 @@ Information about a setting can be viewed with `nb settings show`:
     Available themes:
 
        blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn, example, example2
+       ocean, raspberry, unicorn
 
       • Default Value: 'nb'
 
