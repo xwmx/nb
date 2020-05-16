@@ -5188,32 +5188,42 @@ HEREDOC
         _print_item_color="${_list_item_id_color}"
       fi
 
-      # Calculate apparent length of the list item string, with byte and
-      # character calculations for handling unicode characters.
-      local _item_line_length=
-      _item_line_length="$(printf "%s" "${_print_item}" | wc -m)"
-
-      local _item_line_length_bytes=
-      _item_line_length_bytes="$(printf "%s" "${_print_item}" | wc -c)"
-
-      local _item_line_length_diff=
-      _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length)/3))
-
-      _item_line_length=$((_item_line_length+_item_line_length_diff))
-
-      if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
-        ! {
-          ((_print_excerpt))  ||
-          ((_list_filenames)) ||
-          ((_no_id))          ||
-          ((_no_color))
-        } && {
-          [[ -n "${_maybe_title:-}" ]] ||
-          [[ -n "${_first_line:-}"  ]]
-        }
+      if ! {
+        ((_list_filenames)) ||
+        ((_no_id))          ||
+        ((_no_color))
+      }
       then
-        # Turn off line-wrapping
-        printf '\033[?7l'
+        # Calculate apparent length of the list item string, with byte and
+        # character calculations for handling unicode characters.
+        local _item_line_length=
+        _item_line_length="$(printf "%s" "${_print_item}" | wc -m)"
+
+        local _item_line_length_bytes=
+        _item_line_length_bytes="$(printf "%s" "${_print_item}" | wc -c)"
+
+        local _item_line_length_diff=
+        _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length)/3))
+
+        _item_line_length=$((_item_line_length+_item_line_length_diff))
+      fi
+
+      if ! {
+        ((_print_excerpt))  ||
+        ((_list_filenames)) ||
+        ((_no_id))          ||
+        ((_no_color))
+      }
+      then
+        if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+           {
+             [[ -n "${_maybe_title:-}" ]] ||
+             [[ -n "${_first_line:-}"  ]]
+           }
+        then
+          # Turn off line-wrapping
+          printf '\033[?7l'
+        fi
       fi
 
       if ((_no_color))
@@ -5223,19 +5233,22 @@ HEREDOC
         printf "%s" "${_print_item_color}"
       fi
 
-      if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
-        ! {
-          ((_print_excerpt))  ||
-          ((_list_filenames)) ||
-          ((_no_id))          ||
-          ((_no_color))
-        } && {
-          [[ -n "${_maybe_title:-}" ]] ||
-          [[ -n "${_first_line:-}"  ]]
-        }
+      if ! {
+        ((_print_excerpt))  ||
+        ((_list_filenames)) ||
+        ((_no_id))          ||
+        ((_no_color))
+      }
       then
-        # Turn on line-wrapping
-        printf '\033[?7h'
+        if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+           {
+             [[ -n "${_maybe_title:-}" ]] ||
+             [[ -n "${_first_line:-}"  ]]
+           }
+        then
+          # Turn on line-wrapping
+          printf '\033[?7h'
+        fi
       fi
 
       # End of line.
@@ -5245,7 +5258,8 @@ HEREDOC
          [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
          _file_is_text "${_NOTEBOOK_PATH}/${__basename}"
       then # excerpt is specified with a non-zero digit, as required by `head`.
-        if [[ "${_item_line_length}" -gt "${_columns}" ]]
+        if [[ -z "${_item_line_length:-}"               ]] ||
+           [[ "${_item_line_length}" -gt "${_columns}"  ]]
         then
           _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
         else
