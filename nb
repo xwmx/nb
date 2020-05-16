@@ -7728,7 +7728,7 @@ HEREDOC
 
   _settings_list_items+=("$(_id_brackets_color '1') auto_sync")
   _settings_help_items+=("\
-    $(_highlight_secondary "------------")
+    $(_highlight_secondary "---------")
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
@@ -7737,7 +7737,7 @@ HEREDOC
 
   _settings_list_items+=("$(_id_brackets_color '2') color_primary")
   _settings_help_items+=("\
-    $(_highlight_secondary "----------------")
+    $(_highlight_secondary "-------------")
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors. To view a table of 256 common colors and numbers,
@@ -7749,7 +7749,7 @@ HEREDOC
 
   _settings_list_items+=("$(_id_brackets_color '3') color_secondary")
   _settings_help_items+=("\
-    $(_highlight_secondary "------------------")
+    $(_highlight_secondary "---------------")
     The color used for lines and footer elements. Like nb_color_primary,
     this can often be set to an xterm color number between 0 and 255. view a
     table of 256 common colors and numbers, run: \`${_ME} settings colors\`
@@ -7759,7 +7759,7 @@ HEREDOC
 
   _settings_list_items+=("$(_id_brackets_color '4') color_theme")
   _settings_help_items+=("\
-    $(_highlight_secondary "--------------")
+    $(_highlight_secondary "-----------")
     The color theme. \`${_ME}\` has several built-in themes and user
     defined themes can be installed in the \$NB_DIR/.themes directory.
     Themes have an .nb-theme or .nb-theme.sh extension and contain a
@@ -7804,7 +7804,7 @@ HEREDOC
 
   _settings_list_items+=("$(_id_brackets_color '5') default_extension")
   _settings_help_items+=("\
-    $(_highlight_secondary "--------------------")
+    $(_highlight_secondary "-----------------")
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
@@ -7820,7 +7820,7 @@ HEREDOC
 
   _settings_list_items+=("$(_id_brackets_color '7') encryption_tool")
   _settings_help_items+=("\
-    $(_highlight_secondary "------------------")
+    $(_highlight_secondary "---------------")
     The tool used for encrypting notes.
 
       • Supported Values: 'openssl', 'gpg'
