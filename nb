@@ -409,7 +409,7 @@ then
   export NB_COLOR_SECONDARY=94
 fi
 
-if [[ "${NB_COLOR_THEME}" == "monochrome"  ]]
+if [[ "${NB_COLOR_THEME}" == "monochrome" ]]
 then
   export NB_COLOR_PRIMARY=249
   export NB_COLOR_SECONDARY=241
@@ -433,7 +433,7 @@ then
   export NB_COLOR_SECONDARY=90
 fi
 
-if [[ "${NB_COLOR_THEME}" == "unicorn"  ]]
+if [[ "${NB_COLOR_THEME}" == "unicorn"    ]]
 then
   export NB_COLOR_PRIMARY=189
   export NB_COLOR_SECONDARY=153
