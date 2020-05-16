@@ -6,17 +6,17 @@
 management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
 [Pandoc](http://pandoc.org/)-backed conversion,
-global and local notebooks, tagging, and more, all in a single portable script.
+global and local notebooks, tagging, color themes, and more,
+all in a single portable, well-tested script.
+
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown) and
 [Emacs Org mode](https://orgmode.org/),
-can work with files in any format, and can export notes to many document
-formats. `nb` can also create private, password-protected encrypted notes and
-bookmarks.
-
-With `nb`, you can add and edit notes using Vim, Emacs, VS Code, Sublime
-Text, and any other text editor you prefer. `nb` works in any
-standard Linux / Unix environment, including macOS and Windows via WSL.
+can work with files in any format, can import and export notes to many
+document formats, and can create private, password-protected encrypted
+notes and bookmarks. With `nb`, you can add and edit notes using Vim, Emacs,
+VS Code, Sublime Text, and any other text editor you prefer. `nb` works in
+any standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
