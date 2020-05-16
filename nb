@@ -372,62 +372,62 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # Colors
 ###############################################################################
 
-# $NB_THEME
+# $NB_COLOR_THEME
 #
 # Default: nb
 #
 # The color theme.
-export NB_THEME="${NB_THEME:-nb}"
+export NB_COLOR_THEME="${NB_COLOR_THEME:-nb}"
 
-if [[ "${NB_THEME}" == "blacklight" ]]
+if [[ "${NB_COLOR_THEME}" == "blacklight" ]]
 then
-  export NB_ACCENT_COLOR=56
-  export NB_HIGHLIGHT_COLOR=39
+  export NB_COLOR_ACCENT=56
+  export NB_COLOR_HIGHLIGHT=39
 fi
 
-if [[ "${NB_THEME}" == "console" ]]
+if [[ "${NB_COLOR_THEME}" == "console" ]]
 then
-  export NB_ACCENT_COLOR=22
-  export NB_HIGHLIGHT_COLOR=40
+  export NB_COLOR_ACCENT=22
+  export NB_COLOR_HIGHLIGHT=40
 fi
 
-if [[ "${NB_THEME}" == "desert" ]]
+if [[ "${NB_COLOR_THEME}" == "desert" ]]
 then
-  export NB_ACCENT_COLOR=94
-  export NB_HIGHLIGHT_COLOR=179
+  export NB_COLOR_ACCENT=94
+  export NB_COLOR_HIGHLIGHT=179
 fi
 
-if [[ "${NB_THEME}" == "electro" ]]
+if [[ "${NB_COLOR_THEME}" == "electro" ]]
 then
-  export NB_ACCENT_COLOR=27
-  export NB_HIGHLIGHT_COLOR=165
+  export NB_COLOR_ACCENT=27
+  export NB_COLOR_HIGHLIGHT=165
 fi
 
-if [[ "${NB_THEME}" == "forest" ]]
+if [[ "${NB_COLOR_THEME}" == "forest" ]]
 then
-  export NB_ACCENT_COLOR=94
-  export NB_HIGHLIGHT_COLOR=29
+  export NB_COLOR_ACCENT=94
+  export NB_COLOR_HIGHLIGHT=29
 fi
 
-if [[ "${NB_THEME}" == "nb" ]]
+if [[ "${NB_COLOR_THEME}" == "nb" ]]
 then
   # See default values below.
   :
 fi
 
-if [[ "${NB_THEME}" == "ocean" ]]
+if [[ "${NB_COLOR_THEME}" == "ocean" ]]
 then
-  export NB_ACCENT_COLOR=26
-  export NB_HIGHLIGHT_COLOR=45
+  export NB_COLOR_ACCENT=26
+  export NB_COLOR_HIGHLIGHT=45
 fi
 
-if [[ "${NB_THEME}" == "raspberry" ]]
+if [[ "${NB_COLOR_THEME}" == "raspberry" ]]
 then
-  export NB_ACCENT_COLOR=90
-  export NB_HIGHLIGHT_COLOR=162
+  export NB_COLOR_ACCENT=90
+  export NB_COLOR_HIGHLIGHT=162
 fi
 
-export _NB_THEMES=(
+export _NB_COLOR_THEMES=(
   blacklight
   console
   desert
@@ -443,11 +443,11 @@ export _NB_THEMES=(
 # if statment assigning the color environment variables to tput ANSI color
 # numbers. Example:
 #
-#     # filename: ~/.nb/.themes/example-theme-name.nb-theme.sh
-#     if [[ "${NB_THEME}" == "example-theme-name" ]]
+#     # filename: ~/.nb/.themes/example.nb-theme.sh
+#     if [[ "${NB_COLOR_THEME}" == "example" ]]
 #     then
-#       export NB_ACCENT_COLOR=8
-#       export NB_HIGHLIGHT_COLOR=68
+#       export NB_COLOR_ACCENT=8
+#       export NB_COLOR_HIGHLIGHT=68
 #     fi
 #
 #  To view a list of available color numbers, run `nb settings colors`
@@ -461,14 +461,14 @@ _load_themes() {
       _name="$(basename "${__file}")"
       _name="${_name%%.*}"
 
-      _NB_THEMES=("${_NB_THEMES[@]}" "${_name}")
+      _NB_COLOR_THEMES=("${_NB_COLOR_THEMES[@]}" "${_name}")
       source "${__file}"
     done
     set -f
   fi
 } && _load_themes
 
-# $NB_ACCENT_COLOR
+# $NB_COLOR_ACCENT
 #
 # Default: 8
 #
@@ -478,9 +478,9 @@ _load_themes() {
 #   nb settings colors
 #
 # Supported Values: [0..255+]
-export NB_ACCENT_COLOR="${NB_ACCENT_COLOR:-8}"
+export NB_COLOR_ACCENT="${NB_COLOR_ACCENT:-8}"
 
-# $NB_HIGHLIGHT_COLOR
+# $NB_COLOR_HIGHLIGHT
 #
 # Default: Value depends on terminal capabilities.
 #
@@ -491,17 +491,19 @@ export NB_ACCENT_COLOR="${NB_ACCENT_COLOR:-8}"
 #
 # Supported Values: [0..255+]
 [[ -n "${NOTES_HIGHLIGHT_COLOR:-}" ]] &&
-  NB_HIGHLIGHT_COLOR="${NOTES_HIGHLIGHT_COLOR}"
-__set_nb_highlight_color() {
+  NB_COLOR_HIGHLIGHT="${NOTES_HIGHLIGHT_COLOR}"
+[[ -n "${NB_HIGHLIGHT_COLOR:-}" ]] &&
+  NB_COLOR_HIGHLIGHT="${NB_HIGHLIGHT_COLOR}"
+__set_nb_color_highlight() {
   local _colors=
   _colors="$(tput colors)"
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
-    export NB_HIGHLIGHT_COLOR="${NB_HIGHLIGHT_COLOR:-68}"
+    export NB_COLOR_HIGHLIGHT="${NB_COLOR_HIGHLIGHT:-68}"
   else
-    export NB_HIGHLIGHT_COLOR="${NB_HIGHLIGHT_COLOR:-4}"
+    export NB_COLOR_HIGHLIGHT="${NB_COLOR_HIGHLIGHT:-4}"
   fi
-} && __set_nb_highlight_color
+} && __set_nb_color_highlight
 
 
 # _highlight()
@@ -515,8 +517,8 @@ export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
 export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
 
-export _TPUT_HIGHLIGHT_COLOR=
-_TPUT_HIGHLIGHT_COLOR="$(tput setaf "${NB_HIGHLIGHT_COLOR}")"
+export _TPUT_COLOR_HIGHLIGHT=
+_TPUT_COLOR_HIGHLIGHT="$(tput setaf "${NB_COLOR_HIGHLIGHT}")"
 _highlight() {
   local _input="${1:-}"
 
@@ -525,13 +527,13 @@ _highlight() {
     printf "%s%s%s%s%s\\n"        \
       "${_TPUT_SGR0}"             \
       "${_TPUT_SMUL}"             \
-      "${_TPUT_HIGHLIGHT_COLOR}"  \
+      "${_TPUT_COLOR_HIGHLIGHT}"  \
       "${_input}"                 \
       "${_TPUT_SGR0}"
   else
     printf "%s%s%s%s\\n"          \
       "${_TPUT_SGR0}"             \
-      "${_TPUT_HIGHLIGHT_COLOR}"  \
+      "${_TPUT_COLOR_HIGHLIGHT}"  \
       "${_input}"                 \
       "${_TPUT_SGR0}"
   fi
@@ -544,12 +546,12 @@ _highlight() {
 #
 # Description:
 #   Highlight the given string using the accent color.
-export _TPUT_ACCENT_COLOR=
-_TPUT_ACCENT_COLOR="$(tput setaf "${NB_ACCENT_COLOR}")"
+export _TPUT_COLOR_ACCENT=
+_TPUT_COLOR_ACCENT="$(tput setaf "${NB_COLOR_ACCENT}")"
 _highlight_accent() {
   local _input="${1:-}"
 
-  printf "%s%s%s\\n" "${_TPUT_ACCENT_COLOR}" "${_input}" "${_TPUT_SGR0}"
+  printf "%s%s%s\\n" "${_TPUT_COLOR_ACCENT}" "${_input}" "${_TPUT_SGR0}"
 }
 
 # _id_brackets_color()
@@ -564,7 +566,7 @@ _id_brackets_color() {
     "%s%s[%s%s%s]%s"            \
     "${_TPUT_SGR0}"             \
     "${_TPUT_SETAF_8}"          \
-    "${_TPUT_HIGHLIGHT_COLOR}"  \
+    "${_TPUT_COLOR_HIGHLIGHT}"  \
     "${1:-}"                    \
     "${_TPUT_SETAF_8}"          \
     "${_TPUT_SGR0}"
@@ -3915,9 +3917,9 @@ _env() {
     printf "NB_DIR=%s\\n" "${NB_DIR:-}"
     printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
     printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
-    printf "NB_HIGHLIGHT_COLOR=%s\\n" "${NB_HIGHLIGHT_COLOR:-}"
-    printf "NB_ACCENT_COLOR=%s\\n" "${NB_ACCENT_COLOR:-}"
-    printf "NB_THEME=%s\\n" "${NB_THEME:-}"
+    printf "NB_COLOR_HIGHLIGHT=%s\\n" "${NB_COLOR_HIGHLIGHT:-}"
+    printf "NB_COLOR_ACCENT=%s\\n" "${NB_COLOR_ACCENT:-}"
+    printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -7359,8 +7361,8 @@ Description:
 Examples:
   ${_ME} settings
   ${_ME} settings set 3 'org'
-  ${_ME} settings set nb_highlight_color 105
-  ${_ME} settings unset nb_highlight_color
+  ${_ME} settings set nb_color_highlight 105
+  ${_ME} settings unset nb_color_highlight
   ${_ME} settings colors
   ${_ME} settings colors 105
 HEREDOC
@@ -7428,28 +7430,28 @@ _settings() {
         ((_get_id)) && printf "2" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      3|NB_DEFAULT_EXTENSION|nb_default_extension)
-        ((_get_id)) && printf "3" || printf "NB_DEFAULT_EXTENSION"
+      3|NB_COLOR_ACCENT|nb_color_accent)
+        ((_get_id)) && printf "3" || printf "NB_COLOR_ACCENT"
         return 0
         ;;
-      4|NB_DIR|nb_dir)
-        ((_get_id)) && printf "4" || printf "NB_DIR"
+      4|NB_COLOR_HIGHLIGHT|nb_color_highlight)
+        ((_get_id)) && printf "4" || printf "NB_COLOR_HIGHLIGHT"
         return 0
         ;;
-      5|NB_ENCRYPTION_TOOL|nb_encryption_tool)
-        ((_get_id)) && printf "5" || printf "NB_ENCRYPTION_TOOL"
+      5|NB_COLOR_THEME|nb_color_theme)
+        ((_get_id)) && printf "5" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      6|NB_HIGHLIGHT_COLOR|nb_highlight_color)
-        ((_get_id)) && printf "6" || printf "NB_HIGHLIGHT_COLOR"
+      6|NB_DEFAULT_EXTENSION|nb_default_extension)
+        ((_get_id)) && printf "6" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      7|NB_ACCENT_COLOR|nb_accent_color)
-        ((_get_id)) && printf "7" || printf "NB_ACCENT_COLOR"
+      7|NB_DIR|nb_dir)
+        ((_get_id)) && printf "7" || printf "NB_DIR"
         return 0
         ;;
-      8|NB_THEME|nb_theme)
-        ((_get_id)) && printf "8" || printf "NB_THEME"
+      8|NB_ENCRYPTION_TOOL|nb_encryption_tool)
+        ((_get_id)) && printf "8" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
       *)
@@ -7490,8 +7492,8 @@ HEREDOC
       fi
     done
 
-    if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
-       [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
+    if [[ "${_setting_name}" == "NB_COLOR_HIGHLIGHT"  ]] ||
+       [[ "${_setting_name}" == "NB_COLOR_ACCENT"     ]]
     then
       printf "%s\\n" "$(_nb_settings_colors)"
     fi
@@ -7551,15 +7553,15 @@ HEREDOC
       _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}" &&
       _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
       printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
-      if [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR"  ]] ||
-         [[ "${_setting_name}" == "NB_ACCENT_COLOR"     ]]
+      if [[ "${_setting_name}" == "NB_COLOR_HIGHLIGHT"  ]] ||
+         [[ "${_setting_name}" == "NB_COLOR_ACCENT"     ]]
       then
         _setting_name="$(tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
                _value="$(tput setaf "${_value}")${_value}${_TPUT_SGR0}"
-      elif [[ "${_setting_name}" == "NB_THEME" ]]
+      elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
       then
         local _new_color=
-        _new_color="$(NB_THEME='' "${_MY_PATH}" settings get NB_HIGHLIGHT_COLOR)"
+        _new_color="$(NB_COLOR_THEME='' "${_MY_PATH}" settings get NB_COLOR_HIGHLIGHT)"
         _setting_name="$(tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
                _value="$(tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
       else
@@ -7589,19 +7591,19 @@ HEREDOC
             eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
           )"
 
-          if [[ "${_setting_name}" == "NB_ACCENT_COLOR" ]]
+          if [[ "${_setting_name}" == "NB_COLOR_ACCENT" ]]
           then
             _setting_name="$(_highlight "${_setting_name}")"
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_HIGHLIGHT_COLOR" ]]
+          elif [[ "${_setting_name}" == "NB_COLOR_HIGHLIGHT" ]]
           then
             _setting_name="$(tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_THEME" ]]
+          elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
           then
             _new_hi_color="$(
-              NB_THEME="nb" NB_HIGHLIGHT_COLOR='' \
-                "${_MY_PATH}" settings get NB_HIGHLIGHT_COLOR
+              NB_COLOR_THEME="nb" NB_COLOR_HIGHLIGHT='' \
+                "${_MY_PATH}" settings get NB_COLOR_HIGHLIGHT
             )"
 
             _setting_name="$(tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
@@ -7655,8 +7657,8 @@ HEREDOC
         _return_1 \
           printf "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
       fi
-    elif [[ "${1:-}" == 'NB_HIGHLIGHT_COLOR' ]] ||
-         [[ "${1:-}" == 'NB_ACCENT_COLOR'    ]]
+    elif [[ "${1:-}" == 'NB_COLOR_HIGHLIGHT' ]] ||
+         [[ "${1:-}" == 'NB_COLOR_ACCENT'    ]]
     then
       if [[ "${2:-}" =~ ^[0-9] ]]
       then
@@ -7664,9 +7666,9 @@ HEREDOC
       else
         _return_1 printf "%s must be a number.\\n" "${1}"
       fi
-    elif [[ "${1:-}" == 'NB_THEME' ]]
+    elif [[ "${1:-}" == 'NB_COLOR_THEME' ]]
     then
-      if _contains "${2:-}" "${_NB_THEMES[@]}"
+      if _contains "${2:-}" "${_NB_COLOR_THEMES[@]}"
       then
         return 0
       else
@@ -7696,33 +7698,17 @@ HEREDOC
 
       • Default Value: '1'")
 
-  _settings_list_items+=("$(_id_brackets_color '3') nb_default_extension")
+  _settings_list_items+=("$(_id_brackets_color '3') nb_color_accent")
   _settings_help_items+=("\
-    $(_highlight_accent "--------------------")
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
-    whatever you prefer.
+    $(_highlight_accent "---------------")
+    The color used for lines and footer elements. Like nb_color_highlight,
+    this can often be set to an xterm color number between 0 and 255. view a
+    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
+    To view a color for a number, run: \`${_ME} settings colors <number>\`
 
-      • Default Value: 'md'")
+      • Default Value: '8'")
 
-  _settings_list_items+=("$(_id_brackets_color '4') nb_dir")
-  _settings_help_items+=("\
-    $(_highlight_accent "------")
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
-
-      • Default Value: '~/.nb'")
-
-  _settings_list_items+=("$(_id_brackets_color '5') nb_encryption_tool")
-  _settings_help_items+=("\
-    $(_highlight_accent "------------------")
-    The tool used for encrypting notes.
-
-      • Supported Values: 'openssl', 'gpg'
-      • Default Value:    'openssl'")
-
-  _settings_list_items+=("$(_id_brackets_color '6') nb_highlight_color")
+  _settings_list_items+=("$(_id_brackets_color '4') nb_color_highlight")
   _settings_help_items+=("\
     $(_highlight_accent "------------------")
     The primary color used to highlight identifiers and messages. Often this
@@ -7734,19 +7720,9 @@ HEREDOC
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.")
 
-  _settings_list_items+=("$(_id_brackets_color '7') nb_accent_color")
+  _settings_list_items+=("$(_id_brackets_color '5') nb_color_theme")
   _settings_help_items+=("\
-    $(_highlight_accent "---------------")
-    The color used for lines and footer elements. Like nb_highlight_color,
-    this can often be set to an xterm color number between 0 and 255. view a
-    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
-    To view a color for a number, run: \`${_ME} settings colors <number>\`
-
-      • Default Value: '8'")
-
-  _settings_list_items+=("$(_id_brackets_color '8') nb_theme")
-  _settings_help_items+=("\
-    $(_highlight_accent "--------")
+    $(_highlight_accent "--------------")
     The color theme. \`${_ME}\` has several built-in themes user defined
     themes can be installed in the \$NB_DIR/.themes directory. Themes have
     an .nb-theme or .nb-theme.sh extension and contain a single if statment
@@ -7754,11 +7730,11 @@ HEREDOC
 
       Example:
 
-        # filename: ~/.nb/.themes/example-theme-name.nb-theme.sh
-        if [[ \"\${NB_THEME}\" == \"example-theme-name\" ]]
+        # filename: ~/.nb/.themes/example.nb-theme.sh
+        if [[ \"\${NB_COLOR_THEME}\" == \"example\" ]]
         then
-          export NB_ACCENT_COLOR=8
-          export NB_HIGHLIGHT_COLOR=68
+          export NB_COLOR_ACCENT=8
+          export NB_COLOR_HIGHLIGHT=68
         fi
 
     To view a list of available color numbers, run \`nb settings colors\`
@@ -7767,7 +7743,7 @@ HEREDOC
           local _line=
           local _line_color=
 
-          for __theme in "${_NB_THEMES[@]}"
+          for __theme in "${_NB_COLOR_THEMES[@]}"
           do
             local _test_line="${_line} ${__theme}"
 
@@ -7786,6 +7762,32 @@ HEREDOC
         } && __list_themes)
 
       • Default Value: 'nb'")
+
+  _settings_list_items+=("$(_id_brackets_color '6') nb_default_extension")
+  _settings_help_items+=("\
+    $(_highlight_accent "--------------------")
+    The default extension to use for notes files. Change to 'org' for Emacs
+    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    whatever you prefer.
+
+      • Default Value: 'md'")
+
+  _settings_list_items+=("$(_id_brackets_color '7') nb_dir")
+  _settings_help_items+=("\
+    $(_highlight_accent "------")
+    The location of the directory that contains the notebooks. To sync with
+    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
+    \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
+
+      • Default Value: '~/.nb'")
+
+  _settings_list_items+=("$(_id_brackets_color '8') nb_encryption_tool")
+  _settings_help_items+=("\
+    $(_highlight_accent "------------------")
+    The tool used for encrypting notes.
+
+      • Supported Values: 'openssl', 'gpg'
+      • Default Value:    'openssl'")
 
   while ((${#}))
   do
@@ -7942,7 +7944,7 @@ _shell() {
   _debug printf "_shell() \${_initial_command:-}: '%s'\\n" \
     "${_initial_command:-}"
 
-  printf "%s" "${_TPUT_HIGHLIGHT_COLOR}"
+  printf "%s" "${_TPUT_COLOR_HIGHLIGHT}"
   cat <<HEREDOC
 __          _
 \ \   _ __ | |__

@@ -23,7 +23,7 @@ _setup_notebooks() {
 one (${_GIT_REMOTE_URL})"
   }
 
-  NB_HIGHLIGHT_COLOR=3 run "${_NB}" notebooks
+  NB_COLOR_HIGHLIGHT=3 run "${_NB}" notebooks
   [[ ${status} -eq 0 ]]
 
 
