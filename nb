@@ -524,17 +524,17 @@ _highlight() {
 
   if [[ "${2:-}" == "--underline" ]]
   then
-    printf "%s%s%s%s%s\\n"        \
-      "${_TPUT_SGR0}"             \
-      "${_TPUT_SMUL}"             \
-      "${_TPUT_COLOR_PRIMARY}"    \
-      "${_input}"                 \
+    printf "%s%s%s%s%s\\n"      \
+      "${_TPUT_SGR0}"           \
+      "${_TPUT_SMUL}"           \
+      "${_TPUT_COLOR_PRIMARY}"  \
+      "${_input}"               \
       "${_TPUT_SGR0}"
   else
-    printf "%s%s%s%s\\n"          \
-      "${_TPUT_SGR0}"             \
-      "${_TPUT_COLOR_PRIMARY}"    \
-      "${_input}"                 \
+    printf "%s%s%s%s\\n"        \
+      "${_TPUT_SGR0}"           \
+      "${_TPUT_COLOR_PRIMARY}"  \
+      "${_input}"               \
       "${_TPUT_SGR0}"
   fi
 }
@@ -563,12 +563,12 @@ _highlight_secondary() {
 #   Print <id> with surrounding color brackets.
 _id_brackets_color() {
   printf \
-    "%s%s[%s%s%s]%s"            \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SETAF_8}"          \
-    "${_TPUT_COLOR_PRIMARY}"    \
-    "${1:-}"                    \
-    "${_TPUT_SETAF_8}"          \
+    "%s%s[%s%s%s]%s"          \
+    "${_TPUT_SGR0}"           \
+    "${_TPUT_SETAF_8}"        \
+    "${_TPUT_COLOR_PRIMARY}"  \
+    "${1:-}"                  \
+    "${_TPUT_SETAF_8}"        \
     "${_TPUT_SGR0}"
 }
 
@@ -1661,8 +1661,8 @@ _get_unique_path() {
   do
     _uniqueness_counter="$((_uniqueness_counter+1))"
 
-    printf -v _unique_file_name -- "%s-%01d"   \
-      "${_file_name}"                          \
+    printf -v _unique_file_name -- "%s-%01d"  \
+      "${_file_name}"                         \
       "${_uniqueness_counter}"
   done
 
