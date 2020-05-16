@@ -7478,7 +7478,7 @@ _settings() {
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|NB_COLOR_THEME|COLOR_THEME|nb_color_theme|color_theme)
+      4|NB_COLOR_THEME|COLOR_THEME|nb_color_theme|color_theme|theme|color_scheme)
         ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
