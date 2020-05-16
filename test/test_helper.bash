@@ -33,7 +33,7 @@ setup() {
   export NB_DIR="${_TMP_DIR}/notebooks"
   export _NOTEBOOK_PATH="${NB_DIR}/home"
   export NBRC_PATH="${_TMP_DIR}/.notesrc"
-  export NB_COLOR_HIGHLIGHT=3
+  export NB_COLOR_PRIMARY=3
   export NB_AUTO_SYNC=0
 
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
@@ -96,8 +96,8 @@ _compare() {
 #
 # Usage:
 #   _highlight <string> [--underline]
-export _TPUT_COLOR_HIGHLIGHT
-_TPUT_COLOR_HIGHLIGHT="$(tput setaf 3)"
+export _TPUT_COLOR_PRIMARY
+_TPUT_COLOR_PRIMARY="$(tput setaf 3)"
 export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
 _highlight() {
@@ -110,11 +110,11 @@ _highlight() {
   if [[ "${2:-}" == "--underline" ]]
   then
     printf \
-      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_COLOR_HIGHLIGHT}%s${_TPUT_SGR0}\\n" \
+      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n" \
       "${_input}"
   else
     printf \
-      "${_TPUT_SGR0}${_TPUT_COLOR_HIGHLIGHT}%s${_TPUT_SGR0}\\n" \
+      "${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n" \
       "${_input}"
   fi
 }

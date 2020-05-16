@@ -167,7 +167,6 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'Usage' ]]
 }
 
-
 @test "\`settings set\` with invalid argument exits with error." {
   {
     "${_NB}" init
@@ -251,7 +250,6 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_AUTO_SYNC` #######################################################
 
-
 @test "\`settings set NB_AUTO_SYNC\` with valid argument sets and exits." {
   {
     "${_NB}" init
@@ -290,6 +288,129 @@ skip "Determine how to test interactive prompt."
 
   printf "get NB_AUTO_SYNC: '%s'\\n" "$("${_NB}" settings get NB_AUTO_SYNC)"
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
+}
+
+# `set NB_COLOR_PRIMARY` ######################################################
+
+@test "\`settings set NB_COLOR_PRIMARY\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_COLOR_PRIMARY 123
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_COLOR_PRIMARY    ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
+  [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+}
+
+@test "\`settings set NB_COLOR_PRIMARY\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_COLOR_PRIMARY 123
+
+  [[ "${output}" =~ NB_COLOR_PRIMARY    ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+
+  run "${_NB}" settings set NB_COLOR_PRIMARY invalid-color
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ 'NB_COLOR_PRIMARY must be a number.' ]]
+  printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
+  [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+}
+
+# `set NB_COLOR_SECONDARY` ####################################################
+
+@test "\`settings set NB_COLOR_SECONDARY\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_COLOR_SECONDARY 123
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_COLOR_SECONDARY  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
+  [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+}
+
+@test "\`settings set NB_COLOR_SECONDARY\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_COLOR_SECONDARY 123
+
+  [[ "${output}" =~ NB_COLOR_SECONDARY  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+
+  run "${_NB}" settings set NB_COLOR_SECONDARY invalid-color
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ 'NB_COLOR_SECONDARY must be a number.' ]]
+  printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
+  [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+}
+
+# `set NB_COLOR_THEME` ##############################################################
+
+@test "\`settings set NB_COLOR_THEME\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_COLOR_THEME "console"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_COLOR_THEME  ]]
+  [[ "${output}" =~ set\ to         ]]
+  [[ "${output}" =~ console         ]]
+  printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
+  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'console' ]]
+}
+
+@test "\`settings set NB_COLOR_THEME\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_COLOR_THEME "forest"
+
+  [[ "${output}" =~ NB_COLOR_THEME                    ]]
+  [[ "${output}" =~ set\ to                           ]]
+  [[ "${output}" =~ forest                            ]]
+  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest'  ]]
+
+  run "${_NB}" settings set NB_COLOR_THEME invalid-theme
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ 'NB_COLOR_THEME must be one of the available themes.' ]]
+  printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
+  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest' ]]
 }
 
 # `set NB_DIR` #############################################################
@@ -414,129 +535,6 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
-# `set NB_COLOR_ACCENT` #######################################################
-
-@test "\`settings set NB_COLOR_ACCENT\` with valid argument sets and exits." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" settings set NB_COLOR_ACCENT 123
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_COLOR_ACCENT     ]]
-  [[ "${output}" =~ set\ to             ]]
-  [[ "${output}" =~ 123                 ]]
-  printf "NB_COLOR_ACCENT: %s\\n" "$("${_NB}" settings get NB_COLOR_ACCENT)"
-  [[ "$("${_NB}" settings get NB_COLOR_ACCENT)" == '123' ]]
-}
-
-@test "\`settings set NB_COLOR_ACCENT\` with invalid argument exits with error." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" settings set NB_COLOR_ACCENT 123
-
-  [[ "${output}" =~ NB_COLOR_ACCENT     ]]
-  [[ "${output}" =~ set\ to             ]]
-  [[ "${output}" =~ 123                 ]]
-  [[ "$("${_NB}" settings get NB_COLOR_ACCENT)" == '123' ]]
-
-  run "${_NB}" settings set NB_COLOR_ACCENT invalid-color
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ 'NB_COLOR_ACCENT must be a number.' ]]
-  printf "NB_COLOR_ACCENT: %s\\n" "$("${_NB}" settings get NB_COLOR_ACCENT)"
-  [[ "$("${_NB}" settings get NB_COLOR_ACCENT)" == '123' ]]
-}
-
-# `set NB_COLOR_HIGHLIGHT` #################################################
-
-@test "\`settings set NB_COLOR_HIGHLIGHT\` with valid argument sets and exits." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" settings set NB_COLOR_HIGHLIGHT 123
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_COLOR_HIGHLIGHT  ]]
-  [[ "${output}" =~ set\ to             ]]
-  [[ "${output}" =~ 123                 ]]
-  printf "NB_COLOR_HIGHLIGHT: %s\\n" "$("${_NB}" settings get NB_COLOR_HIGHLIGHT)"
-  [[ "$(NB_COLOR_HIGHLIGHT='' "${_NB}" settings get NB_COLOR_HIGHLIGHT)" == '123' ]]
-}
-
-@test "\`settings set NB_COLOR_HIGHLIGHT\` with invalid argument exits with error." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" settings set NB_COLOR_HIGHLIGHT 123
-
-  [[ "${output}" =~ NB_COLOR_HIGHLIGHT  ]]
-  [[ "${output}" =~ set\ to             ]]
-  [[ "${output}" =~ 123                 ]]
-  [[ "$(NB_COLOR_HIGHLIGHT='' "${_NB}" settings get NB_COLOR_HIGHLIGHT)" == '123' ]]
-
-  run "${_NB}" settings set NB_COLOR_HIGHLIGHT invalid-color
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ 'NB_COLOR_HIGHLIGHT must be a number.' ]]
-  printf "NB_COLOR_HIGHLIGHT: %s\\n" "$("${_NB}" settings get NB_COLOR_HIGHLIGHT)"
-  [[ "$(NB_COLOR_HIGHLIGHT='' "${_NB}" settings get NB_COLOR_HIGHLIGHT)" == '123' ]]
-}
-
-# `set NB_COLOR_THEME` ##############################################################
-
-@test "\`settings set NB_COLOR_THEME\` with valid argument sets and exits." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" settings set NB_COLOR_THEME "console"
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_COLOR_THEME  ]]
-  [[ "${output}" =~ set\ to         ]]
-  [[ "${output}" =~ console         ]]
-  printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
-  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'console' ]]
-}
-
-@test "\`settings set NB_COLOR_THEME\` with invalid argument exits with error." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" settings set NB_COLOR_THEME "forest"
-
-  [[ "${output}" =~ NB_COLOR_THEME                    ]]
-  [[ "${output}" =~ set\ to                           ]]
-  [[ "${output}" =~ forest                            ]]
-  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest'  ]]
-
-  run "${_NB}" settings set NB_COLOR_THEME invalid-theme
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ 'NB_COLOR_THEME must be one of the available themes.' ]]
-  printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
-  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest' ]]
-}
-
 # `list` ######################################################################
 
 @test "\`settings show <name>\` in lowercase shows setting." {
@@ -577,8 +575,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ nb_color_accent ]]
-  [[ "${lines[1]}" =~ --------------- ]]
+  [[ "${lines[0]}" =~ nb_color_primary ]]
+  [[ "${lines[1]}" =~ ---------------- ]]
 }
 
 # `unset` #####################################################################

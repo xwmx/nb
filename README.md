@@ -1085,15 +1085,15 @@ You can update a setting without the prompt using `nb settings set`:
 
 ```bash
 # set highlight color with name
-> nb settings set nb_color_highlight 105
-NB_COLOR_HIGHLIGHT set to '105'
+> nb settings set nb_color_primary 105
+NB_COLOR_PRIMARY set to '105'
 
 # set highlight color with setting number (6)
 > nb setting set 6 105
-NB_COLOR_HIGHLIGHT set to '105'
+NB_COLOR_PRIMARY set to '105'
 ```
 
-`nb_color_highlight` expects an xterm color number between 0 and 255,
+`nb_color_primary` expects an xterm color number between 0 and 255,
 and can support higher values for terminals that support many colors.
 Print a table of common colors and numbers with:
 
@@ -1104,7 +1104,7 @@ nb settings colors
 Print the value of a setting:
 
 ```bash
-> nb settings get nb_color_highlight
+> nb settings get nb_color_primary
 105
 
 > nb settings get 6
@@ -1114,10 +1114,10 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> nb settings unset nb_color_highlight
-NB_COLOR_HIGHLIGHT restored to the default: '4'
+> nb settings unset nb_color_primary
+NB_COLOR_PRIMARY restored to the default: '4'
 
-> nb settings get nb_color_highlight
+> nb settings get nb_color_primary
 4
 ```
 
@@ -2172,8 +2172,8 @@ Description:
 Examples:
   nb settings
   nb settings set 3 'org'
-  nb settings set nb_color_highlight 105
-  nb settings unset nb_color_highlight
+  nb settings set nb_color_primary 105
+  nb settings unset nb_color_primary
   nb settings colors
   nb settings colors 105
 ```
@@ -2195,17 +2195,8 @@ Examples:
 
       • Default Value: '1'
 
-[3] nb_color_accent
-    ---------------
-    The color used for lines and footer elements. Like nb_color_highlight,
-    this can often be set to an xterm color number between 0 and 255. view a
-    table of 256 common colors and numbers, run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
-
-      • Default Value: '8'
-
-[4] nb_color_highlight
-    ------------------
+[3] nb_color_primary
+    ----------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors. To view a table of 256 common colors and numbers,
@@ -2214,6 +2205,15 @@ Examples:
 
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.
+
+[4] nb_color_secondary
+    ------------------
+    The color used for lines and footer elements. Like nb_color_primary,
+    this can often be set to an xterm color number between 0 and 255. view a
+    table of 256 common colors and numbers, run: `nb settings colors`
+    To view a color for a number, run: `nb settings colors <number>`
+
+      • Default Value: '8'
 
 [5] nb_color_theme
     --------------
@@ -2227,8 +2227,8 @@ Examples:
         # filename: ~/.nb/.themes/example.nb-theme.sh
         if [[ "${NB_COLOR_THEME}" == "example" ]]
         then
-          export NB_COLOR_ACCENT=8
-          export NB_COLOR_HIGHLIGHT=68
+          export NB_COLOR_SECONDARY=8
+          export NB_COLOR_PRIMARY=68
         fi
 
     To view a list of available color numbers, run `nb settings colors`
