@@ -1368,6 +1368,7 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
+  nb settings [<number> | <name>]
   nb settings [colors [<number>] | edit | list [--long]]
   nb settings (get | show | unset) (<number> | <name>)
   nb settings set (<number> | <name>) <value>
@@ -2176,7 +2177,7 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  nb settings
+  nb settings [<number> | <name>]
   nb settings colors [<number>]
   nb settings edit
   nb settings get   (<number> | <name>)

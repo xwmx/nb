@@ -2448,6 +2448,7 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
+  ${_ME} settings [<number> | <name>]
   ${_ME} settings [colors [<number>] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<number> | <name>)
   ${_ME} settings set (<number> | <name>) <value>
@@ -7378,7 +7379,7 @@ _alias_subcommand "search" "q"
 
 desc "settings" <<HEREDOC
 Usage:
-  ${_ME} settings
+  ${_ME} settings [<number> | <name>]
   ${_ME} settings colors [<number>]
   ${_ME} settings edit
   ${_ME} settings get   (<number> | <name>)
@@ -7506,35 +7507,41 @@ _settings() {
     esac
   }
 
-  # Usage: _nb_settings_prompt
+  # Usage: _nb_settings_prompt [<id> | <name>]
   _nb_settings_prompt() {
-    cat <<HEREDOC
+    local _setting_name="${1:-}"
+
+    if [[ -n "${_setting_name}" ]]
+    then
+      _setting_name="$(_nb_settings_identify "${_setting_name}")"
+    else
+      cat <<HEREDOC
 $(_highlight "${_ME}") Settings
 $(_highlight_secondary "-----------")
 $(_settings list)
 
 Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
 HEREDOC
-    local _setting_name=
 
-    while true
-    do
-      read -r -p "$(_highlight "Number or Name: ")" __setting
-      if [[ -n "${__setting}" ]]
-      then
-        case "${__setting}" in
-          q|quit|exit)
-            printf "Exiting...\\n"
-            return 0
-            ;;
-          *)
-            _setting_name="$(
-              _nb_settings_identify "${__setting}"
-            )" && break
-            ;;
-        esac
-      fi
-    done
+      while true
+      do
+        read -r -p "$(_highlight "Number or Name: ")" __setting
+        if [[ -n "${__setting}" ]]
+        then
+          case "${__setting}" in
+            q|quit|exit)
+              printf "Exiting...\\n"
+              return 0
+              ;;
+            *)
+              _setting_name="$(
+                _nb_settings_identify "${__setting}"
+              )" && break
+              ;;
+          esac
+        fi
+      done
+    fi
 
     if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
        [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
@@ -7918,7 +7925,19 @@ HEREDOC
         return 0
         ;;
       *)
-        _nb_settings_prompt
+        local _setting_name=
+        if [[ -n "${1:-}" ]]
+        then
+          _setting_name="$(_nb_settings_identify "${1}")"
+        fi
+
+        if [[ -n "${_setting_name:-}" ]]
+        then
+          _nb_settings_prompt "${_setting_name}"
+        else
+          _nb_settings_prompt
+        fi
+
         return 0
         ;;
     esac
