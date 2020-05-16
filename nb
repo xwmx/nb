@@ -7463,35 +7463,35 @@ _settings() {
     fi
 
     case "${_id_or_name}" in
-      1|NB_AUTO_SYNC|AUTO_SYNC|nb_auto_sync|auto_sync)
+      1|auto_sync|NB_AUTO_SYNC|nb_auto_sync|AUTO_SYNC)
         ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|NB_COLOR_PRIMARY|COLOR_PRIMARY|nb_color_primary|color_primary|primary_color)
+      2|color_primary|NB_COLOR_PRIMARY|nb_color_primary|COLOR_PRIMARY|primary_color)
         ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|NB_COLOR_SECONDARY|COLOR_SECONDARY|nb_color_secondary|color_secondary|secondary_color)
+      3|color_secondary|NB_COLOR_SECONDARY|nb_color_secondary|COLOR_SECONDARY|secondary_color)
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|NB_COLOR_THEME|COLOR_THEME|nb_color_theme|color_theme|theme|color_scheme)
+      4|color_theme|NB_COLOR_THEME|nb_color_theme|COLOR_THEME|theme|color_scheme)
         ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      5|NB_DEFAULT_EXTENSION|DEFAULT_EXTENSION|nb_default_extension|default_extension)
+      5|default_extension|NB_DEFAULT_EXTENSION|nb_default_extension|DEFAULT_EXTENSION)
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      6|EDITOR|editor)
+      6|editor|EDITOR)
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
-      7|NB_ENCRYPTION_TOOL|ENCRYPTION_TOOL|nb_encryption_tool|encryption_tool)
+      7|encryption_tool|NB_ENCRYPTION_TOOL|nb_encryption_tool|ENCRYPTION_TOOL)
         ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|NB_DIR|nb_dir)
+      8|nb_dir|NB_DIR)
         ((_get_id)) && printf "8" || printf "NB_DIR"
         return 0
         ;;
