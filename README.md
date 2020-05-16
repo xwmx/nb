@@ -6,7 +6,7 @@
 management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
 [Pandoc](http://pandoc.org/)-backed conversion,
-global and local notebooks, tagging, custom color themes,
+global and local notebooks, tagging, customizable color themes,
 and more, all in a single portable script.
 
 `nb` creates notes in text-based formats like
