@@ -2424,9 +2424,9 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  ${_ME} settings [colors [<number>] | edit | list]
-  ${_ME} settings (get | unset) <setting>
-  ${_ME} settings set <setting> <value>
+  ${_ME} settings [colors [<number>] | edit | list [--long]]
+  ${_ME} settings (get | show | unset) (<number> | <name>)
+  ${_ME} settings set (<number> | <name>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]

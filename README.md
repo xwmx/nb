@@ -1085,15 +1085,15 @@ You can update a setting without the prompt using `nb settings set`:
 
 ```bash
 # set highlight color with name
-> nb settings set nb_highlight_color 105
-NB_HIGHLIGHT_COLOR set to '105'
+> nb settings set nb_color_highlight 105
+NB_COLOR_HIGHLIGHT set to '105'
 
 # set highlight color with setting number (6)
 > nb setting set 6 105
-NB_HIGHLIGHT_COLOR set to '105'
+NB_COLOR_HIGHLIGHT set to '105'
 ```
 
-`nb_highlight_color` expects an xterm color number between 0 and 255,
+`nb_color_highlight` expects an xterm color number between 0 and 255,
 and can support higher values for terminals that support many colors.
 Print a table of common colors and numbers with:
 
@@ -1104,7 +1104,7 @@ nb settings colors
 Print the value of a setting:
 
 ```bash
-> nb settings get nb_highlight_color
+> nb settings get nb_color_highlight
 105
 
 > nb settings get 6
@@ -1114,10 +1114,10 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> nb settings unset nb_highlight_color
-NB_HIGHLIGHT_COLOR restored to the default: '4'
+> nb settings unset nb_color_highlight
+NB_COLOR_HIGHLIGHT restored to the default: '4'
 
-> nb settings get nb_highlight_color
+> nb settings get nb_color_highlight
 4
 ```
 
@@ -1341,9 +1341,9 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  nb settings [colors [<number>] | edit | list]
-  nb settings (get | unset) <setting>
-  nb settings set <setting> <value>
+  nb settings [colors [<number>] | edit | list [--long]]
+  nb settings (get | show | unset) (<number> | <name>)
+  nb settings set (<number> | <name>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
@@ -2149,18 +2149,20 @@ Usage:
   nb settings colors [<number>]
   nb settings edit
   nb settings get   (<number> | <name>)
-  nb settings list
+  nb settings list  [--long]
   nb settings set   (<number> | <name>) <value>
+  nb settings show  (<number> | <name>)
   nb settings unset (<number> | <name>)
 
 Subcommands:
   (default)  Open the settings prompt.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
-  edit       Open the ~/.nbrc configuration file in `$EDITOR`.
+  edit       Open the `nb` configuration file in `$EDITOR`.
   get        Print the value of a setting.
   list       List information about available settings.
   set        Assign <value> to a setting.
+  show       Print the help information and current value of a setting.
   unset      Unset a setting, returning it to the default value.
 
 Description:
@@ -2170,55 +2172,94 @@ Description:
 Examples:
   nb settings
   nb settings set 3 'org'
-  nb settings set nb_highlight_color 105
-  nb settings unset nb_highlight_color
+  nb settings set nb_color_highlight 105
+  nb settings unset nb_color_highlight
   nb settings colors
   nb settings colors 105
 ```
 
-##### `settings list`
+##### `settings list --long`
 
 ```text
 [1] editor
     ------
     The command line text editor to use with `nb`.
+
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
 
 [2] nb_auto_sync
-    ---------------
+    ------------
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
+
       • Default Value: '1'
 
-[3] nb_default_extension
-    -----------------------
-    The default extension to use for `nb` files. Change to 'org' for Emacs
+[3] nb_color_accent
+    ---------------
+    The color used for lines and footer elements. Like nb_color_highlight,
+    this can often be set to an xterm color number between 0 and 255. view a
+    table of 256 common colors and numbers, run: `nb settings colors`
+    To view a color for a number, run: `nb settings colors <number>`
+
+      • Default Value: '8'
+
+[4] nb_color_highlight
+    ------------------
+    The primary color used to highlight identifiers and messages. Often this
+    can be set to an xterm color number between 0 and 255. Some terminals
+    support many more colors. To view a table of 256 common colors and numbers,
+    run: `nb settings colors`
+    To view a color for a number, run: `nb settings colors <number>`
+
+      • Default Value: '68' (blue) for 256 color terminals,
+                       '4'  (blue) for  8  color terminals.
+
+[5] nb_color_theme
+    --------------
+    The color theme. `nb` has several built-in themes user defined
+    themes can be installed in the $NB_DIR/.themes directory. Themes have
+    an .nb-theme or .nb-theme.sh extension and contain a single if statment
+    assigning the color environment variables to tput ANSI color numbers.
+
+      Example:
+
+        # filename: ~/.nb/.themes/example.nb-theme.sh
+        if [[ "${NB_COLOR_THEME}" == "example" ]]
+        then
+          export NB_COLOR_ACCENT=8
+          export NB_COLOR_HIGHLIGHT=68
+        fi
+
+    To view a list of available color numbers, run `nb settings colors`
+    Available themes:
+       blacklight, console, desert, electro, forest, nb, ocean
+       raspberry, example, example2
+
+      • Default Value: 'nb'
+
+[6] nb_default_extension
+    --------------------
+    The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
+
       • Default Value: 'md'
 
-[4] nb_dir
-    ---------
+[7] nb_dir
+    ------
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     `nb settings set NB_DIR ~/Dropbox/Notes`
+
       • Default Value: '~/.nb'
 
-[5] nb_encryption_tool
-    ---------------------
+[8] nb_encryption_tool
+    ------------------
     The tool used for encrypting notes.
+
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
-
-[6] nb_highlight_color
-    ---------------------
-    Set highlighting color. Often this can be set to an xterm color number
-    between 0 and 255. Some terminals support many more colors. To view a
-    table of 256 common colors and numbers, run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
-      • Default Value: '68' (blue) for 256 color terminals,
-                       '4'  (blue) for  8  color terminals.
 ```
 
 #### `shell`
