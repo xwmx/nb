@@ -2606,7 +2606,6 @@ _add() {
   local _password=
   local _title=
 
-  # Parse function options.
   while ((${#}))
   do
     local __arg="${1:-}"
@@ -3754,7 +3753,6 @@ _edit() {
   local _local_editor=
   local _password=
 
-  # Parse function options.
   while ((${#}))
   do
     local __arg="${1:-}"
@@ -4871,7 +4869,6 @@ _list() {
 
   _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
-  # Parse function options.
   while ((${#}))
   do
     local __arg="${1:-}"
@@ -8162,7 +8159,6 @@ _show() {
   local _print_title=0
   local _tool=
 
-  # Parse function options.
   while ((${#}))
   do
     local __arg="${1:-}"
