@@ -733,18 +733,6 @@ _get_hash() {
   fi
 }
 
-# __option_value_is_present()
-#
-# Usage:
-#   __option_value_is_present "${variable}"
-#
-# Returns:
-#   0  The argument is present and does not match an option flag.
-#   1  The argument is blank or matches as an option flag.
-__option_value_is_present() {
-  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
-}
-
 # __option_get_value()
 #
 # Usage:
@@ -763,6 +751,18 @@ __option_get_value() {
   else
     _exit_1 printf "%s requires a valid argument.\\n" "$(_highlight "${__arg}")"
   fi
+}
+
+# __option_value_is_present()
+#
+# Usage:
+#   __option_value_is_present "${variable}"
+#
+# Returns:
+#   0  The argument is present and does not match an option flag.
+#   1  The argument is blank or matches as an option flag.
+__option_value_is_present() {
+  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
 }
 
 ###############################################################################
