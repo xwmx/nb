@@ -409,6 +409,12 @@ then
   export NB_COLOR_SECONDARY=94
 fi
 
+if [[ "${NB_COLOR_THEME}" == "monochrome"  ]]
+then
+  export NB_COLOR_PRIMARY=249
+  export NB_COLOR_SECONDARY=241
+fi
+
 if [[ "${NB_COLOR_THEME}" == "nb"         ]]
 then
   # See default values below.
@@ -427,15 +433,23 @@ then
   export NB_COLOR_SECONDARY=90
 fi
 
+if [[ "${NB_COLOR_THEME}" == "unicorn"  ]]
+then
+  export NB_COLOR_PRIMARY=189
+  export NB_COLOR_SECONDARY=153
+fi
+
 export _NB_COLOR_THEMES=(
   blacklight
   console
   desert
   electro
   forest
+  monochrome
   nb
   ocean
   raspberry
+  unicorn
 )
 
 # User defined themes can be installed in the $NB_DIR/.themes directory.
