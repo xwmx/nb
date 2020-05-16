@@ -45,8 +45,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ ' 105' ]]
-  [[ ! "${output}" =~ ' 106' ]]
+  [[ "${output}" =~ ' 105'    ]]
+  [[ ! "${output}" =~ ' 106'  ]]
 }
 
 # `edit` ######################################################################
@@ -132,9 +132,9 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ 1             ]]
-  [[ "${lines[0]}" =~ editor        ]]
+  [[ "${lines[0]}" =~ auto_sync     ]]
   [[ "${lines[1]}" =~ 2             ]]
-  [[ "${lines[1]}" =~ nb_auto_sync  ]]
+  [[ "${lines[1]}" =~ color_primary ]]
 }
 
 @test "\`settings list --long\` lists available settings with \`show\`." {
@@ -147,9 +147,9 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ 1             ]]
-  [[ "${lines[0]}" =~ editor        ]]
-  [[ "${lines[1]}" =~ ------        ]]
+  [[ "${lines[0]}" =~ 1         ]]
+  [[ "${lines[0]}" =~ auto_sync ]]
+  [[ "${lines[1]}" =~ --------- ]]
 }
 
 # `set` #######################################################################
@@ -266,6 +266,22 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
 }
 
+@test "\`settings set auto_sync\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set auto_sync 0
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_AUTO_SYNC  ]]
+  [[ "${output}" =~ set\ to\      ]]
+  [[ "${output}" =~ '0'           ]]
+  [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
+}
+
 @test "\`settings set NB_AUTO_SYNC\` with invalid argument exits with error." {
   {
     "${_NB}" init
@@ -283,8 +299,8 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
   # [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
-  [[ "${output}" =~ NB_AUTO_SYNC        ]]
-  [[ "${output}" =~ must\ be\ either    ]]
+  [[ "${output}" =~ NB_AUTO_SYNC      ]]
+  [[ "${output}" =~ must\ be\ either  ]]
 
   printf "get NB_AUTO_SYNC: '%s'\\n" "$("${_NB}" settings get NB_AUTO_SYNC)"
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
@@ -302,9 +318,26 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${output}" =~ NB_COLOR_PRIMARY    ]]
-  [[ "${output}" =~ set\ to             ]]
-  [[ "${output}" =~ 123                 ]]
+  [[ "${output}" =~ NB_COLOR_PRIMARY  ]]
+  [[ "${output}" =~ set\ to           ]]
+  [[ "${output}" =~ 123               ]]
+  printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
+  [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+}
+
+@test "\`settings set color_primary\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set color_primary 123
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_COLOR_PRIMARY  ]]
+  [[ "${output}" =~ set\ to           ]]
+  [[ "${output}" =~ 123               ]]
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
   [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
 }
@@ -316,9 +349,9 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_PRIMARY 123
 
-  [[ "${output}" =~ NB_COLOR_PRIMARY    ]]
-  [[ "${output}" =~ set\ to             ]]
-  [[ "${output}" =~ 123                 ]]
+  [[ "${output}" =~ NB_COLOR_PRIMARY  ]]
+  [[ "${output}" =~ set\ to           ]]
+  [[ "${output}" =~ 123               ]]
   [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
 
   run "${_NB}" settings set NB_COLOR_PRIMARY invalid-color
@@ -339,6 +372,23 @@ skip "Determine how to test interactive prompt."
   }
 
   run "${_NB}" settings set NB_COLOR_SECONDARY 123
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_COLOR_SECONDARY  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ 123                 ]]
+  printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
+  [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+}
+
+@test "\`settings set color_secondary\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set color_secondary 123
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -391,6 +441,23 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'console' ]]
 }
 
+@test "\`settings set color_theme\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set color_theme "console"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_COLOR_THEME  ]]
+  [[ "${output}" =~ set\ to         ]]
+  [[ "${output}" =~ console         ]]
+  printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
+  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'console' ]]
+}
+
 @test "\`settings set NB_COLOR_THEME\` with invalid argument exits with error." {
   {
     "${_NB}" init
@@ -398,9 +465,9 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_THEME "forest"
 
-  [[ "${output}" =~ NB_COLOR_THEME                    ]]
-  [[ "${output}" =~ set\ to                           ]]
-  [[ "${output}" =~ forest                            ]]
+  [[ "${output}" =~ NB_COLOR_THEME  ]]
+  [[ "${output}" =~ set\ to         ]]
+  [[ "${output}" =~ forest          ]]
   [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest'  ]]
 
   run "${_NB}" settings set NB_COLOR_THEME invalid-theme
@@ -421,6 +488,23 @@ skip "Determine how to test interactive prompt."
   }
 
   run "${_NB}" settings set NB_DIR /tmp/path/to/data/dir
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "settings get NB_DIR: '%s'\\n" "$("${_NB}" settings get NB_DIR)"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_DIR                ]]
+  [[ "${output}" =~ set\ to               ]]
+  [[ "${output}" =~ /tmp/path/to/data/dir ]]
+  [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == '/tmp/path/to/data/dir' ]]
+}
+
+@test "\`settings set nb_dir\` with full path argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set nb_dir /tmp/path/to/data/dir
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -513,6 +597,22 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
+@test "\`settings set encryption_tool\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set encryption_tool gpg
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_ENCRYPTION_TOOL  ]]
+  [[ "${output}" =~ set\ to             ]]
+  [[ "${output}" =~ gpg                 ]]
+  [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
+}
+
 @test "\`settings set NB_ENCRYPTION_TOOL\` with invalid argument exits with error." {
   {
     "${_NB}" init
@@ -547,8 +647,22 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ nb_auto_sync ]]
-  [[ "${lines[1]}" =~ ------------ ]]
+  [[ "${lines[0]}" =~ auto_sync ]]
+  [[ "${lines[1]}" =~ --------- ]]
+}
+
+@test "\`settings show <name>\` in lowercase with no prefix shows setting." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings show auto_sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ auto_sync ]]
+  [[ "${lines[1]}" =~ --------- ]]
 }
 
 @test "\`settings show <name>\` in uppercase shows setting." {
@@ -561,8 +675,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ nb_color_theme ]]
-  [[ "${lines[1]}" =~ -------------- ]]
+  [[ "${lines[0]}" =~ color_theme ]]
+  [[ "${lines[1]}" =~ ----------- ]]
 }
 
 @test "\`settings show <id>\` shows setting." {
@@ -570,13 +684,13 @@ skip "Determine how to test interactive prompt."
     "${_NB}" init
   }
 
-  run "${_NB}" settings show 3
+  run "${_NB}" settings show 2
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ nb_color_primary ]]
-  [[ "${lines[1]}" =~ ---------------- ]]
+  [[ "${lines[0]}" =~ color_primary ]]
+  [[ "${lines[1]}" =~ ------------- ]]
 }
 
 # `unset` #####################################################################

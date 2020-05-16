@@ -1075,7 +1075,7 @@ To update a setting in the prompt, enter the setting name or number,
 then enter the new value, and `nb` will add the setting to your
 `~/.nbrc` configuration file.
 
-#### Example: Highlight Color
+#### Example: Primary Color
 
 `nb` has a minimal text interface and uses color (blue, by default) to
 highlight certain elements like ids, the current notebook name, and the shell
@@ -1085,7 +1085,7 @@ You can update a setting without the prompt using `nb settings set`:
 
 ```bash
 # set highlight color with name
-> nb settings set nb_color_primary 105
+> nb settings set color_primary 105
 NB_COLOR_PRIMARY set to '105'
 
 # set highlight color with setting number (6)
@@ -1093,7 +1093,7 @@ NB_COLOR_PRIMARY set to '105'
 NB_COLOR_PRIMARY set to '105'
 ```
 
-`nb_color_primary` expects an xterm color number between 0 and 255,
+`color_primary` expects an xterm color number between 0 and 255,
 and can support higher values for terminals that support many colors.
 Print a table of common colors and numbers with:
 
@@ -1104,7 +1104,7 @@ nb settings colors
 Print the value of a setting:
 
 ```bash
-> nb settings get nb_color_primary
+> nb settings get color_primary
 105
 
 > nb settings get 6
@@ -1114,10 +1114,10 @@ Print the value of a setting:
 Unset a setting and revert to default:
 
 ```bash
-> nb settings unset nb_color_primary
+> nb settings unset color_primary
 NB_COLOR_PRIMARY restored to the default: '4'
 
-> nb settings get nb_color_primary
+> nb settings get color_primary
 4
 ```
 
@@ -2172,8 +2172,8 @@ Description:
 Examples:
   nb settings
   nb settings set 3 'org'
-  nb settings set nb_color_primary 105
-  nb settings unset nb_color_primary
+  nb settings set color_primary 105
+  nb settings unset color_primary
   nb settings colors
   nb settings colors 105
 ```
@@ -2181,13 +2181,7 @@ Examples:
 ##### `settings list --long`
 
 ```text
-[1] editor
-    ------
-    The command line text editor to use with `nb`.
-
-      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
-
-[2] nb_auto_sync
+[1] auto_sync
     ------------
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if
@@ -2195,7 +2189,7 @@ Examples:
 
       • Default Value: '1'
 
-[3] nb_color_primary
+[2] color_primary
     ----------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
@@ -2206,16 +2200,16 @@ Examples:
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.
 
-[4] nb_color_secondary
+[3] color_secondary
     ------------------
-    The color used for lines and footer elements. Like nb_color_primary,
+    The color used for lines and footer elements. Like color_primary,
     this can often be set to an xterm color number between 0 and 255. view a
     table of 256 common colors and numbers, run: `nb settings colors`
     To view a color for a number, run: `nb settings colors <number>`
 
       • Default Value: '8'
 
-[5] nb_color_theme
+[4] color_theme
     --------------
     The color theme. `nb` has several built-in themes user defined
     themes can be installed in the $NB_DIR/.themes directory. Themes have
@@ -2233,12 +2227,13 @@ Examples:
 
     To view a list of available color numbers, run `nb settings colors`
     Available themes:
-       blacklight, console, desert, electro, forest, nb, ocean
-       raspberry, example, example2
+
+       blacklight, console, desert, electro, forest, monochrome, nb
+       ocean, raspberry, unicorn
 
       • Default Value: 'nb'
 
-[6] nb_default_extension
+[5] default_extension
     --------------------
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
@@ -2246,20 +2241,26 @@ Examples:
 
       • Default Value: 'md'
 
-[7] nb_dir
+[6] editor
+    ------
+    The command line text editor to use with `nb`.
+
+      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+
+[7] encryption_tool
+    ------------------
+    The tool used for encrypting notes.
+
+      • Supported Values: 'openssl', 'gpg'
+      • Default Value:    'openssl'
+
+[8] nb_dir
     ------
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     `nb settings set NB_DIR ~/Dropbox/Notes`
 
       • Default Value: '~/.nb'
-
-[8] nb_encryption_tool
-    ------------------
-    The tool used for encrypting notes.
-
-      • Supported Values: 'openssl', 'gpg'
-      • Default Value:    'openssl'
 ```
 
 #### `shell`

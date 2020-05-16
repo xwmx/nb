@@ -7375,8 +7375,8 @@ Description:
 Examples:
   ${_ME} settings
   ${_ME} settings set 3 'org'
-  ${_ME} settings set nb_color_primary 105
-  ${_ME} settings unset nb_color_primary
+  ${_ME} settings set color_primary 105
+  ${_ME} settings unset color_primary
   ${_ME} settings colors
   ${_ME} settings colors 105
 HEREDOC
@@ -7436,36 +7436,36 @@ _settings() {
     fi
 
     case "${_id_or_name}" in
-      1|EDITOR|editor)
-        ((_get_id)) && printf "1" || printf "EDITOR"
+      1|NB_AUTO_SYNC|AUTO_SYNC|nb_auto_sync|auto_sync)
+        ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|NB_AUTO_SYNC|nb_auto_sync)
-        ((_get_id)) && printf "2" || printf "NB_AUTO_SYNC"
+      2|NB_COLOR_PRIMARY|COLOR_PRIMARY|nb_color_primary|color_primary)
+        ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|NB_COLOR_PRIMARY|nb_color_primary)
-        ((_get_id)) && printf "3" || printf "NB_COLOR_PRIMARY"
+      3|NB_COLOR_SECONDARY|COLOR_SECONDARY|nb_color_secondary|color_secondary)
+        ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|NB_COLOR_SECONDARY|nb_color_secondary)
-        ((_get_id)) && printf "4" || printf "NB_COLOR_SECONDARY"
+      4|NB_COLOR_THEME|COLOR_THEME|nb_color_theme|color_theme)
+        ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      5|NB_COLOR_THEME|nb_color_theme)
-        ((_get_id)) && printf "5" || printf "NB_COLOR_THEME"
+      5|NB_DEFAULT_EXTENSION|DEFAULT_EXTENSION|nb_default_extension|default_extension)
+        ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      6|NB_DEFAULT_EXTENSION|nb_default_extension)
-        ((_get_id)) && printf "6" || printf "NB_DEFAULT_EXTENSION"
+      6|EDITOR|editor)
+        ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
-      7|NB_DIR|nb_dir)
-        ((_get_id)) && printf "7" || printf "NB_DIR"
+      7|NB_ENCRYPTION_TOOL|ENCRYPTION_TOOL|nb_encryption_tool|encryption_tool)
+        ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|NB_ENCRYPTION_TOOL|nb_encryption_tool)
-        ((_get_id)) && printf "8" || printf "NB_ENCRYPTION_TOOL"
+      8|NB_DIR|nb_dir)
+        ((_get_id)) && printf "8" || printf "NB_DIR"
         return 0
         ;;
       *)
@@ -7696,14 +7696,7 @@ HEREDOC
   local _settings_list_items=()
   local _settings_help_items=()
 
-  _settings_list_items+=("$(_id_brackets_color '1') editor")
-  _settings_help_items+=("\
-    $(_highlight_secondary "------")
-    The command line text editor to use with \`${_ME}\`.
-
-      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'")
-
-  _settings_list_items+=("$(_id_brackets_color '2') nb_auto_sync")
+  _settings_list_items+=("$(_id_brackets_color '1') auto_sync")
   _settings_help_items+=("\
     $(_highlight_secondary "------------")
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
@@ -7712,7 +7705,7 @@ HEREDOC
 
       • Default Value: '1'")
 
-  _settings_list_items+=("$(_id_brackets_color '3') nb_color_primary")
+  _settings_list_items+=("$(_id_brackets_color '2') color_primary")
   _settings_help_items+=("\
     $(_highlight_secondary "----------------")
     The primary color used to highlight identifiers and messages. Often this
@@ -7724,7 +7717,7 @@ HEREDOC
       • Default Value: '68' (blue) for 256 color terminals,
                        '4'  (blue) for  8  color terminals.")
 
-  _settings_list_items+=("$(_id_brackets_color '4') nb_color_secondary")
+  _settings_list_items+=("$(_id_brackets_color '3') color_secondary")
   _settings_help_items+=("\
     $(_highlight_secondary "------------------")
     The color used for lines and footer elements. Like nb_color_primary,
@@ -7734,7 +7727,7 @@ HEREDOC
 
       • Default Value: '8'")
 
-  _settings_list_items+=("$(_id_brackets_color '5') nb_color_theme")
+  _settings_list_items+=("$(_id_brackets_color '4') color_theme")
   _settings_help_items+=("\
     $(_highlight_secondary "--------------")
     The color theme. \`${_ME}\` has several built-in themes user defined
@@ -7753,6 +7746,7 @@ HEREDOC
 
     To view a list of available color numbers, run \`nb settings colors\`
     Available themes:
+
       $(__list_themes() {
           local _line=
           local _line_color=
@@ -7777,7 +7771,7 @@ HEREDOC
 
       • Default Value: 'nb'")
 
-  _settings_list_items+=("$(_id_brackets_color '6') nb_default_extension")
+  _settings_list_items+=("$(_id_brackets_color '5') default_extension")
   _settings_help_items+=("\
     $(_highlight_secondary "--------------------")
     The default extension to use for notes files. Change to 'org' for Emacs
@@ -7786,7 +7780,22 @@ HEREDOC
 
       • Default Value: 'md'")
 
-  _settings_list_items+=("$(_id_brackets_color '7') nb_dir")
+  _settings_list_items+=("$(_id_brackets_color '6') editor")
+  _settings_help_items+=("\
+    $(_highlight_secondary "------")
+    The command line text editor to use with \`${_ME}\`.
+
+      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'")
+
+  _settings_list_items+=("$(_id_brackets_color '7') encryption_tool")
+  _settings_help_items+=("\
+    $(_highlight_secondary "------------------")
+    The tool used for encrypting notes.
+
+      • Supported Values: 'openssl', 'gpg'
+      • Default Value:    'openssl'")
+
+  _settings_list_items+=("$(_id_brackets_color '8') nb_dir")
   _settings_help_items+=("\
     $(_highlight_secondary "------")
     The location of the directory that contains the notebooks. To sync with
@@ -7794,14 +7803,6 @@ HEREDOC
     \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
 
       • Default Value: '~/.nb'")
-
-  _settings_list_items+=("$(_id_brackets_color '8') nb_encryption_tool")
-  _settings_help_items+=("\
-    $(_highlight_secondary "------------------")
-    The tool used for encrypting notes.
-
-      • Supported Values: 'openssl', 'gpg'
-      • Default Value:    'openssl'")
 
   while ((${#}))
   do
