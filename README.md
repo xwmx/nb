@@ -1089,7 +1089,7 @@ You can update a setting without the prompt using `nb settings set`:
 NB_COLOR_PRIMARY set to '105'
 
 # set highlight color with setting number (6)
-> nb setting set 6 105
+> nb settings set 6 105
 NB_COLOR_PRIMARY set to '105'
 ```
 
@@ -2211,10 +2211,11 @@ Examples:
 
 [4] color_theme
     --------------
-    The color theme. `nb` has several built-in themes user defined
-    themes can be installed in the $NB_DIR/.themes directory. Themes have
-    an .nb-theme or .nb-theme.sh extension and contain a single if statment
-    assigning the color environment variables to tput ANSI color numbers.
+    The color theme. `nb` has several built-in themes and user
+    defined themes can be installed in the $NB_DIR/.themes directory.
+    Themes have an .nb-theme or .nb-theme.sh extension and contain a
+    single if statment assigning the color environment variables to
+    tput ANSI color numbers.
 
       Example:
 
