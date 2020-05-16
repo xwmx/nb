@@ -1064,8 +1064,7 @@ nb export Movies /path/to/example.html
 ### Settings
 
 `nb settings` opens the settings prompt, which provides an easy way to
-change your `nb` settings. To print a list of available settings, see
-[`nb help settings`](#settings-1).
+change your `nb` settings.
 
 ```bash
 nb settings
@@ -1075,51 +1074,78 @@ To update a setting in the prompt, enter the setting name or number,
 then enter the new value, and `nb` will add the setting to your
 `~/.nbrc` configuration file.
 
-#### Example: Primary Color
+#### Example: Color Theme
 
 `nb` has a minimal text interface and uses color (blue, by default) to
 highlight certain elements like ids, the current notebook name, and the shell
 prompt.
 
+Information about a setting can be viewed with `nb settings show`:
+
+```bash
+> nb settings show color_theme
+[4] color_theme
+    --------------
+    The color theme. `nb` has several built-in themes and user
+    defined themes can be installed in the $NB_DIR/.themes directory.
+    Themes have an .nb-theme or .nb-theme.sh extension and contain a
+    single if statment assigning the color environment variables to
+    tput ANSI color numbers.
+
+      Example:
+
+        # filename: ~/.nb/.themes/example.nb-theme.sh
+        if [[ "${NB_COLOR_THEME}" == "example" ]]
+        then
+          export NB_COLOR_PRIMARY=68
+          export NB_COLOR_SECONDARY=8
+        fi
+
+    To view a list of available color numbers, run `nb settings colors`
+    Available themes:
+
+       blacklight, console, desert, electro, forest, monochrome, nb
+       ocean, raspberry, unicorn, example, example2
+
+      • Default Value: 'nb'
+
+NB_COLOR_THEME is currently set to nb
+```
+
 You can update a setting without the prompt using `nb settings set`:
 
 ```bash
 # set highlight color with name
-> nb settings set color_primary 105
-NB_COLOR_PRIMARY set to '105'
+> nb settings set color_theme raspberry
+NB_COLOR_THEME set to raspberry
 
-# set highlight color with setting number (6)
-> nb settings set 6 105
-NB_COLOR_PRIMARY set to '105'
-```
-
-`color_primary` expects an xterm color number between 0 and 255,
-and can support higher values for terminals that support many colors.
-Print a table of common colors and numbers with:
-
-```bash
-nb settings colors
+# set highlight color with setting number (4)
+> nb settings set 4 raspberry
+NB_COLOR_THEME set to raspberry
 ```
 
 Print the value of a setting:
 
 ```bash
-> nb settings get color_primary
-105
+> nb settings get color_theme
+raspberry
 
-> nb settings get 6
-105
+> nb settings get 4
+raspberry
 ```
 
 Unset a setting and revert to default:
 
 ```bash
-> nb settings unset color_primary
-NB_COLOR_PRIMARY restored to the default: '4'
+> nb settings unset color_theme
+NB_COLOR_THEME restored to the default: nb
 
-> nb settings get color_primary
-4
+> nb settings get color_theme
+nb
 ```
+
+For more information about settings, see [`nb help settings`](#settings-1) and
+[`nb settings list --long`](#settings-list---long).
 
 ### Interactive Shell
 
