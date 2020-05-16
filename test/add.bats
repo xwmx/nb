@@ -134,10 +134,58 @@ load test_helper
 
 # --filename option ###########################################################
 
-
 @test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
   run "${_NB}" init
-  run "${_NB}" add --filename example.md
+  run "${_NB}" add --filename example.org
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+
+  [[ -n "$(ls example.org)" ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "\`add\` with --filename option overrides content or filename argument." {
+  run "${_NB}" init
+  run "${_NB}" add "sample.md" --filename example.org
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+
+  [[ -n "$(ls example.org)" ]]
+  ! grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
+  grep -q 'sample.md' "${_NOTEBOOK_PATH}"/*
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "\`add\` with extension-less --filename option uses default extension." {
+  run "${_NB}" init
+  run "${_NB}" add --filename example
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 

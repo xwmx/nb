@@ -1633,6 +1633,15 @@ _get_unique_basename() {
     _file_type="md"
   fi
 
+  if [[ -n "${_file_type:-}"                ]] &&
+     [[ "${_file_basename}" =~ \.           ]] &&
+     [[ "${_file_name}" != "${_file_type}"  ]]
+  then
+    _file_type="${_file_type}"
+  else
+    _file_type="md"
+  fi
+
   basename "$(
     _get_unique_path "${_NOTEBOOK_PATH}/${_file_name}.${_file_type}"
   )"
@@ -2646,8 +2655,9 @@ _add() {
   local _maybe_filename_or_content_extension="${_maybe_filename_or_content##*\.}"
   if [[ -n "${_maybe_filename_or_content:-}" ]]
   then
-    if [[ "${_maybe_filename_or_content:-}" =~ \.[A-Za-z0-9]+$ ]] &&
-       [[ -n "${_maybe_filename_or_content_extension:-}" ]]
+    if [[ "${_maybe_filename_or_content:-}" =~ \.[A-Za-z0-9]+$  ]] &&
+       [[ -n "${_maybe_filename_or_content_extension:-}"        ]] &&
+       [[ -z "${_filename}"                                     ]]
     then
       _filename="${_maybe_filename_or_content}"
     else
