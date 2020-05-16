@@ -451,7 +451,7 @@ export _NB_COLOR_THEMES=(
 #     fi
 #
 #  To view a list of available color numbers, run `nb settings colors`
-_load_themes() {
+__load_themes() {
   if [[ -d "${NB_DIR}/.themes" ]]
   then
     set +f
@@ -466,7 +466,7 @@ _load_themes() {
     done
     set -f
   fi
-} && _load_themes
+} && __load_themes
 
 # $NB_COLOR_ACCENT
 #
