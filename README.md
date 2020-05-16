@@ -2227,8 +2227,8 @@ Examples:
         # filename: ~/.nb/.themes/example.nb-theme.sh
         if [[ "${NB_COLOR_THEME}" == "example" ]]
         then
-          export NB_COLOR_SECONDARY=8
           export NB_COLOR_PRIMARY=68
+          export NB_COLOR_SECONDARY=8
         fi
 
     To view a list of available color numbers, run `nb settings colors`
