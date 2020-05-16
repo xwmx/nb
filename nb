@@ -1645,7 +1645,6 @@ _get_unique_basename() {
   basename "$(
     _get_unique_path "${_NOTEBOOK_PATH}/${_file_name}.${_file_type}"
   )"
-
 }
 
 # _get_unique_path()
