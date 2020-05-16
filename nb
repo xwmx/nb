@@ -7495,7 +7495,7 @@ HEREDOC
     if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
        [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
     then
-      printf "%s\\n" "$(_nb_settings_colors)"
+      printf "%s\\n\\n" "$(_nb_settings_colors)"
     fi
 
     _settings show "${_setting_name}"
