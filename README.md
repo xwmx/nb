@@ -6,8 +6,8 @@
 management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
 [Pandoc](http://pandoc.org/)-backed conversion,
-global and local notebooks, tagging, color themes, and more,
-all in a single portable, well-tested script.
+global and local notebooks, tagging, custom color themes,
+and more, all in a single portable script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown) and
@@ -37,7 +37,7 @@ any device.
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured, intuitive, and enjoyable experience within a
 carefully crafted user-centric text interface.
-The entire program is a single well-tested script
+The entire program is a single well-tested shell script
 that can be copied or `curl`ed anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
