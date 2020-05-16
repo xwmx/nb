@@ -3670,7 +3670,8 @@ _delete() {
     _scoped_basename="${_notebook_identifier}:${_basename}"
   fi
 
-  local _note_info_hi="$(_id_brackets_color "${_id}") $(_highlight "${_scoped_basename}")"
+  local _note_info_hi
+  _note_info_hi="$(_id_brackets_color "${_id}") $(_highlight "${_scoped_basename}")"
 
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
