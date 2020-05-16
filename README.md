@@ -203,6 +203,7 @@ instructions](etc/README.md).
   <a href="#git-sync">Git Sync</a> •
   <a href="#import--export">Import / Export</a> •
   <a href="#settings">Settings</a> •
+  <a href="#color-themes">Color Themes</a> •
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a>
@@ -214,8 +215,8 @@ To get started, simply run:
 nb
 ```
 
-`nb` sets up your initial "home" notebook the first time it runs.
-Now it's ready for you to start adding notes.
+`nb` stores notes in notebooks, and `nb` sets up your initial "home" notebook
+the first time it runs.
 
 ### Working with Notes
 
@@ -259,17 +260,20 @@ To list notes and notebooks, run `nb ls`:
 
 ```bash
 > nb ls
-home
-----
+home · notebook2
+----------------
 [3] example.md · "Example content."
 [2] todos.md · "Todos:"
 [1] ideas.md · "- Example idea one."
 ```
 
-Notebooks are listed above the line, with the current notebook highlighted.
-Notes from the current notebook are listed with each id and either the
-filename or title, if one is present. When no title is present, the
-first line of the note file is displayed next to the filename.
+Notebooks are listed above the line, with the current notebook
+highlighted and/or underlined, depending on terminal capabilities.
+
+Notes from the current notebook are listed in the order they were last
+modified. By default, each note is listed with its id, filename, and an
+excerpt from the first line of the note. When a note has a title, the
+title is displayed instead of the filename and first line.
 
 Titles can be defined within a note using
 [either Markdown `h1` style](https://daringfireball.net/projects/markdown/syntax#header)
@@ -1074,18 +1078,76 @@ To update a setting in the prompt, enter the setting name or number,
 then enter the new value, and `nb` will add the setting to your
 `~/.nbrc` configuration file.
 
-#### Example: Color Theme
+#### Example: editor
 
-`nb` has a minimal text interface and uses color (blue, by default) to
-highlight certain elements like ids, the current notebook name, and the shell
-prompt.
+`nb` can be configured to use a specific command line editor using the
+`editor` setting.
 
-Information about a setting can be viewed with `nb settings show`:
+The settings prompt for a setting can be started by passing the setting
+name or number to `nb settings`:
 
 ```bash
-> nb settings show color_theme
+> nb settings editor
+[6] editor
+    ------
+    The command line text editor to use with `nb`.
+
+      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+
+EDITOR is currently set to vim
+
+Enter a new value, unset to set to the default value, or q to quit.
+Value:
+```
+
+A setting can also be updated without the prompt using `nb settings set`:
+
+```bash
+# set editor with setting name
+> nb settings set editor code
+EDITOR set to code
+
+# set highlight color with setting number (6)
+> nb settings set 6 code
+EDITOR set to code
+```
+
+Print the value of a setting:
+
+```bash
+> nb settings get editor
+code
+
+> nb settings get 6
+code
+```
+
+Unset a setting and revert to default:
+
+```bash
+> nb settings unset editor
+EDITOR restored to the default: vim
+
+> nb settings get editor
+vim
+```
+
+For more information about settings, see [`nb help settings`](#settings-1) and
+[`nb settings list --long`](#settings-list---long).
+
+### Color Themes
+
+`nb` has a minimal text interface and uses color to highlight certain
+elements like ids, the current notebook name, the shell prompt, and
+divider lines.
+
+`nb` includes several built-in color themes and supports user-created color
+themes. The color theme can be configured in `notes settings`:
+
+```bash
+> nb settings color_theme
 [4] color_theme
-    --------------
+    -----------
     The color theme. `nb` has several built-in themes and user
     defined themes can be installed in the $NB_DIR/.themes directory.
     Themes have an .nb-theme or .nb-theme.sh extension and contain a
@@ -1110,42 +1172,42 @@ Information about a setting can be viewed with `nb settings show`:
       • Default Value: 'nb'
 
 NB_COLOR_THEME is currently set to nb
+
+Enter a new value, unset to set to the default value, or q to quit.
+Value:
 ```
 
-You can update a setting without the prompt using `nb settings set`:
+The primary and secondary colors can also be configured individually,
+making the built-in color schemes easily customizable in
+`notes settings`. Use `notes settings color_primary` and
+`notes settings color_secondary` to open the color settings prompts,
+which also both print a table of color values to choose from:
 
 ```bash
-# set highlight color with name
-> nb settings set color_theme raspberry
-NB_COLOR_THEME set to raspberry
+> nb settings color_primary
+[...color table omitted...]
 
-# set highlight color with setting number (4)
-> nb settings set 4 raspberry
-NB_COLOR_THEME set to raspberry
+[2] color_primary
+    -------------
+    The primary color used to highlight identifiers and messages. Often this
+    can be set to an xterm color number between 0 and 255. Some terminals
+    support many more colors. To view a table of 256 common colors and numbers,
+    run: `nb settings colors`
+    To view a color for a number, run: `nb settings colors <number>`
+
+      • Default Value: '68' (blue) for 256 color terminals,
+                       '4'  (blue) for  8  color terminals.
+
+NB_COLOR_PRIMARY is currently set to 162
+
+Enter a new value, unset to set to the default value, or q to quit.
+Value:
 ```
 
-Print the value of a setting:
+#### Shell Theme Support
 
-```bash
-> nb settings get color_theme
-raspberry
-
-> nb settings get 4
-raspberry
-```
-
-Unset a setting and revert to default:
-
-```bash
-> nb settings unset color_theme
-NB_COLOR_THEME restored to the default: nb
-
-> nb settings get color_theme
-nb
-```
-
-For more information about settings, see [`nb help settings`](#settings-1) and
-[`nb settings list --long`](#settings-list---long).
+- [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
+    current notebook name in the context line of the prompt.
 
 ### Interactive Shell
 
@@ -1203,11 +1265,6 @@ $
 
 The `nb` shell recognizes all `nb` subcommands and options,
 providing a streamlined, distraction-free approach for working with `nb`.
-
-### Shell Theme Support
-
-- [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
-    current notebook name in the context line of the prompt.
 
 ### Shortcut Aliases
 
