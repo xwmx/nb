@@ -3623,9 +3623,9 @@ HEREDOC
 _delete() {
   local _basename=
   local _force=0
-  local _note_info_line
+  local _note_info_line=
   local _selection=
-  local _title
+  local _title=
 
   for __arg in "${@:-}"
   do
@@ -3670,12 +3670,14 @@ _delete() {
     _scoped_basename="${_notebook_identifier}:${_basename}"
   fi
 
+  local _note_info_hi="$(_id_brackets_color "${_id}") $(_highlight "${_scoped_basename}")"
+
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
-    _note_info_line="$(_id_brackets_color "${_id}") ${_scoped_basename} '${_title}'"
+    _note_info_line="${_note_info_hi} '${_title}'"
   else
-    _note_info_line="$(_id_brackets_color "${_id}") ${_scoped_basename}"
+    _note_info_line="${_note_info_hi}"
   fi
 
   if ! ((_force))
