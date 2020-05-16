@@ -2404,8 +2404,9 @@ Usage:
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [--raw-content] [--related <url>]...
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [-f <filename> | --filename <filename>]
+              [--raw-content] [--related <url>]... [--skip-content]
+              [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -2778,25 +2779,27 @@ desc "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [--raw-content] [--related <url>]...
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [-f <filename> | --filename <filename>]
+              [--raw-content] [--related <url>]... [--skip-content]
+              [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
 
 Options:
-  -c, --comment <comment>   A comment or description for this bookmark.
-  --edit                    Open the bookmark in your editor before saving.
-  -e, --encrypt             Encrypt the bookmark with a password.
-  --raw-content             Save the page content as HTML.
-  --related <url>           A URL for a page related to the bookmarked page.
-                            Multiple \`--related\` flags can be used in a
-                            command to save multiple related URLs.
-  --skip-content            Omit page content from the note.
-  --tags <tag1>,<tag2>...   A comma-separated list of tags.
-  --title <title>           The bookmark title. When not specified,
-                            \`${_ME}\` will use the html <title> tag.
+  -c, --comment <comment>    A comment or description for this bookmark.
+  --edit                     Open the bookmark in your editor before saving.
+  -e, --encrypt              Encrypt the bookmark with a password.
+  -f, --filename <filename>  The filename for the new note.
+  --raw-content              Save the page content as HTML.
+  --related <url>            A URL for a page related to the bookmarked page.
+                             Multiple \`--related\` flags can be used in a
+                             command to save multiple related URLs.
+  --skip-content             Omit page content from the note.
+  --tags <tag1>,<tag2>...    A comma-separated list of tags.
+  --title <title>            The bookmark title. When not specified,
+                             \`${_ME}\` will use the html <title> tag.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -2841,6 +2844,7 @@ _bookmark() {
   local _comment=
   local _edit_before_save=0
   local _encrypt=0
+  local _filename=
   local _password=
   local _raw_content=0
   local _selection=
@@ -2866,6 +2870,10 @@ _bookmark() {
         ;;
       -e|--encrypt|--encrypted)
         _encrypt=1
+        ;;
+      -f|--filename)
+        _filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       --password)
         _password="$(__option_get_value "${__arg}" "${__val:-}")"
@@ -3162,14 +3170,6 @@ HEREDOC
   fi
 
   # `bookmark <url>`
-  local _basename
-  _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S').bookmark.md")"
-
-  _debug printf \
-    "_bookmark() \`\${_basename}\`: '%s'\\n" "${_basename:-}"
-
-  local _target_path="${_NOTEBOOK_PATH}/${_basename}"
-
   local _page_content
   if ! _page_content="$(_download_from "${_url}")" &&
      [[ -z "${_page_content:-}" ]]
@@ -3302,23 +3302,27 @@ HEREDOC
 
   if [[ -n "${_bookmark_content}" ]]
   then
-    local _add_options=()
+    local _basename=
+
+    if [[ -z "${_filename:-}" ]]
+    then
+      _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S').bookmark.md")"
+    else
+      if [[ "${_filename}" =~ \. ]]
+      then
+        _basename="$(_get_unique_basename "${_filename}")"
+      else
+        _basename="$(_get_unique_basename "${_filename}.bookmark.md")"
+      fi
+    fi
+
+    local _add_options=("--filename" "${_basename}")
 
     ((_encrypt))              && _add_options+=("--encrypt")
     ((_edit_before_save))     && _add_options+=("--edit")
     [[ -n "${_password:-}" ]] && _add_options+=("--password" "${_password}")
 
-    _debug printf \
-      "_bookmark() \${_add_options[*]}}: '%s'\\n" \
-      "${_add_options[*]:-}"
-
-    if [[ -n "${_add_options[*]:-}" ]]
-    then
-      printf "%s" "${_bookmark_content}" \
-        | _add "${_basename}" "${_add_options[@]}"
-    else
-      printf "%s" "${_bookmark_content}" | _add "${_basename}"
-    fi
+    printf "%s" "${_bookmark_content}" | _add "${_add_options[@]}"
   fi
 }
 _alias_subcommand "bookmark" "b"

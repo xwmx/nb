@@ -1298,8 +1298,9 @@ Usage:
          [-t <title> | --title <title>] [--type <type>]
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [--raw-content] [--related <url>]...
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [-f <filename> | --filename <filename>]
+              [--raw-content] [--related <url>]... [--skip-content]
+              [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1414,25 +1415,27 @@ Markdown files with Git-backed versioning and syncing.
 Usage:
   bookmark [<list options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-                 [-e | --encrypt] [--raw-content] [--related <url>]...
-                 [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [-f <filename> | --filename <filename>]
+              [--raw-content] [--related <url>]... [--skip-content]
+              [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   bookmark search <query>
 
 Options:
-  -c, --comment <comment>   A comment or description for this bookmark.
-  --edit                    Open the bookmark in your editor before saving.
-  -e, --encrypt             Encrypt the bookmark with a password.
-  --raw-content             Save the page content as HTML.
-  --related <url>           A URL for a page related to the bookmarked page.
-                            Multiple `--related` flags can be used in a
-                            command to save multiple related URLs.
-  --skip-content            Omit page content from the note.
-  --tags <tag1>,<tag2>...   A comma-separated list of tags.
-  --title <title>           The bookmark title. When not specified,
-                            `nb` will use the html <title> tag.
+  -c, --comment <comment>    A comment or description for this bookmark.
+  --edit                     Open the bookmark in your editor before saving.
+  -e, --encrypt              Encrypt the bookmark with a password.
+  -f, --filename <filename>  The filename for the new note.
+  --raw-content              Save the page content as HTML.
+  --related <url>            A URL for a page related to the bookmarked page.
+                             Multiple `--related` flags can be used in a
+                             command to save multiple related URLs.
+  --skip-content             Omit page content from the note.
+  --tags <tag1>,<tag2>...    A comma-separated list of tags.
+  --title <title>            The bookmark title. When not specified,
+                             `nb` will use the html <title> tag.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -1529,25 +1532,27 @@ Shortcut Alias: `a`
 Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [--raw-content] [--related <url>]...
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-e | --encrypt] [-f <filename> | --filename <filename>]
+              [--raw-content] [--related <url>]... [--skip-content]
+              [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
 
 Options:
-  -c, --comment <comment>   A comment or description for this bookmark.
-  --edit                    Open the bookmark in your editor before saving.
-  -e, --encrypt             Encrypt the bookmark with a password.
-  --raw-content             Save the page content as HTML.
-  --related <url>           A URL for a page related to the bookmarked page.
-                            Multiple `--related` flags can be used in a
-                            command to save multiple related URLs.
-  --skip-content            Omit page content from the note.
-  --tags <tag1>,<tag2>...   A comma-separated list of tags.
-  --title <title>           The bookmark title. When not specified,
-                            `nb` will use the html <title> tag.
+  -c, --comment <comment>    A comment or description for this bookmark.
+  --edit                     Open the bookmark in your editor before saving.
+  -e, --encrypt              Encrypt the bookmark with a password.
+  -f, --filename <filename>  The filename for the new note.
+  --raw-content              Save the page content as HTML.
+  --related <url>            A URL for a page related to the bookmarked page.
+                             Multiple `--related` flags can be used in a
+                             command to save multiple related URLs.
+  --skip-content             Omit page content from the note.
+  --tags <tag1>,<tag2>...    A comma-separated list of tags.
+  --title <title>            The bookmark title. When not specified,
+                             `nb` will use the html <title> tag.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.

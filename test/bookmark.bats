@@ -685,6 +685,83 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
+# --filename option ###########################################################
+
+@test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
+  run "${_NB}" init
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.bookmark.md
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+
+  [[ -n "$(ls example.bookmark.md)" ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "\`add\` with --filename option uses specified extension." {
+  run "${_NB}" init
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.org
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+
+  [[ -n "$(ls example.org)" ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "\`add\` with extension-less --filename option uses default extension." {
+  run "${_NB}" init
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+
+  [[ -n "$(ls example.bookmark.md)" ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 # `bookmark delete` ###########################################################
 
 @test "\`bookmark delete\` deletes properly without errors." {
