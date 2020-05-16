@@ -388,19 +388,19 @@ fi
 if [[ "${NB_COLOR_THEME}" == "console"    ]]
 then
   export NB_COLOR_PRIMARY=40
-  export NB_COLOR_SECONDARY=22
+  export NB_COLOR_SECONDARY=28
 fi
 
 if [[ "${NB_COLOR_THEME}" == "desert"     ]]
 then
   export NB_COLOR_PRIMARY=179
-  export NB_COLOR_SECONDARY=94
+  export NB_COLOR_SECONDARY=95
 fi
 
 if [[ "${NB_COLOR_THEME}" == "electro"    ]]
 then
   export NB_COLOR_PRIMARY=165
-  export NB_COLOR_SECONDARY=27
+  export NB_COLOR_SECONDARY=26
 fi
 
 if [[ "${NB_COLOR_THEME}" == "forest"     ]]
@@ -423,7 +423,7 @@ fi
 
 if [[ "${NB_COLOR_THEME}" == "ocean"      ]]
 then
-  export NB_COLOR_PRIMARY=45
+  export NB_COLOR_PRIMARY=75
   export NB_COLOR_SECONDARY=26
 fi
 
