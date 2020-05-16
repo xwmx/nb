@@ -768,6 +768,15 @@ highlighting:
 1:# Example Note
 ```
 
+To just print the note information line without the content matches, use
+the `-l` or `--list` option:
+
+```bash
+> nb search 'example' --list
+[314] example.bookmark.md 'Example Bookmark (example.com)'
+[2718] example.md 'Example Note'
+```
+
 `nb search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
 [`ag`](https://github.com/ggreer/the_silver_searcher),
 [`ack`](http://beyondgrep.com/), and
