@@ -2844,6 +2844,36 @@ Examples:
 Shortcut Alias: \`b\`
 HEREDOC
 _bookmark() {
+  # Usage: _bookmark_view_in_terminal_browser (<url>)
+  _bookmark_view_in_terminal_browser() {
+    _target_url="${1:-}"
+    if _command_exists 'w3m'
+    then
+      w3m "${_target_url}"
+      return 0
+    elif _command_exists 'lynx'
+    then
+      lynx "${_target_url}"
+      return 0
+    elif _command_exists "curl" || _command_exists "wget"
+    then
+      _download_from "${_target_url}" \
+        | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+            then
+              "${PAGER}"
+            elif _command_exists "less"
+            then
+              less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+            else
+              cat
+            fi
+
+      return 0
+    else
+      _exit_1 printf "Terminal web browser not detected.\\n"
+    fi
+  }
+
   local _arguments=()
   local _bookmark_content=
   local _comment=
@@ -3007,31 +3037,8 @@ _bookmark() {
           fi
         elif [[ "${_subcommand}" == "peek" ]]
         then
-          if _command_exists 'w3m'
-          then
-            w3m "${_target_path}"
-            return 0
-          elif _command_exists 'lynx'
-          then
-            lynx "${_target_path}"
-            return 0
-          elif _command_exists "curl" || _command_exists "wget"
-          then
-            _download_from "file://${_target_path}" \
-              | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-                  then
-                    "${PAGER}"
-                  elif _command_exists "less"
-                  then
-                    less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-                  else
-                    cat
-                  fi
-
-            return 0
-          else
-            _exit_1 printf "Terminal web browser not detected.\\n"
-          fi
+          _bookmark_view_in_terminal_browser "file://${_target_path}"
+          return 0
         fi
       elif [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
            [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
@@ -3140,31 +3147,8 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
     # `bookmark peek`
     if [[ "${_subcommand}" == "peek" ]]
     then
-      if _command_exists 'w3m'
-      then
-        w3m "${_target_url}"
-        return 0
-      elif _command_exists 'lynx'
-      then
-        lynx "${_target_url}"
-        return 0
-      elif _command_exists "curl" || _command_exists "wget"
-      then
-        _download_from "${_target_url}" \
-          | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-              then
-                "${PAGER}"
-              elif _command_exists "less"
-              then
-                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-              else
-                cat
-              fi
-
-        return 0
-      else
-        _exit_1 printf "Terminal web browser not detected.\\n"
-      fi
+      _bookmark_view_in_terminal_browser "${_target_url}"
+      return 0
     # `bookmark open`
     elif [[ "${_subcommand}" == "open" ]]
     then
