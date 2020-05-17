@@ -635,6 +635,64 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
+# `set NB_FOOTER` #############################################################
+
+@test "\`settings set NB_FOOTER\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_FOOTER 0
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_FOOTER ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ '0'       ]]
+  [[ "$("${_NB}" settings get NB_FOOTER)" == '0' ]]
+}
+
+@test "\`settings set footer\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set footer 0
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_FOOTER ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ '0'       ]]
+  [[ "$("${_NB}" settings get NB_FOOTER)" == '0' ]]
+}
+
+@test "\`settings set NB_FOOTER\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_FOOTER '0'
+
+  [[ "${output}" =~ NB_FOOTER ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ '0'       ]]
+
+  run "${_NB}" settings set NB_FOOTER example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  # [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
+  [[ "${output}" =~ NB_FOOTER         ]]
+  [[ "${output}" =~ must\ be\ either  ]]
+
+  printf "get NB_FOOTER: '%s'\\n" "$("${_NB}" settings get NB_FOOTER)"
+  [[ "$("${_NB}" settings get NB_FOOTER)" == '0' ]]
+}
+
 # `list` ######################################################################
 
 @test "\`settings show <name>\` in lowercase shows setting." {

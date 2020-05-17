@@ -62,12 +62,12 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ "${lines[0]}" =~ home                 ]]
-  [[ "${lines[0]}" =~ .\ \[1\ archived\]   ]]
-  [[ "${lines[1]}" =~ -------------------  ]]
-  [[ "${lines[2]}" =~ three   ]]
-  [[ "${lines[3]}" =~ two     ]]
-  [[ "${lines[4]}" =~ one     ]]
+  [[ "${lines[0]}" =~ home                  ]]
+  [[ "${lines[0]}" =~ .\ \[1\ archived\]    ]]
+  [[ "${lines[1]}" =~ -------------------   ]]
+  [[ "${lines[2]}" =~ three                 ]]
+  [[ "${lines[3]}" =~ two                   ]]
+  [[ "${lines[4]}" =~ one                   ]]
 }
 
 @test "\`ls\` with local includes it in notebook list." {
@@ -103,13 +103,13 @@ HEREDOC
   }
 
   run "${_NB}" ls -e 5
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 21 ]]
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 21  ]]
 }
 
 # `ls -n <number>` ############################################################
@@ -121,13 +121,12 @@ HEREDOC
   }
 
   run "${_NB}" ls -n 0
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${#lines[@]}" -eq 6 ]]
-
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" -eq 6                   ]]
   [[ "${lines[2]}" == "3 omitted. 3 total." ]]
 }
 
@@ -138,15 +137,14 @@ HEREDOC
   }
 
   run "${_NB}" ls -n 1
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ "${#lines[@]}" -eq 7 ]]
-
-  [[ "${lines[2]}" =~ three ]]
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" -eq 7                   ]]
+  [[ "${lines[2]}" =~ three                 ]]
   [[ "${lines[3]}" == "2 omitted. 3 total." ]]
 }
 
@@ -157,16 +155,15 @@ HEREDOC
   }
 
   run "${_NB}" ls -n 2
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ "${#lines[@]}" -eq 8 ]]
-
-  [[ "${lines[2]}" =~ three ]]
-  [[ "${lines[3]}" =~ two   ]]
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" -eq 8                   ]]
+  [[ "${lines[2]}" =~ three                 ]]
+  [[ "${lines[3]}" =~ two                   ]]
   [[ "${lines[4]}" == "1 omitted. 3 total." ]]
 }
 
@@ -177,16 +174,50 @@ HEREDOC
   }
 
   run "${_NB}" ls -n 3
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   _compare "${lines[0]}" "three"
 
-  [[ "${#lines[@]}" -eq 8 ]]
-
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 8   ]]
   [[ "${lines[2]}" =~ three ]]
   [[ "${lines[3]}" =~ two   ]]
   [[ "${lines[4]}" =~ one   ]]
+}
+
+# footer ######################################################################
+
+@test "\`ls\` includes footer." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${lines[6]}" =~ ❯ ]]
+}
+
+@test "\`NB_FOOTER=0 ls\` does not include footer." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  NB_FOOTER=0 run "${_NB}" ls
+
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0      ]]
+  [[ ! "${lines[6]}" =~ ❯ ]]
 }

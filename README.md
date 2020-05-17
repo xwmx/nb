@@ -2352,7 +2352,14 @@ Examples:
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'
 
-[8] nb_dir
+[8] footer
+    ------
+    By default, `nb ls` includes a footer with example commands for
+    easy reference. To hide this footer, set this to '0'.
+
+      • Default Value: '1'
+
+[9] nb_dir
     ------
     The location of the directory that contains the notebooks. To sync with
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:

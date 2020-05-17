@@ -368,6 +368,13 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
   NB_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL}"
 export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
+# $NB_FOOTER
+#
+# Default: '1'
+#
+# Supported Values: '0' '1'
+export NB_FOOTER="${NB_FOOTER:-1}"
+
 ###############################################################################
 # Colors
 ###############################################################################
@@ -3948,6 +3955,7 @@ _env() {
     printf "NB_COLOR_PRIMARY=%s\\n" "${NB_COLOR_PRIMARY:-}"
     printf "NB_COLOR_SECONDARY=%s\\n" "${NB_COLOR_SECONDARY:-}"
     printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
+    printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -5606,91 +5614,94 @@ _ls() {
     printf "%s" "${_maybe_notebook_list}"
     _list -n "${_limit}" "${_args[@]:-}"
 
-    local _scope=
-    if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
+    if ((NB_FOOTER))
     then
-      _scope="${_SCOPE}:"
-    fi
-
-    _commands_raw=(
-      "❯ ${_ME} ${_scope}ls"
-      "${_ME} ${_scope}add"
-      "${_ME} ${_scope}b <url>"
-      "${_ME} edit ${_scope}<id>"
-      "${_ME} show ${_scope}<id>"
-      "${_ME} open ${_scope}<id>"
-      "${_ME} ${_scope}search <query>"
-      "${_ME} notebooks add <name>"
-      "${_ME} settings"
-      "${_ME} help"
-    )
-
-    _commands_hi=(
-      "❯ $(_highlight_secondary "${_ME} ${_scope}ls")"
-        "$(_highlight_secondary "${_commands_raw[1]}")"
-        "$(_highlight_secondary "${_commands_raw[2]}")"
-        "$(_highlight_secondary "${_commands_raw[3]}")"
-        "$(_highlight_secondary "${_commands_raw[4]}")"
-        "$(_highlight_secondary "${_commands_raw[5]}")"
-        "$(_highlight_secondary "${_commands_raw[6]}")"
-        "$(_highlight_secondary "${_commands_raw[7]}")"
-        "$(_highlight_secondary "${_commands_raw[8]}")"
-        "$(_highlight_secondary "${_commands_raw[9]}")"
-    )
-
-    local _line_hi=
-    local _line_raw=
-    local _output_raw=
-    local _output_hi=
-    local _separator_raw=" ·"
-    local _separator_hi=
-    _separator_hi="$(_highlight "${_separator_raw}")"
-    local _test_line=
-
-    for ((i=0;i < "${#_commands_raw[@]}"; i++))
-    do
-      if [[ -z "${_test_line}" ]]
-      then # first item in line
-        _test_line="${_commands_raw[i]}"
-      else
-        _test_line="${_test_line}${_separator_raw} ${_commands_raw[i]}"
+      local _scope=
+      if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
+      then
+        _scope="${_SCOPE}:"
       fi
 
-      if [[ "${#_test_line}" -gt "${_columns}" ]]
-      then # wrap to next line
-        _output_hi="${_output_hi}${_line_hi}${_NEWLINE}"
-        _output_raw="${_output_raw}${_line_raw}${_NEWLINE}"
+      _commands_raw=(
+        "❯ ${_ME} ${_scope}ls"
+        "${_ME} ${_scope}add"
+        "${_ME} ${_scope}b <url>"
+        "${_ME} edit ${_scope}<id>"
+        "${_ME} show ${_scope}<id>"
+        "${_ME} open ${_scope}<id>"
+        "${_ME} ${_scope}search <query>"
+        "${_ME} notebooks add <name>"
+        "${_ME} settings"
+        "${_ME} help"
+      )
 
-        # Start the line for the next iteration using the current name.
-        _test_line="${_commands_raw[i]}"
-        _line_hi="${_commands_hi[i]:-}"
-        _line_raw="${_commands_raw[i]}"
-      else # add to line
-        if [[ -z "${_line_hi}" ]]
-        then # first item in highlighted line
+      _commands_hi=(
+        "❯ $(_highlight_secondary "${_ME} ${_scope}ls")"
+          "$(_highlight_secondary "${_commands_raw[1]}")"
+          "$(_highlight_secondary "${_commands_raw[2]}")"
+          "$(_highlight_secondary "${_commands_raw[3]}")"
+          "$(_highlight_secondary "${_commands_raw[4]}")"
+          "$(_highlight_secondary "${_commands_raw[5]}")"
+          "$(_highlight_secondary "${_commands_raw[6]}")"
+          "$(_highlight_secondary "${_commands_raw[7]}")"
+          "$(_highlight_secondary "${_commands_raw[8]}")"
+          "$(_highlight_secondary "${_commands_raw[9]}")"
+      )
+
+      local _line_hi=
+      local _line_raw=
+      local _output_raw=
+      local _output_hi=
+      local _separator_raw=" ·"
+      local _separator_hi=
+      _separator_hi="$(_highlight "${_separator_raw}")"
+      local _test_line=
+
+      for ((i=0;i < "${#_commands_raw[@]}"; i++))
+      do
+        if [[ -z "${_test_line}" ]]
+        then # first item in line
+          _test_line="${_commands_raw[i]}"
+        else
+          _test_line="${_test_line}${_separator_raw} ${_commands_raw[i]}"
+        fi
+
+        if [[ "${#_test_line}" -gt "${_columns}" ]]
+        then # wrap to next line
+          _output_hi="${_output_hi}${_line_hi}${_NEWLINE}"
+          _output_raw="${_output_raw}${_line_raw}${_NEWLINE}"
+
+          # Start the line for the next iteration using the current name.
+          _test_line="${_commands_raw[i]}"
           _line_hi="${_commands_hi[i]:-}"
           _line_raw="${_commands_raw[i]}"
-        else
-          _line_hi="${_line_hi}${_separator_hi} ${_commands_hi[i]:-}"
-          _line_raw="${_line_raw}${_separator_raw} ${_commands_raw[i]}"
+        else # add to line
+          if [[ -z "${_line_hi}" ]]
+          then # first item in highlighted line
+            _line_hi="${_commands_hi[i]:-}"
+            _line_raw="${_commands_raw[i]}"
+          else
+            _line_hi="${_line_hi}${_separator_hi} ${_commands_hi[i]:-}"
+            _line_raw="${_line_raw}${_separator_raw} ${_commands_raw[i]}"
+          fi
         fi
-      fi
 
-      if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
-      then # end of list
-        _output_hi="${_output_hi}${_line_hi}"
-        _output_raw="${_output_raw}${_line_raw}"
-      fi
-    done
+        if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
+        then # end of list
+          _output_hi="${_output_hi}${_line_hi}"
+          _output_raw="${_output_raw}${_line_raw}"
+        fi
+      done
 
-    printf '\033[?7l'
-    _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-    printf "%s" "${_TPUT_SGR0}"
-    printf '\033[?7h'
-    printf '\n'
-    cat <<HEREDOC
+      printf '\033[?7l'
+      _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+      printf "%s" "${_TPUT_SGR0}"
+      printf '\033[?7h'
+      printf '\n'
+      cat <<HEREDOC
 ${_output_hi}
 HEREDOC
+    fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
         "${PAGER}"
@@ -7491,8 +7502,12 @@ _settings() {
         ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|nb_dir|NB_DIR)
-        ((_get_id)) && printf "8" || printf "NB_DIR"
+      8|footer|NB_FOOTER|nb_footer|FOOTER)
+        ((_get_id)) && printf "8" || printf "NB_FOOTER"
+        return 0
+        ;;
+      9|nb_dir|NB_DIR)
+        ((_get_id)) && printf "9" || printf "NB_DIR"
         return 0
         ;;
       *)
@@ -7667,8 +7682,8 @@ HEREDOC
 
   # Usage: _nb_settings_validate_value (<number> | <name>) <value>
   _nb_settings_validate_value() {
-    if [[ "${1:-}" == 'EDITOR' ]] ||
-       [[ "${1:-}" == 'NB_DEFAULT_EXTENSION' ]]
+    if [[ "${1:-}" == 'EDITOR'                ]] ||
+       [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
     then
       if [[ -n "${2:-}" ]]
       then
@@ -7676,13 +7691,14 @@ HEREDOC
       else
         _return_1 printf "%s requires a value.\\n" "${1:-}"
       fi
-    elif [[ "${1:-}" == 'NB_AUTO_SYNC' ]]
+    elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
+         [[ "${1:-}" == 'NB_FOOTER'     ]]
     then
       if [[ "${2:-}" =~ ^0|1$ ]]
       then
         return 0
       else
-        _return_1 printf "NB_AUTO_SYNC must be either '0' or '1'.\\n"
+        _return_1 printf "%s must be either '0' or '1'.\\n" "${1}"
       fi
     elif [[ "${1:-}" == 'NB_DIR' ]]
     then
@@ -7829,7 +7845,15 @@ HEREDOC
       • Supported Values: 'openssl', 'gpg'
       • Default Value:    'openssl'")
 
-  _settings_list_items+=("$(_id_brackets_color '8') nb_dir")
+  _settings_list_items+=("$(_id_brackets_color '8') footer")
+  _settings_help_items+=("\
+    $(_highlight_secondary "------")
+    By default, \`${_ME} ls\` includes a footer with example commands for
+    easy reference. To hide this footer, set this to '0'.
+
+      • Default Value: '1'")
+
+  _settings_list_items+=("$(_id_brackets_color '9') nb_dir")
   _settings_help_items+=("\
     $(_highlight_secondary "------")
     The location of the directory that contains the notebooks. To sync with
