@@ -282,6 +282,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to\      ]]
   [[ "${output}" =~ '0'           ]]
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"' ]]
 }
 
 @test "\`settings set auto_sync\` with valid argument sets and exits." {
@@ -298,6 +299,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to\      ]]
   [[ "${output}" =~ '0'           ]]
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"' ]]
 }
 
 @test "\`settings set NB_AUTO_SYNC\` with invalid argument exits with error." {
@@ -310,6 +312,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_AUTO_SYNC  ]]
   [[ "${output}" =~ set\ to\      ]]
   [[ "${output}" =~ '0'           ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"' ]]
 
   run "${_NB}" settings set NB_AUTO_SYNC example
 
@@ -322,6 +325,8 @@ skip "Determine how to test interactive prompt."
 
   printf "get NB_AUTO_SYNC: '%s'\\n" "$("${_NB}" settings get NB_AUTO_SYNC)"
   [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-example}"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"'         ]]
 }
 
 # `set NB_COLOR_PRIMARY` ######################################################
@@ -341,6 +346,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 123               ]]
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
   [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-123}"' ]]
 }
 
 @test "\`settings set color_primary\` with valid argument sets and exits." {
@@ -358,6 +364,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 123               ]]
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
   [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-123}"' ]]
 }
 
 @test "\`settings set NB_COLOR_PRIMARY\` with invalid argument exits with error." {
@@ -371,6 +378,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to           ]]
   [[ "${output}" =~ 123               ]]
   [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-123}"' ]]
 
   run "${_NB}" settings set NB_COLOR_PRIMARY invalid-color
 
@@ -379,7 +387,9 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 1 ]]
   [[ "${output}" =~ 'NB_COLOR_PRIMARY must be a number.' ]]
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
-  [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123' ]]
+  [[ "$(NB_COLOR_PRIMARY='' "${_NB}" settings get NB_COLOR_PRIMARY)" == '123'             ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-invalid-color}"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-123}"'             ]]
 }
 
 # `set NB_COLOR_SECONDARY` ####################################################
@@ -399,6 +409,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 123                 ]]
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
   [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-123}"' ]]
 }
 
 @test "\`settings set color_secondary\` with valid argument sets and exits." {
@@ -416,6 +427,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 123                 ]]
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
   [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-123}"' ]]
 }
 
 @test "\`settings set NB_COLOR_SECONDARY\` with invalid argument exits with error." {
@@ -429,6 +441,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to             ]]
   [[ "${output}" =~ 123                 ]]
   [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-123}"' ]]
 
   run "${_NB}" settings set NB_COLOR_SECONDARY invalid-color
 
@@ -438,6 +451,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'NB_COLOR_SECONDARY must be a number.' ]]
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
   [[ "$("${_NB}" settings get NB_COLOR_SECONDARY)" == '123' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-123}"' ]]
 }
 
 # `set NB_COLOR_THEME` ##############################################################
@@ -457,6 +471,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ console         ]]
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
   [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'console' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_THEME="${NB_COLOR_THEME:-console}"' ]]
 }
 
 @test "\`settings set color_theme\` with valid argument sets and exits." {
@@ -474,6 +489,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ console         ]]
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
   [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'console' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_THEME="${NB_COLOR_THEME:-console}"' ]]
 }
 
 @test "\`settings set NB_COLOR_THEME\` with invalid argument exits with error." {
@@ -486,7 +502,8 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_COLOR_THEME  ]]
   [[ "${output}" =~ set\ to         ]]
   [[ "${output}" =~ forest          ]]
-  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest'  ]]
+  [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_THEME="${NB_COLOR_THEME:-forest}"' ]]
 
   run "${_NB}" settings set NB_COLOR_THEME invalid-theme
 
@@ -496,6 +513,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'NB_COLOR_THEME must be one of the available themes.' ]]
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
   [[ "$(NB_COLOR_THEME='' "${_NB}" settings get NB_COLOR_THEME)" == 'forest' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_THEME="${NB_COLOR_THEME:-forest}"' ]]
 }
 
 # `set NB_DIR` #############################################################
