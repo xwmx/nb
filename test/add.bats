@@ -99,7 +99,6 @@ load test_helper
 
 # --content option ############################################################
 
-
 @test "\`add\` with --content option exits with 0, creates new note, creates commit." {
   run "${_NB}" init
   run "${_NB}" add --content "# Content"
@@ -222,7 +221,6 @@ load test_helper
 }
 
 # --title option ##############################################################
-
 
 @test "\`add\` with --title option exits with 0, creates new note, creates commit." {
   run "${_NB}" init
