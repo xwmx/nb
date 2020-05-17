@@ -148,6 +148,7 @@ __set_editor() {
   local _editors=(
     code
     subl
+    micro
     mate
     macdown
     nano
