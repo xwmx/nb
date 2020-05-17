@@ -10,9 +10,6 @@
   </a>
 </p>
 
-
-[//]: # (Original badge: '[![Build Status](https://travis-ci.org/xwmx/nb.svg?branch=master)](https://travis-ci.org/xwmx/nb)')
-
 # `❯ nb`
 
 `nb` is a command line note-taking, bookmarking, archiving, and research
