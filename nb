@@ -2994,8 +2994,18 @@ _bookmark() {
     # handle non-bookmarks
     if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
     then
-      if [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
-         [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
+      if [[ "${_subcommand}" == "open"  ]] &&
+         [[ "${_basename}" =~ \.html$   ]]
+      then
+        if _command_exists "xdg-open"
+        then
+          xdg-open "${_target_path}" && return 0
+        elif [[ "${OSTYPE}" =~ ^darwin ]]
+        then
+          open "${_target_path}" && return 0
+        fi
+      elif [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
+           [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
       then
         if [[ "${_subcommand}" == "open" ]]
         then
