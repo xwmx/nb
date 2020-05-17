@@ -7863,7 +7863,7 @@ HEREDOC
     $(_highlight_secondary "------")
     The command line text editor to use with \`${_ME}\`.
 
-      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'")
+      • Example Values: 'vim', 'emacs', 'micro', 'code', 'subl' 'macdown'")
 
   _settings_list_items+=("$(_id_brackets_color '7') encryption_tool")
   _settings_help_items+=("\

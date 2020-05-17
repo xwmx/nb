@@ -82,10 +82,12 @@ features. `nb` is flexible.
   - [Emacs](https://en.wikipedia.org/wiki/Emacs),
   - [Visual Studio Code](https://code.visualstudio.com/),
   - [Sublime Text](https://www.sublimetext.com/),
+  - [micro](https://github.com/zyedidia/micro),
+  - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [Atom](https://atom.io/),
   - [TextMate](https://macromates.com/),
   - [MacDown](https://macdown.uranusjr.com/),
-  - [nano](https://en.wikipedia.org/wiki/GNU_nano),
+  - [some of these](https://github.com/topics/text-editor),
   - [or many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
 
 ##### Optional
@@ -2354,7 +2356,7 @@ Examples:
     ------
     The command line text editor to use with `nb`.
 
-      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+      • Example Values: 'vim', 'emacs', 'micro', 'code', 'subl' 'macdown'
 
 [7] encryption_tool
     ---------------
