@@ -88,7 +88,7 @@ features. `nb` is flexible.
   - [TextMate](https://macromates.com/),
   - [MacDown](https://macdown.uranusjr.com/),
   - [some of these](https://github.com/topics/text-editor),
-  - [or many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
+  - [and many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
 
 ##### Optional
 
