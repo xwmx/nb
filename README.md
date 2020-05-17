@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/xwmx/nb.svg?branch=master)](https://travis-ci.org/xwmx/nb)
 
-# `❯ nb` · `notes` + `bookmark`
+# `❯ nb`
 
 `nb` is a command line note-taking, bookmarking, archiving, and research
 management tool with encryption, advanced search,
