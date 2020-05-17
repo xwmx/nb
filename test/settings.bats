@@ -36,6 +36,47 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
+# env #########################################################################
+
+@test "EDITOR setting does not inherit from the environment." {
+  {
+    "${_NB}" init
+    [[ "${EDITOR:-}" != "example" ]]
+  }
+
+  run "${_NB}" settings set EDITOR example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ EDITOR    ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ example   ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
+
+  [[ "$("${_NB}" settings get EDITOR)" == 'example' ]]
+  [[ "$(EDITOR=vim "${_NB}" settings get EDITOR)" == 'example' ]]
+}
+
+@test "Non-EDITOR setting inherits from the environment." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_AUTO_SYNC 0
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_AUTO_SYNC  ]]
+  [[ "${output}" =~ set\ to\      ]]
+  [[ "${output}" =~ '0'           ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"' ]]
+
+  [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '0' ]]
+  [[ "$(NB_AUTO_SYNC=1 "${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
+}
+
 # `colors` ####################################################################
 
 @test "\`settings colors\` prints colors." {
