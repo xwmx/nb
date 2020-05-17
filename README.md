@@ -41,7 +41,7 @@ so bookmarks are easy to edit just like any other note.
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync with a remote repository, if one has been configured.
 `nb` can also be configured to save notes in a location used by a general
-purpose syncing utility like Dropbox so notes can be edited in other apps on
+purpose syncing utility like Dropbox so they can be edited in other apps on
 any device.
 
 `nb` is designed to be portable, future-focused, and vendor independent,
