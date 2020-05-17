@@ -803,13 +803,13 @@ __set_notebook_path() {
     if [[ "${PWD}" == "/" ]]
     then
       cd "${_CURRENT_WORKING_DIR}"
-      return
+      return 0
     elif [[ -d "${PWD}/.git"    ]] &&
          [[ -f "${PWD}/.index"  ]]
     then
       _LOCAL_NOTEBOOK_PATH="${PWD}"
       cd "${_CURRENT_WORKING_DIR}"
-      return
+      return 0
     else
       cd ..
       __set_local_notebook_path
