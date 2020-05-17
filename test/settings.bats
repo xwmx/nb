@@ -18,6 +18,24 @@ skip "Determine how to test interactive prompt."
   [[ "${lines[0]}" =~ Settings ]]
 }
 
+@test "\`settings\` with two arguments calls \`settings set\`." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings EDITOR example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${output}" =~ EDITOR    ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ example   ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example}"' ]]
+}
+
 # `colors` ####################################################################
 
 @test "\`settings colors\` prints colors." {

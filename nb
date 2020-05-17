@@ -7953,7 +7953,12 @@ HEREDOC
 
         if [[ -n "${_setting_name:-}" ]]
         then
-          _nb_settings_prompt "${_setting_name}"
+          if [[ -n "${2:-}" ]]
+          then
+            _nb_settings_set "${_setting_name}" "${2}"
+          else
+            _nb_settings_prompt "${_setting_name}"
+          fi
         else
           _nb_settings_prompt
         fi
