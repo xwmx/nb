@@ -1,4 +1,4 @@
-BIN_NB ?= nb
+BIN ?= nb
 BIN_BOOKMARK ?= bookmark
 BIN_NOTES ?= notes
 PREFIX ?= /usr/local
