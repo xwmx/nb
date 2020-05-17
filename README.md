@@ -2268,7 +2268,7 @@ Description:
 
 Examples:
   nb settings
-  nb settings set 3 'org'
+  nb settings set 5 'org'
   nb settings set color_primary 105
   nb settings unset color_primary
   nb settings colors

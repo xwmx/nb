@@ -7412,7 +7412,7 @@ Description:
 
 Examples:
   ${_ME} settings
-  ${_ME} settings set 3 'org'
+  ${_ME} settings set 5 'org'
   ${_ME} settings set color_primary 105
   ${_ME} settings unset color_primary
   ${_ME} settings colors
