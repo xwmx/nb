@@ -2290,7 +2290,7 @@ Examples:
 
 ```text
 [1] auto_sync
-    ------------
+    ---------
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to '0'.
@@ -2298,7 +2298,7 @@ Examples:
       • Default Value: '1'
 
 [2] color_primary
-    ----------------
+    -------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors. To view a table of 256 common colors and numbers,
@@ -2309,16 +2309,16 @@ Examples:
                        '4'  (blue) for  8  color terminals.
 
 [3] color_secondary
-    ------------------
-    The color used for lines and footer elements. Like color_primary,
-    this can often be set to an xterm color number between 0 and 255. view a
+    ---------------
+    The color used for lines and footer elements. Like color_primary, this
+    can often be set to an xterm color number between 0 and 255. view a
     table of 256 common colors and numbers, run: `nb settings colors`
     To view a color for a number, run: `nb settings colors <number>`
 
       • Default Value: '8'
 
 [4] color_theme
-    --------------
+    -----------
     The color theme. `nb` has several built-in themes and user
     defined themes can be installed in the $NB_DIR/.themes directory.
     Themes have an .nb-theme or .nb-theme.sh extension and contain a
@@ -2343,7 +2343,7 @@ Examples:
       • Default Value: 'nb'
 
 [5] default_extension
-    --------------------
+    -----------------
     The default extension to use for notes files. Change to 'org' for Emacs
     Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
     whatever you prefer.
@@ -2357,7 +2357,7 @@ Examples:
       • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
 
 [7] encryption_tool
-    ------------------
+    ---------------
     The tool used for encrypting notes.
 
       • Supported Values: 'openssl', 'gpg'

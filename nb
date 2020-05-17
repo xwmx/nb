@@ -7792,8 +7792,8 @@ HEREDOC
   _settings_list_items+=("$(_id_brackets_color '3') color_secondary")
   _settings_help_items+=("\
     $(_highlight_secondary "---------------")
-    The color used for lines and footer elements. Like nb_color_primary,
-    this can often be set to an xterm color number between 0 and 255. view a
+    The color used for lines and footer elements. Like color_primary, this
+    can often be set to an xterm color number between 0 and 255. view a
     table of 256 common colors and numbers, run: \`${_ME} settings colors\`
     To view a color for a number, run: \`${_ME} settings colors <number>\`
 
