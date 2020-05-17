@@ -2994,15 +2994,44 @@ _bookmark() {
     # handle non-bookmarks
     if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
     then
-      if [[ "${_subcommand}" == "open"  ]] &&
-         [[ "${_basename}" =~ \.html$   ]]
+      if [[ "${_basename}" =~ \.html$ ]]
       then
-        if _command_exists "xdg-open"
+        if [[ "${_subcommand}" == "open"  ]]
         then
-          xdg-open "${_target_path}" && return 0
-        elif [[ "${OSTYPE}" =~ ^darwin ]]
+          if _command_exists "xdg-open"
+          then
+            xdg-open "${_target_path}" && return 0
+          elif [[ "${OSTYPE}" =~ ^darwin ]]
+          then
+            open "${_target_path}" && return 0
+          fi
+        elif [[ "${_subcommand}" == "peek" ]]
         then
-          open "${_target_path}" && return 0
+          if _command_exists 'w3m'
+          then
+            w3m "${_target_path}"
+            return 0
+          elif _command_exists 'lynx'
+          then
+            lynx "${_target_path}"
+            return 0
+          elif _command_exists "curl" || _command_exists "wget"
+          then
+            _download_from "file://${_target_path}" \
+              | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+                  then
+                    "${PAGER}"
+                  elif _command_exists "less"
+                  then
+                    less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                  else
+                    cat
+                  fi
+
+            return 0
+          else
+            _exit_1 printf "Terminal web browser not detected.\\n"
+          fi
         fi
       elif [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
            [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
