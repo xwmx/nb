@@ -1,4 +1,17 @@
-[![Build Status](https://travis-ci.org/xwmx/nb.svg?branch=master)](https://travis-ci.org/xwmx/nb)
+<div align="center">
+	<img src="docs/images/nb.png" alt="drawing" width="200"/>
+</div>
+
+<p align="center">
+  <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
+    <img  src="https://travis-ci.org/xwmx/nb.svg?branch=master"
+          alt="Build Status"
+          style="max-width:100%;">
+  </a>
+</p>
+
+
+[//]: # (Original badge: '[![Build Status](https://travis-ci.org/xwmx/nb.svg?branch=master)](https://travis-ci.org/xwmx/nb)')
 
 # `❯ nb`
 
