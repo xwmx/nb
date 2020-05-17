@@ -1,6 +1,6 @@
-<div align="center">
-	<img src="docs/images/nb.png" alt="drawing" width="200"/>
-</div>
+<p align="center">
+  <img src="docs/images/nb.png" alt="drawing" width="200"/>
+</p>
 
 <p align="center">
   <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
