@@ -1194,6 +1194,7 @@ which also both print a table of color values to choose from:
 
 ```bash
 > nb settings color_primary
+
 [...color table omitted...]
 
 [2] color_primary
