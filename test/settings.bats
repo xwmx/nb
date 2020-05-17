@@ -33,7 +33,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR    ]]
   [[ "${output}" =~ set\ to\  ]]
   [[ "${output}" =~ example   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example}"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
 # `colors` ####################################################################
@@ -227,7 +227,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR    ]]
   [[ "${output}" =~ set\ to\  ]]
   [[ "${output}" =~ example   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example}"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
 @test "\`settings set\` with multi-word argument exits and sets." {
@@ -245,7 +245,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR            ]]
   [[ "${output}" =~ set\ to\          ]]
   [[ "${output}" =~ example\ editor   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example editor}"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example editor"' ]]
 }
 
 @test "\`settings set\` with lowercase setting name exits and sets." {
@@ -263,7 +263,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EDITOR    ]]
   [[ "${output}" =~ set\ to\  ]]
   [[ "${output}" =~ example   ]]
-  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-example}"' ]]
+  [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
 # `set NB_AUTO_SYNC` #######################################################
@@ -803,7 +803,7 @@ skip "Determine how to test interactive prompt."
     "${_NB}" init
     run "${_NB}" settings set EDITOR sample
     [[ "$(EDITOR='' "${_NB}" settings get EDITOR)" == 'sample'  ]]
-    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-sample}"'  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'             ]]
   }
 
   run "${_NB}" settings unset EDITOR
@@ -813,7 +813,7 @@ skip "Determine how to test interactive prompt."
   printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
   [[ ${status} -eq 0 ]]
   [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'             ]]
-  [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="${EDITOR:-sample}"'  ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'             ]]
   [[ "${output}" =~ EDITOR                                      ]]
   [[ "${output}" =~ restored\ to\ the\ default                  ]]
   [[ ! "${output}" =~ sample                                    ]]
