@@ -527,7 +527,6 @@ __set_nb_color_primary() {
   fi
 } && __set_nb_color_primary
 
-
 # _highlight()
 #
 # Usage:
