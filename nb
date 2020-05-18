@@ -1410,8 +1410,8 @@ _get_notebook_identifier() {
   then
     if [[ "${_notebook_identifier}" =~ / ]]
     then
-      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]] &&
-         [[ "${_notebook_identifier}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                          ]] &&
+         [[ "${_notebook_identifier}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
       then
         _notebook_identifier="local"
       else
@@ -1453,7 +1453,7 @@ _get_selection_basename() {
     _set_selection_notebook "${_selection}"
     _identifier="$(_get_selection_identifier "${_selection}")"
 
-    if [[ -e "${_identifier}" ]] &&
+    if [[ -e "${_identifier}"                   ]] &&
        [[ "${_identifier}" =~ ${_NOTEBOOK_PATH} ]]
     then # <selection> is a full path.
       _basename="$(basename "${_identifier}")"
@@ -1472,7 +1472,7 @@ _get_selection_basename() {
       do
         _title="$(_get_title "${_NOTEBOOK_PATH}/${__file}")"
 
-        if [[ -n "${_title}" ]] &&
+        if [[ -n "${_title}"                  ]] &&
            [[ "${_title}" == "${_identifier}" ]]
         then
           _basename="${__file}"
@@ -1841,7 +1841,8 @@ HEREDOC
   local _git_email=
   _git_email="$(git config user.email || printf '')"
 
-  if [[ -z "${_git_name}" ]] || [[ -z "${_git_email}" ]]
+  if [[ -z "${_git_name}"   ]] ||
+     [[ -z "${_git_email}"  ]]
   then
     cat <<HEREDOC
 Welcome to $(_highlight "${_ME}")!
@@ -1957,7 +1958,7 @@ _highlight_syntax_if_available() {
 
       # Markdown highlighting is better with explicit 'md' lexer.
       if [[ ! "${_extension}" == "md" ]] &&
-         [[ -z "${_lexer:-}" ]]
+         [[ -z "${_lexer:-}"          ]]
       then
         pygmentize -O style=friendly "${@}" 2>/dev/null
       elif [[ -n "${_lexer:-}" ]]
@@ -5628,7 +5629,7 @@ _ls() {
   fi
 
   if [[ "${_notes_count_local}" -gt $((_lines-4))           ]] &&
-     [[ "${_limit}"             -gt "${_notes_count_local}"  ]]
+     [[ "${_limit}"             -gt "${_notes_count_local}" ]]
   then
     _use_pager=1
   fi
@@ -5806,8 +5807,8 @@ _move() {
     _target_notebook_path="${NB_DIR}/${_target_notebook}"
   fi
 
-  if [[ -z "${_basename}" ]] ||
-     [[ ! -e "${_target_notebook_path}/.git" ]]
+  if [[ -z "${_basename}"                     ]] ||
+     [[ ! -e "${_target_notebook_path}/.git"  ]]
   then
     _exit_1 _help "move"
   elif [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
@@ -6231,7 +6232,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi
 
     if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
-       [[ -n "${_remote_url:-}" ]]
+       [[ -n "${_remote_url:-}"                   ]]
     then
       git clone "${_remote_url}" "${_path}"
     else
@@ -6955,7 +6956,7 @@ _rename() {
   then
     local _source_file_name="${_source_basename%%.*}"
     local _source_file_type="${_source_basename#*.}"
-    if [[ -z "${_source_file_type:-}" ]] ||
+    if [[ -z "${_source_file_type:-}"                     ]] ||
        [[ "${_source_file_type}" == "${_source_basename}" ]]
     then
       _source_file_type=
@@ -6963,7 +6964,7 @@ _rename() {
 
     local _target_file_name="${_target_name%%.*}"
     local _target_file_type="${_target_name#*.}"
-    if [[ -z "${_target_file_type:-}" ]] ||
+    if [[ -z "${_target_file_type:-}"                 ]] ||
        [[ "${_target_file_type}" == "${_target_name}" ]]
     then # no file extension specified in _target_name
       if [[ -n "${_source_file_type}" ]]
