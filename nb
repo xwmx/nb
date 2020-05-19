@@ -3326,7 +3326,8 @@ HEREDOC
         cat "${_temp_file}"                       \
           | pandoc                                \
             --from html-native_divs-native_spans  \
-            --to markdown-grid_tables --wrap=none
+            --to markdown-grid_tables --wrap=none \
+            2>/dev/null || cat "${_temp_file}"
         )"
       _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
     else
