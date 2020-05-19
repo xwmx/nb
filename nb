@@ -1960,10 +1960,10 @@ _highlight_syntax_if_available() {
       if [[ ! "${_extension}" == "md" ]] &&
          [[ -z "${_lexer:-}"          ]]
       then
-        pygmentize -O style=friendly "${@}" 2>/dev/null
+        pygmentize -O style=friendly "${@}"
       elif [[ -n "${_lexer:-}" ]]
       then
-        pygmentize -l "${_lexer }" -O style=friendly "${@}" 2>/dev/null
+        pygmentize -l "${_lexer }" -O style=friendly "${@}"
       else
         pygmentize -l md -O style=friendly "${@}"
       fi
@@ -1976,7 +1976,7 @@ _highlight_syntax_if_available() {
       else
         pygmentize -l md -O style=friendly
       fi
-    fi
+    fi 2>/dev/null
   else
     cat "${@}"
   fi
