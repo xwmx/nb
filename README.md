@@ -46,7 +46,7 @@ any device.
 
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured, intuitive, and enjoyable experience within a
-carefully crafted user-centric text interface.
+user-centric text interface.
 The entire program is a single well-tested shell script
 that can be copied or `curl`ed anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
