@@ -3199,21 +3199,21 @@ HEREDOC
   fi
 
   # `bookmark <url>`
-  local _tmp_file=
-  _tmp_file="$(mktemp)"
+  local _temp_file=
+  _temp_file="$(mktemp)"
 
-  if ! _download_from "${_url}" "${_tmp_file}" ||
-     [[ ! -e "${_tmp_file}"                 ]] ||
-     [[ "$(wc -c <"${_tmp_file}")" == 0     ]]
+  if ! _download_from "${_url}" "${_temp_file}" ||
+     [[ ! -e "${_temp_file}"                 ]] ||
+     [[ "$(wc -c <"${_temp_file}")" == 0     ]]
   then
     _exit_1 \
       printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
   fi
 
-  if [[ -z "${_title}" ]] && _file_is_text "${_tmp_file}"
+  if [[ -z "${_title}" ]] && _file_is_text "${_temp_file}"
   then
     _title="$(
-      cat "${_tmp_file}"                                \
+      cat "${_temp_file}"                               \
         | grep -o -E -i '.*<title[^>]*>[^<]*</title>'   \
         | head -1                                       \
         | sed 's/.*<title[^>]*>//'                      \
@@ -3243,20 +3243,20 @@ HEREDOC
 
   _bookmark_content+="<${_url}>${_NEWLINE}"
 
-  if _file_is_text "${_tmp_file}"
+  if _file_is_text "${_temp_file}"
   then
     local _description=
     _description="$(
-       cat "${_tmp_file}" \
-        | sed -E -n       \
+       cat "${_temp_file}"  \
+        | sed -E -n         \
           's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
     )"
 
     if [[ -z "${_description:-}" ]]
     then
       _description="$(
-       cat "${_tmp_file}" \
-          | sed -E -n     \
+       cat "${_temp_file}"  \
+          | sed -E -n       \
             's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p'
       )"
     fi
@@ -3314,7 +3314,7 @@ HEREDOC
     _bookmark_content+="${_NEWLINE}${_tag_string}${_NEWLINE}"
   fi
 
-  if ! ((_skip_content)) && _file_is_text "${_tmp_file}"
+  if ! ((_skip_content)) && _file_is_text "${_temp_file}"
   then
     if ! ((_raw_content)) &&
        _command_exists "pandoc"
@@ -3323,7 +3323,7 @@ HEREDOC
 
       local _processed_content
       _processed_content="$(
-        cat "${_tmp_file}"                        \
+        cat "${_temp_file}"                       \
           | pandoc                                \
             --from html-native_divs-native_spans  \
             --to markdown-grid_tables --wrap=none
@@ -3331,7 +3331,7 @@ HEREDOC
       _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
     else
       _bookmark_content+="${_NEWLINE}## Page Content (HTML)${_NEWLINE}"
-      _bookmark_content+="${_NEWLINE}$(cat "${_tmp_file}")${_NEWLINE}"
+      _bookmark_content+="${_NEWLINE}$(cat "${_temp_file}")${_NEWLINE}"
     fi
   fi
 
@@ -3359,7 +3359,7 @@ HEREDOC
 
     printf "%s" "${_bookmark_content}" | _add "${_add_options[@]}"
 
-    [[ -f "${_tmp_file:-}" ]] && rm "${_tmp_file}"
+    [[ -f "${_temp_file:-}" ]] && rm "${_temp_file}"
   fi
 }
 _alias_subcommand "bookmark" "b"
@@ -4583,13 +4583,13 @@ _index() {
         local _reconcle_index_path="${1:-}"
         [[ -z "${_reconcle_index_path:-}" ]] && return 1
 
-        local _tmp_file
-        _tmp_file="$(mktemp)"
+        local _temp_file
+        _temp_file="$(mktemp)"
 
-        exec 3> "${_tmp_file}"
-        exec 4< "${_tmp_file}"
+        exec 3> "${_temp_file}"
+        exec 4< "${_temp_file}"
 
-        rm "${_tmp_file}"
+        rm "${_temp_file}"
 
         # Remove duplicates and preserve newlines.
         awk '!NF || !seen[$0]++' "${_reconcle_index_path}" >&3
