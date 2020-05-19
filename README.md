@@ -207,15 +207,15 @@ instructions](etc/README.md).
 ## Overview
 
 <p align="center">
-  <a href="#working-with-notes">Notes</a> •
-  <a href="#bookmarks">Bookmarks</a> •
-  <a href="#search">Search</a> •
+  <a href="#-working-with-notes">Notes</a> •
+  <a href="#-bookmarks">Bookmarks</a> •
+  <a href="#-search">Search</a> •
   <a href="#revision-history">History</a> •
-  <a href="#notebooks">Notebooks</a> •
+  <a href="#-notebooks">Notebooks</a> •
   <a href="#git-sync">Git Sync</a> •
   <a href="#import--export">Import / Export</a> •
   <a href="#settings">Settings</a> •
-  <a href="#color-themes">Color Themes</a> •
+  <a href="#-color-themes">Color Themes</a> •
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a>
@@ -1366,12 +1366,12 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#list">list</a> •
   <a href="#ls">ls</a> •
   <a href="#move">move</a> •
-  <a href="#notebooks-1">notebooks</a> •
+  <a href="#notebooks">notebooks</a> •
   <a href="#open">open</a> •
   <a href="#peek">peek</a> •
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
-  <a href="#search-1">search</a> •
+  <a href="#search">search</a> •
   <a href="#settings-1">settings</a> •
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
