@@ -230,7 +230,7 @@ nb
 `nb` stores notes in notebooks, and `nb` sets up your initial "home" notebook
 the first time it runs.
 
-### Working with Notes
+### 📝 Working with Notes
 
 #### Adding Notes
 
@@ -531,7 +531,7 @@ By default, `nb delete` will display a confirmation prompt. To skip, use the
 nb delete 3 --force
 ```
 
-### Bookmarks
+### 🔖 Bookmarks
 
 Use `nb bookmark` to create, view, and search bookmarks, links, and
 online references. Bookmarks are Markdown notes containing information about
@@ -738,7 +738,7 @@ subcommands and options, and behaves identically.
 
 See [`bookmark help`](#bookmark-help) for more information.
 
-### Search
+### 🔍 Search
 
 Use `nb search` to search your notes, with support for regular
 expressions and tags:
@@ -821,7 +821,7 @@ nb history Example
 `nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
-### Notebooks
+### 📔 Notebooks
 
 You can create additional notebooks, each of which has its own version history.
 
@@ -1156,7 +1156,7 @@ vim
 For more information about settings, see [`nb help settings`](#settings-1) and
 [`nb settings list --long`](#settings-list---long).
 
-### Color Themes
+### 🎨 Color Themes
 
 `nb` has a minimal text interface and uses color to highlight certain
 elements like ids, the current notebook name, the shell prompt, and
