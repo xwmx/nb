@@ -266,6 +266,22 @@ Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
 
+##### Shortcut Alias: `a`
+
+`nb` includes single-character shortcuts for many commands, including
+`a` for `add`:
+
+```bash
+# create a new note in your text editor
+nb a
+
+# create a new note with the filename 'example.md'
+nb a example.md
+
+# create a new note containing "This is a note."
+nb a "This is a note."
+```
+
 #### Listing Notes
 
 To list notes and notebooks, run `nb ls`:
@@ -444,6 +460,21 @@ When a note is encrypted, `nb edit` will prompt you for the note password,
 open the unencrypted content in your editor, and then automatically reencrypt
 the note when you are done editing.
 
+##### Shortcut Alias: `e`
+
+Like `add`, `edit` has a shortcut alias, `e`:
+
+```bash
+# edit note by id
+nb e 3
+
+# edit note by filename
+nb e example.md
+
+# edit note by title
+nb e 'A Document Title'
+```
+
 #### Viewing Notes
 
 Notes can be viewed using `nb show`:
@@ -508,6 +539,21 @@ for each type.
 the terminal. To view files in the system's preferred GUI application,
 use [`nb open`](#import--export).
 
+##### Shortcut Alias: `s`
+
+`show` is aliased to `s`:
+
+```bash
+# show note by id
+nb s 3
+
+# show note by filename
+nb s example.md
+
+# show note by title
+nb s 'A Document Title'
+```
+
 #### Deleting Notes
 
 Deleting notes works the same, accepting an id, filename, or title to
@@ -529,6 +575,21 @@ By default, `nb delete` will display a confirmation prompt. To skip, use the
 
 ```bash
 nb delete 3 --force
+```
+
+##### Shortcut Alias: `d`
+
+`delete` has the alias `d`:
+
+```bash
+# delete note by id
+nb d 3
+
+# delete note by filename
+nb d example.md
+
+# delete note by title
+nb d 'A Document Title'
 ```
 
 ### 🔖 Bookmarks
@@ -647,6 +708,18 @@ Add: nb bookmark <url> Help: nb help bookmark
 [2] 🔖 Example Two (example.com)
 ```
 
+##### Shortcut Alias: `b`
+
+`bookmark` can also be used with the alias `b`:
+
+```bash
+# bookmark a page
+nb b https://example.com
+
+# list bookmarks
+nb b
+```
+
 #### Opening Bookmarks
 
 `nb` provides multiple ways to view bookmarked web pages.
@@ -676,6 +749,19 @@ When used with bookmarks, `nb open` and `nb peek` are aliases for
 `open` and `peek` automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
+
+##### Shortcut Aliases: `o` and `p`
+
+`open` and `peek` can also be used with the shortcut aliases `o` and
+`p`:
+
+```bash
+# open bookmark by id
+nb o 3
+
+# peek bookmark by id
+nb p 12
+```
 
 #### Bookmark File Format
 
@@ -797,6 +883,18 @@ performs searches using the first tool it finds. `nb search` works
 mostly the same regardless of which tool is found and is perfectly fine using
 the environment's built-in `grep`. `rg`, `ag`, and `ack` are faster and there
 are some subtle differences in color highlighting.
+
+##### Shortcut Alias: `q`
+
+`search` can also be used with the alias `q` (for "query"):
+
+```bash
+# search for 'example' in the current notebook
+nb q 'example'
+
+# seach for 'example', omitting content matches
+nb q -l 'example'
+```
 
 ### Revision History
 
