@@ -366,6 +366,82 @@ load test_helper
   [[ "${#_files[@]}" -eq 0 ]]
 }
 
+# aliases ####################################################################
+
+@test "\`a\` with no arguments creates new note file created with \$EDITOR." {
+  run "${_NB}" init
+  run "${_NB}" add
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates a new note file with $EDITOR
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+
+@test "\`create\` with no arguments creates new note file created with \$EDITOR." {
+  run "${_NB}" init
+  run "${_NB}" add
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates a new note file with $EDITOR
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+
+@test "\`new\` with no arguments creates new note file created with \$EDITOR." {
+  run "${_NB}" init
+  run "${_NB}" add
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates a new note file with $EDITOR
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 # help ########################################################################
 
 @test "\`help add\` exits with status 0." {

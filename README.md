@@ -1726,6 +1726,7 @@ Examples:
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
 
+Aliases: `create`, `new`
 Shortcut Alias: `a`
 ```
 
@@ -2175,6 +2176,7 @@ Subcommands:
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
+             Aliases: `notebooks create`, `notebooks new`
   archive    Set the current notebook or notebook <name> to 'archived' status.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.

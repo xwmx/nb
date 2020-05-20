@@ -105,3 +105,48 @@ _setup_notebooks() {
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
   [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
 }
+
+@test "\`notebooks a <name>\` exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks add example
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # [[ "${output}" == "Added: example" ]]
+  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
+}
+
+@test "\`notebooks create <name>\` exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks add example
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # [[ "${output}" == "Added: example" ]]
+  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
+}
+
+@test "\`notebooks new <name>\` exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks add example
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # [[ "${output}" == "Added: example" ]]
+  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
+}
