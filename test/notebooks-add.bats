@@ -92,15 +92,18 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add example "${_GIT_REMOTE_URL}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"
+
   [[ ${status} -eq 0 ]]
 
-  [[ "${lines[1]}" =~ Added\: ]]
-  [[ "${lines[1]}" =~ example ]]
-  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
-  [[ -d "${NB_DIR}/example/.git" ]]
+  [[ "${lines[1]}" =~ Added\ notebook\:                       ]]
+  [[ "${lines[1]}" =~ example                                 ]]
+  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
+  [[ -d "${NB_DIR}/example/.git"                              ]]
+
   _origin="$(cd "${NB_DIR}/example" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
   [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
@@ -112,6 +115,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add example
+
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -127,6 +131,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add example
+
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -142,6 +147,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add example
+
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"

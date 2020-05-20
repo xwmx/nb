@@ -5984,7 +5984,7 @@ _notebooks() {
         _clear_cache                       &&
         _git_checkpoint "[nb] Initialize" "${NB_DIR}/${_name}"
     fi
-    printf "Added: %s\\n" "$(_highlight "${_name}")"
+    printf "Added notebook: %s\\n" "$(_highlight "${_name}")"
   }
 
   # _notebooks_current()
