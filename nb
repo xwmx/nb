@@ -2846,6 +2846,8 @@ Examples:
 Shortcut Alias: \`b\`
 HEREDOC
 _bookmark() {
+  _debug printf "_bookmark() \${@:-}: '%s'\\n" "${@:-}"
+
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
     _target_url="${1:-}"
@@ -2977,10 +2979,11 @@ _bookmark() {
         ;;
       *)
         if [[ ! "${_subcommand:-}" =~ ^list$|^search$ ]] &&
-           [[ -z "${_url:-}" ]]
+           [[ -z "${_url:-}"                          ]]
         then
           _url="${__arg:-}"
-        elif [[ "${_subcommand:-}" =~ ^list$|^search$ ]]
+        elif [[ -z "${_subcommand:-}"               ]] ||
+             [[ "${_subcommand}" =~ ^list$|^search$ ]]
         then
           _arguments+=("${__arg}")
         fi
@@ -2989,6 +2992,8 @@ _bookmark() {
 
     shift
   done
+
+  _debug printf "_bookmark() \${_arguments[@]:-}: '%s'\\n" "${_arguments[@]:-}"
 
   # `bookmark list`
   if [[ "${_subcommand}" == "list" ]]

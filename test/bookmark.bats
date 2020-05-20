@@ -140,6 +140,44 @@ HEREDOC
   [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
+@test "\`bookmark -n <num>\` exits with 0 and displays limited list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+# one
+line two
+line three
+line four
+HEREDOC
+    "${_NB}" add "second.bookmark.md" -c "<${_BOOKMARK_URL}>"
+    cat <<HEREDOC | "${_NB}" add "third.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    "${_NB}" add "fourth.bookmark.md" -c "<${_BOOKMARK_URL}>" \
+      --title "Example Bookmark Title"
+    cat <<HEREDOC | "${_NB}" add "fifth.md"
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" bookmark -n 1
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${lines[0]}" =~ second.bookmark.md     ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" == '1 omitted. 2 total.'  ]]
+}
+
 @test "\`bookmark\` with valid <url> argument creates new note without errors." {
   {
     run "${_NB}" init
