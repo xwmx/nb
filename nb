@@ -8394,6 +8394,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         ls -lah -G "${_target_path}"
     elif _command_exists "imgcat"                 &&
          _file_is_image "${_target_path}"         &&
+         [[ ! "${_target_path}" =~ afphoto$   ]]  &&
          [[ -n "${TERM_PROGRAM:-}"            ]]  &&
          [[ "${TERM_PROGRAM}" == "iTerm.app"  ]]  &&
          {
@@ -8401,6 +8402,8 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "imgcat" ]]
          }
     then
+
+    echo hi
       imgcat "${_target_path}" \
         | if _command_exists "less" && ! ((_dump))
           then
@@ -8408,8 +8411,9 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
-    elif _command_exists "magick"         &&
-         _file_is_image "${_target_path}" &&
+    elif _command_exists "magick"               &&
+         _file_is_image "${_target_path}"       &&
+         [[ ! "${_target_path}" =~ afphoto$  ]] &&
          {
            # Detect sixel support. Via: https://git.io/JfCel
            IFS=";" read -ra __reply -s -t 1 -d "c" -p $'\e[c' >&2
