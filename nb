@@ -1247,6 +1247,7 @@ _file_is_encrypted() {
 #   0  If file is an image.
 #   1  if not.
 export _IMAGE_FILE_EXTENSIONS=(
+  afphoto
   ai
   bmp
   gif
