@@ -1627,7 +1627,8 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  nb settings [<number> | <name>] [colors [<number>] | edit | list [--long]]
+  nb settings [<number> [<value>] | <name> [<value>]]
+  nb settings [colors [<number>] | edit | list [--long]]
   nb settings (get | show | unset) (<number> | <name>)
   nb settings set (<number> | <name>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
@@ -2437,7 +2438,7 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  nb settings [<number> | <name>]
+  nb settings [<number> [<value>] | <name> [<value>]]
   nb settings colors [<number>]
   nb settings edit
   nb settings get   (<number> | <name>)
@@ -2447,7 +2448,8 @@ Usage:
   nb settings unset (<number> | <name>)
 
 Subcommands:
-  (default)  Open the settings prompt.
+  (default)  Open the settings prompt, to <number> or <name>, if present.
+             When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
   edit       Open the `nb` configuration file in `$EDITOR`.
