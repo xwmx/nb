@@ -1,3 +1,17 @@
+<p align="center">
+  <img 	src="docs/images/nb.png"
+  		alt="nb"
+  		width="200"/>
+</p>
+
+<p align="center">
+  <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
+    <img  src="https://travis-ci.org/xwmx/nb.svg?branch=master"
+          alt="Build Status"
+          style="max-width:100%;">
+  </a>
+</p>
+
 # `❯ nb`
 
 `nb` is a command line note-taking, bookmarking, archiving, and research
