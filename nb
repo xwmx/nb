@@ -2922,7 +2922,7 @@ _bookmark() {
       --skip-content)
         _skip_content=1
         ;;
-      --tags)
+      --tag|--tags)
         _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
