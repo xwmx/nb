@@ -68,7 +68,7 @@ any device.
 providing a full-featured, intuitive, and enjoyable experience within a
 user-centric text interface.
 The entire program is a single well-tested shell script
-that can be copied or `curl`ed anywhere and just work, using
+that can be copied or `curl`ed almost anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
 `nb` makes it easy to incorporate other tools, writing apps, and workflows.
