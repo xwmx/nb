@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="docs/images/nb.png" alt="drawing" width="200"/>
+  <img 	src="docs/images/nb.png"
+  		alt="nb"
+  		width="200"/>
 </p>
 
 <p align="center">
@@ -29,6 +31,26 @@ VS Code, Sublime Text, and any other text editor you prefer. `nb` works in
 any standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
+
+<p align="center">
+  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
+  	   	alt="home"
+  	   	width="450"/>
+</p>
+
+`nb` is also a powerful text-based CLI bookmarking system
+that includes local full-text search of cached page content with regular
+expression support, tagging, convenient filtering and listing, Wayback Machine
+snapshot lookup for broken links, and easy viewing of bookmarked pages in the
+terminal and your regular web browser. Page information is automatically
+downloaded, compiled, and saved into normal Markdown documents made for humans,
+so bookmarks are easy to edit just like any other note.
+
+<p align="center">
+  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
+  		alt="bookmarks"
+  		width="450"/>
+</p>
 
 `nb` is also a powerful text-based CLI bookmarking system
 that includes local full-text search of cached page content with regular
