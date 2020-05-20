@@ -120,7 +120,7 @@ _setup_notebooks() {
     _setup_notebooks
   }
 
-  run "${_NB}" notebooks add example
+  run "${_NB}" notebooks a example
 
   [[ ${status} -eq 0 ]]
 

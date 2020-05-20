@@ -6626,7 +6626,7 @@ HEREDOC
   local _name="${2:-}"
 
   case "${_subcommand}" in
-    ^a$|add|create|new)
+    a|add|create|new)
       _notebooks_add "${_name:-}" "${3:-}"
       ;;
     export)
