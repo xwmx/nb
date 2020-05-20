@@ -21,6 +21,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add
+
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -29,6 +30,7 @@ _setup_notebooks() {
     "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)"
 
   [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\] ]]
+
   printf "%s\\n" "$(cd "${NB_DIR}" && find . -maxdepth 1)"
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6 ]]
 }
@@ -39,6 +41,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add one
+
   [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -54,13 +57,15 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add example
+
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # [[ "${output}" == "Added: example" ]]
-  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
+  [[ "${lines[0]}" =~ Added\ notebook\: ]]
+  [[ "${lines[0]}" =~ example           ]]
+  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
 @test "\`notebooks add <name>\` creates git commit." {
@@ -69,6 +74,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks add example
+
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
