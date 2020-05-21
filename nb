@@ -7215,8 +7215,9 @@ _search() {
       then # ack is available.
         if ((_color))
         then
-          _search_args+=("--color-lineno='bold green'")
-          _search_args+=("--color-match='black on_blue'")
+          _search_args+=("--color")
+          _search_args+=("--color-lineno=bold green")
+          _search_args+=("--color-match=blue on_black")
         else
           _search_args+=("--nocolor")
         fi
@@ -7239,6 +7240,7 @@ _search() {
         set +f
         find . -type f -not -path '*/\.git*' \
           | grep \
+              -E \
               --ignore-case           \
               "${_search_args[@]}"    \
               --text                  \
