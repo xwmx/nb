@@ -7102,11 +7102,13 @@ _search() {
   _debug printf "_search() \${@}: '%s'\\n" "${@}"
 
   local _all=0
+  local _color=1
   local _last_path=
   local _only_list=0
   local _max_columns="2000"
   local _print_paths=0
   local _query=
+  local _search_args=()
   local _type=
   local _use_grep=0
 
@@ -7121,6 +7123,9 @@ _search() {
         ;;
       -l|--list)
         _only_list=1
+        ;;
+      --no-color|--nocolor)
+        _color=0
         ;;
       --path|--paths)
         _print_paths=1
@@ -7169,48 +7174,76 @@ _search() {
     do
       if _command_exists "rg" && ! ((_use_grep))
       then
+        if ((_color))
+        then
+          _search_args+=("--color" "always")
+        else
+          _search_args+=("--color" "never")
+        fi
+
         rg \
-          --hidden        \
-          --iglob '!.git' \
-          --ignore-case   \
-          --no-heading    \
-          --color always  \
-          --line-number   \
+          --hidden              \
+          --iglob '!.git'       \
+          --ignore-case         \
+          --no-heading          \
+          "${_search_args[@]}"  \
+          --line-number         \
           --max-columns "${_max_columns}" --max-columns-preview \
           "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ag" && ! ((_use_grep))
       then
+        if ((_color))
+        then
+          _search_args+=("--color")
+          _search_args+=("--color-line-number"  "32")
+          _search_args+=("--color-match"        "1;35")
+        else
+          _search_args+=("--nocolor")
+        fi
+
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
         ag \
-          --hidden      \
-          --ignore-case \
-          --noheading   \
-          --color       \
-          --color-line-number '32' \
-          --color-match '1;35' \
+          --hidden              \
+          --ignore-case         \
+          --noheading           \
+          "${_search_args[@]}"  \
           "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
+        if ((_color))
+        then
+          _search_args+=("--color-lineno='bold green'")
+          _search_args+=("--color-match='black on_blue'")
+        else
+          _search_args+=("--nocolor")
+        fi
+
         ack "${_query}" "${__notebook_path}" \
-          --ignore-case \
-          --noheading   \
-          --color-lineno='bold green'   \
-          --color-match='black on_blue' \
+          --ignore-case         \
+          --noheading           \
+          "${_search_args[@]}"  \
             || return 0 # Don't fail out within a single scope.
       else # fall back to POSIX grep.
+        if ((_color))
+        then
+          _search_args+=("--color=always")
+        else
+          _search_args+=("--color=never")
+        fi
+
         # Add /dev/null so file path is printed even if there is only one
         # matching file. Reference: http://stackoverflow.com/a/15432718
         set +f
         find . -type f -not -path '*/\.git*' \
           | grep \
-              --ignore-case   \
-              --color=always  \
-              --text          \
-              -n "${_query}"  \
-              "${__notebook_path}"/* \
+              --ignore-case           \
+              "${_search_args[@]}"    \
+              --text                  \
+              -n "${_query}"          \
+              "${__notebook_path}"/*  \
               "${__notebook_path}"/.index /dev/null \
                 || return 0 # Don't fail out within a single scope.
         set -f
