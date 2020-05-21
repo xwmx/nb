@@ -407,7 +407,7 @@ fi
 
 if [[ "${NB_COLOR_THEME}" == "electro"    ]]
 then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-129}"
+  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-200}"
   export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
 fi
 
