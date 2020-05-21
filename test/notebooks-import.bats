@@ -96,15 +96,17 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks import                     \
     "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
-    "example"
+    "example-notebook"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
-  [[ ${status} -eq 0                ]]
-  [[ -d "${NB_DIR}/example"         ]]
-  [[ "${lines[0]}" =~ "Imported"    ]]
+  [[ ${status} -eq 0                        ]]
+  [[ -d "${NB_DIR}/example-notebook"        ]]
+  [[ -d "${NB_DIR}/example-notebook/.git"   ]]
+  [[ -f "${NB_DIR}/example-notebook/.index" ]]
+  [[ "${lines[0]}" =~ "Imported"            ]]
   "${_NB}" notebooks | grep -q 'example'
 }
 
