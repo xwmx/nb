@@ -8625,6 +8625,34 @@ _sync() {
       printf "Syncing failed!\\n"
 }
 
+# todos ################################################################# todos
+
+desc "todos" <<HEREDOC
+Usage:
+  ${_ME} todos [open | closed]
+
+Description:
+  List todos.
+HEREDOC
+_todos() {
+  local _subcommand="${1:-}"
+
+  case "${_subcommand}" in
+    closed)
+      _search '\[x\]'
+      ;;
+    open)
+      _search '\[ \]'
+      ;;
+    *)
+      _search '\[ \]|\[x\]'
+      ;;
+  esac              \
+    | sed '/^$/d'   \
+    | sed 's/.*://'
+}
+_alias_subcommand "todos" "todo"
+
 # update ############################################################### update
 
 desc "update" <<HEREDOC
@@ -8976,6 +9004,7 @@ _SUBCOMMANDS=(
   status
   subcommands
   sync
+  todos
   u
   update
   upgrade
@@ -9028,6 +9057,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   show
   status
   sync
+  todos
   u
   update
   use
@@ -9070,6 +9100,7 @@ _GIT_SUBCOMMANDS=(
   preview
   q
   rename
+  todos
   s
   show
   search
