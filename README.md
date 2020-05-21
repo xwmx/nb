@@ -1382,7 +1382,7 @@ Value:
 |:--:|:--:|
 | 	|    |
 
-##### `nb`
+##### `nb` (default)
 
 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-bookmarks.png) |
 |:--:|:--:|
