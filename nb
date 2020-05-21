@@ -7099,6 +7099,8 @@ Examples:
 Shortcut Alias: \`q\`
 HEREDOC
 _search() {
+  _debug printf "_search() \${@}: '%s'\\n" "${@}"
+
   local _all=0
   local _last_path=
   local _only_list=0
@@ -8629,27 +8631,41 @@ _sync() {
 
 desc "todos" <<HEREDOC
 Usage:
-  ${_ME} todos [open | closed]
+  ${_ME} todos [open | closed] [-a | --all]
+
+Options:
+  -a, --all  Search all active notebooks.
 
 Description:
   List todos.
 HEREDOC
 _todos() {
-  local _subcommand="${1:-}"
+  local _pattern='\- \[ \]|\- \[x\]'
+  local _search_all=0
 
-  case "${_subcommand}" in
-    closed)
-      _search '\[x\]'
-      ;;
-    open)
-      _search '\[ \]'
-      ;;
-    *)
-      _search '\[ \]|\[x\]'
-      ;;
-  esac              \
-    | sed '/^$/d'   \
-    | sed 's/.*://'
+  while ((${#}))
+  do
+    case "${1:-}" in
+      -a|--all)
+        _search_all=1
+        ;;
+      closed)
+        _pattern='\- \[x\]'
+        ;;
+      open)
+        _pattern='\- \[ \]'
+        ;;
+    esac
+
+    shift
+  done
+
+  if ((_search_all))
+  then
+    _search "${_pattern}" --all
+  else
+    _search "${_pattern}"
+  fi | sed -e '/^$/d'
 }
 _alias_subcommand "todos" "todo"
 
