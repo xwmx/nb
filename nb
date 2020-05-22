@@ -1547,6 +1547,21 @@ _get_selection_parts() {
 # Description:
 #   Print the title, if present, of the note at the path. Supports both
 #   Markdown h1 styles and YAML front matter.
+#
+#   - Markdown
+#     - Supported:
+#       - # This is a Title
+#       - This is a Title
+#         ===============
+#       - ---
+#         title: This is a Title
+#         ---
+#     - https://daringfireball.net/projects/markdown/syntax#header
+#     - https://jekyllrb.com/docs/front-matter/
+#   - Org Mode
+#     - Supported:
+#       - #+TITLE: This is a Title
+#     - https://orgmode.org/guide/Export-Settings.html
 _get_title() {
   local _in_code_block=0
   local _in_front_matter=0
