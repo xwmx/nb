@@ -166,7 +166,7 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NB}" list --no-color
+  run "${_NB}" list --no-color --reverse
   [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
@@ -174,21 +174,21 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
-  [[ "${lines[0]}"  == "[15] Example Multi-Line Org Title"  ]]
-  [[ "${lines[1]}"  == "[14] Example Multi-Line Org Title"  ]]
-  [[ "${lines[2]}"  == "[13] Example Org Title"             ]]
-  [[ "${lines[3]}"  == "[12] Title Twelve"                  ]]
-  [[ "${lines[4]}"  == "[11] Title Eleven"                  ]]
-  [[ "${lines[5]}"  == "[10] Title Ten"                     ]]
-  [[ "${lines[6]}"  == "[9]  Title Nine"                    ]]
+  [[ "${lines[0]}"  == "[1]  Title One"                     ]]
+  [[ "${lines[1]}"  == "[2]  two.md · \"line one\""         ]]
+  [[ "${lines[2]}"  == "[3]  Title Three"                   ]]
+  [[ "${lines[3]}"  == "[4]  Title Four"                    ]]
+  [[ "${lines[4]}"  == "[5]  Title Five"                    ]]
+  [[ "${lines[5]}"  == "[6]  six.md · \"line five\""        ]]
+  [[ "${lines[6]}"  == "[7]  Title Seven"                   ]]
   [[ "${lines[7]}"  == "[8]  Title Eight"                   ]]
-  [[ "${lines[8]}"  == "[7]  Title Seven"                   ]]
-  [[ "${lines[9]}"  == "[6]  six.md · \"line five\""        ]]
-  [[ "${lines[10]}" == "[5]  Title Five"                    ]]
-  [[ "${lines[11]}" == "[4]  Title Four"                    ]]
-  [[ "${lines[12]}" == "[3]  Title Three"                   ]]
-  [[ "${lines[13]}" == "[2]  two.md · \"line one\""         ]]
-  [[ "${lines[14]}" == "[1]  Title One"                     ]]
+  [[ "${lines[8]}"  == "[9]  Title Nine"                    ]]
+  [[ "${lines[9]}"  == "[10] Title Ten"                     ]]
+  [[ "${lines[10]}" == "[11] Title Eleven"                  ]]
+  [[ "${lines[11]}" == "[12] Title Twelve"                  ]]
+  [[ "${lines[12]}" == "[13] Example Org Title"             ]]
+  [[ "${lines[13]}" == "[14] Example Multi-Line Org Title"  ]]
+  [[ "${lines[14]}" == "[15] Example Multi-Line Org Title"  ]]
 }
 
 # `_get_unique_basename()` ####################################################
