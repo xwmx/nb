@@ -1038,7 +1038,7 @@ HEREDOC
     _expected="0 bookmarks.
 
 Add a bookmark:
-  $(_highlight 'nb bookmark <url>')
+  $(_highlight 'nb <url>')
 Help information:
   $(_highlight 'nb help bookmark')"
   }

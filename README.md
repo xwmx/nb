@@ -615,12 +615,14 @@ nb d 'A Document Title'
 
 ### 🔖 Bookmarks
 
-Use `nb bookmark` to create, view, and search bookmarks, links, and
-online references. Bookmarks are Markdown notes containing information about
-the bookmarked page. To create a new bookmark:
+`nb` is a powerful bookmark management system, enabling you to to view, search,
+and manage your bookmarks, links, and online references. Bookmarks are
+Markdown notes containing information about the bookmarked page.
+
+To create a new bookmark simply pass a URL as the first argument to `nb`:
 
 ```bash
-nb bookmark https://example.com
+nb https://example.com
 ```
 
 `nb` automatically generates a bookmark using information from the page:
@@ -654,7 +656,7 @@ Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
 
 ```bash
-nb bookmark https://example.com --tags tag1,tag2
+nb https://example.com --tags tag1,tag2
 ```
 ```markdown
 # Example Domain (example.com)
@@ -708,7 +710,7 @@ Bookmarks can also be encrypted:
 
 ```bash
 # create a new password-protected, encrypted bookmark
-nb bookmark https://example.com --encrypt
+nb https://example.com --encrypt
 ```
 
 Encrypted bookmarks require a password before they can be viewed or
@@ -719,8 +721,8 @@ filter bookmarks:
 
 ```bash
 > nb bookmark
-Add: nb bookmark <url> Help: nb help bookmark
----------------------------------------------
+Add: nb <url> Help: nb help bookmark
+------------------------------------
 [3] 🔖 🔒 Example Three (example.com)
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
@@ -734,11 +736,15 @@ Add: nb bookmark <url> Help: nb help bookmark
 `bookmark` can also be used with the alias `b`:
 
 ```bash
-# bookmark a page
-nb b https://example.com
+> nb b
+Add: nb <url> Help: nb help bookmark
+------------------------------------
+[3] 🔖 🔒 Example Three (example.com)
+[2] 🔖 Example Two (example.com)
+[1] 🔖 Example One (example.com)
 
-# list bookmarks
-nb b
+> nb b two
+[2] 🔖 Example Two (example.com)
 ```
 
 #### Opening Bookmarks
@@ -1478,8 +1484,8 @@ them faster to work with:
 # `a` (add): add a new note named 'example.md'
 nb a example.md
 
-# `b` (bookmark): add a new bookmark for https://example.com
-nb b https://example.com
+# `b` (bookmark): list bookmarks
+nb b
 
 # `o` (open): open bookmark 12 in your web browser
 nb o 12
@@ -1845,6 +1851,7 @@ Options:
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
+             Bookmarks can also be added with `nb <url>`
   delete     Delete a bookmark.
   edit       Edit a bookmark.
   list       List bookmarks in the current notebook.
@@ -1871,6 +1878,7 @@ Description:
     <https://www.example.com>
 
 Examples:
+  nb https://example.com
   nb bookmark https://example.com
   nb bookmark https://example.com --tags example,sample,demo
   nb bookmark https://example.com/about -c 'Example comment.'

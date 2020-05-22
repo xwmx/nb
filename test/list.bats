@@ -16,7 +16,7 @@ load test_helper
 Add a note:
   $(_highlight 'nb add')
 Add a bookmark:
-  $(_highlight "nb bookmark <url>")
+  $(_highlight "nb <url>")
 Import a file:
   $(_highlight "nb import (<path> | <url>)")
 Help information:

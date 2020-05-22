@@ -2876,6 +2876,7 @@ Options:
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
+             Bookmarks can also be added with \`nb <url>\`
   delete     Delete a bookmark.
   edit       Edit a bookmark.
   list       List bookmarks in the current notebook.
@@ -2902,6 +2903,7 @@ Description:
     <https://www.example.com>
 
 Examples:
+  ${_ME} https://example.com
   ${_ME} bookmark https://example.com
   ${_ME} bookmark https://example.com --tags example,sample,demo
   ${_ME} bookmark https://example.com/about -c 'Example comment.'
@@ -3250,11 +3252,11 @@ Check the Wayback Machine for an archived version? [y/N] " __yn
   if [[ -z "${_url:-}" ]]
   then
     local _header=
-    _header="Add: $(_highlight "${_ME} bookmark <url>")"
+    _header="Add: $(_highlight "${_ME} <url>")"
     _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
 cat <<HEREDOC
 ${_header}
-$(_highlight_secondary "---------------------------------------------")
+$(_highlight_secondary "------------------------------------")
 HEREDOC
     _bookmark list
     return 0
@@ -5093,7 +5095,7 @@ _list() {
 0 bookmarks.
 
 Add a bookmark:
-  $(_highlight "${_ME} bookmark <url>")
+  $(_highlight "${_ME} <url>")
 Help information:
   $(_highlight "${_ME} help bookmark")
 HEREDOC
@@ -5116,7 +5118,7 @@ HEREDOC
 Add a note:
   $(_highlight "${_ME} add")
 Add a bookmark:
-  $(_highlight "${_ME} bookmark <url>")
+  $(_highlight "${_ME} <url>")
 Import a file:
   $(_highlight "${_ME} import (<path> | <url>)")
 Help information:

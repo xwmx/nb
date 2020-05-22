@@ -60,12 +60,12 @@ _main() {
          [[ "${_count}" == 8 ]]
       then
         printf "%s\\n" "${__line}" \
-          | sed -e 's/nb bookmark/bookmark/' \
-          | sed -e 's/nb help bookmark/bookmark help/'
+          | sed -e 's/nb help bookmark/bookmark help/' \
+          | sed -e 's/nb/bookmark/'
       elif [[ "${_count}" == 2 ]]
       then
         printf "%s\\n" "${__line}" \
-          | sed -e 's/------//'
+          | sed -e 's/-------------------------/----------------------------/'
       else
         printf "%s\\n" "${__line}"
       fi
