@@ -1657,6 +1657,7 @@ More Information:
 
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
+               When a <url> is provided, create a new bookmark.
   add          Add a new note.
   bookmark     Add, open, list, and search bookmarks.
   completions  Install and uninstall completion scripts.
