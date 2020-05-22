@@ -1586,17 +1586,13 @@ _get_title() {
         while IFS= read -r __line || [[ -n "${__line}" ]]
         do
           _counter="$((_counter+1))"
-          # NOTE: Titles can be defined with multiple #+TITLE: lines.
+
           if [[ "${__line}" =~  ^\\title\{ ]]
           then
-            if [[ -n "${_title:-}" ]]
-            then
-              _title="${_title} "
-            fi
-
-            _title+="$(
+            _title="$(
               printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
             )"
+            break
           elif [[ -n "${__line:-}"      ]] &&
                [[ ! "${__line}" =~ ^\\  ]] &&
                [[ "${_counter}" -gt 20  ]]
@@ -1613,6 +1609,7 @@ _get_title() {
         while IFS= read -r __line || [[ -n "${__line}" ]]
         do
           _counter="$((_counter+1))"
+
           # NOTE: Titles can be defined with multiple #+TITLE: lines.
           if [[ "${__line}" =~ ^\#\+TITLE\: ]]
           then
