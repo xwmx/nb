@@ -2020,36 +2020,32 @@ _git_should_autosync() {
 _highlight_syntax_if_available() {
   if hash "pygmentize" 2>/dev/null
   then # pygments is installed.
+    local _arguments=("-O" "style=friendly")
+    local _lexer=
+    local _path=
+
     if _interactive_input
     then
-      local _path="${1:-}"
-      local _basename=
-      _basename="$(basename "${_path}")"
-      local _extension="${_basename##*.}"
-
-      local _lexer="${2:-}"
-
-      # Markdown highlighting is better with explicit 'md' lexer.
-      if [[ ! "${_extension}" == "md" ]] &&
-         [[ -z "${_lexer:-}"          ]]
-      then
-        pygmentize -O style=friendly "${@}"
-      elif [[ -n "${_lexer:-}" ]]
-      then
-        pygmentize -l "${_lexer }" -O style=friendly "${@}"
-      else
-        pygmentize -l md -O style=friendly "${@}"
-      fi
+      _path="${1:-}"
+      _lexer="${2:-}"
     else
-      local _lexer="${1:-}"
+      _lexer="${1:-}"
+    fi
 
-      if [[ -n "${_lexer:-}" ]]
+    if [[ -z "${_lexer:-}" ]]
+    then
+      if [[ "${_path}" =~ \.latex$|\.tex$|\.aux$|\.toc$ ]]
       then
-        pygmentize -l "${_lexer:-}" -O style=friendly
+        _lexer="latex"
       else
-        pygmentize -l md -O style=friendly
+        _lexer="md"
       fi
-    fi 2>/dev/null
+    fi
+
+    [[ -n "${_lexer:-}" ]]  && _arguments+=("-l" "${_lexer}")
+    _interactive_input      && _arguments+=("${_path}")
+
+    pygmentize "${_arguments[@]}" 2>/dev/null
   else
     cat "${@}"
   fi
