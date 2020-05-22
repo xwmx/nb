@@ -1563,8 +1563,11 @@ _get_title() {
     then
       if [[ "${_path}" =~ \.org$ ]]
       then
+        local _counter=0
+
         while IFS= read -r __line || [[ -n "${__line}" ]]
         do
+          _counter="$((_counter+1))"
           # NOTE: Titles can be defined with multiple #+TITLE: lines.
           if [[ "${__line}" =~ ^\#\+TITLE\: ]]
           then
@@ -1574,7 +1577,9 @@ _get_title() {
             fi
 
             _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
-          elif [[ -n "${__line:-}" ]] && [[ ! "${__line}" =~ ^\# ]]
+          elif [[ -n "${__line:-}"      ]] &&
+               [[ ! "${__line}" =~ ^\#  ]] &&
+               [[ "${_counter}" -gt 5   ]]
           then
             break
           else
