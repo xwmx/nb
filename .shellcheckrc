@@ -16,18 +16,24 @@ disable=SC1090
 
 # Disable SC2002
 #
+# Um, I like cats 😸.
+#
 # https://github.com/koalaman/shellcheck/wiki/SC2002
 disable=SC2002
 
 # Disable SC2015
 #
 # This is used in some places as intended.
+#
 # https://github.com/koalaman/shellcheck/wiki/SC2015
 disable=SC2015
 
 # Disable SC2183
 #
-# https://github.com/koalaman/shellcheck/wiki/SC2183
+# Running into this: https://github.com/koalaman/shellcheck/issues/1310
+# TODO: Check if resolved.
+#
+#https://github.com/koalaman/shellcheck/wiki/SC2183
 disable=SC2183
 
 # Disable SC2120
