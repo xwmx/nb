@@ -5729,15 +5729,17 @@ _ls() {
     if ((NB_FOOTER))
     then
       local _scope=
+      local _scoped_bookmark=
       if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
       then
         _scope="${_SCOPE}:"
+        _scoped_bookmark="${_scope} "
       fi
 
       _commands_raw=(
         "❯ ${_ME} ${_scope}ls"
         "${_ME} ${_scope}add"
-        "${_ME} ${_scope}b <url>"
+        "${_ME} ${_scoped_bookmark}<url>"
         "${_ME} edit ${_scope}<id>"
         "${_ME} show ${_scope}<id>"
         "${_ME} open ${_scope}<id>"
