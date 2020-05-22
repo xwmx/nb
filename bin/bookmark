@@ -43,7 +43,7 @@ if [[ -z "${_NB_PATH:-}" ]]
 then
   cat <<HEREDOC
 \`bookmark\` is part of \`nb\`. To install \`nb\`, see:
-  https://github.com/xwmx/notes
+  https://github.com/xwmx/nb
 HEREDOC
 fi
 
