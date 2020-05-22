@@ -29,4 +29,3 @@ tmp:
 
 ver:
 	$(eval VERSION := $(shell $(BIN) --version))
-	echo ${VERSION}
