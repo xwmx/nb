@@ -1562,6 +1562,9 @@ _get_selection_parts() {
 #     - Supported:
 #       - #+TITLE: This is a Title
 #     - https://orgmode.org/guide/Export-Settings.html
+#   - Latex
+#     - Supported:
+#       - \title{This is a Title}
 _get_title() {
   local _in_code_block=0
   local _in_front_matter=0
@@ -1576,7 +1579,34 @@ _get_title() {
   then
     if _file_is_text "${_path}"
     then
-      if [[ "${_path}" =~ \.org$ ]]
+      if [[ "${_path}" =~ \.latex$|\.tex$ ]]
+      then
+        local _counter=0
+
+        while IFS= read -r __line || [[ -n "${__line}" ]]
+        do
+          _counter="$((_counter+1))"
+          # NOTE: Titles can be defined with multiple #+TITLE: lines.
+          if [[ "${__line}" =~  ^\\title\{ ]]
+          then
+            if [[ -n "${_title:-}" ]]
+            then
+              _title="${_title} "
+            fi
+
+            _title+="$(
+              printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
+            )"
+          elif [[ -n "${__line:-}"      ]] &&
+               [[ ! "${__line}" =~ ^\\  ]] &&
+               [[ "${_counter}" -gt 20  ]]
+          then
+            break
+          else
+            continue
+          fi
+        done < "${_path}"
+      elif [[ "${_path}" =~ \.org$ ]]
       then
         local _counter=0
 
