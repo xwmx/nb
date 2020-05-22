@@ -38,7 +38,7 @@ disable=SC2183
 
 # Disable SC2120
 #
-# This is being triggered on `_ls`, which is passed arguments in `_notes()`.
+# This is being triggered on `_ls`, which is passed arguments in `_nb_main()`.
 # This is likely being triggered because `_ls` is called separately explicitly
 # without arguments.
 #
