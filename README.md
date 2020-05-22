@@ -2518,15 +2518,17 @@ Alias: `set`
 
 [4] color_theme
     -----------
-    The color theme. `nb` has several built-in themes and user
-    defined themes can be installed in the $NB_DIR/.themes directory.
+    The color theme. `nb` has several customizable built-in themes,
+    listed below.
+
+    Additional themes can be installed in the $NB_DIR/.themes directory.
     Themes have an .nb-theme or .nb-theme.sh extension and contain a
     single if statment assigning the color environment variables to
     tput ANSI color numbers.
 
       Example:
 
-        # filename: ~/.nb/.themes/example.nb-theme.sh
+        # file: ~/.nb/.themes/example.nb-theme.sh
         if [[ "${NB_COLOR_THEME}" == "example" ]]
         then
           export NB_COLOR_PRIMARY=68
@@ -2534,6 +2536,7 @@ Alias: `set`
         fi
 
     To view a list of available color numbers, run `nb settings colors`
+
     Available themes:
 
        blacklight, console, desert, electro, forest, monochrome, nb
