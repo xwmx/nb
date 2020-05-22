@@ -1566,6 +1566,7 @@ _get_selection_parts() {
 #     - Supported:
 #       - \title{This is a Title}
 _get_title() {
+  local _counter=0
   local _in_code_block=0
   local _in_front_matter=0
   local _maybe_title=
@@ -1581,8 +1582,6 @@ _get_title() {
     then
       if [[ "${_path}" =~ \.latex$|\.tex$ ]]
       then
-        local _counter=0
-
         while IFS= read -r __line || [[ -n "${__line}" ]]
         do
           _counter="$((_counter+1))"
@@ -1604,8 +1603,6 @@ _get_title() {
         done < "${_path}"
       elif [[ "${_path}" =~ \.org$ ]]
       then
-        local _counter=0
-
         while IFS= read -r __line || [[ -n "${__line}" ]]
         do
           _counter="$((_counter+1))"
