@@ -7565,6 +7565,8 @@ Examples:
   ${_ME} settings unset color_primary
   ${_ME} settings colors
   ${_ME} settings colors 105
+
+Alias: \`set\`
 HEREDOC
 _settings() {
   # Usage: _nb_settings_colors
@@ -8124,6 +8126,7 @@ HEREDOC
   done
 }
 _alias_subcommand "settings" "config"
+_alias_subcommand "settings" "set"
 
 # shell  ################################################################ shell
 
@@ -9116,6 +9119,7 @@ _SUBCOMMANDS=(
   rename
   s
   search
+  set
   settings
   shell
   show

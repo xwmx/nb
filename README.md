@@ -2471,6 +2471,8 @@ Examples:
   nb settings unset color_primary
   nb settings colors
   nb settings colors 105
+
+Alias: `set`
 ```
 
 ##### `settings list --long`
