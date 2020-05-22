@@ -308,8 +308,8 @@ To list notes and notebooks, run `nb ls`:
 
 ```bash
 > nb ls
-home · notebook2
-----------------
+home
+----
 [3] example.md · "Example content."
 [2] todos.md · "Todos:"
 [1] ideas.md · "- Example idea one."
