@@ -22,8 +22,9 @@ global and local notebooks, tagging, customizable color themes,
 plain-text data storage, and more, all in a single portable script.
 
 `nb` creates notes in text-based formats like
-[Markdown](https://en.wikipedia.org/wiki/Markdown) and
+[Markdown](https://en.wikipedia.org/wiki/Markdown),
 [Emacs Org mode](https://orgmode.org/),
+and [LaTeX](https://www.latex-project.org/),
 can work with files in any format, can import and export notes to many
 document formats, and can create private, password-protected encrypted
 notes and bookmarks. With `nb`, you can add and edit notes using Vim, Emacs,
