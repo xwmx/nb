@@ -3,7 +3,7 @@
 
 load test_helper
 
-# `nb` (pre-init) ##########################################################
+# `nb` (pre-init) #############################################################
 
 @test "\`nb\` (pre-init) exits with status 0 and prints \`ls\` ouput." {
   {
@@ -44,7 +44,7 @@ load test_helper
   [[ "${lines[22]}" == "  $(_highlight 'nb help')"                    ]]
 }
 
-# `nb` (empty repo) ########################################################
+# `nb` (empty repo) ###########################################################
 
 @test "\`nb\` with empty repo exits with status 0 and \`ls\` output." {
   run "${_NB}" init
@@ -67,7 +67,7 @@ load test_helper
   [[ "${lines[10]}" == "  $(_highlight 'nb help')"                    ]]
 }
 
-# `nb` (non-empty repo) ####################################################
+# `nb` (non-empty repo) #######################################################
 
 @test "\`nb\` with a non-empty repo exits with 0 and prints list." {
   {
@@ -89,7 +89,62 @@ load test_helper
   [[ "${lines[4]}" =~ one   ]]
 }
 
-# `nb` NB_DIR ###########################################################
+# `nb <url>` ##################################################################
+
+@test "\`nb\` with <url> creates bookmark." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" "${_BOOKMARK_URL}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note with bookmark filename
+  [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
+
+  # Creates new note file with content
+  [[ "${#_files[@]}" -eq 1 ]]
+  _bookmark_content="\
+# Example Domain
+
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Page Content
+
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
+}
+
+# `nb` NB_DIR #################################################################
 
 @test "\`nb\` with invalid NB_DIR exits with 1." {
   {
