@@ -2,7 +2,7 @@ Package: nb
 Version: {{VERSION}}
 Architecture: all
 Maintainer: "William Melody" <hi@williammelody.com>
-Depends: pandoc, python-pygments, ripgrep, tig, w3m
+Depends: bash-completion, pandoc, python-pygments, ripgrep, tig, w3m
 Section: base
 Priority: optional
 Description: CLI note-taking, bookmarking, and archiving with encryption,
