@@ -28,4 +28,4 @@ tmp:
 	$(eval TMP := $(shell mktemp -d -t nb.XXXXX))
 
 ver:
-	$(eval VERSION := $(shell $(BIN) --version))
+	$(eval VERSION := $(shell ./$(BIN) --version))
