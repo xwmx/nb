@@ -9303,29 +9303,37 @@ do
       ;;
     *:*)
       __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
-      if [[ -z "${_SCOPE:-}"        ]] &&
-         [[ -z "${_SUBCOMMAND:-}"   ]] &&
-         [[ "${#__parts[@]}" -gt 0  ]]
+      if [[ "${#__parts[@]}" -gt 0  ]]
       then
-        if [[ -d "${NB_DIR}/${__parts[0]}"      ]] ||
-           {
-             [[ "${__parts[0]}" == "local"      ]] &&
-             [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
-           }
+        if [[ -z "${_SCOPE:-}"      ]] &&
+           [[ -z "${_SUBCOMMAND:-}" ]]
         then
-          _SCOPE="${__parts[0]}"
-          if _is_valid_subcommand "${__parts[1]:-}"
+          if [[ -d "${NB_DIR}/${__parts[0]}"      ]] ||
+             {
+               [[ "${__parts[0]}" == "local"      ]] &&
+               [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+             }
           then
-            _SUBCOMMAND="${__parts[1]:-}"
-          fi
-        else
-          if _string_is_url "${__parts[0]}"
+            _SCOPE="${__parts[0]}"
+            if _is_valid_subcommand "${__parts[1]:-}"
+            then
+              _SUBCOMMAND="${__parts[1]:-}"
+            fi
+          elif _string_is_url "${__parts[0]}"
           then
             _SUBCOMMAND="bookmark"
             _ARGUMENTS+=("${__opt}")
           else
             _exit_1 printf "Notebook not found: %s\\n" "${__parts[0]}"
           fi
+        elif [[ -n "${_SCOPE:-}"      ]] &&
+             [[ -z "${_SUBCOMMAND:-}" ]] &&
+             _string_is_url "${__parts[0]}"
+        then
+          _SUBCOMMAND="bookmark"
+          _ARGUMENTS+=("${__opt}")
+        else
+          _ARGUMENTS+=("${__opt}")
         fi
       else
         _ARGUMENTS+=("${__opt}")
