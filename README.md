@@ -60,7 +60,7 @@ purpose syncing utility like Dropbox so they can be edited in other apps on
 any device.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-empty.png"
+  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
   		alt="bookmarks"
   		width="450"/>
 </p>
