@@ -1625,7 +1625,8 @@ _get_title() {
             continue
           fi
         done < "${_path}"
-      else
+      elif [[ "${_path}" =~ \.md$|\.markdown$ ]]
+      then
         while IFS= read -r __line || [[ -n "${__line}" ]]
         do
           if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
