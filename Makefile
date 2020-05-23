@@ -5,8 +5,8 @@ PREFIX ?= /usr/local
 
 debs: tmp ver
 	$(eval DEB_ROOT := $(TMP)/DEBIAN)
-	mkdir -p $(TMP)/usr/bin
-	cp $(BIN) $(TMP)/usr/bin/
+	mkdir -p $(TMP)/usr/local/bin
+	cp $(BIN) $(TMP)/usr/local/bin/
 	mkdir -p $(DEB_ROOT)
 	cat etc/DEBIAN/control | sed s/{{VERSION}}/$(VERSION)/ > $(DEB_ROOT)/control
 	dpkg-deb -Zgzip -b $(TMP) nb_$(VERSION)_amd64.deb
