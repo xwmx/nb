@@ -6685,18 +6685,19 @@ HEREDOC
   _notebooks_add_new() {
     local _notebook_list=
     _notebook_list=($(
-      find "${NB_DIR}" -mindepth 1 -maxdepth 1 -type d | grep -v '/\.'
+      find "${NB_DIR}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; \
+        | grep -v '^\.'
     ))
 
-    for __notebook_path in "${_notebook_list[@]}"
+    for __notebook_name in "${_notebook_list[@]}"
     do
-      if [[ ! -d "${__notebook_path}/.git" ]]
+      if [[ ! -d "${NB_DIR}/${__notebook_name}/.git" ]]
       then
-        cd "${__notebook_path}"             &&
-          git init 1>/dev/null              &&
-          touch "${__notebook_path}/.index" &&
-          _clear_cache                      &&
-          _git_checkpoint "[nb] Initialize" "${__notebook_path}"
+        cd "${NB_DIR}/${__notebook_name}"             &&
+          git init 1>/dev/null                        &&
+          touch "${NB_DIR}/${__notebook_name}/.index" &&
+          _clear_cache                                &&
+          _git_checkpoint "[nb] Initialize" "${NB_DIR}/${__notebook_name}"
       fi
     done
   }
