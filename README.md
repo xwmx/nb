@@ -49,8 +49,8 @@ so bookmarks are easy to edit just like any other note.
 
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
-  		alt="bookmarks"
-  		width="450"/>
+  		  alt="bookmarks"
+  		  width="450"/>
 </p>
 
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
@@ -61,8 +61,8 @@ any device.
 
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
-  		alt="bookmarks"
-  		width="450"/>
+  		  alt="bookmarks"
+  		  width="450"/>
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
