@@ -920,10 +920,10 @@ are some subtle differences in color highlighting.
 `search` can also be used with the alias `q` (for "query"):
 
 ```bash
-# search for 'example' in the current notebook
+# search for 'example' and print matching excerpts
 nb q 'example'
 
-# seach for 'example', omitting content matches
+# search for 'example' and list each matching file
 nb q -l 'example'
 ```
 
