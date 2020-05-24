@@ -8527,8 +8527,6 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "imgcat" ]]
          }
     then
-
-    echo hi
       imgcat "${_target_path}" \
         | if _command_exists "less" && ! ((_dump))
           then
