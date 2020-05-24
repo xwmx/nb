@@ -875,7 +875,7 @@ _decrypt_file() {
 
   if [[ -z "${_password}" ]]
   then
-    _return_1 printf "Password required.\\n"
+    _exit_1 printf "Password required.\\n"
   fi
 
   if [[ -z "${_encrypted_path}" ]]
@@ -920,12 +920,12 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
         rm "${_unencrypted_path}"
   else
-    _return_1 printf "Unable to decrypt file.\\n"
+    _exit_1 printf "Unable to decrypt file.\\n"
   fi
 
   if [[ ! -e "${_unencrypted_path}" ]]
   then
-    _return_1 printf "Decryption error.\\n" 1>&2
+    _exit_1 printf "Decryption error.\\n" 1>&2
   fi
 
   printf "%s\\n" "${_unencrypted_path}"
