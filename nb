@@ -7786,7 +7786,11 @@ HEREDOC
       elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
       then
         local _new_color=
-        _new_color="$(NB_COLOR_THEME='' "${_MY_PATH}" settings get NB_COLOR_PRIMARY)"
+        _new_color="$(
+          NB_COLOR_THEME="${_value}"  \
+          NB_COLOR_PRIMARY=''         \
+            "${_MY_PATH}" settings get NB_COLOR_PRIMARY)"
+        echo $_new_color
         _setting_name="$(tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
         _value="$(tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
       else
