@@ -4254,9 +4254,9 @@ _export() {
     else
       cp "${_NOTEBOOK_PATH}/${_basename}" "${_target_path}"
     fi &&
-      printf "Exported %s to %s\\n"         \
-          "$(_highlight "${_selection}")"   \
-          "$(_highlight "${_target_path}")"
+      printf "Exported %s to %s\\n"       \
+        "$(_highlight "${_selection}")"   \
+        "$(_highlight "${_target_path}")"
   fi
 }
 
