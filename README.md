@@ -1000,6 +1000,18 @@ title:
 nb edit example:12
 ```
 
+When a notebook name is specified without a command, `nb` runs `nb ls` in the
+specified notebook:
+
+```bash
+> nb example:
+example · home
+--------------
+[3] Title Three
+[2] Title Two
+[1] Title One
+```
+
 Notes can also be moved between notebooks:
 
 ```bash
