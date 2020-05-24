@@ -39,11 +39,9 @@ but `nb` works great without them.
   	   	width="450"/>
 </p>
 
-`nb` is also a powerful text-based CLI bookmarking system
-that includes
+`nb` is also a powerful text-based CLI bookmarking system that includes:
 
-- local full-text search of cached page content with regular
-expression support,
+- local full-text search of cached page content with regular expression support,
 - tagging,
 - convenient filtering and listing,
 - Wayback Machine snapshot lookup for broken links,
