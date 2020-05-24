@@ -972,8 +972,9 @@ example · home
 [1] Title One
 ```
 
-Commands in `nb` like `nb add` are performed within the current notebook.
-`nb edit 3`, for example, tells `nb` to `edit` note `3` in the current
+Command in `nb` run within the current notebook, and identifiers like id,
+filename, and title refer to notes within the current notebook.
+`nb edit 3`, for example, tells `nb` to `edit` note `3` within the current
 notebook.
 
 To switch to a different notebook, use `nb use`:
