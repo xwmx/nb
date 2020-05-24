@@ -957,15 +957,26 @@ You can create additional notebooks, each of which has its own version history.
 Create a new notebook:
 
 ```bash
-# add a notebook named example-notebook
-nb notebooks add example-notebook
+# add a notebook named example
+nb notebooks add example
 ```
 
 Switch to a notebook:
 
 ```bash
-# switch to example-notebook
-nb use example-notebook
+# switch to projects
+nb use example
+```
+
+`nb` and `nb ls` list the available notebooks above the list of notes:
+
+```bash
+> nb ls
+example · home
+--------------
+[3] Title Three
+[2] Title Two
+[1] Title One
 ```
 
 If you are in one notebook and you want to perform a command in a
@@ -973,23 +984,23 @@ different notebook without switching to it, add the notebook name with a
 colon before the command name:
 
 ```bash
-# show note 5 in example-notebook
-nb example-notebook:show 5
+# show note 5 in the notebook named 'example'
+nb example:show 5
 ```
 
 You can similarly set the notebook name as a modifier to the id, filename, or
 title:
 
 ```bash
-# edit note 12 in example-notebook
-nb edit example-notebook:12
+# edit note 12 in the notebook named 'example'
+nb edit example:12
 ```
 
 Notes can also be moved between notebooks:
 
 ```bash
-# move note 3 from the current notebook to example-notebook
-nb move 3 example-notebook
+# move note 3 from the current notebook to 'example'
+nb move 3 example
 ```
 
 #### Global and Local Notebooks
@@ -1010,8 +1021,8 @@ notebook is set as the current notebook:
 
 ```bash
 > nb ls
-local · example2 · example3
----------------------------
+local · example · home
+----------------------
 [3] Title Three
 [2] Title Two
 [1] Title One
