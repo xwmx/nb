@@ -1065,13 +1065,13 @@ _encrypt_file() {
 
   if [[ -z "${_password}" ]]
   then
-    _return_1 printf "Password required.\\n"
+    _exit_1 printf "Password required.\\n"
   fi
 
   if [[ -z "${_decrypted_path}" ]] ||
      [[ -z "${_encrypted_path}" ]]
   then
-    _return_1 printf "Encrypted and decripted paths required.\\n"
+    _exit_1 printf "Encrypted and decripted paths required.\\n"
   fi
 
   if [[ "${NB_ENCRYPTION_TOOL}" == "gpg" ]]
@@ -1093,13 +1093,13 @@ _encrypt_file() {
       -out "${_encrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
-    _return_1 \
+    _exit_1 \
       printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
   then
-    _return_1 printf "Encryption error.\\n"
+    _exit_1 printf "Encryption error.\\n"
   fi
 }
 
