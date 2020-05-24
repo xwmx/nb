@@ -961,13 +961,6 @@ Create a new notebook:
 nb notebooks add example
 ```
 
-Switch to a notebook:
-
-```bash
-# switch to projects
-nb use example
-```
-
 `nb` and `nb ls` list the available notebooks above the list of notes:
 
 ```bash
@@ -977,6 +970,17 @@ example · home
 [3] Title Three
 [2] Title Two
 [1] Title One
+```
+
+Commands in `nb` like `nb add` are performed within the current notebook.
+`nb edit 3`, for example, tells `nb` to `edit` note `3` in the current
+notebook.
+
+To switch to a different notebook, use `nb use`:
+
+```bash
+# switch to the notebook named 'example'
+nb use example
 ```
 
 If you are in one notebook and you want to perform a command in a
