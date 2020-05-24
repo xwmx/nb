@@ -1755,7 +1755,9 @@ Options:
   -c, --comment <comment>    A comment or description for this bookmark.
   --edit                     Open the bookmark in your editor before saving.
   -e, --encrypt              Encrypt the bookmark with a password.
-  -f, --filename <filename>  The filename for the new note.
+  -f, --filename <filename>  The filename for the bookmark. It is recommended
+                             to omit the extension so the default bookmark
+                             extension is used.
   --raw-content              Save the page content as HTML.
   --related <url>            A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
@@ -1767,6 +1769,7 @@ Options:
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
+             Bookmarks can also be added with `nb <url>`
   delete     Delete a bookmark.
   edit       Edit a bookmark.
   list       List bookmarks in the current notebook.
@@ -1794,8 +1797,10 @@ Description:
 
 Examples:
   bookmark https://example.com
+  bookmark https://example.com --encrypt
   bookmark https://example.com --tags example,sample,demo
   bookmark https://example.com/about -c 'Example comment.'
+  bookmark https://example.com/faqs -f example-filename
   bookmark list
   bookmark search 'example query'
   bookmark open 5
@@ -1818,7 +1823,8 @@ Usage:
 Options:
   -c, --content <content>     The content for the new note.
   -e, --encrypt               Encrypt the note with a password.
-  -f, --filename <filename>   The filename for the new note.
+  -f, --filename <filename>   The filename for the new note. The default
+                              extension is used when the extension is omitted.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename will be derived from the
                               title, unless `--filename` is specified.
@@ -1849,7 +1855,7 @@ Examples:
   nb add "Note content."
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
-  nb add -t "Secret Document" --encrypt
+  nb add -f "Secret Document" --encrypt
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
@@ -1873,7 +1879,9 @@ Options:
   -c, --comment <comment>    A comment or description for this bookmark.
   --edit                     Open the bookmark in your editor before saving.
   -e, --encrypt              Encrypt the bookmark with a password.
-  -f, --filename <filename>  The filename for the new note.
+  -f, --filename <filename>  The filename for the bookmark. It is recommended
+                             to omit the extension so the default bookmark
+                             extension is used.
   --raw-content              Save the page content as HTML.
   --related <url>            A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
@@ -1914,8 +1922,10 @@ Description:
 Examples:
   nb https://example.com
   nb bookmark https://example.com
+  nb bookmark https://example.com --encrypt
   nb bookmark https://example.com --tags example,sample,demo
   nb bookmark https://example.com/about -c 'Example comment.'
+  nb bookmark https://example.com/faqs -f example-filename
   nb bookmark list
   nb bookmark search 'example query'
   nb bookmark open 5

@@ -89,9 +89,10 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 HEREDOC
-      "${_NB_PATH:-}" help bookmark        \
-        | sed -e "s/  nb /  /"             \
-        | sed -e "s/Shortcut Alias: \`b\`//"  \
+      "${_NB_PATH:-}" help bookmark             \
+        | sed -e "/  nb https\:\/\/example.com/d"  \
+        | sed -e "s/  nb /  /"                  \
+        | sed -e "s/Shortcut Alias: \`b\`//"    \
         | sed -e '$ d'
 
       cat <<HEREDOC
