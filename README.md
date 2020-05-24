@@ -1030,7 +1030,7 @@ nb move 3 example
 
 By default, all `nb` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
-stored in the directory configured in [`NB_DIR`](#settings-list), which is
+stored in the directory configured in [`NB_DIR`](##settings-list---long), which is
 `~/.nb` by default.
 
 ##### Local Notebooks
