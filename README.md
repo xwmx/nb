@@ -40,12 +40,17 @@ but `nb` works great without them.
 </p>
 
 `nb` is also a powerful text-based CLI bookmarking system
-that includes local full-text search of cached page content with regular
-expression support, tagging, convenient filtering and listing, Wayback Machine
-snapshot lookup for broken links, and easy viewing of bookmarked pages in the
-terminal and your regular web browser. Page information is automatically
-downloaded, compiled, and saved into normal Markdown documents made for humans,
-so bookmarks are easy to edit just like any other note.
+that includes
+
+- local full-text search of cached page content with regular
+expression support,
+- tagging,
+- convenient filtering and listing,
+- Wayback Machine snapshot lookup for broken links,
+- and easy viewing of bookmarked pages in the terminal and your regular web browser.
+
+Page information is automatically downloaded, compiled, and saved into normal Markdown
+documents made for humans, so bookmarks are easy to edit just like any other note.
 
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
