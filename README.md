@@ -44,7 +44,8 @@ but `nb` works great without them.
 - local full-text search of cached page content with regular expression support,
 - tagging,
 - convenient filtering and listing,
-- Wayback Machine snapshot lookup for broken links,
+- [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup for
+  broken links,
 - and easy viewing of bookmarked pages in the terminal and your regular web browser.
 
 Page information is automatically downloaded, compiled, and saved into normal Markdown
