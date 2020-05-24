@@ -5730,20 +5730,23 @@ _ls() {
     if ((NB_FOOTER))
     then
       local _scope=
-      local _scoped_bookmark=
+      local _scope_left_pad=
+      local _scope_right_pad=
       if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
       then
         _scope="${_SCOPE}:"
-        _scoped_bookmark="${_scope} "
+        _scope_left_pad=" ${_scope}"
+        _scope_right_pad="${_scope} "
       fi
 
       _commands_raw=(
-        "❯ ${_ME} ${_scope}ls"
+        "❯ ${_ME} ${_scope}"
         "${_ME} ${_scope}add"
-        "${_ME} ${_scoped_bookmark}<url>"
+        "${_ME} ${_scope_right_pad}<url>"
         "${_ME} edit ${_scope}<id>"
         "${_ME} show ${_scope}<id>"
         "${_ME} open ${_scope}<id>"
+        "${_ME} ${_scope}list"
         "${_ME} ${_scope}search <query>"
         "${_ME} notebooks add <name>"
         "${_ME} settings"
@@ -5751,7 +5754,7 @@ _ls() {
       )
 
       _commands_hi=(
-        "❯ $(_highlight_secondary "${_ME} ${_scope}ls")"
+        "❯ $(_highlight_secondary "${_ME}${_scope_left_pad}")"
           "$(_highlight_secondary "${_commands_raw[1]}")"
           "$(_highlight_secondary "${_commands_raw[2]}")"
           "$(_highlight_secondary "${_commands_raw[3]}")"
@@ -5761,6 +5764,7 @@ _ls() {
           "$(_highlight_secondary "${_commands_raw[7]}")"
           "$(_highlight_secondary "${_commands_raw[8]}")"
           "$(_highlight_secondary "${_commands_raw[9]}")"
+          "$(_highlight_secondary "${_commands_raw[10]}")"
       )
 
       local _line_hi=
