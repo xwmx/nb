@@ -2715,7 +2715,7 @@ _add() {
         shift
         ;;
       *)
-        if [[ -z "${_maybe_filename_or_title:-}" ]]
+        if [[ -z "${_maybe_filename_or_content:-}" ]]
         then
           _maybe_filename_or_content="${__arg:-}"
         else
