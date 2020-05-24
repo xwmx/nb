@@ -255,6 +255,9 @@ nb
 `nb` stores notes in notebooks, and `nb` sets up your initial "home" notebook
 the first time it runs.
 
+By default, notebooks and notes are global, so they
+are always available to `nb` regardless of the current working directory.
+
 ### 📝 Working with Notes
 
 #### Adding Notes
