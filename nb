@@ -2528,6 +2528,7 @@ Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
   ${_ME} sync [-a | --all]
+  ${_ME} update
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
   ${_ME} -h | --help | help [<subcommand> | --readme]
@@ -2574,6 +2575,7 @@ Subcommands:
   show         Show a note.
   status       Run \`git status\` in the current notebook.
   sync         Sync local notebook with the remote repository.
+  update       Update \`${_ME}\` to the latest version.
   use          Switch to a notebook.
   version      Display version information.
 

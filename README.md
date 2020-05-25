@@ -245,7 +245,7 @@ instructions](etc/README.md).
 When `nb` is installed using a package manager like npm or
 Homebrew, use the package manager's upgrade functionality to update `nb` to
 the latest version. When installed via other methods, `nb` can be updated to
-the latest version using the `nb update` subcommand.
+the latest version using the [`nb update`](#update) subcommand.
 
 ## Overview
 
@@ -1699,6 +1699,7 @@ Usage:
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
   nb sync [-a | --all]
+  nb update
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
   nb -h | --help | help [<subcommand> | --readme]
@@ -1740,6 +1741,7 @@ Subcommands:
   show         Show a note.
   status       Run `git status` in the current notebook.
   sync         Sync local notebook with the remote repository.
+  update       Update `nb` to the latest version.
   use          Switch to a notebook.
   version      Display version information.
 
