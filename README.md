@@ -891,7 +891,7 @@ expressions and tags:
 # search current notebook for 'example query'
 nb search 'example query'
 
-# search all notebooks for 'example query'
+# search all active notebooks for 'example query'
 nb search 'example query' --all
 
 # search nb for 'Example' OR 'Sample'
@@ -952,6 +952,9 @@ nb q 'example'
 
 # search for 'example' and list each matching file
 nb q -l 'example'
+
+# search for 'example' in all unarchived notebooks
+nb q -a 'example'
 ```
 
 ### Revision History
