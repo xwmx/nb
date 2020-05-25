@@ -168,7 +168,9 @@ brew install xwmx/taps/nb
 Installing `nb` with Homebrew also installs the recommended dependencies
 and completion scripts.
 
-#### npm
+#### Ubuntu, Windows WSL, Alpine, and others
+
+##### npm
 
 To install with [npm](https://www.npmjs.com/package/notes.sh):
 
@@ -176,7 +178,7 @@ To install with [npm](https://www.npmjs.com/package/notes.sh):
 npm install --global notes.sh
 ```
 
-#### bpkg
+##### bpkg
 
 To install with [bpkg](https://github.com/bpkg/bpkg):
 
@@ -184,7 +186,7 @@ To install with [bpkg](https://github.com/bpkg/bpkg):
 bpkg install xwmx/nb
 ```
 
-#### Make
+##### Make
 
 To install with [Make](https://en.wikipedia.org/wiki/Make_(software)),
 clone this repository, navigate to the clone's root directory, and run:
@@ -198,8 +200,6 @@ Depending on your system configuration, `sudo` might be required:
 ```bash
 sudo make install
 ```
-
-#### Ubuntu, Windows WSL, Alpine, and others
 
 To install as an administrator, copy and paste one of the following multi-line
 commands:
@@ -219,7 +219,7 @@ sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
 Manually installed copies of `nb` can be updated using the `nb update`
 command.
 
-##### User-only Installation
+###### User-only Installation
 
 To install with just user permissions, simply add the `nb` script to your
 `$PATH`. If you already have a `~/bin` directory, for example, you can use
@@ -236,7 +236,7 @@ curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb && chmod +x ~/bin/n
 #### Tab Completion
 
 Bash and Zsh tab completion should be enabled when `nb` is installed using
-Homebrew, npm, bpkg, or Make, assuming you have the appropriate system
+the methods above, assuming you have the appropriate system
 permissions or installed with `sudo`. If completion isn't working after
 installing `nb`, see the [completion installation
 instructions](etc/README.md).
