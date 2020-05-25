@@ -4038,8 +4038,10 @@ _env() {
       _completions install --download
 
       apk add --no-cache  \
+        bash-completion   \
         curl              \
         pandoc            \
+        py3-pygments      \
         ripgrep           \
         tig               \
         w3m
