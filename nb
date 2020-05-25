@@ -8832,11 +8832,6 @@ _update() {
     _current_path="$(realpath "${_current_path}")"
   fi
 
-  if [[ ! -w "${_current_path}" ]]
-  then
-    sudo -v
-  fi
-
   if hash npm 2>/dev/null         &&
     npm list | grep -q notes.sh   &&
     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
@@ -8879,6 +8874,12 @@ HEREDOC
             ;;
         esac
       done
+
+      if [[ ! -w "${_current_path}" ]]
+      then
+        sudo "${_MY_PATH}" update
+        exit $?
+      fi
 
       cat  "${_temp_file}" > "${_current_path}"
       printf "%s updated to the latest version.\\n" "$(_highlight "${_ME}")"
