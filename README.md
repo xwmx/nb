@@ -276,8 +276,7 @@ To get started, simply run:
 nb
 ```
 
-`nb` stores notes in notebooks, and `nb` sets up your initial "home" notebook
-the first time it runs.
+`nb` sets up your initial "home" notebook the first time it runs.
 
 By default, notebooks and notes are global (at `~/.nb`), so they are always available to
 `nb` regardless of the current working directory. `nb` also supports [local
