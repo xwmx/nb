@@ -4030,7 +4030,7 @@ Description:
 HEREDOC
 _env() {
   local _subcommand="${1:-}"
-  if [[ -n "${_subcommand}" ]] && [[ "${_subcommand}" == "install" ]]
+  if [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "install" ]]
   then
     # packages: curl pandoc pygments w3m ripgrep tig
     if [[ -x "$(command -v apk)" ]]
@@ -4066,6 +4066,9 @@ _env() {
     else
       _completions install --download
     fi
+  elif [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "uninstall" ]]
+  then
+    _completions uninstall
   else
     printf "_ME=%s\\n" "${_ME:-}"
     printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
