@@ -643,7 +643,7 @@ nb d 'A Document Title'
 and manage your bookmarks, links, and online references. Bookmarks are
 Markdown notes containing information about the bookmarked page.
 
-To create a new bookmark simply pass a URL as the first argument to `nb`:
+To create a new bookmark pass a URL as the first argument to `nb`:
 
 ```bash
 nb https://example.com
@@ -870,7 +870,7 @@ Perform a full text search of bookmarks and archived page content:
 5:Lorem ipsum example query.
 ```
 
-`bookmark` is simply a shortcut for `nb bookmark`, accepts all of the same
+`bookmark` is a shortcut for `nb bookmark`, accepts all of the same
 subcommands and options, and behaves identically.
 
 See [`bookmark help`](#bookmark-help) for more information.
@@ -1052,7 +1052,7 @@ stored in the directory configured in [`NB_DIR`](#settings-list---long), which i
 ##### Local Notebooks
 
 `nb` also supports creating and working with local notebooks. Local
-notebooks are simply notebooks that are anywhere on the system outside
+notebooks are notebooks that are anywhere on the system outside
 of `NB_DIR`. When `nb` runs within a local notebook, the local
 notebook is set as the current notebook:
 
@@ -1196,7 +1196,7 @@ existing notebook and start syncing changes automatically:
 nb notebooks add Example https://gitlab.com/example/example.git
 ```
 
-Turn off syncing for a notebook by simply removing the remote:
+Turn off syncing for a notebook by removing the remote:
 
 ```bash
 # remove the current remote from the current notebook
@@ -2756,7 +2756,7 @@ Description:
 
 #### `update`
 
-```bash
+```text
 Description:
   Update `nb` to the latest version. You will be prompted for
   your password if administrator priviledges are required.
