@@ -238,14 +238,12 @@ permissions or installed with `sudo`. If completion isn't working after
 installing `nb`, see the [completion installation
 instructions](etc/README.md).
 
-##### Updating
+#### Updating
 
 When `nb` is installed using a package manager like npm or
 Homebrew, use the package manager's upgrade functionality to update `nb` to
-the latest version.
-
-When installed via other methods, `nb` can be updated to the latest version
-using the `nb update` subcommand.
+the latest version. When installed via other methods, `nb` can be updated to
+the latest version using the `nb update` subcommand.
 
 ## Overview
 
