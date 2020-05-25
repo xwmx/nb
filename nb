@@ -8875,13 +8875,13 @@ HEREDOC
         esac
       done
 
-      if [[ ! -w "${_current_path}" ]]
+      if [[ -w "${_current_path}" ]]
       then
-        sudo "${_MY_PATH}" update
-        exit $?
+        cat  "${_temp_file}" > "${_current_path}"
+      else
+        cat "${_temp_file}" | sudo tee "${_current_path}" > /dev/null
       fi
 
-      cat  "${_temp_file}" > "${_current_path}"
       printf "%s updated to the latest version.\\n" "$(_highlight "${_ME}")"
       exit 0
     else
