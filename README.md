@@ -170,18 +170,6 @@ and completion scripts.
 
 #### Ubuntu, Windows WSL, Alpine, and others
 
-##### npm
-
-To install with [npm](https://www.npmjs.com/package/notes.sh):
-
-```bash
-npm install --global notes.sh
-```
-
-Note: Installing through `npm` only installs completion scripts.
-On Ubuntu, WSL, and Alpine, you can
-run `nb env install` to install the optional dependencies.
-
 ##### bpkg
 
 To install with [bpkg](https://github.com/bpkg/bpkg):
@@ -216,9 +204,6 @@ sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo nb env install
 ```
 
-Manually installed copies of `nb` can be updated using the `nb update`
-subcommand.
-
 ###### User-only Installation
 
 To install with just user permissions, simply add the `nb` script to your
@@ -233,6 +218,18 @@ wget https://raw.github.com/xwmx/nb/master/nb -O ~/bin/nb && chmod +x ~/bin/nb
 curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb && chmod +x ~/bin/nb
 ```
 
+##### npm
+
+To install with [npm](https://www.npmjs.com/package/notes.sh):
+
+```bash
+npm install --global notes.sh
+```
+
+Note: Installing through `npm` only installs completion scripts.
+On Ubuntu, WSL, and Alpine, you can
+run `nb env install` to install the optional dependencies.
+
 #### Tab Completion
 
 Bash and Zsh tab completion should be enabled when `nb` is installed using
@@ -240,6 +237,15 @@ the methods above, assuming you have the appropriate system
 permissions or installed with `sudo`. If completion isn't working after
 installing `nb`, see the [completion installation
 instructions](etc/README.md).
+
+##### Updating
+
+When `nb` is installed using a package manager like npm or
+Homebrew, use the package manager's upgrade functionality to update `nb` to
+the latest version.
+
+When installed via other methods, `nb` can be updated to the latest version
+using the `nb update` subcommand.
 
 ## Overview
 
