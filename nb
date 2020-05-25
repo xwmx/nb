@@ -8973,7 +8973,7 @@ _nb_main() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|help|settings|version)
+    commands|completions|env|help|settings|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
