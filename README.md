@@ -170,24 +170,7 @@ and completion scripts.
 
 #### Ubuntu, Windows WSL, Alpine, and others
 
-##### bpkg
-
-To install with [bpkg](https://github.com/bpkg/bpkg):
-
-```bash
-bpkg install xwmx/nb
-```
-
-##### Make
-
-To install with [Make](https://en.wikipedia.org/wiki/Make_(software)),
-clone this repository, navigate to the clone's root directory, and run:
-
-```bash
-sudo make install
-```
-
-##### Manual Install
+##### Download and Install
 
 To install as an administrator, copy and paste one of the following multi-line
 commands:
@@ -218,6 +201,18 @@ wget https://raw.github.com/xwmx/nb/master/nb -O ~/bin/nb && chmod +x ~/bin/nb
 curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb && chmod +x ~/bin/nb
 ```
 
+Installing with just user permissions doesn't include the optional
+dependencies or completions, but `nb` works without them.
+
+##### Make
+
+To install with [Make](https://en.wikipedia.org/wiki/Make_(software)),
+clone this repository, navigate to the clone's root directory, and run:
+
+```bash
+sudo make install
+```
+
 ##### npm
 
 To install with [npm](https://www.npmjs.com/package/notes.sh):
@@ -229,6 +224,14 @@ npm install --global notes.sh
 Note: Installing through `npm` only installs completion scripts.
 On Ubuntu, WSL, and Alpine, you can
 run `nb env install` to install the optional dependencies.
+
+##### bpkg
+
+To install with [bpkg](https://github.com/bpkg/bpkg):
+
+```bash
+bpkg install xwmx/nb
+```
 
 #### Tab Completion
 
