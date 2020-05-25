@@ -150,13 +150,6 @@ Also supported for various enhancements:
 
 ### Installation
 
-Most installation methods below should work in most Linux and BSD
-environments.
-
-When installing with Make or using the manual commands on Ubuntu, WSL,
-and Alpine Linux, the recommended dependencies will also be installed,
-along with Bash and Zsh completion scripts.
-
 #### macOS / Homebrew
 
 To install with [Homebrew](http://brew.sh/):
@@ -187,6 +180,9 @@ sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo nb env install
 ```
 
+This will also install the completion scripts on all systems and the
+recommended dependencies on Ubuntu, WSL, and Alpine Linux.
+
 ###### User-only Installation
 
 To install with just user permissions, simply add the `nb` script to your
@@ -212,6 +208,9 @@ clone this repository, navigate to the clone's root directory, and run:
 ```bash
 sudo make install
 ```
+
+This will also install the completion scripts on all systems and the
+recommended dependencies on Ubuntu, WSL, and Alpine Linux.
 
 ##### npm
 
