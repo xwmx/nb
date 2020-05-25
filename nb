@@ -4039,13 +4039,7 @@ _env() {
     fi
     if [[ -x "$(command -v apt-get)" ]]
     then
-      apt-get install curl python-pygments tig w3m
-
-      https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
-      sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
-
-      curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-      sudo dpkg -i ripgrep_11.0.2_amd64.deb
+      apt-get install bash-completion curl pandoc python3-pygments ripgrep tig w3m
     fi
     if [[ -x "$(command -v dnf)" ]]
     then
