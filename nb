@@ -4040,6 +4040,7 @@ _env() {
     if [[ -x "$(command -v apt-get)" ]]
     then
       apt-get install bash-completion curl pandoc python3-pygments ripgrep tig w3m
+      _completions install --download
     fi
     if [[ -x "$(command -v dnf)" ]]
     then
