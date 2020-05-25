@@ -8817,9 +8817,12 @@ Usage:
   ${_ME} update
 
 Description:
-  Update \`${_ME}\` to the latest version. If \`${_ME}\` was installed
-  using a package manager like npm or Homebrew, use the package manager's
-  upgrade functionality instead of this command.
+  Update \`${_ME}\` to the latest version. You will be prompted for
+  your password if administrator priviledges are required.
+
+  If \`${_ME}\` was installed using a package manager like npm or
+  Homebrew, use the package manager's upgrade functionality instead
+  of this command.
 HEREDOC
 _update() {
   local _current_path
@@ -8827,6 +8830,11 @@ _update() {
   if [[ -n "${_current_path}" ]]
   then
     _current_path="$(realpath "${_current_path}")"
+  fi
+
+  if [[ ! -w "${_current_path}" ]]
+  then
+    sudo -v
   fi
 
   if hash npm 2>/dev/null         &&

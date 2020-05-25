@@ -2757,13 +2757,13 @@ Description:
 #### `update`
 
 ```bash
-Usage:
-  nb update
-
 Description:
-  Update `nb` to the latest version. If `nb` is installed using
-  a package manager like npm or Homebrew, use the package manager's
-  update functionality instead of this command.
+  Update `nb` to the latest version. You will be prompted for
+  your password if administrator priviledges are required.
+
+  If `nb` was installed using a package manager like npm or
+  Homebrew, use the package manager's upgrade functionality instead
+  of this command.
 ```
 
 #### `use`
