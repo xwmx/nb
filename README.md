@@ -2761,6 +2761,9 @@ Description:
 #### `update`
 
 ```text
+Usage:
+  nb update
+
 Description:
   Update `nb` to the latest version. You will be prompted for
   your password if administrator priviledges are required.
