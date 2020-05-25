@@ -198,7 +198,13 @@ curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb && chmod +x ~/bin/n
 ```
 
 Installing with just user permissions doesn't include the optional
-dependencies or completions, but `nb` works without them.
+dependencies or completions, but `nb` works without them. If you have
+`sudo` access and want to install the completion scripts and
+dependencies, run the following command:
+
+```bash
+sudo nb env install
+```
 
 ##### Make
 
