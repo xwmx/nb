@@ -10,7 +10,7 @@ Vcs-Git: https://github.com/xwmx/nb.git
 
 Package: nb
 Architecture: all
-Depends: pandoc, python3-pygments, ripgrep, tig, w3m, ${misc:Depends}
+Depends: bash-completion, pandoc, python3-pygments, ripgrep, tig, w3m, ${misc:Depends}
 Description: CLI note-taking, bookmarking, and archiving.
  CLI note-taking, bookmarking, and archiving with encryption,
  search, Git-backed versioning and syncing, tagging, and more in a single
