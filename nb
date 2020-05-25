@@ -4035,10 +4035,18 @@ _env() {
     # packages: curl pandoc pygments w3m ripgrep tig
     if [[ -x "$(command -v apk)" ]]
     then
-      apk add --no-cache curl pandoc ripgrep tig w3m
       _completions install --download
+
+      apk add --no-cache  \
+        curl              \
+        pandoc            \
+        ripgrep           \
+        tig               \
+        w3m
     elif [[ -x "$(command -v apt-get)" ]]
     then
+      _completions install --download
+
       apt-get install     \
         bash-completion   \
         curl              \
@@ -4046,9 +4054,7 @@ _env() {
         python3-pygments  \
         ripgrep           \
         tig               \
-        w3m               \
-        -y
-      _completions install --download
+        w3m
     elif [[ -x "$(command -v dnf)" ]]
     then
       : # TODO: dnf install
