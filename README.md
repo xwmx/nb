@@ -1086,7 +1086,7 @@ nb move 1 home
 nb search 'query string' --all
 ```
 
-Local notebooks can be created with [`nb notebooks init`](#notebooks-1):
+Local notebooks can be created with [`nb notebooks init`](#notebooks):
 
 ```bash
 # initialize the current directory as a notebook
