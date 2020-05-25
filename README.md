@@ -198,15 +198,15 @@ To install as an administrator, copy and paste one of the following multi-line
 commands:
 
 ```bash
-# install using curl
-sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
-  sudo chmod +x /usr/local/bin/nb &&
-  sudo nb completions install --download
-
 # install using wget
 sudo wget https://raw.github.com/xwmx/nb/master/nb -O /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb completions install --download
+  sudo nb env install
+
+# install using curl
+sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
+  sudo chmod +x /usr/local/bin/nb &&
+  sudo nb env install
 ```
 
 To install as a user, simply add the `nb` script to your `$PATH`. If
@@ -214,11 +214,11 @@ you already have a `~/bin` directory, for example, you can use one of the
 following commands:
 
 ```bash
+# download with wget
+wget https://raw.github.com/xwmx/nb/master/nb -O ~/bin/nb && chmod +x ~/bin/n
+
 # download with curl
 curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb && chmod +x ~/bin/nb
-
-# download with wget
-wget https://raw.github.com/xwmx/nb/master/nb -O ~/bin/nb && chmod +x ~/bin/nb
 ```
 
 #### Tab Completion
