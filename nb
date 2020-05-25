@@ -3000,7 +3000,7 @@ _bookmark() {
       --skip-content)
         _skip_content=1
         ;;
-      --tag|--tags)
+      -t|--tag|--tags)
         _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
@@ -3008,7 +3008,7 @@ _bookmark() {
         _title="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      --via|--also|--related)
+      -r|--via|--also|--related)
         _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
