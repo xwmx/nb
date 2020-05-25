@@ -7,10 +7,10 @@ install:
 	install $(BIN) $(PREFIX)/bin
 	install bin/$(BIN_BOOKMARK) $(PREFIX)/bin
 	install bin/$(BIN_NOTES) $(PREFIX)/bin
-	./$(BIN) completions install
+	./$(BIN) env install
 
 uninstall:
 	rm -f $(PREFIX)/bin/$(BIN)
 	rm -f $(PREFIX)/bin/$(BIN_BOOKMARK)
 	rm -f $(PREFIX)/bin/$(BIN_NOTES)
-	./$(BIN) completions uninstall
+	./$(BIN) env uninstall
