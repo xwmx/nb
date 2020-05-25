@@ -178,9 +178,9 @@ To install with [npm](https://www.npmjs.com/package/notes.sh):
 npm install --global notes.sh
 ```
 
-Unlike other installation methods, installing through `npm` only
-installs completion scripts. On Ubuntu, WSL, and Alpine, you can run
-`nb env install` to install the optional dependencies.
+Note: Installing through `npm` only installs completion scripts.
+On Ubuntu, WSL, and Alpine, you can
+run `nb env install` to install the optional dependencies.
 
 ##### bpkg
 
