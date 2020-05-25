@@ -196,14 +196,10 @@ To install with [Make](https://en.wikipedia.org/wiki/Make_(software)),
 clone this repository, navigate to the clone's root directory, and run:
 
 ```bash
-make install
-```
-
-Depending on your system configuration, `sudo` might be required:
-
-```bash
 sudo make install
 ```
+
+##### Manual Install
 
 To install as an administrator, copy and paste one of the following multi-line
 commands:
