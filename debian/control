@@ -1,0 +1,17 @@
+Source: nb
+Section: misc
+Priority: optional
+Maintainer: William Melody <hi@williammelody.com>
+Build-Depends: debhelper-compat (= 12)
+Standards-Version: 4.4.1
+Homepage: https://github.com/xwmx/nb
+Vcs-Browser: https://github.com/xwmx/nb
+Vcs-Git: https://github.com/xwmx/nb.git
+
+Package: nb
+Architecture: all
+Depends: pandoc, python3-pygments, ripgrep, tig, w3m, ${misc:Depends}
+Description: CLI note-taking, bookmarking, and archiving.
+ CLI note-taking, bookmarking, and archiving with encryption,
+ search, Git-backed versioning and syncing, tagging, and more in a single
+ portable script.
