@@ -4036,19 +4036,29 @@ _env() {
     if [[ -x "$(command -v apk)" ]]
     then
       apk add --no-cache curl pandoc ripgrep tig w3m
-    fi
-    if [[ -x "$(command -v apt-get)" ]]
-    then
-      apt-get install bash-completion curl pandoc python3-pygments ripgrep tig w3m
       _completions install --download
-    fi
-    if [[ -x "$(command -v dnf)" ]]
+    elif [[ -x "$(command -v apt-get)" ]]
+    then
+      apt-get install     \
+        bash-completion   \
+        curl              \
+        pandoc            \
+        python3-pygments  \
+        ripgrep           \
+        tig               \
+        w3m               \
+        -y
+      _completions install --download
+    elif [[ -x "$(command -v dnf)" ]]
     then
       : # TODO: dnf install
-    fi
-    if [[ -x "$(command -v zypper)" ]]
+      _completions install --download
+    elif [[ -x "$(command -v zypper)" ]]
     then
-      : # TODO: zypper install curl jq
+      : # TODO: zypper install
+      _completions install --download
+    else
+      _completions install --download
     fi
   else
     printf "_ME=%s\\n" "${_ME:-}"
