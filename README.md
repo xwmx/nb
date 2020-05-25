@@ -217,7 +217,7 @@ sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
 ```
 
 Manually installed copies of `nb` can be updated using the `nb update`
-command.
+subcommand.
 
 ###### User-only Installation
 
