@@ -8814,7 +8814,9 @@ Usage:
   ${_ME} update
 
 Description:
-  Update ${_ME} to the latest version.
+  Update \`${_ME}\` to the latest version. If \`${_ME}\` was installed
+  using a package manager like npm or Homebrew, use the package manager's
+  upgrade functionality instead of this command.
 HEREDOC
 _update() {
   local _current_path
@@ -8837,7 +8839,7 @@ HEREDOC
   then
     cat <<'HEREDOC'
 Installed with Homebrew. To update, run:
-  brew upgrade xwmx/taps/notes
+  brew upgrade xwmx/taps/nb
 HEREDOC
   else
     local _nb_url="${_REPO_RAW_URL}/nb"

@@ -150,7 +150,14 @@ Also supported for various enhancements:
 
 ### Installation
 
-#### Homebrew
+Most installation methods below should work in most Linux and BSD
+environments.
+
+When installing with Make or using the manual commands on Ubuntu, WSL,
+and Alpine Linux, the recommended dependencies will also be installed,
+along with Bash and Zsh completion scripts.
+
+#### macOS / Homebrew
 
 To install with [Homebrew](http://brew.sh/):
 
@@ -159,7 +166,7 @@ brew install xwmx/taps/nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
-above.
+and completion scripts.
 
 #### npm
 
@@ -192,7 +199,7 @@ Depending on your system configuration, `sudo` might be required:
 sudo make install
 ```
 
-#### Manual
+#### Ubuntu, Windows WSL, Alpine, and others
 
 To install as an administrator, copy and paste one of the following multi-line
 commands:
@@ -209,9 +216,14 @@ sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo nb env install
 ```
 
-To install as a user, simply add the `nb` script to your `$PATH`. If
-you already have a `~/bin` directory, for example, you can use one of the
-following commands:
+Manually installed copies of `nb` can be updated using the `nb update`
+command.
+
+##### User-only Installation
+
+To install with just user permissions, simply add the `nb` script to your
+`$PATH`. If you already have a `~/bin` directory, for example, you can use
+one of the following commands:
 
 ```bash
 # download with wget
@@ -1601,6 +1613,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#show">show</a> •
   <a href="#status">status</a> •
   <a href="#sync">sync</a> •
+  <a href="#update">update</a> •
   <a href="#use">use</a> •
   <a href="#version">version</a>
 </p>
@@ -2735,6 +2748,18 @@ Options:
 
 Description:
   Sync the current local notebook with the remote repository.
+```
+
+#### `update`
+
+```bash
+Usage:
+  nb update
+
+Description:
+  Update `nb` to the latest version. If `nb` is installed using
+  a package manager like npm or Homebrew, use the package manager's
+  update functionality instead of this command.
 ```
 
 #### `use`
