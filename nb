@@ -7211,6 +7211,7 @@ _search() {
   local _print_paths=0
   local _query=
   local _search_args=()
+  local _sort=0
   local _type=
   local _use_grep=0
 
@@ -7231,6 +7232,9 @@ _search() {
         ;;
       --path|--paths)
         _print_paths=1
+        ;;
+      -s|--sort)
+        _sort=1
         ;;
       --type)
         _type="$(__option_get_value "${__arg}" "${__val:-}")"
@@ -7283,6 +7287,11 @@ _search() {
           _search_args+=("--color" "never")
         fi
 
+        if ((_sort))
+        then
+          _search_args+=("--sort-files")
+        fi
+
         rg \
           --hidden              \
           --iglob '!.git'       \
@@ -7293,7 +7302,7 @@ _search() {
           --max-columns "${_max_columns}" --max-columns-preview \
           "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
-      elif _command_exists "ag" && ! ((_use_grep))
+      elif _command_exists "g" && ! ((_use_grep))
       then
         if ((_color))
         then
@@ -7303,6 +7312,12 @@ _search() {
         else
           _search_args+=("--nocolor")
         fi
+
+        # TODO: ag doesn't support sorting directly.
+        # if ((_sort))
+        # then
+        #   _search_args+=("--workers" "1")
+        # fi
 
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
@@ -7322,6 +7337,11 @@ _search() {
           _search_args+=("--color-match=blue on_black")
         else
           _search_args+=("--nocolor")
+        fi
+
+        if ((_sort))
+        then
+          _search_args+=("--sort-files")
         fi
 
         ack "${_query}" "${__notebook_path}" \
