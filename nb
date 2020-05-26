@@ -3192,15 +3192,14 @@ _bookmark() {
         while true
         do
           read -r -p "\
-Check the Wayback Machine for an archived version? [y/N] " __yn
+Check the Wayback Machine for an archived version instead? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
               _check_wayback=1
               break
               ;;
             *)
-              printf "Exiting...\\n"
-              exit 0
+              break
               ;;
           esac
         done
