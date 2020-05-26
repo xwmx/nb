@@ -6478,7 +6478,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           fi
         elif ((_only_local))
         then
-          if [[ -z "${_LOCAL_NOTEBOOK_PATH:0}" ]]
+          if [[ -z "${_LOCAL_NOTEBOOK_PATH:-}" ]]
           then
             return 1
           else
