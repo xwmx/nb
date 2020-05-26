@@ -2709,7 +2709,7 @@ _add() {
         _password="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      -t|--title)
+      -t|--title|--name)
         _title="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
