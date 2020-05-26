@@ -6125,8 +6125,22 @@ _notebooks() {
   # Usage:
   #   _notebooks_delete <name>
   _notebooks_delete() {
-    local _name="${1:-}"
-    if [[ -z "${_name}" ]] || [[ "${_name}" =~ ^\-f$|^\-\-force$ ]]
+    local _force=0
+    local _name=
+
+    for __arg in "${@:-}"
+    do
+      case "${__arg}" in
+        -f|--force)
+          _force=1
+          ;;
+        *)
+          [[ -z "${_name:-}" ]] && _name="${__arg}"
+          ;;
+      esac
+    done
+
+    if [[ -z "${_name}" ]]
     then
       _exit_1 _help notebooks
     elif [[ "${_name}" == "local"          ]] &&
@@ -6135,12 +6149,6 @@ _notebooks() {
       _exit_1 cat <<HEREDOC
 Use your system's shell or file explorer to delete local notebook directories.
 HEREDOC
-    fi
-
-    local _force=0
-    if [[ "${2:-}" =~ ^\-f$|^\-\-force$ ]]
-    then
-      _force=1
     fi
 
     if [[ ! -d "${NB_DIR}/${_name}"        ]] ||

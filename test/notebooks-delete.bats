@@ -31,6 +31,23 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
+@test "\`notebooks delete -f <valid>\` parses arguments and deletes notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks delete -f "one"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ Notebook\ deleted\:       ]]
+  [[ "${output}" =~ one                       ]]
+  [[ ! -e "${NB_DIR}/one"                     ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
+}
+
 @test "\`notebooks delete <current>\` exits with 0 and deletes notebook." {
   {
     _setup_notebooks
