@@ -6745,10 +6745,7 @@ HEREDOC
 
   _notebooks_add_new() {
     local _notebook_list=
-    _notebook_list=($(
-      find "${NB_DIR}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; \
-        | grep -v '^\.'
-    ))
+    _notebook_list=($(ls -1 "${NB_DIR}"))
 
     for __notebook_name in "${_notebook_list[@]}"
     do
