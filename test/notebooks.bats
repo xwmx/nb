@@ -49,6 +49,38 @@ one (${_GIT_REMOTE_URL})"
   [[ "${output}" == "${_expected}" ]]
 }
 
+@test "\`notebooks <name> <name>\` exits with 0 and prints the given notebooks." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks one home
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="one (${_GIT_REMOTE_URL})
+$(_highlight 'home' --underline)"
+  _compare "${_expected}" "${output}"
+
+  [[ "${output}" == "${_expected}" ]]
+}
+
+@test "\`notebooks <invalid>\` exits with 1 and prints the given notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks not-valid
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1                      ]]
+  [[ "${output}" =~ Notebook\ not\ found  ]]
+}
+
 @test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks

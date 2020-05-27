@@ -6403,6 +6403,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
   #   _notebooks_list [<name>] [--archived] [--local] [--global] [--names]
   #                   [--no-color] [--paths] [--unarchived]
   _notebooks_list() {
+    local _counter=0
     local _notebook_names=()
     local _notebook_paths=()
     local _no_color=0
@@ -6567,8 +6568,18 @@ Please type $(_highlight "${_name}") to confirm: " __response
         fi
 
         printf "%s\\n" "${_notebook_line}"
+        _counter=$((_counter+1))
       fi
     done
+
+    if [[ -n "${_notebook_names[*]:-}" ]] &&
+       ! ((_counter))
+    then
+      printf                        \
+        "Notebook not found: %s\\n" \
+        "$(_highlight "${_notebook_names[*]}" | tr '\r\n' ' ')"
+      return 1
+    fi
   }
 
   # _notebooks_notebook()
