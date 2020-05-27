@@ -27,7 +27,7 @@ plain-text data storage, and more, all in a single portable script.
 and [LaTeX](https://www.latex-project.org/),
 can work with files in any format, can import and export notes to many
 document formats, and can create private, password-protected encrypted
-notes and bookmarks. With `nb`, you can add and edit notes using Vim, Emacs,
+notes and bookmarks. With `nb`, you can write notes using Vim, Emacs,
 VS Code, Sublime Text, and any other text editor you prefer. `nb` works in
 any standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
