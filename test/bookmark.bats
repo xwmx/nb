@@ -328,17 +328,16 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-# --comment option ############################################################
+# --excerpt option ############################################################
 
 @test "\`bookmark\` with --excerpt option creates new note with comment." {
   {
     run "${_NB}" init
   }
 
-  run "${_NB}" bookmark "${_BOOKMARK_URL}" --excerpt "\
-Excerpt line 1.
-Excerpt line 2.
-"
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --excerpt "Excerpt line 1.
+
+Excerpt line 2."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -366,8 +365,14 @@ Example description.
 ## Page Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
-  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
+  _file_content="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
+  printf "\${_file_content}: '%s'\\n" "${_file_content}"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
+  diff -u <(echo "${_file_content}") <(echo "${_bookmark_content}")
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 

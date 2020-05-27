@@ -3387,8 +3387,11 @@ HEREDOC
       if ! ((_counter))
       then
         _bookmark_content+="${_NEWLINE}> ${__line}${_NEWLINE}"
+      elif [[ -z "${__line:-}" ]]
+      then
+        _bookmark_content+=">${_NEWLINE}"
       else
-        _bookmark_content+="${_NEWLINE}>${_NEWLINE}> ${__line}${_NEWLINE}"
+        _bookmark_content+="> ${__line}${_NEWLINE}"
       fi
 
       _counter="$((_counter+1))"
