@@ -5611,15 +5611,17 @@ _ls() {
 
     local _notebook_names_raw
     _notebook_names_raw=($(
-      _notebooks --names --no-color --unarchived --global
+      _notebooks --names --no-color --unarchived --global || :
     ))
 
     local _notebook_names_hi
-    _notebook_names_hi=($(_notebooks --names --unarchived --global))
+    _notebook_names_hi=($(
+      _notebooks --names --unarchived --global || :
+    ))
 
     local _notebook_names_archived=
     _notebook_names_archived=($(
-      _notebooks --names --no-color --archived
+      _notebooks --names --no-color --archived || :
     ))
     local _archived_count="${#_notebook_names_archived[@]}"
 
@@ -6406,6 +6408,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
   #                   [--no-color] [--paths] [--unarchived]
   _notebooks_list() {
     local _counter=0
+    local _query_names=()
     local _notebook_names=()
     local _notebook_paths=()
     local _no_color=0
@@ -6443,7 +6446,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           _only_unarchived=1
           ;;
         *)
-          _notebook_names+=("${__arg}")
+          _query_names+=("${__arg}")
           ;;
       esac
     done
@@ -6453,7 +6456,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       exit 1
     fi
 
-    if [[ -z "${_notebook_names[*]:-}" ]]
+    if [[ -z "${_query_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NB_DIR}"))
       set +f
@@ -6466,8 +6469,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
         _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}" "${_notebook_paths[@]:-}")
       fi
     else
-      for __name in "${_notebook_names[@]}"
+      for __name in "${_query_names[@]}"
       do
+        _notebook_names+=("${__name}")
+
         if [[ "${__name}" == "local" ]]
         then
           _notebook_paths+=("${_LOCAL_NOTEBOOK_PATH}")
@@ -6480,6 +6485,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
     _debug printf \
       "_notebooks_list() \${_only_names:-}: '%s'\\n" \
       "${_only_names:-}"
+    _debug printf \
+      "_notebooks_list() \${_query_names[*]}: '%s'\\n" \
+      "${_query_names[*]:-}"
     _debug printf \
       "_notebooks_list() \${_notebook_names[*]}: '%s'\\n" \
       "${_notebook_names[*]:-}"
@@ -6574,13 +6582,16 @@ Please type $(_highlight "${_name}") to confirm: " __response
       fi
     done
 
-    if [[ -n "${_notebook_names[*]:-}" ]] &&
-       ! ((_counter))
+    if ! ((_counter))
     then
-      printf                        \
-        "Notebook not found: %s\\n" \
-        "$(_highlight "${_notebook_names[*]}" | tr '\r\n' ' ')"
-      return 1
+      if [[ -n "${_query_names[*]:-}" ]]
+      then
+        _return_1 printf              \
+          "Notebook not found: %s\\n" \
+          "$(_highlight "${_query_names[*]}" | tr '\r\n' ' ')"
+      else
+        return 1
+      fi
     fi
   }
 
@@ -6796,6 +6807,9 @@ HEREDOC
       ;;
     delete)
       _notebooks_delete "${_name:-}" "${3:-}"
+      ;;
+    list)
+      _notebooks_list "${@:2}"
       ;;
     rename)
       _notebooks_rename "${_name:-}" "${3:-}"

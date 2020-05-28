@@ -34,12 +34,12 @@ HEREDOC
   }
 
   run "${_NB}" ls
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
+  _compare "three" "${lines[0]}"
 
+  [[ ${status} -eq 0          ]]
   [[ "${lines[0]}" =~ home    ]]
   [[ "${lines[1]}" =~ ----    ]]
   [[ "${lines[2]}" =~ three   ]]
@@ -56,12 +56,12 @@ HEREDOC
   }
 
   run "${_NB}" ls
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
+  _compare "three" "${lines[0]}"
 
+  [[ ${status} -eq 0                        ]]
   [[ "${lines[0]}" =~ home                  ]]
   [[ "${lines[0]}" =~ .\ \[1\ archived\]    ]]
   [[ "${lines[1]}" =~ -------------------   ]]
@@ -82,12 +82,12 @@ HEREDOC
   }
 
   run "${_NB}" ls
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
+  _compare "three" "${lines[0]}"
 
+  [[ ${status} -eq 0                ]]
   [[ "${lines[0]}" =~ local         ]]
   [[ "${lines[0]}" =~ home          ]]
   [[ "${lines[1]}" =~ ------------  ]]
