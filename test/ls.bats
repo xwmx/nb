@@ -187,6 +187,110 @@ HEREDOC
   [[ "${lines[4]}" =~ one   ]]
 }
 
+# `ls <selection>` ############################################################
+
+@test "\`ls <selection>\` exits with 0 and displays the selection." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls 1 --filenames
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 4           ]]
+  [[ "${lines[0]}" =~ first.md      ]]
+  [[ "${lines[0]}" =~ [*1*]         ]]
+  [[ "${lines[0]}" =~ ${_files[0]}  ]]
+}
+
+@test "\`ls <query selection>\` exits with 0 and displays the selections." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls 'r' --filenames
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 5           ]]
+  [[ "${lines[0]}" =~ third.md      ]]
+  [[ "${lines[0]}" =~ [*3*]         ]]
+  [[ "${lines[0]}" =~ ${_files[2]}  ]]
+  [[ "${lines[1]}" =~ first.md      ]]
+  [[ "${lines[1]}" =~ [*1*]         ]]
+  [[ "${lines[1]}" =~ ${_files[0]}  ]]
+}
+
+@test "\`ls <invalid-selection>\` exits with 1 and displays a message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add
+# one
+line two
+line three
+line four
+HEREDOC
+    sleep 1
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls not-valid
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 1                      ]]
+  [[ "${#lines[@]}" -eq 1                 ]]
+  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ not-valid           ]]
+}
+
 # footer ######################################################################
 
 @test "\`ls\` includes footer." {

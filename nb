@@ -5775,9 +5775,27 @@ _ls() {
     _use_pager=1
   fi
 
+  local _notebook=
+  if [[ -n "${_args[*]:-}" ]]
+  then
+    _notebook="$(_notebooks list "${_args[0]:-}" 2>/dev/null)" || :
+  fi
+
+  if [[ -n "${_notebook:-}" ]]
+  then
+    _NOTEBOOK_PATH="${NB_DIR}/${_notebook}"
+    _SCOPE="${_notebook}"
+  fi
+
   {
     printf "%s" "${_maybe_notebook_list}"
-    _list -n "${_limit}" "${_args[@]:-}"
+
+    _list -n "${_limit}" "${_args[@]:-}" ||
+      if [[ -n "${_notebook:-}" ]]
+      then
+        _ls
+        return 0
+      fi
 
     if ((NB_FOOTER))
     then
