@@ -5444,7 +5444,7 @@ HEREDOC
 
     if ! ((_counter)) && [[ -n "${_selection:-}" ]]
     then
-      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+      _return_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     fi
   fi
 }
@@ -5775,27 +5775,37 @@ _ls() {
     _use_pager=1
   fi
 
-  local _notebook=
-  if [[ -n "${_args[*]:-}" ]]
+  if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
   then
-    _notebook="$(_notebooks list "${_args[0]:-}" 2>/dev/null)" || :
-  fi
-
-  if [[ -n "${_notebook:-}" ]]
+    "${PAGER}"
+  elif ((_use_pager)) && _command_exists "less"
   then
-    _NOTEBOOK_PATH="${NB_DIR}/${_notebook}"
-    _SCOPE="${_notebook}"
-  fi
-
-  {
+    less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+  else
+    cat
+  fi < <({
     printf "%s" "${_maybe_notebook_list}"
 
-    _list -n "${_limit}" "${_args[@]:-}" ||
-      if [[ -n "${_notebook:-}" ]]
-      then
-        _ls
-        return 0
-      fi
+    _list -n "${_limit}" "${_args[@]:-}" 2>/dev/null ||
+      {
+        if [[ -n "${_args[*]:-}" ]]
+        then
+          local _notebook=
+          _notebook="$(_notebooks list "${_args[0]:-}" 2>/dev/null)" || :
+        fi
+
+        if [[ -n "${_notebook:-}" ]]
+        then
+          _NOTEBOOK_PATH="${NB_DIR}/${_notebook}"
+          _SCOPE="${_notebook}"
+          _SCOPED=1
+          _ls
+          return 0
+        else
+          _exit_1 printf "Not found: %s\\n" \
+            "$(_highlight "${_args[0]:-}")"
+        fi
+      }
 
     if ((NB_FOOTER))
     then
@@ -5891,15 +5901,7 @@ _ls() {
 ${_output_hi}
 HEREDOC
     fi
-  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
-      then
-        "${PAGER}"
-      elif ((_use_pager)) && _command_exists "less"
-      then
-        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
-      else
-        cat
-      fi
+  })
 }
 
 # move ################################################################### move
