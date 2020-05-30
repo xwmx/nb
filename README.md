@@ -14,8 +14,8 @@
 
 # `❯ nb`
 
-`nb` is a command line note-taking, bookmarking, archiving, and research
-management tool with encryption, advanced search,
+`nb` is a command line note-taking, bookmarking, archiving, research
+and knowledge management tool with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
 [Pandoc](http://pandoc.org/)-backed conversion,
 global and local notebooks, tagging, customizable color themes,
