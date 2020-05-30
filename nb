@@ -77,7 +77,7 @@ shopt -s extglob
 # NOTE: To use this command, call it with `"${_SED_I_COMMAND[@]}"`
 #
 # https://stackoverflow.com/q/43171648
-# http://stackoverflow.com/a/16746032
+# https://stackoverflow.com/a/16746032
 if sed --help >/dev/null 2>&1
 then # GNU
   export _SED_I_COMMAND=(sed -i)
@@ -666,7 +666,7 @@ trap _nb_cleanup_on_exit EXIT
 # exists with that name.
 #
 # For information on why `hash` is used here, see:
-# http://stackoverflow.com/a/677212
+# https://stackoverflow.com/a/677212
 _command_exists() {
   hash "${1}" 2>/dev/null
 }
@@ -2013,7 +2013,7 @@ _git_should_autosync() {
 #   available, just pipe through `cat`.
 #
 # References:
-#   http://pygments.org/
+#   https://pygments.org/
 _highlight_syntax_if_available() {
   if hash "pygmentize" 2>/dev/null
   then # pygments is installed.
@@ -2238,7 +2238,7 @@ _list_nb_files() {
 #   Print a line of dashes the length of <text>.
 #
 # More information:
-#   http://wiki.bash-hackers.org/commands/builtin/printf
+#   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
   local _text="${1:-}"
   local _text_length="${#_text}"
@@ -4172,7 +4172,7 @@ Description:
   in <path>. Any additional arguments are passed directly to Pandoc.
   See the Pandoc help information for available options.
 
-    1. http://pandoc.org/
+    1. https://pandoc.org/
 
 Examples:
   # Export an Emacs Org mode note
@@ -4251,7 +4251,7 @@ _export() {
         pandoc "${_NOTEBOOK_PATH}/${_basename}"
       fi
     else
-      _exit_1 printf "Pandoc required. http://pandoc.org/\\n"
+      _exit_1 printf "Pandoc required. https://pandoc.org/\\n"
     fi
   else
     if [[ -z "${_target_path:-}" ]]
@@ -5730,7 +5730,7 @@ _ls() {
       printf "%b" "${_output_hi}"
 
       # Use control characters to disable wrapping for long lines.
-      # Source: http://superuser.com/a/189068
+      # Source: https://superuser.com/a/189068
       printf '\033[?7l'
       if ((_centered))
       then # print full-width line.
@@ -7261,7 +7261,7 @@ Description:
   Search notes. Uses the first available tool in the following list:
     1. \`rg\`    https://github.com/BurntSushi/ripgrep
     2. \`ag\`    https://github.com/ggreer/the_silver_searcher
-    3. \`ack\`   http://beyondgrep.com/
+    3. \`ack\`   https://beyondgrep.com/
     4. \`grep\`  https://en.wikipedia.org/wiki/Grep
 
 Examples:
@@ -7440,7 +7440,7 @@ _search() {
         fi
 
         # Add /dev/null so file path is printed even if there is only one
-        # matching file. Reference: http://stackoverflow.com/a/15432718
+        # matching file. Reference: https://stackoverflow.com/a/15432718
         set +f
         find . -type f -not -path '*/\.git*' \
           | grep \
@@ -7471,7 +7471,7 @@ _search() {
         local _title=
 
         # Use `sed` to remove color and 'matches' suffix from output.
-        # http://unix.stackexchange.com/a/140255
+        # https://unix.stackexchange.com/a/140255
         _path="$(
           printf "%s\\n" "${_line}"                         \
             | cut -d: -f 1                                  \
@@ -8460,10 +8460,10 @@ Description:
 
   If Pygments [4] is installed, notes are printed with syntax highlighting.
 
-    1. http://pandoc.org/
+    1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
-    4. http://pygments.org/
+    4. https://pygments.org/
 
 Examples:
   ${_ME} show 1

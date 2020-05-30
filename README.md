@@ -17,7 +17,7 @@
 `nb` is a command line note-taking, bookmarking, collecting, and archiving
 application with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
-[Pandoc](http://pandoc.org/)-backed conversion,
+[Pandoc](https://pandoc.org/)-backed conversion,
 global and local notebooks, tagging, customizable color themes,
 plain-text data storage, and more, all in a single portable, user-friendly script.
 
@@ -125,18 +125,18 @@ they are available.
 Recommended:
 
 - [Pandoc](https://pandoc.org/)
-- [Pygments](http://pygments.org/)
+- [Pygments](https://pygments.org/)
 - [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
 - [tig](https://github.com/jonas/tig)
 - [w3m](https://en.wikipedia.org/wiki/W3m)
 
 Also supported for various enhancements:
 
-[Ack](http://beyondgrep.com/),
+[Ack](https://beyondgrep.com/),
 [`afplay`](https://ss64.com/osx/afplay.html),
 [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
 [`exa`](https://github.com/ogham/exa),
-[`ffplay`](http://ffmpeg.org/ffplay.html),
+[`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
@@ -152,7 +152,7 @@ Also supported for various enhancements:
 
 #### macOS / Homebrew
 
-To install with [Homebrew](http://brew.sh/):
+To install with [Homebrew](https://brew.sh/):
 
 ```bash
 brew install xwmx/taps/nb
@@ -544,7 +544,7 @@ nb show 'A Document Title'
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[Pygments](http://pygments.org/) is installed, and you can navigate with the
+[Pygments](https://pygments.org/) is installed, and you can navigate with the
 same keys used in `nb ls`:
 
 ```text
@@ -559,7 +559,7 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-When [Pandoc](http://pandoc.org/) is available, use the `--render` option to
+When [Pandoc](https://pandoc.org/) is available, use the `--render` option to
 render the note to HTML and open it in your terminal browser:
 
 ```bash
@@ -575,7 +575,7 @@ and file types include:
 - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer),
   [`afplay`](https://ss64.com/osx/afplay.html),
   [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
-  [`ffplay`](http://ffmpeg.org/ffplay.html) - Audio files
+  [`ffplay`](https://ffmpeg.org/ffplay.html) - Audio files
 - [ImageMagick](https://imagemagick.org/),
   [`imgcat`](https://www.iterm2.com/documentation-images.html),
   [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html) - Images
@@ -935,7 +935,7 @@ the `-l` or `--list` option:
 
 `nb search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
 [`ag`](https://github.com/ggreer/the_silver_searcher),
-[`ack`](http://beyondgrep.com/), and
+[`ack`](https://beyondgrep.com/), and
 [`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
 performs searches using the first tool it finds. `nb search` works
 mostly the same regardless of which tool is found and is perfectly fine using
@@ -1580,7 +1580,7 @@ If `b` is available on your system, you can add `alias b="bookmark"` to your
 
 ```bash
 # add a new bookmark
-b http://example.com
+b https://example.com
 
 # open bookmark 12
 b o 12
@@ -2076,7 +2076,7 @@ Description:
   in <path>. Any additional arguments are passed directly to Pandoc.
   See the Pandoc help information for available options.
 
-    1. http://pandoc.org/
+    1. https://pandoc.org/
 
 Examples:
   # Export an Emacs Org mode note
@@ -2499,7 +2499,7 @@ Description:
   Search notes. Uses the first available tool in the following list:
     1. `rg`    https://github.com/BurntSushi/ripgrep
     2. `ag`    https://github.com/ggreer/the_silver_searcher
-    3. `ack`   http://beyondgrep.com/
+    3. `ack`   https://beyondgrep.com/
     4. `grep`  https://en.wikipedia.org/wiki/Grep
 
 Examples:
@@ -2730,10 +2730,10 @@ Description:
 
   If Pygments [4] is installed, notes are printed with syntax highlighting.
 
-    1. http://pandoc.org/
+    1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
-    4. http://pygments.org/
+    4. https://pygments.org/
 
 Examples:
   nb show 1
