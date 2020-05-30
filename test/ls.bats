@@ -191,25 +191,7 @@ HEREDOC
 
 @test "\`ls <selection>\` exits with 0 and displays the selection." {
   {
-    "${_NB}" init
-    cat <<HEREDOC | "${_NB}" add "first.md"
-# one
-line two
-line three
-line four
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add "second.md"
-# two
-line two
-line three
-line four
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add "third.md"
-# three
-line two
-line three
-line four
-HEREDOC
+    _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
@@ -228,25 +210,7 @@ HEREDOC
 
 @test "\`ls <query selection>\` exits with 0 and displays the selections." {
   {
-    "${_NB}" init
-    cat <<HEREDOC | "${_NB}" add 'first.md'
-# one
-line two
-line three
-line four
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add 'second.md'
-# two
-line two
-line three
-line four
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add 'third.md'
-# three
-line two
-line three
-line four
-HEREDOC
+    _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
