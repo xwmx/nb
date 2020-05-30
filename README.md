@@ -65,7 +65,7 @@ any device.
 
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
-  		  alt="bookmarks"
+  		  alt="welcome"
   		  width="450"/>
 </p>
 
