@@ -6795,7 +6795,8 @@ HEREDOC
 
     for __notebook_name in "${_notebook_list[@]}"
     do
-      if [[ ! -d "${NB_DIR}/${__notebook_name}/.git" ]]
+      if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
+         [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
       then
         cd "${NB_DIR}/${__notebook_name}"             &&
           git init 1>/dev/null                        &&
