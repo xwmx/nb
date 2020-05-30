@@ -251,94 +251,93 @@ HEREDOC
 
   [[ ${status} -eq 1                ]]
   [[ "${#lines[@]}" -eq 1           ]]
-  # [[ "${lines[0]}" =~ Not\ found\:  ]]
-  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ Not\ found\:  ]]
   [[ "${lines[0]}" =~ not-valid     ]]
 }
 
-# @test "\`ls <notebook>\` exits with 0 and runs ls in the notebook." {
-#   {
-#     "${_NB}" init
-#     cat <<HEREDOC | "${_NB}" add "first-home.md"
-# # one home
-# line two
-# line three
-# line four
-# HEREDOC
-#     cat <<HEREDOC | "${_NB}" add "second-home.md"
-# # two home
-# line two
-# line three
-# line four
-# HEREDOC
-#     "${_NB}" notebooks add example
-#     cat <<HEREDOC | "${_NB}" example:add "first-example.md"
-# # one example
-# line two
-# line three
-# line four
-# HEREDOC
-#     cat <<HEREDOC | "${_NB}" example:add "second-example.md"
-# # two example
-# line two
-# line three
-# line four
-# HEREDOC
-#   }
+@test "\`ls <notebook>\` exits with 0 and runs ls in the notebook." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# one home
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# two home
+line two
+line three
+line four
+HEREDOC
+    "${_NB}" notebooks add example
+    cat <<HEREDOC | "${_NB}" example:add "first-example.md"
+# one example
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" example:add "second-example.md"
+# two example
+line two
+line three
+line four
+HEREDOC
+  }
 
-#   run "${_NB}" ls example
+  run "${_NB}" ls example
 
-#   printf "\${status}: %s\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
-#   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-#   [[ ${status} -eq 0                ]]
-#   [[ "${#lines[@]}" -eq 8           ]]
-#   [[ "${lines[3]}" =~ one\ example  ]]
-#   [[ "${lines[3]}" =~ [*1*]         ]]
-# }
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 8           ]]
+  [[ "${lines[3]}" =~ one\ example  ]]
+  [[ "${lines[3]}" =~ [*1*]         ]]
+}
 
-# @test "\`ls <notebook>:\` (with colon) exits with 0 and runs ls in the notebook." {
-#   {
-#     "${_NB}" init
-#     cat <<HEREDOC | "${_NB}" add "first-home.md"
-# # one home
-# line two
-# line three
-# line four
-# HEREDOC
-#     cat <<HEREDOC | "${_NB}" add "second-home.md"
-# # two home
-# line two
-# line three
-# line four
-# HEREDOC
-#     "${_NB}" notebooks add example
-#     cat <<HEREDOC | "${_NB}" example:add "first-example.md"
-# # one example
-# line two
-# line three
-# line four
-# HEREDOC
-#     cat <<HEREDOC | "${_NB}" example:add "second-example.md"
-# # two example
-# line two
-# line three
-# line four
-# HEREDOC
-#   }
+@test "\`ls <notebook>:\` (with colon) exits with 0 and runs ls in the notebook." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# one home
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# two home
+line two
+line three
+line four
+HEREDOC
+    "${_NB}" notebooks add example
+    cat <<HEREDOC | "${_NB}" example:add "first-example.md"
+# one example
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" example:add "second-example.md"
+# two example
+line two
+line three
+line four
+HEREDOC
+  }
 
-#   run "${_NB}" ls example:
+  run "${_NB}" ls example:
 
-#   printf "\${status}: %s\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
-#   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-#   [[ ${status} -eq 0                ]]
-#   [[ "${#lines[@]}" -eq 8           ]]
-#   [[ "${lines[3]}" =~ one\ example  ]]
-#   [[ "${lines[3]}" =~ [*1*]         ]]
-# }
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 8           ]]
+  [[ "${lines[3]}" =~ one\ example  ]]
+  [[ "${lines[3]}" =~ [*1*]         ]]
+}
 
 # footer ######################################################################
 
