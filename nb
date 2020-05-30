@@ -5759,17 +5759,20 @@ _ls() {
   if [[ "${_notes_count_total}" -gt $((_lines-4)) ]]
   then
     _notes_count_local="$(
-      _list \
-        -n "${_lines}"  \
-        "${_args[@]:-}" \
-        --no-id         \
-        --no-indicators \
-        --filenames     \
-        | wc -l
+      {
+        _list \
+          -n "${_lines}"  \
+          "${_args[@]:-}" \
+          --no-id         \
+          --no-indicators \
+          --filenames     \
+          2>/dev/null || printf "\\n"
+        } | wc -l
     )"
   fi
 
-  if [[ "${_notes_count_local}" -gt $((_lines-4))           ]] &&
+  if ((_lines)) &&
+     [[ "${_notes_count_local}" -gt $((_lines-4))           ]] &&
      [[ "${_limit}"             -gt "${_notes_count_local}" ]]
   then
     _use_pager=1
