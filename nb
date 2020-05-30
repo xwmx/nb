@@ -5778,27 +5778,27 @@ _ls() {
   {
     printf "%s" "${_maybe_notebook_list}"
 
-    _list -n "${_limit}" "${_args[@]:-}" 2>/dev/null || {
-      if [[ -n "${_args[*]:-}" ]]
-      then
-        local _maybe_name="${_args[0]:-}"
-        _maybe_name="$(printf "%s\\n" "${_maybe_name}" | sed 's/\:$//')"
+    _list -n "${_limit}" "${_args[@]:-}" # 2>/dev/null || {
+    #   if [[ -n "${_args[*]:-}" ]]
+    #   then
+    #     local _maybe_name="${_args[0]:-}"
+    #     _maybe_name="$(printf "%s\\n" "${_maybe_name}" | sed 's/\:$//')"
 
-        local _notebook=
-        _notebook="$(_notebooks list "${_maybe_name:-}" 2>/dev/null)" || :
-      fi
+    #     local _notebook=
+    #     _notebook="$(_notebooks list "${_maybe_name:-}" 2>/dev/null)" || :
+    #   fi
 
-      if [[ -n "${_notebook:-}" ]]
-      then
-        _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
-          _SCOPE="${_notebook}"                 \
-          _SCOPED=1                             \
-          _ls
-        return 0
-      else
-        _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
-      fi
-    }
+    #   if [[ -n "${_notebook:-}" ]]
+    #   then
+    #     _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
+    #       _SCOPE="${_notebook}"                 \
+    #       _SCOPED=1                             \
+    #       _ls
+    #     return 0
+    #   else
+    #     _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+    #   fi
+    # }
 
     if ((NB_FOOTER))
     then
