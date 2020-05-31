@@ -346,6 +346,54 @@ load test_helper
   [[ "${output}" == "Example Title" ]]
 }
 
+# `show <notebook>` ###########################################################
+
+@test "\`show <notebook>\` exits with status 0 and runs ls in the notebook." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "home-one.md"
+    run "${_NB}" add "home-two.md"
+    run "${_NB}" notebooks add example
+    run "${_NB}" example:add "example-one.md"
+    run "${_NB}" example:add "example-two.md"
+  }
+
+  run "${_NB}" show example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0            ]]
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ home        ]]
+  [[ "${lines[1]}" =~ ----        ]]
+  [[ "${lines[2]}" =~ example-two ]]
+  [[ "${lines[3]}" =~ example-one ]]
+}
+
+@test "\`show <notebook>:\` (with colon) exits with status 0 and runs ls in the notebook." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "home-one.md"
+    run "${_NB}" add "home-two.md"
+    run "${_NB}" notebooks add example
+    run "${_NB}" example:add "example-one.md"
+    run "${_NB}" example:add "example-two.md"
+  }
+
+  run "${_NB}" show example:
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0            ]]
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ home        ]]
+  [[ "${lines[1]}" =~ ----        ]]
+  [[ "${lines[2]}" =~ example-two ]]
+  [[ "${lines[3]}" =~ example-one ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {

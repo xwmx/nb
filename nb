@@ -2529,6 +2529,7 @@ Usage:
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
+  ${_ME} show [<notebook>]
   ${_ME} sync [-a | --all]
   ${_ME} update
   ${_ME} use <notebook>
@@ -2574,7 +2575,7 @@ Subcommands:
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the \`${_ME}\` interactive shell.
-  show         Show a note.
+  show         Show a note or notebook.
   status       Run \`git status\` in the current notebook.
   sync         Sync local notebook with the remote repository.
   update       Update \`${_ME}\` to the latest version.
@@ -8425,6 +8426,7 @@ desc "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
+  ${_ME} show [<notebook>]
 
 Options:
   --dump      Print to standard output.
@@ -8438,9 +8440,9 @@ Options:
   --title     Print the title of the note.
 
 Description:
-  Show a note. Notes in text file formats can be rendered or dumped to
-  standard output. Non-text files will be opened in your system's preferred
-  app or program for that file type.
+  Show a note or notebook. Notes in text file formats can be rendered or
+  printed to standard output. Non-text files will be opened in your system's
+  preferred app or program for that file type.
 
   By default, the note will be opened using \`less\` or the program configured
   in the \`\$PAGER\` environment variable. Use the following keys to navigate
@@ -8545,9 +8547,22 @@ _show() {
   local _basename
   _basename="$(_get_selection_basename "${_selection}")"
   _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
+
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+     local _maybe_notebook="${_selection:-}"
+     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
+
+    if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
+    then
+      _NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
+        _SCOPE="${_maybe_notebook}"                 \
+        _SCOPED=1                                   \
+        _ls
+      return 0
+    else
+      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+    fi
   fi
   _set_selection_notebook "${_selection}"
 

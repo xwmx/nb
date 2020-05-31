@@ -1706,6 +1706,7 @@ Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
+  nb show [<notebook>]
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -1746,7 +1747,7 @@ Subcommands:
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the `nb` interactive shell.
-  show         Show a note.
+  show         Show a note or notebook.
   status       Run `git status` in the current notebook.
   sync         Sync local notebook with the remote repository.
   update       Update `nb` to the latest version.
@@ -2695,6 +2696,7 @@ Example:
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
+  nb show [<notebook>]
 
 Options:
   --dump      Print to standard output.
@@ -2708,9 +2710,9 @@ Options:
   --title     Print the title of the note.
 
 Description:
-  Show a note. Notes in text file formats can be rendered or dumped to
-  standard output. Non-text files will be opened in your system's preferred
-  app or program for that file type.
+  Show a note or notebook. Notes in text file formats can be rendered or
+  printed to standard output. Non-text files will be opened in your system's
+  preferred app or program for that file type.
 
   By default, the note will be opened using `less` or the program configured
   in the `$PAGER` environment variable. Use the following keys to navigate
