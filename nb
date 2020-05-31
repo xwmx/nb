@@ -5790,9 +5790,8 @@ _ls() {
 
         local _notebook=
         _notebook="$(
-          _notebooks list "${_maybe_name:-}" --names --no-color \
-            2>/dev/null || printf ""
-        )"
+          _notebooks list "${_maybe_name:-}" --names --no-color 2>/dev/null
+        )" || :
       fi
 
       if [[ -n "${_notebook:-}" ]]
