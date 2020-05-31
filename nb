@@ -2529,7 +2529,7 @@ Usage:
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
-  ${_ME} show [<notebook>]
+  ${_ME} show <notebook>
   ${_ME} sync [-a | --all]
   ${_ME} update
   ${_ME} use <notebook>
@@ -8429,7 +8429,7 @@ desc "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
-  ${_ME} show [<notebook>]
+  ${_ME} show <notebook>
 
 Options:
   --dump      Print to standard output.

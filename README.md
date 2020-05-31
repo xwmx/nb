@@ -1706,7 +1706,7 @@ Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
-  nb show [<notebook>]
+  nb show <notebook>
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -2696,7 +2696,7 @@ Example:
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
           [--filename | --id | --path | --render | --title]
-  nb show [<notebook>]
+  nb show <notebook>
 
 Options:
   --dump      Print to standard output.
