@@ -6837,7 +6837,8 @@ HEREDOC
       _notebooks_delete "${_name:-}" "${3:-}"
       ;;
     list)
-      _notebooks_list "${@:2}"
+      shift
+      _notebooks_list "${@:-}"
       ;;
     rename)
       _notebooks_rename "${_name:-}" "${3:-}"
