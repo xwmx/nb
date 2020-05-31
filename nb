@@ -5789,7 +5789,10 @@ _ls() {
         _maybe_name="$(printf "%s\\n" "${_maybe_name}" | sed 's/\:$//')"
 
         local _notebook=
-        _notebook="$(_notebooks list "${_maybe_name:-}" 2>/dev/null)" || :
+        _notebook="$(
+          _notebooks list "${_maybe_name:-}" --names --no-color \
+            2>/dev/null || printf ""
+        )"
       fi
 
       if [[ -n "${_notebook:-}" ]]
