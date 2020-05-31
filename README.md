@@ -1648,7 +1648,8 @@ Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
 Usage:
-  nb [<id> | <filename> | <path> | <title>] [<list options>...]
+  nb
+  nb [<id> | <filename> | <path> | <title> | <notebook>] [<list options>...]
   nb [<url>] [<bookmark options>...]
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
