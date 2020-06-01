@@ -3336,15 +3336,15 @@ HEREDOC
   then
     local _description=
     _description="$(
-       cat "${_temp_file}"  \
+      cat "${_temp_file}"   \
         | sed -E -n         \
-          's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
+            's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
     )"
 
     if [[ -z "${_description:-}" ]]
     then
       _description="$(
-       cat "${_temp_file}"  \
+        cat "${_temp_file}" \
           | sed -E -n       \
             's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p'
       )"
@@ -8554,8 +8554,8 @@ _show() {
 
   if [[ -z "${_basename}" ]]
   then
-     local _maybe_notebook="${_selection:-}"
-     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
+    local _maybe_notebook="${_selection:-}"
+    _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
 
     if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
     then
