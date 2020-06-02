@@ -5530,6 +5530,10 @@ _ls() {
   local _justified=0
   local _limit=30
   local _maybe_notebook_list=
+  local _notebook_names_raw
+  _notebook_names_raw=($(
+    _notebooks --names --no-color --unarchived --global || :
+  ))
   local _plain=0
 
   while ((${#}))
@@ -5610,11 +5614,6 @@ _ls() {
     then
       _separator=" ·"
     fi
-
-    local _notebook_names_raw
-    _notebook_names_raw=($(
-      _notebooks --names --no-color --unarchived --global || :
-    ))
 
     local _notebook_names_hi
     _notebook_names_hi=($(
@@ -5819,6 +5818,12 @@ _ls() {
         _scope_right_pad="${_scope} "
       fi
 
+      local _notebook_command="${_ME} notebooks add <name>"
+      if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
+      then
+        _notebook_command="${_ME} use <notebook>"
+      fi
+
       _commands_raw=(
         "❯ ${_ME} ${_scope}"
         "${_ME} ${_scope}add"
@@ -5828,7 +5833,7 @@ _ls() {
         "${_ME} open ${_scope}<id>"
         "${_ME} ${_scope}list"
         "${_ME} ${_scope}search <query>"
-        "${_ME} notebooks add <name>"
+        "${_notebook_command}"
         "${_ME} settings"
         "${_ME} help"
       )
