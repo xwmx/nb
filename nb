@@ -5800,7 +5800,7 @@ _ls() {
         _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
           _SCOPE="${_notebook}"                 \
           _SCOPED=1                             \
-          _ls
+          _ls "${_args[@]:1}"
         return 0
       else
         _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
@@ -8483,6 +8483,7 @@ _show() {
   _debug printf "_show() \${1:-}: '%s'\\n" "${1:-}"
   _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
+  local _ls_arguments=()
   local _dump=0
   local _password=
   local _print_filename=0
@@ -8521,6 +8522,7 @@ _show() {
         ;;
       --render|-r)
         _render=1
+        _ls_arguments+=("${__arg}")
         ;;
       --title)
         _print_title=1
@@ -8534,6 +8536,8 @@ _show() {
         then
           _selection="${__arg}"
         fi
+
+        _ls_arguments+=("${__arg}")
         ;;
     esac
 
@@ -8562,7 +8566,7 @@ _show() {
       _NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
         _SCOPE="${_maybe_notebook}"                 \
         _SCOPED=1                                   \
-        _ls
+        _ls "${_ls_arguments[@]:1}"
       return 0
     else
       _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"

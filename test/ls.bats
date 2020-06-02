@@ -339,6 +339,48 @@ HEREDOC
   [[ "${lines[3]}" =~ [*1*]         ]]
 }
 
+@test "\`ls <notebook> --sort\` exits with 0 and runs ls in the notebook." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# one home
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# two home
+line two
+line three
+line four
+HEREDOC
+    "${_NB}" notebooks add example
+    cat <<HEREDOC | "${_NB}" example:add "first-example.md"
+# one example
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" example:add "second-example.md"
+# two example
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" ls example --sort
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 6           ]]
+  [[ "${lines[0]}" =~ one\ example  ]]
+  [[ "${lines[0]}" =~ [*1*]         ]]
+}
+
 # footer ######################################################################
 
 @test "\`ls\` includes footer." {

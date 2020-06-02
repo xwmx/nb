@@ -394,6 +394,26 @@ load test_helper
   [[ "${lines[3]}" =~ example-one ]]
 }
 
+@test "\`show <notebook> --sort\` exits with status 0 and runs ls in the notebook." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "home-one.md"
+    run "${_NB}" add "home-two.md"
+    run "${_NB}" notebooks add example
+    run "${_NB}" example:add "example-one.md"
+    run "${_NB}" example:add "example-two.md"
+  }
+
+  run "${_NB}" show example --sort
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0            ]]
+  [[ "${lines[0]}" =~ example-one ]]
+  [[ "${lines[1]}" =~ example-two ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
