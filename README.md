@@ -2777,7 +2777,7 @@ Usage:
 
 Description:
   Update `nb` to the latest version. You will be prompted for
-  your password if administrator priviledges are required.
+  your password if administrator privileges are required.
 
   If `nb` was installed using a package manager like npm or
   Homebrew, use the package manager's upgrade functionality instead

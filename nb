@@ -8947,7 +8947,7 @@ Usage:
 
 Description:
   Update \`${_ME}\` to the latest version. You will be prompted for
-  your password if administrator priviledges are required.
+  your password if administrator privileges are required.
 
   If \`${_ME}\` was installed using a package manager like npm or
   Homebrew, use the package manager's upgrade functionality instead
