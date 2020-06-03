@@ -7023,7 +7023,8 @@ _remote() {
       then
         if [[ "${_existing_url}" == "${_url}" ]]
         then
-          _exit_1 printf "Remote already set to %s\\n" "$(_highlight "${_url}")"
+          _exit_1 printf "Remote already set to %s\\n" \
+            "$(_highlight "${_url}")"
         fi
 
         if ! ((_force))
@@ -7050,7 +7051,7 @@ _remote() {
           printf "Remote set to %s\\n" "$(_highlight "${_url}")"  &&
           return 0
       else
-        git remote add origin "${_url}"                             &&
+        git remote add origin "${_url}"                           &&
           printf "Remote set to %s\\n" "$(_highlight "${_url}")"  &&
           return 0
       fi
@@ -7058,8 +7059,7 @@ _remote() {
     *)
       if ((_remote_exists))
       then
-        git remote get-url origin &&
-        return 0
+        git remote get-url origin && return 0
       else
         printf "No remote configured.\\n"
         return 0
