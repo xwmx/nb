@@ -1311,6 +1311,9 @@ _file_is_text() {
     {
       ! _file_is_image    "${_file_path:-}" &&
       ! _file_is_document "${_file_path:-}" &&
+      ! _file_is_audio    "${_file_path:-}" &&
+      ! _file_is_video    "${_file_path:-}" &&
+      ! _file_is_archive  "${_file_path:-}" &&
       [[ "$(file "${_file_path:-}"  \
               --exclude=apptype     \
               --exclude=encoding    \
