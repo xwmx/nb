@@ -1147,8 +1147,7 @@ _file_is_archive() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  _contains "${_file_type}" "${_ARCHIVE_FILE_EXTENSIONS[@]}" ||
-    [[ "$(file "${_file_path:-}" | cut -d: -f2)" =~ archive|compressed ]]
+  _contains "${_file_type}" "${_ARCHIVE_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_audio()
@@ -1235,8 +1234,9 @@ _file_is_encrypted() {
   # `file` with 'soft' test is slow, so avoid calling it.
   _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}" ||
     {
-      ! _file_is_text     "${1:-}"  &&
-      ! _file_is_image    "${1:-}"  &&
+      ! _file_is_text     "${_file_path:-}" &&
+      ! _file_is_image    "${_file_path:-}" &&
+      ! _file_is_document "${_file_path:-}" &&
       [[ "$(file "${_file_path:-}"  \
               --exclude=apptype     \
               --exclude=encoding    \
@@ -1308,7 +1308,10 @@ _file_is_text() {
 
   # Avoid calling `file` for better performance.
   _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
-    [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+    {
+      [[ "${_file_type}" == "${_file_path##*/}"     ]] &&
+      [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+    }
 }
 
 # _file_is_video()
