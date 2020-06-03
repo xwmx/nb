@@ -1309,8 +1309,10 @@ _file_is_text() {
   # Avoid calling `file` for better performance.
   _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
     {
-      [[ "${_file_type}" == "${_file_path##*/}"     ]] &&
-      [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+      {
+        [[ "${_file_type}" == "${_file_path##*/}"   ]] ||
+        [[ "${_file_path}" =~ nb-bookmark-download  ]]
+      } && [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
     }
 }
 
@@ -3299,7 +3301,7 @@ HEREDOC
 
   # `bookmark <url>`
   local _temp_file=
-  _temp_file="$(mktemp)"
+  _temp_file="$(mktemp -t nb-bookmark-download.XXXXXX)"
 
   if ! _download_from "${_url}" "${_temp_file}" ||
      [[ ! -e "${_temp_file}"                 ]] ||
