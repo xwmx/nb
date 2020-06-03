@@ -65,3 +65,9 @@
 | ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-bookmarks.png) |
 |:--:|:--:|
 | 	|    |
+
+### `utility`
+
+| ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-bookmarks.png) |
+|:--:|:--:|
+| 	|    |

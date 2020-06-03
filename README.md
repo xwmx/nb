@@ -1378,7 +1378,7 @@ themes. The color theme can be configured in `notes settings`:
     Available themes:
 
        blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn
+       ocean, raspberry, unicorn, utility
 
 NB_COLOR_THEME is currently set to nb
 
@@ -1473,6 +1473,12 @@ Value:
 ##### `unicorn`
 
 | ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-bookmarks.png) |
+|:--:|:--:|
+| 	|    |
+
+##### `utility`
+
+| ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-bookmarks.png) |
 |:--:|:--:|
 | 	|    |
 
@@ -2618,7 +2624,7 @@ Alias: `set`
     Available themes:
 
        blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn
+       ocean, raspberry, unicorn, utility
 
       • Default Value: 'nb'
 
