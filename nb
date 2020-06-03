@@ -6803,7 +6803,7 @@ add the notebook name before the command name, separated by a colon:
 Examples:
   ${_ME} home:list
   ${_ME} example:add --title "Example Title"
-  ${_ME} example:search 'sample query'
+  ${_ME} example:search "sample query"
 HEREDOC
     fi
 
