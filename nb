@@ -8700,6 +8700,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "imgcat"                 &&
          _file_is_image "${_target_path}"         &&
          [[ ! "${_target_path}" =~ afphoto$   ]]  &&
+         [[ ! "${_target_path}" =~ svg$       ]]  &&
          [[ -n "${TERM_PROGRAM:-}"            ]]  &&
          [[ "${TERM_PROGRAM}" == "iTerm.app"  ]]  &&
          {
