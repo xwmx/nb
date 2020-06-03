@@ -1311,7 +1311,7 @@ _file_is_text() {
     {
       {
         [[ "${_file_type}" == "${_file_path##*/}"   ]] ||
-        [[ "${_file_path}" =~ nb-bookmark-download  ]]
+        [[ "${_file_path}" =~ nb-bookmark-tempfile  ]]
       } && [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
     }
 }
@@ -3301,7 +3301,7 @@ HEREDOC
 
   # `bookmark <url>`
   local _temp_file=
-  _temp_file="$(mktemp -t nb-bookmark-download.XXXXXX)"
+  _temp_file="$(mktemp -t nb-bookmark-tempfile.XXXXXX)"
 
   if ! _download_from "${_url}" "${_temp_file}" ||
      [[ ! -e "${_temp_file}"                 ]] ||
