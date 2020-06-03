@@ -1309,10 +1309,18 @@ _file_is_text() {
   # Avoid calling `file` for better performance.
   _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
     {
-      {
-        [[ "${_file_type}" == "${_file_path##*/}"   ]] ||
-        [[ "${_file_path}" =~ nb-bookmark-tempfile  ]]
-      } && [[ "$(file -b --mime-type "${1:-}")" =~ ^text ]]
+      ! _file_is_image    "${_file_path:-}" &&
+      ! _file_is_document "${_file_path:-}" &&
+      [[ "$(file "${_file_path:-}"  \
+              --exclude=apptype     \
+              --exclude=encoding    \
+              --exclude=tokens      \
+              --exclude=cdf         \
+              --exclude=compress    \
+              --exclude=elf         \
+              --exclude=tar         \
+              --exclude=soft        \
+              -b --mime-type)" =~ ^text ]]
     }
 }
 
