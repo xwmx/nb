@@ -4103,14 +4103,28 @@ _env() {
     then
       _completions install --download
 
-      apt-get install     \
-        bash-completion   \
-        curl              \
-        pandoc            \
-        python3-pygments  \
-        ripgrep           \
-        tig               \
-        w3m
+      if [[ "$(lsb_release -d | awk '{print $3}' | sed -e 's/\.//g')" -gt "1810" ]]
+      then
+        apt-get install     \
+          bash-completion   \
+          curl              \
+          pandoc            \
+          python3-pygments  \
+          ripgrep           \
+          tig               \
+          w3m
+      else
+        apt-get install     \
+          bash-completion   \
+          curl              \
+          pandoc            \
+          python3-pygments  \
+          tig               \
+          w3m
+
+        curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+        dpkg -i ripgrep_11.0.2_amd64.deb
+      fi
     elif [[ -x "$(command -v dnf)" ]]
     then
       : # TODO: dnf install
