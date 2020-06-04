@@ -4124,8 +4124,10 @@ _env() {
           tig               \
           w3m
 
-        curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-        dpkg -i ripgrep_11.0.2_amd64.deb
+        local _rg_version="11.0.2"
+        curl -LO "https://github.com/BurntSushi/ripgrep/releases/download/${_rg_version}/ripgrep_${_rg_version}_amd64.deb"
+        dpkg -i "ripgrep_${_rg_version}_amd64.deb"
+        rm "ripgrep_${_rg_version}_amd64.deb"
       fi
     elif [[ -x "$(command -v dnf)" ]]
     then
