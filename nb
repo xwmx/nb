@@ -637,8 +637,7 @@ fi
 # Description:
 #   Clear the cache.
 _clear_cache() {
-  if [[ -e "${_NB_CACHE_PATH}" ]] &&
-     [[ -d "${_NB_CACHE_PATH}" ]]
+  if [[ -d "${_NB_CACHE_PATH}" ]]
   then
     rm -r "${_NB_CACHE_PATH:?}"
     mkdir -p "${_NB_CACHE_PATH}"
