@@ -7520,31 +7520,31 @@ _search() {
             then
               _skip=0
             elif {
-                [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]] &&
+                [[ "${_type}" =~ ^bookmark$|^bookmarks$                 ]] &&
                 _file_is_bookmark "${_path}"
               } || {
-                [[ "${_type}" =~ ^note$|^notes$|^text$ ]] &&
+                [[ "${_type}" =~ ^note$|^notes$|^text$                  ]] &&
                 _file_is_text "${_path}"
               } || {
-                [[ "${_type}" =~ ^folder$|^folders$ ]] &&
-                [[ "$(dirname "${_path}")" != "${__notebook_path}" ]]
+                [[ "${_type}" =~ ^folder$|^folders$                     ]] &&
+                [[ "$(dirname "${_path}")" != "${__notebook_path}"      ]]
               } || {
-                [[ "${_type}" =~ ^archive$ ]] &&
+                [[ "${_type}" =~ ^archive$                              ]] &&
                 _file_is_archive "${_path}"
               } || {
-                [[ "${_type}" =~ ^audio$|^music$ ]] &&
+                [[ "${_type}" =~ ^audio$|^music$                        ]] &&
                 _file_is_audio "${_path}"
               } || {
-                [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]] &&
+                [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$    ]] &&
                 _file_is_document "${_path}"
               } || {
-                [[ "${_type}" =~ ^encrypted$ ]] &&
+                [[ "${_type}" =~ ^encrypted$                            ]] &&
                 _file_is_encrypted "${_path}"
               } || {
-                [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$ ]] &&
+                [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$  ]] &&
                 _file_is_image "${_path}"
               } || {
-                [[ "${_type}" =~ ^video$|^videos$ ]] &&
+                [[ "${_type}" =~ ^video$|^videos$                       ]] &&
                 _file_is_video "${_path}"
               }
             then
@@ -8788,7 +8788,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
     then
       pdftotext "${_target_path}" - \
-        | tr -d '\014' \
+        | tr -d '\014'              \
         | if [[ -n "${PAGER:-}"       ]] &&
              [[ ! "${PAGER}" =~ less  ]] &&
              ! ((_dump))
@@ -8802,8 +8802,8 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ docx$ ]] && _command_exists "pandoc"
     then
-      pandoc --from docx --to markdown "${_target_path}" \
-        | _highlight_syntax_if_available \
+      pandoc --from docx --to markdown "${_target_path}"  \
+        | _highlight_syntax_if_available                  \
         | if [[ -n "${PAGER:-}"      ]] &&
              [[ ! "${PAGER}" =~ less ]] &&
              ! ((_dump))
