@@ -4103,7 +4103,9 @@ _env() {
     then
       _completions install --download
 
-      if [[ "$(lsb_release -d | awk '{print $3}' | sed -e 's/\.//g')" -gt "1810" ]]
+      if [[ "$(lsb_release -d       \
+                | awk '{print $3}'  \
+                | sed -e 's/\.//g')" -gt "18100" ]]
       then
         apt-get install     \
           bash-completion   \
