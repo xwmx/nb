@@ -536,6 +536,20 @@ __set_nb_color_primary() {
 # Supported Values: [0..255+]
 export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
 
+# _dim()
+#
+# Usage:
+#   _dim <string>
+#
+# Print the given scring with the dim color.
+_dim() {
+  printf "%s%s%s%s"     \
+    "${_TPUT_SGR0}"     \
+    "${_TPUT_SETAF_8}"  \
+    "${1:-}"            \
+    "${_TPUT_SGR0}"
+}
+
 # _highlight()
 #
 # Usage:
@@ -5880,7 +5894,7 @@ _ls() {
       )
 
       _commands_hi=(
-        "❯ $(_highlight_secondary "${_ME}${_scope_left_pad}")"
+        "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
           "$(_highlight_secondary "${_commands_raw[1]}")"
           "$(_highlight_secondary "${_commands_raw[2]}")"
           "$(_highlight_secondary "${_commands_raw[3]}")"
