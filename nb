@@ -499,18 +499,6 @@ __load_themes() {
   fi
 } && __load_themes
 
-# $NB_COLOR_SECONDARY
-#
-# Default: 8
-#
-# Color for lines and other accents. This should be set to an xterm color
-# number, usually a value between 1 and 256. For a table of common colors and
-# their numbers, run:
-#   nb settings colors
-#
-# Supported Values: [0..255+]
-export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
-
 # $NB_COLOR_PRIMARY
 #
 # Default: Value depends on terminal capabilities.
@@ -535,6 +523,18 @@ __set_nb_color_primary() {
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-4}"
   fi
 } && __set_nb_color_primary
+
+# $NB_COLOR_SECONDARY
+#
+# Default: 8
+#
+# Color for lines and other accents. This should be set to an xterm color
+# number, usually a value between 1 and 256. For a table of common colors and
+# their numbers, run:
+#   nb settings colors
+#
+# Supported Values: [0..255+]
+export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
 
 # _highlight()
 #
