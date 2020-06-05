@@ -220,10 +220,10 @@ recommended dependencies on Ubuntu and WSL.
 
 ##### npm
 
-To install with [npm](https://www.npmjs.com/package/notes.sh):
+To install with [npm](https://www.npmjs.com/package/nb.sh):
 
 ```bash
-npm install --global notes.sh
+npm install --global nb.sh
 ```
 
 Note: Installing through `npm` only installs completion scripts.
