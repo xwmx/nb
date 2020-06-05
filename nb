@@ -274,6 +274,22 @@ _return_1() {
   return 1
 }
 
+# _warn()
+#
+# Usage:
+#   _warn <command>
+#
+# Description:
+#   Print the specified command with output redirected to standard error.
+#   The command is expected to print a message and should typically be either
+#   `echo`, `printf`, or `cat`.
+_warn() {
+  {
+    printf "%s " "$(tput setaf 1)!$(tput sgr0)"
+    "${@}"
+  } 1>&2
+}
+
 ###############################################################################
 # Configuration
 ###############################################################################
@@ -3331,7 +3347,7 @@ HEREDOC
      [[ ! -e "${_temp_file}"                 ]] ||
      [[ "$(wc -c <"${_temp_file}")" == 0     ]]
   then
-    _exit_1 \
+    _warn \
       printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
   fi
 
