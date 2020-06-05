@@ -3374,7 +3374,8 @@ HEREDOC
     _description="$(
       cat "${_temp_file}"   \
         | sed -E -n         \
-            's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p'
+            's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p' \
+            2>/dev/null || :
     )"
 
     if [[ -z "${_description:-}" ]]
@@ -3382,7 +3383,8 @@ HEREDOC
       _description="$(
         cat "${_temp_file}" \
           | sed -E -n       \
-            's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p'
+            's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
+            2>/dev/null || :
       )"
     fi
 
