@@ -18,7 +18,7 @@
 application with encryption, advanced search,
 [Git](https://git-scm.com/)-backed versioning and syncing,
 [Pandoc](https://pandoc.org/)-backed conversion,
-global and local notebooks, tagging, customizable color themes,
+global and local notebooks, tagging, customizable [color themes](#built-in-themes),
 plain-text data storage, and more, all in a single portable, user-friendly script.
 
 `nb` creates notes in text-based formats like
