@@ -3343,7 +3343,13 @@ HEREDOC
   local _temp_file=
   _temp_file="$(mktemp -t nb-bookmark-tempfile.XXXXXX)"
 
-  if ! _download_from "${_url}" "${_temp_file}" ||
+  local _download_url="${_url}"
+  _download_url="$(
+    printf "%s\\n" "${_download_url}" \
+      | sed 's/https\:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
+  )"
+
+  if ! _download_from "${_download_url}" "${_temp_file}" ||
      [[ ! -e "${_temp_file}"                 ]] ||
      [[ "$(wc -c <"${_temp_file}")" == 0     ]]
   then
