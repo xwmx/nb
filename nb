@@ -3346,7 +3346,7 @@ HEREDOC
   local _download_url="${_url}"
   _download_url="$(
     printf "%s\\n" "${_download_url}" \
-      | sed 's/https\:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
+      | sed 's/https:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
   )"
 
   if ! _download_from "${_download_url}" "${_temp_file}" ||
