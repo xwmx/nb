@@ -4166,11 +4166,17 @@ _env() {
 
         local _rg_version="11.0.2"
         local _deb_filename="ripgrep_${_rg_version}_amd64.deb"
+        local _deb_local_path="${HOME}/${_deb_filename}"
+
         wget \
-          -O "${HOME}/${_deb_filename}" \
+          -O "${_deb_local_path}" \
           "https://github.com/BurntSushi/ripgrep/releases/download/${_rg_version}/${_deb_filename}"
-        dpkg -i "${_deb_filename}"
-        rm "${_deb_filename}"
+
+        if [[ -e "${_deb_local_path}" ]]
+        then
+          dpkg -i "${_deb_local_path}"
+          rm "${_deb_local_path}"
+        fi
       fi
     elif [[ -x "$(command -v dnf)" ]]
     then
