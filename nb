@@ -4142,8 +4142,10 @@ _env() {
 
       if [[ "$(lsb_release -d       \
                 | awk '{print $3}'  \
-                | sed -e 's/\.//g')" -gt "18100" ]]
+                | sed -e 's/\.//g'  \
+                | sed -E 's/(\d\d\d\d).*/\1/g')" -gt "1810" ]]
       then
+        apt update
         apt-get install     \
           bash-completion   \
           curl              \
@@ -4153,6 +4155,7 @@ _env() {
           tig               \
           w3m
       else
+        apt-get update
         apt-get install     \
           bash-completion   \
           curl              \
@@ -4162,9 +4165,12 @@ _env() {
           w3m
 
         local _rg_version="11.0.2"
-        curl -LO "https://github.com/BurntSushi/ripgrep/releases/download/${_rg_version}/ripgrep_${_rg_version}_amd64.deb"
-        dpkg -i "ripgrep_${_rg_version}_amd64.deb"
-        rm "ripgrep_${_rg_version}_amd64.deb"
+        local _deb_filename="ripgrep_${_rg_version}_amd64.deb"
+        wget \
+          -O "${HOME}/${_deb_filename}" \
+          "https://github.com/BurntSushi/ripgrep/releases/download/${_rg_version}/${_deb_filename}"
+        dpkg -i "${_deb_filename}"
+        rm "${_deb_filename}"
       fi
     elif [[ -x "$(command -v dnf)" ]]
     then
