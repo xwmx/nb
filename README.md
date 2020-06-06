@@ -161,7 +161,7 @@ brew install xwmx/taps/nb
 Installing `nb` with Homebrew also installs the recommended dependencies
 and completion scripts.
 
-#### Ubuntu, Windows WSL, Alpine, and others
+#### Ubuntu, Windows WSL, and others
 
 ##### Download and Install
 
@@ -181,7 +181,7 @@ sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
 ```
 
 This will also install the completion scripts on all systems and the
-recommended dependencies on Ubuntu, WSL, and Alpine Linux.
+recommended dependencies on Ubuntu and WSL.
 
 ###### User-only Installation
 
