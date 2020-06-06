@@ -2139,8 +2139,14 @@ _join() {
 #
 # The prompt to display in `less`.
 _less_prompt() {
-  _prompt="\
+  local _prompt="\
 > scroll for more, h for help, or q to quit"
+
+  if [[ "$(tput cols)" -gt 81 ]]
+  then
+    _prompt="\
+> scroll for more, f / b to jump ↑ / ↓, h for help, or q to quit"
+  fi
 
   printf "%s\\n" "${_prompt}"
 }
