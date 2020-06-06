@@ -216,7 +216,7 @@ sudo make install
 ```
 
 This will also install the completion scripts on all systems and the
-recommended dependencies on Ubuntu, WSL, and Alpine Linux.
+recommended dependencies on Ubuntu and WSL.
 
 ##### npm
 
@@ -227,7 +227,7 @@ npm install --global notes.sh
 ```
 
 Note: Installing through `npm` only installs completion scripts.
-On Ubuntu, WSL, and Alpine, you can
+On Ubuntu and WSL, you can
 run `nb env install` to install the optional dependencies.
 
 ##### bpkg
