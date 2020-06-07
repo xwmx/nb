@@ -7039,7 +7039,7 @@ Description:
 
 Examples:
   ${_ME} remote set https://github.com/example/example.git
-  ${_ME} remove remove
+  ${_ME} remote remove
 HEREDOC
 _remote() {
   local _existing_url=

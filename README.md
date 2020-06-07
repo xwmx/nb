@@ -2450,7 +2450,7 @@ Description:
 
 Examples:
   nb remote set https://github.com/example/example.git
-  nb remove remove
+  nb remote remove
 ```
 
 #### `rename`
