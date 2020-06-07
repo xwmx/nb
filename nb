@@ -3733,10 +3733,10 @@ HEREDOC
               printf "Completion script installed: %s\\n" \
                 "${_completion_target}"
             else
-              printf "Exists: %s\\n" "${_completion_target}"
+              _warn printf "Exists: %s\\n" "${_completion_target}"
             fi
           else
-            printf "Permission denied: %s\\n" "${_completion_path}"
+            _warn printf "Permission denied: %s\\n" "${_completion_path}"
           fi
         fi
       fi
@@ -3773,7 +3773,7 @@ HEREDOC
               "${_completion_target}"
           fi
         else
-          printf "Permission denied: %s\\n" "${_completion_path}"
+          _warn printf "Permission denied: %s\\n" "${_completion_path}"
         fi
       fi
     done
