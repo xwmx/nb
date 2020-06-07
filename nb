@@ -3676,16 +3676,16 @@ _completions() {
       _exit_1 printf "Source Git repository not configured.\\n"
     fi
 
-    for _shell in bash zsh
+    for __shell in bash zsh
     do
-      local _completion_source="${_my_dir}/etc/${_ME}-completion.${_shell}"
+      local _completion_source="${_my_dir}/etc/${_ME}-completion.${__shell}"
 
       if ((_download))
       then
         if [[ ! -f "${_completion_source}" ]]
         then
           _completion_source="$(mktemp)"
-          local _completion_url="${_REPO_RAW_URL}/etc/${_ME}-completion.${_shell}"
+          local _completion_url="${_REPO_RAW_URL}/etc/${_ME}-completion.${__shell}"
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
           then
@@ -3698,22 +3698,22 @@ _completions() {
       if [[ ! -f "${_completion_source}" ]]
       then
         cat <<HEREDOC
-Unable to find source ${_shell} completion script. You can try downloading
+Unable to find source ${__shell} completion script. You can try downloading
 and installing the latest version with the following command (\`sudo\` might
 be necessary):
   ${_ME} completions install --download
 
-More information: ${_shell}
+More information: ${__shell}
   https://github.com/${_REPO}/blob/master/etc/README.md
 HEREDOC
       else
         local _completion_path=
         local _completion_target=
-        if [[ "${_shell}" == "bash" ]]
+        if [[ "${__shell}" == "bash" ]]
         then
           _completion_path="$(_get_bash_completion_path)"
           _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
-        elif [[ "${_shell}" == "zsh" ]]
+        elif [[ "${__shell}" == "zsh" ]]
         then
           _completion_path="/usr/local/share/zsh/site-functions"
           _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
@@ -3748,13 +3748,13 @@ HEREDOC
     local _completion_path=
     local _completion_target=
 
-    for _shell in bash zsh
+    for __shell in bash zsh
     do
-      if [[ "${_shell}" == "bash" ]]
+      if [[ "${__shell}" == "bash" ]]
       then
         _completion_path="$(_get_bash_completion_path)"
         _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
-      elif [[ "${_shell}" == "zsh" ]]
+      elif [[ "${__shell}" == "zsh" ]]
       then
         _completion_path="/usr/local/share/zsh/site-functions"
         _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
