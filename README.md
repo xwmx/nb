@@ -1315,7 +1315,7 @@ A setting can also be updated without the prompt using `nb settings set`:
 > nb settings set editor code
 EDITOR set to code
 
-# set highlight color with setting number (6)
+# set editor with setting number (6)
 > nb settings set 6 code
 EDITOR set to code
 ```
