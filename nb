@@ -5464,16 +5464,26 @@ HEREDOC
       then
         # Calculate apparent length of the list item string, with byte and
         # character calculations for handling unicode characters.
-        local _item_line_length=
-        _item_line_length="$(printf "%s" "${_print_item}" | wc -m)"
+        #
+        # More info: https://stackoverflow.com/a/31009961
+        local _original_lang="${LANG}"
+        local _original_lc_all="${LC_ALL}"
+
+        local _item_line_length_chars=
+        _item_line_length_chars="${#_print_item}"
+
+        LANG=C LC_ALL=C
 
         local _item_line_length_bytes=
-        _item_line_length_bytes="$(printf "%s" "${_print_item}" | wc -c)"
+        _item_line_length_bytes="${#_print_item}"
+
+        LANG="${_original_lang}" LC_ALL="${_original_lc_all}"
 
         local _item_line_length_diff=
-        _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length)/3))
+        _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length_chars)/3))
 
-        _item_line_length=$((_item_line_length+_item_line_length_diff))
+        local _item_line_length=
+        _item_line_length=$((_item_line_length_chars+_item_line_length_diff))
       fi
 
       if ! {
