@@ -5121,6 +5121,12 @@ _list() {
   _size="$(stty size)"
 
   local _columns="${_size##* }"
+
+  if [[ -z "${_columns:-}" ]] || [[ "${_columns}" -lt 5 ]]
+  then
+    _columns="$(tput cols)"
+  fi
+
   local _excerpt_length=3
   local _limit=
   local _list_filenames=0
