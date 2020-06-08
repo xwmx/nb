@@ -3592,7 +3592,7 @@ _completions() {
           printf "Exists: %s\\n" "${_bash_completion_path}/${_BASH_COMP_NAME}"
         fi
       else
-        printf "Permission denied: %s\\n" "${_bash_completion_path}"
+        _warn printf "Permission denied: %s\\n" "${_bash_completion_path}"
       fi
     fi
 
@@ -3608,7 +3608,7 @@ _completions() {
           printf "Exists: %s\\n" "${_zsh_completion_path}/${_ZSH_COMP_NAME}"
         fi
       else
-        printf "Permission denied: %s\\n" "${_zsh_completion_path}"
+        _warn printf "Permission denied: %s\\n" "${_zsh_completion_path}"
       fi
     fi
 
