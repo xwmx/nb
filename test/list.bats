@@ -51,7 +51,7 @@ Help information:
 @test "\`list\` includes indicators." {
   {
     "${_NB}" init
-    "${_NB}" add "one.md" --title "Todos"
+    "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
     "${_NB}" add "two.md" --content "Example Content."
     "${_NB}" add "three.md" --title "Three" --encrypt --password=example
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -67,8 +67,8 @@ Help information:
   [[ "${lines[0]}" =~ three.md.enc  ]]
   [[ "${lines[0]}" =~ 🔒            ]]
   [[ "${lines[1]}" =~ two.md        ]]
-  [[ "${lines[2]}" =~ Todos         ]]
-  [[ "${lines[2]}" =~ ✅            ]]
+  [[ "${lines[2]}" =~ bookmark      ]]
+  [[ "${lines[2]}" =~ 🔖            ]]
 }
 
 # `list --no-id` ##############################################################
