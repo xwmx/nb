@@ -5396,7 +5396,7 @@ HEREDOC
 
         if [[ "${_title_or_basename}" =~ todo|Todo|TODO ]]
         then
-          _indicators+="✅ "
+          _indicators+="${_TPUT_SGR0}$(tput setaf 2)✔${_TPUT_SGR0}  "
         fi
 
         if [[ -n "${_indicators:-}" ]]
