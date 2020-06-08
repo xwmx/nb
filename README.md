@@ -12,7 +12,7 @@
   </a>
 </p>
 
-# `❯ nb`
+# `❯ nb` · notes & bookmarks
 
 `nb` is a command line note-taking, bookmarking, collecting, and archiving
 application with encryption, advanced search,
@@ -1647,7 +1647,7 @@ __          _
  / / | | | | |_) |
 /_/  |_| |_|_.__/
 
-`nb`
+`nb` · notes & bookmarks
 
 Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
