@@ -5966,9 +5966,9 @@ _ls() {
     done
   fi
 
-  local _notes_count_local=0
-  local _notes_count_total=0
-  _notes_count_total="$(_count)"
+  local _note_count_local=0
+  local _note_count_total=0
+  _note_count_total="$(_count)"
   local _ui_line_number=0
 
   local _size=
@@ -5976,9 +5976,9 @@ _ls() {
   local _lines="${_size% *}"
   local _use_pager=0
 
-  if [[ "${_notes_count_total}" -gt $((_lines-4)) ]]
+  if [[ "${_note_count_total}" -gt $((_lines-4)) ]]
   then
-    _notes_count_local="$(
+    _note_count_local="$(
       {
         _list \
           -n "${_lines}"  \
@@ -5991,11 +5991,11 @@ _ls() {
     )"
   fi
   # Remove 'omitted' line.
-  _notes_count_local=$((_notes_count_local-1))
+  _note_count_local=$((_note_count_local-1))
   _ui_line_number=$((_header_line_number+_footer_line_number+5))
 
   if ((_lines)) &&
-     [[ "${_notes_count_local}" -ge $((_lines-_ui_line_number)) ]] &&
+     [[ "${_note_count_local}"  -ge $((_lines-_ui_line_number)) ]] &&
      [[ "${_limit}"             -ge $((_lines-_ui_line_number)) ]]
   then
     _use_pager=1
