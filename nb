@@ -5889,13 +5889,15 @@ _ls() {
           --no-indicators \
           --filenames     \
           2>/dev/null || printf ""
-        } | wc -l
+        } | wc -l | tr -d '[:space:]'
     )"
   fi
+  # Remove 'omitted' line.
+  _notes_count_local=$((_notes_count_local-1))
 
   if ((_lines)) &&
-     [[ "${_notes_count_local}" -gt $((_lines-4))           ]] &&
-     [[ "${_limit}"             -gt "${_notes_count_local}" ]]
+     [[ "${_notes_count_local}" -ge $((_lines-_line_number-5)) ]] &&
+     [[ "${_limit}"             -ge $((_lines-_line_number-5)) ]]
   then
     _use_pager=1
   fi
