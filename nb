@@ -5830,10 +5830,8 @@ _ls() {
 
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
-        if ((_header_line_number))  &&
-           ! ((_justified))         &&
-           ((_auto_align))          ||
-           ((_centered))
+        if ((_header_line_number))  && ! ((_justified)) &&
+           ((_auto_align))          ||   ((_centered))
         then
           _centered=1
         fi
