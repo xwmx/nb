@@ -5781,13 +5781,12 @@ _ls() {
       )
     fi
 
-    local _padding=
-
-    local _test_line=
     local _line_raw=
     local _line_hi=
     local _output_raw=
     local _output_hi=
+    local _padding=
+    local _test_line=
 
     for ((i=0;i < "${#_notebook_names_raw[@]}"; i++))
     do
