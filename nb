@@ -5354,6 +5354,7 @@ HEREDOC
         fi
       fi
 
+      local _extra_length=0
       local _indicators=
       local _maybe_padded_indicators=
 
@@ -5397,6 +5398,7 @@ HEREDOC
         if [[ "${_title_or_basename}" =~ todo|Todo|TODO ]]
         then
           _indicators+="✅ "
+          _extra_length=1
         fi
 
         if [[ -n "${_indicators:-}" ]]
@@ -5492,6 +5494,11 @@ HEREDOC
 
         local _item_line_length=
         _item_line_length=$((_item_line_length_chars+_item_line_length_diff))
+
+        if ((_extra_length))
+        then
+          _item_line_length=$((_item_line_length+_extra_length))
+        fi
       fi
 
       if ! {
