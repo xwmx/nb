@@ -5645,8 +5645,105 @@ _ls() {
   #
   # Usage:
   #   _print_footer
-  _print_foote() {
-    :
+  _print_footer() {
+    ((NB_FOOTER)) || return 0
+
+    local _footer_line_hi=
+    local _footer_line_raw=
+    local _footer_output_raw=
+    local _footer_output_hi=
+    local _footer_separator_raw=" ·"
+    local _footer_separator_hi=
+    _footer_separator_hi="$(_highlight "${_footer_separator_raw}")"
+    local _footer_test_line=
+    local _scope=
+    local _scope_left_pad=
+    local _scope_right_pad=
+    if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
+    then
+      _scope="${_SCOPE}:"
+      _scope_left_pad=" ${_scope}"
+      _scope_right_pad="${_scope} "
+    fi
+
+    local _notebook_command="${_ME} notebooks add <name>"
+    if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
+    then
+      _notebook_command="${_ME} use <notebook>"
+    fi
+
+    local _commands_raw=(
+      "❯ ${_ME} ${_scope}"
+      "${_ME} ${_scope}add"
+      "${_ME} ${_scope_right_pad}<url>"
+      "${_ME} edit ${_scope}<id>"
+      "${_ME} show ${_scope}<id>"
+      "${_ME} open ${_scope}<id>"
+      "${_ME} ${_scope}list"
+      "${_ME} ${_scope}search <query>"
+      "${_notebook_command}"
+      "${_ME} settings"
+      "${_ME} help"
+    )
+
+    local _commands_hi=(
+      "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
+        "$(_highlight_secondary "${_commands_raw[1]}")"
+        "$(_highlight_secondary "${_commands_raw[2]}")"
+        "$(_highlight_secondary "${_commands_raw[3]}")"
+        "$(_highlight_secondary "${_commands_raw[4]}")"
+        "$(_highlight_secondary "${_commands_raw[5]}")"
+        "$(_highlight_secondary "${_commands_raw[6]}")"
+        "$(_highlight_secondary "${_commands_raw[7]}")"
+        "$(_highlight_secondary "${_commands_raw[8]}")"
+        "$(_highlight_secondary "${_commands_raw[9]}")"
+        "$(_highlight_secondary "${_commands_raw[10]}")"
+    )
+
+    for ((i=0;i < "${#_commands_raw[@]}"; i++))
+    do
+      if [[ -z "${_footer_test_line}" ]]
+      then # first item in line
+        _footer_test_line="${_commands_raw[i]}"
+      else
+        _footer_test_line="${_footer_test_line}${_footer_separator_raw} ${_commands_raw[i]}"
+      fi
+
+      if [[ "${#_footer_test_line}" -gt "${_columns}" ]]
+      then # wrap to next line
+        _footer_output_hi="${_footer_output_hi}${_footer_line_hi}${_NEWLINE}"
+        _footer_output_raw="${_footer_output_raw}${_footer_line_raw}${_NEWLINE}"
+
+        # Start the line for the next iteration using the current name.
+        _footer_test_line="${_commands_raw[i]}"
+        _footer_line_hi="${_commands_hi[i]:-}"
+        _footer_line_raw="${_commands_raw[i]}"
+      else # add to line
+        if [[ -z "${_footer_line_hi}" ]]
+        then # first item in highlighted line
+          _footer_line_hi="${_commands_hi[i]:-}"
+          _footer_line_raw="${_commands_raw[i]}"
+        else
+          _footer_line_hi="${_footer_line_hi}${_footer_separator_hi} ${_commands_hi[i]:-}"
+          _footer_line_raw="${_footer_line_raw}${_footer_separator_raw} ${_commands_raw[i]}"
+        fi
+      fi
+
+      if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
+      then # end of list
+        _footer_output_hi="${_footer_output_hi}${_footer_line_hi}"
+        _footer_output_raw="${_footer_output_raw}${_footer_line_raw}"
+      fi
+    done
+
+    printf '\033[?7l'
+    _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+    printf "%s" "${_TPUT_SGR0}"
+    printf '\033[?7h'
+    printf '\n'
+    cat <<HEREDOC
+${_footer_output_hi}
+HEREDOC
   }
 
   # _print_header()
@@ -5848,7 +5945,6 @@ _ls() {
   local _args=()
   local _columns
   _columns="$(tput cols)"
-  local _footer_line_number=0
   local _header_line_number=0
   local _limit=30
   local _maybe_notebook_list=
@@ -5898,100 +5994,6 @@ _ls() {
     done < <(_print_header "${_args[@]}")
   fi
 
-  if ((NB_FOOTER))
-  then
-    local _scope=
-    local _scope_left_pad=
-    local _scope_right_pad=
-    if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
-    then
-      _scope="${_SCOPE}:"
-      _scope_left_pad=" ${_scope}"
-      _scope_right_pad="${_scope} "
-    fi
-
-    local _notebook_command="${_ME} notebooks add <name>"
-    if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
-    then
-      _notebook_command="${_ME} use <notebook>"
-    fi
-
-    _commands_raw=(
-      "❯ ${_ME} ${_scope}"
-      "${_ME} ${_scope}add"
-      "${_ME} ${_scope_right_pad}<url>"
-      "${_ME} edit ${_scope}<id>"
-      "${_ME} show ${_scope}<id>"
-      "${_ME} open ${_scope}<id>"
-      "${_ME} ${_scope}list"
-      "${_ME} ${_scope}search <query>"
-      "${_notebook_command}"
-      "${_ME} settings"
-      "${_ME} help"
-    )
-
-    _commands_hi=(
-      "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
-        "$(_highlight_secondary "${_commands_raw[1]}")"
-        "$(_highlight_secondary "${_commands_raw[2]}")"
-        "$(_highlight_secondary "${_commands_raw[3]}")"
-        "$(_highlight_secondary "${_commands_raw[4]}")"
-        "$(_highlight_secondary "${_commands_raw[5]}")"
-        "$(_highlight_secondary "${_commands_raw[6]}")"
-        "$(_highlight_secondary "${_commands_raw[7]}")"
-        "$(_highlight_secondary "${_commands_raw[8]}")"
-        "$(_highlight_secondary "${_commands_raw[9]}")"
-        "$(_highlight_secondary "${_commands_raw[10]}")"
-    )
-
-    local _footer_line_hi=
-    local _footer_line_raw=
-    local _footer_output_raw=
-    local _footer_output_hi=
-    local _footer_separator_raw=" ·"
-    local _footer_separator_hi=
-    _footer_separator_hi="$(_highlight "${_footer_separator_raw}")"
-    local _footer_test_line=
-
-    for ((i=0;i < "${#_commands_raw[@]}"; i++))
-    do
-      if [[ -z "${_footer_test_line}" ]]
-      then # first item in line
-        _footer_test_line="${_commands_raw[i]}"
-      else
-        _footer_test_line="${_footer_test_line}${_footer_separator_raw} ${_commands_raw[i]}"
-      fi
-
-      if [[ "${#_footer_test_line}" -gt "${_columns}" ]]
-      then # wrap to next line
-        _footer_output_hi="${_footer_output_hi}${_footer_line_hi}${_NEWLINE}"
-        _footer_output_raw="${_footer_output_raw}${_footer_line_raw}${_NEWLINE}"
-        _footer_line_number=$((_footer_line_number + 1))
-
-        # Start the line for the next iteration using the current name.
-        _footer_test_line="${_commands_raw[i]}"
-        _footer_line_hi="${_commands_hi[i]:-}"
-        _footer_line_raw="${_commands_raw[i]}"
-      else # add to line
-        if [[ -z "${_footer_line_hi}" ]]
-        then # first item in highlighted line
-          _footer_line_hi="${_commands_hi[i]:-}"
-          _footer_line_raw="${_commands_raw[i]}"
-        else
-          _footer_line_hi="${_footer_line_hi}${_footer_separator_hi} ${_commands_hi[i]:-}"
-          _footer_line_raw="${_footer_line_raw}${_footer_separator_raw} ${_commands_raw[i]}"
-        fi
-      fi
-
-      if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
-      then # end of list
-        _footer_output_hi="${_footer_output_hi}${_footer_line_hi}"
-        _footer_output_raw="${_footer_output_raw}${_footer_line_raw}"
-        _footer_line_number=$((_footer_line_number + 1))
-      fi
-    done
-  fi
-
   local _note_count_local=0
   local _note_count_total=0
   _note_count_total="$(_count)"
@@ -6016,9 +6018,10 @@ _ls() {
         } | wc -l | tr -d '[:space:]'
     )"
   fi
+
   # Remove 'omitted' line.
   _note_count_local=$((_note_count_local-1))
-  _ui_line_number=$((_header_line_number+_footer_line_number+5))
+  _ui_line_number=$((_header_line_number+7))
 
   if ((_lines)) &&
      [[ "${_note_count_local}"  -ge $((_lines-_ui_line_number)) ]] &&
@@ -6056,14 +6059,7 @@ _ls() {
 
     if ((NB_FOOTER))
     then
-      printf '\033[?7l'
-      _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-      printf "%s" "${_TPUT_SGR0}"
-      printf '\033[?7h'
-      printf '\n'
-      cat <<HEREDOC
-${_footer_output_hi}
-HEREDOC
+      _print_footer
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
