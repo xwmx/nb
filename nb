@@ -5650,8 +5650,6 @@ _ls() {
 
     local _footer_line_hi=
     local _footer_line_raw=
-    local _footer_output_raw=
-    local _footer_output_hi=
     local _footer_separator_raw=" ·"
     local _footer_separator_hi=
     _footer_separator_hi="$(_highlight "${_footer_separator_raw}")"
@@ -5659,6 +5657,7 @@ _ls() {
     local _scope=
     local _scope_left_pad=
     local _scope_right_pad=
+
     if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
     then
       _scope="${_SCOPE}:"
@@ -5700,6 +5699,12 @@ _ls() {
         "$(_highlight_secondary "${_commands_raw[10]}")"
     )
 
+    printf '\033[?7l'
+    _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+    printf "%s" "${_TPUT_SGR0}"
+    printf '\033[?7h'
+    printf '\n'
+
     for ((i=0;i < "${#_commands_raw[@]}"; i++))
     do
       if [[ -z "${_footer_test_line}" ]]
@@ -5711,8 +5716,7 @@ _ls() {
 
       if [[ "${#_footer_test_line}" -gt "${_columns}" ]]
       then # wrap to next line
-        _footer_output_hi="${_footer_output_hi}${_footer_line_hi}${_NEWLINE}"
-        _footer_output_raw="${_footer_output_raw}${_footer_line_raw}${_NEWLINE}"
+        printf "%s\\n" "${_footer_line_hi}"
 
         # Start the line for the next iteration using the current name.
         _footer_test_line="${_commands_raw[i]}"
@@ -5731,19 +5735,9 @@ _ls() {
 
       if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
       then # end of list
-        _footer_output_hi="${_footer_output_hi}${_footer_line_hi}"
-        _footer_output_raw="${_footer_output_raw}${_footer_line_raw}"
+        printf "%s\\n" "${_footer_line_hi}"
       fi
     done
-
-    printf '\033[?7l'
-    _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-    printf "%s" "${_TPUT_SGR0}"
-    printf '\033[?7h'
-    printf '\n'
-    cat <<HEREDOC
-${_footer_output_hi}
-HEREDOC
   }
 
   # _print_header()
