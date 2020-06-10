@@ -9033,7 +9033,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         _highlight_syntax_if_available "${_target_path}"
       fi
     else # `show`
-      < "${_target_path}" fmt -s -w "$(tput cols)"  \
+      < "${_target_path}" fold -s -w "$(tput cols)" \
         | _highlight_syntax_if_available            \
         | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
           then
