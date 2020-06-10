@@ -73,6 +73,10 @@ load test_helper
     echo "# Example" > "${_NOTEBOOK_PATH}/example.md"
     echo "# Sample" > "${_NOTEBOOK_PATH}/sample.md"
 
+    # NOTE: `index get_id` calls `reconcile` when filename is not found.
+    printf "first.md id: %s\\n" "$("${_NB}" index get_id "first.md")"
+    printf "second.md id: %s\\n" "$("${_NB}" index get_id "second.md")"
+
     if sed --help >/dev/null 2>&1
     then
       sed -i -e "s/^first.md$//g" "${_NOTEBOOK_PATH}/.index"
@@ -80,18 +84,16 @@ load test_helper
       sed -i '' -e "s/^first.md$//g" "${_NOTEBOOK_PATH}/.index"
     fi
 
-    printf "first.md id: %s\\n" "$("${_NB}" index get_id "first.md")"
-    printf "second.md id: %s\\n" "$("${_NB}" index get_id "second.md")"
     printf ".index: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/.index")"
     printf "ls: '%s'\\n" "$(ls "${_NOTEBOOK_PATH}")"
 
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ first.md ]]
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ first.md     ]]
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ sample.md    ]]
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ sample.md    ]]
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ not-a-file   ]]
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ also-no-file ]]
-    [[ "$("${_NB}" index get_id "second.md")" == '4' ]]
+    [[ "$("${_NB}" index get_id "second.md")" == '4'          ]]
   }
 
   run "${_NB}" index reconcile
@@ -99,15 +101,15 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
   [[ ${status} -eq 0 ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ first.md     ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ example.md   ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ sample.md    ]]
-  [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ not-a-file   ]]
-  [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"  =~ also-no-file ]]
-  [[ "$("${_NB}" index get_id "second.md")"  == '4' ]]
-  [[ "$("${_NB}" index get_id "example.md")" == '7' ]]
-  [[ "$("${_NB}" index get_id "first.md")"   == '8' ]]
-  [[ "$("${_NB}" index get_id "sample.md")"  == '9' ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")"      =~ first.md     ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")"      =~ example.md   ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")"      =~ sample.md    ]]
+  [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ not-a-file   ]]
+  [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")"    =~ also-no-file ]]
+  [[ "$("${_NB}" index get_id "second.md")"   == '4'          ]]
+  [[ "$("${_NB}" index get_id "example.md")"  == '7'          ]]
+  [[ "$("${_NB}" index get_id "first.md")"    == '8'          ]]
+  [[ "$("${_NB}" index get_id "sample.md")"   == '9'          ]]
 
   "${_NB}" index verify
 }
