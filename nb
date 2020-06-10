@@ -1179,11 +1179,13 @@ export _ARCHIVE_FILE_EXTENSIONS=(
   apk
   bz2
   dmg
+  dmg.sparsebundle
   gz
   rar
   s7z
   sit
   sitx
+  sparsebundle
   tar
   tar.gz
   tgz
