@@ -6059,13 +6059,13 @@ _ls() {
   # Remove 'omitted' line.
   _note_count_local=$((_note_count_local - 1))
 
-  _debug echo "_header_line_count:  ${_header_line_count}"
-  _debug echo "_ui_line_count:      ${_ui_line_count}"
-  _debug echo "_line_count:         ${_line_count}"
-  _debug echo "_note_count_local:   ${_note_count_local}"
-  _debug echo "_note_count_total:   ${_note_count_total}"
-  _debug echo "_limit:              ${_limit}"
-  _debug echo "_max_note_count:     ${_max_note_count}"
+  _debug printf "_ls() \$_header_line_count:  %s\\n" "${_header_line_count}"
+  _debug printf "_ls() \$_ui_line_count:      %s\\n" "${_ui_line_count}"
+  _debug printf "_ls() \$_line_count:         %s\\n" "${_line_count}"
+  _debug printf "_ls() \$_note_count_local:   %s\\n" "${_note_count_local}"
+  _debug printf "_ls() \$_note_count_total:   %s\\n" "${_note_count_total}"
+  _debug printf "_ls() \$_limit:              %s\\n" "${_limit}"
+  _debug printf "_ls() \$_max_note_count:     %s\\n" "${_max_note_count}"
 
   if ((_line_count)) &&
      [[ "${_note_count_local}"  -ge "${_max_note_count}" ]] &&
