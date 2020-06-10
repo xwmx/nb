@@ -9033,20 +9033,20 @@ Can't show archives. Export archive and expand to edit.\\n"
         _highlight_syntax_if_available "${_target_path}"
       fi
     else # `show`
-      if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
-      then
-        _highlight_syntax_if_available "${_target_path}" \
-          | "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
-      elif _command_exists "less"
-      then
-        _highlight_syntax_if_available "${_target_path}" \
-          | less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
-      elif [[ -n "${PAGER:-}" ]]
-      then
-        _highlight_syntax_if_available "${_target_path}" | "${PAGER}"
-      else
-        _highlight_syntax_if_available "${_target_path}"
-      fi
+      < "${_target_path}" fmt -s -w "$(tput cols)"  \
+        | _highlight_syntax_if_available            \
+        | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
+          then
+            "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+          elif _command_exists "less"
+          then
+            less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+          elif [[ -n "${PAGER:-}" ]]
+          then
+            "${PAGER}"
+          else
+            cat
+          fi
     fi
   fi
 
