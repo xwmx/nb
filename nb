@@ -4029,14 +4029,14 @@ _edit() {
     shift
   done
 
-  _debug printf "_edit() \${_selection}: %s\\n" "${_selection}"
+  _debug printf "_edit() \${_selection}: %s\\n" "${_selection:-}"
   if [[ -z "${_selection:-}" ]]
   then
     _exit_1 _help "edit"
   fi
 
   _basename="$(_get_selection_basename "${_selection}")"
-  _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename}"
+  _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename:-}"
   if [[ -z "${_basename}" ]]
   then
     _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
