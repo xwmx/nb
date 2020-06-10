@@ -1394,6 +1394,7 @@ _file_is_video() {
 #   Print the first line of the file at <path>, skipping any front matter.
 _get_first_line() {
   local _first_line=
+  local _in_code_block=0
   local _in_front_matter=0
   local _path="${1:-}"
 
@@ -1417,7 +1418,15 @@ _get_first_line() {
           else
             _in_front_matter=1
           fi
-        elif ! ((_in_front_matter))
+        elif [[ "${__line}" =~ ^\`\`\` ]]
+        then # start or end of code block
+          if ((_in_code_block))
+          then
+            _in_code_block=0
+          else
+            _in_code_block=1
+          fi
+        elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
           if [[ -z "${_first_line}" ]] && [[ -n "${__line}" ]]
           then
