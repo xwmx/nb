@@ -5950,6 +5950,7 @@ _ls() {
   local _args=()
   local _columns
   _columns="$(tput cols)"
+  local _header_flags=()
   local _header_line_count=0
   local _limit=30
   local _maybe_notebook_list=
@@ -5969,6 +5970,9 @@ _ls() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      --auto-align|--centered|--justified|--plain)
+        _header_flags+=("${__arg}")
+        ;;
       -n|--limit)
         if __option_value_is_present "${__val:-}"
         then
@@ -6001,7 +6005,7 @@ _ls() {
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
       _header_line_count=$((_header_line_count + 1))
-    done < <(_print_header "${_args[@]}")
+    done < <(_print_header "${_header_flags[@]:-}")
   fi
 
   local _note_count_local=0
