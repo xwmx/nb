@@ -8140,6 +8140,29 @@ HEREDOC
         "${_value}"
   }
 
+  # Usage: _nb_settings_theme_list
+  _nb_settings_theme_list() {
+    local _line=
+    local _line_color=
+
+    for __theme in "${_NB_COLOR_THEMES[@]}"
+    do
+      local _test_line="${_line} ${__theme}"
+
+      if [[ "${#_test_line}" -gt 65 ]]
+      then
+        printf "%s\\n" "${_line_color}" | sed 's/,*$//g'
+              _line="       ${__theme},"
+        _line_color="       $(_highlight "${__theme}"),"
+      else
+              _line="${_line} ${__theme},"
+        _line_color="${_line_color} $(_highlight "${__theme}"),"
+      fi
+    done
+
+    printf "%s\\n" "${_line_color}" | sed 's/,*$//g'
+  }
+
   # Usage: _nb_settings_unset (<number> | <name>)
   _nb_settings_unset() {
     local _setting_name=
@@ -8303,29 +8326,11 @@ HEREDOC
 
     To view a list of available color numbers, run \`nb settings colors\`
 
+    To view theme screenshots, visit https://git.io/nb-docs-color-themes
+
     Available themes:
 
-      $(__list_themes() {
-          local _line=
-          local _line_color=
-
-          for __theme in "${_NB_COLOR_THEMES[@]}"
-          do
-            local _test_line="${_line} ${__theme}"
-
-            if [[ "${#_test_line}" -gt 65 ]]
-            then
-              printf "%s\\n" "${_line_color}" | sed 's/,*$//g'
-                    _line="       ${__theme},"
-              _line_color="       $(_highlight "${__theme}"),"
-            else
-                    _line="${_line} ${__theme},"
-              _line_color="${_line_color} $(_highlight "${__theme}"),"
-            fi
-          done
-
-          printf "%s\\n" "${_line_color}" | sed 's/,*$//g'
-        } && __list_themes)
+      $(_nb_settings_theme_list)
 
       • Default Value: 'nb'")
 
