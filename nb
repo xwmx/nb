@@ -223,14 +223,39 @@ HEREDOC
 # variable has been set. The command is expected to print a message and
 # should typically be either `echo`, `printf`, or `cat`.
 __DEBUG_COUNTER=0
+__DEBUG_START_TIME=
 _debug() {
-  if [[ "${_USE_DEBUG:-"0"}" -eq 1 ]]
+  # Usage; __debug_get_timestamp
+  __debug_get_timestamp() {
+    if hash "gdate" 2>/dev/null
+    then
+      gdate +%s%3N
+    elif date --version >/dev/null 2>&1
+    then
+      date +%s%3N
+    else
+      return 1
+    fi
+  }
+
+  if ((${_USE_DEBUG:-0}))
   then
     __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
+
     {
-      # Prefix debug message with "bug (U+1F41B)"
       printf "🐛  %s " "${__DEBUG_COUNTER}"
       "${@}"
+
+      if [[ -z "${__DEBUG_START_TIME}" ]]
+      then
+        if __DEBUG_START_TIME="$(__debug_get_timestamp)"
+        then
+          printf "⏱   0\\n"
+        fi
+      else
+        printf "⏱   %s\\n" "$(($(__debug_get_timestamp)-__DEBUG_START_TIME))"
+      fi
+
       printf "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
     } 1>&2
   fi
@@ -9633,6 +9658,7 @@ do
       ;;
     --debug)
       _USE_DEBUG=1
+      _debug printf "debug start...\\n"
       ;;
     --version)
       if [[ "${_SUBCOMMAND}" == "git" ]]
