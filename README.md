@@ -227,8 +227,8 @@ npm install --global notes.sh
 ```
 
 Note: Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can
-run `nb env install` to install the optional dependencies.
+On Ubuntu and WSL, you can run `sudo nb env install` to install the
+optional dependencies.
 
 ##### bpkg
 
