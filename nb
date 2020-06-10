@@ -5641,96 +5641,64 @@ Examples:
   ${_ME} ls --type document
 HEREDOC
 _ls() {
-  # _print_paddding()
+  # _print_footer()
   #
   # Usage:
-  #   _print_padding <line> <columns> <aligned>
-  _print_padding() {
-    local _padding_line="${1:-}"
-    local _padding_line_length="${#_padding_line}"
-    local _padding_columns="${2:-}"
-    local _padding_centered="${3:-}"
-
-    local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-    if ((_padding_centered)) && ((_padding_amount))
-    then
-      printf "%-${_padding_amount}s" " "
-    fi
+  #   _print_footer
+  _print_foote() {
+    :
   }
 
-  _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
+  # _print_header()
+  #
+  # Usage:
+  #   _print_header <alignment>
+  #
+  # Description:
+  #   Build word-wrapping notebook line. `fold` doesn't account for
+  #   highlighting.
+  #
+  #   Naive version:
+  #
+  #   _notebooks --names \
+  #     | tr '\n' ' ' \
+  #     | fold -s "-w$(tput cols)" \
+  #     && printf "\\n"
+  _print_header() {
+    local _auto_align=1 # auto-align by default.
+    local _centered=0
+    local _justified=0
+    local _line_number=0
+    local _line_hi=
+    local _line_raw=
+    local _output_hi=
+    local _output_raw=
+    local _padding=
+    local _plain=0
+    local _test_line=
 
-  local _args=()
-  local _auto_align=1 # auto-align by default.
-  local _centered=0
-  local _columns
-  _columns="$(tput cols)"
-  local _footer_line_number=0
-  local _header_line_number=0
-  local _justified=0
-  local _limit=30
-  local _maybe_notebook_list=
-  local _notebook_names_raw
-  _notebook_names_raw=($(
-    _notebooks --names --no-color --unarchived --global || :
-  ))
-  local _plain=0
+    while ((${#}))
+    do
+      local __arg="${1:-}"
+      local __val="${2:-}"
 
-  while ((${#}))
-  do
-    local __arg="${1:-}"
-    local __val="${2:-}"
+      case "${__arg}" in
+        --auto-align)
+          _auto_align=1
+          ;;
+        --centered)
+          _centered=1
+          ;;
+        --justified)
+          _justified=1
+          ;;
+        --plain)
+          _plain=1
+          ;;
+      esac
 
-    case "${__arg}" in
-      --auto-align)
-        _auto_align=1
-        ;;
-      --centered)
-        _centered=1
-        ;;
-      --justified)
-        _justified=1
-        ;;
-      --plain)
-        _plain=1
-        ;;
-      -n|--limit)
-        if __option_value_is_present "${__val:-}"
-        then
-          _limit="${__val:-}"
-        fi
-
-        shift
-        ;;
-      -l|-a)
-        : # Ignore accidental ls -l and -a flags due to muscle memory.
-        ;;
-      *)
-        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
-        then
-          _limit="${__arg:-}"
-        else
-          _args+=("${__arg}")
-        fi
-        ;;
-    esac
-
-    shift
-  done
-
-  _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
-
-  if [[ -z "${_args[*]:-}" ]]
-  then
-    # Build word-wrapping notebook line. `fold` doesn't account for
-    # highlighting.
-    #
-    # Naive version:
-    #
-    # _notebooks --names \
-    #   | tr '\n' ' ' \
-    #   | fold -s "-w$(tput cols)" \
-    #   && printf "\\n"
+      shift
+    done
 
     local _separator=
     if ! ((_plain))
@@ -5781,13 +5749,6 @@ _ls() {
       )
     fi
 
-    local _line_raw=
-    local _line_hi=
-    local _output_raw=
-    local _output_hi=
-    local _padding=
-    local _test_line=
-
     for ((i=0;i < "${#_notebook_names_raw[@]}"; i++))
     do
       if [[ -z "${_test_line}" ]]
@@ -5811,7 +5772,7 @@ _ls() {
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
         _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
-        _header_line_number=$((_header_line_number + 1))
+        _line_number=$((_line_number + 1))
 
         # Start the line for the next iteration using the current name.
         _test_line="${_notebook_names_raw[i]}"
@@ -5830,8 +5791,8 @@ _ls() {
 
       if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
       then # end of list
-        if ((_header_line_number))  && ! ((_justified)) &&
-           ((_auto_align))          ||   ((_centered))
+        if ((_line_number))  && ! ((_justified)) &&
+           ((_auto_align))   ||   ((_centered))
         then
           _centered=1
         fi
@@ -5841,32 +5802,100 @@ _ls() {
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
         _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
-        _header_line_number=$((_header_line_number + 1))
+        _line_number=$((_line_number + 1))
       fi
     done
 
+    printf "%b" "${_output_hi}"
+
+    # Use control characters to disable wrapping for long lines.
+    # Source: https://superuser.com/a/189068
+    printf '\033[?7l'
+    if ((_centered))
+    then # print full-width line.
+      _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+    else # print line the length of the first line.
+      _print_line "$(
+        # $_output_raw generates a line 2 characters too long. TODO: Review
+        printf "%s" "${_output_raw}" | sed 's/..$//'
+      )" | tr -d '\n'
+    fi
+    printf "%s" "${_TPUT_SGR0}"
+    printf '\033[?7h'
+    printf '\n'
+  }
+
+
+  # _print_paddding()
+  #
+  # Usage:
+  #   _print_padding <line> <columns> <aligned>
+  _print_padding() {
+    local _padding_line="${1:-}"
+    local _padding_line_length="${#_padding_line}"
+    local _padding_columns="${2:-}"
+    local _padding_centered="${3:-}"
+
+    local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
+    if ((_padding_centered)) && ((_padding_amount))
+    then
+      printf "%-${_padding_amount}s" " "
+    fi
+  }
+
+  _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
+
+  local _args=()
+  local _columns
+  _columns="$(tput cols)"
+  local _footer_line_number=0
+  local _header_line_number=0
+  local _limit=30
+  local _maybe_notebook_list=
+  local _notebook_names_raw
+  _notebook_names_raw=($(
+    _notebooks --names --no-color --unarchived --global || :
+  ))
+
+  while ((${#}))
+  do
+    local __arg="${1:-}"
+    local __val="${2:-}"
+
+    case "${__arg}" in
+      -n|--limit)
+        if __option_value_is_present "${__val:-}"
+        then
+          _limit="${__val:-}"
+        fi
+
+        shift
+        ;;
+      -l|-a)
+        : # Ignore accidental ls -l and -a flags due to muscle memory.
+        ;;
+      *)
+        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
+        then
+          _limit="${__arg:-}"
+        else
+          _args+=("${__arg}")
+        fi
+        ;;
+    esac
+
+    shift
+  done
+
+  _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
+
+  if [[ -z "${_args[*]:-}" ]]
+  then
     while read -r __line
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
-    done < <({
-      printf "%b" "${_output_hi}"
-
-      # Use control characters to disable wrapping for long lines.
-      # Source: https://superuser.com/a/189068
-      printf '\033[?7l'
-      if ((_centered))
-      then # print full-width line.
-        _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-      else # print line the length of the first line.
-        _print_line "$(
-          # $_output_raw generates a line 2 characters too long. TODO: Review
-          printf "%s" "${_output_raw}" | sed 's/..$//'
-        )" | tr -d '\n'
-      fi
-      printf "%s" "${_TPUT_SGR0}"
-      printf '\033[?7h'
-      printf '\n'
-    })
+      _header_line_number=$((_header_line_number + 1))
+    done < <(_print_header "${_args[@]}")
   fi
 
   if ((NB_FOOTER))
