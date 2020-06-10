@@ -9324,7 +9324,7 @@ _nb_main() {
          [[ ! -e "${_NOTEBOOK_PATH}"  ]]
       then
         _git_required
-        _init "${@}"
+        _init
         _ls || true # returns 0 due to empty repository.
         return 0
       fi
