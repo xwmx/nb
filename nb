@@ -2181,7 +2181,7 @@ _less_prompt() {
   if [[ "$(tput cols)" -gt 81 ]]
   then
     _prompt="\
-> scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
+> scroll for more, d / u to jump ↓ / ↑, h for help, or q to quit"
   fi
 
   printf "%s\\n" "${_prompt}"

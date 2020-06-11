@@ -473,8 +473,8 @@ Key               Function
 ---               --------
 mouse scroll      Scroll up / down
 arrow up / down   Scroll one line up / down
-f                 Move forward one page
-b                 Move back one page
+d                 Move down one half window
+u                 Move up one half window
 /<query>          Search for <query>
 n                 Jump to next <query> match
 q                 Quit
@@ -552,8 +552,8 @@ Key               Function
 ---               --------
 mouse scroll      Scroll up / down
 arrow up / down   Scroll one line up / down
-f                 Move forward one page
-b                 Move back one page
+d                 Move down one half window
+u                 Move up one half window
 /<query>          Search for <query>
 n                 Jump to next <query> match
 q                 Quit
