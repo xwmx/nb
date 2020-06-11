@@ -9033,11 +9033,13 @@ Can't show archives. Export archive and expand to edit.\\n"
         _highlight_syntax_if_available "${_target_path}"
       fi
     else # `show`
-      < "${_target_path}" sed 's/^- /-🦄/g' \
-        | sed 's/^\* /\*🦄/g'               \
+      # NOTE: Temp character is U+241F (unit separator)
+      # https://graphemica.com/%E2%90%9F
+      < "${_target_path}" sed 's/^- /-␟/g'  \
+        | sed 's/^\* /\*␟/g'                \
         | fold -s -w "$(tput cols)"         \
-        | sed 's/^-🦄/- /g'                 \
-        | sed 's/^\*🦄/\* /g'               \
+        | sed 's/^-␟/- /g'                  \
+        | sed 's/^\*␟/\* /g'                \
         | _highlight_syntax_if_available    \
         | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
           then
