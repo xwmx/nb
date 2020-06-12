@@ -3893,6 +3893,7 @@ Examples:
   ${_ME} delete 3
   ${_ME} delete example.md
   ${_ME} delete 'A Document Title'
+  ${_ME} 3 delete --force
 
 Shortcut Alias: \`d\`
 HEREDOC
@@ -4003,8 +4004,7 @@ _alias_subcommand "delete" "d"
 
 desc "edit" <<HEREDOC
 Usage:
-  ${_ME} edit (<id> | <filename> | <path> | <title>)
-          [-e <editor> | --editor <editor>]
+  ${_ME} edit (<id> | <filename> | <path> | <title>) [(-e | --editor) <editor>]
 
 Options:
   -e, --editor <editor>  Edit the note with <editor>, overriding the editor
@@ -4023,6 +4023,7 @@ Examples:
   ${_ME} edit example.md
   ${_ME} edit 'A Document Title'
   echo "Content to append." | ${_ME} edit 1
+  ${_ME} 3 edit
 
 Shortcut Alias: \`e\`
 HEREDOC
@@ -4498,6 +4499,7 @@ Description:
 Examples:
   ${_ME} history
   ${_ME} history example.md
+  ${_ME} 3 history
 HEREDOC
 _history() {
   cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_history() \`cd\` failed.\\n"
@@ -7109,6 +7111,11 @@ Description:
   your system's primary web browser. When the note is in a text format or any
   other file type, \`open\` is the equivalent of \`edit\`.
 
+Examples:
+  ${_ME} open 3
+  ${_ME} open example.bookmark.md
+  ${_ME} 3 open
+
 See also:
   ${_ME} help bookmark
   ${_ME} help edit
@@ -7135,6 +7142,11 @@ Description:
   When the note is a bookmark, view the bookmarked page in your terminal web
   browser. When the note is in a text format or any other file type, \`peek\`
   is the equivalent of \`show\`.
+
+Examples:
+  ${_ME} peek 3
+  ${_ME} peek example.bookmark.md
+  ${_ME} 3 peek
 
 See also:
   ${_ME} help bookmark
@@ -8717,6 +8729,7 @@ Examples:
   ${_ME} show 1
   ${_ME} show example.md --render
   ${_ME} show 'A Document Title' --dump --no-color
+  ${_ME} 1 show
 
 Shortcut Alias: \`s\`
 HEREDOC

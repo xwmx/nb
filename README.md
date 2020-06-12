@@ -501,6 +501,14 @@ nb edit example.md
 nb edit 'A Document Title'
 ```
 
+`edit` and other subcommands that take an identifier can be called with the
+identifier and subcommand name reversed:
+
+```bash
+# edit note by id
+nb 3 edit
+```
+
 `nb edit` can also receive piped content, which it will append to the
 specified note:
 
@@ -525,6 +533,9 @@ nb e example.md
 
 # edit note by title
 nb e 'A Document Title'
+
+# edit note by id, alternative
+nb 3 e
 ```
 
 #### Viewing Notes
@@ -540,6 +551,9 @@ nb show example.md
 
 # show note by title
 nb show 'A Document Title'
+
+# show note by id, alternative
+nb 3 show
 ```
 
 By default, `nb show` will open the note in
@@ -604,6 +618,9 @@ nb s example.md
 
 # show note by title
 nb s 'A Document Title'
+
+# show note by id, alternative
+nb 3 s
 ```
 
 #### Deleting Notes
@@ -620,6 +637,9 @@ nb delete example.md
 
 # delete note by title
 nb delete 'A Document Title'
+
+# delete note by id, alternative
+nb 3 delete
 ```
 
 By default, `nb delete` will display a confirmation prompt. To skip, use the
@@ -642,6 +662,9 @@ nb d example.md
 
 # delete note by title
 nb d 'A Document Title'
+
+# delete note by id, alternative
+nb 3 d
 ```
 
 ### 🔖 Bookmarks
@@ -1029,6 +1052,9 @@ title:
 ```bash
 # edit note 12 in the notebook named 'example'
 nb edit example:12
+
+# edit note 12 in the notebook named 'example', alternative
+nb example:12 edit
 ```
 
 When a notebook name is specified without a command, `nb` runs `nb ls` in the
@@ -2014,6 +2040,7 @@ Examples:
   nb delete 3
   nb delete example.md
   nb delete 'A Document Title'
+  nb 3 delete --force
 
 Shortcut Alias: `d`
 ```
@@ -2022,8 +2049,7 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
-  nb edit (<id> | <filename> | <path> | <title>)
-          [-e <editor> | --editor <editor>]
+  nb edit (<id> | <filename> | <path> | <title>) [(-e | --editor) <editor>]
 
 Options:
   -e, --editor <editor>  Edit the note with <editor>, overriding the editor
@@ -2041,6 +2067,7 @@ Examples:
   nb edit example.md
   nb edit 'A Document Title'
   echo "Content to append." | nb edit 1
+  nb 3 edit
 
 Shortcut Alias: `e`
 ```
@@ -2138,6 +2165,7 @@ Description:
 Examples:
   nb history
   nb history example.md
+  nb 3 history
 ```
 
 #### `import`
@@ -2403,6 +2431,11 @@ Description:
   your system's primary web browser. When the note is in a text format or any
   other file type, `open` is the equivalent of `edit`.
 
+Examples:
+  nb open 3
+  nb open example.bookmark.md
+  nb 3 open
+
 See also:
   nb help bookmark
   nb help edit
@@ -2420,6 +2453,11 @@ Description:
   When the note is a bookmark, view the bookmarked page in your terminal web
   browser. When the note is in a text format or any other file type, `peek`
   is the equivalent of `show`.
+
+Examples:
+  nb peek 3
+  nb peek example.bookmark.md
+  nb 3 peek
 
 See also:
   nb help bookmark
@@ -2748,6 +2786,7 @@ Examples:
   nb show 1
   nb show example.md --render
   nb show 'A Document Title' --dump --no-color
+  nb 1 show
 
 Shortcut Alias: `s`
 ```
