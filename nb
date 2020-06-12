@@ -9322,99 +9322,6 @@ _version() {
 }
 
 ###############################################################################
-# _nb_main()
-###############################################################################
-
-# _nb_main()
-#
-# Description:
-#   Call the appropriate subcommand.
-_nb_main() {
-  _debug printf "_nb_main() >> start\\n"
-  _debug printf "_nb_main() \${@}: '%s'\\n" "${@}"
-  _debug printf "_nb_main() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
-
-  # Set `$_SUBCOMMAND` if it's still blank.
-  if [[ -z "${_SUBCOMMAND:-}" ]]
-  then
-    _SUBCOMMAND="ls"
-  fi
-
-  if [[ -n "${_SCOPE}" ]]
-  then
-    _SCOPED=1
-    if [[ "${_SCOPE}" == "local"          ]] &&
-       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
-    then
-      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-    else
-      _NOTEBOOK_PATH="${NB_DIR}/${_SCOPE}"
-    fi
-  else
-    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
-       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}"  ]]
-    then
-      _SCOPE="local"
-    else
-      _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
-    fi
-  fi
-
-  case "${_SUBCOMMAND}" in
-    init|sync)
-      _git_required
-      "_${_SUBCOMMAND}" "${@}"
-      ;;
-    commands|completions|env|help|settings|update|version)
-      "_${_SUBCOMMAND}" "${@}"
-      ;;
-    *)
-      _git_required
-
-      # Call `_init()` if configuration hasn't been initialized.
-      if [[ ! -e "${NB_DIR}"          ]] ||
-         [[ ! -e "${_NOTEBOOK_PATH}"  ]]
-      then
-        _git_required
-        _init
-        _ls || true # returns 0 due to empty repository.
-        return 0
-      fi
-
-      _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
-      _debug printf \
-        "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}"
-
-      if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
-      then
-        if _git_index_is_dirty
-        then
-          _index reconcile
-
-          if _git_should_autosync
-          then
-            _debug \
-              printf "_nb_main(): _git_index_is_dirty && ((NB_AUTO_SYNC))\\n"
-            "${_MY_PATH}" sync
-          else
-            _debug \
-              printf "_nb_main(): _git_index_is_dirty && ! ((NB_AUTO_SYNC))\\n"
-            _git_checkpoint "[nb] Commit" --spinner
-          fi
-        elif _git_should_autosync
-        then
-          _debug \
-            printf "_nb_main(): ! _git_index_is_dirty\\n"
-          ("${_MY_PATH}" sync &>/dev/null) &
-        fi
-      fi
-
-      "_${_SUBCOMMAND}" "${@}"
-      ;;
-  esac
-}
-
-###############################################################################
 # Program Option Parsing
 ###############################################################################
 
@@ -9815,15 +9722,98 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
 #   Primary entry point for the program logic. Call this function at the end
 #   of the script after everything has been defined.
 _main() {
-  if (("${_PRINT_HELP}"))
+  _debug printf "_main() >> start\\n"
+  _debug printf "_main() \${@}: '%s'\\n" "${@}"
+  _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
+
+  if ((_PRINT_HELP))
   then
     _help "${_SUBCOMMAND:-}"
-  elif (("${_PRINT_VERSION}"))
+    return 0
+  elif ((_PRINT_VERSION))
   then
     _version
-  else
-    _nb_main "${_ARGUMENTS[@]:-}"
+    return 0
   fi
+
+  # Set `$_SUBCOMMAND` if it's still blank.
+  if [[ -z "${_SUBCOMMAND:-}" ]]
+  then
+    _SUBCOMMAND="ls"
+  fi
+
+  if [[ -n "${_SCOPE}" ]]
+  then
+    _SCOPED=1
+    if [[ "${_SCOPE}" == "local"          ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+    then
+      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+    else
+      _NOTEBOOK_PATH="${NB_DIR}/${_SCOPE}"
+    fi
+  else
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
+       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}"  ]]
+    then
+      _SCOPE="local"
+    else
+      _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+    fi
+  fi
+
+  case "${_SUBCOMMAND}" in
+    init|sync)
+      _git_required
+      "_${_SUBCOMMAND}" "${@}"
+      ;;
+    commands|completions|env|help|settings|update|version)
+      "_${_SUBCOMMAND}" "${@}"
+      ;;
+    *)
+      _git_required
+
+      # Call `_init()` if configuration hasn't been initialized.
+      if [[ ! -e "${NB_DIR}"          ]] ||
+         [[ ! -e "${_NOTEBOOK_PATH}"  ]]
+      then
+        _git_required
+        _init
+        _ls || true # returns 0 due to empty repository.
+        return 0
+      fi
+
+      _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
+      _debug printf \
+        "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}"
+
+      if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
+      then
+        if _git_index_is_dirty
+        then
+          _index reconcile
+
+          if _git_should_autosync
+          then
+            _debug \
+              printf "_main(): _git_index_is_dirty && ((NB_AUTO_SYNC))\\n"
+            "${_MY_PATH}" sync
+          else
+            _debug \
+              printf "_main(): _git_index_is_dirty && ! ((NB_AUTO_SYNC))\\n"
+            _git_checkpoint "[nb] Commit" --spinner
+          fi
+        elif _git_should_autosync
+        then
+          _debug \
+            printf "_main(): ! _git_index_is_dirty\\n"
+          ("${_MY_PATH}" sync &>/dev/null) &
+        fi
+      fi
+
+      "_${_SUBCOMMAND}" "${@}"
+      ;;
+  esac
 }
 
-_main "${@:-}"
+_main "${_ARGUMENTS[@]:-}"
