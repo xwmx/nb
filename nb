@@ -9783,8 +9783,8 @@ _main() {
       fi
 
       _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
-      _debug printf \
-        "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}"
+      _debug printf "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" \
+        "${_GIT_SUBCOMMANDS_PATTERN}"
 
       if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
       then
@@ -9804,8 +9804,7 @@ _main() {
           fi
         elif _git_should_autosync
         then
-          _debug \
-            printf "_main(): ! _git_index_is_dirty\\n"
+          _debug printf "_main(): ! _git_index_is_dirty\\n"
           ("${_MY_PATH}" sync &>/dev/null) &
         fi
       fi
