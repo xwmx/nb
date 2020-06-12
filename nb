@@ -225,7 +225,7 @@ HEREDOC
 __DEBUG_COUNTER=0
 __DEBUG_START_TIME=
 _debug() {
-  # Usage; __debug_get_timestamp
+  # Usage: __debug_get_timestamp
   __debug_get_timestamp() {
     if hash "gdate" 2>/dev/null
     then
@@ -582,7 +582,7 @@ export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
 # Usage:
 #   _dim <string>
 #
-# Print the given scring with the dim color.
+# Print the given string with the dim color.
 _dim() {
   printf "%s%s%s%s"     \
     "${_TPUT_SGR0}"     \
