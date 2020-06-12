@@ -47,12 +47,27 @@ _setup_scope() {
   }
 
   run "${_NB}" one:invalid
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[2]}" =~ "first" ]]
+  [[ ${status} -eq 1                ]]
+  [[ "${lines[0]}" =~ Not\ found    ]]
+  [[ "${lines[0]}" =~ one\:invalid  ]]
+}
+
+@test "\`nb one:1\` exits with 0 and scoped \`ls\` output." {
+  {
+    _setup_scope &>/dev/null
+  }
+
+  run "${_NB}" one:1
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ "first" ]]
 }
 
 # `nb <name>:` ################################################################

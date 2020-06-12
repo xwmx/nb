@@ -6124,7 +6124,13 @@ _ls() {
           _ls "${_args[@]:1}"
         return 0
       else
-        _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+        if ((_SCOPED))
+        then
+          _exit_1 printf "Not found: %s\\n" \
+            "$(_highlight "${_SCOPE}:${_args[0]:-}")"
+        else
+          _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+        fi
       fi
     }
 
@@ -9729,6 +9735,8 @@ do
             if _is_valid_subcommand "${__parts[1]:-}"
             then
               _SUBCOMMAND="${__parts[1]:-}"
+            else
+              _ARGUMENTS+=("${__parts[1]:-}")
             fi
           elif _string_is_url "${__parts[0]}"
           then
