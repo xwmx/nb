@@ -9777,7 +9777,6 @@ _main() {
       if [[ ! -e "${NB_DIR}"          ]] ||
          [[ ! -e "${_NOTEBOOK_PATH}"  ]]
       then
-        _git_required
         _init
         _ls || true # returns 0 due to empty repository.
         return 0
