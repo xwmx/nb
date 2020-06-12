@@ -1359,15 +1359,26 @@ _file_is_image() {
 # Returns:
 #   0  If file is text.
 #   1  if not.
+#
+# Resources:
+#   - Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
   bib
   html
   latex
-  md
   markdown
+  md
+  mdown
+  mdwn
+  mdtxt
+  mdtext
+  mkd
+  mkdn
   org
+  Rmd
   rst
   tex
+  text
   textile
   txt
   xml
