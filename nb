@@ -9405,15 +9405,11 @@ unset options
 # Parse Options ###############################################################
 
 # Initialize program option variables.
-_PRINT_HELP=0
-_PRINT_VERSION=0
-_USE_DEBUG=0
-
-# Initialize additional expected option variables.
-_SUBCOMMAND=
+_ARGUMENTS=()
 _SCOPE=
 _SCOPED=0
-_ARGUMENTS=()
+_SUBCOMMAND=
+_USE_DEBUG=0
 
 # $_SUBCOMMANDS
 #
@@ -9613,11 +9609,16 @@ do
   shift
   case "${__opt}" in
     -h|--help)
-      if [[ "${_SUBCOMMAND}" == "git" ]]
+      if [[ "${_SUBCOMMAND:-}" == "git" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
-        _PRINT_HELP=1
+        if [[ -n "${_SUBCOMMAND:-}" ]]
+        then
+          _ARGUMENTS+=("${_SUBCOMMAND}")
+        fi
+
+        _SUBCOMMAND="help"
       fi
       ;;
     --debug)
@@ -9625,11 +9626,11 @@ do
       _debug printf "debug start...\\n"
       ;;
     --version)
-      if [[ "${_SUBCOMMAND}" == "git" ]]
+      if [[ "${_SUBCOMMAND:-}" == "git" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
-        _PRINT_VERSION=1
+        _SUBCOMMAND="version"
       fi
       ;;
     -i|--interactive)
@@ -9725,16 +9726,6 @@ _main() {
   _debug printf "_main() >> start\\n"
   _debug printf "_main() \${@}: '%s'\\n" "${@}"
   _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
-
-  if ((_PRINT_HELP))
-  then
-    _help "${_SUBCOMMAND:-}"
-    return 0
-  elif ((_PRINT_VERSION))
-  then
-    _version
-    return 0
-  fi
 
   # Set `$_SUBCOMMAND` if it's still blank.
   if [[ -z "${_SUBCOMMAND:-}" ]]
