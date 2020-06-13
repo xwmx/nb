@@ -437,6 +437,13 @@ export NB_FOOTER="${NB_FOOTER:-1}"
 # Colors
 ###############################################################################
 
+# $_COLOR_ENABLED
+#
+# Default: 1
+#
+# Supported Values: '0' '1'
+export _COLOR_ENABLED="${_COLOR_ENABLED:-1}"
+
 # $NB_COLOR_THEME
 #
 # Default: nb
@@ -598,6 +605,12 @@ export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
 #
 # Print the given string with the dim color.
 _dim() {
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
+
   printf "%s%s%s%s"     \
     "${_TPUT_SGR0}"     \
     "${_TPUT_SETAF_8}"  \
@@ -619,7 +632,11 @@ export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
 export _TPUT_COLOR_PRIMARY=
 _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
 _highlight() {
-  local _input="${1:-}"
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
 
   if [[ "${2:-}" == "--underline" ]]
   then
@@ -627,13 +644,13 @@ _highlight() {
       "${_TPUT_SGR0}"           \
       "${_TPUT_SMUL}"           \
       "${_TPUT_COLOR_PRIMARY}"  \
-      "${_input}"               \
+      "${1:-}"                  \
       "${_TPUT_SGR0}"
   else
     printf "%s%s%s%s\\n"        \
       "${_TPUT_SGR0}"           \
       "${_TPUT_COLOR_PRIMARY}"  \
-      "${_input}"               \
+      "${1:-}"                  \
       "${_TPUT_SGR0}"
   fi
 }
@@ -648,9 +665,13 @@ _highlight() {
 export _TPUT_COLOR_SECONDARY=
 _TPUT_COLOR_SECONDARY="$(tput setaf "${NB_COLOR_SECONDARY}")"
 _highlight_secondary() {
-  local _input="${1:-}"
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
 
-  printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${_input}" "${_TPUT_SGR0}"
+  printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
 }
 
 # _id_brackets_color()
@@ -661,6 +682,12 @@ _highlight_secondary() {
 # Description:
 #   Print <id> with surrounding color brackets.
 _id_brackets_color() {
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
+
   printf \
     "%s%s[%s%s%s]%s"          \
     "${_TPUT_SGR0}"           \
@@ -2626,7 +2653,7 @@ Usage:
   ${_ME} ls [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--no-color] [--paths] [--unarchived]
+               [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks current [--path]
@@ -2647,7 +2674,7 @@ Usage:
   ${_ME} settings (get | show | unset) (<number> | <name>)
   ${_ME} settings set (<number> | <name>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
   ${_ME} show <notebook>
   ${_ME} sync [-a | --all]
@@ -2655,6 +2682,7 @@ Usage:
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
   ${_ME} -h | --help | help [<subcommand> | --readme]
+  ${_ME} --no-color
   ${_ME} --version | version
 
 Help:
@@ -5195,8 +5223,8 @@ _list() {
 
   local _excerpt_length=3
   local _limit=
+  local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
-  local _no_color=0
   local _no_id=0
   local _print_excerpt=0
   local _print_indicators=1
@@ -5224,11 +5252,11 @@ _list() {
       --filenames|--filename)
         _list_filenames=1
         ;;
+      --no-color|--nocolor)
+        _list_color_enabled=0
+        ;;
       --no-id|--noid|--no-ids|--no-index|--noindex)
         _no_id=1
-        ;;
-      --no-color|--nocolor)
-        _no_color=1
         ;;
       --no-indicators|--noindicators|--no-indicator|--noindicator)
         _print_indicators=0
@@ -5532,11 +5560,9 @@ HEREDOC
         _print_item_color="${_list_item_id_color}"
       fi
 
-      if ! {
-        ((_list_filenames)) ||
-        ((_no_id))          ||
-        ((_no_color))
-      }
+      if ((_list_color_enabled))  &&
+         ! ((_list_filenames))    &&
+         ! ((_no_id))
       then
         # Calculate apparent length of the list item string, with byte and
         # character calculations for handling unicode characters.
@@ -5567,12 +5593,10 @@ HEREDOC
         fi
       fi
 
-      if ! {
-        ((_print_excerpt))  ||
-        ((_list_filenames)) ||
-        ((_no_id))          ||
-        ((_no_color))
-      }
+      if ((_list_color_enabled))  &&
+         ! ((_print_excerpt))     &&
+         ! ((_list_filenames))    &&
+         ! ((_no_id))
       then
         if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
            {
@@ -5585,19 +5609,17 @@ HEREDOC
         fi
       fi
 
-      if ((_no_color))
+      if ((_list_color_enabled))
       then
-        printf "%s" "${_print_item}"
-      else
         printf "%s" "${_print_item_color}"
+      else
+        printf "%s" "${_print_item}"
       fi
 
-      if ! {
-        ((_print_excerpt))  ||
-        ((_list_filenames)) ||
-        ((_no_id))          ||
-        ((_no_color))
-      }
+      if ((_list_color_enabled))  &&
+         ! ((_print_excerpt))     &&
+         ! ((_list_filenames))    &&
+         ! ((_no_id))
       then
         if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
            {
@@ -5751,6 +5773,7 @@ _ls() {
       "${_ME} help"
     )
 
+
     local _commands_hi=(
       "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
         "$(_highlight_secondary "${_commands_raw[1]}")"
@@ -5764,6 +5787,7 @@ _ls() {
         "$(_highlight_secondary "${_commands_raw[9]}")"
         "$(_highlight_secondary "${_commands_raw[10]}")"
     )
+
 
     printf '\033[?7l'
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
@@ -6295,7 +6319,7 @@ _alias_subcommand "move" "mv"
 desc "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--no-color] [--paths] [--unarchived]
+               [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks current [--path]
@@ -6311,7 +6335,6 @@ Options:
   --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
-  --no-color    Print names without highlighting the current notebook.
   --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
@@ -6672,13 +6695,13 @@ Please type $(_highlight "${_name}") to confirm: " __response
   #
   # Usage:
   #   _notebooks_list [<name>] [--archived] [--local] [--global] [--names]
-  #                   [--no-color] [--paths] [--unarchived]
+  #                   [--paths] [--unarchived]
   _notebooks_list() {
     local _counter=0
     local _query_names=()
+    local _notebook_color_enabled="${_COLOR_ENABLED}"
     local _notebook_names=()
     local _notebook_paths=()
-    local _no_color=0
     local _only_archived=0
     local _only_global=0
     local _only_local=0
@@ -6703,8 +6726,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
         --names)
           _only_names=1
           ;;
-        --nocolor|--no-color)
-          _no_color=1
+        --no-color|--nocolor)
+          _notebook_color_enabled=0
           ;;
         --paths)
           _only_paths=1
@@ -6780,11 +6803,11 @@ Please type $(_highlight "${_name}") to confirm: " __response
             if ((_only_paths))
             then
               _notebook_line="${_notebook_paths[i]}"
-            elif ((_no_color)) || [[ "${_SCOPE}" != "local" ]]
+            elif ((_notebook_color_enabled)) && [[ "${_SCOPE}" == "local" ]]
             then
-              _notebook_line="local"
-            else
               _notebook_line="$(_highlight "local" --underline)"
+            else
+              _notebook_line="local"
             fi
           fi
         elif ((_only_local))
@@ -6799,7 +6822,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           if ((_only_paths))
           then
             _notebook_line="${_notebook_paths[i]}"
-          elif ((_no_color))
+          elif ! ((_notebook_color_enabled))
           then
             _notebook_line="${_notebook_names[i]}"
           else
@@ -7540,13 +7563,13 @@ _search() {
   _debug printf "_search() \${@}: '%s'\\n" "${@}"
 
   local _all=0
-  local _color=1
   local _last_path=
   local _only_list=0
   local _max_columns="2000"
   local _print_paths=0
   local _query=
   local _search_args=()
+  local _search_color_enabled="${_COLOR_ENABLED}"
   local _sort=0
   local _type=
   local _use_grep=0
@@ -7564,7 +7587,7 @@ _search() {
         _only_list=1
         ;;
       --no-color|--nocolor)
-        _color=0
+        _search_color_enabled=0
         ;;
       --path|--paths)
         _print_paths=1
@@ -7616,7 +7639,7 @@ _search() {
     do
       if _command_exists "rg" && ! ((_use_grep))
       then
-        if ((_color))
+        if ((_search_color_enabled))
         then
           _search_args+=("--color" "always")
         else
@@ -7640,7 +7663,7 @@ _search() {
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "g" && ! ((_use_grep))
       then
-        if ((_color))
+        if ((_search_color_enabled))
         then
           _search_args+=("--color")
           _search_args+=("--color-line-number"  "32")
@@ -7666,7 +7689,7 @@ _search() {
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
-        if ((_color))
+        if ((_search_color_enabled))
         then
           _search_args+=("--color")
           _search_args+=("--color-lineno=bold green")
@@ -7686,7 +7709,7 @@ _search() {
           "${_search_args[@]}"  \
             || return 0 # Don't fail out within a single scope.
       else # fall back to POSIX grep.
-        if ((_color))
+        if ((_search_color_enabled))
         then
           _search_args+=("--color=always")
         else
@@ -8682,7 +8705,7 @@ HEREDOC
 
 desc "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
   ${_ME} show <notebook>
 
@@ -8691,7 +8714,6 @@ Options:
   --filename  Print the filename of the item.
   --id        Print the id number of the item.
   --path      Print the full path of the item.
-  --no-color  When used with \`--dump\`, print the note without highlighting.
   --render    Use \`pandoc\` [1] to render the file to HTML and display with
               \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is not
               available, \`--render\` is ignored.
@@ -8743,10 +8765,10 @@ _show() {
   local _password=
   local _print_filename=0
   local _print_id=0
-  local _print_no_color=0
   local _print_path=0
   local _render=0
   local _selection=
+  local _show_color_enabled="${_COLOR_ENABLED}"
   local _print_title=0
   local _tool=
 
@@ -8768,12 +8790,12 @@ _show() {
       --id|--index)
         _print_id=1
         ;;
+      --no-color|--nocolor|--raw)
+        _show_color_enabled=0
+        ;;
       --password)
         _password="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
-        ;;
-      --raw|--no-color|--nocolor)
-        _print_no_color=1
         ;;
       --render|-r)
         _render=1
@@ -9070,11 +9092,11 @@ Can't show archives. Export archive and expand to edit.\\n"
   else # default
     if ((_dump))
     then # `show --dump [--no-color]`
-      if ((_print_no_color))
-      then # `show --dump --no-color`
-        cat "${_target_path}"
-      else # `show --dump`
+      if ((_show_color_enabled))
+      then # `show --dump`
         _highlight_syntax_if_available "${_target_path}"
+      else # `show --dump --no-color`
+        cat "${_target_path}"
       fi
     else # `show`
       # NOTE: Temp character is U+241F (unit separator)
@@ -9624,6 +9646,9 @@ do
     --debug)
       _USE_DEBUG=1
       _debug printf "debug start...\\n"
+      ;;
+    --no-color|--nocolor)
+      _COLOR_ENABLED=0
       ;;
     --version)
       if [[ "${_SUBCOMMAND:-}" == "git" ]]
