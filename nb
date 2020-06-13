@@ -2160,7 +2160,7 @@ _git_should_autosync() {
 # References:
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if hash "pygmentize" 2>/dev/null
+  if ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=friendly")
     local _lexer=
