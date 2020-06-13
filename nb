@@ -1136,7 +1136,8 @@ File must be decrypted before editing.\\n"
 Can't edit archives. Export archive and expand to edit.\\n"
   fi
 
-  if ! _file_is_text "${_file_path}"
+  if ! _file_is_text "${_file_path}" &&
+     [[ ! -d "${_file_path}" ]]
   then
     if _command_exists "xdg-open"
     then
