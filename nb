@@ -109,6 +109,11 @@ _REPO="xwmx/nb"
 # The base URL for raw files.
 _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/master"
 
+# $_LANG & $_LC_ALL
+#
+# The original values of $LANG and $LC_ALL
+_LANG="${LANG}" _LC_ALL="${LC_ALL}"
+
 ###############################################################################
 # Configuration File
 ###############################################################################
@@ -1244,7 +1249,7 @@ _file_is_archive() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  _contains "${_file_type}" "${_ARCHIVE_FILE_EXTENSIONS[@]}"
+  LC_ALL=C _contains "${_file_type}" "${_ARCHIVE_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_audio()
@@ -1268,7 +1273,7 @@ _file_is_audio() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  _contains "${_file_type}" "${_AUDIO_FILE_EXTENSIONS[@]}"
+  LC_ALL=C _contains "${_file_type}" "${_AUDIO_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_bookmark()
@@ -1310,7 +1315,7 @@ _file_is_document() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  _contains "${_file_type}" "${_DOCUMENT_FILE_EXTENSIONS[@]}"
+  LC_ALL=C _contains "${_file_type}" "${_DOCUMENT_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_encrypted()
@@ -1329,7 +1334,7 @@ _file_is_encrypted() {
   local _file_type="${_file_path##*.}"
 
   # `file` with 'soft' test is slow, so avoid calling it.
-  _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}" ||
+  LC_ALL=C _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}" ||
     {
       ! _file_is_text     "${_file_path:-}" &&
       ! _file_is_image    "${_file_path:-}" &&
@@ -1375,7 +1380,7 @@ _file_is_image() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  _contains "${_file_type}" "${_IMAGE_FILE_EXTENSIONS[@]}"
+  LC_ALL=C _contains "${_file_type}" "${_IMAGE_FILE_EXTENSIONS[@]}"
 }
 
 # _file_is_text()
@@ -1415,7 +1420,7 @@ _file_is_text() {
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
+  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
     {
       ! _file_is_image    "${_file_path:-}" &&
       ! _file_is_document "${_file_path:-}" &&
@@ -1461,7 +1466,7 @@ _file_is_video() {
   local _file_path="${1:-}"
   local _file_type="${_file_path##*.}"
 
-  _contains "${_file_type}" "${_VIDEO_FILE_EXTENSIONS[@]}"
+  LC_ALL=C _contains "${_file_type}" "${_VIDEO_FILE_EXTENSIONS[@]}"
 }
 
 # _get_first_line()
@@ -5568,9 +5573,6 @@ HEREDOC
         # character calculations for handling unicode characters.
         #
         # More info: https://stackoverflow.com/a/31009961
-        local _original_lang="${LANG}"
-        local _original_lc_all="${LC_ALL}"
-
         local _item_line_length_chars=
         _item_line_length_chars="${#_print_item}"
 
@@ -5579,7 +5581,7 @@ HEREDOC
         local _item_line_length_bytes=
         _item_line_length_bytes="${#_print_item}"
 
-        LANG="${_original_lang}" LC_ALL="${_original_lc_all}"
+        LANG="${_LANG}" LC_ALL="${_LC_ALL}"
 
         local _item_line_length_diff=
         _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length_chars)/3))
