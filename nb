@@ -3149,7 +3149,7 @@ _bookmark() {
       -e|--encrypt|--encrypted)
         _encrypt=1
         ;;
-      --excerpt)
+      --excerpt|--quote|-q)
         _excerpt="$(__option_get_value "${__arg}" "${__val:-}")"
         ;;
       -f|--filename)
