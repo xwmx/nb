@@ -8880,9 +8880,7 @@ _show() {
 
   if ((_print_id))
   then
-    local _id
-    _id="$(_index get_id "${_basename}")"
-    printf "%s\\n" "${_id}"
+    printf "%s\\n" "$(_index get_id "${_basename}")"
     return 0
   fi
 
