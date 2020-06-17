@@ -2637,8 +2637,8 @@ Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [--raw-content] [--related <url>]... [--skip-content]
-              [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3019,8 +3019,8 @@ Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [--raw-content] [--related <url>]... [--skip-content]
-              [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3033,6 +3033,8 @@ Options:
   -f, --filename <filename>  The filename for the bookmark. It is recommended
                              to omit the extension so the default bookmark
                              extension is used.
+  -q, --quote <quote>        A quote or excerpt from the saved page.
+                             Alias: \`--excerpt\`
   --raw-content              Save the page content as HTML.
   --related <url>            A URL for a page related to the bookmarked page.
                              Multiple \`--related\` flags can be used in a
@@ -3075,10 +3077,11 @@ Examples:
   ${_ME} bookmark https://example.com
   ${_ME} bookmark https://example.com --encrypt
   ${_ME} bookmark https://example.com --tags example,sample,demo
-  ${_ME} bookmark https://example.com/about -c 'Example comment.'
+  ${_ME} bookmark https://example.com/about -c "Example comment."
   ${_ME} bookmark https://example.com/faqs -f example-filename
+  ${_ME} bookmark https://example.com --quote "Example quote or excerpt."
   ${_ME} bookmark list
-  ${_ME} bookmark search 'example query'
+  ${_ME} bookmark search "example query"
   ${_ME} bookmark open 5
 
 Shortcut Alias: \`b\`

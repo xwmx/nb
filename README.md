@@ -1690,8 +1690,8 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [--raw-content] [--related <url>]... [--skip-content]
-              [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1812,8 +1812,8 @@ Usage:
   bookmark [<list options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [--raw-content] [--related <url>]... [--skip-content]
-              [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1826,6 +1826,8 @@ Options:
   -f, --filename <filename>  The filename for the bookmark. It is recommended
                              to omit the extension so the default bookmark
                              extension is used.
+  -q, --quote <quote>        A quote or excerpt from the saved page.
+                             Alias: `--excerpt`
   --raw-content              Save the page content as HTML.
   --related <url>            A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
@@ -1867,10 +1869,11 @@ Examples:
   bookmark https://example.com
   bookmark https://example.com --encrypt
   bookmark https://example.com --tags example,sample,demo
-  bookmark https://example.com/about -c 'Example comment.'
+  bookmark https://example.com/about -c "Example comment."
   bookmark https://example.com/faqs -f example-filename
+  bookmark https://example.com --quote "Example quote or excerpt."
   bookmark list
-  bookmark search 'example query'
+  bookmark search "example query"
   bookmark open 5
 
 ------------------------------------------
@@ -1936,8 +1939,8 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [--raw-content] [--related <url>]... [--skip-content]
-              [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -1950,6 +1953,8 @@ Options:
   -f, --filename <filename>  The filename for the bookmark. It is recommended
                              to omit the extension so the default bookmark
                              extension is used.
+  -q, --quote <quote>        A quote or excerpt from the saved page.
+                             Alias: `--excerpt`
   --raw-content              Save the page content as HTML.
   --related <url>            A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
@@ -1992,10 +1997,11 @@ Examples:
   nb bookmark https://example.com
   nb bookmark https://example.com --encrypt
   nb bookmark https://example.com --tags example,sample,demo
-  nb bookmark https://example.com/about -c 'Example comment.'
+  nb bookmark https://example.com/about -c "Example comment."
   nb bookmark https://example.com/faqs -f example-filename
+  nb bookmark https://example.com --quote "Example quote or excerpt."
   nb bookmark list
-  nb bookmark search 'example query'
+  nb bookmark search "example query"
   nb bookmark open 5
 
 Shortcut Alias: `b`
