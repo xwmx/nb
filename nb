@@ -3551,7 +3551,7 @@ HEREDOC
 
   if [[ -n "${_excerpt}" ]]
   then
-    _bookmark_content+="${_NEWLINE}## Excerpt${_NEWLINE}"
+    _bookmark_content+="${_NEWLINE}## Quote${_NEWLINE}"
 
     local _counter=0
 

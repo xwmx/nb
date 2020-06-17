@@ -345,16 +345,16 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-# --excerpt option ############################################################
+# --quote option ##############################################################
 
-@test "\`bookmark\` with --excerpt option creates new note with comment." {
+@test "\`bookmark\` with --quote option creates new note with comment." {
   {
     run "${_NB}" init
   }
 
-  run "${_NB}" bookmark "${_BOOKMARK_URL}" --excerpt "Excerpt line 1.
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --quote "Quote line 1.
 
-Excerpt line 2."
+Quote line 2."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -373,11 +373,11 @@ Excerpt line 2."
 
 Example description.
 
-## Excerpt
+## Quote
 
-> Excerpt line 1.
+> Quote line 1.
 >
-> Excerpt line 2.
+> Quote line 2.
 
 ## Page Content
 
