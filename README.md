@@ -707,6 +707,41 @@ permission.
 text search with `nb search` and `nb bookmark search`. When `pandoc` is
 installed, the HTML page content will be converted to Markdown.
 
+In addition to caching the page content, you can also highlight an excerpt
+from the page using the `-q` / `--quote` option:
+
+```bash
+nb https://example.com --quote "Example quote line one.
+
+Example quote line two."
+```
+```markdown
+# Example Domain (example.com)
+
+<https://example.com>
+
+## Description
+
+Example meta description.
+
+## Quote
+
+> Example quote line one.
+>
+> Example quote line two.
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
+
 Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
 
