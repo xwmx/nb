@@ -711,9 +711,9 @@ In addition to caching the page content, you can also highlight an excerpt
 from the page using the `-q` / `--quote` option:
 
 ```bash
-nb https://example.com --quote "This domain is for use in illustrative examples...
+nb https://example.com --quote "Example quote line one.
 
-...without prior coordination or asking for permission."
+Example quote line two."
 ```
 ```markdown
 # Example Domain (example.com)
@@ -726,9 +726,9 @@ Example meta description.
 
 ## Quote
 
-> This domain is for use in illustrative examples...
+> Example quote line one.
 >
-> ...without prior coordination or asking for permission.
+> Example quote line two.
 
 ## Content
 
