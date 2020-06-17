@@ -2637,7 +2637,7 @@ Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [--related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -3019,7 +3019,7 @@ Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [--related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)

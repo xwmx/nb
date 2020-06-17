@@ -1725,7 +1725,7 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [--related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1847,7 +1847,7 @@ Usage:
   bookmark [<list options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [--related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1974,7 +1974,7 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote | --excerpt] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [--related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
