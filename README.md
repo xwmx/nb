@@ -310,7 +310,8 @@ environment's preferred text editor. You can change your editor using the
 `$EDITOR` environment variable or [`nb settings`](#settings).
 
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
-files by default. To change the file type, see `nb help add`.
+files by default. The default file type can be changed to whatever you
+like using [`nb settings default_extension`](#settings-list---long).
 
 Password-protected notes are encrypted with AES-256 using OpenSSL by
 default. GPG is also supported and can be configured in `nb settings`.
