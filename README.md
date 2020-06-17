@@ -2557,7 +2557,7 @@ Examples:
   # Rename 'example.md' to 'example.org'
   nb rename example.md example.org
 
-  # Rename note 3 (example.md) to "New Name.md"
+  # Rename note 3 ('example.md') to 'New Name.md'
   nb rename 3 "New Name"
 
   # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
