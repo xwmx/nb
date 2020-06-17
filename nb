@@ -5893,9 +5893,11 @@ _ls() {
     done
 
     local _separator=
+    local _separator_hi=
     if ! ((_plain))
     then
       _separator=" ·"
+      _separator_hi="$(_dim "${_separator}")"
     fi
 
     local _notebook_names_hi
@@ -5976,7 +5978,7 @@ _ls() {
           _line_hi="${_notebook_names_hi[i]:-}"
           _line_raw="${_notebook_names_raw[i]}"
         else
-          _line_hi="${_line_hi}${_separator} ${_notebook_names_hi[i]:-}"
+          _line_hi="${_line_hi}${_separator_hi} ${_notebook_names_hi[i]:-}"
           _line_raw="${_line_raw}${_separator} ${_notebook_names_raw[i]}"
         fi
       fi
