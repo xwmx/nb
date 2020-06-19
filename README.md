@@ -508,6 +508,17 @@ home
 This is an example excerpt
 ```
 
+`nb` and `nb ls` display on the 30 most recently modified notes. To list
+a large or smaller number of notes, use the `-n` or `--limit` flag:
+
+```bash
+> nb --limit 2
+home
+----
+[19] Example Title
+[62] Todos
+```
+
 On most systems, when the list of notes is longer than the terminal
 can display on one screen, `nb ls` will open the list in
 [`less`](https://en.wikipedia.org/wiki/Less_(Unix)). Use the following
@@ -527,7 +538,17 @@ q                 Quit
 ```
 
 `nb ls` is a combination of `nb notebooks` and `nb list` in one view
-and accepts the same arguments as `nb list`, which lists only notes.
+and accepts the same arguments as `nb list`, which lists only notes
+without the notebook list and with no limit by default:
+
+```bash
+> nb list
+[100] example-100.md
+[99]  example-99.md
+[98]  example-98.md
+[97]  example-97.md
+...
+```
 
 For more information about options for listing notes, run `nb help ls` and
 `nb help list`.
