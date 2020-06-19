@@ -742,6 +742,36 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
+Add a comment to the bookmark using the `-c` / `--comment` option:
+
+```bash
+nb https://example.com --comment "Example comment."
+```
+```markdown
+# Example Domain (example.com)
+
+<https://example.com>
+
+## Description
+
+Example meta description.
+
+## Comment
+
+Example comment.
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
+
 Bookmarks can be tagged using the `--tags` option. Tags are converted
 into hashtags:
 
