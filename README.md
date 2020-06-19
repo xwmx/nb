@@ -742,7 +742,7 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Add a comment to the bookmark using the `-c` / `--comment` option:
+Add a comment to a bookmark using the `-c` / `--comment` option:
 
 ```bash
 nb https://example.com --comment "Example comment."
