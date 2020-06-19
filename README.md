@@ -441,8 +441,53 @@ home
 [1] 🔖 🔒 example-encrypted.bookmark.md.enc
 ```
 
-`nb` with no subcommand is an alias for `nb ls`, so the examples above
-can be run without the `ls`:
+By default, items are listed starting with the most recently modified.
+To reverse the order, use the `-r` or `--reverse` flag:
+
+```bash
+> nb ls
+home
+----
+[2] Todos
+[3] Example Title
+[1] Ideas
+
+> nb ls --reverse
+home
+----
+[1] Ideas
+[3] Example Title
+[2] Todos
+```
+
+Notes can be sorted with the `-s` / `--sort` flag, which can be combined
+with `-r` / `--reverse`:
+
+```bash
+> nb ls
+home
+----
+[2] Todos
+[3] Example Title
+[1] Ideas
+
+> nb ls --sort
+home
+----
+[1] Ideas
+[2] Todos
+[3] Example Title
+
+> nb ls --sort --reverse
+home
+----
+[3] Example Title
+[2] Todos
+[1] Ideas
+```
+
+`nb` with no subcommand behaves like an alias for `nb ls`, so the examples
+above can be run without the `ls`:
 
 ```bash
 > nb
