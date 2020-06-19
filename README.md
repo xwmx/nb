@@ -1725,7 +1725,7 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1847,7 +1847,7 @@ Usage:
   bookmark [<list options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1864,7 +1864,7 @@ Options:
   -q, --quote <quote>        A quote or excerpt from the saved page.
                              Alias: `--excerpt`
   --raw-content              Save the page content as HTML.
-  --related <url>            A URL for a page related to the bookmarked page.
+  -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
                              command to save multiple related URLs.
   --skip-content             Omit page content from the note.
@@ -1974,7 +1974,7 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1991,7 +1991,7 @@ Options:
   -q, --quote <quote>        A quote or excerpt from the saved page.
                              Alias: `--excerpt`
   --raw-content              Save the page content as HTML.
-  --related <url>            A URL for a page related to the bookmarked page.
+  -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
                              command to save multiple related URLs.
   --skip-content             Omit page content from the note.
