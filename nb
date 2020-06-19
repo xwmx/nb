@@ -2744,6 +2744,7 @@ Subcommands:
 Program Options:
   -i, --interactive   Start the \`${_ME}\` interactive shell.
   -h, --help          Display this help information.
+  --no-color          Print without color highlighting.
   --version           Display version information.
 HEREDOC
       fi

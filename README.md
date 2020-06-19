@@ -1848,7 +1848,7 @@ Usage:
   nb ls [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--no-color] [--paths] [--unarchived]
+               [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [--path]
@@ -1869,7 +1869,7 @@ Usage:
   nb settings (get | show | unset) (<number> | <name>)
   nb settings set (<number> | <name>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+  nb show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
   nb sync [-a | --all]
@@ -1877,6 +1877,7 @@ Usage:
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
   nb -h | --help | help [<subcommand> | --readme]
+  nb --no-color
   nb --version | version
 
 Help:
@@ -1922,6 +1923,7 @@ Subcommands:
 Program Options:
   -i, --interactive   Start the `nb` interactive shell.
   -h, --help          Display this help information.
+  --no-color          Print without color highlighting.
   --version           Display version information.
 ```
 
@@ -2494,7 +2496,7 @@ Shortcut Alias: `mv`
 ```text
 Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--no-color] [--paths] [--unarchived]
+               [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [--path]
@@ -2510,7 +2512,6 @@ Options:
   --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
-  --no-color    Print names without highlighting the current notebook.
   --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
@@ -2877,7 +2878,7 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+  nb show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
 
@@ -2886,7 +2887,6 @@ Options:
   --filename  Print the filename of the item.
   --id        Print the id number of the item.
   --path      Print the full path of the item.
-  --no-color  When used with `--dump`, print the note without highlighting.
   --render    Use `pandoc` [1] to render the file to HTML and display with
               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
               available, `--render` is ignored.
