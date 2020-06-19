@@ -537,9 +537,9 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-`nb ls` is a combination of `nb notebooks` and `nb list` in one view
-and accepts the same arguments as `nb list`, which lists only notes
-without the notebook list and with no limit by default:
+`nb ls` is a combination of [`nb notebooks`](#notebooks) and [`nb list`](#list)
+in one view and accepts the same arguments as `nb list`, which lists only
+notes without the notebook list and with no limit by default:
 
 ```bash
 > nb list
@@ -550,8 +550,8 @@ without the notebook list and with no limit by default:
 ...
 ```
 
-For more information about options for listing notes, run `nb help ls` and
-`nb help list`.
+For more information about options for listing notes, run [`nb help ls`](#ls)
+and [`nb help list`](#list).
 
 #### Editing Notes
 
