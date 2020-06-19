@@ -508,8 +508,8 @@ home
 This is an example excerpt
 ```
 
-`nb` and `nb ls` display on the 30 most recently modified notes. To list
-a large or smaller number of notes, use the `-n` or `--limit` flag:
+`nb` and `nb ls` display the 30 most recently modified notes. To list a
+different number of notes, use the `-n` or `--limit` flag:
 
 ```bash
 > nb --limit 2
@@ -547,7 +547,7 @@ notes without the notebook list and with no limit by default:
 [99]  example-99.md
 [98]  example-98.md
 [97]  example-97.md
-...
+... lists all notes ...
 ```
 
 For more information about options for listing notes, run [`nb help ls`](#ls)
