@@ -509,14 +509,21 @@ This is an example excerpt
 ```
 
 `nb` and `nb ls` display the 30 most recently modified notes. To list a
-different number of notes, use the `-n` or `--limit` flag:
+different number of notes, use the `-n`,`--limit`, or `--<limit>` flags:
 
 ```bash
-> nb --limit 2
+> nb -n 2
 home
 ----
-[19] Example Title
-[62] Todos
+[314] Example Title
+[313] Todos
+
+# alternative
+> nb --2
+home
+----
+[314] Example Title
+[313] Todos
 ```
 
 On most systems, when the list of notes is longer than the terminal
