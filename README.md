@@ -505,7 +505,7 @@ home
 -----------------
 # Example Title
 
-This is an example excerpt
+This is an example excerpt.
 ```
 
 `nb` and `nb ls` display only the 30 most recently modified notes. To list a
