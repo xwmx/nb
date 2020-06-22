@@ -223,7 +223,7 @@ recommended dependencies on Ubuntu and WSL.
 To install with [npm](https://www.npmjs.com/package/notes.sh):
 
 ```bash
-npm install --global notes.sh
+npm install -g notes.sh
 ```
 
 Note: Installing through `npm` only installs completion scripts.
