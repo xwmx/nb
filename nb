@@ -457,6 +457,9 @@ export _COLOR_ENABLED="${_COLOR_ENABLED:-1}"
 export NB_COLOR_THEME="${NB_COLOR_THEME:-nb}"
 
 case "${NB_COLOR_THEME}" in
+  nb)
+    : # Colors assigned as default values below.
+    ;;
   blacklight)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-39}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-56}"
@@ -480,9 +483,6 @@ case "${NB_COLOR_THEME}" in
   monochrome)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-248}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-241}"
-    ;;
-  nb)
-    : # Colors assigned as default values below.
     ;;
   ocean)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
