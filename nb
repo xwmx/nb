@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.1.22"
+_VERSION="4.1.23"
 
 # $_ME
 #
@@ -456,71 +456,51 @@ export _COLOR_ENABLED="${_COLOR_ENABLED:-1}"
 # The color theme.
 export NB_COLOR_THEME="${NB_COLOR_THEME:-nb}"
 
-if [[ "${NB_COLOR_THEME}" == "blacklight" ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-39}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-56}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "console"    ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-40}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-28}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "desert"     ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-179}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-95}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "electro"    ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-200}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "forest"     ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-29}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-94}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "monochrome" ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-248}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-241}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "nb"         ]]
-then
-  # See default values below.
-  :
-fi
-
-if [[ "${NB_COLOR_THEME}" == "ocean"      ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "raspberry"  ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-162}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-90}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "unicorn"    ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-183}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-153}"
-fi
-
-if [[ "${NB_COLOR_THEME}" == "utility"    ]]
-then
-  export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-227}"
-  export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
-fi
+case "${NB_COLOR_THEME}" in
+  nb)
+    : # Colors assigned as default values below.
+    ;;
+  blacklight)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-39}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-56}"
+    ;;
+  console)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-40}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-28}"
+    ;;
+  desert)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-179}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-95}"
+    ;;
+  electro)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-200}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
+    ;;
+  forest)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-29}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-94}"
+    ;;
+  monochrome)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-248}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-241}"
+    ;;
+  ocean)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
+    ;;
+  raspberry)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-162}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-90}"
+    ;;
+  unicorn)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-183}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-153}"
+    ;;
+  utility)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-227}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
+    ;;
+esac
 
 export _NB_COLOR_THEMES=(
   blacklight
@@ -2637,7 +2617,7 @@ Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -2744,6 +2724,7 @@ Subcommands:
 Program Options:
   -i, --interactive   Start the \`${_ME}\` interactive shell.
   -h, --help          Display this help information.
+  --no-color          Print without color highlighting.
   --version           Display version information.
 HEREDOC
       fi
@@ -3019,7 +3000,7 @@ Usage:
   ${_ME} bookmark [<list options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -3036,7 +3017,7 @@ Options:
   -q, --quote <quote>        A quote or excerpt from the saved page.
                              Alias: \`--excerpt\`
   --raw-content              Save the page content as HTML.
-  --related <url>            A URL for a page related to the bookmarked page.
+  -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple \`--related\` flags can be used in a
                              command to save multiple related URLs.
   --skip-content             Omit page content from the note.

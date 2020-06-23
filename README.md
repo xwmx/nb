@@ -223,7 +223,7 @@ recommended dependencies on Ubuntu and WSL.
 To install with [npm](https://www.npmjs.com/package/nb.sh):
 
 ```bash
-npm install --global nb.sh
+npm install -g nb.sh
 ```
 
 Note: Installing through `npm` only installs completion scripts.
@@ -441,8 +441,53 @@ home
 [1] 🔖 🔒 example-encrypted.bookmark.md.enc
 ```
 
-`nb` with no subcommand is an alias for `nb ls`, so the examples above
-can be run without the `ls`:
+By default, items are listed starting with the most recently modified.
+To reverse the order, use the `-r` or `--reverse` flag:
+
+```bash
+> nb ls
+home
+----
+[2] Todos
+[3] Example Title
+[1] Ideas
+
+> nb ls --reverse
+home
+----
+[1] Ideas
+[3] Example Title
+[2] Todos
+```
+
+Notes can be sorted with the `-s` / `--sort` flag, which can be combined
+with `-r` / `--reverse`:
+
+```bash
+> nb ls
+home
+----
+[2] Todos
+[3] Example Title
+[1] Ideas
+
+> nb ls --sort
+home
+----
+[1] Ideas
+[2] Todos
+[3] Example Title
+
+> nb ls --sort --reverse
+home
+----
+[3] Example Title
+[2] Todos
+[1] Ideas
+```
+
+`nb` with no subcommand behaves like an alias for `nb ls`, so the examples
+above can be run without the `ls`:
 
 ```bash
 > nb
@@ -460,7 +505,27 @@ home
 -----------------
 # Example Title
 
-This is an example excerpt
+This is an example excerpt.
+```
+
+`nb` and `nb ls` display only the 30 most recently modified notes. To list a
+different number of notes, use the `-n`,`--limit`, or `--<limit>` flags:
+
+```bash
+> nb -n 2
+home
+----
+[14] Example Title
+[13] Todos
+12 omitted. 14 total.
+
+# alternative
+> nb --2
+home
+----
+[14] Example Title
+[13] Todos
+12 omitted. 14 total.
 ```
 
 On most systems, when the list of notes is longer than the terminal
@@ -481,11 +546,21 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-`nb ls` is a combination of `nb notebooks` and `nb list` in one view
-and accepts the same arguments as `nb list`, which lists only notes.
+`nb ls` is a combination of [`nb notebooks`](#notebooks) and [`nb list`](#list)
+in one view and accepts the same arguments as `nb list`, which lists only
+notes without the notebook list and with no limit by default:
 
-For more information about options for listing notes, run `nb help ls` and
-`nb help list`.
+```bash
+> nb list
+[100] example-100.md
+[99]  example-99.md
+[98]  example-98.md
+[97]  example-97.md
+... lists all notes ...
+```
+
+For more information about options for listing notes, run [`nb help ls`](#ls)
+and [`nb help list`](#list).
 
 #### Editing Notes
 
@@ -729,6 +804,36 @@ Example meta description.
 > Example quote line one.
 >
 > Example quote line two.
+
+## Content
+
+Example Domain
+==============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
+
+Add a comment to a bookmark using the `-c` / `--comment` option:
+
+```bash
+nb https://example.com --comment "Example comment."
+```
+```markdown
+# Example Domain (example.com)
+
+<https://example.com>
+
+## Description
+
+Example meta description.
+
+## Comment
+
+Example comment.
 
 ## Content
 
@@ -1725,7 +1830,7 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1752,7 +1857,7 @@ Usage:
   nb ls [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--no-color] [--paths] [--unarchived]
+               [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [--path]
@@ -1773,7 +1878,7 @@ Usage:
   nb settings (get | show | unset) (<number> | <name>)
   nb settings set (<number> | <name>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+  nb show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
   nb sync [-a | --all]
@@ -1781,6 +1886,7 @@ Usage:
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
   nb -h | --help | help [<subcommand> | --readme]
+  nb --no-color
   nb --version | version
 
 Help:
@@ -1826,6 +1932,7 @@ Subcommands:
 Program Options:
   -i, --interactive   Start the `nb` interactive shell.
   -h, --help          Display this help information.
+  --no-color          Print without color highlighting.
   --version           Display version information.
 ```
 
@@ -1847,7 +1954,7 @@ Usage:
   bookmark [<list options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1864,7 +1971,7 @@ Options:
   -q, --quote <quote>        A quote or excerpt from the saved page.
                              Alias: `--excerpt`
   --raw-content              Save the page content as HTML.
-  --related <url>            A URL for a page related to the bookmarked page.
+  -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
                              command to save multiple related URLs.
   --skip-content             Omit page content from the note.
@@ -1974,7 +2081,7 @@ Usage:
   nb bookmark [<list options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [--related <url>]...
+              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
               [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -1991,7 +2098,7 @@ Options:
   -q, --quote <quote>        A quote or excerpt from the saved page.
                              Alias: `--excerpt`
   --raw-content              Save the page content as HTML.
-  --related <url>            A URL for a page related to the bookmarked page.
+  -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple `--related` flags can be used in a
                              command to save multiple related URLs.
   --skip-content             Omit page content from the note.
@@ -2398,7 +2505,7 @@ Shortcut Alias: `mv`
 ```text
 Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--no-color] [--paths] [--unarchived]
+               [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [--path]
@@ -2414,7 +2521,6 @@ Options:
   --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
-  --no-color    Print names without highlighting the current notebook.
   --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
   --unarchived  Only list unarchived notebooks.
@@ -2781,7 +2887,7 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--dump [--no-color]]
+  nb show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
 
@@ -2790,7 +2896,6 @@ Options:
   --filename  Print the filename of the item.
   --id        Print the id number of the item.
   --path      Print the full path of the item.
-  --no-color  When used with `--dump`, print the note without highlighting.
   --render    Use `pandoc` [1] to render the file to HTML and display with
               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
               available, `--render` is ignored.
