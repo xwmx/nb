@@ -2582,7 +2582,7 @@ _help() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      readme|README|--readme)
+      readme|README|-r|--readme)
         _readme=1
         ;;
       -s|--short)
