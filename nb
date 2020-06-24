@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.1.23"
+_VERSION="4.1.24"
 
 # $_ME
 #
@@ -295,7 +295,7 @@ _debug() {
 #   and should typically be either `echo`, `printf`, or `cat`.
 _exit_1() {
   {
-    printf "%s " "$(tput setaf 1)!$(tput sgr0)"
+    [[ "${1:-}" == "_help" ]] || printf "%s " "$(tput setaf 1)!$(tput sgr0)"
     "${@}"
   } 1>&2
   exit 1
@@ -9499,8 +9499,8 @@ _SUBCOMMANDS=(
 
 # $_DOCUMENTED_SUBCOMMANDS
 #
-# Primary subcommands that appear in documentation. For example, aliases are
-# omitted from this list. This list is also used for tab completion.
+# Primary subcommands that appear in documentation. For example, some aliases
+# are omitted from this list. This list is also used for tab completion.
 _DOCUMENTED_SUBCOMMANDS=(
   a
   add
