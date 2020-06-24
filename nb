@@ -2559,10 +2559,13 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand> | --readme]
+  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
 
 Options:
-  --readme   Download and view the \`${_ME}\` README file.
+  --dump        Print to standard output rather than the pager when content is
+                longer than the terminal height.
+  -r, --readme  Download and view the \`${_ME}\` README file.
+  -s, --short   Print shorter help without subcommand descriptions.
 
 Description:
   Print the program help information. When a subcommand name is passed, print
@@ -2571,7 +2574,30 @@ Description:
 Shortcut Alias: \`h\`
 HEREDOC
 _help() {
-  if [[ -n "${1:-}" ]] && [[ "${1:-}" =~ ^readme$|^README$|^\-\-readme$ ]]
+  local _arguments=()
+  local _readme=0
+  local _short=0
+  local _use_pager=1
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      readme|README|--readme)
+        _readme=1
+        ;;
+      -s|--short)
+        _short=1
+        ;;
+      --dump|--skip-pager)
+        _use_pager=0
+        ;;
+      *)
+        _arguments+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if ((_readme))
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
@@ -2582,16 +2608,18 @@ _help() {
             return 0
         else
           cat
-        fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+        fi |  if ((_use_pager))                &&
+                 [[ -n "${PAGER:-}"         ]] &&
+                 [[ ! "${PAGER:-}" =~ less  ]]
               then
                 "${PAGER}"
-              elif _command_exists "less"
+              elif ((_use_pager)) && _command_exists "less"
               then
                 less --CLEAR-SCREEN --prompt="$(_less_prompt)"
               else
                 cat
               fi
-  elif [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^\-s$|^\-\-short$ ]]
+  elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
     {
       cat <<HEREDOC
@@ -2632,7 +2660,7 @@ Usage:
             [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} git <git options>...
-  ${_ME} help [<subcommand> | --readme]
+  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
@@ -2677,14 +2705,16 @@ Usage:
   ${_ME} --version | version
 
 Help:
+  ${_ME} help               Display this help information.
   ${_ME} help <subcommand>  View help information for <subcommand>
   ${_ME} help --readme      Download and view the \`${_ME}\` README file.
+  ${_ME} help --short       Display program usage information.
 
 More Information:
   https://github.com/${_REPO}
 HEREDOC
 
-    if [[ ! "${1:-}" =~ ^\-s$|^\-\-short$ ]]
+    if ! ((_short))
     then
       cat <<HEREDOC
 
@@ -2728,10 +2758,12 @@ Program Options:
   --version           Display version information.
 HEREDOC
       fi
-    } | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+    } | if ((_use_pager))               &&
+           [[ -n "${PAGER:-}"        ]] &&
+           [[ ! "${PAGER:-}" =~ less ]]
         then
           "${PAGER}"
-        elif _command_exists "less"
+        elif ((_use_pager)) && _command_exists "less"
         then
           less --CLEAR-SCREEN --prompt="$(_less_prompt)"
         else
@@ -2739,7 +2771,7 @@ HEREDOC
         fi
   else
     local _help_text=
-    _help_text="$(desc --get "${@}")"
+    _help_text="$(desc --get "${_arguments[@]}")"
 
     local _help_text_lines=
     _help_text_lines="$(printf "%s\\n" "${_help_text}" | wc -l)"
@@ -2748,12 +2780,14 @@ HEREDOC
     _lines="$(tput lines)"
 
     printf "%s\\n" "${_help_text}" \
-      | if [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
+      | if ((_use_pager))                                  &&
+           [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
            [[ -n "${PAGER:-}"                           ]] &&
            [[ ! "${PAGER:-}" =~ less                    ]]
         then
           "${PAGER}"
-        elif [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
+        elif ((_use_pager))                                  &&
+             [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
              _command_exists "less"
         then
           less --CLEAR-SCREEN --prompt="$(_less_prompt)"
