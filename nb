@@ -295,7 +295,7 @@ _debug() {
 #   and should typically be either `echo`, `printf`, or `cat`.
 _exit_1() {
   {
-    printf "%s " "$(tput setaf 1)!$(tput sgr0)"
+    [[ "${1:-}" == "_help" ]] || printf "%s " "$(tput setaf 1)!$(tput sgr0)"
     "${@}"
   } 1>&2
   exit 1
