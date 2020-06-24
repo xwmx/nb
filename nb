@@ -8806,7 +8806,7 @@ _show() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --dump)
+      --dump|--skip-pager)
         _dump=1
         ;;
       --path)
