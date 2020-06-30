@@ -7757,7 +7757,7 @@ _search() {
         set +f
         {
           # Print .index with null byte delimeter so it's included in
-          # the list
+          # the list of files to search.
           printf "%s/.index\0" "${__notebook_path}"
           find "${__notebook_path}"/* \
             \( -name . -o -prune \)   \
