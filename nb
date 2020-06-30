@@ -7665,6 +7665,9 @@ _search() {
 
     for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
+      _debug printf "_search() \${__notebook_path}: '%s'\\n" \
+        "${__notebook_path}"
+
       if _command_exists "rg" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
@@ -7689,7 +7692,7 @@ _search() {
           --max-columns "${_max_columns}" --max-columns-preview \
           "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
-      elif _command_exists "g" && ! ((_use_grep))
+      elif _command_exists "ag" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
         then
