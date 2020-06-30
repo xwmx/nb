@@ -7683,14 +7683,17 @@ _search() {
         fi
 
         rg \
-          --hidden              \
-          --iglob '!.git'       \
-          --ignore-case         \
-          --no-heading          \
-          "${_search_args[@]}"  \
-          --line-number         \
-          --max-columns "${_max_columns}" --max-columns-preview \
-          "${_query}" "${__notebook_path}" \
+          --hidden                        \
+          --iglob '!.git'                 \
+          --ignore-case                   \
+          --no-heading                    \
+          --line-number                   \
+          --max-columns "${_max_columns}" \
+          --max-columns-preview           \
+          --max-depth 1                   \
+          "${_search_args[@]}"            \
+          "${_query}"                     \
+          "${__notebook_path}"            \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ag" && ! ((_use_grep))
       then
@@ -7715,6 +7718,7 @@ _search() {
           --hidden              \
           --ignore-case         \
           --noheading           \
+          --norecurse           \
           "${_search_args[@]}"  \
           "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
@@ -7737,6 +7741,7 @@ _search() {
         ack "${_query}" "${__notebook_path}" \
           --ignore-case         \
           --noheading           \
+          --no-recurse          \
           "${_search_args[@]}"  \
             || return 0 # Don't fail out within a single scope.
       else # fall back to POSIX grep.
@@ -7750,15 +7755,22 @@ _search() {
         # Add /dev/null so file path is printed even if there is only one
         # matching file. Reference: https://stackoverflow.com/a/15432718
         set +f
-        find . -type f -not -path '*/\.git*' \
-          | grep \
-              -E \
-              --ignore-case           \
-              "${_search_args[@]}"    \
-              --text                  \
-              -n "${_query}"          \
-              "${__notebook_path}"/*  \
-              "${__notebook_path}"/.index /dev/null \
+        {
+          # Print .index with null byte delimeter so it's included in
+          # the list
+          printf "%s/.index\0" "${__notebook_path}"
+          find "${__notebook_path}"/* \
+            \( -name . -o -prune \)   \
+            -type f                   \
+            -print0
+        } | xargs -0 grep           \
+              -E                    \
+              --ignore-case         \
+              "${_search_args[@]}"  \
+              --text                \
+              -n                    \
+              "${_query}"           \
+               /dev/null            \
                 || return 0 # Don't fail out within a single scope.
         set -f
       fi | while read -r _line
