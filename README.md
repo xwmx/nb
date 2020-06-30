@@ -1058,13 +1058,13 @@ nb search 'example query'
 # search all active notebooks for 'example query'
 nb search 'example query' --all
 
-# search nb for 'Example' OR 'Sample'
+# search for 'Example' OR 'Sample'
 nb search 'Example|Sample'
 
-# search for nb containing the hashtag '#example'
+# search items containing the hashtag '#example'
 nb search '#example'
 
-# search with a regular expression for nb containing phone numbers
+# search with a regular expression for items containing phone numbers
 nb search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
 # search bookmarks for 'example'
