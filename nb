@@ -3168,6 +3168,7 @@ _bookmark() {
         ;;
       --excerpt|--quote|-q)
         _excerpt="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       -f|--filename)
         _filename="$(__option_get_value "${__arg}" "${__val:-}")"
