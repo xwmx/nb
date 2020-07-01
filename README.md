@@ -1211,9 +1211,9 @@ specified notebook:
 > nb example:
 example · home
 --------------
-[3] Title Three
-[2] Title Two
-[1] Title One
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
 ```
 
 A bookmark can be added in another notebook using the same approach:
@@ -1245,9 +1245,9 @@ the first two or three characters of the name, then \<tab\>, then \<enter\>:
 > nb example:
 example · home
 --------------
-[3] Title Three
-[2] Title Two
-[1] Title One
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
 ```
 
 #### Global and Local Notebooks
