@@ -1237,7 +1237,7 @@ completion scripts is recommended and makes working with notebooks easy
 and fun.
 
 For example, to list the contents of a notebook you generally can just type
-the first two or three characters of the name, then <tab>, then <enter>:
+the first two or three characters of the name, then \<tab\>, then \<enter\>:
 
 ```bash
 > nb exa<tab>
