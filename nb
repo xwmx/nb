@@ -1884,7 +1884,6 @@ _get_unique_path() {
   fi
 
   local _unique_file_name="${_file_name}"
-
   local _uniqueness_counter=0
 
   while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}" ]]
