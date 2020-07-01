@@ -1058,13 +1058,13 @@ nb search 'example query'
 # search all active notebooks for 'example query'
 nb search 'example query' --all
 
-# search nb for 'Example' OR 'Sample'
+# search for 'Example' OR 'Sample'
 nb search 'Example|Sample'
 
-# search for nb containing the hashtag '#example'
+# search items containing the hashtag '#example'
 nb search '#example'
 
-# search with a regular expression for nb containing phone numbers
+# search with a regular expression for items containing phone numbers
 nb search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
 
 # search bookmarks for 'example'
@@ -1845,7 +1845,7 @@ Usage:
             [<pandoc options>...]
   nb export notebook <name> [<path>]
   nb git <git options>...
-  nb help [<subcommand> | --readme]
+  nb help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
@@ -1890,8 +1890,10 @@ Usage:
   nb --version | version
 
 Help:
+  nb help               Display this help information.
   nb help <subcommand>  View help information for <subcommand>
   nb help --readme      Download and view the `nb` README file.
+  nb help --short       Display program usage information.
 
 More Information:
   https://github.com/xwmx/nb
@@ -2287,10 +2289,13 @@ Description:
 
 ```text
 Usage:
-  nb help [<subcommand> | --readme]
+  nb help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
 
 Options:
-  --readme   Download and view the `nb` README file.
+  --dump        Print to standard output rather than the pager when content is
+                longer than the terminal height.
+  -r, --readme  Download and view the `nb` README file.
+  -s, --short   Print shorter help without subcommand descriptions.
 
 Description:
   Print the program help information. When a subcommand name is passed, print

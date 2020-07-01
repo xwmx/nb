@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.1.24"
+_VERSION="4.1.26"
 
 # $_ME
 #
@@ -112,7 +112,7 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/master"
 # $_LANG & $_LC_ALL
 #
 # The original values of $LANG and $LC_ALL
-_LANG="${LANG}" _LC_ALL="${LC_ALL}"
+_LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
 ###############################################################################
 # Configuration File
@@ -2559,10 +2559,13 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand> | --readme]
+  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
 
 Options:
-  --readme   Download and view the \`${_ME}\` README file.
+  --dump        Print to standard output rather than the pager when content is
+                longer than the terminal height.
+  -r, --readme  Download and view the \`${_ME}\` README file.
+  -s, --short   Print shorter help without subcommand descriptions.
 
 Description:
   Print the program help information. When a subcommand name is passed, print
@@ -2571,7 +2574,30 @@ Description:
 Shortcut Alias: \`h\`
 HEREDOC
 _help() {
-  if [[ -n "${1:-}" ]] && [[ "${1:-}" =~ ^readme$|^README$|^\-\-readme$ ]]
+  local _arguments=()
+  local _readme=0
+  local _short=0
+  local _use_pager=1
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      readme|README|-r|--readme)
+        _readme=1
+        ;;
+      -s|--short)
+        _short=1
+        ;;
+      --dump|--skip-pager)
+        _use_pager=0
+        ;;
+      *)
+        _arguments+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if ((_readme))
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
@@ -2582,16 +2608,18 @@ _help() {
             return 0
         else
           cat
-        fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+        fi |  if ((_use_pager))                &&
+                 [[ -n "${PAGER:-}"         ]] &&
+                 [[ ! "${PAGER:-}" =~ less  ]]
               then
                 "${PAGER}"
-              elif _command_exists "less"
+              elif ((_use_pager)) && _command_exists "less"
               then
                 less --CLEAR-SCREEN --prompt="$(_less_prompt)"
               else
                 cat
               fi
-  elif [[ -z "${1:-}" ]] || [[ "${1:-}" =~ ^\-s$|^\-\-short$ ]]
+  elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
     {
       cat <<HEREDOC
@@ -2632,7 +2660,7 @@ Usage:
             [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} git <git options>...
-  ${_ME} help [<subcommand> | --readme]
+  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
@@ -2677,14 +2705,16 @@ Usage:
   ${_ME} --version | version
 
 Help:
+  ${_ME} help               Display this help information.
   ${_ME} help <subcommand>  View help information for <subcommand>
   ${_ME} help --readme      Download and view the \`${_ME}\` README file.
+  ${_ME} help --short       Display program usage information.
 
 More Information:
   https://github.com/${_REPO}
 HEREDOC
 
-    if [[ ! "${1:-}" =~ ^\-s$|^\-\-short$ ]]
+    if ! ((_short))
     then
       cat <<HEREDOC
 
@@ -2728,10 +2758,12 @@ Program Options:
   --version           Display version information.
 HEREDOC
       fi
-    } | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+    } | if ((_use_pager))               &&
+           [[ -n "${PAGER:-}"        ]] &&
+           [[ ! "${PAGER:-}" =~ less ]]
         then
           "${PAGER}"
-        elif _command_exists "less"
+        elif ((_use_pager)) && _command_exists "less"
         then
           less --CLEAR-SCREEN --prompt="$(_less_prompt)"
         else
@@ -2739,7 +2771,7 @@ HEREDOC
         fi
   else
     local _help_text=
-    _help_text="$(desc --get "${@}")"
+    _help_text="$(desc --get "${_arguments[@]}")"
 
     local _help_text_lines=
     _help_text_lines="$(printf "%s\\n" "${_help_text}" | wc -l)"
@@ -2748,12 +2780,14 @@ HEREDOC
     _lines="$(tput lines)"
 
     printf "%s\\n" "${_help_text}" \
-      | if [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
+      | if ((_use_pager))                                  &&
+           [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
            [[ -n "${PAGER:-}"                           ]] &&
            [[ ! "${PAGER:-}" =~ less                    ]]
         then
           "${PAGER}"
-        elif [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
+        elif ((_use_pager))                                  &&
+             [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
              _command_exists "less"
         then
           less --CLEAR-SCREEN --prompt="$(_less_prompt)"
@@ -7631,6 +7665,9 @@ _search() {
 
     for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
+      _debug printf "_search() \${__notebook_path}: '%s'\\n" \
+        "${__notebook_path}"
+
       if _command_exists "rg" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
@@ -7646,16 +7683,19 @@ _search() {
         fi
 
         rg \
-          --hidden              \
-          --iglob '!.git'       \
-          --ignore-case         \
-          --no-heading          \
-          "${_search_args[@]}"  \
-          --line-number         \
-          --max-columns "${_max_columns}" --max-columns-preview \
-          "${_query}" "${__notebook_path}" \
+          --hidden                        \
+          --iglob '!.git'                 \
+          --ignore-case                   \
+          --no-heading                    \
+          --line-number                   \
+          --max-columns "${_max_columns}" \
+          --max-columns-preview           \
+          --max-depth 1                   \
+          "${_search_args[@]}"            \
+          "${_query}"                     \
+          "${__notebook_path}"            \
             || return 0 # Don't fail out within a single scope.
-      elif _command_exists "g" && ! ((_use_grep))
+      elif _command_exists "ag" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
         then
@@ -7678,6 +7718,7 @@ _search() {
           --hidden              \
           --ignore-case         \
           --noheading           \
+          --norecurse           \
           "${_search_args[@]}"  \
           "${_query}" "${__notebook_path}" \
             || return 0 # Don't fail out within a single scope.
@@ -7700,6 +7741,7 @@ _search() {
         ack "${_query}" "${__notebook_path}" \
           --ignore-case         \
           --noheading           \
+          --no-recurse          \
           "${_search_args[@]}"  \
             || return 0 # Don't fail out within a single scope.
       else # fall back to POSIX grep.
@@ -7713,15 +7755,22 @@ _search() {
         # Add /dev/null so file path is printed even if there is only one
         # matching file. Reference: https://stackoverflow.com/a/15432718
         set +f
-        find . -type f -not -path '*/\.git*' \
-          | grep \
-              -E \
-              --ignore-case           \
-              "${_search_args[@]}"    \
-              --text                  \
-              -n "${_query}"          \
-              "${__notebook_path}"/*  \
-              "${__notebook_path}"/.index /dev/null \
+        {
+          # Print .index with null byte delimeter so it's included in
+          # the list of files to search.
+          printf "%s/.index\0" "${__notebook_path}"
+          find "${__notebook_path}"/* \
+            \( -name . -o -prune \)   \
+            -type f                   \
+            -print0
+        } | xargs -0 grep           \
+              -E                    \
+              --ignore-case         \
+              "${_search_args[@]}"  \
+              --text                \
+              -n                    \
+              "${_query}"           \
+               /dev/null            \
                 || return 0 # Don't fail out within a single scope.
         set -f
       fi | while read -r _line
@@ -8772,7 +8821,7 @@ _show() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --dump)
+      --dump|--skip-pager)
         _dump=1
         ;;
       --path)
