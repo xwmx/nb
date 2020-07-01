@@ -5798,7 +5798,6 @@ _ls() {
       "${_ME} help"
     )
 
-
     local _commands_hi=(
       "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
         "$(_highlight_secondary "${_commands_raw[1]}")"
@@ -5812,7 +5811,6 @@ _ls() {
         "$(_highlight_secondary "${_commands_raw[9]}")"
         "$(_highlight_secondary "${_commands_raw[10]}")"
     )
-
 
     printf '\033[?7l'
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
