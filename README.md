@@ -1236,7 +1236,7 @@ commands in various notebooks using the colon syntax, so installing the
 completion scripts is recommended and makes working with notebooks easy
 and fun.
 
-For example, to list the contents of a notebook you generally can just type
+For example, listing the contents of a notebook is usually as simple as typing
 the first two or three characters of the name, then \<tab\>, then \<enter\>:
 
 ```bash
