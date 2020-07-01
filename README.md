@@ -1229,6 +1229,10 @@ Notes can also be moved between notebooks:
 nb move 3 example
 ```
 
+[`nb` tab completion](#tab-completion) is optimized for frequently running
+commands in various notebooks using the colon syntax, so installing the
+completion scripts is recommended for an optimal experience.
+
 #### Global and Local Notebooks
 
 ##### Global Notebooks
