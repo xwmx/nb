@@ -1236,6 +1236,20 @@ commands in various notebooks using the colon syntax, so installing the
 completion scripts is recommended and makes working with notebooks easy
 and fun.
 
+For example, to list the contents of a notebook you generally can just type
+the first two or three characters of the name, then <tab>, then <enter>:
+
+```bash
+> nb exa<tab>
+# completes to 'example:'
+> nb example:
+example · home
+--------------
+[3] Title Three
+[2] Title Two
+[1] Title One
+```
+
 #### Global and Local Notebooks
 
 ##### Global Notebooks
