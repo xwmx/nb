@@ -1185,6 +1185,12 @@ colon before the command name:
 ```bash
 # show note 5 in the notebook named 'example'
 nb example:show 5
+
+# search for 'example query' in the notebook named 'example'
+nb example:q 'example query'
+
+# show the revision history of the notebook named 'example'
+nb example:history
 ```
 
 You can similarly set the notebook name as a modifier to the id, filename, or
@@ -1208,6 +1214,12 @@ example · home
 [3] Title Three
 [2] Title Two
 [1] Title One
+```
+
+A bookmark can be added in another notebook using the same approach:
+
+```bash
+> nb example: https://example.com --tag tag1,tag2
 ```
 
 Notes can also be moved between notebooks:
