@@ -1233,8 +1233,8 @@ nb move 3 example
 
 [`nb` tab completion](#tab-completion) is optimized for frequently running
 commands in various notebooks using the colon syntax, so installing the
-completion scripts is recommended and makes working with notebooks fun
-and easy.
+completion scripts is recommended and makes working with notebooks easy
+and fun.
 
 #### Global and Local Notebooks
 
