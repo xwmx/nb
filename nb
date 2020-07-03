@@ -6064,7 +6064,6 @@ _ls() {
   local _columns
   _columns="$(tput cols)"
   local _header_flags=()
-  # local _header_line_count=0
   local _limit=20
   local _maybe_notebook_list=
   local _notebook_names_raw
@@ -6072,10 +6071,6 @@ _ls() {
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _use_pager=0
-
-  # local _size
-  # _size="$(stty size)"
-  # local _line_count="${_size% *}"
 
   while ((${#}))
   do
@@ -6124,50 +6119,8 @@ _ls() {
     while read -r __line
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
-      # _header_line_count=$((_header_line_count + 1))
     done < <(_print_header "${_header_flags[@]:-}")
   fi
-
-  # local _note_count_local=0
-  # local _note_count_total=0
-  # _note_count_total="$(_count)"
-
-  # local _ui_line_count=$((_header_line_count + 5))
-
-  # local _max_note_count=$((_line_count-_ui_line_count))
-
-  # if [[ "${_note_count_total}" -gt "${_max_note_count}" ]]
-  # then
-  #   _note_count_local="$(
-  #     {
-  #       _list \
-  #         -n "${_line_count}" \
-  #         "${_args[@]:-}"     \
-  #         --no-id             \
-  #         --no-indicators     \
-  #         --filenames         \
-  #         2>/dev/null || printf ""
-  #       } | wc -l | tr -d '[:space:]'
-  #   )"
-  # fi
-
-  # # Remove 'omitted' line.
-  # _note_count_local=$((_note_count_local - 1))
-
-  # _debug printf "_ls() \$_header_line_count:  %s\\n" "${_header_line_count}"
-  # _debug printf "_ls() \$_ui_line_count:      %s\\n" "${_ui_line_count}"
-  # _debug printf "_ls() \$_line_count:         %s\\n" "${_line_count}"
-  # _debug printf "_ls() \$_note_count_local:   %s\\n" "${_note_count_local}"
-  # _debug printf "_ls() \$_note_count_total:   %s\\n" "${_note_count_total}"
-  # _debug printf "_ls() \$_limit:              %s\\n" "${_limit}"
-  # _debug printf "_ls() \$_max_note_count:     %s\\n" "${_max_note_count}"
-
-  # if ((_line_count)) &&
-  #    [[ "${_note_count_local}"  -ge "${_max_note_count}" ]] &&
-  #    [[ "${_limit}"             -ge "${_max_note_count}" ]]
-  # then
-  #   _use_pager=1
-  # fi
 
   {
     printf "%s" "${_maybe_notebook_list}"
