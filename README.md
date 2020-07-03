@@ -627,14 +627,16 @@ nb 3 show
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[Pygments](https://pygments.org/) is installed, and you can navigate with the
-same keys used in `nb ls`:
+[Pygments](https://pygments.org/) is installed. You can navigate in
+`less` using the following keys:
 
 ```text
 Key               Function
 ---               --------
 mouse scroll      Scroll up / down
 arrow up / down   Scroll one line up / down
+f                 Move down one window
+b                 Move up one window
 d                 Move down one half window
 u                 Move up one half window
 /<query>          Search for <query>
