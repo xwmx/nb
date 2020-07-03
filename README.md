@@ -1884,8 +1884,8 @@ Usage:
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [--all] [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
@@ -2405,8 +2405,8 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -2416,6 +2416,7 @@ Options:
   --no-id                       Don't include the id in list items.
   -n <limit>                    The maximum number of notes to list.
   --<limit>                     Shortcut for `-n <limit>`.
+  -p, --pager                   Display output in the pager.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
@@ -2455,8 +2456,8 @@ Examples:
 ```text
 Usage:
   nb ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -2468,6 +2469,7 @@ Options:
   --no-id                       Don't include the id in list items.
   -n <limit>                    The maximum number of listed items. [default: 20]
   --<limit>                     Shortcut for `-n <limit>`.
+  -p, --pager                   Display output in the pager.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
