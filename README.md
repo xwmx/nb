@@ -508,7 +508,7 @@ home
 This is an example excerpt.
 ```
 
-`nb` and `nb ls` display only the 30 most recently modified notes. To list a
+`nb` and `nb ls` display the 20 most recently modified notes. To list a
 different number of notes, use the `-n`,`--limit`, or `--<limit>` flags:
 
 ```bash
@@ -2466,7 +2466,7 @@ Options:
                                 each note's filename [default: 3].
   --filenames                   Print the filename for each note.
   --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of notes to list.
+  -n <limit>                    The maximum number of listed items. [default: 20]
   --<limit>                     Shortcut for `-n <limit>`.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
@@ -2484,20 +2484,6 @@ Description:
   matching note will be displayed. When no match is found, titles and
   filenames will be searched for any that match <query> as a case-insensitive
   regular expression.
-
-  On most systems, if the list of notes is longer than the terminal can
-  display on one screen, the list will be opened in `less`. Use the
-  following keys to navigate in `less` (see `man less` for more):
-
-    Key               Function
-    ---               --------
-    mouse scroll      Scroll up / down
-    arrow up / down   Scroll one line up / down
-    d                 Move down one half window
-    u                 Move up one half window
-    /<query>          Search for <query>
-    n                 Jump to next <query> match
-    q                 Quit
 
   Options are passed through to `list`. For more information, see
   `nb help list`.
