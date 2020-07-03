@@ -5380,6 +5380,7 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
+  # Use code block to capture all output for piping to pager.
   {
     if [[ "${_filenames_count}" -eq 0           ]] &&
        [[ "${_type}" =~ ^bookmark$|^bookmarks$  ]]
