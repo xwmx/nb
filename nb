@@ -6096,7 +6096,7 @@ _ls() {
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${__arg:-}"
-        elif [[ -z "${__arg:-}" ]]
+        elif [[ -n "${__arg:-}" ]]
         then
           _args+=("${__arg}")
         fi
