@@ -6065,7 +6065,7 @@ _ls() {
 
     case "${__arg}" in
       --all)
-        _limit=999999999
+        _limit=999999999999999
         ;;
       --auto-align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
