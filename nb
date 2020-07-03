@@ -2924,7 +2924,11 @@ _add() {
     _basename="$(_get_unique_basename "${_filename:-}")"
   elif [[ -n "${_title:-}" ]]
   then
-    _filename="$(printf "%s" "${_title}" | tr '[:space:]' '_')"
+    _filename="$(
+      printf "%s" "${_title}" \
+        | tr '[:space:]' '_'  \
+        | tr '/' '_'
+    )"
     _basename="$(_get_unique_basename "${_filename}.${_file_type}")"
   else
     _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
