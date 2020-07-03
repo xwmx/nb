@@ -5430,8 +5430,8 @@ HEREDOC
 
         if [[ -n "${_selection:-}" ]]
         then
-          # If a valid <selection> has been specified, skip the rest of the loop
-          # unless the <selection> basename matches the current one.
+          # If a valid <selection> has been specified, skip the rest of the
+          # loop unless the <selection> basename matches the current one.
           if [[ -n "${_selection_basename}" ]]
           then
             if [[ "${__basename}" != "${_selection_basename}" ]]
@@ -5546,8 +5546,8 @@ HEREDOC
 
         if ! ((_no_id))
         then
-          # NOTE: Plain version serves as the reference version and can be used
-          # for length calculations.
+          # NOTE: Plain version serves as the reference version and can be
+          # used for length calculations.
           local _item_identifier=
           local _max_identifier=
           _item_identifier="$(_index get_id "${__basename}")"
@@ -5676,7 +5676,7 @@ HEREDOC
         if ((_print_excerpt)) &&
            [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
            _file_is_text "${_NOTEBOOK_PATH}/${__basename}"
-        then # excerpt is specified with a non-zero digit, as required by `head`.
+        then # excerpt is specified with a non-zero digit, required by `head`.
           if [[ -z "${_item_line_length:-}"               ]] ||
              [[ "${_item_line_length}" -gt "${_columns}"  ]]
           then
@@ -5693,7 +5693,8 @@ HEREDOC
 
       if ! ((_counter)) && [[ -n "${_selection:-}" ]]
       then
-        _return_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+        _return_1 \
+          printf "Note not found: %s\\n" \ "$(_highlight "${_selection}")"
       fi
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
