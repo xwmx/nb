@@ -2668,7 +2668,7 @@ Usage:
           [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
           [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} ls [<list options>...]
+  ${_ME} ls [--all] [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -5697,12 +5697,14 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-        [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
+  ${_ME} ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [--no-id] [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --all                         Print all items in the notebook. Equivalent
+                                to no limit.
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
                                 each note's filename [default: 3].
   --filenames                   Print the filename for each note.
