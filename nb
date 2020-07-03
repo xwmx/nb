@@ -5274,6 +5274,9 @@ _list() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      --all)
+        _limit=
+        ;;
       -e|--excerpt)
         _print_excerpt=1
         if __option_value_is_present "${__val:-}"
@@ -6078,6 +6081,9 @@ _ls() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      --all)
+        _limit=999999999
+        ;;
       --auto-align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
         ;;
