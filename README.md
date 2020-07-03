@@ -508,42 +508,34 @@ home
 This is an example excerpt.
 ```
 
-`nb` and `nb ls` display only the 30 most recently modified notes. To list a
-different number of notes, use the `-n`,`--limit`, or `--<limit>` flags:
+`nb` and `nb ls` display the 20 most recently modified notes. To list a
+different number of notes, use the `-n`,`--limit`, `--<limit>`, or
+`--all` flags:
 
 ```bash
 > nb -n 2
 home
 ----
-[14] Example Title
-[13] Todos
-12 omitted. 14 total.
+[5] Example Five
+[4] Example Four
+3 omitted. 5 total.
 
-# alternative
-> nb --2
+> nb --3
 home
 ----
-[14] Example Title
-[13] Todos
-12 omitted. 14 total.
-```
+[5] Example Five
+[4] Example Four
+[3] Example Three
+2 omitted. 5 total.
 
-On most systems, when the list of notes is longer than the terminal
-can display on one screen, `nb ls` will open the list in
-[`less`](https://en.wikipedia.org/wiki/Less_(Unix)). Use the following
-keys to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
-for more information):
-
-```text
-Key               Function
----               --------
-mouse scroll      Scroll up / down
-arrow up / down   Scroll one line up / down
-d                 Move down one half window
-u                 Move up one half window
-/<query>          Search for <query>
-n                 Jump to next <query> match
-q                 Quit
+> nb --all
+home
+----
+[5] Example Five
+[4] Example Four
+[3] Example Three
+[2] Example Two
+[1] Example One
 ```
 
 `nb ls` is a combination of [`nb notebooks`](#notebooks) and [`nb list`](#list)
@@ -552,11 +544,12 @@ notes without the notebook list and with no limit by default:
 
 ```bash
 > nb list
-[100] example-100.md
-[99]  example-99.md
-[98]  example-98.md
-[97]  example-97.md
+[100] Example One Hundred
+[99]  Example Ninety-Nine
+[98]  Example Ninety-Eight
 ... lists all notes ...
+[2]   Example Two
+[1]   Example One
 ```
 
 For more information about options for listing notes, run [`nb help ls`](#ls)
@@ -1185,6 +1178,12 @@ colon before the command name:
 ```bash
 # show note 5 in the notebook named 'example'
 nb example:show 5
+
+# search for 'example query' in the notebook named 'example'
+nb example:q 'example query'
+
+# show the revision history of the notebook named 'example'
+nb example:history
 ```
 
 You can similarly set the notebook name as a modifier to the id, filename, or
@@ -1205,9 +1204,15 @@ specified notebook:
 > nb example:
 example · home
 --------------
-[3] Title Three
-[2] Title Two
-[1] Title One
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
+```
+
+A bookmark can be added in another notebook using the same approach:
+
+```bash
+> nb example: https://example.com --tags tag1,tag2
 ```
 
 Notes can also be moved between notebooks:
@@ -1215,6 +1220,27 @@ Notes can also be moved between notebooks:
 ```bash
 # move note 3 from the current notebook to 'example'
 nb move 3 example
+```
+
+##### Notebooks and Tab Completion
+
+[`nb` tab completion](#tab-completion) is optimized for frequently running
+commands in various notebooks using the colon syntax, so installing the
+completion scripts is recommended and makes working with notebooks easy
+and fun.
+
+For example, listing the contents of a notebook is usually as simple as typing
+the first two or three characters of the name, then \<tab\>, then \<enter\>:
+
+```bash
+> nb exa<tab>
+# completes to 'example:'
+> nb example:
+example · home
+--------------
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
 ```
 
 #### Global and Local Notebooks
@@ -1851,10 +1877,10 @@ Usage:
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  nb ls [<list options>...]
+  nb ls [--all] [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -2372,8 +2398,8 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -2383,6 +2409,7 @@ Options:
   --no-id                       Don't include the id in list items.
   -n <limit>                    The maximum number of notes to list.
   --<limit>                     Shortcut for `-n <limit>`.
+  -p, --pager                   Display output in the pager.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
@@ -2421,18 +2448,21 @@ Examples:
 
 ```text
 Usage:
-  nb ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-        [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+  nb ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --all                         Print all items in the notebook. Equivalent
+                                to no limit.
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
                                 each note's filename [default: 3].
   --filenames                   Print the filename for each note.
   --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of notes to list.
+  -n <limit>                    The maximum number of listed items. [default: 20]
   --<limit>                     Shortcut for `-n <limit>`.
+  -p, --pager                   Display output in the pager.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
@@ -2449,20 +2479,6 @@ Description:
   matching note will be displayed. When no match is found, titles and
   filenames will be searched for any that match <query> as a case-insensitive
   regular expression.
-
-  On most systems, if the list of notes is longer than the terminal can
-  display on one screen, the list will be opened in `less`. Use the
-  following keys to navigate in `less` (see `man less` for more):
-
-    Key               Function
-    ---               --------
-    mouse scroll      Scroll up / down
-    arrow up / down   Scroll one line up / down
-    d                 Move down one half window
-    u                 Move up one half window
-    /<query>          Search for <query>
-    n                 Jump to next <query> match
-    q                 Quit
 
   Options are passed through to `list`. For more information, see
   `nb help list`.

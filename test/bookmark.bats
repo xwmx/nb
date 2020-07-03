@@ -347,7 +347,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --quote option ##############################################################
 
-@test "\`bookmark\` with --quote option creates new note with comment." {
+@test "\`bookmark\` with --quote option creates new note with quote." {
   {
     run "${_NB}" init
   }

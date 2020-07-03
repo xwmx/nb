@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.1.26"
+_VERSION="4.2.0"
 
 # $_ME
 #
@@ -1884,7 +1884,6 @@ _get_unique_path() {
   fi
 
   local _unique_file_name="${_file_name}"
-
   local _uniqueness_counter=0
 
   while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}" ]]
@@ -2588,7 +2587,7 @@ _help() {
       -s|--short)
         _short=1
         ;;
-      --dump|--skip-pager)
+      --dump|--skip-pager|--no-pager)
         _use_pager=0
         ;;
       *)
@@ -2666,10 +2665,10 @@ Usage:
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} ls [<list options>...]
+  ${_ME} ls [--all] [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -2925,7 +2924,11 @@ _add() {
     _basename="$(_get_unique_basename "${_filename:-}")"
   elif [[ -n "${_title:-}" ]]
   then
-    _filename="$(printf "%s" "${_title}" | tr '[:space:]' '_')"
+    _filename="$(
+      printf "%s" "${_title}" \
+        | tr '[:space:]' '_'  \
+        | tr '/' '_'
+    )"
     _basename="$(_get_unique_basename "${_filename}.${_file_type}")"
   else
     _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
@@ -3169,6 +3172,7 @@ _bookmark() {
         ;;
       --excerpt|--quote|-q)
         _excerpt="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       -f|--filename)
         _filename="$(__option_get_value "${__arg}" "${__val:-}")"
@@ -5191,8 +5195,8 @@ HEREDOC
 desc "list" <<HEREDOC
 Usage:
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -5202,6 +5206,7 @@ Options:
   --no-id                       Don't include the id in list items.
   -n <limit>                    The maximum number of notes to list.
   --<limit>                     Shortcut for \`-n <limit>\`.
+  -p, --pager                   Display output in the pager.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
@@ -5261,6 +5266,7 @@ _list() {
   local _selection
   local _sort=0
   local _type=
+  local _use_pager=0
 
   _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
@@ -5270,6 +5276,9 @@ _list() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      --all)
+        _limit=
+        ;;
       -e|--excerpt)
         _print_excerpt=1
         if __option_value_is_present "${__val:-}"
@@ -5296,6 +5305,9 @@ _list() {
           _limit="${__val:-}"
           shift
         fi
+        ;;
+      -p|--pager|--less)
+        _use_pager=1
         ;;
       -s|--sort)
         _sort=1
@@ -5368,10 +5380,12 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
-  if [[ "${_filenames_count}" -eq 0           ]] &&
-     [[ "${_type}" =~ ^bookmark$|^bookmarks$  ]]
-  then
-    cat <<HEREDOC
+  # Use code block to capture all output for piping to pager.
+  {
+    if [[ "${_filenames_count}" -eq 0           ]] &&
+       [[ "${_type}" =~ ^bookmark$|^bookmarks$  ]]
+    then
+      cat <<HEREDOC
 0 bookmarks.
 
 Add a bookmark:
@@ -5379,10 +5393,10 @@ Add a bookmark:
 Help information:
   $(_highlight "${_ME} help bookmark")
 HEREDOC
-  elif [[ "${_filenames_count}" -eq 0 ]] &&
-       [[ "${_type}" =~ ^archive$|^audio$|^document$|^image$|^video$ ]]
-  then
-    cat <<HEREDOC
+    elif [[ "${_filenames_count}" -eq 0 ]] &&
+         [[ "${_type}" =~ ^archive$|^audio$|^document$|^image$|^video$ ]]
+    then
+      cat <<HEREDOC
 0 ${_type} files.
 
 Import a file:
@@ -5390,9 +5404,9 @@ Import a file:
 Help information:
   $(_highlight "${_ME} help import")
 HEREDOC
-  elif [[ "${_filenames_count}" -eq 0 ]]
-  then # no files in `$_NOTEBOOK_PATH`
-    cat <<HEREDOC
+    elif [[ "${_filenames_count}" -eq 0 ]]
+    then # no files in `$_NOTEBOOK_PATH`
+      cat <<HEREDOC
 0 notes.
 
 Add a note:
@@ -5404,304 +5418,318 @@ Import a file:
 Help information:
   $(_highlight "${_ME} help")
 HEREDOC
-    return 0
-  else
-    local _counter=0
-    local _max_id
-    _max_id="$(_index get_max_id)"
+      return 0
+    else
+      local _counter=0
+      local _max_id
+      _max_id="$(_index get_max_id)"
 
-    for __basename in "${_filenames[@]}"
-    do
-      _debug printf "list() \${__basename}: '%s'\\n" "${__basename}"
+      for __basename in "${_filenames[@]}"
+      do
+        _debug printf "list() \${__basename}: '%s'\\n" "${__basename}"
 
-      local _maybe_title=
+        local _maybe_title=
 
-      if [[ -n "${_selection:-}" ]]
-      then
-        # If a valid <selection> has been specified, skip the rest of the loop
-        # unless the <selection> basename matches the current one.
-        if [[ -n "${_selection_basename}" ]]
+        if [[ -n "${_selection:-}" ]]
         then
-          if [[ "${__basename}" != "${_selection_basename}" ]]
+          # If a valid <selection> has been specified, skip the rest of the
+          # loop unless the <selection> basename matches the current one.
+          if [[ -n "${_selection_basename}" ]]
           then
-            continue
-          fi
-        else
-
-          # Turn on a case-insensitive matching (-s set nocasematch)
-          shopt -s nocasematch
-
-          if [[ "${__basename:-}" =~ ${_selection} ]]
-          then
-            : # include the note in the list
+            if [[ "${__basename}" != "${_selection_basename}" ]]
+            then
+              continue
+            fi
           else
-            _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
-            if [[ "${_maybe_title:-}" =~ ${_selection} ]]
+
+            # Turn on a case-insensitive matching (-s set nocasematch)
+            shopt -s nocasematch
+
+            if [[ "${__basename:-}" =~ ${_selection} ]]
             then
               : # include the note in the list
             else
-              continue # don't include note in list
+              _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
+              if [[ "${_maybe_title:-}" =~ ${_selection} ]]
+              then
+                : # include the note in the list
+              else
+                continue # don't include note in list
+              fi
             fi
+
+            # Turn off a case-insensitive matching (-u unset nocasematch)
+            shopt -u nocasematch
+          fi
+        fi
+
+        if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
+        then # the limit has been reached.
+
+          _debug printf "list() \${#_limit}: '%s'\\n" "${#_limit}"
+          _debug printf "list() \${#_counter}: '%s'\\n" "${#_counter}"
+
+          local _difference
+          _difference=$((_filenames_count-_counter))
+          printf "%s omitted. %s total.\\n" \
+            "${_difference}" \
+            "${_filenames_count}"
+          break
+        fi
+
+        local _title_or_basename="${__basename}"
+        if ! ((_list_filenames))
+        then
+          if [[ -z "${_maybe_title}" ]]
+          then
+            _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
           fi
 
-          # Turn off a case-insensitive matching (-u unset nocasematch)
-          shopt -u nocasematch
+          if [[ -n "${_maybe_title}" ]]
+          then # note file has title.
+            _title_or_basename="${_maybe_title}"
+          fi
         fi
-      fi
 
-      if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
-      then # the limit has been reached.
+        local _extra_length=0
+        local _indicators=
+        local _maybe_padded_indicators=
 
-        _debug printf "list() \${#_limit}: '%s'\\n" "${#_limit}"
-        _debug printf "list() \${#_counter}: '%s'\\n" "${#_counter}"
-
-        local _difference
-        _difference=$((_filenames_count-_counter))
-        printf "%s omitted. %s total.\\n" \
-          "${_difference}" \
-          "${_filenames_count}"
-        break
-      fi
-
-      local _title_or_basename="${__basename}"
-      if ! ((_list_filenames))
-      then
-        if [[ -z "${_maybe_title}" ]]
+        if ((_print_indicators))
         then
-          _maybe_title="$(_get_title "${_NOTEBOOK_PATH}/${__basename}")"
+          if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
+          then
+            _indicators+="🔖 "
+          fi
+
+          if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
+          then
+            _indicators+="🌄 "
+          fi
+
+          if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
+          then
+            _indicators+="📄 "
+          fi
+
+          if [[ -d "${_NOTEBOOK_PATH}/${__basename}" ]]
+          then
+            _indicators+="📂 "
+          fi
+
+          if _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
+          then
+            _indicators+="📹 "
+          fi
+
+          if _file_is_audio "${_NOTEBOOK_PATH}/${__basename}"
+          then
+            _indicators+="🔉 "
+          fi
+
+          if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
+          then
+            _indicators+="🔒 "
+          fi
+
+          if [[ "${_title_or_basename}" =~ todo|Todo|TODO ]]
+          then
+            _indicators+="✅ "
+            _extra_length=1
+          fi
+
+          if [[ -n "${_indicators:-}" ]]
+          then
+            _maybe_padded_indicators="${_indicators}"
+          fi
         fi
 
-        if [[ -n "${_maybe_title}" ]]
-        then # note file has title.
-          _title_or_basename="${_maybe_title}"
-        fi
-      fi
+        local _list_item="${_maybe_padded_indicators}${_title_or_basename}"
 
-      local _extra_length=0
-      local _indicators=
-      local _maybe_padded_indicators=
-
-      if ((_print_indicators))
-      then
-        if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
+        if ! ((_no_id))
         then
-          _indicators+="🔖 "
+          # NOTE: Plain version serves as the reference version and can be
+          # used for length calculations.
+          local _item_identifier=
+          local _max_identifier=
+          _item_identifier="$(_index get_id "${__basename}")"
+          if ((_SCOPED))
+          then
+            _item_identifier="${_notebook_identifier}:${_item_identifier}"
+            _max_identifier="${_notebook_identifier}:${_max_id}"
+          else
+            _item_identifier="${_item_identifier}"
+            _max_identifier="${_max_id}"
+          fi
+
+          local _id_item=
+          _id_item="[${_item_identifier}]"
+
+          local _id_item_color=
+          _id_item_color="$(_id_brackets_color "${_item_identifier}")"
+
+          # Use calculated number of spaces for nicer formatting.
+          local _spaces=''
+          local _spaces_length=1
+          _spaces_length=$(( ${#_max_identifier} + 3 - ${#_id_item} ))
+          printf -v _spaces '%*s' "${_spaces_length}"
         fi
 
-        if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
+        if ! ((_list_filenames)) &&
+           ! ((_print_excerpt))  &&
+           [[ "${_title_or_basename}" == "${__basename}" ]]
         then
-          _indicators+="🌄 "
+          local _first_line=
+          _first_line="$(_get_first_line "${_NOTEBOOK_PATH}/${__basename}")"
+
+          if [[ -n "${_first_line:-}" ]]
+          then
+            _list_item="${_list_item} · \"${_first_line}\""
+          fi
         fi
 
-        if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
-        then
-          _indicators+="📄 "
-        fi
+        local _print_item=
+        local _print_item_color=
 
-        if [[ -d "${_NOTEBOOK_PATH}/${__basename}" ]]
+        if ((_no_id))
         then
-          _indicators+="📂 "
-        fi
-
-        if _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
-        then
-          _indicators+="📹 "
-        fi
-
-        if _file_is_audio "${_NOTEBOOK_PATH}/${__basename}"
-        then
-          _indicators+="🔉 "
-        fi
-
-        if _file_is_encrypted "${_NOTEBOOK_PATH}/${__basename}"
-        then
-          _indicators+="🔒 "
-        fi
-
-        if [[ "${_title_or_basename}" =~ todo|Todo|TODO ]]
-        then
-          _indicators+="✅ "
-          _extra_length=1
-        fi
-
-        if [[ -n "${_indicators:-}" ]]
-        then
-          _maybe_padded_indicators="${_indicators}"
-        fi
-      fi
-
-      local _list_item="${_maybe_padded_indicators}${_title_or_basename}"
-
-      if ! ((_no_id))
-      then
-        # NOTE: Plain version serves as the reference version and can be used
-        # for length calculations.
-        local _item_identifier=
-        local _max_identifier=
-        _item_identifier="$(_index get_id "${__basename}")"
-        if ((_SCOPED))
-        then
-          _item_identifier="${_notebook_identifier}:${_item_identifier}"
-          _max_identifier="${_notebook_identifier}:${_max_id}"
+          _print_item="${_list_item}"
+          _print_item_color="${_list_item}"
         else
-          _item_identifier="${_item_identifier}"
-          _max_identifier="${_max_id}"
+          local _list_item_id="${_id_item}${_spaces}${_list_item}"
+          local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
+
+          _print_item="${_list_item_id}"
+          _print_item_color="${_list_item_id_color}"
         fi
 
-        local _id_item=
-        _id_item="[${_item_identifier}]"
-
-        local _id_item_color=
-        _id_item_color="$(_id_brackets_color "${_item_identifier}")"
-
-        # Use calculated number of spaces for nicer formatting.
-        local _spaces=''
-        local _spaces_length=1
-        _spaces_length=$(( ${#_max_identifier} + 3 - ${#_id_item} ))
-        printf -v _spaces '%*s' "${_spaces_length}"
-      fi
-
-      if ! ((_list_filenames)) &&
-         ! ((_print_excerpt))  &&
-         [[ "${_title_or_basename}" == "${__basename}" ]]
-      then
-        local _first_line=
-        _first_line="$(_get_first_line "${_NOTEBOOK_PATH}/${__basename}")"
-
-        if [[ -n "${_first_line:-}" ]]
+        if ((_list_color_enabled))  &&
+           ! ((_list_filenames))    &&
+           ! ((_no_id))
         then
-          _list_item="${_list_item} · \"${_first_line}\""
+          # Calculate apparent length of the list item string, with byte and
+          # character calculations for handling unicode characters.
+          #
+          # More info: https://stackoverflow.com/a/31009961
+          local _item_line_length_chars=
+          _item_line_length_chars="${#_print_item}"
+
+          LANG=C LC_ALL=C
+
+          local _item_line_length_bytes=
+          _item_line_length_bytes="${#_print_item}"
+
+          LANG="${_LANG}" LC_ALL="${_LC_ALL}"
+
+          local _item_line_length_diff=
+          _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length_chars)/3))
+
+          local _item_line_length=
+          _item_line_length=$((_item_line_length_chars+_item_line_length_diff))
+
+          if ((_extra_length))
+          then
+            _item_line_length=$((_item_line_length+_extra_length))
+          fi
         fi
-      fi
 
-      local _print_item=
-      local _print_item_color=
-
-      if ((_no_id))
-      then
-        _print_item="${_list_item}"
-        _print_item_color="${_list_item}"
-      else
-        local _list_item_id="${_id_item}${_spaces}${_list_item}"
-        local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
-
-        _print_item="${_list_item_id}"
-        _print_item_color="${_list_item_id_color}"
-      fi
-
-      if ((_list_color_enabled))  &&
-         ! ((_list_filenames))    &&
-         ! ((_no_id))
-      then
-        # Calculate apparent length of the list item string, with byte and
-        # character calculations for handling unicode characters.
-        #
-        # More info: https://stackoverflow.com/a/31009961
-        local _item_line_length_chars=
-        _item_line_length_chars="${#_print_item}"
-
-        LANG=C LC_ALL=C
-
-        local _item_line_length_bytes=
-        _item_line_length_bytes="${#_print_item}"
-
-        LANG="${_LANG}" LC_ALL="${_LC_ALL}"
-
-        local _item_line_length_diff=
-        _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length_chars)/3))
-
-        local _item_line_length=
-        _item_line_length=$((_item_line_length_chars+_item_line_length_diff))
-
-        if ((_extra_length))
+        if ((_list_color_enabled))  &&
+           ! ((_print_excerpt))     &&
+           ! ((_list_filenames))    &&
+           ! ((_no_id))
         then
-          _item_line_length=$((_item_line_length+_extra_length))
+          if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+             {
+               [[ -n "${_maybe_title:-}" ]] ||
+               [[ -n "${_first_line:-}"  ]]
+             }
+          then
+            # Turn off line-wrapping
+            printf '\033[?7l'
+          fi
         fi
-      fi
 
-      if ((_list_color_enabled))  &&
-         ! ((_print_excerpt))     &&
-         ! ((_list_filenames))    &&
-         ! ((_no_id))
-      then
-        if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
-           {
-             [[ -n "${_maybe_title:-}" ]] ||
-             [[ -n "${_first_line:-}"  ]]
-           }
+        if ((_list_color_enabled))
         then
-          # Turn off line-wrapping
-          printf '\033[?7l'
-        fi
-      fi
-
-      if ((_list_color_enabled))
-      then
-        printf "%s" "${_print_item_color}"
-      else
-        printf "%s" "${_print_item}"
-      fi
-
-      if ((_list_color_enabled))  &&
-         ! ((_print_excerpt))     &&
-         ! ((_list_filenames))    &&
-         ! ((_no_id))
-      then
-        if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
-           {
-             [[ -n "${_maybe_title:-}" ]] ||
-             [[ -n "${_first_line:-}"  ]]
-           }
-        then
-          # Turn on line-wrapping
-          printf '\033[?7h'
-        fi
-      fi
-
-      # End of line.
-      printf "\\n"
-
-      if ((_print_excerpt)) &&
-         [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
-         _file_is_text "${_NOTEBOOK_PATH}/${__basename}"
-      then # excerpt is specified with a non-zero digit, as required by `head`.
-        if [[ -z "${_item_line_length:-}"               ]] ||
-           [[ "${_item_line_length}" -gt "${_columns}"  ]]
-        then
-          _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+          printf "%s" "${_print_item_color}"
         else
-          _print_line "$(printf "%-${_item_line_length}s" '.')"
+          printf "%s" "${_print_item}"
         fi
-        head -"${_excerpt_length}" "${_NOTEBOOK_PATH}/${__basename}"
+
+        if ((_list_color_enabled))  &&
+           ! ((_print_excerpt))     &&
+           ! ((_list_filenames))    &&
+           ! ((_no_id))
+        then
+          if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+             {
+               [[ -n "${_maybe_title:-}" ]] ||
+               [[ -n "${_first_line:-}"  ]]
+             }
+          then
+            # Turn on line-wrapping
+            printf '\033[?7h'
+          fi
+        fi
+
+        # End of line.
         printf "\\n"
+
+        if ((_print_excerpt)) &&
+           [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
+           _file_is_text "${_NOTEBOOK_PATH}/${__basename}"
+        then # excerpt is specified with a non-zero digit, required by `head`.
+          if [[ -z "${_item_line_length:-}"               ]] ||
+             [[ "${_item_line_length}" -gt "${_columns}"  ]]
+          then
+            _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+          else
+            _print_line "$(printf "%-${_item_line_length}s" '.')"
+          fi
+          head -"${_excerpt_length}" "${_NOTEBOOK_PATH}/${__basename}"
+          printf "\\n"
+        fi
+
+        _counter=$((_counter+1))
+      done
+
+      if ! ((_counter)) && [[ -n "${_selection:-}" ]]
+      then
+        _return_1 \
+          printf "Note not found: %s\\n" \ "$(_highlight "${_selection}")"
+      fi
+    fi
+  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
+      then
+        "${PAGER}"
+      elif ((_use_pager)) && _command_exists "less"
+      then
+        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+      else
+        cat
       fi
 
-      _counter=$((_counter+1))
-    done
-
-    if ! ((_counter)) && [[ -n "${_selection:-}" ]]
-    then
-      _return_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
-    fi
-  fi
 }
 
 # ls ####################################################################### ls
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-        [-n <limit> | --<limit>] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+  ${_ME} ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
+  --all                         Print all items in the notebook. Equivalent
+                                to no limit.
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
                                 each note's filename [default: 3].
   --filenames                   Print the filename for each note.
   --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of notes to list.
+  -n <limit>                    The maximum number of listed items. [default: 20]
   --<limit>                     Shortcut for \`-n <limit>\`.
+  -p, --pager                   Display output in the pager.
   -s, --sort                    Order notes by id.
   -r, --reverse                 Order notes by id descending.
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
@@ -5718,20 +5746,6 @@ Description:
   matching note will be displayed. When no match is found, titles and
   filenames will be searched for any that match <query> as a case-insensitive
   regular expression.
-
-  On most systems, if the list of notes is longer than the terminal can
-  display on one screen, the list will be opened in \`less\`. Use the
-  following keys to navigate in \`less\` (see \`man less\` for more):
-
-    Key               Function
-    ---               --------
-    mouse scroll      Scroll up / down
-    arrow up / down   Scroll one line up / down
-    d                 Move down one half window
-    u                 Move up one half window
-    /<query>          Search for <query>
-    n                 Jump to next <query> match
-    q                 Quit
 
   Options are passed through to \`list\`. For more information, see
   \`${_ME} help list\`.
@@ -5799,7 +5813,6 @@ _ls() {
       "${_ME} help"
     )
 
-
     local _commands_hi=(
       "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
         "$(_highlight_secondary "${_commands_raw[1]}")"
@@ -5813,7 +5826,6 @@ _ls() {
         "$(_highlight_secondary "${_commands_raw[9]}")"
         "$(_highlight_secondary "${_commands_raw[10]}")"
     )
-
 
     printf '\033[?7l'
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
@@ -6057,8 +6069,7 @@ _ls() {
   local _columns
   _columns="$(tput cols)"
   local _header_flags=()
-  local _header_line_count=0
-  local _limit=30
+  local _limit=20
   local _maybe_notebook_list=
   local _notebook_names_raw
   _notebook_names_raw=($(
@@ -6066,16 +6077,15 @@ _ls() {
   ))
   local _use_pager=0
 
-  local _size
-  _size="$(stty size)"
-  local _line_count="${_size% *}"
-
   while ((${#}))
   do
     local __arg="${1:-}"
     local __val="${2:-}"
 
     case "${__arg}" in
+      --all)
+        _limit=999999999999999
+        ;;
       --auto-align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
         ;;
@@ -6087,6 +6097,9 @@ _ls() {
 
         shift
         ;;
+      -p|--pager|--less)
+        _use_pager=1
+        ;;
       -l|-a)
         : # Ignore accidental ls -l and -a flags due to muscle memory.
         ;;
@@ -6094,7 +6107,8 @@ _ls() {
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${__arg:-}"
-        else
+        elif [[ -n "${__arg:-}" ]]
+        then
           _args+=("${__arg}")
         fi
         ;;
@@ -6110,49 +6124,7 @@ _ls() {
     while read -r __line
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
-      _header_line_count=$((_header_line_count + 1))
     done < <(_print_header "${_header_flags[@]:-}")
-  fi
-
-  local _note_count_local=0
-  local _note_count_total=0
-  _note_count_total="$(_count)"
-
-  local _ui_line_count=$((_header_line_count + 5))
-
-  local _max_note_count=$((_line_count-_ui_line_count))
-
-  if [[ "${_note_count_total}" -gt "${_max_note_count}" ]]
-  then
-    _note_count_local="$(
-      {
-        _list \
-          -n "${_line_count}" \
-          "${_args[@]:-}"     \
-          --no-id             \
-          --no-indicators     \
-          --filenames         \
-          2>/dev/null || printf ""
-        } | wc -l | tr -d '[:space:]'
-    )"
-  fi
-
-  # Remove 'omitted' line.
-  _note_count_local=$((_note_count_local - 1))
-
-  _debug printf "_ls() \$_header_line_count:  %s\\n" "${_header_line_count}"
-  _debug printf "_ls() \$_ui_line_count:      %s\\n" "${_ui_line_count}"
-  _debug printf "_ls() \$_line_count:         %s\\n" "${_line_count}"
-  _debug printf "_ls() \$_note_count_local:   %s\\n" "${_note_count_local}"
-  _debug printf "_ls() \$_note_count_total:   %s\\n" "${_note_count_total}"
-  _debug printf "_ls() \$_limit:              %s\\n" "${_limit}"
-  _debug printf "_ls() \$_max_note_count:     %s\\n" "${_max_note_count}"
-
-  if ((_line_count)) &&
-     [[ "${_note_count_local}"  -ge "${_max_note_count}" ]] &&
-     [[ "${_limit}"             -ge "${_max_note_count}" ]]
-  then
-    _use_pager=1
   fi
 
   {
@@ -8821,7 +8793,7 @@ _show() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --dump|--skip-pager)
+      --dump|--skip-pager|--no-pager)
         _dump=1
         ;;
       --path)
