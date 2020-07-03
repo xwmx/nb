@@ -6097,6 +6097,9 @@ _ls() {
 
         shift
         ;;
+      --pager|--less)
+        _use_pager=1
+        ;;
       -l|-a)
         : # Ignore accidental ls -l and -a flags due to muscle memory.
         ;;
