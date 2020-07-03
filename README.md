@@ -509,41 +509,33 @@ This is an example excerpt.
 ```
 
 `nb` and `nb ls` display the 20 most recently modified notes. To list a
-different number of notes, use the `-n`,`--limit`, or `--<limit>` flags:
+different number of notes, use the `-n`,`--limit`, `--<limit>`, or
+`--all` flags:
 
 ```bash
 > nb -n 2
 home
 ----
-[14] Example Title
-[13] Todos
-12 omitted. 14 total.
+[5] Example Five
+[4] Example Four
+3 omitted. 5 total.
 
-# alternative
-> nb --2
+> nb --3
 home
 ----
-[14] Example Title
-[13] Todos
-12 omitted. 14 total.
-```
+[5] Example Five
+[4] Example Four
+[3] Example Three
+3 omitted. 5 total.
 
-On most systems, when the list of notes is longer than the terminal
-can display on one screen, `nb ls` will open the list in
-[`less`](https://en.wikipedia.org/wiki/Less_(Unix)). Use the following
-keys to navigate in `less` (see [`man less`](https://linux.die.net/man/1/less)
-for more information):
-
-```text
-Key               Function
----               --------
-mouse scroll      Scroll up / down
-arrow up / down   Scroll one line up / down
-d                 Move down one half window
-u                 Move up one half window
-/<query>          Search for <query>
-n                 Jump to next <query> match
-q                 Quit
+> nb --all
+home
+----
+[5] Example Five
+[4] Example Four
+[3] Example Three
+[2] Example Two
+[1] Example One
 ```
 
 `nb ls` is a combination of [`nb notebooks`](#notebooks) and [`nb list`](#list)
