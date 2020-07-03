@@ -526,7 +526,7 @@ home
 [5] Example Five
 [4] Example Four
 [3] Example Three
-3 omitted. 5 total.
+2 omitted. 5 total.
 
 > nb --all
 home
