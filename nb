@@ -2587,7 +2587,7 @@ _help() {
       -s|--short)
         _short=1
         ;;
-      --dump|--skip-pager)
+      --dump|--skip-pager|--no-pager)
         _use_pager=0
         ;;
       *)
@@ -8774,7 +8774,7 @@ _show() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --dump|--skip-pager)
+      --dump|--skip-pager|--no-pager)
         _dump=1
         ;;
       --path)
