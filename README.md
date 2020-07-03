@@ -544,11 +544,12 @@ notes without the notebook list and with no limit by default:
 
 ```bash
 > nb list
-[100] example-100.md
-[99]  example-99.md
-[98]  example-98.md
-[97]  example-97.md
+[100] Example One Hundred
+[99]  Example Ninety-Nine
+[98]  Example Ninety-Eight
 ... lists all notes ...
+[2]   Example Two
+[1]   Example One
 ```
 
 For more information about options for listing notes, run [`nb help ls`](#ls)
