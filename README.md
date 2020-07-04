@@ -1,7 +1,7 @@
 <p align="center">
-  <img 	src="docs/images/nb.png"
-  		alt="nb"
-  		width="200"/>
+  <img  src="docs/images/nb.png"
+        alt="nb"
+        width="200">
 </p>
 
 <p align="center">
@@ -36,7 +36,7 @@ but `nb` works great without them.
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
   	   	alt="home"
-  	   	width="450"/>
+  	   	width="450">
 </p>
 
 `nb` is also a powerful text-based CLI bookmarking system that includes:
@@ -54,7 +54,7 @@ documents made for humans, so bookmarks are easy to edit just like any other not
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
   		  alt="bookmarks"
-  		  width="450"/>
+  		  width="450">
 </p>
 
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
@@ -66,7 +66,7 @@ any device.
 <p align="center">
   <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
   		  alt="welcome"
-  		  width="450"/>
+  		  width="450">
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
