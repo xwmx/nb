@@ -635,10 +635,10 @@ Key               Function
 ---               --------
 mouse scroll      Scroll up / down
 arrow up / down   Scroll one line up / down
-f                 Move down one window
-b                 Move up one window
-d                 Move down one half window
-u                 Move up one half window
+f                 Jump forward one window
+b                 Jump back one window
+d                 Jump down one half window
+u                 Jump up one half window
 /<query>          Search for <query>
 n                 Jump to next <query> match
 q                 Quit
@@ -2937,8 +2937,10 @@ Description:
     ---               --------
     mouse scroll      Scroll up / down
     arrow up / down   Scroll one line up / down
-    d                 Move down one half window
-    u                 Move up one half window
+    f                 Jump forward one window
+    b                 Jump back one window
+    d                 Jump down one half window
+    u                 Jump up one half window
     /<query>          Search for <query>
     n                 Jump to next <query> match
     q                 Quit
