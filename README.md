@@ -1850,12 +1850,12 @@ in a single portable script.
 
 Usage:
   nb
-  nb [<id> | <filename> | <path> | <title> | <notebook>] [<list options>...]
+  nb [<id> | <filename> | <path> | <title> | <notebook>] [<ls options>...]
   nb [<url>] [<bookmark options>...]
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
-  nb bookmark [<list options>...]
+  nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -1981,7 +1981,7 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 Usage:
-  bookmark [<list options>...]
+  bookmark [<ls options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -2108,7 +2108,7 @@ Shortcut Alias: `a`
 
 ```text
 Usage:
-  nb bookmark [<list options>...]
+  nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
