@@ -2417,7 +2417,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder.
 
 Description:
   List notes in the current notebook.
