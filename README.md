@@ -1,7 +1,7 @@
 <p align="center">
-  <img 	src="docs/images/nb.png"
-  		alt="nb"
-  		width="200"/>
+  <img  src="docs/images/nb.png"
+        alt="nb"
+        width="200">
 </p>
 
 <p align="center">
@@ -34,9 +34,9 @@ any standard Linux / Unix environment, including macOS and Windows via WSL.
 but `nb` works great without them.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
-  	   	alt="home"
-  	   	width="450"/>
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
+        alt="home"
+        width="450">
 </p>
 
 `nb` is also a powerful text-based CLI bookmarking system that includes:
@@ -52,9 +52,9 @@ Page information is automatically downloaded, compiled, and saved into normal Ma
 documents made for humans, so bookmarks are easy to edit just like any other note.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
-  		  alt="bookmarks"
-  		  width="450"/>
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
+        alt="bookmarks"
+        width="450">
 </p>
 
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
@@ -64,9 +64,9 @@ purpose syncing utility like Dropbox so they can be edited in other apps on
 any device.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
-  		  alt="welcome"
-  		  width="450"/>
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
+        alt="welcome"
+        width="450">
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
@@ -508,8 +508,8 @@ home
 This is an example excerpt.
 ```
 
-`nb` and `nb ls` display the 20 most recently modified notes. To list a
-different number of notes, use the `-n`,`--limit`, `--<limit>`, or
+`nb` and `nb ls` display the 20 most recently modified items. To list a
+different number of items, use the `-n`,`--limit`, `--<limit>`, `-a`, or
 `--all` flags:
 
 ```bash
@@ -627,16 +627,18 @@ nb 3 show
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[Pygments](https://pygments.org/) is installed, and you can navigate with the
-same keys used in `nb ls`:
+[Pygments](https://pygments.org/) is installed. You can navigate in
+`less` using the following keys:
 
 ```text
 Key               Function
 ---               --------
 mouse scroll      Scroll up / down
 arrow up / down   Scroll one line up / down
-d                 Move down one half window
-u                 Move up one half window
+f                 Jump forward one window
+b                 Jump back one window
+d                 Jump down one half window
+u                 Jump up one half window
 /<query>          Search for <query>
 n                 Jump to next <query> match
 q                 Quit
@@ -1613,67 +1615,67 @@ Value:
 
 | ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png)  |  ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-bookmarks.png)
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `console`
 
 | ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-home.png)  |  ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `desert`
 
 | ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-home.png)  |  ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `electro`
 
 | ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-home.png)  |  ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `forest`
 
 | ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-home.png)  |  ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `monochrome`
 
 | ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `nb` (default)
 
 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `ocean`
 
 | ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-home.png)  |  ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `raspberry`
 
 | ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png)  |  ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `unicorn`
 
 | ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `utility`
 
 | ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 #### Shell Theme Support
 
@@ -1880,7 +1882,7 @@ Usage:
           [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  nb ls [--all] [<list options>...]
+  nb ls [-a | --all] [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -2415,7 +2417,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder.
 
 Description:
   List notes in the current notebook.
@@ -2448,13 +2450,13 @@ Examples:
 
 ```text
 Usage:
-  nb ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+  nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
         [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --all                         Print all items in the notebook. Equivalent
+  -a, --all                     Print all items in the notebook. Equivalent
                                 to no limit.
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
                                 each note's filename [default: 3].
@@ -2935,8 +2937,10 @@ Description:
     ---               --------
     mouse scroll      Scroll up / down
     arrow up / down   Scroll one line up / down
-    d                 Move down one half window
-    u                 Move up one half window
+    f                 Jump forward one window
+    b                 Jump back one window
+    d                 Jump down one half window
+    u                 Jump up one half window
     /<query>          Search for <query>
     n                 Jump to next <query> match
     q                 Quit

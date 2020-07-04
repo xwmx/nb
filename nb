@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.2.0"
+_VERSION="4.2.1"
 
 # $_ME
 #
@@ -2223,7 +2223,7 @@ _less_prompt() {
   if [[ "$(tput cols)" -gt 81 ]]
   then
     _prompt="\
-> scroll for more, d / u to jump ↓ / ↑, h for help, or q to quit"
+> scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
   fi
 
   printf "%s\\n" "${_prompt}"
@@ -2668,7 +2668,7 @@ Usage:
           [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} ls [--all] [<list options>...]
+  ${_ME} ls [-a | --all] [<list options>...]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -5212,7 +5212,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder.
 
 Description:
   List notes in the current notebook.
@@ -5276,7 +5276,7 @@ _list() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --all)
+      -a|--all)
         _limit=
         ;;
       -e|--excerpt)
@@ -5715,13 +5715,13 @@ HEREDOC
 
 desc "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+  ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
         [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --all                         Print all items in the notebook. Equivalent
+  -a, --all                     Print all items in the notebook. Equivalent
                                 to no limit.
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
                                 each note's filename [default: 3].
@@ -6083,7 +6083,7 @@ _ls() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --all)
+      -a|--all)
         _limit=999999999999999
         ;;
       --auto-align|--centered|--justified|--plain)
@@ -6100,8 +6100,8 @@ _ls() {
       -p|--pager|--less)
         _use_pager=1
         ;;
-      -l|-a)
-        : # Ignore accidental ls -l and -a flags due to muscle memory.
+      -l)
+        : # Ignore accidental ls -l  due to muscle memory.
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
@@ -8747,8 +8747,10 @@ Description:
     ---               --------
     mouse scroll      Scroll up / down
     arrow up / down   Scroll one line up / down
-    d                 Move down one half window
-    u                 Move up one half window
+    f                 Jump forward one window
+    b                 Jump back one window
+    d                 Jump down one half window
+    u                 Jump up one half window
     /<query>          Search for <query>
     n                 Jump to next <query> match
     q                 Quit

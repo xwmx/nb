@@ -2,7 +2,6 @@
 
 load test_helper
 
-
 _setup_ls() {
   "${_NB}" init
   cat <<HEREDOC | "${_NB}" add "first.md"
@@ -112,7 +111,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 21  ]]
 }
 
-# `ls -n <number>` ############################################################
+# `ls -n <number>`, ls --limit <number>, ls --<number> ########################
 
 @test "\`ls -n 0\` exits with 0 and lists 0 files." {
   {
@@ -185,6 +184,140 @@ HEREDOC
   [[ "${lines[2]}" =~ three ]]
   [[ "${lines[3]}" =~ two   ]]
   [[ "${lines[4]}" =~ one   ]]
+}
+
+@test "\`ls --limit 3\` exits with 0 and lists 3 files." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls -n 3
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 8   ]]
+  [[ "${lines[2]}" =~ three ]]
+  [[ "${lines[3]}" =~ two   ]]
+  [[ "${lines[4]}" =~ one   ]]
+}
+
+@test "\`ls --3\` exits with 0 and lists 3 files." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls --3
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 8   ]]
+  [[ "${lines[2]}" =~ three ]]
+  [[ "${lines[3]}" =~ two   ]]
+  [[ "${lines[4]}" =~ one   ]]
+}
+
+# `ls -a` / `ls --all` ########################################################
+
+_setup_ls_all() {
+  "${_NB}" init
+
+  for (( _i=1; _i<31; _i++ ))
+  do
+    cat <<HEREDOC | "${_NB}" add "${_i}.md"
+# ${_i}
+line two
+line three
+line four
+HEREDOC
+  done
+}
+
+@test "\`ls --2\` exits with 0 and lists 2 items." {
+  {
+    _setup_ls_all
+  }
+
+  run "${_NB}" ls --2
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 8   ]]
+  [[ "${lines[2]}" =~ '30'  ]]
+  [[ "${lines[3]}" =~ '29'  ]]
+}
+
+@test "\`ls\` exits with 0 and lists 20 items." {
+  {
+    _setup_ls_all
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[@]}: '%s'\\n" "${lines[@]}"
+  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${#lines[@]}" -eq 26        ]]
+  [[ "${lines[2]}"  =~ '30'       ]]
+  [[ "${lines[3]}"  =~ '29'       ]]
+  [[ "${lines[21]}" =~ '11'       ]]
+  [[ "${lines[22]}" =~ 'omitted'  ]]
+}
+
+@test "\`ls -a\` exits with 0 and lists all items." {
+  {
+    _setup_ls_all
+  }
+
+  run "${_NB}" ls -a
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[@]}: '%s'\\n" "${lines[@]}"
+  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 35  ]]
+  [[ "${lines[2]}"  =~ '30' ]]
+  [[ "${lines[3]}"  =~ '29' ]]
+  [[ "${lines[21]}" =~ '11' ]]
+  [[ "${lines[22]}" =~ '10' ]]
+  [[ "${lines[32]}" =~ \-\- ]]
+}
+
+@test "\`ls --all\` exits with 0 and lists all items." {
+  {
+    _setup_ls_all
+  }
+
+  run "${_NB}" ls --all
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[@]}: '%s'\\n" "${lines[@]}"
+  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 35  ]]
+  [[ "${lines[2]}"  =~ '30' ]]
+  [[ "${lines[3]}"  =~ '29' ]]
+  [[ "${lines[21]}" =~ '11' ]]
+  [[ "${lines[22]}" =~ '10' ]]
+  [[ "${lines[32]}" =~ \-\- ]]
 }
 
 # `ls <selection>` ############################################################

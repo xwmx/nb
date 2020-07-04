@@ -295,6 +295,24 @@ HEREDOC
   [[ "${lines[2]}" == "1 omitted. 3 total." ]]
 }
 
+@test "\`list --limit 2\` exits with 0 and displays list with 2 items." {
+  {
+    _setup_list_limit
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --limit 2
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${#lines[@]}" -eq 3 ]]
+
+  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
+}
+
 @test "\`list --2\` exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
