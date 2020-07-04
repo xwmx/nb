@@ -34,9 +34,9 @@ any standard Linux / Unix environment, including macOS and Windows via WSL.
 but `nb` works great without them.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
-  	   	alt="home"
-  	   	width="450">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
+        alt="home"
+        width="450">
 </p>
 
 `nb` is also a powerful text-based CLI bookmarking system that includes:
@@ -52,9 +52,9 @@ Page information is automatically downloaded, compiled, and saved into normal Ma
 documents made for humans, so bookmarks are easy to edit just like any other note.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
-  		  alt="bookmarks"
-  		  width="450">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png"
+        alt="bookmarks"
+        width="450">
 </p>
 
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
@@ -64,9 +64,9 @@ purpose syncing utility like Dropbox so they can be edited in other apps on
 any device.
 
 <p align="center">
-  <img 	src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
-  		  alt="welcome"
-  		  width="450">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
+        alt="welcome"
+        width="450">
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
@@ -1615,67 +1615,67 @@ Value:
 
 | ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png)  |  ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-bookmarks.png)
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `console`
 
 | ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-home.png)  |  ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `desert`
 
 | ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-home.png)  |  ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `electro`
 
 | ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-home.png)  |  ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `forest`
 
 | ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-home.png)  |  ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `monochrome`
 
 | ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `nb` (default)
 
 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `ocean`
 
 | ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-home.png)  |  ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `raspberry`
 
 | ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png)  |  ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `unicorn`
 
 | ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 ##### `utility`
 
 | ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-bookmarks.png) |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
 #### Shell Theme Support
 
