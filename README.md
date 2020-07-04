@@ -508,8 +508,8 @@ home
 This is an example excerpt.
 ```
 
-`nb` and `nb ls` display the 20 most recently modified notes. To list a
-different number of notes, use the `-n`,`--limit`, `--<limit>`, or
+`nb` and `nb ls` display the 20 most recently modified items. To list a
+different number of items, use the `-n`,`--limit`, `--<limit>`, `-a`, or
 `--all` flags:
 
 ```bash
@@ -1882,7 +1882,7 @@ Usage:
           [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  nb ls [--all] [<list options>...]
+  nb ls [-a | --all] [<list options>...]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -2450,13 +2450,13 @@ Examples:
 
 ```text
 Usage:
-  nb ls [--all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+  nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
         [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  --all                         Print all items in the notebook. Equivalent
+  -a, --all                     Print all items in the notebook. Equivalent
                                 to no limit.
   -e, --excerpt [<length>]      Print an excerpt <length> lines long under
                                 each note's filename [default: 3].
