@@ -112,7 +112,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 21  ]]
 }
 
-# `ls -n <number>` ############################################################
+# `ls -n <number>`, ls --limit <number>, ls --<number> ########################
 
 @test "\`ls -n 0\` exits with 0 and lists 0 files." {
   {
@@ -168,6 +168,46 @@ HEREDOC
 }
 
 @test "\`ls -n 3\` exits with 0 and lists 3 files." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls -n 3
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 8   ]]
+  [[ "${lines[2]}" =~ three ]]
+  [[ "${lines[3]}" =~ two   ]]
+  [[ "${lines[4]}" =~ one   ]]
+}
+
+@test "\`ls --limit 3\` exits with 0 and lists 3 files." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls -n 3
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 8   ]]
+  [[ "${lines[2]}" =~ three ]]
+  [[ "${lines[3]}" =~ two   ]]
+  [[ "${lines[4]}" =~ one   ]]
+}
+
+@test "\`ls --3\` exits with 0 and lists 3 files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
