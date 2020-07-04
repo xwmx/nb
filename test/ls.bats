@@ -2,7 +2,6 @@
 
 load test_helper
 
-
 _setup_ls() {
   "${_NB}" init
   cat <<HEREDOC | "${_NB}" add "first.md"
