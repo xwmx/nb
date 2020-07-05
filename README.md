@@ -1937,8 +1937,8 @@ Subcommands:
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Alias for `git` within the current notebook.
-  help         Display this help information.
-  history      Display git history for the current notebook or a note.
+  help         View help information for the program or a subcommand.
+  history      View git history for the current notebook or a note.
   import       Import a file into the current notebook.
   init         Initialize the first notebook.
   list         List notes in the current notebook.
