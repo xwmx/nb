@@ -2705,7 +2705,7 @@ Usage:
 
 Help:
   ${_ME} help               Display this help information.
-  ${_ME} help <subcommand>  View help information for <subcommand>
+  ${_ME} help <subcommand>  View help information for <subcommand>.
   ${_ME} help --readme      Download and view the \`${_ME}\` README file.
   ${_ME} help --short       Display program usage information.
 

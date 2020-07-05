@@ -1919,7 +1919,7 @@ Usage:
 
 Help:
   nb help               Display this help information.
-  nb help <subcommand>  View help information for <subcommand>
+  nb help <subcommand>  View help information for <subcommand>.
   nb help --readme      Download and view the `nb` README file.
   nb help --short       Display program usage information.
 
