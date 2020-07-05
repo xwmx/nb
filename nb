@@ -5815,16 +5815,16 @@ _ls() {
 
     local _commands_hi=(
       "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
-        "$(_highlight_secondary "${_commands_raw[1]}")"
-        "$(_highlight_secondary "${_commands_raw[2]}")"
-        "$(_highlight_secondary "${_commands_raw[3]}")"
-        "$(_highlight_secondary "${_commands_raw[4]}")"
-        "$(_highlight_secondary "${_commands_raw[5]}")"
-        "$(_highlight_secondary "${_commands_raw[6]}")"
-        "$(_highlight_secondary "${_commands_raw[7]}")"
-        "$(_highlight_secondary "${_commands_raw[8]}")"
-        "$(_highlight_secondary "${_commands_raw[9]}")"
-        "$(_highlight_secondary "${_commands_raw[10]}")"
+      "$(_highlight_secondary "${_commands_raw[1]}")"
+      "$(_highlight_secondary "${_commands_raw[2]}")"
+      "$(_highlight_secondary "${_commands_raw[3]}")"
+      "$(_highlight_secondary "${_commands_raw[4]}")"
+      "$(_highlight_secondary "${_commands_raw[5]}")"
+      "$(_highlight_secondary "${_commands_raw[6]}")"
+      "$(_highlight_secondary "${_commands_raw[7]}")"
+      "$(_highlight_secondary "${_commands_raw[8]}")"
+      "$(_highlight_secondary "${_commands_raw[9]}")"
+      "$(_highlight_secondary "${_commands_raw[10]}")"
     )
 
     printf '\033[?7l'
