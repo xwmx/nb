@@ -1043,22 +1043,37 @@ _download_from() {
   then
     if _command_exists "curl"
     then
-      curl -s -L "${_url}" -o "${_target_path}" &&
-        _downloaded=1
+      curl                          \
+        --silent                    \
+        --location                  \
+        "${_url}"                   \
+        --output "${_target_path}"  &&
+          _downloaded=1
     elif _command_exists "wget"
     then
-      wget --quiet -O "${_target_path}" "${_url}" 2>/dev/null &&
-        _downloaded=1
+      wget                    \
+        --quiet               \
+        -O "${_target_path}"  \
+        "${_url}"             \
+        2>/dev/null           &&
+          _downloaded=1
     fi
   else
     if _command_exists "curl"
     then
-      curl -s -L "${_url}" &&
-        _downloaded=1
+      curl          \
+        --silent    \
+        --location  \
+        "${_url}"   &&
+          _downloaded=1
     elif _command_exists "wget"
     then
-      wget --quiet -O - "${_url}" 2>/dev/null &&
-        _downloaded=1
+      wget          \
+        --quiet     \
+        -O -        \
+        "${_url}"   \
+        2>/dev/null &&
+          _downloaded=1
     fi
   fi
 
