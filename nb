@@ -1032,6 +1032,7 @@ _download_from() {
   local _downloaded=0
   local _timeout=15
   local _url="${1:-}"
+
   if [[ -z "${_url}" ]] ||
      [[ ! "${_url}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
   then
