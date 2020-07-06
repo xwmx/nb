@@ -1044,40 +1044,42 @@ _download_from() {
   then
     if _command_exists "curl"
     then
-      curl                          \
-        --silent                    \
-        --location                  \
-        --max-time "${_timeout}"    \
-        "${_url}"                   \
-        --output "${_target_path}"  &&
+      curl                              \
+        --silent                        \
+        --location                      \
+        --connect-timeout "${_timeout}" \
+        "${_url}"                       \
+        --output "${_target_path}"      &&
           _downloaded=1
     elif _command_exists "wget"
     then
-      wget                      \
-        --quiet                 \
-        --timeout="${_timeout}" \
-        -O "${_target_path}"    \
-        "${_url}"               \
-        2>/dev/null             &&
+      wget                              \
+        --quiet                         \
+        --connect-timeout="${_timeout}" \
+        --dns-timeout="${_timeout}"     \
+        -O "${_target_path}"            \
+        "${_url}"                       \
+        2>/dev/null                     &&
           _downloaded=1
     fi
   else
     if _command_exists "curl"
     then
-      curl                        \
-        --silent                  \
-        --location                \
-        --max-time "${_timeout}"  \
-        "${_url}"                 &&
+      curl                              \
+        --silent                        \
+        --location                      \
+        --connect-timeout "${_timeout}" \
+        "${_url}"                       &&
           _downloaded=1
     elif _command_exists "wget"
     then
-      wget                      \
-        --quiet                 \
-        --timeout="${_timeout}" \
-        -O -                    \
-        "${_url}"               \
-        2>/dev/null             &&
+      wget                              \
+        --quiet                         \
+        --connect-timeout="${_timeout}" \
+        --dns-timeout="${_timeout}"     \
+        -O -                            \
+        "${_url}"                       \
+        2>/dev/null                     &&
           _downloaded=1
     fi
   fi
