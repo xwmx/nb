@@ -1184,9 +1184,6 @@ nb example:show 5
 # add a new note in the notebook named 'example'
 nb example:a
 
-# add a new boookmark in the notebook named 'example'
-nb example: https://example.com
-
 # edit note 12 in the notebook named 'example'
 nb example:e 12
 
