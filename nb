@@ -5878,11 +5878,10 @@ _ls() {
   #   highlighting.
   #
   #   Naive version:
-  #
-  #   _notebooks --names \
-  #     | tr '\n' ' ' \
-  #     | fold -s "-w$(tput cols)" \
-  #     && printf "\\n"
+  #     _notebooks --names            \
+  #       | tr '\n' ' '               \
+  #       | fold -s "-w$(tput cols)"  \
+  #       && printf "\\n"
   _print_header() {
     local _auto_align=1 # auto-align by default.
     local _centered=0
