@@ -1181,6 +1181,15 @@ colon before the command name:
 # show note 5 in the notebook named 'example'
 nb example:show 5
 
+# add a new note in the notebook named 'example'
+nb example:a
+
+# add a new boookmark in the notebook named 'example'
+nb example: https://example.com
+
+# edit note 12 in the notebook named 'example'
+nb example:e 12
+
 # search for 'example query' in the notebook named 'example'
 nb example:q 'example query'
 
@@ -1246,7 +1255,7 @@ example · home
 [example:1] Title One
 ```
 
-Notebook command names are also available in tab completion:
+Scoped notebook commands are also available in tab completion:
 
 ```bash
 > nb exa<tab>
