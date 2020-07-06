@@ -5877,7 +5877,7 @@ _ls() {
   #   Build word-wrapping notebook line. `fold` doesn't account for
   #   highlighting.
   #
-  #   Naive version:
+  #   Simple version:
   #     _notebooks --names            \
   #       | tr '\n' ' '               \
   #       | fold -s "-w$(tput cols)"  \
