@@ -64,7 +64,7 @@ _ME="$(basename "${0}")"
 # $_MY_DIR
 #
 # The directory containing $_ME
-_MY_DIR="$(cd "$(dirname "$0")"; pwd)"
+_MY_DIR="$(cd "$(dirname "${0}")"; pwd)"
 
 # $_MY_PATH
 #
