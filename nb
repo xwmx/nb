@@ -5769,11 +5769,11 @@ Examples:
   ${_ME} ls --type document
 HEREDOC
 _ls() {
-  # _print_footer()
+  # _ls_print_footer()
   #
   # Usage:
-  #   _print_footer
-  _print_footer() {
+  #   _ls_print_footer
+  _ls_print_footer() {
     ((NB_FOOTER)) || return 0
 
     local _footer_line_hi=
@@ -5868,10 +5868,10 @@ _ls() {
     done
   }
 
-  # _print_header()
+  # _ls_print_header()
   #
   # Usage:
-  #   _print_header <alignment>
+  #   _ls_print_header <alignment>
   #
   # Description:
   #   Build word-wrapping notebook line. `fold` doesn't account for
@@ -5882,7 +5882,7 @@ _ls() {
   #       | tr '\n' ' '               \
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
-  _print_header() {
+  _ls_print_header() {
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
@@ -5986,7 +5986,7 @@ _ls() {
         then
           _centered=1
           _padding="$(
-            _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+            _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
           )"
         fi
 
@@ -6017,7 +6017,7 @@ _ls() {
           _centered=1
         fi
         _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+          _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
@@ -6045,11 +6045,11 @@ _ls() {
     printf '\n'
   }
 
-  # _print_paddding()
+  # _ls_print_paddding()
   #
   # Usage:
-  #   _print_padding <line> <columns> <aligned>
-  _print_padding() {
+  #   _ls_print_paddding <line> <columns> <aligned>
+  _ls_print_paddding() {
     local _padding_line="${1:-}"
     local _padding_line_length="${#_padding_line}"
     local _padding_columns="${2:-}"
@@ -6123,7 +6123,7 @@ _ls() {
     while read -r __line
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
-    done < <(_print_header "${_header_flags[@]:-}")
+    done < <(_ls_print_header "${_header_flags[@]:-}")
   fi
 
   {
@@ -6161,7 +6161,7 @@ _ls() {
 
     if ((NB_FOOTER))
     then
-      _print_footer
+      _ls_print_footer
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
