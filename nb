@@ -1030,6 +1030,7 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
 #   present.
 _download_from() {
   local _downloaded=0
+  local _timeout=15
   local _url="${1:-}"
   if [[ -z "${_url}" ]] ||
      [[ ! "${_url}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
@@ -1046,33 +1047,37 @@ _download_from() {
       curl                          \
         --silent                    \
         --location                  \
+        --max-time "${_timeout}"    \
         "${_url}"                   \
         --output "${_target_path}"  &&
           _downloaded=1
     elif _command_exists "wget"
     then
-      wget                    \
-        --quiet               \
-        -O "${_target_path}"  \
-        "${_url}"             \
-        2>/dev/null           &&
+      wget                      \
+        --quiet                 \
+        --timeout="${_timeout}" \
+        -O "${_target_path}"    \
+        "${_url}"               \
+        2>/dev/null             &&
           _downloaded=1
     fi
   else
     if _command_exists "curl"
     then
-      curl          \
-        --silent    \
-        --location  \
-        "${_url}"   &&
+      curl                        \
+        --silent                  \
+        --location                \
+        --max-time "${_timeout}"  \
+        "${_url}"                 &&
           _downloaded=1
     elif _command_exists "wget"
     then
-      wget          \
-        --quiet     \
-        -O -        \
-        "${_url}"   \
-        2>/dev/null &&
+      wget                      \
+        --quiet                 \
+        --timeout="${_timeout}" \
+        -O -                    \
+        "${_url}"               \
+        2>/dev/null             &&
           _downloaded=1
     fi
   fi
