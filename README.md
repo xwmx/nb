@@ -1246,6 +1246,15 @@ example · home
 [example:1] Title One
 ```
 
+Notebook command names are also available in tab completion:
+
+```bash
+> nb exa<tab>
+# completes to 'example:'
+> nb example:hi<tab>
+# completes to 'example:history'
+```
+
 #### Global and Local Notebooks
 
 ##### Global Notebooks
