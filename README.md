@@ -1936,7 +1936,7 @@ Usage:
 Help:
   nb help               Display this help information.
   nb help <subcommand>  View help information for <subcommand>.
-  nb help --readme      Download and view the `nb` README file.
+  nb help --readme      View the `nb` README file.
   nb help --short       Display program usage information.
 
 More Information:
@@ -2338,7 +2338,7 @@ Usage:
 Options:
   --dump        Print to standard output rather than the pager when content is
                 longer than the terminal height.
-  -r, --readme  Download and view the `nb` README file.
+  -r, --readme  View the `nb` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
 Description:
