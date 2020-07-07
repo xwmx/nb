@@ -1181,6 +1181,12 @@ colon before the command name:
 # show note 5 in the notebook named 'example'
 nb example:show 5
 
+# add a new note in the notebook named 'example'
+nb example:a
+
+# edit note 12 in the notebook named 'example'
+nb example:e 12
+
 # search for 'example query' in the notebook named 'example'
 nb example:q 'example query'
 
@@ -1232,7 +1238,8 @@ completion scripts is recommended and makes working with notebooks easy
 and fun.
 
 For example, listing the contents of a notebook is usually as simple as typing
-the first two or three characters of the name, then \<tab\>, then \<enter\>:
+the first two or three characters of the name, then press the \<tab\> key,
+then press \<enter\>:
 
 ```bash
 > nb exa<tab>
@@ -1243,6 +1250,15 @@ example · home
 [example:3] Title Three
 [example:2] Title Two
 [example:1] Title One
+```
+
+Scoped notebook commands are also available in tab completion:
+
+```bash
+> nb exa<tab>
+# completes to 'example:'
+> nb example:hi<tab>
+# completes to 'example:history'
 ```
 
 #### Global and Local Notebooks
@@ -1850,12 +1866,12 @@ in a single portable script.
 
 Usage:
   nb
-  nb [<id> | <filename> | <path> | <title> | <notebook>] [<list options>...]
+  nb [<id> | <filename> | <path> | <title> | <notebook>] [<ls options>...]
   nb [<url>] [<bookmark options>...]
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
-  nb bookmark [<list options>...]
+  nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -1919,8 +1935,8 @@ Usage:
 
 Help:
   nb help               Display this help information.
-  nb help <subcommand>  View help information for <subcommand>
-  nb help --readme      Download and view the `nb` README file.
+  nb help <subcommand>  View help information for <subcommand>.
+  nb help --readme      View the `nb` README file.
   nb help --short       Display program usage information.
 
 More Information:
@@ -1937,8 +1953,8 @@ Subcommands:
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Alias for `git` within the current notebook.
-  help         Display this help information.
-  history      Display git history for the current notebook or a note.
+  help         View help information for the program or a subcommand.
+  history      View git history for the current notebook or a note.
   import       Import a file into the current notebook.
   init         Initialize the first notebook.
   list         List notes in the current notebook.
@@ -1981,7 +1997,7 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 Usage:
-  bookmark [<list options>...]
+  bookmark [<ls options>...]
   bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -2108,7 +2124,7 @@ Shortcut Alias: `a`
 
 ```text
 Usage:
-  nb bookmark [<list options>...]
+  nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -2322,7 +2338,7 @@ Usage:
 Options:
   --dump        Print to standard output rather than the pager when content is
                 longer than the terminal height.
-  -r, --readme  Download and view the `nb` README file.
+  -r, --readme  View the `nb` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
 Description:

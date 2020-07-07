@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.2.1"
+_VERSION="4.2.2"
 
 # $_ME
 #
@@ -64,7 +64,7 @@ _ME="$(basename "${0}")"
 # $_MY_DIR
 #
 # The directory containing $_ME
-_MY_DIR="$(cd "$(dirname "$0")"; pwd)"
+_MY_DIR="$(cd "$(dirname "${0}")"; pwd)"
 
 # $_MY_PATH
 #
@@ -75,13 +75,6 @@ _MY_PATH="${_MY_DIR}/${_ME}"
 #
 # The current working directory in which the program was invoked.
 _CURRENT_WORKING_DIR="${PWD}"
-
-# extglob
-#
-# Enable extended pattern matching operators.
-#
-# https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
-shopt -s extglob
 
 # $_SED_I_COMMAND
 #
@@ -1030,7 +1023,9 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
 #   present.
 _download_from() {
   local _downloaded=0
+  local _timeout=15
   local _url="${1:-}"
+
   if [[ -z "${_url}" ]] ||
      [[ ! "${_url}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
   then
@@ -1043,22 +1038,43 @@ _download_from() {
   then
     if _command_exists "curl"
     then
-      curl -s -L "${_url}" -o "${_target_path}" &&
-        _downloaded=1
+      curl                              \
+        --silent                        \
+        --location                      \
+        --connect-timeout "${_timeout}" \
+        "${_url}"                       \
+        --output "${_target_path}"      &&
+          _downloaded=1
     elif _command_exists "wget"
     then
-      wget --quiet -O "${_target_path}" "${_url}" 2>/dev/null &&
-        _downloaded=1
+      wget                              \
+        --quiet                         \
+        --connect-timeout="${_timeout}" \
+        --dns-timeout="${_timeout}"     \
+        -O "${_target_path}"            \
+        "${_url}"                       \
+        2>/dev/null                     &&
+          _downloaded=1
     fi
   else
     if _command_exists "curl"
     then
-      curl -s -L "${_url}" &&
-        _downloaded=1
+      curl                              \
+        --silent                        \
+        --location                      \
+        --connect-timeout "${_timeout}" \
+        "${_url}"                       &&
+          _downloaded=1
     elif _command_exists "wget"
     then
-      wget --quiet -O - "${_url}" 2>/dev/null &&
-        _downloaded=1
+      wget                              \
+        --quiet                         \
+        --connect-timeout="${_timeout}" \
+        --dns-timeout="${_timeout}"     \
+        -O -                            \
+        "${_url}"                       \
+        2>/dev/null                     &&
+          _downloaded=1
     fi
   fi
 
@@ -2563,7 +2579,7 @@ Usage:
 Options:
   --dump        Print to standard output rather than the pager when content is
                 longer than the terminal height.
-  -r, --readme  Download and view the \`${_ME}\` README file.
+  -r, --readme  View the \`${_ME}\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
 Description:
@@ -2636,12 +2652,12 @@ in a single portable script.
 
 Usage:
   ${_ME}
-  ${_ME} [<id> | <filename> | <path> | <title> | <notebook>] [<list options>...]
+  ${_ME} [<id> | <filename> | <path> | <title> | <notebook>] [<ls options>...]
   ${_ME} [<url>] [<bookmark options>...]
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
-  ${_ME} bookmark [<list options>...]
+  ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -2705,8 +2721,8 @@ Usage:
 
 Help:
   ${_ME} help               Display this help information.
-  ${_ME} help <subcommand>  View help information for <subcommand>
-  ${_ME} help --readme      Download and view the \`${_ME}\` README file.
+  ${_ME} help <subcommand>  View help information for <subcommand>.
+  ${_ME} help --readme      View the \`${_ME}\` README file.
   ${_ME} help --short       Display program usage information.
 
 More Information:
@@ -2728,8 +2744,8 @@ Subcommands:
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Alias for \`git\` within the current notebook.
-  help         Display this help information.
-  history      Display git history for the current notebook or a note.
+  help         View help information for the program or a subcommand.
+  history      View git history for the current notebook or a note.
   import       Import a file into the current notebook.
   init         Initialize the first notebook.
   list         List notes in the current notebook.
@@ -3034,7 +3050,7 @@ _alias_subcommand "add" "new"
 
 desc "bookmark" <<HEREDOC
 Usage:
-  ${_ME} bookmark [<list options>...]
+  ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
@@ -5769,11 +5785,11 @@ Examples:
   ${_ME} ls --type document
 HEREDOC
 _ls() {
-  # _print_footer()
+  # _ls_print_footer()
   #
   # Usage:
-  #   _print_footer
-  _print_footer() {
+  #   _ls_print_footer
+  _ls_print_footer() {
     ((NB_FOOTER)) || return 0
 
     local _footer_line_hi=
@@ -5815,16 +5831,16 @@ _ls() {
 
     local _commands_hi=(
       "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
-        "$(_highlight_secondary "${_commands_raw[1]}")"
-        "$(_highlight_secondary "${_commands_raw[2]}")"
-        "$(_highlight_secondary "${_commands_raw[3]}")"
-        "$(_highlight_secondary "${_commands_raw[4]}")"
-        "$(_highlight_secondary "${_commands_raw[5]}")"
-        "$(_highlight_secondary "${_commands_raw[6]}")"
-        "$(_highlight_secondary "${_commands_raw[7]}")"
-        "$(_highlight_secondary "${_commands_raw[8]}")"
-        "$(_highlight_secondary "${_commands_raw[9]}")"
-        "$(_highlight_secondary "${_commands_raw[10]}")"
+      "$(_highlight_secondary "${_commands_raw[1]}")"
+      "$(_highlight_secondary "${_commands_raw[2]}")"
+      "$(_highlight_secondary "${_commands_raw[3]}")"
+      "$(_highlight_secondary "${_commands_raw[4]}")"
+      "$(_highlight_secondary "${_commands_raw[5]}")"
+      "$(_highlight_secondary "${_commands_raw[6]}")"
+      "$(_highlight_secondary "${_commands_raw[7]}")"
+      "$(_highlight_secondary "${_commands_raw[8]}")"
+      "$(_highlight_secondary "${_commands_raw[9]}")"
+      "$(_highlight_secondary "${_commands_raw[10]}")"
     )
 
     printf '\033[?7l'
@@ -5868,22 +5884,21 @@ _ls() {
     done
   }
 
-  # _print_header()
+  # _ls_print_header()
   #
   # Usage:
-  #   _print_header <alignment>
+  #   _ls_print_header <alignment>
   #
   # Description:
   #   Build word-wrapping notebook line. `fold` doesn't account for
   #   highlighting.
   #
-  #   Naive version:
-  #
-  #   _notebooks --names \
-  #     | tr '\n' ' ' \
-  #     | fold -s "-w$(tput cols)" \
-  #     && printf "\\n"
-  _print_header() {
+  #   Simple version:
+  #     _notebooks --names            \
+  #       | tr '\n' ' '               \
+  #       | fold -s "-w$(tput cols)"  \
+  #       && printf "\\n"
+  _ls_print_header() {
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
@@ -5987,7 +6002,7 @@ _ls() {
         then
           _centered=1
           _padding="$(
-            _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+            _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
           )"
         fi
 
@@ -6018,7 +6033,7 @@ _ls() {
           _centered=1
         fi
         _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+          _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
@@ -6046,11 +6061,11 @@ _ls() {
     printf '\n'
   }
 
-  # _print_paddding()
+  # _ls_print_paddding()
   #
   # Usage:
-  #   _print_padding <line> <columns> <aligned>
-  _print_padding() {
+  #   _ls_print_paddding <line> <columns> <aligned>
+  _ls_print_paddding() {
     local _padding_line="${1:-}"
     local _padding_line_length="${#_padding_line}"
     local _padding_columns="${2:-}"
@@ -6124,7 +6139,7 @@ _ls() {
     while read -r __line
     do
       _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
-    done < <(_print_header "${_header_flags[@]:-}")
+    done < <(_ls_print_header "${_header_flags[@]:-}")
   fi
 
   {
@@ -6162,7 +6177,7 @@ _ls() {
 
     if ((NB_FOOTER))
     then
-      _print_footer
+      _ls_print_footer
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
