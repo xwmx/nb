@@ -2642,8 +2642,7 @@ Description:
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
-  the following list:
-    `ranger` [1], `mc` [2], `exa` [3], or `ls`
+  the following list: `ranger` [1], `mc` [2], `exa` [3], or `ls`
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
