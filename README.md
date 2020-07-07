@@ -1961,8 +1961,8 @@ Subcommands:
   ls           List notebooks and notes in the current notebook.
   move         Move a note to a different notebook.
   notebooks    Manage notebooks.
-  open         Open a bookmark in the primary web browser or edit a note.
-  peek         View a bookmark in the terminal web browser or show a note.
+  open         Open a bookmarked web page or notebook folder, or edit a note.
+  peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
   search       Search notes.
