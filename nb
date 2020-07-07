@@ -76,13 +76,6 @@ _MY_PATH="${_MY_DIR}/${_ME}"
 # The current working directory in which the program was invoked.
 _CURRENT_WORKING_DIR="${PWD}"
 
-# extglob
-#
-# Enable extended pattern matching operators.
-#
-# https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html
-shopt -s extglob
-
 # $_SED_I_COMMAND
 #
 # `sed -i` takes an extension on macOS, but that extension can cause errors in
