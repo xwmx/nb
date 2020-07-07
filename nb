@@ -3302,10 +3302,15 @@ _bookmark() {
     _basename="$(_get_selection_basename "${_selection}")"
     if [[ -z "${_basename}" ]]
     then
-      if [[ "${_subcommand}" =~ ^open$|^peek$ ]] &&
-         [[ -d "${NB_DIR}/${_selection}"      ]]
+      if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
       then
-        _notebooks "${_subcommand}" "${_selection}" && return 0
+        local _maybe_notebook="${_selection:-}"
+        _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
+
+        if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
+        then
+          _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
+        fi
       fi
       _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     fi
