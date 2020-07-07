@@ -42,7 +42,7 @@ Usage:
 Options:
   --dump        Print to standard output rather than the pager when content is
                 longer than the terminal height.
-  -r, --readme  Download and view the \`nb\` README file.
+  -r, --readme  View the \`nb\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
 Description:
