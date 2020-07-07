@@ -2584,7 +2584,7 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `exa` [3] or `ls`.
+             `ranger` [1], `mc` [2], `exa` [3], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
   status     Print the archival status of the current notebook or
@@ -2643,7 +2643,7 @@ Description:
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
   the following list:
-    `ranger` [1], `mc` [2], `exa` [3] or `ls`
+    `ranger` [1], `mc` [2], `exa` [3], or `ls`
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
