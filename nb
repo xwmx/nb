@@ -558,7 +558,7 @@ __set_nb_color_primary() {
   _colors="$(tput colors)"
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
-    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-68}"
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-69}"
   else
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-4}"
   fi
