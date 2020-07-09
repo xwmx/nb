@@ -5808,15 +5808,15 @@ _ls() {
     local _footer_separator_hi=
     _footer_separator_hi="$(_highlight "${_footer_separator_raw}")"
     local _footer_test_line=
-    local _scope=
-    local _scope_left_pad=
-    local _scope_right_pad=
+    local _maybe_scope=
+    local _maybe_scope_padded_left=
+    local _maybe_scope_padded_right=
 
     if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
     then
-      _scope="${_SCOPE}:"
-      _scope_left_pad=" ${_scope}"
-      _scope_right_pad="${_scope} "
+      _maybe_scope="${_SCOPE}:"
+      _maybe_scope_padded_left=" ${_maybe_scope}"
+      _maybe_scope_padded_right="${_maybe_scope} "
     fi
 
     local _notebook_command="${_ME} notebooks add <name>"
@@ -5826,21 +5826,21 @@ _ls() {
     fi
 
     local _commands_raw=(
-      "❯ ${_ME} ${_scope}"
-      "${_ME} ${_scope}add"
-      "${_ME} ${_scope_right_pad}<url>"
-      "${_ME} edit ${_scope}<id>"
-      "${_ME} show ${_scope}<id>"
-      "${_ME} open ${_scope}<id>"
-      "${_ME} ${_scope}list"
-      "${_ME} ${_scope}search <query>"
+      "❯ ${_ME}${_maybe_scope_padded_left}"
+      "${_ME} ${_maybe_scope}add"
+      "${_ME} ${_maybe_scope_padded_right}<url>"
+      "${_ME} edit ${_maybe_scope}<id>"
+      "${_ME} show ${_maybe_scope}<id>"
+      "${_ME} open ${_maybe_scope}<id>"
+      "${_ME} ${_maybe_scope}list"
+      "${_ME} ${_maybe_scope}search <query>"
       "${_notebook_command}"
       "${_ME} settings"
       "${_ME} help"
     )
 
     local _commands_hi=(
-      "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
+      "$(_dim '❯') $(_highlight_secondary "${_ME}${_maybe_scope_padded_left}")"
       "$(_highlight_secondary "${_commands_raw[1]}")"
       "$(_highlight_secondary "${_commands_raw[2]}")"
       "$(_highlight_secondary "${_commands_raw[3]}")"
