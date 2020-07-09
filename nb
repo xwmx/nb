@@ -5812,7 +5812,7 @@ _ls() {
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
 
-    if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
+    if ((_SCOPED)) && [[ -n "${_SCOPE:-}" ]]
     then
       _maybe_scope="${_SCOPE}:"
       _maybe_scope_padded_left=" ${_maybe_scope}"
