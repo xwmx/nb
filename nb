@@ -6221,10 +6221,8 @@ _move() {
   local _basename=
   local _force=0
   local _selection=
-  local _source_info_line=
   local _target_notebook=
   local _target_notebook_path=
-  local _title=
 
   for __arg in "${@:-}"
   do
@@ -6283,18 +6281,25 @@ _move() {
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
 
+  local _source_id=
+  _source_id="$(_index get_id "${_basename}")"
+
+  local _source_info=
+  _source_info="$(_id_brackets_color "${_SCOPE}:${_source_id}")"
+  _source_info="${_source_info} $(_highlight "${_SCOPE}:${_basename}")"
+
+  local _title=
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
+
   if [[ -n "${_title}" ]]
   then
-    _source_info_line="${_SCOPE}:${_basename} '${_title}'"
-  else
-    _source_info_line="${_SCOPE}:${_basename}"
+    _source_info="${_source_info} '${_title}'"
   fi
 
   if ! ((_force))
   then
-    printf "Moving %s to notebook %s\\n"      \
-      "$(_highlight "${_source_info_line}")"  \
+    printf "Moving %s to %s\\n"             \
+      "${_source_info}"                     \
       "$(_highlight "${_target_notebook}")"
     while true
     do
