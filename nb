@@ -8084,23 +8084,23 @@ _settings() {
     fi
 
     case "${_id_or_name}" in
-      1|auto_sync|NB_AUTO_SYNC|nb_auto_sync|AUTO_SYNC)
+      1|*auto_sync|*AUTO_SYNC)
         ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|color_primary|NB_COLOR_PRIMARY|nb_color_primary|COLOR_PRIMARY|primary_color)
+      2|*color_primary|*COLOR_PRIMARY|*primary_color|*PRIMARY_COLOR)
         ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|color_secondary|NB_COLOR_SECONDARY|nb_color_secondary|COLOR_SECONDARY|secondary_color)
+      3|*color_secondary|*COLOR_SECONDARY|*secondary_color|*SECONDARY_COLOR)
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|color_theme|NB_COLOR_THEME|nb_color_theme|COLOR_THEME|theme|color_scheme|color_themes)
+      4|*color_theme*|*COLOR_THEME*|color_scheme|theme*)
         ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      5|default_extension|NB_DEFAULT_EXTENSION|nb_default_extension|DEFAULT_EXTENSION)
+      5|*default_extension|*DEFAULT_EXTENSION)
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
@@ -8108,11 +8108,11 @@ _settings() {
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
-      7|encryption_tool|NB_ENCRYPTION_TOOL|nb_encryption_tool|ENCRYPTION_TOOL)
+      7|*encryption_tool|*ENCRYPTION_TOOL)
         ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|footer|NB_FOOTER|nb_footer|FOOTER)
+      8|*footer|*FOOTER)
         ((_get_id)) && printf "8" || printf "NB_FOOTER"
         return 0
         ;;
