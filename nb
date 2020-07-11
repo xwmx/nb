@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.2.2"
+_VERSION="4.3.0"
 
 # $_ME
 #
@@ -558,7 +558,7 @@ __set_nb_color_primary() {
   _colors="$(tput colors)"
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
-    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-68}"
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-69}"
   else
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-4}"
   fi
@@ -603,12 +603,11 @@ _dim() {
 #
 # Description:
 #   Use `tput` to highlight the given string.
-export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
-export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
-export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
-
+export _TPUT_SGR0=          ; _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL=          ; _TPUT_SMUL="$(tput smul)"
+export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(tput setaf 8)"
 export _TPUT_COLOR_PRIMARY=
-_TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
+       _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
 _highlight() {
   if ! ((_COLOR_ENABLED))
   then
@@ -2696,8 +2695,8 @@ Usage:
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks use <name>
-  ${_ME} open (<id> | <filename> | <path> | <title>)
-  ${_ME} peek (<id> | <filename> | <path> | <title>)
+  ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -2752,8 +2751,8 @@ Subcommands:
   ls           List notebooks and notes in the current notebook.
   move         Move a note to a different notebook.
   notebooks    Manage notebooks.
-  open         Open a bookmark in the primary web browser or edit a note.
-  peek         View a bookmark in the terminal web browser or show a note.
+  open         Open a bookmarked web page or notebook folder, or edit a note.
+  peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
   search       Search notes.
@@ -2785,30 +2784,7 @@ HEREDOC
           cat
         fi
   else
-    local _help_text=
-    _help_text="$(desc --get "${_arguments[@]}")"
-
-    local _help_text_lines=
-    _help_text_lines="$(printf "%s\\n" "${_help_text}" | wc -l)"
-
-    local _lines=
-    _lines="$(tput lines)"
-
-    printf "%s\\n" "${_help_text}" \
-      | if ((_use_pager))                                  &&
-           [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
-           [[ -n "${PAGER:-}"                           ]] &&
-           [[ ! "${PAGER:-}" =~ less                    ]]
-        then
-          "${PAGER}"
-        elif ((_use_pager))                                  &&
-             [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
-             _command_exists "less"
-        then
-          less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-        else
-          cat
-        fi
+    printf "%s\\n" "$(desc --get "${_arguments[@]}")"
   fi
 }
 _alias_subcommand "help" "h"
@@ -3302,6 +3278,16 @@ _bookmark() {
     _basename="$(_get_selection_basename "${_selection}")"
     if [[ -z "${_basename}" ]]
     then
+      if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+      then
+        local _maybe_notebook="${_selection:-}"
+        _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
+
+        if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
+        then
+          _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
+        fi
+      fi
       _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
     fi
     _set_selection_notebook "${_selection}"
@@ -5798,15 +5784,15 @@ _ls() {
     local _footer_separator_hi=
     _footer_separator_hi="$(_highlight "${_footer_separator_raw}")"
     local _footer_test_line=
-    local _scope=
-    local _scope_left_pad=
-    local _scope_right_pad=
+    local _maybe_scope=
+    local _maybe_scope_padded_left=
+    local _maybe_scope_padded_right=
 
-    if ((_SCOPED)) && [[ -n "${_SCOPE}" ]]
+    if ((_SCOPED)) && [[ -n "${_SCOPE:-}" ]]
     then
-      _scope="${_SCOPE}:"
-      _scope_left_pad=" ${_scope}"
-      _scope_right_pad="${_scope} "
+      _maybe_scope="${_SCOPE}:"
+      _maybe_scope_padded_left=" ${_maybe_scope}"
+      _maybe_scope_padded_right="${_maybe_scope} "
     fi
 
     local _notebook_command="${_ME} notebooks add <name>"
@@ -5816,21 +5802,21 @@ _ls() {
     fi
 
     local _commands_raw=(
-      "❯ ${_ME} ${_scope}"
-      "${_ME} ${_scope}add"
-      "${_ME} ${_scope_right_pad}<url>"
-      "${_ME} edit ${_scope}<id>"
-      "${_ME} show ${_scope}<id>"
-      "${_ME} open ${_scope}<id>"
-      "${_ME} ${_scope}list"
-      "${_ME} ${_scope}search <query>"
+      "❯ ${_ME}${_maybe_scope_padded_left}"
+      "${_ME} ${_maybe_scope}add"
+      "${_ME} ${_maybe_scope_padded_right}<url>"
+      "${_ME} edit ${_maybe_scope}<id>"
+      "${_ME} show ${_maybe_scope}<id>"
+      "${_ME} open ${_maybe_scope}<id>"
+      "${_ME} ${_maybe_scope}list"
+      "${_ME} ${_maybe_scope}search <query>"
       "${_notebook_command}"
       "${_ME} settings"
       "${_ME} help"
     )
 
     local _commands_hi=(
-      "$(_dim '❯') $(_highlight_secondary "${_ME}${_scope_left_pad}")"
+      "$(_dim '❯') $(_highlight_secondary "${_ME}${_maybe_scope_padded_left}")"
       "$(_highlight_secondary "${_commands_raw[1]}")"
       "$(_highlight_secondary "${_commands_raw[2]}")"
       "$(_highlight_secondary "${_commands_raw[3]}")"
@@ -6212,10 +6198,8 @@ _move() {
   local _basename=
   local _force=0
   local _selection=
-  local _source_info_line=
   local _target_notebook=
   local _target_notebook_path=
-  local _title=
 
   for __arg in "${@:-}"
   do
@@ -6274,18 +6258,25 @@ _move() {
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
 
+  local _source_id=
+  _source_id="$(_index get_id "${_basename}")"
+
+  local _source_info=
+  _source_info="$(_id_brackets_color "${_SCOPE}:${_source_id}")"
+  _source_info="${_source_info} $(_highlight "${_SCOPE}:${_basename}")"
+
+  local _title=
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
+
   if [[ -n "${_title}" ]]
   then
-    _source_info_line="${_SCOPE}:${_basename} '${_title}'"
-  else
-    _source_info_line="${_SCOPE}:${_basename}"
+    _source_info="${_source_info} '${_title}'"
   fi
 
   if ! ((_force))
   then
-    printf "Moving %s to notebook %s\\n"      \
-      "$(_highlight "${_source_info_line}")"  \
+    printf "Moving %s to %s\\n"             \
+      "${_source_info}"                     \
       "$(_highlight "${_target_notebook}")"
     while true
     do
@@ -6373,8 +6364,8 @@ Subcommands:
              file browser, explorer, or finder.
              Shortcut Alias: \`o\`
   peek       Open the current notebook directory or notebook <name> in the
-             first tool found in this list:
-             \`ranger\` [1], \`mc\` [2], \`exa\` [3] or \`ls\`.
+             first tool found in the following list:
+             \`ranger\` [1], \`mc\` [2], \`exa\` [3], or \`ls\`.
              Shortcut Alias: \`p\`
   rename     Rename a notebook.
   status     Print the archival status of the current notebook or
@@ -7142,12 +7133,13 @@ _alias_subcommand "notebooks" "ns"
 
 desc "open" <<HEREDOC
 Usage:
-  ${_ME} open (<id> | <filename> | <path> | <title>)
+  ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
 
 Description:
-  Open the note file. When the note is a bookmark, open the bookmarked page in
-  your system's primary web browser. When the note is in a text format or any
-  other file type, \`open\` is the equivalent of \`edit\`.
+  Open a note or notebook. When the note is a bookmark, open the bookmarked
+  page in your system's primary web browser. When the note is in a text format
+  or any other file type, \`open\` is the equivalent of \`edit\`. \`open\`
+  with a notebook opens the notebook folder in the system's file browser.
 
 Examples:
   ${_ME} open 3
@@ -7174,12 +7166,18 @@ _alias_subcommand "open" "o"
 
 desc "peek" <<HEREDOC
 Usage:
-  ${_ME} peek (<id> | <filename> | <path> | <title>)
+  ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
 
 Description:
-  When the note is a bookmark, view the bookmarked page in your terminal web
-  browser. When the note is in a text format or any other file type, \`peek\`
-  is the equivalent of \`show\`.
+  View a note or notebook in the terminal. When the note is a bookmark, view
+  the bookmarked page in your terminal web browser. When the note is in a text
+  format or any other file type, \`peek\` is the equivalent of \`show\`. When
+  used with a notebook, \`peek\` opens the notebook folder first tool found in
+  the following list: \`ranger\` [1], \`mc\` [2], \`exa\` [3], or \`ls\`.
+
+    1. https://ranger.github.io/
+    2. https://en.wikipedia.org/wiki/Midnight_Commander
+    3. https://github.com/ogham/exa
 
 Examples:
   ${_ME} peek 3
@@ -8068,23 +8066,23 @@ _settings() {
     fi
 
     case "${_id_or_name}" in
-      1|auto_sync|NB_AUTO_SYNC|nb_auto_sync|AUTO_SYNC)
+      1|*auto_sync|*AUTO_SYNC)
         ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|color_primary|NB_COLOR_PRIMARY|nb_color_primary|COLOR_PRIMARY|primary_color)
+      2|*color_primary|*COLOR_PRIMARY|*primary_color|*PRIMARY_COLOR)
         ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|color_secondary|NB_COLOR_SECONDARY|nb_color_secondary|COLOR_SECONDARY|secondary_color)
+      3|*color_secondary|*COLOR_SECONDARY|*secondary_color|*SECONDARY_COLOR)
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|color_theme|NB_COLOR_THEME|nb_color_theme|COLOR_THEME|theme|color_scheme|color_themes)
+      4|*color_theme*|*COLOR_THEME*|color_scheme|theme*)
         ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      5|default_extension|NB_DEFAULT_EXTENSION|nb_default_extension|DEFAULT_EXTENSION)
+      5|*default_extension|*DEFAULT_EXTENSION)
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
@@ -8092,11 +8090,11 @@ _settings() {
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
-      7|encryption_tool|NB_ENCRYPTION_TOOL|nb_encryption_tool|ENCRYPTION_TOOL)
+      7|*encryption_tool|*ENCRYPTION_TOOL)
         ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|footer|NB_FOOTER|nb_footer|FOOTER)
+      8|*footer|*FOOTER)
         ((_get_id)) && printf "8" || printf "NB_FOOTER"
         return 0
         ;;

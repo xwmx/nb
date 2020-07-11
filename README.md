@@ -1910,8 +1910,8 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks use <name>
-  nb open (<id> | <filename> | <path> | <title>)
-  nb peek (<id> | <filename> | <path> | <title>)
+  nb open (<id> | <filename> | <path> | <title> | <notebook>)
+  nb peek (<id> | <filename> | <path> | <title> | <notebook>)
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -1961,8 +1961,8 @@ Subcommands:
   ls           List notebooks and notes in the current notebook.
   move         Move a note to a different notebook.
   notebooks    Manage notebooks.
-  open         Open a bookmark in the primary web browser or edit a note.
-  peek         View a bookmark in the terminal web browser or show a note.
+  open         Open a bookmarked web page or notebook folder, or edit a note.
+  peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
   search       Search notes.
@@ -2583,8 +2583,8 @@ Subcommands:
              file browser, explorer, or finder.
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
-             first tool found in this list:
-             `ranger` [1], `mc` [2], `exa` [3] or `ls`.
+             first tool found in the following list:
+             `ranger` [1], `mc` [2], `exa` [3], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
   status     Print the archival status of the current notebook or
@@ -2611,12 +2611,13 @@ Shortcut Alias: `n`
 
 ```text
 Usage:
-  nb open (<id> | <filename> | <path> | <title>)
+  nb open (<id> | <filename> | <path> | <title> | <notebook>)
 
 Description:
-  Open the note file. When the note is a bookmark, open the bookmarked page in
-  your system's primary web browser. When the note is in a text format or any
-  other file type, `open` is the equivalent of `edit`.
+  Open a note or notebook. When the note is a bookmark, open the bookmarked
+  page in your system's primary web browser. When the note is in a text format
+  or any other file type, `open` is the equivalent of `edit`. `open`
+  with a notebook opens the notebook folder in the system's file browser.
 
 Examples:
   nb open 3
@@ -2634,12 +2635,18 @@ Shortcut Alias: `o`
 
 ```text
 Usage:
-  nb peek (<id> | <filename> | <path> | <title>)
+  nb peek (<id> | <filename> | <path> | <title> | <notebook>)
 
 Description:
-  When the note is a bookmark, view the bookmarked page in your terminal web
-  browser. When the note is in a text format or any other file type, `peek`
-  is the equivalent of `show`.
+  View a note or notebook in the terminal. When the note is a bookmark, view
+  the bookmarked page in your terminal web browser. When the note is in a text
+  format or any other file type, `peek` is the equivalent of `show`. When
+  used with a notebook, `peek` opens the notebook folder first tool found in
+  the following list: `ranger` [1], `mc` [2], `exa` [3], or `ls`.
+
+    1. https://ranger.github.io/
+    2. https://en.wikipedia.org/wiki/Midnight_Commander
+    3. https://github.com/ogham/exa
 
 Examples:
   nb peek 3
