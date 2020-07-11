@@ -2784,10 +2784,7 @@ HEREDOC
           cat
         fi
   else
-    local _help_text=
-    _help_text="$(desc --get "${_arguments[@]}")"
-
-    printf "%s\\n" "${_help_text}"
+    printf "%s\\n" "$(desc --get "${_arguments[@]}")"
   fi
 }
 _alias_subcommand "help" "h"
