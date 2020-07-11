@@ -2787,27 +2787,7 @@ HEREDOC
     local _help_text=
     _help_text="$(desc --get "${_arguments[@]}")"
 
-    local _help_text_lines=
-    _help_text_lines="$(printf "%s\\n" "${_help_text}" | wc -l)"
-
-    local _lines=
-    _lines="$(tput lines)"
-
-    printf "%s\\n" "${_help_text}" \
-      | if ((_use_pager))                                  &&
-           [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
-           [[ -n "${PAGER:-}"                           ]] &&
-           [[ ! "${PAGER:-}" =~ less                    ]]
-        then
-          "${PAGER}"
-        elif ((_use_pager))                                  &&
-             [[ "${_help_text_lines}" -gt "$((_lines-2))" ]] &&
-             _command_exists "less"
-        then
-          less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-        else
-          cat
-        fi
+    printf "%s\\n" "${_help_text}"
   fi
 }
 _alias_subcommand "help" "h"
