@@ -15,7 +15,7 @@
 # `❯ nb`
 
 `nb` is a command line note-taking, bookmarking, collecting, and archiving
-application with
+application with:
 
 - encryption,
 - robust search and filtering,
