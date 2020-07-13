@@ -18,7 +18,7 @@
 application with:
 
 - encryption,
-- robust filtering and search,
+- filtering and search,
 - [Git](https://git-scm.com/)-backed versioning and syncing,
 - [Pandoc](https://pandoc.org/)-backed conversion,
 - global and local notebooks,
