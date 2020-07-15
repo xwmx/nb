@@ -449,6 +449,139 @@ HEREDOC
   [[ "${lines[1]}" =~ second.bookmark.md  ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
+# `list --type` ###############################################################
+
+@test "\`list --document\` exits with 0 and displays a list of documents." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --document
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${#lines[@]}" == 1          ]]
+  [[ "${lines[0]}" =~ second.doc  ]]
+  [[ "${lines[0]}" =~ 2           ]]
+}
+
+@test "\`list --documents\` exits with 0 and displays a list of documents." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --documents
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${#lines[@]}" == 1          ]]
+  [[ "${lines[0]}" =~ second.doc  ]]
+  [[ "${lines[0]}" =~ 2           ]]
+}
+
+@test "\`list --document\` exits with 0 and displays empty list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --document
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" == 5                    ]]
+  [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
+}
+
+
+@test "\`list --documents\` exits with 0 and displays empty list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --documents
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" == 5                    ]]
+  [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
+}
+
 # `list <selection>` ##########################################################
 
 @test "\`list <selection>\` exits with 0 and displays the selection." {

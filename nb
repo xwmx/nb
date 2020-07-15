@@ -5413,8 +5413,10 @@ Help information:
   $(_highlight "${_ME} help bookmark")
 HEREDOC
     elif [[ "${_filenames_count}" -eq 0 ]] &&
-         [[ "${_type}" =~ ^archive$|^audio$|^document$|^image$|^video$ ]]
+         [[ "${_type}" =~ ^archive|^audio|^document|^image|^video ]]
     then
+      _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+
       cat <<HEREDOC
 0 ${_type} files.
 
