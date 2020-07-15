@@ -915,6 +915,245 @@ __set_notebook_path() {
 } && __set_notebook_path
 
 ###############################################################################
+# Git
+###############################################################################
+
+# _git_checkpoint()
+#
+# Usage:
+#   _git_checkpoint <commit message> [<target-directory>]
+#
+# Description:
+#   Commit all files in the repository with the provided commit message.
+_git_checkpoint() {
+  # Usage: _git_checkpoint_commit <message>
+  _git_checkpoint_commit() {
+    [[ -z "${1:-}" ]] &&
+      _exit_1 printf "Usage: _git_checkpoint_commit <message>"
+    _debug printf \
+      "_git_checkpoint() \$(ls -la): '%s'\\n" \
+      "$(ls -la)"
+
+    git add --all && git commit -a -m "${1}"
+  }
+
+  # Usage: _git_checkpoint_sync
+  _git_checkpoint_sync() {
+    if git show-branch remotes/origin/master > /dev/null 2>&1
+    then
+      git fetch && git rebase origin/master && git push
+    else
+      git push
+    fi
+  }
+
+  local _message=
+  local _show_spinner=0
+  local _target_directory=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --spinner)
+        _show_spinner=1
+        ;;
+      *)
+        if [[ -z "${_message}" ]]
+        then
+          _message="${__arg}"
+        elif [[ -z "${_target_directory}" ]]
+        then
+          _target_directory="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${_NOTEBOOK_PATH}"
+  fi
+
+  _debug printf "_git_checkpoint() \${_target_directory}: '%s'\\n" \
+    "${_target_directory}"
+
+  if [[ -z "${_message}" ]]
+  then
+    _exit_1 printf "Usage: _git_checkpoint <message>\\n"
+  fi
+
+  if [[ -n "${2:-}" ]] && [[ "${2}" == "--spinner" ]]
+  then
+    _show_spinner=1
+  fi
+
+  cd "${_target_directory}" ||
+    _exit_1 printf "_git_checkpoint() \`cd\` failed.\\n"
+
+  _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
+
+  if ((NB_AUTO_SYNC))
+  then
+    (
+      # Only sync when the index is dirty to avoid fetching from and pushing
+      # to origin.
+      if _git_index_is_dirty "${_target_directory}"
+      then
+        _git_checkpoint_commit "${_message}" &>/dev/null
+      fi && _git_checkpoint_sync &>/dev/null
+    ) &
+  else
+    (
+      _git_checkpoint_commit "${_message}" &>/dev/null
+    ) &
+  fi
+
+  if ((_show_spinner))
+  then
+    _spinner ${!}
+  fi
+}
+
+# _git_index_is_dirty()
+#
+# Usage:
+#   _git_index_is_dirty [<target-directory>]
+#
+# Returns:
+#   0  If there are uncommitted changes in `_NOTEBOOK_PATH` or
+#      <target-directory>.
+#   1  If the `$_NOTEBOOK_PATH` repository is clean.
+_git_index_is_dirty() {
+  local _target_directory="${1:-}"
+
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${_NOTEBOOK_PATH}"
+  fi
+
+  cd "${_target_directory}" ||
+    _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
+  [[ -n "$(git status --porcelain)" ]]
+}
+
+# _git_required()
+#
+# Usage:
+#   _git_required
+#
+# Description:
+#   Exit with `_exit_1` if `git` isn't found.
+_git_required() {
+  if ! _command_exists "git"
+  then
+    _exit_1 cat <<HEREDOC
+Welcome to $(_highlight "${_ME}")!
+
+Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
+
+About Git: https://git-scm.com/
+HEREDOC
+  fi
+
+  local _git_name=
+  _git_name="$(git config user.name || printf '')"
+
+  local _git_email=
+  _git_email="$(git config user.email || printf '')"
+
+  if [[ -z "${_git_name}"   ]] ||
+     [[ -z "${_git_email}"  ]]
+  then
+    cat <<HEREDOC
+Welcome to $(_highlight "${_ME}")!
+
+Git requires some additional setup before using $(_highlight "${_ME}").
+Enter the name and email address you'd like to use with Git.
+Edits you make will be attributed to this name and email address.
+HEREDOC
+    if [[ -z "${_git_name}" ]]
+    then
+      while true
+      do
+        read -r -p "$(_highlight "Name"): " __name
+        if [[ -n "${__name}" ]]
+        then
+          git config --global user.name "${__name}"
+          break
+        fi
+      done
+    fi
+
+    if [[ -z "${_git_email}" ]]
+    then
+      while true
+      do
+        read -r -p "$(_highlight "Email"): " __email
+        if [[ -n "${__email}" ]]
+        then
+          git config --global user.email "${__email}"
+          break
+        fi
+      done
+    fi
+  fi
+}
+
+# _git_should_autosync()
+#
+# Usage:
+#   _git_should_autosync
+#
+# Returns:
+#   0  If an autosync should be triggered.
+#   1  If not.
+_git_should_autosync() {
+  local _current_timestamp=
+  local _last_fetch_timestamp=
+  local _maybe_fetch_timestamp=
+
+  if ! ((NB_AUTO_SYNC))
+  then # autosync not enabled.
+    return 1
+  fi
+
+  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "\`cd\` failed.\\n"
+  if ! git config --get remote.origin.url &>/dev/null
+  then # there is no remote configured.
+    return 1
+  fi
+
+  if [[ ! -e "${_NOTEBOOK_PATH}/.git/FETCH_HEAD" ]]
+  then # no previous fetches, but has an origin and autosync is enabled.
+    return 0
+  fi
+
+  if _maybe_fetch_timestamp="$(stat -c %Y .git/FETCH_HEAD 2>/dev/null)"
+  then # GNU
+    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+  elif _maybe_fetch_timestamp="$(gstat -c %Y .git/FETCH_HEAD 2>/dev/null)"
+  then # GNU prefixed
+    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+  else
+    _last_fetch_timestamp="$(stat -f '%m' .git/FETCH_HEAD)"
+  fi
+  _current_timestamp="$(date +%s)"
+
+  _diff=$((_current_timestamp-_last_fetch_timestamp))
+  _debug printf \
+    "_git_should_sync() \${_last_fetch_timestamp}: %s\\n" \
+    "${_last_fetch_timestamp}"
+  _debug printf \
+    "_git_should_sync() \${_current_timestamp}: %s\\n" \
+    "${_current_timestamp}"
+  _debug printf \
+    "_git_should_sync() \${_diff}: %s\\n" \
+    "${_diff}"
+
+  [[ "${_diff}" -gt 300 ]]
+}
+
+###############################################################################
 # Helpers
 ###############################################################################
 
@@ -1909,241 +2148,6 @@ _get_unique_path() {
   done
 
   printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
-}
-
-# _git_checkpoint()
-#
-# Usage:
-#   _git_checkpoint <commit message> [<target-directory>]
-#
-# Description:
-#   Commit all files in the repository with the provided commit message.
-_git_checkpoint() {
-  # Usage: _git_checkpoint_commit <message>
-  _git_checkpoint_commit() {
-    [[ -z "${1:-}" ]] &&
-      _exit_1 printf "Usage: _git_checkpoint_commit <message>"
-    _debug printf \
-      "_git_checkpoint() \$(ls -la): '%s'\\n" \
-      "$(ls -la)"
-
-    git add --all && git commit -a -m "${1}"
-  }
-
-  # Usage: _git_checkpoint_sync
-  _git_checkpoint_sync() {
-    if git show-branch remotes/origin/master > /dev/null 2>&1
-    then
-      git fetch && git rebase origin/master && git push
-    else
-      git push
-    fi
-  }
-
-  local _message=
-  local _show_spinner=0
-  local _target_directory=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --spinner)
-        _show_spinner=1
-        ;;
-      *)
-        if [[ -z "${_message}" ]]
-        then
-          _message="${__arg}"
-        elif [[ -z "${_target_directory}" ]]
-        then
-          _target_directory="${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  if [[ -z "${_target_directory}" ]]
-  then
-    _target_directory="${_NOTEBOOK_PATH}"
-  fi
-
-  _debug printf "_git_checkpoint() \${_target_directory}: '%s'\\n" \
-    "${_target_directory}"
-
-  if [[ -z "${_message}" ]]
-  then
-    _exit_1 printf "Usage: _git_checkpoint <message>\\n"
-  fi
-
-  if [[ -n "${2:-}" ]] && [[ "${2}" == "--spinner" ]]
-  then
-    _show_spinner=1
-  fi
-
-  cd "${_target_directory}" ||
-    _exit_1 printf "_git_checkpoint() \`cd\` failed.\\n"
-
-  _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
-
-  if ((NB_AUTO_SYNC))
-  then
-    (
-      # Only sync when the index is dirty to avoid fetching from and pushing
-      # to origin.
-      if _git_index_is_dirty "${_target_directory}"
-      then
-        _git_checkpoint_commit "${_message}" &>/dev/null
-      fi && _git_checkpoint_sync &>/dev/null
-    ) &
-  else
-    (
-      _git_checkpoint_commit "${_message}" &>/dev/null
-    ) &
-  fi
-
-  if ((_show_spinner))
-  then
-    _spinner ${!}
-  fi
-}
-
-# _git_index_is_dirty()
-#
-# Usage:
-#   _git_index_is_dirty [<target-directory>]
-#
-# Returns:
-#   0  If there are uncommitted changes in `_NOTEBOOK_PATH` or
-#      <target-directory>.
-#   1  If the `$_NOTEBOOK_PATH` repository is clean.
-_git_index_is_dirty() {
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory}" ]]
-  then
-    _target_directory="${_NOTEBOOK_PATH}"
-  fi
-
-  cd "${_target_directory}" ||
-    _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
-  [[ -n "$(git status --porcelain)" ]]
-}
-
-# _git_required()
-#
-# Usage:
-#   _git_required
-#
-# Description:
-#   Exit with `_exit_1` if `git` isn't found.
-_git_required() {
-  if ! _command_exists "git"
-  then
-    _exit_1 cat <<HEREDOC
-Welcome to $(_highlight "${_ME}")!
-
-Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
-
-About Git: https://git-scm.com/
-HEREDOC
-  fi
-
-  local _git_name=
-  _git_name="$(git config user.name || printf '')"
-
-  local _git_email=
-  _git_email="$(git config user.email || printf '')"
-
-  if [[ -z "${_git_name}"   ]] ||
-     [[ -z "${_git_email}"  ]]
-  then
-    cat <<HEREDOC
-Welcome to $(_highlight "${_ME}")!
-
-Git requires some additional setup before using $(_highlight "${_ME}").
-Enter the name and email address you'd like to use with Git.
-Edits you make will be attributed to this name and email address.
-HEREDOC
-    if [[ -z "${_git_name}" ]]
-    then
-      while true
-      do
-        read -r -p "$(_highlight "Name"): " __name
-        if [[ -n "${__name}" ]]
-        then
-          git config --global user.name "${__name}"
-          break
-        fi
-      done
-    fi
-
-    if [[ -z "${_git_email}" ]]
-    then
-      while true
-      do
-        read -r -p "$(_highlight "Email"): " __email
-        if [[ -n "${__email}" ]]
-        then
-          git config --global user.email "${__email}"
-          break
-        fi
-      done
-    fi
-  fi
-}
-
-# _git_should_autosync()
-#
-# Usage:
-#   _git_should_autosync
-#
-# Returns:
-#   0  If an autosync should be triggered.
-#   1  If not.
-_git_should_autosync() {
-  local _current_timestamp=
-  local _last_fetch_timestamp=
-  local _maybe_fetch_timestamp=
-
-  if ! ((NB_AUTO_SYNC))
-  then # autosync not enabled.
-    return 1
-  fi
-
-  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "\`cd\` failed.\\n"
-  if ! git config --get remote.origin.url &>/dev/null
-  then # there is no remote configured.
-    return 1
-  fi
-
-  if [[ ! -e "${_NOTEBOOK_PATH}/.git/FETCH_HEAD" ]]
-  then # no previous fetches, but has an origin and autosync is enabled.
-    return 0
-  fi
-
-  if _maybe_fetch_timestamp="$(stat -c %Y .git/FETCH_HEAD 2>/dev/null)"
-  then # GNU
-    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  elif _maybe_fetch_timestamp="$(gstat -c %Y .git/FETCH_HEAD 2>/dev/null)"
-  then # GNU prefixed
-    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  else
-    _last_fetch_timestamp="$(stat -f '%m' .git/FETCH_HEAD)"
-  fi
-  _current_timestamp="$(date +%s)"
-
-  _diff=$((_current_timestamp-_last_fetch_timestamp))
-  _debug printf \
-    "_git_should_sync() \${_last_fetch_timestamp}: %s\\n" \
-    "${_last_fetch_timestamp}"
-  _debug printf \
-    "_git_should_sync() \${_current_timestamp}: %s\\n" \
-    "${_current_timestamp}"
-  _debug printf \
-    "_git_should_sync() \${_diff}: %s\\n" \
-    "${_diff}"
-
-  [[ "${_diff}" -gt 300 ]]
 }
 
 # _highlight_syntax_if_available()
