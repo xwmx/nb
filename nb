@@ -918,6 +918,13 @@ __set_notebook_path() {
 # Git
 ###############################################################################
 
+# $_GIT_ENABLED
+#
+# Default: 1
+#
+# Supported Values: '0' '1'
+export _GIT_ENABLED="${_GIT_ENABLED:-1}"
+
 # _git_checkpoint()
 #
 # Usage:
@@ -926,6 +933,8 @@ __set_notebook_path() {
 # Description:
 #   Commit all files in the repository with the provided commit message.
 _git_checkpoint() {
+  ((_GIT_ENABLED)) || return 0
+
   # Usage: _git_checkpoint_commit <message>
   _git_checkpoint_commit() {
     [[ -z "${1:-}" ]] &&
@@ -1024,6 +1033,8 @@ _git_checkpoint() {
 #      <target-directory>.
 #   1  If the `$_NOTEBOOK_PATH` repository is clean.
 _git_index_is_dirty() {
+  ((_GIT_ENABLED)) || return 1
+
   local _target_directory="${1:-}"
 
   if [[ -z "${_target_directory}" ]]
@@ -1044,6 +1055,8 @@ _git_index_is_dirty() {
 # Description:
 #   Exit with `_exit_1` if `git` isn't found.
 _git_required() {
+  ((_GIT_ENABLED)) || return 0
+
   if ! _command_exists "git"
   then
     _exit_1 cat <<HEREDOC
@@ -1108,6 +1121,8 @@ HEREDOC
 #   0  If an autosync should be triggered.
 #   1  If not.
 _git_should_autosync() {
+  ((_GIT_ENABLED)) || return 1
+
   local _current_timestamp=
   local _last_fetch_timestamp=
   local _maybe_fetch_timestamp=
@@ -9679,6 +9694,9 @@ do
       ;;
     --no-color|--nocolor)
       _COLOR_ENABLED=0
+      ;;
+    --no-git|--nogit|--skip-git)
+      _GIT_ENABLED=0
       ;;
     --version)
       if [[ "${_SUBCOMMAND:-}" == "git" ]]
