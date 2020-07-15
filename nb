@@ -7665,7 +7665,7 @@ _search() {
           _search_args+=("--sort-files")
         fi
 
-        rg \
+        rg                                \
           --hidden                        \
           --iglob '!.git'                 \
           --ignore-case                   \
@@ -7697,13 +7697,13 @@ _search() {
 
         # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
         # Determine how to test without relying on ordering.
-        ag \
-          --hidden              \
-          --ignore-case         \
-          --noheading           \
-          --norecurse           \
-          "${_search_args[@]}"  \
-          "${_query}" "${__notebook_path}" \
+        ag                                  \
+          --hidden                          \
+          --ignore-case                     \
+          --noheading                       \
+          --norecurse                       \
+          "${_search_args[@]}"              \
+          "${_query}" "${__notebook_path}"  \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
@@ -7721,11 +7721,11 @@ _search() {
           _search_args+=("--sort-files")
         fi
 
-        ack "${_query}" "${__notebook_path}" \
-          --ignore-case         \
-          --noheading           \
-          --no-recurse          \
-          "${_search_args[@]}"  \
+        ack "${_query}" "${__notebook_path}"  \
+          --ignore-case                       \
+          --noheading                         \
+          --no-recurse                        \
+          "${_search_args[@]}"                \
             || return 0 # Don't fail out within a single scope.
       else # fall back to POSIX grep.
         if ((_search_color_enabled))
