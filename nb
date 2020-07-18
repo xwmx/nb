@@ -2590,11 +2590,9 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
+  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]]
 
 Options:
-  --dump        Print to standard output rather than the pager when content is
-                longer than the terminal height.
   -r, --readme  View the \`${_ME}\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
@@ -2608,13 +2606,16 @@ _help() {
   local _arguments=()
   local _readme=0
   local _short=0
-  local _use_pager=1
+  local _use_pager=0
 
   for __arg in "${@:-}"
   do
     case "${__arg}" in
       readme|README|-r|--readme)
         _readme=1
+        ;;
+      --pager)
+        _use_pager=1
         ;;
       -s|--short)
         _short=1
@@ -2691,7 +2692,7 @@ Usage:
             [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} git <git options>...
-  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
+  ${_ME} help [<subcommand> | [-r | --readme] | [-s | --short]]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]

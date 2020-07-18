@@ -37,11 +37,9 @@ export _HELP_HEADER
   _expected="$(
     cat <<HEREDOC
 Usage:
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
+  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
 
 Options:
-  --dump        Print to standard output rather than the pager when content is
-                longer than the terminal height.
   -r, --readme  View the \`nb\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
