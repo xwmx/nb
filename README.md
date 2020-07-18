@@ -1904,7 +1904,10 @@ Usage:
           [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  nb ls [-a | --all] [<list options>...]
+  nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]

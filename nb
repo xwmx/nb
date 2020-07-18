@@ -2701,7 +2701,10 @@ Usage:
           [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} ls [-a | --all] [<list options>...]
+  ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
