@@ -1872,7 +1872,7 @@ in a single portable script.
 
 Usage:
   nb
-  nb [<id> | <filename> | <path> | <title> | <notebook>] [<ls options>...]
+  nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]

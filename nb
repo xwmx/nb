@@ -2669,7 +2669,7 @@ in a single portable script.
 
 Usage:
   ${_ME}
-  ${_ME} [<id> | <filename> | <path> | <title> | <notebook>] [<ls options>...]
+  ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
