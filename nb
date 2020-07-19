@@ -2613,6 +2613,7 @@ _help() {
     case "${__arg}" in
       readme|README|-r|--readme)
         _readme=1
+        _use_pager=1
         ;;
       --pager)
         _use_pager=1
