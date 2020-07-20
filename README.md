@@ -23,7 +23,7 @@ application with:
 - [Git](https://git-scm.com/)-backed versioning and syncing,
 - [Pandoc](https://pandoc.org/)-backed conversion,
 - global and local notebooks,
-- customizable [color themes](#built-in-themes),
+- customizable [color themes](#built-in-color-themes),
 
 and more, all in a single portable, user-friendly script.
 
@@ -1631,7 +1631,7 @@ Enter a new value, unset to set to the default value, or q to quit.
 Value:
 ```
 
-#### Built-in Themes
+#### Built-in Color Themes
 
 ##### `blacklight`
 
