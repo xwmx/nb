@@ -2962,6 +2962,17 @@ _add() {
       then
         _exit_1 printf "Password required.\\n"
       fi
+
+      local _password_confirmation=
+
+      printf "Confirm Password: "
+      read -r -s _password_confirmation </dev/tty
+      printf "\\n" # print newline to stop `read`.
+
+      if [[ "${_password}" != "${_password_confirmation}" ]]
+      then
+        _exit_1 printf "Password mismatch.\\n"
+      fi
     fi
 
     _target_path="$(_tempfile_path "${_basename}")"
