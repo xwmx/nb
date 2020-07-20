@@ -26,7 +26,7 @@ application with:
 - customizable [color themes](#built-in-themes),
 - an intuitive and user-friendly text interface,
 
-and more, all in a single portable, well-tested script.
+and more, all in a single portable script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
