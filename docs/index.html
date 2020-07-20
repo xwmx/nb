@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!--
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>nb • CLI plain-text note-taking, bookmarking, and archiving.</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Anton|Roboto+Mono" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <style>
+      html {
+        height: 100%;
+        min-width: 0;
+      }
+
+      body {
+        background-color: #fff;
+        color: #fff;
+        font-family: 'Courier Prime', 'monospace', sans-serif;
+        height: auto;
+        min-height: 100%;
+        padding: 2rem;
+      }
+
+      a,
+      a:hover {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .content {
+        -webkit-animation:  color-animation 30s ease infinite;
+        -moz-animation:     color-animation 30s ease infinite;
+        -o-animation:       color-animation 30s ease infinite;
+        animation:          color-animation 30s ease infinite;
+        background: linear-gradient(135deg,
+          #0ACC99,
+          #0E889C
+        );
+        background-size: 3000% 3000%;
+        min-height: 100%;
+        padding: 0;
+        text-align: center;
+        width: 100%;
+      }
+
+      @-webkit-keyframes color-animation {
+        0%    { background-position: 0%   0%;   }
+        50%   { background-position: 100% 100%; }
+        100%  { background-position: 0%   0%;   }
+      }
+      @-moz-keyframes color-animation {
+        0%    { background-position: 0%   0%;   }
+        50%   { background-position: 100% 100%; }
+        100%  { background-position: 0%   0%;   }
+      }
+      @-o-keyframes color-animation {
+        0%    { background-position: 0%   0%;   }
+        50%   { background-position: 100% 100%; }
+        100%  { background-position: 0%   0%;   }
+      }
+      @keyframes color-animation {
+        0%    { background-position: 0%   0%;   }
+        50%   { background-position: 100% 100%; }
+        100%  { background-position: 0%   0%;   }
+      }
+
+
+      .command-name {
+        font-size: 12rem;
+        line-height: 1em;
+        margin: 0;
+        padding: 0.2em 0 0.05em;
+        word-break: break-all;
+      }
+
+      @media only screen and (min-width: 550px) {
+        .command-name {
+          font-size: 18rem;
+        }
+      }
+
+      @media only screen and (min-width: 768px) {
+        .command-name {
+          font-size: 25rem;
+        }
+      }
+
+      .command-name .letter {
+        display: inline-block;
+      }
+
+      .description, .features {
+        padding: 0 1rem;
+      }
+
+      .features {
+        list-style-type: none;
+        padding: 0 2rem;
+      }
+
+      .links {
+        list-style-type: none;
+        margin-bottom: 0;
+        padding-bottom: 5rem;
+        padding-top: 1rem;
+      }
+
+      .links li {
+        font-size: 4rem;
+        padding: 0 0.25em;
+      }
+
+      ::selection {
+        background: #fff;
+        color: #fff;
+      }
+
+      ::-moz-selection {
+        background: #fff;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <a href="https://github.com/xwmx/nb">
+        <h1 class="command-name">
+          <span class="letter">n</span><span class="letter">b</span>
+        </h1>
+      </a>
+
+      <p class="description">
+        Command line note-taking, bookmarking, and archiving application with:
+      </p>
+      <ul class="features">
+        <li>plain-text data storage,</li>
+        <li>encryption,</li>
+        <li>filtering and search,</li>
+        <li>Git-backed versioning and syncing,</li>
+        <li>Pandoc-backed conversion,</li>
+        <li>global and local notebooks,</li>
+        <li>customizable color themes,</li>
+      </ul>
+      <p class="description">
+        and more, all in a single portable, user-friendly script.
+      </p>
+      <ul class="links list-inline">
+        <li class="list-inline-item">
+          <a href="https://github.com/xwmx/nb" arial-label="github">
+            <i aria-hidden class="fab fa-github"></i>
+          </a>
+        </li> <!-- .list-inline-item -->
+      </ul> <!-- .links -->
+    </div> <!-- .content -->
+  </body>
+</html>
+
