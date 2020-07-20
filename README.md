@@ -24,9 +24,8 @@ application with:
 - [Pandoc](https://pandoc.org/)-backed conversion,
 - global and local notebooks,
 - customizable [color themes](#built-in-themes),
-- an intuitive and user-friendly text interface,
 
-and more, all in a single portable script.
+and more, all in a single portable, user-friendly script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
