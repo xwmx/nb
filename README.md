@@ -14,12 +14,18 @@
 
 # `❯ nb`
 
-`nb` is a command line note-taking, bookmarking, collecting, and archiving
-application with encryption, advanced search,
-[Git](https://git-scm.com/)-backed versioning and syncing,
-[Pandoc](https://pandoc.org/)-backed conversion,
-global and local notebooks, tagging, customizable [color themes](#built-in-themes),
-plain-text data storage, and more, all in a single portable, user-friendly script.
+`nb` is a command line note-taking, bookmarking, and archiving
+application with:
+
+- encryption,
+- filtering and search,
+- [Git](https://git-scm.com/)-backed versioning and syncing,
+- [Pandoc](https://pandoc.org/)-backed conversion,
+- global and local notebooks,
+- customizable [color themes](#built-in-themes),
+- plain-text data storage,
+
+and more, all in a single portable, user-friendly script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
@@ -1866,7 +1872,7 @@ in a single portable script.
 
 Usage:
   nb
-  nb [<id> | <filename> | <path> | <title> | <notebook>] [<ls options>...]
+  nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -1889,7 +1895,7 @@ Usage:
             [<pandoc options>...]
   nb export notebook <name> [<path>]
   nb git <git options>...
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
+  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
@@ -1898,7 +1904,10 @@ Usage:
           [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  nb ls [-a | --all] [<list options>...]
+  nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -2333,11 +2342,9 @@ Description:
 
 ```text
 Usage:
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]] [--dump]
+  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
 
 Options:
-  --dump        Print to standard output rather than the pager when content is
-                longer than the terminal height.
   -r, --readme  View the `nb` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
