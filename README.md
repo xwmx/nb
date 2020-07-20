@@ -18,14 +18,15 @@
 application with:
 
 - encryption,
+- plain-text data storage,
 - filtering and search,
 - [Git](https://git-scm.com/)-backed versioning and syncing,
 - [Pandoc](https://pandoc.org/)-backed conversion,
 - global and local notebooks,
 - customizable [color themes](#built-in-themes),
-- plain-text data storage,
+- an intuitive and user-friendly text interface,
 
-and more, all in a single portable, user-friendly script.
+and more, all in a single portable, well-tested script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
