@@ -17,8 +17,8 @@
 `nb` is a command line note-taking, bookmarking, and archiving
 application with:
 
-- encryption,
 - plain-text data storage,
+- encryption,
 - filtering and search,
 - [Git](https://git-scm.com/)-backed versioning and syncing,
 - [Pandoc](https://pandoc.org/)-backed conversion,
