@@ -961,7 +961,7 @@ Add: nb <url> Help: nb help bookmark
 
 `nb` provides multiple ways to view bookmarked web pages.
 
-`nb bookmark open` and `nb open` open the bookmarked page in your
+`nb open` opens the bookmarked page in your
 system's primary web browser:
 
 ```bash
@@ -969,17 +969,13 @@ system's primary web browser:
 nb open 3
 ```
 
-`nb bookmark peek` and `nb peek` open the bookmarked page in your
+`nb peek` (alias: `preview`) opens the bookmarked page in your
 terminal web browser:
 
 ```bash
 # peek bookmark by id
 nb peek 12
 ```
-
-When used with bookmarks, `nb open` and `nb peek` are aliases for
-`nb bookmark open` and `nb bookmark peek`.
-
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
 
