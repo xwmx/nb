@@ -341,6 +341,16 @@ nb a example.md
 nb a "This is a note."
 ```
 
+##### Other Aliases
+
+`nb add` can also be invoked with `nb create` and `nb new`:
+
+```bash
+nb new "Example note content."
+
+nb create --title "Example Note Title"
+```
+
 #### Listing Notes
 
 To list notes and notebooks, run `nb ls`:
