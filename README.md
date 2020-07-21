@@ -343,7 +343,7 @@ nb a example.md
 nb a "This is a note."
 ```
 
-##### Other Aliases
+##### Other Aliases: `create`, `new`
 
 `nb add` can also be invoked with `nb create` and `nb new` for convenience:
 
