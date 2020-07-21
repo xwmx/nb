@@ -78,10 +78,11 @@ __          _
 
 
       .command-name {
+        display: inline-block;
         font-size: 12rem;
-        line-height: 1em;
+        line-height: 0.9em;
         margin: 0;
-        padding: 0.2em 0 0.05em;
+        padding: 0.3em 0 0;
         word-break: break-all;
       }
 
@@ -93,8 +94,7 @@ __          _
 
       @media only screen and (min-width: 768px) {
         .command-name {
-          font-size: 25rem;
-          padding: 0.2em 0 0;
+          font-size: 23rem;
         }
       }
 
@@ -136,7 +136,13 @@ __          _
         list-style-type: none;
         margin-bottom: 0;
         padding-bottom: 5rem;
-        padding-top: 1rem;
+        padding-top: 2rem;
+      }
+
+      @media only screen and (min-width: 550px) {
+        .links {
+          padding: 4rem;
+        }
       }
 
       .links li {
