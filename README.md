@@ -972,7 +972,7 @@ nb open 3
 `nb peek` (alias: `preview`) opens the bookmarked page in your
 terminal web browser, such as
 [w3m](https://en.wikipedia.org/wiki/W3m) or
-Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
+[Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
 
 ```bash
 # peek bookmark by id
