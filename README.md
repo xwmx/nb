@@ -83,7 +83,7 @@ that can be copied or `curl`ed almost anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments. `nb` works great
 whether you have one notebook with just a few notes or dozens of
-notebooks with many thousands of notes.
+notebooks containing many thousands of notes, bookmarks, and other items.
 `nb` makes it easy to incorporate other tools, writing apps, and workflows.
 `nb` can be used a little, a lot, once in a while, or for just a subset of
 features. `nb` is flexible.
