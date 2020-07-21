@@ -949,7 +949,7 @@ Add: nb <url> Help: nb help bookmark
 > nb b
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
-[3] 🔖 🔒 Example Three (example.com)
+[3] 🔖 🔒 example.bookmark.md.enc
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
@@ -1025,7 +1025,7 @@ List and filter bookmarks with `bookmark` and `bookmark list`:
 > bookmark
 Add: bookmark <url> Help: bookmark help
 ---------------------------------------
-[3] 🔖 🔒 Example Three (example.com)
+[3] 🔖 🔒 example.bookmark.md.enc
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
