@@ -122,19 +122,45 @@ load test_helper
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
+
   grep -q 'Example' "${_NOTEBOOK_PATH}"/*
+
   [[ "${output}" =~ "Imported" ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+  git log | grep -q 'Source'
 }
 
-@test "\`import\` with valid <url> argument creates git commit." {
+@test "\`import --convert\` with valid <url> creates and converts a new note file." {
   run "${_NB}" init
 
-  run "${_NB}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  run "${_NB}" import \
+    --convert         \
+    "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cat "${_NOTEBOOK_PATH}/${_files[0]}"
+
+
+  grep -q 'Example Domain' "${_NOTEBOOK_PATH}/${_files[0]}"
+  grep -q '==============' "${_NOTEBOOK_PATH}/${_files[0]}"
+
+  [[ "${output}" =~ "Imported" ]]
+
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]

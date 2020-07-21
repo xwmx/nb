@@ -3846,7 +3846,7 @@ _completions() {
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
           then
-            _exit_1 printf "Unable to download Completion script from %s\\n" \
+            _exit_1 printf "Unable to download completion script from %s\\n" \
               "${_completion_source}"
           fi
         fi
@@ -4763,7 +4763,7 @@ _import() {
               --to markdown           \
               -o "${_NOTEBOOK_PATH}/${_basename}"
         then
-          _exit_1 printf "Unable to download: %s\\n" "${_url}"
+          _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
         fi
       else
         if ! _download_from "${_url}" "${_NOTEBOOK_PATH}/${_basename}"
