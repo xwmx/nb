@@ -99,14 +99,38 @@ __          _
         }
       }
 
-      .description, .features {
+      .description {
         font-size: 1.25rem;
+        margin: 1rem 0;
         padding: 0 1rem;
       }
 
+      @media only screen and (min-width: 700px) {
+        .description {
+          padding: 0 3rem;
+        }
+      }
+
       .features {
-        list-style-type: none;
-        padding: 1em 2em;
+        font-size: 1rem;
+        list-style-type: '· ';
+        padding: 0 2em 0 3em;
+        text-align: left;
+      }
+
+      @media only screen and (min-width: 400px) {
+        .features {
+          margin: 0 auto;
+          max-width: 28em;
+        }
+      }
+
+      @media only screen and (min-width: 768px) {
+        .features {
+          font-size: 1.25rem;
+          max-width: 28rem;
+          padding: 1rem;
+        }
       }
 
       .links {
