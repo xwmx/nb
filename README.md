@@ -334,7 +334,7 @@ files.
 # create a new note in your text editor
 nb a
 
-# create a new note with the filename 'example.md'
+# create a new note with the filename "example.md"
 nb a example.md
 
 # create a new note containing "This is a note."
@@ -343,11 +343,13 @@ nb a "This is a note."
 
 ##### Other Aliases
 
-`nb add` can also be invoked with `nb create` and `nb new`:
+`nb add` can also be invoked with `nb create` and `nb new` for convenience:
 
 ```bash
+# create a new note containing "Example note content."
 nb new "Example note content."
 
+# create a new note with the title "Example Note Title"
 nb create --title "Example Note Title"
 ```
 
