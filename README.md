@@ -957,7 +957,7 @@ Add: nb <url> Help: nb help bookmark
 [2] 🔖 Example Two (example.com)
 ```
 
-#### Opening Bookmarks
+#### Opening and Viewing Bookmarked Pages
 
 `nb` provides multiple ways to view bookmarked web pages.
 
@@ -970,7 +970,9 @@ nb open 3
 ```
 
 `nb peek` (alias: `preview`) opens the bookmarked page in your
-terminal web browser:
+terminal web browser, such as
+[w3m](https://en.wikipedia.org/wiki/W3m) or
+Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
 
 ```bash
 # peek bookmark by id
