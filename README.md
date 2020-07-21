@@ -933,7 +933,7 @@ filter bookmarks:
 > nb bookmark
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
-[3] 🔖 🔒 Example Three (example.com)
+[3] 🔖 🔒 example.bookmark.md.enc
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
