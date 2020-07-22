@@ -1292,10 +1292,11 @@ stored in the directory configured in [`NB_DIR`](#settings-list---long), which i
 
 `nb` also supports creating and working with local notebooks. Local
 notebooks are notebooks that are anywhere on the system outside
-of `NB_DIR`. Any folder can be an `nb` local notebook, which are just normal
-folders that have been initialized as git repositories and contain an `nb`
-.index file. Local notebooks are a simple and fast way to add structured git
-versioning to any folder of documents.
+of `NB_DIR`. Any folder can be an `nb` local notebook, which is just a normal
+folder that has been initialized as a git repository and contains an `nb`
+.index file. Initializing a folder as an `nb` local notebook is a very easy
+way to add structured git versioning to any folder of documents and
+other files.
 
 When `nb` runs within a local notebook, the local notebook is set as the
 current notebook:
