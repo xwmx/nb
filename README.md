@@ -1320,6 +1320,9 @@ nb move home:Todos local
 # move note 1 from the local notebook to the home notebook
 nb move 1 home
 
+# search the local notebook for <query string>
+nb search 'query string'
+
 # search the local notebook and all global notebooks for <query string>
 nb search 'query string' --all
 ```
