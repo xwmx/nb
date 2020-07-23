@@ -2606,14 +2606,13 @@ _help() {
   local _arguments=()
   local _readme=0
   local _short=0
-  local _use_pager=0
+  local _use_pager=1
 
   for __arg in "${@:-}"
   do
     case "${__arg}" in
       readme|README|-r|--readme)
         _readme=1
-        _use_pager=1
         ;;
       --pager)
         _use_pager=1
