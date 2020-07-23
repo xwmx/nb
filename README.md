@@ -673,8 +673,8 @@ nb show example.md --render
 ```
 
 `nb show` also supports previewing other file types in the terminal,
-depending on the tools available in the environment. Supported tools
-and file types include:
+depending on the tools available in the environment. Supported file types and
+tools include:
 
 - PDF files:
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
