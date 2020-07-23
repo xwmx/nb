@@ -676,17 +676,20 @@ nb show example.md --render
 depending on the tools available in the environment. Supported tools
 and file types include:
 
-- [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext) - PDF files
-- [`mplayer`](https://en.wikipedia.org/wiki/MPlayer),
-  [`afplay`](https://ss64.com/osx/afplay.html),
-  [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
-  [`ffplay`](https://ffmpeg.org/ffplay.html) - Audio files
-- [ImageMagick](https://imagemagick.org/),
-  [`imgcat`](https://www.iterm2.com/documentation-images.html),
-  [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html) - Images
-- [`ranger`](https://ranger.github.io/),
-  [`mc`](https://en.wikipedia.org/wiki/Midnight_Commander) - Folders /
-  Directories
+- PDF files:
+  - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
+- Audio files:
+  - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
+  - [`afplay`](https://ss64.com/osx/afplay.html)
+  - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
+  - [`ffplay`](https://ffmpeg.org/ffplay.html)
+- Images:
+  - [ImageMagick](https://imagemagick.org/)
+  - [`imgcat`](https://www.iterm2.com/documentation-images.html)
+  - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+- Folders / Directories:
+  - [`ranger`](https://ranger.github.io/)
+  - [`mc`](https://en.wikipedia.org/wiki/Midnight_Commander)
 
 When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
