@@ -797,8 +797,8 @@ permission.
 ```
 
 `nb` embeds the page content in the bookmark, making it available for full
-text search with `nb search` and `nb bookmark search`. When `pandoc` is
-installed, the HTML page content will be converted to Markdown.
+text search with `nb search`. When `pandoc` is installed, the HTML page
+content will be converted to Markdown.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -896,24 +896,16 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with `nb bookmark search`:
+Search for tagged bookmarks with `nb search`:
 
 ```bash
-nb bookmark search '#tagname'
+nb search '#tag1'
 ```
 
-`nb bookmark search` has the same full text search as `nb search`.
-Search both bookmarks and notes for tags with `nb search`:
+`nb search` automatically searches archived page content:
 
 ```bash
-nb search '#tagname'
-```
-
-`nb bookmark search` and `nb search` also automatically search archived
-page content:
-
-```bash
-> nb bookmark search 'example query'
+> nb search 'example query'
 [10] example.bookmark.md 'Example Bookmark (example.com)'
 ---------------------------------------------------------
 5:Lorem ipsum example query.
