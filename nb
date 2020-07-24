@@ -2678,36 +2678,37 @@ and divider lines.
 user-defined themes. The current color theme can be set using
 the \`nb settings\` prompt:
 
-    nb settings color_theme
+    $(_highlight "nb settings color_theme")
 
 Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
 currently located at:
 
-    ${NB_DIR}/.themes
+    $(_highlight "${NB_DIR}/.themes")
 
 Themes have a \`.nb-theme\` or \`.nb-theme.sh\` extension and contain one
 \`if\` statment setting the color environment variables to \`tput\` ANSI
 color numbers:
 
-    # file: ~/.nb/.themes/example.nb-theme.sh
-    if [[ "\${NB_COLOR_THEME}" == "example" ]]
+    $(_highlight_secondary "# file: ~/.nb/.themes/example.nb-theme.sh")
+    $(_highlight "\
+if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"example\"${_TPUT_COLOR_PRIMARY} ]]
     then
-      export NB_COLOR_PRIMARY=68
-      export NB_COLOR_SECONDARY=8
-    fi
+      export NB_COLOR_PRIMARY=${_TPUT_SGR0}${NB_COLOR_PRIMARY}${_TPUT_COLOR_PRIMARY}
+      export NB_COLOR_SECONDARY=${_TPUT_SGR0}${NB_COLOR_SECONDARY}${_TPUT_COLOR_PRIMARY}
+    fi")
 
 To view a list of available color numbers, run:
 
-    nb settings colors
+    $(_highlight "nb settings colors")
 
 The primary and secondary colors can also be configured individually,
 making color themes easily customizable:
 
-    # open the settings prompt for the primary color
-    nb settings color_primary
+    $(_highlight_secondary "# open the settings prompt for the primary color")
+    $(_highlight "nb settings color_primary")
 
-    # open the settings prompt for the secondary color
-    nb settings color_secondary
+    $(_highlight_secondary "# open the settings prompt for the secondary color")
+    $(_highlight "nb settings color_secondary")
 
 \`nb\` color settings prompts also print out a table of colors and their
 ANSI color numbers for easy reference.
