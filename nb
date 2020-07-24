@@ -2678,7 +2678,7 @@ the \`nb settings\` prompt:
 
     nb settings color_theme
 
-Custom color themes can be installed in the \`\$NB_DIR/.themes\` directory,
+Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
 currently located at:
 
     ${NB_DIR}/.themes
