@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.3.1"
+_VERSION="4.3.2"
 
 # $_ME
 #
@@ -2606,14 +2606,13 @@ _help() {
   local _arguments=()
   local _readme=0
   local _short=0
-  local _use_pager=0
+  local _use_pager=1
 
   for __arg in "${@:-}"
   do
     case "${__arg}" in
       readme|README|-r|--readme)
         _readme=1
-        _use_pager=1
         ;;
       --pager)
         _use_pager=1
@@ -2838,7 +2837,7 @@ Description:
   Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
-  \`\$EDITOR\`, currently set to '${EDITOR}'. If a non-option argument is
+  \`\$EDITOR\`, currently set to "${EDITOR}". If a non-option argument is
   passed, \`${_ME}\` will treat it as a <filename≥ if a file extension is found.
   If no file extension is found, \`${_ME}\` will treat the string as
   <content> and will create a new note without opening the editor.
@@ -3111,7 +3110,7 @@ Description:
   installed, the HTML content will be converted to Markdown before saving.
 
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
-  bookmark URL is the first URL in the file within '<' and '>' characters:
+  bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
 
@@ -3846,7 +3845,7 @@ _completions() {
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
           then
-            _exit_1 printf "Unable to download Completion script from %s\\n" \
+            _exit_1 printf "Unable to download completion script from %s\\n" \
               "${_completion_source}"
           fi
         fi
@@ -3988,7 +3987,7 @@ Description:
 Examples:
   ${_ME} delete 3
   ${_ME} delete example.md
-  ${_ME} delete 'A Document Title'
+  ${_ME} delete "A Document Title"
   ${_ME} 3 delete --force
 
 Shortcut Alias: \`d\`
@@ -4049,7 +4048,7 @@ _delete() {
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
   then
-    _note_info_line="${_note_info_hi} '${_title}'"
+    _note_info_line="${_note_info_hi} \"${_title}\""
   else
     _note_info_line="${_note_info_hi}"
   fi
@@ -4107,7 +4106,7 @@ Options:
                          specified in the \`\$EDITOR\` environment variable.
 
 Description:
-  Open the specified note in \`\$EDITOR\`, currently set to '${EDITOR}', or
+  Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
   <editor> if specified. Any data piped to \`${_ME} edit\` will be appended to
   the file.
 
@@ -4117,7 +4116,7 @@ Description:
 Examples:
   ${_ME} edit 3
   ${_ME} edit example.md
-  ${_ME} edit 'A Document Title'
+  ${_ME} edit "A Document Title"
   echo "Content to append." | ${_ME} edit 1
   ${_ME} 3 edit
 
@@ -4763,7 +4762,7 @@ _import() {
               --to markdown           \
               -o "${_NOTEBOOK_PATH}/${_basename}"
         then
-          _exit_1 printf "Unable to download: %s\\n" "${_url}"
+          _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
         fi
       else
         if ! _download_from "${_url}" "${_NOTEBOOK_PATH}/${_basename}"
@@ -5247,7 +5246,7 @@ Options:
   -t, --type <type>, --<type>   List items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder.
+                                video, audio, folder
 
 Description:
   List notes in the current notebook.
@@ -5271,7 +5270,7 @@ Examples:
   ${_ME} list example.md -e 10
   ${_ME} list --excerpt --no-id
   ${_ME} list --filenames --reverse
-  ${_ME} list '^Example.*'
+  ${_ME} list "^Example.*"
   ${_ME} list --10
   ${_ME} list --type document
 HEREDOC
@@ -5801,7 +5800,7 @@ Examples:
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
   ${_ME} ls --reverse
-  ${_ME} ls '^Example.*'
+  ${_ME} ls "^Example.*"
   ${_ME} ls --10
   ${_ME} ls --type document
 HEREDOC
@@ -6305,7 +6304,7 @@ _move() {
 
   if [[ -n "${_title}" ]]
   then
-    _source_info="${_source_info} '${_title}'"
+    _source_info="${_source_info} \"${_title}\""
   fi
 
   if ! ((_force))
@@ -6386,7 +6385,7 @@ Subcommands:
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
              Aliases: \`notebooks create\`, \`notebooks new\`
-  archive    Set the current notebook or notebook <name> to 'archived' status.
+  archive    Set the current notebook or notebook <name> to "archived" status.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
@@ -6405,7 +6404,7 @@ Subcommands:
   rename     Rename a notebook.
   status     Print the archival status of the current notebook or
              notebook <name>.
-  unarchive  Remove 'archived' status from current notebook or notebook <name>.
+  unarchive  Remove "archived" status from current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
@@ -7030,7 +7029,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       if [[ "${_old}" == "local" ]] || [[ "${_new}" == "local" ]]
       then
         _exit_1 cat <<HEREDOC
-'local' refers to the local notbook and can not be renamed.
+"local" refers to the local notbook and can not be renamed.
 HEREDOC
       fi
     elif [[ ! -d "${NB_DIR}/${_old}" ]]
@@ -7039,7 +7038,7 @@ HEREDOC
         "$(_highlight "${_old}")"
     elif [[ -e "${NB_DIR}/${_new}" ]]
     then
-      _exit_1 printf "A notebook named '%s' already exists.\\n" \
+      _exit_1 printf "A notebook named \"%s\" already exists.\\n" \
         "$(_highlight "${_new}")"
     fi
 
@@ -7394,9 +7393,9 @@ Options:
   -f, --force     Skip the confirmation prompt.
   --reset         Reset the filename to the last modified timestamp.
   --to-bookmark   Preserve the existing filename and replace the extension
-                  with '.bookmark.md' to convert the note to a bookmark.
+                  with ".bookmark.md" to convert the note to a bookmark.
   --to-note       Preserve the existing filename and replace the bookmark's
-                  '.bookmark.md' extension with '.md' to convert the bookmark
+                  ".bookmark.md" extension with ".md" to convert the bookmark
                   to a Markdown note.
 
 Description:
@@ -7404,16 +7403,16 @@ Description:
   file extension is omitted, the existing extension will be used.
 
 Examples:
-  # Rename 'example.md' to 'example.org'
+  # Rename "example.md" to "example.org"
   ${_ME} rename example.md example.org
 
-  # Rename note 3 ('example.md') to 'New Name.md'
+  # Rename note 3 ("example.md") to "New Name.md"
   ${_ME} rename 3 "New Name"
 
-  # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
+  # Rename "example.bookmark.md" to "New Name.bookmark.md"
   ${_ME} rename example.bookmark.md "New Name"
 
-  # Rename note 3 ('example.md') to bookmark named 'example.bookmark.md'
+  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   ${_ME} rename 3 --to-bookmark
 HEREDOC
 _rename() {
@@ -7590,20 +7589,20 @@ Description:
     4. \`grep\`  https://en.wikipedia.org/wiki/Grep
 
 Examples:
-  # search current notebook for 'example query'
-  ${_ME} search 'example query'
+  # search current notebook for "example query"
+  ${_ME} search "example query"
 
-  # search all notebooks for 'example query'
-  ${_ME} search 'example query' --all
+  # search all notebooks for "example query"
+  ${_ME} search "example query" --all
 
-  # search notes for 'Example' OR 'Sample'
-  ${_ME} search 'Example|Sample'
+  # search notes for "Example" OR "Sample"
+  ${_ME} search "Example|Sample"
 
-  # search for bookmarks containing the hashtag '#example'
-  ${_ME} search '#example' --type bookmark
+  # search for bookmarks containing the hashtag "#example"
+  ${_ME} search "#example" --type bookmark
 
   # search with a regular expression for notes containing phone numbers
-  ${_ME} search '^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$'
+  ${_ME} search "^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$"
 
 Shortcut Alias: \`q\`
 HEREDOC
@@ -7882,7 +7881,7 @@ _search() {
           _filename="$(basename "${_path}")"
           _filename_color="${_filename}"
 
-          # Use '.index' to match filenames.
+          # Use ".index" to match filenames.
           if [[ -n "${_filename:-}" ]] && [[ "${_filename:-}" == ".index" ]]
           then
             _filename_hit=1
@@ -7918,8 +7917,8 @@ _search() {
 
           if [[ -n "${_title}" ]]
           then
-            _file_info="${_filename} '${_title}'"
-            _file_info_color="${_filename_color} '${_title}'"
+            _file_info="${_filename} \"${_title}\""
+            _file_info_color="${_filename_color} \"${_title}\""
           else
             _file_info="${_filename}"
             _file_info_color="${_filename_color}"
@@ -8037,7 +8036,7 @@ Description:
 
 Examples:
   ${_ME} settings
-  ${_ME} settings set 5 'org'
+  ${_ME} settings set 5 "org"
   ${_ME} settings set color_primary 105
   ${_ME} settings unset color_primary
   ${_ME} settings colors
@@ -8357,7 +8356,7 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s must be either '0' or '1'.\\n" "${1}"
+        _return_1 printf "%s must be either \"0\" or \"1\".\\n" "${1}"
       fi
     elif [[ "${1:-}" == 'NB_DIR' ]]
     then
@@ -8368,7 +8367,7 @@ HEREDOC
           [[ ! -w "${2}" ]]
          }
       then
-        _return_1 printf "'%s' is not a valid location for NB_DIR.\\n" "${2:-}"
+        _return_1 printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}"
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL' ]]
     then
@@ -8377,7 +8376,7 @@ HEREDOC
         return 0
       else
         _return_1 \
-          printf "NB_ENCRYPTION_TOOL must be either 'openssl' or 'gpg'.\\n"
+          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n"
       fi
     elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
          [[ "${1:-}" == 'NB_COLOR_SECONDARY'  ]]
@@ -8409,9 +8408,9 @@ HEREDOC
     $(_highlight_secondary "---------")
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to '0'.
+    one is set. To disable this behavior, set this to \"0\".
 
-      • Default Value: '1'")
+      • Default Value: \"1\"")
 
   _settings_list_items+=("$(_id_brackets_color '2') color_primary")
   _settings_help_items+=("\
@@ -8422,8 +8421,8 @@ HEREDOC
     run: \`${_ME} settings colors\`
     To view a color for a number, run: \`${_ME} settings colors <number>\`
 
-      • Default Value: '68' (blue) for 256 color terminals,
-                       '4'  (blue) for  8  color terminals.")
+      • Default Value: \"68\" (blue) for 256 color terminals,
+                       \"4\"  (blue) for  8  color terminals.")
 
   _settings_list_items+=("$(_id_brackets_color '3') color_secondary")
   _settings_help_items+=("\
@@ -8433,7 +8432,7 @@ HEREDOC
     table of 256 common colors and numbers, run: \`${_ME} settings colors\`
     To view a color for a number, run: \`${_ME} settings colors <number>\`
 
-      • Default Value: '8'")
+      • Default Value: \"8\"")
 
   _settings_list_items+=("$(_id_brackets_color '4') color_theme")
   _settings_help_items+=("\
@@ -8463,39 +8462,39 @@ HEREDOC
 
       $(_nb_settings_theme_list)
 
-      • Default Value: 'nb'")
+      • Default Value: \"nb\"")
 
   _settings_list_items+=("$(_id_brackets_color '5') default_extension")
   _settings_help_items+=("\
     $(_highlight_secondary "-----------------")
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    The default extension to use for notes files. Change to \"org\" for Emacs
+    Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
     whatever you prefer.
 
-      • Default Value: 'md'")
+      • Default Value: \"md\"")
 
   _settings_list_items+=("$(_id_brackets_color '6') editor")
   _settings_help_items+=("\
     $(_highlight_secondary "------")
     The command line text editor to use with \`${_ME}\`.
 
-      • Example Values: 'vim', 'emacs', 'micro', 'code', 'subl' 'macdown'")
+      • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
 
   _settings_list_items+=("$(_id_brackets_color '7') encryption_tool")
   _settings_help_items+=("\
     $(_highlight_secondary "---------------")
     The tool used for encrypting notes.
 
-      • Supported Values: 'openssl', 'gpg'
-      • Default Value:    'openssl'")
+      • Supported Values: \"openssl\", \"gpg\"
+      • Default Value:    \"openssl\"")
 
   _settings_list_items+=("$(_id_brackets_color '8') footer")
   _settings_help_items+=("\
     $(_highlight_secondary "------")
     By default, \`${_ME} ls\` includes a footer with example commands for
-    easy reference. To hide this footer, set this to '0'.
+    easy reference. To hide this footer, set this to \"0\".
 
-      • Default Value: '1'")
+      • Default Value: \"1\"")
 
   _settings_list_items+=("$(_id_brackets_color '9') nb_dir")
   _settings_help_items+=("\
@@ -8504,7 +8503,7 @@ HEREDOC
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
 
-      • Default Value: '~/.nb'")
+      • Default Value: \"~/.nb\"")
 
   while ((${#}))
   do
@@ -8627,7 +8626,7 @@ Optons:
   --clear-history  Clear the \`${_ME}\` shell history.
 
 Description:
-  Start the \`${_ME}\` interactive shell. Type 'exit' to exit.
+  Start the \`${_ME}\` interactive shell. Type "exit" to exit.
 
   \`${_ME} shell\` recognizes all \`${_ME}\` subcommands and options, providing
   a streamlined, distraction-free approach for working with \`${_ME}\`.
@@ -8815,7 +8814,7 @@ Description:
 Examples:
   ${_ME} show 1
   ${_ME} show example.md --render
-  ${_ME} show 'A Document Title' --dump --no-color
+  ${_ME} show "A Document Title" --dump --no-color
   ${_ME} 1 show
 
 Shortcut Alias: \`s\`

@@ -64,7 +64,7 @@ HEREDOC
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ first\.md\ \'one\' ]]
+  [[ "${lines[0]}" =~ first\.md\ \"one\" ]]
   [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ idyl ]]
 }
@@ -93,7 +93,7 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ first\.md\ \'one\' ]]
+  [[ "${lines[0]}" =~ first\.md\ \"one\" ]]
   [[ "${#lines[@]}" -eq 1 ]]
 }
 
@@ -111,10 +111,10 @@ HEREDOC
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second\.md\ \'two\' ]]
+  [[ "${lines[0]}" =~ second\.md\ \"two\" ]]
   [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
-  [[ "${lines[3]}" =~ third+\.md\ \'three\' ]]
+  [[ "${lines[3]}" =~ third+\.md\ \"three\" ]]
   [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
@@ -149,8 +149,8 @@ HEREDOC
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second\.md\ \'two\' ]]
-  [[ "${lines[1]}" =~ third+\.md\ \'three\' ]]
+  [[ "${lines[0]}" =~ second\.md\ \"two\" ]]
+  [[ "${lines[1]}" =~ third+\.md\ \"three\" ]]
   [[ "${#lines[@]}" -eq 2 ]]
 }
 
@@ -190,10 +190,10 @@ HEREDOC
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
   [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ fourth\.bookmark\.md\ \'four\' ]]
+  [[ "${lines[0]}" =~ fourth\.bookmark\.md\ \"four\" ]]
   [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
-  [[ "${lines[3]}" =~ sixth\.bookmark\.md\ \'six\' ]]
+  [[ "${lines[3]}" =~ sixth\.bookmark\.md\ \"six\" ]]
   [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[0]}" != "${lines[3]}" ]]
@@ -224,15 +224,15 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:2 ]]
-  [[ "${lines[0]}" =~ second\.md\ \'two\' ]]
+  [[ "${lines[0]}" =~ second\.md\ \"two\" ]]
   [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:3 ]]
-  [[ "${lines[3]}" =~ third\.md\ \'three\' ]]
+  [[ "${lines[3]}" =~ third\.md\ \"three\" ]]
   [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:1 ]]
-  [[ "${lines[6]}" =~ example\.md\ \'sweetish\' ]]
+  [[ "${lines[6]}" =~ example\.md\ \"sweetish\" ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
@@ -248,15 +248,15 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ home:2 ]]
-  [[ "${lines[0]}" =~ second\.md\ \'two\' ]]
+  [[ "${lines[0]}" =~ second\.md\ \"two\" ]]
   [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${lines[3]}" =~ home:3 ]]
-  [[ "${lines[3]}" =~ third\.md\ \'three\' ]]
+  [[ "${lines[3]}" =~ third\.md\ \"three\" ]]
   [[ "${lines[4]}" =~ -*- ]]
   [[ "${lines[5]}" =~ sweetish ]]
   [[ "${lines[6]}" =~ one:1 ]]
-  [[ "${lines[6]}" =~ example\.md\ \'sweetish\' ]]
+  [[ "${lines[6]}" =~ example\.md\ \"sweetish\" ]]
   [[ "${#lines[@]}" -eq 9 ]]
 }
 
@@ -338,7 +338,7 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ 1 ]]
-  [[ "${lines[0]}" =~ example-1.md\ \'one\' ]]
+  [[ "${lines[0]}" =~ example-1.md\ \"one\" ]]
   [[ "${lines[1]}" =~ -*- ]]
   [[ "${lines[2]}" =~ sweetish ]]
   [[ "${#lines[@]}" -eq 3 ]]
@@ -372,19 +372,19 @@ _search_all_setup() {
 
   [[ ${status} -eq 0 ]]
   [[ "${lines[0]}" =~ local:1                     ]]
-  [[ "${lines[0]}" =~ example-1.md\ \'one\'       ]]
+  [[ "${lines[0]}" =~ example-1.md\ \"one\"       ]]
   [[ "${lines[1]}" =~ -*-                         ]]
   [[ "${lines[2]}" =~ sweetish                    ]]
   [[ "${lines[3]}" =~ home:2                      ]]
-  [[ "${lines[3]}" =~ second\.md\ \'two\'         ]]
+  [[ "${lines[3]}" =~ second\.md\ \"two\"         ]]
   [[ "${lines[4]}" =~ -*-                         ]]
   [[ "${lines[5]}" =~ sweetish                    ]]
   [[ "${lines[6]}" =~ home:3                      ]]
-  [[ "${lines[6]}" =~ third\.md\ \'three\'        ]]
+  [[ "${lines[6]}" =~ third\.md\ \"three\"        ]]
   [[ "${lines[7]}" =~ -*-                         ]]
   [[ "${lines[8]}" =~ sweetish                    ]]
   [[ "${lines[9]}" =~ one:1                       ]]
-  [[ "${lines[9]}" =~ example\.md\ \'sweetish\'   ]]
+  [[ "${lines[9]}" =~ example\.md\ \"sweetish\"   ]]
   [[ "${#lines[@]}" -eq 12 ]]
 }
 

@@ -652,7 +652,7 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ \'\/\'\ is\ not\ a\ valid\ location\ for\ NB_DIR\. ]]
+  [[ "${output}" =~ \"\/\"\ is\ not\ a\ valid\ location\ for\ NB_DIR\. ]]
   [[ ! "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == "/" ]]
 }
 
@@ -708,7 +708,7 @@ skip "Determine how to test interactive prompt."
   [[ ${status} -eq 1 ]]
   [[ "${output}" =~ NB_ENCRYPTION_TOOL        ]]
   [[ "${output}" =~ must\ be\ either          ]]
-  [[ "${output}" =~ \'openssl\'\ or\ \'gpg\'  ]]
+  [[ "${output}" =~ \"openssl\"\ or\ \"gpg\"  ]]
   [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
