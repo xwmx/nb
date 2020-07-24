@@ -1592,7 +1592,7 @@ the `nb settings` prompt:
 
 Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
 
-Themes have an `.nb-theme` or `.nb-theme.sh` extension and contain one
+Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one
 `if` statment setting the color environment variables to `tput` ANSI
 color numbers:
 
