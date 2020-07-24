@@ -2684,8 +2684,8 @@ currently located at:
     ${NB_DIR}/.themes
 
 Themes have an \`.nb-theme\` or \`.nb-theme.sh\` extension and contain one
-\`if\` statment assigning the color environment variable values to \`tput\`
-ANSI color numbers:
+\`if\` statment setting the color environment variables to \`tput\` ANSI
+color numbers:
 
     # file: ~/.nb/.themes/example.nb-theme.sh
     if [[ "\${NB_COLOR_THEME}" == "example" ]]
