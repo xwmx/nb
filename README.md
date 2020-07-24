@@ -1846,7 +1846,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#bookmark">bookmark</a> •
   <a href="#completions">completions</a> •
   <a href="#count">count</a> •
-  <a href="#delete">delete</a> •
+  <a href="#delete">delete</a> 
   <a href="#edit">edit</a> •
   <a href="#env">env</a> •
   <a href="#export">export</a> •
@@ -2025,8 +2025,8 @@ __          _                     _
 elements such as ids, the current notebook name, the shell prompt,
 and divider lines.
 
-`nb` includes several built-in color themes and also supports user-defined
-themes. The current color theme can be set with:
+`nb` includes several built-in color themes and also supports
+user-defined themes. The current color theme can be set with:
 
     nb settings color_theme
 
@@ -2053,9 +2053,8 @@ To view a list of available color numbers, run:
     nb settings colors
 
 The primary and secondary colors can also be configured individually,
-making the built-in color schemes easily customizable in `nb settings`.
-Use `nb settings` to open the color settings prompts, which also print
-a table of color values to choose from:
+making color themes easily customizable. Use `nb settings` to open
+the color settings prompts for the primary and secondary colors:
 
     nb settings color_primary
     nb settings color_secondary
