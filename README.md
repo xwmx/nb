@@ -1588,67 +1588,23 @@ configured in `nb settings`:
 
 ```bash
 > nb settings color_theme
-[4] color_theme
-    -----------
-    The color theme.
-
-    To view screenshots of the built-in themes, visit:
-
-        https://git.io/nb-docs-color-themes
-
-    `nb` also supports custom, user-defined themes. To learn more, run:
-
-        nb help --colors
-
-    Available themes:
-
-      blacklight
-      console
-      desert
-      electro
-      forest
-      monochrome
-      nb
-      ocean
-      raspberry
-      unicorn
-      utility
-
-      • Default Value: "nb"
-
-NB_COLOR_THEME is currently set to raspberry
-
-Enter a new value, unset to set to the default value, or q to quit.
-Value:
 ```
 
 The primary and secondary colors can also be configured individually,
-making the built-in color schemes easily customizable in
-`nb settings`. Use `nb settings color_primary` and
-`nb settings color_secondary` to open the color settings prompts,
-which also both print a table of color values to choose from:
+making the built-in color schemes easily customizable in `nb settings`:
 
 ```bash
-> nb settings color_primary
+# open the settings prompt for the primary color
+nb settings color_primary
 
-[...color table omitted...]
-
-[2] color_primary
-    -------------
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors. To view a table of 256 common colors and numbers,
-    run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
-
-      • Default Value: "68" (blue) for 256 color terminals,
-                       "4"  (blue) for  8  color terminals.
-
-NB_COLOR_PRIMARY is currently set to 162
-
-Enter a new value, unset to set to the default value, or q to quit.
-Value:
+# open the settings prompt for the secondary color
+nb settings color_secondary
 ```
+
+`nb` color settings prompt also print out a table of colors and their
+ANSI color numbers for easy reference.
+
+For more information about `nb` color settings, run `nb help --colors`.
 
 #### Built-in Color Themes
 
