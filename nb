@@ -2626,7 +2626,7 @@ _help() {
       --dump|--skip-pager|--no-pager)
         _use_pager=0
         ;;
-      -c|*color*|*theme*)
+      -c|*color*|*colour*|*theme*)
         _color_help=1
         ;;
       *)
