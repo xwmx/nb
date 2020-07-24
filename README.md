@@ -1604,7 +1604,8 @@ nb settings color_secondary
 `nb` color settings prompt also print out a table of colors and their
 ANSI color numbers for easy reference.
 
-For more information about `nb` color settings, run `nb help --colors`.
+For more information about `nb` color settings, see [`nb help
+--colors`](#nb-help---colors).
 
 #### Built-in Color Themes
 
