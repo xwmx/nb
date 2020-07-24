@@ -1840,7 +1840,8 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 <p align="center">
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a>
-  <a href="#nb-help--">bookmark</a>
+  </br>---</br>
+  <a href="#nb-help---colors">nb help --colors</a>
   </br>---</br>
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
