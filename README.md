@@ -1582,47 +1582,49 @@ For more information about settings, see [`nb help settings`](#settings-1) and
 elements like ids, the current notebook name, the shell prompt, and
 divider lines.
 
-`nb` includes several built-in color themes and supports user-created color
-themes. The color theme can be configured in `notes settings`:
+`nb` includes several built-in color themes and supports custom, user-created
+color themes. The color theme can be configured in `nb settings`:
 
 ```bash
 > nb settings color_theme
 [4] color_theme
     -----------
-    The color theme. `nb` has several customizable built-in themes,
-    listed below.
+    The color theme.
 
-    Additional themes can be installed in the $NB_DIR/.themes directory.
-    Themes have an .nb-theme or .nb-theme.sh extension and contain a
-    single if statment assigning the color environment variables to
-    tput ANSI color numbers.
+    To view screenshots of the built-in themes, visit:
 
-      Example:
+        https://git.io/nb-docs-color-themes
 
-        # file: ~/.nb/.themes/example.nb-theme.sh
-        if [[ "${NB_COLOR_THEME}" == "example" ]]
-        then
-          export NB_COLOR_PRIMARY=68
-          export NB_COLOR_SECONDARY=8
-        fi
+    `nb` also supports custom, user-defined themes. To learn more, run:
 
-    To view a list of available color numbers, run `nb settings colors`
+        nb help --colors
 
     Available themes:
 
-       blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn, utility
+      blacklight
+      console
+      desert
+      electro
+      forest
+      monochrome
+      nb
+      ocean
+      raspberry
+      unicorn
+      utility
 
-NB_COLOR_THEME is currently set to nb
+      • Default Value: "nb"
 
-Enter a new value, unset to set to the default value, or q to quit.
+NB_COLOR_THEME is currently set to raspberry
+
+Enter a new value, unset to set to the default value, or q to quit..
 Value:
 ```
 
 The primary and secondary colors can also be configured individually,
 making the built-in color schemes easily customizable in
-`notes settings`. Use `notes settings color_primary` and
-`notes settings color_secondary` to open the color settings prompts,
+`nb settings`. Use `nb settings color_primary` and
+`nb settings color_secondary` to open the color settings prompts,
 which also both print a table of color values to choose from:
 
 ```bash
@@ -1838,6 +1840,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 <p align="center">
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a>
+  <a href="#nb-help--">bookmark</a>
   </br>---</br>
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
@@ -1911,7 +1914,8 @@ Usage:
             [<pandoc options>...]
   nb export notebook <name> [<path>]
   nb git <git options>...
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
+  nb help [<subcommand>]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
@@ -1961,6 +1965,7 @@ Usage:
 Help:
   nb help               Display this help information.
   nb help <subcommand>  View help information for <subcommand>.
+  nb help --colors      View information about color settings.
   nb help --readme      View the `nb` README file.
   nb help --short       Display program usage information.
 
@@ -2092,6 +2097,55 @@ Examples:
 ------------------------------------------
 Part of `nb` (https://github.com/xwmx/nb).
 For more information, see: `nb help`.
+```
+
+#### `nb help --colors`
+
+```text
+__          _                     _
+\ \   _ __ | |__    _    ___ ___ | | ___  _ __ ___
+ \ \ | '_ \| '_ \  (_)  / __/ _ \| |/ _ \| '__/ __|
+ / / | | | | |_) |  _  | (_| (_) | | (_) | |  \__ \
+/_/  |_| |_|_.__/  (_)  \___\___/|_|\___/|_|  |___/
+
+`nb` has a minimal text interface and uses color to highlight certain
+elements such as ids, the current notebook name, the shell prompt,
+and divider lines.
+
+`nb` includes several built-in color themes and also supports user-defined
+color themes. The current color theme can be set with:
+
+    nb settings color_theme
+
+Custom color themes can be installed in the $NB_DIR/.themes directory,
+currently located at:
+
+    ~/.nb/.themes
+
+Themes have an .nb-theme or .nb-theme.sh extension and contain a single
+if statment assigning the color environment variable values to tput ANSI
+color numbers.
+
+  Example:
+
+    # file: ~/.nb/.themes/example.nb-theme.sh
+    if [[ "${NB_COLOR_THEME}" == "example" ]]
+    then
+      export NB_COLOR_PRIMARY=68
+      export NB_COLOR_SECONDARY=8
+    fi
+
+To view a list of available color numbers, run:
+
+    nb settings colors
+
+The primary and secondary colors can also be configured individually,
+making the built-in color schemes easily customizable in `nb settings`.
+Use `nb settings` to open the color settings prompts, which also print
+a table of color values to choose from:
+
+    nb settings color_primary
+    nb settings color_secondary
 ```
 
 ### Subcommands
@@ -2857,29 +2911,29 @@ Alias: `set`
 
 [4] color_theme
     -----------
-    The color theme. `nb` has several customizable built-in themes,
-    listed below.
+    The color theme.
 
-    Additional themes can be installed in the $NB_DIR/.themes directory.
-    Themes have an .nb-theme or .nb-theme.sh extension and contain a
-    single if statment assigning the color environment variables to
-    tput ANSI color numbers.
+    To view screenshots of the built-in themes, visit:
 
-      Example:
+        https://git.io/nb-docs-color-themes
 
-        # file: ~/.nb/.themes/example.nb-theme.sh
-        if [[ "${NB_COLOR_THEME}" == "example" ]]
-        then
-          export NB_COLOR_PRIMARY=68
-          export NB_COLOR_SECONDARY=8
-        fi
+    `nb` supports custom, user-defined themes. To learn more, run:
 
-    To view a list of available color numbers, run `nb settings colors`
+        nb help --colors
 
     Available themes:
 
-       blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn, utility
+      blacklight
+      console
+      desert
+      electro
+      forest
+      monochrome
+      nb
+      ocean
+      raspberry
+      unicorn
+      utility
 
       • Default Value: "nb"
 
