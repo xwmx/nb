@@ -2693,8 +2693,8 @@ color numbers:
     $(_highlight "\
 if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"example\"${_TPUT_COLOR_PRIMARY} ]]
     then
-      export NB_COLOR_PRIMARY=${_TPUT_SGR0}${NB_COLOR_PRIMARY}${_TPUT_COLOR_PRIMARY}
-      export NB_COLOR_SECONDARY=${_TPUT_SGR0}${NB_COLOR_SECONDARY}${_TPUT_COLOR_PRIMARY}
+      export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}
+      export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}
     fi")
 
 To view a list of available color numbers, run:
