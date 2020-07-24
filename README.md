@@ -1612,8 +1612,7 @@ nb settings colors
 ```
 
 The primary and secondary colors can also be configured individually,
-making color themes easily customizable. Use `nb settings` to open
-the color settings prompts for the primary and secondary colors:
+making color themes easily customizable:
 
 ```bash
 # open the settings prompt for the primary color
