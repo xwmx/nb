@@ -1618,7 +1618,7 @@ configured in `nb settings`:
 
 NB_COLOR_THEME is currently set to raspberry
 
-Enter a new value, unset to set to the default value, or q to quit..
+Enter a new value, unset to set to the default value, or q to quit.
 Value:
 ```
 
