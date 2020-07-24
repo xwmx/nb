@@ -2670,15 +2670,15 @@ __          _                     _
     _highlight_secondary "\
 ---------------------------------------------------"
   cat <<HEREDOC
-\`nb\` has a minimal text interface and uses color to highlight certain
+\`${_ME}\` has a minimal text interface and uses color to highlight certain
 elements such as ids, the current notebook name, the shell prompt,
 and divider lines.
 
-\`nb\` includes several built-in color themes and also supports
+\`${_ME}\` includes several built-in color themes and also supports
 user-defined themes. The current color theme can be set using
-the \`nb settings\` prompt:
+the \`${_ME} settings\` prompt:
 
-    $(_highlight "nb settings color_theme")
+    $(_highlight "${_ME} settings color_theme")
 
 Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
 currently located at:
@@ -2697,21 +2697,19 @@ if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"example\"${_TPUT_COLOR_PRIMARY} ]
       export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}
     fi")
 
-To view a list of available color numbers, run:
-
-    $(_highlight "nb settings colors")
-
 The primary and secondary colors can also be configured individually,
 making color themes easily customizable:
 
     $(_highlight_secondary "# open the settings prompt for the primary color")
-    $(_highlight "nb settings color_primary")
+    $(_highlight "${_ME} settings color_primary")
 
     $(_highlight_secondary "# open the settings prompt for the secondary color")
-    $(_highlight "nb settings color_secondary")
+    $(_highlight "${_ME} settings color_secondary")
 
-\`nb\` color settings prompts also print out a table of colors and their
-ANSI color numbers for easy reference.
+To view a table of available colors and numbers, run:
+
+    $(_highlight "${_ME} settings colors")
+
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then

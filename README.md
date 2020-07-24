@@ -1600,15 +1600,9 @@ color numbers:
 # file: ~/.nb/.themes/example.nb-theme.sh
 if [[ "${NB_COLOR_THEME}" == "example" ]]
 then
-  export NB_COLOR_PRIMARY=68
-  export NB_COLOR_SECONDARY=8
+  export NB_COLOR_PRIMARY=43
+  export NB_COLOR_SECONDARY=38
 fi
-```
-
-To view a list of available color numbers, run:
-
-```bash
-nb settings colors
 ```
 
 The primary and secondary colors can also be configured individually,
@@ -1622,8 +1616,11 @@ nb settings color_primary
 nb settings color_secondary
 ```
 
-`nb` color settings prompts also print out a table of colors and their
-ANSI color numbers for easy reference.
+To view a table of available colors and numbers, run:
+
+```bash
+nb settings colors
+```
 
 #### Built-in Color Themes
 
