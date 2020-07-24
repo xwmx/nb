@@ -8112,28 +8112,23 @@ _settings() {
   # Usage: _nb_settings_colors
   _nb_settings_colors() {
     _nb_settings_colors_print(){
-        for __color_number
-        do
-          printf '\e[38;5;%dm %3d ' \
-            "${__color_number}"     \
-            "${__color_number}"
-        done
-        printf '\e[0m \n'
-        # printf '\e[0m '
+      printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
     }
 
     if [[ -n "${1:-}" ]]
     then
       _nb_settings_colors_print "${1:-}"
+      printf "\\n"
     else
-      _nb_settings_colors_print {0..15}
-
-      for ((_i=0;_i<6;_i++))
+      for ((_i=0;_i<256;_i++))
       do
-        _nb_settings_colors_print $(seq $((_i*36+16)) $((_i*36+51)))
-      done
+        if ((_i)) && ! ((_i % 16))
+        then
+          printf "\\n"
+        fi
 
-      _nb_settings_colors_print {232..255}
+        _nb_settings_colors_print "${_i}"
+      done
 
       printf "\\n"
     fi
