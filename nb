@@ -8626,7 +8626,7 @@ Optons:
   --clear-history  Clear the \`${_ME}\` shell history.
 
 Description:
-  Start the \`${_ME}\` interactive shell. Type \"exit\" to exit.
+  Start the \`${_ME}\` interactive shell. Type "exit" to exit.
 
   \`${_ME} shell\` recognizes all \`${_ME}\` subcommands and options, providing
   a streamlined, distraction-free approach for working with \`${_ME}\`.
