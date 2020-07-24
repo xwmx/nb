@@ -300,7 +300,7 @@ Use `nb add` to create new notes:
 # create a new note in your text editor
 nb add
 
-# create a new note with the filename 'example.md'
+# create a new note with the filename "example.md"
 nb add example.md
 
 # create a new note containing "This is a note."
@@ -906,7 +906,7 @@ nb search "#tag1"
 
 ```bash
 > nb search "example query"
-[10] example.bookmark.md 'Example Bookmark (example.com)'
+[10] example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1012,7 +1012,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added [3] 20200101000000.bookmark.md 'Example Domain (example.com)'
+Added [3] 20200101000000.bookmark.md "Example Domain (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -1044,7 +1044,7 @@ Perform a full text search of bookmarks and archived page content:
 
 ```bash
 > bookmark search "example query"
-[10] example.bookmark.md 'Example Bookmark (example.com)'
+[10] example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1085,13 +1085,13 @@ highlighting:
 
 ```bash
 > nb search "example"
-[314]  example.bookmark.md 'Example Bookmark (example.com)'
+[314]  example.bookmark.md "Example Bookmark (example.com)"
 ----------------------------------------------------------
 1:# Example Bookmark (example.com)
 
 3:<https://example.com>
 
-[2718] example.md 'Example Note'
+[2718] example.md "Example Note"
 --------------------------------
 1:# Example Note
 ```
@@ -1101,8 +1101,8 @@ the `-l` or `--list` option:
 
 ```bash
 > nb search "example" --list
-[314]  example.bookmark.md 'Example Bookmark (example.com)'
-[2718] example.md 'Example Note'
+[314]  example.bookmark.md "Example Bookmark (example.com)"
+[2718] example.md "Example Note"
 ```
 
 `nb search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
@@ -1533,7 +1533,7 @@ name or number to `nb settings`:
     ------
     The command line text editor to use with `nb`.
 
-      • Example Values: 'vim', 'emacs', 'code', 'subl', 'atom', 'macdown'
+      • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
 
 EDITOR is currently set to vim
 
@@ -1638,8 +1638,8 @@ which also both print a table of color values to choose from:
     run: `nb settings colors`
     To view a color for a number, run: `nb settings colors <number>`
 
-      • Default Value: '68' (blue) for 256 color terminals,
-                       '4'  (blue) for  8  color terminals.
+      • Default Value: "68" (blue) for 256 color terminals,
+                       "4"  (blue) for  8  color terminals.
 
 NB_COLOR_PRIMARY is currently set to 162
 
@@ -1746,7 +1746,7 @@ nb> edit 3 --content "New content."
 Updated [3] Example
 
 nb> bookmark https://example.com
-Added [4] example.bookmark.md 'Example Domain (example.com)'
+Added [4] example.bookmark.md "Example Domain (example.com)"
 
 nb> ls
 home
@@ -1760,13 +1760,13 @@ nb> bookmark url 4
 https://example.com
 
 nb> search "example"
-[4] example.bookmark.md 'Example (example.com)'
+[4] example.bookmark.md "Example (example.com)"
 -----------------------------------------------
 1:# Example (example.com)
 
 3:<https://example.com>
 
-[3] example.md 'Example'
+[3] example.md "Example"
 ------------------------
 1:# Example
 
@@ -2074,7 +2074,7 @@ Description:
   installed, the HTML content will be converted to Markdown before saving.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
-  bookmark URL is the first URL in the file within '<' and '>' characters:
+  bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
 
@@ -2119,7 +2119,7 @@ Description:
   Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, currently set to 'code'. If a non-option argument is
+  `$EDITOR`, currently set to "example". If a non-option argument is
   passed, `nb` will treat it as a <filename≥ if a file extension is found.
   If no file extension is found, `nb` will treat the string as
   <content> and will create a new note without opening the editor.
@@ -2201,7 +2201,7 @@ Description:
   installed, the HTML content will be converted to Markdown before saving.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
-  bookmark URL is the first URL in the file within '<' and '>' characters:
+  bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
 
@@ -2259,7 +2259,7 @@ Description:
 Examples:
   nb delete 3
   nb delete example.md
-  nb delete 'A Document Title'
+  nb delete "A Document Title"
   nb 3 delete --force
 
 Shortcut Alias: `d`
@@ -2285,7 +2285,7 @@ Description:
 Examples:
   nb edit 3
   nb edit example.md
-  nb edit 'A Document Title'
+  nb edit "A Document Title"
   echo "Content to append." | nb edit 1
   nb 3 edit
 
@@ -2480,7 +2480,7 @@ Examples:
   nb list example.md -e 10
   nb list --excerpt --no-id
   nb list --filenames --reverse
-  nb list '^Example.*'
+  nb list "^Example.*"
   nb list --10
   nb list --type document
 ```
@@ -2538,7 +2538,7 @@ Examples:
   nb ls example.md -e 10
   nb ls --excerpt --no-id
   nb ls --reverse
-  nb ls '^Example.*'
+  nb ls "^Example.*"
   nb ls --10
   nb ls --type document
 ```
@@ -2593,7 +2593,7 @@ Subcommands:
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
              Aliases: `notebooks create`, `notebooks new`
-  archive    Set the current notebook or notebook <name> to 'archived' status.
+  archive    Set the current notebook or notebook <name> to "archived" status.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
@@ -2612,7 +2612,7 @@ Subcommands:
   rename     Rename a notebook.
   status     Print the archival status of the current notebook or
              notebook <name>.
-  unarchive  Remove 'archived' status from current notebook or notebook <name>.
+  unarchive  Remove "archived" status from current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
@@ -2719,9 +2719,9 @@ Options:
   -f, --force     Skip the confirmation prompt.
   --reset         Reset the filename to the last modified timestamp.
   --to-bookmark   Preserve the existing filename and replace the extension
-                  with '.bookmark.md' to convert the note to a bookmark.
+                  with ".bookmark.md" to convert the note to a bookmark.
   --to-note       Preserve the existing filename and replace the bookmark's
-                  '.bookmark.md' extension with '.md' to convert the bookmark
+                  ".bookmark.md" extension with ".md" to convert the bookmark
                   to a Markdown note.
 
 Description:
@@ -2729,16 +2729,16 @@ Description:
   file extension is omitted, the existing extension will be used.
 
 Examples:
-  # Rename 'example.md' to 'example.org'
+  # Rename "example.md" to "example.org"
   nb rename example.md example.org
 
-  # Rename note 3 ('example.md') to 'New Name.md'
+  # Rename note 3 ("example.md") to "New Name.md"
   nb rename 3 "New Name"
 
-  # Rename 'example.bookmark.md' to 'New Name.bookmark.md'
+  # Rename "example.bookmark.md" to "New Name.bookmark.md"
   nb rename example.bookmark.md "New Name"
 
-  # Rename note 3 ('example.md') to bookmark named 'example.bookmark.md'
+  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
 ```
 
@@ -2766,20 +2766,20 @@ Description:
     4. `grep`  https://en.wikipedia.org/wiki/Grep
 
 Examples:
-  # search current notebook for 'example query'
-  nb search 'example query'
+  # search current notebook for "example query"
+  nb search "example query"
 
-  # search all notebooks for 'example query'
-  nb search 'example query' --all
+  # search all notebooks for "example query"
+  nb search "example query" --all
 
-  # search notes for 'Example' OR 'Sample'
-  nb search 'Example|Sample'
+  # search notes for "Example" OR "Sample"
+  nb search "Example|Sample"
 
-  # search for bookmarks containing the hashtag '#example'
-  nb search '#example' --type bookmark
+  # search for bookmarks containing the hashtag "#example"
+  nb search "#example" --type bookmark
 
   # search with a regular expression for notes containing phone numbers
-  nb search '^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$'
+  nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
 
 Shortcut Alias: `q`
 ```
@@ -2815,7 +2815,7 @@ Description:
 
 Examples:
   nb settings
-  nb settings set 5 'org'
+  nb settings set 5 "org"
   nb settings set color_primary 105
   nb settings unset color_primary
   nb settings colors
@@ -2831,9 +2831,9 @@ Alias: `set`
     ---------
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to '0'.
+    one is set. To disable this behavior, set this to "0".
 
-      • Default Value: '1'
+      • Default Value: "1"
 
 [2] color_primary
     -------------
@@ -2843,8 +2843,8 @@ Alias: `set`
     run: `nb settings colors`
     To view a color for a number, run: `nb settings colors <number>`
 
-      • Default Value: '68' (blue) for 256 color terminals,
-                       '4'  (blue) for  8  color terminals.
+      • Default Value: "68" (blue) for 256 color terminals,
+                       "4"  (blue) for  8  color terminals.
 
 [3] color_secondary
     ---------------
@@ -2853,7 +2853,7 @@ Alias: `set`
     table of 256 common colors and numbers, run: `nb settings colors`
     To view a color for a number, run: `nb settings colors <number>`
 
-      • Default Value: '8'
+      • Default Value: "8"
 
 [4] color_theme
     -----------
@@ -2881,35 +2881,35 @@ Alias: `set`
        blacklight, console, desert, electro, forest, monochrome, nb
        ocean, raspberry, unicorn, utility
 
-      • Default Value: 'nb'
+      • Default Value: "nb"
 
 [5] default_extension
     -----------------
-    The default extension to use for notes files. Change to 'org' for Emacs
-    Org mode files, 'rst' for reStructuredText, 'txt' for plain text, or
+    The default extension to use for notes files. Change to "org" for Emacs
+    Org mode files, "rst" for reStructuredText, "txt" for plain text, or
     whatever you prefer.
 
-      • Default Value: 'md'
+      • Default Value: "md"
 
 [6] editor
     ------
     The command line text editor to use with `nb`.
 
-      • Example Values: 'vim', 'emacs', 'micro', 'code', 'subl' 'macdown'
+      • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
 
 [7] encryption_tool
     ---------------
     The tool used for encrypting notes.
 
-      • Supported Values: 'openssl', 'gpg'
-      • Default Value:    'openssl'
+      • Supported Values: "openssl", "gpg"
+      • Default Value:    "openssl"
 
 [8] footer
     ------
     By default, `nb ls` includes a footer with example commands for
-    easy reference. To hide this footer, set this to '0'.
+    easy reference. To hide this footer, set this to "0".
 
-      • Default Value: '1'
+      • Default Value: "1"
 
 [9] nb_dir
     ------
@@ -2917,7 +2917,7 @@ Alias: `set`
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     `nb settings set NB_DIR ~/Dropbox/Notes`
 
-      • Default Value: '~/.nb'
+      • Default Value: "~/.nb"
 ```
 
 #### `shell`
@@ -2930,7 +2930,7 @@ Optons:
   --clear-history  Clear the `nb` shell history.
 
 Description:
-  Start the `nb` interactive shell. Type 'exit' to exit.
+  Start the `nb` interactive shell. Type "exit" to exit.
 
   `nb shell` recognizes all `nb` subcommands and options, providing
   a streamlined, distraction-free approach for working with `nb`.
@@ -3003,7 +3003,7 @@ Description:
 Examples:
   nb show 1
   nb show example.md --render
-  nb show 'A Document Title' --dump --no-color
+  nb show "A Document Title" --dump --no-color
   nb 1 show
 
 Shortcut Alias: `s`
