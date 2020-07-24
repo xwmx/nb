@@ -1584,7 +1584,7 @@ divider lines.
 
 `nb` includes several built-in color themes and also supports [custom,
 user-defined themes](#nb-help---colors). The current color theme can be
-set with `nb settings`:
+set using the `nb settings` prompt:
 
 ```bash
 > nb settings color_theme
@@ -2073,7 +2073,8 @@ elements such as ids, the current notebook name, the shell prompt,
 and divider lines.
 
 `nb` includes several built-in color themes and also supports
-user-defined themes. The current color theme can be set with:
+user-defined themes. The current color theme can be set using
+the `nb settings` prompt:
 
     nb settings color_theme
 
