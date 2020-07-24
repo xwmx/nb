@@ -1596,9 +1596,10 @@ Themes have an .nb-theme or .nb-theme.sh extension and contain a single
 if statment assigning the color environment variable values to tput ANSI
 color numbers.
 
+Example:
 ```bash
 # file: ~/.nb/.themes/example.nb-theme.sh
-if [[ "\${NB_COLOR_THEME}" == "example" ]]
+if [[ "${NB_COLOR_THEME}" == "example" ]]
 then
   export NB_COLOR_PRIMARY=68
   export NB_COLOR_SECONDARY=8
