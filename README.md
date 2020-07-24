@@ -1839,9 +1839,8 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 
 <p align="center">
   <a href="#nb-help">nb</a> •
+  <a href="#nb-help---colors">colors</a> •
   <a href="#bookmark-help">bookmark</a>
-  </br>---</br>
-  <a href="#nb-help---colors">nb help --colors</a>
   </br>---</br>
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
@@ -2013,6 +2012,55 @@ Program Options:
   --version           Display version information.
 ```
 
+#### `nb help --colors`
+
+```text
+__          _                     _
+\ \   _ __ | |__         ___ ___ | | ___  _ __ ___
+ \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|
+ / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \
+/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/
+
+`nb` has a minimal text interface and uses color to highlight certain
+elements such as ids, the current notebook name, the shell prompt,
+and divider lines.
+
+`nb` includes several built-in color themes and also supports user-defined
+themes. The current color theme can be set with:
+
+    nb settings color_theme
+
+Custom color themes can be installed in the $NB_DIR/.themes directory,
+currently located at:
+
+    ~/.nb/.themes
+
+Themes have an .nb-theme or .nb-theme.sh extension and contain a single
+if statment assigning the color environment variable values to tput ANSI
+color numbers.
+
+  Example:
+
+    # file: ~/.nb/.themes/example.nb-theme.sh
+    if [[ "${NB_COLOR_THEME}" == "example" ]]
+    then
+      export NB_COLOR_PRIMARY=68
+      export NB_COLOR_SECONDARY=8
+    fi
+
+To view a list of available color numbers, run:
+
+    nb settings colors
+
+The primary and secondary colors can also be configured individually,
+making the built-in color schemes easily customizable in `nb settings`.
+Use `nb settings` to open the color settings prompts, which also print
+a table of color values to choose from:
+
+    nb settings color_primary
+    nb settings color_secondary
+```
+
 #### `bookmark help`
 
 ```text
@@ -2098,55 +2146,6 @@ Examples:
 ------------------------------------------
 Part of `nb` (https://github.com/xwmx/nb).
 For more information, see: `nb help`.
-```
-
-#### `nb help --colors`
-
-```text
-__          _                     _
-\ \   _ __ | |__    _    ___ ___ | | ___  _ __ ___
- \ \ | '_ \| '_ \  (_)  / __/ _ \| |/ _ \| '__/ __|
- / / | | | | |_) |  _  | (_| (_) | | (_) | |  \__ \
-/_/  |_| |_|_.__/  (_)  \___\___/|_|\___/|_|  |___/
-
-`nb` has a minimal text interface and uses color to highlight certain
-elements such as ids, the current notebook name, the shell prompt,
-and divider lines.
-
-`nb` includes several built-in color themes and also supports user-defined
-color themes. The current color theme can be set with:
-
-    nb settings color_theme
-
-Custom color themes can be installed in the $NB_DIR/.themes directory,
-currently located at:
-
-    ~/.nb/.themes
-
-Themes have an .nb-theme or .nb-theme.sh extension and contain a single
-if statment assigning the color environment variable values to tput ANSI
-color numbers.
-
-  Example:
-
-    # file: ~/.nb/.themes/example.nb-theme.sh
-    if [[ "${NB_COLOR_THEME}" == "example" ]]
-    then
-      export NB_COLOR_PRIMARY=68
-      export NB_COLOR_SECONDARY=8
-    fi
-
-To view a list of available color numbers, run:
-
-    nb settings colors
-
-The primary and secondary colors can also be configured individually,
-making the built-in color schemes easily customizable in `nb settings`.
-Use `nb settings` to open the color settings prompts, which also print
-a table of color values to choose from:
-
-    nb settings color_primary
-    nb settings color_secondary
 ```
 
 ### Subcommands
