@@ -1582,16 +1582,17 @@ For more information about settings, see [`nb help settings`](#settings-1) and
 elements like ids, the current notebook name, the shell prompt, and
 divider lines.
 
-`nb` includes several built-in color themes and supports [custom,
-user-defined color themes](#nb-help---colors). The color theme can be
-configured in `nb settings`:
+`nb` includes several built-in color themes and also supports [custom,
+user-defined themes](#nb-help---colors). The current color theme can be
+set with `nb settings`:
 
 ```bash
 > nb settings color_theme
 ```
 
 The primary and secondary colors can also be configured individually,
-making the built-in color schemes easily customizable in `nb settings`:
+making color themes easily customizable. Use `nb settings` to open
+the color settings prompts for the primary and secondary colors:
 
 ```bash
 # open the settings prompt for the primary color
