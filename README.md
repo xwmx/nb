@@ -1587,7 +1587,7 @@ user-defined themes. The current color theme can be set using
 the `nb settings` prompt:
 
 ```bash
-> nb settings color_theme
+nb settings color_theme
 ```
 
 Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
