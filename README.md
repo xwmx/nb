@@ -1582,8 +1582,9 @@ For more information about settings, see [`nb help settings`](#settings-1) and
 elements like ids, the current notebook name, the shell prompt, and
 divider lines.
 
-`nb` includes several built-in color themes and supports custom, user-created
-color themes. The color theme can be configured in `nb settings`:
+`nb` includes several built-in color themes and supports [custom,
+user-defined color themes](#nb-help---colors). The color theme can be
+configured in `nb settings`:
 
 ```bash
 > nb settings color_theme
@@ -1839,8 +1840,9 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 
 <p align="center">
   <a href="#nb-help">nb</a> •
-  <a href="#nb-help---colors">colors</a> •
   <a href="#bookmark-help">bookmark</a>
+  </br>---</br>
+  <a href="#nb-help---colors">colors</a>
   </br>---</br>
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
@@ -2012,54 +2014,6 @@ Program Options:
   --version           Display version information.
 ```
 
-#### `nb help --colors`
-
-```text
-__          _                     _
-\ \   _ __ | |__         ___ ___ | | ___  _ __ ___
- \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|
- / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \
-/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/
-
-`nb` has a minimal text interface and uses color to highlight certain
-elements such as ids, the current notebook name, the shell prompt,
-and divider lines.
-
-`nb` includes several built-in color themes and also supports
-user-defined themes. The current color theme can be set with:
-
-    nb settings color_theme
-
-Custom color themes can be installed in the $NB_DIR/.themes directory,
-currently located at:
-
-    ~/.nb/.themes
-
-Themes have an .nb-theme or .nb-theme.sh extension and contain a single
-if statment assigning the color environment variable values to tput ANSI
-color numbers.
-
-  Example:
-
-    # file: ~/.nb/.themes/example.nb-theme.sh
-    if [[ "${NB_COLOR_THEME}" == "example" ]]
-    then
-      export NB_COLOR_PRIMARY=68
-      export NB_COLOR_SECONDARY=8
-    fi
-
-To view a list of available color numbers, run:
-
-    nb settings colors
-
-The primary and secondary colors can also be configured individually,
-making color themes easily customizable. Use `nb settings` to open
-the color settings prompts for the primary and secondary colors:
-
-    nb settings color_primary
-    nb settings color_secondary
-```
-
 #### `bookmark help`
 
 ```text
@@ -2145,6 +2099,54 @@ Examples:
 ------------------------------------------
 Part of `nb` (https://github.com/xwmx/nb).
 For more information, see: `nb help`.
+```
+
+#### `nb help --colors`
+
+```text
+__          _                     _
+\ \   _ __ | |__         ___ ___ | | ___  _ __ ___
+ \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|
+ / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \
+/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/
+
+`nb` has a minimal text interface and uses color to highlight certain
+elements such as ids, the current notebook name, the shell prompt,
+and divider lines.
+
+`nb` includes several built-in color themes and also supports
+user-defined themes. The current color theme can be set with:
+
+    nb settings color_theme
+
+Custom color themes can be installed in the $NB_DIR/.themes directory,
+currently located at:
+
+    ~/.nb/.themes
+
+Themes have an .nb-theme or .nb-theme.sh extension and contain a single
+if statment assigning the color environment variable values to tput ANSI
+color numbers.
+
+  Example:
+
+    # file: ~/.nb/.themes/example.nb-theme.sh
+    if [[ "${NB_COLOR_THEME}" == "example" ]]
+    then
+      export NB_COLOR_PRIMARY=68
+      export NB_COLOR_SECONDARY=8
+    fi
+
+To view a list of available color numbers, run:
+
+    nb settings colors
+
+The primary and secondary colors can also be configured individually,
+making color themes easily customizable. Use `nb settings` to open
+the color settings prompts for the primary and secondary colors:
+
+    nb settings color_primary
+    nb settings color_secondary
 ```
 
 ### Subcommands
