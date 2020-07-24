@@ -2659,6 +2659,8 @@ _help() {
               fi
   elif ((_color_help))
   then
+    # NOTE: this screen mirrors the content from README.md#-color-themes:
+    # https://github.com/xwmx/nb#-color-themes
     cat <<HEREDOC
 __          _                     _
 \ \   _ __ | |__         ___ ___ | | ___  _ __ ___
@@ -2676,7 +2678,7 @@ the \`nb settings\` prompt:
 
     nb settings color_theme
 
-Custom color themes can be installed in the \$NB_DIR/.themes directory,
+Custom color themes can be installed in the \`\$NB_DIR/.themes\` directory,
 currently located at:
 
     ${NB_DIR}/.themes
@@ -2704,6 +2706,9 @@ the color settings prompts for the primary and secondary colors:
 
     nb settings color_primary
     nb settings color_secondary
+
+\`nb\` color settings prompts also print out a table of colors and their
+ANSI color numbers for easy reference.
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
