@@ -1578,23 +1578,23 @@ For more information about settings, see [`nb help settings`](#settings-1) and
 
 ### 🎨 Color Themes
 
-`nb` has a minimal text interface and uses color to highlight certain
-elements such as ids, the current notebook name, the shell prompt,
+`nb` uses color to highlight various interface elements,
+including ids, the current notebook name, the shell prompt,
 and divider lines.
 
-`nb` includes several built-in color themes and also supports
-user-defined themes. The current color theme can be set using
-the `nb settings` prompt:
+`nb` includes several built-in color themes and also
+supports user-defined themes. The current color theme can
+be set using the `nb settings` prompt:
 
 ```bash
 nb settings color_theme
 ```
 
-Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
+Custom color themes can be installed in `${NB_DIR}/.themes`.
 
-Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one
-`if` statment setting the color environment variables to `tput` ANSI
-color numbers:
+Themes have a `.nb-theme` or `.nb-theme.sh` extension and
+contain one `if` statement indicating the name and setting
+the color environment variables to `tput` ANSI color numbers:
 
 ```bash
 # file: ~/.nb/.themes/example.nb-theme.sh
@@ -1605,7 +1605,7 @@ then
 fi
 ```
 
-The primary and secondary colors can also be configured individually,
+The primary and secondary colors can be set individually,
 making color themes easily customizable:
 
 ```bash
