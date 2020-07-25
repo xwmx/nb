@@ -8481,12 +8481,10 @@ HEREDOC
 
     Available themes:
 
-$(
-  for __theme in "${_NB_COLOR_THEMES[@]}"
+$(for __theme in "${_NB_COLOR_THEMES[@]}"
   do
     printf "      %s\\n" "$(_highlight "${__theme}")"
-  done
-)
+  done)
 
       • Default Value: \"nb\"")
 
