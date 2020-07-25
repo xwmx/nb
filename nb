@@ -5395,7 +5395,7 @@ _list() {
       --no-indicators|--noindicators|--no-indicator|--noindicator)
         _print_indicators=0
         ;;
-      -n|--limit)
+      -n|--limit|--num|--number)
         if __option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
@@ -6186,7 +6186,7 @@ _ls() {
       --auto-align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
         ;;
-      -n|--limit)
+      -n|--limit|--num|--number)
         if __option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
