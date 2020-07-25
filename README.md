@@ -2859,7 +2859,7 @@ Alias: `set`
 
 [5] default_extension
     -----------------
-    The default extension to use for notes files. Change to "org" for Emacs
+    The default extension to use for note files. Change to "org" for Emacs
     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
     whatever you prefer.
 

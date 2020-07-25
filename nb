@@ -8491,7 +8491,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
   _settings_list_items+=("$(_id_brackets_color '5') default_extension")
   _settings_help_items+=("\
     $(_highlight_secondary "-----------------")
-    The default extension to use for notes files. Change to \"org\" for Emacs
+    The default extension to use for note files. Change to \"org\" for Emacs
     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
     whatever you prefer.
 
