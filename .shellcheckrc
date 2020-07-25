@@ -16,7 +16,7 @@ disable=SC1090
 
 # Disable SC2002
 #
-# Um, I like cats 😸.
+# I like cats 😸.
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2002
 disable=SC2002
