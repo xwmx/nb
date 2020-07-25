@@ -5185,8 +5185,10 @@ Usage:
   ${_ME} init [<remote-url>]
 
 Description:
-  Initialize the local data directory and generate a \`${_ME}\`
-  configuration file if it doesn't exist at ${NBRC_PATH}
+  Initialize the local data directory and generate a configuration file for \`${_ME}\`
+  if it doesn't exist yet at:
+
+      ${NBRC_PATH}
 
 Examples:
   ${_ME} init

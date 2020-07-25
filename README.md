@@ -2401,8 +2401,10 @@ Usage:
   nb init [<remote-url>]
 
 Description:
-  Initialize the local data directory and generate a ~/.nbrc configuration
-  file if it doesn't exist.
+  Initialize the local data directory and generate configuration file for `nb`
+  if it doesn't exist yet at:
+
+      ~/.nbrc
 
 Examples:
   nb init
