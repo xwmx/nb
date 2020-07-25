@@ -124,9 +124,9 @@ HEREDOC
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" -eq 6                   ]]
-  [[ "${lines[2]}" == "3 omitted. 3 total." ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${#lines[@]}" -eq 6                       ]]
+  [[ "${lines[2]}" =~ 3\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "\`ls -n 1\` exits with 0 and lists 1 file." {
@@ -141,10 +141,10 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" -eq 7                   ]]
-  [[ "${lines[2]}" =~ three                 ]]
-  [[ "${lines[3]}" == "2 omitted. 3 total." ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${#lines[@]}" -eq 7                       ]]
+  [[ "${lines[2]}" =~ three                     ]]
+  [[ "${lines[3]}" =~ 2\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "\`ls -n 2\` exits with 0 and lists 2 files." {
@@ -159,11 +159,11 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" -eq 8                   ]]
-  [[ "${lines[2]}" =~ three                 ]]
-  [[ "${lines[3]}" =~ two                   ]]
-  [[ "${lines[4]}" == "1 omitted. 3 total." ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${#lines[@]}" -eq 8                       ]]
+  [[ "${lines[2]}" =~ three                     ]]
+  [[ "${lines[3]}" =~ two                       ]]
+  [[ "${lines[4]}" =~ 1\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "\`ls -n 3\` exits with 0 and lists 3 files." {

@@ -292,7 +292,7 @@ HEREDOC
 
   [[ "${#lines[@]}" -eq 3 ]]
 
-  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
+  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\. ]]
 }
 
 @test "\`list --limit 2\` exits with 0 and displays list with 2 items." {
@@ -310,7 +310,8 @@ HEREDOC
 
   [[ "${#lines[@]}" -eq 3 ]]
 
-  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
+  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\. ]]
+
 }
 
 @test "\`list --2\` exits with 0 and displays list with 2 items." {
@@ -328,7 +329,8 @@ HEREDOC
 
   [[ "${#lines[@]}" -eq 3 ]]
 
-  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
+  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\. ]]
+
 }
 
 # `list --titles` #############################################################
