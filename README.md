@@ -1588,7 +1588,7 @@ themes. The current color theme can be set using the `nb settings` prompt:
 nb settings color_theme
 ```
 
-Custom color themes can be installed in `${NB_DIR}/.themes`.
+Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
 
 Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
 statement indicating the name and setting the color environment variables

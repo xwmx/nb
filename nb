@@ -2679,8 +2679,8 @@ themes. The current color theme can be set using the \`${_ME} settings\` prompt:
 
     $(_highlight "${_ME} settings color_theme")
 
-Custom color themes can be installed in \`\${NB_DIR}/.themes\`, currently
-located at:
+Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
+currentlylocated at:
 
     $(_highlight "${NB_DIR}/.themes")
 
