@@ -2662,33 +2662,31 @@ _help() {
     # NOTE: this screen mirrors the content from README.md#-color-themes:
     # https://github.com/xwmx/nb#-color-themes
     _highlight "\
-__          _                       .__
-\ \   _ __ | |__         ____  ____ |  |   ___________  ______
- \ \ | '_ \| '_ \   _  _/ ___\/  _ \|  |  /  _ \_  __ \/  ___/
- / / | | | | |_) | (_) \  \__(  <_> )  |_(  <_> )  | \/\___ \\
-/_/  |_| |_|_.__/       \___  >____/|____/\____/|__|  /____  >
-                            \/                             \/"
+       __          _                       .__
+       \ \   _ __ | |__         ____  ____ |  |   ___________  ______
+        \ \ | '_ \| '_ \   _  _/ ___\/  _ \|  |  /  _ \_  __ \/  ___/
+        / / | | | | |_) | (_) \  \__(  <_> )  |_(  <_> )  | \/\___ \\
+       /_/  |_| |_|_.__/       \___  >____/|____/\____/|__|  /____  >
+                                   \/                             \/"
     _highlight_secondary "\
---------------------------------------------------------------"
+-----------------------------------------------------------------------------"
   cat <<HEREDOC
-\`${_ME}\` uses color to highlight various interface elements,
-including ids, the current notebook name, the shell prompt,
-and divider lines.
+\`${_ME}\` uses color to highlight various interface elements, including ids, the
+current notebook name, the shell prompt, and divider lines.
 
-\`${_ME}\` includes several built-in color themes and also
-supports user-defined themes. The current color theme can
-be set using the \`${_ME} settings\` prompt:
+\`${_ME}\` includes several built-in color themes and also supports user-defined
+themes. The current color theme can be set using the \`${_ME} settings\` prompt:
 
     $(_highlight "${_ME} settings color_theme")
 
-Custom color themes can be installed in \`\${NB_DIR}/.themes\`,
-currently located at:
+Custom color themes can be installed in \`\${NB_DIR}/.themes\`, currently
+located at:
 
     $(_highlight "${NB_DIR}/.themes")
 
-Themes have a \`.nb-theme\` or \`.nb-theme.sh\` extension and
-contain one \`if\` statement indicating the name and setting
-the color environment variables to \`tput\` ANSI color numbers:
+Themes have a \`.nb-theme\` or \`.nb-theme.sh\` extension and contain one \`if\`
+statement indicating the name and setting the color environment variables
+to \`tput\` ANSI color numbers:
 
     $(_highlight_secondary "# file: ~/.nb/.themes/example.nb-theme.sh")
     $(_highlight "\
@@ -2698,8 +2696,8 @@ if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"example\"${_TPUT_COLOR_PRIMARY} ]
       export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}
     fi")
 
-The primary and secondary colors can be set individually,
-making color themes easily customizable:
+The primary and secondary colors can be set individually, making color themes
+easily customizable:
 
     $(_highlight_secondary "# open the settings prompt for the primary color")
     $(_highlight "${_ME} settings color_primary")
