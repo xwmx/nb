@@ -5670,7 +5670,7 @@ HEREDOC
           local _spaces=''
           local _spaces_length=1
           _spaces_length=$(( ${#_max_identifier} + 3 - ${#_id_item} ))
-          printf -v _spaces '%*s' "${_spaces_length}"
+          printf -v _spaces '%*s' "${_spaces_length}" ""
         fi
 
         if ! ((_list_filenames)) &&
