@@ -8486,17 +8486,17 @@ HEREDOC
 
     To view screenshots of the built-in themes, visit:
 
-        https://git.io/nb-docs-color-themes
+        $(_highlight "https://git.io/nb-docs-color-themes")
 
     \`${_ME}\` supports custom, user-defined themes. To learn more, run:
 
-        ${_ME} help --colors
+        $(_highlight "${_ME} help --colors")
 
     Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
   do
-    printf "      %s\\n" "$(_highlight "${__theme}")"
+    printf "        %s\\n" "$(_highlight "${__theme}")"
   done)
 
     • Default Value: \"nb\"")
@@ -8536,9 +8536,10 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
   _settings_list_items+=("$(_id_brackets_color '9') nb_dir")
   _settings_help_items+=("\
     $(_highlight_secondary "------")
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
+    The location of the directory that contains the notebooks.
+
+    For example, to sync all notebooks with Dropbox, create a folder at
+    \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
     • Default Value: \"~/.nb\"")
 

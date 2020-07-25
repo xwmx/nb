@@ -2809,27 +2809,38 @@ Alias: `set`
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to "0".
 
-      • Default Value: "1"
+    • Default Value: "1"
 
 [2] color_primary
     -------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors. To view a table of 256 common colors and numbers,
-    run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
+    run:
 
-      • Default Value: "68" (blue) for 256 color terminals,
-                       "4"  (blue) for  8  color terminals.
+        nb settings colors
+
+    To view a color for a number, run:
+
+        nb settings colors <number>
+
+    • Default Value: "68" (blue) for 256 color terminals,
+                     "4"  (blue) for  8  color terminals.
 
 [3] color_secondary
     ---------------
     The color used for lines and footer elements. Like color_primary, this
-    can often be set to an xterm color number between 0 and 255. view a
-    table of 256 common colors and numbers, run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
+    can often be set to an xterm color number between 0 and 255. Some terminals
+    support many more colors. To view a table of 256 common colors and numbers,
+    run:
 
-      • Default Value: "8"
+        nb settings colors
+
+    To view a color for a number, run:
+
+        nb settings colors <number>
+
+    • Default Value: "8"
 
 [4] color_theme
     -----------
@@ -2845,19 +2856,19 @@ Alias: `set`
 
     Available themes:
 
-      blacklight
-      console
-      desert
-      electro
-      forest
-      monochrome
-      nb
-      ocean
-      raspberry
-      unicorn
-      utility
+        blacklight
+        console
+        desert
+        electro
+        forest
+        monochrome
+        nb
+        ocean
+        raspberry
+        unicorn
+        utility
 
-      • Default Value: "nb"
+    • Default Value: "nb"
 
 [5] default_extension
     -----------------
@@ -2865,35 +2876,36 @@ Alias: `set`
     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
     whatever you prefer.
 
-      • Default Value: "md"
+    • Default Value: "md"
 
 [6] editor
     ------
     The command line text editor to use with `nb`.
 
-      • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+    • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
 
 [7] encryption_tool
     ---------------
     The tool used for encrypting notes.
 
-      • Supported Values: "openssl", "gpg"
-      • Default Value:    "openssl"
+    • Supported Values: "openssl", "gpg"
+    • Default Value:    "openssl"
 
 [8] footer
     ------
     By default, `nb ls` includes a footer with example commands for
     easy reference. To hide this footer, set this to "0".
 
-      • Default Value: "1"
+    • Default Value: "1"
 
 [9] nb_dir
     ------
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    `nb settings set NB_DIR ~/Dropbox/Notes`
+    The location of the directory that contains the notebooks.
 
-      • Default Value: "~/.nb"
+    For example, to sync all notebooks with Dropbox, create a folder at
+    `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
+
+    • Default Value: "~/.nb"
 ```
 
 #### `shell`
