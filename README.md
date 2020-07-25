@@ -2815,30 +2815,16 @@ Alias: `set`
     -------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors. To view a table of 256 common colors and numbers,
-    run:
-
-        nb settings colors
-
-    To view a color for a number, run:
-
-        nb settings colors <number>
+    support many more colors.
 
     • Default Value: "68" (blue) for 256 color terminals,
                      "4"  (blue) for  8  color terminals.
 
 [3] color_secondary
     ---------------
-    The color used for lines and footer elements. Like color_primary, this
-    can often be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors. To view a table of 256 common colors and numbers,
-    run:
-
-        nb settings colors
-
-    To view a color for a number, run:
-
-        nb settings colors <number>
+    The color used for lines and footer elements. Often this can be set to an
+    xterm color number between 0 and 255. Some terminals support many more
+    colors.
 
     • Default Value: "8"
 
