@@ -8444,7 +8444,7 @@ HEREDOC
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to \"0\".
 
-      • Default Value: \"1\"")
+    • Default Value: \"1\"")
 
   _settings_list_items+=("$(_id_brackets_color '2') color_primary")
   _settings_help_items+=("\
@@ -8452,21 +8452,32 @@ HEREDOC
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors. To view a table of 256 common colors and numbers,
-    run: \`${_ME} settings colors\`
-    To view a color for a number, run: \`${_ME} settings colors <number>\`
+    run:
 
-      • Default Value: \"68\" (blue) for 256 color terminals,
-                       \"4\"  (blue) for  8  color terminals.")
+        $(_highlight "${_ME} settings colors")
+
+    To view a color for a number, run:
+
+        $(_highlight "${_ME} settings colors <number>")
+
+    • Default Value: \"68\" (blue) for 256 color terminals,
+                     \"4\"  (blue) for  8  color terminals.")
 
   _settings_list_items+=("$(_id_brackets_color '3') color_secondary")
   _settings_help_items+=("\
     $(_highlight_secondary "---------------")
     The color used for lines and footer elements. Like color_primary, this
-    can often be set to an xterm color number between 0 and 255. view a
-    table of 256 common colors and numbers, run: \`${_ME} settings colors\`
-    To view a color for a number, run: \`${_ME} settings colors <number>\`
+    can often be set to an xterm color number between 0 and 255. Some terminals
+    support many more colors. To view a table of 256 common colors and numbers,
+    run:
 
-      • Default Value: \"8\"")
+        $(_highlight "${_ME} settings colors")
+
+    To view a color for a number, run:
+
+        $(_highlight "${_ME} settings colors <number>")
+
+    • Default Value: \"8\"")
 
   _settings_list_items+=("$(_id_brackets_color '4') color_theme")
   _settings_help_items+=("\
@@ -8488,7 +8499,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     printf "      %s\\n" "$(_highlight "${__theme}")"
   done)
 
-      • Default Value: \"nb\"")
+    • Default Value: \"nb\"")
 
   _settings_list_items+=("$(_id_brackets_color '5') default_extension")
   _settings_help_items+=("\
@@ -8497,22 +8508,22 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
     whatever you prefer.
 
-      • Default Value: \"md\"")
+    • Default Value: \"md\"")
 
   _settings_list_items+=("$(_id_brackets_color '6') editor")
   _settings_help_items+=("\
     $(_highlight_secondary "------")
     The command line text editor to use with \`${_ME}\`.
 
-      • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
+    • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
 
   _settings_list_items+=("$(_id_brackets_color '7') encryption_tool")
   _settings_help_items+=("\
     $(_highlight_secondary "---------------")
     The tool used for encrypting notes.
 
-      • Supported Values: \"openssl\", \"gpg\"
-      • Default Value:    \"openssl\"")
+    • Supported Values: \"openssl\", \"gpg\"
+    • Default Value:    \"openssl\"")
 
   _settings_list_items+=("$(_id_brackets_color '8') footer")
   _settings_help_items+=("\
@@ -8520,7 +8531,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     By default, \`${_ME} ls\` includes a footer with example commands for
     easy reference. To hide this footer, set this to \"0\".
 
-      • Default Value: \"1\"")
+    • Default Value: \"1\"")
 
   _settings_list_items+=("$(_id_brackets_color '9') nb_dir")
   _settings_help_items+=("\
@@ -8529,7 +8540,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     Dropbox, you could create a folder at ~/Dropbox/Notes and use:
     \`${_ME} settings set NB_DIR ~/Dropbox/Notes\`
 
-      • Default Value: \"~/.nb\"")
+    • Default Value: \"~/.nb\"")
 
   while ((${#}))
   do
