@@ -1401,7 +1401,8 @@ nb notebooks unarchive
 nb notebooks unarchive example
 ```
 
-For more information about working with notebooks, run `nb help notebooks`.
+For more information about working with notebooks, see
+[`nb help notebooks`](#notebooks).
 
 ### Git Sync
 
