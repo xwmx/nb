@@ -28,14 +28,6 @@ disable=SC2002
 # https://github.com/koalaman/shellcheck/wiki/SC2015
 disable=SC2015
 
-# Disable SC2183
-#
-# Running into this: https://github.com/koalaman/shellcheck/issues/1310
-# TODO: Check if resolved.
-#
-#https://github.com/koalaman/shellcheck/wiki/SC2183
-disable=SC2183
-
 # Disable SC2120
 #
 # This is being triggered on `_ls`, which is passed arguments in `_nb_main()`.

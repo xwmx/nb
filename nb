@@ -2411,7 +2411,7 @@ _print_line() {
   local _text="${1:-}"
   local _text_length="${#_text}"
   local _line=
-  printf -v _line "%*s" "${_text_length}"
+  printf -v _line "%*s" "${_text_length}" ""
   _highlight_secondary "${_line// /-}"
 }
 
