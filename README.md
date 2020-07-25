@@ -1578,73 +1578,46 @@ For more information about settings, see [`nb help settings`](#settings-1) and
 
 ### 🎨 Color Themes
 
-`nb` has a minimal text interface and uses color to highlight certain
-elements like ids, the current notebook name, the shell prompt, and
-divider lines.
+`nb` uses color to highlight various interface elements, including ids, the
+current notebook name, the shell prompt, and divider lines.
 
-`nb` includes several built-in color themes and supports user-created color
-themes. The color theme can be configured in `notes settings`:
+`nb` includes several built-in color themes and also supports user-defined
+themes. The current color theme can be set using the `nb settings` prompt:
 
 ```bash
-> nb settings color_theme
-[4] color_theme
-    -----------
-    The color theme. `nb` has several customizable built-in themes,
-    listed below.
-
-    Additional themes can be installed in the $NB_DIR/.themes directory.
-    Themes have an .nb-theme or .nb-theme.sh extension and contain a
-    single if statment assigning the color environment variables to
-    tput ANSI color numbers.
-
-      Example:
-
-        # file: ~/.nb/.themes/example.nb-theme.sh
-        if [[ "${NB_COLOR_THEME}" == "example" ]]
-        then
-          export NB_COLOR_PRIMARY=68
-          export NB_COLOR_SECONDARY=8
-        fi
-
-    To view a list of available color numbers, run `nb settings colors`
-
-    Available themes:
-
-       blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn, utility
-
-NB_COLOR_THEME is currently set to nb
-
-Enter a new value, unset to set to the default value, or q to quit.
-Value:
+nb settings color_theme
 ```
 
-The primary and secondary colors can also be configured individually,
-making the built-in color schemes easily customizable in
-`notes settings`. Use `notes settings color_primary` and
-`notes settings color_secondary` to open the color settings prompts,
-which also both print a table of color values to choose from:
+Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
+
+Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
+statement indicating the name and setting the color environment variables
+to `tput` ANSI color numbers:
 
 ```bash
-> nb settings color_primary
+# file: ~/.nb/.themes/example.nb-theme.sh
+if [[ "${NB_COLOR_THEME}" == "example" ]]
+then
+  export NB_COLOR_PRIMARY=43
+  export NB_COLOR_SECONDARY=38
+fi
+```
 
-[...color table omitted...]
+The primary and secondary colors can be set individually, making color themes
+easily customizable:
 
-[2] color_primary
-    -------------
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors. To view a table of 256 common colors and numbers,
-    run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
+```bash
+# open the settings prompt for the primary color
+nb settings color_primary
 
-      • Default Value: "68" (blue) for 256 color terminals,
-                       "4"  (blue) for  8  color terminals.
+# open the settings prompt for the secondary color
+nb settings color_secondary
+```
 
-NB_COLOR_PRIMARY is currently set to 162
+To view a table of available colors and numbers, run:
 
-Enter a new value, unset to set to the default value, or q to quit.
-Value:
+```bash
+nb settings colors
 ```
 
 #### Built-in Color Themes
@@ -1843,7 +1816,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#bookmark">bookmark</a> •
   <a href="#completions">completions</a> •
   <a href="#count">count</a> •
-  <a href="#delete">delete</a> •
+  <a href="#delete">delete</a> 
   <a href="#edit">edit</a> •
   <a href="#env">env</a> •
   <a href="#export">export</a> •
@@ -1911,18 +1884,19 @@ Usage:
             [<pandoc options>...]
   nb export notebook <name> [<path>]
   nb git <git options>...
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
+  nb help [<subcommand>]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-          [-r | --reverse] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
+          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
+        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -1961,6 +1935,7 @@ Usage:
 Help:
   nb help               Display this help information.
   nb help <subcommand>  View help information for <subcommand>.
+  nb help --colors      View information about color settings.
   nb help --readme      View the `nb` README file.
   nb help --short       Display program usage information.
 
@@ -2426,8 +2401,10 @@ Usage:
   nb init [<remote-url>]
 
 Description:
-  Initialize the local data directory and generate a ~/.nbrc configuration
-  file if it doesn't exist.
+  Initialize the local data directory and generate configuration file for `nb`
+  if it doesn't exist yet at:
+
+      ~/.nbrc
 
 Examples:
   nb init
@@ -2439,24 +2416,23 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-          [-r | --reverse] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
+          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
-                                each note's filename [default: 3].
-  --filenames                   Print the filename for each note.
-  --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of notes to list.
-  --<limit>                     Shortcut for `-n <limit>`.
-  -p, --pager                   Display output in the pager.
-  -s, --sort                    Order notes by id.
-  -r, --reverse                 Order notes by id descending.
-  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
-                                extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder
+  -e, --excerpt [<length>]        Print an excerpt <length> lines long under
+                                  each note's filename [default: 3].
+  --filenames                     Print the filename for each note.
+  --no-id                         Don't include the id in list items.
+  -n, --limit <limit>, --<limit>  The maximum number of notes to list.
+  -p, --pager                     Display output in the pager.
+  -s, --sort                      Order notes by id.
+  -r, --reverse                   Order notes by id descending.
+  -t, --type <type>, --<type>     List items of <type>. <type> can be a file
+                                  extension or one of the following types:
+                                  note, bookmark, document, archive, image,
+                                  video, audio, folder
 
 Description:
   List notes in the current notebook.
@@ -2490,26 +2466,26 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
+        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  -a, --all                     Print all items in the notebook. Equivalent
-                                to no limit.
-  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
-                                each note's filename [default: 3].
-  --filenames                   Print the filename for each note.
-  --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of listed items. [default: 20]
-  --<limit>                     Shortcut for `-n <limit>`.
-  -p, --pager                   Display output in the pager.
-  -s, --sort                    Order notes by id.
-  -r, --reverse                 Order notes by id descending.
-  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
-                                extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder
+  -a, --all                       Print all items in the notebook. Equivalent
+                                  to no limit.
+  -e, --excerpt [<length>]        Print an excerpt <length> lines long under
+                                  each note's filename [default: 3].
+  --filenames                     Print the filename for each note.
+  --no-id                         Don't include the id in list items.
+  -n, --limit <limit>, --<limit>  The maximum number of listed items.
+                                  [default: 20]
+  -p, --pager                     Display output in the pager.
+  -s, --sort                      Order notes by id.
+  -r, --reverse                   Order notes by id descending.
+  -t, --type <type>, --<type>     List items of <type>. <type> can be a file
+                                  extension or one of the following types:
+                                  note, bookmark, document, archive, image,
+                                  video, audio, folder
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -2833,91 +2809,89 @@ Alias: `set`
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to "0".
 
-      • Default Value: "1"
+    • Default Value: "1"
 
 [2] color_primary
     -------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors. To view a table of 256 common colors and numbers,
-    run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
+    support many more colors.
 
-      • Default Value: "68" (blue) for 256 color terminals,
-                       "4"  (blue) for  8  color terminals.
+    • Default Value: "68" (blue) for 256 color terminals,
+                     "4"  (blue) for  8  color terminals.
 
 [3] color_secondary
     ---------------
-    The color used for lines and footer elements. Like color_primary, this
-    can often be set to an xterm color number between 0 and 255. view a
-    table of 256 common colors and numbers, run: `nb settings colors`
-    To view a color for a number, run: `nb settings colors <number>`
+    The color used for lines and footer elements. Often this can be set to an
+    xterm color number between 0 and 255. Some terminals support many more
+    colors.
 
-      • Default Value: "8"
+    • Default Value: "8"
 
 [4] color_theme
     -----------
-    The color theme. `nb` has several customizable built-in themes,
-    listed below.
+    The color theme.
 
-    Additional themes can be installed in the $NB_DIR/.themes directory.
-    Themes have an .nb-theme or .nb-theme.sh extension and contain a
-    single if statment assigning the color environment variables to
-    tput ANSI color numbers.
+    To view screenshots of the built-in themes, visit:
 
-      Example:
+        https://git.io/nb-docs-color-themes
 
-        # file: ~/.nb/.themes/example.nb-theme.sh
-        if [[ "${NB_COLOR_THEME}" == "example" ]]
-        then
-          export NB_COLOR_PRIMARY=68
-          export NB_COLOR_SECONDARY=8
-        fi
+    `nb` supports custom, user-defined themes. To learn more, run:
 
-    To view a list of available color numbers, run `nb settings colors`
+        nb help --colors
 
     Available themes:
 
-       blacklight, console, desert, electro, forest, monochrome, nb
-       ocean, raspberry, unicorn, utility
+        blacklight
+        console
+        desert
+        electro
+        forest
+        monochrome
+        nb
+        ocean
+        raspberry
+        unicorn
+        utility
 
-      • Default Value: "nb"
+    • Default Value: "nb"
 
 [5] default_extension
     -----------------
-    The default extension to use for notes files. Change to "org" for Emacs
+    The default extension to use for note files. Change to "org" for Emacs
     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
     whatever you prefer.
 
-      • Default Value: "md"
+    • Default Value: "md"
 
 [6] editor
     ------
     The command line text editor to use with `nb`.
 
-      • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+    • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
 
 [7] encryption_tool
     ---------------
     The tool used for encrypting notes.
 
-      • Supported Values: "openssl", "gpg"
-      • Default Value:    "openssl"
+    • Supported Values: "openssl", "gpg"
+    • Default Value:    "openssl"
 
 [8] footer
     ------
     By default, `nb ls` includes a footer with example commands for
     easy reference. To hide this footer, set this to "0".
 
-      • Default Value: "1"
+    • Default Value: "1"
 
 [9] nb_dir
     ------
-    The location of the directory that contains the notebooks. To sync with
-    Dropbox, you could create a folder at ~/Dropbox/Notes and use:
-    `nb settings set NB_DIR ~/Dropbox/Notes`
+    The location of the directory that contains the notebooks.
 
-      • Default Value: "~/.nb"
+    For example, to sync all notebooks with Dropbox, create a folder at
+    `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
+
+    • Default Value: "~/.nb"
 ```
 
 #### `shell`
