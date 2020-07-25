@@ -435,7 +435,7 @@ titles:
 [3] Example Title
 ```
 
-For full text search, see `nb help search`.
+For full text search, see [Search](#-search).
 
 To view excerpts of notes, use the `--excerpt` or `-e` option:
 
@@ -1128,6 +1128,8 @@ nb q -l "example"
 # search for "example" in all unarchived notebooks
 nb q -a "example"
 ```
+
+For more information about search, see [`nb help search`](#search).
 
 ### Revision History
 
