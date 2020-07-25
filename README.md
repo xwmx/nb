@@ -1891,12 +1891,12 @@ Usage:
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-          [-r | --reverse] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
+          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
+        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -2414,24 +2414,23 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-          [-r | --reverse] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
+          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
-                                each note's filename [default: 3].
-  --filenames                   Print the filename for each note.
-  --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of notes to list.
-  --<limit>                     Shortcut for `-n <limit>`.
-  -p, --pager                   Display output in the pager.
-  -s, --sort                    Order notes by id.
-  -r, --reverse                 Order notes by id descending.
-  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
-                                extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder
+  -e, --excerpt [<length>]        Print an excerpt <length> lines long under
+                                  each note's filename [default: 3].
+  --filenames                     Print the filename for each note.
+  --no-id                         Don't include the id in list items.
+  -n, --limit <limit>, --<limit>  The maximum number of notes to list.
+  -p, --pager                     Display output in the pager.
+  -s, --sort                      Order notes by id.
+  -r, --reverse                   Order notes by id descending.
+  -t, --type <type>, --<type>     List items of <type>. <type> can be a file
+                                  extension or one of the following types:
+                                  note, bookmark, document, archive, image,
+                                  video, audio, folder
 
 Description:
   List notes in the current notebook.
@@ -2465,26 +2464,26 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --<limit>] [-p | --pager] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
+        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
-  -a, --all                     Print all items in the notebook. Equivalent
-                                to no limit.
-  -e, --excerpt [<length>]      Print an excerpt <length> lines long under
-                                each note's filename [default: 3].
-  --filenames                   Print the filename for each note.
-  --no-id                       Don't include the id in list items.
-  -n <limit>                    The maximum number of listed items. [default: 20]
-  --<limit>                     Shortcut for `-n <limit>`.
-  -p, --pager                   Display output in the pager.
-  -s, --sort                    Order notes by id.
-  -r, --reverse                 Order notes by id descending.
-  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
-                                extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder
+  -a, --all                       Print all items in the notebook. Equivalent
+                                  to no limit.
+  -e, --excerpt [<length>]        Print an excerpt <length> lines long under
+                                  each note's filename [default: 3].
+  --filenames                     Print the filename for each note.
+  --no-id                         Don't include the id in list items.
+  -n, --limit <limit>, --<limit>  The maximum number of listed items.
+                                  [default: 20]
+  -p, --pager                     Display output in the pager.
+  -s, --sort                      Order notes by id.
+  -r, --reverse                   Order notes by id descending.
+  -t, --type <type>, --<type>     List items of <type>. <type> can be a file
+                                  extension or one of the following types:
+                                  note, bookmark, document, archive, image,
+                                  video, audio, folder
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
