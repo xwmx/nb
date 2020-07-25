@@ -2431,7 +2431,7 @@ Options:
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
-  -r, --reverse                   Order notes by id descending.
+  -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
@@ -2484,7 +2484,7 @@ Options:
                                   [default: 20]
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
-  -r, --reverse                   Order notes by id descending.
+  -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
