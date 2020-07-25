@@ -5569,9 +5569,9 @@ HEREDOC
 
           local _difference
           _difference=$((_filenames_count-_counter))
-          printf "%s omitted. %s total. %s\\n"  \
-            "${_difference}"                    \
-            "${_filenames_count}"               \
+          printf "%s %s %s\\n"            \
+            "${_difference} omitted."     \
+            "${_filenames_count} total."  \
             "$(_dim "limit ${_limit}")"
           break
         fi
