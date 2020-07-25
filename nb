@@ -663,7 +663,7 @@ _id_brackets_color() {
     return 0
   fi
 
-  printf \
+  printf                      \
     "%s%s[%s%s%s]%s"          \
     "${_TPUT_SGR0}"           \
     "${_TPUT_SETAF_8}"        \
