@@ -1790,23 +1790,6 @@ nb h add
 nb u example-notebook
 ```
 
-If `b` is available on your system, you can add `alias b="bookmark"` to your
-`~/.bashrc` or equivalent, which will enable you to:
-
-```bash
-# add a new bookmark
-b https://example.com
-
-# open bookmark 12
-b o 12
-
-# edit bookmark 5
-b e 5
-
-# search bookmarks
-b q "#example"
-```
-
 For more commands and options, run `nb help` or `nb help <subcommand>`
 
 ### Help
