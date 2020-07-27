@@ -94,13 +94,18 @@ fi
 
 # $_REPO
 #
-# The <user>/<repo> identifier for the git repository.
+# The <user>/<repo> identifier for this project's git repository.
 _REPO="xwmx/nb"
+
+# $_REPO_MAIN_BRANCH
+#
+# The name of the main branch in this project's git repository.
+_REPO_MAIN_BRANCH="master"
 
 # $_REPO_RAW_URL
 #
 # The base URL for raw files.
-_REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/master"
+_REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 
 # $_LANG & $_LC_ALL
 #
@@ -3789,7 +3794,7 @@ Options:
 
 Description:
   Manage completion scripts. For more information, visit:
-  https://github.com/${_REPO}/blob/master/etc/README.md
+  https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
 _completions() {
   local _BASH_COMP_NAME="nb"
@@ -3925,7 +3930,7 @@ be necessary):
   ${_ME} completions install --download
 
 More information: ${__shell}
-  https://github.com/${_REPO}/blob/master/etc/README.md
+  https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
       else
         local _completion_path=
