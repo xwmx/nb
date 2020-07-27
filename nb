@@ -947,9 +947,14 @@ _git_checkpoint() {
 
   # Usage: _git_checkpoint_sync
   _git_checkpoint_sync() {
-    if git show-branch remotes/origin/master > /dev/null 2>&1
+    local _git_branch=
+    _git_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+    if git show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      git fetch && git rebase origin/master && git push
+      git fetch                             &&
+        git rebase "origin/${_git_branch}"  &&
+        git push origin "${_git_branch}"
     else
       git push
     fi
