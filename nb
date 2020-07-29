@@ -4128,7 +4128,7 @@ _delete() {
     printf "Deleting %s\\n" "${_note_info_line}"
     while true
     do
-      read -r -p "Are you sure you want to proceed? [y/N] " __yn
+      read -r -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -6385,7 +6385,7 @@ _move() {
       "$(_highlight "${_target_notebook}")"
     while true
     do
-      read -r -p "Are you sure you want to proceed? [y/N] " __yn
+      read -r -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -7614,7 +7614,7 @@ _rename() {
       "$(_highlight "${_target_basename}")"
     while true
     do
-      read -r -p "Are you sure you want to proceed? [y/N] " __yn
+      read -r -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -9371,7 +9371,7 @@ HEREDOC
       while true
       do
         printf "Updating %s in place. " "$(_highlight "${_ME}")"
-        read -r -p "Are you sure you want to proceed? [y/N] " __yn
+        read -r -p "Proceed? [y/N] " __yn
         case ${__yn} in
           [Yy]*)
             break
