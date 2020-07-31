@@ -3236,9 +3236,9 @@ _bookmark() {
   local _comment=
   local _edit_before_save=0
   local _encrypt=0
-  local _excerpt=
   local _filename=
   local _password=
+  local _quote=
   local _raw_content=0
   local _selection=
   local _skip_content=0
@@ -3264,16 +3264,16 @@ _bookmark() {
       -e|--encrypt|--encrypted)
         _encrypt=1
         ;;
-      --excerpt|--quote|-q)
-        _excerpt="$(__option_get_value "${__arg}" "${__val:-}")"
-        shift
-        ;;
       -f|--filename)
         _filename="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
         _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
+        ;;
+      -q|--quote|--excerpt)
+        _quote="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --raw-content)
@@ -3666,13 +3666,7 @@ HEREDOC
     done
   fi
 
-  if [[ -n "${_comment}" ]]
-  then
-    _bookmark_content+="${_NEWLINE}## Comment${_NEWLINE}"
-    _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
-  fi
-
-  if [[ -n "${_excerpt}" ]]
+  if [[ -n "${_quote}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Quote${_NEWLINE}"
 
@@ -3691,7 +3685,13 @@ HEREDOC
       fi
 
       _counter="$((_counter+1))"
-    done <<< "${_excerpt}"
+    done <<< "${_quote}"
+  fi
+
+  if [[ -n "${_comment}" ]]
+  then
+    _bookmark_content+="${_NEWLINE}## Comment${_NEWLINE}"
+    _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
   fi
 
   if [[ -n "${_tag_list}" ]]
