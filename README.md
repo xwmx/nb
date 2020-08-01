@@ -275,7 +275,8 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-color-themes">Color Themes</a> •
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
-  <a href="#help">Help</a>
+  <a href="#help">Help</a> •
+  <a href="#tech-notes">Tech Notes</a>
 </p>
 
 To get started, simply run:
@@ -3035,13 +3036,15 @@ Description:
   Display version information.
 ```
 
-## `nb` Markdown Bookmark File Format
+## Tech Notes
 
-### Extension
+### `nb` Markdown Bookmark File Format
+
+#### Extension
 
 `.bookmark.md`
 
-### Description
+#### Description
 
 `nb` bookmarks are Markdown documents created using a combination of
 user input and data from the bookmarked page. The `nb` bookmark format
@@ -3065,7 +3068,7 @@ This creates a file with the name `example.bookmark.md` containing:
 Additional bookmark information is separated into sections, with each
 bookmark section indicated by a Markdown `h2` heading.
 
-### Example
+#### Example
 
 ```markdown
 # Example Domain (example.com)
@@ -3107,16 +3110,16 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-### Elements
+#### Elements
 
-#### Title
+##### Title
 
 `Optional`
 
 A markdown `h1` heading containing the content of the bookmarked page's
 HTML `<title>` tag, if present, followed by the domain within parentheses.
 
-##### Examples
+###### Examples
 
 ```markdown
 # Example Domain (example.com)
@@ -3125,7 +3128,7 @@ HTML `<title>` tag, if present, followed by the domain within parentheses.
 # (example.com)
 ```
 
-#### URL
+##### URL
 
 `Required`
 
@@ -3134,40 +3137,40 @@ The URL of the bookmarked resource, with surrounding angle brackets
 
 This is the only required element.
 
-#### `## Description`
+##### `## Description`
 
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 tag if present.
 
-#### `## Quote`
+##### `## Quote`
 
 `Optional`
 
 A markdown quote element containing an excerpt from the bookmarked
 resource.
 
-#### `## Comment`
+##### `## Comment`
 
 `Optional`
 
 A text element containing a comment written by the user.
 
-#### `## Related`
+##### `## Related`
 
 `Optional`
 
 A Markdown list of angle bracketed (`<`, `>`) URLs that are related to the
 bookmarked resource.
 
-#### `## Tags`
+##### `## Tags`
 
 `Optional`
 
 A list of tags represented as hashtags, separated by individual spaces.
 
-#### `## Content`
+##### `## Content`
 
 `Optional`
 
@@ -3177,7 +3180,7 @@ The Content section is intended to make the page content available to
 full-text search. Content is converted to Markdown to reduce the amount
 of markup and make it more readable when reviewing search results.
 
-#### `## Content (HTML)`
+##### `## Content (HTML)`
 
 `Optional`
 
@@ -3186,20 +3189,20 @@ The full content of the bookmarked page in raw HTML.
 `nb` uses this section to save the page content when `pandoc` is not
 available to convert it to Markdown.
 
-## `nb` Notebook Specification
+### `nb` Notebook Specification
 
 An `nb` notebook is a directory that contains a valid `.git` directory,
 indicating that it has been initialized as a git repository, and a `.index`
 file.
 
-### `.index` File
+#### `.index` File
 
 The notebook index is a text file named `.index` in the notebook directory.
 `.index` contains a list of filenames, one per line, and the line number of
 each filename represents the id. `.index` is included in the git repository
 so ids are preserved across systems.
 
-#### Operations
+##### Operations
 
 - Add:
   - Append a new line containing the filename to `.index`.
@@ -3208,11 +3211,11 @@ so ids are preserved across systems.
 - Delete:
   - Delete the filename, preserving the newline, leaving the line blank.
 
-#### `index` Subcommand
+##### `index` Subcommand
 
 `nb` manages the `.index` using an internal `index` subcommand.
 
-##### `nb help index`
+###### `nb help index`
 
 ```text
 Usage:
@@ -3269,3 +3272,4 @@ root.
 <p align="center">
   📝🔖🔒🔍📔
 </p>
+
