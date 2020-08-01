@@ -3109,8 +3109,13 @@ A markdown `h1` element consisting of the content of the `<title>` of
 the bookmarked HTML page, if present, followed by the domain within
 parentheses.
 
+##### Examples
+
 ```markdown
 # Example Domain (example.com)
+```
+```markdown
+# (example.com)
 ```
 
 #### URL
