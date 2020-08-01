@@ -3169,6 +3169,9 @@ of markup and make it more readable when reviewing search results.
 
 The full content of the bookmarked page in raw HTML.
 
+`nb` uses this section to save the page content when `pandoc` is not
+available to convert it to Markdown.
+
 ## `nb` Notebook Specification
 
 An `nb` notebook is a directory that contains a valid `.git` directory,
