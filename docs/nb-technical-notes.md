@@ -126,11 +126,14 @@ The full content of the bookmarked page in raw HTML.
 
 ## `nb` Notebook Specification
 
-Notebooks in `nb` are git repositories containing a `.index` file.
+Notebooks in `nb` are directories that:
+
+- Are initialized as git repositories
+- Contain a `.index` file
 
 ### `.index` File
 
-The notebooks index is a text file named `.index` in the notebook directory.
+The notebook index is a text file named `.index` in the notebook directory.
 `.index` contains a list of filenames and the line number of each filename
 represents the id. `.index` is included in the git repository so ids are
 preserved across systems.
