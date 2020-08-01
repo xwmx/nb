@@ -3086,6 +3086,11 @@ Example meta description.
 
 Example comment.
 
+## Related
+
+- <https://example.net>
+- <https://example.org>
+
 ## Tags
 
 #tag1 #tag2
@@ -3125,7 +3130,7 @@ HTML `<title>` tag, if present, followed by the domain within parentheses.
 `Required`
 
 The URL of the bookmarked resource, with surrounding angle brackets
-(`<` / `>`).
+(`<`, `>`).
 
 This is the only required element.
 
@@ -3148,6 +3153,11 @@ resource.
 `Optional`
 
 A text element containing a comment written by the user.
+
+#### `## Related`
+
+A Markdown list of angle bracketed (`<`, `>`) URLs that are related to the
+bookmarked resource.
 
 #### `## Tags`
 
