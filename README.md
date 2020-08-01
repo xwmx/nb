@@ -1829,7 +1829,6 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#use">use</a> •
   <a href="#version">version</a>
   </br>---</br>
-  <a href="#technical-notes">Technical Notes</a> •
   <a href="#markdown-bookmark-file-format">Markdown Bookmark File Format</a> •
   <a href="#notebook-specification">Notebook Specification</a>
 </p>
@@ -3033,15 +3032,13 @@ Description:
   Display version information.
 ```
 
-## Technical Notes
+## Markdown Bookmark File Format
 
-### Markdown Bookmark File Format
-
-#### Extension
+### Extension
 
 `.bookmark.md`
 
-#### Description
+### Description
 
 `nb` bookmarks are Markdown documents created using a combination of
 user input and data from the bookmarked page. The `nb` bookmark format
@@ -3062,7 +3059,7 @@ This creates a file with the name `example.bookmark.md` containing:
 <https://example.com>
 ```
 
-#### Example
+### Example
 
 ```markdown
 # Example Domain (example.com)
@@ -3099,9 +3096,9 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-#### Elements
+### Elements
 
-##### Title
+#### Title
 
 `Optional`
 
@@ -3112,7 +3109,7 @@ the bookmarked HTML page, if present, and the domain in parenthesis.
 # Example Domain (example.com)
 ```
 
-##### URL
+#### URL
 
 `Required`
 
@@ -3121,52 +3118,52 @@ The URL of the bookmarked resource, with surrounding angle brackets
 
 This is the only required element.
 
-##### Description
+#### Description
 
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 tag if present.
 
-##### Quote
+#### Quote
 
 `Optional`
 
 A markdown quote element containing an excerpt from the bookmarked
 resource.
 
-##### Comment
+#### Comment
 
 `Optional`
 
 A text element containing a comment written by the user.
 
-##### Tags
+#### Tags
 
 `Optional`
 
 A list of tags represented as hashtags.
 
-##### Content
+#### Content
 
 `Optional`
 
 The full content of the bookmarked page, converted to Markdown.
 
-##### Content (HTML)
+#### Content (HTML)
 
 `Optional`
 
 The full content of the bookmarked page in raw HTML.
 
-### Notebook Specification
+## Notebook Specification
 
 Notebooks in `nb` are directories that:
 
 - Are initialized as git repositories
 - Contain a `.index` file
 
-#### `.index` File
+### `.index` File
 
 The notebook index is a text file named `.index` in the notebook directory.
 `.index` contains a list of filenames and the line number of each filename
