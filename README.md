@@ -3174,9 +3174,60 @@ file.
 ### `.index` File
 
 The notebook index is a text file named `.index` in the notebook directory.
-`.index` contains a list of filenames and the line number of each filename
-represents the id. `.index` is included in the git repository so ids are
-preserved across systems.
+`.index` contains a list of filenames, one per line, and the line number of
+each filename represents the id. `.index` is included in the git repository
+so ids are preserved across systems.
+
+#### Operations
+
+- Add:
+  - Append a new line containing the filename to `.index`.
+- Update:
+  - Overwrite the existing filename in `.index` with the new filename.
+- Delete:
+  - Delete the filename, preserving the newline, leaving the line blank.
+
+#### `nb index`
+
+`nb` includes an internal subcommand, `index, that is used internally for
+managing the index.
+
+```text
+Usage:
+  nb index add <filename>
+  nb index delete <filename>
+  nb index get_basename <id>
+  nb index get_id <filename>
+  nb index get_max_id
+  nb index rebuild
+  nb index reconcile
+  nb index show
+  nb index update <existing-filename> <new-filename>
+  nb index verfiy
+
+Subcommands:
+  add           Add <filename> to the index.
+  delete        Delete <filename> from the index.
+  get_basename  Print the filename / basename at the specified <id>.
+  get_id        Get the id for <filename>.
+  get_max_id    Get the maximum id for the notebook.
+  rebuild       Rebuild the index. Some ids might change.
+  reconcile     Remove duplicates and update index for added and deleted files.
+  show          Print the index.
+  update        Overwrite the <existing-filename> entry with <new-filename>.
+  verify        Verify that the index matches the notebook contents.
+
+Description:
+  Manage the index for the current notebook. This subcommand is used
+  internally by `nb` and using it manually will probably corrupt
+  the index. If something goes wrong with the index, fix it with
+  `nb index reconcile`.
+
+  The index is a text file named '.index' in the notebook directory. .index
+  contains a list of filenames and the line number of each filename
+  represents the id. .index is included in the git repository so ids are
+  preserved across systems.
+```
 
 ## Tests
 
