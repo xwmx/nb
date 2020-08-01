@@ -3060,7 +3060,7 @@ This creates a file with the name `example.bookmark.md` containing:
 ```
 
 Bookmark information is separated into sections, with each bookmark section
-indicated by a Markdown h2 heading.
+indicated by a Markdown `h2` heading.
 
 ### Example
 
@@ -3106,7 +3106,8 @@ permission.
 `Optional`
 
 A markdown `h1` element consisting of the content of the `<title>` of
-the bookmarked HTML page, if present, and the domain in parenthesis.
+the bookmarked HTML page, if present, followed by the domain within
+parentheses.
 
 ```markdown
 # Example Domain (example.com)
