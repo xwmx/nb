@@ -1829,8 +1829,8 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#use">use</a> •
   <a href="#version">version</a>
   </br>---</br>
-  <a href="#markdown-bookmark-file-format">Markdown Bookmark File Format</a> •
-  <a href="#notebook-specification">Notebook Specification</a>
+  <a href="#nb-markdown-bookmark-file-format">Markdown Bookmark File Format</a> •
+  <a href="#nb-notebook-specification">Notebook Specification</a>
 </p>
 
 #### `nb help`
@@ -3032,7 +3032,7 @@ Description:
   Display version information.
 ```
 
-## Markdown Bookmark File Format
+## `nb` Markdown Bookmark File Format
 
 ### Extension
 
@@ -3156,7 +3156,7 @@ The full content of the bookmarked page, converted to Markdown.
 
 The full content of the bookmarked page in raw HTML.
 
-## Notebook Specification
+## `nb` Notebook Specification
 
 Notebooks in `nb` are directories that:
 
