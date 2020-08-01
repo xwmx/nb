@@ -3059,6 +3059,9 @@ This creates a file with the name `example.bookmark.md` containing:
 <https://example.com>
 ```
 
+Bookmark information is separated into sections, with each bookmark section
+indicated by a Markdown h2 heading.
+
 ### Example
 
 ```markdown
@@ -3118,39 +3121,39 @@ The URL of the bookmarked resource, with surrounding angle brackets
 
 This is the only required element.
 
-#### Description
+#### `## Description`
 
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 tag if present.
 
-#### Quote
+#### `## Quote`
 
 `Optional`
 
 A markdown quote element containing an excerpt from the bookmarked
 resource.
 
-#### Comment
+#### `## Comment`
 
 `Optional`
 
 A text element containing a comment written by the user.
 
-#### Tags
+#### `## Tags`
 
 `Optional`
 
 A list of tags represented as hashtags.
 
-#### Content
+#### `## Content`
 
 `Optional`
 
 The full content of the bookmarked page, converted to Markdown.
 
-#### Content (HTML)
+#### `## Content (HTML)`
 
 `Optional`
 
@@ -3158,10 +3161,9 @@ The full content of the bookmarked page in raw HTML.
 
 ## `nb` Notebook Specification
 
-Notebooks in `nb` are directories that:
-
-- Are initialized as git repositories
-- Contain a `.index` file
+Notebooks in `nb` are directories that contain a valid `.git` directory,
+indicating that it has been initialized as a git repository, and a `.index`
+file.
 
 ### `.index` File
 
