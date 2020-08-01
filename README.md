@@ -3177,8 +3177,9 @@ A list of tags represented as hashtags separated by individual spaces.
 The full content of the bookmarked page, converted to Markdown.
 
 The Content section is intended to make the page content available to
-full-text search. Content is converted to Markdown to reduce the amount
-of markup and make it more readable when reviewing search results.
+full-text search. The source HTML is converted to Markdown to reduce
+the amount of markup and make it more readable when reviewing search
+results.
 
 ##### `## Content (HTML)`
 
