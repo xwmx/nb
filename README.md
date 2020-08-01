@@ -1808,7 +1808,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#bookmark">bookmark</a> •
   <a href="#completions">completions</a> •
   <a href="#count">count</a> •
-  <a href="#delete">delete</a> 
+  <a href="#delete">delete</a> •
   <a href="#edit">edit</a> •
   <a href="#env">env</a> •
   <a href="#export">export</a> •
