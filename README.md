@@ -3148,7 +3148,7 @@ tag if present.
 
 `Optional`
 
-A markdown quote element containing an excerpt from the bookmarked
+A markdown quote block containing a user-specified excerpt from the bookmarked
 resource.
 
 ##### `## Comment`
