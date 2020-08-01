@@ -3108,9 +3108,8 @@ permission.
 
 `Optional`
 
-A markdown `h1` element consisting of the content of the `<title>` of
-the bookmarked HTML page, if present, followed by the domain within
-parentheses.
+A markdown `h1` heading containing the content of the bookmarked page's
+HTML `<title>` tag, if present, followed by the domain within parentheses.
 
 ##### Examples
 
