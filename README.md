@@ -1834,9 +1834,6 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#update">update</a> •
   <a href="#use">use</a> •
   <a href="#version">version</a>
-  </br>---</br>
-  <a href="#nb-markdown-bookmark-file-format">Markdown Bookmark File Format</a> •
-  <a href="#nb-notebook-specification">Notebook Specification</a>
 </p>
 
 #### `nb help`
