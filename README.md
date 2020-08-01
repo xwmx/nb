@@ -3156,6 +3156,8 @@ A text element containing a comment written by the user.
 
 #### `## Related`
 
+`Optional`
+
 A Markdown list of angle bracketed (`<`, `>`) URLs that are related to the
 bookmarked resource.
 
