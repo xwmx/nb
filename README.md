@@ -3187,8 +3187,8 @@ results.
 
 The full content of the bookmarked page in raw HTML.
 
-`nb` uses this section to save the page content when `pandoc` is not
-available to convert it to Markdown.
+`nb` uses this section to save the source HTML page content when
+`pandoc` is not available to convert it to Markdown.
 
 ### `nb` Notebook Specification
 
