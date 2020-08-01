@@ -3151,13 +3151,17 @@ A text element containing a comment written by the user.
 
 `Optional`
 
-A list of tags represented as hashtags.
+A list of tags represented as hashtags, separated by individual spaces.
 
 #### `## Content`
 
 `Optional`
 
 The full content of the bookmarked page, converted to Markdown.
+
+The Content section is intended to make the page content available to
+full-text search. Content is converted to Markdown to reduce the amount
+of markup and make it more readable when reviewing search results.
 
 #### `## Content (HTML)`
 
@@ -3186,6 +3190,49 @@ so ids are preserved across systems.
   - Overwrite the existing filename in `.index` with the new filename.
 - Delete:
   - Delete the filename, preserving the newline, leaving the line blank.
+
+#### `index` Subcommand
+
+`nb` manages the `.index` using an internal `index` subcommand.
+
+##### `nb help index`
+
+```text
+Usage:
+  nb index add <filename>
+  nb index delete <filename>
+  nb index get_basename <id>
+  nb index get_id <filename>
+  nb index get_max_id
+  nb index rebuild
+  nb index reconcile
+  nb index show
+  nb index update <existing-filename> <new-filename>
+  nb index verfiy
+
+Subcommands:
+  add           Add <filename> to the index.
+  delete        Delete <filename> from the index.
+  get_basename  Print the filename / basename at the specified <id>.
+  get_id        Get the id for <filename>.
+  get_max_id    Get the maximum id for the notebook.
+  rebuild       Rebuild the index. Some ids might change.
+  reconcile     Remove duplicates and update index for added and deleted files.
+  show          Print the index.
+  update        Overwrite the <existing-filename> entry with <new-filename>.
+  verify        Verify that the index matches the notebook contents.
+
+Description:
+  Manage the index for the current notebook. This subcommand is used
+  internally by `nb` and using it manually will probably corrupt
+  the index. If something goes wrong with the index, fix it with
+  `nb index reconcile`.
+
+  The index is a text file named '.index' in the notebook directory. .index
+  contains a list of filenames and the line number of each filename
+  represents the id. .index is included in the git repository so ids are
+  preserved across systems.
+```
 
 ## Tests
 
