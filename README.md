@@ -276,7 +276,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
-  <a href="#tech-notes">Tech Notes</a>
+  <a href="#specifications">Specifications</a>
 </p>
 
 To get started, simply run:
@@ -3036,7 +3036,7 @@ Description:
   Display version information.
 ```
 
-## Tech Notes
+## Specifications
 
 ### `nb` Markdown Bookmark File Format
 
