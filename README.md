@@ -3167,7 +3167,7 @@ The full content of the bookmarked page in raw HTML.
 
 ## `nb` Notebook Specification
 
-Notebooks in `nb` are directories that contain a valid `.git` directory,
+An `nb` notebook is a directory that contains a valid `.git` directory,
 indicating that it has been initialized as a git repository, and a `.index`
 file.
 
