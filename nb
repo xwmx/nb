@@ -4886,7 +4886,7 @@ Usage:
   ${_ME} index reconcile
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
-  ${_ME} index verfiy
+  ${_ME} index verify
 
 Subcommands:
   add           Add <filename> to the index.

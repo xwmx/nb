@@ -3208,7 +3208,7 @@ Usage:
   nb index reconcile
   nb index show
   nb index update <existing-filename> <new-filename>
-  nb index verfiy
+  nb index verify
 
 Subcommands:
   add           Add <filename> to the index.
