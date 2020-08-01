@@ -1,13 +1,17 @@
-# `nb` Markdown Bookmark File Format
+# `nb` Technical Notes
 
-## Extension
+## `nb` Markdown Bookmark File Format
+
+### Extension
 
 `.bookmark.md`
 
-## Description
+### Description
 
 `nb` bookmarks are Markdown documents created using a combination of
-user input and data from the bookmarked page.
+user input and data from the bookmarked page. The `nb` bookmark format
+is intended to be readable, editable, and clearly organized for
+greatest accessibility.
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
@@ -23,7 +27,7 @@ This creates a file with the name `example.bookmark.md` containing:
 <https://example.com>
 ```
 
-## Example
+### Example
 
 ```markdown
 # Example Domain (example.com)
@@ -60,9 +64,9 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-## Elements
+### Elements
 
-### Title
+#### Title
 
 `Optional`
 
@@ -73,7 +77,7 @@ the bookmarked HTML page, if present, and the domain in parenthesis.
 # Example Domain (example.com)
 ```
 
-### URL
+#### URL
 
 `Required`
 
@@ -82,40 +86,51 @@ The URL of the bookmarked resource, with surrounding angle brackets
 
 This is the only required element.
 
-### Description
+#### Description
 
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 tag if present.
 
-### Quote
+#### Quote
 
 `Optional`
 
 A markdown quote element containing an excerpt from the bookmarked
 resource.
 
-### Comment
+#### Comment
 
 `Optional`
 
 A text element containing a comment written by the user.
 
-### Tags
+#### Tags
 
 `Optional`
 
 A list of tags represented as hashtags.
 
-### Content
+#### Content
 
 `Optional`
 
 The full content of the bookmarked page, converted to Markdown.
 
-### Content (HTML)
+#### Content (HTML)
 
 `Optional`
 
 The full content of the bookmarked page in raw HTML.
+
+## `nb` Notebook Specification
+
+Notebooks in `nb` are git repositories containing a `.index` file.
+
+### `.index` File
+
+The notebooks index is a text file named `.index` in the notebook directory.
+`.index` contains a list of filenames and the line number of each filename
+represents the id. `.index` is included in the git repository so ids are
+preserved across systems.
