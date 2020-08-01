@@ -997,11 +997,14 @@ nb p 12
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
-To create a minimal valid bookmark file with `nb add`:
+To create a minimally valid bookmark file with `nb add`:
 
 ```bash
 nb add example.bookmark.md --content "<https://example.com>"
 ```
+
+For a full overview, see
+[`nb` Markdown Bookmark File Format](#nb-markdown-bookmark-file-format).
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
@@ -1405,6 +1408,9 @@ nb notebooks unarchive example
 
 For more information about working with notebooks, see
 [`nb help notebooks`](#notebooks).
+
+For technical details about notebooks, see
+[`nb` Notebook Specification](#nb-notebook-specification).
 
 ### Git Sync
 
@@ -3047,7 +3053,7 @@ greatest accessibility.
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
-To create a minimal valid bookmark file with `nb add`:
+To create a minimally valid bookmark file with `nb add`:
 
 ```bash
 nb add example.bookmark.md --content "<https://example.com>"
