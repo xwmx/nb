@@ -3142,7 +3142,7 @@ This is the only required element.
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
-tag if present.
+tag, if present.
 
 ##### `## Quote`
 
@@ -3168,7 +3168,7 @@ bookmarked resource.
 
 `Optional`
 
-A list of tags represented as hashtags, separated by individual spaces.
+A list of tags represented as hashtags separated by individual spaces.
 
 ##### `## Content`
 
