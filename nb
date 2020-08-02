@@ -2745,8 +2745,8 @@ Usage:
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [-r <url> | --related <url>]... [--skip-content]
-              [--source] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3131,8 +3131,8 @@ Usage:
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [-r <url> | --related <url>]... [--skip-content]
-              [--source] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
+              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3150,8 +3150,8 @@ Options:
   -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple \`--related\` flags can be used in a
                              command to save multiple related URLs.
+  --save-source              Save the page source as HTML.
   --skip-content             Omit page content from the note.
-  --source                   Save the page source as HTML.
   --tags <tag1>,<tag2>...    A comma-separated list of tags.
   --title <title>            The bookmark title. When not specified,
                              \`${_ME}\` will use the html <title> tag.
@@ -3239,7 +3239,7 @@ _bookmark() {
   local _filename=
   local _password=
   local _quote=
-  local _source=0
+  local _save_source=0
   local _selection=
   local _skip_content=0
   local _subcommand=
@@ -3276,11 +3276,11 @@ _bookmark() {
         _quote="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      --save-source|--source|--save-html|--html|--raw-content|--raw-html)
+        _save_source=1
+        ;;
       --skip-content|--skipcontent|--no-content|--nocontent)
         _skip_content=1
-        ;;
-      --source|--save-source|--html|--save-html|--raw-content|--raw-html)
-        _source=1
         ;;
       -t|--tag|--tags)
         _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
@@ -3749,11 +3749,11 @@ HEREDOC
           )"
         _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
       else
-        _source=1
+        _save_source=1
       fi
     fi
 
-    if ((_source))
+    if ((_save_source))
     then
       _bookmark_content+="${_NEWLINE}## Source${_NEWLINE}"
       _bookmark_content+="${_NEWLINE}\`\`\`html${_NEWLINE}"

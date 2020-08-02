@@ -411,14 +411,14 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-# --source option #############################################################
+# --save-source option ########################################################
 
-@test "\`bookmark --source\` creates new note with HTML content." {
+@test "\`bookmark --save-source\` creates new note with HTML content." {
   {
     run "${_NB}" init
   }
 
-  run "${_NB}" bookmark "${_BOOKMARK_URL}" --raw-content
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --save-source
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
