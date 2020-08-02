@@ -3670,16 +3670,6 @@ HEREDOC
     fi
   fi
 
-  if [[ -n "${_related_urls[*]:-}" ]]
-  then
-    _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
-
-    for __related_url in "${_related_urls[@]:-}"
-    do
-      _bookmark_content+="- <${__related_url}>${_NEWLINE}"
-    done
-  fi
-
   if [[ -n "${_quote}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Quote${_NEWLINE}"
@@ -3706,6 +3696,16 @@ HEREDOC
   then
     _bookmark_content+="${_NEWLINE}## Comment${_NEWLINE}"
     _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
+  fi
+
+  if [[ -n "${_related_urls[*]:-}" ]]
+  then
+    _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
+
+    for __related_url in "${_related_urls[@]:-}"
+    do
+      _bookmark_content+="- <${__related_url}>${_NEWLINE}"
+    done
   fi
 
   if [[ -n "${_tag_list}" ]]
