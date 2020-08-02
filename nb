@@ -3589,23 +3589,37 @@ HEREDOC
       printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
   fi
 
-  if [[ -z "${_title}" ]] && _file_is_text "${_temp_file}"
+  if _file_is_text "${_temp_file}"
   then
-    _title="$(
-      cat "${_temp_file}"                               \
-        | grep -o -E -i '.*<title[^>]*>[^<]*</title>'   \
-        | head -1                                       \
-        | sed 's/.*<title[^>]*>//'                      \
-        | sed 's/.*<TITLE[^>]*>//'                      \
-        | sed 's/<\/title>.*//'                         \
-        | sed 's/<\/TITLE>.*//'
-    )" || : # TODO: pipeline returns error status but still returns title
-    local _domain
-    _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
-    if [[ -n "${_domain}" ]]
+    if [[ -z "${_title}" ]]
     then
-      _title+=" (${_domain})"
+      _title="$(
+        cat "${_temp_file}"                               \
+          | grep -o -E -i '.*<title[^>]*>[^<]*</title>'   \
+          | head -1                                       \
+          | sed 's/.*<title[^>]*>//'                      \
+          | sed 's/.*<TITLE[^>]*>//'                      \
+          | sed 's/<\/title>.*//'                         \
+          | sed 's/<\/TITLE>.*//'
+      )" || : # TODO: pipeline returns error status but still returns title
     fi
+
+    if [[ -z "${_title}" ]]
+    then
+      _title="$(
+        cat "${_temp_file}" \
+          | sed -E -n       \
+            's/.*<meta .*property=.og:title[^>]*content="([^"]+)".*/\1/p' \
+            2>/dev/null || :
+      )"
+    fi
+  fi
+
+  local _domain=
+  _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
+  if [[ -n "${_domain}" ]]
+  then
+    _title+=" (${_domain})"
   fi
 
   if [[ -n "${_title:-}" ]]
