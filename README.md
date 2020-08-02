@@ -3117,7 +3117,8 @@ permission.
 `Optional`
 
 A markdown `h1` heading containing the content of the bookmarked page's
-HTML `<title>` tag, if present, followed by the domain within parentheses.
+HTML `<title>` or [`og:title`](https://ogp.me/) tag, if present, followed by
+the domain within parentheses.
 
 ###### Examples
 
@@ -3142,7 +3143,7 @@ This is the only required element.
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
-tag, if present.
+or [`og:description`](https://ogp.me/) tag, if present.
 
 ##### `## Quote`
 
