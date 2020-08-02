@@ -783,7 +783,7 @@ nb https://example.com
 
 ## Description
 
-Example meta description.
+Example description.
 
 ## Content
 
@@ -816,7 +816,7 @@ Example quote line two."
 
 ## Description
 
-Example meta description.
+Example description.
 
 ## Quote
 
@@ -848,7 +848,7 @@ nb https://example.com --comment "Example comment."
 
 ## Description
 
-Example meta description.
+Example description.
 
 ## Comment
 
@@ -879,7 +879,7 @@ nb https://example.com --tags tag1,tag2
 
 ## Description
 
-Example meta description.
+Example description.
 
 ## Tags
 
@@ -3077,7 +3077,7 @@ bookmark section indicated by a Markdown `h2` heading.
 
 ## Description
 
-Example meta description.
+Example description.
 
 ## Quote
 
