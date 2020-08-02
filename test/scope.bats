@@ -161,7 +161,7 @@ _setup_scope() {
 
 Example description.
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${NB_DIR}/two/${_filename}")"
