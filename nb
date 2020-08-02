@@ -3276,7 +3276,7 @@ _bookmark() {
         _quote="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      --skip-content)
+      --skip-content|--skipcontent|--no-content|--nocontent)
         _skip_content=1
         ;;
       --source|--save-source|--html|--save-html|--raw-content|--raw-html)
