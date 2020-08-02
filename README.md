@@ -234,9 +234,13 @@ To install with [npm](https://www.npmjs.com/package/nb.sh):
 npm install -g nb.sh
 ```
 
-Note: Installing through `npm` only installs completion scripts.
+Installing through `npm` only installs completion scripts.
 On Ubuntu and WSL, you can run `sudo nb env install` to install the
 optional dependencies.
+
+*Note: `nb` was previously available on npm as
+[notes.sh](https://www.npmjs.com/package/notes.sh), which has been
+deprecated in favor of [nb.sh](https://www.npmjs.com/package/nb.sh).*
 
 ##### bpkg
 
