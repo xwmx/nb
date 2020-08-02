@@ -411,9 +411,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-# --raw-content option ########################################################
+# --source option #############################################################
 
-@test "\`bookmark --raw-content\` creates new note with HTML content." {
+@test "\`bookmark --source\` creates new note with HTML content." {
   {
     run "${_NB}" init
   }
@@ -439,6 +439,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 ## Description
 
 Example description.
+
+## Content
+
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")
 
 ## Source
 

@@ -2745,8 +2745,8 @@ Usage:
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote] [-r <url> | --related <url>]... [--skip-content]
+              [--source] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3131,8 +3131,8 @@ Usage:
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [--raw-content] [-r <url> | --related <url>]...
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [-q | --quote] [-r <url> | --related <url>]... [--skip-content]
+              [--source] [--tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3147,11 +3147,11 @@ Options:
                              extension is used.
   -q, --quote <quote>        A quote or excerpt from the saved page.
                              Alias: \`--excerpt\`
-  --raw-content              Save the page content as HTML.
   -r, --related <url>        A URL for a page related to the bookmarked page.
                              Multiple \`--related\` flags can be used in a
                              command to save multiple related URLs.
   --skip-content             Omit page content from the note.
+  --source                   Save the page source as HTML.
   --tags <tag1>,<tag2>...    A comma-separated list of tags.
   --title <title>            The bookmark title. When not specified,
                              \`${_ME}\` will use the html <title> tag.
@@ -3239,7 +3239,7 @@ _bookmark() {
   local _filename=
   local _password=
   local _quote=
-  local _raw_content=0
+  local _source=0
   local _selection=
   local _skip_content=0
   local _subcommand=
@@ -3276,11 +3276,11 @@ _bookmark() {
         _quote="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      --raw-content)
-        _raw_content=1
-        ;;
       --skip-content)
         _skip_content=1
+        ;;
+      --source|--save-source|--html|--save-html|--raw-content|--raw-html)
+        _source=1
         ;;
       -t|--tag|--tags)
         _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
@@ -3731,23 +3731,30 @@ HEREDOC
     _bookmark_content+="${_NEWLINE}${_tag_string}${_NEWLINE}"
   fi
 
-  if ! ((_skip_content)) && _file_is_text "${_temp_file}"
+  if _file_is_text "${_temp_file}"
   then
-    if ! ((_raw_content)) &&
-       _command_exists "pandoc"
+    if ! ((_skip_content))
     then
-      _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
+      if _command_exists "pandoc"
+      then
+        _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
 
-      local _processed_content
-      _processed_content="$(
-        cat "${_temp_file}"                       \
-          | pandoc                                \
-            --from html-native_divs-native_spans  \
-            --to markdown-grid_tables --wrap=none \
-            2>/dev/null || cat "${_temp_file}"
-        )"
-      _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
-    else
+        local _processed_content
+        _processed_content="$(
+          cat "${_temp_file}"                       \
+            | pandoc                                \
+              --from html-native_divs-native_spans  \
+              --to markdown-grid_tables --wrap=none \
+              2>/dev/null || cat "${_temp_file}"
+          )"
+        _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
+      else
+        _source=1
+      fi
+    fi
+
+    if ((_source))
+    then
       _bookmark_content+="${_NEWLINE}## Source${_NEWLINE}"
       _bookmark_content+="${_NEWLINE}\`\`\`html${_NEWLINE}"
       _bookmark_content+="$(cat "${_temp_file}")"
