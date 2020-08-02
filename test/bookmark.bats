@@ -176,7 +176,7 @@ HEREDOC
 
 Example description.
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -319,7 +319,7 @@ Example description.
 
 New comment.
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -379,7 +379,7 @@ Example description.
 >
 > Quote line 2.
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
@@ -440,9 +440,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 Example description.
 
-## Page Content (HTML)
+## Source
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")"
+\`\`\`html
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
+\`\`\`"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
@@ -544,7 +546,7 @@ Example description.
 
 #tag1 #tag2
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -602,7 +604,7 @@ Example comment.
 
 #tag1 #tag2
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -654,7 +656,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 Example description.
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -738,7 +740,7 @@ Example description.
 
 - <https://example.net>
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
@@ -797,7 +799,7 @@ Example description.
 - <https://example.org>
 - <https://example.example>
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"

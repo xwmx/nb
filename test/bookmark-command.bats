@@ -138,7 +138,7 @@ HEREDOC
 
 Example description.
 
-## Page Content
+## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"

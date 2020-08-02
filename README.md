@@ -3182,11 +3182,12 @@ full-text search. The source HTML is converted to Markdown to reduce
 the amount of markup and make it more readable when reviewing search
 results.
 
-##### `## Content (HTML)`
+##### `## Source`
 
 `Optional`
 
-The full content of the bookmarked page in raw HTML.
+A fenced code block with `html` language identifier containing the source HTML
+from the bookmarked page.
 
 `nb` uses this section to save the source HTML page content when
 `pandoc` is not available to convert it to Markdown.
