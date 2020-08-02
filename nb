@@ -3627,7 +3627,7 @@ HEREDOC
     if _command_exists "w3m"
     then # convert html entities
       _title="$(
-        printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 1000
+        printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 99999
       )"
     fi
 
@@ -3661,7 +3661,7 @@ HEREDOC
       if _command_exists "w3m"
       then # convert html entities
         _description="$(
-          printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 1000
+          printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 99999
         )"
       fi
 
