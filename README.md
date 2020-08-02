@@ -3216,8 +3216,9 @@ results.
 A fenced code block with `html` language identifier containing the source HTML
 from the bookmarked page.
 
-`nb` uses this section to save the source HTML page content when
-`pandoc` is not available to convert it to Markdown.
+`nb` does not save the page source by default. `nb` uses this section to save
+the source HTML page content when `pandoc` is not available to convert it to
+Markdown.
 
 ### `nb` Notebook Specification
 
