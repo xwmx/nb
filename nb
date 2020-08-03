@@ -6056,7 +6056,7 @@ _ls() {
       _separator_hi="$(_dim "${_separator}")"
     fi
 
-    local _notebook_names_hi
+    local _notebook_names_hi=
     _notebook_names_hi=($(
       _notebooks --names --unarchived --global || :
     ))
