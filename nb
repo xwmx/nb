@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.3.3"
+_VERSION="4.4.0"
 
 # $_ME
 #
@@ -9364,6 +9364,14 @@ _update() {
     cat <<'HEREDOC'
 Installed with npm. To update, run:
   npm update -g notes.sh
+HEREDOC
+  elif hash npm 2>/dev/null         &&
+    npm list | grep -q nb.sh   &&
+    [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+  then # installed with npm
+    cat <<'HEREDOC'
+Installed with npm. To update, run:
+  npm update -g nb.sh
 HEREDOC
   elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
        [[ "${_current_path}" =~ Cellar  ]]

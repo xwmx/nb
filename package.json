@@ -1,6 +1,6 @@
 {
   "name": "notes.sh",
-  "version": "4.3.3",
+  "version": "4.4.0",
   "description": "CLI note-taking, bookmarking, and archiving with encryption, search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "global": true,
   "install": "make install",
@@ -9,7 +9,7 @@
   },
   "bin": {
     "nb": "nb",
-    "notes.sh": "nb",
+    "nb.sh": "nb",
     "bookmark": "bin/bookmark",
     "notes": "bin/notes"
   },
