@@ -777,7 +777,7 @@ nb https://example.com
 `nb` automatically generates a bookmark using information from the page:
 
 ```markdown
-# Example Domain (example.com)
+# Example Title (example.com)
 
 <https://example.com>
 
@@ -787,8 +787,8 @@ Example description.
 
 ## Content
 
-Example Domain
-==============
+Example Title
+=============
 
 This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
@@ -810,7 +810,7 @@ nb https://example.com --quote "Example quote line one.
 Example quote line two."
 ```
 ```markdown
-# Example Domain (example.com)
+# Example Title (example.com)
 
 <https://example.com>
 
@@ -826,8 +826,8 @@ Example description.
 
 ## Content
 
-Example Domain
-==============
+Example Title
+=============
 
 This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
@@ -842,7 +842,7 @@ Add a comment to a bookmark using the `-c` / `--comment` option:
 nb https://example.com --comment "Example comment."
 ```
 ```markdown
-# Example Domain (example.com)
+# Example Title (example.com)
 
 <https://example.com>
 
@@ -856,8 +856,8 @@ Example comment.
 
 ## Content
 
-Example Domain
-==============
+Example Title
+=============
 
 This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
@@ -873,7 +873,7 @@ into hashtags:
 nb https://example.com --tags tag1,tag2
 ```
 ```markdown
-# Example Domain (example.com)
+# Example Title (example.com)
 
 <https://example.com>
 
@@ -887,8 +887,8 @@ Example description.
 
 ## Content
 
-Example Domain
-==============
+Example Title
+=============
 
 This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
@@ -1016,7 +1016,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added [3] 20200101000000.bookmark.md "Example Domain (example.com)"
+Added [3] 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -1729,12 +1729,12 @@ nb> edit 3 --content "New content."
 Updated [3] Example
 
 nb> bookmark https://example.com
-Added [4] example.bookmark.md "Example Domain (example.com)"
+Added [4] example.bookmark.md "Example Title (example.com)"
 
 nb> ls
 home
 ----
-[4] 🔖 Example Domain (example.com)
+[4] 🔖 Example Title (example.com)
 [3] Example
 [2] Sample
 [1] Demo
@@ -3072,7 +3072,7 @@ bookmark section indicated by a Markdown `h2` heading.
 #### Example
 
 ````markdown
-# Example Domain (example.com)
+# Example Title (example.com)
 
 <https://example.com>
 
@@ -3101,8 +3101,8 @@ Example comment.
 
 ## Content
 
-Example Domain
-==============
+Example Title
+=============
 
 This domain is for use in illustrative examples in documents. You may
 use this domain in literature without prior coordination or asking for
@@ -3116,12 +3116,12 @@ permission.
 <!doctype html>
 <html>
   <head>
-    <title>Example Domain</title>
+    <title>Example Title</title>
     <meta name="description" content="Example description." />
   </head>
 
   <body>
-    <h1>Example Domain</h1>
+    <h1>Example Title</h1>
     <p>
       This domain is for use in illustrative examples in documents. You may
       use this domain in literature without prior coordination or asking for
@@ -3148,7 +3148,7 @@ the domain within parentheses.
 ###### Examples
 
 ```markdown
-# Example Domain (example.com)
+# Example Title (example.com)
 ```
 ```markdown
 # (example.com)
