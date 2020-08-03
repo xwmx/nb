@@ -1,0 +1,13 @@
+desc "npm:deprecate" <<HEREDOC
+Usage:
+  bask npm:deprecate
+
+Description:
+  Deprecate the "nb.sh" npm package.
+HEREDOC
+npm:deprecate() {
+  npm deprecate \
+    "notes.sh"  \
+"This package is available as 'notes.sh': https://www.npmjs.com/package/notes.sh"
+}
+
