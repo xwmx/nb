@@ -6199,7 +6199,6 @@ _ls() {
   _columns="$(tput cols)"
   local _header_flags=()
   local _limit=20
-  local _maybe_notebook_list=
   local _notebook_names_raw
   _notebook_names_raw=($(
     _notebooks --names --no-color --unarchived --global || :
@@ -6248,16 +6247,11 @@ _ls() {
 
   _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
 
-  if [[ -z "${_args[*]:-}" ]]
-  then
-    while read -r __line
-    do
-      _maybe_notebook_list="${_maybe_notebook_list}${__line}${_NEWLINE}"
-    done < <(_ls_print_header "${_header_flags[@]:-}")
-  fi
-
   {
-    printf "%s" "${_maybe_notebook_list}"
+    if [[ -z "${_args[*]:-}" ]]
+    then
+      _ls_print_header "${_header_flags[@]:-}"
+    fi
 
     _list -n "${_limit}" "${_args[@]:-}" 2>/dev/null || {
       if [[ -n "${_args[*]:-}" ]]
