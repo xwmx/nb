@@ -100,7 +100,7 @@ _REPO="xwmx/nb"
 # $_REPO_MAIN_BRANCH
 #
 # The name of the main branch in this project's git repository.
-_REPO_MAIN_BRANCH="main"
+_REPO_MAIN_BRANCH="master"
 
 # $_REPO_RAW_URL
 #
