@@ -7,7 +7,7 @@ Description:
 HEREDOC
 npm:deprecate() {
   npm deprecate \
-    "notes.sh"  \
+    "nb.sh"  \
 "This package is available as 'notes.sh': https://www.npmjs.com/package/notes.sh"
 }
 
