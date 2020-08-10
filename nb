@@ -1000,11 +1000,6 @@ _git_checkpoint() {
     _exit_1 printf "Usage: _git_checkpoint <message>\\n"
   fi
 
-  if [[ -n "${2:-}" ]] && [[ "${2}" == "--spinner" ]]
-  then
-    _show_spinner=1
-  fi
-
   cd "${_target_directory}" ||
     _exit_1 printf "_git_checkpoint() \`cd\` failed.\\n"
 
