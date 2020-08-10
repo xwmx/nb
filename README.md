@@ -2265,10 +2265,14 @@ Shortcut Alias: `e`
 
 ```text
 Usage:
-  nb env
+  nb env [install]
+
+Subcommands:
+  install  Install dependencies on supported systems.
 
 Description:
-  Print program environment and configuration information.
+  Print program environment and configuration information, or install
+  dependencies.
 ```
 
 #### `export`

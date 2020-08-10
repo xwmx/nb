@@ -4365,10 +4365,14 @@ _alias_subcommand "edit" "e"
 
 desc "env" <<HEREDOC
 Usage:
-  ${_ME} env
+  ${_ME} env [install]
+
+Subcommands:
+  install  Install dependencies on supported systems.
 
 Description:
-  Print program environment and configuration information.
+  Print program environment and configuration information, or install
+  dependencies.
 HEREDOC
 _env() {
   local _subcommand="${1:-}"
