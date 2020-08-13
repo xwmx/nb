@@ -1,6 +1,6 @@
 {
   "name": "nb.sh",
-  "version": "4.4.3",
+  "version": "4.4.4",
   "description": "CLI note-taking, bookmarking, and archiving with encryption, search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "global": true,
   "install": "make install",
