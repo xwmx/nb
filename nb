@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.4.2"
+_VERSION="4.4.3"
 
 # $_ME
 #
@@ -998,11 +998,6 @@ _git_checkpoint() {
   if [[ -z "${_message}" ]]
   then
     _exit_1 printf "Usage: _git_checkpoint <message>\\n"
-  fi
-
-  if [[ -n "${2:-}" ]] && [[ "${2}" == "--spinner" ]]
-  then
-    _show_spinner=1
   fi
 
   cd "${_target_directory}" ||
@@ -4370,10 +4365,14 @@ _alias_subcommand "edit" "e"
 
 desc "env" <<HEREDOC
 Usage:
-  ${_ME} env
+  ${_ME} env [install]
+
+Subcommands:
+  install  Install dependencies on supported systems.
 
 Description:
-  Print program environment and configuration information.
+  Print program environment and configuration information, or install
+  dependencies.
 HEREDOC
 _env() {
   local _subcommand="${1:-}"
