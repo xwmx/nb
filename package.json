@@ -9,7 +9,7 @@
   },
   "bin": {
     "nb": "nb",
-    "nb.sh": "nb",
+    "notes.sh": "nb",
     "bookmark": "bin/bookmark",
     "notes": "bin/notes"
   },
