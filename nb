@@ -3732,8 +3732,6 @@ HEREDOC
     then
       if _command_exists "pandoc"
       then
-        _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
-
         local _processed_content
         _processed_content="$(
           cat "${_temp_file}"                       \
@@ -3741,8 +3739,13 @@ HEREDOC
               --from html-native_divs-native_spans  \
               --to markdown-grid_tables --wrap=none \
               2>/dev/null || cat "${_temp_file}"
-          )"
-        _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
+        )"
+
+        if [[ -n "${_processed_content}" ]]
+        then
+          _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
+          _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
+        fi
       else
         _save_source=1
       fi
