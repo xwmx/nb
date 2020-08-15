@@ -5597,15 +5597,9 @@ HEREDOC
 
         if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
         then # the limit has been reached.
-          _debug printf "list() \${#_limit}: '%s'\\n" "${#_limit}"
-          _debug printf "list() \${#_counter}: '%s'\\n" "${#_counter}"
-
-          local _difference
-          _difference=$((_filenames_count-_counter))
-
-          printf "%s %s\\n"               \
-            "${_difference} omitted."     \
-            "${_filenames_count} total."
+          printf "%s omitted. %s total.\\n"   \
+            "$((_filenames_count-_counter))"  \
+            "${_filenames_count}"
 
           break
         fi
