@@ -5477,6 +5477,7 @@ _list() {
   _debug printf "_list() \${_type}: '%s'\\n" "${_type:-}"
 
   local _selection_basename=
+
   if [[ -n "${_selection:-}" ]]
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
@@ -5573,7 +5574,6 @@ HEREDOC
               continue
             fi
           else
-
             # Turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
@@ -5597,19 +5597,21 @@ HEREDOC
 
         if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
         then # the limit has been reached.
-
           _debug printf "list() \${#_limit}: '%s'\\n" "${#_limit}"
           _debug printf "list() \${#_counter}: '%s'\\n" "${#_counter}"
 
           local _difference
           _difference=$((_filenames_count-_counter))
+
           printf "%s %s\\n"               \
             "${_difference} omitted."     \
             "${_filenames_count} total."
+
           break
         fi
 
         local _title_or_basename="${__basename}"
+
         if ! ((_list_filenames))
         then
           if [[ -z "${_maybe_title}" ]]
@@ -5675,6 +5677,7 @@ HEREDOC
           local _item_identifier=
           local _max_identifier=
           _item_identifier="$(_index get_id "${__basename}")"
+
           if ((_SCOPED))
           then
             _item_identifier="${_notebook_identifier}:${_item_identifier}"
@@ -6042,6 +6045,7 @@ _ls() {
 
     local _separator=
     local _separator_hi=
+
     if ! ((_plain))
     then
       _separator=" ·"
@@ -6178,6 +6182,7 @@ _ls() {
     local _padding_centered="${3:-}"
 
     local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
+
     if ((_padding_centered)) && ((_padding_amount))
     then
       printf "%-${_padding_amount}s" " "
