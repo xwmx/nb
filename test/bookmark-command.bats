@@ -5,9 +5,7 @@ load test_helper
 # no argument #################################################################
 
 @test "\`bookmark\` command with no argument exits with 0, prints message, and lists." {
-  {
-    run "${_NB}" init
-  }
+  run "${_NB}" init
 
   run "${_BOOKMARK}"
   printf "\${status}: %s\\n" "${status}"
@@ -165,9 +163,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark\` with invalid <url> argument creates new bookmark without downloading." {
-  {
-    run "${_NB}" init
-  }
+  run "${_NB}" init
 
   run "${_NB}" bookmark 'http invalid url'
 
