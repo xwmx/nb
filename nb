@@ -146,7 +146,7 @@ fi
 # Handle symlinked NBRC_PATH
 if [[ -L "${NBRC_PATH}" ]]
 then
-  NBRC_PATH="$(realpath "${NBRC_PATH}")"
+  NBRC_PATH="$(readlink "${NBRC_PATH}")"
 fi
 
 # Source rc file.
@@ -376,7 +376,7 @@ fi
 
 if [[ -L "${NB_DIR:-}" ]]
 then
-  NB_DIR="$(realpath "${NB_DIR}")"
+  NB_DIR="$(readlink "${NB_DIR}")"
 fi
 
 if [[ -z "${NB_DIR:?}"   ]] ||
