@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.4.4"
+_VERSION="4.4.5"
 
 # $_ME
 #
@@ -146,7 +146,7 @@ fi
 # Handle symlinked NBRC_PATH
 if [[ -L "${NBRC_PATH}" ]]
 then
-  NBRC_PATH="$(realpath "${NBRC_PATH}")"
+  NBRC_PATH="$(readlink "${NBRC_PATH}")"
 fi
 
 # Source rc file.
@@ -376,7 +376,7 @@ fi
 
 if [[ -L "${NB_DIR:-}" ]]
 then
-  NB_DIR="$(realpath "${NB_DIR}")"
+  NB_DIR="$(readlink "${NB_DIR}")"
 fi
 
 if [[ -z "${NB_DIR:?}"   ]] ||
@@ -3732,8 +3732,6 @@ HEREDOC
     then
       if _command_exists "pandoc"
       then
-        _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
-
         local _processed_content
         _processed_content="$(
           cat "${_temp_file}"                       \
@@ -3741,8 +3739,13 @@ HEREDOC
               --from html-native_divs-native_spans  \
               --to markdown-grid_tables --wrap=none \
               2>/dev/null || cat "${_temp_file}"
-          )"
-        _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
+        )"
+
+        if [[ -n "${_processed_content}" ]]
+        then
+          _bookmark_content+="${_NEWLINE}## Content${_NEWLINE}"
+          _bookmark_content+="${_NEWLINE}${_processed_content}${_NEWLINE}"
+        fi
       else
         _save_source=1
       fi
@@ -5474,6 +5477,7 @@ _list() {
   _debug printf "_list() \${_type}: '%s'\\n" "${_type:-}"
 
   local _selection_basename=
+
   if [[ -n "${_selection:-}" ]]
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
@@ -5570,7 +5574,6 @@ HEREDOC
               continue
             fi
           else
-
             # Turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
@@ -5594,19 +5597,15 @@ HEREDOC
 
         if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
         then # the limit has been reached.
+          printf "%s omitted. %s total.\\n"   \
+            "$((_filenames_count-_counter))"  \
+            "${_filenames_count}"
 
-          _debug printf "list() \${#_limit}: '%s'\\n" "${#_limit}"
-          _debug printf "list() \${#_counter}: '%s'\\n" "${#_counter}"
-
-          local _difference
-          _difference=$((_filenames_count-_counter))
-          printf "%s %s\\n"               \
-            "${_difference} omitted."     \
-            "${_filenames_count} total."
           break
         fi
 
         local _title_or_basename="${__basename}"
+
         if ! ((_list_filenames))
         then
           if [[ -z "${_maybe_title}" ]]
@@ -5629,29 +5628,19 @@ HEREDOC
           if _file_is_bookmark "${_NOTEBOOK_PATH}/${__basename}"
           then
             _indicators+="🔖 "
-          fi
-
-          if _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
+          elif _file_is_image "${_NOTEBOOK_PATH}/${__basename}"
           then
             _indicators+="🌄 "
-          fi
-
-          if _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
+          elif _file_is_document "${_NOTEBOOK_PATH}/${__basename}"
           then
             _indicators+="📄 "
-          fi
-
-          if [[ -d "${_NOTEBOOK_PATH}/${__basename}" ]]
+          elif [[ -d "${_NOTEBOOK_PATH}/${__basename}" ]]
           then
             _indicators+="📂 "
-          fi
-
-          if _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
+          elif _file_is_video "${_NOTEBOOK_PATH}/${__basename}"
           then
             _indicators+="📹 "
-          fi
-
-          if _file_is_audio "${_NOTEBOOK_PATH}/${__basename}"
+          elif _file_is_audio "${_NOTEBOOK_PATH}/${__basename}"
           then
             _indicators+="🔉 "
           fi
@@ -5682,6 +5671,7 @@ HEREDOC
           local _item_identifier=
           local _max_identifier=
           _item_identifier="$(_index get_id "${__basename}")"
+
           if ((_SCOPED))
           then
             _item_identifier="${_notebook_identifier}:${_item_identifier}"
@@ -6049,6 +6039,7 @@ _ls() {
 
     local _separator=
     local _separator_hi=
+
     if ! ((_plain))
     then
       _separator=" ·"
@@ -6185,6 +6176,7 @@ _ls() {
     local _padding_centered="${3:-}"
 
     local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
+
     if ((_padding_centered)) && ((_padding_amount))
     then
       printf "%-${_padding_amount}s" " "

@@ -3287,6 +3287,11 @@ Description:
   preserved across systems.
 ```
 
+#### Archived Notebooks
+
+A notebook is considered archived when it contains a file named `.archived`
+at the root level of the notebook directory.
+
 ## Tests
 
 To run the [test suite](test), install
