@@ -9370,16 +9370,16 @@ _update() {
   fi
 
   if hash npm 2>/dev/null         &&
-    npm list | grep -q notes.sh   &&
-    [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+     npm list | grep -q notes.sh  &&
+     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
     cat <<'HEREDOC'
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
-  elif hash npm 2>/dev/null         &&
-    npm list | grep -q nb.sh   &&
-    [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+  elif hash npm 2>/dev/null     &&
+       npm list | grep -q nb.sh &&
+       [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
     cat <<'HEREDOC'
 Installed with npm. To update, run:
