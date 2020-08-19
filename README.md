@@ -2876,8 +2876,6 @@ Alias: `set`
         raspberry
         unicorn
         utility
-        example
-        example2
 
     • Default Value: "nb"
 
