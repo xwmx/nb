@@ -438,7 +438,8 @@ titles:
 
 For full text search, see [Search](#-search).
 
-To view excerpts of notes, use the `--excerpt` or `-e` option:
+To view excerpts of notes, use the `--excerpt` or `-e` option, which
+optionally accepts a length:
 
 ```bash
 > nb ls 3 --excerpt
@@ -447,6 +448,18 @@ To view excerpts of notes, use the `--excerpt` or `-e` option:
 # Example Title
 
 This is an example excerpt.
+
+> nb ls 3 -e 8
+[3] Example Title
+-----------------
+# Example Title
+
+This is an example excerpt.
+
+More example content:
+- one
+- two
+- three
 ```
 
 Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
@@ -527,6 +540,18 @@ home
 # Example Title
 
 This is an example excerpt.
+
+> nb 3 -e 8
+[3] Example Title
+-----------------
+# Example Title
+
+This is an example excerpt.
+
+More example content:
+- one
+- two
+- three
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. To list a
