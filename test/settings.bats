@@ -770,6 +770,64 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_FOOTER)" == '0' ]]
 }
 
+# `set NB_HEADER` #############################################################
+
+@test "\`settings set NB_HEADER\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_HEADER 0
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_HEADER ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ '0'       ]]
+  [[ "$("${_NB}" settings get NB_HEADER)" == '0' ]]
+}
+
+@test "\`settings set header\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set header 0
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_HEADER ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ '0'       ]]
+  [[ "$("${_NB}" settings get NB_HEADER)" == '0' ]]
+}
+
+@test "\`settings set NB_HEADER\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_HEADER '0'
+
+  [[ "${output}" =~ NB_HEADER ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ '0'       ]]
+
+  run "${_NB}" settings set NB_HEADER example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  # [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
+  [[ "${output}" =~ NB_HEADER         ]]
+  [[ "${output}" =~ must\ be\ either  ]]
+
+  printf "get NB_HEADER: '%s'\\n" "$("${_NB}" settings get NB_HEADER)"
+  [[ "$("${_NB}" settings get NB_HEADER)" == '0' ]]
+}
+
 # `list` ######################################################################
 
 @test "\`settings show <name>\` in lowercase shows setting." {

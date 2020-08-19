@@ -540,11 +540,44 @@ HEREDOC
 
   NB_FOOTER=0 run "${_NB}" ls
 
-
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
   [[ ${status} -eq 0      ]]
   [[ ! "${lines[6]}" =~ ❯ ]]
+}
+
+# header ######################################################################
+
+@test "\`ls\` includes header." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${lines[0]}" =~ home  ]]
+}
+
+@test "\`NB_HEADER=0 ls\` does not include header." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  NB_HEADER=0 run "${_NB}" ls
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0          ]]
+  [[ ! "${lines[0]}" =~ home  ]]
 }
