@@ -574,8 +574,8 @@ Todos
 
 [1] Ideas
 ---------
------
-Ideas
+---
+title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. To list a
