@@ -571,7 +571,6 @@ Short options can be combined for brevity:
 ---------
 Todos
 =====
-
 [1] Ideas
 ---------
 ---
