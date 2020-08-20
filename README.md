@@ -487,8 +487,6 @@ home
 [1] Ideas
 
 > nb ls --reverse
-home
-----
 [1] Ideas
 [3] Example Title
 [2] Todos
@@ -506,15 +504,11 @@ home
 [1] Ideas
 
 > nb ls --sort
-home
-----
 [1] Ideas
 [2] Todos
 [3] Example Title
 
 > nb ls --sort --reverse
-home
-----
 [3] Example Title
 [2] Todos
 [1] Ideas
@@ -527,8 +521,8 @@ above can be run without the `ls`:
 > nb
 home
 ----
-[3] Example Title
 [2] Todos
+[3] Example Title
 [1] Ideas
 
 > nb "^example.*"
@@ -552,6 +546,36 @@ More example content:
 - one
 - two
 - three
+
+> nb --sort
+[1] Ideas
+[2] Todos
+[3] Example Title
+
+> nb --sort --reverse
+[3] Example Title
+[2] Todos
+[1] Ideas
+```
+
+Short options can be combined for brevity:
+
+```bash
+# Equivalent to `nb --sort --reverse --excerpt 2` and `nb -s -r -e 2`:
+> nb -sre 2
+[3] Example Title
+-----------------
+# Example Title
+
+[2] Todos
+---------
+Todos
+=====
+
+[1] Ideas
+---------
+-----
+Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. To list a
