@@ -438,7 +438,8 @@ titles:
 
 For full text search, see [Search](#-search).
 
-To view excerpts of notes, use the `--excerpt` or `-e` option:
+To view excerpts of notes, use the `--excerpt` or `-e` option, which
+optionally accepts a length:
 
 ```bash
 > nb ls 3 --excerpt
@@ -447,6 +448,18 @@ To view excerpts of notes, use the `--excerpt` or `-e` option:
 # Example Title
 
 This is an example excerpt.
+
+> nb ls 3 -e 8
+[3] Example Title
+-----------------
+# Example Title
+
+This is an example excerpt.
+
+More example content:
+- one
+- two
+- three
 ```
 
 Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
@@ -474,8 +487,6 @@ home
 [1] Ideas
 
 > nb ls --reverse
-home
-----
 [1] Ideas
 [3] Example Title
 [2] Todos
@@ -493,15 +504,11 @@ home
 [1] Ideas
 
 > nb ls --sort
-home
-----
 [1] Ideas
 [2] Todos
 [3] Example Title
 
 > nb ls --sort --reverse
-home
-----
 [3] Example Title
 [2] Todos
 [1] Ideas
@@ -514,8 +521,8 @@ above can be run without the `ls`:
 > nb
 home
 ----
-[3] Example Title
 [2] Todos
+[3] Example Title
 [1] Ideas
 
 > nb "^example.*"
@@ -527,6 +534,47 @@ home
 # Example Title
 
 This is an example excerpt.
+
+> nb 3 -e 8
+[3] Example Title
+-----------------
+# Example Title
+
+This is an example excerpt.
+
+More example content:
+- one
+- two
+- three
+
+> nb --sort
+[1] Ideas
+[2] Todos
+[3] Example Title
+
+> nb --sort --reverse
+[3] Example Title
+[2] Todos
+[1] Ideas
+```
+
+Short options can be combined for brevity:
+
+```bash
+# equivalent to `nb --sort --reverse --excerpt 2` and `nb -s -r -e 2`:
+> nb -sre 2
+[3] Example Title
+-----------------
+# Example Title
+
+[2] Todos
+---------
+Todos
+=====
+[1] Ideas
+---------
+---
+title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. To list a
@@ -2801,16 +2849,16 @@ Alias: `set`
 ##### `settings list --long`
 
 ```text
-[1] auto_sync
-    ---------
+[1]  auto_sync
+     ---------
     By default, operations that trigger a git commit like `add`, `edit`,
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to "0".
 
     • Default Value: "1"
 
-[2] color_primary
-    -------------
+[2]  color_primary
+     -------------
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors.
@@ -2818,16 +2866,16 @@ Alias: `set`
     • Default Value: "68" (blue) for 256 color terminals,
                      "4"  (blue) for  8  color terminals.
 
-[3] color_secondary
-    ---------------
+[3]  color_secondary
+     ---------------
     The color used for lines and footer elements. Often this can be set to an
     xterm color number between 0 and 255. Some terminals support many more
     colors.
 
     • Default Value: "8"
 
-[4] color_theme
-    -----------
+[4]  color_theme
+     -----------
     The color theme.
 
     To view screenshots of the built-in themes, visit:
@@ -2854,36 +2902,43 @@ Alias: `set`
 
     • Default Value: "nb"
 
-[5] default_extension
-    -----------------
+[5]  default_extension
+     -----------------
     The default extension to use for note files. Change to "org" for Emacs
     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
     whatever you prefer.
 
     • Default Value: "md"
 
-[6] editor
-    ------
+[6]  editor
+     ------
     The command line text editor to use with `nb`.
 
     • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
 
-[7] encryption_tool
-    ---------------
+[7]  encryption_tool
+     ---------------
     The tool used for encrypting notes.
 
     • Supported Values: "openssl", "gpg"
     • Default Value:    "openssl"
 
-[8] footer
-    ------
+[8]  footer
+     ------
     By default, `nb ls` includes a footer with example commands for
     easy reference. To hide this footer, set this to "0".
 
     • Default Value: "1"
 
-[9] nb_dir
-    ------
+[9]  header
+     ------
+    By default, `nb ls` includes a header listing available notebooks.
+    To hide this header, set this to "0".
+
+    • Default Value: "1"
+
+[10] nb_dir
+     ------
     The location of the directory that contains the notebooks.
 
     For example, to sync all notebooks with Dropbox, create a folder at

@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.4.6"
+_VERSION="4.4.7"
 
 # $_ME
 #
@@ -433,6 +433,13 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 #
 # Supported Values: '0' '1'
 export NB_FOOTER="${NB_FOOTER:-1}"
+
+# $NB_HEADER
+#
+# Default: '1'
+#
+# Supported Values: '0' '1'
+export NB_HEADER="${NB_HEADER:-1}"
 
 ###############################################################################
 # Colors
@@ -4476,6 +4483,7 @@ _env() {
     printf "NB_COLOR_SECONDARY=%s\\n" "${NB_COLOR_SECONDARY:-}"
     printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
     printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
+    printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -6014,6 +6022,8 @@ _ls() {
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
   _ls_print_header() {
+    ((NB_HEADER)) || return 0
+
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
@@ -8218,8 +8228,12 @@ _settings() {
         ((_get_id)) && printf "8" || printf "NB_FOOTER"
         return 0
         ;;
-      9|nb_dir|NB_DIR)
-        ((_get_id)) && printf "9" || printf "NB_DIR"
+      9|*header|*HEADER)
+        ((_get_id)) && printf "9" || printf "NB_HEADER"
+        return 0
+        ;;
+      10|nb_dir|NB_DIR)
+        ((_get_id)) && printf "10" || printf "NB_DIR"
         return 0
         ;;
       *)
@@ -8413,7 +8427,8 @@ HEREDOC
         _return_1 printf "%s requires a value.\\n" "${1:-}"
       fi
     elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
-         [[ "${1:-}" == 'NB_FOOTER'     ]]
+         [[ "${1:-}" == 'NB_FOOTER'     ]] ||
+         [[ "${1:-}" == 'NB_HEADER'     ]]
     then
       if [[ "${2:-}" =~ ^0|1$ ]]
       then
@@ -8466,18 +8481,18 @@ HEREDOC
   local _settings_list_items=()
   local _settings_help_items=()
 
-  _settings_list_items+=("$(_id_brackets_color '1') auto_sync")
+  _settings_list_items+=("$(_id_brackets_color '1')  auto_sync")
   _settings_help_items+=("\
-    $(_highlight_secondary "---------")
+    $(_highlight_secondary " ---------")
     By default, operations that trigger a git commit like \`add\`, \`edit\`,
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to \"0\".
 
     • Default Value: \"1\"")
 
-  _settings_list_items+=("$(_id_brackets_color '2') color_primary")
+  _settings_list_items+=("$(_id_brackets_color '2')  color_primary")
   _settings_help_items+=("\
-    $(_highlight_secondary "-------------")
+    $(_highlight_secondary " -------------")
     The primary color used to highlight identifiers and messages. Often this
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors.
@@ -8485,18 +8500,18 @@ HEREDOC
     • Default Value: \"68\" (blue) for 256 color terminals,
                      \"4\"  (blue) for  8  color terminals.")
 
-  _settings_list_items+=("$(_id_brackets_color '3') color_secondary")
+  _settings_list_items+=("$(_id_brackets_color '3')  color_secondary")
   _settings_help_items+=("\
-    $(_highlight_secondary "---------------")
+    $(_highlight_secondary " ---------------")
     The color used for lines and footer elements. Often this can be set to an
     xterm color number between 0 and 255. Some terminals support many more
     colors.
 
     • Default Value: \"8\"")
 
-  _settings_list_items+=("$(_id_brackets_color '4') color_theme")
+  _settings_list_items+=("$(_id_brackets_color '4')  color_theme")
   _settings_help_items+=("\
-    $(_highlight_secondary "-----------")
+    $(_highlight_secondary " -----------")
     The color theme.
 
     To view screenshots of the built-in themes, visit:
@@ -8516,41 +8531,49 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
 
     • Default Value: \"nb\"")
 
-  _settings_list_items+=("$(_id_brackets_color '5') default_extension")
+  _settings_list_items+=("$(_id_brackets_color '5')  default_extension")
   _settings_help_items+=("\
-    $(_highlight_secondary "-----------------")
+    $(_highlight_secondary " -----------------")
     The default extension to use for note files. Change to \"org\" for Emacs
     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
     whatever you prefer.
 
     • Default Value: \"md\"")
 
-  _settings_list_items+=("$(_id_brackets_color '6') editor")
+  _settings_list_items+=("$(_id_brackets_color '6')  editor")
   _settings_help_items+=("\
-    $(_highlight_secondary "------")
+    $(_highlight_secondary " ------")
     The command line text editor to use with \`${_ME}\`.
 
     • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
 
-  _settings_list_items+=("$(_id_brackets_color '7') encryption_tool")
+  _settings_list_items+=("$(_id_brackets_color '7')  encryption_tool")
   _settings_help_items+=("\
-    $(_highlight_secondary "---------------")
+    $(_highlight_secondary " ---------------")
     The tool used for encrypting notes.
 
     • Supported Values: \"openssl\", \"gpg\"
     • Default Value:    \"openssl\"")
 
-  _settings_list_items+=("$(_id_brackets_color '8') footer")
+  _settings_list_items+=("$(_id_brackets_color '8')  footer")
   _settings_help_items+=("\
-    $(_highlight_secondary "------")
+    $(_highlight_secondary " ------")
     By default, \`${_ME} ls\` includes a footer with example commands for
     easy reference. To hide this footer, set this to \"0\".
 
     • Default Value: \"1\"")
 
-  _settings_list_items+=("$(_id_brackets_color '9') nb_dir")
+  _settings_list_items+=("$(_id_brackets_color '9')  header")
   _settings_help_items+=("\
-    $(_highlight_secondary "------")
+    $(_highlight_secondary " ------")
+    By default, \`${_ME} ls\` includes a header listing available notebooks.
+    To hide this header, set this to \"0\".
+
+    • Default Value: \"1\"")
+
+  _settings_list_items+=("$(_id_brackets_color '10') nb_dir")
+  _settings_help_items+=("\
+    $(_highlight_secondary " ------")
     The location of the directory that contains the notebooks.
 
     For example, to sync all notebooks with Dropbox, create a folder at
