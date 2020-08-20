@@ -713,6 +713,11 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
+*Note: If `less` scrolling isn't working in [iterm2](https://www.iterm2.com/),
+go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
+alternate screen mode" *and change it to* "Yes".
+*[More info](https://stackoverflow.com/a/37610820)*
+
 When [Pandoc](https://pandoc.org/) is available, use the `--render` option to
 render the note to HTML and open it in your terminal browser:
 
