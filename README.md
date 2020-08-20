@@ -561,7 +561,7 @@ More example content:
 Short options can be combined for brevity:
 
 ```bash
-# Equivalent to `nb --sort --reverse --excerpt 2` and `nb -s -r -e 2`:
+# equivalent to `nb --sort --reverse --excerpt 2` and `nb -s -r -e 2`:
 > nb -sre 2
 [3] Example Title
 -----------------
