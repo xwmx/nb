@@ -271,7 +271,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-notebooks">Notebooks</a> •
   <a href="#git-sync">Git Sync</a> •
   <a href="#import--export">Import / Export</a> •
-  <a href="#settings">Settings</a> •
+  <a href="#-settings">Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
@@ -1570,7 +1570,7 @@ nb export example.md /path/to/example.docx
 nb export Movies /path/to/example.html
 ```
 
-### Settings
+### ⚙️ Settings
 
 `nb settings` opens the settings prompt, which provides an easy way to
 change your `nb` settings.
