@@ -271,7 +271,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-notebooks">Notebooks</a> •
   <a href="#git-sync">Git Sync</a> •
   <a href="#import--export">Import / Export</a> •
-  <a href="#-settings">Settings</a> •
+  <a href="##%EF%B8%8F-settings">Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
   <a href="#interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
@@ -1881,7 +1881,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
   <a href="#search">search</a> •
-  <a href="#settings-1">settings</a> •
+  <a href="#settings">settings</a> •
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
   <a href="#status">status</a> •
