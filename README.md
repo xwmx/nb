@@ -267,13 +267,13 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-working-with-notes">Notes</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-search">Search</a> •
-  <a href="#revision-history">History</a> •
+  <a href="#-revision-history">History</a> •
   <a href="#-notebooks">Notebooks</a> •
-  <a href="#git-sync">Git Sync</a> •
-  <a href="#import--export">Import / Export</a> •
+  <a href="#-git-sync">Git Sync</a> •
+  <a href="#-import--export">Import / Export</a> •
   <a href="#%EF%B8%8F-settings">Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
-  <a href="#interactive-shell">Shell</a> •
+  <a href="#>-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
   <a href="#specifications">Specifications</a>
@@ -1188,7 +1188,7 @@ nb q -a "example"
 
 For more information about search, see [`nb help search`](#search).
 
-### Revision History
+### 🗒 Revision History
 
 Whenever a note is added, modified, or deleted, `nb` automatically commits
 the change to git transparently in the background. You can view the history of
@@ -1467,7 +1467,7 @@ For more information about working with notebooks, see
 For technical details about notebooks, see
 [`nb` Notebook Specification](#nb-notebook-specification).
 
-### Git Sync
+### 🔄 Git Sync
 
 Each notebook can be synced with a remote git repository by setting the
 remote URL:
@@ -1513,7 +1513,7 @@ nb remote remove
 You can also turn off autosync in `nb settings` and sync manually with
 `nb sync`.
 
-### Import / Export
+### ↕️ Import / Export
 
 Files of any type can be imported into a notebook. `nb edit` and `nb
 open` will open files in your system's default application for that file type.
@@ -1757,7 +1757,7 @@ nb settings colors
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
 
-### Interactive Shell
+### > Interactive Shell
 
 `nb` has an interactive shell that can be started with `nb shell`,
 `nb -i`, or `nb --interactive`:
@@ -3371,4 +3371,3 @@ root.
 <p align="center">
   📝🔖🔒🔍📔
 </p>
-
