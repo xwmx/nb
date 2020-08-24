@@ -370,7 +370,9 @@ home
 ```
 
 Notebooks are listed above the line, with the current notebook
-highlighted and/or underlined, depending on terminal capabilities.
+highlighted and/or underlined, depending on terminal capabilities. By default,
+`nb ls` includes a footer with example commands for easy reference. You
+can hide this footer with `nb settings footer`.
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
