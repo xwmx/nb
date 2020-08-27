@@ -310,7 +310,7 @@ nb add "This is a note."
 # create a new note with piped content
 echo "Note content." | nb add
 
-# create a new password-protected, encrypted note
+# create a new password-protected, encrypted note titled "Secret Document"
 nb add --title "Secret Document" --encrypt
 ```
 
@@ -327,6 +327,59 @@ default. GPG is also supported and can be configured in `nb settings`.
 Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
+
+`nb add` behaves differently depending on the type of argument it
+receives. When a filename is specified, a new note with that filename is
+opened in the editor:
+
+```bash
+nb add example.md
+```
+
+When a string is specified, a new note is immediately created with that
+string as the content and the editor is not opened:
+
+```bash
+> nb add "This is a note."
+Added [5] 20200101000000.md
+```
+
+`nb add <string>` is useful for quickly jotting down a note directly
+via the command line.
+
+`nb add` can also recieve piped content, which behaves the sames `nb add
+<string>`:
+
+```bash
+echo "Note content." | nb add
+Added [6] 20200101000000.md
+```
+
+The title, filename, and content can also be specified with long and
+short options:
+
+```bash
+nb add --filename "example.md" -t "Example Title" -c "Example content."
+```
+
+The `-t <title>` / `--title <title>` will also set the filename to the
+title, with spaces replaced with underscores:
+
+```bash
+> nb add --title "Example Title" "Example content."
+Added [7] Example_Title.md 'Example Title'
+```
+
+Files can be created with any file type either by specifying the
+extension in the filename or via the `--type <type>` option:
+
+```bash
+# create a new org mode file
+nb add example.org
+
+# create a new reStructuredText file
+nb add --type rst
+```
 
 For a full list of options available for `nb add`, run [`nb help add`](#add).
 
