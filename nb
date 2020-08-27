@@ -258,18 +258,16 @@ _debug() {
   if ((${_USE_DEBUG:-0}))
   then
     __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
-
     printf "🐛  %s " "${__DEBUG_COUNTER}"
+
     "${@}"
 
-    if [[ -z "${__DEBUG_START_TIME}" ]]
+    if [[ -n "${__DEBUG_START_TIME:-}" ]]
     then
-      if __DEBUG_START_TIME="$(__debug_get_timestamp)"
-      then
-        printf "⏱   0\\n"
-      fi
-    else
       printf "⏱   %s\\n" "$(($(__debug_get_timestamp)-__DEBUG_START_TIME))"
+    elif __DEBUG_START_TIME="$(__debug_get_timestamp)"
+    then
+      printf "⏱   0\\n"
     fi
 
     printf "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
