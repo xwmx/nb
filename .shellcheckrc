@@ -16,7 +16,7 @@ disable=SC1090
 
 # Disable SC2002
 #
-# I like cats 😸.
+# I like cats 😸. Redirection is also used in this project.
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2002
 disable=SC2002
@@ -30,7 +30,8 @@ disable=SC2015
 
 # Disable SC2088
 #
-# "${HOME}" is preferred in this project, and tildes in quotes are intentional.
+# "${HOME}" is preferred in this project, so tildes in quotes are intended as
+# tildes and are not expected to expand.
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2088
 disable=SC2088
