@@ -2859,109 +2859,109 @@ Alias: `set`
 ```text
 [1]  auto_sync
      ---------
-    By default, operations that trigger a git commit like `add`, `edit`,
-    and `delete` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to "0".
+     By default, operations that trigger a git commit like `add`, `edit`,
+     and `delete` will sync notebook changes to the remote repository, if
+     one is set. To disable this behavior, set this to "0".
 
-    • Default Value: 1
+     • Default Value: 1
 
 [2]  color_primary
      -------------
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors.
+     The primary color used to highlight identifiers and messages. Often this
+     can be set to an xterm color number between 0 and 255. Some terminals
+     support many more colors.
 
-    • Default Value: 68 (blue) for 256 color terminals,
-                     4  (blue) for  8  color terminals.
+     • Default Value: 68 (blue) for 256 color terminals,
+                      4  (blue) for  8  color terminals.
 
 [3]  color_secondary
      ---------------
-    The color used for lines and footer elements. Often this can be set to an
-    xterm color number between 0 and 255. Some terminals support many more
-    colors.
+     The color used for lines and footer elements. Often this can be set to an
+     xterm color number between 0 and 255. Some terminals support many more
+     colors.
 
-    • Default Value: 8
+     • Default Value: 8
 
 [4]  color_theme
      -----------
-    The color theme.
+     The color theme.
 
-    To view screenshots of the built-in themes, visit:
+     To view screenshots of the built-in themes, visit:
 
-        https://git.io/nb-docs-color-themes
+         https://git.io/nb-docs-color-themes
 
-    `nb` supports custom, user-defined themes. To learn more, run:
+     `nb` supports custom, user-defined themes. To learn more, run:
 
-        nb help --colors
+         nb help --colors
 
-    Available themes:
+     Available themes:
 
-        blacklight
-        console
-        desert
-        electro
-        forest
-        monochrome
-        nb
-        ocean
-        raspberry
-        unicorn
-        utility
+         blacklight
+         console
+         desert
+         electro
+         forest
+         monochrome
+         nb
+         ocean
+         raspberry
+         unicorn
+         utility
 
-    • Default Value: nb
+     • Default Value: nb
 
 [5]  default_extension
      -----------------
-    The default extension to use for note files. Change to "org" for Emacs
-    Org mode files, "rst" for reStructuredText, "txt" for plain text, or
-    whatever you prefer.
+     The default extension to use for note files. Change to "org" for Emacs
+     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
+     whatever you prefer.
 
-    • Default Value: md
+     • Default Value: md
 
 [6]  editor
      ------
-    The command line text editor to use with `nb`.
+     The command line text editor to use with `nb`.
 
-    • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+     • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
 
 [7]  encryption_tool
      ---------------
-    The tool used for encrypting notes.
+     The tool used for encrypting notes.
 
-    • Supported Values: openssl, gpg
-    • Default Value:    openssl
+     • Supported Values: openssl, gpg
+     • Default Value:    openssl
 
 [8]  footer
      ------
-    By default, `nb` and `nb ls` include a footer with example commands.
-    To hide this footer, set this to "0".
+     By default, `nb` and `nb ls` include a footer with example commands.
+     To hide this footer, set this to "0".
 
-    • Default Value: 1
+     • Default Value: 1
 
 [9]  header
      ------
-    By default, `nb` and `nb ls` include a header listing available notebooks.
-    Set the alignment, or hide the header with "0".
+     By default, `nb` and `nb ls` include a header listing available notebooks.
+     Set the alignment, or hide the header with "0".
 
-    • Supported Values:
+     • Supported Values:
 
-      0  Hide Header
-      1  Dynamic Alignment (default)
-           - Left justified when list is shorter than terminal width.
-           - Center aligned when list is longer than terminal width.
-      2  Center Aligned
-      3  Left Justified
+       0  Hide Header
+       1  Dynamic Alignment (default)
+            - Left justified when list is shorter than terminal width.
+            - Center aligned when list is longer than terminal width.
+       2  Center Aligned
+       3  Left Justified
 
-    • Default Value: 1
+     • Default Value: 1
 
 [10] nb_dir
      ------
-    The location of the directory that contains the notebooks.
+     The location of the directory that contains the notebooks.
 
-    For example, to sync all notebooks with Dropbox, create a folder at
-    `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
+     For example, to sync all notebooks with Dropbox, create a folder at
+     `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
-    • Default Value: ~/.nb
+     • Default Value: ~/.nb
 ```
 
 #### `shell`

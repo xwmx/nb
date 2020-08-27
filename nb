@@ -8494,111 +8494,111 @@ HEREDOC
   _settings_list_items+=("$(_id_brackets_color '1')  auto_sync")
   _settings_help_items+=("\
     $(_highlight_secondary " ---------")
-    By default, operations that trigger a git commit like \`add\`, \`edit\`,
-    and \`delete\` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to \"0\".
+     By default, operations that trigger a git commit like \`add\`, \`edit\`,
+     and \`delete\` will sync notebook changes to the remote repository, if
+     one is set. To disable this behavior, set this to \"0\".
 
-    • Default Value: $(_highlight "1")")
+     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '2')  color_primary")
   _settings_help_items+=("\
     $(_highlight_secondary " -------------")
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors.
+     The primary color used to highlight identifiers and messages. Often this
+     can be set to an xterm color number between 0 and 255. Some terminals
+     support many more colors.
 
-    • Default Value: $(_highlight "68") (blue) for 256 color terminals,
-                     $(_highlight "4")  (blue) for  8  color terminals.")
+     • Default Value: $(_highlight "68") (blue) for 256 color terminals,
+                      $(_highlight "4")  (blue) for  8  color terminals.")
 
   _settings_list_items+=("$(_id_brackets_color '3')  color_secondary")
   _settings_help_items+=("\
     $(_highlight_secondary " ---------------")
-    The color used for lines and footer elements. Often this can be set to an
-    xterm color number between 0 and 255. Some terminals support many more
-    colors.
+     The color used for lines and footer elements. Often this can be set to an
+     xterm color number between 0 and 255. Some terminals support many more
+     colors.
 
-    • Default Value: $(_highlight "8")")
+     • Default Value: $(_highlight "8")")
 
   _settings_list_items+=("$(_id_brackets_color '4')  color_theme")
   _settings_help_items+=("\
     $(_highlight_secondary " -----------")
-    The color theme.
+     The color theme.
 
-    To view screenshots of the built-in themes, visit:
+     To view screenshots of the built-in themes, visit:
 
-        $(_highlight "https://git.io/nb-docs-color-themes")
+         $(_highlight "https://git.io/nb-docs-color-themes")
 
-    \`${_ME}\` supports custom, user-defined themes. To learn more, run:
+     \`${_ME}\` supports custom, user-defined themes. To learn more, run:
 
-        $(_highlight "${_ME} help --colors")
+         $(_highlight "${_ME} help --colors")
 
-    Available themes:
+     Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
   do
-    printf "        %s\\n" "$(_highlight "${__theme}")"
+    printf "         %s\\n" "$(_highlight "${__theme}")"
   done)
 
-    • Default Value: $(_highlight "nb")")
+     • Default Value: $(_highlight "nb")")
 
   _settings_list_items+=("$(_id_brackets_color '5')  default_extension")
   _settings_help_items+=("\
     $(_highlight_secondary " -----------------")
-    The default extension to use for note files. Change to \"org\" for Emacs
-    Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
-    whatever you prefer.
+     The default extension to use for note files. Change to \"org\" for Emacs
+     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
+     whatever you prefer.
 
-    • Default Value: $(_highlight "md")")
+     • Default Value: $(_highlight "md")")
 
   _settings_list_items+=("$(_id_brackets_color '6')  editor")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    The command line text editor to use with \`${_ME}\`.
+     The command line text editor to use with \`${_ME}\`.
 
-    • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
+     • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
 
   _settings_list_items+=("$(_id_brackets_color '7')  encryption_tool")
   _settings_help_items+=("\
     $(_highlight_secondary " ---------------")
-    The tool used for encrypting notes.
+     The tool used for encrypting notes.
 
-    • Supported Values: $(_highlight "openssl"), $(_highlight "gpg")
-    • Default Value:    $(_highlight "openssl")")
+     • Supported Values: $(_highlight "openssl"), $(_highlight "gpg")
+     • Default Value:    $(_highlight "openssl")")
 
   _settings_list_items+=("$(_id_brackets_color '8')  footer")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
-    To hide this footer, set this to \"0\".
+     By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
+     To hide this footer, set this to \"0\".
 
-    • Default Value: $(_highlight "1")")
+     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '9')  header")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
-    Set the alignment, or hide the header with \"0\".
+     By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
+     Set the alignment, or hide the header with \"0\".
 
-    • Supported Values:
+     • Supported Values:
 
-      $(_highlight "0")  Hide Header
-      $(_highlight "1")  Dynamic Alignment (default)
-           - Left justified when list is shorter than terminal width.
-           - Center aligned when list is longer than terminal width.
-      $(_highlight "2")  Center Aligned
-      $(_highlight "3")  Left Justified
+       $(_highlight "0")  Hide Header
+       $(_highlight "1")  Dynamic Alignment (default)
+            - Left justified when list is shorter than terminal width.
+            - Center aligned when list is longer than terminal width.
+       $(_highlight "2")  Center Aligned
+       $(_highlight "3")  Left Justified
 
-    • Default Value: $(_highlight "1")")
+     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '10') nb_dir")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    The location of the directory that contains the notebooks.
+     The location of the directory that contains the notebooks.
 
-    For example, to sync all notebooks with Dropbox, create a folder at
-    \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
+     For example, to sync all notebooks with Dropbox, create a folder at
+     \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
-    • Default Value: $(_highlight '~/.nb')")
+     • Default Value: $(_highlight '~/.nb')")
 
   while ((${#}))
   do
