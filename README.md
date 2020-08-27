@@ -363,8 +363,8 @@ short options:
 Added [7] example.md 'Example Title'
 ```
 
-The `-t <title>` / `--title <title>` will also set the filename to the
-title, with spaces replaced with underscores:
+The `-t <title>` / `--title <title>` option will also set the filename
+to the title, with spaces replaced with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
@@ -378,7 +378,7 @@ extension in the filename or via the `--type <type>` option:
 # create a new org mode file
 nb add example.org
 
-# create a new reStructuredText file
+# open a new reStructuredText file in the editor
 nb add --type rst
 ```
 
