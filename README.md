@@ -264,7 +264,7 @@ the latest version using the [`nb update`](#update) subcommand.
 ## Overview
 
 <p align="center">
-  <a href="#-working-with-notes">Notes</a> •
+  <a href="#-notes">Notes</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-search">Search</a> •
   <a href="#-revision-history">History</a> •
@@ -291,7 +291,7 @@ By default, notebooks and notes are global (at `~/.nb`), so they are always avai
 `nb` regardless of the current working directory. `nb` also supports [local
 notebooks](#global-and-local-notebooks).
 
-### 📝 Working with Notes
+### 📝 Notes
 
 #### Adding Notes
 
