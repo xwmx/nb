@@ -8498,7 +8498,7 @@ HEREDOC
     and \`delete\` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to \"0\".
 
-    • Default Value: \"1\"")
+    • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '2')  color_primary")
   _settings_help_items+=("\
@@ -8507,8 +8507,8 @@ HEREDOC
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors.
 
-    • Default Value: \"68\" (blue) for 256 color terminals,
-                     \"4\"  (blue) for  8  color terminals.")
+    • Default Value: $(_highlight "68") (blue) for 256 color terminals,
+                     $(_highlight "4")  (blue) for  8  color terminals.")
 
   _settings_list_items+=("$(_id_brackets_color '3')  color_secondary")
   _settings_help_items+=("\
@@ -8517,7 +8517,7 @@ HEREDOC
     xterm color number between 0 and 255. Some terminals support many more
     colors.
 
-    • Default Value: \"8\"")
+    • Default Value: $(_highlight "8")")
 
   _settings_list_items+=("$(_id_brackets_color '4')  color_theme")
   _settings_help_items+=("\
@@ -8539,7 +8539,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     printf "        %s\\n" "$(_highlight "${__theme}")"
   done)
 
-    • Default Value: \"nb\"")
+    • Default Value: $(_highlight "nb")")
 
   _settings_list_items+=("$(_id_brackets_color '5')  default_extension")
   _settings_help_items+=("\
@@ -8548,7 +8548,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
     whatever you prefer.
 
-    • Default Value: \"md\"")
+    • Default Value: $(_highlight "md")")
 
   _settings_list_items+=("$(_id_brackets_color '6')  editor")
   _settings_help_items+=("\
@@ -8562,8 +8562,8 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     $(_highlight_secondary " ---------------")
     The tool used for encrypting notes.
 
-    • Supported Values: \"openssl\", \"gpg\"
-    • Default Value:    \"openssl\"")
+    • Supported Values: $(_highlight "openssl"), $(_highlight "gpg")
+    • Default Value:    $(_highlight "openssl")")
 
   _settings_list_items+=("$(_id_brackets_color '8')  footer")
   _settings_help_items+=("\
@@ -8571,7 +8571,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     By default, \`${_ME} ls\` includes a footer with example commands for
     easy reference. To hide this footer, set this to \"0\".
 
-    • Default Value: \"1\"")
+    • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '9')  header")
   _settings_help_items+=("\
@@ -8580,14 +8580,14 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     Set the justification for this heading, or hide it with \"0\".
 
     • Supported Values:
-      0  Hide Header
-      1  Dynamic Justification (default)
+      $(_highlight "0")  Hide Header
+      $(_highlight "1")  Dynamic Justification (default)
            - Left justified when list is shorter than terminal width.
            - Center justified when list is longer than terminal width.
-      2  Center Justified
-      3  Left Justified
+      $(_highlight "2")  Center Justified
+      $(_highlight "3")  Left Justified
 
-    • Default Value: \"1\"")
+    • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '10') nb_dir")
   _settings_help_items+=("\
@@ -8597,7 +8597,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
     For example, to sync all notebooks with Dropbox, create a folder at
     \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
-    • Default Value: \"~/.nb\"")
+    • Default Value: $(_highlight '~/.nb')")
 
   while ((${#}))
   do

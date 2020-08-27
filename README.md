@@ -2863,7 +2863,7 @@ Alias: `set`
     and `delete` will sync notebook changes to the remote repository, if
     one is set. To disable this behavior, set this to "0".
 
-    • Default Value: "1"
+    • Default Value: 1
 
 [2]  color_primary
      -------------
@@ -2871,8 +2871,8 @@ Alias: `set`
     can be set to an xterm color number between 0 and 255. Some terminals
     support many more colors.
 
-    • Default Value: "68" (blue) for 256 color terminals,
-                     "4"  (blue) for  8  color terminals.
+    • Default Value: 68 (blue) for 256 color terminals,
+                     4  (blue) for  8  color terminals.
 
 [3]  color_secondary
      ---------------
@@ -2880,7 +2880,7 @@ Alias: `set`
     xterm color number between 0 and 255. Some terminals support many more
     colors.
 
-    • Default Value: "8"
+    • Default Value: 8
 
 [4]  color_theme
      -----------
@@ -2908,7 +2908,7 @@ Alias: `set`
         unicorn
         utility
 
-    • Default Value: "nb"
+    • Default Value: nb
 
 [5]  default_extension
      -----------------
@@ -2916,7 +2916,7 @@ Alias: `set`
     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
     whatever you prefer.
 
-    • Default Value: "md"
+    • Default Value: md
 
 [6]  editor
      ------
@@ -2928,15 +2928,15 @@ Alias: `set`
      ---------------
     The tool used for encrypting notes.
 
-    • Supported Values: "openssl", "gpg"
-    • Default Value:    "openssl"
+    • Supported Values: openssl, gpg
+    • Default Value:    openssl
 
 [8]  footer
      ------
     By default, `nb ls` includes a footer with example commands for
     easy reference. To hide this footer, set this to "0".
 
-    • Default Value: "1"
+    • Default Value: 1
 
 [9]  header
      ------
@@ -2951,7 +2951,7 @@ Alias: `set`
       2  Center Justified
       3  Left Justified
 
-    • Default Value: "1"
+    • Default Value: 1
 
 [10] nb_dir
      ------
@@ -2960,7 +2960,7 @@ Alias: `set`
     For example, to sync all notebooks with Dropbox, create a folder at
     `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
-    • Default Value: "~/.nb"
+    • Default Value: ~/.nb
 ```
 
 #### `shell`
