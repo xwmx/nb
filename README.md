@@ -2941,7 +2941,15 @@ Alias: `set`
 [9]  header
      ------
     By default, `nb ls` includes a header listing available notebooks.
-    To hide this header, set this to "0".
+    Set the justification for this heading, or hide it with "0".
+
+    • Supported Values:
+      0  Hide Header
+      1  Dynamic Justification (default)
+           - Left justified when list is shorter than terminal width.
+           - Center justified when list is longer than terminal width.
+      2  Center Justified
+      3  Left Justified
 
     • Default Value: "1"
 

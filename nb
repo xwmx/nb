@@ -438,7 +438,7 @@ export NB_FOOTER="${NB_FOOTER:-1}"
 #
 # Default: '1'
 #
-# Supported Values: '0' '1'
+# Supported Values: '0' '1' '2' '3'
 export NB_HEADER="${NB_HEADER:-1}"
 
 ###############################################################################
@@ -6036,6 +6036,9 @@ _ls() {
     local _plain=0
     local _test_line=
 
+    [[ "${NB_HEADER}" == 2 ]] && _centered=1
+    [[ "${NB_HEADER}" == 3 ]] && _justified=1
+
     while ((${#}))
     do
       local __arg="${1:-}"
@@ -8427,14 +8430,21 @@ HEREDOC
         _return_1 printf "%s requires a value.\\n" "${1:-}"
       fi
     elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
-         [[ "${1:-}" == 'NB_FOOTER'     ]] ||
-         [[ "${1:-}" == 'NB_HEADER'     ]]
+         [[ "${1:-}" == 'NB_FOOTER'     ]]
     then
-      if [[ "${2:-}" =~ ^0|1$ ]]
+      if [[ "${2:-}" =~ ^0$|^1$ ]]
       then
         return 0
       else
         _return_1 printf "%s must be either \"0\" or \"1\".\\n" "${1}"
+      fi
+    elif [[ "${1:-}" == 'NB_HEADER'     ]]
+    then
+      if [[ "${2:-}" =~ ^0$|^1$|^2$|^3$ ]]
+      then
+        return 0
+      else
+        _return_1 printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
       fi
     elif [[ "${1:-}" == 'NB_DIR' ]]
     then
@@ -8567,7 +8577,15 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
     By default, \`${_ME} ls\` includes a header listing available notebooks.
-    To hide this header, set this to \"0\".
+    Set the justification for this heading, or hide it with \"0\".
+
+    • Supported Values:
+      0  Hide Header
+      1  Dynamic Justification (default)
+           - Left justified when list is shorter than terminal width.
+           - Center justified when list is longer than terminal width.
+      2  Center Justified
+      3  Left Justified
 
     • Default Value: \"1\"")
 
