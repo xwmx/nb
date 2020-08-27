@@ -352,7 +352,7 @@ via the command line.
 
 ```bash
 echo "Note content." | nb add
-Added [6] 20200101000000.md
+Added [6] 20200101000100.md
 ```
 
 The title, filename, and content can also be specified with long and
