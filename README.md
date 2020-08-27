@@ -2922,7 +2922,19 @@ Alias: `set`
      ------
      The command line text editor to use with `nb`.
 
-     • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+     • Example Values:
+
+         vim
+         emacs
+         micro
+         code
+         subl
+         macdown
+         mate
+         atom
+         nano
+         pico
+         vi
 
 [7]  encryption_tool
      ---------------
