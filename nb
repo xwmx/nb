@@ -8557,7 +8557,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
 
      • Example Values:
 
-$(for __editor in vim emacs micro code subl macdown mate atom nano pico vi
+$(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then

@@ -2924,17 +2924,17 @@ Alias: `set`
 
      • Example Values:
 
-         vim
-         emacs
-         micro
+         atom
          code
-         subl
+         emacs
          macdown
          mate
-         atom
+         micro
          nano
          pico
+         subl
          vi
+         vim
 
 [7]  encryption_tool
      ---------------
