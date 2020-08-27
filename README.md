@@ -328,6 +328,8 @@ Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
 
+For a full list of options available for `nb add`, run `nb help add`.
+
 ##### Shortcut Alias: `a`
 
 `nb` includes single-character shortcuts for many commands, including
