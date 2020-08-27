@@ -359,7 +359,8 @@ The title, filename, and content can also be specified with long and
 short options:
 
 ```bash
-nb add --filename "example.md" -t "Example Title" -c "Example content."
+> nb add --filename "example.md" -t "Example Title" -c "Example content."
+Added [7] example.md 'Example Title'
 ```
 
 The `-t <title>` / `--title <title>` will also set the filename to the
@@ -367,7 +368,7 @@ title, with spaces replaced with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added [7] Example_Title.md 'Example Title'
+Added [8] Example_Title.md 'Example Title'
 ```
 
 Files can be created with any file type either by specifying the
