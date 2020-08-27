@@ -2894,7 +2894,7 @@ Alias: `set`
 
          nb help --colors
 
-     Available themes:
+     • Available themes:
 
          blacklight
          console

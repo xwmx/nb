@@ -8532,7 +8532,7 @@ HEREDOC
 
          $(_highlight "${_ME} help --colors")
 
-     Available themes:
+     • Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
   do
