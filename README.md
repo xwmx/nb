@@ -2933,22 +2933,23 @@ Alias: `set`
 
 [8]  footer
      ------
-    By default, `nb ls` includes a footer with example commands for
-    easy reference. To hide this footer, set this to "0".
+    By default, `nb` and `nb ls` include a footer with example commands.
+    To hide this footer, set this to "0".
 
     • Default Value: 1
 
 [9]  header
      ------
-    By default, `nb ls` includes a header listing available notebooks.
-    Set the justification for this heading, or hide it with "0".
+    By default, `nb` and `nb ls` include a header listing available notebooks.
+    Set the alignment, or hide the header with "0".
 
     • Supported Values:
+
       0  Hide Header
-      1  Dynamic Justification (default)
+      1  Dynamic Alignment (default)
            - Left justified when list is shorter than terminal width.
-           - Center justified when list is longer than terminal width.
-      2  Center Justified
+           - Center aligned when list is longer than terminal width.
+      2  Center Aligned
       3  Left Justified
 
     • Default Value: 1

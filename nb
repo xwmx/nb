@@ -8568,23 +8568,24 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
   _settings_list_items+=("$(_id_brackets_color '8')  footer")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    By default, \`${_ME} ls\` includes a footer with example commands for
-    easy reference. To hide this footer, set this to \"0\".
+    By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
+    To hide this footer, set this to \"0\".
 
     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '9')  header")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    By default, \`${_ME} ls\` includes a header listing available notebooks.
-    Set the justification for this heading, or hide it with \"0\".
+    By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
+    Set the alignment, or hide the header with \"0\".
 
     • Supported Values:
+
       $(_highlight "0")  Hide Header
-      $(_highlight "1")  Dynamic Justification (default)
+      $(_highlight "1")  Dynamic Alignment (default)
            - Left justified when list is shorter than terminal width.
-           - Center justified when list is longer than terminal width.
-      $(_highlight "2")  Center Justified
+           - Center aligned when list is longer than terminal width.
+      $(_highlight "2")  Center Aligned
       $(_highlight "3")  Left Justified
 
     • Default Value: $(_highlight "1")")
