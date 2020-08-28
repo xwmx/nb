@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.4.7"
+_VERSION="4.5.0"
 
 # $_ME
 #
@@ -258,18 +258,16 @@ _debug() {
   if ((${_USE_DEBUG:-0}))
   then
     __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
-
     printf "🐛  %s " "${__DEBUG_COUNTER}"
+
     "${@}"
 
-    if [[ -z "${__DEBUG_START_TIME}" ]]
+    if [[ -n "${__DEBUG_START_TIME:-}" ]]
     then
-      if __DEBUG_START_TIME="$(__debug_get_timestamp)"
-      then
-        printf "⏱   0\\n"
-      fi
-    else
       printf "⏱   %s\\n" "$(($(__debug_get_timestamp)-__DEBUG_START_TIME))"
+    elif __DEBUG_START_TIME="$(__debug_get_timestamp)"
+    then
+      printf "⏱   0\\n"
     fi
 
     printf "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
@@ -438,7 +436,7 @@ export NB_FOOTER="${NB_FOOTER:-1}"
 #
 # Default: '1'
 #
-# Supported Values: '0' '1'
+# Supported Values: '0' '1' '2' '3'
 export NB_HEADER="${NB_HEADER:-1}"
 
 ###############################################################################
@@ -2656,7 +2654,7 @@ _help() {
             | w3m -T text/html
             return 0
         else
-          cat
+          _highlight_syntax_if_available
         fi |  if ((_use_pager))                &&
                  [[ -n "${PAGER:-}"         ]] &&
                  [[ ! "${PAGER:-}" =~ less  ]]
@@ -2737,6 +2735,12 @@ Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
+Help:
+  ${_ME} help               Display this help information.
+  ${_ME} help <subcommand>  View help information for <subcommand>.
+  ${_ME} help --colors      View information about color settings.
+  ${_ME} help --readme      View the \`${_ME}\` README file.
+
 Usage:
   ${_ME}
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
@@ -2809,16 +2813,6 @@ Usage:
   ${_ME} -h | --help | help [<subcommand> | --readme]
   ${_ME} --no-color
   ${_ME} --version | version
-
-Help:
-  ${_ME} help               Display this help information.
-  ${_ME} help <subcommand>  View help information for <subcommand>.
-  ${_ME} help --colors      View information about color settings.
-  ${_ME} help --readme      View the \`${_ME}\` README file.
-  ${_ME} help --short       Display program usage information.
-
-More Information:
-  https://github.com/${_REPO}
 HEREDOC
 
     if ! ((_short))
@@ -2863,6 +2857,9 @@ Program Options:
   -h, --help          Display this help information.
   --no-color          Print without color highlighting.
   --version           Display version information.
+
+More Information:
+  https://github.com/${_REPO}
 HEREDOC
       fi
     } | if ((_use_pager))               &&
@@ -6036,6 +6033,9 @@ _ls() {
     local _plain=0
     local _test_line=
 
+    [[ "${NB_HEADER}" == 2 ]] && _centered=1
+    [[ "${NB_HEADER}" == 3 ]] && _justified=1
+
     while ((${#}))
     do
       local __arg="${1:-}"
@@ -8427,14 +8427,21 @@ HEREDOC
         _return_1 printf "%s requires a value.\\n" "${1:-}"
       fi
     elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
-         [[ "${1:-}" == 'NB_FOOTER'     ]] ||
-         [[ "${1:-}" == 'NB_HEADER'     ]]
+         [[ "${1:-}" == 'NB_FOOTER'     ]]
     then
-      if [[ "${2:-}" =~ ^0|1$ ]]
+      if [[ "${2:-}" =~ ^0$|^1$ ]]
       then
         return 0
       else
         _return_1 printf "%s must be either \"0\" or \"1\".\\n" "${1}"
+      fi
+    elif [[ "${1:-}" == 'NB_HEADER'     ]]
+    then
+      if [[ "${2:-}" =~ ^0$|^1$|^2$|^3$ ]]
+      then
+        return 0
+      else
+        _return_1 printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
       fi
     elif [[ "${1:-}" == 'NB_DIR' ]]
     then
@@ -8484,102 +8491,119 @@ HEREDOC
   _settings_list_items+=("$(_id_brackets_color '1')  auto_sync")
   _settings_help_items+=("\
     $(_highlight_secondary " ---------")
-    By default, operations that trigger a git commit like \`add\`, \`edit\`,
-    and \`delete\` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to \"0\".
+     By default, operations that trigger a git commit like \`add\`, \`edit\`,
+     and \`delete\` will sync notebook changes to the remote repository, if
+     one is set. To disable this behavior, set this to \"0\".
 
-    • Default Value: \"1\"")
+     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '2')  color_primary")
   _settings_help_items+=("\
     $(_highlight_secondary " -------------")
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors.
+     The primary color used to highlight identifiers and messages. Often this
+     can be set to an xterm color number between 0 and 255. Some terminals
+     support many more colors.
 
-    • Default Value: \"68\" (blue) for 256 color terminals,
-                     \"4\"  (blue) for  8  color terminals.")
+     • Default Value: $(_highlight "68") (blue) for 256 color terminals,
+                      $(_highlight "4")  (blue) for  8  color terminals.")
 
   _settings_list_items+=("$(_id_brackets_color '3')  color_secondary")
   _settings_help_items+=("\
     $(_highlight_secondary " ---------------")
-    The color used for lines and footer elements. Often this can be set to an
-    xterm color number between 0 and 255. Some terminals support many more
-    colors.
+     The color used for lines and footer elements. Often this can be set to an
+     xterm color number between 0 and 255. Some terminals support many more
+     colors.
 
-    • Default Value: \"8\"")
+     • Default Value: $(_highlight "8")")
 
   _settings_list_items+=("$(_id_brackets_color '4')  color_theme")
   _settings_help_items+=("\
     $(_highlight_secondary " -----------")
-    The color theme.
+     The color theme.
 
-    To view screenshots of the built-in themes, visit:
+     To view screenshots of the built-in themes, visit:
 
-        $(_highlight "https://git.io/nb-docs-color-themes")
+         $(_highlight "https://git.io/nb-docs-color-themes")
 
-    \`${_ME}\` supports custom, user-defined themes. To learn more, run:
+     \`${_ME}\` supports custom, user-defined themes. To learn more, run:
 
-        $(_highlight "${_ME} help --colors")
+         $(_highlight "${_ME} help --colors")
 
-    Available themes:
+     • Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
   do
-    printf "        %s\\n" "$(_highlight "${__theme}")"
+    printf "         %s\\n" "$(_highlight "${__theme}")"
   done)
 
-    • Default Value: \"nb\"")
+     • Default Value: $(_highlight "nb")")
 
   _settings_list_items+=("$(_id_brackets_color '5')  default_extension")
   _settings_help_items+=("\
     $(_highlight_secondary " -----------------")
-    The default extension to use for note files. Change to \"org\" for Emacs
-    Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
-    whatever you prefer.
+     The default extension to use for note files. Change to \"org\" for Emacs
+     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
+     whatever you prefer.
 
-    • Default Value: \"md\"")
+     • Default Value: $(_highlight "md")")
 
   _settings_list_items+=("$(_id_brackets_color '6')  editor")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    The command line text editor to use with \`${_ME}\`.
+     The command line text editor to use with \`${_ME}\`.
 
-    • Example Values: \"vim\", \"emacs\", \"micro\", \"code\", \"subl\", \"macdown\"")
+     • Example Values:
+
+$(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
+  do
+    if _command_exists "${__editor}"
+    then
+      printf "         %s\\n" "$(_highlight "${__editor}")"
+    fi
+  done)")
 
   _settings_list_items+=("$(_id_brackets_color '7')  encryption_tool")
   _settings_help_items+=("\
     $(_highlight_secondary " ---------------")
-    The tool used for encrypting notes.
+     The tool used for encrypting notes.
 
-    • Supported Values: \"openssl\", \"gpg\"
-    • Default Value:    \"openssl\"")
+     • Supported Values: $(_highlight "openssl"), $(_highlight "gpg")
+     • Default Value:    $(_highlight "openssl")")
 
   _settings_list_items+=("$(_id_brackets_color '8')  footer")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    By default, \`${_ME} ls\` includes a footer with example commands for
-    easy reference. To hide this footer, set this to \"0\".
+     By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
+     To hide this footer, set this to \"0\".
 
-    • Default Value: \"1\"")
+     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '9')  header")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    By default, \`${_ME} ls\` includes a header listing available notebooks.
-    To hide this header, set this to \"0\".
+     By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
+     Set the alignment, or hide the header with \"0\".
 
-    • Default Value: \"1\"")
+     • Supported Values:
+
+       $(_highlight "0")  Hide Header
+       $(_highlight "1")  Dynamic Alignment (default)
+            - Left justified when list is shorter than terminal width.
+            - Center aligned when list is longer than terminal width.
+       $(_highlight "2")  Center Aligned
+       $(_highlight "3")  Left Justified
+
+     • Default Value: $(_highlight "1")")
 
   _settings_list_items+=("$(_id_brackets_color '10') nb_dir")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
-    The location of the directory that contains the notebooks.
+     The location of the directory that contains the notebooks.
 
-    For example, to sync all notebooks with Dropbox, create a folder at
-    \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
+     For example, to sync all notebooks with Dropbox, create a folder at
+     \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
-    • Default Value: \"~/.nb\"")
+     • Default Value: $(_highlight '~/.nb')")
 
   while ((${#}))
   do

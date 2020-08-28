@@ -264,16 +264,16 @@ the latest version using the [`nb update`](#update) subcommand.
 ## Overview
 
 <p align="center">
-  <a href="#-working-with-notes">Notes</a> •
+  <a href="#-notes">Notes</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-search">Search</a> •
-  <a href="#revision-history">History</a> •
+  <a href="#-revision-history">History</a> •
   <a href="#-notebooks">Notebooks</a> •
-  <a href="#git-sync">Git Sync</a> •
-  <a href="#import--export">Import / Export</a> •
-  <a href="#settings">Settings</a> •
+  <a href="#-git-sync">Git Sync</a> •
+  <a href="#%EF%B8%8F-import--export">Import / Export</a> •
+  <a href="#%EF%B8%8F-settings">Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
-  <a href="#interactive-shell">Shell</a> •
+  <a href="#-nb-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
   <a href="#specifications">Specifications</a>
@@ -291,7 +291,7 @@ By default, notebooks and notes are global (at `~/.nb`), so they are always avai
 `nb` regardless of the current working directory. `nb` also supports [local
 notebooks](#global-and-local-notebooks).
 
-### 📝 Working with Notes
+### 📝 Notes
 
 #### Adding Notes
 
@@ -310,7 +310,7 @@ nb add "This is a note."
 # create a new note with piped content
 echo "Note content." | nb add
 
-# create a new password-protected, encrypted note
+# create a new password-protected, encrypted note titled "Secret Document"
 nb add --title "Secret Document" --encrypt
 ```
 
@@ -322,11 +322,80 @@ environment's preferred text editor. You can change your editor using the
 files by default. The default file type can be changed to whatever you
 like using [`nb settings default_extension`](#settings-list---long).
 
-Password-protected notes are encrypted with AES-256 using OpenSSL by
-default. GPG is also supported and can be configured in `nb settings`.
+Password-protected notes are created with the `-e` / `--encrypt` flag
+and are encrypted with AES-256 using OpenSSL by default.
+GPG is also supported and can be configured in `nb settings`.
 Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
+
+`nb add` behaves differently depending on the type of argument it
+receives. When a filename is specified, a new note with that filename is
+opened in the editor:
+
+```bash
+nb add example.md
+```
+
+When a string is specified, a new note is immediately created with that
+string as the content and the editor is not opened:
+
+```bash
+> nb add "This is a note."
+Added [5] 20200101000000.md
+```
+
+`nb add <string>` is useful for quickly jotting down notes directly
+via the command line.
+
+When no filename is specified, `nb add` uses the current datetime as
+the filename.
+
+`nb add` can also recieve piped content, which behaves the same as
+`nb add <string>`:
+
+```bash
+# create a new note containing "Note content."
+> echo "Note content." | nb add
+Added [6] 20200101000100.md
+
+# create a new note containing the clipboard contents on macOS
+> pbpaste | nb add
+Added [7] 20200101000200.md
+
+# create a new note containing the clipboard contents with xclip
+> xclip -o | nb add
+Added [8] 20200101000300.md
+```
+
+The title, filename, and content can also be specified with long and
+short options:
+
+```bash
+> nb add --filename "example.md" -t "Example Title" -c "Example content."
+Added [9] example.md 'Example Title'
+```
+
+The `-t <title>` / `--title <title>` option will also set the filename
+to the title, with spaces replaced with underscores:
+
+```bash
+> nb add --title "Example Title" "Example content."
+Added [10] Example_Title.md 'Example Title'
+```
+
+Files can be created with any file type either by specifying the
+extension in the filename or via the `--type <type>` option:
+
+```bash
+# open a new org mode file in the editor
+nb add example.org
+
+# open a new reStructuredText file in the editor
+nb add --type rst
+```
+
+For a full list of options available for `nb add`, run [`nb help add`](#add).
 
 ##### Shortcut Alias: `a`
 
@@ -342,6 +411,9 @@ nb a example.md
 
 # create a new note containing "This is a note."
 nb a "This is a note."
+
+# create a new note containing the clipboard contents with xclip
+xclip -o | nb a
 ```
 
 ##### Other Aliases: `create`, `new`
@@ -371,6 +443,9 @@ home
 
 Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
+`nb ls` also includes a footer with example commands for easy reference.
+The notebook header and command footer can be configured or hidden with
+`nb settings header` and `nb settings footer`.
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
@@ -712,6 +787,11 @@ u                 Jump up one half window
 n                 Jump to next <query> match
 q                 Quit
 ```
+
+*Note: If `less` scrolling isn't working in [iterm2](https://www.iterm2.com/),
+go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
+alternate screen mode" *and change it to* "Yes".
+*[More info](https://stackoverflow.com/a/37610820)*
 
 When [Pandoc](https://pandoc.org/) is available, use the `--render` option to
 render the note to HTML and open it in your terminal browser:
@@ -1183,7 +1263,7 @@ nb q -a "example"
 
 For more information about search, see [`nb help search`](#search).
 
-### Revision History
+### 🗒 Revision History
 
 Whenever a note is added, modified, or deleted, `nb` automatically commits
 the change to git transparently in the background. You can view the history of
@@ -1206,7 +1286,7 @@ nb history Example
 `nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
-### 📔 Notebooks
+### 📔📓📒 Notebooks
 
 You can create additional notebooks, each of which has its own version history.
 
@@ -1415,8 +1495,9 @@ nb notebooks archive
 nb notebooks archive example
 ```
 
-When a notebook is archived it is not included in `ls` output, synced
-automatically with `sync --all`, or included in `search --all`.
+When a notebook is archived it is not included in `ls` output,
+`search --all`, or tab completion, nor synced automatically
+with `sync --all`.
 
 ```bash
 > nb ls
@@ -1461,7 +1542,7 @@ For more information about working with notebooks, see
 For technical details about notebooks, see
 [`nb` Notebook Specification](#nb-notebook-specification).
 
-### Git Sync
+### 🔄 Git Sync
 
 Each notebook can be synced with a remote git repository by setting the
 remote URL:
@@ -1507,7 +1588,7 @@ nb remote remove
 You can also turn off autosync in `nb settings` and sync manually with
 `nb sync`.
 
-### Import / Export
+### ↕️ Import / Export
 
 Files of any type can be imported into a notebook. `nb edit` and `nb
 open` will open files in your system's default application for that file type.
@@ -1564,7 +1645,7 @@ nb export example.md /path/to/example.docx
 nb export Movies /path/to/example.html
 ```
 
-### Settings
+### ⚙️ Settings
 
 `nb settings` opens the settings prompt, which provides an easy way to
 change your `nb` settings.
@@ -1587,11 +1668,23 @@ name or number to `nb settings`:
 
 ```bash
 > nb settings editor
-[6] editor
-    ------
-    The command line text editor to use with `nb`.
+[6]  editor
+     ------
+     The command line text editor to use with `nb`.
 
-      • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+     • Example Values:
+
+         atom
+         code
+         emacs
+         macdown
+         mate
+         micro
+         nano
+         pico
+         subl
+         vi
+         vim
 
 EDITOR is currently set to vim
 
@@ -1644,38 +1737,6 @@ themes. The current color theme can be set using the `nb settings` prompt:
 
 ```bash
 nb settings color_theme
-```
-
-Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
-
-Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
-statement indicating the name and setting the color environment variables
-to `tput` ANSI color numbers:
-
-```bash
-# file: ~/.nb/.themes/example.nb-theme.sh
-if [[ "${NB_COLOR_THEME}" == "example" ]]
-then
-  export NB_COLOR_PRIMARY=43
-  export NB_COLOR_SECONDARY=38
-fi
-```
-
-The primary and secondary colors can be set individually, making color themes
-easily customizable:
-
-```bash
-# open the settings prompt for the primary color
-nb settings color_primary
-
-# open the settings prompt for the secondary color
-nb settings color_secondary
-```
-
-To view a table of available colors and numbers, run:
-
-```bash
-nb settings colors
 ```
 
 #### Built-in Color Themes
@@ -1746,12 +1807,46 @@ nb settings colors
 |:--:|:--:|
 |    |    |
 
-#### Shell Theme Support
+#### Custom Color Themes
+
+Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
+
+Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
+statement indicating the name and setting the color environment variables
+to `tput` ANSI color numbers:
+
+```bash
+# file: ~/.nb/.themes/example.nb-theme.sh
+if [[ "${NB_COLOR_THEME}" == "example" ]]
+then
+  export NB_COLOR_PRIMARY=43
+  export NB_COLOR_SECONDARY=38
+fi
+```
+
+The primary and secondary colors can be set individually, making color themes
+easily customizable:
+
+```bash
+# open the settings prompt for the primary color
+nb settings color_primary
+
+# open the settings prompt for the secondary color
+nb settings color_secondary
+```
+
+To view a table of available colors and numbers, run:
+
+```bash
+nb settings colors
+```
+
+### $ Shell Theme Support
 
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
 
-### Interactive Shell
+### > `nb` Interactive Shell
 
 `nb` has an interactive shell that can be started with `nb shell`,
 `nb -i`, or `nb --interactive`:
@@ -1875,7 +1970,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
   <a href="#search">search</a> •
-  <a href="#settings-1">settings</a> •
+  <a href="#settings">settings</a> •
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
   <a href="#status">status</a> •
@@ -1899,6 +1994,12 @@ __          _
 Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
+
+Help:
+  nb help               Display this help information.
+  nb help <subcommand>  View help information for <subcommand>.
+  nb help --colors      View information about color settings.
+  nb help --readme      View the `nb` README file.
 
 Usage:
   nb
@@ -1973,16 +2074,6 @@ Usage:
   nb --no-color
   nb --version | version
 
-Help:
-  nb help               Display this help information.
-  nb help <subcommand>  View help information for <subcommand>.
-  nb help --colors      View information about color settings.
-  nb help --readme      View the `nb` README file.
-  nb help --short       Display program usage information.
-
-More Information:
-  https://github.com/xwmx/nb
-
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
@@ -2021,6 +2112,9 @@ Program Options:
   -h, --help          Display this help information.
   --no-color          Print without color highlighting.
   --version           Display version information.
+
+More Information:
+  https://github.com/xwmx/nb
 ```
 
 #### `bookmark help`
@@ -2851,100 +2945,121 @@ Alias: `set`
 ```text
 [1]  auto_sync
      ---------
-    By default, operations that trigger a git commit like `add`, `edit`,
-    and `delete` will sync notebook changes to the remote repository, if
-    one is set. To disable this behavior, set this to "0".
+     By default, operations that trigger a git commit like `add`, `edit`,
+     and `delete` will sync notebook changes to the remote repository, if
+     one is set. To disable this behavior, set this to "0".
 
-    • Default Value: "1"
+     • Default Value: 1
 
 [2]  color_primary
      -------------
-    The primary color used to highlight identifiers and messages. Often this
-    can be set to an xterm color number between 0 and 255. Some terminals
-    support many more colors.
+     The primary color used to highlight identifiers and messages. Often this
+     can be set to an xterm color number between 0 and 255. Some terminals
+     support many more colors.
 
-    • Default Value: "68" (blue) for 256 color terminals,
-                     "4"  (blue) for  8  color terminals.
+     • Default Value: 68 (blue) for 256 color terminals,
+                      4  (blue) for  8  color terminals.
 
 [3]  color_secondary
      ---------------
-    The color used for lines and footer elements. Often this can be set to an
-    xterm color number between 0 and 255. Some terminals support many more
-    colors.
+     The color used for lines and footer elements. Often this can be set to an
+     xterm color number between 0 and 255. Some terminals support many more
+     colors.
 
-    • Default Value: "8"
+     • Default Value: 8
 
 [4]  color_theme
      -----------
-    The color theme.
+     The color theme.
 
-    To view screenshots of the built-in themes, visit:
+     To view screenshots of the built-in themes, visit:
 
-        https://git.io/nb-docs-color-themes
+         https://git.io/nb-docs-color-themes
 
-    `nb` supports custom, user-defined themes. To learn more, run:
+     `nb` supports custom, user-defined themes. To learn more, run:
 
-        nb help --colors
+         nb help --colors
 
-    Available themes:
+     • Available themes:
 
-        blacklight
-        console
-        desert
-        electro
-        forest
-        monochrome
-        nb
-        ocean
-        raspberry
-        unicorn
-        utility
+         blacklight
+         console
+         desert
+         electro
+         forest
+         monochrome
+         nb
+         ocean
+         raspberry
+         unicorn
+         utility
 
-    • Default Value: "nb"
+     • Default Value: nb
 
 [5]  default_extension
      -----------------
-    The default extension to use for note files. Change to "org" for Emacs
-    Org mode files, "rst" for reStructuredText, "txt" for plain text, or
-    whatever you prefer.
+     The default extension to use for note files. Change to "org" for Emacs
+     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
+     whatever you prefer.
 
-    • Default Value: "md"
+     • Default Value: md
 
 [6]  editor
      ------
-    The command line text editor to use with `nb`.
+     The command line text editor to use with `nb`.
 
-    • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+     • Example Values:
+
+         atom
+         code
+         emacs
+         macdown
+         mate
+         micro
+         nano
+         pico
+         subl
+         vi
+         vim
 
 [7]  encryption_tool
      ---------------
-    The tool used for encrypting notes.
+     The tool used for encrypting notes.
 
-    • Supported Values: "openssl", "gpg"
-    • Default Value:    "openssl"
+     • Supported Values: openssl, gpg
+     • Default Value:    openssl
 
 [8]  footer
      ------
-    By default, `nb ls` includes a footer with example commands for
-    easy reference. To hide this footer, set this to "0".
+     By default, `nb` and `nb ls` include a footer with example commands.
+     To hide this footer, set this to "0".
 
-    • Default Value: "1"
+     • Default Value: 1
 
 [9]  header
      ------
-    By default, `nb ls` includes a header listing available notebooks.
-    To hide this header, set this to "0".
+     By default, `nb` and `nb ls` include a header listing available notebooks.
+     Set the alignment, or hide the header with "0".
 
-    • Default Value: "1"
+     • Supported Values:
+
+       0  Hide Header
+       1  Dynamic Alignment (default)
+            - Left justified when list is shorter than terminal width.
+            - Center aligned when list is longer than terminal width.
+       2  Center Aligned
+       3  Left Justified
+
+     • Default Value: 1
 
 [10] nb_dir
      ------
-    The location of the directory that contains the notebooks.
+     The location of the directory that contains the notebooks.
 
-    For example, to sync all notebooks with Dropbox, create a folder at
-    `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
+     For example, to sync all notebooks with Dropbox, create a folder at
+     `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
-    • Default Value: "~/.nb"
+     • Default Value: ~/.nb
 ```
 
 #### `shell`
@@ -3365,4 +3480,3 @@ root.
 <p align="center">
   📝🔖🔒🔍📔
 </p>
-

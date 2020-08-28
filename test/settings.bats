@@ -820,9 +820,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1 ]]
-  # [[ "${output}" == "NB_AUTO_SYNC must be either '0' or '1'." ]]
-  [[ "${output}" =~ NB_HEADER         ]]
-  [[ "${output}" =~ must\ be\ either  ]]
+  [[ "${output}" =~ NB_HEADER  ]]
+  [[ "${output}" =~ must\ be\  ]]
 
   printf "get NB_HEADER: '%s'\\n" "$("${_NB}" settings get NB_HEADER)"
   [[ "$("${_NB}" settings get NB_HEADER)" == '0' ]]

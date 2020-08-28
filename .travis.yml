@@ -17,8 +17,8 @@ jobs:
       before_install:
         - brew install bats-core
         - brew install pandoc
-        - brew install pygments
-        - brew install w3m
+        # - brew install pygments
+        # - brew install w3m
         - git config --global user.name "Example Name"
         - git config --global user.email "example@example.com"
       osx_image: xcode11.3
