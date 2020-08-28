@@ -353,15 +353,15 @@ the current datetime as the filename.
 
 ```bash
 # create a new note containing "Note content."
-echo "Note content." | nb add
+> echo "Note content." | nb add
 Added [6] 20200101000100.md
 
 # create a new note containing the clipboard contents on macOS
-pbpaste | nb add
+> pbpaste | nb add
 Added [7] 20200101000200.md
 
 # create a new note containing the clipboard contents with xclip
-xclip -o | nb add
+> xclip -o | nb add
 Added [8] 20200101000300.md
 ```
 
