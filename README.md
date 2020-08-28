@@ -442,9 +442,9 @@ home
 ```
 
 Notebooks are listed above the line, with the current notebook
-highlighted and/or underlined, depending on terminal capabilities. By default,
-`nb ls` includes a footer with example commands for easy reference. The
-notebook header and command reference footer can be configured or hidden with
+highlighted and/or underlined, depending on terminal capabilities.
+`nb ls` also includes a footer with example commands for easy reference.
+The notebook header and command footer can be configured or hidden with
 `nb settings header` and `nb settings footer`.
 
 Notes from the current notebook are listed in the order they were last
