@@ -1665,11 +1665,23 @@ name or number to `nb settings`:
 
 ```bash
 > nb settings editor
-[6] editor
-    ------
-    The command line text editor to use with `nb`.
+[6]  editor
+     ------
+     The command line text editor to use with `nb`.
 
-      • Example Values: "vim", "emacs", "micro", "code", "subl", "macdown"
+     • Example Values:
+
+         atom
+         code
+         emacs
+         macdown
+         mate
+         micro
+         nano
+         pico
+         subl
+         vi
+         vim
 
 EDITOR is currently set to vim
 
