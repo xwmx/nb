@@ -2654,7 +2654,7 @@ _help() {
             | w3m -T text/html
             return 0
         else
-          cat
+          _highlight_syntax_if_available
         fi |  if ((_use_pager))                &&
                  [[ -n "${PAGER:-}"         ]] &&
                  [[ ! "${PAGER:-}" =~ less  ]]
