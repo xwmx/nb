@@ -352,8 +352,17 @@ the current datetime as the filename.
 `nb add <string>`:
 
 ```bash
+# create a new note containing "Note content."
 echo "Note content." | nb add
 Added [6] 20200101000100.md
+
+# create a new note containing the clipboard contents on macOS
+pbpaste | nb add
+Added [7] 20200101000200.md
+
+# create a new note containing the clipboard contents with xclip
+xclip -o | nb add
+Added [8] 20200101000300.md
 ```
 
 The title, filename, and content can also be specified with long and
@@ -361,7 +370,7 @@ short options:
 
 ```bash
 > nb add --filename "example.md" -t "Example Title" -c "Example content."
-Added [7] example.md 'Example Title'
+Added [9] example.md 'Example Title'
 ```
 
 The `-t <title>` / `--title <title>` option will also set the filename
@@ -369,7 +378,7 @@ to the title, with spaces replaced with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added [8] Example_Title.md 'Example Title'
+Added [10] Example_Title.md 'Example Title'
 ```
 
 Files can be created with any file type either by specifying the
