@@ -385,7 +385,7 @@ Files can be created with any file type either by specifying the
 extension in the filename or via the `--type <type>` option:
 
 ```bash
-# create a new org mode file
+# open a new org mode file in the editor
 nb add example.org
 
 # open a new reStructuredText file in the editor
