@@ -273,7 +273,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#%EF%B8%8F-import--export">Import / Export</a> •
   <a href="#%EF%B8%8F-settings">Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
-  <a href="#-interactive-shell">Shell</a> •
+  <a href="#-nb-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
   <a href="#specifications">Specifications</a>
@@ -1843,7 +1843,7 @@ nb settings colors
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
 
-### > Interactive Shell
+### > `nb` Interactive Shell
 
 `nb` has an interactive shell that can be started with `nb shell`,
 `nb -i`, or `nb --interactive`:
