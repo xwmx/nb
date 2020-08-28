@@ -2688,13 +2688,13 @@ themes. The current color theme can be set using the \`${_ME} settings\` prompt:
     $(_highlight "${_ME} settings color_theme")
 
 Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
-currently located at:
+which is currently located at:
 
     $(_highlight "${NB_DIR}/.themes")
 
 Themes have a \`.nb-theme\` or \`.nb-theme.sh\` extension and contain one \`if\`
-statement indicating the name and setting the color environment variables
-to \`tput\` ANSI color numbers:
+statement indicating the name and setting the primary and secondary color
+environment variables to \`tput\` ANSI color numbers:
 
     $(_highlight_secondary "# file: ~/.nb/.themes/example.nb-theme.sh")
     $(_highlight "\
