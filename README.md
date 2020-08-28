@@ -1997,7 +1997,6 @@ Help:
   nb help <subcommand>  View help information for <subcommand>.
   nb help --colors      View information about color settings.
   nb help --readme      View the `nb` README file.
-  nb help --short       Display program usage information.
 
 Usage:
   nb
