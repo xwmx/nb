@@ -322,8 +322,9 @@ environment's preferred text editor. You can change your editor using the
 files by default. The default file type can be changed to whatever you
 like using [`nb settings default_extension`](#settings-list---long).
 
-Password-protected notes are encrypted with AES-256 using OpenSSL by
-default. GPG is also supported and can be configured in `nb settings`.
+Password-protected notes are created with the `-e` / `--encrypt` flag
+and are encrypted with AES-256 using OpenSSL by default.
+GPG is also supported and can be configured in `nb settings`.
 Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
