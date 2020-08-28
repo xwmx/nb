@@ -1736,38 +1736,6 @@ themes. The current color theme can be set using the `nb settings` prompt:
 nb settings color_theme
 ```
 
-Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
-
-Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
-statement indicating the name and setting the color environment variables
-to `tput` ANSI color numbers:
-
-```bash
-# file: ~/.nb/.themes/example.nb-theme.sh
-if [[ "${NB_COLOR_THEME}" == "example" ]]
-then
-  export NB_COLOR_PRIMARY=43
-  export NB_COLOR_SECONDARY=38
-fi
-```
-
-The primary and secondary colors can be set individually, making color themes
-easily customizable:
-
-```bash
-# open the settings prompt for the primary color
-nb settings color_primary
-
-# open the settings prompt for the secondary color
-nb settings color_secondary
-```
-
-To view a table of available colors and numbers, run:
-
-```bash
-nb settings colors
-```
-
 #### Built-in Color Themes
 
 ##### `blacklight`
@@ -1835,6 +1803,40 @@ nb settings colors
 | ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-bookmarks.png) |
 |:--:|:--:|
 |    |    |
+
+#### Custom Color Themes
+
+Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
+
+Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
+statement indicating the name and setting the color environment variables
+to `tput` ANSI color numbers:
+
+```bash
+# file: ~/.nb/.themes/example.nb-theme.sh
+if [[ "${NB_COLOR_THEME}" == "example" ]]
+then
+  export NB_COLOR_PRIMARY=43
+  export NB_COLOR_SECONDARY=38
+fi
+```
+
+The primary and secondary colors can be set individually, making color themes
+easily customizable:
+
+```bash
+# open the settings prompt for the primary color
+nb settings color_primary
+
+# open the settings prompt for the secondary color
+nb settings color_secondary
+```
+
+To view a table of available colors and numbers, run:
+
+```bash
+nb settings colors
+```
 
 #### Shell Theme Support
 
