@@ -408,6 +408,9 @@ nb a example.md
 
 # create a new note containing "This is a note."
 nb a "This is a note."
+
+# create a new note containing the clipboard contents with xclip
+xclip -o | nb a
 ```
 
 ##### Other Aliases: `create`, `new`
