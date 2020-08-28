@@ -1550,6 +1550,9 @@ remote URL:
 ```bash
 # set the current notebook's remote to a private GitHub repository
 nb remote set https://github.com/example/example.git
+
+# set the remote for the notebook named "example"
+nb example:remote set https://github.com/example/example.git
 ```
 
 Any notebook with a remote URL will sync automatically every time a command is
