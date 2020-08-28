@@ -1838,7 +1838,7 @@ To view a table of available colors and numbers, run:
 nb settings colors
 ```
 
-#### Shell Theme Support
+### 💲 Shell Theme Support
 
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
