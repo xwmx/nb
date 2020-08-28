@@ -1992,6 +1992,13 @@ Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
+Help:
+  nb help               Display this help information.
+  nb help <subcommand>  View help information for <subcommand>.
+  nb help --colors      View information about color settings.
+  nb help --readme      View the `nb` README file.
+  nb help --short       Display program usage information.
+
 Usage:
   nb
   nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
@@ -2065,16 +2072,6 @@ Usage:
   nb --no-color
   nb --version | version
 
-Help:
-  nb help               Display this help information.
-  nb help <subcommand>  View help information for <subcommand>.
-  nb help --colors      View information about color settings.
-  nb help --readme      View the `nb` README file.
-  nb help --short       Display program usage information.
-
-More Information:
-  https://github.com/xwmx/nb
-
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
@@ -2113,6 +2110,9 @@ Program Options:
   -h, --help          Display this help information.
   --no-color          Print without color highlighting.
   --version           Display version information.
+
+More Information:
+  https://github.com/xwmx/nb
 ```
 
 #### `bookmark help`

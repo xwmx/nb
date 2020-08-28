@@ -2735,6 +2735,13 @@ Command line note-taking, bookmarking, and archiving with encryption, search,
 Git-backed versioning and syncing, Pandoc-backed format conversion, and more
 in a single portable script.
 
+Help:
+  ${_ME} help               Display this help information.
+  ${_ME} help <subcommand>  View help information for <subcommand>.
+  ${_ME} help --colors      View information about color settings.
+  ${_ME} help --readme      View the \`${_ME}\` README file.
+  ${_ME} help --short       Display program usage information.
+
 Usage:
   ${_ME}
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
@@ -2807,16 +2814,6 @@ Usage:
   ${_ME} -h | --help | help [<subcommand> | --readme]
   ${_ME} --no-color
   ${_ME} --version | version
-
-Help:
-  ${_ME} help               Display this help information.
-  ${_ME} help <subcommand>  View help information for <subcommand>.
-  ${_ME} help --colors      View information about color settings.
-  ${_ME} help --readme      View the \`${_ME}\` README file.
-  ${_ME} help --short       Display program usage information.
-
-More Information:
-  https://github.com/${_REPO}
 HEREDOC
 
     if ! ((_short))
@@ -2861,6 +2858,9 @@ Program Options:
   -h, --help          Display this help information.
   --no-color          Print without color highlighting.
   --version           Display version information.
+
+More Information:
+  https://github.com/${_REPO}
 HEREDOC
       fi
     } | if ((_use_pager))               &&
