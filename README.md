@@ -345,9 +345,11 @@ string as the content and the editor is not opened:
 Added [5] 20200101000000.md
 ```
 
-`nb add <string>` is useful for quickly jotting down a note directly
-via the command line. When no filename is specified, `nb add` uses
-the current datetime as the filename.
+`nb add <string>` is useful for quickly jotting down notes directly
+via the command line.
+
+When no filename is specified, `nb add` uses the current datetime as
+the filename.
 
 `nb add` can also recieve piped content, which behaves the same as
 `nb add <string>`:
