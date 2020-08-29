@@ -2946,6 +2946,11 @@ Description:
   Configure `nb`. Use `nb settings set` to customize a setting and
   `nb settings unset` to restore the default for a setting.
 
+  Use the `nb set` alias to quickly assign values to settings:
+
+    nb set color_theme blacklight
+    nb set limit 40
+
 Examples:
   nb settings
   nb settings set 5 "org"
@@ -2953,6 +2958,7 @@ Examples:
   nb settings unset color_primary
   nb settings colors
   nb settings colors 105
+  nb set limit 15
 
 Alias: `set`
 ```
