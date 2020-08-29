@@ -439,6 +439,13 @@ export NB_FOOTER="${NB_FOOTER:-1}"
 # Supported Values: '0' '1' '2' '3'
 export NB_HEADER="${NB_HEADER:-1}"
 
+# $NB_LIMIT
+#
+# Default: '20'
+#
+# Supported Values: any positive number
+export NB_LIMIT="${NB_LIMIT:-20}"
+
 ###############################################################################
 # Colors
 ###############################################################################
@@ -4480,6 +4487,7 @@ _env() {
     printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
     printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
     printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
+    printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -6210,7 +6218,7 @@ _ls() {
   local _columns
   _columns="$(tput cols)"
   local _header_flags=()
-  local _limit=20
+  local _limit="${NB_LIMIT}"
   local _notebook_names_raw
   _notebook_names_raw=($(
     _notebooks --names --no-color --unarchived --global || :
@@ -8134,6 +8142,11 @@ Description:
   Configure \`${_ME}\`. Use \`${_ME} settings set\` to customize a setting and
   \`${_ME} settings unset\` to restore the default for a setting.
 
+  Use the \`${_ME} set\` alias to quickly assign values to settings:
+
+    ${_ME} set color_theme blacklight
+    ${_ME} set limit 40
+
 Examples:
   ${_ME} settings
   ${_ME} settings set 5 "org"
@@ -8141,6 +8154,7 @@ Examples:
   ${_ME} settings unset color_primary
   ${_ME} settings colors
   ${_ME} settings colors 105
+  ${_ME} set limit 15
 
 Alias: \`set\`
 HEREDOC
@@ -8231,8 +8245,12 @@ _settings() {
         ((_get_id)) && printf "9" || printf "NB_HEADER"
         return 0
         ;;
-      10|nb_dir|NB_DIR)
-        ((_get_id)) && printf "10" || printf "NB_DIR"
+      10|*limit|*LIMIT)
+        ((_get_id)) && printf "10" || printf "NB_LIMIT"
+        return 0
+        ;;
+      11|nb_dir|NB_DIR)
+        ((_get_id)) && printf "11" || printf "NB_DIR"
         return 0
         ;;
       *)
@@ -8442,6 +8460,14 @@ HEREDOC
       else
         _return_1 printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
       fi
+    elif [[ "${1:-}" == 'NB_LIMIT' ]]
+    then
+      if [[ "${2:-}" =~ ^[0-9]+$ ]]
+      then
+        return 0
+      else
+        _return_1 printf "%s must be a number.\\n" "${1}"
+      fi
     elif [[ "${1:-}" == 'NB_DIR' ]]
     then
       if [[ -z "${2:-}"   ]] ||
@@ -8594,7 +8620,14 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
      • Default Value: $(_highlight "1")")
 
-  _settings_list_items+=("$(_id_brackets_color '10') nb_dir")
+  _settings_list_items+=("$(_id_brackets_color '10') limit")
+  _settings_help_items+=("\
+    $(_highlight_secondary " -----")
+     The maximum number of notes included in the \`nb\` and \`nb ls\` lists.
+
+     • Default Value: $(_highlight "20")")
+
+  _settings_list_items+=("$(_id_brackets_color '11') nb_dir")
   _settings_help_items+=("\
     $(_highlight_secondary " ------")
      The location of the directory that contains the notebooks.

@@ -652,9 +652,10 @@ Todos
 title: Ideas
 ```
 
-`nb` and `nb ls` display the 20 most recently modified items. To list a
-different number of items, use the `-n`,`--limit`, `--<limit>`, `-a`, or
-`--all` flags:
+`nb` and `nb ls` display the 20 most recently modified items. The default
+limit can be changed with [`nb set limit <number>`](#settings). To list a
+different number of items on a per-command basis, use the `-n`,`--limit`,
+`--<limit>`, `-a`, or `--all` flags:
 
 ```bash
 > nb -n 2
@@ -1725,6 +1726,19 @@ EDITOR restored to the default: vim
 
 > nb settings get editor
 vim
+```
+
+#### Alias: `set`
+
+Use `nb set` to quickly assign values to settings without starting the
+settings prompt:
+
+```bash
+> nb set color_theme blacklight
+NB_COLOR_THEME set to blacklight
+
+> nb set limit 10
+NB_LIMIT set to 10
 ```
 
 For more information about settings, see [`nb help settings`](#settings-1) and
@@ -3055,7 +3069,13 @@ Alias: `set`
 
      • Default Value: 1
 
-[10] nb_dir
+[10] limit
+     -----
+     The maximum number of notes included in the `nb` and `nb ls` lists.
+
+     • Default Value: 20
+
+[11] nb_dir
      ------
      The location of the directory that contains the notebooks.
 
