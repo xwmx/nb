@@ -717,6 +717,97 @@ HEREDOC
   [[ "${lines[2]}" =~ one     ]]
 }
 
+
+@test "\`scoped:list\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  run "${_NB}" one:list
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 notes.
+
+Add a note:
+  $(_highlight 'nb one:add')
+Add a bookmark:
+  $(_highlight 'nb one: <url>')
+Import a file:
+  $(_highlight 'nb one:import (<path> | <url>)')
+Help information:
+  $(_highlight 'nb help')"
+  [[ ${status} -eq 0 ]]
+  [[ "${_expected}" == "${output}" ]]
+}
+
+@test "\`scoped:list --bookmarks\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  run "${_NB}" one:list --bookmarks
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 bookmarks.
+
+Add a bookmark:
+  $(_highlight 'nb one: <url>')
+Help information:
+  $(_highlight 'nb help bookmark')"
+  [[ ${status} -eq 0 ]]
+  [[ "${_expected}" == "${output}" ]]
+}
+
+@test "\`scoped:list --documents\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  run "${_NB}" one:list --documents
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 document files.
+
+Import a file:
+  $(_highlight 'nb one:import (<path> | <url>)')
+Help information:
+  $(_highlight 'nb help import')"
+  [[ ${status} -eq 0 ]]
+  [[ "${_expected}" == "${output}" ]]
+}
+
+# `list --hard-empty` #########################################################
+
+@test "\`list --hard-empty\` with empty notebook returns 1." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  run "${_NB}" one:list
+  [[ ${status} -eq 0 ]]
+
+  run "${_NB}" one:list --hard-empty
+  [[ ${status} -eq 1 ]]
+
+  "${_NB}" one:add "one.md" --title "one"
+
+  run "${_NB}" one:list --hard-empty
+  [[ ${status} -eq 0 ]]
+}
+
 # help ########################################################################
 
 @test "\`help list\` exits with status 0." {
