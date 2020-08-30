@@ -1398,7 +1398,8 @@ example · home
 A bookmark can be added in another notebook using the same approach:
 
 ```bash
-> nb example: https://example.com --tags tag1,tag2
+# create a new bookmark in a notebook named "sample"
+> nb sample: https://example.com --tags tag1,tag2
 ```
 
 Notes can also be moved between notebooks:
