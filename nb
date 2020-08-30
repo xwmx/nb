@@ -4082,7 +4082,7 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  _list_nb_files | wc -l
+  _list_nb_files | wc -l | tr -d ' '
 }
 
 # delete ############################################################### delete
