@@ -509,8 +509,8 @@ filenames that fuzzy match the query:
 [1] Ideas
 ```
 
-A case-insensitive regular expression can also be to filter filenames and
-titles:
+A case-insensitive regular expression can also be used to filter
+filenames and titles:
 
 ```bash
 > nb ls "^example.*"
