@@ -7415,7 +7415,7 @@ _remote() {
           while true
           do
             printf "Removing remote %s\\n" "$(_highlight "${_existing_url}")"
-            read -r -p "Do you want to proceed? [y/N] " __yn
+            read -r -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
                 break
@@ -7456,7 +7456,7 @@ _remote() {
             printf "Updating remote from %s to %s\\n" \
               "$(_highlight "${_existing_url}")"      \
               "$(_highlight "${_url}")"
-            read -r -p "Do you want to proceed? [y/N] " __yn
+            read -r -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
                 break
