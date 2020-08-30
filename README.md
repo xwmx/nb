@@ -855,6 +855,24 @@ nb s "A Document Title"
 nb 3 s
 ```
 
+##### Alias: `view`
+
+`nb show` can also be invoked with `nb view` for convenience:
+
+```bash
+# show note by id
+nb view 3
+
+# show note by filename
+nb view example.md
+
+# show note by title
+nb view "A Document Title"
+
+# show note by id, alternative
+nb 3 view
+```
+
 For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
