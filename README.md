@@ -278,7 +278,6 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#%EF%B8%8F-import--export">Import / Export</a> •
   <a href="#%EF%B8%8F-settings">Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
-  <a href="#-shell-theme-support">Shell Theme Support</a> •
   <a href="#-nb-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
