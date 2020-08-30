@@ -265,6 +265,11 @@ the latest version using the [`nb update`](#update) subcommand.
 
 <p align="center">
   <a href="#-notes">Notes</a> •
+  <a href="#adding-notes">Adding</a> •
+  <a href="#listing-notes">Listing</a> •
+  <a href="#editing-notes">Editing</a> •
+  <a href="#viewing-notes">Viewing</a> •
+  <a href="#deleting-notes">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-search">Search</a> •
   <a href="#-revision-history">History</a> •
