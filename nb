@@ -5414,6 +5414,8 @@ _list() {
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
+  local _maybe_scope=
+  local _maybe_scope_padded_right=
   local _no_id=0
   local _print_excerpt=0
   local _print_indicators=1
@@ -5539,6 +5541,12 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
+  if ((_SCOPED)) && [[ -n "${_SCOPE:-}" ]]
+  then
+    _maybe_scope="${_SCOPE}:"
+    _maybe_scope_padded_right="${_maybe_scope} "
+  fi
+
   # Use code block to capture all output for piping to pager.
   {
     if ! ((_filenames_count))
@@ -5552,7 +5560,7 @@ _list() {
 0 bookmarks.
 
 Add a bookmark:
-  $(_highlight "${_ME} <url>")
+  $(_highlight "${_ME} ${_maybe_scope_padded_right}<url>")
 Help information:
   $(_highlight "${_ME} help bookmark")
 HEREDOC
@@ -5564,7 +5572,7 @@ HEREDOC
 0 ${_type} files.
 
 Import a file:
-  $(_highlight "${_ME} import (<path> | <url>)")
+  $(_highlight "${_ME} ${_maybe_scope}import (<path> | <url>)")
 Help information:
   $(_highlight "${_ME} help import")
 HEREDOC
@@ -5573,11 +5581,11 @@ HEREDOC
 0 notes.
 
 Add a note:
-  $(_highlight "${_ME} add")
+  $(_highlight "${_ME} ${_maybe_scope}add")
 Add a bookmark:
-  $(_highlight "${_ME} <url>")
+  $(_highlight "${_ME} ${_maybe_scope_padded_right}<url>")
 Import a file:
-  $(_highlight "${_ME} import (<path> | <url>)")
+  $(_highlight "${_ME} ${_maybe_scope}import (<path> | <url>)")
 Help information:
   $(_highlight "${_ME} help")
 HEREDOC
