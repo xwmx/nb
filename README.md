@@ -2106,10 +2106,10 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  nb settings [<number> [<value>] | <name> [<value>]]
+  nb [set | settings] [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number>] | edit | list [--long]]
-  nb settings (get | show | unset) (<number> | <name>)
-  nb settings set (<number> | <name>) <value>
+  nb settings (get | show | unset) (<name> | <number>)
+  nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
@@ -2952,17 +2952,17 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  nb settings [<number> [<value>] | <name> [<value>]]
+  nb settings [<name> [<value>] | <number> [<value>]]
   nb settings colors [<number>]
   nb settings edit
-  nb settings get   (<number> | <name>)
+  nb settings get   (<name> | <number>)
   nb settings list  [--long]
-  nb settings set   (<number> | <name>) <value>
-  nb settings show  (<number> | <name>)
-  nb settings unset (<number> | <name>)
+  nb settings set   (<name> | <number>) <value>
+  nb settings show  (<name> | <number>)
+  nb settings unset (<name> | <number>)
 
 Subcommands:
-  (default)  Open the settings prompt, to <number> or <name>, if present.
+  (default)  Open the settings prompt, to <name> or <number>, if present.
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.

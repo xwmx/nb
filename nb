@@ -2804,10 +2804,10 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  ${_ME} settings [<number> [<value>] | <name> [<value>]]
+  ${_ME} [set | settings] [<name> [<value>] | <number> [<value>]]
   ${_ME} settings [colors [<number>] | edit | list [--long]]
-  ${_ME} settings (get | show | unset) (<number> | <name>)
-  ${_ME} settings set (<number> | <name>) <value>
+  ${_ME} settings (get | show | unset) (<name> | <number>)
+  ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
@@ -8117,17 +8117,17 @@ _alias_subcommand "search" "q"
 
 desc "settings" <<HEREDOC
 Usage:
-  ${_ME} settings [<number> [<value>] | <name> [<value>]]
+  ${_ME} settings [<name> [<value>] | <number> [<value>]]
   ${_ME} settings colors [<number>]
   ${_ME} settings edit
-  ${_ME} settings get   (<number> | <name>)
+  ${_ME} settings get   (<name> | <number>)
   ${_ME} settings list  [--long]
-  ${_ME} settings set   (<number> | <name>) <value>
-  ${_ME} settings show  (<number> | <name>)
-  ${_ME} settings unset (<number> | <name>)
+  ${_ME} settings set   (<name> | <number>) <value>
+  ${_ME} settings show  (<name> | <number>)
+  ${_ME} settings unset (<name> | <number>)
 
 Subcommands:
-  (default)  Open the settings prompt, to <number> or <name>, if present.
+  (default)  Open the settings prompt, to <name> or <number>, if present.
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
