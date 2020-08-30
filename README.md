@@ -369,7 +369,7 @@ Added [6] 20200101000100.md
 > pbpaste | nb add
 Added [7] 20200101000200.md
 
-# create a new note containing the clipboard contents with xclip
+# create a new note containing the clipboard contents via xclip
 > xclip -o | nb add
 Added [8] 20200101000300.md
 ```
