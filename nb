@@ -5410,6 +5410,7 @@ _list() {
   fi
 
   local _excerpt_length=3
+  local _hard_empty=0
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
@@ -5443,6 +5444,9 @@ _list() {
         ;;
       --filenames|--filename)
         _list_filenames=1
+        ;;
+      --hard-empty)
+        _hard_empty=1
         ;;
       --no-color|--nocolor)
         _list_color_enabled=0
@@ -5537,10 +5541,14 @@ _list() {
 
   # Use code block to capture all output for piping to pager.
   {
-    if [[ "${_filenames_count}" -eq 0           ]] &&
-       [[ "${_type}" =~ ^bookmark$|^bookmarks$  ]]
+    if ! ((_filenames_count))
     then
-      cat <<HEREDOC
+      if ((_hard_empty))
+      then
+        return 1
+      elif [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
+      then
+        cat <<HEREDOC
 0 bookmarks.
 
 Add a bookmark:
@@ -5548,12 +5556,11 @@ Add a bookmark:
 Help information:
   $(_highlight "${_ME} help bookmark")
 HEREDOC
-    elif [[ "${_filenames_count}" -eq 0 ]] &&
-         [[ "${_type}" =~ ^archive|^audio|^document|^image|^video ]]
-    then
-      _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+      elif [[ "${_type}" =~ ^archive|^audio|^document|^image|^video ]]
+      then
+        _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
 
-      cat <<HEREDOC
+        cat <<HEREDOC
 0 ${_type} files.
 
 Import a file:
@@ -5561,9 +5568,8 @@ Import a file:
 Help information:
   $(_highlight "${_ME} help import")
 HEREDOC
-    elif [[ "${_filenames_count}" -eq 0 ]]
-    then # no files in `$_NOTEBOOK_PATH`
-      cat <<HEREDOC
+      else
+        cat <<HEREDOC
 0 notes.
 
 Add a note:
@@ -5575,6 +5581,8 @@ Import a file:
 Help information:
   $(_highlight "${_ME} help")
 HEREDOC
+      fi
+
       return 0
     else
       local _counter=0
@@ -6273,7 +6281,7 @@ _ls() {
       _ls_print_header "${_header_flags[@]:-}"
     fi
 
-    _list -n "${_limit}" "${_args[@]:-}" 2>/dev/null || {
+    _list -n "${_limit}" --hard-empty "${_args[@]:-}" 2>/dev/null || {
       if [[ -n "${_args[*]:-}" ]]
       then
         local _maybe_name="${_args[0]:-}"
@@ -6293,12 +6301,20 @@ _ls() {
           _ls "${_args[@]:1}"
         return 0
       else
-        if ((_SCOPED))
-        then
-          _exit_1 printf "Not found: %s\\n" \
-            "$(_highlight "${_SCOPE}:${_args[0]:-}")"
+        local _local_count
+        _local_count="$(_count)"
+
+        if ! ((_local_count))
+        then # current notebook is empty
+          _list -n "${_limit}" "${_args[@]:-}"
         else
-          _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+          if ((_SCOPED))
+          then
+            _exit_1 printf "Not found: %s\\n" \
+              "$(_highlight "${_SCOPE}:${_args[0]:-}")"
+          else
+            _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+          fi
         fi
       fi
     }
