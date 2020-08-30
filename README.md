@@ -2297,7 +2297,7 @@ Examples:
   nb add "Note content."
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
-  nb add -f "Secret Document" --encrypt
+  nb add -t "Secret Document" --encrypt
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
