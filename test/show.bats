@@ -414,6 +414,38 @@ load test_helper
   [[ "${lines[1]}" =~ example-two ]]
 }
 
+# `s <id>` #################################################################
+
+@test "\`s <id> --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" s 1 --filename
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "example.md" ]]
+}
+
+# `view <id>` #################################################################
+
+@test "\`view <id> --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" view 1 --filename
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" == "example.md" ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {

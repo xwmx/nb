@@ -827,6 +827,63 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_HEADER)" == '0' ]]
 }
 
+# `set NB_LIMIT` ##############################################################
+
+@test "\`settings set NB_LIMIT\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_LIMIT 5
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_LIMIT  ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ 5         ]]
+  [[ "$("${_NB}" settings get NB_LIMIT)" == 5 ]]
+}
+
+@test "\`settings set limit\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set limit 6
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0 ]]
+  [[ "${output}" =~ NB_LIMIT  ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ 6         ]]
+  [[ "$("${_NB}" settings get NB_LIMIT)" == 6 ]]
+}
+
+@test "\`settings set NB_LIMIT\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_LIMIT 7
+
+  [[ "${output}" =~ NB_LIMIT  ]]
+  [[ "${output}" =~ set\ to\  ]]
+  [[ "${output}" =~ 7         ]]
+
+  run "${_NB}" settings set NB_LIMIT example
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 1 ]]
+  [[ "${output}" =~ NB_LIMIT    ]]
+  [[ "${output}" =~ must\ be\   ]]
+
+  printf "get NB_LIMIT: '%s'\\n" "$("${_NB}" settings get NB_LIMIT)"
+  [[ "$("${_NB}" settings get NB_LIMIT)" == 7 ]]
+}
+
 # `list` ######################################################################
 
 @test "\`settings show <name>\` in lowercase shows setting." {

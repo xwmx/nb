@@ -265,6 +265,11 @@ the latest version using the [`nb update`](#update) subcommand.
 
 <p align="center">
   <a href="#-notes">Notes</a> •
+  <a href="#adding-notes">Adding</a> •
+  <a href="#listing-notes">Listing</a> •
+  <a href="#editing-notes">Editing</a> •
+  <a href="#viewing-notes">Viewing</a> •
+  <a href="#deleting-notes">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-search">Search</a> •
   <a href="#-revision-history">History</a> •
@@ -276,7 +281,8 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-nb-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
-  <a href="#specifications">Specifications</a>
+  <a href="#specifications">Specifications</a> •
+  <a href="#tests">Tests</a>
 </p>
 
 To get started, simply run:
@@ -363,7 +369,7 @@ Added [6] 20200101000100.md
 > pbpaste | nb add
 Added [7] 20200101000200.md
 
-# create a new note containing the clipboard contents with xclip
+# create a new note containing the clipboard contents using xclip
 > xclip -o | nb add
 Added [8] 20200101000300.md
 ```
@@ -503,8 +509,8 @@ filenames that fuzzy match the query:
 [1] Ideas
 ```
 
-A case-insensitive regular expression can also be to filter filenames and
-titles:
+A case-insensitive regular expression can also be used to filter
+filenames and titles:
 
 ```bash
 > nb ls "^example.*"
@@ -652,9 +658,10 @@ Todos
 title: Ideas
 ```
 
-`nb` and `nb ls` display the 20 most recently modified items. To list a
-different number of items, use the `-n`,`--limit`, `--<limit>`, `-a`, or
-`--all` flags:
+`nb` and `nb ls` display the 20 most recently modified items. The default
+limit can be changed with [`nb set limit <number>`](#settings). To list a
+different number of items on a per-command basis, use the `-n`,`--limit`,
+`--<limit>`, `-a`, or `--all` flags:
 
 ```bash
 > nb -n 2
@@ -751,6 +758,8 @@ nb e "A Document Title"
 nb 3 e
 ```
 
+For `nb edit` help information, run [`nb help edit`](#edit).
+
 #### Viewing Notes
 
 Notes can be viewed using `nb show`:
@@ -846,6 +855,26 @@ nb s "A Document Title"
 nb 3 s
 ```
 
+##### Alias: `view`
+
+`nb show` can also be invoked with `nb view` for convenience:
+
+```bash
+# show note by id
+nb view 3
+
+# show note by filename
+nb view example.md
+
+# show note by title
+nb view "A Document Title"
+
+# show note by id, alternative
+nb 3 view
+```
+
+For `nb show` help information, run [`nb help show`](#show).
+
 #### Deleting Notes
 
 Deleting notes works the same, accepting an id, filename, or title to
@@ -889,6 +918,8 @@ nb d "A Document Title"
 # delete note by id, alternative
 nb 3 d
 ```
+
+For `nb delete` help information, run [`nb help delete`](#delete).
 
 ### 🔖 Bookmarks
 
@@ -1367,7 +1398,8 @@ example · home
 A bookmark can be added in another notebook using the same approach:
 
 ```bash
-> nb example: https://example.com --tags tag1,tag2
+# create a new bookmark in a notebook named "sample"
+> nb sample: https://example.com --tags tag1,tag2
 ```
 
 Notes can also be moved between notebooks:
@@ -1550,6 +1582,9 @@ remote URL:
 ```bash
 # set the current notebook's remote to a private GitHub repository
 nb remote set https://github.com/example/example.git
+
+# set the remote for the notebook named "example"
+nb example:remote set https://github.com/example/example.git
 ```
 
 Any notebook with a remote URL will sync automatically every time a command is
@@ -1722,6 +1757,19 @@ EDITOR restored to the default: vim
 
 > nb settings get editor
 vim
+```
+
+#### Alias: `set`
+
+Use `nb set` to quickly assign values to settings without starting the
+settings prompt:
+
+```bash
+> nb set color_theme blacklight
+NB_COLOR_THEME set to blacklight
+
+> nb set limit 10
+NB_LIMIT set to 10
 ```
 
 For more information about settings, see [`nb help settings`](#settings-1) and
@@ -2058,10 +2106,10 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  nb settings [<number> [<value>] | <name> [<value>]]
+  nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number>] | edit | list [--long]]
-  nb settings (get | show | unset) (<number> | <name>)
-  nb settings set (<number> | <name>) <value>
+  nb settings (get | show | unset) (<name> | <number>)
+  nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [--dump]
           [--filename | --id | --path | --render | --title]
@@ -2249,7 +2297,7 @@ Examples:
   nb add "Note content."
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
-  nb add -f "Secret Document" --encrypt
+  nb add -t "Secret Document" --encrypt
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
@@ -2904,17 +2952,17 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  nb settings [<number> [<value>] | <name> [<value>]]
+  nb settings [<name> [<value>] | <number> [<value>]]
   nb settings colors [<number>]
   nb settings edit
-  nb settings get   (<number> | <name>)
+  nb settings get   (<name> | <number>)
   nb settings list  [--long]
-  nb settings set   (<number> | <name>) <value>
-  nb settings show  (<number> | <name>)
-  nb settings unset (<number> | <name>)
+  nb settings set   (<name> | <number>) <value>
+  nb settings show  (<name> | <number>)
+  nb settings unset (<name> | <number>)
 
 Subcommands:
-  (default)  Open the settings prompt, to <number> or <name>, if present.
+  (default)  Open the settings prompt, to <name> or <number>, if present.
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
@@ -2929,6 +2977,11 @@ Description:
   Configure `nb`. Use `nb settings set` to customize a setting and
   `nb settings unset` to restore the default for a setting.
 
+  Use the `nb set` alias to quickly assign values to settings:
+
+    nb set color_theme blacklight
+    nb set limit 40
+
 Examples:
   nb settings
   nb settings set 5 "org"
@@ -2936,6 +2989,7 @@ Examples:
   nb settings unset color_primary
   nb settings colors
   nb settings colors 105
+  nb set limit 15
 
 Alias: `set`
 ```
@@ -3052,7 +3106,13 @@ Alias: `set`
 
      • Default Value: 1
 
-[10] nb_dir
+[10] limit
+     -----
+     The maximum number of notes included in the `nb` and `nb ls` lists.
+
+     • Default Value: 20
+
+[11] nb_dir
      ------
      The location of the directory that contains the notebooks.
 
@@ -3148,6 +3208,7 @@ Examples:
   nb show "A Document Title" --dump --no-color
   nb 1 show
 
+Alias: `view`
 Shortcut Alias: `s`
 ```
 
