@@ -2804,7 +2804,7 @@ Usage:
             (<name> | --reset | --to-bookmark | --to-note)
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
-  ${_ME} [set | settings] [<name> [<value>] | <number> [<value>]]
+  ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings [colors [<number>] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
