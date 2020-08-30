@@ -6301,7 +6301,7 @@ _ls() {
         )" || :
       fi
 
-      if [[ -n "${_notebook:-}" ]]
+      if [[ -n "${_notebook:-}" ]] && ! ((_SCOPED))
       then
         _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
           _SCOPE="${_notebook}"                 \
