@@ -758,6 +758,8 @@ nb e "A Document Title"
 nb 3 e
 ```
 
+For `nb edit` help information, run [`nb help edit`](#edit).
+
 #### Viewing Notes
 
 Notes can be viewed using `nb show`:
@@ -853,6 +855,8 @@ nb s "A Document Title"
 nb 3 s
 ```
 
+For `nb show` help information, run [`nb help show`](#show).
+
 #### Deleting Notes
 
 Deleting notes works the same, accepting an id, filename, or title to
@@ -896,6 +900,8 @@ nb d "A Document Title"
 # delete note by id, alternative
 nb 3 d
 ```
+
+For `nb delete` help information, run [`nb help delete`](#delete).
 
 ### 🔖 Bookmarks
 
