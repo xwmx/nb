@@ -8949,6 +8949,7 @@ Examples:
   ${_ME} show "A Document Title" --dump --no-color
   ${_ME} 1 show
 
+Alias: \`view\`
 Shortcut Alias: \`s\`
 HEREDOC
 _show() {
@@ -9322,6 +9323,7 @@ Can't show archives. Export archive and expand to edit.\\n"
   fi
 }
 _alias_subcommand "show" "s"
+_alias_subcommand "show" "view"
 
 # status ############################################################### status
 
@@ -9706,6 +9708,7 @@ _SUBCOMMANDS=(
   upgrade
   use
   version
+  view
 )
 
 # $_DOCUMENTED_SUBCOMMANDS
@@ -9802,6 +9805,7 @@ _GIT_SUBCOMMANDS=(
   search
   use
   u
+  view
 )
 
 # $_SUBCOMMANDS_PATTERN

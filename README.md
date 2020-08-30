@@ -3183,6 +3183,7 @@ Examples:
   nb show "A Document Title" --dump --no-color
   nb 1 show
 
+Alias: `view`
 Shortcut Alias: `s`
 ```
 
