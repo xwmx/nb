@@ -7067,6 +7067,11 @@ Please type $(_highlight "${_name}") to confirm: " __response
     local _notebook_name="${2:-}"
     if [[ -n "${_notebook_name:-}" ]]
     then
+      if [[ "${_notebook_name}" =~ :$ ]]
+      then
+        _notebook_name=$(printf "%s\\n" "${_notebook_name}" | cut -f 1 -d ":")
+      fi
+
       _NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"
     else
       _notebook_name="$(_notebooks current)"
