@@ -1456,6 +1456,19 @@ good way to organize your notes and bookmarks by top-level topic. Tags
 are searchable across notebooks and can be created ad hoc, making notebooks
 and tags distinct and complementary organizational systems in `nb`.
 
+Search for tags with `nb search` / `nb q`:
+
+```bash
+# search for #tag in the current notebook
+nb q "#tag"
+
+# search for #sample-tag in all notebooks
+nb q "#tag" -a
+
+# search for #sample-tag in the "example" notebook
+nb example:q "#tag"
+```
+
 #### Global and Local Notebooks
 
 ##### Global Notebooks
