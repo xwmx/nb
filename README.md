@@ -1418,13 +1418,6 @@ Notes can also be moved between notebooks:
 nb move 3 example
 ```
 
-##### Notebooks, Tags, and Taxonomy
-
-`nb` is optimized to work with multiple notebooks, so notebooks are a
-good way to organize your notes and bookmarks by top-level topic. Tags
-are searchable across notebooks and can be created ad hoc, making notebooks
-and tags distinct and complementary organizational systems in `nb`.
-
 ##### Notebooks and Tab Completion
 
 [`nb` tab completion](#tab-completion) is optimized for frequently running
@@ -1455,6 +1448,13 @@ Scoped notebook commands are also available in tab completion:
 > nb example:hi<tab>
 # completes to "example:history"
 ```
+
+#### Notebooks, Tags, and Taxonomy
+
+`nb` is optimized to work with multiple notebooks, so notebooks are a
+good way to organize your notes and bookmarks by top-level topic. Tags
+are searchable across notebooks and can be created ad hoc, making notebooks
+and tags distinct and complementary organizational systems in `nb`.
 
 #### Global and Local Notebooks
 
