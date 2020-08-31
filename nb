@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.6.1"
+_VERSION="4.6.2"
 
 # $_ME
 #
@@ -2690,9 +2690,9 @@ __          _                     _
 current notebook name, the shell prompt, and divider lines.
 
 \`${_ME}\` includes several built-in color themes and also supports user-defined
-themes. The current color theme can be set using the \`${_ME} settings\` prompt:
+themes. The current color theme can be set using \`${_ME} set color_theme\`:
 
-    $(_highlight "${_ME} settings color_theme")
+    $(_highlight "${_ME} set color_theme")
 
 Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
 which is currently located at:
@@ -2715,10 +2715,10 @@ The primary and secondary colors can be set individually, making color themes
 easily customizable:
 
     $(_highlight_secondary "# open the settings prompt for the primary color")
-    $(_highlight "${_ME} settings color_primary")
+    $(_highlight "${_ME} set color_primary")
 
     $(_highlight_secondary "# open the settings prompt for the secondary color")
-    $(_highlight "${_ME} settings color_secondary")
+    $(_highlight "${_ME} set color_secondary")
 
 To view a table of available colors and numbers, run:
 
@@ -2920,11 +2920,11 @@ Description:
 
   \`${_ME}\` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the \`--type\`
-  option. To change the default file type, use \`${_ME} settings\`.
+  option. To change the default file type, use \`${_ME} set default_extension\`.
 
   When the \`-e\` / \`--encrypt\` option is used, \`${_ME}\` will encrypt the
   note with AES-256 using OpenSSL by default, or GPG, if configured in
-  \`${_ME} settings\`.
+  \`${_ME} set encryption_tool\`.
 
 Examples:
   ${_ME} add
@@ -5933,8 +5933,6 @@ _ls() {
   # Usage:
   #   _ls_print_footer
   _ls_print_footer() {
-    ((NB_FOOTER)) || return 0
-
     local _footer_line_hi=
     local _footer_line_raw=
     local _footer_separator_raw=" ·"
@@ -6042,8 +6040,6 @@ _ls() {
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
   _ls_print_header() {
-    ((NB_HEADER)) || return 0
-
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
@@ -6284,7 +6280,7 @@ _ls() {
   _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
 
   {
-    if [[ -z "${_args[*]:-}" ]]
+    if ((NB_HEADER)) && [[ -z "${_args[*]:-}" ]]
     then
       _ls_print_header "${_header_flags[@]:-}"
     fi
@@ -6327,7 +6323,7 @@ _ls() {
       fi
     }
 
-    if ((NB_FOOTER))
+    if ((NB_FOOTER)) && [[ -z "${_args[*]:-}" ]]
     then
       _ls_print_footer
     fi
@@ -7067,6 +7063,11 @@ Please type $(_highlight "${_name}") to confirm: " __response
     local _notebook_name="${2:-}"
     if [[ -n "${_notebook_name:-}" ]]
     then
+      if [[ "${_notebook_name}" =~ :$ ]]
+      then
+        _notebook_name=$(printf "%s\\n" "${_notebook_name}" | cut -f 1 -d ":")
+      fi
+
       _NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"
     else
       _notebook_name="$(_notebooks current)"
@@ -8141,7 +8142,7 @@ _alias_subcommand "search" "q"
 
 desc "settings" <<HEREDOC
 Usage:
-  ${_ME} settings [<name> [<value>] | <number> [<value>]]
+  ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings colors [<number>]
   ${_ME} settings edit
   ${_ME} settings get   (<name> | <number>)
@@ -9775,6 +9776,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   rename
   s
   search
+  set
   settings
   shell
   show
@@ -10025,7 +10027,7 @@ _main() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|help|settings|update|version)
+    commands|completions|env|help|set|settings|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)

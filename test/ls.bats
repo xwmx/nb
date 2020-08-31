@@ -108,7 +108,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0        ]]
-  [[ "${#lines[@]}" -eq 21  ]]
+  [[ "${#lines[@]}" -eq 18  ]]
 }
 
 # `ls -n <number>`, ls --limit <number>, ls --<number> ########################
@@ -335,7 +335,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 4           ]]
+  [[ "${#lines[@]}" -eq 1           ]]
   [[ "${lines[0]}" =~ first.md      ]]
   [[ "${lines[0]}" =~ [*1*]         ]]
   [[ "${lines[0]}" =~ ${_files[0]}  ]]
@@ -354,7 +354,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 5           ]]
+  [[ "${#lines[@]}" -eq 2           ]]
   [[ "${lines[0]}" =~ third.md      ]]
   [[ "${lines[0]}" =~ [*3*]         ]]
   [[ "${lines[0]}" =~ ${_files[2]}  ]]
@@ -509,7 +509,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 6           ]]
+  [[ "${#lines[@]}" -eq 2           ]]
   [[ "${lines[0]}" =~ one\ example  ]]
   [[ "${lines[0]}" =~ [*1*]         ]]
 }

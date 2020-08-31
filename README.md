@@ -322,15 +322,16 @@ nb add --title "Secret Document" --encrypt
 
 `nb add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-`$EDITOR` environment variable or [`nb settings`](#settings).
+`$EDITOR` environment variable or [`nb set editor`](#settings-list---long).
 
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. The default file type can be changed to whatever you
-like using [`nb settings default_extension`](#settings-list---long).
+like using [`nb set default_extension`](#settings-list---long).
 
 Password-protected notes are created with the `-e` / `--encrypt` flag
 and are encrypted with AES-256 using OpenSSL by default.
-GPG is also supported and can be configured in `nb settings`.
+GPG is also supported and can be configured with
+[`nb set encryption_tool`](#settings-list---long).
 Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
@@ -451,7 +452,8 @@ Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
 `nb ls` also includes a footer with example commands for easy reference.
 The notebook header and command footer can be configured or hidden with
-`nb settings header` and `nb settings footer`.
+[`nb set header`](#settings-list---long) and
+[`nb set footer`](#settings-list---long).
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
@@ -659,9 +661,9 @@ title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
-limit can be changed with [`nb set limit <number>`](#settings). To list a
-different number of items on a per-command basis, use the `-n`,`--limit`,
-`--<limit>`, `-a`, or `--all` flags:
+limit can be changed with [`nb set limit <number>`](#settings-list---long).
+To list a different number of items on a per-command basis, use the `-n`,
+`--limit`, `--<limit>`, `-a`, or `--all` flags:
 
 ```bash
 > nb -n 2
@@ -1140,6 +1142,14 @@ nb peek 12
 If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
+`nb show` and `nb edit` can also be used to view and edit bookmark files,
+which include the cached page converted to Markdown.
+
+`nb show <id> --render` displays the bookmark file converted to HTML in
+the terminal web browser, including all bookmark fields and the cached page
+content, providing a cleaned-up, distraction-free, locally-served view of
+the page content along with all of your notes.
+
 ##### Shortcut Aliases: `o` and `p`
 
 `open` and `peek` can also be used with the shortcut aliases `o` and
@@ -1321,7 +1331,7 @@ nb history Example
 
 You can create additional notebooks, each of which has its own version history.
 
-Create a new notebook:
+Create a new notebook with `nb notebooks add`:
 
 ```bash
 # add a notebook named example
@@ -1438,6 +1448,26 @@ Scoped notebook commands are also available in tab completion:
 # completes to "example:"
 > nb example:hi<tab>
 # completes to "example:history"
+```
+
+#### Notebooks, Tags, and Taxonomy
+
+`nb` is optimized to work with multiple notebooks, so notebooks are a
+good way to organize your notes and bookmarks by top-level topic. Tags
+are searchable across notebooks and can be created ad hoc, making notebooks
+and tags distinct and complementary organizational systems in `nb`.
+
+Search for a tag in or across notebooks with `nb search` / `nb q`:
+
+```bash
+# search for #tag in the current notebook
+nb q "#tag"
+
+# search for #tag in all notebooks
+nb q "#tag" -a
+
+# search for #tag in the "example" notebook
+nb example:q "#tag"
 ```
 
 #### Global and Local Notebooks
@@ -1601,8 +1631,8 @@ system.
 Many services provide free private git repositories, so git syncing with
 `nb` is easy, free, and vendor-independent. You can also sync your notes
 using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
-your `nb` directory in `nb settings` and git syncing will still work
-simultaneously.
+your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
+and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
 pass the URL to `nb notebooks add` and `nb` will clone your
@@ -1620,8 +1650,8 @@ Turn off syncing for a notebook by removing the remote:
 nb remote remove
 ```
 
-You can also turn off autosync in `nb settings` and sync manually with
-`nb sync`.
+You can also turn off autosync with
+[`nb set auto_sync`](#settings-list---long) and sync manually with `nb sync`.
 
 ### ↕️ Import / Export
 
@@ -1682,11 +1712,11 @@ nb export Movies /path/to/example.html
 
 ### ⚙️ Settings
 
-`nb settings` opens the settings prompt, which provides an easy way to
-change your `nb` settings.
+[`nb set`](#settings) and [`nb settings`](#settings) open the settings
+prompt, which provides an easy way to change your `nb` settings.
 
 ```bash
-nb settings
+nb set
 ```
 
 To update a setting in the prompt, enter the setting name or number,
@@ -1699,10 +1729,10 @@ then enter the new value, and `nb` will add the setting to your
 `editor` setting.
 
 The settings prompt for a setting can be started by passing the setting
-name or number to `nb settings`:
+name or number to `nb set`:
 
 ```bash
-> nb settings editor
+> nb set editor
 [6]  editor
      ------
      The command line text editor to use with `nb`.
@@ -1727,19 +1757,28 @@ Enter a new value, unset to set to the default value, or q to quit.
 Value:
 ```
 
-A setting can also be updated without the prompt using `nb settings set`:
+A setting can also be updated without the prompt by passing both the name
+and value to `nb set`:
 
 ```bash
 # set editor with setting name
-> nb settings set editor code
+> nb set editor code
 EDITOR set to code
 
 # set editor with setting number (6)
-> nb settings set 6 code
+> nb set 6 code
 EDITOR set to code
+
+# set the color theme to blacklight
+> nb set color_theme blacklight
+NB_COLOR_THEME set to blacklight
+
+# set the default `ls` limit to 10
+> nb set limit 10
+NB_LIMIT set to 10
 ```
 
-Print the value of a setting:
+Use `nb settings get` to print the value of a setting:
 
 ```bash
 > nb settings get editor
@@ -1749,7 +1788,7 @@ code
 code
 ```
 
-Unset a setting and revert to default:
+Use `nb settings unset` to unset a setting and revert to default:
 
 ```bash
 > nb settings unset editor
@@ -1759,20 +1798,11 @@ EDITOR restored to the default: vim
 vim
 ```
 
-#### Alias: `set`
+`nb set` and `nb settings` are aliases that refer to the same subcommand, so
+the two subcommand names can be used interchangably.
 
-Use `nb set` to quickly assign values to settings without starting the
-settings prompt:
-
-```bash
-> nb set color_theme blacklight
-NB_COLOR_THEME set to blacklight
-
-> nb set limit 10
-NB_LIMIT set to 10
-```
-
-For more information about settings, see [`nb help settings`](#settings-1) and
+For more information about `set` and `settings`, see
+[`nb help settings`](#settings) and
 [`nb settings list --long`](#settings-list---long).
 
 ### 🎨 Color Themes
@@ -1781,10 +1811,11 @@ For more information about settings, see [`nb help settings`](#settings-1) and
 current notebook name, the shell prompt, and divider lines.
 
 `nb` includes several built-in color themes and also supports user-defined
-themes. The current color theme can be set using the `nb settings` prompt:
+themes. The current color theme can be set using
+[`nb set color_theme`](#settings-list---long):
 
 ```bash
-nb settings color_theme
+nb set color_theme
 ```
 
 #### Built-in Color Themes
@@ -1877,16 +1908,16 @@ easily customizable:
 
 ```bash
 # open the settings prompt for the primary color
-nb settings color_primary
+nb set color_primary
 
 # open the settings prompt for the secondary color
-nb settings color_secondary
+nb set color_secondary
 ```
 
 To view a table of available colors and numbers, run:
 
 ```bash
-nb settings colors
+nb set colors
 ```
 
 ### $ Shell Theme Support
@@ -2285,11 +2316,11 @@ Description:
 
   `nb` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the `--type`
-  option. To change the default file type, use `nb settings`.
+  option. To change the default file type, use `nb set default_extension`.
 
   When the `-e` / `--encrypt` option is used, `nb` will encrypt the
   note with AES-256 using OpenSSL by default, or GPG, if configured in
-  `nb settings`.
+  `nb set encryption_tool`.
 
 Examples:
   nb add
@@ -2952,7 +2983,7 @@ Shortcut Alias: `q`
 
 ```text
 Usage:
-  nb settings [<name> [<value>] | <number> [<value>]]
+  nb set [<name> [<value>] | <number> [<value>]]
   nb settings colors [<number>]
   nb settings edit
   nb settings get   (<name> | <number>)
@@ -3301,8 +3332,8 @@ This creates a file with the name `example.bookmark.md` containing:
 <https://example.com>
 ```
 
-Additional bookmark information is separated into sections, with each
-bookmark section indicated by a Markdown `h2` heading.
+In a full bookmark, bookmark information is separated into sections,
+with each bookmark section indicated by a Markdown `h2` heading.
 
 #### Example
 
@@ -3437,10 +3468,11 @@ A list of tags represented as hashtags separated by individual spaces.
 
 The full content of the bookmarked page, converted to Markdown.
 
-The Content section is intended to make the page content available to
-full-text search. The source HTML is converted to Markdown to reduce
-the amount of markup and make it more readable when reviewing search
-results.
+The `## Content` section makes the page content available locally for
+full-text search and viewing of page content. The source HTML is converted
+to inline Markdown to reduce the amount of markup, make it more readable,
+and make page conent easily viewable in the terminal as markdown and
+streamlined HTML in terminal web browsers.
 
 ##### `## Source`
 
