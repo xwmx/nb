@@ -322,7 +322,7 @@ nb add --title "Secret Document" --encrypt
 
 `nb add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-`$EDITOR` environment variable or [`nb set editor`](#settings).
+`$EDITOR` environment variable or [`nb set editor`](#settings-list---long).
 
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. The default file type can be changed to whatever you
@@ -330,7 +330,8 @@ like using [`nb set default_extension`](#settings-list---long).
 
 Password-protected notes are created with the `-e` / `--encrypt` flag
 and are encrypted with AES-256 using OpenSSL by default.
-GPG is also supported and can be configured with `nb set encryption_tool`.
+GPG is also supported and can be configured with
+[`nb set encryption_tool`](#settings-list---long).
 Encrypted notes can be decrypted using the OpenSSL and GPG command line
 tools directly, so you aren't dependent on `nb` to decrypt your
 files.
@@ -451,7 +452,8 @@ Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
 `nb ls` also includes a footer with example commands for easy reference.
 The notebook header and command footer can be configured or hidden with
-`nb set header` and `nb set footer`.
+[`nb set header`](#settings-list---long) and
+[`nb set footer`](#settings-list---long).
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
@@ -659,9 +661,9 @@ title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
-limit can be changed with [`nb set limit <number>`](#settings). To list a
-different number of items on a per-command basis, use the `-n`,`--limit`,
-`--<limit>`, `-a`, or `--all` flags:
+limit can be changed with [`nb set limit <number>`](#settings-list---long).
+To list a different number of items on a per-command basis, use the `-n`,
+`--limit`, `--<limit>`, `-a`, or `--all` flags:
 
 ```bash
 > nb -n 2
@@ -1601,8 +1603,8 @@ system.
 Many services provide free private git repositories, so git syncing with
 `nb` is easy, free, and vendor-independent. You can also sync your notes
 using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
-your `nb` directory with `nb set nb_dir <path>` and git syncing will still
-work simultaneously.
+your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
+and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
 pass the URL to `nb notebooks add` and `nb` will clone your
@@ -1620,8 +1622,8 @@ Turn off syncing for a notebook by removing the remote:
 nb remote remove
 ```
 
-You can also turn off autosync with `nb set auto_sync` and sync manually
-with `nb sync`.
+You can also turn off autosync with
+[`nb set auto_sync`](#settings-list---long) and sync manually with `nb sync`.
 
 ### ↕️ Import / Export
 
@@ -1682,8 +1684,8 @@ nb export Movies /path/to/example.html
 
 ### ⚙️ Settings
 
-`nb set` and `nb settings` open the settings prompt, which provides an easy
-way to change your `nb` settings.
+[`nb set`](#settings) and [`nb settings`](#settings) open the settings
+prompt, which provides an easy way to change your `nb` settings.
 
 ```bash
 nb set
@@ -1772,7 +1774,7 @@ vim
 the two subcommand names can be used interchangably.
 
 For more information about `set` and `settings`, see
-[`nb help settings`](#settings-1) and
+[`nb help settings`](#settings) and
 [`nb settings list --long`](#settings-list---long).
 
 ### 🎨 Color Themes
@@ -1781,7 +1783,8 @@ For more information about `set` and `settings`, see
 current notebook name, the shell prompt, and divider lines.
 
 `nb` includes several built-in color themes and also supports user-defined
-themes. The current color theme can be set using `nb set color_theme`:
+themes. The current color theme can be set using
+[`nb set color_theme`](#settings-list---long):
 
 ```bash
 nb set color_theme
