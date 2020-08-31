@@ -1142,6 +1142,13 @@ nb peek 12
 If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
+`nb show` and `nb edit` can also be used to view and edit bookmark files,
+which include the cached page converted to Markdown. `nb show <id> --render`
+displays the bookmark file converted to HTML in the terminal web browser,
+including all bookmark fields and the cached page content, providing a
+cleaned-up, distraction-free, locally-served view of the page content
+along with all of your notes.
+
 ##### Shortcut Aliases: `o` and `p`
 
 `open` and `peek` can also be used with the shortcut aliases `o` and
@@ -3440,10 +3447,11 @@ A list of tags represented as hashtags separated by individual spaces.
 
 The full content of the bookmarked page, converted to Markdown.
 
-The Content section is intended to make the page content available to
-full-text search. The source HTML is converted to Markdown to reduce
-the amount of markup and make it more readable when reviewing search
-results.
+The `## Content` section makes the page content available locally for
+full-text search and viewing of page content. The source HTML is converted
+to inline Markdown to reduce the amount of markup, make it more readable,
+and make page conent easily viewable in the terminal as markdown and
+streamlined HTML in terminal web browsers.
 
 ##### `## Source`
 
