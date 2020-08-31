@@ -6327,7 +6327,7 @@ _ls() {
       fi
     }
 
-    if ((NB_FOOTER))
+    if ((NB_FOOTER)) && [[ -z "${_args[*]:-}" ]]
     then
       _ls_print_footer
     fi
