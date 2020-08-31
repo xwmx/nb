@@ -3301,8 +3301,8 @@ This creates a file with the name `example.bookmark.md` containing:
 <https://example.com>
 ```
 
-Additional bookmark information is separated into sections, with each
-bookmark section indicated by a Markdown `h2` heading.
+In a full bookmark, bookmark information is separated into sections,
+with each bookmark section indicated by a Markdown `h2` heading.
 
 #### Example
 
