@@ -1143,11 +1143,12 @@ If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
 `nb show` and `nb edit` can also be used to view and edit bookmark files,
-which include the cached page converted to Markdown. `nb show <id> --render`
-displays the bookmark file converted to HTML in the terminal web browser,
-including all bookmark fields and the cached page content, providing a
-cleaned-up, distraction-free, locally-served view of the page content
-along with all of your notes.
+which include the cached page converted to Markdown.
+
+`nb show <id> --render` displays the bookmark file converted to HTML in
+the terminal web browser, including all bookmark fields and the cached page
+content, providing a cleaned-up, distraction-free, locally-served view of
+the page content along with all of your notes.
 
 ##### Shortcut Aliases: `o` and `p`
 
