@@ -1462,10 +1462,10 @@ Search for tags in or across notebooks with `nb search` / `nb q`:
 # search for #tag in the current notebook
 nb q "#tag"
 
-# search for #sample-tag in all notebooks
+# search for #tag in all notebooks
 nb q "#tag" -a
 
-# search for #sample-tag in the "example" notebook
+# search for #tag in the "example" notebook
 nb example:q "#tag"
 ```
 
