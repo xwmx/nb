@@ -1330,7 +1330,7 @@ nb history Example
 
 You can create additional notebooks, each of which has its own version history.
 
-Create a new notebook:
+Create a new notebook with `nb notebooks add`:
 
 ```bash
 # add a notebook named example
@@ -1417,6 +1417,13 @@ Notes can also be moved between notebooks:
 # move note 3 from the current notebook to "example"
 nb move 3 example
 ```
+
+##### Notebooks, Tags, and Taxonomy
+
+`nb` is optimized to work with multiple notebooks, so notebooks are a
+good way to organize your notes and bookmarks by top-level topic. Tags
+are searchable across notebooks and can be created ad hoc, making notebooks
+and tags distinct and complementary organizational systems in `nb`.
 
 ##### Notebooks and Tab Completion
 
