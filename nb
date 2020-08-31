@@ -5933,8 +5933,6 @@ _ls() {
   # Usage:
   #   _ls_print_footer
   _ls_print_footer() {
-    ((NB_FOOTER)) || return 0
-
     local _footer_line_hi=
     local _footer_line_raw=
     local _footer_separator_raw=" ·"
@@ -6042,8 +6040,6 @@ _ls() {
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
   _ls_print_header() {
-    ((NB_HEADER)) || return 0
-
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
@@ -6284,7 +6280,7 @@ _ls() {
   _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
 
   {
-    if [[ -z "${_args[*]:-}" ]]
+    if ((NB_HEADER)) && [[ -z "${_args[*]:-}" ]]
     then
       _ls_print_header "${_header_flags[@]:-}"
     fi
