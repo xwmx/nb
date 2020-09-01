@@ -2105,8 +2105,8 @@ Usage:
             [<pandoc options>...]
   nb export notebook <name> [<path>]
   nb git <git options>...
-  nb help [<subcommand>]
-  nb help [-c | --colors] | [-r | --readme] | [-s | --short]
+  nb help [<subcommand>] [-p | --print]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
@@ -2142,7 +2142,7 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--dump]
+  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
   nb sync [-a | --all]
@@ -2552,9 +2552,12 @@ Description:
 
 ```text
 Usage:
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
+  nb help [<subcommand>] [-p | --print]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
 
 Options:
+  -c, --colors  View information about color themes and color settings.
+  -p, --print   Print to standard output / terminal.
   -r, --readme  View the `nb` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
@@ -3189,19 +3192,19 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--dump]
+  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
 
 Options:
-  --dump      Print to standard output.
-  --filename  Print the filename of the item.
-  --id        Print the id number of the item.
-  --path      Print the full path of the item.
-  --render    Use `pandoc` [1] to render the file to HTML and display with
-              `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
-              available, `--render` is ignored.
-  --title     Print the title of the note.
+  --filename   Print the filename of the item.
+  --id         Print the id number of the item.
+  --path       Print the full path of the item.
+  -p, --print  Print to standard output / terminal.
+  --render     Use `pandoc` [1] to render the file to HTML and display with
+               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
+               not available, `--render` is ignored.
+  --title      Print the title of the note.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -3224,7 +3227,8 @@ Description:
     n                 Jump to next <query> match
     q                 Quit
 
-  To skip the pager and print to standard output, use the `--dump` option.
+  To skip the pager and print to standard output, use the `-p` / `--print`
+  option.
 
   If Pygments [4] is installed, notes are printed with syntax highlighting.
 
@@ -3236,7 +3240,7 @@ Description:
 Examples:
   nb show 1
   nb show example.md --render
-  nb show "A Document Title" --dump --no-color
+  nb show "A Document Title" --print --no-color
   nb 1 show
 
 Alias: `view`
