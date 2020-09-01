@@ -799,7 +799,7 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-*Note: If `less` scrolling isn't working in [iterm2](https://www.iterm2.com/),
+*Note: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
 go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
