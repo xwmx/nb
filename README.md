@@ -1646,8 +1646,11 @@ nb notebooks add Example https://gitlab.com/example/example.git
 Turn off syncing for a notebook by removing the remote:
 
 ```bash
-# remove the current remote from the current notebook
+# remove the remote from the current notebook
 nb remote remove
+
+# remove the remote from the notebook named "example"
+nb example:remote remove
 ```
 
 You can also turn off autosync with
