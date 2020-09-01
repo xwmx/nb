@@ -337,8 +337,8 @@ tools directly, so you aren't dependent on `nb` to decrypt your
 files.
 
 `nb add` behaves differently depending on the type of argument it
-receives. When a filename is specified, a new note with that filename is
-opened in the editor:
+receives. When a filename with extension is specified, a new note
+with that filename is opened in the editor:
 
 ```bash
 nb add example.md
