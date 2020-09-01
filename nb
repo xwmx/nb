@@ -8949,8 +8949,8 @@ Description:
 
     Key               Function
     ---               --------
-    mouse scroll      Scroll up / down
-    arrow up / down   Scroll one line up / down
+    mouse scroll      Scroll up or down
+    arrow up or down  Scroll one line up or down
     f                 Jump forward one window
     b                 Jump back one window
     d                 Jump down one half window
