@@ -76,7 +76,7 @@ any device.
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
-providing a full-featured, intuitive, and enjoyable experience within a
+providing a full-featured, intuitive experience within a composable
 user-centric text interface.
 The entire program is a single well-tested shell script
 that can be copied or `curl`ed almost anywhere and just work, using
@@ -337,8 +337,8 @@ tools directly, so you aren't dependent on `nb` to decrypt your
 files.
 
 `nb add` behaves differently depending on the type of argument it
-receives. When a filename is specified, a new note with that filename is
-opened in the editor:
+receives. When a filename with extension is specified, a new note
+with that filename is opened in the editor:
 
 ```bash
 nb add example.md
@@ -788,8 +788,8 @@ By default, `nb show` will open the note in
 ```text
 Key               Function
 ---               --------
-mouse scroll      Scroll up / down
-arrow up / down   Scroll one line up / down
+mouse scroll      Scroll up or down
+arrow up or down  Scroll one line up or down
 f                 Jump forward one window
 b                 Jump back one window
 d                 Jump down one half window
@@ -799,7 +799,7 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-*Note: If `less` scrolling isn't working in [iterm2](https://www.iterm2.com/),
+*Note: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
 go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
@@ -1646,12 +1646,16 @@ nb notebooks add Example https://gitlab.com/example/example.git
 Turn off syncing for a notebook by removing the remote:
 
 ```bash
-# remove the current remote from the current notebook
+# remove the remote from the current notebook
 nb remote remove
+
+# remove the remote from the notebook named "example"
+nb example:remote remove
 ```
 
 You can also turn off autosync with
-[`nb set auto_sync`](#settings-list---long) and sync manually with `nb sync`.
+[`nb set auto_sync`](#settings-list---long) and sync manually with
+[`nb sync`](#sync).
 
 ### ↕️ Import / Export
 
@@ -2105,8 +2109,8 @@ Usage:
             [<pandoc options>...]
   nb export notebook <name> [<path>]
   nb git <git options>...
-  nb help [<subcommand>]
-  nb help [-c | --colors] | [-r | --readme] | [-s | --short]
+  nb help [<subcommand>] [-p | --print]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
@@ -2142,7 +2146,7 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--dump]
+  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
   nb sync [-a | --all]
@@ -2552,9 +2556,12 @@ Description:
 
 ```text
 Usage:
-  nb help [<subcommand> | [-r | --readme] | [-s | --short]]
+  nb help [<subcommand>] [-p | --print]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
 
 Options:
+  -c, --colors  View information about color themes and color settings.
+  -p, --print   Print to standard output / terminal.
   -r, --readme  View the `nb` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
@@ -3189,19 +3196,19 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--dump]
+  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
   nb show <notebook>
 
 Options:
-  --dump      Print to standard output.
-  --filename  Print the filename of the item.
-  --id        Print the id number of the item.
-  --path      Print the full path of the item.
-  --render    Use `pandoc` [1] to render the file to HTML and display with
-              `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is not
-              available, `--render` is ignored.
-  --title     Print the title of the note.
+  --filename   Print the filename of the item.
+  --id         Print the id number of the item.
+  --path       Print the full path of the item.
+  -p, --print  Print to standard output / terminal.
+  --render     Use `pandoc` [1] to render the file to HTML and display with
+               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
+               not available, `--render` is ignored.
+  --title      Print the title of the note.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -3214,8 +3221,8 @@ Description:
 
     Key               Function
     ---               --------
-    mouse scroll      Scroll up / down
-    arrow up / down   Scroll one line up / down
+    mouse scroll      Scroll up or down
+    arrow up or down  Scroll one line up or down
     f                 Jump forward one window
     b                 Jump back one window
     d                 Jump down one half window
@@ -3224,7 +3231,8 @@ Description:
     n                 Jump to next <query> match
     q                 Quit
 
-  To skip the pager and print to standard output, use the `--dump` option.
+  To skip the pager and print to standard output, use the `-p` / `--print`
+  option.
 
   If Pygments [4] is installed, notes are printed with syntax highlighting.
 
@@ -3236,7 +3244,7 @@ Description:
 Examples:
   nb show 1
   nb show example.md --render
-  nb show "A Document Title" --dump --no-color
+  nb show "A Document Title" --print --no-color
   nb 1 show
 
 Alias: `view`

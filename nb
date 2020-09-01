@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.6.2"
+_VERSION="4.6.3"
 
 # $_ME
 #
@@ -2606,11 +2606,12 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand>]
-  ${_ME} help  [-c | --colors] | [-r | --readme] | [-s | --short]
+  ${_ME} help [<subcommand>] [-p | --print]
+  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
 
 Options:
   -c, --colors  View information about color themes and color settings.
+  -p, --print   Print to standard output / terminal.
   -r, --readme  View the \`${_ME}\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
@@ -2636,11 +2637,11 @@ _help() {
       --pager)
         _use_pager=1
         ;;
+      -p|--print|--dump|--skip-pager|--no-pager)
+        _use_pager=0
+        ;;
       -s|--short)
         _short=1
-        ;;
-      --dump|--skip-pager|--no-pager)
-        _use_pager=0
         ;;
       -c|*color*|*colour*|*theme*)
         _color_help=1
@@ -2662,17 +2663,7 @@ _help() {
             return 0
         else
           _highlight_syntax_if_available
-        fi |  if ((_use_pager))                &&
-                 [[ -n "${PAGER:-}"         ]] &&
-                 [[ ! "${PAGER:-}" =~ less  ]]
-              then
-                "${PAGER}"
-              elif ((_use_pager)) && _command_exists "less"
-              then
-                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-              else
-                cat
-              fi
+        fi
   elif ((_color_help))
   then
     # NOTE: this screen mirrors the content from README.md#-color-themes:
@@ -2727,8 +2718,7 @@ To view a table of available colors and numbers, run:
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
-    {
-      cat <<HEREDOC
+    cat <<HEREDOC
 __          _
 \ \   _ __ | |__
  \ \ | '_ \| '_ \\
@@ -2772,8 +2762,8 @@ Usage:
             [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} git <git options>...
-  ${_ME} help [<subcommand>]
-  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short]
+  ${_ME} help [<subcommand>] [-p | --print]
+  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<id> | <filename> | <path> | <title>]
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
@@ -2809,7 +2799,7 @@ Usage:
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
   ${_ME} show <notebook>
   ${_ME} sync [-a | --all]
@@ -2867,21 +2857,20 @@ Program Options:
 More Information:
   https://github.com/${_REPO}
 HEREDOC
-      fi
-    } | if ((_use_pager))               &&
-           [[ -n "${PAGER:-}"        ]] &&
-           [[ ! "${PAGER:-}" =~ less ]]
-        then
-          "${PAGER}"
-        elif ((_use_pager)) && _command_exists "less"
-        then
-          less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-        else
-          cat
-        fi
+    fi
   else
     printf "%s\\n" "$(desc --get "${_arguments[@]}")"
-  fi
+  fi | if ((_use_pager))               &&
+          [[ -n "${PAGER:-}"        ]] &&
+          [[ ! "${PAGER:-}" =~ less ]]
+       then
+         "${PAGER}"
+       elif ((_use_pager)) && _command_exists "less"
+       then
+         less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+       else
+         cat
+       fi
 }
 _alias_subcommand "help" "h"
 
@@ -8924,19 +8913,19 @@ HEREDOC
 
 desc "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--dump]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
   ${_ME} show <notebook>
 
 Options:
-  --dump      Print to standard output.
-  --filename  Print the filename of the item.
-  --id        Print the id number of the item.
-  --path      Print the full path of the item.
-  --render    Use \`pandoc\` [1] to render the file to HTML and display with
-              \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is not
-              available, \`--render\` is ignored.
-  --title     Print the title of the note.
+  --filename   Print the filename of the item.
+  --id         Print the id number of the item.
+  --path       Print the full path of the item.
+  -p, --print  Print to standard output / terminal.
+  --render     Use \`pandoc\` [1] to render the file to HTML and display with
+               \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is
+               not available, \`--render\` is ignored.
+  --title      Print the title of the note.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -8949,8 +8938,8 @@ Description:
 
     Key               Function
     ---               --------
-    mouse scroll      Scroll up / down
-    arrow up / down   Scroll one line up / down
+    mouse scroll      Scroll up or down
+    arrow up or down  Scroll one line up or down
     f                 Jump forward one window
     b                 Jump back one window
     d                 Jump down one half window
@@ -8959,7 +8948,8 @@ Description:
     n                 Jump to next <query> match
     q                 Quit
 
-  To skip the pager and print to standard output, use the \`--dump\` option.
+  To skip the pager and print to standard output, use the \`-p\` / \`--print\`
+  option.
 
   If Pygments [4] is installed, notes are printed with syntax highlighting.
 
@@ -8971,7 +8961,7 @@ Description:
 Examples:
   ${_ME} show 1
   ${_ME} show example.md --render
-  ${_ME} show "A Document Title" --dump --no-color
+  ${_ME} show "A Document Title" --print --no-color
   ${_ME} 1 show
 
 Alias: \`view\`
@@ -8983,7 +8973,7 @@ _show() {
   _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
 
   local _ls_arguments=()
-  local _dump=0
+  local _print_output=0
   local _password=
   local _print_filename=0
   local _print_id=0
@@ -9000,9 +8990,6 @@ _show() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --dump|--skip-pager|--no-pager)
-        _dump=1
-        ;;
       --path)
         _print_path=1
         ;;
@@ -9018,6 +9005,9 @@ _show() {
       --password)
         _password="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
+        ;;
+      -p|--print|--dump|--skip-pager|--no-pager)
+        _print_output=1
         ;;
       --render|-r)
         _render=1
@@ -9178,7 +9168,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       imgcat "${_target_path}" \
-        | if _command_exists "less" && ! ((_dump))
+        | if _command_exists "less" && ! ((_print_output))
           then
             less -r --prompt="$(_less_prompt)"
           else
@@ -9197,7 +9187,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       magick "${_target_path}" sixel:- \
-        | if _command_exists "less" && ! ((_dump))
+        | if _command_exists "less" && ! ((_print_output))
           then
             less -r --prompt="$(_less_prompt)"
           else
@@ -9211,7 +9201,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       kitty +kitten icat "${_target_path}" \
-        | if _command_exists "less" && ! ((_dump))
+        | if _command_exists "less" && ! ((_print_output))
           then
             less -r --prompt="$(_less_prompt)"
           else
@@ -9260,10 +9250,10 @@ Can't show archives. Export archive and expand to edit.\\n"
         | tr -d '\014'              \
         | if [[ -n "${PAGER:-}"       ]] &&
              [[ ! "${PAGER}" =~ less  ]] &&
-             ! ((_dump))
+             ! ((_print_output))
           then
             "${PAGER}"
-          elif _command_exists "less" && ! ((_dump))
+          elif _command_exists "less" && ! ((_print_output))
           then
             less --CLEAR-SCREEN --prompt="$(_less_prompt)"
           else
@@ -9275,10 +9265,10 @@ Can't show archives. Export archive and expand to edit.\\n"
         | _highlight_syntax_if_available                  \
         | if [[ -n "${PAGER:-}"      ]] &&
              [[ ! "${PAGER}" =~ less ]] &&
-             ! ((_dump))
+             ! ((_print_output))
           then
             "${PAGER}"
-          elif _command_exists "less" && ! ((_dump))
+          elif _command_exists "less" && ! ((_print_output))
           then
             less --CLEAR-SCREEN --prompt="$(_less_prompt)"
           else
@@ -9292,10 +9282,10 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   elif ((_render))              &&
-       ((_dump))                &&
+       ((_print_output))                &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
-  then # `show --render --dump` with `pandoc` and `w3m` available.
+  then # `show --render --print` with `pandoc` and `w3m` available.
     pandoc "${_target_path}" \
       | w3m -dump -T text/html
   elif ((_render))              &&
@@ -9310,12 +9300,12 @@ Can't show archives. Export archive and expand to edit.\\n"
   then # `show --render` with `pandoc` and `lynx` available.
     pandoc "${_target_path}" | lynx -stdin
   else # default
-    if ((_dump))
-    then # `show --dump [--no-color]`
+    if ((_print_output))
+    then # `show --print [--no-color]`
       if ((_show_color_enabled))
-      then # `show --dump`
+      then # `show --print`
         _highlight_syntax_if_available "${_target_path}"
-      else # `show --dump --no-color`
+      else # `show --print --no-color`
         cat "${_target_path}"
       fi
     else # `show`
