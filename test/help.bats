@@ -37,11 +37,12 @@ export _HELP_HEADER
   _expected="$(
     cat <<HEREDOC
 Usage:
-  nb help [<subcommand>]
-  nb help  [-c | --colors] | [-r | --readme] | [-s | --short]
+  nb help [<subcommand>] [-p | --print]
+  nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
 
 Options:
   -c, --colors  View information about color themes and color settings.
+  -p, --print   Print to standard output / terminal.
   -r, --readme  View the \`nb\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 

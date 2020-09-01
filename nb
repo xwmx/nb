@@ -2606,11 +2606,12 @@ HEREDOC
 
 desc "help" <<HEREDOC
 Usage:
-  ${_ME} help [<subcommand>]
-  ${_ME} help  [-c | --colors] | [-r | --readme] | [-s | --short]
+  ${_ME} help [<subcommand>] [-p | --print]
+  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
 
 Options:
   -c, --colors  View information about color themes and color settings.
+  -p, --print   Print to standard output / terminal.
   -r, --readme  View the \`${_ME}\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
@@ -2636,11 +2637,11 @@ _help() {
       --pager)
         _use_pager=1
         ;;
+      -p|--print|--dump|--skip-pager|--no-pager)
+        _use_pager=0
+        ;;
       -s|--short)
         _short=1
-        ;;
-      --dump|--skip-pager|--no-pager)
-        _use_pager=0
         ;;
       -c|*color*|*colour*|*theme*)
         _color_help=1
@@ -2662,17 +2663,7 @@ _help() {
             return 0
         else
           _highlight_syntax_if_available
-        fi |  if ((_use_pager))                &&
-                 [[ -n "${PAGER:-}"         ]] &&
-                 [[ ! "${PAGER:-}" =~ less  ]]
-              then
-                "${PAGER}"
-              elif ((_use_pager)) && _command_exists "less"
-              then
-                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-              else
-                cat
-              fi
+        fi
   elif ((_color_help))
   then
     # NOTE: this screen mirrors the content from README.md#-color-themes:
@@ -2727,8 +2718,7 @@ To view a table of available colors and numbers, run:
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
-    {
-      cat <<HEREDOC
+    cat <<HEREDOC
 __          _
 \ \   _ __ | |__
  \ \ | '_ \| '_ \\
@@ -2867,21 +2857,20 @@ Program Options:
 More Information:
   https://github.com/${_REPO}
 HEREDOC
-      fi
-    } | if ((_use_pager))               &&
-           [[ -n "${PAGER:-}"        ]] &&
-           [[ ! "${PAGER:-}" =~ less ]]
-        then
-          "${PAGER}"
-        elif ((_use_pager)) && _command_exists "less"
-        then
-          less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-        else
-          cat
-        fi
+    fi
   else
     printf "%s\\n" "$(desc --get "${_arguments[@]}")"
-  fi
+  fi | if ((_use_pager))               &&
+          [[ -n "${PAGER:-}"        ]] &&
+          [[ ! "${PAGER:-}" =~ less ]]
+       then
+         "${PAGER}"
+       elif ((_use_pager)) && _command_exists "less"
+       then
+         less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+       else
+         cat
+       fi
 }
 _alias_subcommand "help" "h"
 
