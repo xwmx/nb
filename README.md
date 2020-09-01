@@ -1654,7 +1654,8 @@ nb example:remote remove
 ```
 
 You can also turn off autosync with
-[`nb set auto_sync`](#settings-list---long) and sync manually with `nb sync`.
+[`nb set auto_sync`](#settings-list---long) and sync manually with
+[`nb sync`](#sync).
 
 ### ↕️ Import / Export
 
