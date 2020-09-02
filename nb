@@ -4894,8 +4894,8 @@ ${_url}
       _basename="$(basename -- "${_path}")"
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"    &&
-        _index add "${_basename}"                       &&
+      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"  &&
+        _index add "${_basename}"                     &&
         _git_checkpoint "[nb] Import: ${_basename}"
       printf "Imported %s to %s\\n"     \
         "$(_highlight "${_path}")"      \
