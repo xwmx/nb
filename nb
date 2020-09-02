@@ -5073,8 +5073,8 @@ _index() {
       ;;
     reconcile)
       _index_reconcile_remove_duplicates() {
-        local _reconcle_index_path="${1:-}"
-        [[ -z "${_reconcle_index_path:-}" ]] && return 1
+        local _reconcile_index_path="${1:-}"
+        [[ -z "${_reconcile_index_path:-}" ]] && return 1
 
         local _temp_file
         _temp_file="$(mktemp)"
@@ -5085,8 +5085,8 @@ _index() {
         rm "${_temp_file}"
 
         # Remove duplicates and preserve newlines.
-        awk '!NF || !seen[$0]++' "${_reconcle_index_path}" >&3
-        cat <&4 > "${_reconcle_index_path}"
+        awk '!NF || !seen[$0]++' "${_reconcile_index_path}" >&3
+        cat <&4 > "${_reconcile_index_path}"
 
         exec 3>&-
         exec 4<&-
