@@ -2139,6 +2139,7 @@ Usage:
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
+  nb run <command> [<arguments>...]
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   nb set [<name> [<value>] | <number> [<value>]]
@@ -2180,6 +2181,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
+  run          Run a command in the notebook directory.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the `nb` interactive shell.
@@ -2942,6 +2944,16 @@ Examples:
 
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
+```
+
+#### `run`
+
+```text
+Usage:
+  nb run <command> [<arguments>...]
+
+Description:
+  Run a bash command within the current notebook directory.
 ```
 
 #### `search`

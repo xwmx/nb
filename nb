@@ -2796,6 +2796,7 @@ Usage:
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
+  ${_ME} run <command> [<arguments>...]
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
@@ -2842,6 +2843,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
+  run          Run a command in the notebook directory.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the \`${_ME}\` interactive shell.
@@ -7695,6 +7697,23 @@ _rename() {
     "$(_highlight "${_target_basename}")"
 }
 
+# run ##################################################################### run
+
+desc "run" <<HEREDOC
+Usage:
+  ${_ME} run <command> [<arguments>...]
+
+Description:
+  Run a bash command within the current notebook directory.
+HEREDOC
+_run() {
+  cd "${_NOTEBOOK_PATH}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
+  [[ -n "${*}" ]]         || _exit_1 printf "Command required.\\n"
+
+  ("${@}")
+}
+_alias_subcommand "run" "r"
+
 # search ############################################################### search
 
 desc "search" <<HEREDOC
@@ -9706,8 +9725,10 @@ _SUBCOMMANDS=(
   peek
   preview
   q
+  r
   remote
   rename
+  run
   s
   search
   set
@@ -9762,8 +9783,10 @@ _DOCUMENTED_SUBCOMMANDS=(
   peek
   preview
   q
+  r
   remote
   rename
+  run
   s
   search
   set
@@ -10017,7 +10040,7 @@ _main() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|help|set|settings|update|version)
+    commands|completions|env|h|help|r|run|set|settings|subcommands|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
