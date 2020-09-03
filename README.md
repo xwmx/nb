@@ -1943,7 +1943,7 @@ __          _
 /_/  |_| |_|_.__/
 ------------------
 nb shell started. Enter ls to list notes and notebooks.
-Enter help for a list of subcommands. Enter exit to exit.
+Enter help for usage information. Enter exit to exit.
 nb> ls
 home
 ----
