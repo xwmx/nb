@@ -8873,7 +8873,7 @@ HEREDOC
     while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
     do
       history -s "${__input}"
-      if [[ "${__input}" =~ ^exit|quit$ ]]
+      if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
       then
         return 0
       else
