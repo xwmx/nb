@@ -9783,7 +9783,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   peek
   preview
   q
-  r
   remote
   rename
   run
