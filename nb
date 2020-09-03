@@ -2625,6 +2625,7 @@ _help() {
   local _arguments=()
   local _color_help=0
   local _readme=0
+  local _shell=0
   local _short=0
   local _use_pager=1
 
@@ -2639,6 +2640,9 @@ _help() {
         ;;
       -p|--print|--dump|--skip-pager|--no-pager)
         _use_pager=0
+        ;;
+      --shell)
+        _shell=1
         ;;
       -s|--short)
         _short=1
@@ -2860,17 +2864,22 @@ HEREDOC
     fi
   else
     printf "%s\\n" "$(desc --get "${_arguments[@]}")"
-  fi | if ((_use_pager))               &&
-          [[ -n "${PAGER:-}"        ]] &&
-          [[ ! "${PAGER:-}" =~ less ]]
-       then
-         "${PAGER}"
-       elif ((_use_pager)) && _command_exists "less"
-       then
-         less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-       else
-         cat
-       fi
+  fi |  if ((_shell))
+        then # Strip 'nb' command name from help output.
+          sed -e "s/^  nb /  /" -e "/^  nb$/d"
+        else
+          cat
+        fi |  if ((_use_pager))               &&
+                 [[ -n "${PAGER:-}"        ]] &&
+                 [[ ! "${PAGER:-}" =~ less ]]
+              then
+                "${PAGER}"
+              elif ((_use_pager)) && _command_exists "less"
+              then
+                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+              else
+                cat
+              fi
 }
 _alias_subcommand "help" "h"
 
@@ -8832,7 +8841,7 @@ __          _
 /_/  |_| |_|_.__/
 $(_highlight_secondary "------------------")
 $(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
-Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
+Enter $(_highlight "help") for usage information. Enter $(_highlight "exit") to exit.
 HEREDOC
 
   if [[ -n "${_initial_command:-}" ]]
@@ -8862,18 +8871,11 @@ HEREDOC
         )"
 
         if [[ "${_normalized_input}" =~ ^help   ]] ||
-           [[ "${_normalized_input}" =~ ^help\  ]]
+           [[ "${_normalized_input}" =~ ^help\  ]] ||
+           [[ "${_normalized_input}" =~ ^h$     ]] ||
+           [[ "${_normalized_input}" =~ ^h\     ]]
         then
-          # Strip 'nb' command name from help output.
-          local _output=
-          local _processed_output=
-
-          _output="$(eval "\"${_MY_PATH}\" ${_normalized_input}" || :)"
-          _processed_output="$(
-            printf "%s\\n" "${_output}" \
-              | sed -e "s/^  nb /  /"
-          )"
-          printf "%s\\n" "${_processed_output}"
+          eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
         elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
              [[ "${_normalized_input}" =~ ^printf\ .* ]]
         then
