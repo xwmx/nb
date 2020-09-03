@@ -6313,10 +6313,10 @@ _ls() {
         else
           if ((_SCOPED))
           then
-            _exit_1 printf "Not found: %s\\n" \
+            _return_1 printf "Not found: %s\\n" \
               "$(_highlight "${_SCOPE}:${_args[0]:-}")"
           else
-            _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+            _return_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
           fi
         fi
       fi
