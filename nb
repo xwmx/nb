@@ -8880,7 +8880,6 @@ HEREDOC
              [[ "${_normalized_input}" =~ ^printf\ .* ]]
         then
           eval "${_normalized_input}"
-        # elif [[ "${_normalized_input}" =~ ^vim\ .*   ]]
         elif _command_name="$(
           printf "%s\\n" "${_normalized_input}" \
             | grep --only-matching --color=never \
