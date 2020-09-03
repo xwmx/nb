@@ -97,7 +97,12 @@ _nb_subcommands() {
     return 0
   elif [[ -L "${_nb_dir}" ]]
   then
-    _nb_dir="$(realpath "${_nb_dir}")"
+    if hash "realpath" 2>/dev/null
+    then
+      _nb_dir="$(realpath "${_nb_dir}")"
+    else
+      _nb_dir="$(readlink "${_nb_dir}")"
+    fi
   fi
 
   if [[ ! -d "${_nb_dir}"  ]]
