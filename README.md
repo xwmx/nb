@@ -1201,8 +1201,11 @@ For a full overview, see
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`nb` includes `bookmark`, a full-featured, streamlined command line
-interface for creating, viewing, searching, and editing bookmarks.
+`nb` includes `bookmark`, a full-featured command line interface for
+creating, viewing, searching, and editing bookmarks.
+
+`bookmark` is a shortcut for the `nb bookmark` subcommand, accepting all
+of the same subcommands and options with identical behavior.
 
 Bookmark a page:
 
@@ -1244,9 +1247,6 @@ Perform a full text search of bookmarks and archived page content:
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
-
-`bookmark` is a shortcut for `nb bookmark`, accepts all of the same
-subcommands and options, and behaves identically.
 
 See [`bookmark help`](#bookmark-help) for more information.
 
