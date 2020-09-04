@@ -2123,7 +2123,7 @@ Usage:
           [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [--no-indicators] [-n <limit> | --limit <limit> | --<limit>]
+        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
         [-p | --pager] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
@@ -2709,7 +2709,7 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [--no-indicators] [-n <limit> | --limit <limit> | --<limit>]
+        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
         [-p | --pager] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
