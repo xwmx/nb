@@ -1447,6 +1447,9 @@ Notes can also be moved between notebooks:
 ```bash
 # move note 3 from the current notebook to "example"
 nb move 3 example
+
+# move note 5 in the notebook "example" to the notebook "sample"
+nb move example:5 sample
 ```
 
 ##### Notebooks and Tab Completion
