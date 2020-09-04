@@ -1405,7 +1405,7 @@ nb example:q "example query"
 nb example:history
 ```
 
-You can similarly set the notebook name as a modifier to the id, filename, or
+The notebook name can also be used as a modifier to the id, filename, or
 title:
 
 ```bash
@@ -1414,10 +1414,16 @@ nb edit example:12
 
 # edit note 12 in the notebook named "example", alternative
 nb example:12 edit
+
+# edit note titled "misc" in the notebook "example"
+nb edit example:misc
+
+# edit note with filename "todos.md" in the notebook "example", alternative
+nb example:todos.md edit
 ```
 
-When a notebook name is specified without a command, `nb` runs `nb ls` in the
-specified notebook:
+When a notebook name followed by a colon is used without a command,
+`nb` runs `nb ls` in the specified notebook:
 
 ```bash
 > nb example:
@@ -1428,7 +1434,8 @@ example · home
 [example:1] Title One
 ```
 
-A bookmark can be added in another notebook using the same approach:
+A bookmark can be added in another notebook by specifying the notebook
+name with a colon, then a space, then the URL and bookmark options:
 
 ```bash
 # create a new bookmark in a notebook named "sample"
