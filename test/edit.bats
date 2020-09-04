@@ -307,6 +307,63 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
+# --content option ############################################################
+
+@test "\`edit\` with --content option edits without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+
+  run "${_NB}" edit 1 --content "Example content."
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "\`edit\` with empty --content option exits with 1" {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+
+  run "${_NB}" edit 1 --content
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 1
+  [[ ${status} -eq 1 ]]
+
+  # Does not update note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
+
+  # Prints error message
+  [[ "${output}" =~ requires\ a\ valid\ argument ]]
+}
+
 # encrypted ###################################################################
 
 @test "\`edit\` with encrypted file edits properly without errors." {

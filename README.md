@@ -276,7 +276,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-notebooks">Notebooks</a> •
   <a href="#-git-sync">Git Sync</a> •
   <a href="#%EF%B8%8F-import--export">Import / Export</a> •
-  <a href="#%EF%B8%8F-settings">Settings</a> •
+  <a href="#%EF%B8%8F-set--settings"><code>set</code> & Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
   <a href="#-nb-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
@@ -374,6 +374,17 @@ Added [7] 20200101000200.md
 > xclip -o | nb add
 Added [8] 20200101000300.md
 ```
+
+Content can be passed with the `--content` option, which will also
+create a new note without opening the editor:
+
+```bash
+nb add --content "Note content."
+```
+
+When content is piped, specified with `--content`, or passed as a
+string argument, use the `--edit` flag to open the file in the editor
+before the change is committed.
 
 The title, filename, and content can also be specified with long and
 short options:
@@ -732,11 +743,23 @@ nb 3 edit
 ```
 
 `nb edit` can also receive piped content, which it will append to the
-specified note:
+specified note without opening the editor:
 
 ```bash
 echo "Content to append." | nb edit 1
 ```
+
+Content can be passed with the `--content` option, which will also
+append the content without opening the editor:
+
+```bash
+nb edit 1 --content "Content to append."
+```
+
+When content is piped or specified with `--content`, use the `--edit`
+flag to open the file in the editor before the change is committed.
+
+##### Editing Encrypted Notes
 
 When a note is encrypted, `nb edit` will prompt you for the note password,
 open the unencrypted content in your editor, and then automatically reencrypt
@@ -1714,7 +1737,7 @@ nb export example.md /path/to/example.docx
 nb export Movies /path/to/example.html
 ```
 
-### ⚙️ Settings
+### ⚙️ `set` & Settings
 
 [`nb set`](#settings) and [`nb settings`](#settings) open the settings
 prompt, which provides an easy way to change your `nb` settings.
@@ -1943,7 +1966,7 @@ __          _
 /_/  |_| |_|_.__/
 ------------------
 nb shell started. Enter ls to list notes and notebooks.
-Enter help for a list of subcommands. Enter exit to exit.
+Enter help for usage information. Enter exit to exit.
 nb> ls
 home
 ----
@@ -2052,6 +2075,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#peek">peek</a> •
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
+  <a href="#run">run</a> •
   <a href="#search">search</a> •
   <a href="#settings">settings</a> •
   <a href="#shell">shell</a> •
@@ -2104,6 +2128,7 @@ Usage:
   nb count
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
   nb edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>]
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
@@ -2115,13 +2140,15 @@ Usage:
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
-  nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
+        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -2139,6 +2166,7 @@ Usage:
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
+  nb run <command> [<arguments>...]
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   nb set [<name> [<value>] | <number> [<value>]]
@@ -2180,6 +2208,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
+  run          Run a shell command in the notebook.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the `nb` interactive shell.
@@ -2294,11 +2323,13 @@ For more information, see: `nb help`.
 ```text
 Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
-         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c, --content <content>     The content for the new note.
+  --edit                      Open the note in the editor before saving when
+                              content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note. The default
                               extension is used when the extension is omitted.
@@ -2463,15 +2494,22 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
-  nb edit (<id> | <filename> | <path> | <title>) [(-e | --editor) <editor>]
+  nb edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
+          [-e <editor> | --editor <editor>]
 
 Options:
-  -e, --editor <editor>  Edit the note with <editor>, overriding the editor
-                         specified in the `$EDITOR` environment variable.
+  -c, --content <content>  The content for the new note.
+  --edit                   Open the note in the editor before saving when
+                           content is piped or passed as an argument.
+  -e, --editor <editor>    Edit the note with <editor>, overriding the editor
+                           specified in the `$EDITOR` environment variable.
 
 Description:
-  Open the specified note in `$EDITOR` or <editor> if specified. Any data
-  piped to `nb edit` will be appended to the file.
+  Open the specified note in `$EDITOR` or <editor> if specified. Content
+  piped to `nb edit` or passed using the `--content` option will will be
+  appended to the file without opening it in the editor, unless the
+  `--edit` flag is specified.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
@@ -2641,17 +2679,19 @@ Examples:
 
 ```text
 Usage:
-  nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -2692,8 +2732,9 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
+        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -2702,9 +2743,10 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -2942,6 +2984,16 @@ Examples:
 
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
+```
+
+#### `run`
+
+```text
+Usage:
+  nb run <command> [<arguments>...]
+
+Description:
+  Run a Bash shell command within the current notebook directory.
 ```
 
 #### `search`

@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.6.3"
+_VERSION="4.7.0"
 
 # $_ME
 #
@@ -2625,6 +2625,7 @@ _help() {
   local _arguments=()
   local _color_help=0
   local _readme=0
+  local _shell=0
   local _short=0
   local _use_pager=1
 
@@ -2639,6 +2640,9 @@ _help() {
         ;;
       -p|--print|--dump|--skip-pager|--no-pager)
         _use_pager=0
+        ;;
+      --shell)
+        _shell=1
         ;;
       -s|--short)
         _short=1
@@ -2742,7 +2746,7 @@ Usage:
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
-         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
@@ -2757,6 +2761,7 @@ Usage:
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
@@ -2768,9 +2773,10 @@ Usage:
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
@@ -2792,6 +2798,7 @@ Usage:
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
+  ${_ME} run <command> [<arguments>...]
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
@@ -2838,6 +2845,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
+  run          Run a shell command in the notebook.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the \`${_ME}\` interactive shell.
@@ -2860,17 +2868,22 @@ HEREDOC
     fi
   else
     printf "%s\\n" "$(desc --get "${_arguments[@]}")"
-  fi | if ((_use_pager))               &&
-          [[ -n "${PAGER:-}"        ]] &&
-          [[ ! "${PAGER:-}" =~ less ]]
-       then
-         "${PAGER}"
-       elif ((_use_pager)) && _command_exists "less"
-       then
-         less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-       else
-         cat
-       fi
+  fi |  if ((_shell))
+        then # Strip 'nb' command name from help output.
+          sed -e "s/^  nb /  /" -e "/^  nb$/d"
+        else
+          cat
+        fi |  if ((_use_pager))               &&
+                 [[ -n "${PAGER:-}"        ]] &&
+                 [[ ! "${PAGER:-}" =~ less ]]
+              then
+                "${PAGER}"
+              elif ((_use_pager)) && _command_exists "less"
+              then
+                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+              else
+                cat
+              fi
 }
 _alias_subcommand "help" "h"
 
@@ -2883,11 +2896,13 @@ _alias_subcommand "help" "h"
 desc "add" <<HEREDOC
 Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
-         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c, --content <content>     The content for the new note.
+  --edit                      Open the note in the editor before saving when
+                              content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note. The default
                               extension is used when the extension is omitted.
@@ -3056,7 +3071,9 @@ _add() {
     cat >> "${_target_path}"
   fi
 
-  if ((_edit_before_save)) || _interactive_input && [[ -z "${_content:-}" ]]
+  if ((_edit_before_save)) || {
+    _interactive_input && [[ -z "${_content:-}" ]]
+  }
   then
     _edit_file "${_target_path}"
   fi
@@ -4201,16 +4218,22 @@ _alias_subcommand "delete" "d"
 
 desc "edit" <<HEREDOC
 Usage:
-  ${_ME} edit (<id> | <filename> | <path> | <title>) [(-e | --editor) <editor>]
+  ${_ME} edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
+          [-e <editor> | --editor <editor>]
 
 Options:
-  -e, --editor <editor>  Edit the note with <editor>, overriding the editor
-                         specified in the \`\$EDITOR\` environment variable.
+  -c, --content <content>  The content for the new note.
+  --edit                   Open the note in the editor before saving when
+                           content is piped or passed as an argument.
+  -e, --editor <editor>    Edit the note with <editor>, overriding the editor
+                           specified in the \`\$EDITOR\` environment variable.
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
-  <editor> if specified. Any data piped to \`${_ME} edit\` will be appended to
-  the file.
+  <editor> if specified. Content piped to \`${_ME} edit\` or passed using the
+  \`--content\` option will will be appended to the file without opening it
+  in the editor, unless the \`--edit\` flag is specified.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
@@ -4226,6 +4249,8 @@ Shortcut Alias: \`e\`
 HEREDOC
 _edit() {
   local _basename=
+  local _content=
+  local _edit_before_save=0
   local _local_editor=
   local _password=
 
@@ -4235,6 +4260,13 @@ _edit() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      -c|--content)
+        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
+        ;;
+      --edit)
+        _edit_before_save=1
+        ;;
       -e|--editor)
         _local_editor="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
@@ -4296,19 +4328,26 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if _interactive_input
-    then # terminal input.
-      if [[ -z "${_content:-}" ]]
-      then
-        if [[ -n "${_local_editor}" ]]
-        then
-          EDITOR="${_local_editor}" _edit_file "${_target_file}"
-        else
-          _edit_file "${_target_file}"
-        fi
-      fi
-    else # piped input.
+    if [[ -n "${_content}" ]]
+    then
+      printf "%s\\n" "${_content}" >> "${_target_file}"
+    fi
+
+    if ! _interactive_input
+    then # piped input
       cat >> "${_target_file}"
+    fi
+
+    if ((_edit_before_save)) || {
+       _interactive_input && [[ -z "${_content:-}" ]]
+    }
+    then
+      if [[ -n "${_local_editor}" ]]
+      then
+        EDITOR="${_local_editor}" _edit_file "${_target_file}"
+      else
+        _edit_file "${_target_file}"
+      fi
     fi
 
     _after="$(_get_hash "${_NOTEBOOK_PATH}/${_basename}")"
@@ -4894,8 +4933,8 @@ ${_url}
       _basename="$(basename -- "${_path}")"
       _basename="$(_import_get_valid_basename "${_basename}")"
 
-      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"    &&
-        _index add "${_basename}"                       &&
+      mv "${_path}" "${_NOTEBOOK_PATH}/${_basename}"  &&
+        _index add "${_basename}"                     &&
         _git_checkpoint "[nb] Import: ${_basename}"
       printf "Imported %s to %s\\n"     \
         "$(_highlight "${_path}")"      \
@@ -5073,8 +5112,8 @@ _index() {
       ;;
     reconcile)
       _index_reconcile_remove_duplicates() {
-        local _reconcle_index_path="${1:-}"
-        [[ -z "${_reconcle_index_path:-}" ]] && return 1
+        local _reconcile_index_path="${1:-}"
+        [[ -z "${_reconcile_index_path:-}" ]] && return 1
 
         local _temp_file
         _temp_file="$(mktemp)"
@@ -5085,8 +5124,8 @@ _index() {
         rm "${_temp_file}"
 
         # Remove duplicates and preserve newlines.
-        awk '!NF || !seen[$0]++' "${_reconcle_index_path}" >&3
-        cat <&4 > "${_reconcle_index_path}"
+        awk '!NF || !seen[$0]++' "${_reconcile_index_path}" >&3
+        cat <&4 > "${_reconcile_index_path}"
 
         exec 3>&-
         exec 4<&-
@@ -5338,17 +5377,19 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -5433,7 +5474,7 @@ _list() {
           shift
         fi
         ;;
-      --filenames|--filename)
+      --filename*)
         _list_filenames=1
         ;;
       --hard-empty)
@@ -5442,10 +5483,10 @@ _list() {
       --no-color|--nocolor)
         _list_color_enabled=0
         ;;
-      --no-id|--noid|--no-ids|--no-index|--noindex)
+      --no-id*|--noid*|--no-index|--noindex)
         _no_id=1
         ;;
-      --no-indicators|--noindicators|--no-indicator|--noindicator)
+      --no-indicator*|--noindicator*)
         _print_indicators=0
         ;;
       -n|--limit|--num|--number)
@@ -5856,7 +5897,6 @@ HEREDOC
       else
         cat
       fi
-
 }
 
 # ls ####################################################################### ls
@@ -5864,8 +5904,9 @@ HEREDOC
 desc "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
+        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -5874,9 +5915,10 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -6303,10 +6345,10 @@ _ls() {
         else
           if ((_SCOPED))
           then
-            _exit_1 printf "Not found: %s\\n" \
+            _return_1 printf "Not found: %s\\n" \
               "$(_highlight "${_SCOPE}:${_args[0]:-}")"
           else
-            _exit_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+            _return_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
           fi
         fi
       fi
@@ -6880,13 +6922,13 @@ Please type $(_highlight "${_name}") to confirm: " __response
         --global)
           _only_global=1
           ;;
-        --names)
+        --name*)
           _only_names=1
           ;;
         --no-color|--nocolor)
           _notebook_color_enabled=0
           ;;
-        --paths)
+        --path*)
           _only_paths=1
           ;;
         --unarchived)
@@ -7687,6 +7729,23 @@ _rename() {
     "$(_highlight "${_target_basename}")"
 }
 
+# run ##################################################################### run
+
+desc "run" <<HEREDOC
+Usage:
+  ${_ME} run <command> [<arguments>...]
+
+Description:
+  Run a Bash shell command within the current notebook directory.
+HEREDOC
+_run() {
+  cd "${_NOTEBOOK_PATH}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
+  [[ -n "${*}" ]]         || _exit_1 printf "Command required.\\n"
+
+  ("${@}")
+}
+_alias_subcommand "run" "r"
+
 # search ############################################################### search
 
 desc "search" <<HEREDOC
@@ -7758,7 +7817,7 @@ _search() {
       --no-color|--nocolor)
         _search_color_enabled=0
         ;;
-      --path|--paths)
+      --path*)
         _print_paths=1
         ;;
       -s|--sort)
@@ -8243,7 +8302,7 @@ _settings() {
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      6|editor|EDITOR)
+      6|*editor|*EDITOR)
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
@@ -8263,7 +8322,7 @@ _settings() {
         ((_get_id)) && printf "10" || printf "NB_LIMIT"
         return 0
         ;;
-      11|nb_dir|NB_DIR)
+      11|*dir|*DIR)
         ((_get_id)) && printf "11" || printf "NB_DIR"
         return 0
         ;;
@@ -8833,7 +8892,7 @@ __          _
 /_/  |_| |_|_.__/
 $(_highlight_secondary "------------------")
 $(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
-Enter $(_highlight "help") for a list of subcommands. Enter $(_highlight "exit") to exit.
+Enter $(_highlight "help") for usage information. Enter $(_highlight "exit") to exit.
 HEREDOC
 
   if [[ -n "${_initial_command:-}" ]]
@@ -8846,7 +8905,7 @@ HEREDOC
     while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
     do
       history -s "${__input}"
-      if [[ "${__input}" =~ ^exit|quit$ ]]
+      if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
       then
         return 0
       else
@@ -8863,23 +8922,15 @@ HEREDOC
         )"
 
         if [[ "${_normalized_input}" =~ ^help   ]] ||
-           [[ "${_normalized_input}" =~ ^help\  ]]
+           [[ "${_normalized_input}" =~ ^help\  ]] ||
+           [[ "${_normalized_input}" =~ ^h$     ]] ||
+           [[ "${_normalized_input}" =~ ^h\     ]]
         then
-          # Strip 'nb' command name from help output.
-          local _output=
-          local _processed_output=
-
-          _output="$(eval "\"${_MY_PATH}\" ${_normalized_input}" || :)"
-          _processed_output="$(
-            printf "%s\\n" "${_output}" \
-              | sed -e "s/^  nb /  /"
-          )"
-          printf "%s\\n" "${_processed_output}"
+          eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
         elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
              [[ "${_normalized_input}" =~ ^printf\ .* ]]
         then
           eval "${_normalized_input}"
-        # elif [[ "${_normalized_input}" =~ ^vim\ .*   ]]
         elif _command_name="$(
           printf "%s\\n" "${_normalized_input}" \
             | grep --only-matching --color=never \
@@ -9706,8 +9757,10 @@ _SUBCOMMANDS=(
   peek
   preview
   q
+  r
   remote
   rename
+  run
   s
   search
   set
@@ -9764,6 +9817,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   q
   remote
   rename
+  run
   s
   search
   set
@@ -10017,7 +10071,7 @@ _main() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|help|set|settings|update|version)
+    commands|completions|env|h|help|r|run|set|settings|subcommands|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
