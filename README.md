@@ -1447,7 +1447,7 @@ nb example:todos.md delete
 nb example:todos.md d
 ```
 
-When a notebook name with colon is called without a command, `nb` runs
+When a notebook name with colon is called without a subcommand, `nb` runs
 `nb ls` in the specified notebook:
 
 ```bash
