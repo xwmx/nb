@@ -1447,8 +1447,8 @@ nb example:todos.md delete
 nb example:todos.md d
 ```
 
-When a notebook name followed by a colon is used without a command,
-`nb` runs `nb ls` in the specified notebook:
+When a notebook name with colon is called without a command, `nb` runs
+`nb ls` in the specified notebook:
 
 ```bash
 > nb example:
@@ -1460,7 +1460,7 @@ example · home
 ```
 
 A bookmark can be added in another notebook by specifying the notebook
-name with a colon, then a space, then the URL and bookmark options:
+name with colon, then a space, then the URL and bookmark options:
 
 ```bash
 # create a new bookmark in a notebook named "sample"
