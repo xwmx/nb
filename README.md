@@ -375,6 +375,17 @@ Added [7] 20200101000200.md
 Added [8] 20200101000300.md
 ```
 
+Content can be passed with the `--content` option, which will also
+create a new note without opening the editor:
+
+```bash
+nb add --content "Note content."
+```
+
+When content is piped, specified with `--content`, or passed as a
+string argument, use the `--edit` flag to open the file in the editor
+before the change is committed.
+
 The title, filename, and content can also be specified with long and
 short options:
 
@@ -732,11 +743,23 @@ nb 3 edit
 ```
 
 `nb edit` can also receive piped content, which it will append to the
-specified note:
+specified note without opening the editor:
 
 ```bash
 echo "Content to append." | nb edit 1
 ```
+
+Content can be passed with the `--content` option, which will also
+be appended:
+
+```bash
+nb edit 1 --content "Content to append."
+```
+
+When content is piped or specified with `--content`, use the `--edit`
+flag to open the file in the editor before the change is committed.
+
+##### Editing Encrypted Notes
 
 When a note is encrypted, `nb edit` will prompt you for the note password,
 open the unencrypted content in your editor, and then automatically reencrypt
