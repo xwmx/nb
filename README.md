@@ -750,7 +750,7 @@ echo "Content to append." | nb edit 1
 ```
 
 Content can be passed with the `--content` option, which will also
-be appended:
+append the content without opening the editor:
 
 ```bash
 nb edit 1 --content "Content to append."
