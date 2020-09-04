@@ -2052,6 +2052,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#peek">peek</a> •
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
+  <a href="#run">run</a> •
   <a href="#search">search</a> •
   <a href="#settings">settings</a> •
   <a href="#shell">shell</a> •
