@@ -65,7 +65,7 @@ documents made for humans, so bookmarks are easy to edit just like any other not
 
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
 record changes and sync notebooks with remote repositories.
-`nb` can also be configured to sync notebooks with a general purpose
+`nb` can also be configured to sync notebooks using a general purpose
 syncing utility like Dropbox so notes can be edited in other apps
 on any device.
 
