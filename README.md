@@ -2104,6 +2104,7 @@ Usage:
   nb count
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
   nb edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>]
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
@@ -2467,15 +2468,22 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
-  nb edit (<id> | <filename> | <path> | <title>) [(-e | --editor) <editor>]
+  nb edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
+          [-e <editor> | --editor <editor>]
 
 Options:
-  -e, --editor <editor>  Edit the note with <editor>, overriding the editor
-                         specified in the `$EDITOR` environment variable.
+  -c, --content <content>  The content for the new note.
+  --edit                   Open the note in the editor before saving when
+                           content is piped or passed as an argument.
+  -e, --editor <editor>    Edit the note with <editor>, overriding the editor
+                           specified in the `$EDITOR` environment variable.
 
 Description:
-  Open the specified note in `$EDITOR` or <editor> if specified. Any data
-  piped to `nb edit` will be appended to the file.
+  Open the specified note in `$EDITOR` or <editor> if specified. Content
+  piped to `nb edit` or passed using the `--content` option will will be
+  appended to the file without opening it in the editor, unless the
+  `--edit` flag is specified.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.

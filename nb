@@ -2761,6 +2761,7 @@ Usage:
   ${_ME} count
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
@@ -3069,7 +3070,9 @@ _add() {
     cat >> "${_target_path}"
   fi
 
-  if ((_edit_before_save)) || _interactive_input && [[ -z "${_content:-}" ]]
+  if ((_edit_before_save)) || {
+    _interactive_input && [[ -z "${_content:-}" ]]
+  }
   then
     _edit_file "${_target_path}"
   fi
@@ -4214,16 +4217,22 @@ _alias_subcommand "delete" "d"
 
 desc "edit" <<HEREDOC
 Usage:
-  ${_ME} edit (<id> | <filename> | <path> | <title>) [(-e | --editor) <editor>]
+  ${_ME} edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
+          [-e <editor> | --editor <editor>]
 
 Options:
-  -e, --editor <editor>  Edit the note with <editor>, overriding the editor
-                         specified in the \`\$EDITOR\` environment variable.
+  -c, --content <content>  The content for the new note.
+  --edit                   Open the note in the editor before saving when
+                           content is piped or passed as an argument.
+  -e, --editor <editor>    Edit the note with <editor>, overriding the editor
+                           specified in the \`\$EDITOR\` environment variable.
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
-  <editor> if specified. Any data piped to \`${_ME} edit\` will be appended to
-  the file.
+  <editor> if specified. Content piped to \`${_ME} edit\` or passed using the
+  \`--content\` option will will be appended to the file without opening it
+  in the editor, unless the \`--edit\` flag is specified.
 
   Non-text files will be opened in your system's preferred app or program for
   that file type.
@@ -4239,6 +4248,8 @@ Shortcut Alias: \`e\`
 HEREDOC
 _edit() {
   local _basename=
+  local _content=
+  local _edit_before_save=0
   local _local_editor=
   local _password=
 
@@ -4248,6 +4259,13 @@ _edit() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      -c|--content)
+        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        shift
+        ;;
+      --edit)
+        _edit_before_save=1
+        ;;
       -e|--editor)
         _local_editor="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
@@ -4309,19 +4327,26 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if _interactive_input
-    then # terminal input.
-      if [[ -z "${_content:-}" ]]
-      then
-        if [[ -n "${_local_editor}" ]]
-        then
-          EDITOR="${_local_editor}" _edit_file "${_target_file}"
-        else
-          _edit_file "${_target_file}"
-        fi
-      fi
-    else # piped input.
+    if [[ -n "${_content}" ]]
+    then
+      printf "%s\\n" "${_content}" >> "${_target_file}"
+    fi
+
+    if ! _interactive_input
+    then # piped input
       cat >> "${_target_file}"
+    fi
+
+    if ((_edit_before_save)) || {
+       _interactive_input && [[ -z "${_content:-}" ]]
+    }
+    then
+      if [[ -n "${_local_editor}" ]]
+      then
+        EDITOR="${_local_editor}" _edit_file "${_target_file}"
+      else
+        _edit_file "${_target_file}"
+      fi
     fi
 
     _after="$(_get_hash "${_NOTEBOOK_PATH}/${_basename}")"
