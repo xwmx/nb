@@ -902,8 +902,8 @@ For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
 
-Deleting notes works the same, accepting an id, filename, or title to
-specify the note:
+Deleting notes works similarly to `edit` and `show`, accepting
+an id, filename, or title to specify the note:
 
 ```bash
 # delete note by id
