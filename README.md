@@ -902,8 +902,8 @@ For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
 
-Deleting notes works the same, accepting an id, filename, or title to
-specify the note:
+Deleting notes works similarly to `edit` and `show`, accepting
+an id, filename, or title to specify the note:
 
 ```bash
 # delete note by id
@@ -1201,8 +1201,11 @@ For a full overview, see
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`nb` includes `bookmark`, a full-featured, streamlined command line
-interface for creating, viewing, searching, and editing bookmarks.
+`nb` includes `bookmark`, a full-featured command line interface for
+creating, viewing, searching, and editing bookmarks.
+
+`bookmark` is a shortcut for the `nb bookmark` subcommand, accepting all
+of the same subcommands and options with identical behavior.
 
 Bookmark a page:
 
@@ -1244,9 +1247,6 @@ Perform a full text search of bookmarks and archived page content:
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
-
-`bookmark` is a shortcut for `nb bookmark`, accepts all of the same
-subcommands and options, and behaves identically.
 
 See [`bookmark help`](#bookmark-help) for more information.
 
@@ -1389,35 +1389,66 @@ different notebook without switching to it, add the notebook name with a
 colon before the command name:
 
 ```bash
-# show note 5 in the notebook named "example"
-nb example:show 5
+# add a new note in the notebook "example"
+nb example:add
 
-# add a new note in the notebook named "example"
+# add a new note in the notebook "example", shortcut alias
 nb example:a
 
-# edit note 12 in the notebook named "example"
+# show note 5 in the notebook "example"
+nb example:show 5
+
+# show note 5 in the notebook "example", shortcut alias
+nb example:s 5
+
+# edit note 12 in the notebook "example"
+nb example:edit 12
+
+# edit note 12 in the notebook "example", shortcut alias
 nb example:e 12
 
-# search for "example query" in the notebook named "example"
+# search for "example query" in the notebook "example"
+nb example:search "example query"
+
+# search for "example query" in the notebook "example", shortcut alias
 nb example:q "example query"
 
-# show the revision history of the notebook named "example"
+# show the revision history of the notebook "example"
 nb example:history
 ```
 
-You can similarly set the notebook name as a modifier to the id, filename, or
-title:
+The notebook name with colon can also be used as a modifier to the id,
+filename, or title:
 
 ```bash
-# edit note 12 in the notebook named "example"
+# edit note 12 in the notebook "example"
 nb edit example:12
 
-# edit note 12 in the notebook named "example", alternative
+# edit note 12 in the notebook "example", shortcut alias
+nb e example:12
+
+# edit note 12 in the notebook "example", alternative
 nb example:12 edit
+
+# edit note 12 in the notebook "example", alternative, shortcut alias
+nb example:12 e
+
+# show note titled "misc" in the notebook "example"
+nb show example:misc
+
+# show note titled "misc" in the notebook "example", shortcut alias
+nb s example:misc
+
+# delete note with filename "todos.md" in the notebook "example", alternative
+nb example:todos.md delete
+
+# delete note with filename "todos.md" in the notebook "example", alternative,
+# shortcut alias
+nb example:todos.md d
 ```
 
-When a notebook name is specified without a command, `nb` runs `nb ls` in the
-specified notebook:
+When a notebook name with colon is called without a subcommand, `nb` runs
+`nb ls` in the specified notebook:
 
 ```bash
 > nb example:
@@ -1428,7 +1459,8 @@ example · home
 [example:1] Title One
 ```
 
-A bookmark can be added in another notebook using the same approach:
+A bookmark can be created in another notebook by specifying the notebook
+name with colon, then a space, then the URL and bookmark options:
 
 ```bash
 # create a new bookmark in a notebook named "sample"
@@ -1440,6 +1472,9 @@ Notes can also be moved between notebooks:
 ```bash
 # move note 3 from the current notebook to "example"
 nb move 3 example
+
+# move note 5 in the notebook "example" to the notebook "sample"
+nb move example:5 sample
 ```
 
 ##### Notebooks and Tab Completion
@@ -1528,6 +1563,12 @@ A local notebook is always referred to by the name `local` and otherwise
 behaves just like a global notebook whenever a command is run from within it:
 
 ```bash
+# add a new note in the local notebook
+nb add
+
+# edit note 15 in the local notebook
+nb edit 15
+
 # move note titled "Todos" from the home notebook to the local notebook
 nb move home:Todos local
 
@@ -2218,6 +2259,10 @@ Subcommands:
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
   version      Display version information.
+
+Notebook Usage:
+  nb <notebook>:[<subcommand>] [<identifier>] [<options>...]
+  nb <subcommand> <notebook>:<identifier> [<options>...]
 
 Program Options:
   -i, --interactive   Start the `nb` interactive shell.
