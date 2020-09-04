@@ -2296,11 +2296,13 @@ For more information, see: `nb help`.
 ```text
 Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
-         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
 
 Options:
   -c, --content <content>     The content for the new note.
+  --edit                      Open the note in the editor before saving when
+                              content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note. The default
                               extension is used when the extension is omitted.
