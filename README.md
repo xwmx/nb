@@ -1389,16 +1389,24 @@ different notebook without switching to it, add the notebook name with a
 colon before the command name:
 
 ```bash
+# add a new note in the notebook named "example"
+nb example:add
+
+nb example:a
+
 # show note 5 in the notebook named "example"
 nb example:show 5
 
-# add a new note in the notebook named "example"
-nb example:a
+nb example:s 5
 
 # edit note 12 in the notebook named "example"
+nb example:edit 12
+
 nb example:e 12
 
 # search for "example query" in the notebook named "example"
+nb example:search "example query"
+
 nb example:q "example query"
 
 # show the revision history of the notebook named "example"
@@ -1412,14 +1420,22 @@ title:
 # edit note 12 in the notebook named "example"
 nb edit example:12
 
+nb e example:12
+
 # edit note 12 in the notebook named "example", alternative
 nb example:12 edit
 
-# edit note titled "misc" in the notebook "example"
-nb edit example:misc
+nb example:12 e
 
-# edit note with filename "todos.md" in the notebook "example", alternative
-nb example:todos.md edit
+# show note titled "misc" in the notebook "example"
+nb show example:misc
+
+nb s example:misc
+
+# delete note with filename "todos.md" in the notebook "example", alternative
+nb example:todos.md delete
+
+nb example:todos.md d
 ```
 
 When a notebook name followed by a colon is used without a command,
