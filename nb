@@ -5474,7 +5474,7 @@ _list() {
           shift
         fi
         ;;
-      --filenames|--filename)
+      --filename*)
         _list_filenames=1
         ;;
       --hard-empty)
@@ -5483,10 +5483,10 @@ _list() {
       --no-color|--nocolor)
         _list_color_enabled=0
         ;;
-      --no-id|--noid|--no-ids|--no-index|--noindex)
+      --no-id*|--noid*|--no-index|--noindex)
         _no_id=1
         ;;
-      --no-indicators|--noindicators|--no-indicator|--noindicator)
+      --no-indicator*|--noindicator*)
         _print_indicators=0
         ;;
       -n|--limit|--num|--number)
@@ -6922,13 +6922,13 @@ Please type $(_highlight "${_name}") to confirm: " __response
         --global)
           _only_global=1
           ;;
-        --names)
+        --name*)
           _only_names=1
           ;;
         --no-color|--nocolor)
           _notebook_color_enabled=0
           ;;
-        --paths)
+        --path*)
           _only_paths=1
           ;;
         --unarchived)
@@ -7817,7 +7817,7 @@ _search() {
       --no-color|--nocolor)
         _search_color_enabled=0
         ;;
-      --path|--paths)
+      --path*)
         _print_paths=1
         ;;
       -s|--sort)
@@ -8302,7 +8302,7 @@ _settings() {
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      6|editor|EDITOR)
+      6|*editor|*EDITOR)
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
@@ -8322,7 +8322,7 @@ _settings() {
         ((_get_id)) && printf "10" || printf "NB_LIMIT"
         return 0
         ;;
-      11|nb_dir|NB_DIR)
+      11|*dir|*DIR)
         ((_get_id)) && printf "11" || printf "NB_DIR"
         return 0
         ;;
