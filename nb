@@ -2773,9 +2773,10 @@ Usage:
   ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
@@ -5376,17 +5377,19 @@ HEREDOC
 
 desc "list" <<HEREDOC
 Usage:
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -5901,8 +5904,9 @@ HEREDOC
 desc "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
+        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -5911,9 +5915,10 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.

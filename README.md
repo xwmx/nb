@@ -2117,13 +2117,15 @@ Usage:
   nb import [copy | download | move] (<path> | <url>) [--convert]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
-  nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [--no-indicators] [-n <limit> | --limit <limit> | --<limit>]
+        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -2654,17 +2656,19 @@ Examples:
 
 ```text
 Usage:
-  nb list [-e [<length>] | --excerpt [<length>]] [--filenames] [--no-id]
-          [-n <limit> | --limit <limit> |  --<limit>] [-p | --pager]
-          [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+  nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
+          [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -2705,8 +2709,9 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [--no-id] [--no-indicators] [-n <limit> | --limit <limit> | --<limit>]
+        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -2715,9 +2720,10 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
-  --no-id                         Don't include the id in list items.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
+  --no-id                         Don't include the id in list items.
+  --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
