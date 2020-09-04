@@ -1417,8 +1417,8 @@ nb example:q "example query"
 nb example:history
 ```
 
-The notebook name can also be used as a modifier to the id, filename, or
-title:
+The notebook name with colon can also be used as a modifier to the id,
+filename, or title:
 
 ```bash
 # edit note 12 in the notebook "example"
