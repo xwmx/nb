@@ -1563,6 +1563,12 @@ A local notebook is always referred to by the name `local` and otherwise
 behaves just like a global notebook whenever a command is run from within it:
 
 ```bash
+# add a new note in the local notebook
+nb add
+
+# edit note 15 in the local notebook
+nb edit 15
+
 # move note titled "Todos" from the home notebook to the local notebook
 nb move home:Todos local
 
