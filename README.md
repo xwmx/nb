@@ -1459,7 +1459,7 @@ example · home
 [example:1] Title One
 ```
 
-A bookmark can be added in another notebook by specifying the notebook
+A bookmark can be created in another notebook by specifying the notebook
 name with colon, then a space, then the URL and bookmark options:
 
 ```bash
