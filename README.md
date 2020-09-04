@@ -1389,27 +1389,31 @@ different notebook without switching to it, add the notebook name with a
 colon before the command name:
 
 ```bash
-# add a new note in the notebook named "example"
+# add a new note in the notebook "example"
 nb example:add
 
+# add a new note in the notebook "example", shortcut alias
 nb example:a
 
-# show note 5 in the notebook named "example"
+# show note 5 in the notebook "example"
 nb example:show 5
 
+# show note 5 in the notebook "example", shortcut alias
 nb example:s 5
 
-# edit note 12 in the notebook named "example"
+# edit note 12 in the notebook "example"
 nb example:edit 12
 
+# edit note 12 in the notebook "example", shortcut alias
 nb example:e 12
 
-# search for "example query" in the notebook named "example"
+# search for "example query" in the notebook "example"
 nb example:search "example query"
 
+# search for "example query" in the notebook "example", shortcut alias
 nb example:q "example query"
 
-# show the revision history of the notebook named "example"
+# show the revision history of the notebook "example"
 nb example:history
 ```
 
@@ -1417,24 +1421,29 @@ The notebook name can also be used as a modifier to the id, filename, or
 title:
 
 ```bash
-# edit note 12 in the notebook named "example"
+# edit note 12 in the notebook "example"
 nb edit example:12
 
+# edit note 12 in the notebook "example", shortcut alias
 nb e example:12
 
-# edit note 12 in the notebook named "example", alternative
+# edit note 12 in the notebook "example", alternative
 nb example:12 edit
 
+# edit note 12 in the notebook "example", alternative, shortcut alias
 nb example:12 e
 
 # show note titled "misc" in the notebook "example"
 nb show example:misc
 
+# show note titled "misc" in the notebook "example", shortcut alias
 nb s example:misc
 
 # delete note with filename "todos.md" in the notebook "example", alternative
 nb example:todos.md delete
 
+# delete note with filename "todos.md" in the notebook "example", alternative,
+# shortcut alias
 nb example:todos.md d
 ```
 
