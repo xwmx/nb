@@ -2254,6 +2254,10 @@ Subcommands:
   use          Switch to a notebook.
   version      Display version information.
 
+Notebook Usage:
+  nb <notebook>:[<subcommand>] [<identifier>] [<options>...]
+  nb <subcommand> <notebook>:<identifier> [<options>...]
+
 Program Options:
   -i, --interactive   Start the `nb` interactive shell.
   -h, --help          Display this help information.

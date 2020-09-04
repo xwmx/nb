@@ -2856,6 +2856,10 @@ Subcommands:
   use          Switch to a notebook.
   version      Display version information.
 
+Notebook Usage:
+  ${_ME} <notebook>:[<subcommand>] [<identifier>] [<options>...]
+  ${_ME} <subcommand> <notebook>:<identifier> [<options>...]
+
 Program Options:
   -i, --interactive   Start the \`${_ME}\` interactive shell.
   -h, --help          Display this help information.
