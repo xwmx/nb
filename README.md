@@ -3440,7 +3440,7 @@ This creates a file with the name `example.bookmark.md` containing:
 <https://example.com>
 ```
 
-In a full bookmark, bookmark information is separated into sections,
+In a full bookmark, information is separated into sections,
 with each bookmark section indicated by a Markdown `h2` heading.
 
 #### Example
