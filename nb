@@ -1820,7 +1820,7 @@ _get_http_status() {
 #   _get_notebook_identifier (<path> | <name>)
 #
 # Description:
-#   Print a copy / pastable notebooks name, with spaces escaped.
+#   Print a copy / pastable notebook name, with spaces escaped.
 _get_notebook_identifier() {
   local _notebook_identifier="${1:-}"
 
