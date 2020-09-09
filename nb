@@ -985,7 +985,7 @@ _git_checkpoint() {
 
         if [[ "${_conflicted_files[*]}" == ".index" ]]
         then
-          # Keep both. Remove git conflict markers to keep both.
+          # Remove git conflict markers to keep both.
           # More info: https://stackoverflow.com/a/55187779
           "${_SED_I_COMMAND[@]}"  \
             -e '/^<<<<<<</d'      \
