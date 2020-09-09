@@ -9424,16 +9424,32 @@ Description:
   Sync the current local notebook with the remote repository.
 HEREDOC
 _sync() {
-  local _notebooks
-
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"
+
+  local _current_notebook=
+  _current_notebook="$(_notebooks current)"
+
+  local _notebooks=("${_current_notebook}")
 
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\\n"
-    _notebooks=($(_notebooks --names --no-color --unarchived))
-  else
-    _notebooks=($(_notebooks current))
+
+    local _notebook_names
+    _notebook_names=($(_notebooks --names --no-color --unarchived))
+
+    if [[ "${_current_notebook}" == "local" ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"    ]]
+    then
+      _notebooks+=($(_notebooks --names --no-color --unarchived))
+    else
+      if _contains "${_current_notebook}" "${_notebook_names[@]}"
+      then
+        _notebooks=(${_notebook_names[@]})
+      else
+        _notebooks+=(${_notebook_names[@]})
+      fi
+    fi
   fi
 
   _debug printf "_sync() \${_notebooks[*]:-}: '%s'\\n" "${_notebooks[*]:-}"
@@ -9442,7 +9458,15 @@ _sync() {
   for __notebook in "${_notebooks[@]:-}"
   do
     printf "%s..." "${__notebook}"
-    _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
+
+    if [[ "${__notebook}" == "local"      ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+    then
+      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+    else
+      _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
+    fi
+
     (NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner)
   done &&
     printf "Done!\\n" ||
