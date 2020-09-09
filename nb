@@ -1122,7 +1122,7 @@ _git_out_of_sync() {
   fi
 
   cd "${_target_directory}" ||
-    _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
+    _exit_1 printf "_git_out_of_sync() \`cd\` failed.\\n"
   git status | grep -q 'diverged'
 }
 
