@@ -974,11 +974,24 @@ _git_checkpoint() {
         return 1
       }
 
-      git rebase "origin/${_git_branch}" &>/dev/null || {
-        git rebase --abort
+      local _mergable=0
+
+      git merge --no-commit --no-ff "origin/${_git_branch}" &>/dev/null &&
+        _mergable=1
+
+      git merge --abort
+
+      if ((_mergable))
+      then
+        git rebase "origin/${_git_branch}" &>/dev/null || {
+          git rebase --abort
+          _warn printf "Merge conflict. Use \`%s git\` to merge.\\n" "${_ME}"
+          return 1
+        }
+      else
         _warn printf "Merge conflict. Use \`%s git\` to merge.\\n" "${_ME}"
         return 1
-      }
+      fi
 
       git push origin "${_git_branch}" &>/dev/null || {
         _warn printf "Unable to push to remote.\\n"
