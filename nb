@@ -1036,7 +1036,8 @@ _git_checkpoint() {
       if _git_index_is_dirty "${_target_directory}"
       then
         _git_checkpoint_commit "${_message}" &>/dev/null
-      fi && _git_checkpoint_sync &>/dev/null
+      # fi && _git_checkpoint_sync &>/dev/null
+      fi && _git_checkpoint_sync
     ) &
   else
     (
@@ -1056,7 +1057,7 @@ _git_checkpoint() {
 #   _git_index_is_dirty [<target-directory>]
 #
 # Returns:
-#   0  If there are uncommitted changes in `_NOTEBOOK_PATH` or
+#   0  If there are uncommitted changes in `$_NOTEBOOK_PATH` or
 #      <target-directory>.
 #   1  If the `$_NOTEBOOK_PATH` repository is clean.
 _git_index_is_dirty() {
@@ -1072,6 +1073,29 @@ _git_index_is_dirty() {
   cd "${_target_directory}" ||
     _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
   [[ -n "$(git status --porcelain)" ]]
+}
+
+# _git_out_of_sync()
+#
+# Usage:
+#   _git_out_of_sync [<target-directory>]
+#
+# Returns:
+#   0  If the `$_NOTEBOOK_PATH` repository is out of sync with the remote.
+#   1  If the `$_NOTEBOOK_PATH` repository is synced with the remote.
+_git_out_of_sync() {
+  ((_GIT_ENABLED)) || return 1
+
+  local _target_directory="${1:-}"
+
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${_NOTEBOOK_PATH}"
+  fi
+
+  cd "${_target_directory}" ||
+    _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
+  git status | grep -q 'diverged'
 }
 
 # _git_required()
@@ -9480,10 +9504,11 @@ _sync() {
 
     NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner
 
-    # if _git_index_is_dirty "${_NOTEBOOK_PATH}"
-    # then
-    #   _exit_1 printf "Syncing failed.\\n"
-    # fi
+    if _git_index_is_dirty  "${_NOTEBOOK_PATH}" ||
+       _git_out_of_sync     "${_NOTEBOOK_PATH}"
+    then
+      _exit_1 printf "Syncing failed.\\n"
+    fi
   done && printf "Done!\\n"
 }
 
