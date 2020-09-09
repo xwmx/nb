@@ -969,9 +969,20 @@ _git_checkpoint() {
 
     if git show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      git fetch                             &&
-        git rebase "origin/${_git_branch}"  &&
-        git push origin "${_git_branch}"
+      git fetch || {
+        _warn printf "Unable to fetch from remote.\\n"
+        return 1
+      }
+
+      git rebase "origin/${_git_branch}" || {
+        _warn printf "Merge conflict. Use \`%s git\` to merge.\\n" "${_ME}"
+        return 1
+      }
+
+      git push origin "${_git_branch}" || {
+        _warn printf "Unable to push to remote.\\n"
+        return 1
+      }
     else
       git push
     fi
@@ -9467,10 +9478,13 @@ _sync() {
       _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
     fi
 
-    (NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner)
-  done &&
-    printf "Done!\\n" ||
-      printf "Syncing failed!\\n"
+    NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner
+
+    # if _git_index_is_dirty "${_NOTEBOOK_PATH}"
+    # then
+    #   _exit_1 printf "Syncing failed.\\n"
+    # fi
+  done && printf "Done!\\n"
 }
 
 # todos ################################################################# todos
