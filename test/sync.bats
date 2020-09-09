@@ -19,7 +19,7 @@ _setup_notebooks() {
   export NB_DIR="${NB_DIR_1}"
 }
 
-@test "sync notebooks exist after setup" {
+@test "\`sync\` notebooks exist after setup" {
   {
     _setup_notebooks
   }
@@ -29,7 +29,7 @@ _setup_notebooks() {
   [[ -d "${NB_DIR_2}/home/.git"   ]]
 }
 
-@test "sync succeeds when files are added to both clones" {
+@test "\`sync\` succeeds when files are added to both clones" {
   {
     _setup_notebooks
     run "${_NB}" add "one.md" --content "Example content from 1."
