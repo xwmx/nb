@@ -48,7 +48,8 @@ _setup_notebooks() {
   cat "${NB_DIR_1}/home/.index"
 
   [[ ${status} -eq 0                                ]]
-  [[ "$("${_NB}" count)" == 1                       ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 1  ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 1  ]]
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md" ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "two.md" ]]
 
@@ -62,10 +63,11 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR_2}/home/.index"
 
-  [[ ${status} -eq 0          ]]
-  [[ "$("${_NB}" count)" == 2 ]]
-  [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md" ]]
-  [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md" ]]
+  [[ ${status} -eq 0                                                  ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 1                    ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 2                    ]]
+  [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md"                   ]]
+  [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
 
   # Sync 1, pulling changes from remote
   export NB_DIR="${NB_DIR_1}"
@@ -76,8 +78,9 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR_1}/home/.index"
 
-  [[ ${status} -eq 0          ]]
-  [[ "$("${_NB}" count)" == 2 ]]
-  [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md" ]]
-  [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md" ]]
+  [[ ${status} -eq 0                                                  ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 2                    ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 2                    ]]
+  [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
+  [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
 }
