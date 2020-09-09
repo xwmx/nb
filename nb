@@ -974,23 +974,38 @@ _git_checkpoint() {
         return 1
       }
 
-      local _mergable=0
-
-      git merge --no-commit --no-ff "origin/${_git_branch}" &>/dev/null &&
-        _mergable=1
-
-      git merge --abort
-
-      if ((_mergable))
+      if ! git rebase "origin/${_git_branch}" &>/dev/null
       then
-        git rebase "origin/${_git_branch}" &>/dev/null || {
+        local _merge_error=1
+
+        local _conflicted_files
+        _conflicted_files=($(
+          GIT_PAGER='' git diff --name-only --diff-filter=U
+        ))
+
+        if [[ "${_conflicted_files[*]}" == ".index" ]]
+        then
+          # Keep both. Remove git conflict markers to keep both.
+          # More info: https://stackoverflow.com/a/55187779
+          "${_SED_I_COMMAND[@]}"  \
+            -e '/^<<<<<<</d'      \
+            -e '/^>>>>>>>/d'      \
+            -e '/=======/d'       \
+            ".index"
+
+          git add ".index"
+
+          GIT_EDITOR=true git rebase --continue &>/dev/null && _merge_error=0
+        fi
+
+        if ((_merge_error))
+        then
           git rebase --abort
-          _warn printf "Merge conflict. Use \`%s git\` to merge.\\n" "${_ME}"
+          _warn printf \
+            "Merge conflict. Use \`%s git\` to merge manually.\\n" \
+            "${_ME}"
           return 1
-        }
-      else
-        _warn printf "Merge conflict. Use \`%s git\` to merge.\\n" "${_ME}"
-        return 1
+        fi
       fi
 
       git push origin "${_git_branch}" &>/dev/null || {
