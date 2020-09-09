@@ -755,11 +755,12 @@ trap _nb_cleanup_on_exit EXIT
 # Usage:
 #   _command_exists <name>
 #
-# Takes a potential command <name> as an argument and returns whether a command
-# exists with that name.
+# Exit / Error Status:
+#   0 (success, true) If a command <name> is defined in the current environment.
+#   1 (error,  false) If not.
 #
-# For information on why `hash` is used here, see:
-# https://stackoverflow.com/a/677212
+# Information on why `hash` is used here:
+# http://stackoverflow.com/a/677212
 _command_exists() {
   hash "${1}" 2>/dev/null
 }
@@ -767,11 +768,14 @@ _command_exists() {
 # _contains()
 #
 # Usage:
-#   _contains "${item}" "${list[@]}"
+#   _contains <query> <list-item>...
 #
-# Returns:
-#   0  If the item is included in the list.
-#   1  If not.
+# Exit / Error Status:
+#   0 (success, true)  If the item is included in the list.
+#   1 (error,  false)  If not.
+#
+# Examples:
+#   _contains "${_query}" "${_list[@}"
 _contains() {
   local _query="${1:-}"
   shift
@@ -860,9 +864,9 @@ __option_get_value() {
 # Usage:
 #   __option_value_is_present "${variable}"
 #
-# Returns:
-#   0  The argument is present and does not match an option flag.
-#   1  The argument is blank or matches as an option flag.
+# Exit / Error Status:
+#   0 (success, true)  The argument is present and does not match an option flag.
+#   1 (error,  false)  The argument is blank or matches as an option flag.
 __option_value_is_present() {
   [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
 }
@@ -1084,10 +1088,10 @@ _git_checkpoint() {
 # Usage:
 #   _git_index_is_dirty [<target-directory>]
 #
-# Returns:
-#   0  If there are uncommitted changes in `$_NOTEBOOK_PATH` or
-#      <target-directory>.
-#   1  If the `$_NOTEBOOK_PATH` repository is clean.
+# Exit / Error Status:
+#   0 (success, true)  If there are uncommitted changes in `$_NOTEBOOK_PATH` or
+#                      <target-directory>.
+#   1 (error,  false)  If the `$_NOTEBOOK_PATH` repository is clean.
 _git_index_is_dirty() {
   ((_GIT_ENABLED)) || return 1
 
@@ -1108,9 +1112,9 @@ _git_index_is_dirty() {
 # Usage:
 #   _git_out_of_sync [<target-directory>]
 #
-# Returns:
-#   0  If the `$_NOTEBOOK_PATH` repository is out of sync with the remote.
-#   1  If the `$_NOTEBOOK_PATH` repository is synced with the remote.
+# Exit / Error Status:
+#   0 (success, true)  If the current notebook is out of sync with the remote.
+#   1 (error,  false)  If the current notebook is synced with the remote.
 _git_out_of_sync() {
   ((_GIT_ENABLED)) || return 1
 
@@ -1196,9 +1200,9 @@ HEREDOC
 # Usage:
 #   _git_should_autosync
 #
-# Returns:
-#   0  If an autosync should be triggered.
-#   1  If not.
+# Exit / Error Status:
+#   0 (success, true)  If an autosync should be triggered.
+#   1 (error,  false)  If not.
 _git_should_autosync() {
   ((_GIT_ENABLED)) || return 1
 
@@ -1549,9 +1553,9 @@ _encrypt_file() {
 # Usage:
 #   _file_is_archive <path>
 #
-# Returns:
-#   0  If file is an archive.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is an archive.
+#   1 (error,  false)  if not.
 export _ARCHIVE_FILE_EXTENSIONS=(
   7z
   apk
@@ -1589,9 +1593,9 @@ _file_is_archive() {
 # Usage:
 #   _file_is_audio (<path> | <filename>)
 #
-# Returns:
-#   0  If file is an audio file.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is an audio file.
+#   1 (error,  false)  if not.
 export _AUDIO_FILE_EXTENSIONS=(
   aac
   aiff
@@ -1613,9 +1617,9 @@ _file_is_audio() {
 # Usage:
 #   _file_is_bookmark (<path> | <filename>)
 #
-# Returns:
-#   0 If file is a bookmark.
-#   1 if not.
+# Exit / Error Status:
+#   0 (success, true) If file is a bookmark.
+#   1 (error,  false) if not.
 export _BOOKMARK_FILE_EXTENSIONS=(
   bookmark.md
   bookmark.md.enc
@@ -1633,9 +1637,9 @@ _file_is_bookmark() {
 # Usage:
 #   _file_is_document (<path> | <filename>)
 #
-# Returns:
-#   0  If file is a Word, Open Office, PDF, or other document.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is a Word, Open Office, PDF, or other document.
+#   1 (error,  false)  if not.
 export _DOCUMENT_FILE_EXTENSIONS=(
   doc
   docx
@@ -1655,9 +1659,9 @@ _file_is_document() {
 # Usage:
 #   _file_is_encrypted <path>
 #
-# Returns:
-#   0  If file is encrypted.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is encrypted.
+#   1 (error,  false)  if not.
 export _ENCRYPTED_FILE_EXTENSIONS=(
   enc
 )
@@ -1687,9 +1691,9 @@ _file_is_encrypted() {
 # Usage:
 #   _file_is_image (<path> | <filename>)
 #
-# Returns:
-#   0  If file is an image.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is an image.
+#   1 (error,  false)  if not.
 export _IMAGE_FILE_EXTENSIONS=(
   afphoto
   ai
@@ -1720,9 +1724,9 @@ _file_is_image() {
 # Usage:
 #   _file_is_text <path>
 #
-# Returns:
-#   0  If file is text.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is text.
+#   1 (error,  false)  if not.
 #
 # Resources:
 #   - Markdown: https://superuser.com/a/285878
@@ -1777,9 +1781,9 @@ _file_is_text() {
 # Usage:
 #   _file_is_video (<path> | <filename>)
 #
-# Returns:
-#   0  If file is a video file.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is a video file.
+#   1 (error,  false)  if not.
 export _VIDEO_FILE_EXTENSIONS=(
   avi
   flv
@@ -2294,9 +2298,9 @@ _highlight_syntax_if_available() {
 # Usage:
 #   _interactive_input
 #
-# Returns:
-#   0  If the current input is interactive (eg, a shell).
-#   1  If the current input is stdin / piped input.
+# Exit / Error Status:
+#   0 (success, true)  If the current input is interactive (eg, a shell).
+#   1 (error,  false)  If the current input is stdin / piped input.
 _interactive_input() {
   [[ -t 0 ]]
 }
@@ -2304,12 +2308,14 @@ _interactive_input() {
 # _join()
 #
 # Usage:
-#   _join "," a b c
-#   _join "${an_array[@]}"
+#   _join <delimiter> <list-item>...
 #
-# Returns:
-#   The list or array of items joined into a string with elements divided by
-#   the optional separator if one is provided.
+# Description:
+#   Print a string containing all <list-item> arguments separated by
+#   <delimeter>.
+#
+# Example:
+#   _join "${_delimeter}" "${_list[@]}"
 #
 # More information:
 #   https://stackoverflow.com/a/17841619
@@ -2326,7 +2332,8 @@ _join() {
 # Usage:
 #   _less_prompt
 #
-# The prompt to display in `less`.
+# Description:
+#   The prompt to display in `less`.
 _less_prompt() {
   local _prompt="\
 > scroll for more, h for help, or q to quit"
@@ -2588,9 +2595,9 @@ _spinner() {
 # Usage:
 #   _string_is_url <string>
 #
-# Returns:
-#   0  If file is a Word, Open Office, PDF, or other document.
-#   1  if not.
+# Exit / Error Status:
+#   0 (success, true)  If file is a Word, Open Office, PDF, or other document.
+#   1 (error,  false)  if not.
 _string_is_url() {
   [[ "${1:-}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
 }
@@ -9993,9 +10000,9 @@ _debug printf "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}
 # Usage:
 #   _is_valid_subcommand <name>
 #
-# Returns:
-#   0  If the given <name> is a valid subcommand name.
-#   1  If not.
+# Exit / Error Status:
+#   0 (success, true)  If the given <name> is a valid subcommand name.
+#   1 (error,  false)  If not.
 _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
