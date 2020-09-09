@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ###############################################################################
 # test_helper.bash
 #
@@ -55,6 +56,11 @@ setup() {
   # Use empty `nb` script in environment to avoid depending on `nb`
   # being available in `$PATH`.
   export PATH="${BATS_TEST_DIRNAME}/fixtures/bin:${PATH}"
+
+  # $_NEWLINE
+  #
+  # Assign newline with ANSI-C quoting for string building.
+  export _NEWLINE=$'\n'
 
   if [[ ! "${NB_DIR}"         =~ ^/tmp/nb_test ]] ||
      [[ ! "${_NOTEBOOK_PATH}" =~ ^/tmp/nb_test ]] ||
@@ -132,12 +138,13 @@ _setup_remote_repo() {
   if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
      [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/nb_test ]]
   then
-    mkdir "${_GIT_REMOTE_PATH}" &&
-      cd "${_GIT_REMOTE_PATH}"  &&
-      git init                  &&
-      touch '.index'            &&
-      git add --all             &&
-      git commit -a -m "Initial commit."
+    mkdir "${_GIT_REMOTE_PATH}.setup"     &&
+      cd "${_GIT_REMOTE_PATH}.setup"      &&
+      git init                            &&
+      touch '.index'                      &&
+      git add --all                       &&
+      git commit -a -m "Initial commit."  &&
+      git clone --bare "${_GIT_REMOTE_PATH}.setup" "${_GIT_REMOTE_PATH}"
 
       cd "${_pwd}" || exit
   fi

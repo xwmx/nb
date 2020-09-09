@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.7.1"
+_VERSION="4.7.2"
 
 # $_ME
 #
@@ -969,11 +969,51 @@ _git_checkpoint() {
 
     if git show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      git fetch                             &&
-        git rebase "origin/${_git_branch}"  &&
-        git push origin "${_git_branch}"
+      git fetch &>/dev/null || {
+        _warn printf "Unable to fetch from remote.\\n"
+        return 1
+      }
+
+      if ! git rebase "origin/${_git_branch}" &>/dev/null
+      then
+        local _merge_error=1
+
+        local _conflicted_files
+        _conflicted_files=($(
+          GIT_PAGER='' git diff --name-only --diff-filter=U
+        ))
+
+        if [[ "${_conflicted_files[*]}" == ".index" ]]
+        then
+          # Remove git conflict markers to keep both.
+          # More info: https://stackoverflow.com/a/55187779
+          "${_SED_I_COMMAND[@]}"  \
+            -e '/^<<<<<<</d'      \
+            -e '/^>>>>>>>/d'      \
+            -e '/=======/d'       \
+            ".index"
+
+          git add ".index"
+
+          GIT_EDITOR=true git rebase --continue &>/dev/null && _merge_error=0
+        fi
+
+        if ((_merge_error))
+        then
+          git rebase --abort
+          _warn printf \
+            "Merge conflict. Use \`%s git\` to merge manually.\\n" \
+            "${_ME}"
+          return 1
+        fi
+      fi
+
+      git push origin "${_git_branch}" &>/dev/null || {
+        _warn printf "Unable to push to remote.\\n"
+        return 1
+      }
     else
-      git push
+      git push &>/dev/null
     fi
   }
 
@@ -1025,7 +1065,7 @@ _git_checkpoint() {
       if _git_index_is_dirty "${_target_directory}"
       then
         _git_checkpoint_commit "${_message}" &>/dev/null
-      fi && _git_checkpoint_sync &>/dev/null
+      fi && _git_checkpoint_sync
     ) &
   else
     (
@@ -1045,7 +1085,7 @@ _git_checkpoint() {
 #   _git_index_is_dirty [<target-directory>]
 #
 # Returns:
-#   0  If there are uncommitted changes in `_NOTEBOOK_PATH` or
+#   0  If there are uncommitted changes in `$_NOTEBOOK_PATH` or
 #      <target-directory>.
 #   1  If the `$_NOTEBOOK_PATH` repository is clean.
 _git_index_is_dirty() {
@@ -1061,6 +1101,29 @@ _git_index_is_dirty() {
   cd "${_target_directory}" ||
     _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
   [[ -n "$(git status --porcelain)" ]]
+}
+
+# _git_out_of_sync()
+#
+# Usage:
+#   _git_out_of_sync [<target-directory>]
+#
+# Returns:
+#   0  If the `$_NOTEBOOK_PATH` repository is out of sync with the remote.
+#   1  If the `$_NOTEBOOK_PATH` repository is synced with the remote.
+_git_out_of_sync() {
+  ((_GIT_ENABLED)) || return 1
+
+  local _target_directory="${1:-}"
+
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${_NOTEBOOK_PATH}"
+  fi
+
+  cd "${_target_directory}" ||
+    _exit_1 printf "_git_out_of_sync() \`cd\` failed.\\n"
+  git status | grep -q 'diverged'
 }
 
 # _git_required()
@@ -1820,7 +1883,7 @@ _get_http_status() {
 #   _get_notebook_identifier (<path> | <name>)
 #
 # Description:
-#   Print a copy / pastable notebooks name, with spaces escaped.
+#   Print a copy / pastable notebook name, with spaces escaped.
 _get_notebook_identifier() {
   local _notebook_identifier="${1:-}"
 
@@ -2752,7 +2815,8 @@ Usage:
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   ${_ME} bookmark [list [<list options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -3147,29 +3211,30 @@ Usage:
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [--skip-content] [--tags <tag1>,<tag2>...] [--title <title>]
+              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   ${_ME} bookmark list [<list options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
 
 Options:
-  -c, --comment <comment>    A comment or description for this bookmark.
-  --edit                     Open the bookmark in your editor before saving.
-  -e, --encrypt              Encrypt the bookmark with a password.
-  -f, --filename <filename>  The filename for the bookmark. It is recommended
-                             to omit the extension so the default bookmark
-                             extension is used.
-  -q, --quote <quote>        A quote or excerpt from the saved page.
-                             Alias: \`--excerpt\`
-  -r, --related <url>        A URL for a page related to the bookmarked page.
-                             Multiple \`--related\` flags can be used in a
-                             command to save multiple related URLs.
-  --save-source              Save the page source as HTML.
-  --skip-content             Omit page content from the note.
-  --tags <tag1>,<tag2>...    A comma-separated list of tags.
-  --title <title>            The bookmark title. When not specified,
-                             \`${_ME}\` will use the html <title> tag.
+  -c, --comment <comment>      A comment or description for this bookmark.
+  --edit                       Open the bookmark in your editor before saving.
+  -e, --encrypt                Encrypt the bookmark with a password.
+  -f, --filename <filename>    The filename for the bookmark. It is
+                               recommended to omit the extension so the
+                               default bookmark extension is used.
+  -q, --quote <quote>          A quote or excerpt from the saved page.
+                               Alias: \`--excerpt\`
+  -r, --related <url>          A URL for a page related to the bookmarked page.
+                               Multiple \`--related\` flags can be used in a
+                               command to save multiple related URLs.
+  --save-source                Save the page source as HTML.
+  --skip-content               Omit page content from the note.
+  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  --title <title>              The bookmark title. When not specified,
+                               \`${_ME}\` will use the html <title> tag.
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
@@ -9422,16 +9487,32 @@ Description:
   Sync the current local notebook with the remote repository.
 HEREDOC
 _sync() {
-  local _notebooks
-
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"
+
+  local _current_notebook=
+  _current_notebook="$(_notebooks current)"
+
+  local _notebooks=("${_current_notebook}")
 
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
     _debug printf "_sync() -a|--all\\n"
-    _notebooks=($(_notebooks --names --no-color --unarchived))
-  else
-    _notebooks=($(_notebooks current))
+
+    local _notebook_names
+    _notebook_names=($(_notebooks --names --no-color --unarchived))
+
+    if [[ "${_current_notebook}" == "local" ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"    ]]
+    then
+      _notebooks+=($(_notebooks --names --no-color --unarchived))
+    else
+      if _contains "${_current_notebook}" "${_notebook_names[@]}"
+      then
+        _notebooks=(${_notebook_names[@]})
+      else
+        _notebooks+=(${_notebook_names[@]})
+      fi
+    fi
   fi
 
   _debug printf "_sync() \${_notebooks[*]:-}: '%s'\\n" "${_notebooks[*]:-}"
@@ -9440,11 +9521,23 @@ _sync() {
   for __notebook in "${_notebooks[@]:-}"
   do
     printf "%s..." "${__notebook}"
-    _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
-    (NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner)
-  done &&
-    printf "Done!\\n" ||
-      printf "Syncing failed!\\n"
+
+    if [[ "${__notebook}" == "local"      ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+    then
+      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+    else
+      _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
+    fi
+
+    NB_AUTO_SYNC=1 _git_checkpoint "[nb] Sync" --spinner
+
+    if _git_index_is_dirty  "${_NOTEBOOK_PATH}" ||
+       _git_out_of_sync     "${_NOTEBOOK_PATH}"
+    then
+      _exit_1 printf "Syncing failed.\\n"
+    fi
+  done && printf "Done!\\n"
 }
 
 # todos ################################################################# todos
