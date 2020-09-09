@@ -45,7 +45,11 @@ _setup_notebooks() {
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  printf "index 1:\\n"
   cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 1  ]]
@@ -61,6 +65,10 @@ _setup_notebooks() {
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
   cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
@@ -76,11 +84,90 @@ _setup_notebooks() {
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  printf "index 1:\\n"
   cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 2                    ]]
   [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 2                    ]]
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
+
+  # Add more notes to each clone
+
+  export NB_DIR="${NB_DIR_1}"
+  run "${_NB}" add "one-2.md" --content "Example content from 1."
+
+  export NB_DIR="${NB_DIR_2}"
+  run "${_NB}" add "two-2.md" --content "Example content from 2."
+
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 3                    ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 3                    ]]
+  [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}one-2.md"  ]]
+  [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"  ]]
+
+  # Sync 2, sending new changes to remote.
+  export NB_DIR="${NB_DIR_2}"
+
+  run "${_NB}" sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
+
+  [[ ${status} -eq 0                                                  ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 3                    ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 3                    ]]
+  [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}one-2.md"  ]]
+  [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"  ]]
+
+  # Sync 1, pulling changes from remote, rebasing, and sending new changes back
+  # to remote.
+  export NB_DIR="${NB_DIR_1}"
+
+  run "${_NB}" sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
+
+  [[ ${status} -eq 0                                                  ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4                    ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 3                    ]]
+  [[ "$(cat "${NB_DIR_1}/home/.index")" == \
+     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md"  ]]
+  [[ "$(cat "${NB_DIR_2}/home/.index")" == \
+     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"                     ]]
+
+  # Sync 2, pulling changes from remote.
+  export NB_DIR="${NB_DIR_2}"
+
+  run "${_NB}" sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
+
+  [[ ${status} -eq 0                                                  ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4                    ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 4                    ]]
+  [[ "$(cat "${NB_DIR_1}/home/.index")" == \
+     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md"  ]]
+  [[ "$(cat "${NB_DIR_2}/home/.index")" == \
+     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md"  ]]
 }
