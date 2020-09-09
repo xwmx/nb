@@ -969,22 +969,23 @@ _git_checkpoint() {
 
     if git show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      git fetch || {
+      git fetch &>/dev/null || {
         _warn printf "Unable to fetch from remote.\\n"
         return 1
       }
 
-      git rebase "origin/${_git_branch}" || {
+      git rebase "origin/${_git_branch}" &>/dev/null || {
+        git rebase --abort
         _warn printf "Merge conflict. Use \`%s git\` to merge.\\n" "${_ME}"
         return 1
       }
 
-      git push origin "${_git_branch}" || {
+      git push origin "${_git_branch}" &>/dev/null || {
         _warn printf "Unable to push to remote.\\n"
         return 1
       }
     else
-      git push
+      git push &>/dev/null
     fi
   }
 
@@ -1036,7 +1037,6 @@ _git_checkpoint() {
       if _git_index_is_dirty "${_target_directory}"
       then
         _git_checkpoint_commit "${_message}" &>/dev/null
-      # fi && _git_checkpoint_sync &>/dev/null
       fi && _git_checkpoint_sync
     ) &
   else
