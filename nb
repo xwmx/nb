@@ -1850,7 +1850,12 @@ _get_first_line() {
         then
           if [[ -z "${_first_line}" ]] && [[ -n "${__line}" ]]
           then
-            _first_line="${__line}"
+            if [[ "${#__line}" -gt 120 ]]
+            then
+              _first_line="${__line:0:120}..."
+            else
+              _first_line="${__line}"
+            fi
             break
           fi
         fi
