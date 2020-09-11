@@ -290,7 +290,7 @@ __option_get_value() {
 # __option_value_is_present()
 #
 # Usage:
-#   __option_value_is_present "${variable}"
+#   __option_value_is_present <value>
 #
 # Exit / Error Status:
 #   0 (success, true)  The argument is present and does not match as an option
