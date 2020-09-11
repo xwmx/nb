@@ -76,22 +76,6 @@ _MY_PATH="${_MY_DIR}/${_ME}"
 # The current working directory in which the program was invoked.
 _CURRENT_WORKING_DIR="${PWD}"
 
-# $_SED_I_COMMAND
-#
-# `sed -i` takes an extension on macOS, but that extension can cause errors in
-# GNU `sed`.
-#
-# NOTE: To use this command, call it with `"${_SED_I_COMMAND[@]}"`
-#
-# https://stackoverflow.com/q/43171648
-# https://stackoverflow.com/a/16746032
-if sed --help >/dev/null 2>&1
-then # GNU
-  export _SED_I_COMMAND=(sed -i)
-else # BSD
-  export _SED_I_COMMAND=(sed -i '')
-fi
-
 # $_REPO
 #
 # The <user>/<repo> identifier for this project's git repository.
@@ -113,119 +97,68 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
 ###############################################################################
-# Configuration File
+# Utilities
 ###############################################################################
 
-# .nbrc
+# _command_exists()
 #
-# If a `.nbrc` file exists in `$HOME`, source it.
-if [[ -n "${NBRC_PATH:-}" ]]
-then
-  export NBRC_PATH="${NBRC_PATH}"
-elif [[ -n "${NOTESRC_PATH:-}" ]]
-then # Use legacy NOTESRC_PATH environment variable.
-  export NBRC_PATH="${NOTESRC_PATH}"
-elif [[ -e "${HOME}/.notesrc" ]] &&
-     grep -q -e "xwmx" -e "alphabetum" "${HOME}/.notesrc"
-then # Migrate legacy .notesrc TODO: remove.
-  mv "${HOME}/.notesrc" "${HOME}/.nbrc"
-  "${_SED_I_COMMAND[@]}"                              \
-    -e "s/NOTES_/NB_/g"                               \
-    -e "s/notesrc/nbrc/g"                             \
-    -e "s/alphabetum/xwmx/g"                          \
-    -e "s/\/notes/\/nb/g"                             \
-    -e "s/\.notes/\.nb/g"                             \
-    -e "s/by \`notes\`/by \`notes\` (now \`nb\`)/g"   \
-    -e "s/file for notes/file for \`nb\`/g"           \
-    "${HOME}/.nbrc"
-  export NBRC_PATH="${HOME}/.nbrc"
-else
-  export NBRC_PATH="${HOME}/.nbrc"
-fi
+# Usage:
+#   _command_exists <name>
+#
+# Exit / Error Status:
+#   0 (success, true) If a command <name> is defined in the current environment.
+#   1 (error,  false) If not.
+#
+# Information on why `hash` is used here:
+# http://stackoverflow.com/a/677212
+_command_exists() {
+  hash "${1}" 2>/dev/null
+}
 
-# Handle symlinked NBRC_PATH
-if [[ -L "${NBRC_PATH}" ]]
-then
-  NBRC_PATH="$(readlink "${NBRC_PATH}")"
-fi
+# _contains()
+#
+# Usage:
+#   _contains <query> <list-item>...
+#
+# Exit / Error Status:
+#   0 (success, true)  If the item is included in the list.
+#   1 (error,  false)  If not.
+#
+# Examples:
+#   _contains "${_query}" "${_list[@}"
+_contains() {
+  local _query="${1:-}"
+  shift
 
-# Source rc file.
-if [[ -e "${NBRC_PATH}" ]]
-then
-  source "${NBRC_PATH}"
-fi
-
-###############################################################################
-# $EDITOR
-###############################################################################
-
-# Set default $EDITOR if one has not been set.
-export EDITOR="${EDITOR:-}"
-__set_editor() {
-  local _editors=(
-    code
-    subl
-    micro
-    mate
-    macdown
-    nano
-    pico
-    vim
-    vi
-    emacs
-  )
-
-  if [[ -z "${EDITOR:-}" ]]
+  if [[ -z "${_query}"  ]] ||
+     [[ -z "${*:-}"     ]]
   then
-    if [[ -n "${VISUAL:-}" ]]
-    then
-      EDITOR="${VISUAL}"
-    else
-      for __editor in "${_editors[@]}"
-      do
-        if hash "${__editor}" 2>/dev/null
-        then
-          EDITOR="${__editor}"
-          break
-        fi
-      done
-    fi
-
-    if [[ -z "${EDITOR:-}" ]]
-    then
-      cat <<HEREDOC
-Command line text editor not found. Set the \$EDITOR variable in your
-environment or in the \`${_ME}\` configuration file located at:
-  ${NBRC_PATH}
-
-More information about setting \$EDITOR:
-  https://askubuntu.com/q/432524
-
-\`${_ME}\` uses text editors with command line support, such as:
-
-- Visual Studio Code
-    https://code.visualstudio.com
-- Sublime Text
-    https://www.sublimetext.com
-- Atom
-    https://atom.io
-- MacDown
-    https://macdown.uranusjr.com
-- Vim
-    https://en.wikipedia.org/wiki/Vim_(text_editor)
-- Emacs
-    https://en.wikipedia.org/wiki/Emacs
-- TextMate
-    https://macromates.com
-- nano
-    https://en.wikipedia.org/wiki/GNU_nano
-- or many of these:
-    https://en.wikipedia.org/wiki/List_of_text_editors
-HEREDOC
-      exit 1
-    fi
+    return 1
   fi
-} && __set_editor
+
+  for __element in "${@}"
+  do
+    [[ "${__element}" == "${_query}" ]] && return 0
+  done
+
+  return 1
+}
+
+# _sed_i
+#
+# `sed -i` takes an extension on macOS, but that extension can cause errors in
+# GNU `sed`.
+#
+# https://stackoverflow.com/q/43171648
+# https://stackoverflow.com/a/16746032
+_sed_i() {
+  if sed --help >/dev/null 2>&1
+  then # GNU
+    sed -i "${@}"
+  else # BSD
+    sed -i '' "${@}"
+  fi
+}
 
 ###############################################################################
 # Debug
@@ -327,6 +260,88 @@ _warn() {
     "${@}"
   } 1>&2
 }
+
+###############################################################################
+# Option Helpers
+###############################################################################
+
+# __option_get_value()
+#
+# Usage:
+#   __option_get_value <option> <value>
+#
+# Description:
+#   Given a flag (e.g., -e | --example) return the value or exit 1 if value
+#   is blank or appears to be another option.
+__option_get_value() {
+  local __arg="${1:-}"
+  local __val="${2:-}"
+
+  if [[ -n "${__val:-}" ]] && [[ ! "${__val:-}" =~ ^- ]]
+  then
+    printf "%s\\n" "${__val}"
+  else
+    _exit_1 printf                        \
+      "%s requires a valid argument.\\n"  \
+      "$(_highlight "${__arg}")"
+  fi
+}
+
+# __option_value_is_present()
+#
+# Usage:
+#   __option_value_is_present "${variable}"
+#
+# Exit / Error Status:
+#   0 (success, true)  The argument is present and does not match as an option
+#                      flag.
+#   1 (error,  false)  The argument is blank or matches as an option flag.
+__option_value_is_present() {
+  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+}
+
+###############################################################################
+# Configuration File
+###############################################################################
+
+# .nbrc
+#
+# If a `.nbrc` file exists in `$HOME`, source it.
+if [[ -n "${NBRC_PATH:-}" ]]
+then
+  export NBRC_PATH="${NBRC_PATH}"
+elif [[ -n "${NOTESRC_PATH:-}" ]]
+then # Use legacy NOTESRC_PATH environment variable.
+  export NBRC_PATH="${NOTESRC_PATH}"
+elif [[ -e "${HOME}/.notesrc" ]] &&
+     grep -q -e "xwmx" -e "alphabetum" "${HOME}/.notesrc"
+then # Migrate legacy .notesrc TODO: remove.
+  mv "${HOME}/.notesrc" "${HOME}/.nbrc"
+  _sed_i                                              \
+    -e "s/NOTES_/NB_/g"                               \
+    -e "s/notesrc/nbrc/g"                             \
+    -e "s/alphabetum/xwmx/g"                          \
+    -e "s/\/notes/\/nb/g"                             \
+    -e "s/\.notes/\.nb/g"                             \
+    -e "s/by \`notes\`/by \`notes\` (now \`nb\`)/g"   \
+    -e "s/file for notes/file for \`nb\`/g"           \
+    "${HOME}/.nbrc"
+  export NBRC_PATH="${HOME}/.nbrc"
+else
+  export NBRC_PATH="${HOME}/.nbrc"
+fi
+
+# Handle symlinked NBRC_PATH
+if [[ -L "${NBRC_PATH}" ]]
+then
+  NBRC_PATH="$(readlink "${NBRC_PATH}")"
+fi
+
+# Source rc file.
+if [[ -e "${NBRC_PATH}" ]]
+then
+  source "${NBRC_PATH}"
+fi
 
 ###############################################################################
 # Configuration
@@ -445,6 +460,78 @@ export NB_HEADER="${NB_HEADER:-1}"
 #
 # Supported Values: any positive number
 export NB_LIMIT="${NB_LIMIT:-20}"
+
+###############################################################################
+# $EDITOR
+###############################################################################
+
+# Set default $EDITOR if one has not been set.
+export EDITOR="${EDITOR:-}"
+__set_editor() {
+  local _editors=(
+    code
+    subl
+    micro
+    mate
+    macdown
+    nano
+    pico
+    vim
+    vi
+    emacs
+  )
+
+  if [[ -z "${EDITOR:-}" ]]
+  then
+    if [[ -n "${VISUAL:-}" ]]
+    then
+      EDITOR="${VISUAL}"
+    else
+      for __editor in "${_editors[@]}"
+      do
+        if hash "${__editor}" 2>/dev/null
+        then
+          EDITOR="${__editor}"
+          break
+        fi
+      done
+    fi
+
+    if [[ -z "${EDITOR:-}" ]]
+    then
+      cat <<HEREDOC
+Command line text editor not found. Set the \$EDITOR variable in your
+environment or in the \`${_ME}\` configuration file located at:
+  ${NBRC_PATH}
+
+More information about setting \$EDITOR:
+  https://askubuntu.com/q/432524
+
+\`${_ME}\` uses text editors with command line support, such as:
+
+- Visual Studio Code
+    https://code.visualstudio.com
+- Sublime Text
+    https://www.sublimetext.com
+- Atom
+    https://atom.io
+- MacDown
+    https://macdown.uranusjr.com
+- Vim
+    https://en.wikipedia.org/wiki/Vim_(text_editor)
+- Emacs
+    https://en.wikipedia.org/wiki/Emacs
+- TextMate
+    https://macromates.com
+- nano
+    https://en.wikipedia.org/wiki/GNU_nano
+- or many of these:
+    https://en.wikipedia.org/wiki/List_of_text_editors
+HEREDOC
+      exit 1
+    fi
+  fi
+} && __set_editor
 
 ###############################################################################
 # Colors
@@ -690,188 +777,6 @@ _id_brackets_color() {
 }
 
 ###############################################################################
-# Cache & Temp Directories
-###############################################################################
-
-# $_NB_CACHE_PATH
-#
-# The full path to the cache directory.
-export _NB_CACHE_PATH="${NB_DIR}/.cache"
-if [[ -d "${NB_DIR}" ]] && [[ ! -e "${_NB_CACHE_PATH}" ]]
-then
-  mkdir -p "${_NB_CACHE_PATH}"
-fi
-
-# _clear_cache()
-#
-# Usage:
-#   _clear_cache
-#
-# Description:
-#   Clear the cache.
-_clear_cache() {
-  if [[ -d "${_NB_CACHE_PATH}" ]]
-  then
-    rm -r "${_NB_CACHE_PATH:?}"
-    mkdir -p "${_NB_CACHE_PATH}"
-  fi
-}
-
-# $_NB_TEMP_DIRECTORY
-#
-# The full path to the temp directory.
-export _NB_TEMP_DIRECTORY
-_NB_TEMP_DIRECTORY="$(mktemp -d)"
-
-# _tempfile_path()
-#
-# Usage:
-#   _tempfile_path <basename>
-#
-# Description:
-#   Print the full path for <basename> within the temp directory.
-_tempfile_path() {
-  [[ -z "${1:-}" ]] && return 1
-  printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${1:-}"
-}
-
-# Usage: _nb_cleanup_on_exit
-_nb_cleanup_on_exit() {
-  if [[ -n "${_NB_TEMP_DIRECTORY:-}" ]] &&
-     [[ -e "${_NB_TEMP_DIRECTORY}"   ]]
-  then
-    rm -rf "${_NB_TEMP_DIRECTORY}"
-  fi
-}
-
-trap _nb_cleanup_on_exit EXIT
-
-###############################################################################
-# Utilities
-###############################################################################
-
-# _command_exists()
-#
-# Usage:
-#   _command_exists <name>
-#
-# Exit / Error Status:
-#   0 (success, true) If a command <name> is defined in the current environment.
-#   1 (error,  false) If not.
-#
-# Information on why `hash` is used here:
-# http://stackoverflow.com/a/677212
-_command_exists() {
-  hash "${1}" 2>/dev/null
-}
-
-# _contains()
-#
-# Usage:
-#   _contains <query> <list-item>...
-#
-# Exit / Error Status:
-#   0 (success, true)  If the item is included in the list.
-#   1 (error,  false)  If not.
-#
-# Examples:
-#   _contains "${_query}" "${_list[@}"
-_contains() {
-  local _query="${1:-}"
-  shift
-
-  if [[ -z "${_query}"  ]] ||
-     [[ -z "${*:-}"     ]]
-  then
-    return 1
-  fi
-
-  for __element in "${@}"
-  do
-    [[ "${__element}" == "${_query}" ]] && return 0
-  done
-
-  return 1
-}
-
-# _get_hash()
-#
-# Usage:
-#   _get_hash <path>
-#
-# Description:
-#   Generate a hash for the file or directory at <path>.
-_get_hash() {
-  # Usage: _get_hash_with_command <path> <command>
-  _get_hash_with_command() {
-    local _command=
-    IFS=' ' read -ra _command <<< "${2:-}"
-
-    local _path="${1:-}"
-
-    [[ -n "${_command[*]:-}" ]] && [[ -n "${_path}" ]] || return 1
-
-    if [[ -d "${_path}" ]]
-    then
-      tar -P -cf - "${_path}"     \
-        | "${_command[@]}"        \
-        | awk '{ print $1 }'
-    else
-      "${_command[@]}" "${_path}" \
-        | awk '{print $1}'
-    fi
-  }
-
-  local _path="${1:-}"
-  [[ -n "${_path:-}" ]] || return 1
-
-  if _command_exists "shasum"
-  then
-    _get_hash_with_command "${_path}" "shasum -a 256"
-  elif _command_exists "md5sum"
-  then
-    _get_hash_with_command "${_path}" "md5sum"
-  elif _command_exists "md5"
-  then
-    _get_hash_with_command "${_path}" "md5 -q"
-  else
-    _exit_1 printf "No hashing tool found.\\n"
-  fi
-}
-
-# __option_get_value()
-#
-# Usage:
-#   __option_get_value <option> <value>
-#
-# Description:
-#  Given a flag (e.g., -e | --example) return the value or exit 1 if value
-#  is blank or appears to be another option.
-__option_get_value() {
-  local __arg="${1:-}"
-  local __val="${2:-}"
-
-  if [[ -n "${__val:-}" ]] && [[ ! "${__val:-}" =~ ^- ]]
-  then
-    printf "%s\\n" "${__val}"
-  else
-    _exit_1 printf "%s requires a valid argument.\\n" "$(_highlight "${__arg}")"
-  fi
-}
-
-# __option_value_is_present()
-#
-# Usage:
-#   __option_value_is_present "${variable}"
-#
-# Exit / Error Status:
-#   0 (success, true)  The argument is present and does not match an option flag.
-#   1 (error,  false)  The argument is blank or matches as an option flag.
-__option_value_is_present() {
-  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
-}
-
-###############################################################################
 # Current Notebook
 ###############################################################################
 
@@ -935,6 +840,63 @@ __set_notebook_path() {
 } && __set_notebook_path
 
 ###############################################################################
+# Cache & Temp Directories
+###############################################################################
+
+# $_NB_CACHE_PATH
+#
+# The full path to the cache directory.
+export _NB_CACHE_PATH="${NB_DIR}/.cache"
+if [[ -d "${NB_DIR}" ]] && [[ ! -e "${_NB_CACHE_PATH}" ]]
+then
+  mkdir -p "${_NB_CACHE_PATH}"
+fi
+
+# _clear_cache()
+#
+# Usage:
+#   _clear_cache
+#
+# Description:
+#   Clear the cache.
+_clear_cache() {
+  if [[ -d "${_NB_CACHE_PATH}" ]]
+  then
+    rm -r "${_NB_CACHE_PATH:?}"
+    mkdir -p "${_NB_CACHE_PATH}"
+  fi
+}
+
+# $_NB_TEMP_DIRECTORY
+#
+# The full path to the temp directory.
+export _NB_TEMP_DIRECTORY
+_NB_TEMP_DIRECTORY="$(mktemp -d)"
+
+# _tempfile_path()
+#
+# Usage:
+#   _tempfile_path <basename>
+#
+# Description:
+#   Print the full path for <basename> within the temp directory.
+_tempfile_path() {
+  [[ -z "${1:-}" ]] && return 1
+  printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${1:-}"
+}
+
+# Usage: _nb_cleanup_on_exit
+_nb_cleanup_on_exit() {
+  if [[ -n "${_NB_TEMP_DIRECTORY:-}" ]] &&
+     [[ -e "${_NB_TEMP_DIRECTORY}"   ]]
+  then
+    rm -rf "${_NB_TEMP_DIRECTORY}"
+  fi
+}
+
+trap _nb_cleanup_on_exit EXIT
+
+###############################################################################
 # Git
 ###############################################################################
 
@@ -991,10 +953,10 @@ _git_checkpoint() {
         then
           # Remove git conflict markers to keep both.
           # More info: https://stackoverflow.com/a/55187779
-          "${_SED_I_COMMAND[@]}"  \
-            -e '/^<<<<<<</d'      \
-            -e '/^>>>>>>>/d'      \
-            -e '/=======/d'       \
+          _sed_i              \
+            -e '/^<<<<<<</d'  \
+            -e '/^>>>>>>>/d'  \
+            -e '/=======/d'   \
             ".index"
 
           git add ".index"
@@ -1863,6 +1825,51 @@ _get_first_line() {
 
       printf "%s\\n" "${_first_line}"
     fi
+  fi
+}
+
+# _get_hash()
+#
+# Usage:
+#   _get_hash <path>
+#
+# Description:
+#   Generate a hash for the file or directory at <path>.
+_get_hash() {
+  # Usage: _get_hash_with_command <path> <command>
+  _get_hash_with_command() {
+    local _command=
+    IFS=' ' read -ra _command <<< "${2:-}"
+
+    local _path="${1:-}"
+
+    [[ -n "${_command[*]:-}" ]] && [[ -n "${_path}" ]] || return 1
+
+    if [[ -d "${_path}" ]]
+    then
+      tar -P -cf - "${_path}"     \
+        | "${_command[@]}"        \
+        | awk '{ print $1 }'
+    else
+      "${_command[@]}" "${_path}" \
+        | awk '{print $1}'
+    fi
+  }
+
+  local _path="${1:-}"
+  [[ -n "${_path:-}" ]] || return 1
+
+  if _command_exists "shasum"
+  then
+    _get_hash_with_command "${_path}" "shasum -a 256"
+  elif _command_exists "md5sum"
+  then
+    _get_hash_with_command "${_path}" "md5sum"
+  elif _command_exists "md5"
+  then
+    _get_hash_with_command "${_path}" "md5 -q"
+  else
+    _exit_1 printf "No hashing tool found.\\n"
   fi
 }
 
@@ -5107,7 +5114,7 @@ _index() {
 
       if grep -q "^${_basename}$" "${_index_path}"
       then
-        "${_SED_I_COMMAND[@]}" -e "s/^${_basename}$//g" "${_index_path}"
+        _sed_i -e "s/^${_basename}$//g" "${_index_path}"
       else
         return 1
       fi
@@ -5285,8 +5292,7 @@ _index() {
 
       if grep -q "^${_old_basename}$" "${_index_path}"
       then
-        "${_SED_I_COMMAND[@]}" \
-          -e "s/^${_old_basename}$/${_new_basename}/g" "${_index_path}"
+        _sed_i -e "s/^${_old_basename}$/${_new_basename}/g" "${_index_path}"
       else
         return 1
       fi
@@ -8545,9 +8551,9 @@ HEREDOC
     local _default_value=
 
     _setting_name="$(_nb_settings_identify "${1:-}")" &&
-      "${_SED_I_COMMAND[@]}" \
+      _sed_i                                            \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
-        -e "s/^export ${_setting_name}.*Set by.*$//g" \
+        -e "s/^export ${_setting_name}.*Set by.*$//g"   \
         "${NBRC_PATH}" &&
         {
           _stripped=$(<"${NBRC_PATH}")
