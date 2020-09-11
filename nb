@@ -144,7 +144,7 @@ _contains() {
   return 1
 }
 
-# _sed_i
+# _sed_i()
 #
 # `sed -i` takes an extension on macOS, but that extension can cause errors in
 # GNU `sed`.
