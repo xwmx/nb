@@ -2077,8 +2077,9 @@ _get_title() {
           then # line starts with an atx-style H1
             _title="$(
               printf "%s\\n" "${__line}"    \
-                | sed 's/^[[:space:]]*# //' \
-                | sed 's/ #$//'
+                | sed                       \
+                  -e 's/^[[:space:]]*# //'  \
+                  -e 's/ #$//'
               )"
             break
           elif [[ "${__line}" =~ ^---$ ]]
