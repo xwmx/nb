@@ -2066,112 +2066,109 @@ _get_title() {
     return 1
   elif [[ -e "${_path}" ]]
   then
-    if _file_is_text "${_path}"
+    if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
-      if [[ "${_path}" =~ \.md$|\.markdown$ ]]
-      then
-        while IFS= read -r __line || [[ -n "${__line}" ]]
-        do
-          if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
-             ! ((_in_code_block))
-          then # line starts with an atx-style H1
-            _title="$(
-              printf "%s\\n" "${__line}"    \
-                | sed                       \
-                  -e 's/^[[:space:]]*# //'  \
-                  -e 's/ #$//'
-              )"
-            break
-          elif [[ "${__line}" =~ ^---$ ]]
-          then # start or end of front matter block
-            if ((_in_front_matter))
-            then
-              _in_front_matter=0
-            else
-              _in_front_matter=1
-            fi
-          elif [[ "${__line}" =~ ^\`\`\` ]]
-          then # start or end of code block
-            if ((_in_code_block))
-            then
-              _in_code_block=0
-            else
-              _in_code_block=1
-            fi
-          elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\: ]]
-          then # front matter title
-            _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
-            break
-          elif ! ((_in_front_matter)) && ! ((_in_code_block))
+      while IFS= read -r __line || [[ -n "${__line}" ]]
+      do
+        if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
+           ! ((_in_code_block))
+        then # line starts with an atx-style H1
+          _title="$(
+            printf "%s\\n" "${__line}"    \
+              | sed                       \
+                -e 's/^[[:space:]]*# //'  \
+                -e 's/ #$//'
+            )"
+          break
+        elif [[ "${__line}" =~ ^---$ ]]
+        then # start or end of front matter block
+          if ((_in_front_matter))
           then
-            if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
-            then  # potential setext-style H1
-              _maybe_title="${__line}"
-            elif [[ -n "${_maybe_title}"             ]] &&
-                 [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
-            then # underline for setext-style H1 on previous line
-              _title="$(
-                printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
-              )"
-              break
-            elif [[ -n "${_maybe_title}"       ]] &&
-                 [[ ! "${_maybe_title}" =~ ^\[ ]]
-            then # in normal content, title not found
-              break
-            else
-              continue
-            fi
+            _in_front_matter=0
+          else
+            _in_front_matter=1
           fi
-        done < "${_path}"
-      elif [[ "${_path}" =~ \.latex$|\.tex$ ]]
-      then
-        while IFS= read -r __line || [[ -n "${__line}" ]]
-        do
-          _counter="$((_counter+1))"
-
-          if [[ "${__line}" =~  ^\\title\{ ]]
+        elif [[ "${__line}" =~ ^\`\`\` ]]
+        then # start or end of code block
+          if ((_in_code_block))
           then
+            _in_code_block=0
+          else
+            _in_code_block=1
+          fi
+        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\: ]]
+        then # front matter title
+          _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
+          break
+        elif ! ((_in_front_matter)) && ! ((_in_code_block))
+        then
+          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
+          then  # potential setext-style H1
+            _maybe_title="${__line}"
+          elif [[ -n "${_maybe_title}"             ]] &&
+               [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
+          then # underline for setext-style H1 on previous line
             _title="$(
-              printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
+              printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
             )"
             break
-          elif [[ -n "${__line:-}"      ]] &&
-               [[ ! "${__line}" =~ ^\\  ]] &&
-               [[ "${_counter}" -gt 20  ]]
-          then
+          elif [[ -n "${_maybe_title}"       ]] &&
+               [[ ! "${_maybe_title}" =~ ^\[ ]]
+          then # in normal content, title not found
             break
           else
             continue
           fi
-        done < "${_path}"
-      elif [[ "${_path}" =~ \.org$ ]]
-      then
-        while IFS= read -r __line || [[ -n "${__line}" ]]
-        do
-          _counter="$((_counter+1))"
+        fi
+      done < "${_path}"
+    elif [[ "${_path}" =~ \.latex$|\.tex$ ]]
+    then
+      while IFS= read -r __line || [[ -n "${__line}" ]]
+      do
+        _counter="$((_counter+1))"
 
-          # NOTE: Titles can be defined with multiple #+TITLE: lines.
-          if [[ "${__line}" =~ ^\#\+TITLE\: ]]
-          then
-            if [[ -n "${_title:-}" ]]
-            then
-              _title="${_title} "
-            fi
+        if [[ "${__line}" =~  ^\\title\{ ]]
+        then
+          _title="$(
+            printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
+          )"
+          break
+        elif [[ -n "${__line:-}"      ]] &&
+             [[ ! "${__line}" =~ ^\\  ]] &&
+             [[ "${_counter}" -gt 20  ]]
+        then
+          break
+        else
+          continue
+        fi
+      done < "${_path}"
+    elif [[ "${_path}" =~ \.org$ ]]
+    then
+      while IFS= read -r __line || [[ -n "${__line}" ]]
+      do
+        _counter="$((_counter+1))"
 
-            _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
-          elif [[ -n "${__line:-}"      ]] &&
-               [[ ! "${__line}" =~ ^\#  ]] &&
-               [[ "${_counter}" -gt 5   ]]
+        # NOTE: Titles can be defined with multiple #+TITLE: lines.
+        if [[ "${__line}" =~ ^\#\+TITLE\: ]]
+        then
+          if [[ -n "${_title:-}" ]]
           then
-            break
-          else
-            continue
+            _title="${_title} "
           fi
-        done < "${_path}"
-      fi
 
-      printf "%s\\n" "${_title}"
+          _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
+        elif [[ -n "${__line:-}"      ]] &&
+             [[ ! "${__line}" =~ ^\#  ]] &&
+             [[ "${_counter}" -gt 5   ]]
+        then
+          break
+        else
+          continue
+        fi
+      done < "${_path}"
     fi
+
+    printf "%s\\n" "${_title}"
   fi
 }
 
