@@ -8632,7 +8632,7 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL' ]]
     then
-      if [[ "${2:-}" =~ ^openssl|gpg$ ]]
+      if [[ "${2:-}" =~ ^openssl$|^gpg$ ]]
       then
         return 0
       else
