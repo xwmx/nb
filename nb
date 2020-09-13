@@ -8309,7 +8309,7 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
-  # Usage: _nb_settings_colors
+  # Usage: _nb_settings_colors [<number>]
   _nb_settings_colors() {
     # Usage: _nb_settings_colors_print <number>
     _nb_settings_colors_print() {
