@@ -8311,7 +8311,8 @@ HEREDOC
 _settings() {
   # Usage: _nb_settings_colors
   _nb_settings_colors() {
-    _nb_settings_colors_print(){
+    # Usage: _nb_settings_colors_print <number>
+    _nb_settings_colors_print() {
       printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
     }
 
