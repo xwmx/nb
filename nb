@@ -3595,7 +3595,6 @@ Check the Wayback Machine for an archived version instead? [y/N] " __yn
             | grep --color=never 'closest'                              \
             | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
             | sed -E 's/.*"url": "([^"]+)".*/\1/g' || printf ""
-
         )"
         if [[ -n "${_wayback_response:-}" ]]
         then
