@@ -4800,7 +4800,12 @@ Description:
 HEREDOC
 _git() {
   cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_git() \`cd\` failed.\\n"
-  git "${@}"
+  if [[ -n "${1:-}" ]]
+  then
+    git "${@}"
+  else
+    git
+  fi
 }
 
 # history ############################################################# history
