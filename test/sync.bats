@@ -29,7 +29,7 @@ _setup_notebooks() {
   [[ -d "${NB_DIR_2}/home/.git"   ]]
 }
 
-@test "\`sync\` succeeds when files are added to both clones" {
+@test "\`sync\` succeeds when files are added and removed from two clones" {
   {
     _setup_notebooks
     run "${_NB}" add "one.md" --content "Example content from 1."
@@ -43,13 +43,14 @@ _setup_notebooks() {
   # Sync 1, sending changes to remote
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(1)\\n"
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 1  ]]
@@ -63,13 +64,14 @@ _setup_notebooks() {
   # to remote.
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(2)\\n"
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 1                    ]]
@@ -82,13 +84,14 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(3)\\n"
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 2                    ]]
@@ -114,13 +117,14 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(4)\\n"
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 3                    ]]
@@ -134,13 +138,14 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(5)\\n"
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4                    ]]
@@ -155,13 +160,14 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(6)\\n"
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4                    ]]
@@ -180,12 +186,13 @@ _setup_notebooks() {
   export NB_DIR="${NB_DIR_2}"
   run "${_NB}" add "two-3.md" --content "Example content from 2."
 
-  # NB_DIR="${NB_DIR_1}" "${_NB}" count
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # NB_DIR="${NB_DIR_2}" "${_NB}" count
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(6.5)\\n"
+  NB_DIR="${NB_DIR_1}" "${_NB}" count
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  NB_DIR="${NB_DIR_2}" "${_NB}" count
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4                    ]]
   [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 5                    ]]
@@ -202,6 +209,7 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  printf "(7)\\n"
   NB_DIR="${NB_DIR_1}" "${_NB}" count
   printf "index 1:\\n"
   cat "${NB_DIR_1}/home/.index"
@@ -222,15 +230,16 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  # printf "\${status}: %s\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # NB_DIR="${NB_DIR_1}" "${_NB}" count
-  # printf "index 1:\\n"
-  # cat "${NB_DIR_1}/home/.index"
-  # NB_DIR="${NB_DIR_2}" "${_NB}" count
-  # printf "index 2:\\n"
-  # cat "${NB_DIR_2}/home/.index"
+  printf "(8)\\n"
+  NB_DIR="${NB_DIR_1}" "${_NB}" count
+  printf "index 1:\\n"
+  cat "${NB_DIR_1}/home/.index"
+  NB_DIR="${NB_DIR_2}" "${_NB}" count
+  printf "index 2:\\n"
+  cat "${NB_DIR_2}/home/.index"
 
   [[ ${status} -eq 0                                                  ]]
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 5                    ]]
@@ -248,6 +257,7 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  printf "(9)\\n"
   NB_DIR="${NB_DIR_1}" "${_NB}" count
   printf "index 1:\\n"
   cat "${NB_DIR_1}/home/.index"
@@ -271,6 +281,7 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  printf "(10)\\n"
   NB_DIR="${NB_DIR_1}" "${_NB}" count
   printf "index 1:\\n"
   cat "${NB_DIR_1}/home/.index"
