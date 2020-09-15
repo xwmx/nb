@@ -9574,10 +9574,13 @@ Description:
   Sync the current local notebook with the remote repository.
 
 Conflict Resolution:
-  When \`${_ME} sync\` encounters a conflict and can't merge overlapping
-  local and remote changes, both versions are saved in the file, separated
-  by git conflict markers. Use \`${_ME} edit\` to remove the conflict markers
-  and delete any unwanted text.
+  When \`${_ME} sync\` encounters a conflict in a text file and can't merge
+  overlapping local and remote changes, both versions are saved in the file,
+  separated by git conflict markers. Use \`${_ME} edit\` to remove the
+  conflict markers and delete any unwanted text. When \`${_ME}\` encounters
+  a conflict in a binary file, such as an encrypted note or bookmark, both
+  versions of the file are saved in the notebook as individual files, one
+  with \`--conflicted\` appended to the filename.
 HEREDOC
 _sync() {
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"

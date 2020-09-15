@@ -1723,10 +1723,10 @@ You can also turn off autosync with
 
 #### Sync Conflict Resolution
 
-When `nb sync` encounters a conflict and can't merge overlapping local and
-remote changes, both versions are saved in the file, separated by git
-conflict markers. Use `nb edit` to remove the conflict markers and
-delete any unwanted text.
+When `nb sync` encounters a conflict in a text file and can't merge
+overlapping local and remote changes, both versions are saved in the file,
+separated by git conflict markers. Use `nb edit` to remove the conflict
+markers and delete any unwanted text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
@@ -1758,6 +1758,10 @@ and remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
 - List Item pluot
 - List Item plum
 ```
+
+When `nb` encounters a conflict in a binary file, such as an encrypted
+note, both versions of the file are saved in the notebook as individual
+files, one with `--conflicted` appended to the filename.
 
 When encountering a conflict that `nb` says it can't merge, use
 [`nb git`](#git) and [`nb run`](#run) to resolve the conflict manually.
@@ -3415,10 +3419,13 @@ Description:
   Sync the current local notebook with the remote repository.
 
 Conflict Resolution:
-  When `nb sync` encounters a conflict and can't merge overlapping
-  local and remote changes, both versions are saved in the file, separated
-  by git conflict markers. Use `nb edit` to remove the conflict markers
-  and delete any unwanted text.
+  When `nb sync` encounters a conflict in a text file and can't merge
+  overlapping local and remote changes, both versions are saved in the file,
+  separated by git conflict markers. Use `nb edit` to remove the
+  conflict markers and delete any unwanted text. When `nb` encounters
+  a conflict in a binary file, such as an encrypted note or bookmark, both
+  versions of the file are saved in the notebook as individual files, one
+  with `--conflicted` appended to the filename.
 ```
 
 #### `update`
