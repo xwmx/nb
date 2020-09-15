@@ -962,7 +962,12 @@ _git_checkpoint() {
           for __file in "${_conflicted_files[@]}"
           do
             [[ "${__file}" == ".index" ]] && continue
-            _file_is_text "${__file}"     || _non_text_files+=("${__file}")
+
+            if ! _file_is_text "${__file}"
+            then
+              _non_text_files+=("${__file}")
+              continue
+            fi
 
             _added_conflicted_files+=("${__file}")
 
