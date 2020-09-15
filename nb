@@ -963,15 +963,16 @@ _git_checkpoint() {
           do
             [[ "${__file}" == ".index" ]] && continue
 
-            if ! _file_is_text "${__file}"
+            if _file_is_text "${__file}"
             then
+              _added_conflicted_files+=("${__file}")
+
+              git add "${__file}"
+            else
               _non_text_files+=("${__file}")
+
               continue
             fi
-
-            _added_conflicted_files+=("${__file}")
-
-            git add "${__file}"
           done
 
           if ! ((${#_non_text_files[@]}))
