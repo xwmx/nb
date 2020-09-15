@@ -9533,6 +9533,12 @@ Options:
 
 Description:
   Sync the current local notebook with the remote repository.
+
+Conflict Resolution:
+  When \`${_ME} sync\` encounters a conflict and can't merge overlapping
+  local and remote changes, both versions are saved in the file, separated
+  by git conflict markers. Use \`${_ME} edit\` to remove the conflict markers
+  and delete any unwanted text.
 HEREDOC
 _sync() {
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"

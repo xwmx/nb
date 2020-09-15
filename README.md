@@ -3372,6 +3372,12 @@ Options:
 
 Description:
   Sync the current local notebook with the remote repository.
+
+Conflict Resolution:
+  When `nb sync` encounters a conflict and can't merge overlapping
+  local and remote changes, both versions are saved in the file, separated
+  by git conflict markers. Use `nb edit` to remove the conflict markers
+  and delete any unwanted text.
 ```
 
 #### `update`
