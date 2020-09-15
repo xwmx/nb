@@ -673,11 +673,17 @@ title: Ideas
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
 limit can be changed with [`nb set limit <number>`](#settings-list---long).
-To list a different number of items on a per-command basis, use the `-n`,
-`--limit`, `--<limit>`, `-a`, or `--all` flags:
+To list a different number of items on a per-command basis, use the
+`-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
 
 ```bash
-> nb -n 2
+> nb -n 1
+home
+----
+[5] Example Five
+4 omitted. 5 total.
+
+> nb --limit 2
 home
 ----
 [5] Example Five
