@@ -1743,8 +1743,8 @@ two systems, and git has no way to determine which one we want to keep:
 - List Item plum
 ```
 
-Local changes are between the lines starting with `<<<<<<<` and
-`=======`, while the remote changes are between the `=======` and
+The local change is between the lines starting with `<<<<<<<` and
+`=======`, while the remote change is between the `=======` and
 `>>>>>>>` lines.
 
 To resolve this conflict by keeping both items, simply edit the file
