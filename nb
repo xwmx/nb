@@ -941,11 +941,11 @@ _git_checkpoint() {
           GIT_PAGER='' git diff --name-only --diff-filter=U
         ))
 
+        local _non_text_files=()
+        local _added_conflicted_files=()
+
         if [[ -n "${_conflicted_files[*]:-}" ]]
         then
-          local _non_text_files=()
-          local _added_conflicted_files=()
-
           if _contains ".index" "${_conflicted_files[@]}"
           then
             # Remove git conflict markers to keep both.
@@ -984,12 +984,12 @@ _git_checkpoint() {
             "${_ME}"
           return 1
         else
-          if ((${#_added_conflicted_files}))
+          if ((${#_added_conflicted_files[@]}))
           then
             printf "\\n\\n"
             _warn printf "Some files contain conflicts:\\n"
 
-            for __file in ${_added_conflicted_files[@]}
+            for __file in "${_added_conflicted_files[@]}"
             do
               printf "  %s:%s\\n" "${PWD##*/}" "${__file}" 1>&2
             done
