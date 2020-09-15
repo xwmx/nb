@@ -20,9 +20,7 @@ _setup_notebooks() {
 }
 
 @test "\`sync\` notebooks exist after setup" {
-  {
-    _setup_notebooks
-  }
+  _setup_notebooks
 
   [[ "${NB_DIR_1}" == "${NB_DIR}" ]]
   [[ -d "${NB_DIR_1}/home/.git"   ]]
@@ -301,186 +299,181 @@ _setup_notebooks() {
 
 @test "\`sync\` succeeds when one file is edited on two clones" {
   # skip
-  {
-    _setup_notebooks
 
-    export NB_DIR="${NB_DIR_1}"
+  _setup_notebooks
 
-    run "${_NB}" add "one.md" --content "Example content from 1.
+  export NB_DIR="${NB_DIR_1}"
+
+  run "${_NB}" add "one.md" --content "Example content from 1.
 
 - Line 3 List Item
 - Line 4 List Item
 - Line 5 List Item
 "
-    run "${_NB}" sync
+  run "${_NB}" sync
 
-    export NB_DIR="${NB_DIR_2}"
+  export NB_DIR="${NB_DIR_2}"
 
-    run "${_NB}" sync
+  run "${_NB}" sync
 
-    # ls -la "${NB_DIR_2}"
+  # ls -la "${NB_DIR_2}"
 
-    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/one.md"
+  _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/one.md"
 
-    run "${_NB}" &>/dev/null
-    run "${_NB}" sync
+  run "${_NB}" &>/dev/null
+  run "${_NB}" sync
 
-    export NB_DIR="${NB_DIR_1}"
+  export NB_DIR="${NB_DIR_1}"
 
-    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/one.md"
+  _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/one.md"
 
-    run "${_NB}" &>/dev/null
-    run "${_NB}" sync
+  run "${_NB}" &>/dev/null
+  run "${_NB}" sync
 
-    printf "\${status}: %s\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-    cat "${NB_DIR_1}/home/one.md"
+  cat "${NB_DIR_1}/home/one.md"
 
-    [[ ${status} -eq 0 ]]
-    [[ ${output} =~ Some\ files\ contain\ conflicts ]]
-    [[ ${output} =~ home\:one\.md ]]
+  [[ ${status} -eq 0 ]]
+  [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+  [[ ${output} =~ home\:one\.md ]]
 
-    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
-    grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
-    grep -q '======='             "${NB_DIR_1}/home/one.md"
-    grep -q '\- Line x List Item' "${NB_DIR_1}/home/one.md"
-    grep -q '>>>>>>>'             "${NB_DIR_1}/home/one.md"
-    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/one.md"
-    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
-  }
+  grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
+  grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
+  grep -q '======='             "${NB_DIR_1}/home/one.md"
+  grep -q '\- Line x List Item' "${NB_DIR_1}/home/one.md"
+  grep -q '>>>>>>>'             "${NB_DIR_1}/home/one.md"
+  grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/one.md"
+  grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
 }
 
 @test "\`sync\` succeeds when multiple files are edited on two clones" {
   # skip
-  {
-    _setup_notebooks
+  _setup_notebooks
 
-    export NB_DIR="${NB_DIR_1}"
+  export NB_DIR="${NB_DIR_1}"
 
-    run "${_NB}" add "one.md" --content "Example content from 1.
-
-- Line 3 List Item
-- Line 4 List Item
-- Line 5 List Item
-"
-
-    run "${_NB}" add "two.md" --content "Example content from 1.
+  run "${_NB}" add "one.md" --content "Example content from 1.
 
 - Line 3 List Item
 - Line 4 List Item
 - Line 5 List Item
 "
 
-    run "${_NB}" add "three.md" --content "Example content from 1.
+  run "${_NB}" add "two.md" --content "Example content from 1.
 
 - Line 3 List Item
 - Line 4 List Item
 - Line 5 List Item
 "
-    run "${_NB}" sync
 
-    export NB_DIR="${NB_DIR_2}"
+  run "${_NB}" add "three.md" --content "Example content from 1.
 
-    run "${_NB}" sync
+- Line 3 List Item
+- Line 4 List Item
+- Line 5 List Item
+"
+  run "${_NB}" sync
 
-    # ls -la "${NB_DIR_2}"
+  export NB_DIR="${NB_DIR_2}"
 
-    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/one.md"
-    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/two.md"
-    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/three.md"
+  run "${_NB}" sync
 
-    run "${_NB}" &>/dev/null
-    run "${_NB}" sync
+  # ls -la "${NB_DIR_2}"
 
-    export NB_DIR="${NB_DIR_1}"
+  _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/one.md"
+  _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/two.md"
+  _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/three.md"
 
-    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/one.md"
-    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/two.md"
-    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/three.md"
+  run "${_NB}" &>/dev/null
+  run "${_NB}" sync
 
-    run "${_NB}" &>/dev/null
-    run "${_NB}" sync
+  export NB_DIR="${NB_DIR_1}"
 
-    printf "\${status}: %s\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
+  _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/one.md"
+  _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/two.md"
+  _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/three.md"
 
-    cat "${NB_DIR_1}/home/one.md"
+  run "${_NB}" &>/dev/null
+  run "${_NB}" sync
 
-    [[ ${status} -eq 0 ]]
-    [[ ${output} =~ Some\ files\ contain\ conflicts ]]
-    [[ ${output} =~ home\:one\.md   ]]
-    [[ ${output} =~ home\:two\.md   ]]
-    [[ ${output} =~ home\:three\.md ]]
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
-    grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
-    grep -q '======='             "${NB_DIR_1}/home/one.md"
-    grep -q '\- Line x List Item' "${NB_DIR_1}/home/one.md"
-    grep -q '>>>>>>>'             "${NB_DIR_1}/home/one.md"
-    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/one.md"
-    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
+  cat "${NB_DIR_1}/home/one.md"
 
-    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/two.md"
-    grep -q '\- Line n List Item' "${NB_DIR_1}/home/two.md"
-    grep -q '======='             "${NB_DIR_1}/home/two.md"
-    grep -q '\- Line x List Item' "${NB_DIR_1}/home/two.md"
-    grep -q '>>>>>>>'             "${NB_DIR_1}/home/two.md"
-    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/two.md"
-    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/two.md"
+  [[ ${status} -eq 0 ]]
+  [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+  [[ ${output} =~ home\:one\.md   ]]
+  [[ ${output} =~ home\:two\.md   ]]
+  [[ ${output} =~ home\:three\.md ]]
 
-    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/three.md"
-    grep -q '\- Line n List Item' "${NB_DIR_1}/home/three.md"
-    grep -q '======='             "${NB_DIR_1}/home/three.md"
-    grep -q '\- Line x List Item' "${NB_DIR_1}/home/three.md"
-    grep -q '>>>>>>>'             "${NB_DIR_1}/home/three.md"
-    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/three.md"
-    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
-  }
+  grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
+  grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
+  grep -q '======='             "${NB_DIR_1}/home/one.md"
+  grep -q '\- Line x List Item' "${NB_DIR_1}/home/one.md"
+  grep -q '>>>>>>>'             "${NB_DIR_1}/home/one.md"
+  grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/one.md"
+  grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
+
+  grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/two.md"
+  grep -q '\- Line n List Item' "${NB_DIR_1}/home/two.md"
+  grep -q '======='             "${NB_DIR_1}/home/two.md"
+  grep -q '\- Line x List Item' "${NB_DIR_1}/home/two.md"
+  grep -q '>>>>>>>'             "${NB_DIR_1}/home/two.md"
+  grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/two.md"
+  grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/two.md"
+
+  grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/three.md"
+  grep -q '\- Line n List Item' "${NB_DIR_1}/home/three.md"
+  grep -q '======='             "${NB_DIR_1}/home/three.md"
+  grep -q '\- Line x List Item' "${NB_DIR_1}/home/three.md"
+  grep -q '>>>>>>>'             "${NB_DIR_1}/home/three.md"
+  grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/three.md"
+  grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
 }
 
 @test "\`sync\` succeeds when the same filename is added on two clones" {
   # skip
-  {
-    _setup_notebooks
+  _setup_notebooks
 
-    export NB_DIR="${NB_DIR_1}"
+  export NB_DIR="${NB_DIR_1}"
 
-    run "${_NB}" add "one.md" --content "Example content from 1.
+  run "${_NB}" add "one.md" --content "Example content from 1.
 
 - Line 3 List Item
 - Line 4 List Item
 - Line 5 List Item
 "
-    run "${_NB}" sync
+  run "${_NB}" sync
 
-    export NB_DIR="${NB_DIR_2}"
+  export NB_DIR="${NB_DIR_2}"
 
-    run "${_NB}" add "one.md" --content "Example different content from 2.
+  run "${_NB}" add "one.md" --content "Example different content from 2.
 
 This content is unique to 2.
 "
 
-    run "${_NB}" sync
+  run "${_NB}" sync
 
-    printf "\${status}: %s\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-    printf "1:one.md\\n"
-    cat "${NB_DIR_1}/home/one.md"
-    printf "2:one.md\\n"
-    cat "${NB_DIR_2}/home/one.md"
+  printf "1:one.md\\n"
+  cat "${NB_DIR_1}/home/one.md"
+  printf "2:one.md\\n"
+  cat "${NB_DIR_2}/home/one.md"
 
-    [[ ${status} -eq 0 ]]
-    [[ ${output} =~ Some\ files\ contain\ conflicts ]]
-    [[ ${output} =~ home\:one\.md ]]
+  [[ ${status} -eq 0 ]]
+  [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+  [[ ${output} =~ home\:one\.md ]]
 
-    grep -q '<<<<<<< HEAD'              "${NB_DIR_2}/home/one.md"
-    grep -q 'Example content from 1.'   "${NB_DIR_2}/home/one.md"
-    grep -q '\- Line 3 List Item'       "${NB_DIR_2}/home/one.md"
-    grep -q '======='                   "${NB_DIR_2}/home/one.md"
-    grep -q 'Example different content' "${NB_DIR_2}/home/one.md"
-    grep -q '>>>>>>>'                   "${NB_DIR_2}/home/one.md"
-    grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
-  }
+  grep -q '<<<<<<< HEAD'              "${NB_DIR_2}/home/one.md"
+  grep -q 'Example content from 1.'   "${NB_DIR_2}/home/one.md"
+  grep -q '\- Line 3 List Item'       "${NB_DIR_2}/home/one.md"
+  grep -q '======='                   "${NB_DIR_2}/home/one.md"
+  grep -q 'Example different content' "${NB_DIR_2}/home/one.md"
+  grep -q '>>>>>>>'                   "${NB_DIR_2}/home/one.md"
+  grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
 }
