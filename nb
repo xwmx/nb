@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.7.3"
+_VERSION="4.7.4"
 
 # $_ME
 #
@@ -125,7 +125,7 @@ _command_exists() {
 #   1 (error,  false)  If not.
 #
 # Examples:
-#   _contains "${_query}" "${_list[@}"
+#   _contains "${_query}" "${_list[@]}"
 _contains() {
   local _query="${1:-}"
   shift
@@ -941,19 +941,57 @@ _git_checkpoint() {
           GIT_PAGER='' git diff --name-only --diff-filter=U
         ))
 
-        if [[ "${_conflicted_files[*]}" == ".index" ]]
+        local _conflicted_text_files=()
+        local _conflicted_binary_files=()
+        local _current_directory="${PWD##*/}"
+
+        if [[ -n "${_conflicted_files[*]:-}" ]]
         then
-          # Remove git conflict markers to keep both.
-          # More info: https://stackoverflow.com/a/55187779
-          _sed_i              \
-            -e '/^<<<<<<</d'  \
-            -e '/^>>>>>>>/d'  \
-            -e '/=======/d'   \
-            ".index"
+          if _contains ".index" "${_conflicted_files[@]}"
+          then
+            # Remove git conflict markers to keep both.
+            # More info: https://stackoverflow.com/a/55187779
+            _sed_i              \
+              -e '/^<<<<<<</d'  \
+              -e '/^>>>>>>>/d'  \
+              -e '/=======/d'   \
+              ".index"
 
-          git add ".index"
+            git add ".index"
+          fi
 
-          GIT_EDITOR=true git rebase --continue &>/dev/null && _merge_error=0
+          for __file in "${_conflicted_files[@]}"
+          do
+            [[ "${__file}" == ".index" ]] && continue
+
+            if _file_is_text "${__file}"
+            then
+              _conflicted_text_files+=("${__file}")
+
+              git add "${__file}"
+            else
+              git checkout "origin/${_git_branch}" -- "${__file}"
+
+              local _conflicted_file=
+              _conflicted_file="$(
+                _get_unique_basename                        \
+                  "${__file%%.*}--conflicted.${__file#*.}"  \
+                  "${_current_directory}"
+              )"
+
+              _conflicted_binary_files+=("${_conflicted_file}")
+
+              git mv "${__file}" "${_conflicted_file}"
+
+              git checkout "${_git_branch}" -- "${__file}"
+
+              git add "${_conflicted_file}"
+              git add "${__file}"
+            fi
+          done
+
+          GIT_EDITOR=true git rebase --continue &>/dev/null &&
+            _merge_error=0
         fi
 
         if ((_merge_error))
@@ -963,6 +1001,36 @@ _git_checkpoint() {
             "Merge conflict. Use \`%s git\` to merge manually.\\n" \
             "${_ME}"
           return 1
+        else
+          if ((${#_conflicted_text_files[@]}))
+          then
+            printf "\\n"
+            _warn cat <<HEREDOC
+Files containing conflicts:
+
+$(for __file in "${_conflicted_text_files[@]}"
+do
+  printf "  %s:%s\\n" "${_current_directory}" "${__file}"
+done)
+
+Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
+HEREDOC
+          fi
+
+          if ((${#_conflicted_binary_files[@]}))
+          then
+            printf "\\n"
+            _warn cat <<HEREDOC
+Conflicted copies of binary files:
+
+$(for __file in "${_conflicted_binary_files[@]}"
+do
+  printf "  %s:%s\\n" "${_current_directory}" "${__file}"
+done)
+
+Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
+HEREDOC
+          fi
         fi
       fi
 
@@ -2174,13 +2242,20 @@ _get_title() {
 # _get_unique_basename()
 #
 # Usage:
-#   _get_unique_basename [<file name> | <file extension>]
+#   _get_unique_basename [<file name> | <file extension>] [<directory>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
 _get_unique_basename() {
   local _file_basename="${1:-}"
   local _file_name="${_file_basename%%.*}"
+
+  local _directory="${2:-}"
+
+  if [[ -z "${_directory:-}" ]]
+  then
+    _directory="${_NOTEBOOK_PATH}"
+  fi
 
   if [[ -z "${_file_name}" ]]
   then
@@ -2203,7 +2278,7 @@ _get_unique_basename() {
   fi
 
   basename "$(
-    _get_unique_path "${_NOTEBOOK_PATH}/${_file_name}.${_file_type}"
+    _get_unique_path "${_directory}/${_file_name}.${_file_type}"
   )"
 }
 
@@ -2238,7 +2313,8 @@ _get_unique_path() {
   local _unique_file_name="${_file_name}"
   local _uniqueness_counter=0
 
-  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}" ]]
+  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}"     ]] ||
+        [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}.enc" ]]
   do
     _uniqueness_counter="$((_uniqueness_counter+1))"
 
@@ -3595,7 +3671,6 @@ Check the Wayback Machine for an archived version instead? [y/N] " __yn
             | grep --color=never 'closest'                              \
             | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
             | sed -E 's/.*"url": "([^"]+)".*/\1/g' || printf ""
-
         )"
         if [[ -n "${_wayback_response:-}" ]]
         then
@@ -3873,7 +3948,7 @@ HEREDOC
     local _add_options=("--filename" "${_basename}")
 
     ((_encrypt))              && _add_options+=("--encrypt")
-    ((_edit_before_commit))     && _add_options+=("--edit")
+    ((_edit_before_commit))   && _add_options+=("--edit")
     [[ -n "${_password:-}" ]] && _add_options+=("--password" "${_password}")
 
     printf "%s" "${_bookmark_content}" | _add "${_add_options[@]}"
@@ -4801,7 +4876,12 @@ Description:
 HEREDOC
 _git() {
   cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_git() \`cd\` failed.\\n"
-  git "${@}"
+  if [[ -n "${1:-}" ]]
+  then
+    git "${@}"
+  else
+    git
+  fi
 }
 
 # history ############################################################# history
@@ -8309,9 +8389,10 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
-  # Usage: _nb_settings_colors
+  # Usage: _nb_settings_colors [<number>]
   _nb_settings_colors() {
-    _nb_settings_colors_print(){
+    # Usage: _nb_settings_colors_print <number>
+    _nb_settings_colors_print() {
       printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
     }
 
@@ -8631,7 +8712,7 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL' ]]
     then
-      if [[ "${2:-}" =~ ^openssl|gpg$ ]]
+      if [[ "${2:-}" =~ ^openssl$|^gpg$ ]]
       then
         return 0
       else
@@ -9493,6 +9574,15 @@ Options:
 
 Description:
   Sync the current local notebook with the remote repository.
+
+Conflict Resolution:
+  When \`${_ME} sync\` encounters a conflict in a text file and can't merge
+  overlapping local and remote changes, both versions are saved in the file,
+  separated by git conflict markers. Use \`${_ME} edit\` to remove the
+  conflict markers and delete any unwanted text. When \`${_ME}\` encounters
+  a conflict in a binary file, such as an encrypted note or bookmark, both
+  versions of the file are saved in the notebook as individual files, one
+  with \`--conflicted\` appended to the filename.
 HEREDOC
 _sync() {
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"

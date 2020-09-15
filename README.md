@@ -1721,6 +1721,51 @@ You can also turn off autosync with
 [`nb set auto_sync`](#settings-list---long) and sync manually with
 [`nb sync`](#sync).
 
+#### Sync Conflict Resolution
+
+When `nb sync` encounters a conflict in a text file and can't merge
+overlapping local and remote changes, both versions are saved in the file,
+separated by git conflict markers. Use `nb edit` to remove the conflict
+markers and delete any unwanted text.
+
+For example, in the following file, the second list item was changed on
+two systems, and git has no way to determine which one we want to keep:
+
+```
+# Example Title
+
+- List Item apple
+<<<<<<< HEAD
+- List Item apricot
+=======
+- List Item pluot
+>>>>>>> 719od01... [nb] Commit
+- List Item plum
+```
+
+Any lines between the lines starting with `<<<<<<<` and `=======` are the
+local changes, while the remote changes are between the `=======` and
+`>>>>>>>` lines.
+
+To resolve this by keeping both items, simply edit the file with `nb edit`
+and remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
+
+```
+# Example Title
+
+- List Item apple
+- List Item apricot
+- List Item pluot
+- List Item plum
+```
+
+When `nb` encounters a conflict in a binary file, such as an encrypted
+note, both versions of the file are saved in the notebook as individual
+files, one with `--conflicted` appended to the filename.
+
+When encountering a conflict that `nb` says it can't merge, use
+[`nb git`](#git) and [`nb run`](#run) to resolve the conflict manually.
+
 ### ↕️ Import / Export
 
 Files of any type can be imported into a notebook. `nb edit` and `nb
@@ -3372,6 +3417,15 @@ Options:
 
 Description:
   Sync the current local notebook with the remote repository.
+
+Conflict Resolution:
+  When `nb sync` encounters a conflict in a text file and can't merge
+  overlapping local and remote changes, both versions are saved in the file,
+  separated by git conflict markers. Use `nb edit` to remove the
+  conflict markers and delete any unwanted text. When `nb` encounters
+  a conflict in a binary file, such as an encrypted note or bookmark, both
+  versions of the file are saved in the notebook as individual files, one
+  with `--conflicted` appended to the filename.
 ```
 
 #### `update`

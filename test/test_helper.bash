@@ -98,6 +98,52 @@ _compare() {
   printf "actual:\\n%s\\n" "${_actual}"
 }
 
+# _get_hash()
+#
+# Usage:
+#   _get_hash <path>
+#
+# Description:
+#   Generate a hash for the file or directory at <path>.
+_get_hash() {
+  # Usage: _get_hash_with_command <path> <command>
+  _get_hash_with_command() {
+    local _command=
+    IFS=' ' read -ra _command <<< "${2:-}"
+
+    local _path="${1:-}"
+
+    [[ -n "${_command[*]:-}" ]] && [[ -n "${_path}" ]] || return 1
+
+    if [[ -d "${_path}" ]]
+    then
+      tar -P -cf - "${_path}"     \
+        | "${_command[@]}"        \
+        | awk '{ print $1 }'
+    else
+      "${_command[@]}" "${_path}" \
+        | awk '{print $1}'
+    fi
+  }
+
+  local _path="${1:-}"
+  [[ -n "${_path:-}" ]] || return 1
+
+  if hash "shasum" 2>/dev/null
+  then
+    _get_hash_with_command "${_path}" "shasum -a 256"
+  elif hash "md5sum" 2>/dev/null
+  then
+    _get_hash_with_command "${_path}" "md5sum"
+  elif hash "md5" 2>/dev/null
+  then
+    _get_hash_with_command "${_path}" "md5 -q"
+  else
+    printf "No hashing tool found.\\n"
+    exit 1
+  fi
+}
+
 # _highlight()
 #
 # Usage:
@@ -122,6 +168,22 @@ _highlight() {
     printf \
       "${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n" \
       "${_input}"
+  fi
+}
+
+# _sed_i()
+#
+# `sed -i` takes an extension on macOS, but that extension can cause errors in
+# GNU `sed`.
+#
+# https://stackoverflow.com/q/43171648
+# https://stackoverflow.com/a/16746032
+_sed_i() {
+  if sed --help >/dev/null 2>&1
+  then # GNU
+    sed -i "${@}"
+  else # BSD
+    sed -i '' "${@}"
   fi
 }
 
