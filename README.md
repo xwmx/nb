@@ -2296,7 +2296,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
-  run          Run a shell command in the notebook.
+  run          Run shell commands within the notebook.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the `nb` interactive shell.
@@ -3092,7 +3092,12 @@ Usage:
   nb run <command> [<arguments>...]
 
 Description:
-  Run a Bash shell command within the current notebook directory.
+  Run shell commands within the current notebook directory.
+
+Examples:
+  nb run ls -la
+  nb run find . -name 'example*'
+  nb run rg example
 ```
 
 #### `search`
