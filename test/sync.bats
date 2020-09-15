@@ -477,3 +477,95 @@ This content is unique to 2.
   grep -q '>>>>>>>'                   "${NB_DIR_2}/home/one.md"
   grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
 }
+
+@test "\`sync\` succeeds when an encrypted file is edited on two clones" {
+  # skip
+
+  _setup_notebooks
+
+  export NB_DIR="${NB_DIR_1}"
+
+  run "${_NB}" add "one.md"       \
+    --encrypt --password password \
+    --content "Example content from 1.
+
+- Line 3 List Item
+- Line 4 List Item
+- Line 5 List Item
+"
+  run "${_NB}" sync
+
+  export NB_DIR="${NB_DIR_2}"
+
+  run "${_NB}" sync
+
+  # ls -la "${NB_DIR_2}"
+
+  echo "Edit content from 2." | "${_NB}" edit 1 --password password
+
+  run "${_NB}" sync
+
+  export NB_DIR="${NB_DIR_1}"
+
+  _before="$(
+    _get_hash "${NB_DIR_1}/home/one.md.enc"
+  )"
+
+  echo "Edit content from 1." | "${_NB}" edit 1 --password password
+
+  _after="$(
+    _get_hash "${NB_DIR_1}/home/one.md.enc"
+  )"
+
+  printf "\${_before}:  %s\\n" "${_before}"
+  printf "\${_after}:   %s\\n" "${_after}"
+
+  [[ "${_before}" != "${_after}" ]]
+
+  run "${_NB}" sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # _get_hash "${NB_DIR_1}/home/one.md.enc"
+  # _get_hash "${NB_DIR_2}/home/one.md.enc"
+
+  [[ ${status} -eq 0 ]]
+
+  [[ -e "${NB_DIR_1}/home/one.md.enc"             ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc" ]]
+
+  [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+
+  [[ ${output} =~ Some\ conflicted\ files\ have\ been\ copied ]]
+  [[ ${output} =~ home\:one\-\-conflicted\.md\.enc ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  run "${_NB}" sync
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # _get_hash "${NB_DIR_1}/home/one.md.enc"
+  # _get_hash "${NB_DIR_2}/home/one.md.enc"
+
+  [[ ${status} -eq 0 ]]
+
+  ls "${NB_DIR_2}/home/"
+
+  [[ -e "${NB_DIR_1}/home/one.md.enc"             ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc" ]]
+
+  [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
+     "$(_get_hash "${NB_DIR_2}/home/one--conflicted.md.enc")" ]]
+
+  [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" == \
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+
+  [[ "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
+     Edit\ content\ from\ 1\. ]]
+  [[ "$("${_NB}" show one--conflicted.md.enc --password password --print --no-color)" =~ \
+     Edit\ content\ from\ 2\. ]]
+}

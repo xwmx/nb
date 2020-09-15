@@ -323,8 +323,8 @@ HEREDOC
 
 @test "\`_get_unique_basename()\` works for encrypted bookmarks" {
   run "${_NB}" init
-  run  "${_NB}" add "example.bookmark.md"  \
-      --content "<https://example.com>" \
+  run  "${_NB}" add "example.bookmark.md"   \
+      --content "<https://example.com>"     \
       --encrypt --password password
 
   [[ ${status} -eq 0 ]]
@@ -358,4 +358,45 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${lines[0]}" =~ example-2.bookmark.md.enc ]]
+}
+
+@test "\`_get_unique_basename()\` works for encrypted conflicted bookmarks" {
+  local _filename="example.bookmark.md"
+
+  run "${_NB}" init
+  run  "${_NB}" add "${_filename%%.*}--conflicted.${_filename#*.}"  \
+      --content "<https://example.com>"                             \
+      --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example--conflicted.bookmark.md.enc ]]
+
+  run "${_NB}" add "example--conflicted.bookmark.md"  \
+    --content "<https://example.com>"                 \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example--conflicted-1.bookmark.md.enc ]]
+
+  run "${_NB}" add "example--conflicted.bookmark.md"  \
+    --content "<https://example.com>"                 \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example--conflicted-2.bookmark.md.enc ]]
 }
