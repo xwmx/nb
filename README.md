@@ -2283,7 +2283,7 @@ Subcommands:
   delete       Delete a note.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
-  git          Alias for `git` within the current notebook.
+  git          Run `git` commands within the current notebook.
   help         View help information for the program or a subcommand.
   history      View git history for the current notebook or a note.
   import       Import a file into the current notebook.
@@ -2681,7 +2681,12 @@ Usage:
   nb git <git options>...
 
 Description:
-  Alias for `git` within the current notebook.
+  Run `git` commands within the current notebook.
+
+Examples:
+  nb git status
+  nb git diff
+  nb git log
 ```
 
 #### `help`
