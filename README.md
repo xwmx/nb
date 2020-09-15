@@ -673,11 +673,17 @@ title: Ideas
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
 limit can be changed with [`nb set limit <number>`](#settings-list---long).
-To list a different number of items on a per-command basis, use the `-n`,
-`--limit`, `--<limit>`, `-a`, or `--all` flags:
+To list a different number of items on a per-command basis, use the
+`-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
 
 ```bash
-> nb -n 2
+> nb -n 1
+home
+----
+[5] Example Five
+4 omitted. 5 total.
+
+> nb --limit 2
 home
 ----
 [5] Example Five
@@ -1259,7 +1265,7 @@ expressions and tags:
 # search current notebook for "example query"
 nb search "example query"
 
-# search all active notebooks for "example query"
+# search all unarchived notebooks for "example query"
 nb search "example query" --all
 
 # search for "Example" OR "Sample"
@@ -1724,9 +1730,9 @@ You can also turn off autosync with
 #### Sync Conflict Resolution
 
 When `nb sync` encounters a conflict in a text file and can't merge
-overlapping local and remote changes, both versions are saved in the file,
-separated by git conflict markers. Use `nb edit` to remove the conflict
-markers and delete any unwanted text.
+overlapping local and remote changes, `nb` saves both versions within
+the file, separated by git conflict markers. Use `nb edit` to remove
+the conflict markers and delete any unwanted text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
@@ -1743,12 +1749,13 @@ two systems, and git has no way to determine which one we want to keep:
 - List Item plum
 ```
 
-Any lines between the lines starting with `<<<<<<<` and `=======` are the
-local changes, while the remote changes are between the `=======` and
+The local change is between the lines starting with `<<<<<<<` and
+`=======`, while the remote change is between the `=======` and
 `>>>>>>>` lines.
 
-To resolve this by keeping both items, simply edit the file with `nb edit`
-and remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
+To resolve this conflict by keeping both items, simply edit the file
+with `nb edit` and remove the lines starting with `<<<<<<<`, `=======`,
+and `>>>>>>>`:
 
 ```
 # Example Title
@@ -1763,8 +1770,8 @@ When `nb` encounters a conflict in a binary file, such as an encrypted
 note, both versions of the file are saved in the notebook as individual
 files, one with `--conflicted` appended to the filename.
 
-When encountering a conflict that `nb` says it can't merge, use
-[`nb git`](#git) and [`nb run`](#run) to resolve the conflict manually.
+If you encounter a conflict that `nb` says it can't merge, [`nb git`](#git)
+and [`nb run`](#run) can be used to resolve the conflict manually.
 
 ### ↕️ Import / Export
 
@@ -2282,7 +2289,7 @@ Subcommands:
   delete       Delete a note.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
-  git          Alias for `git` within the current notebook.
+  git          Run `git` commands within the current notebook.
   help         View help information for the program or a subcommand.
   history      View git history for the current notebook or a note.
   import       Import a file into the current notebook.
@@ -2295,7 +2302,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
-  run          Run a shell command in the notebook.
+  run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the `nb` interactive shell.
@@ -2680,7 +2687,12 @@ Usage:
   nb git <git options>...
 
 Description:
-  Alias for `git` within the current notebook.
+  Run `git` commands within the current notebook directory.
+
+Examples:
+  nb git status
+  nb git diff
+  nb git log
 ```
 
 #### `help`
@@ -3086,7 +3098,12 @@ Usage:
   nb run <command> [<arguments>...]
 
 Description:
-  Run a Bash shell command within the current notebook directory.
+  Run shell commands within the current notebook directory.
+
+Examples:
+  nb run ls -la
+  nb run find . -name 'example*'
+  nb run rg example
 ```
 
 #### `search`
@@ -3097,7 +3114,7 @@ Usage:
                     [-l | --list] [--path]
 
 Options:
-  -a, --all                     Search all active notebooks.
+  -a, --all                     Search all unarchived notebooks.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
@@ -3413,19 +3430,21 @@ Usage:
   nb sync [-a | --all]
 
 Options:
-  -a, --all   Sync all active notebooks.
+  -a, --all   Sync all unarchived notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.
 
-Conflict Resolution:
+Sync Conflict Resolution:
   When `nb sync` encounters a conflict in a text file and can't merge
-  overlapping local and remote changes, both versions are saved in the file,
-  separated by git conflict markers. Use `nb edit` to remove the
-  conflict markers and delete any unwanted text. When `nb` encounters
-  a conflict in a binary file, such as an encrypted note or bookmark, both
-  versions of the file are saved in the notebook as individual files, one
-  with `--conflicted` appended to the filename.
+  overlapping local and remote changes, both versions are saved in the
+  file, separated by git conflict markers. Use `nb edit` to remove the
+  conflict markers and delete any unwanted text.
+
+  When `nb sync` encounters a conflict in a binary file, such as an
+  encrypted note or bookmark, both versions of the file are saved in the
+  notebook as individual files, one with `--conflicted` appended to the
+  filename.
 ```
 
 #### `update`

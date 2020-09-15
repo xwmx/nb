@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.7.4"
+_VERSION="4.7.5"
 
 # $_ME
 #
@@ -1027,8 +1027,6 @@ $(for __file in "${_conflicted_binary_files[@]}"
 do
   printf "  %s:%s\\n" "${_current_directory}" "${__file}"
 done)
-
-Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
 HEREDOC
           fi
         fi
@@ -2981,7 +2979,7 @@ Subcommands:
   delete       Delete a note.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
-  git          Alias for \`git\` within the current notebook.
+  git          Run \`git\` commands within the current notebook.
   help         View help information for the program or a subcommand.
   history      View git history for the current notebook or a note.
   import       Import a file into the current notebook.
@@ -2994,7 +2992,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
-  run          Run a shell command in the notebook.
+  run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the \`${_ME}\` interactive shell.
@@ -4872,7 +4870,12 @@ Usage:
   ${_ME} git <git options>...
 
 Description:
-  Alias for \`git\` within the current notebook.
+  Run \`git\` commands within the current notebook directory.
+
+Examples:
+  ${_ME} git status
+  ${_ME} git diff
+  ${_ME} git log
 HEREDOC
 _git() {
   cd "${_NOTEBOOK_PATH}" || _exit_1 printf "_git() \`cd\` failed.\\n"
@@ -7893,7 +7896,12 @@ Usage:
   ${_ME} run <command> [<arguments>...]
 
 Description:
-  Run a Bash shell command within the current notebook directory.
+  Run shell commands within the current notebook directory.
+
+Examples:
+  ${_ME} run ls -la
+  ${_ME} run find . -name 'example*'
+  ${_ME} run rg example
 HEREDOC
 _run() {
   cd "${_NOTEBOOK_PATH}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
@@ -7911,7 +7919,7 @@ Usage:
                     [-l | --list] [--path]
 
 Options:
-  -a, --all                     Search all active notebooks.
+  -a, --all                     Search all unarchived notebooks.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
@@ -9570,19 +9578,21 @@ Usage:
   ${_ME} sync [-a | --all]
 
 Options:
-  -a, --all   Sync all active notebooks.
+  -a, --all   Sync all unarchived notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.
 
-Conflict Resolution:
+Sync Conflict Resolution:
   When \`${_ME} sync\` encounters a conflict in a text file and can't merge
-  overlapping local and remote changes, both versions are saved in the file,
-  separated by git conflict markers. Use \`${_ME} edit\` to remove the
-  conflict markers and delete any unwanted text. When \`${_ME}\` encounters
-  a conflict in a binary file, such as an encrypted note or bookmark, both
-  versions of the file are saved in the notebook as individual files, one
-  with \`--conflicted\` appended to the filename.
+  overlapping local and remote changes, both versions are saved in the
+  file, separated by git conflict markers. Use \`${_ME} edit\` to remove the
+  conflict markers and delete any unwanted text.
+
+  When \`${_ME} sync\` encounters a conflict in a binary file, such as an
+  encrypted note or bookmark, both versions of the file are saved in the
+  notebook as individual files, one with \`--conflicted\` appended to the
+  filename.
 HEREDOC
 _sync() {
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"
@@ -9645,7 +9655,7 @@ Usage:
   ${_ME} todos [open | closed] [-a | --all]
 
 Options:
-  -a, --all  Search all active notebooks.
+  -a, --all  Search all unarchived notebooks.
 
 Description:
   List todos.
