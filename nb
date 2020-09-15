@@ -1027,8 +1027,6 @@ $(for __file in "${_conflicted_binary_files[@]}"
 do
   printf "  %s:%s\\n" "${_current_directory}" "${__file}"
 done)
-
-Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
 HEREDOC
           fi
         fi
