@@ -1738,7 +1738,7 @@ two systems, and git has no way to determine which one we want to keep:
 <<<<<<< HEAD
 - List Item apricot
 =======
-- List Item orange
+- List Item pluot
 >>>>>>> 719od01... [nb] Commit
 - List Item plum
 ```
@@ -1751,7 +1751,7 @@ and remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
 
 - List Item apple
 - List Item apricot
-- List Item orange
+- List Item pluot
 - List Item plum
 ```
 
