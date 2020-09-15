@@ -2296,7 +2296,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
-  run          Run shell commands within the notebook.
+  run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
   shell        Start the `nb` interactive shell.
