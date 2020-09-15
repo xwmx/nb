@@ -2687,7 +2687,7 @@ Usage:
   nb git <git options>...
 
 Description:
-  Run `git` commands within the current notebook.
+  Run `git` commands within the current notebook directory.
 
 Examples:
   nb git status

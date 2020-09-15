@@ -4870,7 +4870,7 @@ Usage:
   ${_ME} git <git options>...
 
 Description:
-  Run \`git\` commands within the current notebook.
+  Run \`git\` commands within the current notebook directory.
 
 Examples:
   ${_ME} git status
