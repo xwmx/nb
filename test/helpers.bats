@@ -258,6 +258,42 @@ HEREDOC
   [[ "${lines[0]}" =~ example-2.md ]]
 }
 
+@test "\`_get_unique_basename()\` works for encrypted notes" {
+  run "${_NB}" init
+  run "${_NB}" add "example.md" --content "Example" \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example.md.enc ]]
+
+  run "${_NB}" add "example.md" --content "Example" \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-1.md.enc ]]
+
+  run "${_NB}" add "example.md" --content "Example" \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-2.md.enc ]]
+}
+
 @test "\`_get_unique_basename()\` works for bookmarks" {
   {
     "${_NB}" init
@@ -283,4 +319,43 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ "${lines[0]}" =~ example-2.bookmark.md ]]
+}
+
+@test "\`_get_unique_basename()\` works for encrypted bookmarks" {
+  run "${_NB}" init
+  run  "${_NB}" add "example.bookmark.md"  \
+      --content "<https://example.com>" \
+      --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example.bookmark.md.enc ]]
+
+  run "${_NB}" add "example.bookmark.md"  \
+    --content "<https://example.com>"     \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-1.bookmark.md.enc ]]
+
+  run "${_NB}" add "example.bookmark.md"  \
+    --content "<https://example.com>"     \
+    --encrypt --password password
+
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ "${lines[0]}" =~ example-2.bookmark.md.enc ]]
 }
