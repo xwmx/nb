@@ -1015,7 +1015,9 @@ done)
 
 Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
 HEREDOC
-          elif ((${#_conflicted_binary_files[@]}))
+          fi
+
+          if ((${#_conflicted_binary_files[@]}))
           then
             printf "\\n"
             _warn cat <<HEREDOC
