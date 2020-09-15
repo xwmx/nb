@@ -941,19 +941,39 @@ _git_checkpoint() {
           GIT_PAGER='' git diff --name-only --diff-filter=U
         ))
 
-        if [[ "${_conflicted_files[*]}" == ".index" ]]
+        if [[ -n "${_conflicted_files[*]:-}" ]]
         then
-          # Remove git conflict markers to keep both.
-          # More info: https://stackoverflow.com/a/55187779
-          _sed_i              \
-            -e '/^<<<<<<</d'  \
-            -e '/^>>>>>>>/d'  \
-            -e '/=======/d'   \
-            ".index"
+          local _non_text_files=()
+          local _added_conflicted_files=()
 
-          git add ".index"
+          if _contains ".index" "${_conflicted_files[@]}"
+          then
+            # Remove git conflict markers to keep both.
+            # More info: https://stackoverflow.com/a/55187779
+            _sed_i              \
+              -e '/^<<<<<<</d'  \
+              -e '/^>>>>>>>/d'  \
+              -e '/=======/d'   \
+              ".index"
 
-          GIT_EDITOR=true git rebase --continue &>/dev/null && _merge_error=0
+            git add ".index"
+          fi
+
+          for __file in "${_conflicted_files[@]}"
+          do
+            [[ "${__file}" == ".index" ]] && continue
+            _file_is_text "${__file}"     || _non_text_files+=("${__file}")
+
+            _added_conflicted_files+=("${__file}")
+
+            git add "${__file}"
+          done
+
+          if ! ((${#_non_text_files[@]}))
+          then
+            GIT_EDITOR=true git rebase --continue &>/dev/null &&
+              _merge_error=0
+          fi
         fi
 
         if ((_merge_error))
@@ -963,6 +983,21 @@ _git_checkpoint() {
             "Merge conflict. Use \`%s git\` to merge manually.\\n" \
             "${_ME}"
           return 1
+        else
+          if ((${#_added_conflicted_files}))
+          then
+            printf "\\n\\n"
+            _warn printf "Some files contain conflicts:\\n"
+
+            for __file in ${_added_conflicted_files[@]}
+            do
+              printf "  %s:%s\\n" "${PWD##*/}" "${__file}" 1>&2
+            done
+
+            printf "\
+Resolve conflicts with \`%s edit\`. More info: \`%s help sync\`\\n" \
+              "${_ME}" "${_ME}" 1>&2
+          fi
         fi
       fi
 

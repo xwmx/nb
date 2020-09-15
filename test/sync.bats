@@ -30,6 +30,7 @@ _setup_notebooks() {
 }
 
 @test "\`sync\` succeeds when files are added and removed from two clones" {
+  # skip
   {
     _setup_notebooks
     run "${_NB}" add "one.md" --content "Example content from 1."
@@ -296,4 +297,145 @@ _setup_notebooks() {
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
+}
+
+@test "\`sync\` succeeds when one file is edited on two clones" {
+  {
+    _setup_notebooks
+
+    export NB_DIR="${NB_DIR_1}"
+
+    run "${_NB}" add "one.md" --content "Example content from 1.
+
+- Line 3 List Item
+- Line 4 List Item
+- Line 5 List Item
+"
+    run "${_NB}" sync
+
+    export NB_DIR="${NB_DIR_2}"
+
+    run "${_NB}" sync
+
+    # ls -la "${NB_DIR_2}"
+
+    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/one.md"
+
+    run "${_NB}" &>/dev/null
+    run "${_NB}" sync
+
+    export NB_DIR="${NB_DIR_1}"
+
+    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/one.md"
+
+    run "${_NB}" &>/dev/null
+    run "${_NB}" sync
+
+    printf "\${status}: %s\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    cat "${NB_DIR_1}/home/one.md"
+
+    [[ ${status} -eq 0 ]]
+    [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+    [[ ${output} =~ home\:one\.md ]]
+
+    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
+    grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
+    grep -q '======='             "${NB_DIR_1}/home/one.md"
+    grep -q '\- Line x List Item' "${NB_DIR_1}/home/one.md"
+    grep -q '>>>>>>>'             "${NB_DIR_1}/home/one.md"
+    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/one.md"
+    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
+  }
+
+
+}
+
+@test "\`sync\` succeeds when multiple files are edited on two clones" {
+  {
+    _setup_notebooks
+
+    export NB_DIR="${NB_DIR_1}"
+
+    run "${_NB}" add "one.md" --content "Example content from 1.
+
+- Line 3 List Item
+- Line 4 List Item
+- Line 5 List Item
+"
+
+    run "${_NB}" add "two.md" --content "Example content from 1.
+
+- Line 3 List Item
+- Line 4 List Item
+- Line 5 List Item
+"
+
+    run "${_NB}" add "three.md" --content "Example content from 1.
+
+- Line 3 List Item
+- Line 4 List Item
+- Line 5 List Item
+"
+    run "${_NB}" sync
+
+    export NB_DIR="${NB_DIR_2}"
+
+    run "${_NB}" sync
+
+    # ls -la "${NB_DIR_2}"
+
+    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/one.md"
+    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/two.md"
+    _sed_i 's/Line 4/Line n/' "${NB_DIR_2}/home/three.md"
+
+    run "${_NB}" &>/dev/null
+    run "${_NB}" sync
+
+    export NB_DIR="${NB_DIR_1}"
+
+    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/one.md"
+    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/two.md"
+    _sed_i 's/Line 4/Line x/' "${NB_DIR_1}/home/three.md"
+
+    run "${_NB}" &>/dev/null
+    run "${_NB}" sync
+
+    printf "\${status}: %s\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    cat "${NB_DIR_1}/home/one.md"
+
+    [[ ${status} -eq 0 ]]
+    [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+    [[ ${output} =~ home\:one\.md   ]]
+    [[ ${output} =~ home\:two\.md   ]]
+    [[ ${output} =~ home\:three\.md ]]
+
+    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
+    grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
+    grep -q '======='             "${NB_DIR_1}/home/one.md"
+    grep -q '\- Line x List Item' "${NB_DIR_1}/home/one.md"
+    grep -q '>>>>>>>'             "${NB_DIR_1}/home/one.md"
+    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/one.md"
+    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
+
+    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/two.md"
+    grep -q '\- Line n List Item' "${NB_DIR_1}/home/two.md"
+    grep -q '======='             "${NB_DIR_1}/home/two.md"
+    grep -q '\- Line x List Item' "${NB_DIR_1}/home/two.md"
+    grep -q '>>>>>>>'             "${NB_DIR_1}/home/two.md"
+    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/two.md"
+    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/two.md"
+
+    grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/three.md"
+    grep -q '\- Line n List Item' "${NB_DIR_1}/home/three.md"
+    grep -q '======='             "${NB_DIR_1}/home/three.md"
+    grep -q '\- Line x List Item' "${NB_DIR_1}/home/three.md"
+    grep -q '>>>>>>>'             "${NB_DIR_1}/home/three.md"
+    grep -q '\[nb\] Commit'       "${NB_DIR_1}/home/three.md"
+    grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
+
+  }
 }

@@ -125,6 +125,22 @@ _highlight() {
   fi
 }
 
+# _sed_i()
+#
+# `sed -i` takes an extension on macOS, but that extension can cause errors in
+# GNU `sed`.
+#
+# https://stackoverflow.com/q/43171648
+# https://stackoverflow.com/a/16746032
+_sed_i() {
+  if sed --help >/dev/null 2>&1
+  then # GNU
+    sed -i "${@}"
+  else # BSD
+    sed -i '' "${@}"
+  fi
+}
+
 # _setup_remote_repo()
 #
 # Usage:
