@@ -986,17 +986,17 @@ _git_checkpoint() {
         else
           if ((${#_added_conflicted_files[@]}))
           then
-            printf "\\n\\n"
-            _warn printf "Some files contain conflicts:\\n"
+            printf "\\n"
+            _warn cat <<HEREDOC
+Some files contain conflicts:
 
-            for __file in "${_added_conflicted_files[@]}"
-            do
-              printf "  %s:%s\\n" "${PWD##*/}" "${__file}" 1>&2
-            done
+$(for __file in "${_added_conflicted_files[@]}"
+do
+  printf "  %s:%s\\n" "${PWD##*/}" "${__file}"
+done)
 
-            printf "\
-Resolve conflicts with \`%s edit\`. More info: \`%s help sync\`\\n" \
-              "${_ME}" "${_ME}" 1>&2
+Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
+HEREDOC
           fi
         fi
       fi
