@@ -3429,14 +3429,16 @@ Options:
 Description:
   Sync the current local notebook with the remote repository.
 
-Conflict Resolution:
+Sync Conflict Resolution:
   When `nb sync` encounters a conflict in a text file and can't merge
-  overlapping local and remote changes, both versions are saved in the file,
-  separated by git conflict markers. Use `nb edit` to remove the
-  conflict markers and delete any unwanted text. When `nb` encounters
-  a conflict in a binary file, such as an encrypted note or bookmark, both
-  versions of the file are saved in the notebook as individual files, one
-  with `--conflicted` appended to the filename.
+  overlapping local and remote changes, both versions are saved in the
+  file, separated by git conflict markers. Use `nb edit` to remove the
+  conflict markers and delete any unwanted text.
+
+  When `nb sync` encounters a conflict in a binary file, such as an
+  encrypted note or bookmark, both versions of the file are saved in the
+  notebook as individual files, one with `--conflicted` appended to the
+  filename.
 ```
 
 #### `update`
