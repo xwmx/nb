@@ -1743,6 +1743,10 @@ two systems, and git has no way to determine which one we want to keep:
 - List Item plum
 ```
 
+Any lines between the lines starting with `<<<<<<<` and `=======` are the
+local changes, while the remote changes are between the `=======` and
+`>>>>>>>` lines.
+
 To resolve this by keeping both items, simply edit the file with `nb edit`
 and remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
 
