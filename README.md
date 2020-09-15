@@ -1755,6 +1755,9 @@ and remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
 - List Item plum
 ```
 
+When encountering a conflict that `nb` says it can't merge, use
+[`nb git`](#git) and [`nb run`](#run) to resolve the conflict manually.
+
 ### ↕️ Import / Export
 
 Files of any type can be imported into a notebook. `nb edit` and `nb
