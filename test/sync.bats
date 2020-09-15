@@ -336,7 +336,7 @@ _setup_notebooks() {
   cat "${NB_DIR_1}/home/one.md"
 
   [[ ${status} -eq 0 ]]
-  [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+  [[ ${output} =~ Files\ containing\ conflicts\: ]]
   [[ ${output} =~ home\:one\.md ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
@@ -404,7 +404,7 @@ _setup_notebooks() {
   cat "${NB_DIR_1}/home/one.md"
 
   [[ ${status} -eq 0 ]]
-  [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+  [[ ${output} =~ Files\ containing\ conflicts\: ]]
   [[ ${output} =~ home\:one\.md   ]]
   [[ ${output} =~ home\:two\.md   ]]
   [[ ${output} =~ home\:three\.md ]]
@@ -466,7 +466,7 @@ This content is unique to 2.
   cat "${NB_DIR_2}/home/one.md"
 
   [[ ${status} -eq 0 ]]
-  [[ ${output} =~ Some\ files\ contain\ conflicts ]]
+  [[ ${output} =~ Files\ containing\ conflicts\: ]]
   [[ ${output} =~ home\:one\.md ]]
 
   grep -q '<<<<<<< HEAD'              "${NB_DIR_2}/home/one.md"
@@ -538,8 +538,8 @@ This content is unique to 2.
   [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
      "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
 
-  [[ ${output} =~ Some\ conflicted\ files\ have\ been\ copied ]]
-  [[ ${output} =~ home\:one\-\-conflicted\.md\.enc ]]
+  [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\: ]]
+  [[ ${output} =~ home\:one\-\-conflicted\.md\.enc        ]]
 
   export NB_DIR="${NB_DIR_2}"
 

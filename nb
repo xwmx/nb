@@ -1006,7 +1006,7 @@ _git_checkpoint() {
           then
             printf "\\n"
             _warn cat <<HEREDOC
-Some files contain conflicts:
+Files containing conflicts:
 
 $(for __file in "${_conflicted_text_files[@]}"
 do
@@ -1021,7 +1021,7 @@ HEREDOC
           then
             printf "\\n"
             _warn cat <<HEREDOC
-Some conflicted files have been copied:
+Conflicted copies of binary files:
 
 $(for __file in "${_conflicted_binary_files[@]}"
 do
