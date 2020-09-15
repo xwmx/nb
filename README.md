@@ -1259,7 +1259,7 @@ expressions and tags:
 # search current notebook for "example query"
 nb search "example query"
 
-# search all active notebooks for "example query"
+# search all unarchived notebooks for "example query"
 nb search "example query" --all
 
 # search for "Example" OR "Sample"
@@ -3108,7 +3108,7 @@ Usage:
                     [-l | --list] [--path]
 
 Options:
-  -a, --all                     Search all active notebooks.
+  -a, --all                     Search all unarchived notebooks.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
@@ -3424,7 +3424,7 @@ Usage:
   nb sync [-a | --all]
 
 Options:
-  -a, --all   Sync all active notebooks.
+  -a, --all   Sync all unarchived notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.

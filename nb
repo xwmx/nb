@@ -7919,7 +7919,7 @@ Usage:
                     [-l | --list] [--path]
 
 Options:
-  -a, --all                     Search all active notebooks.
+  -a, --all                     Search all unarchived notebooks.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
@@ -9578,7 +9578,7 @@ Usage:
   ${_ME} sync [-a | --all]
 
 Options:
-  -a, --all   Sync all active notebooks.
+  -a, --all   Sync all unarchived notebooks.
 
 Description:
   Sync the current local notebook with the remote repository.
@@ -9655,7 +9655,7 @@ Usage:
   ${_ME} todos [open | closed] [-a | --all]
 
 Options:
-  -a, --all  Search all active notebooks.
+  -a, --all  Search all unarchived notebooks.
 
 Description:
   List todos.
