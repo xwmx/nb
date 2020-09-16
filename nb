@@ -10008,7 +10008,7 @@ export _NB_PLUGINS=()
 # $NB_PLUGIN_SUBCOMMANDS
 #
 # The list of subcommands exposed by plugins.
-NB_PLUGIN_SUBCOMMANDS=()
+export NB_PLUGIN_SUBCOMMANDS=()
 
 # User defined plugins can be installed in the $NB_DIR/.plugins directory.
 # Plugins have an .nb-plugin, .nb-theme.bash, or .nb-theme.sh extension and
@@ -10025,7 +10025,7 @@ __load_plugins() {
       _name="$(basename "${__file}")"
       _name="${_name%%.*}"
 
-      _NB_PLUGINS=("${_NB_PLUGINS[@]}" "${_name}")
+      _NB_PLUGINS+=("${_name}")
       source "${__file}"
     done
     set -f
@@ -10160,7 +10160,7 @@ _SUBCOMMANDS=(
   use
   version
   view
-  ${NB_PLUGIN_SUBCOMMANDS[@]}
+  ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
 
 # $_DOCUMENTED_SUBCOMMANDS
@@ -10216,7 +10216,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   update
   use
   version
-  ${NB_PLUGIN_SUBCOMMANDS[@]}
+  ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
 
 # $_GIT_SUBCOMMANDS
@@ -10262,7 +10262,7 @@ _GIT_SUBCOMMANDS=(
   use
   u
   view
-  ${NB_PLUGIN_SUBCOMMANDS[@]}
+  ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
 
 # $_SUBCOMMANDS_PATTERN
