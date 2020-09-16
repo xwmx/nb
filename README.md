@@ -2068,6 +2068,9 @@ Plugins can be installed from either a URL or path using the
 # install a plugin from a URL
 nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
 
+# install a plugin from a standard GitHub URL
+nb plugin install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
+
 # install a plugin from a path
 nb plugins install plugins/example.nb-plugin
 ```

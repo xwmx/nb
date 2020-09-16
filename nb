@@ -7630,8 +7630,8 @@ _plugins() {
     install)
       if [[ -n "${_path:-}" ]]
       then
-        if ! [[ -f "${_path:-}"         ]] &&
-           ! [[ "${_path}" =~ nb-plugin ]]
+        if ! [[ -f "${_path:-}"     ]] &&
+           ! [[ "${_path}" =~ nb\-  ]]
         then
           _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
         fi
@@ -7653,10 +7653,15 @@ _plugins() {
       else
         _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
 
-        _url="$(
-          printf "%s\\n" "${_url}" \
-            | sed 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
-        )"
+        if [[ "${_url:-}" =~ https\:\/\/github.com ]]
+        then
+          _url="$(
+            printf "%s\\n" "${_url}"  \
+              | sed                   \
+                -e 's/\/blob//g'      \
+                -e 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
+          )"
+        fi
 
         if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
         then
@@ -7705,11 +7710,11 @@ _plugins() {
       fi
       ;;
     *)
-      local _query="*nb-plugin*"
+      local _query="*nb-*"
 
       if [[ -n "${_name}" ]]
       then
-        _query="${_name}.nb-plugin*"
+        _query="${_name}.nb-*"
       fi
 
       if ((_print_paths))
