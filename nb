@@ -9725,7 +9725,7 @@ _update() {
      npm list | grep -q notes.sh  &&
      [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
-    cat <<'HEREDOC'
+    cat <<HEREDOC
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
@@ -9733,14 +9733,14 @@ HEREDOC
        npm list | grep -q nb.sh &&
        [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
-    cat <<'HEREDOC'
+    cat <<HEREDOC
 Installed with npm. To update, run:
   npm update -g nb.sh
 HEREDOC
   elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
        [[ "${_current_path}" =~ Cellar  ]]
   then
-    cat <<'HEREDOC'
+    cat <<HEREDOC
 Installed with Homebrew. To update, run:
   brew upgrade xwmx/taps/nb
 HEREDOC
