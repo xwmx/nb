@@ -414,10 +414,10 @@ the `-e` / `--encrypt` flag and are encrypted with AES-256 using OpenSSL
 by default. GPG is also supported and can be configured with
 [`nb set encryption_tool`](#settings-list---long).
 
-Each note file is encrypted individually with its own password. When an
-encrypted note is viewed, edited, or opened, `nb` will prompt for that
-note or bookmark's password, and otherwise behave identically. After
-an item is edited, `nb` automatically re-encrypts it and saves the new
+Each protected note or bookmark is encrypted individually with its own
+password. When an encrypted item is viewed, edited, or opened, `nb`
+will simply prompt for the item's password before proceeding. After an
+item is edited, `nb` automatically re-encrypts it and saves the new
 version.
 
 Encrypted notes can also be decrypted using the OpenSSL and GPG command
