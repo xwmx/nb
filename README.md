@@ -24,7 +24,7 @@ application with:
 - [Pandoc](https://pandoc.org/)-backed conversion,
 - global and local notebooks,
 - customizable [color themes](#built-in-color-themes),
-- a hackable and extensible plugin system,
+- a plugin system for extending functionality,
 
 and more, all in a single portable, user-friendly script.
 
