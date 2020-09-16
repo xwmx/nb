@@ -9499,7 +9499,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   elif ((_render))              &&
-       ((_print_output))                &&
+       ((_print_output))        &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
   then # `show --render --print` with `pandoc` and `w3m` available.
