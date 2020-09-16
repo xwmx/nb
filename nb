@@ -608,9 +608,9 @@ export _NB_COLOR_THEMES=(
 )
 
 # User defined themes can be installed in the $NB_DIR/.themes directory.
-# Themes have an .nb-theme or .nb-theme.sh extension and contain a single
-# if statment assigning the color environment variables to tput ANSI color
-# numbers. Example:
+# Themes have an .nb-theme, .n-theme.bash, or .nb-theme.sh extension and
+# contain a single if statment assigning the color environment variables
+# to tput ANSI color numbers. Example:
 #
 #     # filename: ~/.nb/.themes/example.nb-theme.sh
 #     if [[ "${NB_COLOR_THEME}" == "example" ]]
@@ -6680,6 +6680,8 @@ _alias_subcommand "move" "mv"
 
 # notebooks ######################################################### notebooks
 
+# TODO: Vim highlighting bug. "
+
 desc "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -7564,6 +7566,165 @@ _peek() {
 }
 _alias_subcommand "peek" "p"
 _alias_subcommand "peek" "preview"
+
+# plugins ############################################################# plugins
+
+desc "plugins" <<HEREDOC
+Usage:
+  ${_ME} plugins [<name>] [--paths]
+  ${_ME} plugins install [<path> | <url>]
+  ${_ME} plugins uninstall <name>
+
+Options:
+  --paths  Print the full path to each plugin.
+
+Subcommands:
+  (default)  List plugins.
+  install    Install a plugin from a <path> or <url>
+  uninstall  Uninstall the specified plugin.
+
+Description:
+  Manage plugins.
+HEREDOC
+_plugins() {
+  local _basename=
+  local _force=0
+  local _name=
+  local _path=
+  local _print_paths=0
+  local _subcommand=
+  local _url=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      --path*)
+        _print_paths=1
+        ;;
+      *)
+        if [[ "${__arg}" =~ ^install$|^uninstall$ ]]
+        then
+          _subcommand="${__arg}"
+        elif [[ "${_subcommand}" == "install" ]]
+        then
+          if [[ "${__arg:-}" =~ ^http|^file\: ]]
+          then
+            _url="${__arg}"
+          else
+            _path="${__arg}"
+          fi
+        else
+          _name="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  case "${_subcommand}" in
+    install)
+      if [[ -n "${_path:-}" ]]
+      then
+        if ! [[ -f "${_path:-}"         ]] &&
+           ! [[ "${_path}" =~ nb-plugin ]]
+        then
+          _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
+        fi
+
+        _basename="$(basename -- "${_path}")"
+
+        if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
+        then
+          _exit_1 printf "Plugin already installed: %s\\n" "${_basename}"
+        fi
+
+        if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
+        then
+          printf "Plugin installed:\\n%s\\n" \
+            "$(_highlight "${NB_DIR}/.plugins/${_basename}")"
+        else
+          _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
+        fi
+      else
+        _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
+
+        _url="$(
+          printf "${_url}" \
+            | sed 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
+        )"
+
+        if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
+        then
+          printf "Plugin installed:\\n%s\\n" \
+            "$(_highlight "${NB_DIR}/.plugins/${_basename}")"
+        else
+          _exit_1 printf "Unable to download and install: %s\\n"  "${_url}"
+        fi
+      fi
+      ;;
+    uninstall)
+      local _plugin_path
+      # _plugin_path="$(_plugins "${_name}" --paths)"
+
+      if ! _plugin_path="$(_plugins ${_name%%.*} --paths)"  ||
+         [[ -z "${_plugin_path:-}" ]]                       ||
+         ! [[ -f "${_plugin_path}" ]]
+      then
+        _exit_1 printf "Plugin not found: %s\\n" "${_name}"
+      fi
+
+      if ! ((_force))
+      then
+        printf "Uninstalling plugin:\\n%s\\n" "$(_highlight "${_plugin_path}")"
+        while true
+        do
+          read -r -p "Proceed? [y/N] " __yn
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      if rm "${_plugin_path:-?}"
+      then
+        printf "Plugin successfully uninstalled:\\n%s\\n" \
+          "$(_highlight "${_plugin_path}")"
+      else
+        _exit_1 printf "Unable to uninstall plugin:\\n%s\\n" "${_plugin_path}"
+      fi
+      ;;
+    *)
+      local _query="*nb-plugin*"
+
+      if [[ -n "${_name}" ]]
+      then
+        _query="${_name}.nb-plugin*"
+      fi
+
+      if ((_print_paths))
+      then
+        # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+        find "${NB_DIR}"/.plugins -type f -name "${_query}" | grep .
+      else
+        if ((${#_NB_PLUGINS[@]}))
+        then
+          printf "%s\\n" "${_NB_PLUGINS[@]}"
+        else
+          printf "No plugins installed.\\n"
+        fi
+      fi
+      ;;
+  esac
+}
+_alias_subcommand "plugins" "plugin"
 
 # remote ############################################################### remote
 
@@ -9833,6 +9994,42 @@ _version() {
 }
 
 ###############################################################################
+# Plugins
+###############################################################################
+
+# $_NB_PLUGINS
+#
+# The list of currently-active plugins.
+export _NB_PLUGINS=()
+
+# $NB_PLUGIN_SUBCOMMANDS
+#
+# The list of subcommands exposed by plugins.
+NB_PLUGIN_SUBCOMMANDS=()
+
+# User defined plugins can be installed in the $NB_DIR/.plugins directory.
+# Plugins have an .nb-plugin, .nb-theme.bash, or .nb-theme.sh extension and
+# written in Bash or compatible shell scripting language.
+__load_plugins() {
+  if [[ -d "${NB_DIR}/.plugins" ]]
+  then
+    set +f
+    for __file in "${NB_DIR}/.plugins"/*.nb-plugin*
+    do
+      [[ -f "${__file}" ]] || continue
+
+      _name=
+      _name="$(basename "${__file}")"
+      _name="${_name%%.*}"
+
+      _NB_PLUGINS=("${_NB_PLUGINS[@]}" "${_name}")
+      source "${__file}"
+    done
+    set -f
+  fi
+} && __load_plugins
+
+###############################################################################
 # Program Option Parsing
 ###############################################################################
 
@@ -9936,6 +10133,8 @@ _SUBCOMMANDS=(
   open
   p
   peek
+  plugin
+  plugins
   preview
   q
   r
@@ -9958,6 +10157,7 @@ _SUBCOMMANDS=(
   use
   version
   view
+  ${NB_PLUGIN_SUBCOMMANDS[@]}
 )
 
 # $_DOCUMENTED_SUBCOMMANDS
@@ -9994,6 +10194,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   open
   p
   peek
+  plugins
   preview
   q
   remote
@@ -10012,6 +10213,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   update
   use
   version
+  ${NB_PLUGIN_SUBCOMMANDS[@]}
 )
 
 # $_GIT_SUBCOMMANDS
@@ -10057,6 +10259,7 @@ _GIT_SUBCOMMANDS=(
   use
   u
   view
+  ${NB_PLUGIN_SUBCOMMANDS[@]}
 )
 
 # $_SUBCOMMANDS_PATTERN

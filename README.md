@@ -24,6 +24,7 @@ application with:
 - [Pandoc](https://pandoc.org/)-backed conversion,
 - global and local notebooks,
 - customizable [color themes](#built-in-color-themes),
+- a hackable and extensible plugin system,
 
 and more, all in a single portable, user-friendly script.
 
@@ -2053,6 +2054,97 @@ nb set colors
 
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
+
+### Plugins
+
+`nb` includes support for plugins, which can be used to create new
+subcommands and extend the functionality of `nb`.
+
+Plugins can be installed from either a URL or path using the
+`nb plugins` subcommand.
+
+```bash
+# install a plugin from a URL
+nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
+
+# install a plugin from a path
+nb plugins install plugins/copy.nb-plugin
+```
+
+Installed plugins can be listed with `nb plugins`, which optionally
+takes a name and print full paths:
+
+```bash
+> nb plugins
+copy
+example1
+example2
+
+> nb plugins copy
+copy
+
+> nb plugins copy --paths
+/home/example/.nb/.plugins/copy.nb-plugin
+```
+
+Use `nb plugins uninstall` to uninstall a plugin:
+
+```bash
+> nb plugins uninstall copy
+Plugin successfully uninstalled:
+/home/example/.nb/.plugins/copy.nb-plugin
+```
+
+#### Creating Plugins
+
+Plugins are written in a Bash-compatible shell language and have an
+`.nb-plugin` extension.
+
+`nb` includes two example plugins:
+
+- [copy.nb-plugin](plugins/copy.nb-plugin)
+- [example.nb-plugin](plugins/example.nb-plugin)
+
+Create a new subcommand in three easy steps:
+
+##### 1. Add new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array
+
+```bash
+NB_PLUGIN_SUBCOMMANDS+=(
+  example
+)
+```
+
+##### 2. Define help and usage text in a `desc` block
+
+```bash
+desc "example" <<HEREDOC
+Usage:
+  ${_ME} example
+
+Description:
+  Print "Hello, World!"
+HEREDOC
+```
+
+##### 3. Define the subcommand as a function
+
+Create a function with the same name as the subcommand with a leading
+underscore:
+
+```bash
+_example() {
+ printf "Hello, World!\\n"
+}
+```
+
+That's it!
+
+View the complete plugin at
+[plugins/example.nb-plugin.bash](plugins/example.nb-plugin.bash).
+
+Plugins have full access to all of `nb`'s internal functions and
+variables.
 
 ### > `nb` Interactive Shell
 

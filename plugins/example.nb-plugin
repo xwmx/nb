@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+###############################################################################
+# example
+#
+# An example plugin for `nb`.
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
+NB_PLUGIN_SUBCOMMANDS+=(
+  example
+)
+
+# Define help and usage text in a `desc` block.
+desc "example" <<HEREDOC
+Usage:
+  ${_ME} example
+
+Description:
+  Print "Hello, World!"
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_example() {
+ printf "Hello, World!\\n"
+}
