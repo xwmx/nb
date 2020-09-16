@@ -5162,6 +5162,7 @@ _index() {
   case "${_subcommand}" in
     add)
       local _basename="${2:-}"
+
       if [[ -z "${_basename}" ]]
       then
         _exit_1 _help index
@@ -5360,6 +5361,7 @@ _index() {
     update)
       local _old_basename="${2:-}"
       local _new_basename="${3:-}"
+
       if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
       then
         _exit_1 _help index
@@ -5374,8 +5376,10 @@ _index() {
       ;;
     verify)
       local _valid=1
+
       local -a _index_list=()
       _index_list=($(<"${_index_path}"))
+
       local -a _file_list=()
       _file_list=($(ls "${_NOTEBOOK_PATH}"))
 
@@ -5404,6 +5408,7 @@ _index() {
       do
         local _count
         _count="$(printf "%s\\n" "${__item}" | awk '{print $1}')"
+
         if [[ "${_count}" -gt 1 ]]
         then
           _valid=0
