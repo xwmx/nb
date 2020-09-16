@@ -10262,7 +10262,7 @@ _main() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|h|help|r|run|set|settings|subcommands|update|version)
+    commands|completions|env|git|h|help|r|run|set|settings|subcommands|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
