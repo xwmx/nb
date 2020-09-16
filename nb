@@ -2942,6 +2942,9 @@ Usage:
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} plugins [<name>] [--paths]
+  ${_ME} plugins install [<path> | <url>]
+  ${_ME} plugins uninstall <name>
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)

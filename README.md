@@ -2358,6 +2358,9 @@ Usage:
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
+  nb plugins [<name>] [--paths]
+  nb plugins install [<path> | <url>]
+  nb plugins uninstall <name>
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -3132,6 +3135,26 @@ See also:
 
 Alias: `preview`
 Shortcut Alias: `p`
+```
+
+#### `plugins`
+
+```text
+Usage:
+  nb plugins [<name>] [--paths]
+  nb plugins install [<path> | <url>]
+  nb plugins uninstall <name>
+
+Options:
+  --paths  Print the full path to each plugin.
+
+Subcommands:
+  (default)  List plugins.
+  install    Install a plugin from a <path> or <url>
+  uninstall  Uninstall the specified plugin.
+
+Description:
+  Manage plugins.
 ```
 
 #### `remote`
