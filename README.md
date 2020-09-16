@@ -280,7 +280,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#%EF%B8%8F-set--settings"><code>set</code> & Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
   <a href="#-nb-interactive-shell">Shell</a> •
-  <a href="#plugins">Plugins</a> •
+  <a href="#-plugins">Plugins</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
   <a href="#specifications">Specifications</a> •
@@ -2056,7 +2056,7 @@ nb set colors
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
 
-### Plugins
+### 🔌 Plugins
 
 `nb` includes support for plugins, which can be used to create new
 subcommands and extend the functionality of `nb`.
@@ -2268,7 +2268,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#notebooks">notebooks</a> •
   <a href="#open">open</a> •
   <a href="#peek">peek</a> •
-  <a href="#plugins-1">plugins</a> •
+  <a href="#plugins">plugins</a> •
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
   <a href="#run">run</a> •
