@@ -328,14 +328,6 @@ environment's preferred text editor. You can change your editor using the
 files by default. The default file type can be changed to whatever you
 like using [`nb set default_extension`](#settings-list---long).
 
-Password-protected notes are created with the `-e` / `--encrypt` flag
-and are encrypted with AES-256 using OpenSSL by default.
-GPG is also supported and can be configured with
-[`nb set encryption_tool`](#settings-list---long).
-Encrypted notes can be decrypted using the OpenSSL and GPG command line
-tools directly, so you aren't dependent on `nb` to decrypt your
-files.
-
 `nb add` behaves differently depending on the type of argument it
 receives. When a filename with extension is specified, a new note
 with that filename is opened in the editor:
@@ -414,6 +406,23 @@ nb add --type rst
 ```
 
 For a full list of options available for `nb add`, run [`nb help add`](#add).
+
+##### Password-Protected Encrypted Notes and Bookmarks
+
+Password-protected notes and [bookmarks](#-bookmarks) are created with
+the `-e` / `--encrypt` flag and are encrypted with AES-256 using OpenSSL
+by default. GPG is also supported and can be configured with
+[`nb set encryption_tool`](#settings-list---long).
+
+Each note file is encrypted individually with its own password. When an
+encrypted note is viewed, edited, or opened, `nb` will prompt for that
+note or bookmark's password, and otherwise behave identically. After
+an item is edited, `nb` automatically re-encrypts it and saves the new
+version.
+
+Encrypted notes can also be decrypted using the OpenSSL and GPG command
+line tools directly, so you aren't dependent on `nb` to decrypt your
+files.
 
 ##### Shortcut Alias: `a`
 
