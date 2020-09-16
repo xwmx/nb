@@ -1536,7 +1536,7 @@ _encrypt_file() {
   if [[ -z "${_decrypted_path}" ]] ||
      [[ -z "${_encrypted_path}" ]]
   then
-    _exit_1 printf "Encrypted and decripted paths required.\\n"
+    _exit_1 printf "Encrypted and decrypted paths required.\\n"
   fi
 
   if [[ "${NB_ENCRYPTION_TOOL}" == "gpg" ]]
