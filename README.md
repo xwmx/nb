@@ -2062,14 +2062,14 @@ nb set colors
 subcommands and extend the functionality of `nb`.
 
 Plugins can be installed from either a URL or path using the
-`nb plugins` subcommand.
+[`nb plugins`](#plugins) subcommand.
 
 ```bash
 # install a plugin from a URL
 nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
 
 # install a plugin from a path
-nb plugins install plugins/copy.nb-plugin
+nb plugins install plugins/example.nb-plugin
 ```
 
 Installed plugins can be listed with `nb plugins`, which optionally
@@ -2078,14 +2078,17 @@ takes a name and print full paths:
 ```bash
 > nb plugins
 copy
-example1
-example2
+example
 
 > nb plugins copy
 copy
 
-> nb plugins copy --paths
+> nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
+/home/example/.nb/.plugins/example.nb-plugin
+
+> nb plugins example --paths
+/home/example/.nb/.plugins/example.nb-plugin
 ```
 
 Use `nb plugins uninstall` to uninstall a plugin:
