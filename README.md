@@ -2141,8 +2141,7 @@ _example() {
 
 That's it!
 
-View the complete plugin at
-[plugins/example.nb-plugin.bash](plugins/example.nb-plugin.bash).
+View the complete plugi: [plugins/example.nb-plugin](plugins/example.nb-plugin)
 
 Plugins have full access to all of `nb`'s internal functions and
 variables.
