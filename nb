@@ -10099,7 +10099,8 @@ do
 
   case "${__opt}" in
     -h|--help)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]]
+      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
+         [[ "${_SUBCOMMAND:-}" == "run" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
@@ -10122,7 +10123,8 @@ do
       _GIT_ENABLED=0
       ;;
     --version)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]]
+      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
+         [[ "${_SUBCOMMAND:-}" == "run" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
@@ -10130,7 +10132,13 @@ do
       fi
       ;;
     -i|--interactive)
-      _SUBCOMMAND="shell"
+      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
+         [[ "${_SUBCOMMAND:-}" == "run" ]]
+      then
+        _ARGUMENTS+=("${__opt}")
+      else
+        _SUBCOMMAND="shell"
+      fi
       ;;
     --welcome)
       _print_welcome
