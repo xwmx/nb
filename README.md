@@ -2141,10 +2141,25 @@ _example() {
 
 That's it!
 
-View the complete plugi: [plugins/example.nb-plugin](plugins/example.nb-plugin)
+View the complete plugin: [plugins/example.nb-plugin](plugins/example.nb-plugin)
+
+#### Internal Functions and Variables
 
 Plugins have full access to all of `nb`'s internal functions and
-variables.
+variables, which are identified by leading underscores. `nb` subcommands
+can be called using their internal function names, and options can be
+used to output information in formats suitable for scripting:
+
+```bash
+# Print the content of note 3 to standard output with no color
+_show 3 --print --no-color
+
+# list all unarchived global notebook names
+_notebooks --names --no-color --unarchived --global
+
+# list all filenames in the current notebook
+_list --filenames --no-id --no-indicator
+```
 
 ### > `nb` Interactive Shell
 
