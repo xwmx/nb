@@ -10094,7 +10094,9 @@ _PREVIOUS_OPTION_WAS_FLAG=0
 while ((${#}))
 do
   __opt="${1}"
+
   shift
+
   case "${__opt}" in
     -h|--help)
       if [[ "${_SUBCOMMAND:-}" == "git" ]]
