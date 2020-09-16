@@ -20,6 +20,8 @@ Usage:
 
 Description:
   Create a copy of the specified item in the current notebook.
+
+Alias: \`duplicate\`
 HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
