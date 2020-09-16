@@ -7654,7 +7654,7 @@ _plugins() {
         _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
 
         _url="$(
-          printf "${_url}" \
+          printf "%s\\n" "${_url}" \
             | sed 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
         )"
 
