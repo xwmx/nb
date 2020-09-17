@@ -7733,7 +7733,10 @@ HEREDOC
         _query="${_name}"
       fi
 
-      if ((_print_paths))
+      if [[ ! -e "${NB_DIR}/.plugins" ]]
+      then
+        (return 1)
+      elif ((_print_paths))
       then
         # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
         find "${NB_DIR}"/.plugins -type f -name "${_query}" | grep .
