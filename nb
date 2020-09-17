@@ -6933,7 +6933,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ ! -d "${_path}" ]]
     then
-      _exit_1 printf "Not a directory %s" "$(_highlight "${_path}")"
+      _exit_1 printf "Not a directory: %s" "$(_highlight "${_path}")"
     fi
 
     local _target_basename="${2:-}"
@@ -6948,7 +6948,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     cp -R "${_path}" "${_target_path}"  &&
       _clear_cache                      &&
       _notebooks_add_new                &&
-      printf "Imported notebook %s\\n" \
+      printf "Imported notebook: %s\\n" \
         "$(_highlight "$(basename "${_target_path}")")"
   }
 
