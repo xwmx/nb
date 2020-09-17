@@ -2188,8 +2188,8 @@ have an `.nb-plugin` extension.
 
 `nb` includes two example plugins:
 
-- [`copy.nb-plugin`](plugins/copy.nb-plugin)
 - [`example.nb-plugin`](plugins/example.nb-plugin)
+- [`copy.nb-plugin`](plugins/copy.nb-plugin)
 
 Create a new subcommand in three easy steps:
 
