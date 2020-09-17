@@ -2222,7 +2222,7 @@ _example() {
 }
 ```
 
-That's it!
+That's it! 🎉
 
 View the complete plugin: [`plugins/example.nb-plugin`](plugins/example.nb-plugin)
 
