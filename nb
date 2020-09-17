@@ -7700,8 +7700,8 @@ _plugins() {
     uninstall)
       local _plugin_path
 
-      if ! _plugin_path="$(_plugins ${_name} --paths)"  ||
-         [[ -z "${_plugin_path:-}" ]]                   ||
+      if ! _plugin_path="$(_plugins ${_name} --paths 2>/dev/null)"  ||
+         [[ -z "${_plugin_path:-}" ]]                               ||
          ! [[ -f "${_plugin_path}" ]]
       then
         _exit_1 printf "Plugin not found: %s\\n" "${_name}"
