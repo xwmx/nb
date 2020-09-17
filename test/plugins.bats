@@ -107,6 +107,11 @@ load test_helper
   [[ -e "${NB_DIR}/.plugins/turquoise.nb-theme" ]]
   [[ "${lines[0]}" =~ Plugin\ installed         ]]
   [[ "${lines[1]}" =~ turquoise.nb-theme        ]]
+
+  run "${_NB}" settings colors themes
+
+  [[ "${status}" == 0         ]]
+  [[ "${output}" =~ turquoise ]]
 }
 
 @test "\`plugins install\` with valid <url> argument installs a plugin." {
@@ -144,6 +149,11 @@ load test_helper
   [[ -e "${NB_DIR}/.plugins/turquoise.nb-theme" ]]
   [[ "${lines[0]}" =~ Plugin\ installed         ]]
   [[ "${lines[1]}" =~ turquoise.nb-theme        ]]
+
+  run "${_NB}" settings colors themes
+
+  [[ "${status}" == 0         ]]
+  [[ "${output}" =~ turquoise ]]
 }
 
 @test "\`plugins install\` with invalid argument exits with error." {
