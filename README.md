@@ -1645,6 +1645,10 @@ Initialized local notebook: /home/username/example-directory
 
 > nb notebooks import example-directory
 Imported notebook: example-directory
+
+> nb notebooks
+example-directory
+home
 ```
 
 #### Archiving Notebooks
