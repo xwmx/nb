@@ -2152,9 +2152,7 @@ Create a new subcommand in three easy steps:
 ##### 1. Add new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array
 
 ```bash
-NB_PLUGIN_SUBCOMMANDS+=(
-  example
-)
+NB_PLUGIN_SUBCOMMANDS+=(example)
 ```
 
 ##### 2. Define help and usage text in a `desc` block

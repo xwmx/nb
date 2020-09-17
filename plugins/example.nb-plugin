@@ -11,9 +11,7 @@
 ###############################################################################
 
 # Add subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
-NB_PLUGIN_SUBCOMMANDS+=(
-  example
-)
+NB_PLUGIN_SUBCOMMANDS+=(example)
 
 # Define help and usage text in a `desc` block.
 desc "example" <<HEREDOC
