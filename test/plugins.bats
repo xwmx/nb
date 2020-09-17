@@ -86,6 +86,11 @@ load test_helper
   [[ -e "${NB_DIR}/.plugins/example.nb-plugin"  ]]
   [[ "${lines[0]}" =~ Plugin\ installed         ]]
   [[ "${lines[1]}" =~ example.nb-plugin         ]]
+
+  run "${_NB}" example
+
+  [[ "${status}" == 0                 ]]
+  [[ "${lines[0]}" =~ Hello,\ World!  ]]
 }
 
 @test "\`plugins install\` with valid <path> argument installs a theme plugin." {
@@ -118,6 +123,11 @@ load test_helper
   [[ -e "${NB_DIR}/.plugins/example.nb-plugin"  ]]
   [[ "${lines[0]}" =~ Plugin\ installed         ]]
   [[ "${lines[1]}" =~ example.nb-plugin         ]]
+
+  run "${_NB}" example
+
+  [[ "${status}" == 0                 ]]
+  [[ "${lines[0]}" =~ Hello,\ World!  ]]
 }
 
 @test "\`plugins install\` with valid <url> argument installs a theme plugin." {
