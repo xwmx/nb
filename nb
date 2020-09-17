@@ -461,6 +461,11 @@ export NB_HEADER="${NB_HEADER:-1}"
 # Supported Values: any positive number
 export NB_LIMIT="${NB_LIMIT:-20}"
 
+# $_NB_PLUGINS
+#
+# The list of currently-active plugins.
+export _NB_PLUGINS=()
+
 # $EDITOR ############################################################# $EDITOR
 
 # Set default $EDITOR if one has not been set.
@@ -607,12 +612,13 @@ export _NB_COLOR_THEMES=(
   utility
 )
 
-# User defined themes can be installed in the $NB_DIR/.themes directory.
-# Themes have an .nb-theme, .n-theme.bash, or .nb-theme.sh extension and
-# contain a single if statment assigning the color environment variables
-# to tput ANSI color numbers. Example:
+# User defined themes can be installed in the $NB_DIR/.plugins directory.
+# Themes have an .nb-theme extension and contain a single if statment
+# assigning the color environment variables to tput ANSI color numbers.
 #
-#     # filename: ~/.nb/.themes/example.nb-theme.sh
+# Example:
+#
+#     # filename: ~/.nb/.plugins/example.nb-theme
 #     if [[ "${NB_COLOR_THEME}" == "example" ]]
 #     then
 #       export NB_COLOR_PRIMARY=68
@@ -621,17 +627,21 @@ export _NB_COLOR_THEMES=(
 #
 #  To view a list of available color numbers, run `nb settings colors`
 __load_themes() {
-  if [[ -d "${NB_DIR}/.themes" ]]
+  if [[ -d "${NB_DIR}/.plugins" ]]
   then
     set +f
-    for __file in "${NB_DIR}/.themes"/*.nb-theme*
+    for __file in "${NB_DIR}/.plugins"/*.nb-theme*
     do
-      local _name=
-      _name="$(basename "${__file}")"
-      _name="${_name%%.*}"
+      if [[ -e "${__file}" ]]
+      then
+        local _basename
+        _basename="$(basename "${__file}")"
+        local _name="${_basename%%.*}"
 
-      _NB_COLOR_THEMES=("${_NB_COLOR_THEMES[@]}" "${_name}")
-      source "${__file}"
+        _NB_PLUGINS+=("${_basename}")
+        _NB_COLOR_THEMES+=("${_name}")
+        source "${__file}"
+      fi
     done
     set -f
   fi
@@ -7636,6 +7646,8 @@ _plugins() {
           _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
         fi
 
+        [[ ! -e "${NB_DIR}/.plugins" ]] && mkdir "${NB_DIR}/.plugins"
+
         _basename="$(basename -- "${_path}")"
 
         if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
@@ -7674,10 +7686,9 @@ _plugins() {
       ;;
     uninstall)
       local _plugin_path
-      # _plugin_path="$(_plugins "${_name}" --paths)"
 
-      if ! _plugin_path="$(_plugins ${_name%%.*} --paths)"  ||
-         [[ -z "${_plugin_path:-}" ]]                       ||
+      if ! _plugin_path="$(_plugins ${_name} --paths)"  ||
+         [[ -z "${_plugin_path:-}" ]]                   ||
          ! [[ -f "${_plugin_path}" ]]
       then
         _exit_1 printf "Plugin not found: %s\\n" "${_name}"
@@ -7714,7 +7725,7 @@ _plugins() {
 
       if [[ -n "${_name}" ]]
       then
-        _query="${_name}.nb-*"
+        _query="${_name}"
       fi
 
       if ((_print_paths))
@@ -10005,19 +10016,16 @@ _version() {
 # Plugins
 ###############################################################################
 
-# $_NB_PLUGINS
-#
-# The list of currently-active plugins.
-export _NB_PLUGINS=()
-
 # $NB_PLUGIN_SUBCOMMANDS
 #
 # The list of subcommands exposed by plugins.
 export NB_PLUGIN_SUBCOMMANDS=()
 
 # User defined plugins can be installed in the $NB_DIR/.plugins directory.
-# Plugins have an .nb-plugin, .nb-theme.bash, or .nb-theme.sh extension and
-# written in Bash or compatible shell scripting language.
+# Plugins have a .nb-plugin or .nb-theme extension and are written in a
+# Bash-compatible shell scripting language.
+#
+# NOTE: Themes are loaded separately.
 __load_plugins() {
   if [[ -d "${NB_DIR}/.plugins" ]]
   then
@@ -10028,7 +10036,7 @@ __load_plugins() {
 
       _name=
       _name="$(basename "${__file}")"
-      _name="${_name%%.*}"
+      # _name="${_name%%.*}"
 
       _NB_PLUGINS+=("${_name}")
       source "${__file}"

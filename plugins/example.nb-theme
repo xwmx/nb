@@ -1,0 +1,5 @@
+if [[ "${NB_COLOR_THEME}" == "example" ]]
+then
+  export NB_COLOR_PRIMARY=43
+  export NB_COLOR_SECONDARY=38
+fi
