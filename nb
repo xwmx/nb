@@ -7640,6 +7640,8 @@ _plugins() {
 
   case "${_subcommand}" in
     install)
+      [[ ! -e "${NB_DIR}/.plugins" ]] && mkdir "${NB_DIR}/.plugins"
+
       if [[ -n "${_path:-}" ]]
       then
         if ! [[ -f "${_path:-}"     ]] &&
@@ -7647,8 +7649,6 @@ _plugins() {
         then
           _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
         fi
-
-        [[ ! -e "${NB_DIR}/.plugins" ]] && mkdir "${NB_DIR}/.plugins"
 
         _basename="$(basename -- "${_path}")"
 
