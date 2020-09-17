@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="4.7.5"
+_VERSION="5.0.1"
 
 # $_ME
 #
@@ -312,23 +312,6 @@ __option_value_is_present() {
 if [[ -n "${NBRC_PATH:-}" ]]
 then
   export NBRC_PATH="${NBRC_PATH}"
-elif [[ -n "${NOTESRC_PATH:-}" ]]
-then # Use legacy NOTESRC_PATH environment variable.
-  export NBRC_PATH="${NOTESRC_PATH}"
-elif [[ -e "${HOME}/.notesrc" ]] &&
-     grep -q -e "xwmx" -e "alphabetum" "${HOME}/.notesrc"
-then # Migrate legacy .notesrc TODO: remove.
-  mv "${HOME}/.notesrc" "${HOME}/.nbrc"
-  _sed_i                                              \
-    -e "s/NOTES_/NB_/g"                               \
-    -e "s/notesrc/nbrc/g"                             \
-    -e "s/alphabetum/xwmx/g"                          \
-    -e "s/\/notes/\/nb/g"                             \
-    -e "s/\.notes/\.nb/g"                             \
-    -e "s/by \`notes\`/by \`notes\` (now \`nb\`)/g"   \
-    -e "s/file for notes/file for \`nb\`/g"           \
-    "${HOME}/.nbrc"
-  export NBRC_PATH="${HOME}/.nbrc"
 else
   export NBRC_PATH="${HOME}/.nbrc"
 fi
@@ -355,36 +338,8 @@ fi
 if [[ -n "${NB_DIR:-}" ]]
 then
   export NB_DIR="${NB_DIR}"
-elif [[ -n "${NOTES_DIR:-}" ]]
-then # Use legacy NOTES_DIR environment variable.
-  export NB_DIR="${NOTES_DIR}"
 else
   export NB_DIR="${HOME}/.nb"
-fi
-
-# TODO: Remove legacy migrations.
-if [[ -d "${HOME}/.notes/home/.git"   ]] &&
-   [[ -f "${HOME}/.notes/home/.index" ]] &&
-   [[ ! -e "${HOME}/.nb"              ]] &&
-   [[ "${NB_DIR}" != "${HOME}/.notes" ]] &&
-   {
-     [[ -z "${NOTES_DIR:-}"                ]] ||
-     [[ "${NOTES_DIR}" != "${HOME}/.notes" ]]
-   }
-then # Migrate legacy ~/.notes directory.
-  mv "${HOME}/.notes" "${HOME}/.nb"
-  printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
-elif [[ -d "${HOME}/Notebooks/home/.git"   ]] &&
-     [[ -f "${HOME}/Notebooks/home/.index" ]] &&
-     [[ ! -e "${HOME}/.nb"                 ]] &&
-     [[ "${NB_DIR}" != "${HOME}/Notebooks" ]] &&
-     {
-       [[ -z "${NOTES_DIR:-}"                   ]] ||
-       [[ "${NOTES_DIR}" != "${HOME}/Notebooks" ]]
-     }
-then # Migrate legacy ~/Notebooks directory.
-  mv "${HOME}/Notebooks" "${HOME}/.nb"
-  printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
 fi
 
 if [[ -L "${NB_DIR:-}" ]]
@@ -418,8 +373,6 @@ fi
 #
 # When set to '1', each `_git_checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
-[[ -n "${NOTES_AUTO_SYNC:-}" ]] &&
-  NB_AUTO_SYNC="${NOTES_AUTO_SYNC}"
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
 # `$NB_DEFAULT_EXTENSION`
@@ -427,8 +380,6 @@ export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 # Default: 'md'
 #
 # Example Values: 'md' 'org'
-[[ -n "${NOTES_DEFAULT_EXTENSION:-}" ]] &&
-  NB_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION}"
 export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 
 # $NB_ENCRYPTION_TOOL
@@ -436,8 +387,6 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 # Default: 'openssl'
 #
 # Supported Values: 'gpg' 'openssl'
-[[ -n "${NOTES_ENCRYPTION_TOOL:-}" ]] &&
-  NB_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL}"
 export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
 # $NB_FOOTER
@@ -529,7 +478,7 @@ HEREDOC
       exit 1
     fi
   fi
-} && __set_editor
+}; __set_editor
 
 # Color ################################################################# Color
 
@@ -607,12 +556,13 @@ export _NB_COLOR_THEMES=(
   utility
 )
 
-# User defined themes can be installed in the $NB_DIR/.themes directory.
-# Themes have an .nb-theme or .nb-theme.sh extension and contain a single
-# if statment assigning the color environment variables to tput ANSI color
-# numbers. Example:
+# User defined themes can be installed in the $NB_DIR/.plugins directory.
+# Themes have an .nb-theme extension and contain a single if statment
+# assigning the color environment variables to tput ANSI color numbers.
 #
-#     # filename: ~/.nb/.themes/example.nb-theme.sh
+# Example:
+#
+#     # filename: ~/.nb/.plugins/example.nb-theme
 #     if [[ "${NB_COLOR_THEME}" == "example" ]]
 #     then
 #       export NB_COLOR_PRIMARY=68
@@ -621,21 +571,30 @@ export _NB_COLOR_THEMES=(
 #
 #  To view a list of available color numbers, run `nb settings colors`
 __load_themes() {
-  if [[ -d "${NB_DIR}/.themes" ]]
+  if [[ -d "${NB_DIR}/.themes"    ]] &&
+     [[ ! -e "${NB_DIR}/.plugins" ]]
+  then # migrate legacy .themes directory. TODO: Remove.
+    mv "${NB_DIR}/.themes" "${NB_DIR}/.plugins"
+  fi
+
+  if [[ -d "${NB_DIR}/.plugins" ]]
   then
     set +f
-    for __file in "${NB_DIR}/.themes"/*.nb-theme*
+    for __file in "${NB_DIR}/.plugins"/*.nb-theme*
     do
-      local _name=
-      _name="$(basename "${__file}")"
-      _name="${_name%%.*}"
+      if [[ -e "${__file}" ]]
+      then
+        local _basename
+        _basename="$(basename "${__file}")"
+        local _name="${_basename%%.*}"
 
-      _NB_COLOR_THEMES=("${_NB_COLOR_THEMES[@]}" "${_name}")
-      source "${__file}"
+        _NB_COLOR_THEMES+=("${_name}")
+        source "${__file}"
+      fi
     done
     set -f
   fi
-} && __load_themes
+}; __load_themes
 
 # $NB_COLOR_PRIMARY
 #
@@ -647,10 +606,6 @@ __load_themes() {
 #   nb settings colors
 #
 # Supported Values: [0..255+]
-[[ -n "${NOTES_HIGHLIGHT_COLOR:-}" ]] &&
-  NB_COLOR_PRIMARY="${NOTES_HIGHLIGHT_COLOR}"
-[[ -n "${NB_HIGHLIGHT_COLOR:-}" ]] &&
-  NB_COLOR_PRIMARY="${NB_HIGHLIGHT_COLOR}"
 __set_nb_color_primary() {
   local _colors=
   _colors="$(tput colors)"
@@ -660,7 +615,7 @@ __set_nb_color_primary() {
   else
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-4}"
   fi
-} && __set_nb_color_primary
+}; __set_nb_color_primary
 
 # $NB_COLOR_SECONDARY
 #
@@ -811,7 +766,7 @@ __set_notebook_path() {
       cd ..
       __set_local_notebook_path
     fi
-  } && __set_local_notebook_path
+  }; __set_local_notebook_path
 
   __set_global_notebook() {
     if [[ -e "${NB_DIR}/.current" ]]
@@ -823,7 +778,7 @@ __set_notebook_path() {
         _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_GLOBAL_NOTEBOOK_NAME}"
       fi
     fi
-  } && __set_global_notebook
+  }; __set_global_notebook
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
@@ -831,7 +786,7 @@ __set_notebook_path() {
   else
     _NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
   fi
-} && __set_notebook_path
+}; __set_notebook_path
 
 # Cache & Temp ################################################### Cache & Temp
 
@@ -1522,9 +1477,9 @@ Can't edit archives. Export archive and expand to edit.\\n"
 # _encrypt_file()
 #
 # Usage:
-#   _encrypt_file <decrypted path> <encrypted path> <password>
+#   _encrypt_file <unencrypted path> <encrypted path> <password>
 _encrypt_file() {
-  local _decrypted_path="${1:-}"
+  local _unencrypted_path="${1:-}"
   local _encrypted_path="${2:-}"
   local _password="${3:-}"
 
@@ -1533,10 +1488,10 @@ _encrypt_file() {
     _exit_1 printf "Password required.\\n"
   fi
 
-  if [[ -z "${_decrypted_path}" ]] ||
-     [[ -z "${_encrypted_path}" ]]
+  if [[ -z "${_unencrypted_path}" ]] ||
+     [[ -z "${_encrypted_path}"   ]]
   then
-    _exit_1 printf "Encrypted and decripted paths required.\\n"
+    _exit_1 printf "Encrypted and unencrypted paths required.\\n"
   fi
 
   if [[ "${NB_ENCRYPTION_TOOL}" == "gpg" ]]
@@ -1549,13 +1504,13 @@ _encrypt_file() {
         --symmetric                   \
         --cipher-algo AES256          \
         --output "${_encrypted_path}" \
-        "${_decrypted_path}"
+        "${_unencrypted_path}"
   elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl" ]]
   then
-    openssl enc                 \
-      -aes-256-cbc              \
-      -in "${_decrypted_path}"  \
-      -out "${_encrypted_path}" \
+    openssl enc                   \
+      -aes-256-cbc                \
+      -in "${_unencrypted_path}"  \
+      -out "${_encrypted_path}"   \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
     _exit_1 \
@@ -2818,42 +2773,50 @@ _help() {
   then
     # NOTE: this screen mirrors the content from README.md#-color-themes:
     # https://github.com/xwmx/nb#-color-themes
-    _highlight "\
-__          _                     _
-\ \   _ __ | |__         ___ ___ | | ___  _ __ ___
- \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|
- / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\
-/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
+    _highlight "__          _                     _"
+    _highlight "\ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
+    _highlight " \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
+    _highlight " / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
+    _highlight "/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
     _highlight_secondary "\
 ---------------------------------------------------"
   cat <<HEREDOC
-\`${_ME}\` uses color to highlight various interface elements, including ids, the
-current notebook name, the shell prompt, and divider lines.
+\`${_ME}\` uses color to highlight various interface elements, including ids,
+the current notebook name, the shell prompt, and divider lines.
 
 \`${_ME}\` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using \`${_ME} set color_theme\`:
 
     $(_highlight "${_ME} set color_theme")
 
-Custom color themes can be installed in the \`\${NB_DIR}/.themes\` directory,
-which is currently located at:
+Custom color themes are \`nb\` plugins with a \`.nb-theme\` file extension.
+A theme is defined with a single \`if\` statement indicating the name and
+assigning the color environment variables to \`tput\` ANSI color numbers:
 
-    $(_highlight "${NB_DIR}/.themes")
+    $(_highlight_secondary "# turquoise.nb-theme")
+    $(_highlight "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
+    $(_highlight "then")
+    $(_highlight "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
+    $(_highlight "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
+    $(_highlight "fi")
 
-Themes have a \`.nb-theme\` or \`.nb-theme.sh\` extension and contain one \`if\`
-statement indicating the name and setting the primary and secondary color
-environment variables to \`tput\` ANSI color numbers:
+View this theme as a complete file:
 
-    $(_highlight_secondary "# file: ~/.nb/.themes/example.nb-theme.sh")
-    $(_highlight "\
-if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"example\"${_TPUT_COLOR_PRIMARY} ]]
-    then
-      export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}
-      export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}
-    fi")
+    $(_highlight "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
-The primary and secondary colors can be set individually, making color themes
-easily customizable:
+Themes can be installed using the \`nb plugins\` subcommand:
+
+    $(_dim ">") $(_highlight "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_highlight_secondary "Plugin installed:")
+    $(_highlight_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
+
+Once a theme is installed, use it with \`nb set color_theme\`:
+
+    $(_dim ">") $(_highlight "set color_theme turquoise")
+    $(_highlight_secondary "NB_COLOR_THEME set to turquoise")
+
+The primary and secondary colors can also be overridden individually,
+making color themes easily customizable:
 
     $(_highlight_secondary "# open the settings prompt for the primary color")
     $(_highlight "${_ME} set color_primary")
@@ -2942,6 +2905,9 @@ Usage:
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} plugins [<name>] [--paths]
+  ${_ME} plugins install [<path> | <url>]
+  ${_ME} plugins uninstall <name>
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -2949,7 +2915,7 @@ Usage:
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
-  ${_ME} settings [colors [<number>] | edit | list [--long]]
+  ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
@@ -2990,6 +2956,7 @@ Subcommands:
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
+  plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
   run          Run shell commands within the current notebook.
@@ -5162,6 +5129,7 @@ _index() {
   case "${_subcommand}" in
     add)
       local _basename="${2:-}"
+
       if [[ -z "${_basename}" ]]
       then
         _exit_1 _help index
@@ -5360,6 +5328,7 @@ _index() {
     update)
       local _old_basename="${2:-}"
       local _new_basename="${3:-}"
+
       if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
       then
         _exit_1 _help index
@@ -5374,8 +5343,10 @@ _index() {
       ;;
     verify)
       local _valid=1
+
       local -a _index_list=()
       _index_list=($(<"${_index_path}"))
+
       local -a _file_list=()
       _file_list=($(ls "${_NOTEBOOK_PATH}"))
 
@@ -5404,6 +5375,7 @@ _index() {
       do
         local _count
         _count="$(printf "%s\\n" "${__item}" | awk '{print $1}')"
+
         if [[ "${_count}" -gt 1 ]]
         then
           _valid=0
@@ -6675,6 +6647,8 @@ _alias_subcommand "move" "mv"
 
 # notebooks ######################################################### notebooks
 
+# TODO: Vim highlighting bug. "
+
 desc "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -6959,7 +6933,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ ! -d "${_path}" ]]
     then
-      _exit_1 printf "Not a directory %s" "$(_highlight "${_path}")"
+      _exit_1 printf "Not a directory: %s" "$(_highlight "${_path}")"
     fi
 
     local _target_basename="${2:-}"
@@ -6974,7 +6948,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     cp -R "${_path}" "${_target_path}"  &&
       _clear_cache                      &&
       _notebooks_add_new                &&
-      printf "Imported notebook %s\\n" \
+      printf "Imported notebook: %s\\n" \
         "$(_highlight "$(basename "${_target_path}")")"
   }
 
@@ -7560,6 +7534,181 @@ _peek() {
 _alias_subcommand "peek" "p"
 _alias_subcommand "peek" "preview"
 
+# plugins ############################################################# plugins
+
+desc "plugins" <<HEREDOC
+Usage:
+  ${_ME} plugins [<name>] [--paths]
+  ${_ME} plugins install [<path> | <url>]
+  ${_ME} plugins uninstall <name>
+
+Options:
+  --paths  Print the full path to each plugin.
+
+Subcommands:
+  (default)  List plugins.
+  install    Install a plugin from a <path> or <url>.
+  uninstall  Uninstall the specified plugin.
+
+Description:
+  Manage plugins and themes.
+
+Plugin Extensions:
+  .nb-theme   Plugins defining color themes.
+  .nb-plugin  Plugins defining new subcommands and functionality.
+HEREDOC
+_plugins() {
+  local _basename=
+  local _force=0
+  local _name=
+  local _path=
+  local _print_paths=0
+  local _subcommand=
+  local _url=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      --path*)
+        _print_paths=1
+        ;;
+      *)
+        if [[ "${__arg}" =~ ^install$|^uninstall$ ]]
+        then
+          _subcommand="${__arg}"
+        elif [[ "${_subcommand}" == "install" ]]
+        then
+          if [[ "${__arg:-}" =~ ^http|^file\: ]]
+          then
+            _url="${__arg}"
+          else
+            _path="${__arg}"
+          fi
+        else
+          _name="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  case "${_subcommand}" in
+    install)
+      [[ ! -e "${NB_DIR}/.plugins" ]] && mkdir "${NB_DIR}/.plugins"
+
+      if [[ -n "${_path:-}" ]]
+      then
+        if ! [[ -f "${_path:-}"     ]] &&
+           ! [[ "${_path}" =~ nb\-  ]]
+        then
+          _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
+        fi
+
+        _basename="$(basename -- "${_path}")"
+
+        if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
+        then
+          _exit_1 printf "Plugin already installed: %s\\n" "${_basename}"
+        fi
+
+        if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
+        then
+          printf "Plugin installed:\\n%s\\n" \
+            "$(_highlight "${NB_DIR}/.plugins/${_basename}")"
+        else
+          _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
+        fi
+      else
+        _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
+
+        if [[ "${_url:-}" =~ https\:\/\/github.com ]]
+        then
+          _url="$(
+            printf "%s\\n" "${_url}"  \
+              | sed                   \
+                -e 's/\/blob//g'      \
+                -e 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
+          )"
+        fi
+
+        if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
+        then
+          printf "Plugin installed:\\n%s\\n" \
+            "$(_highlight "${NB_DIR}/.plugins/${_basename}")"
+        else
+          _exit_1 printf "Unable to download and install: %s\\n"  "${_url}"
+        fi
+      fi
+      ;;
+    uninstall)
+      local _plugin_path
+
+      if ! _plugin_path="$(_plugins ${_name} --paths 2>/dev/null)"  ||
+         [[ -z "${_plugin_path:-}" ]]                               ||
+         ! [[ -f "${_plugin_path}" ]]
+      then
+        _exit_1 printf "Plugin not found: %s\\n" "${_name}"
+      fi
+
+      if ! ((_force))
+      then
+        cat <<HEREDOC
+Uninstalling plugin. Warning: This will permanently delete the following file:
+$(_highlight "${_plugin_path}")
+HEREDOC
+        while true
+        do
+          read -r -p "Proceed? [y/N] " __yn
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:-?}"
+      then
+        printf "Plugin successfully uninstalled:\\n%s\\n" \
+          "$(_highlight "${_plugin_path}")"
+      else
+        _exit_1 printf "Unable to uninstall plugin:\\n%s\\n" "${_plugin_path}"
+      fi
+      ;;
+    *)
+      local _query="*nb-*"
+
+      if [[ -n "${_name}" ]]
+      then
+        _query="${_name}"
+      fi
+
+      if [[ ! -e "${NB_DIR}/.plugins" ]]
+      then
+        (return 1)
+      elif ((_print_paths))
+      then
+        # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+        find "${NB_DIR}"/.plugins -type f -name "${_query}" | grep .
+      else
+        find "${NB_DIR}"/.plugins -type f -name "${_query}" -exec basename {} \; | grep .
+      fi || if [[ -n "${_name:-}" ]]
+            then
+              _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
+            else
+              _exit_1 printf "No plugins found.\\n"
+            fi
+      ;;
+  esac
+}
+_alias_subcommand "plugins" "plugin"
+
 # remote ############################################################### remote
 
 desc "remote" <<HEREDOC
@@ -7923,7 +8072,7 @@ Options:
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
-  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
+  -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder
@@ -8356,7 +8505,7 @@ _alias_subcommand "search" "q"
 desc "settings" <<HEREDOC
 Usage:
   ${_ME} set [<name> [<value>] | <number> [<value>]]
-  ${_ME} settings colors [<number>]
+  ${_ME} settings colors [<number> | themes]
   ${_ME} settings edit
   ${_ME} settings get   (<name> | <number>)
   ${_ME} settings list  [--long]
@@ -8369,6 +8518,7 @@ Subcommands:
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
+             \`settings colors themes\` prints a list of installed themes.
   edit       Open the \`${_ME}\` configuration file in \`\$EDITOR\`.
   get        Print the value of a setting.
   list       List information about available settings.
@@ -8397,7 +8547,7 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
-  # Usage: _nb_settings_colors [<number>]
+  # Usage: _nb_settings_colors [<number>] [themes]
   _nb_settings_colors() {
     # Usage: _nb_settings_colors_print <number>
     _nb_settings_colors_print() {
@@ -8406,8 +8556,13 @@ _settings() {
 
     if [[ -n "${1:-}" ]]
     then
-      _nb_settings_colors_print "${1:-}"
-      printf "\\n"
+      if [[ "${1}" == "themes" ]]
+      then
+        printf "%s\\n" "${_NB_COLOR_THEMES[@]}"
+      else
+        _nb_settings_colors_print "${1:-}"
+        printf "\\n"
+      fi
     else
       for ((_i=0;_i<256;_i++))
       do
@@ -9499,7 +9654,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   elif ((_render))              &&
-       ((_print_output))                &&
+       ((_print_output))        &&
        _command_exists "pandoc" &&
        _command_exists "w3m"
   then # `show --render --print` with `pandoc` and `w3m` available.
@@ -9725,7 +9880,7 @@ _update() {
      npm list | grep -q notes.sh  &&
      [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
-    cat <<'HEREDOC'
+    cat <<HEREDOC
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
@@ -9733,14 +9888,14 @@ HEREDOC
        npm list | grep -q nb.sh &&
        [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
   then # installed with npm
-    cat <<'HEREDOC'
+    cat <<HEREDOC
 Installed with npm. To update, run:
   npm update -g nb.sh
 HEREDOC
   elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
        [[ "${_current_path}" =~ Cellar  ]]
   then
-    cat <<'HEREDOC'
+    cat <<HEREDOC
 Installed with Homebrew. To update, run:
   brew upgrade xwmx/taps/nb
 HEREDOC
@@ -9828,36 +9983,43 @@ _version() {
 }
 
 ###############################################################################
-# Program Option Parsing
+# Plugins
 ###############################################################################
 
-# Steps:
+# $NB_PLUGIN_SUBCOMMANDS
 #
-# 1. set expected short options in `optstring` at beginning of the "Normalize
-#    Options" section,
-# 2. parse options in while loop in the "Parse Options" section.
+# The list of subcommands exposed by plugins.
+export NB_PLUGIN_SUBCOMMANDS=()
+
+# User defined plugins can be installed in the $NB_DIR/.plugins directory.
+# Plugins have a .nb-plugin or .nb-theme extension and are written in a
+# Bash-compatible shell scripting language.
+#
+# NOTE: Themes are loaded separately.
+__load_plugins() {
+  if [[ -d "${NB_DIR}/.plugins" ]]
+  then
+    set +f
+    for __file in "${NB_DIR}/.plugins"/*.nb-plugin*
+    do
+      [[ -f "${__file}" ]] || continue
+
+      source "${__file}"
+    done
+    set -f
+  fi
+}; __load_plugins
+
+###############################################################################
+# Program Option Parsing
+###############################################################################
 
 # Normalize Options ###########################################################
 
 # Source:
 #   https://github.com/e36freak/templates/blob/master/options
 
-# The first loop, even though it uses 'optstring', will NOT check if an
-# option that takes a required argument has the argument provided. That must
-# be done within the second loop and case statement, yourself. Its purpose
-# is solely to determine that -oARG is split into -o ARG, and not -o -A -R -G.
-
-# Set short options -----------------------------------------------------------
-
-# option string, for short options.
-#
-# Very much like getopts, expected short options should be appended to the
-# string here. Any option followed by a ':' takes a required argument.
-optstring='h'
-
-# Normalize -------------------------------------------------------------------
-
-# iterate over options, breaking -ab into -a -b and --foo=bar into --foo bar
+# Iterate over options, breaking -ab into -a -b and --foo=bar into --foo bar
 # also turns -- into --endopts to avoid issues with things like '-o-', the '-'
 # should not indicate the end of options, but be an invalid option (or the
 # argument to the option, such as wget -qO-)
@@ -9875,14 +10037,6 @@ do
         c="${1:i:1}"
         # add current char to options
         options+=("-${c}")
-
-        # if option takes a required argument, and it's not the last char
-        # make the rest of the string its argument
-        if [[ "${optstring}" = *"${c}:"* && "${1:i+1}" ]]
-        then
-          options+=("${1:i+1}")
-          break
-        fi
       done
       ;;
     # if option is of type --foo=bar, split on first '='
@@ -9960,6 +10114,8 @@ _SUBCOMMANDS=(
   open
   p
   peek
+  plugin
+  plugins
   preview
   q
   r
@@ -9982,6 +10138,7 @@ _SUBCOMMANDS=(
   use
   version
   view
+  ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
 
 # $_DOCUMENTED_SUBCOMMANDS
@@ -10018,6 +10175,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   open
   p
   peek
+  plugins
   preview
   q
   remote
@@ -10036,6 +10194,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   update
   use
   version
+  ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
 
 # $_GIT_SUBCOMMANDS
@@ -10081,6 +10240,7 @@ _GIT_SUBCOMMANDS=(
   use
   u
   view
+  ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
 
 # $_SUBCOMMANDS_PATTERN
@@ -10118,10 +10278,13 @@ _PREVIOUS_OPTION_WAS_FLAG=0
 while ((${#}))
 do
   __opt="${1}"
+
   shift
+
   case "${__opt}" in
     -h|--help)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]]
+      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
+         [[ "${_SUBCOMMAND:-}" == "run" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
@@ -10144,7 +10307,8 @@ do
       _GIT_ENABLED=0
       ;;
     --version)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]]
+      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
+         [[ "${_SUBCOMMAND:-}" == "run" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
@@ -10152,7 +10316,13 @@ do
       fi
       ;;
     -i|--interactive)
-      _SUBCOMMAND="shell"
+      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
+         [[ "${_SUBCOMMAND:-}" == "run" ]]
+      then
+        _ARGUMENTS+=("${__opt}")
+      else
+        _SUBCOMMAND="shell"
+      fi
       ;;
     --welcome)
       _print_welcome
@@ -10276,7 +10446,7 @@ _main() {
       _git_required
       "_${_SUBCOMMAND}" "${@}"
       ;;
-    commands|completions|env|h|help|r|run|set|settings|subcommands|update|version)
+    commands|completions|env|git|h|help|r|run|set|settings|subcommands|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)

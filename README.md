@@ -14,16 +14,17 @@
 
 # `❯ nb`
 
-`nb` is a command line note-taking, bookmarking, and archiving
-application with:
+`nb` is a command line note-taking, bookmarking, archiving,
+and knowledge base application with:
 
 - plain-text data storage,
-- encryption,
-- filtering and search,
-- [Git](https://git-scm.com/)-backed versioning and syncing,
-- [Pandoc](https://pandoc.org/)-backed conversion,
-- global and local notebooks,
+- [encryption](#password-protected-encrypted-notes-and-bookmarks),
+- [filtering](#listing-notes) and [search](#-search),
+- [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
+- [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
+- global and local [notebooks](#-notebooks),
 - customizable [color themes](#built-in-color-themes),
+- extensibility with [plugins](#-plugins),
 
 and more, all in a single portable, user-friendly script.
 
@@ -34,7 +35,7 @@ and [LaTeX](https://www.latex-project.org/),
 can work with files in any format, can import and export notes to many
 document formats, and can create private, password-protected encrypted
 notes and bookmarks. With `nb`, you can write notes using Vim, Emacs,
-VS Code, Sublime Text, and any other text editor you prefer. `nb` works in
+VS Code, Sublime Text, and any other text editor you like. `nb` works in
 any standard Linux / Unix environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
@@ -235,8 +236,8 @@ npm install -g notes.sh
 ```
 
 Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can run `sudo nb env install` to install the
-optional dependencies.
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
 
 ##### bpkg
 
@@ -278,6 +279,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#%EF%B8%8F-import--export">Import / Export</a> •
   <a href="#%EF%B8%8F-set--settings"><code>set</code> & Settings</a> •
   <a href="#-color-themes">Color Themes</a> •
+  <a href="#-plugins">Plugins</a> •
   <a href="#-nb-interactive-shell">Shell</a> •
   <a href="#shortcut-aliases">Shortcuts</a> •
   <a href="#help">Help</a> •
@@ -294,14 +296,14 @@ nb
 `nb` sets up your initial "home" notebook the first time it runs.
 
 By default, notebooks and notes are global (at `~/.nb`), so they are always available to
-`nb` regardless of the current working directory. `nb` also supports [local
-notebooks](#global-and-local-notebooks).
+`nb` regardless of the current working directory. `nb` also supports
+[local notebooks](#global-and-local-notebooks).
 
 ### 📝 Notes
 
 #### Adding Notes
 
-Use `nb add` to create new notes:
+Use [`nb add`](#add) to create new notes:
 
 ```bash
 # create a new note in your text editor
@@ -327,14 +329,6 @@ environment's preferred text editor. You can change your editor using the
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. The default file type can be changed to whatever you
 like using [`nb set default_extension`](#settings-list---long).
-
-Password-protected notes are created with the `-e` / `--encrypt` flag
-and are encrypted with AES-256 using OpenSSL by default.
-GPG is also supported and can be configured with
-[`nb set encryption_tool`](#settings-list---long).
-Encrypted notes can be decrypted using the OpenSSL and GPG command line
-tools directly, so you aren't dependent on `nb` to decrypt your
-files.
 
 `nb add` behaves differently depending on the type of argument it
 receives. When a filename with extension is specified, a new note
@@ -415,6 +409,23 @@ nb add --type rst
 
 For a full list of options available for `nb add`, run [`nb help add`](#add).
 
+##### Password-Protected Encrypted Notes and Bookmarks
+
+Password-protected notes and [bookmarks](#-bookmarks) are created with
+the `-e` / `--encrypt` flag and are encrypted with AES-256 using OpenSSL
+by default. GPG is also supported and can be configured with
+[`nb set encryption_tool`](#settings-list---long).
+
+Each protected note and bookmark is encrypted individually with its own
+password. When an encrypted item is viewed, edited, or opened, `nb`
+will simply prompt for the item's password before proceeding. After an
+item is edited, `nb` automatically re-encrypts it and saves the new
+version.
+
+Encrypted notes can also be decrypted using the OpenSSL and GPG command
+line tools directly, so you aren't dependent on `nb` to decrypt your
+files.
+
 ##### Shortcut Alias: `a`
 
 `nb` includes single-character shortcuts for many commands, including
@@ -448,7 +459,7 @@ nb create --title "Example Note Title"
 
 #### Listing Notes
 
-To list notes and notebooks, run `nb ls`:
+To list notes and notebooks, run [`nb ls`](#ls):
 
 ```bash
 > nb ls
@@ -727,7 +738,8 @@ and [`nb help list`](#list).
 
 #### Editing Notes
 
-You can edit a note in your editor using its id, filename, or title:
+You can edit a note in your editor by passing its id, filename, or title
+to [`nb edit`](#edit):
 
 ```bash
 # edit note by id
@@ -793,7 +805,7 @@ For `nb edit` help information, run [`nb help edit`](#edit).
 
 #### Viewing Notes
 
-Notes can be viewed using `nb show`:
+Notes can be viewed using [`nb show`](#show):
 
 ```bash
 # show note by id
@@ -866,7 +878,7 @@ for each type.
 
 `nb show` is primarily intended for previewing notes and files within
 the terminal. To view files in the system's preferred GUI application,
-use [`nb open`](#import--export).
+use [`nb open`](#open).
 
 ##### Shortcut Alias: `s`
 
@@ -908,8 +920,8 @@ For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
 
-Deleting notes works similarly to `edit` and `show`, accepting
-an id, filename, or title to specify the note:
+To delete a note, pass its id, filename, or title to
+[`nb delete`](#delete):
 
 ```bash
 # delete note by id
@@ -988,8 +1000,8 @@ permission.
 ```
 
 `nb` embeds the page content in the bookmark, making it available for full
-text search with `nb search`. When `pandoc` is installed, the HTML page
-content will be converted to Markdown.
+text search with [`nb search`](#search). When `pandoc` is installed, the
+HTML page content will be converted to Markdown.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -1087,7 +1099,7 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with `nb search`:
+Search for tagged bookmarks with [`nb search`](#search):
 
 ```bash
 nb search "#tag1"
@@ -1112,8 +1124,8 @@ nb https://example.com --encrypt
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
-`nb bookmark` and `nb bookmark list` can be used to list and
-filter bookmarks:
+[`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
+and filter bookmarks:
 
 ```bash
 > nb bookmark
@@ -1147,7 +1159,7 @@ Add: nb <url> Help: nb help bookmark
 
 `nb` provides multiple ways to view bookmarked web pages.
 
-`nb open` opens the bookmarked page in your
+[`nb open`](#open) opens the bookmarked page in your
 system's primary web browser:
 
 ```bash
@@ -1155,8 +1167,8 @@ system's primary web browser:
 nb open 3
 ```
 
-`nb peek` (alias: `preview`) opens the bookmarked page in your
-terminal web browser, such as
+[`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
+in your terminal web browser, such as
 [w3m](https://en.wikipedia.org/wiki/W3m) or
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
 
@@ -1207,8 +1219,8 @@ For a full overview, see
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`nb` includes `bookmark`, a full-featured command line interface for
-creating, viewing, searching, and editing bookmarks.
+`nb` includes [`bookmark`](#bookmark-help), a full-featured command line
+interface for creating, viewing, searching, and editing bookmarks.
 
 `bookmark` is a shortcut for the `nb bookmark` subcommand, accepting all
 of the same subcommands and options with identical behavior.
@@ -1258,8 +1270,8 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🔍 Search
 
-Use `nb search` to search your notes, with support for regular
-expressions and tags:
+Use [`nb search`](#search) to search your notes, with support for
+regular expressions and tags:
 
 ```bash
 # search current notebook for "example query"
@@ -1336,8 +1348,10 @@ For more information about search, see [`nb help search`](#search).
 ### 🗒 Revision History
 
 Whenever a note is added, modified, or deleted, `nb` automatically commits
-the change to git transparently in the background. You can view the history of
-the notebook or an individual note with:
+the change to git transparently in the background.
+
+Use [`nb history`](#history) to view the history of the notebook or an
+individual note:
 
 ```bash
 # show history for current notebook
@@ -1360,7 +1374,7 @@ nb history Example
 
 You can create additional notebooks, each of which has its own version history.
 
-Create a new notebook with `nb notebooks add`:
+Create a new notebook with [`nb notebooks add`](#notebooks):
 
 ```bash
 # add a notebook named example
@@ -1383,7 +1397,7 @@ filename, and title refer to notes within the current notebook.
 `nb edit 3`, for example, tells `nb` to `edit` note with id `3` within the
 current notebook.
 
-To switch to a different notebook, use `nb use`:
+To switch to a different notebook, use [`nb use`](#use):
 
 ```bash
 # switch to the notebook named "example"
@@ -1521,7 +1535,8 @@ good way to organize your notes and bookmarks by top-level topic. Tags
 are searchable across notebooks and can be created ad hoc, making notebooks
 and tags distinct and complementary organizational systems in `nb`.
 
-Search for a tag in or across notebooks with `nb search` / `nb q`:
+Search for a tag in or across notebooks with
+[`nb search`](#search) / [`nb q`](#search):
 
 ```bash
 # search for #tag in the current notebook
@@ -1606,6 +1621,9 @@ Local notebooks can also be created by exporting a global notebook:
 ```bash
 # export global notebook named "example" to "../path/to/destination"
 nb notebooks export example ../path/to/destination
+
+# alternative
+nb export example ../path/to/destination
 ```
 
 Local notebooks can also be imported, making them global:
@@ -1613,11 +1631,32 @@ Local notebooks can also be imported, making them global:
 ```bash
 # import notebook or folder at "../path/to/notebook"
 nb notebooks import ../path/to/notebook
+
+# alternative
+nb import ../path/to/notebook
+```
+
+`nb notebooks init` and `nb notebooks import` can be used together to
+easily turn any directory of existing files into a global `nb` notebook:
+
+```bash
+> ls
+example-directory
+
+> nb notebooks init example-directory
+Initialized local notebook: /home/username/example-directory
+
+> nb notebooks import example-directory
+Imported notebook: example-directory
+
+> nb notebooks
+example-directory
+home
 ```
 
 #### Archiving Notebooks
 
-Notebooks can be archived:
+Notebooks can be archived using [`nb notebooks archive`](#notebooks):
 
 ```bash
 # archive the current notebook
@@ -1627,9 +1666,9 @@ nb notebooks archive
 nb notebooks archive example
 ```
 
-When a notebook is archived it is not included in `ls` output,
-`search --all`, or tab completion, nor synced automatically
-with `sync --all`.
+When a notebook is archived it is not included in [`ls`](#ls)
+output, [`search --all`](#search), or tab completion, nor synced
+automatically with [`sync --all`](#sync).
 
 ```bash
 > nb ls
@@ -1651,14 +1690,15 @@ nb use example
 nb example:list
 ```
 
-Check a notebook's archival status with `nb notebooks status`:
+Check a notebook's archival status with
+[`nb notebooks status`](#notebooks):
 
 ```bash
 > nb notebooks status example
 example is archived.
 ```
 
-Unarchiving a notebook is simple:
+Use [`nb notebooks unarchive`](#notebooks) to unarchive a notebook:
 
 ```bash
 # unarchive the current notebook
@@ -1677,7 +1717,7 @@ For technical details about notebooks, see
 ### 🔄 Git Sync
 
 Each notebook can be synced with a remote git repository by setting the
-remote URL:
+remote URL using [`nb remote`](#remote):
 
 ```bash
 # set the current notebook's remote to a private GitHub repository
@@ -1705,8 +1745,8 @@ your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
 and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
-pass the URL to `nb notebooks add` and `nb` will clone your
-existing notebook and start syncing changes automatically:
+pass the URL to [`nb notebooks add`](#notebooks) and `nb` will clone
+your existing notebook and start syncing changes automatically:
 
 ```bash
 # create a new notebook named Example cloned from a private GitLab repository
@@ -1729,10 +1769,11 @@ You can also turn off autosync with
 
 #### Sync Conflict Resolution
 
-When `nb sync` encounters a conflict in a text file and can't merge
-overlapping local and remote changes, `nb` saves both versions within
-the file, separated by git conflict markers. Use `nb edit` to remove
-the conflict markers and delete any unwanted text.
+When [`nb sync`](#sync) encounters a conflict in a text file and can't
+merge overlapping local and remote changes, `nb` saves both versions
+within the file, separated by git conflict markers. Use
+[`nb edit`](#edit) to remove the conflict markers and delete any unwanted
+text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
@@ -1775,8 +1816,9 @@ and [`nb run`](#run) can be used to resolve the conflict manually.
 
 ### ↕️ Import / Export
 
-Files of any type can be imported into a notebook. `nb edit` and `nb
-open` will open files in your system's default application for that file type.
+Files of any type can be imported into a notebook using
+[`nb import`](#import). [`nb edit`](#edit) and [`nb open`](#open) will open
+files in your system's default application for that file type.
 
 ```bash
 # import an image file
@@ -1817,18 +1859,48 @@ home
 [1] 📂 Example Folder
 ```
 
-Notes can also be exported. If you have Pandoc installed, notes can
-be converted to any of the
+Notes, bookmarks, and other files can be exported using [`nb export`](#export).
+If Pandoc is installed, notes can be automatically converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
 By default, the output format is determined by the file extension:
 
 ```bash
-# Export a Markdown note to a .docx Microsoft Office Word document
+# export a Markdown note to a .docx Microsoft Office Word document
 nb export example.md /path/to/example.docx
 
-# Export a note titled "Movies" to an HTML web page.
+# export a note titled "Movies" to an HTML web page.
 nb export Movies /path/to/example.html
 ```
+
+For more control over the `pandoc` options, use the
+[`nb export pandoc`](#export) subcommand:
+
+```bash
+# export note 42 as an epub with pandoc options
+nb export pandoc 42 --from markdown_strict --to epub -o path/to/example.epub
+```
+
+[`nb export notebook`](#export) and [`nb import notebook`](#import) can be
+used to export and import notebooks:
+
+```bash
+# export global notebook named "example" to "../path/to/destination"
+nb export notebook example ../path/to/destination
+
+# import notebook or folder at "../path/to/notebook"
+nb import notebook ../path/to/notebook
+```
+
+[`nb export notebook`](#export) and [`nb import notebook`](#import) behave
+like aliases for [`nb notebooks export`](#notebooks) and
+[`nb notebooks import`](#notebooks), and the subcommands can be used
+interchangeably.
+
+For more information about imported and exported notebooks, see
+[Global and Local Notebooks](#global-and-local-notebooks).
+
+For `nb import` and `nb export` help information, see
+[`nb help import`](#import) and [`nb help export`](#export).
 
 ### ⚙️ `set` & Settings
 
@@ -1849,7 +1921,7 @@ then enter the new value, and `nb` will add the setting to your
 `editor` setting.
 
 The settings prompt for a setting can be started by passing the setting
-name or number to `nb set`:
+name or number to [`nb set`](#settings):
 
 ```bash
 > nb set editor
@@ -1898,7 +1970,7 @@ NB_COLOR_THEME set to blacklight
 NB_LIMIT set to 10
 ```
 
-Use `nb settings get` to print the value of a setting:
+Use [`nb settings get`](#settings) to print the value of a setting:
 
 ```bash
 > nb settings get editor
@@ -1908,7 +1980,8 @@ code
 code
 ```
 
-Use `nb settings unset` to unset a setting and revert to default:
+Use [`nb settings unset`](#settings) to unset a setting and revert to
+the default:
 
 ```bash
 > nb settings unset editor
@@ -2008,23 +2081,40 @@ nb set color_theme
 
 #### Custom Color Themes
 
-Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
-
-Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
-statement indicating the name and setting the color environment variables
-to `tput` ANSI color numbers:
+Color themes are [`nb` plugins](#-plugins) with a `.nb-theme` file
+extension and contain one `if` statement indicating the name and setting
+the color environment variables to `tput` ANSI color numbers:
 
 ```bash
-# file: ~/.nb/.themes/example.nb-theme.sh
-if [[ "${NB_COLOR_THEME}" == "example" ]]
+# turquoise.nb-theme
+if [[ "${NB_COLOR_THEME}" == "turquoise" ]]
 then
   export NB_COLOR_PRIMARY=43
   export NB_COLOR_SECONDARY=38
 fi
 ```
 
-The primary and secondary colors can be set individually, making color themes
-easily customizable:
+View this theme as a complete file:
+[`plugins/turquoise.nb-theme`](plugins/turquoise.nb-theme)
+
+Themes can be installed using [`nb plugins`](#plugins):
+
+```bash
+> nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
+Plugin installed:
+/home/example/.nb/.plugins/turquoise.nb-theme
+```
+
+Once a theme is installed, use [`nb set color_theme`](#settings) to set it as
+the current theme:
+
+```bash
+> nb set color_theme turquoise
+NB_COLOR_THEME set to turquoise
+```
+
+The primary and secondary colors can also be overridden individually, making
+color themes easily customizable:
 
 ```bash
 # open the settings prompt for the primary color
@@ -2045,10 +2135,148 @@ nb set colors
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
     current notebook name in the context line of the prompt.
 
+### 🔌 Plugins
+
+`nb` includes support for plugins, which can be used to create new
+subcommands, design themes, and otherwise extend the functionality of `nb`.
+
+`nb` supports two types of plugins, identified by their file extensions:
+
+- `.nb-theme` · Plugins defining [color themes](#custom-color-themes).
+
+- `.nb-plugin` · Plugins defining new subcommands and adding functionality.
+
+Plugins are managed with the [`nb plugins`](#plugins) subcommand and
+are installed in the `${NB_DIR}/.plugins` directory.
+
+Plugins can be installed from either a URL or a path using the
+[`nb plugins install`](#plugins) subcommand.
+
+```bash
+# install a plugin from a URL
+nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
+
+# install a plugin from a standard GitHub URL
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
+
+# install a theme from a standard GitHub URL
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
+
+# install a plugin from a path
+nb plugins install plugins/example.nb-plugin
+```
+
+The `<url>` should be the full URL to the plugin file. `nb` also
+recognizes regular GitHub URLs, which can be used interchangably with
+raw GitHub URLs.
+
+Installed plugins can be listed with [`nb plugins`](#plugins), which
+optionally takes a name and prints full paths:
+
+```bash
+> nb plugins
+copy.nb-plugin
+example.nb-plugin
+turquoise.nb-theme
+
+> nb plugins copy.nb-plugin
+copy.nb-plugin
+
+> nb plugins --paths
+/home/example/.nb/.plugins/copy.nb-plugin
+/home/example/.nb/.plugins/example.nb-plugin
+/home/example/.nb/.plugins/turquoise.nb-theme
+
+> nb plugins turquoise.nb-theme --paths
+/home/example/.nb/.plugins/turquoise.nb-theme
+```
+
+Use [`nb plugins uninstall`](#plugins) to uninstall a plugin:
+
+```bash
+> nb plugins uninstall example.nb-plugin
+Plugin successfully uninstalled:
+/home/example/.nb/.plugins/example.nb-plugin
+```
+
+#### Creating Plugins
+
+Plugins are written in a Bash-compatible shell scripting language and
+have an `.nb-plugin` extension.
+
+`nb` includes two example plugins:
+
+- [`example.nb-plugin`](plugins/example.nb-plugin)
+- [`copy.nb-plugin`](plugins/copy.nb-plugin)
+
+Create a new subcommand in three easy steps:
+
+##### 1. Add the new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array.
+
+```bash
+NB_PLUGIN_SUBCOMMANDS+=(example)
+```
+
+##### 2. Define help and usage text in a `desc` block.
+
+```bash
+desc "example" <<HEREDOC
+Usage:
+  nb example
+
+Description:
+  Print "Hello, World!"
+HEREDOC
+```
+
+##### 3. Define the subcommand as a function.
+
+Create a function with the same name as the subcommand with a leading
+underscore:
+
+```bash
+_example() {
+  printf "Hello, World!\\n"
+}
+```
+
+That's it! 🎉
+
+View the complete plugin: [`plugins/example.nb-plugin`](plugins/example.nb-plugin)
+
+With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
+that prints "Hello, World!"
+
+For a full example, [`copy.nb-plugin`](plugins/copy.nb-plugin) adds
+copy / duplicate functionality to `nb` and demonstrates a variety of
+features available for creating new subcommands.
+
+You can install any plugin you create locally with
+`nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
+anywhere else online and install it with `nb plugins install <url>`.
+
+#### Internal Functions and Variables
+
+Plugins have full access to all of `nb`'s internal functions and
+variables, which are identified by leading underscores. `nb` subcommands
+can be called using their internal function names, and options can be
+used to output information in formats suitable for scripting:
+
+```bash
+# print the content of note 3 to standard output with no color
+_show 3 --print --no-color
+
+# list all unarchived global notebook names
+_notebooks --names --no-color --unarchived --global
+
+# list all filenames in the current notebook
+_list --filenames --no-id --no-indicator
+```
+
 ### > `nb` Interactive Shell
 
-`nb` has an interactive shell that can be started with `nb shell`,
-`nb -i`, or `nb --interactive`:
+`nb` has an interactive shell that can be started with
+[`nb shell`](#shell), `nb -i`, or `nb --interactive`:
 
 ```bash
 $ nb shell
@@ -2166,6 +2394,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#notebooks">notebooks</a> •
   <a href="#open">open</a> •
   <a href="#peek">peek</a> •
+  <a href="#plugins">plugins</a> •
   <a href="#remote">remote</a> •
   <a href="#rename">rename</a> •
   <a href="#run">run</a> •
@@ -2257,6 +2486,9 @@ Usage:
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
+  nb plugins [<name>] [--paths]
+  nb plugins install [<path> | <url>]
+  nb plugins uninstall <name>
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -2264,7 +2496,7 @@ Usage:
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   nb set [<name> [<value>] | <number> [<value>]]
-  nb settings [colors [<number>] | edit | list [--long]]
+  nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
@@ -2300,6 +2532,7 @@ Subcommands:
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
+  plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
   run          Run shell commands within the current notebook.
@@ -3033,6 +3266,30 @@ Alias: `preview`
 Shortcut Alias: `p`
 ```
 
+#### `plugins`
+
+```text
+Usage:
+  nb plugins [<name>] [--paths]
+  nb plugins install [<path> | <url>]
+  nb plugins uninstall <name>
+
+Options:
+  --paths  Print the full path to each plugin.
+
+Subcommands:
+  (default)  List plugins.
+  install    Install a plugin from a <path> or <url>.
+  uninstall  Uninstall the specified plugin.
+
+Description:
+  Manage plugins and themes.
+
+Plugin Extensions:
+  .nb-theme   Plugins defining color themes.
+  .nb-plugin  Plugins defining new subcommands and functionality.
+```
+
 #### `remote`
 
 ```text
@@ -3118,7 +3375,7 @@ Options:
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
   --path                        Print the full path for each matching file.
-  -t, --type <type>, --<type>   List items of <type>. <type> can be a file
+  -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder
@@ -3153,7 +3410,7 @@ Shortcut Alias: `q`
 ```text
 Usage:
   nb set [<name> [<value>] | <number> [<value>]]
-  nb settings colors [<number>]
+  nb settings colors [<number> | themes]
   nb settings edit
   nb settings get   (<name> | <number>)
   nb settings list  [--long]
@@ -3166,6 +3423,7 @@ Subcommands:
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
+             `settings colors themes` prints a list of installed themes.
   edit       Open the `nb` configuration file in `$EDITOR`.
   get        Print the value of a setting.
   list       List information about available settings.

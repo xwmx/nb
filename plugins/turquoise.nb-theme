@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+###############################################################################
+# turquoise.nb-theme
+#
+# A blue and green theme for `nb`.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+if [[ "${NB_COLOR_THEME}" == "turquoise" ]]
+then
+  export NB_COLOR_PRIMARY=43
+  export NB_COLOR_SECONDARY=38
+fi

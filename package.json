@@ -1,6 +1,6 @@
 {
   "name": "nb.sh",
-  "version": "4.7.5",
+  "version": "5.0.1",
   "description": "CLI note-taking, bookmarking, and archiving with encryption, search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "global": true,
   "install": "make install",
@@ -10,8 +10,7 @@
   "bin": {
     "nb": "nb",
     "nb.sh": "nb",
-    "bookmark": "bin/bookmark",
-    "notes": "bin/notes"
+    "bookmark": "bin/bookmark"
   },
   "scripts": {
     "test": "bats test",
