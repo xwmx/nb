@@ -2160,7 +2160,7 @@ NB_PLUGIN_SUBCOMMANDS+=(example)
 ```bash
 desc "example" <<HEREDOC
 Usage:
-  ${_ME} example
+  nb example
 
 Description:
   Print "Hello, World!"

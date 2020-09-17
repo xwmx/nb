@@ -19,7 +19,7 @@ NB_PLUGIN_SUBCOMMANDS+=(
 # Define help and usage text in a `desc` block.
 desc "copy" <<HEREDOC
 Usage:
-  ${_ME} copy (<id> | <filename> | <path> | <title>)
+  nb copy (<id> | <filename> | <path> | <title>)
 
 Description:
   Create a copy of the specified item in the current notebook.

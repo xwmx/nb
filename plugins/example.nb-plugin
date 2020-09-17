@@ -16,7 +16,7 @@ NB_PLUGIN_SUBCOMMANDS+=(example)
 # Define help and usage text in a `desc` block.
 desc "example" <<HEREDOC
 Usage:
-  ${_ME} example
+  nb example
 
 Description:
   Print "Hello, World!"
