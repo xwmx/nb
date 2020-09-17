@@ -55,7 +55,7 @@ _copy() {
   #
   # NOTE: Important! This sets the current notebook for all subsequent
   # operations.
-  _set_selection_notebook "${_source_basename}"
+  _set_selection_notebook "${_selection}"
 
   # Get a unique basename based on the source basename.
   local _target_basename
