@@ -26,5 +26,5 @@ HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
 _example() {
- printf "Hello, World!\\n"
+  printf "Hello, World!\\n"
 }
