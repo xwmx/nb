@@ -1638,7 +1638,7 @@ nb import ../path/to/notebook
 
 #### Archiving Notebooks
 
-Notebooks can be archived:
+Notebooks can be archived using [`nb notebooks archive`](#notebooks):
 
 ```bash
 # archive the current notebook
@@ -1680,7 +1680,7 @@ Check a notebook's archival status with
 example is archived.
 ```
 
-Unarchiving a notebook is simple:
+Use [`nb notebooks unarchive`](#notebooks) to unarchive a notebook:
 
 ```bash
 # unarchive the current notebook
