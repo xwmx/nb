@@ -2024,20 +2024,35 @@ extension and contain one `if` statement indicating the name and setting
 the color environment variables to `tput` ANSI color numbers:
 
 ```bash
-# example.nb-theme
-if [[ "${NB_COLOR_THEME}" == "example" ]]
+# reef.nb-theme
+if [[ "${NB_COLOR_THEME}" == "reef" ]]
 then
   export NB_COLOR_PRIMARY=43
   export NB_COLOR_SECONDARY=38
 fi
 ```
 
-Themes can be installed using the [`nb plugins`] subcommand. Once
-a theme is installed, use `nb set color_theme` to set it as the current
-theme.
+To view this theme as a complete file, see
+[`plugins/reef.nb-theme`](plugins/reef.nb-theme).
 
-The primary and secondary colors can also be set individually, making color
-themes easily customizable:
+Themes can be installed using the [`nb plugins`] subcommand.
+
+```bash
+> nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
+Plugin installed:
+/home/example/.nb/.plugins/reef.nb-theme
+```
+
+Once a theme is installed, use `nb set color_theme` to set it as the current
+theme:
+
+```bash
+> nb set color_theme reef
+NB_COLOR_THEME set to reef
+```
+
+The primary and secondary colors can also be overridden individually, making
+color themes easily customizable:
 
 ```bash
 # open the settings prompt for the primary color
