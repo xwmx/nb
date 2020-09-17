@@ -1835,7 +1835,7 @@ home
 [1] 📂 Example Folder
 ```
 
-Notes, bookmarks and other files can be exported using [`nb export`](#export).
+Notes, bookmarks, and other files can be exported using [`nb export`](#export).
 If Pandoc is installed, notes can be automatically converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
 By default, the output format is determined by the file extension:
