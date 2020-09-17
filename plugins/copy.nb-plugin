@@ -95,7 +95,7 @@ _copy() {
     local _scoped_id="${_id}"
 
     if ((_SCOPED))
-    then # selection includes a notebook prefix, e.g., notebook:123
+    then # Selection includes a notebook prefix, e.g., "notebook:123".
       # Add the notebook identifier to the id and basename.
       local _notebook_identifier
       _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -104,7 +104,7 @@ _copy() {
       _scoped_id="${_notebook_identifier}:${_id}"
     fi
 
-    # Print feedback.
+    # Print feedback with scoped id and basename.
     printf "Added %s %s\\n"                   \
       "$(_id_brackets_color "${_scoped_id}")" \
       "$(_highlight "${_scoped_basename}")"
