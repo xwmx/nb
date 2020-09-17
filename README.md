@@ -805,7 +805,7 @@ For `nb edit` help information, run [`nb help edit`](#edit).
 
 #### Viewing Notes
 
-Notes can be viewed using `nb show`:
+Notes can be viewed using [`nb show`](#show):
 
 ```bash
 # show note by id
@@ -920,8 +920,8 @@ For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
 
-Deleting notes works similarly to `edit` and `show`, accepting
-an id, filename, or title to specify the note:
+To delete a note, pass its id, filename, or title to
+[`nb delete`](#delete):
 
 ```bash
 # delete note by id
@@ -1000,8 +1000,8 @@ permission.
 ```
 
 `nb` embeds the page content in the bookmark, making it available for full
-text search with `nb search`. When `pandoc` is installed, the HTML page
-content will be converted to Markdown.
+text search with [`nb search`](#search). When `pandoc` is installed, the
+HTML page content will be converted to Markdown.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -1099,7 +1099,7 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with `nb search`:
+Search for tagged bookmarks with [`nb search`](#search):
 
 ```bash
 nb search "#tag1"
@@ -1124,8 +1124,8 @@ nb https://example.com --encrypt
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
-`nb bookmark` and `nb bookmark list` can be used to list and
-filter bookmarks:
+[`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
+and filter bookmarks:
 
 ```bash
 > nb bookmark
@@ -1159,7 +1159,7 @@ Add: nb <url> Help: nb help bookmark
 
 `nb` provides multiple ways to view bookmarked web pages.
 
-`nb open` opens the bookmarked page in your
+[`nb open`](#open) opens the bookmarked page in your
 system's primary web browser:
 
 ```bash
@@ -1167,8 +1167,8 @@ system's primary web browser:
 nb open 3
 ```
 
-`nb peek` (alias: `preview`) opens the bookmarked page in your
-terminal web browser, such as
+[`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
+in your terminal web browser, such as
 [w3m](https://en.wikipedia.org/wiki/W3m) or
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
 
@@ -1219,8 +1219,8 @@ For a full overview, see
 
 #### `bookmark` -- A command line tool for managing bookmarks.
 
-`nb` includes `bookmark`, a full-featured command line interface for
-creating, viewing, searching, and editing bookmarks.
+`nb` includes [`bookmark`](#bookmark-help), a full-featured command line
+interface for creating, viewing, searching, and editing bookmarks.
 
 `bookmark` is a shortcut for the `nb bookmark` subcommand, accepting all
 of the same subcommands and options with identical behavior.
@@ -1270,8 +1270,8 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🔍 Search
 
-Use `nb search` to search your notes, with support for regular
-expressions and tags:
+Use [`nb search`](#search) to search your notes, with support for
+regular expressions and tags:
 
 ```bash
 # search current notebook for "example query"
@@ -1348,8 +1348,10 @@ For more information about search, see [`nb help search`](#search).
 ### 🗒 Revision History
 
 Whenever a note is added, modified, or deleted, `nb` automatically commits
-the change to git transparently in the background. You can view the history of
-the notebook or an individual note with:
+the change to git transparently in the background.
+
+Use [`nb history`](#history) to view the history of the notebook or an
+individual note:
 
 ```bash
 # show history for current notebook
@@ -1372,7 +1374,7 @@ nb history Example
 
 You can create additional notebooks, each of which has its own version history.
 
-Create a new notebook with `nb notebooks add`:
+Create a new notebook with [`nb notebooks add`](#notebooks):
 
 ```bash
 # add a notebook named example
@@ -1395,7 +1397,7 @@ filename, and title refer to notes within the current notebook.
 `nb edit 3`, for example, tells `nb` to `edit` note with id `3` within the
 current notebook.
 
-To switch to a different notebook, use `nb use`:
+To switch to a different notebook, use [`nb use`](#use):
 
 ```bash
 # switch to the notebook named "example"
@@ -1533,7 +1535,8 @@ good way to organize your notes and bookmarks by top-level topic. Tags
 are searchable across notebooks and can be created ad hoc, making notebooks
 and tags distinct and complementary organizational systems in `nb`.
 
-Search for a tag in or across notebooks with `nb search` / `nb q`:
+Search for a tag in or across notebooks with
+[`nb search`](#search) / [`nb q`](#search):
 
 ```bash
 # search for #tag in the current notebook
@@ -1645,9 +1648,9 @@ nb notebooks archive
 nb notebooks archive example
 ```
 
-When a notebook is archived it is not included in `ls` output,
-`search --all`, or tab completion, nor synced automatically
-with `sync --all`.
+When a notebook is archived it is not included in [`ls`](#ls)
+output, [`search --all`](#search), or tab completion, nor synced
+automatically with [`sync --all`](#sync).
 
 ```bash
 > nb ls
@@ -1669,7 +1672,8 @@ nb use example
 nb example:list
 ```
 
-Check a notebook's archival status with `nb notebooks status`:
+Check a notebook's archival status with
+[`nb notebooks status`](#notebooks):
 
 ```bash
 > nb notebooks status example
@@ -1695,7 +1699,7 @@ For technical details about notebooks, see
 ### 🔄 Git Sync
 
 Each notebook can be synced with a remote git repository by setting the
-remote URL:
+remote URL using [`nb remote`](#remote):
 
 ```bash
 # set the current notebook's remote to a private GitHub repository
@@ -1723,8 +1727,8 @@ your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
 and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
-pass the URL to `nb notebooks add` and `nb` will clone your
-existing notebook and start syncing changes automatically:
+pass the URL to [`nb notebooks add`](#notebooks) and `nb` will clone
+your existing notebook and start syncing changes automatically:
 
 ```bash
 # create a new notebook named Example cloned from a private GitLab repository
@@ -1747,10 +1751,11 @@ You can also turn off autosync with
 
 #### Sync Conflict Resolution
 
-When `nb sync` encounters a conflict in a text file and can't merge
-overlapping local and remote changes, `nb` saves both versions within
-the file, separated by git conflict markers. Use `nb edit` to remove
-the conflict markers and delete any unwanted text.
+When [`nb sync`](#sync) encounters a conflict in a text file and can't
+merge overlapping local and remote changes, `nb` saves both versions
+within the file, separated by git conflict markers. Use
+[`nb edit`](#edit) to remove the conflict markers and delete any unwanted
+text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
@@ -1794,8 +1799,8 @@ and [`nb run`](#run) can be used to resolve the conflict manually.
 ### ↕️ Import / Export
 
 Files of any type can be imported into a notebook using
-[`nb import`](#import). `nb edit` and `nb open` will open files in your
-system's default application for that file type.
+[`nb import`](#import). [`nb edit`](#edit) and [`nb open`](#open) will open
+files in your system's default application for that file type.
 
 ```bash
 # import an image file
@@ -1898,7 +1903,7 @@ then enter the new value, and `nb` will add the setting to your
 `editor` setting.
 
 The settings prompt for a setting can be started by passing the setting
-name or number to `nb set`:
+name or number to [`nb set`](#settings):
 
 ```bash
 > nb set editor
@@ -1947,7 +1952,7 @@ NB_COLOR_THEME set to blacklight
 NB_LIMIT set to 10
 ```
 
-Use `nb settings get` to print the value of a setting:
+Use [`nb settings get`](#settings) to print the value of a setting:
 
 ```bash
 > nb settings get editor
@@ -1957,7 +1962,8 @@ code
 code
 ```
 
-Use `nb settings unset` to unset a setting and revert to default:
+Use [`nb settings unset`](#settings) to unset a setting and revert to
+the default:
 
 ```bash
 > nb settings unset editor
@@ -2073,7 +2079,7 @@ fi
 View this theme as a complete file:
 [`plugins/turquoise.nb-theme`](plugins/turquoise.nb-theme)
 
-Themes can be installed using the [`nb plugins`](#plugins) subcommand.
+Themes can be installed using [`nb plugins`](#plugins):
 
 ```bash
 > nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
@@ -2081,8 +2087,8 @@ Plugin installed:
 /home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
-Once a theme is installed, use `nb set color_theme` to set it as the current
-theme:
+Once a theme is installed, use [`nb set color_theme`](#settings) to set it as
+the current theme:
 
 ```bash
 > nb set color_theme turquoise
@@ -2146,8 +2152,8 @@ The `<url>` should be the full URL to the plugin file. `nb` also
 recognizes regular GitHub URLs, which can be used interchangably with
 raw GitHub URLs.
 
-Installed plugins can be listed with `nb plugins`, which optionally
-takes a name and prints full paths:
+Installed plugins can be listed with [`nb plugins`](#plugins), which
+optionally takes a name and prints full paths:
 
 ```bash
 > nb plugins
@@ -2167,7 +2173,7 @@ copy.nb-theme
 /home/example/.nb/.plugins/example.nb-plugin
 ```
 
-Use `nb plugins uninstall` to uninstall a plugin:
+Use [`nb plugins uninstall`](#plugins) to uninstall a plugin:
 
 ```bash
 > nb plugins uninstall example.nb-plugin
@@ -2251,8 +2257,8 @@ _list --filenames --no-id --no-indicator
 
 ### > `nb` Interactive Shell
 
-`nb` has an interactive shell that can be started with `nb shell`,
-`nb -i`, or `nb --interactive`:
+`nb` has an interactive shell that can be started with
+[`nb shell`](#shell), `nb -i`, or `nb --interactive`:
 
 ```bash
 $ nb shell
