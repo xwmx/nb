@@ -2079,8 +2079,8 @@ nb set colors
 subcommands and extend the functionality of `nb`. `nb` supports two
 types of plugins, identified by their file extensions:
 
-- .nb-theme - Plugins defining [color themes](#custom-color-themes),
-- .nb-plugin - Plugins defining new subcommands and adding functionality.
+- `.nb-theme` - Plugins defining [color themes](#custom-color-themes),
+- `.nb-plugin` - Plugins defining new subcommands and adding functionality.
 
 Plugins are managed with the [`nb plugins`](#plugins) subcommand and
 installed in the `"${NB_DIR}/.plugins"` directory.
