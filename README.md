@@ -2032,8 +2032,8 @@ then
 fi
 ```
 
-To view this theme as a complete file, see
-[`plugins/reef.nb-theme`](plugins/reef.nb-theme).
+View this theme as a complete file:
+[`plugins/reef.nb-theme`](plugins/reef.nb-theme)
 
 Themes can be installed using the [`nb plugins`](#plugins) subcommand.
 
