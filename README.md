@@ -2085,7 +2085,7 @@ subcommands, design themes, and otherwise extend the functionality of `nb`.
 - `.nb-plugin` · Plugins defining new subcommands and adding functionality.
 
 Plugins are managed with the [`nb plugins`](#plugins) subcommand and
-installed in the `${NB_DIR}/.plugins` directory.
+are installed in the `${NB_DIR}/.plugins` directory.
 
 Plugins can be installed from either a URL or path using the
 [`nb plugins install`](#plugins) subcommand.
