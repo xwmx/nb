@@ -7696,7 +7696,10 @@ _plugins() {
 
       if ! ((_force))
       then
-        printf "Uninstalling plugin:\\n%s\\n" "$(_highlight "${_plugin_path}")"
+        cat <<HEREDOC
+Uninstalling plugin. Warning: This will permanently delete the following file:
+$(_highlight "${_plugin_path}")
+HEREDOC
         while true
         do
           read -r -p "Proceed? [y/N] " __yn
