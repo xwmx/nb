@@ -57,12 +57,58 @@ _copy() {
   # operations.
   _set_selection_notebook "${_selection}"
 
+  # Validate that the selection is a file.
+  if [[ ! -e "${_NOTEBOOK_PATH}/${_source_basename}" ]]
+  then
+    _exit_1 printf "Not found: %s\\n" "${_selection}"
+  elif [[ ! -f "${_NOTEBOOK_PATH}/${_source_basename}" ]]
+  then
+    _exit_1 printf "Copying directories is not currently supported.\\n"
+  fi
+
   # Get a unique basename based on the source basename.
   local _target_basename
   _target_basename="$(_get_unique_basename "${_source_basename}")"
 
-  # Print the source contents and pipe to `_add()`.
-  _show "${_source_basename}" --no-color --print | _add "${_target_basename}"
+  if _file_is_text "${_source_basename}"
+  then
+    # Print the source contents and pipe to `_add()`.
+    _show "${_source_basename}" --no-color --print | _add "${_target_basename}"
+  else
+    # Copy the binary file to the new basename.
+    cp                                        \
+      "${_NOTEBOOK_PATH}/${_source_basename}" \
+      "${_NOTEBOOK_PATH}/${_target_basename}"
+
+    # Add the new basename to the index.
+    _index add "${_target_basename}"
+
+    # Get the new id.
+    local _id
+    _id="$(_index get_id "${_target_basename}")"
+
+    # Set the scoped basename and id to the current basename and id
+    local _scoped_basename="${_target_basename}"
+    local _scoped_id="${_id}"
+
+    if ((_SCOPED))
+    then
+      # Add the notebook identifier to the id and basename.
+      local _notebook_identifier
+      _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+
+      _scoped_basename="${_notebook_identifier}:${_target_basename}"
+      _scoped_id="${_notebook_identifier}:${_id}"
+    fi
+
+    # Print feedback.
+    printf "Added %s %s\\n"                   \
+      "$(_id_brackets_color "${_scoped_id}")" \
+      "$(_highlight "${_scoped_basename}")"
+
+    # Record the change in git.
+    _git_checkpoint "[nb] Add: ${_target_basename}"
+  fi
 }
 # Use `_alias_subcommand` to create a full alias, with linked help / usage.
 # NOTE: Aliases also have to be added to the $NB_PLUGIN_SUBCOMMANDS array.
