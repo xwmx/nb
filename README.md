@@ -1856,8 +1856,8 @@ For more control over the `pandoc` options, use the
 nb export pandoc 42 --from markdown_strict --to epub -o path/to/example.epub
 ```
 
-`nb export notebook` and `nb import notebook` can be used to export and
-import notebooks:
+[`nb export notebook`](#export) and [`nb import notebook`](#import) can be
+used to export and import notebooks:
 
 ```bash
 # export global notebook named "example" to "../path/to/destination"
@@ -1867,9 +1867,10 @@ nb export notebook example ../path/to/destination
 nb import notebook ../path/to/notebook
 ```
 
-`nb export notebook` and `nb import notebook` behave like aliases for
-`nb notebooks export` and `nb notebooks import`, and the subcommands can
-be used interchangeably.
+[`nb export notebook`](#export) and [`nb import notebook`](#import) behave
+like aliases for [`nb notebooks export`](#notebooks) and
+[`nb notebooks import`](#notebooks), and the subcommands can be used
+interchangeably.
 
 For more information about imported and exported notebooks, see
 [Global and Local Notebooks](#global-and-local-notebooks).
