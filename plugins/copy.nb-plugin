@@ -71,10 +71,10 @@ _copy() {
   _target_basename="$(_get_unique_basename "${_source_basename}")"
 
   if _file_is_text "${_source_basename}"
-  then # text can use `_add()`
+  then # Text can use `_add()`.
     # Print the source contents and pipe to `_add()`.
     _show "${_source_basename}" --no-color --print | _add "${_target_basename}"
-  else # binary files must be copied manually.
+  else # Binary files must be copied manually.
     # Copy the binary file to the new basename.
     cp                                        \
       "${_NOTEBOOK_PATH}/${_source_basename}" \
