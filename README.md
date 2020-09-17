@@ -2180,6 +2180,10 @@ That's it!
 
 View the complete plugin: [plugins/example.nb-plugin](plugins/example.nb-plugin)
 
+You can install any plugin you create locally with
+`nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
+anywhere else online and install it with `nb plugins install <url>`.
+
 #### Internal Functions and Variables
 
 Plugins have full access to all of `nb`'s internal functions and
