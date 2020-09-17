@@ -2103,7 +2103,7 @@ nb plugins install plugins/example.nb-plugin
 ```
 
 Installed plugins can be listed with `nb plugins`, which optionally
-takes a name and print full paths:
+takes a name and prints full paths:
 
 ```bash
 > nb plugins
