@@ -2144,8 +2144,8 @@ have an `.nb-plugin` extension.
 
 `nb` includes two example plugins:
 
-- [copy.nb-plugin](plugins/copy.nb-plugin)
-- [example.nb-plugin](plugins/example.nb-plugin)
+- [`copy.nb-plugin`](plugins/copy.nb-plugin)
+- [`example.nb-plugin`](plugins/example.nb-plugin)
 
 Create a new subcommand in three easy steps:
 
@@ -2180,12 +2180,12 @@ _example() {
 
 That's it!
 
-View the complete plugin: [plugins/example.nb-plugin](plugins/example.nb-plugin)
+View the complete plugin: [`plugins/example.nb-plugin`](plugins/example.nb-plugin)
 
-With example.nb-plugin installed, `nb` includes an `nb example` subcommand
+With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
-[copy.nb-plugin](plugins/copy.nb-plugin) provides copy / duplicate
+[`copy.nb-plugin`](plugins/copy.nb-plugin) provides copy / duplicate
 functionality and demonstrates some of the main features available for
 creating new subcommands.
 
