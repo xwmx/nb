@@ -1640,11 +1640,11 @@ nb import ../path/to/notebook
 easily turn any directory of existing files into a global `nb` notebook:
 
 ```bash
-> nb notebooks init example-notebook
-Initialized local notebook: /home/username/example-notebook
+> nb notebooks init example-directory
+Initialized local notebook: /home/username/example-directory
 
-> nb notebooks import example-notebook
-Imported notebook: example-notebook
+> nb notebooks import example-directory
+Imported notebook: example-directory
 ```
 
 #### Archiving Notebooks
