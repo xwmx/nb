@@ -21,7 +21,7 @@ application with:
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
 - [filtering](#listing-notes) and [search](#-search),
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
-- [Pandoc](https://pandoc.org/)-backed conversion,
+- [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - global and local [notebooks](#-notebooks),
 - customizable [color themes](#built-in-color-themes),
 - a [plugin system](#-plugins) for extending functionality,
