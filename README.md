@@ -14,8 +14,8 @@
 
 # `❯ nb`
 
-`nb` is a command line note-taking, bookmarking, and archiving
-application with:
+`nb` is a command line note-taking, bookmarking, archiving,
+and knowledge base application with:
 
 - plain-text data storage,
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
