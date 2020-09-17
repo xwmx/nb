@@ -2080,7 +2080,7 @@ subcommands and extend the functionality of `nb`. `nb` supports two
 types of plugins, identified by their file extensions:
 
 - .nb-theme - Plugins defining [color themes](#custom-color-themes),
-- .nb-plugin - Plugins defining new subcommands and add functionality.
+- .nb-plugin - Plugins defining new subcommands and adding functionality.
 
 Plugins are managed with the [`nb plugins`](#plugins) subcommand and
 installed in the `"${NB_DIR}/.plugins"` directory.
@@ -2111,15 +2111,15 @@ reef.nb-theme
 copy.nb-plugin
 example.nb-plugin
 
-> nb plugins copy
-copy
+> nb plugins copy.nb-theme
+copy.nb-theme
 
 > nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
 /home/example/.nb/.plugins/reef.nb-plugin
 
-> nb plugins example --paths
+> nb plugins example.nb-theme --paths
 /home/example/.nb/.plugins/example.nb-plugin
 ```
 
