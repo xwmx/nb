@@ -71,10 +71,10 @@ _copy() {
   _target_basename="$(_get_unique_basename "${_source_basename}")"
 
   if _file_is_text "${_source_basename}"
-  then
+  then # text can use `_add()`
     # Print the source contents and pipe to `_add()`.
     _show "${_source_basename}" --no-color --print | _add "${_target_basename}"
-  else
+  else # binary files must be copied manually.
     # Copy the binary file to the new basename.
     cp                                        \
       "${_NOTEBOOK_PATH}/${_source_basename}" \
@@ -92,7 +92,7 @@ _copy() {
     local _scoped_id="${_id}"
 
     if ((_SCOPED))
-    then
+    then # selection includes a notebook prefix, e.g., notebook:123
       # Add the notebook identifier to the id and basename.
       local _notebook_identifier
       _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
