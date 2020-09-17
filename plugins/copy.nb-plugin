@@ -10,7 +10,7 @@
 # https://github.com/xwmx/nb
 ###############################################################################
 
-# Add subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
+# Add the new subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
 NB_PLUGIN_SUBCOMMANDS+=(
   copy
   duplicate
