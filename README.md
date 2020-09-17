@@ -2035,7 +2035,7 @@ fi
 To view this theme as a complete file, see
 [`plugins/reef.nb-theme`](plugins/reef.nb-theme).
 
-Themes can be installed using the [`nb plugins`] subcommand.
+Themes can be installed using the [`nb plugins`](#plugins) subcommand.
 
 ```bash
 > nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
