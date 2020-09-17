@@ -3005,6 +3005,7 @@ Subcommands:
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
+  plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
   rename       Rename a note.
   run          Run shell commands within the current notebook.
@@ -7599,7 +7600,11 @@ Subcommands:
   uninstall  Uninstall the specified plugin.
 
 Description:
-  Manage plugins.
+  Manage plugins and themes.
+
+Plugin Extensions:
+  .nb-theme   Plugins defining color themes.
+  .nb-plugin  Plugins defining new subcommands and functionality.
 HEREDOC
 _plugins() {
   local _basename=
