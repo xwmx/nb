@@ -2149,7 +2149,7 @@ have an `.nb-plugin` extension.
 
 Create a new subcommand in three easy steps:
 
-##### 1. Add new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array.
+##### 1. Add the new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array.
 
 ```bash
 NB_PLUGIN_SUBCOMMANDS+=(example)
