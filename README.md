@@ -459,7 +459,7 @@ nb create --title "Example Note Title"
 
 #### Listing Notes
 
-To list notes and notebooks, run `nb ls`:
+To list notes and notebooks, run [`nb ls`](#ls):
 
 ```bash
 > nb ls
@@ -738,7 +738,8 @@ and [`nb help list`](#list).
 
 #### Editing Notes
 
-You can edit a note in your editor using its id, filename, or title:
+You can edit a note in your editor by passing its id, filename, or title
+to [`nb edit`](#edit):
 
 ```bash
 # edit note by id
