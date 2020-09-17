@@ -42,9 +42,12 @@ _copy() {
   # <id>, <filename>, <path>, or <title>, with or without a notebook name.
   #
   # Examples:
-  #   1
+  #   12
   #   example.md
-  #   notebook1:42
+  #   Example Title
+  #   notebook:42
+  #   notebook:Example
+  #   notebook:Example\ Title
   local _source_basename
   _source_basename="$(_get_selection_basename "${_selection}")"
 
