@@ -1848,8 +1848,8 @@ nb export example.md /path/to/example.docx
 nb export Movies /path/to/example.html
 ```
 
-For more control over the `pandoc` options, use the `nb export pandoc`
-subcommand:
+For more control over the `pandoc` options, use the
+[`nb export pandoc`](#export) subcommand:
 
 ```bash
 # export note 42 as an epub with pandoc options
