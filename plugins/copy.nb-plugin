@@ -88,7 +88,7 @@ _copy() {
 
     # Operation complete.
     #
-    # Remaining commands build the feedback message for the user.
+    # Build the feedback message for the user.
 
     # Get the new id.
     local _id
