@@ -878,7 +878,7 @@ for each type.
 
 `nb show` is primarily intended for previewing notes and files within
 the terminal. To view files in the system's preferred GUI application,
-use [`nb open`](#import--export).
+use [`nb open`](#open).
 
 ##### Shortcut Alias: `s`
 
