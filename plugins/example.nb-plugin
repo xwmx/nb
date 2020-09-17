@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 ###############################################################################
-# example
+# example.nb-plugin
 #
 # An example plugin for `nb`.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
 #
 # https://github.com/xwmx/nb
 ###############################################################################

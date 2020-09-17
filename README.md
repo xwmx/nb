@@ -2019,14 +2019,12 @@ nb set color_theme
 
 #### Custom Color Themes
 
-Custom color themes can be installed in the `${NB_DIR}/.themes` directory.
-
-Themes have a `.nb-theme` or `.nb-theme.sh` extension and contain one `if`
-statement indicating the name and setting the color environment variables
-to `tput` ANSI color numbers:
+Color themes are [`nb` plugins](#-plugins) with a `.nb-theme` file
+extension and contain one `if` statement indicating the name and setting
+the color environment variables to `tput` ANSI color numbers:
 
 ```bash
-# file: ~/.nb/.themes/example.nb-theme.sh
+# example.nb-theme
 if [[ "${NB_COLOR_THEME}" == "example" ]]
 then
   export NB_COLOR_PRIMARY=43
@@ -2034,8 +2032,12 @@ then
 fi
 ```
 
-The primary and secondary colors can be set individually, making color themes
-easily customizable:
+Themes can be installed using the [`nb plugins`] subcommand. Once
+a theme is installed, use `nb set color_theme` to set it as the current
+theme.
+
+The primary and secondary colors can also be set individually, making color
+themes easily customizable:
 
 ```bash
 # open the settings prompt for the primary color
@@ -2059,10 +2061,17 @@ nb set colors
 ### 🔌 Plugins
 
 `nb` includes support for plugins, which can be used to create new
-subcommands and extend the functionality of `nb`.
+subcommands and extend the functionality of `nb`. `nb` supports two
+types of plugins, identified by their file extensions:
+
+- .nb-theme - Plugins defining [color themes](#custom-color-themes),
+- .nb-plugin - Plugins defining new subcommands and add functionality.
+
+Plugins are managed with the [`nb plugins`](#plugins) subcommand and
+installed in the `"${NB_DIR}/.plugins"` directory.
 
 Plugins can be installed from either a URL or path using the
-[`nb plugins`](#plugins) subcommand.
+[`nb plugins install`](#plugins) subcommand.
 
 ```bash
 # install a plugin from a URL
@@ -2070,6 +2079,9 @@ nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy
 
 # install a plugin from a standard GitHub URL
 nb plugin install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
+
+# install a theme from a standard GitHub URL
+https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
 
 # install a plugin from a path
 nb plugins install plugins/example.nb-plugin
@@ -2080,8 +2092,9 @@ takes a name and print full paths:
 
 ```bash
 > nb plugins
-copy
-example
+reef.nb-theme
+copy.nb-plugin
+example.nb-plugin
 
 > nb plugins copy
 copy
@@ -2089,6 +2102,7 @@ copy
 > nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
+/home/example/.nb/.plugins/reef.nb-plugin
 
 > nb plugins example --paths
 /home/example/.nb/.plugins/example.nb-plugin
@@ -2097,15 +2111,15 @@ copy
 Use `nb plugins uninstall` to uninstall a plugin:
 
 ```bash
-> nb plugins uninstall copy
+> nb plugins uninstall example.nb-plugin
 Plugin successfully uninstalled:
-/home/example/.nb/.plugins/copy.nb-plugin
+/home/example/.nb/.plugins/example.nb-plugin
 ```
 
 #### Creating Plugins
 
-Plugins are written in a Bash-compatible shell language and have an
-`.nb-plugin` extension.
+Plugins are written in a Bash-compatible shell scripting language and
+have an `.nb-plugin` extension.
 
 `nb` includes two example plugins:
 

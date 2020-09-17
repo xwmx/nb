@@ -1,3 +1,15 @@
+#!/usr/bin/env bash
+###############################################################################
+# reef.nb-theme
+#
+# A blue and green theme for `nb`.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
 if [[ "${NB_COLOR_THEME}" == "reef" ]]
 then
   export NB_COLOR_PRIMARY=43

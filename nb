@@ -7733,13 +7733,13 @@ _plugins() {
         # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
         find "${NB_DIR}"/.plugins -type f -name "${_query}" | grep .
       else
-        if ((${#_NB_PLUGINS[@]}))
-        then
-          printf "%s\\n" "${_NB_PLUGINS[@]}"
-        else
-          printf "No plugins installed.\\n"
-        fi
-      fi
+        find "${NB_DIR}"/.plugins -type f -name "${_query}" -exec basename {} \; | grep .
+      fi || if [[ -n "${_name:-}" ]]
+            then
+              _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
+            else
+              _exit_1 printf "No plugins found.\\n"
+            fi
       ;;
   esac
 }

@@ -4,6 +4,9 @@
 #
 # A plugin for `nb`.
 #
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
+#
 # https://github.com/xwmx/nb
 ###############################################################################
 
