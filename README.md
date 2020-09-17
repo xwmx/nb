@@ -2179,8 +2179,8 @@ copy.nb-plugin
 example.nb-plugin
 turquoise.nb-theme
 
-> nb plugins copy.nb-theme
-copy.nb-theme
+> nb plugins copy.nb-plugin
+copy.nb-plugin
 
 > nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
