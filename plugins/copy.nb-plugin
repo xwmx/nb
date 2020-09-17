@@ -88,7 +88,7 @@ _copy() {
 
     # Operation complete.
     #
-    # Build the feedback message for the user.
+    # Build the feedback message for the user since we can't use `_add()` here.
 
     # Get the new id.
     local _id
