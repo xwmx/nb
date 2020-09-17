@@ -2,7 +2,7 @@
 ###############################################################################
 # copy / duplicate
 #
-# A plugin for `nb`.
+# A plugin for `nb` providing copy / duplicate functionality.
 #
 # Install with:
 #   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
