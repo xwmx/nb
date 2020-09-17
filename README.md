@@ -2172,7 +2172,7 @@ underscore:
 
 ```bash
 _example() {
- printf "Hello, World!\\n"
+  printf "Hello, World!\\n"
 }
 ```
 
