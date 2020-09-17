@@ -2247,9 +2247,9 @@ View the complete plugin: [`plugins/example.nb-plugin`](plugins/example.nb-plugi
 With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
-For a full example, [`copy.nb-plugin`](plugins/copy.nb-plugin) provides
-copy / duplicate functionality and demonstrates many of the features available
-for creating new subcommands.
+For a full example, [`copy.nb-plugin`](plugins/copy.nb-plugin) adds
+copy / duplicate functionality to `nb` and demonstrates a variety of
+features available for creating new subcommands.
 
 You can install any plugin you create locally with
 `nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
