@@ -1617,6 +1617,9 @@ Local notebooks can also be created by exporting a global notebook:
 ```bash
 # export global notebook named "example" to "../path/to/destination"
 nb notebooks export example ../path/to/destination
+
+# alternative
+nb export example ../path/to/destination
 ```
 
 Local notebooks can also be imported, making them global:
@@ -1624,6 +1627,9 @@ Local notebooks can also be imported, making them global:
 ```bash
 # import notebook or folder at "../path/to/notebook"
 nb notebooks import ../path/to/notebook
+
+# alternative
+nb import ../path/to/notebook
 ```
 
 #### Archiving Notebooks
@@ -1834,12 +1840,38 @@ be converted to any of the
 By default, the output format is determined by the file extension:
 
 ```bash
-# Export a Markdown note to a .docx Microsoft Office Word document
+# export a Markdown note to a .docx Microsoft Office Word document
 nb export example.md /path/to/example.docx
 
-# Export a note titled "Movies" to an HTML web page.
+# export a note titled "Movies" to an HTML web page.
 nb export Movies /path/to/example.html
 ```
+
+For more control over the `pandoc` options, use the `nb export pandoc`
+subcommand:
+
+```bash
+# export note 42 as an epub
+nb export pandoc 42 --from markdown_strict --to epub -o path/to/example.epub
+```
+
+`nb export` and `nb import` can also be used to export and import
+notebooks:
+
+```bash
+# export global notebook named "example" to "../path/to/destination"
+nb export notebook example ../path/to/destination
+
+# import notebook or folder at "../path/to/notebook"
+nb import notebook ../path/to/notebook
+```
+
+`nb export notebook` and `nb import notebook` behave like aliases for
+`nb notebooks export` and `nb notebooks import`, and the subcommands can
+be used interchangeably.
+
+For more information about imported and exported notebooks, see
+[Global and Local Notebooks](#global-and-local-notebooks).
 
 ### ⚙️ `set` & Settings
 
@@ -2201,7 +2233,7 @@ can be called using their internal function names, and options can be
 used to output information in formats suitable for scripting:
 
 ```bash
-# Print the content of note 3 to standard output with no color
+# print the content of note 3 to standard output with no color
 _show 3 --print --no-color
 
 # list all unarchived global notebook names
