@@ -24,7 +24,7 @@ and knowledge base application with:
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - global and local [notebooks](#-notebooks),
 - customizable [color themes](#built-in-color-themes),
-- [plugins](#-plugins) for extending functionality,
+- extensibility with [plugins](#-plugins),
 
 and more, all in a single portable, user-friendly script.
 
