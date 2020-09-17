@@ -7715,7 +7715,7 @@ HEREDOC
         done
       fi
 
-      if rm "${_plugin_path:-?}"
+      if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:-?}"
       then
         printf "Plugin successfully uninstalled:\\n%s\\n" \
           "$(_highlight "${_plugin_path}")"
