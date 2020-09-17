@@ -1851,12 +1851,12 @@ For more control over the `pandoc` options, use the `nb export pandoc`
 subcommand:
 
 ```bash
-# export note 42 as an epub
+# export note 42 as an epub with pandoc options
 nb export pandoc 42 --from markdown_strict --to epub -o path/to/example.epub
 ```
 
-`nb export` and `nb import` can also be used to export and import
-notebooks:
+`nb export notebook` and `nb import notebook` can be used to export and
+import notebooks:
 
 ```bash
 # export global notebook named "example" to "../path/to/destination"
