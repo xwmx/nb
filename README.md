@@ -1792,8 +1792,9 @@ and [`nb run`](#run) can be used to resolve the conflict manually.
 
 ### ↕️ Import / Export
 
-Files of any type can be imported into a notebook. `nb edit` and `nb
-open` will open files in your system's default application for that file type.
+Files of any type can be imported into a notebook using
+[`nb import`](#import). `nb edit` and `nb open` will open files in your
+system's default application for that file type.
 
 ```bash
 # import an image file
@@ -1834,8 +1835,8 @@ home
 [1] 📂 Example Folder
 ```
 
-Notes can also be exported. If you have Pandoc installed, notes can
-be converted to any of the
+Notes, bookmarks and other files can be exported using [`nb export`](#export).
+If Pandoc is installed, notes can be automatically converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
 By default, the output format is determined by the file extension:
 
@@ -1872,6 +1873,9 @@ be used interchangeably.
 
 For more information about imported and exported notebooks, see
 [Global and Local Notebooks](#global-and-local-notebooks).
+
+For `nb import` and `nb export` help information, see
+[`nb help import`](#import) and [`nb help export`](#export).
 
 ### ⚙️ `set` & Settings
 
