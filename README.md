@@ -2076,14 +2076,15 @@ nb set colors
 ### 🔌 Plugins
 
 `nb` includes support for plugins, which can be used to create new
-subcommands and extend the functionality of `nb`. `nb` supports two
-types of plugins, identified by their file extensions:
+subcommands, design themes, and otherwise extend the functionality of `nb`.
+`nb` supports two types of plugins, identified by their file extensions:
 
-- `.nb-theme` - Plugins defining [color themes](#custom-color-themes),
+- `.nb-theme`  - Plugins defining [color themes](#custom-color-themes).
+
 - `.nb-plugin` - Plugins defining new subcommands and adding functionality.
 
 Plugins are managed with the [`nb plugins`](#plugins) subcommand and
-installed in the `"${NB_DIR}/.plugins"` directory.
+installed in the `${NB_DIR}/.plugins` directory.
 
 Plugins can be installed from either a URL or path using the
 [`nb plugins install`](#plugins) subcommand.
@@ -2093,10 +2094,10 @@ Plugins can be installed from either a URL or path using the
 nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
 
 # install a plugin from a standard GitHub URL
-nb plugin install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
 
 # install a theme from a standard GitHub URL
-https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
 
 # install a plugin from a path
 nb plugins install plugins/example.nb-plugin
