@@ -1636,6 +1636,17 @@ nb notebooks import ../path/to/notebook
 nb import ../path/to/notebook
 ```
 
+`nb notebooks init` and `nb notebooks import` can be used together to
+easily turn any directory of existing files into a global `nb` notebook:
+
+```
+> nb notebooks init example-notebook
+Initialized local notebooks: /home/username/example-notebook
+
+> nb notebooks import example-notebook
+Imported notebook: example-notebook
+```
+
 #### Archiving Notebooks
 
 Notebooks can be archived using [`nb notebooks archive`](#notebooks):
