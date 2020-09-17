@@ -138,7 +138,7 @@ load test_helper
 
 # `copy <invalid>` ###############################################################
 
-@test "\`copy <invalid>\` exits with error." {
+@test "\`copy <invalid>\` exits with error message." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -154,6 +154,29 @@ load test_helper
 
   [[ "${status}" == 1             ]]
   [[ "${lines[0]}" =~ Not\ found  ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" == 1 ]]
+}
+
+# `copy <directory>` ##########################################################
+
+@test "\`copy <directory>\` exits with error message." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
+
+    [[ "${status}" == 0 ]]
+  }; _setup
+
+  run "${_NB}" copy "example"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 1               ]]
+  [[ "${lines[0]}" =~ Not\ a\ file  ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" == 1 ]]
@@ -291,4 +314,45 @@ load test_helper
   [[ "${status}" == 0                     ]]
   [[ "${lines[0]}" =~ Added               ]]
   [[ "${lines[0]}" =~ example-2-2.md.enc  ]]
+}
+
+# help ########################################################################
+
+@test "\`copy\` with no argument exits with status 1 and prints usage." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0 ]]
+  }; _setup
+
+  run "${_NB}" copy
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1            ]]
+  [[ "${lines[0]}" =~ Usage\:   ]]
+  [[ "${lines[1]}" =~ nb\ copy  ]]
+}
+
+
+@test "\`help copy\` exits with status 0 and prints usage." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0 ]]
+  }; _setup
+
+  run "${_NB}" help copy
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${lines[0]}" =~ Usage\:   ]]
+  [[ "${lines[1]}" =~ nb\ copy  ]]
 }
