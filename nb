@@ -529,7 +529,7 @@ HEREDOC
       exit 1
     fi
   fi
-} && __set_editor
+}; __set_editor
 
 # Color ################################################################# Color
 
@@ -645,7 +645,7 @@ __load_themes() {
     done
     set -f
   fi
-} && __load_themes
+}; __load_themes
 
 # $NB_COLOR_PRIMARY
 #
@@ -670,7 +670,7 @@ __set_nb_color_primary() {
   else
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-4}"
   fi
-} && __set_nb_color_primary
+}; __set_nb_color_primary
 
 # $NB_COLOR_SECONDARY
 #
@@ -821,7 +821,7 @@ __set_notebook_path() {
       cd ..
       __set_local_notebook_path
     fi
-  } && __set_local_notebook_path
+  }; __set_local_notebook_path
 
   __set_global_notebook() {
     if [[ -e "${NB_DIR}/.current" ]]
@@ -833,7 +833,7 @@ __set_notebook_path() {
         _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_GLOBAL_NOTEBOOK_NAME}"
       fi
     fi
-  } && __set_global_notebook
+  }; __set_global_notebook
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
@@ -841,7 +841,7 @@ __set_notebook_path() {
   else
     _NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
   fi
-} && __set_notebook_path
+}; __set_notebook_path
 
 # Cache & Temp ################################################### Cache & Temp
 
@@ -10057,7 +10057,7 @@ __load_plugins() {
     done
     set -f
   fi
-} && __load_plugins
+}; __load_plugins
 
 ###############################################################################
 # Program Option Parsing
