@@ -2970,7 +2970,7 @@ Usage:
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
-  ${_ME} settings [colors [<number>] | edit | list [--long]]
+  ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
@@ -8560,7 +8560,7 @@ _alias_subcommand "search" "q"
 desc "settings" <<HEREDOC
 Usage:
   ${_ME} set [<name> [<value>] | <number> [<value>]]
-  ${_ME} settings colors [<number>]
+  ${_ME} settings colors [<number> | themes]
   ${_ME} settings edit
   ${_ME} settings get   (<name> | <number>)
   ${_ME} settings list  [--long]
@@ -8573,6 +8573,7 @@ Subcommands:
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
+             \`settings colors themes\` prints a list of installed themes.
   edit       Open the \`${_ME}\` configuration file in \`\$EDITOR\`.
   get        Print the value of a setting.
   list       List information about available settings.
@@ -8601,7 +8602,7 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
-  # Usage: _nb_settings_colors [<number>]
+  # Usage: _nb_settings_colors [<number>] [themes]
   _nb_settings_colors() {
     # Usage: _nb_settings_colors_print <number>
     _nb_settings_colors_print() {
@@ -8610,8 +8611,13 @@ _settings() {
 
     if [[ -n "${1:-}" ]]
     then
-      _nb_settings_colors_print "${1:-}"
-      printf "\\n"
+      if [[ "${1}" == "themes" ]]
+      then
+        printf "%s\\n" "${_NB_COLOR_THEMES[@]}"
+      else
+        _nb_settings_colors_print "${1:-}"
+        printf "\\n"
+      fi
     else
       for ((_i=0;_i<256;_i++))
       do

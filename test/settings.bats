@@ -108,6 +108,20 @@ skip "Determine how to test interactive prompt."
   [[ ! "${output}" =~ ' 106'  ]]
 }
 
+@test "\`settings colors themes\` prints theme list." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings colors themes
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "blacklight"  ]]
+}
+
 # `edit` ######################################################################
 
 @test "\`settings edit\` edits .nbrc." {

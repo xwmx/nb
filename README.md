@@ -2478,7 +2478,7 @@ Usage:
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
   nb set [<name> [<value>] | <number> [<value>]]
-  nb settings [colors [<number>] | edit | list [--long]]
+  nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
@@ -3392,7 +3392,7 @@ Shortcut Alias: `q`
 ```text
 Usage:
   nb set [<name> [<value>] | <number> [<value>]]
-  nb settings colors [<number>]
+  nb settings colors [<number> | themes]
   nb settings edit
   nb settings get   (<name> | <number>)
   nb settings list  [--long]
@@ -3405,6 +3405,7 @@ Subcommands:
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
              When <number> is provided, print the number in its color.
+             `settings colors themes` prints a list of installed themes.
   edit       Open the `nb` configuration file in `$EDITOR`.
   get        Print the value of a setting.
   list       List information about available settings.
