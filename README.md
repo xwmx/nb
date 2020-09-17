@@ -2182,7 +2182,7 @@ That's it!
 
 View the complete plugin: [plugins/example.nb-plugin](plugins/example.nb-plugin)
 
-With this plugin installed, `nb` includes an `nb example` subcommand
+With example.nb-plugin installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
 [copy.nb-plugin](plugins/copy.nb-plugin) provides copy / duplicate
