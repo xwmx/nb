@@ -83,11 +83,14 @@ _copy() {
     # Add the new basename to the index.
     _index add "${_target_basename}"
 
+    # Record the change in git.
+    _git_checkpoint "[nb] Add: ${_target_basename}"
+
     # Get the new id.
     local _id
     _id="$(_index get_id "${_target_basename}")"
 
-    # Set the scoped basename and id to the current basename and id
+    # Set the scoped basename and id to the current basename and id.
     local _scoped_basename="${_target_basename}"
     local _scoped_id="${_id}"
 
@@ -105,9 +108,6 @@ _copy() {
     printf "Added %s %s\\n"                   \
       "$(_id_brackets_color "${_scoped_id}")" \
       "$(_highlight "${_scoped_basename}")"
-
-    # Record the change in git.
-    _git_checkpoint "[nb] Add: ${_target_basename}"
   fi
 }
 # Use `_alias_subcommand` to create a full alias, with linked help / usage.
