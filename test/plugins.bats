@@ -185,7 +185,6 @@ load test_helper
 
   run "${_NB}" plugins uninstall "example.nb-plugin" --force
 
-
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -202,7 +201,6 @@ load test_helper
   }; _setup
 
   run "${_NB}" plugins uninstall "turquoise.nb-theme" --force
-
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
