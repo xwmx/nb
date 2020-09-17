@@ -64,9 +64,8 @@ _copy() {
     _exit_1 printf "Not found: %s\\n" "${_selection}"
   elif [[ ! -f "${_NOTEBOOK_PATH}/${_source_basename}" ]]
   then
-    _exit_1 printf "Copying directories is not currently supported.\\n"
+    _exit_1 printf "Not a file: %s\\n" "${_selection}"
   fi
-
   # Get a unique basename based on the source basename.
   local _target_basename
   _target_basename="$(_get_unique_basename "${_source_basename}")"
