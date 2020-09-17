@@ -2113,9 +2113,9 @@ takes a name and prints full paths:
 
 ```bash
 > nb plugins
-reef.nb-theme
 copy.nb-plugin
 example.nb-plugin
+reef.nb-theme
 
 > nb plugins copy.nb-theme
 copy.nb-theme
