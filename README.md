@@ -2185,10 +2185,10 @@ copy.nb-plugin
 > nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
-/home/example/.nb/.plugins/turquoise.nb-plugin
+/home/example/.nb/.plugins/turquoise.nb-theme
 
-> nb plugins example.nb-theme --paths
-/home/example/.nb/.plugins/example.nb-plugin
+> nb plugins turquoise.nb-theme --paths
+/home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
 Use [`nb plugins uninstall`](#plugins) to uninstall a plugin:
