@@ -312,23 +312,6 @@ __option_value_is_present() {
 if [[ -n "${NBRC_PATH:-}" ]]
 then
   export NBRC_PATH="${NBRC_PATH}"
-elif [[ -n "${NOTESRC_PATH:-}" ]]
-then # Use legacy NOTESRC_PATH environment variable.
-  export NBRC_PATH="${NOTESRC_PATH}"
-elif [[ -e "${HOME}/.notesrc" ]] &&
-     grep -q -e "xwmx" -e "alphabetum" "${HOME}/.notesrc"
-then # Migrate legacy .notesrc TODO: remove.
-  mv "${HOME}/.notesrc" "${HOME}/.nbrc"
-  _sed_i                                              \
-    -e "s/NOTES_/NB_/g"                               \
-    -e "s/notesrc/nbrc/g"                             \
-    -e "s/alphabetum/xwmx/g"                          \
-    -e "s/\/notes/\/nb/g"                             \
-    -e "s/\.notes/\.nb/g"                             \
-    -e "s/by \`notes\`/by \`notes\` (now \`nb\`)/g"   \
-    -e "s/file for notes/file for \`nb\`/g"           \
-    "${HOME}/.nbrc"
-  export NBRC_PATH="${HOME}/.nbrc"
 else
   export NBRC_PATH="${HOME}/.nbrc"
 fi
@@ -355,36 +338,8 @@ fi
 if [[ -n "${NB_DIR:-}" ]]
 then
   export NB_DIR="${NB_DIR}"
-elif [[ -n "${NOTES_DIR:-}" ]]
-then # Use legacy NOTES_DIR environment variable.
-  export NB_DIR="${NOTES_DIR}"
 else
   export NB_DIR="${HOME}/.nb"
-fi
-
-# TODO: Remove legacy migrations.
-if [[ -d "${HOME}/.notes/home/.git"   ]] &&
-   [[ -f "${HOME}/.notes/home/.index" ]] &&
-   [[ ! -e "${HOME}/.nb"              ]] &&
-   [[ "${NB_DIR}" != "${HOME}/.notes" ]] &&
-   {
-     [[ -z "${NOTES_DIR:-}"                ]] ||
-     [[ "${NOTES_DIR}" != "${HOME}/.notes" ]]
-   }
-then # Migrate legacy ~/.notes directory.
-  mv "${HOME}/.notes" "${HOME}/.nb"
-  printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
-elif [[ -d "${HOME}/Notebooks/home/.git"   ]] &&
-     [[ -f "${HOME}/Notebooks/home/.index" ]] &&
-     [[ ! -e "${HOME}/.nb"                 ]] &&
-     [[ "${NB_DIR}" != "${HOME}/Notebooks" ]] &&
-     {
-       [[ -z "${NOTES_DIR:-}"                   ]] ||
-       [[ "${NOTES_DIR}" != "${HOME}/Notebooks" ]]
-     }
-then # Migrate legacy ~/Notebooks directory.
-  mv "${HOME}/Notebooks" "${HOME}/.nb"
-  printf "%s migrated to %s\\n" "${HOME}/.notes" "${HOME}/.nb"
 fi
 
 if [[ -L "${NB_DIR:-}" ]]
@@ -418,8 +373,6 @@ fi
 #
 # When set to '1', each `_git_checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
-[[ -n "${NOTES_AUTO_SYNC:-}" ]] &&
-  NB_AUTO_SYNC="${NOTES_AUTO_SYNC}"
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
 # `$NB_DEFAULT_EXTENSION`
@@ -427,8 +380,6 @@ export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 # Default: 'md'
 #
 # Example Values: 'md' 'org'
-[[ -n "${NOTES_DEFAULT_EXTENSION:-}" ]] &&
-  NB_DEFAULT_EXTENSION="${NOTES_DEFAULT_EXTENSION}"
 export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 
 # $NB_ENCRYPTION_TOOL
@@ -436,8 +387,6 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 # Default: 'openssl'
 #
 # Supported Values: 'gpg' 'openssl'
-[[ -n "${NOTES_ENCRYPTION_TOOL:-}" ]] &&
-  NB_ENCRYPTION_TOOL="${NOTES_ENCRYPTION_TOOL}"
 export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
 # $NB_FOOTER
@@ -657,10 +606,6 @@ __load_themes() {
 #   nb settings colors
 #
 # Supported Values: [0..255+]
-[[ -n "${NOTES_HIGHLIGHT_COLOR:-}" ]] &&
-  NB_COLOR_PRIMARY="${NOTES_HIGHLIGHT_COLOR}"
-[[ -n "${NB_HIGHLIGHT_COLOR:-}" ]] &&
-  NB_COLOR_PRIMARY="${NB_HIGHLIGHT_COLOR}"
 __set_nb_color_primary() {
   local _colors=
   _colors="$(tput colors)"
