@@ -7593,7 +7593,7 @@ Options:
 
 Subcommands:
   (default)  List plugins.
-  install    Install a plugin from a <path> or <url>
+  install    Install a plugin from a <path> or <url>.
   uninstall  Uninstall the specified plugin.
 
 Description:

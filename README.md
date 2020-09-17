@@ -2087,7 +2087,7 @@ subcommands, design themes, and otherwise extend the functionality of `nb`.
 Plugins are managed with the [`nb plugins`](#plugins) subcommand and
 are installed in the `${NB_DIR}/.plugins` directory.
 
-Plugins can be installed from either a URL or path using the
+Plugins can be installed from either a URL or a path using the
 [`nb plugins install`](#plugins) subcommand.
 
 ```bash
@@ -2149,13 +2149,13 @@ have an `.nb-plugin` extension.
 
 Create a new subcommand in three easy steps:
 
-##### 1. Add new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array
+##### 1. Add new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array.
 
 ```bash
 NB_PLUGIN_SUBCOMMANDS+=(example)
 ```
 
-##### 2. Define help and usage text in a `desc` block
+##### 2. Define help and usage text in a `desc` block.
 
 ```bash
 desc "example" <<HEREDOC
@@ -2167,7 +2167,7 @@ Description:
 HEREDOC
 ```
 
-##### 3. Define the subcommand as a function
+##### 3. Define the subcommand as a function.
 
 Create a function with the same name as the subcommand with a leading
 underscore:
@@ -3209,7 +3209,7 @@ Options:
 
 Subcommands:
   (default)  List plugins.
-  install    Install a plugin from a <path> or <url>
+  install    Install a plugin from a <path> or <url>.
   uninstall  Uninstall the specified plugin.
 
 Description:
