@@ -2842,8 +2842,8 @@ Custom color themes are \`nb\` plugins with a \`.nb-theme\` file extension.
 A theme is defined with a single \`if\` statement indicating the name and
 assigning the color environment variables to \`tput\` ANSI color numbers:
 
-    $(_highlight_secondary "# reef.nb-theme")
-    $(_highlight "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"reef\"${_TPUT_COLOR_PRIMARY} ]]")
+    $(_highlight_secondary "# turquoise.nb-theme")
+    $(_highlight "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
     $(_highlight "then")
     $(_highlight "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
     $(_highlight "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
@@ -2851,18 +2851,18 @@ assigning the color environment variables to \`tput\` ANSI color numbers:
 
 View this theme as a complete file:
 
-    $(_highlight "https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme")
+    $(_highlight "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
 Themes can be installed using the \`nb plugins\` subcommand:
 
-    $(_dim ">") $(_highlight "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme")
+    $(_dim ">") $(_highlight "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
     $(_highlight_secondary "Plugin installed:")
-    $(_highlight_secondary "/home/example/.nb/.plugins/reef.nb-theme")
+    $(_highlight_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
 
 Once a theme is installed, use it with \`nb set color_theme\`:
 
-    $(_dim ">") $(_highlight "set color_theme reef")
-    $(_highlight_secondary "NB_COLOR_THEME set to reef")
+    $(_dim ">") $(_highlight "set color_theme turquoise")
+    $(_highlight_secondary "NB_COLOR_THEME set to turquoise")
 
 The primary and secondary colors can also be overridden individually,
 making color themes easily customizable:

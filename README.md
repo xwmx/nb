@@ -2061,8 +2061,8 @@ extension and contain one `if` statement indicating the name and setting
 the color environment variables to `tput` ANSI color numbers:
 
 ```bash
-# reef.nb-theme
-if [[ "${NB_COLOR_THEME}" == "reef" ]]
+# turquoise.nb-theme
+if [[ "${NB_COLOR_THEME}" == "turquoise" ]]
 then
   export NB_COLOR_PRIMARY=43
   export NB_COLOR_SECONDARY=38
@@ -2070,22 +2070,22 @@ fi
 ```
 
 View this theme as a complete file:
-[`plugins/reef.nb-theme`](plugins/reef.nb-theme)
+[`plugins/turquoise.nb-theme`](plugins/turquoise.nb-theme)
 
 Themes can be installed using the [`nb plugins`](#plugins) subcommand.
 
 ```bash
-> nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
+> nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
 Plugin installed:
-/home/example/.nb/.plugins/reef.nb-theme
+/home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
 Once a theme is installed, use `nb set color_theme` to set it as the current
 theme:
 
 ```bash
-> nb set color_theme reef
-NB_COLOR_THEME set to reef
+> nb set color_theme turquoise
+NB_COLOR_THEME set to turquoise
 ```
 
 The primary and secondary colors can also be overridden individually, making
@@ -2135,7 +2135,7 @@ nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
 
 # install a theme from a standard GitHub URL
-nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
 
 # install a plugin from a path
 nb plugins install plugins/example.nb-plugin
@@ -2152,7 +2152,7 @@ takes a name and prints full paths:
 > nb plugins
 copy.nb-plugin
 example.nb-plugin
-reef.nb-theme
+turquoise.nb-theme
 
 > nb plugins copy.nb-theme
 copy.nb-theme
@@ -2160,7 +2160,7 @@ copy.nb-theme
 > nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
-/home/example/.nb/.plugins/reef.nb-plugin
+/home/example/.nb/.plugins/turquoise.nb-plugin
 
 > nb plugins example.nb-theme --paths
 /home/example/.nb/.plugins/example.nb-plugin
