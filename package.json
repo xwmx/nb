@@ -10,8 +10,7 @@
   "bin": {
     "nb": "nb",
     "notes.sh": "nb",
-    "bookmark": "bin/bookmark",
-    "notes": "bin/notes"
+    "bookmark": "bin/bookmark"
   },
   "scripts": {
     "test": "bats test",
