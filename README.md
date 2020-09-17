@@ -2077,6 +2077,7 @@ nb set colors
 
 `nb` includes support for plugins, which can be used to create new
 subcommands, design themes, and otherwise extend the functionality of `nb`.
+
 `nb` supports two types of plugins, identified by their file extensions:
 
 - `.nb-theme`  - Plugins defining [color themes](#custom-color-themes).
