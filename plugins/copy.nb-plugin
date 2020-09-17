@@ -86,6 +86,9 @@ _copy() {
     # Record the change in git.
     _git_checkpoint "[nb] Add: ${_target_basename}"
 
+    # Operation complete. Remaining commands build the feedback message
+    # for the user.
+
     # Get the new id.
     local _id
     _id="$(_index get_id "${_target_basename}")"
@@ -94,6 +97,9 @@ _copy() {
     local _scoped_basename="${_target_basename}"
     local _scoped_id="${_id}"
 
+    # $_SCOPED indicates whether the current notebook context is different
+    # from the configured current notebook, meaning the user used a
+    # selection with a notebook colon prefix. 1 == scoped, 0 == unscoped
     if ((_SCOPED))
     then # Selection includes a notebook prefix, e.g., "notebook:123".
       # Add the notebook identifier to the id and basename.
