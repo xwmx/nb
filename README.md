@@ -236,8 +236,8 @@ npm install -g notes.sh
 ```
 
 Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can run `sudo nb env install` to install the
-optional dependencies.
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
 
 ##### bpkg
 
@@ -296,14 +296,14 @@ nb
 `nb` sets up your initial "home" notebook the first time it runs.
 
 By default, notebooks and notes are global (at `~/.nb`), so they are always available to
-`nb` regardless of the current working directory. `nb` also supports [local
-notebooks](#global-and-local-notebooks).
+`nb` regardless of the current working directory. `nb` also supports
+[local notebooks](#global-and-local-notebooks).
 
 ### 📝 Notes
 
 #### Adding Notes
 
-Use `nb add` to create new notes:
+Use [`nb add`](#add) to create new notes:
 
 ```bash
 # create a new note in your text editor
