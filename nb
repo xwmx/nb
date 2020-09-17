@@ -622,6 +622,12 @@ export _NB_COLOR_THEMES=(
 #
 #  To view a list of available color numbers, run `nb settings colors`
 __load_themes() {
+  if [[ -d "${NB_DIR}/.themes"    ]] &&
+     [[ ! -d "${NB_DIR}/.plugins" ]]
+  then # migrate legacy .themes directory. TODO: Remove.
+    mv "${NB_DIR}/.themes" "${NB_DIR}/.plugins"
+  fi
+
   if [[ -d "${NB_DIR}/.plugins" ]]
   then
     set +f
