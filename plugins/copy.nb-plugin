@@ -44,7 +44,7 @@ _copy() {
   # Examples:
   #   12
   #   example.md
-  #   Example Title
+  #   Example\ Title
   #   notebook:42
   #   notebook:Example
   #   notebook:Example\ Title
