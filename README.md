@@ -2104,6 +2104,10 @@ nb plugins install https://github.com/xwmx/nb/blob/master/plugins/reef.nb-theme
 nb plugins install plugins/example.nb-plugin
 ```
 
+The `<url>` should be the full URL to the plugin file. `nb` also
+recognizes regular GitHub URLs, which can be used interchangably with
+raw GitHub URLs.
+
 Installed plugins can be listed with `nb plugins`, which optionally
 takes a name and prints full paths:
 
