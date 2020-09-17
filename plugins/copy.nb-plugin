@@ -86,8 +86,9 @@ _copy() {
     # Record the change in git.
     _git_checkpoint "[nb] Add: ${_target_basename}"
 
-    # Operation complete. Remaining commands build the feedback message
-    # for the user.
+    # Operation complete.
+    #
+    # Remaining commands build the feedback message for the user.
 
     # Get the new id.
     local _id
