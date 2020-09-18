@@ -2376,7 +2376,7 @@ _less_prompt() {
 #   _line_wrap_off
 #
 # Description:
-#   Turn off line wrapping, aka automatic margins.
+#   Turn off line wrapping / automatic margins.
 _line_wrap_off() {
   # NOTE: `tput` vs control sequence:
   # https://unix.stackexchange.com/a/558771
@@ -2394,7 +2394,7 @@ _line_wrap_off() {
 #   _line_wrap_on
 #
 # Description:
-#   Turn on line wrapping, aka automatic margins.
+#   Turn on line wrapping / automatic margins.
 _line_wrap_on() {
   # tput smam
 
