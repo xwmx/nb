@@ -358,12 +358,11 @@ then
 NB_DIR is not valid:
   ${NB_DIR}
 
-Running the following command might resolve the issue:
-  ${_ME} settings unset nb_dir
+Remove any NB_DIR settings in .nbrc to reset to default:
+  ${NBRC_PATH}
 
-Alternatively, set NB_DIR to a new location where you'd like to store your
-notes and bookmarks. For example:
-  ${_ME} settings set nb_dir ~/Notebooks
+NB_DIR settings prompt:
+  ${_ME} settings nb_dir
 HEREDOC
 fi
 
