@@ -4637,7 +4637,7 @@ _env() {
           tig               \
           w3m
 
-        local _rg_version="11.0.2"
+        local _rg_version="12.1.1"
         local _deb_filename="ripgrep_${_rg_version}_amd64.deb"
         local _deb_local_path="${HOME}/${_deb_filename}"
 
