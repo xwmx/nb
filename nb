@@ -1596,10 +1596,7 @@ export _BOOKMARK_FILE_EXTENSIONS=(
 )
 _file_is_bookmark() {
   # Use explicit matching for legacy bookmark name support.
-  [[ "${1:-}" =~ .bookmark.md$      ]] ||
-  [[ "${1:-}" =~ .bookmark.md.enc$  ]] ||
-  [[ "${1:-}" =~ -bookmark.md$      ]] ||
-  [[ "${1:-}" =~ -bookmark.md.enc$  ]]
+  [[ "${1:-}" =~ [-|.]bookmark.md|[-|.]bookmark.md.enc ]]
 }
 
 # _file_is_document()
