@@ -2674,10 +2674,11 @@ _spinner() {
 #   _string_is_url <string>
 #
 # Exit / Error Status:
-#   0 (success, true)  If file is a Word, Open Office, PDF, or other document.
+#   0 (success, true)  If the string is a recognized URL.
 #   1 (error,  false)  if not.
 _string_is_url() {
-  [[ "${1:-}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
+  [[ "${1:-}" =~ \
+    ^ftp\:\/\/|^http\:\/\/|^https\:\/\/|^file\:\/\/|^sftp\:\/\/ ]]
 }
 
 ###############################################################################
@@ -10366,11 +10367,15 @@ do
       _print_welcome
       ;;
     *:*)
-      __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
-      if [[ "${#__parts[@]}" -gt 0  ]]
+      if _string_is_url "${__opt}"
       then
-        if [[ -z "${_SCOPE:-}"      ]] &&
-           [[ -z "${_SUBCOMMAND:-}" ]]
+        _SUBCOMMAND="bookmark"
+        _ARGUMENTS+=("${__opt}")
+      elif __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n")) &&
+           [[ "${#__parts[@]}" -gt 0  ]]
+      then
+        if [[ -z "${_SCOPE:-}"            ]] &&
+           [[ -z "${_SUBCOMMAND:-}"       ]]
         then
           if [[ -d "${NB_DIR}/${__parts[0]}"      ]] ||
              {
@@ -10379,21 +10384,18 @@ do
              }
           then
             _SCOPE="${__parts[0]}"
+
             if _is_valid_subcommand "${__parts[1]:-}"
             then
               _SUBCOMMAND="${__parts[1]:-}"
             else
               _ARGUMENTS+=("${__parts[1]:-}")
             fi
-          elif _string_is_url "${__parts[0]}"
-          then
-            _SUBCOMMAND="bookmark"
-            _ARGUMENTS+=("${__opt}")
           else
             _exit_1 printf "Notebook not found: %s\\n" "${__parts[0]}"
           fi
-        elif [[ -n "${_SCOPE:-}"      ]] &&
-             [[ -z "${_SUBCOMMAND:-}" ]] &&
+        elif [[ -n "${_SCOPE:-}"            ]] &&
+             [[ -z "${_SUBCOMMAND:-}"       ]] &&
              _string_is_url "${__parts[0]}"
         then
           _SUBCOMMAND="bookmark"
