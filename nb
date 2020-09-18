@@ -1976,7 +1976,7 @@ _get_selection_basename() {
     else # <selection> might be a title.
       local _title=
       local _filenames=
-      _filenames=($(_list_nb_files))
+      _filenames=($(_list_files))
 
       for __file in "${_filenames[@]:-}"
       do
@@ -2378,14 +2378,14 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _list_nb_files()
+# _list_files()
 #
 # Usage:
-#   _list_nb_files [--sort] [--reverse] [--type <type>]
+#   _list_files [--sort] [--reverse] [--type <type>]
 #
 # Description:
 #   List note files with default sorting.
-_list_nb_files() {
+_list_files() {
   # Relevant `ls` options:
   # --  Default sort order.
   # -t  Sort by time modified (most recently modified first) before sorting
@@ -4237,7 +4237,7 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  _list_nb_files | wc -l | tr -d ' '
+  _list_files | wc -l | tr -d ' '
 }
 
 # delete ############################################################### delete
@@ -5723,9 +5723,9 @@ _list() {
 
   if [[ -n "${_list_file_options[*]:-}" ]]
   then
-    _filenames=($(_list_nb_files "${_list_file_options[@]}")) || :
+    _filenames=($(_list_files "${_list_file_options[@]}")) || :
   else
-    _filenames=($(_list_nb_files)) || :
+    _filenames=($(_list_files)) || :
   fi
 
   local _filenames_count="${#_filenames[@]}"
