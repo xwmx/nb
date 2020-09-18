@@ -7422,7 +7422,7 @@ HEREDOC
     if [[ -d "${NB_DIR}/${_name}/.git" ]]
     then
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
-      printf "Now using %s.\\n" "$(_highlight "${_name}")"
+      printf "Now using: %s\\n" "$(_highlight "${_name}")"
     else
       _exit_1 printf "Not found: %s\\n" "$(_highlight "${_name}")"
     fi
