@@ -2350,7 +2350,7 @@ _join() {
   printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
 }
 
-# _less_prompt
+# _less_prompt()
 #
 # Usage:
 #   _less_prompt
@@ -2370,7 +2370,7 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _line_wrap_off
+# _line_wrap_off()
 #
 # Usage:
 #   _line_wrap_off
@@ -2388,7 +2388,7 @@ _line_wrap_off() {
   printf '\033[?7l'
 }
 
-# _line_wrap_on
+# _line_wrap_on()
 #
 # Usage:
 #   _line_wrap_on
