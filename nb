@@ -306,17 +306,14 @@ __option_value_is_present() {
 
 # Configuration File ####################################### Configuration File
 
-# .nbrc
+# $NBRC_PATH
 #
-# If a `.nbrc` file exists in `$HOME`, source it.
-if [[ -n "${NBRC_PATH:-}" ]]
-then
-  export NBRC_PATH="${NBRC_PATH}"
-else
-  export NBRC_PATH="${HOME}/.nbrc"
-fi
+# Default: `$HOME/.nbrc`
+#
+# The location of the .nbrc configuration file.
+export NBRC_PATH="${NBRC_PATH:-"${HOME}/.nbrc"}"
 
-# Handle symlinked NBRC_PATH
+# Handle symlinked NBRC_PATH.
 if [[ -L "${NBRC_PATH}" ]]
 then
   NBRC_PATH="$(readlink "${NBRC_PATH}")"
@@ -335,18 +332,15 @@ fi
 # Default: `$HOME/.nb`
 #
 # The location of the directory that contains the notebooks.
-if [[ -n "${NB_DIR:-}" ]]
-then
-  export NB_DIR="${NB_DIR}"
-else
-  export NB_DIR="${HOME}/.nb"
-fi
+export NB_DIR="${NB_DIR:-"${HOME}/.nb"}"
 
+# Handle symlinked NB_DIR.
 if [[ -L "${NB_DIR:-}" ]]
 then
   NB_DIR="$(readlink "${NB_DIR}")"
 fi
 
+# Validate that NB_DIR exists and is writable.
 if [[ -z "${NB_DIR:?}"   ]] ||
    [[ "${NB_DIR}" == "/" ]] ||
    {
@@ -368,7 +362,7 @@ fi
 
 # $NB_AUTO_SYNC
 #
-# Default: 1
+# Default: '1'
 #
 # When set to '1', each `_git_checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
@@ -483,14 +477,14 @@ HEREDOC
 
 # $_COLOR_ENABLED
 #
-# Default: 1
+# Default: '1'
 #
 # Supported Values: '0' '1'
 export _COLOR_ENABLED="${_COLOR_ENABLED:-1}"
 
 # $NB_COLOR_THEME
 #
-# Default: nb
+# Default: 'nb'
 #
 # The color theme.
 export NB_COLOR_THEME="${NB_COLOR_THEME:-nb}"
@@ -618,7 +612,7 @@ __set_nb_color_primary() {
 
 # $NB_COLOR_SECONDARY
 #
-# Default: 8
+# Default: '8'
 #
 # Color for lines and other accents. This should be set to an xterm color
 # number, usually a value between 1 and 256. For a table of common colors and
@@ -731,6 +725,8 @@ _id_brackets_color() {
 # $_NOTEBOOK_PATH
 #
 # Default: `$NB_DIR/home`
+#
+# The path to the current notebook.
 export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NB_DIR}/home}"
 
 # $_GLOBAL_NOTEBOOK_PATH
@@ -848,7 +844,7 @@ trap _nb_cleanup_on_exit EXIT
 
 # $_GIT_ENABLED
 #
-# Default: 1
+# Default: '1'
 #
 # Supported Values: '0' '1'
 export _GIT_ENABLED="${_GIT_ENABLED:-1}"
