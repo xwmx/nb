@@ -1811,8 +1811,11 @@ When `nb` encounters a conflict in a binary file, such as an encrypted
 note, both versions of the file are saved in the notebook as individual
 files, one with `--conflicted` appended to the filename.
 
-If you encounter a conflict that `nb` says it can't merge, [`nb git`](#git)
-and [`nb run`](#run) can be used to resolve the conflict manually.
+`nb` handles git operations automatically, so you shouldn't ever need
+to use the `git` command line tool directly. If you do encounter a
+conflict that `nb` says it can't merge, [`nb git`](#git) and
+[`nb run`](#run) can be used to resolve the conflict manually without
+changing the current working directory.
 
 ### ↕️ Import / Export
 
