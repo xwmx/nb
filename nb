@@ -2532,16 +2532,16 @@ _print_line() {
   _highlight_secondary "${_line// /-}"
 }
 
-# _print_paddding()
+# _print_padding()
 #
 # Usage:
-#   _print_paddding <line> <columns> [<aligned>]
+#   _print_padding <line> <columns> [<aligned>]
 #
 # Description:
 #   Print a string of spaces that can be used as left padding to
 #   center-align <line>. <aligned> is an optional boolean that can
 #   be used to print no padding, returning an empty string.
-_print_paddding() {
+_print_padding() {
   local _padding_line="${1:-}"
   local _padding_line_length="${#_padding_line}"
   local _padding_columns="${2:-}"
@@ -2563,16 +2563,24 @@ _print_paddding() {
 # Description:
 #   Print the welcome message.
 _print_welcome() {
-    cat <<HEREDOC
-$(_highlight_secondary "·----------------·")
-$(_highlight "Welcome") to
-__          _
-\ \   _ __ | |__
- \ \ | '_ \| '_ \\
- / / | | | | |_) |
-/_/  |_| |_|_.__/
-$(_highlight_secondary "·----------------·")
+  local _columns
+  _columns="$(tput cols)"
+
+  local _padding
+  _padding="$(_print_padding " / / | | | | |_) |" "${_columns}")"
+
+  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+
+  cat <<HEREDOC
+${_padding}$(_highlight "Welcome") to
+${_padding}__          _
+${_padding}\ \   _ __ | |__
+${_padding} \ \ | '_ \| '_ \\
+${_padding} / / | | | | |_) |
+${_padding}/_/  |_| |_|_.__/
 HEREDOC
+
+  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
 }
 
 # _set_selection_notebook()
@@ -6339,7 +6347,7 @@ _ls() {
         then
           _centered=1
           _padding="$(
-            _print_paddding "${_line_raw}" "${_columns}" "${_centered}"
+            _print_padding "${_line_raw}" "${_columns}" "${_centered}"
           )"
         fi
 
@@ -6370,7 +6378,7 @@ _ls() {
           _centered=1
         fi
         _padding="$(
-          _print_paddding "${_line_raw}" "${_columns}" "${_centered}"
+          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
