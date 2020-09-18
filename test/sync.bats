@@ -196,7 +196,7 @@ _setup_notebooks() {
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4 ]]
   [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 5 ]]
   [[ "$(cat "${NB_DIR_1}/home/.index")" == \
-    "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}one-3.md"  ]]
+    "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}one-3.md"        ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
 
@@ -220,7 +220,7 @@ _setup_notebooks() {
   [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count)" == 4  ]]
   [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count)" == 5  ]]
   [[ "$(cat "${NB_DIR_1}/home/.index")" == \
-    "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}one-3.md"  ]]
+    "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}one-3.md"        ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
 
@@ -246,7 +246,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == \
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
-     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
+     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"               ]]
 
   # Sync 9, push changes to remote.
   export NB_DIR="${NB_DIR_1}"
@@ -270,7 +270,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == \
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
-     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
+     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"               ]]
 
   # Sync 10, pull changes from remote.
   export NB_DIR="${NB_DIR_2}"
@@ -335,9 +335,9 @@ _setup_notebooks() {
 
   cat "${NB_DIR_1}/home/one.md"
 
-  [[ ${status} -eq 0 ]]
-  [[ ${output} =~ Files\ containing\ conflicts\: ]]
-  [[ ${output} =~ home\:one\.md ]]
+  [[ ${status} -eq 0                              ]]
+  [[ ${output} =~ Files\ containing\ conflicts\:  ]]
+  [[ ${output} =~ home\:one\.md                   ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
   grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
@@ -403,11 +403,11 @@ _setup_notebooks() {
 
   cat "${NB_DIR_1}/home/one.md"
 
-  [[ ${status} -eq 0 ]]
-  [[ ${output} =~ Files\ containing\ conflicts\: ]]
-  [[ ${output} =~ home\:one\.md   ]]
-  [[ ${output} =~ home\:two\.md   ]]
-  [[ ${output} =~ home\:three\.md ]]
+  [[ ${status} -eq 0                              ]]
+  [[ ${output} =~ Files\ containing\ conflicts\:  ]]
+  [[ ${output} =~ home\:one\.md                   ]]
+  [[ ${output} =~ home\:two\.md                   ]]
+  [[ ${output} =~ home\:three\.md                 ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
   grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
@@ -465,9 +465,9 @@ This content is unique to 2.
   printf "2:one.md\\n"
   cat "${NB_DIR_2}/home/one.md"
 
-  [[ ${status} -eq 0 ]]
-  [[ ${output} =~ Files\ containing\ conflicts\: ]]
-  [[ ${output} =~ home\:one\.md ]]
+  [[ ${status} -eq 0                              ]]
+  [[ ${output} =~ Files\ containing\ conflicts\:  ]]
+  [[ ${output} =~ home\:one\.md                   ]]
 
   grep -q '<<<<<<< HEAD'              "${NB_DIR_2}/home/one.md"
   grep -q 'Example content from 1.'   "${NB_DIR_2}/home/one.md"
@@ -503,10 +503,12 @@ This content is unique to 2.
 
   export NB_DIR="${NB_DIR_2}"
 
-  [[ ! "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 1\. ]]
-  [[ ! "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 2\. ]]
+  [[ ! "$(
+          "${_NB}" show one.md.enc --password password --print --no-color
+        )" =~ Edit\ content\ from\ 1\.              ]]
+  [[ ! "$(
+          "${_NB}" show one.md.enc --password password --print --no-color
+        )" =~ Edit\ content\ from\ 2\.              ]]
 
   run "${_NB}" sync
 
@@ -517,7 +519,7 @@ This content is unique to 2.
   [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"   ]]
 
   ls -la "${NB_DIR_2}"
 
@@ -532,10 +534,11 @@ This content is unique to 2.
   [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"   ]]
 
-  [[ "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 2\. ]]
+  [[ "$(
+        "${_NB}" show one.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 2\. ]]
 
   export NB_DIR="${NB_DIR_1}"
 
@@ -552,10 +555,11 @@ This content is unique to 2.
   printf "\${_before}:  %s\\n" "${_before}"
   printf "\${_after}:   %s\\n" "${_after}"
 
-  [[ "${_before}" != "${_after}" ]]
+  [[ "${_before}" != "${_after}"      ]]
 
-  [[ "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 1\. ]]
+  [[ "$(
+        "${_NB}" show one.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 1\.  ]]
 
   run "${_NB}" sync
 
@@ -563,29 +567,31 @@ This content is unique to 2.
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                                      ]]
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"               ]]
-  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc"   ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                     ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc"         ]]
 
-  [[ -e "${NB_DIR_2}/home/one.md.enc"               ]]
-  [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_2}/home/one.md.enc"                     ]]
+  [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc"       ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
   [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\: ]]
   [[ ${output} =~ home\:one\-\-conflicted\.md\.enc        ]]
 
-  [[ "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 1\. ]]
-  [[ "$("${_NB}" show one--conflicted.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 2\. ]]
+  [[ "$(
+        "${_NB}" show one.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 1\.                      ]]
+  [[ "$(
+        "${_NB}" show one--conflicted.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 2\.                      ]]
 
   export NB_DIR="${NB_DIR_2}"
 
@@ -594,16 +600,16 @@ This content is unique to 2.
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                                          ]]
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"             ]]
-  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                         ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc"             ]]
 
-  [[ -e "${NB_DIR_2}/home/one.md.enc"             ]]
-  [[ -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_2}/home/one.md.enc"                         ]]
+  [[ -e "${NB_DIR_2}/home/one--conflicted.md.enc"             ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"             ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
      "$(_get_hash "${NB_DIR_2}/home/one--conflicted.md.enc")" ]]
@@ -611,8 +617,10 @@ This content is unique to 2.
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
      "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" ]]
 
-  [[ "$("${_NB}" show one.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 1\. ]]
-  [[ "$("${_NB}" show one--conflicted.md.enc --password password --print --no-color)" =~ \
-     Edit\ content\ from\ 2\. ]]
+  [[ "$(
+        "${_NB}" show one.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 1\.                          ]]
+  [[ "$(
+        "${_NB}" show one--conflicted.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 2\.                          ]]
 }
