@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck disable=SC2016
 
 load test_helper
 
@@ -556,8 +557,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                        ]]
-  [[ "${output}" =~ 'NB_COLOR_SECONDARY must be a number.'  ]]
+  [[ ${status} -eq 1                                          ]]
+  [[ "${output}" =~ NB_COLOR_SECONDARY\ must\ be\ a\ number.  ]]
 
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
 
@@ -627,8 +628,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                                      ]]
-  [[ "${output}" =~ 'NB_COLOR_THEME must be one of the available themes.' ]]
+  [[ ${status} -eq 1                                                            ]]
+  [[ "${output}" =~ NB_COLOR_THEME\ must\ be\ one\ of\ the\ available\ themes\. ]]
 
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
 
