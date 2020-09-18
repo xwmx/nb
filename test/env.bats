@@ -25,11 +25,10 @@ load test_helper
 }
 
 @test "\`env\` with VISUAL sets editor." {
-  EDITOR= VISUAL='example-visual' run "${_NB}" env
+  EDITOR='' VISUAL='example-visual' run "${_NB}" env
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[*]}" "${lines[*]}"
 
   [[ "${lines[3]}" =~ EDITOR=example-visual ]]
 }
