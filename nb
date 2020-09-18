@@ -398,10 +398,10 @@ export NB_FOOTER="${NB_FOOTER:-1}"
 
 # $NB_HEADER
 #
-# Default: '1'
+# Default: '2'
 #
 # Supported Values: '0' '1' '2' '3'
-export NB_HEADER="${NB_HEADER:-1}"
+export NB_HEADER="${NB_HEADER:-2}"
 
 # $NB_LIMIT
 #
@@ -9006,13 +9006,13 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
      • Supported Values:
 
        $(_highlight "0")  Hide Header
-       $(_highlight "1")  Dynamic Alignment (default)
+       $(_highlight "1")  Dynamic Alignment
             - Left justified when list is shorter than terminal width.
             - Center aligned when list is longer than terminal width.
-       $(_highlight "2")  Center Aligned
+       $(_highlight "2")  Center Aligned (default)
        $(_highlight "3")  Left Justified
 
-     • Default Value: $(_highlight "1")")
+     • Default Value: $(_highlight "2")")
 
   _settings_list_items+=("$(_id_brackets_color '10') limit")
   _settings_help_items+=("\
