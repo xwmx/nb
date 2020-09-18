@@ -2370,6 +2370,37 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
+# _line_wrap_off
+#
+# Usage:
+#   _line_wrap_off
+#
+# Description:
+#   Turn off line wrapping, aka automatic margins.
+_line_wrap_off() {
+  # NOTE: `tput` vs control sequence:
+  # https://unix.stackexchange.com/a/558771
+  # https://unix.stackexchange.com/a/515938
+  # https://superuser.com/a/189068
+
+  # tput rmam
+
+  printf '\033[?7l'
+}
+
+# _line_wrap_on
+#
+# Usage:
+#   _line_wrap_on
+#
+# Description:
+#   Turn on line wrapping, aka automatic margins.
+_line_wrap_on() {
+  # tput smam
+
+  printf '\033[?7h'
+}
+
 # _list_files()
 #
 # Usage:
@@ -5981,8 +6012,7 @@ HEREDOC
                [[ -n "${_first_line:-}"  ]]
              }
           then
-            # Turn off line-wrapping
-            printf '\033[?7l'
+            _line_wrap_off
           fi
         fi
 
@@ -6004,8 +6034,7 @@ HEREDOC
                [[ -n "${_first_line:-}"  ]]
              }
           then
-            # Turn on line-wrapping
-            printf '\033[?7h'
+            _line_wrap_on
           fi
         fi
 
@@ -6163,11 +6192,11 @@ _ls() {
       "$(_highlight_secondary "${_commands_raw[10]}")"
     )
 
-    printf '\033[?7l'
+    _line_wrap_off
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
     printf "%s" "${_TPUT_SGR0}"
-    printf '\033[?7h'
-    printf '\n'
+    _line_wrap_on
+    printf "\\n"
 
     for ((i=0;i < "${#_commands_raw[@]}"; i++))
     do
@@ -6374,9 +6403,8 @@ _ls() {
 
     printf "%b" "${_output_hi}"
 
-    # Use control characters to disable wrapping for long lines.
-    # Source: https://superuser.com/a/189068
-    printf '\033[?7l'
+    _line_wrap_off
+
     if ((_centered))
     then # print full-width line.
       _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
@@ -6386,9 +6414,10 @@ _ls() {
         printf "%s" "${_output_raw}" | sed 's/..$//'
       )" | tr -d '\n'
     fi
+
     printf "%s" "${_TPUT_SGR0}"
-    printf '\033[?7h'
-    printf '\n'
+    _line_wrap_on
+    printf "\\n"
   }
 
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
@@ -8435,9 +8464,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            printf '\033[?7l'
+            _line_wrap_off
             printf "%s" "${_id_filename_color}"
-            printf '\033[?7h'
+            _line_wrap_on
             printf "\\n"
           fi
 
@@ -8449,9 +8478,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            printf '\033[?7l'
+            _line_wrap_off
             _print_line "${_id_filename}"
-            printf '\033[?7h'
+            _line_wrap_on
           fi
 
           if ((_filename_hit))
