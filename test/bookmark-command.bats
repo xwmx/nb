@@ -158,7 +158,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -187,9 +187,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="<http invalid url>"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
 
   # Creates git commit
@@ -201,7 +203,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints error message

@@ -25,6 +25,7 @@ export _OG_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.htm
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -37,8 +38,10 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -51,7 +54,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -79,6 +82,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example OG Title
 
@@ -91,8 +95,10 @@ Example OG description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example OG Title' "${_NOTEBOOK_PATH}"/*
 
@@ -105,7 +111,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
