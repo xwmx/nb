@@ -3400,6 +3400,7 @@ _bookmark() {
   local _filename=
   local _password=
   local _quote=
+  local _related_urls=()
   local _save_source=0
   local _selection=
   local _skip_content=0
@@ -3407,7 +3408,6 @@ _bookmark() {
   local _tag_list=
   local _title=
   local _url=
-  local _related_urls=()
 
   while ((${#}))
   do
@@ -3437,6 +3437,10 @@ _bookmark() {
         _quote="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      -r|--via|--also|--related)
+        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
+        shift
+        ;;
       --save-source|--source|--save-html|--html|--raw-content|--raw-html)
         _save_source=1
         ;;
@@ -3449,10 +3453,6 @@ _bookmark() {
         ;;
       --title)
         _title="$(__option_get_value "${__arg}" "${__val:-}")"
-        shift
-        ;;
-      -r|--via|--also|--related)
-        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
       delete)
@@ -7921,7 +7921,7 @@ _rename() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --force|-f)
+      -f|--force)
         _force=1
         ;;
       --reset)
@@ -9403,7 +9403,7 @@ _show() {
       -p|--print|--dump|--skip-pager|--no-pager)
         _print_output=1
         ;;
-      --render|-r)
+      -r|--render)
         _render=1
         _ls_arguments+=("${__arg}")
         ;;
