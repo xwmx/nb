@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.0.2"
+_VERSION="5.0.3"
 
 # $_ME
 #
@@ -2569,7 +2569,7 @@ _print_welcome() {
   local _padding
   _padding="$(_print_padding " / / | | | | |_) |" "${_columns}")"
 
-  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+  _print_line "$(printf "%-${_columns}s" '.')"
 
   cat <<HEREDOC
 ${_padding}$(_highlight "Welcome") to
@@ -2580,7 +2580,7 @@ ${_padding} / / | | | | |_) |
 ${_padding}/_/  |_| |_|_.__/
 HEREDOC
 
-  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+  _print_line "$(printf "%-${_columns}s" '.')"
 }
 
 # _set_selection_notebook()
@@ -8579,6 +8579,9 @@ _settings() {
       then
         printf "%s\\n" "${_NB_COLOR_THEMES[@]}"
       else
+        [[ "${1}" =~ [[:digit:]] ]] || _exit_1 \
+          printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
+
         _nb_settings_colors_print "${1:-}"
         printf "\\n"
       fi
