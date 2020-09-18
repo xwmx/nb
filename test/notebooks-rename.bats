@@ -27,11 +27,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks rename "one" "new-name"
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 0                          ]]
   [[ "${output}" =~ one                       ]]
   [[ "${output}" =~ is\ now\ named            ]]
   [[ "${output}" =~ new-name                  ]]
@@ -46,11 +46,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks rename "home" "new-name"
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 0                              ]]
   [[ "${output}" =~ home                          ]]
   [[ "${output}" =~ is\ now\ named                ]]
   [[ "${output}" =~ new-name                      ]]
@@ -65,11 +65,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks rename "invalid" "new-name"
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 1                                    ]]
   [[ "${output}" =~ invalid                             ]]
   [[ "${output}" =~ is\ not\ a\ valid\ notebook\ name\. ]]
   [[ ! -e "${NB_DIR}/new-name/.git"                     ]]
@@ -86,11 +86,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks rename "one" "two"
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 1                          ]]
   [[ "${output}" =~ A\ notebook\ named        ]]
   [[ "${output}" =~ two                       ]]
   [[ "${output}" =~ lready\ exists\.          ]]
@@ -117,9 +117,9 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" =~ can\ not\ be\ renamed\. ]]
-  [[ -e "${NB_DIR}/local" ]]
+  [[ ${status} -eq 1                            ]]
+  [[ "${lines[0]}" =~ can\ not\ be\ renamed\.   ]]
+  [[ -e "${NB_DIR}/local"                       ]]
 }
 
 @test "\`notebooks rename local <new-name>\` outside local deletes." {
@@ -140,7 +140,7 @@ _setup_notebooks() {
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                  ]]
   [[ "${lines[0]}" =~ is\ now\ named  ]]
   [[ ! -e "${NB_DIR}/local"           ]]
   [[ -e "${NB_DIR}/new-name"          ]]

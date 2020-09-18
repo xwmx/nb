@@ -22,11 +22,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks current
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 0    ]]
   [[ "${output}" =~ one ]]
 }
 
@@ -37,11 +37,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks current --path
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 0              ]]
   [[ "${output}" =~ ${NB_DIR}/one ]]
 }
 
@@ -57,11 +57,11 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks current
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 0      ]]
   [[ "${output}" =~ local ]]
 }
 
@@ -77,12 +77,12 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks current --path
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_TMP_DIR}: '%s'\\n" "${_TMP_DIR}"
 
+  [[ ${status} -eq 0                    ]]
   [[ "${output}" =~ ${_TMP_DIR}/example ]]
 }
 
@@ -93,12 +93,12 @@ _setup_notebooks() {
   }
 
   run "${_NB}" home:notebooks current
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ home ]]
+  [[ ${status} -eq 0      ]]
+  [[ "${output}" =~ home  ]]
 }
 
 @test "\`notebooks current --path\` exits with 0 and prints the scoped notebook path." {
@@ -108,10 +108,10 @@ _setup_notebooks() {
   }
 
   run "${_NB}" home:notebooks current --path
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" == "${NB_DIR}/home" ]]
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" == "${NB_DIR}/home"  ]]
 }

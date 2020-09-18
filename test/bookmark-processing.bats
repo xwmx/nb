@@ -6,12 +6,15 @@ export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 export _OG_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.html"
 
 @test "\`bookmark\` extracts title and meta description tag content." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -58,7 +61,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark\` extracts open graph title and description tag content." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_OG_BOOKMARK_URL}"
 

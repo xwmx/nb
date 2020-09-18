@@ -48,7 +48,10 @@ load test_helper
 # `nb` (empty repo) ###########################################################
 
 @test "\`nb\` with empty repo exits with status 0 and \`ls\` output." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}"
 
   printf "\${status}: %s\\n" "${status}"
@@ -80,6 +83,7 @@ load test_helper
   }
 
   run "${_NB}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[*]}" "${lines[*]}"
@@ -98,8 +102,10 @@ load test_helper
   }
 
   run "${_NB}" "${_BOOKMARK_URL}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -153,10 +159,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   NB_DIR='/' run "${_NB}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[*]}" "${lines[*]}"
 
-  [[ "${status}" -eq 1 ]]
-  [[ "${lines[0]}" =~ NB_DIR\ is\ not\ valid ]]
+  [[ "${status}" -eq 1                        ]]
+  [[ "${lines[0]}" =~ NB_DIR\ is\ not\ valid  ]]
 }

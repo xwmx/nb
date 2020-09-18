@@ -139,9 +139,9 @@ load test_helper
   git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\        ]]
@@ -182,9 +182,9 @@ load test_helper
   git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\        ]]
@@ -225,9 +225,9 @@ load test_helper
   git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\        ]]
@@ -269,9 +269,9 @@ load test_helper
   git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\        ]]
@@ -312,9 +312,9 @@ load test_helper
   git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\        ]]

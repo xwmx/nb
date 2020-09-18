@@ -367,6 +367,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ ${status} -eq 0              ]]
   [[ "${output}" =~ NB_AUTO_SYNC  ]]
   [[ "${output}" =~ set\ to\      ]]
@@ -384,6 +385,7 @@ skip "Determine how to test interactive prompt."
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ ${status} -eq 0              ]]
   [[ "${output}" =~ NB_AUTO_SYNC  ]]
   [[ "${output}" =~ set\ to\      ]]
@@ -482,8 +484,8 @@ skip "Determine how to test interactive prompt."
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                      ]]
-  [[ "${output}" =~ 'NB_COLOR_PRIMARY must be a number.'  ]]
+  [[ ${status} -eq 1                                          ]]
+  [[ "${output}" =~ \NB_COLOR_PRIMARY\ must\ be\ a\ number\.  ]]
 
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
 

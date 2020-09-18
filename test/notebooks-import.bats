@@ -15,7 +15,9 @@ _setup_notebooks() {
 # no argument #################################################################
 
 @test "\`notebooks import\` with no arguments exits with status 1 and prints help." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" notebooks import
 
@@ -27,7 +29,9 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks import\` with valid directory <path> imports." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
@@ -42,11 +46,13 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks import\` with relative <path> imports." {
-  run "${_NB}" init
-  mkdir "${_TMP_DIR}/example"
-  touch "${_TMP_DIR}/example/file.md"
+  {
+    run "${_NB}" init
+    mkdir "${_TMP_DIR}/example"
+    touch "${_TMP_DIR}/example/file.md"
 
-  cd "${_TMP_DIR}"
+    cd "${_TMP_DIR}"
+  }
 
   run "${_NB}" notebooks import example
 
@@ -61,9 +67,11 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks import\` with existing notebook imports with unique name." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "Example Folder"
-  [[ -d "${NB_DIR}/Example Folder" ]]
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "Example Folder"
+    [[ -d "${NB_DIR}/Example Folder" ]]
+  }
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
@@ -78,7 +86,9 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks import\` with invalid file <path> argument exits with 1." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/example.md"
 
@@ -92,7 +102,9 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks import\` with valid <name> argument imports." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" notebooks import                     \
     "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
@@ -111,9 +123,11 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks import\` with existing notebook <name> imports with unique name." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example" ]]
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example" ]]
+  }
 
   run "${_NB}" notebooks import                     \
     "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \

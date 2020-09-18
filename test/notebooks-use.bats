@@ -21,15 +21,17 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks use
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
+
+  [[ ${status} -eq 1                                  ]]
   [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\] ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"          ]]
 
   run "${_NB}" env
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
@@ -43,17 +45,18 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks use not-a-notebook
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
-  [[ "${lines[0]}" =~ Not\ found      ]]
-  [[ "${lines[0]}" =~ not-a-notebook  ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+  [[ ${status} -eq 1                          ]]
+  [[ "${lines[0]}" =~ Not\ found              ]]
+  [[ "${lines[0]}" =~ not-a-notebook          ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 
   run "${_NB}" env
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
@@ -67,16 +70,17 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks use one
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'Now using: $(_highlight 'one')'" "'${output}'"
 
-  [[ "${output}" == "Now using: $(_highlight 'one')" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "one" ]]
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "Now using: $(_highlight 'one')"  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "one"           ]]
 
   run "${_NB}" env
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
@@ -90,16 +94,17 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks use one:
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'Now using: $(_highlight 'one')'" "'${output}'"
 
-  [[ "${output}" == "Now using: $(_highlight 'one')" ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "one" ]]
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "Now using: $(_highlight 'one')"  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "one"           ]]
 
   run "${_NB}" env
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
@@ -119,15 +124,17 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks use one
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
-  [[ "${lines[0]}" =~ in\ a\ local\ notebook ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+
+  [[ ${status} -eq 1                          ]]
+  [[ "${lines[0]}" =~ in\ a\ local\ notebook  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 
   run "${_NB}" env
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"

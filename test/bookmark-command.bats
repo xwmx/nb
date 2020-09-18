@@ -5,9 +5,12 @@ load test_helper
 # no argument #################################################################
 
 @test "\`bookmark\` command with no argument exits with 0, prints message, and lists." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_BOOKMARK}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -115,8 +118,10 @@ HEREDOC
   }
 
   run "${_BOOKMARK}" "${_BOOKMARK_URL}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -163,12 +168,15 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark\` with invalid <url> argument creates new bookmark without downloading." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark 'http invalid url'
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0

@@ -5,7 +5,10 @@ load test_helper
 # `list` (empty) ##############################################################
 
 @test "\`list\` (empty) exits with 0 and lists files." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" list
 
   printf "\${status}: %s\\n" "${status}"
@@ -21,8 +24,9 @@ Import a file:
   $(_highlight "nb import (<path> | <url>)")
 Help information:
   $(_highlight 'nb help')"
-  [[ ${status} -eq 0 ]]
-  [[ "${_expected}" == "${output}" ]]
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
 }
 
 # `list` ######################################################################
@@ -37,12 +41,12 @@ Help information:
   }
 
   run "${_NB}" list
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
+  [[ ${status} -eq 0        ]]
   [[ "${lines[0]}" =~ three ]]
   [[ "${lines[1]}" =~ two   ]]
   [[ "${lines[2]}" =~ one   ]]
@@ -58,12 +62,12 @@ Help information:
   }
 
   run "${_NB}" list
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
+  [[ ${status} -eq 0                ]]
   [[ "${lines[0]}" =~ three.md.enc  ]]
   [[ "${lines[0]}" =~ 🔒            ]]
   [[ "${lines[1]}" =~ two.md        ]]
@@ -83,15 +87,15 @@ Help information:
   }
 
   run "${_NB}" list --no-id
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" =~ three  ]]
-  [[ "${lines[1]}" =~ two    ]]
-  [[ "${lines[2]}" =~ one    ]]
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ three   ]]
+  [[ "${lines[1]}" =~ two     ]]
+  [[ "${lines[2]}" =~ one     ]]
 }
 
 # `list --no-color` ###########################################################
@@ -106,15 +110,15 @@ Help information:
   }
 
   run "${_NB}" list --no-color
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'[3] ${_files[2]}'" "'${lines[0]}'"
 
-  [[ "${lines[0]}" =~ three  ]]
-  [[ "${lines[1]}" =~ two    ]]
-  [[ "${lines[2]}" =~ one    ]]
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ three   ]]
+  [[ "${lines[1]}" =~ two     ]]
+  [[ "${lines[2]}" =~ one     ]]
 }
 
 # `list (-e | --excerpt)` #####################################################
@@ -148,13 +152,13 @@ HEREDOC
   }
 
   run "${_NB}" list -e
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 15 ]]
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 15  ]]
 }
 
 @test "\`list -e 2\` exits with 0 and displays 4 line list items." {
@@ -164,13 +168,13 @@ HEREDOC
   }
 
   run "${_NB}" list -e 2
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 12 ]]
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 12  ]]
 }
 
 @test "\`list -e 0\` exits with 0 and displays 1 line list items." {
@@ -180,12 +184,12 @@ HEREDOC
   }
 
   run "${_NB}" list -e 0
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0      ]]
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
@@ -196,13 +200,13 @@ HEREDOC
   }
 
   run "${_NB}" list --excerpt
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 15 ]]
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 15  ]]
 }
 
 @test "\`list --excerpt 2\` exits with 0 and displays 4 line list items." {
@@ -212,13 +216,13 @@ HEREDOC
   }
 
   run "${_NB}" list --excerpt 2
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 12 ]]
+  [[ ${status} -eq 0        ]]
+  [[ "${#lines[@]}" -eq 12  ]]
 }
 
 @test "\`list --excerpt 0\` exits with 0 and displays 1 line list items." {
@@ -228,12 +232,12 @@ HEREDOC
   }
 
   run "${_NB}" list --excerpt 0
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0      ]]
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
@@ -268,12 +272,12 @@ HEREDOC
   }
 
   run "${_NB}" list -n
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0      ]]
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
@@ -284,15 +288,14 @@ HEREDOC
   }
 
   run "${_NB}" list -n 2
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 3 ]]
-
-  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\. ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${#lines[@]}" -eq 3                       ]]
+  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "\`list --limit 2\` exits with 0 and displays list with 2 items." {
@@ -302,15 +305,14 @@ HEREDOC
   }
 
   run "${_NB}" list --limit 2
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 3 ]]
-
-  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\. ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${#lines[@]}" -eq 3                       ]]
+  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
 
 }
 
@@ -321,15 +323,14 @@ HEREDOC
   }
 
   run "${_NB}" list --2
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 3 ]]
-
-  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\. ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${#lines[@]}" -eq 3                       ]]
+  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
 
 }
 
@@ -360,7 +361,6 @@ HEREDOC
   }
 
   run "${_NB}" list --titles
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -369,6 +369,7 @@ HEREDOC
   printf "\${lines[1]}: '%s'\\n" "${lines[1]}"
   printf "\${lines[2]}: '%s'\\n" "${lines[2]}"
 
+  [[ ${status} -eq 0            ]]
   [[ "${lines[0]}" =~ three     ]] && [[ "${lines[0]}" =~ 3 ]]
   [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
   [[ "${lines[2]}" =~ one       ]] && [[ "${lines[2]}" =~ 1 ]]
@@ -401,12 +402,12 @@ HEREDOC
   }
 
   run "${_NB}" list --filenames
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0            ]]
   [[ "${lines[0]}" =~ third.md  ]] && [[ "${lines[0]}" =~ 3 ]]
   [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
   [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
@@ -446,7 +447,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                      ]]
   [[ "${lines[0]}" =~ fourth.bookmark.md  ]] && [[ "${lines[0]}" =~ 4 ]]
   [[ "${lines[1]}" =~ second.bookmark.md  ]] && [[ "${lines[1]}" =~ 2 ]]
 }
@@ -679,13 +680,13 @@ HEREDOC
   }
 
   run "${_NB}" list invalid
-  [[ ${status} -eq 1 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 1 ]]
+  [[ ${status} -eq 1                      ]]
+  [[ "${#lines[@]}" -eq 1                 ]]
   [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
   [[ "${lines[0]}" =~ invalid             ]]
 }
@@ -703,12 +704,12 @@ HEREDOC
   }
 
   run "${_NB}" one:list
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
+  [[ ${status} -eq 0          ]]
   [[ "${lines[0]}" =~ one:3   ]]
   [[ "${lines[0]}" =~ three   ]]
   [[ "${lines[1]}" =~ one:2   ]]
@@ -740,8 +741,9 @@ Import a file:
   $(_highlight 'nb one:import (<path> | <url>)')
 Help information:
   $(_highlight 'nb help')"
-  [[ ${status} -eq 0 ]]
-  [[ "${_expected}" == "${output}" ]]
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
 }
 
 @test "\`scoped:list --bookmarks\` with empty notebook prints help info." {
@@ -751,7 +753,6 @@ Help information:
   }
 
   run "${_NB}" one:list --bookmarks
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -762,8 +763,9 @@ Add a bookmark:
   $(_highlight 'nb one: <url>')
 Help information:
   $(_highlight 'nb help bookmark')"
-  [[ ${status} -eq 0 ]]
-  [[ "${_expected}" == "${output}" ]]
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
 }
 
 @test "\`scoped:list --documents\` with empty notebook prints help info." {
@@ -773,7 +775,6 @@ Help information:
   }
 
   run "${_NB}" one:list --documents
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -784,8 +785,9 @@ Import a file:
   $(_highlight 'nb one:import (<path> | <url>)')
 Help information:
   $(_highlight 'nb help import')"
-  [[ ${status} -eq 0 ]]
-  [[ "${_expected}" == "${output}" ]]
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
 }
 
 # `list --hard-empty` #########################################################
@@ -812,13 +814,16 @@ Help information:
 
 @test "\`help list\` exits with status 0." {
   run "${_NB}" help list
+
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help list\` prints help information." {
   run "${_NB}" help list
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" =~ nb\ list ]]
 }

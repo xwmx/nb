@@ -10,10 +10,11 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   }
-  _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
 
   run "${_NB}" edit
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -44,9 +45,11 @@ load test_helper
   }
 
   run "${_NB}" edit 1
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
+
+  [[ ${status} -eq 1                      ]]
   [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
   [[ "${lines[0]}" =~ 1                   ]]
 }
@@ -60,13 +63,15 @@ load test_helper
     run "${_NB}" one:add
     _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
   }
-  [[ -n "${_filename}" ]]
-  [[ -e "${NB_DIR}/one/${_filename}" ]]
 
   run "${_NB}" edit one:"${_filename}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${output}" =~ Updated\            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
@@ -83,10 +88,12 @@ load test_helper
 
   export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
     run "${_NB}" edit "${_filename}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ -z ${output} ]]
+
+  [[ ${status} -eq 0  ]]
+  [[ -z ${output}     ]]
 }
 
 @test "\`edit\` encrypted with no changes does not print output." {
@@ -99,10 +106,12 @@ load test_helper
 
   export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
     run "${_NB}" edit "${_filename}" --password example
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ -z ${output} ]]
+
+  [[ ${status} -eq 0  ]]
+  [[ -z ${output}     ]]
 }
 
 # <filename> ##################################################################
@@ -115,6 +124,7 @@ load test_helper
   }
 
   run "${_NB}" edit "${_filename}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -147,6 +157,7 @@ load test_helper
   }
 
   run "${_NB}" edit "${_filename}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -180,6 +191,7 @@ load test_helper
   }
 
   run "${_NB}" edit 1
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -213,6 +225,7 @@ load test_helper
   }
 
   run "${_NB}" edit "${_NOTEBOOK_PATH}/${_filename}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -244,10 +257,11 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" edit "${_title}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -314,10 +328,11 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" edit 1 --content "Example content."
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -346,8 +361,8 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" edit 1 --content
 
@@ -374,8 +389,11 @@ load test_helper
   }
 
   run "${_NB}" edit 1 --password=example
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0
   [[ ${status} -eq 0 ]]
 
   # Updates file
@@ -399,9 +417,11 @@ load test_helper
 
 @test "\`help edit\` exits with status 0 and prints help information." {
   run "${_NB}" help edit
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
   [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }

@@ -5,9 +5,12 @@ load test_helper
 # no argument #################################################################
 
 @test "\`bookmark\` with no argument exits with 0, prints message, and lists." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -148,11 +151,15 @@ HEREDOC
 }
 
 @test "\`bookmark\` with valid <url> argument creates new note without errors." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -284,9 +291,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --comment option ############################################################
 
 @test "\`bookmark\` with --comment option creates new note with comment." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --comment "New comment."
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -338,7 +348,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --quote option ##############################################################
 
 @test "\`bookmark\` with --quote option creates new note with quote." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --quote "Quote line 1.
 
@@ -402,11 +414,15 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --save-source option ########################################################
 
 @test "\`bookmark --save-source\` creates new note with HTML content." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --save-source
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -461,9 +477,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 # --skip-content option #######################################################
 
 @test "\`bookmark\` with --skip-content option creates new note with no page content." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --skip-content
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -507,9 +526,12 @@ Example description."
 # --tags option ###############################################################
 
 @test "\`bookmark\` with --tags option creates new note with tags." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags tag1,tag2
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -559,9 +581,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark\` with --tags option and hashtags creates new note with tags." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2' -c 'Example comment.'
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -617,9 +642,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --title option ##############################################################
 
 @test "\`bookmark\` with --title option creates new note with title." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --title "New Title"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -667,9 +695,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --related option ############################################################
 
 @test "\`bookmark\` with invalid --related <url> argument exits with 1." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark --related
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -698,6 +729,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --related https://example.net
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -755,6 +787,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     --related https://example.net \
     --related https://example.org \
     --related https://example.example
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -808,7 +841,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --encrypt option ############################################################
 
 @test "\`bookmark --encrypt\` with content argument creates a new .enc bookmark." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
 
@@ -821,7 +856,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark --encrypt --password\` without argument exits with 1." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password
 
   [[ ${status} -eq 1 ]]
@@ -833,7 +871,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --filename option ###########################################################
 
 @test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.bookmark.md
 
@@ -859,7 +899,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`add\` with --filename option uses specified extension." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.org
 
   printf "\${status}: %s\\n" "${status}"
@@ -884,7 +927,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`add\` with extension-less --filename option uses default extension." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example
 
@@ -916,11 +961,12 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete 1 --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -960,10 +1006,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark edit 1
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-# Returns status 0
+  # Returns status 0
   [[ ${status} -eq 0 ]]
 
   # Updates note file
@@ -992,6 +1039,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark url 99
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -1009,6 +1057,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark url 1
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -1030,6 +1079,7 @@ https://example.com
   }
 
   run "${_NB}" bookmark url 1
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -1050,6 +1100,7 @@ https://example.com
   }
 
   run "${_NB}" bookmark url 1 --password=example
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -1177,7 +1228,10 @@ HEREDOC
 }
 
 @test "\`bookmark help\` exits with status 0 and prints." {
-  "${_NB}" init
+  {
+    "${_NB}" init
+  }
+
 
   run "${_NB}" bookmark help
 

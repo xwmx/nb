@@ -210,13 +210,16 @@ _setup_notebook() {
 
 @test "\`help notebooks\` exits with status 0." {
   run "${_NB}" help notebooks
+
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help notebooks\` prints help information." {
   run "${_NB}" help notebooks
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ nb\ notebook ]]
+
+  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[1]}" =~ nb\ notebook  ]]
 }
