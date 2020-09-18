@@ -51,10 +51,12 @@ load test_helper
   [[ "$(_get_hash "${NB_DIR_1}/home/example.md.enc")" == \
      "$(_get_hash "${NB_DIR_2}/home/example-1.md.enc")" ]]
 
-  [[ "$("${_NB}" show example.md.enc --password password --print --no-color)" =~ \
-     Example\ content\. ]]
-  [[ "$("${_NB}" show example-1.md.enc --password password --print --no-color)" =~ \
-     Example\ content\. ]]
+  [[ "$(
+        "${_NB}" show example.md.enc --password password --print --no-color
+      )" =~ Example\ content\. ]]
+  [[ "$(
+        "${_NB}" show example-1.md.enc --password password --print --no-color
+      )" =~ Example\ content\. ]]
 }
 
 # `copy <id>` #################################################################
@@ -106,10 +108,12 @@ load test_helper
   [[ "$(_get_hash "${NB_DIR_1}/home/example.md.enc")" == \
      "$(_get_hash "${NB_DIR_2}/home/example-1.md.enc")" ]]
 
-  [[ "$("${_NB}" show example.md.enc --password password --print --no-color)" =~ \
-     Example\ content\. ]]
-  [[ "$("${_NB}" show example-1.md.enc --password password --print --no-color)" =~ \
-     Example\ content\. ]]
+  [[ "$(
+        "${_NB}" show example.md.enc --password password --print --no-color
+      )" =~ Example\ content\. ]]
+  [[ "$(
+        "${_NB}" show example-1.md.enc --password password --print --no-color
+      )" =~ Example\ content\. ]]
 }
 
 # `copy <title>` ##############################################################
