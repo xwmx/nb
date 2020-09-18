@@ -65,7 +65,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -140,7 +140,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -178,7 +178,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -217,7 +217,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -256,7 +256,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -295,7 +295,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -334,7 +334,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -373,7 +373,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -689,7 +689,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
