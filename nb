@@ -8774,6 +8774,10 @@ HEREDOC
     local _value=
 
     _setting_name="$(_nb_settings_identify "${1:-}")"  &&
+      if [[ "${2:-}" == "unset" ]]
+      then
+        _nb_settings_unset "${_setting_name}" && return 0
+      fi &&
       _nb_settings_validate_value "${_setting_name}" "${2:-}" &&
       {
         _value="${2:-}"

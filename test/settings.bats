@@ -335,6 +335,27 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"' ]]
 }
 
+@test "\`settings set\` with 'unset' value unsets and exits." {
+  {
+    "${_NB}" init
+    run "${_NB}" settings set color_secondary 42
+    [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
+  }
+
+  run "${_NB}" settings set color_secondary unset
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" =~ NB_COLOR_SECONDARY                ]]
+  [[ "${output}" =~ restored                          ]]
+  [[ "${output}" =~ 8                                 ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+}
+
 # `set NB_AUTO_SYNC` #######################################################
 
 @test "\`settings set NB_AUTO_SYNC\` with valid argument sets and exits." {
