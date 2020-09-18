@@ -8300,8 +8300,6 @@ _search() {
         local _filename_color=
         local _filename_hit=0
         local _id=
-        # Define `_id_filename` with and without color to have a version
-        # without the additional length from `tput` calls.
         local _id_filename=
         local _id_filename_color=
         local _path=
