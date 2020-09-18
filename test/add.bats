@@ -71,7 +71,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with scope creates new note without errors." {
+@test "\`add\` with scope and content argument creates new note without errors." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add Example
@@ -109,6 +109,85 @@ load test_helper
   [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
 }
 
+@test "\`add\` with URL content argument creates new note without errors." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" add "${_BOOKMARK_URL}"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cat "${_NOTEBOOK_PATH}/${_files[0]}"
+
+  grep -q 'file' "${_NOTEBOOK_PATH}"/*
+  grep -q 'fixtures' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "\`add\` with scope and URL content argument creates new note without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add Example
+    _NOTEBOOK_PATH="${NB_DIR}/Example"
+  }
+
+  run "${_NB}" Example:add "${_BOOKMARK_URL}"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+  grep -q 'file' "${_NOTEBOOK_PATH}"/*
+  grep -q 'fixtures' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\                  ]]
+  [[ "${output}" =~ Example:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
+}
+
 # --content option ############################################################
 
 @test "\`add\` with --content option exits with 0, creates new note, creates commit." {
@@ -126,6 +205,34 @@ load test_helper
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" -eq 1 ]]
   grep -q '# Content' "${_NOTEBOOK_PATH}"/*
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "\`add\` with URL --content option exits with 0, creates new note, creates commit." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" add --content "${_BOOKMARK_URL}"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  cat "${_NOTEBOOK_PATH}/${_files[0]}"
+
+  grep -q 'file' "${_NOTEBOOK_PATH}"/*
+  grep -q 'fixtures' "${_NOTEBOOK_PATH}"/*
 
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]

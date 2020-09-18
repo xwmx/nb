@@ -3169,7 +3169,8 @@ _add() {
   then
     if [[ "${_maybe_filename_or_content:-}" =~ \.[A-Za-z0-9]+$  ]] &&
        [[ -n "${_maybe_filename_or_content_extension:-}"        ]] &&
-       [[ -z "${_filename}"                                     ]]
+       [[ -z "${_filename}"                                     ]] &&
+       ! _string_is_url "${_maybe_filename_or_content:-}"
     then
       _filename="${_maybe_filename_or_content}"
     else
@@ -10292,7 +10293,7 @@ _SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_SUBCOMMANDS[@]}")$"
 # The contents of the `$_GIT_SUBCOMMANDS` array, joined with '|'.
 _GIT_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_GIT_SUBCOMMANDS[@]}")$"
 
-_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n" "${_SUBCOMMANDS_PATTERN}"
+_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n"     "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}"
 
 # _is_valid_subcommand()
@@ -10307,16 +10308,11 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
-# $_PREVIOUS_OPTION_WAS_FLAG
-#
-# Set to `1` when a flag option is found and use to avoid setting subcommand
-# to a flag argument.
-_PREVIOUS_OPTION_WAS_FLAG=0
-
 # Parse program options.
 while ((${#}))
 do
   __opt="${1}"
+  __previous_option_was_flag=0
 
   shift
 
@@ -10367,15 +10363,17 @@ do
       _print_welcome
       ;;
     *:*)
-      if _string_is_url "${__opt}"
+      if [[ -z "${_SUBCOMMAND:-}" ]] &&
+          _string_is_url "${__opt}"
       then
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
       elif __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n")) &&
-           [[ "${#__parts[@]}" -gt 0  ]]
+           [[ "${#__parts[@]}" -gt 0                          ]] &&
+           ! _string_is_url "${__opt}"
       then
-        if [[ -z "${_SCOPE:-}"            ]] &&
-           [[ -z "${_SUBCOMMAND:-}"       ]]
+        if [[ -z "${_SCOPE:-}"      ]] &&
+           [[ -z "${_SUBCOMMAND:-}" ]]
         then
           if [[ -d "${NB_DIR}/${__parts[0]}"      ]] ||
              {
@@ -10394,12 +10392,6 @@ do
           else
             _exit_1 printf "Notebook not found: %s\\n" "${__parts[0]}"
           fi
-        elif [[ -n "${_SCOPE:-}"            ]] &&
-             [[ -z "${_SUBCOMMAND:-}"       ]] &&
-             _string_is_url "${__parts[0]}"
-        then
-          _SUBCOMMAND="bookmark"
-          _ARGUMENTS+=("${__opt}")
         else
           _ARGUMENTS+=("${__opt}")
         fi
@@ -10412,7 +10404,7 @@ do
       break
       ;;
     *)
-      if ! ((_PREVIOUS_OPTION_WAS_FLAG))  &&
+      if ! ((__previous_option_was_flag)) &&
          [[ -z "${_SUBCOMMAND:-}" ]]      &&
          _is_valid_subcommand "${__opt}"
       then
@@ -10420,10 +10412,10 @@ do
       else
         if [[ "${__opt}" =~ ^- ]]
         then
-          _PREVIOUS_OPTION_WAS_FLAG=1
-        elif ((_PREVIOUS_OPTION_WAS_FLAG))
+          __previous_option_was_flag=1
+        elif ((__previous_option_was_flag))
         then
-          _PREVIOUS_OPTION_WAS_FLAG=0
+          __previous_option_was_flag=0
         fi
 
         _ARGUMENTS+=("${__opt}")
@@ -10432,11 +10424,11 @@ do
   esac
 done
 
-_debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n" "${_SUBCOMMANDS[*]}"
+_debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n"      "${_SUBCOMMANDS[*]}"
 _debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\\n" "${_SUBCOMMANDS_PATTERN}"
-_debug printf "\${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
-_debug printf "\${_SCOPE}: '%s'\\n" "${_SCOPE}"
-_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
+_debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
+_debug printf "\${_SCOPE}: '%s'\\n"               "${_SCOPE}"
+_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # _main()
@@ -10452,8 +10444,8 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
 #   of the script after everything has been defined.
 _main() {
   _debug printf "_main() >> start\\n"
-  _debug printf "_main() \${@}: '%s'\\n" "${@}"
-  _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
+  _debug printf "_main() \${@}: '%s'\\n"            "${@}"
+  _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n"  "${_SUBCOMMAND}"
 
   # Set `$_SUBCOMMAND` if it's still blank.
   if [[ -z "${_SUBCOMMAND:-}" ]]
