@@ -617,12 +617,11 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-
-  [[ "${#lines[@]}" -eq 1 ]]
-  [[ "${lines[0]}" =~ first.md ]]
-  [[ "${lines[0]}" =~ [*1*] ]]
-  [[ "${lines[0]}" =~ ${_files[0]} ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 1           ]]
+  [[ "${lines[0]}" =~ first.md      ]]
+  [[ "${lines[0]}" =~ [*1*]         ]]
+  [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
 
@@ -651,19 +650,19 @@ HEREDOC
   }
 
   run "${_NB}" list 'r' --filenames
-  [[ ${status} -eq 0 ]]
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${#lines[@]}" -eq 2 ]]
-  [[ "${lines[0]}" =~ third.md ]]
-  [[ "${lines[0]}" =~ [*3*] ]]
-  [[ "${lines[0]}" =~ ${_files[2]} ]]
-  [[ "${lines[1]}" =~ first.md ]]
-  [[ "${lines[1]}" =~ [*1*] ]]
-  [[ "${lines[1]}" =~ ${_files[0]} ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 2           ]]
+  [[ "${lines[0]}" =~ third.md      ]]
+  [[ "${lines[0]}" =~ [*3*]         ]]
+  [[ "${lines[0]}" =~ ${_files[2]}  ]]
+  [[ "${lines[1]}" =~ first.md      ]]
+  [[ "${lines[1]}" =~ [*1*]         ]]
+  [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
 @test "\`list <invalid-selection>\` exits with 1 and displays a message." {
