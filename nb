@@ -2569,7 +2569,7 @@ _print_welcome() {
   local _padding
   _padding="$(_print_padding " / / | | | | |_) |" "${_columns}")"
 
-  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+  _print_line "$(printf "%-${_columns}s" '.')"
 
   cat <<HEREDOC
 ${_padding}$(_highlight "Welcome") to
@@ -2580,7 +2580,7 @@ ${_padding} / / | | | | |_) |
 ${_padding}/_/  |_| |_|_.__/
 HEREDOC
 
-  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+  _print_line "$(printf "%-${_columns}s" '.')"
 }
 
 # _set_selection_notebook()
