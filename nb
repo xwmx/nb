@@ -2532,6 +2532,29 @@ _print_line() {
   _highlight_secondary "${_line// /-}"
 }
 
+# _print_paddding()
+#
+# Usage:
+#   _print_paddding <line> <columns> [<aligned>]
+#
+# Description:
+#   Print a string of spaces that can be used as left padding to
+#   center-align <line>. <aligned> is an optional boolean that can
+#   be used to print no padding, returning an empty string.
+_print_paddding() {
+  local _padding_line="${1:-}"
+  local _padding_line_length="${#_padding_line}"
+  local _padding_columns="${2:-}"
+  local _padding_centered="${3:-1}"
+
+  local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
+
+  if ((_padding_centered)) && ((_padding_amount))
+  then
+    printf "%-${_padding_amount}s" " "
+  fi
+}
+
 # _print_welcome()
 #
 # Usage:
@@ -6226,11 +6249,17 @@ _ls() {
       case "${__arg}" in
         --auto-align)
           _auto_align=1
+          _centered=0
+          _justified=0
           ;;
         --centered)
+          _auto_align=0
           _centered=1
+          _justified=0
           ;;
         --justified)
+          _auto_align=0
+          _centered=0
           _justified=1
           ;;
         --plain)
@@ -6310,7 +6339,7 @@ _ls() {
         then
           _centered=1
           _padding="$(
-            _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
+            _print_paddding "${_line_raw}" "${_columns}" "${_centered}"
           )"
         fi
 
@@ -6341,7 +6370,7 @@ _ls() {
           _centered=1
         fi
         _padding="$(
-          _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
+          _print_paddding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
@@ -6367,24 +6396,6 @@ _ls() {
     printf "%s" "${_TPUT_SGR0}"
     printf '\033[?7h'
     printf '\n'
-  }
-
-  # _ls_print_paddding()
-  #
-  # Usage:
-  #   _ls_print_paddding <line> <columns> <aligned>
-  _ls_print_paddding() {
-    local _padding_line="${1:-}"
-    local _padding_line_length="${#_padding_line}"
-    local _padding_columns="${2:-}"
-    local _padding_centered="${3:-}"
-
-    local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-
-    if ((_padding_centered)) && ((_padding_amount))
-    then
-      printf "%-${_padding_amount}s" " "
-    fi
   }
 
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
