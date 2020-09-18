@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.0.1"
+_VERSION="5.0.2"
 
 # $_ME
 #
@@ -398,10 +398,10 @@ export NB_FOOTER="${NB_FOOTER:-1}"
 
 # $NB_HEADER
 #
-# Default: '1'
+# Default: '2'
 #
 # Supported Values: '0' '1' '2' '3'
-export NB_HEADER="${NB_HEADER:-1}"
+export NB_HEADER="${NB_HEADER:-2}"
 
 # $NB_LIMIT
 #
@@ -2532,6 +2532,29 @@ _print_line() {
   _highlight_secondary "${_line// /-}"
 }
 
+# _print_padding()
+#
+# Usage:
+#   _print_padding <line> <columns> [<aligned>]
+#
+# Description:
+#   Print a string of spaces that can be used as left padding to
+#   center-align <line>. <aligned> is an optional boolean that can
+#   be used to print no padding, returning an empty string.
+_print_padding() {
+  local _padding_line="${1:-}"
+  local _padding_line_length="${#_padding_line}"
+  local _padding_columns="${2:-}"
+  local _padding_centered="${3:-1}"
+
+  local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
+
+  if ((_padding_centered)) && ((_padding_amount))
+  then
+    printf "%-${_padding_amount}s" " "
+  fi
+}
+
 # _print_welcome()
 #
 # Usage:
@@ -2540,16 +2563,24 @@ _print_line() {
 # Description:
 #   Print the welcome message.
 _print_welcome() {
-    cat <<HEREDOC
-$(_highlight_secondary "·----------------·")
-$(_highlight "Welcome") to
-__          _
-\ \   _ __ | |__
- \ \ | '_ \| '_ \\
- / / | | | | |_) |
-/_/  |_| |_|_.__/
-$(_highlight_secondary "·----------------·")
+  local _columns
+  _columns="$(tput cols)"
+
+  local _padding
+  _padding="$(_print_padding " / / | | | | |_) |" "${_columns}")"
+
+  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+
+  cat <<HEREDOC
+${_padding}$(_highlight "Welcome") to
+${_padding}__          _
+${_padding}\ \   _ __ | |__
+${_padding} \ \ | '_ \| '_ \\
+${_padding} / / | | | | |_) |
+${_padding}/_/  |_| |_|_.__/
 HEREDOC
+
+  _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
 }
 
 # _set_selection_notebook()
@@ -6226,11 +6257,17 @@ _ls() {
       case "${__arg}" in
         --auto-align)
           _auto_align=1
+          _centered=0
+          _justified=0
           ;;
         --centered)
+          _auto_align=0
           _centered=1
+          _justified=0
           ;;
         --justified)
+          _auto_align=0
+          _centered=0
           _justified=1
           ;;
         --plain)
@@ -6310,7 +6347,7 @@ _ls() {
         then
           _centered=1
           _padding="$(
-            _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
+            _print_padding "${_line_raw}" "${_columns}" "${_centered}"
           )"
         fi
 
@@ -6341,7 +6378,7 @@ _ls() {
           _centered=1
         fi
         _padding="$(
-          _ls_print_paddding "${_line_raw}" "${_columns}" "${_centered}"
+          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
@@ -6367,24 +6404,6 @@ _ls() {
     printf "%s" "${_TPUT_SGR0}"
     printf '\033[?7h'
     printf '\n'
-  }
-
-  # _ls_print_paddding()
-  #
-  # Usage:
-  #   _ls_print_paddding <line> <columns> <aligned>
-  _ls_print_paddding() {
-    local _padding_line="${1:-}"
-    local _padding_line_length="${#_padding_line}"
-    local _padding_columns="${2:-}"
-    local _padding_centered="${3:-}"
-
-    local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
-
-    if ((_padding_centered)) && ((_padding_amount))
-    then
-      printf "%-${_padding_amount}s" " "
-    fi
   }
 
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
@@ -9006,13 +9025,13 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
      • Supported Values:
 
        $(_highlight "0")  Hide Header
-       $(_highlight "1")  Dynamic Alignment (default)
+       $(_highlight "1")  Dynamic Alignment
             - Left justified when list is shorter than terminal width.
             - Center aligned when list is longer than terminal width.
-       $(_highlight "2")  Center Aligned
+       $(_highlight "2")  Center Aligned (default)
        $(_highlight "3")  Left Justified
 
-     • Default Value: $(_highlight "1")")
+     • Default Value: $(_highlight "2")")
 
   _settings_list_items+=("$(_id_brackets_color '10') limit")
   _settings_help_items+=("\
