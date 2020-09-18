@@ -27,6 +27,7 @@ load test_helper
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${status}" -eq 0 ]]
 
   [[ "${lines[8]}"  == "Initializing..."                              ]]

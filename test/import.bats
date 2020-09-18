@@ -5,19 +5,29 @@ load test_helper
 # no argument #################################################################
 
 @test "\`import\` with no arguments exits with status 1 and prints help." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" import
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
+
+  [[ ${status} -eq 1          ]]
   [[ "${lines[0]}" =~ Usage\: ]]
 }
 
 @test "\`import\` with no arguments does not create git commit." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" import
+
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -28,23 +38,32 @@ load test_helper
 # <path> ######################################################################
 
 @test "\`import\` with valid <path> argument creates a new note file." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1        ]]
+  [[ "${lines[0]}" =~ "Imported"  ]]
   grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
-  [[ "${lines[0]}" =~ "Imported" ]]
 }
 
 @test "\`import\` with valid <path> argument creates git commit." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -55,7 +74,9 @@ load test_helper
 # <directory path> ############################################################
 
 @test "\`import\` with valid <directory path> argument imports a directory." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
@@ -83,9 +104,11 @@ load test_helper
 }
 
 @test "\`import move\` with valid <directory path> argument moves a directory." {
-  run "${_NB}" init
-  cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_TMP_DIR}"
-  [[ -e "${_TMP_DIR}/Example Folder" ]]
+  {
+    run "${_NB}" init
+    cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_TMP_DIR}"
+    [[ -e "${_TMP_DIR}/Example Folder" ]]
+  }
 
   run "${_NB}" import move "${_TMP_DIR}/Example Folder"
 
@@ -116,7 +139,9 @@ load test_helper
 # <url> ######################################################################
 
 @test "\`import\` with valid <url> argument creates a new note file." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
@@ -141,7 +166,9 @@ load test_helper
 }
 
 @test "\`import --convert\` with valid <url> creates and converts a new note file." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" import \
     --convert         \
@@ -154,7 +181,6 @@ load test_helper
   [[ "${#_files[@]}" -eq 1 ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
-
 
   grep -q 'Example Domain' "${_NOTEBOOK_PATH}/${_files[0]}"
   grep -q '==============' "${_NOTEBOOK_PATH}/${_files[0]}"

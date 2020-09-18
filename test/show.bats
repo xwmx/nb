@@ -12,10 +12,11 @@ load test_helper
   }
 
   run "${_NB}" show
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
 
+  [[ ${status} -eq 1              ]]
   [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
 }
@@ -29,6 +30,7 @@ load test_helper
   }
 
   run "${_NB}" show
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 }
@@ -43,11 +45,13 @@ load test_helper
   }
 
   run "${_NB}" show 1 --dump
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0                ]]
   [[ ! "${lines[0]}" =~ "# Example" ]]
-  [[ "${lines[0]}" =~ "Example" ]]
+  [[ "${lines[0]}" =~ "Example"     ]]
 }
 
 @test "\`show --dump --no-color\` with argument exits with 0 and prints note without highlighting." {
@@ -58,9 +62,11 @@ load test_helper
   }
 
   run "${_NB}" show 1 --dump --no-color
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0              ]]
   [[ "${lines[0]}" =~ "# Example" ]]
 }
 
@@ -72,12 +78,12 @@ load test_helper
   }
 
   run "${_NB}" show --dump
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
 
+  [[ ${status} -eq 1              ]]
   [[ ! "${output}" =~ mock_editor ]]
-
   [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
 
@@ -91,10 +97,12 @@ load test_helper
   }
 
   run "${_NB}" show 1
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
-  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_highlight "1")" ]]
+
+  [[ ${status} -eq 1                                                        ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_highlight "1")"  ]]
 }
 
 # `show <filename> --dump` ####################################################
@@ -107,9 +115,11 @@ load test_helper
   }
 
   run "${_NB}" show "${_filename}" --dump
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0            ]]
   [[ "${output}" =~ mock_editor ]]
 }
 
@@ -123,10 +133,12 @@ load test_helper
   }
 
   run "${_NB}" show 1 --dump
+
   printf "\${_filename}: %s\\n" "${_filename}"
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0            ]]
   [[ "${output}" =~ mock_editor ]]
 }
 
@@ -140,9 +152,11 @@ load test_helper
   }
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0            ]]
   [[ "${output}" =~ mock_editor ]]
 }
 
@@ -157,9 +171,11 @@ load test_helper
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" show "${_title}" --dump
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0            ]]
   [[ "${output}" =~ mock_editor ]]
 }
 
@@ -173,10 +189,12 @@ load test_helper
   }
 
   run "${_NB}" show "${_filename}" --path
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
 # `show <id> --path` ##########################################################
@@ -189,10 +207,12 @@ load test_helper
   }
 
   run "${_NB}" show 1 --path
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
 
@@ -206,10 +226,12 @@ load test_helper
   }
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --path
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
 # `show <title> --path` #######################################################
@@ -223,10 +245,12 @@ load test_helper
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" show "${_title}" --path
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
 # `show <filename> --id` ######################################################
@@ -239,9 +263,11 @@ load test_helper
   }
 
   run "${_NB}" show "${_filename}" --id
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0    ]]
   [[ "${output}" == "1" ]]
 }
 
@@ -255,9 +281,11 @@ load test_helper
   }
 
   run "${_NB}" show 1 --id
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0    ]]
   [[ "${output}" == "1" ]]
 }
 
@@ -271,9 +299,11 @@ load test_helper
   }
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0    ]]
   [[ "${output}" == "1" ]]
 }
 
@@ -284,13 +314,15 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0    ]]
   [[ "${output}" == "1" ]]
 }
 
@@ -304,6 +336,7 @@ load test_helper
   }
 
   run "${_NB}" show 1 --password=example --dump
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -324,10 +357,12 @@ load test_helper
   }
 
   run "${_NB}" show 1 --filename
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "example.md" ]]
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
 }
 
 # `show <id> --title` #########################################################
@@ -340,9 +375,11 @@ load test_helper
   }
 
   run "${_NB}" show 1 --title
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0                ]]
   [[ "${output}" == "Example Title" ]]
 }
 
@@ -424,10 +461,12 @@ load test_helper
   }
 
   run "${_NB}" s 1 --filename
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "example.md" ]]
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
 }
 
 # `view <id>` #################################################################
@@ -440,23 +479,28 @@ load test_helper
   }
 
   run "${_NB}" view 1 --filename
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${output}" == "example.md" ]]
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
 }
 
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {
   run "${_NB}" help show
+
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help show\` prints help information." {
   run "${_NB}" help show
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
 }

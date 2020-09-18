@@ -37,7 +37,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0      ]]
   [[ "${lines[0]}" =~ Add ]] && [[ "${lines[0]}" =~ Help ]]
   [[ "${lines[1]}" =~ --- ]]
   [[ "${lines[2]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[2]}" =~ 4 ]]

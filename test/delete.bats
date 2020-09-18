@@ -8,11 +8,14 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" delete --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -43,9 +46,11 @@ load test_helper
   }
 
   run "${_NB}" delete 1 --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
+
+  [[ ${status} -eq 1                      ]]
   [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
   [[ "${lines[0]}" =~ 1                   ]]
 }
@@ -55,15 +60,19 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" delete "${_filename}" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
+  [[ ${status} -eq 0                        ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -74,14 +83,18 @@ load test_helper
     run "${_NB}" notebooks add "one"
     run "${_NB}" use "one"
     run "${_NB}" add
+
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: '${_filename:-}'"
     printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
     printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
+
     run "${_NB}" use "home"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
   }
-  [[ -n "${_filename}" ]]
-  [[ -e "${NB_DIR}/one/${_filename}" ]]
 
   run "${_NB}" delete one:"${_filename}" --force
 
@@ -99,12 +112,15 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete "${_filename}" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -139,12 +155,15 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete 1 --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -179,12 +198,15 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete "${_NOTEBOOK_PATH}/${_filename}" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -219,13 +241,16 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete "${_title}" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -260,12 +285,15 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+
     IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete "${_filename}" --force
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
@@ -298,13 +326,16 @@ load test_helper
 
 @test "\`help delete\` exits with status 0." {
   run "${_NB}" help delete
+
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help delete\` prints help information." {
   run "${_NB}" help delete
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ nb\ delete ]]
+
+  [[ "${lines[0]}" == "Usage:"    ]]
+  [[ "${lines[1]}" =~ nb\ delete  ]]
 }

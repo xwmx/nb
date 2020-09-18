@@ -13,27 +13,33 @@ export _HELP_HEADER
 
 @test "\`help\` with no arguments exits with status 0." {
   run "${_NB}" help
-  [ "${status}" -eq 0 ]
+
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "\`help\` with no arguments prints default help." {
   run "${_NB}" help
+
   _compare "${_HELP_HEADER}" "$(IFS=$'\n'; echo "${lines[*]:0:11}")"
+
   [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
 }
 
 @test "\`-h\` prints default help." {
   run "${_NB}" -h
+
   [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
 }
 
 @test "\`--help\` prints default help." {
   run "${_NB}" --help
+
   [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
 }
 
 @test "\`help help\` prints \`help\` subcommand usage." {
   run "${_NB}" help help
+
   _expected="$(
     cat <<HEREDOC
 Usage:

@@ -18,8 +18,10 @@ load test_helper
   }
 
   run "${_NB}" index reconcile
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   "${_NB}" index verify
   [[ ${status} -eq 0 ]]
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "${_existing_index}" ]]
@@ -35,9 +37,11 @@ load test_helper
   }
 
   run "${_NB}" index reconcile
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
+
   [[ ${status} -eq 0 ]]
   [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ not-a-file ]]
   "${_NB}" index verify
@@ -53,9 +57,11 @@ load test_helper
   }
 
   run "${_NB}" index reconcile
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
+
   [[ ${status} -eq 0 ]]
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ example.md ]]
   "${_NB}" index verify
@@ -97,10 +103,12 @@ load test_helper
   }
 
   run "${_NB}" index reconcile
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
-  [[ ${status} -eq 0 ]]
+
+  [[ ${status} -eq 0                                          ]]
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")"      =~ first.md     ]]
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")"      =~ example.md   ]]
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")"      =~ sample.md    ]]
