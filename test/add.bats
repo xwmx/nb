@@ -33,6 +33,84 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
+# <filename> argument #########################################################
+
+@test "\`add\` with filename argument creates new note without errors." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" add "example-filename.md" --content "# Example Title"
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+  [[ "${#_files[@]}" == 1                     ]]
+  [[ "${_files[0]}" == "example-filename.md"  ]]
+
+  grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\              ]]
+  [[ "${output}" =~ example-filename.md ]]
+}
+
+@test "\`add\` with .org filename argument creates new note without errors." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" add "example-filename.org" --content "Example content."
+
+  printf "\${status}: %s\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+  [[ "${#_files[@]}" == 1                     ]]
+  [[ "${_files[0]}" == "example-filename.org" ]]
+
+  grep -q 'Example content.' "${_NOTEBOOK_PATH}"/*
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added\                ]]
+  [[ "${output}" =~ example-filename.org  ]]
+}
+
 # <content> argument ##########################################################
 
 @test "\`add\` with content argument creates new note without errors." {
