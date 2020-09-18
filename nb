@@ -2379,15 +2379,8 @@ _less_prompt() {
 #   _list_files [--sort] [--reverse] [--type <type>]
 #
 # Description:
-#   List note files with default sorting.
+#   List files in the current notebook.
 _list_files() {
-  # Relevant `ls` options:
-  # --  Default sort order.
-  # -t  Sort by time modified (most recently modified first) before sorting
-  #     the operands by lexicographical order
-  # -r  Reverse the order of the sort to get reverse order or the oldest
-  #     entries first (or largest files last, combined with sort by size
-
   local _reverse=0
   local _sort=0
   local _type=
