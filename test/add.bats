@@ -16,11 +16,13 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates a new note file with $EDITOR
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -84,7 +86,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                          ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -124,11 +126,13 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# Content' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -162,11 +166,13 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# Content' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -198,11 +204,12 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
 
@@ -235,15 +242,16 @@ load test_helper
 
   run "${_NB}" Example:add "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   [[ "$(cat "${_NOTEBOOK_PATH}/${_files[0]}")" == "${_BOOKMARK_URL}" ]]
 
@@ -272,15 +280,16 @@ load test_helper
 
   run "${_NB}" add "example@example.com"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
 
@@ -311,15 +320,16 @@ load test_helper
 
   run "${_NB}" add "http: this is not a URL"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
 
@@ -350,15 +360,16 @@ load test_helper
 
   run "${_NB}" add "example.com"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
 
@@ -391,13 +402,15 @@ load test_helper
 
   run "${_NB}" add --content "# Content"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# Content' "${_NOTEBOOK_PATH}"/*
 
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -415,13 +428,14 @@ load test_helper
 
   run "${_NB}" add --content "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
 
@@ -443,13 +457,14 @@ load test_helper
 
   run "${_NB}" add --content
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # --filename option ###########################################################
@@ -461,18 +476,21 @@ load test_helper
 
   run "${_NB}" add --filename example.org
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
+
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
   [[ -n "$(ls example.org)" ]]
+
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   while [[ -n "$(git status --porcelain)" ]]
@@ -489,14 +507,16 @@ load test_helper
 
   run "${_NB}" add "sample.md" --filename example.org
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
+
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
@@ -518,18 +538,21 @@ load test_helper
 
   run "${_NB}" add --filename example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
+
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
   [[ "${#_files[@]}" -eq 1 ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
   [[ -n "$(ls example.md)" ]]
+
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   while [[ -n "$(git status --porcelain)" ]]
@@ -546,15 +569,18 @@ load test_helper
 
   run "${_NB}" add --filename
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
+
   ls "${_NOTEBOOK_PATH}/"
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # --title option ##############################################################
@@ -567,16 +593,16 @@ load test_helper
   run "${_NB}" add \
     --title "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
@@ -595,17 +621,24 @@ load test_helper
 }
 
 @test "\`add\` with empty --title option exits with 1" {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" add --title
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
+
   ls "${_NOTEBOOK_PATH}/"
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # --type option ###############################################################
@@ -617,11 +650,14 @@ load test_helper
 
   run "${_NB}" add  "* Content" --type org
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '* Content' "${_NOTEBOOK_PATH}"/*
+
   [[ "${_files[0]}" =~ org$ ]]
 }
 
@@ -629,10 +665,11 @@ load test_helper
   run "${_NB}" init
   run "${_NB}" add  "* Content" --type
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # --encrypt option ############################################################
@@ -644,12 +681,12 @@ load test_helper
 
   run "${_NB}" add  "* Content" --encrypt --password=example
 
-  [[ ${status} -eq 0 ]]
-
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
-  [[ "${_files[0]}" =~ enc$ ]]
-  [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
+
+  [[ ${status} -eq 0                                                                ]]
+  [[ "${#_files[@]}" -eq 1                                                          ]]
+  [[ "${_files[0]}" =~ enc$                                                         ]]
+  [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl  ]]
 }
 
 # --password option ###########################################################
@@ -661,10 +698,11 @@ load test_helper
 
   run "${_NB}" add  "* Content" --encrypt --password
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # piped #######################################################################
@@ -676,15 +714,17 @@ load test_helper
 
   run bash -c "echo '# Piped' | \"${_NB}\" add"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# Piped' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -712,11 +752,14 @@ load test_helper
 
   run bash -c "echo '# Piped' | \"${_NB}\" add --type org"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# Piped' "${_NOTEBOOK_PATH}"/*
+
   [[ "${_files[0]}" =~ org$ ]]
 }
 
@@ -727,10 +770,11 @@ load test_helper
 
   run bash -c "echo '# Piped' | \"${_NB}\" add --type"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # aliases ####################################################################
@@ -742,15 +786,17 @@ load test_helper
 
   run "${_NB}" add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates a new note file with $EDITOR
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -771,15 +817,17 @@ load test_helper
 
   run "${_NB}" add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates a new note file with $EDITOR
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -800,15 +848,17 @@ load test_helper
 
   run "${_NB}" add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates a new note file with $EDITOR
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
   # Creates git commit
@@ -832,7 +882,7 @@ load test_helper
 @test "\`help add\` returns usage information." {
   run "${_NB}" help add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:" ]]
