@@ -1530,10 +1530,11 @@ Scoped notebook commands are also available in tab completion:
 
 #### Notebooks, Tags, and Taxonomy
 
-`nb` is optimized to work with multiple notebooks, so notebooks are a
-good way to organize your notes and bookmarks by top-level topic. Tags
-are searchable across notebooks and can be created ad hoc, making notebooks
-and tags distinct and complementary organizational systems in `nb`.
+`nb` is optimized to work well with a lot of notebooks, so notebooks are
+a really good way to organize your notes and bookmarks by top-level topic.
+
+Tags are searchable across notebooks and can be created ad hoc, making
+notebooks and tags distinct and complementary organizational systems in `nb`.
 
 Search for a tag in or across notebooks with
 [`nb search`](#search) / [`nb q`](#search):
