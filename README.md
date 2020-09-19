@@ -2285,7 +2285,7 @@ _list --filenames --no-id --no-indicator
 `nb` includes a variety of helper and utility functions that can be
 leveraged when creating plugins. Plugins can also define their own helper
 and utility functions, and can override functions in `nb`, including
-entire subcommands. As a result, `nb` is very hackable and customizable.
+entire subcommands.
 
 ### > `nb` Interactive Shell
 
