@@ -1264,7 +1264,6 @@ HEREDOC
     "${_NB}" init
   }
 
-
   run "${_NB}" bookmark help
 
   printf "\${status}: '%s'\\n" "${status}"
