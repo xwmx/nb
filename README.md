@@ -2265,11 +2265,11 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 #### Internal Functions and Variables
 
-Plugins have full access to all of `nb`'s internal functions and
-variables, which are identified by leading underscores. `nb`
-subcommands, which represent `nb`'s stable public API, should be called
-using their internal function names. Options can be used to output
-information in formats suitable for parsing and processing:
+Plugins have full access to all internal functions and variables,
+which are identified by leading underscores. `nb` subcommands, which
+represent `nb`'s stable public API, should be called using their internal
+function names. Options can be used to output information in formats
+suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
@@ -2285,7 +2285,8 @@ _list --filenames --no-id --no-indicator
 `nb` includes a variety of helper and utility functions that can be
 leveraged when creating plugins. Plugins can also define their own helper
 and utility functions, and can override functions in `nb`, including
-entire subcommands.
+entire subcommands. As a result, plugins can be used to customize and
+extend just about anything in `nb`.
 
 ### > `nb` Interactive Shell
 
