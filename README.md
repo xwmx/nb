@@ -3955,16 +3955,16 @@ so ids are preserved across systems.
 ##### Operations
 
 <dl>
-  <dt>`add`</dt>
+  <dt><code>add</code></dt>
   <dd>Append a new line containing the filename to <code>.index</code>.</dd>
-  <dt>`update`</dt>
+  <dt><code>update</code></dt>
   <dd>Overwrite the existing filename in <code>.index</code> with the new filename.</dd>
-  <dt>`delete`</dt>
+  <dt><code>delete</code></dt>
   <dd>Delete the filename, preserving the newline, leaving the line blank.</dd>
-  <dt>`reconcile`</dt>
+  <dt><code>reconcile</code></dt>
   <dd>Remove duplicates and update index for added and deleted files.</dd>
-  <dt>`rebuild`</dt>
-  <dd>Delete and rebuild `.index`, listing files by most recently modified, reversed.</dd>
+  <dt><code>rebuild</code></dt>
+  <dd>Delete and rebuild <code>.index</code>, listing files by most recently modified, reversed.</dd>
 </dl>
 
 ##### `index` Subcommand
