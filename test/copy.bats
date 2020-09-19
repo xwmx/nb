@@ -322,6 +322,104 @@ load test_helper
   [[ "${lines[0]}" =~ example-2-2.md.enc  ]]
 }
 
+# `<selector>` copy alternative ###############################################
+
+@test "\`<id> copy\` with text file copies file." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0 ]]
+  }; _setup
+
+  run "${_NB}" 1 copy
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 0               ]]
+  [[ "${lines[0]}" =~ Added         ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  [[ "$(_get_hash "${NB_DIR}/home/example.md")" == \
+     "$(_get_hash "${NB_DIR}/home/example-1.md")" ]]
+}
+
+# `<scope:selector>` ##########################################################
+
+@test "\`copy <scope>:<id>\` with text file copies file." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0               ]]
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+}; _setup
+
+  run "${_NB}" copy one:1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 0               ]]
+  [[ "${lines[0]}" =~ Added         ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  [[ "$(_get_hash "${NB_DIR}/one/example.md")" == \
+     "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
+}
+
+@test "\`<scope>:<id> copy\` with text file copies file." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0               ]]
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+}; _setup
+
+  run "${_NB}" one:1 copy
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 0               ]]
+  [[ "${lines[0]}" =~ Added         ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  [[ "$(_get_hash "${NB_DIR}/one/example.md")" == \
+     "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
+}
+
+# duplicate ###################################################################
+
+@test "\`duplicate <id>\` with text file copies file." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0 ]]
+  }; _setup
+
+  run "${_NB}" duplicate 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 0               ]]
+  [[ "${lines[0]}" =~ Added         ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  [[ "$(_get_hash "${NB_DIR_1}/home/example.md")" == \
+     "$(_get_hash "${NB_DIR_2}/home/example-1.md")" ]]
+}
+
 # help ########################################################################
 
 @test "\`copy\` with no argument exits with status 1 and prints usage." {
