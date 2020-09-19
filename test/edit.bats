@@ -9,7 +9,9 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
     _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   }
 
@@ -61,8 +63,11 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
     run "${_NB}" one:add
+
     _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
   }
@@ -83,6 +88,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --content "Example content."
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -101,6 +107,7 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add "example.md" --content "Example content." \
       --encrypt --password example
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -120,6 +127,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -152,7 +160,9 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "Note name with spaces.md"
+
     _filename="Note name with spaces.md"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -187,6 +197,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -221,6 +232,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -256,6 +268,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
@@ -291,6 +304,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -327,6 +341,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
@@ -360,6 +375,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
@@ -385,6 +401,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "# Content" --encrypt --password=example
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
