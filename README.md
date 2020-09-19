@@ -2148,7 +2148,7 @@ subcommands, design themes, and otherwise extend the functionality of `nb`.
 `nb` supports two types of plugins, identified by their file extensions:
 
 <dl>
-  <dt><code>.nb-theme<code></dt>
+  <dt><code>.nb-theme</code></dt>
   <dd>Plugins defining <a href="#custom-color-themes">color themes</a>.</dd>
   <dt><code>.nb-plugin</code></dt>
   <dd>Plugins defining new subcommands and adding functionality.</dd>
