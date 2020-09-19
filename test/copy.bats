@@ -184,6 +184,7 @@ load test_helper
   [[ "${lines[0]}" =~ Not\ a\ file  ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
+
   [[ "${#_files[@]}" == 1 ]]
 }
 
