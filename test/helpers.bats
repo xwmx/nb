@@ -15,7 +15,6 @@ load test_helper
     [[ -e "${NB_DIR}/.cache" ]]
   }
 
-
   run "${_NB}" notebooks add "example"
 
   printf "\${status}: '%s'\\n" "${status}"
