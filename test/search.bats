@@ -28,7 +28,7 @@ HEREDOC
 
   run "${_NB}" search
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                        ]]
@@ -46,7 +46,7 @@ HEREDOC
 
   run "${_NB}" search 'no match'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1  ]]
@@ -63,7 +63,7 @@ HEREDOC
 
   run "${_NB}" search 'idyl'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
@@ -81,7 +81,7 @@ HEREDOC
 
   run "${_NB}" search 'idyl' --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                              ]]
@@ -97,7 +97,7 @@ HEREDOC
 
   run "${_NB}" search 'idyl' --list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                      ]]
@@ -115,7 +115,7 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
@@ -137,7 +137,7 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --path --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
@@ -155,7 +155,7 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --list --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
@@ -196,7 +196,7 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --bookmarks --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_filename}: '%s'\\n" "${_filename}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
@@ -231,7 +231,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'sweetish' --all --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -256,7 +256,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'sweetish' -a --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -281,7 +281,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'no match' --all
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
@@ -296,7 +296,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'sweetish' --all --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
@@ -314,7 +314,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'no match' --all --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
@@ -350,7 +350,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'sweetish' --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -376,7 +376,7 @@ _search_all_setup() {
 
   run "${_NB}" search 'sweetish' --all --use-grep
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -418,7 +418,7 @@ _search_all_setup() {
 @test "\`help search\` prints help information." {
   run "${_NB}" help search
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage\:               ]]

@@ -11,7 +11,7 @@ load test_helper
 
   run "${_NB}" import
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -44,7 +44,7 @@ load test_helper
 
   run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -82,7 +82,7 @@ load test_helper
 
   IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
@@ -114,7 +114,7 @@ load test_helper
 
   IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
@@ -145,7 +145,7 @@ load test_helper
 
   run "${_NB}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -174,7 +174,7 @@ load test_helper
     --convert         \
     "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -206,7 +206,7 @@ load test_helper
     "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
     "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
@@ -221,7 +221,7 @@ load test_helper
 @test "\`help import\` returns usage information." {
   run "${_NB}" help import
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                  ]]

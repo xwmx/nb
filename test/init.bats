@@ -7,7 +7,7 @@ load test_helper
 @test "\`init\` exits with status 0." {
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -21,7 +21,7 @@ load test_helper
 
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
@@ -35,7 +35,7 @@ load test_helper
 
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ already\ initialized  ]]
@@ -45,7 +45,7 @@ load test_helper
 @test "\`init\` creates \`\$NB_DIR\` and \`\$_NOTEBOOK_PATH\` directories." {
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -d "${NB_DIR}"         ]]
@@ -55,7 +55,7 @@ load test_helper
 @test "\`init\` creates a git directory in \`\$_NOTEBOOK_PATH\`." {
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -d "${_NOTEBOOK_PATH}/.git" ]]
@@ -64,7 +64,7 @@ load test_helper
 @test "\`init\` creates an .index \`\$_NOTEBOOK_PATH\`." {
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -78,7 +78,7 @@ load test_helper
 
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -91,7 +91,7 @@ load test_helper
 
   run "${_NB}" init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "%s\\n" "$(cat "${NBRC_PATH}")"
 
@@ -123,7 +123,7 @@ load test_helper
 
   run "${_NB}" init "${_GIT_REMOTE_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _origin="$(cd "${_NOTEBOOK_PATH}" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
@@ -143,7 +143,7 @@ load test_helper
 @test "\`help init\` prints help information." {
   run "${_NB}" help init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:"                    ]]

@@ -15,7 +15,7 @@ load test_helper
 
   run "${_NB}" notebooks add "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -205,7 +205,7 @@ HEREDOC
 
   run "${_NB}" list --no-color --reverse
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
@@ -239,7 +239,7 @@ HEREDOC
 
   run "${_NB}" add "example.md" --content "Example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -249,7 +249,7 @@ HEREDOC
   run "${_NB}" add "example.md" --content "Example"
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -265,7 +265,7 @@ HEREDOC
   run "${_NB}" add "example.md" --content "Example" \
     --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -275,7 +275,7 @@ HEREDOC
   run "${_NB}" add "example.md" --content "Example" \
     --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -285,7 +285,7 @@ HEREDOC
   run "${_NB}" add "example.md" --content "Example" \
     --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -302,7 +302,7 @@ HEREDOC
   run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -311,7 +311,7 @@ HEREDOC
 
   run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -328,7 +328,7 @@ HEREDOC
       --content "<https://example.com>"     \
       --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -339,7 +339,7 @@ HEREDOC
     --content "<https://example.com>"     \
     --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -352,7 +352,7 @@ HEREDOC
 
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -370,7 +370,7 @@ HEREDOC
       --content "<https://example.com>"                             \
       --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -381,7 +381,7 @@ HEREDOC
     --content "<https://example.com>"                 \
     --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -392,7 +392,7 @@ HEREDOC
     --content "<https://example.com>"                 \
     --encrypt --password password
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 

@@ -11,7 +11,7 @@ load test_helper
 
   run "${_NB}" list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="0 notes.
@@ -42,7 +42,7 @@ Help information:
 
   run "${_NB}" list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
@@ -63,7 +63,7 @@ Help information:
 
   run "${_NB}" list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
@@ -88,7 +88,7 @@ Help information:
 
   run "${_NB}" list --no-id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'${_files[2]}'" "'${lines[0]}'"
 
@@ -111,7 +111,7 @@ Help information:
 
   run "${_NB}" list --no-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'[3] ${_files[2]}'" "'${lines[0]}'"
 
@@ -153,7 +153,7 @@ HEREDOC
 
   run "${_NB}" list -e
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -169,7 +169,7 @@ HEREDOC
 
   run "${_NB}" list -e 2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -185,7 +185,7 @@ HEREDOC
 
   run "${_NB}" list -e 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -201,7 +201,7 @@ HEREDOC
 
   run "${_NB}" list --excerpt
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -217,7 +217,7 @@ HEREDOC
 
   run "${_NB}" list --excerpt 2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -233,7 +233,7 @@ HEREDOC
 
   run "${_NB}" list --excerpt 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -273,7 +273,7 @@ HEREDOC
 
   run "${_NB}" list -n
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -289,7 +289,7 @@ HEREDOC
 
   run "${_NB}" list -n 2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -306,7 +306,7 @@ HEREDOC
 
   run "${_NB}" list --limit 2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -324,7 +324,7 @@ HEREDOC
 
   run "${_NB}" list --2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -362,7 +362,7 @@ HEREDOC
 
   run "${_NB}" list --titles
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
@@ -403,7 +403,7 @@ HEREDOC
 
   run "${_NB}" list --filenames
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -443,7 +443,7 @@ HEREDOC
 
   run "${_NB}" list --bookmarks
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -480,7 +480,7 @@ HEREDOC
 
   run "${_NB}" list --document
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -516,7 +516,7 @@ HEREDOC
 
   run "${_NB}" list --documents
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -546,7 +546,7 @@ HEREDOC
 
   run "${_NB}" list --document
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -576,7 +576,7 @@ HEREDOC
 
   run "${_NB}" list --documents
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -613,7 +613,7 @@ HEREDOC
 
   run "${_NB}" list 1 --filenames
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -651,7 +651,7 @@ HEREDOC
 
   run "${_NB}" list 'r' --filenames
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -680,7 +680,7 @@ HEREDOC
 
   run "${_NB}" list invalid
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -704,7 +704,7 @@ HEREDOC
 
   run "${_NB}" one:list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
@@ -727,7 +727,7 @@ HEREDOC
   run "${_NB}" one:list
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="0 notes.
@@ -753,7 +753,7 @@ Help information:
 
   run "${_NB}" one:list --bookmarks
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="0 bookmarks.
@@ -775,7 +775,7 @@ Help information:
 
   run "${_NB}" one:list --documents
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="0 document files.
@@ -820,7 +820,7 @@ Help information:
 @test "\`help list\` prints help information." {
   run "${_NB}" help list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:" ]]

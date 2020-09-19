@@ -17,7 +17,7 @@ _setup_rename() {
 
   run "${_NB}" rename --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 1
@@ -51,7 +51,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "EXAMPLE.org" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -88,7 +88,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "EXAMPLE" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -126,7 +126,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "EXAMPLE" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -164,7 +164,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "EXAMPLE.md" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -202,7 +202,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "EXAMPLE.bookmark.md" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -240,7 +240,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "EXAMPLE" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -260,7 +260,7 @@ _setup_rename() {
 
   run "${_NB}" rename 1 "EXAMPLE" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -301,7 +301,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" --reset --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -345,7 +345,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" --to-bookmark --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -386,7 +386,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "sample" --to-bookmark --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -427,7 +427,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" "sample.demo" --to-bookmark --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -468,7 +468,7 @@ _setup_rename() {
 
   run "${_NB}" rename "${_filename}" --to-note --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -510,7 +510,7 @@ _setup_rename() {
 @test "\`help rename\` prints help information." {
   run "${_NB}" help rename
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage\:     ]]

@@ -15,7 +15,7 @@ load test_helper
 
   run "${_NB}" copy "example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0               ]]
@@ -41,7 +41,7 @@ load test_helper
 
   run "${_NB}" copy "example.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                   ]]
@@ -72,7 +72,7 @@ load test_helper
 
   run "${_NB}" copy 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0               ]]
@@ -98,7 +98,7 @@ load test_helper
 
   run "${_NB}" copy 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                   ]]
@@ -129,7 +129,7 @@ load test_helper
 
   run "${_NB}" copy Example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0               ]]
@@ -153,7 +153,7 @@ load test_helper
 
   run "${_NB}" copy "not-valid"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1             ]]
@@ -176,7 +176,7 @@ load test_helper
 
   run "${_NB}" copy "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1               ]]
@@ -199,7 +199,7 @@ load test_helper
 
   run "${_NB}" copy "example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0               ]]
@@ -208,7 +208,7 @@ load test_helper
 
   run "${_NB}" copy "example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0               ]]
@@ -217,7 +217,7 @@ load test_helper
 
   run "${_NB}" copy "example-1.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                 ]]
@@ -226,7 +226,7 @@ load test_helper
 
   run "${_NB}" copy "example-1.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                 ]]
@@ -235,7 +235,7 @@ load test_helper
 
   run "${_NB}" copy "example-2.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                 ]]
@@ -244,7 +244,7 @@ load test_helper
 
   run "${_NB}" copy "example-2.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                 ]]
@@ -267,7 +267,7 @@ load test_helper
 
   run "${_NB}" copy "example.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                   ]]
@@ -276,7 +276,7 @@ load test_helper
 
   run "${_NB}" copy "example.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                   ]]
@@ -285,7 +285,7 @@ load test_helper
 
   run "${_NB}" copy "example-1.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                     ]]
@@ -294,7 +294,7 @@ load test_helper
 
   run "${_NB}" copy "example-1.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                     ]]
@@ -303,7 +303,7 @@ load test_helper
 
   run "${_NB}" copy "example-2.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                     ]]
@@ -312,7 +312,7 @@ load test_helper
 
   run "${_NB}" copy "example-2.md.enc"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                     ]]
@@ -333,7 +333,7 @@ load test_helper
 
   run "${_NB}" copy
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1            ]]
@@ -353,7 +353,7 @@ load test_helper
 
   run "${_NB}" help copy
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]

@@ -25,7 +25,7 @@ one (${_GIT_REMOTE_URL})"
 
   NB_COLOR_HIGHLIGHT=3 run "${_NB}" notebooks
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
 
@@ -40,7 +40,7 @@ one (${_GIT_REMOTE_URL})"
 
   run "${_NB}" notebooks one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="one (${_GIT_REMOTE_URL})"
@@ -56,7 +56,7 @@ one (${_GIT_REMOTE_URL})"
 
   run "${_NB}" notebooks one home
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="one (${_GIT_REMOTE_URL})
@@ -74,7 +74,7 @@ $(_highlight 'home' --underline)"
 
   run "${_NB}" notebooks not-valid
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -89,7 +89,7 @@ $(_highlight 'home' --underline)"
 
   run "${_NB}" notebooks home --names
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
 
@@ -106,7 +106,7 @@ one"
 
   run "${_NB}" notebooks --names
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
 
@@ -121,7 +121,7 @@ one"
 
   run "${_NB}" notebooks --no-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="home
@@ -138,7 +138,7 @@ one (${_GIT_REMOTE_URL})"
 
   run "${_NB}" notebooks home --no-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="home"
@@ -154,7 +154,7 @@ one (${_GIT_REMOTE_URL})"
 
   run "${_NB}" notebooks --names --no-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="home
@@ -172,7 +172,7 @@ one"
 
   run "${_NB}" notebooks --names --no-color --archived
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="one"
@@ -189,7 +189,7 @@ one"
 
   run "${_NB}" notebooks --names --no-color --unarchived
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="home"
@@ -208,7 +208,7 @@ one"
 
   run "${_NB}" notebooks --names --no-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="local
@@ -230,7 +230,7 @@ one"
   run "${_NB}" notebooks --names --no-color --local
 
   printf "\${PWD}: %s\\n" "${PWD}"
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="local"
@@ -249,7 +249,7 @@ one"
 
   run "${_NB}" notebooks --names --no-color --local
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -z "${output}"   ]]
@@ -264,7 +264,7 @@ one"
 
   run "${_NB}" notebooks --names --no-color --global
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="home
@@ -286,7 +286,7 @@ one"
 
   run "${_NB}" notebooks --paths
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="${_TMP_DIR}/example-local
@@ -308,7 +308,7 @@ ${NB_DIR}/one"
   run "${_NB}" notebooks --paths --local
 
   printf "\${PWD}: %s\\n" "${PWD}"
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="${_TMP_DIR}/example-local"
@@ -327,7 +327,7 @@ ${NB_DIR}/one"
 
   run "${_NB}" notebooks --paths --local
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -z "${output}"   ]]
@@ -342,7 +342,7 @@ ${NB_DIR}/one"
 
   run "${_NB}" notebooks --paths --global
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="${NB_DIR}/home
@@ -363,7 +363,7 @@ ${NB_DIR}/one"
 @test "\`help notebooks\` prints help information." {
   run "${_NB}" help notebooks
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:"                        ]]

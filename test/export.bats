@@ -12,7 +12,7 @@ load test_helper
 
   run "${_NB}" export
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                ]]
@@ -29,7 +29,7 @@ load test_helper
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
   cat "${_TMP_DIR}/example.md"
@@ -64,7 +64,7 @@ load test_helper
 
   run "${_NB}" export notebook "example" "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -84,7 +84,7 @@ load test_helper
 
   run "${_NB}" export pandoc 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                              ]]
@@ -98,7 +98,7 @@ load test_helper
 
   run "${_NB}" export pandoc 100
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                  ]]
@@ -110,7 +110,7 @@ load test_helper
 @test "\`help export\` returns usage information." {
   run "${_NB}" help export
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]

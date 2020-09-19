@@ -20,7 +20,7 @@ _setup_use() {
 
   run "${_NB}" use
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
@@ -30,7 +30,7 @@ _setup_use() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[1]}'"
 
@@ -44,7 +44,7 @@ _setup_use() {
 
   run "${_NB}" use not-a-repo
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
@@ -54,7 +54,7 @@ _setup_use() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
@@ -69,7 +69,7 @@ _setup_use() {
 
   run "${_NB}" use one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'${_expected}'" "'${output}'"
 
@@ -78,7 +78,7 @@ _setup_use() {
   [[ "$(cat "${NB_DIR}/.current")" == "one" ]]
 
   run "${_NB}" env
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
@@ -96,7 +96,7 @@ _setup_use() {
 @test "\`help use\` prints help information." {
   run "${_NB}" help use
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage                 ]]

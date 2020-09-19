@@ -23,7 +23,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks archive
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
@@ -45,7 +45,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks archive one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                ]]
@@ -71,7 +71,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks archive
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -98,7 +98,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks unarchive
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                    ]]
@@ -121,7 +121,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks unarchive one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
@@ -143,7 +143,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks unarchive
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                    ]]
@@ -167,7 +167,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks status
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                        ]]
@@ -176,7 +176,7 @@ _setup_notebook() {
   run "${_NB}" notebooks archive
   run "${_NB}" notebooks status
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                    ]]
@@ -190,7 +190,7 @@ _setup_notebook() {
 
   run "${_NB}" notebooks status one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                        ]]
@@ -199,7 +199,7 @@ _setup_notebook() {
   run "${_NB}" notebooks archive one
   run "${_NB}" notebooks status one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                    ]]
@@ -217,7 +217,7 @@ _setup_notebook() {
 @test "\`help notebooks\` prints help information." {
   run "${_NB}" help notebooks
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:"      ]]

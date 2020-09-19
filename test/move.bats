@@ -18,7 +18,7 @@ _setup_move() {
 
   run "${_NB}" move --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with 1
@@ -49,7 +49,7 @@ _setup_move() {
 
   run "${_NB}" move 0 "destination"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1            ]]
@@ -66,7 +66,7 @@ _setup_move() {
 
   run "${_NB}" move "invalid" "destination" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1            ]]
@@ -82,7 +82,7 @@ _setup_move() {
 
   run "${_NB}" move 0 "invalid" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1            ]]
@@ -100,7 +100,7 @@ _setup_move() {
 
   run "${_NB}" move "${_filename}" "destination"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                        ]]
@@ -125,7 +125,7 @@ _setup_move() {
 
   run "${_NB}" move one:"${_filename}" "home" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0                    ]]
@@ -144,7 +144,7 @@ _setup_move() {
 
   run "${_NB}" move "${_filename}" "destination" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -178,7 +178,7 @@ _setup_move() {
 
   run "${_NB}" move 1 "destination" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -212,7 +212,7 @@ _setup_move() {
 
   run "${_NB}" move "${_NOTEBOOK_PATH}/${_filename}" "destination" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -247,7 +247,7 @@ _setup_move() {
 
   run "${_NB}" move "${_title}" "destination" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -283,7 +283,7 @@ _setup_move() {
 
   run "${_NB}" move "${_filename}" "destination" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -321,7 +321,7 @@ _setup_move() {
 
   run "${_NB}" move "home:${_filename}" local --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -357,7 +357,7 @@ _setup_move() {
 
   run "${_NB}" move "${_filename}" home --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -393,7 +393,7 @@ _setup_move() {
 
   run "${_NB}" move "local:${_filename}" home --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # exits with status 0
@@ -428,7 +428,7 @@ _setup_move() {
 @test "\`help move\` prints help information." {
   run "${_NB}" help move
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage\:  ]]

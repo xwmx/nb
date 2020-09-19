@@ -15,7 +15,7 @@ load test_helper
 
   run "${_NB}" edit
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 1
@@ -46,7 +46,7 @@ load test_helper
 
   run "${_NB}" edit 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -69,7 +69,7 @@ load test_helper
 
   run "${_NB}" edit one:"${_filename}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${output}" =~ Updated\            ]]
@@ -89,7 +89,7 @@ load test_helper
   export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
     run "${_NB}" edit "${_filename}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0  ]]
@@ -107,7 +107,7 @@ load test_helper
   export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
     run "${_NB}" edit "${_filename}" --password example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0  ]]
@@ -125,7 +125,7 @@ load test_helper
 
   run "${_NB}" edit "${_filename}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -158,7 +158,7 @@ load test_helper
 
   run "${_NB}" edit "${_filename}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -192,7 +192,7 @@ load test_helper
 
   run "${_NB}" edit 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -226,7 +226,7 @@ load test_helper
 
   run "${_NB}" edit "${_NOTEBOOK_PATH}/${_filename}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -262,7 +262,7 @@ load test_helper
 
   run "${_NB}" edit "${_title}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -296,7 +296,7 @@ load test_helper
 
   run bash -c "echo '## Piped' | ${_NB} edit 1"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -333,7 +333,7 @@ load test_helper
 
   run "${_NB}" edit 1 --content "Example content."
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -366,7 +366,7 @@ load test_helper
 
   run "${_NB}" edit 1 --content
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 1
@@ -390,7 +390,7 @@ load test_helper
 
   run "${_NB}" edit 1 --password=example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 0
@@ -418,7 +418,7 @@ load test_helper
 @test "\`help edit\` exits with status 0 and prints help information." {
   run "${_NB}" help edit
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]

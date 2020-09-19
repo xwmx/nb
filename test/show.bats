@@ -13,7 +13,7 @@ load test_helper
 
   run "${_NB}" show
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1              ]]
@@ -31,7 +31,7 @@ load test_helper
 
   run "${_NB}" show
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 }
 
@@ -46,7 +46,7 @@ load test_helper
 
   run "${_NB}" show 1 --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
@@ -63,7 +63,7 @@ load test_helper
 
   run "${_NB}" show 1 --dump --no-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
@@ -79,7 +79,7 @@ load test_helper
 
   run "${_NB}" show --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1              ]]
@@ -98,7 +98,7 @@ load test_helper
 
   run "${_NB}" show 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                                                        ]]
@@ -116,7 +116,7 @@ load test_helper
 
   run "${_NB}" show "${_filename}" --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -135,7 +135,7 @@ load test_helper
   run "${_NB}" show 1 --dump
 
   printf "\${_filename}: %s\\n" "${_filename}"
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -153,7 +153,7 @@ load test_helper
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -172,7 +172,7 @@ load test_helper
 
   run "${_NB}" show "${_title}" --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -190,7 +190,7 @@ load test_helper
 
   run "${_NB}" show "${_filename}" --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
@@ -208,7 +208,7 @@ load test_helper
 
   run "${_NB}" show 1 --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
@@ -227,7 +227,7 @@ load test_helper
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
@@ -246,7 +246,7 @@ load test_helper
 
   run "${_NB}" show "${_title}" --path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
@@ -264,7 +264,7 @@ load test_helper
 
   run "${_NB}" show "${_filename}" --id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0    ]]
@@ -282,7 +282,7 @@ load test_helper
 
   run "${_NB}" show 1 --id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0    ]]
@@ -300,7 +300,7 @@ load test_helper
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0    ]]
@@ -319,7 +319,7 @@ load test_helper
 
   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0    ]]
@@ -337,7 +337,7 @@ load test_helper
 
   run "${_NB}" show 1 --password=example --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -358,7 +358,7 @@ load test_helper
 
   run "${_NB}" show 1 --filename
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
@@ -376,7 +376,7 @@ load test_helper
 
   run "${_NB}" show 1 --title
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
@@ -397,7 +397,7 @@ load test_helper
 
   run "${_NB}" show example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0            ]]
@@ -420,7 +420,7 @@ load test_helper
 
   run "${_NB}" show example:
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0            ]]
@@ -443,7 +443,7 @@ load test_helper
 
   run "${_NB}" show example --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0            ]]
@@ -462,7 +462,7 @@ load test_helper
 
   run "${_NB}" s 1 --filename
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
@@ -480,7 +480,7 @@ load test_helper
 
   run "${_NB}" view 1 --filename
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
@@ -498,7 +498,7 @@ load test_helper
 @test "\`help show\` prints help information." {
   run "${_NB}" help show
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage\:     ]]

@@ -21,7 +21,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "one" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -38,7 +38,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete -f "one"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -57,7 +57,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "one" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -77,7 +77,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "home" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                            ]]
@@ -102,7 +102,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "home" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -119,7 +119,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1        ]]
@@ -134,7 +134,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete not-valid --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                        ]]
@@ -155,7 +155,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete local --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                  ]]
@@ -179,7 +179,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete local --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                      ]]

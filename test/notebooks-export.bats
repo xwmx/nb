@@ -20,7 +20,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -41,7 +41,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -66,7 +66,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -86,7 +86,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "not valid"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -106,7 +106,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "example" "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -127,7 +127,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "example" "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -148,7 +148,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "example" "${_TMP_DIR}/sample-example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -170,7 +170,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks export "example" "subfolder/local-notebook"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 

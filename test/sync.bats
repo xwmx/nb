@@ -43,7 +43,7 @@ _setup_notebooks() {
   # Sync 1, send changes to remote
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(1)\\n"
@@ -64,7 +64,7 @@ _setup_notebooks() {
   # back to remote
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(2)\\n"
@@ -84,7 +84,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(3)\\n"
@@ -117,7 +117,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(4)\\n"
@@ -138,7 +138,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(5)\\n"
@@ -160,7 +160,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(6)\\n"
@@ -206,7 +206,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(7)\\n"
@@ -230,7 +230,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(8)\\n"
@@ -254,7 +254,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(9)\\n"
@@ -278,7 +278,7 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "(10)\\n"
@@ -331,7 +331,7 @@ _setup_notebooks() {
   run "${_NB}" &>/dev/null
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   cat "${NB_DIR_1}/home/one.md"
@@ -399,7 +399,7 @@ _setup_notebooks() {
   run "${_NB}" &>/dev/null
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   cat "${NB_DIR_1}/home/one.md"
@@ -458,7 +458,7 @@ This content is unique to 2.
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "1:one.md\\n"
@@ -564,7 +564,7 @@ This content is unique to 2.
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
@@ -598,7 +598,7 @@ This content is unique to 2.
 
   run "${_NB}" sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                          ]]

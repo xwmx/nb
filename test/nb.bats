@@ -25,7 +25,7 @@ load test_helper
 
   run "${_NB}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0 ]]
@@ -54,7 +54,7 @@ load test_helper
 
   run "${_NB}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0 ]]
@@ -84,7 +84,7 @@ load test_helper
 
   run "${_NB}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[*]}" "${lines[*]}"
 
@@ -103,7 +103,7 @@ load test_helper
 
   run "${_NB}" "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
@@ -160,7 +160,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   NB_DIR='/' run "${_NB}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[*]}" "${lines[*]}"
 

@@ -11,7 +11,7 @@ load test_helper
 
   run "${_NB}" run ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status}  -eq 0           ]]
@@ -26,7 +26,7 @@ load test_helper
 
   run "${_NB}" run
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status}  -eq 1                   ]]

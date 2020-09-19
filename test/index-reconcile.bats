@@ -22,8 +22,8 @@ load test_helper
 
   run "${_NB}" index reconcile
 
-  printf "\${status}:   %s\\n"    "${status}"
-  printf "\${output}:   '%s'\\n"  "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   "${_NB}" index verify
 
@@ -44,8 +44,8 @@ load test_helper
 
   run "${_NB}" index reconcile
 
-  printf "\${status}:   %s\\n"    "${status}"
-  printf "\${output}:   '%s'\\n"  "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
 
   [[ ${status} -eq 0                                      ]]
@@ -67,8 +67,8 @@ load test_helper
 
   run "${_NB}" index reconcile
 
-  printf "\${status}:   %s\\n"    "${status}"
-  printf "\${output}:   '%s'\\n"  "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
 
   [[ ${status} -eq 0                                    ]]
@@ -117,8 +117,8 @@ load test_helper
 
   run "${_NB}" index reconcile
 
-  printf "\${status}:   %s\\n"    "${status}"
-  printf "\${output}:   '%s'\\n"  "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/.index"
 
   [[ ${status} -eq 0                                          ]]

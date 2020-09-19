@@ -13,7 +13,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -27,7 +27,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings EDITOR example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
@@ -48,7 +48,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set EDITOR example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                            ]]
@@ -68,7 +68,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_AUTO_SYNC 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                ]]
@@ -90,7 +90,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings colors
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0        ]]
@@ -106,7 +106,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings colors 105
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0          ]]
@@ -121,7 +121,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings colors themes
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
@@ -137,7 +137,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings edit
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -153,7 +153,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings get
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   [[ ${status} -eq 1        ]]
   [[ "${output}" =~ 'Usage' ]]
@@ -166,7 +166,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings get EXAMPLE
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -181,7 +181,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings get NB_DIR
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0          ]]
@@ -195,7 +195,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings get nb_dir
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0          ]]
@@ -211,7 +211,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
@@ -228,7 +228,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings list --long
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -246,7 +246,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1        ]]
@@ -260,7 +260,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set EXAMPLE example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -275,7 +275,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set EDITOR
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1        ]]
@@ -289,7 +289,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set EDITOR example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
@@ -307,7 +307,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set EDITOR "example editor"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
@@ -325,7 +325,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set editor example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
@@ -346,7 +346,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set color_secondary unset
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
@@ -366,7 +366,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_AUTO_SYNC 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                ]]
@@ -384,7 +384,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set auto_sync 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                ]]
@@ -409,7 +409,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_AUTO_SYNC example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "get NB_AUTO_SYNC: '%s'\\n" "$("${_NB}" settings get NB_AUTO_SYNC)"
 
@@ -430,7 +430,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_PRIMARY 123
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
 
@@ -449,7 +449,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set color_primary 123
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
 
@@ -476,7 +476,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_PRIMARY invalid-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_PRIMARY: %s\\n" "$("${_NB}" settings get NB_COLOR_PRIMARY)"
 
@@ -496,7 +496,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_SECONDARY 123
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
 
@@ -515,7 +515,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set color_secondary 123
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
 
@@ -542,7 +542,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_SECONDARY invalid-color
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_SECONDARY: %s\\n" "$("${_NB}" settings get NB_COLOR_SECONDARY)"
 
@@ -561,7 +561,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_THEME "console"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
 
@@ -580,7 +580,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set color_theme "console"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
 
@@ -607,7 +607,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_COLOR_THEME invalid-theme
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "NB_COLOR_THEME: %s\\n" "$("${_NB}" settings get NB_COLOR_THEME)"
 
@@ -626,7 +626,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_DIR /tmp/path/to/data/dir
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "settings get NB_DIR: '%s'\\n" "$("${_NB}" settings get NB_DIR)"
 
@@ -644,7 +644,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set nb_dir /tmp/path/to/data/dir
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "settings get NB_DIR: '%s'\\n" "$("${_NB}" settings get NB_DIR)"
 
@@ -662,7 +662,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_DIR "/tmp/path to data/dir"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "settings get NB_DIR: '%s'\\n" "$("${_NB}" settings get NB_DIR)"
 
@@ -680,7 +680,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_DIR ~/tmp/path
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                    ]]
@@ -697,7 +697,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_DIR "${HOME}/tmp/path"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                    ]]
@@ -714,7 +714,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_DIR "/"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                                                    ]]
@@ -731,7 +731,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_ENCRYPTION_TOOL gpg
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                              ]]
@@ -748,7 +748,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set encryption_tool gpg
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                              ]]
@@ -771,7 +771,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_ENCRYPTION_TOOL example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                                                              ]]
@@ -790,7 +790,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_FOOTER 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                              ]]
@@ -807,7 +807,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set footer 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                              ]]
@@ -830,7 +830,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_FOOTER example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "get NB_FOOTER: '%s'\\n" "$("${_NB}" settings get NB_FOOTER)"
 
@@ -849,7 +849,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_HEADER 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                              ]]
@@ -866,7 +866,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set header 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                              ]]
@@ -889,7 +889,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_HEADER example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "get NB_HEADER: '%s'\\n" "$("${_NB}" settings get NB_HEADER)"
 
@@ -908,7 +908,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_LIMIT 5
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -925,7 +925,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set limit 6
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -948,7 +948,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings set NB_LIMIT example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "get NB_LIMIT: '%s'\\n" "$("${_NB}" settings get NB_LIMIT)"
 
@@ -967,7 +967,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings show nb_auto_sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -982,7 +982,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings show auto_sync
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0            ]]
@@ -997,7 +997,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings show NB_COLOR_THEME
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
@@ -1012,7 +1012,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings show 2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
@@ -1029,7 +1029,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings unset
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1        ]]
@@ -1043,7 +1043,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings unset EXAMPLE
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -1061,7 +1061,7 @@ skip "Determine how to test interactive prompt."
 
   run "${_NB}" settings unset EDITOR
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
 

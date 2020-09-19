@@ -12,7 +12,7 @@ load test_helper
 
   run "${_NB}" add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -42,7 +42,7 @@ load test_helper
 
   run "${_NB}" add "example-filename.md" --content "# Example Title"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -80,7 +80,7 @@ load test_helper
 
   run "${_NB}" add "example-filename.org" --content "Example content."
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -120,7 +120,7 @@ load test_helper
 
   run "${_NB}" add "# Content"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -158,7 +158,7 @@ load test_helper
 
   run "${_NB}" Example:add "# Content"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -194,7 +194,7 @@ load test_helper
 
   run "${_NB}" add "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0

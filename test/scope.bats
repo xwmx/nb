@@ -20,7 +20,7 @@ _setup_scope() {
 
   run "${_NB}" one:notebook
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0      ]]
@@ -34,7 +34,7 @@ _setup_scope() {
 
   run "${_NB}" two:notebook
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0      ]]
@@ -48,7 +48,7 @@ _setup_scope() {
 
   run "${_NB}" one:invalid
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                ]]
@@ -63,7 +63,7 @@ _setup_scope() {
 
   run "${_NB}" one:1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0          ]]
@@ -80,7 +80,7 @@ _setup_scope() {
 
   run "${_NB}" one:
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0          ]]
@@ -94,7 +94,7 @@ _setup_scope() {
 
   run "${_NB}" one: --no-id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0          ]]
@@ -108,7 +108,7 @@ _setup_scope() {
 
   run "${_NB}" two:
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
@@ -122,7 +122,7 @@ _setup_scope() {
 
   run "${_NB}" invalid:
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                                ]]
@@ -138,7 +138,7 @@ _setup_scope() {
 
   run "${_NB}" two: "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}/two/"
 
@@ -197,7 +197,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" show one:first --dump
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0        ]]

@@ -25,7 +25,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                ]]
@@ -46,7 +46,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                    ]]
@@ -65,7 +65,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                            ]]
@@ -82,7 +82,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                ]]
@@ -105,7 +105,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                    ]]
@@ -126,7 +126,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                          ]]
@@ -141,7 +141,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                ]]
@@ -170,7 +170,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                    ]]
@@ -189,7 +189,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                          ]]
@@ -205,7 +205,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"
 

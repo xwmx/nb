@@ -16,7 +16,7 @@ load test_helper
 
   run "${_NB}" delete --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 1
@@ -47,7 +47,7 @@ load test_helper
 
   run "${_NB}" delete 1 --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                      ]]
@@ -68,7 +68,7 @@ load test_helper
 
   run "${_NB}" delete "${_filename}" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                        ]]
@@ -98,7 +98,7 @@ load test_helper
 
   run "${_NB}" delete one:"${_filename}" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${output}" =~ Deleted\            ]]
@@ -121,7 +121,7 @@ load test_helper
 
   run "${_NB}" delete "${_filename}" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -164,7 +164,7 @@ load test_helper
 
   run "${_NB}" delete 1 --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -207,7 +207,7 @@ load test_helper
 
   run "${_NB}" delete "${_NOTEBOOK_PATH}/${_filename}" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -251,7 +251,7 @@ load test_helper
 
   run "${_NB}" delete "${_title}" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -294,7 +294,7 @@ load test_helper
 
   run "${_NB}" delete "${_filename}" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -333,7 +333,7 @@ load test_helper
 @test "\`help delete\` prints help information." {
   run "${_NB}" help delete
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:"    ]]

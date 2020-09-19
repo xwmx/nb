@@ -11,7 +11,7 @@ load test_helper
 
   run "${_NB}" bookmark
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 0
@@ -65,7 +65,7 @@ HEREDOC
 
   run "${_NB}" bookmark example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -103,7 +103,7 @@ HEREDOC
 
   run "${_NB}" bookmark --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -141,7 +141,7 @@ HEREDOC
 
   run "${_NB}" bookmark -n 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -157,7 +157,7 @@ HEREDOC
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
@@ -209,7 +209,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   run "${_NB}" init
 
   run "${_NB}" bookmark "file://${BATS_TEST_DIRNAME}/fixtures/example.pdf"
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -251,7 +251,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark 'http invalid url'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -301,7 +301,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --comment "New comment."
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -359,7 +359,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --quote "Quote line 1.
 
 Quote line 2."
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -425,7 +425,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --save-source
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
@@ -491,7 +491,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --skip-content
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -543,7 +543,7 @@ Example description."
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags tag1,tag2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -601,7 +601,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2' -c 'Example comment.'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -665,7 +665,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --title "New Title"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -721,7 +721,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark --related
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 1
@@ -750,7 +750,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --related https://example.net
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -811,7 +811,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     --related https://example.org \
     --related https://example.example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -905,7 +905,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.bookmark.md
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -934,7 +934,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.org
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -963,7 +963,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -998,7 +998,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" delete 1 --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1038,7 +1038,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark edit 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1071,7 +1071,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark url 99
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1089,7 +1089,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark url 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1111,7 +1111,7 @@ https://example.com
 
   run "${_NB}" bookmark url 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1132,7 +1132,7 @@ https://example.com
 
   run "${_NB}" bookmark url 1 --password=example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1173,7 +1173,7 @@ HEREDOC
 
   run "${_NB}" bookmark list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -1195,7 +1195,7 @@ Help information:
 
   run "${_NB}" bookmark list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -1235,7 +1235,7 @@ HEREDOC
 
   run "${_NB}" bookmark list --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -1249,7 +1249,7 @@ HEREDOC
 @test "\`help bookmark\` exits with status 0 and prints." {
   run "${_NB}" help bookmark
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -1266,7 +1266,7 @@ HEREDOC
 
   run "${_NB}" bookmark help
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]

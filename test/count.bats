@@ -33,7 +33,7 @@ HEREDOC
 
   run "${_NB}" count
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "3"
 
@@ -52,7 +52,7 @@ HEREDOC
 @test "\`help count\` prints help information." {
   run "${_NB}" help count
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "Usage:"      ]]

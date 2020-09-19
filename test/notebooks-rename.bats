@@ -28,7 +28,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks rename "one" "new-name"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                          ]]
@@ -47,7 +47,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks rename "home" "new-name"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                              ]]
@@ -66,7 +66,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks rename "invalid" "new-name"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                                    ]]
@@ -87,7 +87,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks rename "one" "two"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                          ]]
@@ -114,7 +114,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks rename local new-name
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                            ]]
@@ -137,7 +137,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks rename local new-name
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                  ]]

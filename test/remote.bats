@@ -15,7 +15,7 @@ _setup_remote() {
 
   run "${_NB}" remote
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ No\ remote\ configured  ]]
@@ -31,7 +31,7 @@ _setup_remote() {
 
   run "${_NB}" remote
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" == "https://example.com/example.git" ]]
@@ -47,7 +47,7 @@ _setup_remote() {
 
   run "${_NB}" remote remove
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ No\ remote\ configured  ]]
@@ -63,7 +63,7 @@ _setup_remote() {
 
   run "${_NB}" remote remove --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Removed\ remote                   ]]
@@ -80,7 +80,7 @@ _setup_remote() {
 
   run "${_NB}" remote set --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage\: ]]
@@ -94,7 +94,7 @@ _setup_remote() {
 
   run "${_NB}" remote set "https://example.com/example.git" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Remote\ set\ to                   ]]
@@ -111,7 +111,7 @@ _setup_remote() {
 
   run "${_NB}" remote set "https://example.com/example2.git" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Remote\ set\ to                   ]]
@@ -128,7 +128,7 @@ _setup_remote() {
 
   run "${_NB}" remote set "https://example.com/example.git" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Remote\ already\ set\ to        ]]
@@ -141,7 +141,7 @@ _setup_remote() {
 @test "\`help remote\` exits with 0 and prints help information." {
   run "${_NB}" help remote
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                  ]]

@@ -21,7 +21,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks import
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -35,7 +35,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
@@ -56,7 +56,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks import example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
@@ -75,7 +75,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
@@ -92,7 +92,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
@@ -110,7 +110,7 @@ _setup_notebooks() {
     "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
     "example-notebook"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
@@ -133,7 +133,7 @@ _setup_notebooks() {
     "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
     "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 

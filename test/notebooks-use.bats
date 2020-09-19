@@ -22,7 +22,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks use
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
@@ -32,7 +32,7 @@ _setup_notebooks() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
@@ -46,7 +46,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks use not-a-notebook
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
@@ -57,7 +57,7 @@ _setup_notebooks() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
@@ -71,7 +71,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks use one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'Now using: $(_highlight 'one')'" "'${output}'"
 
@@ -81,7 +81,7 @@ _setup_notebooks() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
@@ -95,7 +95,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks use one:
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'Now using: $(_highlight 'one')'" "'${output}'"
 
@@ -105,7 +105,7 @@ _setup_notebooks() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
@@ -125,7 +125,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks use one
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
@@ -135,7 +135,7 @@ _setup_notebooks() {
 
   run "${_NB}" env
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]

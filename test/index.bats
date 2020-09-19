@@ -15,7 +15,7 @@ load test_helper
 
   run "${_NB}" index
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -e "${_NOTEBOOK_PATH}/.index" ]]
@@ -35,7 +35,7 @@ load test_helper
 
   run "${_NB}" index add "$(ls "${_NOTEBOOK_PATH}")"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\$(cat \${_NOTEBOOK_PATH}/.index): '%s'\\n" \
     "$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -56,7 +56,7 @@ load test_helper
 
   run "${_NB}" index add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                              ]]
@@ -76,7 +76,7 @@ load test_helper
 
   run "${_NB}" index add 'not-a-file'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                    ]]
@@ -93,7 +93,7 @@ load test_helper
 
   run "${_NB}" index add "$(ls "${_NOTEBOOK_PATH}")"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$  ]]
@@ -110,7 +110,7 @@ load test_helper
 
   run "${_NB}" index get_basename 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
@@ -125,7 +125,7 @@ load test_helper
 
   run "${_NB}" index get_basename 12345
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
@@ -139,7 +139,7 @@ load test_helper
 
   run "${_NB}" index get_basename
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -156,7 +156,7 @@ load test_helper
 
   run "${_NB}" index get_id "$(ls "${_NOTEBOOK_PATH}")"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0    ]]
@@ -171,7 +171,7 @@ load test_helper
 
   run "${_NB}" index get_id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -186,7 +186,7 @@ load test_helper
 
   run "${_NB}" index get_id 'not-an-entry'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1    ]]
@@ -205,7 +205,7 @@ load test_helper
 
   run "${_NB}" index get_max_id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0    ]]
@@ -219,7 +219,7 @@ load test_helper
 
   run "${_NB}" index get_max_id
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0      ]]
@@ -236,7 +236,7 @@ load test_helper
 
   run "${_NB}" index delete "$(ls "${_NOTEBOOK_PATH}")"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                            ]]
@@ -251,7 +251,7 @@ load test_helper
 
   run "${_NB}" index delete
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -266,7 +266,7 @@ load test_helper
 
   run "${_NB}" index delete 'not-a-file'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
@@ -286,7 +286,7 @@ load test_helper
 
   run "${_NB}" index rebuild
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                                    ]]
@@ -325,7 +325,7 @@ load test_helper
 
   run "${_NB}" index show
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                    ]]
@@ -342,7 +342,7 @@ load test_helper
 
   run "${_NB}" index update "$(ls "${_NOTEBOOK_PATH}")" "example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf \
     "$(cat \"\$\{_NOTEBOOK_PATH\}/.index\"): '%s'\\n" \
@@ -359,7 +359,7 @@ load test_helper
   }
 
   run "${_NB}" index update
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -374,7 +374,7 @@ load test_helper
 
   run "${_NB}" index update "$(ls "${_NOTEBOOK_PATH}")"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -399,7 +399,7 @@ load test_helper
 
   run "${_NB}" index verify
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -418,7 +418,7 @@ load test_helper
 
   run "${_NB}" index verify
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
@@ -437,7 +437,7 @@ load test_helper
 
   run "${_NB}" index verify
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1 ]]
@@ -454,7 +454,7 @@ load test_helper
 @test "\`help index\` prints help information." {
   run "${_NB}" help index
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ Usage\:                     ]]

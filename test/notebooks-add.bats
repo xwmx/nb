@@ -22,7 +22,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks add
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "File Count: '%s'\\n" \
     "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)"
@@ -41,7 +41,7 @@ _setup_notebooks() {
   run "${_NB}" notebooks add one
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1                                          ]]
@@ -57,7 +57,7 @@ _setup_notebooks() {
   run "${_NB}" notebooks add example
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                          ]]
@@ -74,7 +74,7 @@ _setup_notebooks() {
   run "${_NB}" notebooks add example
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\$(ls -la \"${NB_DIR}/example/\"): '%s'\\n" \
     "$(ls -la "${NB_DIR}/example/")"
@@ -98,7 +98,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks add example "${_GIT_REMOTE_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"
 
@@ -122,7 +122,7 @@ _setup_notebooks() {
   run "${_NB}" notebooks a example
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                          ]]
@@ -138,7 +138,7 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks add example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                          ]]
@@ -155,7 +155,7 @@ _setup_notebooks() {
   run "${_NB}" notebooks add example
 
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                          ]]

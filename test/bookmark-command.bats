@@ -11,7 +11,7 @@ load test_helper
 
   run "${_BOOKMARK}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 0
@@ -65,7 +65,7 @@ HEREDOC
 
   run "${_BOOKMARK}" example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -103,7 +103,7 @@ HEREDOC
 
   run "${_BOOKMARK}" --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -119,7 +119,7 @@ HEREDOC
 
   run "${_BOOKMARK}" "${_BOOKMARK_URL}"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
@@ -174,7 +174,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark 'http invalid url'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"

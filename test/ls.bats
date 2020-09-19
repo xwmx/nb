@@ -34,7 +34,7 @@ HEREDOC
 
   run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "three" "${lines[0]}"
 
@@ -56,7 +56,7 @@ HEREDOC
 
   run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "three" "${lines[0]}"
 
@@ -82,7 +82,7 @@ HEREDOC
 
   run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "three" "${lines[0]}"
 
@@ -103,7 +103,7 @@ HEREDOC
 
   run "${_NB}" ls -e 5
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -121,7 +121,7 @@ HEREDOC
 
   run "${_NB}" ls -n 0
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                            ]]
@@ -137,7 +137,7 @@ HEREDOC
 
   run "${_NB}" ls -n 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
@@ -155,7 +155,7 @@ HEREDOC
 
   run "${_NB}" ls -n 2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
@@ -174,7 +174,7 @@ HEREDOC
 
   run "${_NB}" ls -n 3
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   _compare "${lines[0]}" "three"
@@ -194,7 +194,7 @@ HEREDOC
 
   run "${_NB}" ls -n 3
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   _compare "${lines[0]}" "three"
@@ -214,7 +214,7 @@ HEREDOC
 
   run "${_NB}" ls --3
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   _compare "${lines[0]}" "three"
@@ -249,7 +249,7 @@ HEREDOC
 
   run "${_NB}" ls --2
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0        ]]
@@ -330,7 +330,7 @@ HEREDOC
 
   run "${_NB}" ls 1 --filenames
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -349,7 +349,7 @@ HEREDOC
 
   run "${_NB}" ls 'r' --filenames
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -378,7 +378,7 @@ HEREDOC
 
   run "${_NB}" ls not-valid
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -420,7 +420,7 @@ HEREDOC
 
   run "${_NB}" ls example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -462,7 +462,7 @@ HEREDOC
 
   run "${_NB}" ls example:
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -504,7 +504,7 @@ HEREDOC
 
   run "${_NB}" ls example --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -524,7 +524,7 @@ HEREDOC
 
   run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
@@ -540,7 +540,7 @@ HEREDOC
 
   NB_FOOTER=0 run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
@@ -558,7 +558,7 @@ HEREDOC
 
   run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
@@ -574,7 +574,7 @@ HEREDOC
 
   NB_HEADER=0 run "${_NB}" ls
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${lines[0]}" "three"
 
