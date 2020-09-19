@@ -565,7 +565,7 @@ load test_helper
   }
 
   run "${_NB}" add \
-    --title "Example Title: A*sting•with/a\\bunch|of?invalid<filename\"characters>"
+    --title "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
 
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -580,12 +580,12 @@ load test_helper
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
-  [[ -n "$(ls example_title__a_sting•with_a_bunch_of_invalid_filename_characters_.md)" ]]
+  [[ -n "$(ls example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md)" ]]
 
   cat "${_NOTEBOOK_PATH}/${_files[0]}"
 
   [[ "$(cat "${_NOTEBOOK_PATH}/${_files[0]}")" =~ \
-        \#\ Example\ Title\:\ A\*sting•with\/a\\bunch\|of\?invalid\<filename\"characters\> ]]
+        \#\ Example\ Title\:\ A\*string•with\/a\\bunch\|of\?invalid\<filename\"characters\> ]]
 
   while [[ -n "$(git status --porcelain)" ]]
   do
