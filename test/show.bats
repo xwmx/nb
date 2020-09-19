@@ -8,6 +8,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -26,6 +27,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -41,6 +43,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -58,6 +61,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -74,6 +78,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -111,6 +116,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -129,6 +135,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -148,6 +155,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -166,6 +174,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
@@ -185,6 +194,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -203,6 +213,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -222,6 +233,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -240,9 +252,10 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" show "${_title}" --path
 
@@ -259,6 +272,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -277,6 +291,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -295,6 +310,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -313,6 +329,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
@@ -332,6 +349,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "# Content" --encrypt --password=example
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -353,6 +371,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -371,6 +390,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -457,6 +477,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -475,6 +496,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 

@@ -157,6 +157,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" notebooks add Example
+
     _NOTEBOOK_PATH="${NB_DIR}/Example"
   }
 
@@ -237,6 +238,7 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" notebooks add Example
+
     _NOTEBOOK_PATH="${NB_DIR}/Example"
   }
 

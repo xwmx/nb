@@ -18,8 +18,11 @@ _setup_notebooks() {
 @test "\`notebooks init\` with no arguments initializes the current directory" {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
   }
 
@@ -38,9 +41,13 @@ _setup_notebooks() {
 @test "\`notebooks init\` in existing notebook exits with 1 and prints error message." {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
   }
 
@@ -57,9 +64,13 @@ _setup_notebooks() {
 @test "\`notebooks init\` in existing git repo exits with 1 and prints error message." {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null
   }
 
@@ -76,7 +87,9 @@ _setup_notebooks() {
 @test "\`notebooks init <relative path>\` with no arguments succeeds." {
   {
     _setup_notebooks
+
     cd "${_TMP_DIR}"
+
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
@@ -95,11 +108,17 @@ _setup_notebooks() {
 @test "\`notebooks init <relative path>\` in existing notebook exits with 1." {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+
     cd "${_TMP_DIR}"
+
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
@@ -116,11 +135,17 @@ _setup_notebooks() {
 @test "\`notebooks init <relative path>\` in existing git repo exits with 1." {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null
+
     cd "${_TMP_DIR}"
+
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
@@ -162,9 +187,13 @@ _setup_notebooks() {
 @test "\`notebooks init <absolute path>\` in existing notebook exits with 1." {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
   }
 
@@ -181,9 +210,13 @@ _setup_notebooks() {
 @test "\`notebooks init <absolute path>\` in existing git repo exits with 1." {
   {
     _setup_notebooks
+
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null
   }
 

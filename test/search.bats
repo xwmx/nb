@@ -23,6 +23,7 @@ HEREDOC
 @test "\`search\` exits with status 1 and prints help information." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -41,6 +42,7 @@ HEREDOC
 @test "\`search <no match>\` exits with status 1 and does not print output." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -58,6 +60,7 @@ HEREDOC
 @test "\`search <one match>\` exits with status 0 and prints output." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -76,6 +79,7 @@ HEREDOC
 @test "\`search <one match> --path\` exits with status 0 and prints path." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -92,6 +96,7 @@ HEREDOC
 @test "\`search <one match> --list\` exits with status 0 and prints listing." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -110,6 +115,7 @@ HEREDOC
 @test "\`search <multiple matches>\` exits with status 0 and prints output." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -132,6 +138,7 @@ HEREDOC
 @test "\`search <multiple matches> --path\` exits with 0 and prints paths." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -150,6 +157,7 @@ HEREDOC
 @test "\`search <multiple matches> --list\` exits with 0 and prints listings." {
   {
     _setup_search
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -170,6 +178,7 @@ HEREDOC
 @test "\`search --bookmarks\` exits with status 0 and prints output." {
   {
     _setup_search
+
   cat <<HEREDOC | "${_NB}" add "fourth.bookmark.md"
 # four
 
@@ -199,7 +208,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_filename}: '%s'\\n" "${_filename}"
-  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
+  printf "\${lines[3]}: '%s'\\n"  "${lines[3]}"
 
   [[ ${status} -eq 0                                  ]]
   [[ "${lines[0]}" =~ fourth\.bookmark\.md\ \"four\"  ]]
@@ -341,9 +350,13 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
 
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+
     "${_NB}" add example-1.md --title "one" --content "sweetish"
     "${_NB}" add example-2.md --title "two"
   }
@@ -367,9 +380,13 @@ _search_all_setup() {
     _search_all_setup &>/dev/null
 
     mkdir -p "${_TMP_DIR}/example"
+
     cd "${_TMP_DIR}/example"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+
     "${_NB}" add example-1.md --title "one" --content "sweetish"
     "${_NB}" add example-2.md --title "two"
   }

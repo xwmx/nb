@@ -84,6 +84,7 @@ $(_highlight 'home' --underline)"
 @test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks
+
     _expected="$(_highlight 'home')"
   }
 
@@ -201,8 +202,11 @@ one"
 @test "\`notebooks --names --no-color\` prints local and global." {
   {
     _setup_notebooks
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
@@ -222,8 +226,11 @@ one"
 @test "\`notebooks --names --no-color --local\` exits with 0 and prints local." {
   {
     _setup_notebooks
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
@@ -242,8 +249,11 @@ one"
 @test "\`notebooks --names --no-color --local\` with no local exits with 1." {
   {
     _setup_notebooks
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}"
+
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
@@ -279,8 +289,11 @@ one"
 @test "\`notebooks --paths\` prints local and global." {
   {
     _setup_notebooks
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
@@ -300,8 +313,11 @@ ${NB_DIR}/one"
 @test "\`notebooks --paths --local\` exits with 0 and prints local." {
   {
     _setup_notebooks
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
@@ -320,8 +336,11 @@ ${NB_DIR}/one"
 @test "\`notebooks --paths --local\` with no local exits with 1." {
   {
     _setup_notebooks
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}"
+
     [[ "$(pwd)" == "${_TMP_DIR}" ]]
   }
 
