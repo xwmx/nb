@@ -359,6 +359,7 @@ load test_helper
   }
 
   run "${_NB}" index update
+
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
