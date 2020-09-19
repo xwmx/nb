@@ -39,9 +39,9 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
-  [[ ${status} -eq 0               ]]
-  [[ -d "${NB_DIR}/Example Folder" ]]
-  [[ "${lines[0]}" =~ "Imported"   ]]
+  [[ ${status} -eq 0                            ]]
+  [[ -d "${NB_DIR}/Example Folder"              ]]
+  [[ "${lines[0]}" =~ "Imported"                ]]
   "${_NB}" notebooks | grep -q 'Example Folder'
 }
 
@@ -60,9 +60,9 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
-  [[ ${status} -eq 0              ]]
-  [[ -d "${NB_DIR}/example"       ]]
-  [[ "${lines[0]}" =~ "Imported"  ]]
+  [[ ${status} -eq 0                      ]]
+  [[ -d "${NB_DIR}/example"               ]]
+  [[ "${lines[0]}" =~ "Imported"          ]]
   "${_NB}" notebooks | grep -q 'example'
 }
 
@@ -79,9 +79,9 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
-  [[ ${status} -eq 0                  ]]
-  [[ -d "${NB_DIR}/Example Folder-1"  ]]
-  [[ "${lines[0]}" =~ "Imported"      ]]
+  [[ ${status} -eq 0                              ]]
+  [[ -d "${NB_DIR}/Example Folder-1"              ]]
+  [[ "${lines[0]}" =~ "Imported"                  ]]
   "${_NB}" notebooks | grep -q 'Example Folder-1'
 }
 
@@ -137,8 +137,8 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
-  [[ ${status} -eq 0                  ]]
-  [[ -d "${NB_DIR}/example-1"  ]]
-  [[ "${lines[0]}" =~ "Imported"      ]]
+  [[ ${status} -eq 0                        ]]
+  [[ -d "${NB_DIR}/example-1"               ]]
+  [[ "${lines[0]}" =~ "Imported"            ]]
   "${_NB}" notebooks | grep -q 'example-1'
 }
