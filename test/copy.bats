@@ -396,7 +396,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
 }
 
-# `<scope>:show <selector>` ###################################################
+# `<scope>:copy <selector>` ###################################################
 
 @test "\`<scope>:copy <id>\` with text file copies file." {
   _setup() {
