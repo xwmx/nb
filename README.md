@@ -2267,7 +2267,7 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 Plugins have full access to all internal functions and variables,
 which are identified by leading underscores. `nb` subcommands, which
-represent `nb`'s stable public API, should be called using their internal
+represent `nb`'s public API, should be called using their internal
 function names. Options can be used to output information in formats
 suitable for parsing and processing:
 
