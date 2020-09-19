@@ -142,6 +142,90 @@ _setup_move() {
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
+@test "\`<scope>:move <selector> <notebook>\` with <filename> argument moves note." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" use "one"
+    run "${_NB}" add
+
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    run "${_NB}" use "home"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" one:move "${_filename}" "home" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                    ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
+}
+
+@test "\`<scope>:<selector> move <notebook>\` with <filename> argument moves note." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" use "one"
+    run "${_NB}" add
+
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    run "${_NB}" use "home"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" one:"${_filename}" move "home" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                    ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
+}
+
+@test "\`<selector> <scope>:move <notebook>\` with <filename> argument moves note." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" use "one"
+    run "${_NB}" add
+
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    run "${_NB}" use "home"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" "${_filename}" one:move "home" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                    ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
+  [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
+}
+
 # <filename> ##################################################################
 
 @test "\`move\` with <filename> argument successfully moves note." {
@@ -187,6 +271,39 @@ _setup_move() {
   }
 
   run "${_NB}" move 1 "destination" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
+  [[ ${status} -eq 0 ]]
+
+  # moves note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"    ]]
+  [[ -e "${NB_DIR}/destination/${_filename}"  ]]
+
+  # creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # prints output
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
+}
+
+@test "\`<id> move\` successfully moves note." {
+  {
+    _setup_move
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" 1 move "destination" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

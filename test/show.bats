@@ -509,6 +509,107 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
+# `<id> show` alternative  ####################################################
+
+@test "\`<id> show --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" 1 show --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
+# `<scoped>`  #################################################################
+
+@test "\`show <scope>:<id> --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+  }
+
+  run "${_NB}" show one:example.md --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
+@test "\`<scope>:<id> show --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+  }
+
+  run "${_NB}" one:example.md show --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
+@test "\`<scoped>:show <id> --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+  }
+
+  run "${_NB}" one:show example.md --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
+@test "\`<id> <scoped>:show --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+  }
+
+  run "${_NB}" example.md one:show --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
 # help ########################################################################
 
 @test "\`help show\` exits with status 0." {

@@ -346,7 +346,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/home/example-1.md")" ]]
 }
 
-# `<scope:selector>` ##########################################################
+# `copy <scope:selector>` #####################################################
 
 @test "\`copy <scope>:<id>\` with text file copies file." {
   _setup() {
@@ -357,7 +357,7 @@ load test_helper
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
-}; _setup
+  }; _setup
 
   run "${_NB}" copy one:1
 
@@ -381,9 +381,59 @@ load test_helper
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
-}; _setup
+  }; _setup
 
   run "${_NB}" one:1 copy
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 0               ]]
+  [[ "${lines[0]}" =~ Added         ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  [[ "$(_get_hash "${NB_DIR}/one/example.md")" == \
+     "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
+}
+
+# `<scope>:show <selector>` ###################################################
+
+@test "\`<scope>:copy <id>\` with text file copies file." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0               ]]
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+  }; _setup
+
+  run "${_NB}" one:copy 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" == 0               ]]
+  [[ "${lines[0]}" =~ Added         ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  [[ "$(_get_hash "${NB_DIR}/one/example.md")" == \
+     "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
+}
+
+@test "\`<id> <scope>:copy\` with text file copies file." {
+  _setup() {
+    run "${_NB}" init
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
+    [[ "${status}" == 0               ]]
+    [[ -e "${NB_DIR}/one/example.md"  ]]
+  }; _setup
+
+  run "${_NB}" 1 one:copy
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

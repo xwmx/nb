@@ -85,6 +85,97 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
+@test "\`<scope>:edit <selector>\` with <filename> argument prints scoped output." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "Example initial content."
+
+    _filename=$("${_NB}" one: -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -n "${_filename}"                        ]]
+    [[ -e "${NB_DIR}/one/${_filename}"          ]]
+    [[ ! "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
+  }
+
+  run "${_NB}" one:edit "${_filename}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
+
+  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ one\:[0-9]+         ]]
+  [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
+}
+
+@test "\`<scope>:<selector> edit\` alternative with edits properly without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "Example initial content."
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" "one:${_filename}" edit --content "Example content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/one/${_filename}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
+
+  # Prints output
+  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ one\:[0-9]+         ]]
+  [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
+}
+
+@test "\`<selector> <scope>:edit\` alternative with edits properly without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "Example initial content."
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" "${_filename}" one:edit --content "Example content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/one/${_filename}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
+
+  # Prints output
+  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ one\:[0-9]+         ]]
+  [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
+}
+
 # <selector> (no changes) #####################################################
 
 @test "\`edit\` with no changes does not print output." {
@@ -196,7 +287,7 @@ load test_helper
 
 # <id> ########################################################################
 
-@test "\`edit\` with <id> argument edits properly without errors." {
+@test "\`edit <id>\` edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -208,6 +299,42 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output
+  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "\`<id> edit\` alternative edits properly without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example initial content."
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
+  }
+
+  run "${_NB}" 1 edit
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${_NOTEBOOK_PATH}/${_filename}"
 
   # Returns status 0
   [[ ${status} -eq 0 ]]
@@ -437,76 +564,6 @@ load test_helper
   [[ "${output}" =~ Updated\        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-}
-
-# <id>, alternative ###########################################################
-
-@test "\`<id> edit\` alternative edits properly without errors." {
-  {
-    run "${_NB}" init
-    run "${_NB}" add "Example initial content."
-
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
-  }
-
-  run "${_NB}" 1 edit
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  cat "${_NOTEBOOK_PATH}/${_filename}"
-
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
-
-  # Updates note file
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
-
-  # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Edit'
-
-  # Prints output
-  [[ "${output}" =~ Updated\        ]]
-  [[ "${output}" =~ [0-9]+          ]]
-  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-}
-
-@test "\`<scope>:<selector> edit\` alternative with edits properly without errors." {
-  {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "Example initial content."
-
-    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
-
-    echo "\${_filename:-}: ${_filename:-}"
-
-    [[ -n "${_filename}"                ]]
-    [[ -e "${NB_DIR}/one/${_filename}"  ]]
-  }
-
-  run "${_NB}" "one:${_filename}" edit --content "Example content."
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  cat "${NB_DIR}/one/${_filename}"
-
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
-
-  # Updates note file
-  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
-
-  # Prints output
-  [[ "${output}" =~ Updated\            ]]
-  [[ "${output}" =~ one\:[0-9]+         ]]
-  [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
 # help ########################################################################
