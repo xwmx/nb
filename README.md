@@ -3954,12 +3954,18 @@ so ids are preserved across systems.
 
 ##### Operations
 
-- Add:
-  - Append a new line containing the filename to `.index`.
-- Update:
-  - Overwrite the existing filename in `.index` with the new filename.
-- Delete:
-  - Delete the filename, preserving the newline, leaving the line blank.
+<dl>
+  <dt>`add`</dt>
+  <dd>Append a new line containing the filename to <code>.index</code>.</dd>
+  <dt>`update`</dt>
+  <dd>Overwrite the existing filename in <code>.index</code> with the new filename.</dd>
+  <dt>`delete`</dt>
+  <dd>Delete the filename, preserving the newline, leaving the line blank.</dd>
+  <dt>`reconcile`</dt>
+  <dd>Remove duplicates and update index for added and deleted files.</dd>
+  <dt>`rebuild`</dt>
+  <dd>Delete and rebuild `.index`, listing files by most recently modified, reversed.</dd>
+</dl>
 
 ##### `index` Subcommand
 
@@ -3986,7 +3992,8 @@ Subcommands:
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the notebook.
-  rebuild       Rebuild the index. Some ids might change.
+  rebuild       Rebuild the index, listing files by last modified, reversed.
+                Some ids will change. Prefer `nb index reconcile`.
   reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.

@@ -5171,7 +5171,8 @@ Subcommands:
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the notebook.
-  rebuild       Rebuild the index. Some ids might change.
+  rebuild       Rebuild the index, listing files by last modified, reversed.
+                Some ids will change. Prefer \`${_ME} index reconcile\`.
   reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
@@ -5308,7 +5309,7 @@ _index() {
       _debug printf \
         "_index() rebuild: \`ls \${_NOTEBOOK_PATH}\`: '%s'\\n" \
         "$(ls "${_NOTEBOOK_PATH}")"
-      ls "${_NOTEBOOK_PATH}" > "${_index_path}" &&
+      ls -t -r "${_NOTEBOOK_PATH}" > "${_index_path}" &&
         _git_checkpoint "[nb] Rebuild Index"
       ;;
     reconcile)
