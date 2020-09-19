@@ -368,36 +368,36 @@ HEREDOC
     run "${_NB}" init
   }
 
-  run  "${_NB}" add "${_filename%%.*}--conflicted.${_filename#*.}"  \
-      --content "<https://example.com>"                             \
+  run  "${_NB}" add "${_filename%%.*}--conflicted-copy.${_filename#*.}"   \
+      --content "<https://example.com>"                                   \
       --encrypt --password password
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                                      ]]
-  [[ "${lines[0]}" =~ example--conflicted.bookmark.md.enc ]]
+  [[ ${status} -eq 0                                            ]]
+  [[ "${lines[0]}" =~ example--conflicted-copy.bookmark.md.enc  ]]
 
-  run "${_NB}" add "example--conflicted.bookmark.md"  \
-    --content "<https://example.com>"                 \
+  run "${_NB}" add "example--conflicted-copy.bookmark.md"   \
+    --content "<https://example.com>"                       \
     --encrypt --password password
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${lines[0]}" =~ example--conflicted-1.bookmark.md.enc ]]
+  [[ ${status} -eq 0                                              ]]
+  [[ "${lines[0]}" =~ example--conflicted-copy-1.bookmark.md.enc  ]]
 
-  run "${_NB}" add "example--conflicted.bookmark.md"  \
-    --content "<https://example.com>"                 \
+  run "${_NB}" add "example--conflicted-copy.bookmark.md"   \
+    --content "<https://example.com>"                       \
     --encrypt --password password
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${lines[0]}" =~ example--conflicted-2.bookmark.md.enc ]]
+  [[ ${status} -eq 0                                              ]]
+  [[ "${lines[0]}" =~ example--conflicted-copy-2.bookmark.md.enc  ]]
 }

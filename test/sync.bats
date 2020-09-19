@@ -496,31 +496,31 @@ This content is unique to 2.
 "
   run "${_NB}" sync
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"               ]]
-  [[ ! -e "${NB_DIR_1}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                     ]]
+  [[ ! -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"  ]]
 
-  [[ ! -e "${NB_DIR_2}/home/one.md.enc"             ]]
-  [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
+  [[ ! -e "${NB_DIR_2}/home/one.md.enc"                   ]]
+  [[ ! -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"  ]]
 
   export NB_DIR="${NB_DIR_2}"
 
   [[ ! "$(
           "${_NB}" show one.md.enc --password password --print --no-color
-        )" =~ Edit\ content\ from\ 1\.              ]]
+        )" =~ Edit\ content\ from\ 1\.                    ]]
   [[ ! "$(
           "${_NB}" show one.md.enc --password password --print --no-color
-        )" =~ Edit\ content\ from\ 2\.              ]]
+        )" =~ Edit\ content\ from\ 2\.                    ]]
 
   run "${_NB}" sync
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"               ]]
-  [[ ! -e "${NB_DIR_1}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                     ]]
+  [[ ! -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"  ]]
 
-  [[ -e "${NB_DIR_2}/home/one.md.enc"               ]]
-  [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_2}/home/one.md.enc"                     ]]
+  [[ ! -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"  ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"   ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
   ls -la "${NB_DIR_2}"
 
@@ -528,18 +528,18 @@ This content is unique to 2.
 
   run "${_NB}" sync
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"               ]]
-  [[ ! -e "${NB_DIR_1}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                     ]]
+  [[ ! -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"  ]]
 
-  [[ -e "${NB_DIR_2}/home/one.md.enc"               ]]
-  [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc" ]]
+  [[ -e "${NB_DIR_2}/home/one.md.enc"                     ]]
+  [[ ! -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"  ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"   ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
   [[ "$(
         "${_NB}" show one.md.enc --password password --print --no-color
-      )" =~ Edit\ content\ from\ 2\.                ]]
+      )" =~ Edit\ content\ from\ 2\.                      ]]
 
   export NB_DIR="${NB_DIR_1}"
 
@@ -573,25 +573,25 @@ This content is unique to 2.
   [[ ${status} -eq 0                                      ]]
 
   [[ -e "${NB_DIR_1}/home/one.md.enc"                     ]]
-  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc"         ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"    ]]
 
   [[ -e "${NB_DIR_2}/home/one.md.enc"                     ]]
-  [[ ! -e "${NB_DIR_2}/home/one--conflicted.md.enc"       ]]
+  [[ ! -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"  ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
      "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
-  [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
+  [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted-copy.md.enc")" == \
      "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
 
   [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\: ]]
-  [[ ${output} =~ home\:one\-\-conflicted\.md\.enc        ]]
+  [[ ${output} =~ home\:one\-\-conflicted-copy\.md\.enc   ]]
 
   [[ "$(
         "${_NB}" show one.md.enc --password password --print --no-color
       )" =~ Edit\ content\ from\ 1\.                      ]]
   [[ "$(
-        "${_NB}" show one--conflicted.md.enc --password password --print --no-color
+        "${_NB}" show one--conflicted-copy.md.enc --password password --print --no-color
       )" =~ Edit\ content\ from\ 2\.                      ]]
 
   export NB_DIR="${NB_DIR_2}"
@@ -601,27 +601,27 @@ This content is unique to 2.
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                          ]]
+  [[ ${status} -eq 0                                                ]]
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"                         ]]
-  [[ -e "${NB_DIR_1}/home/one--conflicted.md.enc"             ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                               ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"              ]]
 
-  [[ -e "${NB_DIR_2}/home/one.md.enc"                         ]]
-  [[ -e "${NB_DIR_2}/home/one--conflicted.md.enc"             ]]
+  [[ -e "${NB_DIR_2}/home/one.md.enc"                               ]]
+  [[ -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"              ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"             ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"                   ]]
 
-  [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one--conflicted.md.enc")" ]]
+  [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted-copy.md.enc")" == \
+     "$(_get_hash "${NB_DIR_2}/home/one--conflicted-copy.md.enc")"  ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_1}/home/one--conflicted.md.enc")" ]]
+     "$(_get_hash "${NB_DIR_1}/home/one--conflicted-copy.md.enc")"  ]]
 
   [[ "$(
         "${_NB}" show one.md.enc --password password --print --no-color
-      )" =~ Edit\ content\ from\ 1\.                          ]]
+      )" =~ Edit\ content\ from\ 1\.                                ]]
   [[ "$(
-        "${_NB}" show one--conflicted.md.enc --password password --print --no-color
-      )" =~ Edit\ content\ from\ 2\.                          ]]
+        "${_NB}" show one--conflicted-copy.md.enc --password password --print --no-color
+      )" =~ Edit\ content\ from\ 2\.                                ]]
 }
