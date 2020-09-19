@@ -3962,7 +3962,7 @@ so ids are preserved across systems.
   <dt><code>delete</code></dt>
   <dd>Delete the filename, preserving the newline, leaving the line blank.</dd>
   <dt><code>reconcile</code></dt>
-  <dd>Remove duplicates and update <code>.index</code> for added and deleted files.</dd>
+  <dd>Remove duplicates, <code>add</code> entries for new files, and <code>delete</code> entries for deleted files.</dd>
   <dt><code>rebuild</code></dt>
   <dd>Delete and rebuild <code>.index</code>, listing files by most recently modified, reversed.</dd>
 </dl>
