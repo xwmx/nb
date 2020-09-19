@@ -2222,7 +2222,7 @@ Create a new subcommand in three easy steps:
 NB_PLUGIN_SUBCOMMANDS+=(example)
 ```
 
-##### 2. Define help and usage text with `describe <subcommand>`.
+##### 2. Define help and usage text with `describe <subcommand> <usage>`.
 
 ```bash
 describe "example" <<HEREDOC

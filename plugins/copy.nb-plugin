@@ -16,7 +16,7 @@ NB_PLUGIN_SUBCOMMANDS+=(
   duplicate
 )
 
-# Define help and usage text with `describe <subcommand>`.
+# Define help and usage text with `describe <subcommand> <usage>`.
 describe "copy" <<HEREDOC
 Usage:
   nb copy (<id> | <filename> | <path> | <title>)
