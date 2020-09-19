@@ -21,8 +21,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ -e "${NB_DIR}/.cache" ]]
+  [[ ${status} -eq 0                  ]]
+  [[ -e "${NB_DIR}/.cache"            ]]
   [[ -z "$(ls -A "${NB_DIR}/.cache")" ]]
 }
 
