@@ -1178,9 +1178,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${lines[1]}" =~ second.bookmark.md       ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[0]}" =~ 4 ]]
+  [[ "${lines[1]}" =~ second.bookmark.md        ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
 @test "\`bookmark list\` with no bookmarks prints message." {
@@ -1201,8 +1201,8 @@ Help information:
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${_expected}" == "${output}" ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
 }
 
 # `bookmark list --sort` ######################################################
@@ -1240,9 +1240,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ second.bookmark.md        ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
 # help ########################################################################
@@ -1253,9 +1253,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
-
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
   [[ "${lines[1]}" =~  nb\ bookmark ]]
 }
 
@@ -1269,8 +1268,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
-
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
   [[ "${lines[1]}" =~  nb\ bookmark ]]
 }
