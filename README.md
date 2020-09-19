@@ -1530,7 +1530,7 @@ Scoped notebook commands are also available in tab completion:
 
 #### Notebooks, Tags, and Taxonomy
 
-`nb` is optimized to work well with a lot of notebooks, so notebooks are
+`nb` is optimized to work well with a bunch of notebooks, so notebooks are
 a really good way to organize your notes and bookmarks by top-level topic.
 
 Tags are searchable across notebooks and can be created ad hoc, making
