@@ -170,6 +170,7 @@ HEREDOC
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1  ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -182,8 +183,10 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -206,11 +209,15 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark\` with pdf <url> argument creates new note without errors." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "file://${BATS_TEST_DIRNAME}/fixtures/example.pdf"
+
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -223,6 +230,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${#_files[@]}" -eq 1 ]]
 
   _bookmark_content="<file://${BATS_TEST_DIRNAME}/fixtures/example.pdf>"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
 
@@ -237,7 +245,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -253,6 +261,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -311,6 +320,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1  ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -327,8 +337,10 @@ New comment.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -992,8 +1004,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
   }
 
@@ -1017,9 +1032,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Delete'
 
   # Deletes entry from index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
-  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
   [[ "${output}" =~ Deleted\                  ]]
@@ -1178,9 +1193,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${lines[1]}" =~ second.bookmark.md       ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[0]}" =~ 4 ]]
+  [[ "${lines[1]}" =~ second.bookmark.md        ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
 @test "\`bookmark list\` with no bookmarks prints message." {
@@ -1201,8 +1216,8 @@ Help information:
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${_expected}" == "${output}" ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
 }
 
 # `bookmark list --sort` ######################################################
@@ -1240,9 +1255,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ second.bookmark.md        ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
 # help ########################################################################
@@ -1253,9 +1268,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
-
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
   [[ "${lines[1]}" =~  nb\ bookmark ]]
 }
 
@@ -1264,14 +1278,12 @@ HEREDOC
     "${_NB}" init
   }
 
-
   run "${_NB}" bookmark help
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
-
-  [[ "${lines[0]}" == "Usage:" ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
   [[ "${lines[1]}" =~  nb\ bookmark ]]
 }

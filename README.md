@@ -2147,9 +2147,12 @@ subcommands, design themes, and otherwise extend the functionality of `nb`.
 
 `nb` supports two types of plugins, identified by their file extensions:
 
-- `.nb-theme` · Plugins defining [color themes](#custom-color-themes).
-
-- `.nb-plugin` · Plugins defining new subcommands and adding functionality.
+<dl>
+  <dt><code>.nb-theme</code></dt>
+  <dd>Plugins defining <a href="#custom-color-themes">color themes</a>.</dd>
+  <dt><code>.nb-plugin</code></dt>
+  <dd>Plugins defining new subcommands and adding functionality.</dd>
+</dl>
 
 Plugins are managed with the [`nb plugins`](#plugins) subcommand and
 are installed in the `${NB_DIR}/.plugins` directory.
@@ -2222,10 +2225,10 @@ Create a new subcommand in three easy steps:
 NB_PLUGIN_SUBCOMMANDS+=(example)
 ```
 
-##### 2. Define help and usage text in a `desc` block.
+##### 2. Define help and usage text with `describe <subcommand> <usage>`.
 
 ```bash
-desc "example" <<HEREDOC
+describe "example" <<HEREDOC
 Usage:
   nb example
 
@@ -2262,10 +2265,11 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 #### Internal Functions and Variables
 
-Plugins have full access to all of `nb`'s internal functions and
-variables, which are identified by leading underscores. `nb` subcommands
-can be called using their internal function names, and options can be
-used to output information in formats suitable for scripting:
+Plugins have full access to all internal functions and variables,
+which are identified by leading underscores. `nb` subcommands, which
+represent `nb`'s stable public API, should be called using their internal
+function names. Options can be used to output information in formats
+suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
@@ -2277,6 +2281,12 @@ _notebooks --names --no-color --unarchived --global
 # list all filenames in the current notebook
 _list --filenames --no-id --no-indicator
 ```
+
+`nb` includes a variety of helper and utility functions that can be
+leveraged when creating plugins. Plugins can also define their own helper
+and utility functions, and can override functions in `nb`, including
+entire subcommands. As a result, plugins can be used to customize and
+extend just about anything in `nb`.
 
 ### > `nb` Interactive Shell
 

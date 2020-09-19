@@ -12,6 +12,7 @@ _setup_rename() {
 @test "\`rename\` with no arguments exits with 1, does nothing, and prints help." {
   {
     _setup_rename
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -44,8 +45,11 @@ _setup_rename() {
 @test "\`rename\` with <filename> argument renames without errors." {
   {
     _setup_rename
+
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -58,8 +62,8 @@ _setup_rename() {
   [[ ${status} -eq 0 ]]
 
   # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.org" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.org"     ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -81,8 +85,11 @@ _setup_rename() {
 @test "\`rename\` with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
+
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -95,8 +102,8 @@ _setup_rename() {
   [[ ${status} -eq 0 ]]
 
   # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md"      ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -118,9 +125,13 @@ _setup_rename() {
 @test "\`rename\` bookmark with extension-less <filename> argument uses source extension." {
   {
     "${_NB}" init
+
     _filename="initial sample name.bookmark.md"
+
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -133,7 +144,7 @@ _setup_rename() {
   [[ ${status} -eq 0 ]]
 
   # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"      ]]
   [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.bookmark.md" ]]
 
   # Creates git commit
@@ -156,9 +167,13 @@ _setup_rename() {
 @test "\`rename\` bookmark with extension <filename> argument uses target extension." {
   {
     "${_NB}" init
+
     _filename="initial sample name.bookmark.md"
+
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -171,8 +186,8 @@ _setup_rename() {
   [[ ${status} -eq 0 ]]
 
   # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md"      ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -194,9 +209,13 @@ _setup_rename() {
 @test "\`rename\` note with bookmark extension <filename> argument uses target extension." {
   {
     "${_NB}" init
+
     _filename="initial sample name.md"
+
     "${_NB}" add "${_filename}"
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -232,9 +251,13 @@ _setup_rename() {
 @test "\`rename\` with existing <filename> exits with status 1." {
   {
     _setup_rename
+
     run "${_NB}" add "EXAMPLE.org"
+
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -253,8 +276,11 @@ _setup_rename() {
 @test "\`rename <id>\` with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
+
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -267,8 +293,48 @@ _setup_rename() {
   [[ ${status} -eq 0 ]]
 
   # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md"      ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Rename'
+
+  # Updates index
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
+}
+
+@test "\`<id> rename\` with extension-less <filename> argument uses source extension." {
+  {
+    _setup_rename
+
+    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  }
+
+  run "${_NB}" 1 rename "EXAMPLE" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md"      ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -292,10 +358,15 @@ _setup_rename() {
 @test "\`rename --reset\` with <filename> argument renames without errors." {
   {
     _setup_rename
+
     _original=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     _filename="test.md"
+
     "${_NB}" rename "${_original}" "${_filename}" --force
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -308,10 +379,12 @@ _setup_rename() {
   [[ ${status} -eq 0 ]]
 
   # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${_files[0]}" =~ [A-Za-z0-9]+.md ]]
   printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  [[ "${_files[0]}" =~ [A-Za-z0-9]+.md      ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -323,7 +396,9 @@ _setup_rename() {
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
+
   "${_NB}" index get_id "${_files[0]}"
+
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
@@ -337,9 +412,13 @@ _setup_rename() {
 @test "\`rename --to-bookmark\` with note renames without errors." {
   {
     "${_NB}" init
+
     _filename="example.md"
+
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+
     echo "\${_filename:-}: ${_filename:-}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -353,9 +432,11 @@ _setup_rename() {
 
   # Renames note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${_files[0]}" =~ example.bookmark.md ]]
   printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  [[ "${_files[0]}" =~ example.bookmark.md ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -367,7 +448,9 @@ _setup_rename() {
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
+
   "${_NB}" index get_id "${_files[0]}"
+
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
@@ -379,8 +462,11 @@ _setup_rename() {
 @test "\`rename 1 sample --to-bookmark\` with note renames without errors." {
   {
     "${_NB}" init
+
     _filename="example.md"
+
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -394,9 +480,11 @@ _setup_rename() {
 
   # Renames note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${_files[0]}" =~ sample.bookmark.md ]]
   printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  [[ "${_files[0]}" =~ sample.bookmark.md ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -408,7 +496,9 @@ _setup_rename() {
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
+
   "${_NB}" index get_id "${_files[0]}"
+
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
@@ -420,8 +510,11 @@ _setup_rename() {
 @test "\`rename 1 sample.demo --to-bookmark\` discards extension and renames." {
   {
     "${_NB}" init
+
     _filename="example.md"
+
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -435,9 +528,11 @@ _setup_rename() {
 
   # Renames note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${_files[0]}" =~ sample.bookmark.md ]]
   printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  [[ "${_files[0]}" =~ sample.bookmark.md ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -449,7 +544,9 @@ _setup_rename() {
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
+
   "${_NB}" index get_id "${_files[0]}"
+
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
@@ -461,8 +558,11 @@ _setup_rename() {
 @test "\`rename --to-note\` with bookmark renames without errors." {
   {
     "${_NB}" init
+
     _filename="example.bookmark.md"
+
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -476,9 +576,11 @@ _setup_rename() {
 
   # Renames note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${_files[0]}" =~ example.md ]]
   printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  [[ "${_files[0]}" =~ example.md ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -490,13 +592,185 @@ _setup_rename() {
 
   # Updates index
   cat "${_NOTEBOOK_PATH}/.index"
+
   "${_NB}" index get_id "${_files[0]}"
+
   [[ "$("${_NB}" index get_id "${_files[0]}")" == '1' ]]
 
   # Prints output
   [[ "${output}" =~ example.bookmark.md ]]
   [[ "${output}" =~ renamed\ to         ]]
   [[ "${output}" =~ example.md          ]]
+}
+
+# <scope> #####################################################################
+
+@test "\`rename <scope>:<id>\` with extension-less <filename> argument uses source extension." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "initial example name.md"
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -e "${NB_DIR}/one/${_filename}" ]]
+  }
+
+  run "${_NB}" rename one:1 "EXAMPLE" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${NB_DIR}/one/${_filename}"  ]]
+  [[ -e "${NB_DIR}/one/EXAMPLE.md"      ]]
+
+  # Creates git commit
+  cd "${NB_DIR}/one/" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Rename'
+
+  # Updates index
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
+}
+
+@test "\`<scope>:rename <id>\` with extension-less <filename> argument uses source extension." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "initial example name.md"
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -e "${NB_DIR}/one/${_filename}" ]]
+  }
+
+  run "${_NB}" one:rename 1 "EXAMPLE" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${NB_DIR}/one/${_filename}"  ]]
+  [[ -e "${NB_DIR}/one/EXAMPLE.md"      ]]
+
+  # Creates git commit
+  cd "${NB_DIR}/one/" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Rename'
+
+  # Updates index
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
+}
+
+@test "\`<scope>:<id> rename\` with extension-less <filename> argument uses source extension." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "initial example name.md"
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -e "${NB_DIR}/one/${_filename}" ]]
+  }
+
+  run "${_NB}" one:1 rename "EXAMPLE" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${NB_DIR}/one/${_filename}"  ]]
+  [[ -e "${NB_DIR}/one/EXAMPLE.md"      ]]
+
+  # Creates git commit
+  cd "${NB_DIR}/one/" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Rename'
+
+  # Updates index
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
+}
+
+@test "\`<id> <scope>:rename\` with extension-less <filename> argument uses source extension." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" one:add "initial example name.md"
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -e "${NB_DIR}/one/${_filename}" ]]
+  }
+
+  run "${_NB}" 1 one:rename "EXAMPLE" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Renames note file
+  [[ ! -e "${NB_DIR}/one/${_filename}"  ]]
+  [[ -e "${NB_DIR}/one/EXAMPLE.md"      ]]
+
+  # Creates git commit
+  cd "${NB_DIR}/one/" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Rename'
+
+  # Updates index
+  [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
+
+  # Prints output
+  [[ "${output}" =~ initial\ example\ name.md ]]
+  [[ "${output}" =~ renamed\ to               ]]
+  [[ "${output}" =~ EXAMPLE.md                ]]
 }
 
 # help ########################################################################

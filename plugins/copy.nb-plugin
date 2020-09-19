@@ -16,8 +16,8 @@ NB_PLUGIN_SUBCOMMANDS+=(
   duplicate
 )
 
-# Define help and usage text in a `desc` block.
-desc "copy" <<HEREDOC
+# Define help and usage text with `describe <subcommand> <usage>`.
+describe "copy" <<HEREDOC
 Usage:
   nb copy (<id> | <filename> | <path> | <title>)
 
@@ -51,10 +51,10 @@ _copy() {
   local _source_basename
   _source_basename="$(_get_selection_basename "${_selection}")"
 
-  # Set the current notebooks based on selection.
+  # Set the current notebook using the selection.
   #
-  # NOTE: Important! This sets the current notebook for all subsequent
-  # operations.
+  # NOTE: Important!
+  # This sets the current notebook for all subsequent operations.
   _set_selection_notebook "${_selection}"
 
   # Validate that the selection is a file.
