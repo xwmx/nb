@@ -2148,9 +2148,9 @@ subcommands, design themes, and otherwise extend the functionality of `nb`.
 `nb` supports two types of plugins, identified by their file extensions:
 
 <dl>
-  <dt>`.nb-theme`</dt>
-  <dd>Plugins defining [color themes](#custom-color-themes).</dd>
-  <dt>`.nb-plugin`</dt>
+  <dt><code>.nb-theme<code></dt>
+  <dd>Plugins defining <a href="#custom-color-themes">color themes</a>.</dd>
+  <dt><code>.nb-plugin</code></dt>
   <dd>Plugins defining new subcommands and adding functionality.</dd>
 </dl>
 
@@ -2282,9 +2282,10 @@ _notebooks --names --no-color --unarchived --global
 _list --filenames --no-id --no-indicator
 ```
 
-`nb` includes a variety of helper and utility functions. Plugins can
-include their own helper and utility functions, and can override
-functions in `nb`.
+`nb` includes a variety of helper and utility functions that can be
+leveraged when creating plugins. Plugins can also define their own helper
+and utility functions, and can override functions in `nb`, including
+entire subcommands. As a result, `nb` is very hackable and customizable.
 
 ### > `nb` Interactive Shell
 
