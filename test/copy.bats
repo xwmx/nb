@@ -169,6 +169,7 @@ load test_helper
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+
     cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
 
     [[ "${status}" == 0 ]]
