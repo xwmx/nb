@@ -10410,6 +10410,13 @@ do
             if _is_valid_subcommand "${__parts[1]:-}"
             then
               _SUBCOMMAND="${__parts[1]:-}"
+            elif [[ -z "${_SUBCOMMAND:-}"                     ]] &&
+                 [[ "${#__parts[@]}" -gt 2                    ]] &&
+                 __maybe_url="$(_join ':' "${__parts[@]:1}")"    &&
+                 _string_is_url "${__maybe_url:-}"
+            then
+              _SUBCOMMAND="bookmark"
+              _ARGUMENTS+=("${__maybe_url}")
             else
               _ARGUMENTS+=("${__parts[1]:-}")
             fi
