@@ -7,7 +7,9 @@ load test_helper
 @test "\`index\` builds an index if one doesn't exist." {
   {
     "${_NB}" init
+
     rm "${_NOTEBOOK_PATH}/.index"
+
     [[ ! -e "${_NOTEBOOK_PATH}/.index" ]]
   }
 
@@ -25,7 +27,9 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
+
     echo "" > "${_NOTEBOOK_PATH}/.index"
+
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
@@ -44,7 +48,9 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
+
     echo "" > "${_NOTEBOOK_PATH}/.index"
+
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
@@ -62,7 +68,9 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
+
     echo "" > "${_NOTEBOOK_PATH}/.index"
+
     [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
@@ -79,6 +87,7 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
+
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
   }
 
@@ -269,7 +278,9 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
+
     echo "" > "${_NOTEBOOK_PATH}/.index"
+
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "" ]]
   }
 
@@ -286,7 +297,9 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" add
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
     run "${_NB}" delete "${_filename}" --force
     run "${_NB}" add
   }
@@ -328,6 +341,7 @@ load test_helper
   }
 
   run "${_NB}" index update "$(ls "${_NOTEBOOK_PATH}")" "example.md"
+
   printf "\${status}: %s\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf \
@@ -374,10 +388,12 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
     "${_NB}" add "second.md" --title "two"
+
     printf \
       "\"\$(cat \"\${_NOTEBOOK_PATH}/.index\")\": '%s'\\n" \
       "$(cat "${_NOTEBOOK_PATH}/.index")"
     printf "\$(ls \${_NOTEBOOK_PATH}): '%s'\\n" "$(ls "${_NOTEBOOK_PATH}")"
+
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls "${_NOTEBOOK_PATH}")" ]]
   }
 
@@ -394,7 +410,9 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
     "${_NB}" add "second.md" --title "two"
+
     printf "not-a-file\\n" >> "${_NOTEBOOK_PATH}/.index"
+
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
   }
 
@@ -411,7 +429,9 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
     "${_NB}" add "second.md" --title "two"
+
     printf "second.md\\n" >> "${_NOTEBOOK_PATH}/.index"
+
     [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
   }
 
