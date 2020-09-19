@@ -13,6 +13,7 @@ _setup_move() {
 @test "\`move\` with no arguments exits with status 1." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -61,6 +62,7 @@ _setup_move() {
 @test "\`move <invalid> <notebook>\` exits with 1 and prints help." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -77,6 +79,7 @@ _setup_move() {
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -94,7 +97,9 @@ _setup_move() {
   skip "Determine how to test interactive prompt."
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
     [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
 
@@ -115,8 +120,11 @@ _setup_move() {
     run "${_NB}" notebooks add "one"
     run "${_NB}" use "one"
     run "${_NB}" add
+
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+
     echo "\${_filename:-}: ${_filename:-}"
+
     run "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
@@ -139,6 +147,7 @@ _setup_move() {
 @test "\`move\` with <filename> argument successfully moves note." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -151,8 +160,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NB_DIR}/destination/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"    ]]
+  [[ -e "${NB_DIR}/destination/${_filename}"  ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -173,6 +182,7 @@ _setup_move() {
 @test "\`move\` with <id> argument successfully moves note." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -185,8 +195,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NB_DIR}/destination/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"    ]]
+  [[ -e "${NB_DIR}/destination/${_filename}"  ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -207,6 +217,7 @@ _setup_move() {
 @test "\`move\` with <path> argument successfully moves note." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -219,8 +230,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NB_DIR}/destination/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"    ]]
+  [[ -e "${NB_DIR}/destination/${_filename}"  ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -241,6 +252,7 @@ _setup_move() {
 @test "\`move\` with <title> argument successfully moves note." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
@@ -254,8 +266,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${NB_DIR}/destination/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"    ]]
+  [[ -e "${NB_DIR}/destination/${_filename}"  ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -278,6 +290,7 @@ _setup_move() {
     run "${_NB}" init
     run "${_NB}" notebooks add "destination"
     run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+
     IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -312,10 +325,13 @@ _setup_move() {
 @test "\`move\` to local with <filename> argument successfully moves note." {
   {
     _setup_move
+
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
@@ -328,8 +344,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ -e "${_TMP_DIR}/example-local/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"        ]]
+  [[ -e "${_TMP_DIR}/example-local/${_filename}"  ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -348,10 +364,15 @@ _setup_move() {
 @test "\`move\` from local with <filename> argument successfully moves note." {
   {
     _setup_move
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+
     run "${_NB}" add "local-example.md" --content "local example content"
+
     _files=($(ls "${_TMP_DIR}/example-local/")) && _filename="${_files[0]}"
   }
 
@@ -364,8 +385,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ ! -e "${_TMP_DIR}/example-local/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}"            ]]
+  [[ ! -e "${_TMP_DIR}/example-local/${_filename}"  ]]
 
   # creates git commit
   cd "${_TMP_DIR}/example-local" || return 1
@@ -384,10 +405,15 @@ _setup_move() {
 @test "\`move\` from local with local:<filename> argument successfully moves note." {
   {
     _setup_move
+
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
     cd "${_TMP_DIR}/example-local"
+
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+
     run "${_NB}" add "local-example.md" --content "local example content"
+
     _files=($(ls "${_TMP_DIR}/example-local/")) && _filename="${_files[0]}"
   }
 
@@ -400,8 +426,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  [[ ! -e "${_TMP_DIR}/example-local/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}"            ]]
+  [[ ! -e "${_TMP_DIR}/example-local/${_filename}"  ]]
 
   # creates git commit
   cd "${_TMP_DIR}/example-local" || return 1
