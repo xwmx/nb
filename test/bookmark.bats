@@ -5,18 +5,21 @@ load test_helper
 # no argument #################################################################
 
 @test "\`bookmark\` with no argument exits with 0, prints message, and lists." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0          ]]
 
   # Does not create note file
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+  [[ "${#_files[@]}" -eq 0    ]]
 
   # Does not create git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -27,7 +30,7 @@ load test_helper
   ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
-  [[ "${lines[0]}" =~ ^Add\: ]]
+  [[ "${lines[0]}" =~ ^Add\:  ]]
 }
 
 # <url> or <list option...> argument ##########################################
@@ -62,13 +65,13 @@ HEREDOC
 
   run "${_NB}" bookmark example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${#lines[@]}" == "1" ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[0]}" =~ 4 ]]
+  [[ "${#lines[@]}" == "1"                      ]]
 }
 
 @test "\`bookmark --sort\` exits with 0 and displays a sorted list of bookmarks." {
@@ -100,13 +103,13 @@ HEREDOC
 
   run "${_NB}" bookmark --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ second.bookmark.md        ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
 @test "\`bookmark -n <num>\` exits with 0 and displays limited list." {
@@ -138,31 +141,35 @@ HEREDOC
 
   run "${_NB}" bookmark -n 1
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md     ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" == '1 omitted. 2 total.'  ]]
+  [[ ${status} -eq 0                          ]]
+  [[ "${lines[0]}" =~ second.bookmark.md      ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" == '1 omitted. 2 total.'   ]]
 }
 
 @test "\`bookmark\` with valid <url> argument creates new note without errors." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}"
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note with bookmark filename
   [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
   _bookmark_content="\
 # Example Domain
 
@@ -189,7 +196,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -202,7 +209,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   run "${_NB}" init
 
   run "${_NB}" bookmark "file://${BATS_TEST_DIRNAME}/fixtures/example.pdf"
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -214,9 +221,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="<file://${BATS_TEST_DIRNAME}/fixtures/example.pdf>"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
 
   # Creates git commit
@@ -242,21 +251,24 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   run "${_NB}" bookmark 'http invalid url'
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note with bookmark filename
   [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
+
   _bookmark_content="<http invalid url>"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
 
   # Creates git commit
@@ -268,7 +280,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints error message
@@ -284,18 +296,21 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --comment option ############################################################
 
 @test "\`bookmark\` with --comment option creates new note with comment." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --comment "New comment."
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
   _bookmark_content="\
 # Example Domain
 
@@ -326,7 +341,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -338,12 +353,14 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --quote option ##############################################################
 
 @test "\`bookmark\` with --quote option creates new note with quote." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --quote "Quote line 1.
 
 Quote line 2."
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -352,6 +369,7 @@ Quote line 2."
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -390,7 +408,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -402,11 +420,15 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --save-source option ########################################################
 
 @test "\`bookmark --save-source\` creates new note with HTML content." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --save-source
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
@@ -417,6 +439,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -435,8 +458,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")
 \`\`\`html
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 \`\`\`"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -449,7 +474,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -461,10 +486,13 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 # --skip-content option #######################################################
 
 @test "\`bookmark\` with --skip-content option creates new note with no page content." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --skip-content
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -473,6 +501,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -481,8 +510,10 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 ## Description
 
 Example description."
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -495,7 +526,7 @@ Example description."
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -507,10 +538,13 @@ Example description."
 # --tags option ###############################################################
 
 @test "\`bookmark\` with --tags option creates new note with tags." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags tag1,tag2
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -519,6 +553,7 @@ Example description."
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -535,8 +570,10 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -549,7 +586,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -559,10 +596,13 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`bookmark\` with --tags option and hashtags creates new note with tags." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2' -c 'Example comment.'
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -571,6 +611,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -591,8 +632,10 @@ Example comment.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -605,7 +648,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -617,10 +660,13 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --title option ##############################################################
 
 @test "\`bookmark\` with --title option creates new note with title." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --title "New Title"
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -629,6 +675,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # New Title
 
@@ -641,8 +688,10 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# New Title' "${_NOTEBOOK_PATH}"/*
 
@@ -655,7 +704,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -667,10 +716,13 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --related option ############################################################
 
 @test "\`bookmark\` with invalid --related <url> argument exits with 1." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark --related
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 1
@@ -698,7 +750,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --related https://example.net
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -707,6 +760,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -723,8 +777,10 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -737,7 +793,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -755,7 +811,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     --related https://example.net \
     --related https://example.org \
     --related https://example.example
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -764,6 +821,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   [[ "${#_files[@]}" -eq 1 ]]
+
   _bookmark_content="\
 # Example Domain
 
@@ -782,8 +840,10 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
   grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
 
@@ -796,7 +856,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
@@ -808,42 +868,52 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 # --encrypt option ############################################################
 
 @test "\`bookmark --encrypt\` with content argument creates a new .enc bookmark." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
 
   [[ ${status} -eq 0 ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 1 ]]
-  [[ "${_files[0]}" =~ enc$ ]]
-  [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
+
+  [[ "${#_files[@]}" -eq 1                                                          ]]
+  [[ "${_files[0]}" =~ enc$                                                         ]]
+  [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl  ]]
 }
 
 @test "\`bookmark --encrypt --password\` without argument exits with 1." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+
+  [[ "${#_files[@]}" -eq 0  ]]
 }
 
 # --filename option ###########################################################
 
 @test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.bookmark.md
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
   [[ "${#_files[@]}" -eq 1 ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -859,16 +929,20 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`add\` with --filename option uses specified extension." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.org
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
   [[ "${#_files[@]}" -eq 1 ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -884,17 +958,20 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "\`add\` with extension-less --filename option uses default extension." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
   [[ "${#_files[@]}" -eq 1 ]]
 
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -916,12 +993,13 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+    _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
   run "${_NB}" delete 1 --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -960,10 +1038,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark edit 1
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-# Returns status 0
+  # Returns status 0
   [[ ${status} -eq 0 ]]
 
   # Updates note file
@@ -992,7 +1071,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark url 99
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1009,7 +1089,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   }
 
   run "${_NB}" bookmark url 1
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1030,7 +1111,8 @@ https://example.com
   }
 
   run "${_NB}" bookmark url 1
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1050,7 +1132,8 @@ https://example.com
   }
 
   run "${_NB}" bookmark url 1 --password=example
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -1091,7 +1174,7 @@ HEREDOC
 
   run "${_NB}" bookmark list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -1113,7 +1196,7 @@ Help information:
 
   run "${_NB}" bookmark list
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
@@ -1153,7 +1236,7 @@ HEREDOC
 
   run "${_NB}" bookmark list --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -1167,7 +1250,7 @@ HEREDOC
 @test "\`help bookmark\` exits with status 0 and prints." {
   run "${_NB}" help bookmark
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]
@@ -1177,11 +1260,14 @@ HEREDOC
 }
 
 @test "\`bookmark help\` exits with status 0 and prints." {
-  "${_NB}" init
+  {
+    "${_NB}" init
+  }
+
 
   run "${_NB}" bookmark help
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0 ]]

@@ -14,10 +14,13 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with no arguments exits with status 1 and prints help." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" notebooks export
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1          ]]
@@ -25,16 +28,20 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with valid <name> exports to current directory." {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example" ]]
+
+  [[ -d "${NB_DIR}/example"     ]]
   [[ ! -d "${_TMP_DIR}/example" ]]
 
   cd "${_TMP_DIR}"
 
   run "${_NB}" notebooks export "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -45,17 +52,21 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with valid <name> exports to current directory uniquely." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example"     ]]
-  mkdir -p "${_TMP_DIR}/example"
-  [[ -d "${_TMP_DIR}/example"   ]]
+  {
+    run "${_NB}" init
 
-  cd "${_TMP_DIR}"
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example"     ]]
+
+    mkdir -p "${_TMP_DIR}/example"
+    [[ -d "${_TMP_DIR}/example"   ]]
+
+    cd "${_TMP_DIR}"
+  }
 
   run "${_NB}" notebooks export "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -66,15 +77,16 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with invalid <name> exits with 1." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example" ]]
-
-  cd "${_TMP_DIR}"
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example" ]]
+    cd "${_TMP_DIR}"
+  }
 
   run "${_NB}" notebooks export "not valid"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -85,14 +97,16 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with valid <name> and <path> exports." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example"     ]]
-  [[ ! -d "${_TMP_DIR}/example" ]]
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example"     ]]
+    [[ ! -d "${_TMP_DIR}/example" ]]
+  }
 
   run "${_NB}" notebooks export "example" "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -103,15 +117,17 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with valid <name> and <path> exports uniquely." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example"     ]]
-  mkdir -p "${_TMP_DIR}/example"
-  [[ -d "${_TMP_DIR}/example"   ]]
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example"     ]]
+    mkdir -p "${_TMP_DIR}/example"
+    [[ -d "${_TMP_DIR}/example"   ]]
+  }
 
   run "${_NB}" notebooks export "example" "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -122,15 +138,17 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with valid <name> and <path> ending in existing name exports." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example"     ]]
-  mkdir -p "${_TMP_DIR}/example"
-  [[ -d "${_TMP_DIR}/example"   ]]
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example"     ]]
+    mkdir -p "${_TMP_DIR}/example"
+    [[ -d "${_TMP_DIR}/example"   ]]
+  }
 
   run "${_NB}" notebooks export "example" "${_TMP_DIR}/sample-example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -141,17 +159,18 @@ _setup_notebooks() {
 }
 
 @test "\`notebooks export\` with valid <name> and relative <path> exports." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example"       ]]
-  mkdir -p "${_TMP_DIR}/subfolder"
-  [[ -d "${_TMP_DIR}/subfolder"   ]]
-
-  cd "${_TMP_DIR}"
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example"       ]]
+    mkdir -p "${_TMP_DIR}/subfolder"
+    [[ -d "${_TMP_DIR}/subfolder"   ]]
+    cd "${_TMP_DIR}"
+  }
 
   run "${_NB}" notebooks export "example" "subfolder/local-notebook"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 

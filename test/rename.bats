@@ -10,11 +10,14 @@ _setup_rename() {
 # no argument #################################################################
 
 @test "\`rename\` with no arguments exits with 1, does nothing, and prints help." {
-  _setup_rename
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  {
+    _setup_rename
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  }
 
   run "${_NB}" rename --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 1
@@ -43,11 +46,12 @@ _setup_rename() {
     _setup_rename
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "EXAMPLE.org" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -79,11 +83,12 @@ _setup_rename() {
     _setup_rename
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "EXAMPLE" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -116,11 +121,12 @@ _setup_rename() {
     _filename="initial sample name.bookmark.md"
     "${_NB}" add "${_filename}" --content "<https://example.com>"
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "EXAMPLE" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -153,11 +159,12 @@ _setup_rename() {
     _filename="initial sample name.bookmark.md"
     "${_NB}" add "${_filename}" --content "<https://example.com>"
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "EXAMPLE.md" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -190,18 +197,19 @@ _setup_rename() {
     _filename="initial sample name.md"
     "${_NB}" add "${_filename}"
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "EXAMPLE.bookmark.md" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
   [[ ${status} -eq 0 ]]
 
-  # Renames note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  # Renames file
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"      ]]
   [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.bookmark.md" ]]
 
   # Creates git commit
@@ -216,7 +224,7 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ sample\ name.md ]]
+  [[ "${output}" =~ initial\ sample\ name.md          ]]
   [[ "${output}" =~ renamed\ to                       ]]
   [[ "${output}" =~ EXAMPLE.bookmark.md               ]]
 }
@@ -227,15 +235,17 @@ _setup_rename() {
     run "${_NB}" add "EXAMPLE.org"
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "EXAMPLE" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
+
+  [[ ${status} -eq 1                      ]]
   [[ "${output}" =~ 'File already exists' ]]
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
 # <id> ########################################################################
@@ -245,11 +255,12 @@ _setup_rename() {
     _setup_rename
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename 1 "EXAMPLE" --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -285,11 +296,12 @@ _setup_rename() {
     _filename="test.md"
     "${_NB}" rename "${_original}" "${_filename}" --force
     echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" --reset --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -327,12 +339,13 @@ _setup_rename() {
     "${_NB}" init
     _filename="example.md"
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+    echo "\${_filename:-}: ${_filename:-}"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
-  echo "\${_filename:-}: ${_filename:-}"
 
   run "${_NB}" rename "${_filename}" --to-bookmark --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -368,11 +381,12 @@ _setup_rename() {
     "${_NB}" init
     _filename="example.md"
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "sample" --to-bookmark --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -408,11 +422,12 @@ _setup_rename() {
     "${_NB}" init
     _filename="example.md"
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" "sample.demo" --to-bookmark --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -448,11 +463,12 @@ _setup_rename() {
     "${_NB}" init
     _filename="example.bookmark.md"
     "${_NB}" add "${_filename}" --content "<https://example.com>"
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
   }
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
 
   run "${_NB}" rename "${_filename}" --to-note --force
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
@@ -487,13 +503,16 @@ _setup_rename() {
 
 @test "\`help rename\` exits with status 0." {
   run "${_NB}" help rename
+
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help rename\` prints help information." {
   run "${_NB}" help rename
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ \nb\ rename ]]
 }

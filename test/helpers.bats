@@ -7,20 +7,22 @@ load test_helper
 @test "\`_clear_cache()\` clears the cache." {
   {
     "${_NB}" init
+
     mkdir -p "${NB_DIR}/.cache"
+
     echo "Example" > "${NB_DIR}/.cache/example"
+
     [[ -e "${NB_DIR}/.cache" ]]
   }
 
-
   run "${_NB}" notebooks add "example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ -e "${NB_DIR}/.cache" ]]
+  [[ ${status} -eq 0                  ]]
+  [[ -e "${NB_DIR}/.cache"            ]]
   [[ -z "$(ls -A "${NB_DIR}/.cache")" ]]
 }
 
@@ -204,13 +206,13 @@ HEREDOC
   }
 
   run "${_NB}" list --no-color --reverse
-  [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
+  [[ ${status} -eq 0                                        ]]
   [[ "${lines[0]}"  == "[1]  Title One"                     ]]
   [[ "${lines[1]}"  == "[2]  two.md · \"line one\""         ]]
   [[ "${lines[2]}"  == "[3]  Title Three"                   ]]
@@ -239,59 +241,58 @@ HEREDOC
 
   run "${_NB}" add "example.md" --content "Example"
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-1.md ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
 
   run "${_NB}" add "example.md" --content "Example"
 
-  [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-2.md ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-2.md  ]]
 }
 
 @test "\`_get_unique_basename()\` works for encrypted notes" {
-  run "${_NB}" init
-  run "${_NB}" add "example.md" --content "Example" \
-    --encrypt --password password
-
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
-
-  [[ "${lines[0]}" =~ example.md.enc ]]
+  {
+    run "${_NB}" init
+  }
 
   run "${_NB}" add "example.md" --content "Example" \
     --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-1.md.enc ]]
+  [[ ${status} -eq 0                  ]]
+  [[ "${lines[0]}" =~ example.md.enc  ]]
 
   run "${_NB}" add "example.md" --content "Example" \
     --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example-2.md.enc ]]
+  [[ ${status} -eq 0                    ]]
+  [[ "${lines[0]}" =~ example-1.md.enc  ]]
+
+  run "${_NB}" add "example.md" --content "Example" \
+    --encrypt --password password
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                    ]]
+  [[ "${lines[0]}" =~ example-2.md.enc  ]]
 }
 
 @test "\`_get_unique_basename()\` works for bookmarks" {
@@ -302,49 +303,49 @@ HEREDOC
 
   run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
-  [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0                        ]]
   [[ "${lines[0]}" =~ example-1.bookmark.md ]]
 
   run "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0                        ]]
   [[ "${lines[0]}" =~ example-2.bookmark.md ]]
 }
 
 @test "\`_get_unique_basename()\` works for encrypted bookmarks" {
-  run "${_NB}" init
+  {
+    run "${_NB}" init
+  }
+
   run  "${_NB}" add "example.bookmark.md"   \
       --content "<https://example.com>"     \
       --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0                          ]]
   [[ "${lines[0]}" =~ example.bookmark.md.enc ]]
 
   run "${_NB}" add "example.bookmark.md"  \
     --content "<https://example.com>"     \
     --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
+  [[ ${status} -eq 0                            ]]
   [[ "${lines[0]}" =~ example-1.bookmark.md.enc ]]
 
   run "${_NB}" add "example.bookmark.md"  \
@@ -353,7 +354,7 @@ HEREDOC
 
   [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
@@ -361,42 +362,42 @@ HEREDOC
 }
 
 @test "\`_get_unique_basename()\` works for encrypted conflicted bookmarks" {
-  local _filename="example.bookmark.md"
+  {
+    local _filename="example.bookmark.md"
 
-  run "${_NB}" init
-  run  "${_NB}" add "${_filename%%.*}--conflicted.${_filename#*.}"  \
-      --content "<https://example.com>"                             \
+    run "${_NB}" init
+  }
+
+  run  "${_NB}" add "${_filename%%.*}--conflicted-copy.${_filename#*.}"   \
+      --content "<https://example.com>"                                   \
       --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example--conflicted.bookmark.md.enc ]]
+  [[ ${status} -eq 0                                            ]]
+  [[ "${lines[0]}" =~ example--conflicted-copy.bookmark.md.enc  ]]
 
-  run "${_NB}" add "example--conflicted.bookmark.md"  \
-    --content "<https://example.com>"                 \
+  run "${_NB}" add "example--conflicted-copy.bookmark.md"   \
+    --content "<https://example.com>"                       \
     --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example--conflicted-1.bookmark.md.enc ]]
+  [[ ${status} -eq 0                                              ]]
+  [[ "${lines[0]}" =~ example--conflicted-copy-1.bookmark.md.enc  ]]
 
-  run "${_NB}" add "example--conflicted.bookmark.md"  \
-    --content "<https://example.com>"                 \
+  run "${_NB}" add "example--conflicted-copy.bookmark.md"   \
+    --content "<https://example.com>"                       \
     --encrypt --password password
 
-  [[ ${status} -eq 0 ]]
-
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" =~ example--conflicted-2.bookmark.md.enc ]]
+  [[ ${status} -eq 0                                              ]]
+  [[ "${lines[0]}" =~ example--conflicted-copy-2.bookmark.md.enc  ]]
 }

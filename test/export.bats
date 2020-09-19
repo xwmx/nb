@@ -11,9 +11,11 @@ load test_helper
   }
 
   run "${_NB}" export
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 1 ]]
+
+  [[ ${status} -eq 1                ]]
   [[ "${lines[1]}" =~ '  nb export' ]]
 }
 
@@ -27,11 +29,11 @@ load test_helper
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.md"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
-
   cat "${_TMP_DIR}/example.md"
+
   [[ -e "${_TMP_DIR}/example.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
 }
@@ -43,7 +45,9 @@ load test_helper
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.html"
+
   cat "${_TMP_DIR}/example.html"
+
   [[ -e "${_TMP_DIR}/example.html" ]]
   grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
 }
@@ -51,14 +55,16 @@ load test_helper
 # `notebook` ##################################################################
 
 @test "\`export notebook\` with valid <name> and <path> exports." {
-  run "${_NB}" init
-  run "${_NB}" notebooks add "example"
-  [[ -d "${NB_DIR}/example" ]]
-  [[ ! -d "${_TMP_DIR}/example" ]]
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "example"
+    [[ -d "${NB_DIR}/example" ]]
+    [[ ! -d "${_TMP_DIR}/example" ]]
+  }
 
   run "${_NB}" export notebook "example" "${_TMP_DIR}/example"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_TMP_DIR}"
 
@@ -77,10 +83,11 @@ load test_helper
   }
 
   run "${_NB}" export pandoc 1
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                                              ]]
   [[ "${output}" =~ '<h1 id="export-example">Export Example</h1>' ]]
 }
 
@@ -90,20 +97,23 @@ load test_helper
   }
 
   run "${_NB}" export pandoc 100
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
-  [[ "${output}" =~ 'Note not found' ]]
+  [[ ${status} -eq 1                  ]]
+  [[ "${output}" =~ 'Note not found'  ]]
 }
 
 # help ########################################################################
 
 @test "\`help export\` returns usage information." {
   run "${_NB}" help export
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" == "Usage:" ]]
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" == "Usage:"      ]]
   [[ "${lines[1]}" =~ '  nb export' ]]
 }

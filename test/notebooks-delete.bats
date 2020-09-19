@@ -21,10 +21,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "one" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                          ]]
   [[ "${output}" =~ Notebook\ deleted\:       ]]
   [[ "${output}" =~ one                       ]]
   [[ ! -e "${NB_DIR}/one"                     ]]
@@ -38,10 +38,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete -f "one"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                          ]]
   [[ "${output}" =~ Notebook\ deleted\:       ]]
   [[ "${output}" =~ one                       ]]
   [[ ! -e "${NB_DIR}/one"                     ]]
@@ -57,10 +57,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "one" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                          ]]
   [[ "${lines[0]}" =~ Now\ using              ]]
   [[ "${lines[0]}" =~ home                    ]]
   [[ "${lines[1]}" =~ Notebook\ deleted\:     ]]
@@ -77,10 +77,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete "home" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                            ]]
   [[ "${lines[0]}" =~ Now\ using                ]]
   [[ "${lines[0]}" =~ one                       ]]
   [[ "${lines[1]}" =~ Notebook\ deleted\:       ]]
@@ -92,18 +92,20 @@ _setup_notebooks() {
 @test "\`notebooks delete <home>\` last notebook exits with 0 and deletes notebook." {
   {
     _setup_notebooks
-    [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
+    [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
+
     "${_NB}" notebooks delete "one" --force
-    [[ -e "${NB_DIR}/home" ]]
-    [[ ! -e "${NB_DIR}/one" ]]
+
+    [[ -e "${NB_DIR}/home"                      ]]
+    [[ ! -e "${NB_DIR}/one"                     ]]
   }
 
   run "${_NB}" notebooks delete "home" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                          ]]
   [[ "${lines[0]}" =~ Notebook\ deleted\:     ]]
   [[ "${lines[0]}" =~ home                    ]]
   [[ ! -e "${NB_DIR}/home"                    ]]
@@ -117,10 +119,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1        ]]
   [[ "${lines[0]}" =~ Usage ]]
   [[ -e "${NB_DIR}/home"    ]]
 }
@@ -132,10 +134,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete not-valid --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1                        ]]
   [[ "${lines[0]}" =~ Notebook\ not\ found  ]]
   [[ -e "${NB_DIR}/home"                    ]]
 }
@@ -146,17 +148,17 @@ _setup_notebooks() {
     run "${_NB}" notebooks add local
     mkdir -p "${_TMP_DIR}/example"
     cd "${_TMP_DIR}/example"
-    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+    [[ "$(pwd)" == "${_TMP_DIR}/example"  ]]
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
-    [[ -e "${NB_DIR}/local" ]]
+    [[ -e "${NB_DIR}/local"               ]]
   }
 
   run "${_NB}" notebooks delete local --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1                  ]]
   [[ "${lines[0]}" =~ file\ explorer  ]]
   [[ -e "${NB_DIR}/home"              ]]
   [[ -e "${NB_DIR}/local"             ]]
@@ -177,10 +179,10 @@ _setup_notebooks() {
 
   run "${_NB}" notebooks delete local --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                      ]]
   [[ "${lines[0]}" =~ Notebook\ deleted\: ]]
   [[ "${lines[0]}" =~ local               ]]
   [[ ! -e "${NB_DIR}/local"               ]]

@@ -54,7 +54,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.0.3"
+_VERSION="5.0.4"
 
 # $_ME
 #
@@ -306,17 +306,14 @@ __option_value_is_present() {
 
 # Configuration File ####################################### Configuration File
 
-# .nbrc
+# $NBRC_PATH
 #
-# If a `.nbrc` file exists in `$HOME`, source it.
-if [[ -n "${NBRC_PATH:-}" ]]
-then
-  export NBRC_PATH="${NBRC_PATH}"
-else
-  export NBRC_PATH="${HOME}/.nbrc"
-fi
+# Default: `$HOME/.nbrc`
+#
+# The location of the .nbrc configuration file.
+export NBRC_PATH="${NBRC_PATH:-"${HOME}/.nbrc"}"
 
-# Handle symlinked NBRC_PATH
+# Handle symlinked NBRC_PATH.
 if [[ -L "${NBRC_PATH}" ]]
 then
   NBRC_PATH="$(readlink "${NBRC_PATH}")"
@@ -335,18 +332,15 @@ fi
 # Default: `$HOME/.nb`
 #
 # The location of the directory that contains the notebooks.
-if [[ -n "${NB_DIR:-}" ]]
-then
-  export NB_DIR="${NB_DIR}"
-else
-  export NB_DIR="${HOME}/.nb"
-fi
+export NB_DIR="${NB_DIR:-"${HOME}/.nb"}"
 
+# Handle symlinked NB_DIR.
 if [[ -L "${NB_DIR:-}" ]]
 then
   NB_DIR="$(readlink "${NB_DIR}")"
 fi
 
+# Validate that NB_DIR exists and is writable.
 if [[ -z "${NB_DIR:?}"   ]] ||
    [[ "${NB_DIR}" == "/" ]] ||
    {
@@ -358,18 +352,17 @@ then
 NB_DIR is not valid:
   ${NB_DIR}
 
-Running the following command might resolve the issue:
-  ${_ME} settings unset nb_dir
+Remove any NB_DIR settings in .nbrc to reset to default:
+  ${NBRC_PATH}
 
-Alternatively, set NB_DIR to a new location where you'd like to store your
-notes and bookmarks. For example:
-  ${_ME} settings set nb_dir ~/Notebooks
+NB_DIR settings prompt:
+  ${_ME} settings nb_dir
 HEREDOC
 fi
 
 # $NB_AUTO_SYNC
 #
-# Default: 1
+# Default: '1'
 #
 # When set to '1', each `_git_checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
@@ -484,14 +477,14 @@ HEREDOC
 
 # $_COLOR_ENABLED
 #
-# Default: 1
+# Default: '1'
 #
 # Supported Values: '0' '1'
 export _COLOR_ENABLED="${_COLOR_ENABLED:-1}"
 
 # $NB_COLOR_THEME
 #
-# Default: nb
+# Default: 'nb'
 #
 # The color theme.
 export NB_COLOR_THEME="${NB_COLOR_THEME:-nb}"
@@ -619,7 +612,7 @@ __set_nb_color_primary() {
 
 # $NB_COLOR_SECONDARY
 #
-# Default: 8
+# Default: '8'
 #
 # Color for lines and other accents. This should be set to an xterm color
 # number, usually a value between 1 and 256. For a table of common colors and
@@ -732,6 +725,8 @@ _id_brackets_color() {
 # $_NOTEBOOK_PATH
 #
 # Default: `$NB_DIR/home`
+#
+# The path to the current notebook.
 export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NB_DIR}/home}"
 
 # $_GLOBAL_NOTEBOOK_PATH
@@ -849,7 +844,7 @@ trap _nb_cleanup_on_exit EXIT
 
 # $_GIT_ENABLED
 #
-# Default: 1
+# Default: '1'
 #
 # Supported Values: '0' '1'
 export _GIT_ENABLED="${_GIT_ENABLED:-1}"
@@ -930,7 +925,7 @@ _git_checkpoint() {
               local _conflicted_file=
               _conflicted_file="$(
                 _get_unique_basename                        \
-                  "${__file%%.*}--conflicted.${__file#*.}"  \
+                  "${__file%%.*}--conflicted-copy.${__file#*.}"  \
                   "${_current_directory}"
               )"
 
@@ -1601,10 +1596,7 @@ export _BOOKMARK_FILE_EXTENSIONS=(
 )
 _file_is_bookmark() {
   # Use explicit matching for legacy bookmark name support.
-  [[ "${1:-}" =~ .bookmark.md$      ]] ||
-  [[ "${1:-}" =~ .bookmark.md.enc$  ]] ||
-  [[ "${1:-}" =~ -bookmark.md$      ]] ||
-  [[ "${1:-}" =~ -bookmark.md.enc$  ]]
+  [[ "${1:-}" =~ [-|.]bookmark.md|[-|.]bookmark.md.enc ]]
 }
 
 # _file_is_document()
@@ -1976,7 +1968,7 @@ _get_selection_basename() {
     else # <selection> might be a title.
       local _title=
       local _filenames=
-      _filenames=($(_list_nb_files))
+      _filenames=($(_list_files))
 
       for __file in "${_filenames[@]:-}"
       do
@@ -2358,7 +2350,7 @@ _join() {
   printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
 }
 
-# _less_prompt
+# _less_prompt()
 #
 # Usage:
 #   _less_prompt
@@ -2378,21 +2370,45 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _list_nb_files()
+# _line_wrap_off()
 #
 # Usage:
-#   _list_nb_files [--sort] [--reverse] [--type <type>]
+#   _line_wrap_off
 #
 # Description:
-#   List note files with default sorting.
-_list_nb_files() {
-  # Relevant `ls` options:
-  # --  Default sort order.
-  # -t  Sort by time modified (most recently modified first) before sorting
-  #     the operands by lexicographical order
-  # -r  Reverse the order of the sort to get reverse order or the oldest
-  #     entries first (or largest files last, combined with sort by size
+#   Turn off line wrapping / automatic margins.
+_line_wrap_off() {
+  # NOTE: `tput` vs control sequence:
+  # https://unix.stackexchange.com/a/558771
+  # https://unix.stackexchange.com/a/515938
+  # https://superuser.com/a/189068
 
+  # tput rmam
+
+  printf '\033[?7l'
+}
+
+# _line_wrap_on()
+#
+# Usage:
+#   _line_wrap_on
+#
+# Description:
+#   Turn on line wrapping / automatic margins.
+_line_wrap_on() {
+  # tput smam
+
+  printf '\033[?7h'
+}
+
+# _list_files()
+#
+# Usage:
+#   _list_files [--sort] [--reverse] [--type <type>]
+#
+# Description:
+#   List files in the current notebook.
+_list_files() {
   local _reverse=0
   local _sort=0
   local _type=
@@ -2652,16 +2668,28 @@ _spinner() {
   printf "    \b\b\b\b"
 }
 
+# _string_is_email()
+#
+# Usage:
+#   _string_is_email <string>
+#
+# Exit / Error Status:
+#   0 (success, true)  If the string is recognized as an email address.
+#   1 (error,  false)  if not.
+_string_is_email() {
+  [[ "${1:-}" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
+}
+
 # _string_is_url()
 #
 # Usage:
 #   _string_is_url <string>
 #
 # Exit / Error Status:
-#   0 (success, true)  If file is a Word, Open Office, PDF, or other document.
+#   0 (success, true)  If the string is a recognized URL.
 #   1 (error,  false)  if not.
 _string_is_url() {
-  [[ "${1:-}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
+  [[ "${1:-}" =~ ^https\:\/\/|^http\:\/\/|^file\:\/\/|^ftp\:\/\/|^sftp\:\/\/ ]]
 }
 
 ###############################################################################
@@ -3098,7 +3126,7 @@ _add() {
   local _encrypt=0
   local _filename=
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _maybe_filename_or_content=
+  local _maybe_content_or_filename=
   local _password=
   local _title=
 
@@ -3135,9 +3163,9 @@ _add() {
         shift
         ;;
       *)
-        if [[ -z "${_maybe_filename_or_content:-}" ]]
+        if [[ -z "${_maybe_content_or_filename:-}" ]]
         then
-          _maybe_filename_or_content="${__arg:-}"
+          _maybe_content_or_filename="${__arg:-}"
         else
           _arguments+=("${__arg:-}")
         fi
@@ -3147,16 +3175,28 @@ _add() {
     shift
   done
 
-  local _maybe_filename_or_content_extension="${_maybe_filename_or_content##*\.}"
-  if [[ -n "${_maybe_filename_or_content:-}" ]]
+  local _common_non_text_file_extension_tlds=(
+    app agency au com company biz blog buzz ca cloud club de design dev cf ch
+    cn edu email es fr fun ga gov guru icu info it jp link life live ly media
+    mil net new nl no online nyc page rocks ru se shop site solutions space
+    store tech top tk tv uk us vip wang website work xyz
+  )
+
+  local _maybe_content_or_filename_extension="${_maybe_content_or_filename##*\.}"
+
+  if [[ -n "${_maybe_content_or_filename:-}" ]]
   then
-    if [[ "${_maybe_filename_or_content:-}" =~ \.[A-Za-z0-9]+$  ]] &&
-       [[ -n "${_maybe_filename_or_content_extension:-}"        ]] &&
-       [[ -z "${_filename}"                                     ]]
+    if  [[ "${_maybe_content_or_filename:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
+        [[ -n "${_maybe_content_or_filename_extension:-}"         ]]  &&
+        [[ -z "${_filename}"                                      ]]  &&
+        ! _string_is_url "${_maybe_content_or_filename:-}"            &&
+        ! _string_is_email "${_maybe_content_or_filename:-}"          &&
+        ! _contains "${_maybe_content_or_filename_extension:-}"   \
+                    "${_common_non_text_file_extension_tlds[@]}"
     then
-      _filename="${_maybe_filename_or_content}"
+      _filename="${_maybe_content_or_filename}"
     else
-      _content="${_maybe_filename_or_content}"
+      _content="${_maybe_content_or_filename}"
     fi
   fi
 
@@ -3166,9 +3206,9 @@ _add() {
   elif [[ -n "${_title:-}" ]]
   then
     _filename="$(
-      printf "%s" "${_title}" \
-        | tr '[:space:]' '_'  \
-        | tr '/' '_'
+      printf "%s" "${_title}"           \
+        | tr '[:upper:]' '[:lower:]'    \
+        | tr '[:space:]:*/"\\<>?|' '_'
     )"
     _basename="$(_get_unique_basename "${_filename}.${_file_type}")"
   else
@@ -3400,6 +3440,7 @@ _bookmark() {
   local _filename=
   local _password=
   local _quote=
+  local _related_urls=()
   local _save_source=0
   local _selection=
   local _skip_content=0
@@ -3407,7 +3448,6 @@ _bookmark() {
   local _tag_list=
   local _title=
   local _url=
-  local _related_urls=()
 
   while ((${#}))
   do
@@ -3437,6 +3477,10 @@ _bookmark() {
         _quote="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      -r|--via|--also|--related)
+        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
+        shift
+        ;;
       --save-source|--source|--save-html|--html|--raw-content|--raw-html)
         _save_source=1
         ;;
@@ -3449,10 +3493,6 @@ _bookmark() {
         ;;
       --title)
         _title="$(__option_get_value "${__arg}" "${__val:-}")"
-        shift
-        ;;
-      -r|--via|--also|--related)
-        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
       delete)
@@ -4237,7 +4277,7 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  _list_nb_files | wc -l | tr -d ' '
+  _list_files | wc -l | tr -d ' '
 }
 
 # delete ############################################################### delete
@@ -4621,7 +4661,7 @@ _env() {
           tig               \
           w3m
 
-        local _rg_version="11.0.2"
+        local _rg_version="12.1.1"
         local _deb_filename="ripgrep_${_rg_version}_amd64.deb"
         local _deb_local_path="${HOME}/${_deb_filename}"
 
@@ -5723,9 +5763,9 @@ _list() {
 
   if [[ -n "${_list_file_options[*]:-}" ]]
   then
-    _filenames=($(_list_nb_files "${_list_file_options[@]}")) || :
+    _filenames=($(_list_files "${_list_file_options[@]}")) || :
   else
-    _filenames=($(_list_nb_files)) || :
+    _filenames=($(_list_files)) || :
   fi
 
   local _filenames_count="${#_filenames[@]}"
@@ -5996,8 +6036,7 @@ HEREDOC
                [[ -n "${_first_line:-}"  ]]
              }
           then
-            # Turn off line-wrapping
-            printf '\033[?7l'
+            _line_wrap_off
           fi
         fi
 
@@ -6019,8 +6058,7 @@ HEREDOC
                [[ -n "${_first_line:-}"  ]]
              }
           then
-            # Turn on line-wrapping
-            printf '\033[?7h'
+            _line_wrap_on
           fi
         fi
 
@@ -6178,13 +6216,13 @@ _ls() {
       "$(_highlight_secondary "${_commands_raw[10]}")"
     )
 
-    printf '\033[?7l'
+    _line_wrap_off
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
     printf "%s" "${_TPUT_SGR0}"
-    printf '\033[?7h'
-    printf '\n'
+    _line_wrap_on
+    printf "\\n"
 
-    for ((i=0;i < "${#_commands_raw[@]}"; i++))
+    for ((i=0; i < "${#_commands_raw[@]}"; i++))
     do
       if [[ -z "${_footer_test_line}" ]]
       then # first item in line
@@ -6330,7 +6368,7 @@ _ls() {
       )
     fi
 
-    for ((i=0;i < "${#_notebook_names_raw[@]}"; i++))
+    for ((i=0; i < "${#_notebook_names_raw[@]}"; i++))
     do
       if [[ -z "${_test_line}" ]]
       then # first item in line
@@ -6389,9 +6427,8 @@ _ls() {
 
     printf "%b" "${_output_hi}"
 
-    # Use control characters to disable wrapping for long lines.
-    # Source: https://superuser.com/a/189068
-    printf '\033[?7l'
+    _line_wrap_off
+
     if ((_centered))
     then # print full-width line.
       _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
@@ -6401,9 +6438,10 @@ _ls() {
         printf "%s" "${_output_raw}" | sed 's/..$//'
       )" | tr -d '\n'
     fi
+
     printf "%s" "${_TPUT_SGR0}"
-    printf '\033[?7h'
-    printf '\n'
+    _line_wrap_on
+    printf "\\n"
   }
 
   _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
@@ -7137,7 +7175,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       "_notebooks_list() \${_notebook_paths[*]}: '%s'\\n" \
       "${_notebook_paths[*]:-}"
 
-    for ((i=0;i < "${#_notebook_names[@]}"; i++))
+    for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
       if [[ -e "${_notebook_paths[i]}/.git" ]]
       then # it's a git repository.
@@ -7408,7 +7446,7 @@ HEREDOC
     if [[ -d "${NB_DIR}/${_name}/.git" ]]
     then
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
-      printf "Now using %s.\\n" "$(_highlight "${_name}")"
+      printf "Now using: %s\\n" "$(_highlight "${_name}")"
     else
       _exit_1 printf "Not found: %s\\n" "$(_highlight "${_name}")"
     fi
@@ -7921,7 +7959,7 @@ _rename() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --force|-f)
+      -f|--force)
         _force=1
         ;;
       --reset)
@@ -8315,8 +8353,6 @@ _search() {
         local _filename_color=
         local _filename_hit=0
         local _id=
-        # Define `_id_filename` with and without color to have a version
-        # without the additional length from `tput` calls.
         local _id_filename=
         local _id_filename_color=
         local _path=
@@ -8452,9 +8488,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            printf '\033[?7l'
+            _line_wrap_off
             printf "%s" "${_id_filename_color}"
-            printf '\033[?7h'
+            _line_wrap_on
             printf "\\n"
           fi
 
@@ -8466,9 +8502,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            printf '\033[?7l'
+            _line_wrap_off
             _print_line "${_id_filename}"
-            printf '\033[?7h'
+            _line_wrap_on
           fi
 
           if ((_filename_hit))
@@ -8586,7 +8622,7 @@ _settings() {
         printf "\\n"
       fi
     else
-      for ((_i=0;_i<256;_i++))
+      for ((_i=0; _i < 256; _i++))
       do
         if ((_i)) && ! ((_i % 16))
         then
@@ -8762,6 +8798,10 @@ HEREDOC
     local _value=
 
     _setting_name="$(_nb_settings_identify "${1:-}")"  &&
+      if [[ "${2:-}" == "unset" ]]
+      then
+        _nb_settings_unset "${_setting_name}" && return 0
+      fi &&
       _nb_settings_validate_value "${_setting_name}" "${2:-}" &&
       {
         _value="${2:-}"
@@ -9403,7 +9443,7 @@ _show() {
       -p|--print|--dump|--skip-pager|--no-pager)
         _print_output=1
         ;;
-      --render|-r)
+      -r|--render)
         _render=1
         _ls_arguments+=("${__arg}")
         ;;
@@ -9768,8 +9808,8 @@ Sync Conflict Resolution:
 
   When \`${_ME} sync\` encounters a conflict in a binary file, such as an
   encrypted note or bookmark, both versions of the file are saved in the
-  notebook as individual files, one with \`--conflicted\` appended to the
-  filename.
+  notebook as individual files, one with \`--conflicted-copy\` appended to
+  the filename.
 HEREDOC
 _sync() {
   _debug printf "_sync() \${*}: '%s'\\n" "${*}"
@@ -10053,7 +10093,7 @@ do
     # if option is of type -ab
     -[!-]?*)
       # loop over each character starting with the second
-      for ((i=1; i<${#1}; i++))
+      for ((i=1; i < ${#1}; i++))
       do
         # extract 1 character from position 'i'
         c="${1:i:1}"
@@ -10275,7 +10315,7 @@ _SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_SUBCOMMANDS[@]}")$"
 # The contents of the `$_GIT_SUBCOMMANDS` array, joined with '|'.
 _GIT_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_GIT_SUBCOMMANDS[@]}")$"
 
-_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n" "${_SUBCOMMANDS_PATTERN}"
+_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n"     "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}"
 
 # _is_valid_subcommand()
@@ -10290,16 +10330,11 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
-# $_PREVIOUS_OPTION_WAS_FLAG
-#
-# Set to `1` when a flag option is found and use to avoid setting subcommand
-# to a flag argument.
-_PREVIOUS_OPTION_WAS_FLAG=0
-
 # Parse program options.
 while ((${#}))
 do
   __opt="${1}"
+  __previous_option_was_flag=0
 
   shift
 
@@ -10350,8 +10385,14 @@ do
       _print_welcome
       ;;
     *:*)
-      __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n"))
-      if [[ "${#__parts[@]}" -gt 0  ]]
+      if [[ -z "${_SUBCOMMAND:-}" ]] &&
+          _string_is_url "${__opt}"
+      then
+        _SUBCOMMAND="bookmark"
+        _ARGUMENTS+=("${__opt}")
+      elif __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n")) &&
+           [[ "${#__parts[@]}" -gt 0                          ]] &&
+           ! _string_is_url "${__opt}"
       then
         if [[ -z "${_SCOPE:-}"      ]] &&
            [[ -z "${_SUBCOMMAND:-}" ]]
@@ -10363,25 +10404,16 @@ do
              }
           then
             _SCOPE="${__parts[0]}"
+
             if _is_valid_subcommand "${__parts[1]:-}"
             then
               _SUBCOMMAND="${__parts[1]:-}"
             else
               _ARGUMENTS+=("${__parts[1]:-}")
             fi
-          elif _string_is_url "${__parts[0]}"
-          then
-            _SUBCOMMAND="bookmark"
-            _ARGUMENTS+=("${__opt}")
           else
             _exit_1 printf "Notebook not found: %s\\n" "${__parts[0]}"
           fi
-        elif [[ -n "${_SCOPE:-}"      ]] &&
-             [[ -z "${_SUBCOMMAND:-}" ]] &&
-             _string_is_url "${__parts[0]}"
-        then
-          _SUBCOMMAND="bookmark"
-          _ARGUMENTS+=("${__opt}")
         else
           _ARGUMENTS+=("${__opt}")
         fi
@@ -10394,7 +10426,7 @@ do
       break
       ;;
     *)
-      if ! ((_PREVIOUS_OPTION_WAS_FLAG))  &&
+      if ! ((__previous_option_was_flag)) &&
          [[ -z "${_SUBCOMMAND:-}" ]]      &&
          _is_valid_subcommand "${__opt}"
       then
@@ -10402,10 +10434,10 @@ do
       else
         if [[ "${__opt}" =~ ^- ]]
         then
-          _PREVIOUS_OPTION_WAS_FLAG=1
-        elif ((_PREVIOUS_OPTION_WAS_FLAG))
+          __previous_option_was_flag=1
+        elif ((__previous_option_was_flag))
         then
-          _PREVIOUS_OPTION_WAS_FLAG=0
+          __previous_option_was_flag=0
         fi
 
         _ARGUMENTS+=("${__opt}")
@@ -10414,11 +10446,11 @@ do
   esac
 done
 
-_debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n" "${_SUBCOMMANDS[*]}"
+_debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n"      "${_SUBCOMMANDS[*]}"
 _debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\\n" "${_SUBCOMMANDS_PATTERN}"
-_debug printf "\${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
-_debug printf "\${_SCOPE}: '%s'\\n" "${_SCOPE}"
-_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
+_debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
+_debug printf "\${_SCOPE}: '%s'\\n"               "${_SCOPE}"
+_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # _main()
@@ -10434,8 +10466,8 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n" "${_ARGUMENTS[*]:-}"
 #   of the script after everything has been defined.
 _main() {
   _debug printf "_main() >> start\\n"
-  _debug printf "_main() \${@}: '%s'\\n" "${@}"
-  _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n" "${_SUBCOMMAND}"
+  _debug printf "_main() \${@}: '%s'\\n"            "${@}"
+  _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n"  "${_SUBCOMMAND}"
 
   # Set `$_SUBCOMMAND` if it's still blank.
   if [[ -z "${_SUBCOMMAND:-}" ]]

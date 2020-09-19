@@ -33,15 +33,15 @@ HEREDOC
 
   run "${_NB}" bookmarks
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Add ]] && [[ "${lines[0]}" =~ Help ]]
-  [[ "${lines[1]}" =~ --- ]]
-  [[ "${lines[2]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[2]}" =~ 4 ]]
-  [[ "${lines[3]}" =~ second.bookmark.md       ]] && [[ "${lines[3]}" =~ 2 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ Add                       ]] && [[ "${lines[0]}" =~ Help  ]]
+  [[ "${lines[1]}" =~ ---                       ]]
+  [[ "${lines[2]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[2]}" =~ 4     ]]
+  [[ "${lines[3]}" =~ second.bookmark.md        ]] && [[ "${lines[3]}" =~ 2     ]]
 }
 
 # `bookmarks --sort` ##########################################################
@@ -75,12 +75,12 @@ HEREDOC
 
   run "${_NB}" bookmarks --sort
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ second.bookmark.md        ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[1]}" =~ 4 ]]
 }

@@ -32,26 +32,30 @@ HEREDOC
   }
 
   run "${_NB}" count
-  [[ ${status} -eq 0 ]]
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _compare "${lines[0]}" "3"
 
-  [[ "${lines[0]}" -eq 3 ]]
+  [[ ${status} -eq 0      ]]
+  [[ "${lines[0]}" -eq 3  ]]
 }
 
 # help ########################################################################
 
 @test "\`help count\` exits with status 0." {
   run "${_NB}" help count
+
   [[ ${status} -eq 0 ]]
 }
 
 @test "\`help count\` prints help information." {
   run "${_NB}" help count
-  printf "\${status}: %s\\n" "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" == "  nb count" ]]
+
+  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[1]}" == "  nb count"  ]]
 }

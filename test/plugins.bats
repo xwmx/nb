@@ -13,7 +13,7 @@ load test_helper
 
   run "${_NB}" plugins
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                     ]]
@@ -30,7 +30,7 @@ load test_helper
 
   run "${_NB}" plugins example.nb-plugin
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                   ]]
@@ -47,7 +47,7 @@ load test_helper
 
   run "${_NB}" plugins example
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1                       ]]
@@ -62,7 +62,7 @@ load test_helper
 
   run "${_NB}" plugins
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1             ]]
@@ -79,7 +79,7 @@ load test_helper
 
   run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                           ]]
@@ -100,7 +100,7 @@ load test_helper
 
   run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                           ]]
@@ -121,7 +121,7 @@ load test_helper
 
   run "${_NB}" plugins install file://"${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                           ]]
@@ -142,7 +142,7 @@ load test_helper
 
   run "${_NB}" plugins install file://"${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                           ]]
@@ -163,7 +163,7 @@ load test_helper
 
   run "${_NB}" plugins install "invalid"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1               ]]
@@ -178,7 +178,7 @@ load test_helper
 
   run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1                     ]]
@@ -195,7 +195,7 @@ load test_helper
 
   run "${_NB}" plugins uninstall "example.nb-plugin" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                                   ]]
@@ -212,7 +212,7 @@ load test_helper
 
   run "${_NB}" plugins uninstall "turquoise.nb-theme" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 0                                   ]]
@@ -229,7 +229,7 @@ load test_helper
 
   run "${_NB}" plugins uninstall "example" --force
 
-  printf "\${status}: %s\\n" "${status}"
+  printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" == 1                           ]]

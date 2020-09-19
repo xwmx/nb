@@ -1809,10 +1809,15 @@ and `>>>>>>>`:
 
 When `nb` encounters a conflict in a binary file, such as an encrypted
 note, both versions of the file are saved in the notebook as individual
-files, one with `--conflicted` appended to the filename.
+files, one with `--conflicted-copy` appended to the filename. To
+resolve a conflicted copy of a binary file, compare both versions and
+merge them manually, then delete the `--conflicted-copy`.
 
-If you encounter a conflict that `nb` says it can't merge, [`nb git`](#git)
-and [`nb run`](#run) can be used to resolve the conflict manually.
+`nb` handles git operations automatically, so you shouldn't ever need
+to use the `git` command line tool directly. If you do encounter a
+conflict that `nb` says it can't merge, [`nb git`](#git) and
+[`nb run`](#run) can be used to resolve the conflict manually without
+changing the current working directory.
 
 ### ↕️ Import / Export
 
@@ -3556,10 +3561,10 @@ Alias: `set`
      • Supported Values:
 
        0  Hide Header
-       1  Dynamic Alignment (default)
+       1  Dynamic Alignment
             - Left justified when list is shorter than terminal width.
             - Center aligned when list is longer than terminal width.
-       2  Center Aligned
+       2  Center Aligned (default)
        3  Left Justified
 
      • Default Value: 1
