@@ -7,8 +7,11 @@ load test_helper
 @test "\`_clear_cache()\` clears the cache." {
   {
     "${_NB}" init
+
     mkdir -p "${NB_DIR}/.cache"
+
     echo "Example" > "${NB_DIR}/.cache/example"
+
     [[ -e "${NB_DIR}/.cache" ]]
   }
 
