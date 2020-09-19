@@ -189,6 +189,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${#_files[@]}" -eq 1 ]]
 
   _bookmark_content="<http invalid url>"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
 

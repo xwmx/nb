@@ -15,11 +15,11 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0          ]]
 
   # Does not create note file
   _files=($(ls "${_NOTEBOOK_PATH}/"))
-  [[ "${#_files[@]}" -eq 0 ]]
+  [[ "${#_files[@]}" -eq 0    ]]
 
   # Does not create git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -30,7 +30,7 @@ load test_helper
   ! git log | grep -q '\[nb\] Add'
 
   # Prints help information
-  [[ "${lines[0]}" =~ ^Add\: ]]
+  [[ "${lines[0]}" =~ ^Add\:  ]]
 }
 
 # <url> or <list option...> argument ##########################################
@@ -69,9 +69,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${#lines[@]}" == "1" ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[0]}" =~ 4 ]]
+  [[ "${#lines[@]}" == "1"                      ]]
 }
 
 @test "\`bookmark --sort\` exits with 0 and displays a sorted list of bookmarks." {
@@ -107,9 +107,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md       ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ second.bookmark.md        ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
 @test "\`bookmark -n <num>\` exits with 0 and displays limited list." {
@@ -145,9 +145,9 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ second.bookmark.md     ]] && [[ "${lines[0]}" =~ 2 ]]
-  [[ "${lines[1]}" == '1 omitted. 2 total.'  ]]
+  [[ ${status} -eq 0                          ]]
+  [[ "${lines[0]}" =~ second.bookmark.md      ]] && [[ "${lines[0]}" =~ 2 ]]
+  [[ "${lines[1]}" == '1 omitted. 2 total.'   ]]
 }
 
 @test "\`bookmark\` with valid <url> argument creates new note without errors." {
@@ -163,13 +163,13 @@ HEREDOC
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note with bookmark filename
   [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
   _bookmark_content="\
 # Example Domain
 
@@ -256,15 +256,16 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note with bookmark filename
   [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
 
   _bookmark_content="<http invalid url>"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
 
@@ -305,11 +306,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0        ]]
 
   # Creates new note file with content
   _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-  [[ "${#_files[@]}" -eq 1 ]]
+  [[ "${#_files[@]}" -eq 1  ]]
   _bookmark_content="\
 # Example Domain
 

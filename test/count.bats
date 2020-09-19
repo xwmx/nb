@@ -35,10 +35,11 @@ HEREDOC
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   _compare "${lines[0]}" "3"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" -eq 3 ]]
+  [[ ${status} -eq 0      ]]
+  [[ "${lines[0]}" -eq 3  ]]
 }
 
 # help ########################################################################

@@ -20,10 +20,10 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Exits with status 1
-  [[ ${status} -eq 1 ]]
+  [[ ${status} -eq 1                      ]]
 
   # Does not delete note file
-  [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 
   # Does not create git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -34,8 +34,8 @@ load test_helper
   ! git log | grep -q '\[nb\] Delete'
 
   # Prints help information
-  [[ "${lines[0]}" =~ Usage\:         ]]
-  [[ "${lines[1]}" =~ \ \ nb\ delete  ]]
+  [[ "${lines[0]}" =~ Usage\:             ]]
+  [[ "${lines[1]}" =~ \ \ nb\ delete      ]]
 }
 
 # <selector> ##################################################################
@@ -63,7 +63,7 @@ load test_helper
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
-    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
   }
 
   run "${_NB}" delete "${_filename}" --force
@@ -87,6 +87,7 @@ load test_helper
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
     echo "\${_filename:-}: '${_filename:-}'"
+
     printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
     printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
 
@@ -116,7 +117,7 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
   }
 
   run "${_NB}" delete "${_filename}" --force
@@ -125,14 +126,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                        ]]
 
   # Deletes note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -159,7 +160,7 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
 
-    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
   }
 
   run "${_NB}" delete 1 --force
@@ -168,14 +169,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                        ]]
 
   # Deletes note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -211,14 +212,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                        ]]
 
   # Deletes note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -246,7 +247,7 @@ load test_helper
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-    [[ -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+    [[ -e "${_NOTEBOOK_PATH}/${_filename}"   ]]
   }
 
   run "${_NB}" delete "${_title}" --force
@@ -255,14 +256,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                        ]]
 
   # Deletes note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -298,14 +299,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                        ]]
 
   # Deletes note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}" ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
