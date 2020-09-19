@@ -1247,7 +1247,7 @@ _alias_subcommand() {
     return 1
   fi
 
-  eval "desc \"${_alias}\" \"\$___desc_${_subcommand}\""
+  eval "describe \"${_alias}\" \"\$____describe_${_subcommand}\""
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
@@ -2696,18 +2696,18 @@ _string_is_url() {
 # desc
 ###############################################################################
 
-# desc()
+# describe()
 #
 # Usage:
-#   desc <name> <description>
-#   desc --get <name>
+#   describe <name> <description>
+#   describe --get <name>
 #
 # Options:
 #   --get  Print the description for <name> if one has been set.
 #
 # Examples:
 # ```
-#   desc "list" <<HEREDOC
+#   describe "list" <<HEREDOC
 # Usage:
 #   ${_ME} list
 #
@@ -2715,56 +2715,57 @@ _string_is_url() {
 #   List items.
 # HEREDOC
 #
-# desc --get "list"
+# describe --get "list"
 # ```
 #
 # Set or print a description for a specified command or function <name>. The
 # <description> text can be passed as the second argument or as standard input.
 #
-# To make the <description> text available to other functions, `desc()` assigns
-# the text to a variable with the format `$___desc_<name>`.
+# To make the <description> text available to other functions, `describe()`
+# assigns the text to a variable with the format `$____describe_<name>`.
 #
 # When the `--get` option is used, the description for <name> is printed, if
 # one has been set.
-desc() {
+describe() {
   set +e
-  [[ -z "${1:-}" ]] && _exit_1 printf "desc(): No command name specified.\\n"
+  [[ -z "${1:-}" ]] &&
+    _exit_1 printf "describe(): <name> required.\\n"
 
   if [[ "${1}" == "--get" ]]
   then # get ------------------------------------------------------------------
-    [[ -z "${2:-}" ]] && _exit_1 printf "desc(): No command name specified.\\n"
+    [[ -z "${2:-}" ]] &&
+      _exit_1 printf "describe(): <description> required.\\n"
 
     local _name="${2:-}"
-    local _desc_var="___desc_${_name}"
+    local _describe_var="____describe_${_name}"
 
-    if [[ ! "${_name}" =~ ^\- ]] && [[ -n "${!_desc_var:-}" ]]
+    if [[ ! "${_name}" =~ ^\- ]] && [[ -n "${!_describe_var:-}" ]]
     then
-      printf "%s\\n" "${!_desc_var}"
+      printf "%s\\n" "${!_describe_var}"
     else
       printf "No additional information for \`%s\`\\n" "${_name}"
     fi
   else # set ------------------------------------------------------------------
     if [[ -n "${2:-}" ]]
     then # argument is present
-      read -r -d '' "___desc_${1}" <<HEREDOC
+      read -r -d '' "____describe_${1}" <<HEREDOC
 ${2}
 HEREDOC
-
-      _debug printf "desc() set with argument: \${___desc_%s}\\n" "${1}"
     else # no argument is present, so assume piped input
-      read -r -d '' "___desc_${1}"
-
-      _debug printf "desc() set with pipe: \${___desc_%s}\\n" "${1}"
+      read -r -d '' "____describe_${1}"
     fi
   fi
   set -e
 }
 
+# Support legacy `desc` name.
+desc() { describe "${@}"; }
+
 ###############################################################################
 # help
 ###############################################################################
 
-desc "help" <<HEREDOC
+describe "help" <<HEREDOC
 Usage:
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
@@ -3044,7 +3045,7 @@ More Information:
 HEREDOC
     fi
   else
-    printf "%s\\n" "$(desc --get "${_arguments[@]}")"
+    printf "%s\\n" "$(describe --get "${_arguments[@]}")"
   fi |  if ((_shell))
         then # Strip 'nb' command name from help output.
           sed -e "s/^  nb /  /" -e "/^  nb$/d"
@@ -3070,7 +3071,7 @@ _alias_subcommand "help" "h"
 
 # add ##################################################################### add
 
-desc "add" <<HEREDOC
+describe "add" <<HEREDOC
 Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -3326,7 +3327,7 @@ _alias_subcommand "add" "new"
 
 # bookmark ########################################################### bookmark
 
-desc "bookmark" <<HEREDOC
+describe "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
@@ -3997,7 +3998,7 @@ _alias_subcommand "bookmark" "bookmarks"
 
 # commands ########################################################### commands
 
-desc "commands" <<HEREDOC
+describe "commands" <<HEREDOC
 Usage:
   ${_ME} commands
 
@@ -4011,7 +4012,7 @@ _alias_subcommand "commands" "subcommands"
 
 # completions ##################################################### completions
 
-desc "completions" <<HEREDOC
+describe "completions" <<HEREDOC
 Usage:
   ${_ME} completions (check | install [-d | --download] | uninstall)
 
@@ -4269,7 +4270,7 @@ HEREDOC
 
 # count ################################################################# count
 
-desc "count" <<HEREDOC
+describe "count" <<HEREDOC
 Usage:
   ${_ME} count
 
@@ -4282,7 +4283,7 @@ _count() {
 
 # delete ############################################################### delete
 
-desc "delete" <<HEREDOC
+describe "delete" <<HEREDOC
 Usage:
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
 
@@ -4405,7 +4406,7 @@ _alias_subcommand "delete" "d"
 
 # edit ################################################################### edit
 
-desc "edit" <<HEREDOC
+describe "edit" <<HEREDOC
 Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
@@ -4605,7 +4606,7 @@ _alias_subcommand "edit" "e"
 
 # env ##################################################################### env
 
-desc "env" <<HEREDOC
+describe "env" <<HEREDOC
 Usage:
   ${_ME} env [install]
 
@@ -4736,7 +4737,7 @@ _env() {
 
 # export ############################################################### export
 
-desc "export" <<HEREDOC
+describe "export" <<HEREDOC
 Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
@@ -4903,7 +4904,7 @@ _export() {
 
 # git ##################################################################### git
 
-desc "git" <<HEREDOC
+describe "git" <<HEREDOC
 Usage:
   ${_ME} git <git options>...
 
@@ -4927,7 +4928,7 @@ _git() {
 
 # history ############################################################# history
 
-desc "history" <<HEREDOC
+describe "history" <<HEREDOC
 Usage:
   ${_ME} history [<id> | <filename> | <path> | <title>]
 
@@ -4972,7 +4973,7 @@ _history() {
 
 # import ############################################################### import
 
-desc "import" <<HEREDOC
+describe "import" <<HEREDOC
 Usage:
   ${_ME} import (<path> | <url>)
   ${_ME} import copy <path>
@@ -5151,7 +5152,7 @@ ${_url}
 
 # index ################################################################# index
 
-desc "index" <<HEREDOC
+describe "index" <<HEREDOC
 Usage:
   ${_ME} index add <filename>
   ${_ME} index delete <filename>
@@ -5469,7 +5470,7 @@ _index() {
 
 # init ################################################################### init
 
-desc "init" <<HEREDOC
+describe "init" <<HEREDOC
 Usage:
   ${_ME} init [<remote-url>]
 
@@ -5578,7 +5579,7 @@ HEREDOC
 
 # list ################################################################### list
 
-desc "list" <<HEREDOC
+describe "list" <<HEREDOC
 Usage:
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
@@ -6102,7 +6103,7 @@ HEREDOC
 
 # ls ####################################################################### ls
 
-desc "ls" <<HEREDOC
+describe "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
@@ -6560,7 +6561,7 @@ _ls() {
 
 # move ################################################################### move
 
-desc "move" <<HEREDOC
+describe "move" <<HEREDOC
 Usage:
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
 
@@ -6706,7 +6707,7 @@ _alias_subcommand "move" "mv"
 
 # TODO: Vim highlighting bug. "
 
-desc "notebooks" <<HEREDOC
+describe "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -7520,7 +7521,7 @@ _alias_subcommand "notebooks" "ns"
 
 # open ################################################################### open
 
-desc "open" <<HEREDOC
+describe "open" <<HEREDOC
 Usage:
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
 
@@ -7553,7 +7554,7 @@ _alias_subcommand "open" "o"
 
 # peek ################################################################### peek
 
-desc "peek" <<HEREDOC
+describe "peek" <<HEREDOC
 Usage:
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
 
@@ -7593,7 +7594,7 @@ _alias_subcommand "peek" "preview"
 
 # plugins ############################################################# plugins
 
-desc "plugins" <<HEREDOC
+describe "plugins" <<HEREDOC
 Usage:
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>]
@@ -7768,7 +7769,7 @@ _alias_subcommand "plugins" "plugin"
 
 # remote ############################################################### remote
 
-desc "remote" <<HEREDOC
+describe "remote" <<HEREDOC
 Usage:
   ${_ME} remote
   ${_ME} remote remove
@@ -7914,7 +7915,7 @@ _remote() {
 
 # rename ############################################################### rename
 
-desc "rename" <<HEREDOC
+describe "rename" <<HEREDOC
 Usage:
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -8097,7 +8098,7 @@ _rename() {
 
 # run ##################################################################### run
 
-desc "run" <<HEREDOC
+describe "run" <<HEREDOC
 Usage:
   ${_ME} run <command> [<arguments>...]
 
@@ -8119,7 +8120,7 @@ _alias_subcommand "run" "r"
 
 # search ############################################################### search
 
-desc "search" <<HEREDOC
+describe "search" <<HEREDOC
 Usage:
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
@@ -8557,7 +8558,7 @@ _alias_subcommand "search" "q"
 
 # settings ########################################################### settings
 
-desc "settings" <<HEREDOC
+describe "settings" <<HEREDOC
 Usage:
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings colors [<number> | themes]
@@ -9206,7 +9207,7 @@ _alias_subcommand "settings" "set"
 
 # shell  ################################################################ shell
 
-desc "shell" <<HEREDOC
+describe "shell" <<HEREDOC
 Usage:
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
 
@@ -9345,7 +9346,7 @@ HEREDOC
 
 # show ################################################################### show
 
-desc "show" <<HEREDOC
+describe "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --path | --render | --title]
@@ -9776,7 +9777,7 @@ _alias_subcommand "show" "view"
 
 # status ############################################################### status
 
-desc "status" <<HEREDOC
+describe "status" <<HEREDOC
 Usage:
   ${_ME} status
 
@@ -9790,7 +9791,7 @@ _status() {
 
 # sync ################################################################### sync
 
-desc "sync" <<HEREDOC
+describe "sync" <<HEREDOC
 Usage:
   ${_ME} sync [-a | --all]
 
@@ -9867,7 +9868,7 @@ _sync() {
 
 # todos ################################################################# todos
 
-desc "todos" <<HEREDOC
+describe "todos" <<HEREDOC
 Usage:
   ${_ME} todos [open | closed] [-a | --all]
 
@@ -9909,7 +9910,7 @@ _alias_subcommand "todos" "todo"
 
 # update ############################################################### update
 
-desc "update" <<HEREDOC
+describe "update" <<HEREDOC
 Usage:
   ${_ME} update
 
@@ -10012,7 +10013,7 @@ _alias_subcommand "update" "upgrade"
 
 # use ##################################################################### use
 
-desc "use" <<HEREDOC
+describe "use" <<HEREDOC
 Usage:
   ${_ME} use <notebook>
 
@@ -10033,7 +10034,7 @@ _alias_subcommand "use" "u"
 
 # version ############################################################# version
 
-desc "version" <<HEREDOC
+describe "version" <<HEREDOC
 Usage:
   ${_ME} version
 

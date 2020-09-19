@@ -2222,10 +2222,10 @@ Create a new subcommand in three easy steps:
 NB_PLUGIN_SUBCOMMANDS+=(example)
 ```
 
-##### 2. Define help and usage text in a `desc` block.
+##### 2. Define help and usage text with `describe <subcommand>`.
 
 ```bash
-desc "example" <<HEREDOC
+describe "example" <<HEREDOC
 Usage:
   nb example
 

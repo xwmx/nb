@@ -13,8 +13,8 @@
 # Add the new subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
 NB_PLUGIN_SUBCOMMANDS+=(example)
 
-# Define help and usage text in a `desc` block.
-desc "example" <<HEREDOC
+# Define help and usage text with `describe <subcommand>`.
+describe "example" <<HEREDOC
 Usage:
   nb example
 
