@@ -10396,13 +10396,13 @@ do
       then
         _ARGUMENTS+=("${__opt}")
       else
-        __maybe_selection_notebook="${__opt%%:*}"
-
         if [[ -n "${_SCOPE:-}"      ]] &&
            [[ -n "${_SUBCOMMAND:-}" ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
+          __maybe_selection_notebook="${__opt%%:*}"
+
           if [[ -d "${NB_DIR}/${__maybe_selection_notebook}"  ]] ||
              {
                [[ "${__maybe_selection_notebook}" == "local"  ]] &&
