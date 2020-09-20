@@ -1946,10 +1946,7 @@ _get_notebook_identifier() {
 # _get_selection_basename()
 #
 # Usage:
-#   _get_selection_basename <id>
-#   _get_selection_basename <filename>
-#   _get_selection_basename <path>
-#   _get_selection_basename <title>
+#   _get_selection_basename (<id> | <filename> | <path> | <title>}
 #
 # Description:
 #   Determine the basename of the file in `$_NOTEBOOK_PATH` that is identified
