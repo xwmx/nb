@@ -10385,6 +10385,8 @@ _set_selection_notebook() { : ; }
 # $_SCOPE
 #
 # Unnecessary.
+#
+# shellcheck disable=SC2034
 if [[ -n "${_SCOPE:-}" ]]
 then
   _SCOPED=1
