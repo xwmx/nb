@@ -8394,11 +8394,11 @@ _search() {
 
           if ((_all)) || ((_SELECTION_SCOPED))
           then
-            local _notebook_name=
-            _notebook_name="$(_get_notebook_identifier "${__notebook_path}")"
+            local _notebook_identifier=
+            _notebook_identifier="$(_get_notebook_identifier "${__notebook_path}")"
 
-            _id_filename="[${_notebook_name}:${_id}] ${_file_info}"
-            _id_filename_color="$(_id_brackets_color "${_notebook_name}:${_id}") ${_file_info_color}"
+            _id_filename="[${_notebook_identifier}:${_id}] ${_file_info}"
+            _id_filename_color="$(_id_brackets_color "${_notebook_identifier}:${_id}") ${_file_info_color}"
           else
             _id_filename="[${_id}] ${_file_info}"
             _id_filename_color="$(_id_brackets_color "${_id}") ${_file_info_color}"
