@@ -901,7 +901,6 @@ _git_checkpoint() {
 
         local _conflicted_text_files=()
         local _conflicted_binary_files=()
-        local _current_directory="${PWD##*/}"
 
         if [[ -n "${_conflicted_files[*]:-}" ]]
         then
@@ -913,9 +912,9 @@ _git_checkpoint() {
               -e '/^<<<<<<</d'  \
               -e '/^>>>>>>>/d'  \
               -e '/=======/d'   \
-              ".index"
+              "${_target_directory}/.index"
 
-            git add ".index"
+            git -C "${_target_directory}" add ".index"
           fi
 
           for __file in "${_conflicted_files[@]}"
@@ -934,7 +933,7 @@ _git_checkpoint() {
               _conflicted_file="$(
                 _get_unique_basename                        \
                   "${__file%%.*}--conflicted-copy.${__file#*.}"  \
-                  "${_current_directory}"
+                  "${_target_directory}"
               )"
 
               _conflicted_binary_files+=("${_conflicted_file}")
@@ -968,7 +967,7 @@ Files containing conflicts:
 
 $(for __file in "${_conflicted_text_files[@]}"
 do
-  printf "  %s:%s\\n" "${_current_directory}" "${__file}"
+  printf "  %s:%s\\n" "${_target_directory}" "${__file}"
 done)
 
 Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
@@ -983,7 +982,7 @@ Conflicted copies of binary files:
 
 $(for __file in "${_conflicted_binary_files[@]}"
 do
-  printf "  %s:%s\\n" "${_current_directory}" "${__file}"
+  printf "  %s:%s\\n" "${_target_directory}" "${__file}"
 done)
 HEREDOC
           fi
@@ -1033,9 +1032,6 @@ HEREDOC
   then
     _exit_1 printf "Usage: _git_checkpoint <message>\\n"
   fi
-
-  cd "${_target_directory}" ||
-    _exit_1 printf "_git_checkpoint() \`cd\` failed.\\n"
 
   _debug printf "_git_checkpoint() \$(ls -la): '%s'\\n" "$(ls -la)"
 
@@ -1101,9 +1097,7 @@ _git_out_of_sync() {
     _target_directory="${_NOTEBOOK_PATH}"
   fi
 
-  cd "${_target_directory}" ||
-    _exit_1 printf "_git_out_of_sync() \`cd\` failed.\\n"
-  git status | grep -q 'diverged'
+  git -C "${_target_directory}" status | grep -q 'diverged'
 }
 
 # _git_required()
@@ -1174,7 +1168,7 @@ HEREDOC
 # _git_should_autosync()
 #
 # Usage:
-#   _git_should_autosync
+#   _git_should_autosync [<target-directory>]
 #
 # Exit / Error Status:
 #   0 (success, true)  If an autosync should be triggered.
@@ -1185,31 +1179,42 @@ _git_should_autosync() {
   local _current_timestamp=
   local _last_fetch_timestamp=
   local _maybe_fetch_timestamp=
+  local _target_directory="${1:-}"
+
+  if [[ -z "${_target_directory}" ]]
+  then
+    _target_directory="${_NOTEBOOK_PATH}"
+  fi
 
   if ! ((NB_AUTO_SYNC))
   then # autosync not enabled.
     return 1
   fi
 
-  cd "${_NOTEBOOK_PATH}" || _exit_1 printf "\`cd\` failed.\\n"
-  if ! git config --get remote.origin.url &>/dev/null
+  if ! git -C "${_target_directory}" config --get remote.origin.url &>/dev/null
   then # there is no remote configured.
     return 1
   fi
 
-  if [[ ! -e "${_NOTEBOOK_PATH}/.git/FETCH_HEAD" ]]
+  if [[ ! -e "${_target_directory}/.git/FETCH_HEAD" ]]
   then # no previous fetches, but has an origin and autosync is enabled.
     return 0
   fi
 
-  if _maybe_fetch_timestamp="$(stat -c %Y .git/FETCH_HEAD 2>/dev/null)"
+  if _maybe_fetch_timestamp="$(
+       stat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
+     )"
   then # GNU
     _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  elif _maybe_fetch_timestamp="$(gstat -c %Y .git/FETCH_HEAD 2>/dev/null)"
+  elif _maybe_fetch_timestamp="$(
+         gstat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
+       )"
   then # GNU prefixed
     _last_fetch_timestamp="${_maybe_fetch_timestamp}"
   else
-    _last_fetch_timestamp="$(stat -f '%m' .git/FETCH_HEAD)"
+    _last_fetch_timestamp="$(
+      stat -f '%m' "${_target_directory}/.git/FETCH_HEAD"
+    )"
   fi
   _current_timestamp="$(date +%s)"
 
