@@ -3220,29 +3220,32 @@ _add() {
     local _id
     _id="$(_index get_id "${_basename}")"
 
-    local _scoped_basename="${_basename}"
+    local _maybe_scoped_id
+    _maybe_scoped_id="${_id}"
+
+    local _maybe_scoped_basename="${_basename}"
 
     if ((_SELECTION_SCOPED))
     then
       local _notebook_display_name
       _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_NAME}")"
 
-      _id="${_notebook_display_name}:${_id}"
-      _scoped_basename="${_notebook_display_name}:${_basename}"
+      _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
+      _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
     fi
 
     local _title
     _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
     if [[ -n "${_title}" ]]
     then
-      printf "Added %s %s '%s'\\n"            \
-        "$(_id_brackets_color "${_id}")"      \
-        "$(_highlight "${_scoped_basename}")" \
+      printf "Added %s %s '%s'\\n"                          \
+        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
+        "$(_highlight         "${_maybe_scoped_basename}")" \
         "${_title}"
     else
-      printf "Added %s %s\\n"                 \
-        "$(_id_brackets_color "${_id}")"      \
-        "$(_highlight "${_scoped_basename}")"
+      printf "Added %s %s\\n"                               \
+        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
+        "$(_highlight "${_maybe_scoped_basename}")"
     fi
   fi &&
     _git_checkpoint "[nb] Add: ${_basename}"
@@ -4264,19 +4267,24 @@ _delete() {
   local _id
   _id="$(_index get_id "${_basename}")"
 
-  local _scoped_basename="${_basename}"
+  local _maybe_scoped_id
+  _maybe_scoped_id="${_id}"
+
+  local _maybe_scoped_basename="${_basename}"
 
   if ((_SELECTION_SCOPED))
   then
     local _notebook_display_name
     _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_NAME}")"
 
-    _id="${_notebook_display_name}:${_id}"
-    _scoped_basename="${_notebook_display_name}:${_basename}"
+    _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
+    _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
   fi
 
   local _note_info_hi
-  _note_info_hi="$(_id_brackets_color "${_id}") $(_highlight "${_scoped_basename}")"
+  _note_info_hi="$(
+    _id_brackets_color "${_maybe_scoped_id}") $(_highlight "${_maybe_scoped_basename}"
+  )"
 
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
   if [[ -n "${_title}" ]]
@@ -4496,29 +4504,32 @@ _edit() {
       local _id
       _id="$(_index get_id "${_basename}")"
 
-      local _scoped_basename="${_basename}"
+      local _maybe_scoped_id
+      _maybe_scoped_id="$(_index get_id "${_basename}")"
+
+      local _maybe_scoped_basename="${_basename}"
 
       if ((_SELECTION_SCOPED))
       then
         local _notebook_display_name
         _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_NAME}")"
 
-        _id="${_notebook_display_name}:${_id}"
-        _scoped_basename="${_notebook_display_name}:${_basename}"
+        _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
+        _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
       fi
 
       local _title
       _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
       if [[ -n "${_title}" ]]
       then
-        printf "Updated %s %s '%s'\\n"          \
-          "$(_id_brackets_color "${_id}")"      \
-          "$(_highlight "${_scoped_basename}")" \
+        printf "Updated %s %s '%s'\\n"                        \
+          "$(_id_brackets_color "${_maybe_scoped_id}")"       \
+          "$(_highlight         "${_maybe_scoped_basename}")" \
           "${_title}"
       else
-        printf "Updated %s %s\\n"               \
-          "$(_id_brackets_color "${_id}")"      \
-          "$(_highlight "${_scoped_basename}")"
+        printf "Updated %s %s\\n"                             \
+          "$(_id_brackets_color "${_maybe_scoped_id}")"       \
+          "$(_highlight         "${_maybe_scoped_basename}")"
       fi
     fi
   else
