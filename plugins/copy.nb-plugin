@@ -43,6 +43,12 @@ _copy() {
   local _source_basename
   _source_basename="$(_get_selection_basename "${_selection}")"
 
+  # Set the current notebook using the selection.
+  #
+  # NOTE: Important!
+  # This sets the current notebook for all subsequent operations.
+  _set_selection_notebook "${_selection}"
+
   # Validate that the selection is a file.
   if [[ -z "${_source_basename:-}"                    ]] ||
      [[ ! -e "${_NOTEBOOK_PATH}/${_source_basename}"  ]]
@@ -84,10 +90,10 @@ _copy() {
     local _maybe_scoped_basename="${_target_basename}"
     local _maybe_scoped_id="${_id}"
 
-    # $_SELECTION_SCOPED indicates whether the current notebook context
+    # $_SCOPED indicates whether the current notebook context
     # differs from the configured current notebook, meaning the user used
     # a selection with a notebook colon prefix. 1 == scoped, 0 == unscoped
-    if ((_SELECTION_SCOPED))
+    if ((_SCOPED))
     then # Selection includes a notebook prefix, e.g., "notebook:123".
       # Add the notebook identifier to the id and basename.
       local _notebook_identifier
