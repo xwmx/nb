@@ -3222,7 +3222,7 @@ _add() {
 
     local _scoped_basename="${_basename}"
 
-    if [[ -n "${_SCOPE}" ]]
+    if ((_SELECTION_SCOPED))
     then
       local _notebook_identifier
       _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -6094,7 +6094,7 @@ _ls() {
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
 
-    if [[ -n "${_SCOPE:-}" ]]
+    if ((_SELECTION_SCOPED))
     then
       _maybe_scope="${_SCOPE}:"
       _maybe_scope_padded_left=" ${_maybe_scope}"
