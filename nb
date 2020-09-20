@@ -4948,7 +4948,7 @@ _import() {
 
   local _basename=
   local _convert=0
-  local _notebook_name=
+  local _target_notebook_name=
   local _path=
   local _subcommand=
   local _url=
@@ -4974,7 +4974,7 @@ _import() {
           elif [[ "${_subcommand}" == "notebook"  ]] &&
                [[ -n "${_path:-}"                 ]]
           then
-            _notebook_name="${__arg:-}"
+            _target_notebook_name="${__arg:-}"
           else
             _path="${__arg:-}"
           fi
@@ -5059,7 +5059,7 @@ ${_url}
         "$(_highlight "${_basename}")"
       ;;
     notebook)
-      _notebooks import "${_path:-}" "${_notebook_name:-}"
+      _notebooks import "${_path:-}" "${_target_notebook_name:-}"
       return 0
       ;;
     *)
