@@ -10400,7 +10400,7 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
 # _set_selection_notebook() <selection>
 #
-# Selection notebook set in option parsing.
+# Selection notebook is now set in option parsing.
 _set_selection_notebook() { : ; }
 
 # $_SCOPE
