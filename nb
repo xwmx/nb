@@ -3225,7 +3225,7 @@ _add() {
     if ((_SELECTION_SCOPED))
     then
       local _notebook_identifier
-      _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+      _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_NAME}")"
       _id="${_notebook_identifier}:${_id}"
       _scoped_basename="${_notebook_identifier}:${_basename}"
     fi
@@ -4268,7 +4268,7 @@ _delete() {
   if ((_SELECTION_SCOPED))
   then
     local _notebook_identifier
-    _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+    _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_NAME}")"
     _id="${_notebook_identifier}:${_id}"
     _scoped_basename="${_notebook_identifier}:${_basename}"
   fi
@@ -4499,7 +4499,7 @@ _edit() {
       if ((_SELECTION_SCOPED))
       then
         local _notebook_identifier
-        _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+        _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_NAME}")"
         _id="${_notebook_identifier}:${_id}"
         _scoped_basename="${_notebook_identifier}:${_basename}"
       fi
@@ -5695,7 +5695,7 @@ _list() {
 
   if ((_SELECTION_SCOPED))
   then
-    _maybe_scope="${_SCOPE}:"
+    _maybe_scope="${_NOTEBOOK_NAME}:"
     _maybe_scope_padded_right="${_maybe_scope} "
   fi
 
@@ -6096,7 +6096,7 @@ _ls() {
 
     if ((_SELECTION_SCOPED))
     then
-      _maybe_scope="${_SCOPE}:"
+      _maybe_scope="${_NOTEBOOK_NAME}:"
       _maybe_scope_padded_left=" ${_maybe_scope}"
       _maybe_scope_padded_right="${_maybe_scope} "
     fi
@@ -6439,7 +6439,7 @@ _ls() {
       if [[ -n "${_notebook:-}" ]] && ! ((_SELECTION_SCOPED))
       then
         _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
-          _SCOPE="${_notebook}"                 \
+          _NOTEBOOK_NAME="${_notebook}"         \
           _SELECTION_SCOPED=1                   \
           _ls "${_args[@]:1}"
         return 0
@@ -6454,7 +6454,7 @@ _ls() {
           if ((_SELECTION_SCOPED))
           then
             _return_1 printf "Not found: %s\\n" \
-              "$(_highlight "${_SCOPE}:${_args[0]:-}")"
+              "$(_highlight "${_NOTEBOOK_NAME}:${_args[0]:-}")"
           else
             _return_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
           fi
@@ -6546,7 +6546,8 @@ _move() {
   if [[ -z "${_basename}"                       ]] ||
        [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then
-    _exit_1 printf "Not found: %s\\n" "$(_highlight "${_SCOPE}:${_selection}")"
+    _exit_1 printf \
+       "Not found: %s\\n" "$(_highlight "${_NOTEBOOK_NAME}:${_selection}")"
   elif [[ ! -e "${_target_notebook_path}/.git"    ]]
   then
     _exit_1 printf \
@@ -6554,7 +6555,7 @@ _move() {
   elif [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
     _exit_1 printf \
-      "Already exists: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
+      "Already exists: %s\\n" "$(_highlight "${_NOTEBOOK_NAME}:${_basename}")"
   fi
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
@@ -6563,8 +6564,8 @@ _move() {
   _source_id="$(_index get_id "${_basename}")"
 
   local _source_info=
-  _source_info="$(_id_brackets_color "${_SCOPE}:${_source_id}")"
-  _source_info="${_source_info} $(_highlight "${_SCOPE}:${_basename}")"
+  _source_info="$(_id_brackets_color "${_NOTEBOOK_NAME}:${_source_id}")"
+  _source_info="${_source_info} $(_highlight "${_NOTEBOOK_NAME}:${_basename}")"
 
   local _title=
   _title="$(_get_title "${_NOTEBOOK_PATH}/${_basename}")"
@@ -6604,7 +6605,7 @@ _move() {
       | "${_MY_PATH}" "${_target_notebook}:add" "${_basename}" 1> /dev/null
   fi
 
-  "${_MY_PATH}" delete "${_SCOPE}:${_basename}" --force 1> /dev/null
+  "${_MY_PATH}" delete "${_NOTEBOOK_NAME}:${_basename}" --force 1> /dev/null
 
   local _id
   _id="$(
@@ -7082,10 +7083,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi
 
     _debug printf \
-      "_notebooks_list() \${_only_names:-}: '%s'\\n" \
+      "_notebooks_list() \${_only_names:-}: '%s'\\n"      \
       "${_only_names:-}"
     _debug printf \
-      "_notebooks_list() \${_query_names[*]}: '%s'\\n" \
+      "_notebooks_list() \${_query_names[*]}: '%s'\\n"    \
       "${_query_names[*]:-}"
     _debug printf \
       "_notebooks_list() \${_notebook_names[*]}: '%s'\\n" \
@@ -7101,9 +7102,9 @@ Please type $(_highlight "${_name}") to confirm: " __response
         local _notebook_line=
         local _origin_url=
 
-        if [[ "${i}" == "0" ]]                      &&
-           [[ "${_notebook_names[i]}" == "local" ]] &&
-           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"     ]]
+        if [[ "${i}" == "0" ]]                       &&
+           [[ "${_notebook_names[i]}" == "local"  ]] &&
+           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"      ]]
         then # local notebook as first notebook
           if ((_only_global))
           then
@@ -7112,7 +7113,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
             if ((_only_paths))
             then
               _notebook_line="${_notebook_paths[i]}"
-            elif ((_notebook_color_enabled)) && [[ "${_SCOPE}" == "local" ]]
+            elif ((_notebook_color_enabled))          &&
+                 [[ "${_NOTEBOOK_NAME}" == "local" ]]
             then
               _notebook_line="$(_highlight "local" --underline)"
             else
@@ -7135,7 +7137,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           then
             _notebook_line="${_notebook_names[i]}"
           else
-            if [[ "${_SCOPE}" == "${_notebook_names[i]}" ]]
+            if [[ "${_NOTEBOOK_NAME}" == "${_notebook_names[i]}" ]]
             then # it's the current repository.
               _notebook_line="$(_highlight "${_notebook_names[i]}")"
 
@@ -9405,7 +9407,7 @@ _show() {
     if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
     then
       _NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
-        _SCOPE="${_maybe_notebook}"                 \
+        _NOTEBOOK_NAME="${_maybe_notebook}"         \
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
@@ -10044,7 +10046,7 @@ unset options
 
 # Initialize program option variables.
 _ARGUMENTS=()
-_SCOPE=
+_NOTEBOOK_NAME=
 _SELECTION_SCOPED=0
 _SUBCOMMAND=
 _USE_DEBUG=0
@@ -10319,13 +10321,13 @@ do
           if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
           then
             _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
-            _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+            _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
             _SELECTION_SCOPED=1
           elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
                [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
           then
             _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-            _SCOPE="local"
+            _NOTEBOOK_NAME="local"
             _SELECTION_SCOPED=1
           elif [[ -n "${_SUBCOMMAND:-}" ]]
           then
@@ -10385,7 +10387,7 @@ done
 _debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n"      "${_SUBCOMMANDS[*]}"
 _debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\\n" "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
-_debug printf "\${_SCOPE}: '%s'\\n"               "${_SCOPE}"
+_debug printf "\${_NOTEBOOK_NAME}: '%s'\\n"       "${_NOTEBOOK_NAME}"
 _debug printf "\${_NOTEBOOK_PATH}: '%s'\\n"       "${_NOTEBOOK_PATH}"
 _debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
 _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
@@ -10402,6 +10404,11 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 _set_selection_notebook() { : ; }
 
 # $_SCOPE
+#
+# shellcheck disable=SC2034
+_SCOPE="${_NOTEBOOK_NAME}"
+
+# $_SCOPED
 #
 # shellcheck disable=SC2034
 _SCOPED="${_SELECTION_SCOPED}"
@@ -10429,22 +10436,22 @@ _main() {
     _SUBCOMMAND="ls"
   fi
 
-  if [[ -n "${_SCOPE}" ]]
+  if [[ -n "${_NOTEBOOK_NAME}" ]]
   then
-    if [[ "${_SCOPE}" == "local"          ]] &&
+    if [[ "${_NOTEBOOK_NAME}" == "local"  ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
       _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
     else
-      _NOTEBOOK_PATH="${NB_DIR}/${_SCOPE}"
+      _NOTEBOOK_PATH="${NB_DIR}/${_NOTEBOOK_NAME}"
     fi
   else
     if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
        [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}"  ]]
     then
-      _SCOPE="local"
+      _NOTEBOOK_NAME="local"
     else
-      _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+      _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
     fi
   fi
 
