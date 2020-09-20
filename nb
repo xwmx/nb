@@ -1946,7 +1946,8 @@ _get_notebook_display_name() {
 # _get_selection_basename()
 #
 # Usage:
-#   _get_selection_basename (<id> | <filename> | <path> | <title>}
+#   _get_selection_basename (<id> | <filename> | <path> | <title>)
+#                           <notebook-path>
 #
 # Description:
 #   Determine the basename of the file in `$_NOTEBOOK_PATH` that is identified
@@ -1954,16 +1955,17 @@ _get_notebook_display_name() {
 _get_selection_basename() {
   local _basename=
   local _identifier="${1:-}"
+  local _notebook_path="${2:-}"
 
   if [[ -z "${_identifier:-}" ]]
   then
     _basename=
   else
     if [[ -e "${_identifier}"                     ]] &&
-       [[ "${_identifier}" =~ ${_NOTEBOOK_PATH}   ]]
+       [[ "${_identifier}" =~ ${_notebook_path}   ]]
     then # <selection> is a full path.
       _basename="$(basename "${_identifier}")"
-    elif [[ -e "${_NOTEBOOK_PATH}/${_identifier}" ]]
+    elif [[ -e "${_notebook_path}/${_identifier}" ]]
     then # <selection> is a filename.
       _basename="${_identifier}"
     elif [[ "${_identifier}" =~ ^[0-9]+$          ]]
@@ -1976,7 +1978,7 @@ _get_selection_basename() {
 
       for __file in "${_filenames[@]:-}"
       do
-        _title="$(_get_title "${_NOTEBOOK_PATH}/${__file}")"
+        _title="$(_get_title "${_notebook_path}/${__file}")"
 
         if [[ -n "${_title}"                  ]] &&
            [[ "${_title}" == "${_identifier}" ]]
@@ -3508,7 +3510,7 @@ _bookmark() {
   if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
   then
     local _basename=
-    _basename="$(_get_selection_basename "${_selection}")"
+    _basename="${_SELECTION_BASENAME}"
     if [[ -z "${_basename}" ]]
     then
       if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
@@ -4257,7 +4259,7 @@ _delete() {
     _exit_1 _help "delete"
   fi
 
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="${_SELECTION_BASENAME}"
   _debug printf "_delete() \${_basename}: '%s'\\n" "${_basename}"
   if [[ -z "${_basename}" ]]
   then
@@ -4414,7 +4416,7 @@ _edit() {
     _exit_1 _help "edit"
   fi
 
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="${_SELECTION_BASENAME}"
   _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename:-}"
   if [[ -z "${_basename}" ]]
   then
@@ -4757,7 +4759,7 @@ _export() {
   fi
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="${_SELECTION_BASENAME}"
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_NOTEBOOK_PATH}/${_basename:-}" ]]
   then
@@ -4889,7 +4891,7 @@ _history() {
   _debug printf "_history() \${_selection}: '%s'\\n" "${_selection}"
 
   local _basename=
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="${_SELECTION_BASENAME}"
   _debug printf "_history() \${_basename}: '%s'\\n" "${_basename}"
   _debug printf "_history() \${_NOTEBOOK_PATH}: '%s'\\n" "${_NOTEBOOK_PATH}"
 
@@ -5677,7 +5679,7 @@ _list() {
 
   if [[ -n "${_selection:-}" ]]
   then
-    _selection_basename="$(_get_selection_basename "${_selection}")"
+    _selection_basename="${_SELECTION_BASENAME}"
   fi
 
   local _notebook_display_name=
@@ -6441,8 +6443,10 @@ _ls() {
     _list -n "${_limit}" --hard-empty "${_args[@]:-}" 2>/dev/null || {
       if [[ -n "${_args[*]:-}" ]]
       then
-        local _maybe_name="${_args[0]:-}"
-        _maybe_name="$(printf "%s\\n" "${_maybe_name}" | sed 's/\:$//')"
+        local _maybe_notebook_name="${_args[0]:-}"
+        _maybe_notebook_name="$(
+          printf "%s\\n" "${_maybe_notebook_name}" | sed 's/\:$//'
+        )"
 
         local _notebook=
         _notebook="$(
@@ -6465,13 +6469,14 @@ _ls() {
         then # current notebook is empty
           _list -n "${_limit}" "${_args[@]:-}"
         else
+          local _selection="${_args[0]:-}"
+
           if ((_SELECTION_SCOPED))
           then
-            _return_1 printf "Not found: %s\\n" \
-              "$(_highlight "${_NOTEBOOK_NAME}:${_args[0]:-}")"
-          else
-            _return_1 printf "Not found: %s\\n" "$(_highlight "${_args[0]:-}")"
+            _selection="${_NOTEBOOK_NAME}:${_selection}"
           fi
+
+          _return_1 printf "Not found: %s\\n" "$(_highlight "${_selection}")"
         fi
       fi
     }
@@ -6547,7 +6552,7 @@ _move() {
   fi
   _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
 
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="${_SELECTION_BASENAME}"
 
   if [[ "${_target_notebook}" == "local" ]] &&
      [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"   ]]
@@ -7926,7 +7931,7 @@ _rename() {
   fi
 
   local _source_basename
-  _source_basename="$(_get_selection_basename "${_selection}")"
+  _source_basename="${_SELECTION_BASENAME}"
   local _source_path="${_NOTEBOOK_PATH}/${_source_basename}"
 
   if [[ -z "${_source_basename}" ]]
@@ -9410,7 +9415,7 @@ _show() {
   fi
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="${_SELECTION_BASENAME}"
   _debug printf "_show() \${_basename}: '%s'\\n" "${_basename}"
 
   if [[ -z "${_basename}" ]]
@@ -10061,6 +10066,8 @@ unset options
 # Initialize program option variables.
 _ARGUMENTS=()
 _NOTEBOOK_NAME=
+_SELECTION=
+_SELECTION_BASENAME=
 _SELECTION_SCOPED=0
 _SUBCOMMAND=
 _USE_DEBUG=0
@@ -10367,6 +10374,18 @@ do
                 fi
 
                 _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
+
+                if ((_SELECTION_SCOPED))
+                then
+                  _SELECTION+=("${_NOTEBOOK_NAME}:${__maybe_identifier_or_subcommand_or_url}")
+                  _SELECTION_BASENAME="$(
+                    _get_selection_basename                         \
+                      "${__maybe_identifier_or_subcommand_or_url}"  \
+                      "${_NOTEBOOK_PATH}"
+                  )"
+                else
+                  _SELECTION+=("${__maybe_identifier_or_subcommand_or_url}")
+                fi
               fi
             fi
           fi
