@@ -10294,9 +10294,6 @@ do
       then
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
-      # elif [[ -n "${_SUBCOMMAND:-}" ]]
-      # then
-      #   _ARGUMENTS+=("${__opt}")
       else
         __maybe_selection_notebook="${__opt%%:*}"
 
