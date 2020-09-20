@@ -2014,28 +2014,28 @@ _get_selection_identifier() {
 # Description:
 #   Given <selection>, split on first colon.
 _get_selection_parts() {
-  local _identifier=
-  local _maybe_notebook_name=
   local _selection="${1:-}"
 
-  if [[ -n "${_selection:-}" ]]
-  then
-    _maybe_notebook_name=$(printf "%s\\n" "${_selection}" | cut -f 1 -d ":")
+  [[ -z "${_selection:-}" ]] && return 0
 
-    if [[ "${_selection}" =~ ':' ]] &&
-       {
-         [[ -e "${NB_DIR}/${_maybe_notebook_name}/.git" ]] ||
-         {
-           [[ "${_maybe_notebook_name}" == "local" ]] &&
-           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"       ]]
-         }
-       }
-    then
-      _identifier=$(printf "%s\\n" "${_selection}" | cut -f 2- -d ":")
-      printf "%s\\n%s\\n" "${_maybe_notebook_name}" "${_identifier}"
-    else
-      printf "%s\\n" "${_selection}"
-    fi
+  if [[ ! "${_selection}" =~ :      ]] ||
+     _string_is_url "${_selection}"
+  then
+    printf "%s\\n" "${_selection}"
+    return 0
+  fi
+
+  local _maybe_selection_notebook="${_selection%%:*}"
+
+  if [[ -d "${NB_DIR}/${_maybe_selection_notebook}/.git"  ]] ||
+     {
+       [[ "${_maybe_selection_notebook}" == "local"       ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                  ]]
+     }
+  then
+    printf "%s\\n%s\\n" "${_maybe_selection_notebook}" "${_selection#*:}"
+  else
+    printf "%s\\n" "${_selection}"
   fi
 }
 
@@ -10394,10 +10394,10 @@ do
       else
         __maybe_selection_notebook="${__opt%%:*}"
 
-        if [[ -d "${NB_DIR}/${__maybe_selection_notebook}"  ]] ||
+        if [[ -d "${NB_DIR}/${__maybe_selection_notebook}/.git" ]] ||
            {
-             [[ "${__maybe_selection_notebook}" == "local"  ]] &&
-             [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"              ]]
+             [[ "${__maybe_selection_notebook}" == "local"      ]] &&
+             [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                  ]]
            }
         then
           _SCOPE="${__maybe_selection_notebook}"
