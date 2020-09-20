@@ -859,36 +859,44 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 _git_checkpoint() {
   ((_GIT_ENABLED)) || return 0
 
-  # Usage: _git_checkpoint_commit <message>
+  # Usage: _git_checkpoint_commit <message> <target-directory>
   _git_checkpoint_commit() {
-    [[ -z "${1:-}" ]] &&
-      _exit_1 printf "Usage: _git_checkpoint_commit <message>"
+    if [[ -z "${1:-}" ]] || [[ -z "${2:-}" ]]
+    then
+      _exit_1 printf \
+         "Usage: _git_checkpoint_commit <message> <target-directory>"
+    fi
+
     _debug printf \
       "_git_checkpoint() \$(ls -la): '%s'\\n" \
       "$(ls -la)"
 
-    git add --all && git commit -a -m "${1}"
+    git -C "${2}" add --all && git -C "${2}" commit -a -m "${1}"
   }
 
-  # Usage: _git_checkpoint_sync
+  # Usage: _git_checkpoint_sync <target-directory>
   _git_checkpoint_sync() {
-    local _git_branch=
-    _git_branch="$(git rev-parse --abbrev-ref HEAD)"
+   local _target_directory="${1:-}"
+   [[ -z "${_target_directory:-}" ]] &&
+      _exit_1 printf "Usage: _get_checkpoint_sync <target-directory>"
 
-    if git show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
+    local _git_branch=
+    _git_branch="$(git -C "${_target_directory}" rev-parse --abbrev-ref HEAD)"
+
+    if git -C "${_target_directory}" show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      git fetch &>/dev/null || {
+      git -C "${_target_directory}" fetch &>/dev/null || {
         _warn printf "Unable to fetch from remote.\\n"
         return 1
       }
 
-      if ! git rebase "origin/${_git_branch}" &>/dev/null
+      if ! git -C "${_target_directory}" rebase "origin/${_git_branch}" &>/dev/null
       then
         local _merge_error=1
 
         local _conflicted_files
         _conflicted_files=($(
-          GIT_PAGER='' git diff --name-only --diff-filter=U
+          GIT_PAGER='' git -C "${_target_directory}" diff --name-only --diff-filter=U
         ))
 
         local _conflicted_text_files=()
@@ -918,9 +926,9 @@ _git_checkpoint() {
             then
               _conflicted_text_files+=("${__file}")
 
-              git add "${__file}"
+              git -C "${_target_directory}" add "${__file}"
             else
-              git checkout "origin/${_git_branch}" -- "${__file}"
+              git -C "${_target_directory}" checkout "origin/${_git_branch}" -- "${__file}"
 
               local _conflicted_file=
               _conflicted_file="$(
@@ -931,22 +939,22 @@ _git_checkpoint() {
 
               _conflicted_binary_files+=("${_conflicted_file}")
 
-              git mv "${__file}" "${_conflicted_file}"
+              git -C "${_target_directory}" mv "${__file}" "${_conflicted_file}"
 
-              git checkout "${_git_branch}" -- "${__file}"
+              git -C "${_target_directory}" checkout "${_git_branch}" -- "${__file}"
 
-              git add "${_conflicted_file}"
-              git add "${__file}"
+              git -C "${_target_directory}" add "${_conflicted_file}"
+              git -C "${_target_directory}" add "${__file}"
             fi
           done
 
-          GIT_EDITOR=true git rebase --continue &>/dev/null &&
+          GIT_EDITOR=true git -C "${_target_directory}" rebase --continue &>/dev/null &&
             _merge_error=0
         fi
 
         if ((_merge_error))
         then
-          git rebase --abort
+          git -C "${_target_directory}" rebase --abort
           _warn printf \
             "Merge conflict. Use \`%s git\` to merge manually.\\n" \
             "${_ME}"
@@ -982,7 +990,7 @@ HEREDOC
         fi
       fi
 
-      git push origin "${_git_branch}" &>/dev/null || {
+      git -C "${_target_directory}" push origin "${_git_branch}" &>/dev/null || {
         _warn printf "Unable to push to remote.\\n"
         return 1
       }
@@ -1038,12 +1046,12 @@ HEREDOC
       # to origin.
       if _git_index_is_dirty "${_target_directory}"
       then
-        _git_checkpoint_commit "${_message}" &>/dev/null
-      fi && _git_checkpoint_sync
+        _git_checkpoint_commit "${_message}" "${_target_directory}" &>/dev/null
+      fi && _git_checkpoint_sync "${_target_directory}"
     ) &
   else
     (
-      _git_checkpoint_commit "${_message}" &>/dev/null
+      _git_checkpoint_commit "${_message}" "${_target_directory}" &>/dev/null
     ) &
   fi
 
@@ -1072,9 +1080,7 @@ _git_index_is_dirty() {
     _target_directory="${_NOTEBOOK_PATH}"
   fi
 
-  cd "${_target_directory}" ||
-    _exit_1 printf "_git_index_is_dirty() \`cd\` failed.\\n"
-  [[ -n "$(git status --porcelain)" ]]
+  [[ -n "$(git -C "${_target_directory}" status --porcelain)" ]]
 }
 
 # _git_out_of_sync()
@@ -4257,7 +4263,7 @@ _delete() {
 
   local _scoped_basename="${_basename}"
 
-  if [[ -n "${_SCOPE}" ]]
+  if ((_SELECTION_SCOPED))
   then
     local _notebook_identifier
     _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -4488,7 +4494,7 @@ _edit() {
 
       local _scoped_basename="${_basename}"
 
-      if [[ -n "${_SCOPE}" ]]
+      if ((_SELECTION_SCOPED))
       then
         local _notebook_identifier
         _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -5685,7 +5691,7 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
-  if [[ -n "${_SCOPE:-}" ]]
+  if ((_SELECTION_SCOPED))
   then
     _maybe_scope="${_SCOPE}:"
     _maybe_scope_padded_right="${_maybe_scope} "
@@ -5856,7 +5862,7 @@ HEREDOC
           local _max_identifier=
           _item_identifier="$(_index get_id "${__basename}")"
 
-          if [[ -n "${_SCOPE}" ]]
+          if ((_SELECTION_SCOPED))
           then
             _item_identifier="${_notebook_identifier}:${_item_identifier}"
             _max_identifier="${_notebook_identifier}:${_max_id}"
@@ -6428,10 +6434,11 @@ _ls() {
         )" || :
       fi
 
-      if [[ -n "${_notebook:-}" ]] && [[ -z "${_SCOPE:-}" ]]
+      if [[ -n "${_notebook:-}" ]] && ! ((_SELECTION_SCOPED))
       then
         _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
           _SCOPE="${_notebook}"                 \
+          _SELECTION_SCOPED=1                   \
           _ls "${_args[@]:1}"
         return 0
       else
@@ -6442,7 +6449,7 @@ _ls() {
         then # current notebook is empty
           _list -n "${_limit}" "${_args[@]:-}"
         else
-          if [[ -n "${_SCOPE}" ]]
+          if ((_SELECTION_SCOPED))
           then
             _return_1 printf "Not found: %s\\n" \
               "$(_highlight "${_SCOPE}:${_args[0]:-}")"
@@ -6534,16 +6541,18 @@ _move() {
     _target_notebook_path="${NB_DIR}/${_target_notebook}"
   fi
 
-  if [[ -z "${_basename}"                     ]] ||
-     [[ ! -e "${_target_notebook_path}/.git"  ]]
+  if [[ -z "${_basename}"                       ]] ||
+       [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
   then
-    _exit_1 _help "move"
-  elif [[ ! -e "${_NOTEBOOK_PATH}/${_basename}" ]]
+    _exit_1 printf "Not found: %s\\n" "$(_highlight "${_SCOPE}:${_selection}")"
+  elif [[ ! -e "${_target_notebook_path}/.git"    ]]
   then
-    _exit_1 printf "Not Found: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
+    _exit_1 printf \
+      "Target notebook not found: %s\\n" "$(_highlight "${_target_notebook}")"
   elif [[ -e "${_target_notebook_path}/${_basename}" ]]
   then
-    _exit_1 printf "Already exists: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
+    _exit_1 printf \
+      "Already exists: %s\\n" "$(_highlight "${_SCOPE}:${_basename}")"
   fi
 
   _debug printf "_move() \${_basename}: '%s'\\n" "${_basename}"
@@ -8381,7 +8390,7 @@ _search() {
             _file_info_color="${_filename_color}"
           fi
 
-          if ((_all)) || [[ -n "${_SCOPE}" ]]
+          if ((_all)) || ((_SELECTION_SCOPED))
           then
             local _notebook_name=
             _notebook_name="$(_get_notebook_identifier "${__notebook_path}")"
@@ -10034,6 +10043,7 @@ unset options
 # Initialize program option variables.
 _ARGUMENTS=()
 _SCOPE=
+_SELECTION_SCOPED=0
 _SUBCOMMAND=
 _USE_DEBUG=0
 
@@ -10295,41 +10305,51 @@ do
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
       else
-        __maybe_selection_notebook="${__opt%%:*}"
+        __maybe_identifier_subcommand_or_url="${__opt#*:}"
 
-        if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
-        then
-          _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
-          _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
-        elif [[ "${___maybe_selection_notebook:-}" == "local"       ]] &&
-             [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
-        then
-          _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-          _SCOPE="local"
-        elif [[ -n "${_SUBCOMMAND:-}" ]]
+        if [[ -n "${_SUBCOMMAND:-}"                           ]] &&
+           [[ -z "${__maybe_identifier_subcommand_or_url:-}"  ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
-          _exit_1 printf \
-            "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
-        fi
+          __maybe_selection_notebook="${__opt%%:*}"
 
-        if [[ -n "${_SCOPE:-}" ]]
-        then
-          __maybe_identifier_subcommand_or_url="${__opt#*:}"
-
-          if [[ -n "${__maybe_identifier_subcommand_or_url:-}" ]]
+          if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
           then
-            if _is_valid_subcommand "${__maybe_identifier_subcommand_or_url}"
-            then
-              _SUBCOMMAND="${__maybe_identifier_subcommand_or_url}"
-            else
-              if _string_is_url "${__maybe_identifier_subcommand_or_url}"
-              then
-                _SUBCOMMAND="bookmark"
-              fi
+            _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
+            _SCOPE="$(basename "${_NOTEBOOK_PATH}")"
+            _SELECTION_SCOPED=1
+          elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
+               [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
+          then
+            _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+            _SCOPE="local"
+            _SELECTION_SCOPED=1
+          elif [[ -n "${_SUBCOMMAND:-}" ]]
+          then
+            _ARGUMENTS+=("${__opt}")
+          else
+            _exit_1 printf \
+              "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
+          fi
 
-              _ARGUMENTS+=("${__maybe_identifier_subcommand_or_url}")
+          if [[ -n "${_SCOPE:-}" ]]
+          then
+            __maybe_identifier_subcommand_or_url="${__opt#*:}"
+
+            if [[ -n "${__maybe_identifier_subcommand_or_url:-}" ]]
+            then
+              if _is_valid_subcommand "${__maybe_identifier_subcommand_or_url}"
+              then
+                _SUBCOMMAND="${__maybe_identifier_subcommand_or_url}"
+              else
+                if _string_is_url "${__maybe_identifier_subcommand_or_url}"
+                then
+                  _SUBCOMMAND="bookmark"
+                fi
+
+                _ARGUMENTS+=("${__maybe_identifier_subcommand_or_url}")
+              fi
             fi
           fi
         fi
@@ -10381,15 +10401,8 @@ _set_selection_notebook() { : ; }
 
 # $_SCOPE
 #
-# Unnecessary.
-#
 # shellcheck disable=SC2034
-if [[ -n "${_SCOPE:-}" ]]
-then
-  _SCOPED=1
-else
-  _SCOPED=0
-fi
+_SCOPED="${_SELECTION_SCOPED}"
 
 ###############################################################################
 # _main()

@@ -39,23 +39,9 @@ _copy() {
   fi
 
   # Get the basename from the selection. The selection argument can be an
-  # <id>, <filename>, <path>, or <title>, with or without a notebook name.
-  #
-  # Examples:
-  #   42
-  #   example.md
-  #   Example\ Title
-  #   notebook:42
-  #   notebook:example.md
-  #   notebook:Example\ Title
+  # <id>, <filename>, <path>, or <title>.
   local _source_basename
   _source_basename="$(_get_selection_basename "${_selection}")"
-
-  # Set the current notebook using the selection.
-  #
-  # NOTE: Important!
-  # This sets the current notebook for all subsequent operations.
-  _set_selection_notebook "${_selection}"
 
   # Validate that the selection is a file.
   if [[ -z "${_source_basename:-}"                    ]] ||
@@ -95,26 +81,26 @@ _copy() {
     _id="$(_index get_id "${_target_basename}")"
 
     # Set the scoped basename and id to the current basename and id.
-    local _scoped_basename="${_target_basename}"
-    local _scoped_id="${_id}"
+    local _maybe_scoped_basename="${_target_basename}"
+    local _maybe_scoped_id="${_id}"
 
-    # $_SCOPE is present when the current notebook context is differs
-    # from the configured current notebook, meaning the user used a
-    # selection with a notebook colon prefix.
-    if [[ -n "${_SCOPE:-}" ]]
+    # $_SELECTION_SCOPED indicates whether the current notebook context
+    # differs from the configured current notebook, meaning the user used
+    # a selection with a notebook colon prefix. 1 == scoped, 0 == unscoped
+    if ((_SELECTION_SCOPED))
     then # Selection includes a notebook prefix, e.g., "notebook:123".
       # Add the notebook identifier to the id and basename.
       local _notebook_identifier
       _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
 
-      _scoped_basename="${_notebook_identifier}:${_target_basename}"
-      _scoped_id="${_notebook_identifier}:${_id}"
+      _maybe_scoped_basename="${_notebook_identifier}:${_target_basename}"
+      _maybe_scoped_id="${_notebook_identifier}:${_id}"
     fi
 
     # Print feedback with scoped id and basename.
-    printf "Added %s %s\\n"                   \
-      "$(_id_brackets_color "${_scoped_id}")" \
-      "$(_highlight "${_scoped_basename}")"
+    printf "Added %s %s\\n"                         \
+      "$(_id_brackets_color "${_maybe_scoped_id}")" \
+      "$(_highlight "${_maybe_scoped_basename}")"
   fi
 }
 # Use `_alias_subcommand` to create a full alias, with linked help / usage.

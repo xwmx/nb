@@ -48,14 +48,14 @@ _setup_move() {
     run "${_NB}" init
   }
 
-  run "${_NB}" move 0 "destination"
+  run "${_NB}" move 1 "destination"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ nb\ move  ]]
+  [[ ${status} -eq 1              ]]
+  [[ "${lines[0]}" =~ Not\ found  ]]
+  [[ "${lines[0]}" =~ home:1      ]]
 
 }
 
@@ -71,9 +71,10 @@ _setup_move() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ nb\ move  ]]
+  [[ ${status} -eq 1                ]]
+  [[ "${lines[0]}" =~ Not\ found    ]]
+  [[ "${lines[0]}" =~ home:invalid  ]]
+
 }
 
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
@@ -83,14 +84,14 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" move 0 "invalid" --force
+  run "${_NB}" move 1 "invalid" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ nb\ move  ]]
+  [[ ${status} -eq 1                                ]]
+  [[ "${lines[0]}" =~ Target\ notebook\ not\ found  ]]
+  [[ "${lines[0]}" =~ invalid                       ]]
 }
 
 @test "\`move <selector> <notebook> (no force)\` returns 0 and moves note." {
