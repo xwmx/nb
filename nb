@@ -10310,10 +10310,10 @@ do
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
       else
-        __maybe_identifier_subcommand_or_url="${__opt#*:}"
+        __maybe_identifier_or_subcommand_or_url="${__opt#*:}"
 
-        if [[ -n "${_SUBCOMMAND:-}"                           ]] &&
-           [[ -z "${__maybe_identifier_subcommand_or_url:-}"  ]]
+        if [[ -n "${_SUBCOMMAND:-}"                              ]] &&
+           [[ -z "${__maybe_identifier_or_subcommand_or_url:-}"  ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
@@ -10340,20 +10340,20 @@ do
 
           if [[ -n "${_SCOPE:-}" ]]
           then
-            __maybe_identifier_subcommand_or_url="${__opt#*:}"
+            __maybe_identifier_or_subcommand_or_url="${__opt#*:}"
 
-            if [[ -n "${__maybe_identifier_subcommand_or_url:-}" ]]
+            if [[ -n "${__maybe_identifier_or_subcommand_or_url:-}" ]]
             then
-              if _is_valid_subcommand "${__maybe_identifier_subcommand_or_url}"
+              if _is_valid_subcommand "${__maybe_identifier_or_subcommand_or_url}"
               then
-                _SUBCOMMAND="${__maybe_identifier_subcommand_or_url}"
+                _SUBCOMMAND="${__maybe_identifier_or_subcommand_or_url}"
               else
-                if _string_is_url "${__maybe_identifier_subcommand_or_url}"
+                if _string_is_url "${__maybe_identifier_or_subcommand_or_url}"
                 then
                   _SUBCOMMAND="bookmark"
                 fi
 
-                _ARGUMENTS+=("${__maybe_identifier_subcommand_or_url}")
+                _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
               fi
             fi
           fi
