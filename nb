@@ -10392,8 +10392,7 @@ do
       then
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
-      elif [[ -n "${_SCOPE:-}"      ]] &&
-           [[ -n "${_SUBCOMMAND:-}" ]]
+      elif [[ -n "${_SUBCOMMAND:-}" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
