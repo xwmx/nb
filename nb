@@ -10335,7 +10335,7 @@ do
               "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
           fi
 
-          if [[ -n "${_SCOPE:-}" ]]
+          if ((_SELECTION_SCOPED))
           then
             __maybe_identifier_or_subcommand_or_url="${__opt#*:}"
 
