@@ -5815,7 +5815,8 @@ _list() {
     _selection_basename="$(_get_selection_basename "${_selection}")"
   fi
 
-  local _notebook_path="$(_get_notebook --path)"
+  local _notebook_path
+  _notebook_path="$(_get_notebook "${_selection:-}" --path)"
 
   local _notebook_display_name=
   _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
@@ -7891,7 +7892,8 @@ _remote() {
     esac
   done
 
-  local _notebook_path="$(_get_notebook --path)"
+  local _notebook_path
+  _notebook_path="$(_get_notebook --path)"
 
   if [[ "$(git -C "${_notebook_path}" remote get-url origin 2>/dev/null)" ]]
   then
