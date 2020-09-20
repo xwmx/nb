@@ -2613,7 +2613,6 @@ _set_selection_notebook() {
 
   if [[ "${#_parts[@]}" -gt 1 ]]
   then
-    _SCOPED=1
     if [[ "${_parts[0]}" == "local"       ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
@@ -3297,7 +3296,7 @@ _add() {
 
     local _scoped_basename="${_basename}"
 
-    if ((_SCOPED))
+    if [[ -n "${_SCOPE}" ]]
     then
       local _notebook_identifier
       _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -4343,7 +4342,7 @@ _delete() {
 
   local _scoped_basename="${_basename}"
 
-  if ((_SCOPED))
+  if [[ -n "${_SCOPE}" ]]
   then
     local _notebook_identifier
     _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -4576,7 +4575,7 @@ _edit() {
 
       local _scoped_basename="${_basename}"
 
-      if ((_SCOPED))
+      if [[ -n "${_SCOPE}" ]]
       then
         local _notebook_identifier
         _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
@@ -5776,7 +5775,7 @@ _list() {
     "list() \${_filenames_count}: '%s'\\n" \
     "${_filenames_count[@]}"
 
-  if ((_SCOPED)) && [[ -n "${_SCOPE:-}" ]]
+  if [[ -n "${_SCOPE:-}" ]]
   then
     _maybe_scope="${_SCOPE}:"
     _maybe_scope_padded_right="${_maybe_scope} "
@@ -5947,7 +5946,7 @@ HEREDOC
           local _max_identifier=
           _item_identifier="$(_index get_id "${__basename}")"
 
-          if ((_SCOPED))
+          if [[ -n "${_SCOPE}" ]]
           then
             _item_identifier="${_notebook_identifier}:${_item_identifier}"
             _max_identifier="${_notebook_identifier}:${_max_id}"
@@ -6177,7 +6176,7 @@ _ls() {
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
 
-    if ((_SCOPED)) && [[ -n "${_SCOPE:-}" ]]
+    if [[ -n "${_SCOPE:-}" ]]
     then
       _maybe_scope="${_SCOPE}:"
       _maybe_scope_padded_left=" ${_maybe_scope}"
@@ -6519,11 +6518,10 @@ _ls() {
         )" || :
       fi
 
-      if [[ -n "${_notebook:-}" ]] && ! ((_SCOPED))
+      if [[ -n "${_notebook:-}" ]] && ! [[ -n "${_SCOPE}" ]]
       then
         _NOTEBOOK_PATH="${NB_DIR}/${_notebook}" \
           _SCOPE="${_notebook}"                 \
-          _SCOPED=1                             \
           _ls "${_args[@]:1}"
         return 0
       else
@@ -6534,7 +6532,7 @@ _ls() {
         then # current notebook is empty
           _list -n "${_limit}" "${_args[@]:-}"
         else
-          if ((_SCOPED))
+          if [[ -n "${_SCOPE}" ]]
           then
             _return_1 printf "Not found: %s\\n" \
               "$(_highlight "${_SCOPE}:${_args[0]:-}")"
@@ -8476,7 +8474,7 @@ _search() {
             _file_info_color="${_filename_color}"
           fi
 
-          if ((_all)) || ((_SCOPED))
+          if ((_all)) || [[ -n "${_SCOPE}" ]]
           then
             local _notebook_name=
             _notebook_name="$(_get_notebook_identifier "${__notebook_path}")"
@@ -9490,7 +9488,6 @@ _show() {
     then
       _NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
         _SCOPE="${_maybe_notebook}"                 \
-        _SCOPED=1                                   \
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
@@ -10131,7 +10128,6 @@ unset options
 # Initialize program option variables.
 _ARGUMENTS=()
 _SCOPE=
-_SCOPED=0
 _SUBCOMMAND=
 _USE_DEBUG=0
 
@@ -10484,7 +10480,6 @@ _main() {
 
   if [[ -n "${_SCOPE}" ]]
   then
-    _SCOPED=1
     if [[ "${_SCOPE}" == "local"          ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then

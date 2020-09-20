@@ -98,10 +98,10 @@ _copy() {
     local _scoped_basename="${_target_basename}"
     local _scoped_id="${_id}"
 
-    # $_SCOPED indicates whether the current notebook context is different
+    # $_SCOPE is present when the current notebook context is differs
     # from the configured current notebook, meaning the user used a
-    # selection with a notebook colon prefix. 1 == scoped, 0 == unscoped
-    if ((_SCOPED))
+    # selection with a notebook colon prefix.
+    if [[ -n "${_SCOPE:-}" ]]
     then # Selection includes a notebook prefix, e.g., "notebook:123".
       # Add the notebook identifier to the id and basename.
       local _notebook_identifier
