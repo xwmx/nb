@@ -1909,14 +1909,14 @@ _get_http_status() {
   fi
 }
 
-# _get_notebook_identifier()
+# _get_notebook_display_name()
 #
 # Usage:
-#   _get_notebook_identifier (<path> | <name>)
+#   _get_notebook_display_name (<path> | <name>)
 #
 # Description:
 #   Print a copy / pastable notebook name, with spaces escaped.
-_get_notebook_identifier() {
+_get_notebook_display_name() {
   local _notebook_identifier="${1:-}"
 
   if [[ -n "${_notebook_identifier:-}" ]]
@@ -3224,10 +3224,11 @@ _add() {
 
     if ((_SELECTION_SCOPED))
     then
-      local _notebook_identifier
-      _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_NAME}")"
-      _id="${_notebook_identifier}:${_id}"
-      _scoped_basename="${_notebook_identifier}:${_basename}"
+      local _notebook_display_name
+      _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_NAME}")"
+
+      _id="${_notebook_display_name}:${_id}"
+      _scoped_basename="${_notebook_display_name}:${_basename}"
     fi
 
     local _title
@@ -4267,10 +4268,11 @@ _delete() {
 
   if ((_SELECTION_SCOPED))
   then
-    local _notebook_identifier
-    _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_NAME}")"
-    _id="${_notebook_identifier}:${_id}"
-    _scoped_basename="${_notebook_identifier}:${_basename}"
+    local _notebook_display_name
+    _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_NAME}")"
+
+    _id="${_notebook_display_name}:${_id}"
+    _scoped_basename="${_notebook_display_name}:${_basename}"
   fi
 
   local _note_info_hi
@@ -4498,10 +4500,11 @@ _edit() {
 
       if ((_SELECTION_SCOPED))
       then
-        local _notebook_identifier
-        _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_NAME}")"
-        _id="${_notebook_identifier}:${_id}"
-        _scoped_basename="${_notebook_identifier}:${_basename}"
+        local _notebook_display_name
+        _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_NAME}")"
+
+        _id="${_notebook_display_name}:${_id}"
+        _scoped_basename="${_notebook_display_name}:${_basename}"
       fi
 
       local _title
@@ -5666,8 +5669,8 @@ _list() {
     _selection_basename="$(_get_selection_basename "${_selection}")"
   fi
 
-  local _notebook_identifier=
-  _notebook_identifier="$(_get_notebook_identifier "${_NOTEBOOK_PATH}")"
+  local _notebook_display_name=
+  _notebook_display_name="$(_get_notebook_display_name "${_NOTEBOOK_PATH}")"
 
   _debug printf \
     "list() \${_selection_basename}: '%s'\\n" \
@@ -5866,8 +5869,8 @@ HEREDOC
 
           if ((_SELECTION_SCOPED))
           then
-            _item_identifier="${_notebook_identifier}:${_item_identifier}"
-            _max_identifier="${_notebook_identifier}:${_max_id}"
+            _item_identifier="${_notebook_display_name}:${_item_identifier}"
+            _max_identifier="${_notebook_display_name}:${_max_id}"
           else
             _item_identifier="${_item_identifier}"
             _max_identifier="${_max_id}"
@@ -8396,11 +8399,11 @@ _search() {
 
           if ((_all)) || ((_SELECTION_SCOPED))
           then
-            local _notebook_identifier=
-            _notebook_identifier="$(_get_notebook_identifier "${__notebook_path}")"
+            local _notebook_display_name=
+            _notebook_display_name="$(_get_notebook_display_name "${__notebook_path}")"
 
-            _id_filename="[${_notebook_identifier}:${_id}] ${_file_info}"
-            _id_filename_color="$(_id_brackets_color "${_notebook_identifier}:${_id}") ${_file_info_color}"
+            _id_filename="[${_notebook_display_name}:${_id}] ${_file_info}"
+            _id_filename_color="$(_id_brackets_color "${_notebook_display_name}:${_id}") ${_file_info_color}"
           else
             _id_filename="[${_id}] ${_file_info}"
             _id_filename_color="$(_id_brackets_color "${_id}") ${_file_info_color}"
@@ -10398,6 +10401,11 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 # TODO: Remove
 ###############################################################################
 
+# _get_notebook_identifier()
+#
+# Renamed to `_get_notebook_display_name()`.
+_get_notebook_identifier() { _get_notebook_display_name "${@}"; }
+
 # _set_selection_notebook() <selection>
 #
 # Selection notebook is now set in option parsing.
@@ -10405,10 +10413,14 @@ _set_selection_notebook() { : ; }
 
 # $_SCOPE
 #
+# Renamed to `$_NOTEBOOK_NAME`.
+#
 # shellcheck disable=SC2034
 _SCOPE="${_NOTEBOOK_NAME}"
 
 # $_SCOPED
+#
+# Renamed to `$_SELECTION_SCOPED`.
 #
 # shellcheck disable=SC2034
 _SCOPED="${_SELECTION_SCOPED}"
