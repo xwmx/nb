@@ -10387,16 +10387,13 @@ do
       _print_welcome
       ;;
     *:*)
-      if [[ -z "${_SUBCOMMAND:-}" ]] &&
+      if [[ -z "${_SUBCOMMAND:-}"   ]] &&
           _string_is_url "${__opt}"
       then
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
-      elif [[ ! "${__opt:-}" =~ :     ]] ||
-           {
-             [[ -n "${_SCOPE:-}"      ]] &&
-             [[ -n "${_SUBCOMMAND:-}" ]]
-           }
+      elif [[ -n "${_SCOPE:-}"      ]] &&
+           [[ -n "${_SUBCOMMAND:-}" ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
