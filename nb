@@ -10392,36 +10392,40 @@ do
       then
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
-      elif __parts=($(printf "%s\\n" "${__opt}" | tr ":" "\\n")) &&
-           [[ "${#__parts[@]}" -gt 0                          ]] &&
-           ! _string_is_url "${__opt}"
+      elif [[ "${__opt:-}" =~ : ]]
       then
+        __maybe_selection_notebook="${__opt%%:*}"
+
         if [[ -z "${_SCOPE:-}"      ]] &&
            [[ -z "${_SUBCOMMAND:-}" ]]
         then
-          if [[ -d "${NB_DIR}/${__parts[0]}"      ]] ||
+          if [[ -d "${NB_DIR}/${__maybe_selection_notebook}"  ]] ||
              {
-               [[ "${__parts[0]}" == "local"      ]] &&
-               [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+               [[ "${__maybe_selection_notebook}" == "local"  ]] &&
+               [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"              ]]
              }
           then
-            _SCOPE="${__parts[0]}"
+            _SCOPE="${__maybe_selection_notebook}"
 
-            if _is_valid_subcommand "${__parts[1]:-}"
+            __maybe_identifier_subcommand_or_url="${__opt#*:}"
+
+            if [[ -n "${__maybe_identifier_subcommand_or_url:-}" ]]
             then
-              _SUBCOMMAND="${__parts[1]:-}"
-            elif [[ -z "${_SUBCOMMAND:-}"                     ]] &&
-                 [[ "${#__parts[@]}" -gt 2                    ]] &&
-                 __maybe_url="$(_join ':' "${__parts[@]:1}")"    &&
-                 _string_is_url "${__maybe_url:-}"
-            then
-              _SUBCOMMAND="bookmark"
-              _ARGUMENTS+=("${__maybe_url}")
-            else
-              _ARGUMENTS+=("${__parts[1]:-}")
+              if _is_valid_subcommand "${__maybe_identifier_subcommand_or_url}"
+              then
+                _SUBCOMMAND="${__maybe_identifier_subcommand_or_url}"
+              else
+                if _string_is_url "${__maybe_identifier_subcommand_or_url}"
+                then
+                  _SUBCOMMAND="bookmark"
+                fi
+
+                _ARGUMENTS+=("${__maybe_identifier_subcommand_or_url}")
+              fi
             fi
           else
-            _exit_1 printf "Notebook not found: %s\\n" "${__parts[0]}"
+            _exit_1 printf \
+              "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
           fi
         else
           _ARGUMENTS+=("${__opt}")
