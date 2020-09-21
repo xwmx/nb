@@ -32,7 +32,11 @@ setup() {
   _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
 
   export NB_DIR="${_TMP_DIR}/notebooks"
-  export _NOTEBOOK_PATH="${NB_DIR}/home"
+
+  export NB_NOTEBOOK_PATH="${NB_DIR}/home"
+# Assign legacy $_NOTEBOOK_PATH. TODO: global search and replace.
+  export _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
+
   export NBRC_PATH="${_TMP_DIR}/.nbrc"
   export NB_COLOR_PRIMARY=3
   export NB_AUTO_SYNC=0
