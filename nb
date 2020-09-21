@@ -734,11 +734,6 @@ export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-"${NB_DIR}/home"}"
 # The path of the current global notebook.
 export _GLOBAL_NOTEBOOK_PATH=
 
-# $_GLOBAL_NOTEBOOK_NAME
-#
-# The name of the current global notebook.
-export _GLOBAL_NOTEBOOK_NAME=
-
 # $_LOCAL_NOTEBOOK_PATH
 #
 # The path of the local notebook, if one is found. The current working
@@ -765,11 +760,12 @@ __set_notebook_path() {
   __set_global_notebook() {
     if [[ -e "${NB_DIR}/.current" ]]
     then
-      _GLOBAL_NOTEBOOK_NAME="$(cat "${NB_DIR}/.current")"
+      local _global_notebook_name=
+      _global_notebook_name="$(cat "${NB_DIR}/.current")"
 
-      if [[ -d "${NB_DIR}/${_GLOBAL_NOTEBOOK_NAME}" ]]
+      if [[ -d "${NB_DIR}/${_global_notebook_name}" ]]
       then
-        _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_GLOBAL_NOTEBOOK_NAME}"
+        _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_global_notebook_name}"
       fi
     fi
   }; __set_global_notebook
