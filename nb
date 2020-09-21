@@ -9878,8 +9878,7 @@ _status() {
   local _notebook_path
   _notebook_path="$(_get_notebook --path)"
 
-  cd "${_notebook_path}" || _exit_1 printf "_status() \`cd\` failed.\\n"
-  git status
+  git -C "${_notebook_path}" status
 }
 
 # sync ################################################################### sync
