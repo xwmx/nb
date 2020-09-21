@@ -27,7 +27,7 @@ load test_helper
   [[ ${status} -eq 1 ]]
 }
 
-@test "\`init\` exits with status 1 when \`\$_NOTEBOOK_PATH\` exists." {
+@test "\`init\` exits with status 0 when \`\$_NOTEBOOK_PATH\` exists." {
   {
     mkdir -p "${_NOTEBOOK_PATH}"
     [[ -e "${_NOTEBOOK_PATH}" ]]
@@ -38,8 +38,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ already\ initialized  ]]
-  [[ ${status} -eq 1                        ]]
+  [[ "${output}" =~ already\ exists ]]
+  [[ ${status} -eq 0                ]]
 }
 
 @test "\`init\` creates \`\$NB_DIR\` and \`\$_NOTEBOOK_PATH\` directories." {

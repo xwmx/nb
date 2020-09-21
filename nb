@@ -732,13 +732,12 @@ export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-"${NB_DIR}/home"}"
 # $_GLOBAL_NOTEBOOK_PATH
 #
 # The path of the current global notebook.
-export _GLOBAL_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
+export _GLOBAL_NOTEBOOK_PATH=
 
 # $_GLOBAL_NOTEBOOK_NAME
 #
 # The name of the current global notebook.
 export _GLOBAL_NOTEBOOK_NAME=
-_GLOBAL_NOTEBOOK_NAME="$(basename "${_GLOBAL_NOTEBOOK_PATH}")"
 
 # $_LOCAL_NOTEBOOK_PATH
 #
