@@ -722,17 +722,17 @@ _id_brackets_color() {
 
 # Current Notebook ########################################### Current Notebook
 
-# $_NOTEBOOK_PATH
+# $NB_NOTEBOOK_PATH
 #
 # Default: `$NB_DIR/home`
 #
 # The path to the current notebook.
-export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-${NB_DIR}/home}"
+export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-"${NB_DIR}/home"}"
 
 # $_GLOBAL_NOTEBOOK_PATH
 #
 # The path of the current global notebook.
-export _GLOBAL_NOTEBOOK_PATH="${_NOTEBOOK_PATH}"
+export _GLOBAL_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
 
 # $_GLOBAL_NOTEBOOK_NAME
 #
@@ -777,9 +777,9 @@ __set_notebook_path() {
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
-    _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+    NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
   else
-    _NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
+    NB_NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
   fi
 }; __set_notebook_path
 
@@ -852,10 +852,10 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 # _git_checkpoint()
 #
 # Usage:
-#   _git_checkpoint <notebook path> <commit message>
+#   _git_checkpoint <target directory> <commit message>
 #
 # Description:
-#   Commit all files in the repository with the provided commit message.
+#   Commit all files in <target directory> with the provided commit message.
 _git_checkpoint() {
   ((_GIT_ENABLED)) || return 0
 
@@ -874,7 +874,7 @@ _git_checkpoint() {
       git -C "${_target_directory}" commit -a -m "${_message}"
   }
 
-  # Usage: _git_checkpoint_sync <target-directory>
+  # Usage: _git_checkpoint_sync <target directory>
   _git_checkpoint_sync() {
    local _target_directory="${1:-}"
 
@@ -1031,7 +1031,7 @@ HEREDOC
 
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${_NOTEBOOK_PATH}"
+    _target_directory="${NB_NOTEBOOK_PATH}"
   fi
 
   if [[ -z "${_message}" ]]
@@ -1064,12 +1064,11 @@ HEREDOC
 # _git_index_is_dirty()
 #
 # Usage:
-#   _git_index_is_dirty [<target-directory>]
+#   _git_index_is_dirty <target directory>
 #
 # Exit / Error Status:
-#   0 (success, true)  If there are uncommitted changes in `$_NOTEBOOK_PATH` or
-#                      <target-directory>.
-#   1 (error,  false)  If the `$_NOTEBOOK_PATH` repository is clean.
+#   0 (success, true)  If there are uncommitted changes in <target directory>.
+#   1 (error,  false)  If the <target director> is clean.
 _git_index_is_dirty() {
   ((_GIT_ENABLED)) || return 1
 
@@ -1077,7 +1076,7 @@ _git_index_is_dirty() {
 
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${_NOTEBOOK_PATH}"
+    _target_directory="${NB_NOTEBOOK_PATH}"
   fi
 
   [[ -n "$(git -C "${_target_directory}" status --porcelain)" ]]
@@ -1086,11 +1085,11 @@ _git_index_is_dirty() {
 # _git_out_of_sync()
 #
 # Usage:
-#   _git_out_of_sync [<target-directory>]
+#   _git_out_of_sync <target-directory>
 #
 # Exit / Error Status:
-#   0 (success, true)  If the current notebook is out of sync with the remote.
-#   1 (error,  false)  If the current notebook is synced with the remote.
+#   0 (success, true)  If <target diectory> is out of sync with the remote.
+#   1 (error,  false)  If <target diectory> is synced with the remote.
 _git_out_of_sync() {
   ((_GIT_ENABLED)) || return 1
 
@@ -1098,7 +1097,7 @@ _git_out_of_sync() {
 
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${_NOTEBOOK_PATH}"
+    _target_directory="${NB_NOTEBOOK_PATH}"
   fi
 
   git -C "${_target_directory}" status | grep -q 'diverged'
@@ -1172,7 +1171,7 @@ HEREDOC
 # _git_should_autosync()
 #
 # Usage:
-#   _git_should_autosync [<target-directory>]
+#   _git_should_autosync <target directory>
 #
 # Exit / Error Status:
 #   0 (success, true)  If an autosync should be triggered.
@@ -1187,7 +1186,7 @@ _git_should_autosync() {
 
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${_NOTEBOOK_PATH}"
+    _target_directory="${NB_NOTEBOOK_PATH}"
   fi
 
   if ! ((NB_AUTO_SYNC))
@@ -1427,7 +1426,7 @@ _edit_file() {
     return 1
   fi
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_NOTEBOOK_PATH}" || return 1
 
   if _file_is_encrypted "${_file_path}"
   then
@@ -1910,13 +1909,20 @@ _get_http_status() {
 #   _get_selection_basename <selection>
 #
 # Description:
-#   Determine the basename of the file in `$_NOTEBOOK_PATH` that is identified
-#   by the given <id>, <filename>, <path>, or <title>.
+#   Determine the basename of the file that is identified by the given <id>,
+#   <filename>, <path>, or <title> and is in `$NB_NOTEBOOK_PATH` or a
+#   notebook specified with a colon prefix.
+#
+#   Examples:
+#     1
+#     example.md
+#     notebook:1
+#     notebook:example.md
 _get_selection_basename() {
   local _basename=
   local _identifier=
   local _selection="${1:-}"
-  local _selection_notebook_path="${_NOTEBOOK_PATH}"
+  local _selection_notebook_path="${NB_NOTEBOOK_PATH}"
   if [[ -z "${_selection}" ]]
   then
     _basename=
@@ -2051,10 +2057,10 @@ _get_notebook() {
   fi
 
   if ((_context))
-  then
+  then # fall back to `$NB_NOTEBOOK_PATH`
     if [[ -z "${_notebook_path:-}" ]]
     then
-      _notebook_path="${_NOTEBOOK_PATH}"
+      _notebook_path="${NB_NOTEBOOK_PATH}"
     fi
 
     if [[ -z "${_notebook_name:-}" ]]
@@ -2246,7 +2252,7 @@ _get_unique_basename() {
 
   if [[ -z "${_directory:-}" ]]
   then
-    _directory="${_NOTEBOOK_PATH}"
+    _directory="${NB_NOTEBOOK_PATH}"
   fi
 
   if [[ -z "${_file_name}" ]]
@@ -3154,7 +3160,7 @@ _add() {
   local _filename=
   local _file_type="${NB_DEFAULT_EXTENSION}"
   local _maybe_content_or_filename=
-  local _notebook_path="${_NOTEBOOK_PATH}"
+  local _notebook_path="${NB_NOTEBOOK_PATH}"
   local _password=
   local _title=
 
@@ -4731,7 +4737,7 @@ _env() {
   else
     printf "_ME=%s\\n" "${_ME:-}"
     printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
-    printf "_NOTEBOOK_PATH=%s\\n" "${_NOTEBOOK_PATH:-}"
+    printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
     printf "EDITOR=%s\\n" "${EDITOR:-}"
     printf "PAGER=%s\\n" "${PAGER:-}"
     printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
@@ -5058,7 +5064,7 @@ _import() {
   #   _import_get_valid_basename <basename>
   _import_get_valid_basename() {
     local _target_basename="${1:-}"
-    if [[ -e "${_NOTEBOOK_PATH}/${_target_basename}" ]]
+    if [[ -e "${NB_NOTEBOOK_PATH}/${_target_basename}" ]]
     then
       _target_basename="$(_get_unique_basename "${_target_basename}")"
     fi
@@ -5235,7 +5241,7 @@ HEREDOC
 _index() {
   local _subcommand="${1:-}"
 
-  local _notebook_path="${_NOTEBOOK_PATH}"
+  local _notebook_path="${NB_NOTEBOOK_PATH}"
 
   local _index_path="${_notebook_path}/.index"
 
@@ -5949,7 +5955,7 @@ HEREDOC
           local _max_identifier=
 
           _item_identifier="$(
-            _NOTEBOOK_PATH="${_notebook_path}" _index get_id "${__basename}"
+            NB_NOTEBOOK_PATH="${_notebook_path}" _index get_id "${__basename}"
           )"
 
           if ((_SELECTION_SCOPED))
@@ -6357,7 +6363,7 @@ _ls() {
 
     if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
     then
-      if [[ "${_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+      if [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
       then
         _notebook_names_hi=(
           "$(_highlight "local" --underline)"
@@ -6526,9 +6532,9 @@ _ls() {
 
       if [[ -n "${_notebook_name:-}" ]] && ! ((_SELECTION_SCOPED))
       then
-        _NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
-          _NOTEBOOK_NAME="${_notebook_name}"          \
-          _SELECTION_SCOPED=1                         \
+        NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
+          _NOTEBOOK_NAME="${_notebook_name}"            \
+          _SELECTION_SCOPED=1                           \
           _ls "${_args[@]:1}"
         return 0
       else
@@ -6831,14 +6837,14 @@ _notebooks() {
 
     if ((_path))
     then
-      printf "%s\\n" "${_NOTEBOOK_PATH}"
+      printf "%s\\n" "${NB_NOTEBOOK_PATH}"
     else
-      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
-         [[ "${_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
+         [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
       then
         printf "local\\n"
       else
-        basename "${_NOTEBOOK_PATH}"
+        basename "${NB_NOTEBOOK_PATH}"
       fi
     fi
   }
@@ -7291,7 +7297,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         _notebook_name=$(printf "%s\\n" "${_notebook_name}" | cut -f 1 -d ":")
       fi
 
-      _NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"
+      NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"
     else
       _notebook_name="$(_notebooks current)"
     fi
@@ -7311,10 +7317,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       if _command_exists "xdg-open"
       then
-        xdg-open "${_NOTEBOOK_PATH}"
+        xdg-open "${NB_NOTEBOOK_PATH}"
       elif _command_exists "open"
       then
-        open "${_NOTEBOOK_PATH}"
+        open "${NB_NOTEBOOK_PATH}"
       else
         _exit_1 printf \
           "%s doesn't know how to open directories on your system.\\n" \
@@ -7324,27 +7330,27 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       if _command_exists "ranger"
       then
-        ranger "${_NOTEBOOK_PATH}"
+        ranger "${NB_NOTEBOOK_PATH}"
       elif _command_exists "mc"
       then
-        mc "${_NOTEBOOK_PATH}"
+        mc "${NB_NOTEBOOK_PATH}"
       elif _command_exists "exa"
       then
-        exa -lah --git "${_NOTEBOOK_PATH}"
+        exa -lah --git "${NB_NOTEBOOK_PATH}"
       else
         # gnu || bsd
-        ls -lah --color=always "${_NOTEBOOK_PATH}" 2>/dev/null ||
-          ls -lah -G "${_NOTEBOOK_PATH}"
+        ls -lah --color=always "${NB_NOTEBOOK_PATH}" 2>/dev/null ||
+          ls -lah -G "${NB_NOTEBOOK_PATH}"
       fi
     else
-      local _dotfile_path="${_NOTEBOOK_PATH}/.archived"
+      local _dotfile_path="${NB_NOTEBOOK_PATH}/.archived"
 
       if [[ "${_subcommand}" == "archive" ]]
       then
         if [[ ! -e "${_dotfile_path}" ]]
         then
           touch "${_dotfile_path}" &&
-            _git_checkpoint "${_NOTEBOOK_PATH}" "[nb] Archived"
+            _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Archived"
         fi
 
         printf "%s archived.\\n" "$(_highlight "${_notebook_name}")"
@@ -7361,7 +7367,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         if [[ -e "${_dotfile_path}" ]]
         then
           rm "${_dotfile_path}" &&
-            _git_checkpoint "${_NOTEBOOK_PATH}" "[nb] Unarchived"
+            _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Unarchived"
         fi
 
         printf "%s unarchived.\\n" "$(_highlight "${_notebook_name}")"
@@ -8452,7 +8458,7 @@ _search() {
           fi
 
           _id="$(
-            _NOTEBOOK_PATH="${__notebook_path}"   \
+            NB_NOTEBOOK_PATH="${__notebook_path}" \
               _index get_id "${_filename_for_id}"
           )"
           _title="$(_get_title "${_path}")"
@@ -9470,7 +9476,7 @@ _show() {
 
     if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
     then
-      _NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
+      NB_NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
         _NOTEBOOK_NAME="${_maybe_notebook}"         \
         _SELECTION_SCOPED=1                         \
         _ls "${_ls_arguments[@]:1}"
@@ -9830,15 +9836,15 @@ _sync() {
     if [[ "${__notebook}" == "local"      ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
-      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+      NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
     else
-      _NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
+      NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
     fi
 
-    NB_AUTO_SYNC=1 _git_checkpoint "${_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+    NB_AUTO_SYNC=1 _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
 
-    if _git_index_is_dirty  "${_NOTEBOOK_PATH}" ||
-       _git_out_of_sync     "${_NOTEBOOK_PATH}"
+    if _git_index_is_dirty  "${NB_NOTEBOOK_PATH}" ||
+       _git_out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
       _exit_1 printf "Syncing failed.\\n"
     fi
@@ -10374,13 +10380,13 @@ do
 
         if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
         then
-          _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
-          _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
+          NB_NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
+          _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
           _SELECTION_SCOPED=1
         elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
              [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
         then
-          _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+          NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
           _NOTEBOOK_NAME="local"
           _SELECTION_SCOPED=1
         elif [[ -n "${_SUBCOMMAND:-}" ]]
@@ -10444,7 +10450,7 @@ done
 
 _debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
 _debug printf "\${_NOTEBOOK_NAME}: '%s'\\n"       "${_NOTEBOOK_NAME}"
-_debug printf "\${_NOTEBOOK_PATH}: '%s'\\n"       "${_NOTEBOOK_PATH}"
+_debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
 _debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
 _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
@@ -10471,13 +10477,13 @@ _set_selection_notebook() {
     then
       if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
       then
-        _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
-        _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
+        NB_NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
+        _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
         _SELECTION_SCOPED=1
       elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
            [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
       then
-        _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+        NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
         _NOTEBOOK_NAME="local"
         _SELECTION_SCOPED=1
       else
@@ -10486,6 +10492,13 @@ _set_selection_notebook() {
     fi
   fi
 }
+
+# $_NOTEBOOK_PATH
+#
+# Renamed.
+#
+# shellcheck disable=SC2034
+_NOTEBOOK_PATH="${_NOTEBOOK_PATH:-"${NB_NOTEBOOK_PATH}"}"
 
 # $_SCOPE
 #
@@ -10529,17 +10542,17 @@ _main() {
     if [[ "${_NOTEBOOK_NAME}" == "local"  ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
-      _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+      NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
     else
-      _NOTEBOOK_PATH="${NB_DIR}/${_NOTEBOOK_NAME}"
+      NB_NOTEBOOK_PATH="${NB_DIR}/${_NOTEBOOK_NAME}"
     fi
   else
-    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                    ]] &&
-       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${_NOTEBOOK_PATH}"  ]]
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
+       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${NB_NOTEBOOK_PATH}"  ]]
     then
       _NOTEBOOK_NAME="local"
     else
-      _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
+      _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
     fi
   fi
 
@@ -10555,8 +10568,8 @@ _main() {
       _git_required
 
       # Call `_init()` if configuration hasn't been initialized.
-      if [[ ! -e "${NB_DIR}"          ]] ||
-         [[ ! -e "${_NOTEBOOK_PATH}"  ]]
+      if [[ ! -e "${NB_DIR}"            ]] ||
+         [[ ! -e "${NB_NOTEBOOK_PATH}"  ]]
       then
         _init
         _ls || true # returns 0 due to empty repository.
@@ -10573,7 +10586,7 @@ _main() {
           then
             "${_MY_PATH}" sync
           else
-            _git_checkpoint "${_NOTEBOOK_PATH}" "[nb] Commit" --spinner
+            _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Commit" --spinner
           fi
         elif _git_should_autosync
         then
