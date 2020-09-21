@@ -6199,7 +6199,7 @@ _ls() {
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
 
-    if ((_SELECTION_SCOPED))
+    if _notebooks current --selected
     then
       _maybe_scope="$(_get_notebook --display-name):"
       _maybe_scope_padded_left=" ${_maybe_scope}"
@@ -6504,6 +6504,10 @@ _ls() {
         ;;
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
+        ;;
+      *:*)
+        # Skip selection arguments.
+        :
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
@@ -6874,7 +6878,8 @@ _notebooks() {
       printf "%s\\n" "${NB_NOTEBOOK_PATH}"
     elif ((_return_selected))
     then
-      [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]]
+      [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]] &&
+      [[ "${NB_NOTEBOOK_PATH}" != "${_LOCAL_NOTEBOOK_PATH}"  ]]
     else
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
          [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
