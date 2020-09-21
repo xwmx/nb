@@ -10134,7 +10134,6 @@ unset options
 # Initialize program option variables.
 _ARGUMENTS=()
 _NOTEBOOK_NAME=
-_SELECTION=
 _SELECTION_SCOPED=0
 _SUBCOMMAND=
 _USE_DEBUG=0
@@ -10431,13 +10430,6 @@ do
               fi
 
               _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
-
-              if ((_SELECTION_SCOPED))
-              then
-                _SELECTION+=("${_NOTEBOOK_NAME}:${__maybe_identifier_or_subcommand_or_url}")
-              else
-                _SELECTION+=("${__maybe_identifier_or_subcommand_or_url}")
-              fi
             fi
           fi
         fi
