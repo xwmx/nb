@@ -797,49 +797,70 @@ then
   mkdir -p "${_NB_CACHE_PATH}"
 fi
 
-# _clear_cache()
-#
-# Usage:
-#   _clear_cache
-#
-# Description:
-#   Clear the cache.
-_clear_cache() {
-  if [[ -d "${_NB_CACHE_PATH}" ]]
-  then
-    rm -r "${_NB_CACHE_PATH:?}"
-    mkdir -p "${_NB_CACHE_PATH}"
-  fi
-}
-
 # $_NB_TEMP_DIRECTORY
 #
 # The full path to the temp directory.
 export _NB_TEMP_DIRECTORY
 _NB_TEMP_DIRECTORY="$(mktemp -d)"
 
-# _tempfile_path()
+# _temp()
 #
 # Usage:
-#   _tempfile_path <basename>
+#   _temp cache [clear]
+#   _temp directory
+#   _temp file <basename>
+#   _temp cleanup
 #
+# Subcommands:
+#   cache       Print the full path to the cache directory, or optionally clear
+#               the cache.
+#   directory   Print the full path the the temp directory.
+#   file        Print the full path for <basename> within the temp directory.
+#   cleanup     Force delete the temp directory.
 # Description:
-#   Print the full path for <basename> within the temp directory.
-_tempfile_path() {
-  [[ -z "${1:-}" ]] && return 1
-  printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${1:-}"
+#   Manage temp and cache files and directories.
+_temp() {
+  # _temp_validate_directory <path>
+  _temp_validate_directory() {
+    [[ -n "${1:?}"          ]] &&
+    [[ -d "${1}"            ]] &&
+    [[ "${1}" != "/"        ]] &&
+    [[ "${1}" != "${HOME}"  ]] &&
+    [[ "${1}" != "${PWD}"   ]]
+  }
+
+  local _subcommand="${1:-}"
+
+  case "${_subcommand}" in
+    cache)
+      if [[ "${2:-}" == "clear" ]]
+      then
+        if _temp_validate_directory "${_NB_CACHE_PATH:?}"
+        then
+          rm -r "${_NB_CACHE_PATH:?}"
+          mkdir -p "${_NB_CACHE_PATH}"
+        fi
+      else
+        printf "%s\\n" "${_NB_CACHE_PATH}"
+      fi
+      ;;
+    directory)
+      printf "%s\\n" "${_NB_TEMP_DIRECTORY:-}"
+      ;;
+    file)
+      [[ -z "${2:-}" ]] && return 1 # _exit_1 printf _help "temp"
+      printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${2:-}"
+      ;;
+    cleanup)
+      if _temp_validate_directory "${_NB_TEMP_DIRECTORY:?}"
+      then
+        rm -rf "${_NB_TEMP_DIRECTORY}"
+      fi
+      ;;
+  esac
 }
 
-# Usage: _nb_cleanup_on_exit
-_nb_cleanup_on_exit() {
-  if [[ -n "${_NB_TEMP_DIRECTORY:-}" ]] &&
-     [[ -e "${_NB_TEMP_DIRECTORY}"   ]]
-  then
-    rm -rf "${_NB_TEMP_DIRECTORY}"
-  fi
-}
-
-trap _nb_cleanup_on_exit EXIT
+trap "_temp cleanup" EXIT
 
 ###############################################################################
 # Git
@@ -1284,7 +1305,7 @@ _decrypt_file() {
   _unencrypted_basename="$(printf "%s" "${_basename}" | sed 's/.enc$//')"
 
   local _unencrypted_path
-  _unencrypted_path="$(_tempfile_path "${_unencrypted_basename}")"
+  _unencrypted_path="$(_temp file "${_unencrypted_basename}")"
 
   local _file_command_response
   _file_command_response="$(file "${_encrypted_path}")"
@@ -3287,7 +3308,7 @@ _add() {
       fi
     fi
 
-    _target_path="$(_tempfile_path "${_basename}")"
+    _target_path="$(_temp file "${_basename}")"
   fi
 
   if [[ -n "${_title}" ]]
@@ -4596,7 +4617,7 @@ _edit() {
       if [[ "${_before}" != "${_after}" ]]
       then
         local _temp_encrypted_path=
-        _temp_encrypted_path="$(_tempfile_path "${_basename}").tmp"
+        _temp_encrypted_path="$(_temp file "${_basename}").tmp"
 
         mv "${_encrypted_path}" "${_temp_encrypted_path}"
         _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
@@ -6960,7 +6981,7 @@ _notebooks() {
       mkdir -p "${NB_DIR}/${_name}"
         git -C "${NB_DIR}/${_name}" init 1>/dev/null  &&
         touch "${NB_DIR}/${_name}/.index"             &&
-        _clear_cache                                  &&
+        _temp cache clear                             &&
         _git_checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
     fi
     printf "Added notebook: %s\\n" "$(_highlight "${_name}")"
@@ -7123,7 +7144,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     else
       rm -r -f "${NB_DIR:?}/${_name}"
     fi &&
-      _clear_cache &&
+      _temp cache clear &&
       printf "Notebook deleted: %s\\n" "$(_highlight "${_name}")"
   }
 
@@ -7165,7 +7186,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     _target_path="$(_get_unique_path "${_target_path}")"
 
     cp -R "${NB_DIR}/${_name}" "${_target_path}"  &&
-      _clear_cache                                &&
+      _temp cache clear                           &&
       printf "Exported notebook %s to %s\\n"  \
         "$(_highlight "${_name}")"            \
         "$(_highlight "${_target_path}")"
@@ -7205,7 +7226,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
     _target_path="$(_get_unique_path "${NB_DIR}/${_target_basename}")"
 
     cp -R "${_path}" "${_target_path}"  &&
-      _clear_cache                      &&
+      _temp cache clear                 &&
       _notebooks_add_new                &&
       printf "Imported notebook: %s\\n" \
         "$(_highlight "$(basename "${_target_path}")")"
@@ -7600,7 +7621,8 @@ HEREDOC
       printf "%s\\n" "${_new}" > "${NB_DIR}/.current"
     fi
 
-    _clear_cache
+    _temp cache clear
+
     printf "%s is now named %s\\n" \
       "$(_highlight "${_old}")"    \
       "$(_highlight "${_new}")"
@@ -7663,7 +7685,7 @@ HEREDOC
       then
           git -C "${NB_DIR}/${__notebook_name}" init 1>/dev/null  &&
           touch "${NB_DIR}/${__notebook_name}/.index"             &&
-          _clear_cache                                            &&
+          _temp cache clear                                       &&
           _git_checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
       fi
     done
@@ -10373,6 +10395,7 @@ _SUBCOMMANDS=(
   status
   subcommands
   sync
+  temp
   todos
   u
   update
