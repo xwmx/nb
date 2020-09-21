@@ -27,6 +27,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[11]}: '%s'\\n" "${lines[11]}"
 
   [[ "${status}" -eq 0 ]]
 
@@ -79,7 +80,7 @@ load test_helper
     "${_NB}" add "first.md" --title "one"
     "${_NB}" add "second.md" --title "two"
     "${_NB}" add "third.md" --title "three"
-    _files=($(ls -t "${_NOTEBOOK_PATH}/"))
+    _files=($(ls -t "${NB_DIR}/home/"))
   }
 
   run "${_NB}"
@@ -106,7 +107,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  _files=($(ls "${NB_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
   [[ ${status} -eq 0 ]]
@@ -128,13 +129,13 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
-  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${NB_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
+  [[ "$(cat "${NB_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  grep -q '# Example Domain' "${NB_NOTEBOOK_PATH}"/*
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -142,8 +143,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${NB_NOTEBOOK_PATH}")" == "$(cat "${NB_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Added\                    ]]

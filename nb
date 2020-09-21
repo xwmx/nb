@@ -2472,6 +2472,8 @@ _list_files() {
   local _sort=0
   local _type=
 
+  [[ -z "${_notebook_path:-}" ]] && _notebook_path="${NB_NOTEBOOK_PATH}"
+
   while ((${#}))
   do
     local __arg="${1:-}"
@@ -3577,9 +3579,10 @@ _bookmark() {
         ;;
       *)
         if [[ ! "${_subcommand:-}" =~ ^list$|^search$ ]] &&
-           [[ -z "${_url:-}"                          ]]
+           [[ -z "${_url:-}"                          ]] &&
+           _string_is_url "${__arg}"
         then
-          _url="${__arg:-}"
+          _url="${__arg}"
         elif [[ -z "${_subcommand:-}"               ]] ||
              [[ "${_subcommand}" =~ ^list$|^search$ ]]
         then
@@ -3790,24 +3793,18 @@ Check the Wayback Machine for an archived version instead? [y/N] " __yn
   # `bookmark`
   if [[ -z "${_url:-}" ]]
   then
-    local _header=
-    _header="Add: $(_highlight "${_ME} <url>")"
-    _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
+    if [[ -z "${_arguments[*]:-}" ]]
+    then
+      local _header=
+      _header="Add: $(_highlight "${_ME} <url>")"
+      _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
 cat <<HEREDOC
 ${_header}
 $(_highlight_secondary "------------------------------------")
 HEREDOC
-    _bookmark list
-    return 0
-  elif [[ ! "${_url}" =~ ^ftp|^http|^file|^mailto|^news|^telnet|^gopher ]]
-  then
-    if [[ -n "${_arguments[*]:-}" ]]
-    then
-      _arguments=("${_url}" "${_arguments[@]:-}")
-    else
-      _arguments=("${_url}")
     fi
-    _bookmark list "${_arguments[@]}"
+
+    _bookmark list "${_arguments[@]:-}"
     return 0
   fi
 
@@ -5665,7 +5662,7 @@ _init() {
         _git_checkpoint "${NB_DIR}/home" "[nb] Initialize"
     fi
 
-    printf "home\\n" > "${NB_DIR}/.current"
+    _notebooks use "home" 1>/dev/null
 
     printf "Created %s notebook.\\n" "$(_highlight "home")"
   }
@@ -5817,7 +5814,7 @@ _list() {
   local _print_excerpt=0
   local _print_indicators=1
   local _reverse=0
-  local _selection
+  local _selection=
   local _sort=0
   local _type=
   local _use_pager=0
@@ -5894,6 +5891,7 @@ _list() {
   done
 
   local _selection_basename=
+  local _selection_identifier=
 
   if [[ -n "${_selection:-}" ]]
   then
@@ -5901,8 +5899,14 @@ _list() {
     _selection_identifier="$(_get_selection_identifier "${_selection}")"
   fi
 
-  local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection:-}" --path)"
+  local _notebook_path=
+
+  if [[ "${_selection:-}" =~ : ]]
+  then
+    _notebook_path="$(_get_notebook "${_selection:-}" --path)"
+  else
+    _notebook_path="$(_get_notebook --path)"
+  fi
 
   local _notebook_display_name=
   _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
@@ -5926,7 +5930,7 @@ _list() {
 
   # Use code block to capture all output for piping to pager.
   {
-    if ! ((_filenames_count))
+    if ! ((_filenames_count)) && [[ -z "${_selection_identifier:-}" ]]
     then
       if ((_hard_empty))
       then
@@ -6232,7 +6236,7 @@ HEREDOC
       if ! ((_counter)) && [[ -n "${_selection:-}" ]]
       then
         _return_1 \
-          printf "Note not found: %s\\n" \ "$(_highlight "${_selection}")"
+          printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
       fi
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
@@ -6628,8 +6632,7 @@ _ls() {
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
       *:*)
-        # Skip selection arguments.
-        :
+        _args+=("$(_get_selection_identifier "${__arg}")")
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
@@ -6667,7 +6670,7 @@ _ls() {
         )" || :
       fi
 
-      if [[ -n "${_notebook_name:-}" ]] && ! ((_SELECTION_SCOPED))
+      if [[ -n "${_notebook_name:-}" ]] && ! _notebooks current --selected
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
           _NOTEBOOK_NAME="${_notebook_name}"            \
@@ -7639,6 +7642,10 @@ HEREDOC
     if [[ -d "${NB_DIR}/${_name}/.git" ]]
     then
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
+
+      _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_name}"
+      NB_NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
+
       printf "Now using: %s\\n" "$(_highlight "${_name}")"
     else
       _exit_1 printf "Not found: %s\\n" "$(_highlight "${_name}")"
@@ -10652,7 +10659,7 @@ _get_notebook_identifier() { _get_notebook "${@}" --display-name; }
 # Selection notebook is now handled in option parsing and through functions..
 _set_selection_notebook() {
   if [[ "${1:-}" =~ : ]]
-  then
+  then # TODO: Remove?
     local _maybe_selection_notebook="${__opt%%:*}"
 
     if [[ -n "${_maybe_selection_notebook:-}" ]]
@@ -10660,18 +10667,23 @@ _set_selection_notebook() {
       if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
+        _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
         _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
         _SELECTION_SCOPED=1
       elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
            [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
       then
         NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+        _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
         _NOTEBOOK_NAME="local"
         _SELECTION_SCOPED=1
       else
         return 1
       fi
     fi
+  elif [[ "${_NOTEBOOK_PATH:-}" != "${NB_NOTEBOOK_PATH}" ]]
+  then
+    _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
   fi
 }
 
@@ -10680,7 +10692,7 @@ _set_selection_notebook() {
 # Renamed.
 #
 # shellcheck disable=SC2034
-_NOTEBOOK_PATH="${_NOTEBOOK_PATH:-"${NB_NOTEBOOK_PATH}"}"
+export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-"${NB_NOTEBOOK_PATH}"}"
 
 # $_SCOPE
 #
