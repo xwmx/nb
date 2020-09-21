@@ -157,4 +157,119 @@ _setup_notebooks() {
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
+
+}
+
+# --global ####################################################################
+
+@test "\`notebooks current --global\` exits with 0 and prints the current global notebook name." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current --global
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ one ]]
+}
+
+@test "\`notebooks current --global --path\` exits with 0 and prints the notebook path." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current --global --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" =~ ${NB_DIR}/one ]]
+}
+
+@test "\`notebooks current --global\` in a local notebook exits with 0 and prints the global notebook." {
+  {
+    _setup_notebooks
+
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+
+    mkdir -p "${_TMP_DIR}/example"
+
+    cd "${_TMP_DIR}/example"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+  }
+
+  run "${_NB}" notebooks current --global
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ one ]]
+}
+
+@test "\`notebooks current --global --path\` in a local notebook exits with 0 and prints the local notebook path." {
+  {
+    _setup_notebooks
+
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+
+    mkdir -p "${_TMP_DIR}/example"
+
+    cd "${_TMP_DIR}/example"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
+
+    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
+  }
+
+  run "${_NB}" notebooks current --global --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_TMP_DIR}: '%s'\\n" "${_TMP_DIR}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" =~ ${NB_DIR}/one ]]
+}
+
+@test "\`notebooks current --global\` with selected exits with 0 and prints the global notebook name." {
+  {
+    _setup_notebooks
+
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" home:notebooks current --global
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ one ]]
+}
+
+@test "\`notebooks current --global --path\` with selected exits with 0 and prints the scoped notebook path." {
+  {
+    _setup_notebooks
+
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" home:notebooks current --global --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" =~ ${NB_DIR}/one ]]
+
 }

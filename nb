@@ -2995,7 +2995,7 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--path | --selected]
+  ${_ME} notebooks current [--global] [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6745,7 +6745,7 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--path | --selected]
+  ${_ME} notebooks current [--global] [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6754,7 +6754,7 @@ Usage:
 
 Options:
   --archived    Only list archived notebooks.
-  --global      List global notebooks.
+  --global      List global notebooks or the notebook set globally with \`use\`.
   --local       List local notebook.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
@@ -6841,21 +6841,36 @@ _notebooks() {
   # _notebooks_current()
   #
   # Usage:
-  #   _notebooks_current [--path | --scoped]
+  #   _notebooks_current [--global] [--path | --scoped]
   _notebooks_current() {
+    local _print_global=0
     local _print_path=0
     local _return_selected=0
 
-    case "${1:-}" in
-      --path*)
-        _print_path=1
-        ;;
-      --scoped|--selected)
-        _return_selected=1
-        ;;
-    esac
+    for __arg in "${@:-}"
+    do
+      case "${__arg:-}" in
+        --global)
+          _print_global=1
+          ;;
+        --path*)
+          _print_path=1
+          ;;
+        --scoped|--selected)
+          _return_selected=1
+          ;;
+      esac
+    done
 
-    if ((_print_path))
+    if ((_print_global))
+    then
+      if ((_print_path))
+      then
+        printf "%s\\n" "${_GLOBAL_NOTEBOOK_PATH}"
+      else
+        basename "${_GLOBAL_NOTEBOOK_PATH}"
+      fi
+    elif ((_print_path))
     then
       printf "%s\\n" "${NB_NOTEBOOK_PATH}"
     elif ((_return_selected))
@@ -7526,7 +7541,7 @@ HEREDOC
       _notebooks_init "${_name:-}" "${3:-}"
       ;;
     current)
-      _notebooks_current "${_name:-}"
+      _notebooks_current "${@:2}"
       ;;
     delete)
       _notebooks_delete "${_name:-}" "${3:-}"
@@ -8503,7 +8518,8 @@ _search() {
             _file_info_color="${_filename_color}"
           fi
 
-          if ((_all)) || ((_SELECTION_SCOPED))
+          if ((_all)) ||
+             [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
           then
             local _notebook_display_name=
             _notebook_display_name="$(_get_notebook "${__notebook_path}" --display-name)"
