@@ -1426,7 +1426,10 @@ _edit_file() {
     return 1
   fi
 
-  cd "${NB_NOTEBOOK_PATH}" || return 1
+  local _current_notebook_path
+  _current_notebook_path="$(_notebooks current --path)"
+
+  cd "${_current_notebook_path}" || return 1
 
   if _file_is_encrypted "${_file_path}"
   then
@@ -10573,17 +10576,17 @@ _main() {
 
       if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
       then
-        if _git_index_is_dirty
+        if _git_index_is_dirty "${NB_NOTEBOOK_PATH}"
         then
           _index reconcile
 
-          if _git_should_autosync
+          if _git_should_autosync "${NB_NOTEBOOK_PATH}"
           then
             "${_MY_PATH}" sync
           else
             _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Commit" --spinner
           fi
-        elif _git_should_autosync
+        elif _git_should_autosync "${NB_NOTEBOOK_PATH}"
         then
           ("${_MY_PATH}" sync &>/dev/null) &
         fi
