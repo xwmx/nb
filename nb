@@ -10427,9 +10427,10 @@ do
               if _string_is_url "${__maybe_identifier_or_subcommand_or_url}"
               then
                 _SUBCOMMAND="bookmark"
+                _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
+              else
+                _ARGUMENTS+=("${__opt}")
               fi
-
-              _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
             fi
           fi
         fi
