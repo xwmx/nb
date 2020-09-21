@@ -10728,25 +10728,6 @@ _main() {
     _SUBCOMMAND="ls"
   fi
 
-  if [[ -n "${_NOTEBOOK_NAME}" ]]
-  then
-    if [[ "${_NOTEBOOK_NAME}" == "local"  ]] &&
-       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
-    then
-      NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-    else
-      NB_NOTEBOOK_PATH="${NB_DIR}/${_NOTEBOOK_NAME}"
-    fi
-  else
-    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
-       [[ "${_LOCAL_NOTEBOOK_PATH}" == "${NB_NOTEBOOK_PATH}"  ]]
-    then
-      _NOTEBOOK_NAME="local"
-    else
-      _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
-    fi
-  fi
-
   case "${_SUBCOMMAND}" in
     init|sync)
       _git_required
