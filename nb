@@ -2994,7 +2994,7 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--global] [--path | --selected]
+  ${_ME} notebooks current [--global | --local] [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6748,7 +6748,7 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--global] [--path | --selected]
+  ${_ME} notebooks current [--global | --local] [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6844,9 +6844,10 @@ _notebooks() {
   # _notebooks_current()
   #
   # Usage:
-  #   _notebooks_current [--global] [--path | --scoped]
+  #   _notebooks_current [--global | --local] [--path | --scoped]
   _notebooks_current() {
     local _print_global=0
+    local _print_local=0
     local _print_path=0
     local _return_selected=0
 
@@ -6855,6 +6856,9 @@ _notebooks() {
       case "${__arg:-}" in
         --global)
           _print_global=1
+          ;;
+        --local)
+          _print_local=1
           ;;
         --path*)
           _print_path=1
@@ -6872,6 +6876,17 @@ _notebooks() {
         printf "%s\\n" "${_GLOBAL_NOTEBOOK_PATH}"
       else
         basename "${_GLOBAL_NOTEBOOK_PATH}"
+      fi
+    elif ((_print_local))
+    then
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+      then
+        if ((_print_path))
+        then
+          printf "%s\\n" "${_LOCAL_NOTEBOOK_PATH}"
+        else
+          printf "local"
+        fi
       fi
     elif ((_print_path))
     then
