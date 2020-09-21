@@ -1029,9 +1029,9 @@ HEREDOC
     esac
   done
 
-  if [[ -z "${_target_directory}" ]]
+  if [[ -z "${_target_directory:-}" ]]
   then
-    _target_directory="${NB_NOTEBOOK_PATH}"
+    _target_directory="$(_notebooks current --path)"
   fi
 
   if [[ -z "${_message}" ]]
@@ -1074,9 +1074,9 @@ _git_index_is_dirty() {
 
   local _target_directory="${1:-}"
 
-  if [[ -z "${_target_directory}" ]]
+  if [[ -z "${_target_directory:-}" ]]
   then
-    _target_directory="${NB_NOTEBOOK_PATH}"
+    _exit_1 printf "Usage: _git_index_is_dirty <target directory>\\n"
   fi
 
   [[ -n "$(git -C "${_target_directory}" status --porcelain)" ]]
@@ -1085,7 +1085,7 @@ _git_index_is_dirty() {
 # _git_out_of_sync()
 #
 # Usage:
-#   _git_out_of_sync <target-directory>
+#   _git_out_of_sync <target directory>
 #
 # Exit / Error Status:
 #   0 (success, true)  If <target diectory> is out of sync with the remote.
@@ -1095,9 +1095,9 @@ _git_out_of_sync() {
 
   local _target_directory="${1:-}"
 
-  if [[ -z "${_target_directory}" ]]
+  if [[ -z "${_target_directory:-}" ]]
   then
-    _target_directory="${NB_NOTEBOOK_PATH}"
+    _exit_1 printf "Usage: _git_out_of_sync <target directory>\\n"
   fi
 
   git -C "${_target_directory}" status | grep -q 'diverged'
@@ -1186,7 +1186,7 @@ _git_should_autosync() {
 
   if [[ -z "${_target_directory}" ]]
   then
-    _target_directory="${NB_NOTEBOOK_PATH}"
+    _exit_1 printf "Usage: _git_should_autosync <target directory>\\n"
   fi
 
   if ! ((NB_AUTO_SYNC))
