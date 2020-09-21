@@ -1913,7 +1913,7 @@ _get_http_status() {
 #
 # Description:
 #   Determine the basename of the file that is identified by the given <id>,
-#   <filename>, <path>, or <title> and is in `$NB_NOTEBOOK_PATH` or a
+#   <filename>, <path>, or <title> and is in the current notebook or a
 #   notebook specified with a colon prefix.
 #
 #   Examples:
@@ -1925,7 +1925,10 @@ _get_selection_basename() {
   local _basename=
   local _identifier=
   local _selection="${1:-}"
-  local _selection_notebook_path="${NB_NOTEBOOK_PATH}"
+
+  local _selection_notebook_path
+  _selection_notebook_path="$(_notebooks current --path)"
+
   if [[ -z "${_selection}" ]]
   then
     _basename=
@@ -2060,10 +2063,10 @@ _get_notebook() {
   fi
 
   if ((_context))
-  then # fall back to `$NB_NOTEBOOK_PATH`
+  then # fall back to the current notebook.
     if [[ -z "${_notebook_path:-}" ]]
     then
-      _notebook_path="${NB_NOTEBOOK_PATH}"
+      _notebook_path="$(_notebooks current --path)"
     fi
 
     if [[ -z "${_notebook_name:-}" ]]
@@ -2255,7 +2258,7 @@ _get_unique_basename() {
 
   if [[ -z "${_directory:-}" ]]
   then
-    _directory="${NB_NOTEBOOK_PATH}"
+    _directory="$(_notebooks current --path)"
   fi
 
   if [[ -z "${_file_name}" ]]
@@ -3163,7 +3166,6 @@ _add() {
   local _filename=
   local _file_type="${NB_DEFAULT_EXTENSION}"
   local _maybe_content_or_filename=
-  local _notebook_path="${NB_NOTEBOOK_PATH}"
   local _password=
   local _title=
 
@@ -3251,6 +3253,9 @@ _add() {
   else
     _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
   fi
+
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
 
   _target_path="${_notebook_path}/${_basename}"
 
@@ -5067,7 +5072,11 @@ _import() {
   #   _import_get_valid_basename <basename>
   _import_get_valid_basename() {
     local _target_basename="${1:-}"
-    if [[ -e "${NB_NOTEBOOK_PATH}/${_target_basename}" ]]
+
+    local _current_notebook_path
+    _current_notebook_path="$(_notebooks current --path)"
+
+    if [[ -e "${_current_notebook_path}/${_target_basename}" ]]
     then
       _target_basename="$(_get_unique_basename "${_target_basename}")"
     fi
