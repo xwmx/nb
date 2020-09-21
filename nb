@@ -739,7 +739,15 @@ export _GLOBAL_NOTEBOOK_PATH=
 # The path of the local notebook, if one is found. The current working
 # directory and all parents are searched.
 export _LOCAL_NOTEBOOK_PATH=
-__set_notebook_path() {
+
+# __set_notebook_paths()
+#
+# Usage:
+#   __set_notebook_paths
+#
+# Description:
+#   Set the the notebook path variables to reflect the current environment.
+__set_notebook_paths() {
   __set_local_notebook_path() {
     if [[ "${PWD}" == "/" ]]
     then
@@ -776,7 +784,7 @@ __set_notebook_path() {
   else
     NB_NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
   fi
-}; __set_notebook_path
+}; __set_notebook_paths
 
 # Cache & Temp ################################################### Cache & Temp
 
