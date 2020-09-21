@@ -7147,6 +7147,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
       exit 1
     fi
 
+    _current_notebook_name="$(_get_notebook --name)"
+
     if [[ -z "${_query_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NB_DIR}"))
@@ -7191,8 +7193,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
             if ((_only_paths))
             then
               _notebook_line="${_notebook_paths[i]}"
-            elif ((_notebook_color_enabled))          &&
-                 [[ "${_NOTEBOOK_NAME}" == "local" ]]
+            elif ((_notebook_color_enabled))                  &&
+                 [[ "${_current_notebook_name}" == "local" ]]
             then
               _notebook_line="$(_highlight "local" --underline)"
             else
@@ -7215,7 +7217,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
           then
             _notebook_line="${_notebook_names[i]}"
           else
-            if [[ "${_NOTEBOOK_NAME}" == "${_notebook_names[i]}" ]]
+            if [[ "${_current_notebook_name}" == "${_notebook_names[i]}" ]]
             then # it's the current repository.
               _notebook_line="$(_highlight "${_notebook_names[i]}")"
 
