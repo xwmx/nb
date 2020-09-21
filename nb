@@ -10448,11 +10448,11 @@ do
   esac
 done
 
-_debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
-_debug printf "\${_NOTEBOOK_NAME}: '%s'\\n"       "${_NOTEBOOK_NAME}"
-_debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
-_debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
-_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
+# _debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
+# _debug printf "\${_NOTEBOOK_NAME}: '%s'\\n"       "${_NOTEBOOK_NAME}"
+# _debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
+# _debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
+# _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # Legacy Functions and Variables
@@ -10527,11 +10527,6 @@ _SCOPED="${_SELECTION_SCOPED}"
 #   Primary entry point for the program logic. Call this function at the end
 #   of the script after everything has been defined.
 _main() {
-  _debug printf "_main() >> start\\n"
-  _debug printf "_main() \${@}: '%s'\\n"            "${@}"
-  _debug printf "_main() \${_SUBCOMMAND}: '%s'\\n"  "${_SUBCOMMAND}"
-
-  # Set `$_SUBCOMMAND` if it's still blank.
   if [[ -z "${_SUBCOMMAND:-}" ]]
   then
     _SUBCOMMAND="ls"
