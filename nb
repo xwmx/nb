@@ -3336,7 +3336,7 @@ _add() {
 
     local _maybe_scoped_basename="${_basename}"
 
-    if ((_SELECTION_SCOPED))
+    if _notebooks current --selected
     then
       local _notebook_display_name
       _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
@@ -4388,7 +4388,7 @@ _delete() {
 
   local _maybe_scoped_basename="${_basename}"
 
-  if ((_SELECTION_SCOPED))
+  if _notebooks current --selected
   then
     local _notebook_display_name
     _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
@@ -4625,7 +4625,7 @@ _edit() {
 
       local _maybe_scoped_basename="${_basename}"
 
-      if ((_SELECTION_SCOPED))
+      if _notebooks current --selected
       then
         local _notebook_display_name
         _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
