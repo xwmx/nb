@@ -9936,6 +9936,7 @@ _sync() {
   _debug printf "_sync() \${_notebooks[*]:-}: '%s'\\n" "${_notebooks[*]:-}"
 
   printf "Syncing: "
+
   for __notebook in "${_notebooks[@]:-}"
   do
     printf "%s..." "${__notebook}"
