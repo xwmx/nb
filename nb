@@ -5796,7 +5796,7 @@ _list() {
 
   local _filenames_count="${#_filenames[@]}"
 
-  if ((_SELECTION_SCOPED))
+  if _notebooks current --selected
   then
     _maybe_scope="$(_get_notebook "${_notebook_path}" --display-name):"
     _maybe_scope_padded_right="${_maybe_scope} "
@@ -6875,7 +6875,6 @@ _notebooks() {
     elif ((_return_selected))
     then
       [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]]
-      printf ""
     else
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
          [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
