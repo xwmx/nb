@@ -2465,6 +2465,7 @@ _line_wrap_on() {
 # Description:
 #   List files in the current notebook.
 _list_files() {
+  local _notebook_path=
   local _reverse=0
   local _sort=0
   local _type=
@@ -2488,6 +2489,11 @@ _list_files() {
           shift
         fi
         ;;
+      *)
+        if [[ -z "${_notebook_path:-}" ]]
+        then
+          _notebook_path="${__arg}"
+        fi
     esac
 
     shift
@@ -2495,9 +2501,9 @@ _list_files() {
 
   if ((_sort))
   then
-    cat "${_NOTEBOOK_PATH}/.index"
+    cat "${_notebook_path}/.index"
   else
-    ls -t -1 "${_NOTEBOOK_PATH}"
+    ls -t -1 "${_notebook_path}"
   fi | {
     if ((_reverse))
     then
@@ -2530,7 +2536,7 @@ _list_files() {
       then
         while read -r __line
         do
-          if [[ -d "${_NOTEBOOK_PATH}/${__line}" ]]
+          if [[ -d "${_notebook_path}/${__line}" ]]
           then
             printf "%s\\n" "${__line}"
           fi
@@ -5813,6 +5819,7 @@ _list() {
   if [[ -n "${_selection:-}" ]]
   then
     _selection_basename="$(_get_selection_basename "${_selection}")"
+    _selection_identifier="$(_get_selection_identifier "${_selection}")"
   fi
 
   local _notebook_path
@@ -5820,10 +5827,6 @@ _list() {
 
   local _notebook_display_name=
   _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
-
-  _debug printf \
-    "list() \${_selection_basename}: '%s'\\n" \
-    "${_selection_basename}"
 
   local _list_files_options=("${_notebook_path}")
   local _filenames=()
@@ -5902,7 +5905,7 @@ HEREDOC
 
         local _maybe_title=
 
-        if [[ -n "${_selection:-}" ]]
+        if [[ -n "${_selection_identifier:-}" ]]
         then
           # If a valid <selection> has been specified, skip the rest of the
           # loop unless the <selection> basename matches the current one.
@@ -5916,12 +5919,13 @@ HEREDOC
             # Turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
-            if [[ "${__basename:-}" =~ ${_selection} ]]
+            if [[ "${__basename:-}" =~ ${_selection_identifier} ]]
             then
               : # include the note in the list
             else
               _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
-              if [[ "${_maybe_title:-}" =~ ${_selection} ]]
+
+              if [[ "${_maybe_title:-}" =~ ${_selection_identifier} ]]
               then
                 : # include the note in the list
               else
@@ -6009,7 +6013,10 @@ HEREDOC
           # used for length calculations.
           local _item_identifier=
           local _max_identifier=
-          _item_identifier="$(_index get_id "${__basename}")"
+
+          _item_identifier="$(
+            _NOTEBOOK_PATH="${_notebook_path}" _index get_id "${__basename}"
+          )"
 
           if ((_SELECTION_SCOPED))
           then
@@ -10480,54 +10487,47 @@ do
         _ARGUMENTS+=("${__opt}")
       else
         __maybe_identifier_or_subcommand_or_url="${__opt#*:}"
+        __maybe_selection_notebook="${__opt%%:*}"
 
-        if [[ -n "${_SUBCOMMAND:-}"                              ]] &&
-           [[ -z "${__maybe_identifier_or_subcommand_or_url:-}"  ]]
+        if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
+        then
+          _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
+          _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
+          _SELECTION_SCOPED=1
+        elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
+             [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
+        then
+          _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+          _NOTEBOOK_NAME="local"
+          _SELECTION_SCOPED=1
+        elif [[ -n "${_SUBCOMMAND:-}" ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
-          __maybe_selection_notebook="${__opt%%:*}"
+          _exit_1 printf \
+            "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
+        fi
 
-          if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
+        if ((_SELECTION_SCOPED))
+        then
+          if [[ -n "${__maybe_identifier_or_subcommand_or_url:-}" ]]
           then
-            _NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
-            _NOTEBOOK_NAME="$(basename "${_NOTEBOOK_PATH}")"
-            _SELECTION_SCOPED=1
-          elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
-               [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
-          then
-            _NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-            _NOTEBOOK_NAME="local"
-            _SELECTION_SCOPED=1
-          elif [[ -n "${_SUBCOMMAND:-}" ]]
-          then
-            _ARGUMENTS+=("${__opt}")
-          else
-            _exit_1 printf \
-              "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
-          fi
-
-          if ((_SELECTION_SCOPED))
-          then
-            if [[ -n "${__maybe_identifier_or_subcommand_or_url:-}" ]]
+            if _is_valid_subcommand "${__maybe_identifier_or_subcommand_or_url}"
             then
-              if _is_valid_subcommand "${__maybe_identifier_or_subcommand_or_url}"
+              _SUBCOMMAND="${__maybe_identifier_or_subcommand_or_url}"
+            else
+              if _string_is_url "${__maybe_identifier_or_subcommand_or_url}"
               then
-                _SUBCOMMAND="${__maybe_identifier_or_subcommand_or_url}"
+                _SUBCOMMAND="bookmark"
+              fi
+
+              _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
+
+              if ((_SELECTION_SCOPED))
+              then
+                _SELECTION+=("${_NOTEBOOK_NAME}:${__maybe_identifier_or_subcommand_or_url}")
               else
-                if _string_is_url "${__maybe_identifier_or_subcommand_or_url}"
-                then
-                  _SUBCOMMAND="bookmark"
-                fi
-
-                _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
-
-                if ((_SELECTION_SCOPED))
-                then
-                  _SELECTION+=("${_NOTEBOOK_NAME}:${__maybe_identifier_or_subcommand_or_url}")
-                else
-                  _SELECTION+=("${__maybe_identifier_or_subcommand_or_url}")
-                fi
+                _SELECTION+=("${__maybe_identifier_or_subcommand_or_url}")
               fi
             fi
           fi
