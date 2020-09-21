@@ -9612,7 +9612,7 @@ _show() {
       --path)
         _print_path=1
         ;;
-      --filename)
+      --filename|--basename)
         _print_filename=1
         ;;
       --id|--index)

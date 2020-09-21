@@ -384,6 +384,23 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
+@test "\`show <id> --basename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --basename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
 # `show <id> --title` #########################################################
 
 @test "\`show <id> --title\` exits with status 0 and prints note filename." {
