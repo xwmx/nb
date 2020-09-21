@@ -6671,7 +6671,6 @@ _ls() {
       if [[ -n "${_notebook_name:-}" ]] && ! _notebooks current --selected
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
-          _NOTEBOOK_NAME="${_notebook_name}"            \
           _ls "${_args[@]:1}"
         return 0
       else
@@ -7669,8 +7668,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if [[ "${_subcommand:-}" != "current"     ]] ||
-     [[ "${_name:-}"       != "--selected"  ]]
+  if [[ "${_subcommand:-}" != "current" ]]
   then
     _notebooks_add_new
   fi
@@ -9672,7 +9670,6 @@ _show() {
     if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
     then
       NB_NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
-        _NOTEBOOK_NAME="${_maybe_notebook}"           \
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
@@ -10308,7 +10305,6 @@ unset options
 
 # Initialize program option variables.
 _ARGUMENTS=()
-_NOTEBOOK_NAME=
 _SUBCOMMAND=
 _USE_DEBUG=0
 
@@ -10573,12 +10569,10 @@ do
         if [[ -d "${NB_DIR}/${__maybe_selection_notebook:-}/.git"   ]]
         then
           NB_NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
-          _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
         elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
              [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
         then
           NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-          _NOTEBOOK_NAME="local"
         elif [[ -n "${_SUBCOMMAND:-}" ]]
         then
           _ARGUMENTS+=("${__opt}")
@@ -10635,7 +10629,6 @@ do
 done
 
 # _debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
-# _debug printf "\${_NOTEBOOK_NAME}: '%s'\\n"       "${_NOTEBOOK_NAME}"
 # _debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
 # _debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
 # _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
@@ -10665,13 +10658,11 @@ _set_selection_notebook() {
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${__maybe_selection_notebook}"
         _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
-        _NOTEBOOK_NAME="$(basename "${NB_NOTEBOOK_PATH}")"
       elif [[ "${__maybe_selection_notebook:-}" == "local"        ]] &&
            [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]]
       then
         NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
         _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
-        _NOTEBOOK_NAME="local"
       else
         return 1
       fi
@@ -10694,7 +10685,7 @@ export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-"${NB_NOTEBOOK_PATH}"}"
 # Renamed.
 #
 # shellcheck disable=SC2034
-_SCOPE="${_NOTEBOOK_NAME}"
+_SCOPE="$(_notebooks current --name)"
 
 # $_SCOPED
 #
