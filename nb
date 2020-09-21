@@ -7300,8 +7300,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
   #   _notebooks_notebook <subcommand> <name>
   _notebooks_notebook() {
     local _subcommand="${1:-}"
-
     local _notebook_name="${2:-}"
+
     if [[ -n "${_notebook_name:-}" ]]
     then
       if [[ "${_notebook_name}" =~ :$ ]]
@@ -7309,14 +7309,21 @@ Please type $(_highlight "${_name}") to confirm: " __response
         _notebook_name=$(printf "%s\\n" "${_notebook_name}" | cut -f 1 -d ":")
       fi
 
-      NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"
+      local _notebook_path
+      _notebook_path="$(_notebooks "${_notebook_name}" --path)"
     else
       _notebook_name="$(_notebooks current)"
+      _notebook_path="$(_notebooks current --path)"
     fi
 
     if [[ -z "${_notebook_name:-}" ]]
     then
       _exit_1 printf "Unable to determine notebook name.\\n"
+    fi
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _exit_1 printf "Unable to determine notebook path.\\n"
     fi
 
     if [[ -z "${_subcommand}" ]]
@@ -7329,10 +7336,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       if _command_exists "xdg-open"
       then
-        xdg-open "${NB_NOTEBOOK_PATH}"
+        xdg-open "${_notebook_path}"
       elif _command_exists "open"
       then
-        open "${NB_NOTEBOOK_PATH}"
+        open "${_notebook_path}"
       else
         _exit_1 printf \
           "%s doesn't know how to open directories on your system.\\n" \
@@ -7342,27 +7349,27 @@ Please type $(_highlight "${_name}") to confirm: " __response
     then
       if _command_exists "ranger"
       then
-        ranger "${NB_NOTEBOOK_PATH}"
+        ranger "${_notebook_path}"
       elif _command_exists "mc"
       then
-        mc "${NB_NOTEBOOK_PATH}"
+        mc "${_notebook_path}"
       elif _command_exists "exa"
       then
-        exa -lah --git "${NB_NOTEBOOK_PATH}"
+        exa -lah --git "${_notebook_path}"
       else
         # gnu || bsd
-        ls -lah --color=always "${NB_NOTEBOOK_PATH}" 2>/dev/null ||
-          ls -lah -G "${NB_NOTEBOOK_PATH}"
+        ls -lah --color=always "${_notebook_path}" 2>/dev/null ||
+          ls -lah -G "${_notebook_path}"
       fi
     else
-      local _dotfile_path="${NB_NOTEBOOK_PATH}/.archived"
+      local _dotfile_path="${_notebook_path}/.archived"
 
       if [[ "${_subcommand}" == "archive" ]]
       then
         if [[ ! -e "${_dotfile_path}" ]]
         then
           touch "${_dotfile_path}" &&
-            _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Archived"
+            _git_checkpoint "${_notebook_path}" "[nb] Archived"
         fi
 
         printf "%s archived.\\n" "$(_highlight "${_notebook_name}")"
@@ -7379,7 +7386,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         if [[ -e "${_dotfile_path}" ]]
         then
           rm "${_dotfile_path}" &&
-            _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Unarchived"
+            _git_checkpoint "${_notebook_path}" "[nb] Unarchived"
         fi
 
         printf "%s unarchived.\\n" "$(_highlight "${_notebook_name}")"
@@ -10411,8 +10418,10 @@ do
 
         if ((_SELECTION_SCOPED))
         then
-          if [[ -n "${__maybe_identifier_or_subcommand_or_url:-}" ]]
+          if [[ -z "${__maybe_identifier_or_subcommand_or_url:-}" ]]
           then
+            _ARGUMENTS+=("${__opt}")
+          else
             if _is_valid_subcommand "${__maybe_identifier_or_subcommand_or_url}"
             then
               _SUBCOMMAND="${__maybe_identifier_or_subcommand_or_url}"
