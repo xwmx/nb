@@ -2995,7 +2995,7 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--path]
+  ${_ME} notebooks current [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6745,7 +6745,7 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--path]
+  ${_ME} notebooks current [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6760,6 +6760,8 @@ Options:
   --names       Only print each notebook's name.
   --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
+  --selected    Exit with 0 if the current notebook differs from the global
+                notebook set with \`use\`, or otherwise exits with 1.
   --unarchived  Only list unarchived notebooks.
 
 Subcommands:
@@ -6839,17 +6841,27 @@ _notebooks() {
   # _notebooks_current()
   #
   # Usage:
-  #   _notebooks_current --path
+  #   _notebooks_current [--path | --scoped]
   _notebooks_current() {
-    local _path=0
-    if [[ "${1:-}" == "--path" ]]
-    then
-      _path=1
-    fi
+    local _print_path=0
+    local _return_selected=0
 
-    if ((_path))
+    case "${1:-}" in
+      --path*)
+        _print_path=1
+        ;;
+      --scoped|--selected)
+        _return_selected=1
+        ;;
+    esac
+
+    if ((_print_path))
     then
       printf "%s\\n" "${NB_NOTEBOOK_PATH}"
+    elif ((_return_selected))
+    then
+      [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]]
+      printf ""
     else
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
          [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]

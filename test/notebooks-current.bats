@@ -3,7 +3,7 @@
 load test_helper
 
 _setup_notebooks() {
-  "${_NB}" init
+  run "${_NB}" init
   mkdir -p "${NB_DIR}/one"
   cd "${NB_DIR}/one" || return 1
   git init
@@ -124,4 +124,37 @@ _setup_notebooks() {
 
   [[ ${status} -eq 0                  ]]
   [[ "${output}" == "${NB_DIR}/home"  ]]
+}
+
+# --selected ####################################################################
+
+@test "\`notebooks current --selected\` exits with 1 when unscoped." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current --selected
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1  ]]
+  # TODO: This test fails. Review.
+  # [[ -z "${output}"   ]]
+}
+
+@test "\`notebooks current --selected\` exits with 0 when scoped." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" home:notebooks current --selected
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
 }

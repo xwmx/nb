@@ -2494,7 +2494,7 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--path]
+  nb notebooks current [--path | --selected]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
@@ -3168,7 +3168,7 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--path]
+  nb notebooks current [--path | --selected]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
@@ -3183,6 +3183,8 @@ Options:
   --names       Only print each notebook's name.
   --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
+  --selected    Exit with 0 if the current notebook differs from the global
+                notebook set with `use`, or otherwise exits with 1.
   --unarchived  Only list unarchived notebooks.
 
 Subcommands:
