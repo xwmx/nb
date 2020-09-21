@@ -1223,15 +1223,6 @@ _git_should_autosync() {
   _current_timestamp="$(date +%s)"
 
   _diff=$((_current_timestamp-_last_fetch_timestamp))
-  _debug printf \
-    "_git_should_sync() \${_last_fetch_timestamp}: %s\\n" \
-    "${_last_fetch_timestamp}"
-  _debug printf \
-    "_git_should_sync() \${_current_timestamp}: %s\\n" \
-    "${_current_timestamp}"
-  _debug printf \
-    "_git_should_sync() \${_diff}: %s\\n" \
-    "${_diff}"
 
   [[ "${_diff}" -gt 300 ]]
 }
@@ -3320,10 +3311,6 @@ _add() {
     _target_path="${_encrypted_path}"
   fi
 
-  _debug printf \
-    "_add() \`\${_target_path}\`: '%s'\\n" \
-    "${_target_path:-}"
-
   if [[ -e "${_target_path}" ]]
   then
     _index add "${_basename}"
@@ -3441,8 +3428,6 @@ Examples:
 Shortcut Alias: \`b\`
 HEREDOC
 _bookmark() {
-  _debug printf "_bookmark() \${@:-}: '%s'\\n" "${@:-}"
-
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
     _target_url="${1:-}"
@@ -3592,8 +3577,6 @@ _bookmark() {
 
     shift
   done
-
-  _debug printf "_bookmark() \${_arguments[@]:-}: '%s'\\n" "${_arguments[@]:-}"
 
   # `bookmark list`
   if [[ "${_subcommand}" == "list" ]]
@@ -4527,7 +4510,6 @@ _edit() {
     shift
   done
 
-  _debug printf "_edit() \${_selection}: %s\\n" "${_selection:-}"
   if [[ -z "${_selection:-}" ]]
   then
     _exit_1 _help "edit"
@@ -4538,8 +4520,6 @@ _edit() {
 
   local _notebook_path
   _notebook_path="$(_get_notebook "${_selection}" --path)"
-
-  _debug printf "_edit() \${_basename}: '%s'\\n" "${_basename:-}"
 
   if [[ -z "${_basename}" ]]
   then
@@ -4596,8 +4576,6 @@ _edit() {
     fi
 
     _after="$(_get_hash "${_notebook_path}/${_basename}")"
-    _debug printf "_edit() \${_before}: %s\\n" "${_before}"
-    _debug printf "_edit() \${_after}: %s\\n" "${_after}"
 
     if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path:-}" ]]
     then
@@ -4874,7 +4852,6 @@ _export() {
   then
     _exit_1 _help "export"
   fi
-  _debug printf "_export() \${_selection}: %s\\n" "${_selection}"
 
   if ((_notebook_export))
   then
@@ -4892,7 +4869,6 @@ _export() {
   then
     _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
   fi
-  _debug printf "_export() \${_basename}: %s\\n" "${_basename}"
 
   if ((_pandoc_only))
   then
@@ -4912,7 +4888,6 @@ _export() {
     then
       _exit_1 _help "export"
     fi
-    _debug printf "_export() \${target_path}: %s\\n" "${_target_path}"
 
     if [[ -e "${_target_path:-}" ]]
     then
@@ -4941,7 +4916,6 @@ _export() {
     if _command_exists 'pandoc' &&
        [[ "${_source_file_type}" != "${_target_file_type}" ]]
     then
-      _debug printf "_export() \${_args}: %s\\n" "${_args[*]:-}"
       if [[ -n "${_args[*]:-}" ]]
       then
         pandoc                              \
@@ -5287,13 +5261,11 @@ _index() {
 
       if ! grep -q "^${_basename}$" "${_index_path}"
       then
-        _debug printf "_index() add \$_basename: %s\\n" "${_basename}"
         printf "%s\\n" "${_basename}" >> "${_index_path}"
       fi
       ;;
     delete)
       local _basename="${2:-}"
-      _debug printf "_index() delete \${_basename}: '%s'\\n" "${_basename}"
 
       if [[ -z "${_basename}" ]]
       then
@@ -5377,10 +5349,6 @@ _index() {
       printf "\\n"
       ;;
     rebuild)
-      _debug printf "_index() rebuild\\n"
-      _debug printf \
-        "_index() rebuild: \`ls \${_notebook_path}\`: '%s'\\n" \
-        "$(ls "${_notebook_path}")"
       ls -t -r "${_notebook_path}" > "${_index_path}" &&
         _git_checkpoint "${_notebook_path}" "[nb] Rebuild Index"
       ;;
@@ -5412,13 +5380,6 @@ _index() {
       _file_list=($(ls "${_notebook_path}"))
 
       _index_reconcile_remove_duplicates "${_index_path}"
-
-      _debug printf \
-        "_index() reconcile: \`\${_index_list[*]}\`: '%s'\\n" \
-        "${_index_list[*]:-}"
-      _debug printf \
-        "_index() reconcile: \`\${_file_list[*]}\`: '%s'\\n" \
-        "${_file_list[*]:-}"
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
@@ -5494,13 +5455,6 @@ _index() {
 
       local -a _file_list=()
       _file_list=($(ls "${_notebook_path}"))
-
-      _debug printf \
-        "_index() verify: \`\${_index_list[*]}\`: '%s'\\n" \
-        "${_index_list[*]:-}"
-      _debug printf \
-        "_index() verify: \`\${_file_list[*]}\`: '%s'\\n" \
-        "${_file_list[*]:-}"
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
@@ -5703,10 +5657,6 @@ Examples:
   ${_ME} list --type document
 HEREDOC
 _list() {
-  _debug printf "_list() \${1:-}: '%s'\\n" "${1:-}"
-  _debug printf "_list() \${2:-}: '%s'\\n" "${2:-}"
-  _debug printf "_list() \${3:-}: '%s'\\n" "${3:-}"
-
   local _size=
   _size="$(stty size)"
 
@@ -5732,8 +5682,6 @@ _list() {
   local _sort=0
   local _type=
   local _use_pager=0
-
-  _debug printf "_list() \${@:-}: '%s'\\n" "${@:-}"
 
   while ((${#}))
   do
@@ -5791,7 +5739,6 @@ _list() {
         shift
         ;;
       *)
-        _debug printf "_list() *: '%s'\\n" "${__arg:-}"
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${__arg:2}"
@@ -5806,13 +5753,6 @@ _list() {
 
     shift
   done
-
-  _debug printf "_list() \${_limit}: '%s'\\n" "${_limit:-}"
-  _debug printf "_list() \${_print_excerpt}: '%s'\\n" "${_print_excerpt:-}"
-  _debug printf "_list() \${_excerpt_length}: '%s'\\n" "${_excerpt_length:-}"
-  _debug printf "_list() \${_selection}: '%s'\\n" "${_selection:-}"
-  _debug printf "_list() \${_sort}: '%s'\\n" "${_sort:-}"
-  _debug printf "_list() \${_type}: '%s'\\n" "${_type:-}"
 
   local _selection_basename=
 
@@ -5838,10 +5778,6 @@ _list() {
   _filenames=($(_list_files "${_list_files_options[@]}")) || :
 
   local _filenames_count="${#_filenames[@]}"
-
-  _debug printf \
-    "list() \${_filenames_count}: '%s'\\n" \
-    "${_filenames_count[@]}"
 
   if ((_SELECTION_SCOPED))
   then
@@ -5901,8 +5837,6 @@ HEREDOC
 
       for __basename in "${_filenames[@]}"
       do
-        _debug printf "list() \${__basename}: '%s'\\n" "${__basename}"
-
         local _maybe_title=
 
         if [[ -n "${_selection_identifier:-}" ]]
@@ -6517,8 +6451,6 @@ _ls() {
     printf "\\n"
   }
 
-  _debug printf "_ls() \${@:-}: '%s'\\n" "${@:-}"
-
   local _args=()
   local _columns
   _columns="$(tput cols)"
@@ -6569,8 +6501,6 @@ _ls() {
 
     shift
   done
-
-  _debug printf "_ls() \${_args[*]}: '%s'\\n" "${_args[*]:-}"
 
   {
     if ((NB_HEADER)) && [[ -z "${_args[*]:-}" ]]
@@ -6687,7 +6617,6 @@ _move() {
   then
     _target_notebook="$(printf "%s\\n" "${_target_notebook}" | tr -d ':')"
   fi
-  # _debug printf "_move() \${_target_notebook}: '%s'\\n" "${_target_notebook}"
 
   local _basename
   _basename="$(_get_selection_basename "${_selection}")"
@@ -7183,8 +7112,6 @@ Please type $(_highlight "${_name}") to confirm: " __response
     local _only_paths=0
     local _only_unarchived=0
 
-    _debug printf "_notebooks_list() \${@:-}: '%s'\\n" "${@:-}"
-
     for __arg in "${@:-}"
     do
       case "${__arg}" in
@@ -7245,19 +7172,6 @@ Please type $(_highlight "${_name}") to confirm: " __response
         fi
       done
     fi
-
-    _debug printf \
-      "_notebooks_list() \${_only_names:-}: '%s'\\n"      \
-      "${_only_names:-}"
-    _debug printf \
-      "_notebooks_list() \${_query_names[*]}: '%s'\\n"    \
-      "${_query_names[*]:-}"
-    _debug printf \
-      "_notebooks_list() \${_notebook_names[*]}: '%s'\\n" \
-      "${_notebook_names[*]:-}"
-    _debug printf \
-      "_notebooks_list() \${_notebook_paths[*]}: '%s'\\n" \
-      "${_notebook_paths[*]:-}"
 
     for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
@@ -7908,9 +7822,6 @@ _remote() {
     _existing_url="$(git -C "${_notebook_path}" remote get-url origin)"
   fi
 
-  _debug printf "_remote() \${_remote_exists}: '%s'\\n" "${_remote_exists}"
-  _debug printf "_remote() \${_existing_url}: '%s'\\n" "${_existing_url}"
-
   case "${_subcommand}" in
     remove|rm)
       if ((_remote_exists))
@@ -8085,8 +7996,6 @@ _rename() {
   then
     _exit_1 _help "rename"
   fi
-  _debug printf "_rename() \${_source_basename}: '%s'\\n" \
-    "${_source_basename}"
 
   if ((_reset))
   then
@@ -8249,8 +8158,6 @@ Examples:
 Shortcut Alias: \`q\`
 HEREDOC
 _search() {
-  _debug printf "_search() \${@}: '%s'\\n" "${@}"
-
   local _all=0
   local _last_path=
   local _only_list=0
@@ -8320,15 +8227,8 @@ _search() {
       _target_notebook_paths=($(_notebooks current --path))
     fi
 
-    _debug printf \
-      "_search() \${_target_notebook_paths[*]}: '%s'\\n" \
-      "${_target_notebook_paths[*]}"
-
     for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
-      _debug printf "_search() \${__notebook_path}: '%s'\\n" \
-        "${__notebook_path}"
-
       if _command_exists "rg" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
@@ -9353,9 +9253,6 @@ _shell() {
     esac
   done
 
-  _debug printf "_shell() \${_initial_command:-}: '%s'\\n" \
-    "${_initial_command:-}"
-
   printf "%s" "${_TPUT_COLOR_PRIMARY}"
   cat <<HEREDOC
 __          _
@@ -9492,10 +9389,6 @@ Alias: \`view\`
 Shortcut Alias: \`s\`
 HEREDOC
 _show() {
-  _debug printf "_show() \${0:-}: '%s'\\n" "${0:-}"
-  _debug printf "_show() \${1:-}: '%s'\\n" "${1:-}"
-  _debug printf "_show() \${2:-}: '%s'\\n" "${2:-}"
-
   local _ls_arguments=()
   local _print_output=0
   local _password=
@@ -9556,9 +9449,6 @@ _show() {
 
     shift
   done
-
-  _debug printf "_show() \${_render}: '%s'\\n" "${_render}"
-  _debug printf "_show() \${_selection}: '%s'\\n" "${_selection}"
 
   if [[ -z "${_selection:-}" ]]
   then
@@ -9905,8 +9795,6 @@ Sync Conflict Resolution:
   the filename.
 HEREDOC
 _sync() {
-  _debug printf "_sync() \${*}: '%s'\\n" "${*}"
-
   local _current_notebook=
   _current_notebook="$(_notebooks current)"
 
@@ -9914,8 +9802,6 @@ _sync() {
 
   if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
   then
-    _debug printf "_sync() -a|--all\\n"
-
     local _notebook_names
     _notebook_names=($(_notebooks --names --no-color --unarchived))
 
@@ -9932,8 +9818,6 @@ _sync() {
       fi
     fi
   fi
-
-  _debug printf "_sync() \${_notebooks[*]:-}: '%s'\\n" "${_notebooks[*]:-}"
 
   printf "Syncing: "
 
@@ -10410,9 +10294,6 @@ _SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_SUBCOMMANDS[@]}")$"
 # The contents of the `$_GIT_SUBCOMMANDS` array, joined with '|'.
 _GIT_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_GIT_SUBCOMMANDS[@]}")$"
 
-_debug printf "\${_SUBCOMMANDS_PATTERN}: %s\\n"     "${_SUBCOMMANDS_PATTERN}"
-_debug printf "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" "${_GIT_SUBCOMMANDS_PATTERN}"
-
 # _is_valid_subcommand()
 #
 # Usage:
@@ -10559,8 +10440,6 @@ do
   esac
 done
 
-_debug printf "\${_SUBCOMMANDS[*]}: '%s'\\n"      "${_SUBCOMMANDS[*]}"
-_debug printf "\${_SUBCOMMANDS_PATTERN}: '%s'\\n" "${_SUBCOMMANDS_PATTERN}"
 _debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
 _debug printf "\${_NOTEBOOK_NAME}: '%s'\\n"       "${_NOTEBOOK_NAME}"
 _debug printf "\${_NOTEBOOK_PATH}: '%s'\\n"       "${_NOTEBOOK_PATH}"
@@ -10682,10 +10561,6 @@ _main() {
         return 0
       fi
 
-      _debug printf "\${_SUBCOMMAND}: %s\\n" "${_SUBCOMMAND}"
-      _debug printf "\${_GIT_SUBCOMMANDS_PATTERN}: %s\\n" \
-        "${_GIT_SUBCOMMANDS_PATTERN}"
-
       if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
       then
         if _git_index_is_dirty
@@ -10694,17 +10569,12 @@ _main() {
 
           if _git_should_autosync
           then
-            _debug \
-              printf "_main(): _git_index_is_dirty && ((NB_AUTO_SYNC))\\n"
             "${_MY_PATH}" sync
           else
-            _debug \
-              printf "_main(): _git_index_is_dirty && ! ((NB_AUTO_SYNC))\\n"
             _git_checkpoint "${_NOTEBOOK_PATH}" "[nb] Commit" --spinner
           fi
         elif _git_should_autosync
         then
-          _debug printf "_main(): ! _git_index_is_dirty\\n"
           ("${_MY_PATH}" sync &>/dev/null) &
         fi
       fi
