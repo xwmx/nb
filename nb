@@ -3008,6 +3008,7 @@ Usage:
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
+  ${_ME} notebooks select <selection>
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -6889,6 +6890,7 @@ Usage:
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
+  ${_ME} notebooks select <selection>
   ${_ME} notebooks use <name>
 
 Options:
@@ -6927,6 +6929,8 @@ Subcommands:
              \`ranger\` [1], \`mc\` [2], \`exa\` [3], or \`ls\`.
              Shortcut Alias: \`p\`
   rename     Rename a notebook.
+  select     Set the current notebook from a colon-prefixed selection.
+             Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or
              notebook <name>.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
@@ -7578,6 +7582,27 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi
   }
 
+  # _notebooks_select()
+  #
+  # Usage:
+  #   _notebook_select <selection>
+  _notebooks_select() {
+    local _notebook_name="${1%%:*}"
+    local _notebook_paths=()
+
+    _notebook_paths=($(
+      _notebooks "${_notebook_name:-}" --path 2>/dev/null
+    ))
+
+    if [[ "${#_notebook_paths[@]}" == 1 ]]
+    then
+      NB_NOTEBOOK_PATH="${_notebook_paths[0]}"
+      return 0
+    else
+      return 1
+    fi
+  }
+
   # _notebooks_rename()
   #
   # Usage:
@@ -7717,6 +7742,9 @@ HEREDOC
       ;;
     rename)
       _notebooks_rename "${_name:-}" "${3:-}"
+      ;;
+    select)
+      _notebooks_select "${2:-}"
       ;;
     use)
       _notebooks_use "${_name:-}"
@@ -10585,18 +10613,15 @@ do
       then
         _ARGUMENTS+=("${__opt}")
       else
-        ___notebook_name="${__opt%%:*}"
-        ___notebook_path="$(_notebooks "${___notebook_name:-}" --path)"
-
-        if [[ -n "${___notebook_path:-}" ]]
+        if ! _notebooks select "${__opt}"
         then
-          NB_NOTEBOOK_PATH="${___notebook_path}"
-        elif [[ -n "${_SUBCOMMAND:-}" ]]
-        then
-          _ARGUMENTS+=("${__opt}")
-        else
-          _exit_1 printf \
-            "Notebook not found: %s\\n" "${___notebook_name}"
+          if [[ -n "${_SUBCOMMAND:-}" ]]
+          then
+            _ARGUMENTS+=("${__opt}")
+          else
+            _exit_1 printf \
+              "Notebook not found: %s\\n" "$(_highlight "${__opt%%:*}")"
+          fi
         fi
 
         if _notebooks current --selected || _notebooks current --local
@@ -10670,17 +10695,9 @@ _get_notebook_identifier() { _get_notebook "${@}" --display-name; }
 _set_selection_notebook() {
   if [[ "${1:-}" =~ : ]]
   then
-    local _notebook_name="${1%%:*}"
-
-    local _notebook_path=
-    _notebook_path="$(_notebooks "${_notebook_name:-}" --path)"
-
-    if [[ -n "${_notebook_path:-}" ]]
+    if _notebooks select "${1:-}"
     then
-      NB_NOTEBOOK_PATH="${_notebook_path}"
       _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
-    else
-      return 1
     fi
   elif [[ "${_NOTEBOOK_PATH:-}" != "${NB_NOTEBOOK_PATH}" ]]
   then

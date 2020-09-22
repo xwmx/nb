@@ -2499,6 +2499,7 @@ Usage:
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
+  nb notebooks select <selection>
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3173,6 +3174,7 @@ Usage:
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
+  nb notebooks select <selection>
   nb notebooks use <name>
 
 Options:
@@ -3211,6 +3213,8 @@ Subcommands:
              `ranger` [1], `mc` [2], `exa` [3], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
+  select     Set the current notebook from a colon-prefixed selection.
+             Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or
              notebook <name>.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
