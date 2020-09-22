@@ -6861,12 +6861,6 @@ _move() {
     done
   fi
 
-  _debug printf "\${_MY_PATH} %s\\n" "${_MY_PATH}"
-  _debug printf "\${_target_notebook_path} %s\\n" "${_target_notebook_path}"
-  _debug printf "\${_notebook_path} %s\\n" "${_notebook_path}"
-  _debug printf "\${_basename} %s\\n" "${_basename}"
-  _debug cat "${_notebook_path}/${_basename}"
-
   if [[ -d "${_notebook_path}/${_basename}" ]]
   then
     NB_NOTEBOOK_PATH="${_target_notebook_path}"     \
