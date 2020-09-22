@@ -8868,7 +8868,9 @@ _search() {
              [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
           then
             local _notebook_display_name=
-            _notebook_display_name="$(_notebooks show "${__notebook_path}" --display-name)"
+            _notebook_display_name="$(
+              _notebooks show "${__notebook_path}" --display-name --no-color
+            )"
 
             _id_filename="[${_notebook_display_name}:${_id}] ${_file_info}"
             _id_filename_color="$(_id_brackets_color "${_notebook_display_name}:${_id}") ${_file_info_color}"
