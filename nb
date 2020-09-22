@@ -7879,7 +7879,8 @@ HEREDOC
       _notebooks_init "${_name:-}" "${3:-}"
       ;;
     current)
-      _notebooks_current "${@:2}"
+      shift
+      _notebooks_current "${@:-}"
       ;;
     delete)
       _notebooks_delete "${_name:-}" "${3:-}"
