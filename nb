@@ -5990,7 +5990,7 @@ HEREDOC
       local _max_id
       _max_id="$(_index get_max_id)"
 
-      for __basename in "${_filenames[@]}"
+      for __basename in "${_filenames[@]:-}"
       do
         local _maybe_title=
 
