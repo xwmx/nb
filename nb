@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 ###############################################################################
 # __          _
 # \ \   _ __ | |__
@@ -7796,7 +7796,7 @@ HEREDOC
     local _notebook_list=
     _notebook_list=($(ls -1 "${NB_DIR}"))
 
-    for __notebook_name in "${_notebook_list[@]}"
+    for __notebook_name in "${_notebook_list[@]:-}"
     do
       if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
          [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
