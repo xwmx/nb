@@ -2056,18 +2056,18 @@ _get_notebook() {
     fi
   elif [[ -n "${_selection:-}" ]]
   then
-    local _maybe_selection_notebook="${_selection%%:*}"
+    local _selection_notebook="${_selection%%:*}"
 
-    if [[ -n "${_maybe_selection_notebook:-}" ]]
+    if [[ -n "${_selection_notebook:-}" ]]
     then
-      if [[ "${_maybe_selection_notebook:-}" == "local" ]] &&
+      if [[ "${_selection_notebook:-}" == "local" ]] &&
          [[ -n "${_local_notebook_path:-}"              ]]
       then
         _notebook_path="${_local_notebook_path}"
-      elif [[ -d "${NB_DIR}/${_maybe_selection_notebook:-}/.git"    ]] &&
-           [[ -f "${NB_DIR}/${_maybe_selection_notebook:-}/.index"  ]]
+      elif [[ -d "${NB_DIR}/${_selection_notebook:-}/.git"    ]] &&
+           [[ -f "${NB_DIR}/${_selection_notebook:-}/.index"  ]]
       then
-        _notebook_path="${NB_DIR}/${_maybe_selection_notebook}"
+        _notebook_path="${NB_DIR}/${_selection_notebook}"
       fi
     fi
   fi
@@ -7654,7 +7654,6 @@ HEREDOC
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_path=
     local _print_display_name=0
-    local _print_name=0
     local _print_path=0
     local _selection=
 
@@ -7665,7 +7664,7 @@ HEREDOC
           _print_display_name=1
           ;;
         --name)
-          _print_name=1
+          : # Default. Do nothing.
           ;;
         --path)
           _print_path=1
@@ -7694,40 +7693,47 @@ HEREDOC
       fi
     elif [[ -n "${_selection:-}" ]]
     then
-      local _maybe_selection_notebook="${_selection%%:*}"
+      local _selection_notebook="${_selection%%:*}"
 
-      if [[ -n "${_maybe_selection_notebook:-}" ]]
+      if [[ -n "${_selection_notebook:-}" ]]
       then
-        if [[ "${_maybe_selection_notebook:-}" == "local" ]] &&
+        if [[ "${_selection_notebook:-}" == "local" ]] &&
            [[ -n "${_local_notebook_path:-}"              ]]
         then
           _notebook_path="${_local_notebook_path}"
-        elif [[ -d "${NB_DIR}/${_maybe_selection_notebook:-}/.git"    ]] &&
-             [[ -f "${NB_DIR}/${_maybe_selection_notebook:-}/.index"  ]]
+        elif [[ -d "${NB_DIR}/${_selection_notebook:-}/.git"    ]] &&
+             [[ -f "${NB_DIR}/${_selection_notebook:-}/.index"  ]]
         then
-          _notebook_path="${NB_DIR}/${_maybe_selection_notebook}"
+          _notebook_path="${NB_DIR}/${_selection_notebook}"
         fi
       fi
     fi
 
-    if ((_print_display_name))
-    then
-      local _display_name=
-      _display_name="$(basename "${_notebook_path}")"
-
-      if [[ "${_display_name}" =~ \  ]]
-      then
-        _display_name="$(
-          printf "%s\\n" "${_display_name}" | sed -e "s/ /\\\ /g"
-        )"
-      fi
-
-      printf "%s\\n" "${_display_name:-}"
-    elif ((_print_path))
+    if ((_print_path))
     then
       printf "%s\\n" "${_notebook_path}"
     else
-      printf "%s\\n" "$(basename "${_notebook_path}")"
+      local _notebook_name=
+
+      if [[ "${_notebook_path}" == "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+      then
+        _notebook_name="local"
+      else
+        _notebook_name="$(basename "${_notebook_path}")"
+      fi
+
+      if ((_print_display_name))
+      then
+
+        if [[ "${_notebook_name}" =~ \  ]]
+        then
+          _notebook_name="$(
+            printf "%s" "${_notebook_name}" | sed -e "s/ /\\\ /g"
+          )"
+        fi
+      fi
+
+      printf "%s\\n" "${_notebook_name:-}"
     fi
   }
 
@@ -8804,7 +8810,7 @@ _search() {
              [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
           then
             local _notebook_display_name=
-            _notebook_display_name="$(_get_notebook "${__notebook_path}" --display-name)"
+            _notebook_display_name="$(_notebooks show "${__notebook_path}" --display-name)"
 
             _id_filename="[${_notebook_display_name}:${_id}] ${_file_info}"
             _id_filename_color="$(_id_brackets_color "${_notebook_display_name}:${_id}") ${_file_info_color}"
