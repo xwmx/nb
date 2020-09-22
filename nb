@@ -7649,25 +7649,35 @@ HEREDOC
   # _notebooks_show()
   #
   # Usage:
-  #   _notebooks_show (<name> | <path> | <selection>) [--display-name] [--path]
+  #   _notebooks_show (<name> | <path> | <selection>) [--archived]
+  #                   [--display-name] [--path]
   _notebooks_show() {
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
+    local _notebook_color_enabled=1
     local _notebook_path=
     local _print_display_name=0
-    local _print_path=0
+    local _only_name=0
+    local _only_path=0
     local _selection=
+    local _test_archived=0
 
     for __arg in "${@:-}"
     do
       case "${__arg}" in
+        --archived)
+          _test_archived=1
+          ;;
         --display-name)
           _print_display_name=1
           ;;
         --name)
-          : # Default. Do nothing.
+          _only_name=1
+          ;;
+        --no-color|--nocolor)
+          _notebook_color_enabled=0
           ;;
         --path)
-          _print_path=1
+          _only_path=1
           ;;
         *)
           if [[ -z "${_selection}" ]]
@@ -7718,32 +7728,70 @@ HEREDOC
         printf "Notebook not found: %s\\n" "$(_highlight "${_selection}")"
     fi
 
-    if ((_print_path))
+    if ((_only_path))
     then
       printf "%s\\n" "${_notebook_path}"
-    else
-      local _notebook_name=
-
-      if [[ "${_notebook_path}" == "${_LOCAL_NOTEBOOK_PATH:-}" ]]
-      then
-        _notebook_name="local"
-      else
-        _notebook_name="$(basename "${_notebook_path}")"
-      fi
-
-      if ((_print_display_name))
-      then
-
-        if [[ "${_notebook_name}" =~ \  ]]
-        then
-          _notebook_name="$(
-            printf "%s" "${_notebook_name}" | sed -e "s/ /\\\ /g"
-          )"
-        fi
-      fi
-
-      printf "%s\\n" "${_notebook_name:-}"
+      return 0
     fi
+
+    if ((_test_archived))
+    then
+      if [[ -d "${_notebook_path}/.archived" ]]
+      then
+        return 0
+      else
+        return 1
+      fi
+    fi
+
+    local _notebook_name=
+
+    if [[ "${_notebook_path}" == "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    then
+      _notebook_name="local"
+    else
+      _notebook_name="$(basename "${_notebook_path}")"
+    fi
+
+    if ((_only_name))
+    then
+      printf "%s\\n" "${_notebook_name}"
+      return 0
+    fi
+
+    local _display_name="${_notebook_name}"
+
+    if [[ "${_display_name}" =~ \  ]]
+    then
+      _display_name="$(
+        printf "%s\\n" "${_display_name}" | sed -e "s/ /\\\ /g"
+      )"
+    fi
+
+    if ((_notebook_color_enabled)) &&
+       [[ "${_notebook_path}" == "${NB_NOTEBOOK_PATH}" ]]
+    then
+      _display_name="$(_highlight "${_display_name}")"
+    fi
+
+    local _notebook_line="${_display_name}"
+
+    if [[ -e "${_notebook_path}/.archived" ]]
+    then
+      _notebook_line="${_notebook_line} (archived)"
+    fi
+
+    local _remote_url=
+    _remote_url="$(
+      git -C "${_notebook_path}" config --get remote.origin.url || echo ''
+    )"
+
+    if [[ -n "${_remote_url:-}" ]]
+    then
+      _notebook_line="${_notebook_line} (${_remote_url})"
+    fi
+
+    printf "%s\\n" "${_notebook_line}"
   }
 
   # _notebooks_use()

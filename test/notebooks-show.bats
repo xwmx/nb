@@ -76,16 +76,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0      ]]
-  [[ "${output}" == "one" ]]
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ one ]]
 
   run "${_NB}" notebooks show one:example.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0      ]]
-  [[ "${output}" == "one" ]]
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ one ]]
 }
 
 # `notebooks show --path` #####################################################
