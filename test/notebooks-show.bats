@@ -19,6 +19,22 @@ load test_helper
   [[ "${output}" =~ Usage ]]
 }
 
+@test "\`notebooks show example\` with exits with 1 and prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add one
+  }
+
+  run "${_NB}" notebooks show example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1                      ]]
+  [[ "${output}" =~ Notebook\ not\ found  ]]
+  [[ "${output}" =~ example               ]]
+}
+
 @test "\`notebooks show <id>\` exits with 0 and prints the notebook name." {
   {
     run "${_NB}" init

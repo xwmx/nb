@@ -7649,7 +7649,7 @@ HEREDOC
   # _notebooks_show()
   #
   # Usage:
-  #   _notebooks_show (<name> | <path> | <selection>)
+  #   _notebooks_show (<name> | <path> | <selection>) [--display-name] [--path]
   _notebooks_show() {
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_path=
@@ -7710,6 +7710,12 @@ HEREDOC
           _notebook_path="${NB_DIR}/${_selection_notebook}"
         fi
       fi
+    fi
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _exit_1 \
+        printf "Notebook not found: %s\\n" "$(_highlight "${_selection}")"
     fi
 
     if ((_print_path))
