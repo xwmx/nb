@@ -3178,13 +3178,14 @@ Usage:
 Options:
   --archived    Only list archived notebooks.
   --global      List global notebooks or the notebook set globally with `use`.
-  --local       List local notebook.
+  --local       Exit with 0 if current within a local notebook, otherwise exit
+                with 1.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --path        Print the path of the current notebook.
   --paths       Print the path of each notebook.
   --selected    Exit with 0 if the current notebook differs from the global
-                notebook set with `use`, or otherwise exits with 1.
+                notebook set with `use`, otherwise exit with 1.
   --unarchived  Only list unarchived notebooks.
 
 Subcommands:

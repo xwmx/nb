@@ -300,7 +300,7 @@ _setup_notebooks() {
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local\` in a local notebook exits with 0 and prints the local notebook." {
+@test "\`notebooks current --local\` in a local notebook exits with 0 and prints nothing." {
   {
     _setup_notebooks
 
@@ -318,8 +318,8 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0      ]]
-  [[ "${output}" =~ local ]]
+  [[ ${status} -eq 0 ]]
+  [[ -z "${output}"  ]]
 }
 
 @test "\`notebooks current --local --path\` in a local notebook exits with 0 and prints the local notebook path." {
