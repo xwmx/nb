@@ -10585,36 +10585,36 @@ do
       then
         _ARGUMENTS+=("${__opt}")
       else
-        __maybe_notebook_name="${__opt%%:*}"
-        __notebook_path="$(_notebooks "${__maybe_notebook_name:-}" --path)"
+        ___notebook_name="${__opt%%:*}"
+        ___notebook_path="$(_notebooks "${___notebook_name:-}" --path)"
 
-        if [[ -n "${__notebook_path:-}" ]]
+        if [[ -n "${___notebook_path:-}" ]]
         then
-          NB_NOTEBOOK_PATH="${__notebook_path}"
+          NB_NOTEBOOK_PATH="${___notebook_path}"
         elif [[ -n "${_SUBCOMMAND:-}" ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
           _exit_1 printf \
-            "Notebook not found: %s\\n" "${__maybe_notebook_name}"
+            "Notebook not found: %s\\n" "${___notebook_name}"
         fi
 
         if _notebooks current --selected || _notebooks current --local
         then
-          __maybe_identifier_or_subcommand_or_url="${__opt#*:}"
+          ___identifier_or_subcommand_or_url="${__opt#*:}"
 
-          if [[ -z "${__maybe_identifier_or_subcommand_or_url:-}" ]]
+          if [[ -z "${___identifier_or_subcommand_or_url:-}" ]]
           then
             _ARGUMENTS+=("${__opt}")
           else
-            if _is_valid_subcommand "${__maybe_identifier_or_subcommand_or_url}"
+            if _is_valid_subcommand "${___identifier_or_subcommand_or_url}"
             then
-              _SUBCOMMAND="${__maybe_identifier_or_subcommand_or_url}"
+              _SUBCOMMAND="${___identifier_or_subcommand_or_url}"
             else
-              if _string_is_url "${__maybe_identifier_or_subcommand_or_url}"
+              if _string_is_url "${___identifier_or_subcommand_or_url}"
               then
                 _SUBCOMMAND="bookmark"
-                _ARGUMENTS+=("${__maybe_identifier_or_subcommand_or_url}")
+                _ARGUMENTS+=("${___identifier_or_subcommand_or_url}")
               else
                 _ARGUMENTS+=("${__opt}")
               fi
@@ -10669,23 +10669,18 @@ _get_notebook_identifier() { _get_notebook "${@}" --display-name; }
 # Selection notebook is now handled in option parsing and through functions..
 _set_selection_notebook() {
   if [[ "${1:-}" =~ : ]]
-  then # TODO: Remove?
-    local __maybe_notebook_name="${__opt%%:*}"
+  then
+    local _notebook_name="${1%%:*}"
 
-    if [[ -n "${_maybe_selection_notebook:-}" ]]
+    local _notebook_path=
+    _notebook_path="$(_notebooks "${_notebook_name:-}" --path)"
+
+    if [[ -n "${_notebook_path:-}" ]]
     then
-      if [[ -d "${NB_DIR}/${__maybe_notebook_name:-}/.git"    ]]
-      then
-        NB_NOTEBOOK_PATH="${NB_DIR}/${__maybe_notebook_name}"
-        _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
-      elif [[ "${__maybe_notebook_name:-}" == "local"         ]] &&
-           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                  ]]
-      then
-        NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-        _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
-      else
-        return 1
-      fi
+      NB_NOTEBOOK_PATH="${_notebook_path}"
+      _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
+    else
+      return 1
     fi
   elif [[ "${_NOTEBOOK_PATH:-}" != "${NB_NOTEBOOK_PATH}" ]]
   then
