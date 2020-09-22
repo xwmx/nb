@@ -7481,7 +7481,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
   # _notebooks_notebook()
   #
   # Usage:
-  #   _notebooks_notebook <subcommand> <name>
+  #   _notebooks_notebook [archive | open | peek | status | unarchive] <name>
   _notebooks_notebook() {
     local _subcommand="${1:-}"
     local _notebook_name="${2:-}"
