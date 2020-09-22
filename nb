@@ -6509,9 +6509,9 @@ _ls() {
       )
     fi
 
-    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    if _notebooks current --local
     then
-      if [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}" ]]
+       if [[ "$(_notebooks current)" == "local" ]]
       then
         _notebook_names_hi=(
           "$(_highlight "local" --underline)"
@@ -6523,6 +6523,7 @@ _ls() {
           "${_notebook_names_hi[@]}"
         )
       fi
+
       _notebook_names_raw=(
         "local"
         "${_notebook_names_raw[@]}"
