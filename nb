@@ -2009,7 +2009,7 @@ _get_selection_identifier() {
 #
 # Usage:
 #   _get_notebook [<name> | <path> | <selection>]
-#                 [--display-name | --no-context | --path | --scoped]
+#                 [--display-name | --no-context | --path]
 #
 # Selection notebook is now set in option parsing.
 _get_notebook() {
@@ -2019,7 +2019,6 @@ _get_notebook() {
   local _notebook_path=
   local _print_display_name=0
   local _print_path=0
-  local _return_with_scoped_status=0
   local _selection=
 
   for __arg in "${@:-}"
@@ -2030,9 +2029,6 @@ _get_notebook() {
         ;;
       --path)
         _print_path=1
-        ;;
-      --scoped)
-        _return_with_scoped_status=0
         ;;
       --no-context|--no-default|--no-fallback)
         _context=0
@@ -2109,9 +2105,6 @@ _get_notebook() {
   elif ((_print_path))
   then
     printf "%s\\n" "${_notebook_path}"
-  elif ((_return_with_scoped_status))
-  then
-    _notebooks current --selected
   else
     printf "%s\\n" "${_notebook_name}"
   fi
