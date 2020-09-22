@@ -2015,7 +2015,6 @@ _get_selection_identifier() {
 _get_notebook() {
   local _context=1
   local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
-  local _notebook_name=
   local _notebook_path=
   local _print_display_name=0
   local _print_path=0
@@ -2051,10 +2050,8 @@ _get_notebook() {
          [[ "${_selection}" == "${_local_notebook_path}"  ]]
       then
         _notebook_path="${_local_notebook_path}"
-        _notebook_name="local"
       else
         _notebook_path="${_selection}"
-        _notebook_name="$(basename "${_notebook_path}")"
       fi
     fi
   elif [[ -n "${_selection:-}" ]]
@@ -2067,12 +2064,10 @@ _get_notebook() {
          [[ -n "${_local_notebook_path:-}"              ]]
       then
         _notebook_path="${_local_notebook_path}"
-        _notebook_name="local"
       elif [[ -d "${NB_DIR}/${_maybe_selection_notebook:-}/.git"    ]] &&
            [[ -f "${NB_DIR}/${_maybe_selection_notebook:-}/.index"  ]]
       then
         _notebook_path="${NB_DIR}/${_maybe_selection_notebook}"
-        _notebook_name="$(basename "${_notebook_path}")"
       fi
     fi
   fi
@@ -2083,21 +2078,17 @@ _get_notebook() {
     then
       _notebook_path="$(_notebooks current --path)"
     fi
-
-    if [[ -z "${_notebook_name:-}" ]]
-    then
-      _notebook_name="$(basename "${_notebook_path}")"
-    fi
   fi
 
   if ((_print_display_name))
   then
-    local _display_name="${_notebook_name}"
+    local _display_name=
+    _display_name="$(basename "${_notebook_path}")"
 
-    if [[ "${_notebook_name}" =~ \  ]]
+    if [[ "${_display_name}" =~ \  ]]
     then
       _display_name="$(
-        printf "%s\\n" "${_notebook_name}" | sed -e "s/ /\\\ /g"
+        printf "%s\\n" "${_display_name}" | sed -e "s/ /\\\ /g"
       )"
     fi
 
@@ -2106,7 +2097,7 @@ _get_notebook() {
   then
     printf "%s\\n" "${_notebook_path}"
   else
-    printf "%s\\n" "${_notebook_name}"
+    printf "%s\\n" "$(basename "${_notebook_path}")"
   fi
 }
 
