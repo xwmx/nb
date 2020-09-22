@@ -6714,7 +6714,7 @@ _ls() {
 
           if _notebooks current --selected
           then
-            _selection="$(_get_notebook --name):${_selection}"
+            _selection="$(_notebooks current --name):${_selection}"
           fi
 
           _return_1 printf "Not found: %s\\n" "$(_highlight "${_selection}")"
@@ -7363,7 +7363,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       exit 1
     fi
 
-    _current_notebook_name="$(_get_notebook --name)"
+    _current_notebook_name="$(_notebooks current --name)"
 
     if [[ -z "${_query_names[*]:-}" ]]
     then
