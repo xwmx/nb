@@ -10023,8 +10023,7 @@ _sync() {
     local _notebook_names
     _notebook_names=($(_notebooks --names --no-color --unarchived))
 
-    if [[ "${_current_notebook}" == "local" ]] &&
-       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"    ]]
+    if [[ "$(_notebooks current)" == "local" ]]
     then
       _notebooks+=($(_notebooks --names --no-color --unarchived))
     else
