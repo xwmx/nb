@@ -7582,27 +7582,6 @@ Please type $(_highlight "${_name}") to confirm: " __response
     fi
   }
 
-  # _notebooks_select()
-  #
-  # Usage:
-  #   _notebook_select <selection>
-  _notebooks_select() {
-    local _notebook_name="${1%%:*}"
-    local _notebook_paths=()
-
-    _notebook_paths=($(
-      _notebooks "${_notebook_name:-}" --path 2>/dev/null
-    ))
-
-    if [[ "${#_notebook_paths[@]}" == 1 ]]
-    then
-      NB_NOTEBOOK_PATH="${_notebook_paths[0]}"
-      return 0
-    else
-      return 1
-    fi
-  }
-
   # _notebooks_rename()
   #
   # Usage:
@@ -7644,6 +7623,112 @@ HEREDOC
     printf "%s is now named %s\\n" \
       "$(_highlight "${_old}")"    \
       "$(_highlight "${_new}")"
+  }
+
+  # _notebooks_select()
+  #
+  # Usage:
+  #   _notebook_select <selection>
+  _notebooks_select() {
+    local _notebook_name="${1%%:*}"
+    local _notebook_paths=()
+
+    _notebook_paths=($(
+      _notebooks "${_notebook_name:-}" --path 2>/dev/null
+    ))
+
+    if [[ "${#_notebook_paths[@]}" == 1 ]]
+    then
+      NB_NOTEBOOK_PATH="${_notebook_paths[0]}"
+      return 0
+    else
+      return 1
+    fi
+  }
+
+  # _notebooks_show()
+  #
+  # Usage:
+  #   _notebooks_show (<name> | <path> | <selection>)
+  _notebooks_show() {
+    local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
+    local _notebook_path=
+    local _print_display_name=0
+    local _print_name=0
+    local _print_path=0
+    local _selection=
+
+    for __arg in "${@:-}"
+    do
+      case "${__arg}" in
+        --display-name)
+          _print_display_name=1
+          ;;
+        --name)
+          _print_name=1
+          ;;
+        --path)
+          _print_path=1
+          ;;
+        *)
+          if [[ -z "${_selection}" ]]
+          then
+            _selection="${__arg}"
+          fi
+          ;;
+      esac
+    done
+
+    if [[ "${_selection:-}" =~ / ]]
+    then
+      if [[ -d "${_selection}/.git"   ]] &&
+         [[ -f "${_selection}/.index" ]]
+      then
+        if [[ -n "${_local_notebook_path:-}"                ]] &&
+           [[ "${_selection}" == "${_local_notebook_path}"  ]]
+        then
+          _notebook_path="${_local_notebook_path}"
+        else
+          _notebook_path="${_selection}"
+        fi
+      fi
+    elif [[ -n "${_selection:-}" ]]
+    then
+      local _maybe_selection_notebook="${_selection%%:*}"
+
+      if [[ -n "${_maybe_selection_notebook:-}" ]]
+      then
+        if [[ "${_maybe_selection_notebook:-}" == "local" ]] &&
+           [[ -n "${_local_notebook_path:-}"              ]]
+        then
+          _notebook_path="${_local_notebook_path}"
+        elif [[ -d "${NB_DIR}/${_maybe_selection_notebook:-}/.git"    ]] &&
+             [[ -f "${NB_DIR}/${_maybe_selection_notebook:-}/.index"  ]]
+        then
+          _notebook_path="${NB_DIR}/${_maybe_selection_notebook}"
+        fi
+      fi
+    fi
+
+    if ((_print_display_name))
+    then
+      local _display_name=
+      _display_name="$(basename "${_notebook_path}")"
+
+      if [[ "${_display_name}" =~ \  ]]
+      then
+        _display_name="$(
+          printf "%s\\n" "${_display_name}" | sed -e "s/ /\\\ /g"
+        )"
+      fi
+
+      printf "%s\\n" "${_display_name:-}"
+    elif ((_print_path))
+    then
+      printf "%s\\n" "${_notebook_path}"
+    else
+      printf "%s\\n" "$(basename "${_notebook_path}")"
+    fi
   }
 
   # _notebooks_use()
@@ -7712,7 +7797,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if [[ "${_subcommand:-}" != "current" ]]
+  if ! _contains "${_subcommand:-}" "current" "show"
   then
     _notebooks_add_new
   fi
@@ -7745,6 +7830,10 @@ HEREDOC
       ;;
     select)
       _notebooks_select "${2:-}"
+      ;;
+    show)
+      shift
+      _notebooks_show "${@:-}"
       ;;
     use)
       _notebooks_use "${_name:-}"
