@@ -7678,7 +7678,10 @@ HEREDOC
       esac
     done
 
-    if [[ "${_selection:-}" =~ / ]]
+    if [[ -z "${_selection:-}"      ]]
+    then
+      _exit_1 _help "notebooks"
+    elif [[ "${_selection:-}" =~ /  ]]
     then
       if [[ -d "${_selection}/.git"   ]] &&
          [[ -f "${_selection}/.index" ]]
