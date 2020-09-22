@@ -4338,7 +4338,7 @@ Description:
 HEREDOC
 _count() {
   local _notebook_path
-  _notebook_path="$(_get_notebook --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   _list_files "${_notebook_path}" | wc -l | tr -d ' '
 }
@@ -4987,7 +4987,7 @@ Examples:
 HEREDOC
 _git() {
   local _notebook_path
-  _notebook_path="$(_get_notebook --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}" || _exit_1 printf "_git() \`cd\` failed.\\n"
 
@@ -5271,7 +5271,7 @@ _import() {
   done
 
   local _notebook_path
-  _notebook_path="$(_get_notebook --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   case "${_subcommand}" in
     copy)
@@ -5932,7 +5932,7 @@ _list() {
   then
     _notebook_path="$(_get_notebook "${_selection:-}" --path)"
   else
-    _notebook_path="$(_get_notebook --path)"
+    _notebook_path="$(_notebooks current --path)"
   fi
 
   local _notebook_display_name=
@@ -8341,7 +8341,7 @@ Examples:
 HEREDOC
 _run() {
   local _notebook_path
-  _notebook_path="$(_get_notebook --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
   [[ -n "${*}" ]]         || _exit_1 printf "Command required.\\n"
@@ -9999,7 +9999,7 @@ Description:
 HEREDOC
 _status() {
   local _notebook_path
-  _notebook_path="$(_get_notebook --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   git -C "${_notebook_path}" status
 }
