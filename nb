@@ -2494,7 +2494,7 @@ _list_files() {
 
   if [[ -z "${_notebook_path:-}" ]]
   then
-    _notebook_path="${NB_NOTEBOOK_PATH}"
+    _notebook_path="$(_notebooks current --path)"
   fi
 
   while ((${#}))
@@ -5366,6 +5366,7 @@ Usage:
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verify
+  ${_ME} index <subcommand> <options>... [<notebook-path>]
 
 Subcommands:
   add           Add <filename> to the index.
@@ -5384,7 +5385,8 @@ Description:
   Manage the index for the current notebook. This subcommand is used
   internally by \`${_ME}\` and using it manually will probably corrupt
   the index. If something goes wrong with the index, fix it with
-  \`${_ME} index reconcile\`.
+  \`${_ME} index reconcile\`. All subcommands take an optional
+  <notebook-path> that can be used to circumvent the notebook lookup.
 
   The index is a text file named '.index' in the notebook directory. .index
   contains a list of filenames and the line number of each filename
@@ -5393,7 +5395,9 @@ Description:
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
+  local _notebook_path="${2:-}"
 
+  # Use `$NB_NOTEBOOK_PATH` directly for performance.
   local _notebook_path="${NB_NOTEBOOK_PATH}"
 
   local _index_path="${_notebook_path}/.index"
