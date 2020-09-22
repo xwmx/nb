@@ -125,8 +125,9 @@ _setup_scope() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                ]]
-  [[ "${lines[0]}" =~ "Notebook not found: invalid" ]]
+  [[ ${status} -eq 1                        ]]
+  [[ "${lines[0]}" =~ Notebook\ not\ found  ]]
+  [[ "${lines[0]}" =~ invalid               ]]
 }
 
 # `nb <url>` ##################################################################
