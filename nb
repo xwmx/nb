@@ -6861,21 +6861,28 @@ _move() {
     done
   fi
 
+  _debug printf "\${_MY_PATH} %s\\n" "${_MY_PATH}"
+  _debug printf "\${_target_notebook_path} %s\\n" "${_target_notebook_path}"
+  _debug printf "\${_notebook_path} %s\\n" "${_notebook_path}"
+  _debug printf "\${_basename} %s\\n" "${_basename}"
+  _debug cat "${_notebook_path}/${_basename}"
+
   if [[ -d "${_notebook_path}/${_basename}" ]]
   then
-    "${_MY_PATH}" \
-      "${_target_notebook}:import" \
-      "${_notebook_path}/${_basename}" 1> /dev/null
+    NB_NOTEBOOK_PATH="${_target_notebook_path}"     \
+      _import "${_notebook_path}/${_basename}" 1> /dev/null
   else
-    cat "${_notebook_path}/${_basename}" \
-      | "${_MY_PATH}" "${_target_notebook}:add" "${_basename}" 1> /dev/null
+    cat "${_notebook_path}/${_basename}"            \
+      | NB_NOTEBOOK_PATH="${_target_notebook_path}" \
+        _add "${_basename}" 1> /dev/null
   fi
 
-  "${_MY_PATH}" delete "${_notebook_display_name}:${_basename}" --force 1> /dev/null
+  NB_NOTEBOOK_PATH="${_notebook_path}"              \
+    _delete "${_basename}" --force 1> /dev/null
 
   local _id
   _id="$(
-    "${_MY_PATH}" "${_target_notebook}:index" get_id "${_basename}"
+    NB_NOTEBOOK_PATH="${_target_notebook_path}" _index get_id "${_basename}"
   )"
 
   if [[ ! -e "${_notebook_path}/${_basename}"       ]] ||
@@ -6908,7 +6915,7 @@ Usage:
 Options:
   --archived    Only list archived notebooks.
   --global      List global notebooks or the notebook set globally with \`use\`.
-  --local       List local notebook.
+  --local       List local notebook if present.
   -f, --force   Skip the confirmation prompt.
   --names       Only print each notebook's name.
   --path        Print the path of the current notebook.
@@ -7035,8 +7042,10 @@ _notebooks() {
         then
           printf "%s\\n" "${_LOCAL_NOTEBOOK_PATH}"
         else
-          printf "local"
+          printf "local\\n"
         fi
+      else
+        return 1
       fi
     elif ((_print_path))
     then
@@ -10593,6 +10602,9 @@ do
       then
         _SUBCOMMAND="bookmark"
         _ARGUMENTS+=("${__opt}")
+      elif _notebooks current --selected
+      then
+        _ARGUMENTS+=("${__opt}")
       else
         __maybe_identifier_or_subcommand_or_url="${__opt#*:}"
         __maybe_selection_notebook="${__opt%%:*}"
@@ -10612,7 +10624,7 @@ do
             "Notebook not found: %s\\n" "${__maybe_selection_notebook}"
         fi
 
-        if _notebooks current --selected
+        if _notebooks current --selected || _notebooks current --local
         then
           if [[ -z "${__maybe_identifier_or_subcommand_or_url:-}" ]]
           then

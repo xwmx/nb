@@ -120,15 +120,17 @@ _setup_move() {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
     run "${_NB}" use "one"
-    run "${_NB}" add
+    run "${_NB}" add "example"
 
-    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
-
-    echo "\${_filename:-}: ${_filename:-}"
+    _filenames=("$("${_NB}" list -n 1 --no-id --filenames)")
+    _filename="${_filenames[0]:-}"
 
     run "${_NB}" use "home"
 
-    [[ -n "${_filename}"                ]]
+    echo "\${_filenames:-}: ${_filenames[*]:-}"
+    echo "\${_filename:-}: ${_filenames[0]:-}"
+
+    [[ -n "${_filename:-}"              ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
   }
 
