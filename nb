@@ -6928,15 +6928,7 @@ _notebooks() {
       _notebooks_select "${_selection}" || :
     fi
 
-    if ((_print_global))
-    then
-      if ((_print_path))
-      then
-        printf "%s\\n" "${_GLOBAL_NOTEBOOK_PATH}"
-      else
-        basename "${_GLOBAL_NOTEBOOK_PATH}"
-      fi
-    elif ((_print_local))
+    if ((_print_local))
     then
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
       then
@@ -6948,6 +6940,14 @@ _notebooks() {
         fi
       else
         return 1
+      fi
+    elif ((_print_global))
+    then
+      if ((_print_path))
+      then
+        printf "%s\\n" "${_GLOBAL_NOTEBOOK_PATH}"
+      else
+        basename "${_GLOBAL_NOTEBOOK_PATH}"
       fi
     elif ((_print_path))
     then
