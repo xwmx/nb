@@ -1958,7 +1958,7 @@ _get_selection_basename() {
     _basename=
   else
     _selection_notebook_path="$(
-      _get_notebook "${_selection}" --path
+      _notebooks current "${_selection}" --path
     )"
     _identifier="$(_get_selection_identifier "${_selection}")"
 
@@ -2003,102 +2003,6 @@ _get_selection_basename() {
 #   Given <selection>, print the identifier portion.
 _get_selection_identifier() {
   printf "%s\\n" "${1#*:}"
-}
-
-# _get_notebook()
-#
-# Usage:
-#   _get_notebook [<name> | <path> | <selection>]
-#                 [--display-name | --no-context | --path]
-#
-# Selection notebook is now set in option parsing.
-_get_notebook() {
-  local _context=1
-  local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
-  local _notebook_path=
-  local _print_display_name=0
-  local _print_path=0
-  local _selection=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --display-name)
-        _print_display_name=1
-        ;;
-      --path)
-        _print_path=1
-        ;;
-      --no-context|--no-default|--no-fallback)
-        _context=0
-        ;;
-      *)
-        if [[ -z "${_selection}" ]]
-        then
-          _selection="${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  if [[ "${_selection:-}" =~ / ]]
-  then
-    if [[ -d "${_selection}/.git"   ]] &&
-       [[ -f "${_selection}/.index" ]]
-    then
-      if [[ -n "${_local_notebook_path:-}"                ]] &&
-         [[ "${_selection}" == "${_local_notebook_path}"  ]]
-      then
-        _notebook_path="${_local_notebook_path}"
-      else
-        _notebook_path="${_selection}"
-      fi
-    fi
-  elif [[ -n "${_selection:-}" ]]
-  then
-    local _selection_notebook="${_selection%%:*}"
-
-    if [[ -n "${_selection_notebook:-}" ]]
-    then
-      if [[ "${_selection_notebook:-}" == "local" ]] &&
-         [[ -n "${_local_notebook_path:-}"              ]]
-      then
-        _notebook_path="${_local_notebook_path}"
-      elif [[ -d "${NB_DIR}/${_selection_notebook:-}/.git"    ]] &&
-           [[ -f "${NB_DIR}/${_selection_notebook:-}/.index"  ]]
-      then
-        _notebook_path="${NB_DIR}/${_selection_notebook}"
-      fi
-    fi
-  fi
-
-  if ((_context))
-  then # fall back to the current notebook.
-    if [[ -z "${_notebook_path:-}" ]]
-    then
-      _notebook_path="$(_notebooks current --path)"
-    fi
-  fi
-
-  if ((_print_display_name))
-  then
-    local _display_name=
-    _display_name="$(basename "${_notebook_path}")"
-
-    if [[ "${_display_name}" =~ \  ]]
-    then
-      _display_name="$(
-        printf "%s\\n" "${_display_name}" | sed -e "s/ /\\\ /g"
-      )"
-    fi
-
-    printf "%s\\n" "${_display_name:-}"
-  elif ((_print_path))
-  then
-    printf "%s\\n" "${_notebook_path}"
-  else
-    printf "%s\\n" "$(basename "${_notebook_path}")"
-  fi
 }
 
 # _get_title()
@@ -3003,7 +2907,8 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--global | --local] [--path | --selected]
+  ${_ME} notebooks current [<name> | <path> | <selection>] [--global | --local]
+                       [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -3349,7 +3254,9 @@ _add() {
     if _notebooks current --selected
     then
       local _notebook_display_name
-      _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
+      _notebook_display_name="$(
+        _notebooks current "${_notebook_path}" --display-name
+      )"
 
       _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
       _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
@@ -3629,7 +3536,7 @@ _bookmark() {
     _basename="$(_get_selection_basename "${_selection}")"
 
     local _notebook_path
-    _notebook_path="$(_get_notebook "${_selection}" --path)"
+    _notebook_path="$(_notebooks current "${_selection}" --path)"
 
     if [[ -z "${_basename}" ]]
     then
@@ -4378,7 +4285,7 @@ _delete() {
   _basename="$(_get_selection_basename "${_selection}")"
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   if [[ -z "${_basename}" ]]
   then
@@ -4396,7 +4303,7 @@ _delete() {
   if _notebooks current --selected
   then
     local _notebook_display_name
-    _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
+    _notebook_display_name="$(_notebooks current "${_notebook_path}" --display-name)"
 
     _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
     _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
@@ -4537,7 +4444,7 @@ _edit() {
   _basename="$(_get_selection_basename "${_selection:-}")"
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   if [[ -z "${_basename}" ]]
   then
@@ -4633,7 +4540,9 @@ _edit() {
       if _notebooks current --selected
       then
         local _notebook_display_name
-        _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
+        _notebook_display_name="$(
+          _notebooks show "${_notebook_path}" --display-name
+        )"
 
         _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
         _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
@@ -4881,7 +4790,7 @@ _export() {
   _basename="$(_get_selection_basename "${_selection}")"
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
   then
@@ -5049,9 +4958,6 @@ _helpers() {
     *identifier*)
       _get_selection_identifier       "${_options[@]}"
       ;;
-    *notebook*|*nb*)
-      _get_notebook                   "${_options[@]}"
-      ;;
     *title*)
       _get_title                      "${_options[@]}"
       ;;
@@ -5130,7 +5036,7 @@ _history() {
   _basename="$(_get_selection_basename "${_selection}")"
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
@@ -5915,13 +5821,13 @@ _list() {
 
   if [[ "${_selection:-}" =~ : ]]
   then
-    _notebook_path="$(_get_notebook "${_selection:-}" --path)"
+    _notebook_path="$(_notebooks current "${_selection:-}" --path)"
   else
     _notebook_path="$(_notebooks current --path)"
   fi
 
   local _notebook_display_name=
-  _notebook_display_name="$(_get_notebook "${_notebook_path}" --display-name)"
+  _notebook_display_name="$(_notebooks current "${_notebook_path}" --display-name)"
 
   local _list_files_options=("${_notebook_path}")
   local _filenames=()
@@ -5936,7 +5842,7 @@ _list() {
 
   if _notebooks current --selected
   then
-    _maybe_scope="$(_get_notebook "${_notebook_path}" --display-name):"
+    _maybe_scope="$(_notebooks current "${_notebook_path}" --display-name):"
     _maybe_scope_padded_right="${_maybe_scope} "
   fi
 
@@ -6339,7 +6245,7 @@ _ls() {
 
     if _notebooks current --selected
     then
-      _maybe_scope="$(_get_notebook --display-name):"
+      _maybe_scope="$(_notebooks current --display-name):"
       _maybe_scope_padded_left=" ${_maybe_scope}"
       _maybe_scope_padded_right="${_maybe_scope} "
     fi
@@ -6779,19 +6685,19 @@ _move() {
   _basename="$(_get_selection_basename "${_selection}")"
 
   local _notebook_display_name
-  _notebook_display_name="$(_get_notebook "${_selection}" --display-name)"
+  _notebook_display_name="$(_notebooks current "${_selection}" --display-name)"
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   local _target_notebook_path
   _target_notebook_path="$(
-    _get_notebook "${_target_notebook}" --path --no-context
+    _notebooks show "${_target_notebook}" --path 2>/dev/null || :
   )"
 
   local _target_notebook_display_name
   _target_notebook_display_name="$(
-    _get_notebook "${_target_notebook}" --display-name --no-context
+    _notebooks show "${_target_notebook}" --display-name 2>/dev/null || :
   )"
 
   if [[ -z "${_basename}"                             ]] ||
@@ -6885,7 +6791,8 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--global | --local] [--path | --selected]
+  ${_ME} notebooks current [<name> | <path> | <selection>] [--global | --local]
+                       [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -6919,7 +6826,8 @@ Subcommands:
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name.
+  current    Print the current notebook name. When provides with <name>,
+             <path>, or <selection>, use that as the current notebook.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.
@@ -6985,12 +6893,14 @@ _notebooks() {
   # _notebooks_current()
   #
   # Usage:
-  #   _notebooks_current [--global | --local] [--path | --scoped]
+  #   _notebooks_current (<name> | <path> | <selection>) [--global | --local]
+  #                      [--path | --scoped]
   _notebooks_current() {
     local _print_global=0
     local _print_local=0
     local _print_path=0
     local _return_selected=0
+    local _selection=
 
     for __arg in "${@:-}"
     do
@@ -7007,8 +6917,16 @@ _notebooks() {
         --scoped|--selected)
           _return_selected=1
           ;;
+        [^-]*)
+          _selection="${__arg}"
+          ;;
       esac
     done
+
+    if [[ -n "${_selection:-}" ]]
+    then
+      _notebooks_select "${_selection}" || :
+    fi
 
     if ((_print_global))
     then
@@ -7630,16 +7548,21 @@ HEREDOC
   # Usage:
   #   _notebook_select <selection>
   _notebooks_select() {
-    local _notebook_name="${1%%:*}"
-    local _notebook_paths=()
+    local _selection="${1:-}"
 
-    _notebook_paths=($(
-      _notebooks "${_notebook_name:-}" --path 2>/dev/null
-    ))
-
-    if [[ "${#_notebook_paths[@]}" == 1 ]]
+    if [[ -z "${_selection:-}" ]]
     then
-      NB_NOTEBOOK_PATH="${_notebook_paths[0]}"
+      _exit_1 _help "notebooks"
+    fi
+
+    local _notebook_path=
+    _notebook_path="$(
+      _notebooks_show "${_selection:-}" --path 2>/dev/null || :
+    )"
+
+    if [[ -n "${_notebook_path:-}" ]]
+    then
+      NB_NOTEBOOK_PATH="${_notebook_path}"
       return 0
     else
       return 1
@@ -7724,8 +7647,9 @@ HEREDOC
 
     if [[ -z "${_notebook_path:-}" ]]
     then
-      _exit_1 \
+      _return_1 \
         printf "Notebook not found: %s\\n" "$(_highlight "${_selection}")"
+      return 1
     fi
 
     if ((_only_path))
@@ -8388,7 +8312,7 @@ _rename() {
   _source_basename="$(_get_selection_basename "${_selection}")"
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   local _source_path="${_notebook_path}/${_source_basename}"
 
@@ -9859,7 +9783,7 @@ _show() {
   fi
 
   local _notebook_path
-  _notebook_path="$(_get_notebook "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   local _basename
   _basename="$(_get_selection_basename "${_selection}")"
@@ -10842,7 +10766,7 @@ done
 # _get_notebook_identifier()
 #
 # Renamed.
-_get_notebook_identifier() { _get_notebook "${@}" --display-name; }
+_get_notebook_identifier() { _notebooks show "${@}" --display-name; }
 
 # _set_selection_notebook() <selection>
 #

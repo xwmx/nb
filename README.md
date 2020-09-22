@@ -2494,7 +2494,8 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--global | --local] [--path | --selected]
+  nb notebooks current [<name> | <path> | <selection>] [--global | --local]
+                       [--path | --selected]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
@@ -3169,7 +3170,8 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--global | --local] [--path | --selected]
+  nb notebooks current [<name> | <path> | <selection>] [--global | --local]
+                       [--path | --selected]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
@@ -3203,7 +3205,8 @@ Subcommands:
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name.
+  current    Print the current notebook name. When provides with <name>,
+             <path>, or <selection>, use that as the current notebook.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.

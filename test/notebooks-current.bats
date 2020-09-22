@@ -122,6 +122,94 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
+@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with name." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current home --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" == "${NB_DIR}/home"  ]]
+}
+
+@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with colon name." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current home: --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" == "${NB_DIR}/home"  ]]
+}
+
+@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with path." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current "${NB_DIR}/home" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" == "${NB_DIR}/home"  ]]
+}
+
+@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with identifier." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current home:example.md --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" == "${NB_DIR}/home"  ]]
+}
+
+@test "\`notebooks current --path\` exits with 0 and prints the currrent notebook path with not valid notebook selector." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current not-valid:example.md --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" == "${NB_DIR}/one" ]]
+}
+
+@test "\`notebooks current --path\` exits with 0 and prints the currrent notebook path with not valid path." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current "${NB_DIR}/not-valid" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" == "${NB_DIR}/one" ]]
+}
+
 # --selected ####################################################################
 
 @test "\`notebooks current --selected\` exits with 1 when unscoped." {
@@ -152,6 +240,66 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`notebooks current --selected\` exits with 0 when passed a valid name." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current "home" --selected
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`notebooks current --selected\` exits with 0 when passed a name with colon." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current home: --selected
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`notebooks current --selected\` exits with 0 when passed a valid selection." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current home:example.md --selected
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`notebooks current --selected\` exits with 0 when passed an invalid selection." {
+  {
+    _setup_notebooks
+    printf "%s\\n" "one" > "${NB_DIR}/.current"
+  }
+
+  run "${_NB}" notebooks current not-valid:example.md --selected
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
 }
 
