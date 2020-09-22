@@ -270,7 +270,7 @@ _setup_notebooks() {
 
 # # --local #####################################################################
 
-@test "\`notebooks current --local\` exits with 0 and prints nothing when not in local." {
+@test "\`notebooks current --local\` exits with 1 and prints nothing when not in local." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -281,11 +281,11 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 1 ]]
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local --path\` exits with 0 and prints nothing when not in local." {
+@test "\`notebooks current --local --path\` exits with 1 and prints nothing when not in local." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -296,7 +296,7 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 1 ]]
   [[ -z "${output}"  ]]
 }
 
@@ -345,7 +345,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${_TMP_DIR}/example ]]
 }
 
-@test "\`notebooks current --local\` with selected exits with 0 and prints nothing." {
+@test "\`notebooks current --local\` with selected exits with 1 and prints nothing." {
   {
     _setup_notebooks
 
@@ -357,11 +357,11 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 1 ]]
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local --path\` with selected exits with 0 and prints nothing." {
+@test "\`notebooks current --local --path\` with selected exits with 1 and prints nothing." {
   {
     _setup_notebooks
 
@@ -373,6 +373,6 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 1 ]]
   [[ -z "${output}"  ]]
 }
