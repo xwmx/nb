@@ -462,6 +462,144 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
+# `show <id> --type` ##########################################################
+
+@test "\`show <id> --type\` with note exits with status 0 and prints note type." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0      ]]
+  [[ "${output}" == "md"  ]]
+}
+
+@test "\`show <id> --type\` with bookmark exits with status 0 and prints note type." {
+  {
+    run "${_NB}" init
+    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0      ]]
+  [[ "${output}" == "bookmark.md"  ]]
+}
+
+@test "\`show <id> --type <extension>\` exits with status 0 when note matches." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`show <id> --type <extension>\` exits with status 0 when bookmark matches." {
+  {
+    run "${_NB}" init
+    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type bookmark.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`show <id> --type <extension>\` exits with status 0 when bookmark matches one level." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`show <id> --type <type>\` exits with status 0 when note matches." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type text
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`show <id> --type <type>\` exits with status 0 when bookmark matches." {
+  {
+    run "${_NB}" init
+    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type bookmark
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output}"   ]]
+}
+
+@test "\`show <id> --type <type>\` exits with status 1 when no type match." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --type not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1  ]]
+  [[ -z "${output}"   ]]
+}
+
 # `show <notebook>` ###########################################################
 
 @test "\`show <notebook>\` exits with status 0 and runs ls in the notebook." {

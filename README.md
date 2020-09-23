@@ -2518,6 +2518,7 @@ Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --info | --path | --render | --title]
+          [--type [<type>]]
   nb show <notebook>
   nb sync [-a | --all]
   nb update
@@ -3657,18 +3658,24 @@ Example:
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --info | --path | --render | --title]
+          [--type [<type>]]
   nb show <notebook>
 
 Options:
-  --filename   Print the filename of the item.
-  --id         Print the id number of the item.
-  --info       Print the id, filename, and title of the item.
-  --path       Print the full path of the item.
-  -p, --print  Print to standard output / terminal.
-  --render     Use `pandoc` [1] to render the file to HTML and display with
-               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-               not available, `--render` is ignored.
-  --title      Print the title of the note.
+  --filename        Print the filename of the item.
+  --id              Print the id number of the item.
+  --info            Print the id, filename, and title of the item.
+  --path            Print the full path of the item.
+  -p, --print       Print to standard output / terminal.
+  --render          Use `pandoc` [1] to render the file to HTML and display with
+                    `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
+                    not available, `--render` is ignored.
+  --title           Print the title of the note.
+  --type [<type>]   Print the file extension or, when <type> is specified,
+                    return true if the item matches <type>. <type> can be a
+                    file extension or one of the following types:
+                    archive, audio, bookmark, document, folder, image,
+                    text, video
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
