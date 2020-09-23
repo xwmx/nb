@@ -2336,35 +2336,28 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _line_wrap_off()
+# _wrap()
 #
 # Usage:
-#   _line_wrap_off
-#
-# Description:
-#   Turn off line wrapping / automatic margins.
-_line_wrap_off() {
-  # NOTE: `tput` vs control sequence:
-  # https://unix.stackexchange.com/a/558771
-  # https://unix.stackexchange.com/a/515938
-  # https://superuser.com/a/189068
-
-  # tput rmam
-
-  printf '\033[?7l'
-}
-
-# _line_wrap_on()
-#
-# Usage:
-#   _line_wrap_on
+#   _wrap [on | off]
 #
 # Description:
 #   Turn on line wrapping / automatic margins.
-_line_wrap_on() {
-  # tput smam
+_wrap() {
+  if [[ "${1:-}" == "off"  ]]
+  then
+    # NOTE: `tput` vs control sequence:
+    # https://unix.stackexchange.com/a/558771
+    # https://unix.stackexchange.com/a/515938
+    # https://superuser.com/a/189068
 
-  printf '\033[?7h'
+    # tput rmam
+    printf '\033[?7l'
+  elif [[ "${1:-}" == "on" ]]
+  then
+    # tput smam
+    printf '\033[?7h'
+  fi
 }
 
 # _list_files()
@@ -4984,10 +4977,10 @@ _helpers() {
       _less_prompt                    "${_options[@]}"
       ;;
     line*wrap*off|unwrap)
-      _line_wrap_off                  "${_options[@]}"
+      _wrap off                  "${_options[@]}"
       ;;
     line*wrap*on|wrap)
-      _line_wrap_on                   "${_options[@]}"
+      _wrap on                   "${_options[@]}"
       ;;
     list*files)
       _list_files                     "${_options[@]}"
@@ -6110,7 +6103,7 @@ HEREDOC
                [[ -n "${_first_line:-}"  ]]
              }
           then
-            _line_wrap_off
+            _wrap off
           fi
         fi
 
@@ -6132,7 +6125,7 @@ HEREDOC
                [[ -n "${_first_line:-}"  ]]
              }
           then
-            _line_wrap_on
+            _wrap on
           fi
         fi
 
@@ -6290,10 +6283,10 @@ _ls() {
       "$(_highlight_secondary "${_commands_raw[10]}")"
     )
 
-    _line_wrap_off
+    _wrap off
     _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
     printf "%s" "${_TPUT_SGR0}"
-    _line_wrap_on
+    _wrap on
     printf "\\n"
 
     for ((i=0; i < "${#_commands_raw[@]}"; i++))
@@ -6502,7 +6495,7 @@ _ls() {
 
     printf "%b" "${_output_hi}"
 
-    _line_wrap_off
+    _wrap off
 
     if ((_centered))
     then # print full-width line.
@@ -6515,7 +6508,7 @@ _ls() {
     fi
 
     printf "%s" "${_TPUT_SGR0}"
-    _line_wrap_on
+    _wrap on
     printf "\\n"
   }
 
@@ -8819,9 +8812,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            _line_wrap_off
+            _wrap off
             printf "%s" "${_id_filename_color}"
-            _line_wrap_on
+            _wrap on
             printf "\\n"
           fi
 
@@ -8833,9 +8826,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then # match is in a different file than the last match
-            _line_wrap_off
+            _wrap off
             _print_line "${_id_filename}"
-            _line_wrap_on
+            _wrap on
           fi
 
           if ((_filename_hit))
