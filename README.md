@@ -2521,7 +2521,7 @@ Usage:
           [--filename | --id | --info | --path | --render | --title]
           [--type [<type>]]
   nb show <notebook>
-  nb subcommands [alias <name> <alias>]
+  nb subcommands [add <name>] [alias <name> <alias>]
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -3734,14 +3734,16 @@ Description:
 
 ```text
 Usage:
-  nb subcommands [alias <name> <alias>]
+  nb subcommands [add <name>] [alias <name> <alias>]
 
 Subcommands:
+  add    Add a new subcommand.
   alias  Create an <alias> of a given subcommand <name>, with linked help.
-         Aliases are not persisted, so this is primarily for plugins.
+         Note that aliases must also be added with `subcommands add`.
 
 Description:
-  List available subcommands.
+  List and add subcommands. New subcommands and aliases are not persisted,
+  so `add` and `alias` are primarily for plugins.
 ```
 
 #### `sync`

@@ -2933,7 +2933,7 @@ Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --info | --path | --render | --title]
   ${_ME} show <notebook>
-  ${_ME} subcommands [alias <name> <alias>]
+  ${_ME} subcommands [add <name>] [alias <name> <alias>]
   ${_ME} sync [-a | --all]
   ${_ME} update
   ${_ME} use <notebook>
@@ -10159,17 +10159,25 @@ _status() {
 
 describe "subcommands" <<HEREDOC
 Usage:
-  ${_ME} subcommands [alias <name> <alias>]
+  ${_ME} subcommands [add <name>] [alias <name> <alias>]
 
 Subcommands:
+  add    Add a new subcommand.
   alias  Create an <alias> of a given subcommand <name>, with linked help.
-         Aliases are not persisted, so this is primarily for plugins.
+         Note that aliases must also be added with \`subcommands add\`.
 
 Description:
-  List available subcommands.
+  List and add subcommands. New subcommands and aliases are not persisted,
+  so \`add\` and \`alias\` are primarily for plugins.
 HEREDOC
 _subcommands() {
-  if [[ "${1:-}" == "alias" ]]
+  if [[ "${1:-}" == "add"       ]] &&
+     [[ -n "${2:-}"             ]]
+  then
+    NB_PLUGIN_SUBCOMMANDS+=("${2}")
+  elif [[ "${1:-}" == "alias"   ]] &&
+       [[ -n "${2:-}"           ]] &&
+       [[ -n "${3:-}"           ]]
   then
     _alias_subcommand "${2:-}" "${3:-}"
   else
