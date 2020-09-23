@@ -10,8 +10,8 @@
 # https://github.com/xwmx/nb
 ###############################################################################
 
-# Add the new subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
-NB_PLUGIN_SUBCOMMANDS+=(example)
+# Add the new subcommand name(s) with `_subcommands add <name>`.
+_subcommands add "example"
 
 # Define help and usage text with `describe <subcommand> <usage>`.
 describe "example" <<HEREDOC

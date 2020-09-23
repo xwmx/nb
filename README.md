@@ -2220,10 +2220,10 @@ have an `.nb-plugin` extension.
 
 Create a new subcommand in three easy steps:
 
-##### 1. Add the new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array.
+##### 1. Add the new subcommand name(s) with `_subcommands add <name>`.
 
 ```bash
-NB_PLUGIN_SUBCOMMANDS+=(example)
+_subcommands add "example"
 ```
 
 ##### 2. Define help and usage text with `describe <subcommand> <usage>`.
