@@ -2412,7 +2412,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
   <a href="#status">status</a> •
-  <a href="#subcommands">subcommands</a> •
+  <a href="#subcommands-1">subcommands</a> •
   <a href="#sync">sync</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
