@@ -71,7 +71,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\              ]]
+  [[ "${output}" =~ Added:              ]]
   [[ "${output}" =~ example-filename.md ]]
 }
 
@@ -109,7 +109,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                ]]
+  [[ "${output}" =~ Added:                ]]
   [[ "${output}" =~ example-filename.org  ]]
 }
 
@@ -148,7 +148,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ Added:          ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -189,7 +189,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                  ]]
+  [[ "${output}" =~ Added:                  ]]
   [[ "${output}" =~ Example:[A-Za-z0-9]+    ]]
   [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
 }
@@ -229,7 +229,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ Added:          ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -270,7 +270,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                  ]]
+  [[ "${output}" =~ Added:                  ]]
   [[ "${output}" =~ Example:[A-Za-z0-9]+    ]]
   [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
 }
@@ -310,7 +310,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ Added:          ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -350,7 +350,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ Added:          ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -390,7 +390,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ Added:          ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -742,7 +742,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\          ]]
+  [[ "${output}" =~ Added:          ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }

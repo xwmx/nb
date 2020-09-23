@@ -3239,40 +3239,10 @@ _add() {
 
   if [[ -e "${_target_path}" ]]
   then
-    _index add "${_basename}"
+    local _info
+    _info="$(_show "${_basename}" --info)"
 
-    local _id
-    _id="$(_index get_id "${_basename}")"
-
-    local _maybe_scoped_id
-    _maybe_scoped_id="${_id}"
-
-    local _maybe_scoped_basename="${_basename}"
-
-    if _notebooks current --selected
-    then
-      local _notebook_display_name
-      _notebook_display_name="$(
-        _notebooks show "${_notebook_path}" --display-name --no-color
-      )"
-
-      _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
-      _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
-    fi
-
-    local _title
-    _title="$(_get_title "${_notebook_path}/${_basename}")"
-    if [[ -n "${_title}" ]]
-    then
-      printf "Added %s %s '%s'\\n"                          \
-        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
-        "$(_highlight         "${_maybe_scoped_basename}")" \
-        "${_title}"
-    else
-      printf "Added %s %s\\n"                               \
-        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
-        "$(_highlight "${_maybe_scoped_basename}")"
-    fi
+    printf "Added: %s\\n" "${_info}"
   fi &&
     _git_checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
 }
@@ -4290,41 +4260,12 @@ _delete() {
     _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
   fi
 
-  local _id
-  _id="$(_index get_id "${_basename}")"
-
-  local _maybe_scoped_id
-  _maybe_scoped_id="${_id}"
-
-  local _maybe_scoped_basename="${_basename}"
-
-  if _notebooks current --selected
-  then
-    local _notebook_display_name
-    _notebook_display_name="$(
-      _notebooks show "${_notebook_path}" --display-name --no-color
-    )"
-
-    _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
-    _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
-  fi
-
-  local _note_info_hi
-  _note_info_hi="$(
-    _id_brackets_color "${_maybe_scoped_id}") $(_highlight "${_maybe_scoped_basename}"
-  )"
-
-  _title="$(_get_title "${_notebook_path}/${_basename}")"
-  if [[ -n "${_title}" ]]
-  then
-    _note_info_line="${_note_info_hi} \"${_title}\""
-  else
-    _note_info_line="${_note_info_hi}"
-  fi
+  local _info
+  _info="$(_show "${_basename}" --info)"
 
   if ! ((_force))
   then
-    printf "Deleting %s\\n" "${_note_info_line}"
+    printf "Deleting: %s\\n" "${_info}"
     while true
     do
       read -r -p "Proceed? [y/N] " __yn
@@ -4356,7 +4297,7 @@ _delete() {
 
       _git_checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
-      printf "Deleted %s\\n" "${_note_info_line}"
+      printf "Deleted: %s\\n" "${_info}"
     fi
   else
     _exit_1 printf "Selection not found.\\n"
@@ -4529,39 +4470,10 @@ _edit() {
 
     if [[ "${_before}" != "${_after}" ]]
     then
-      local _id
-      _id="$(_index get_id "${_basename}")"
+      local _info
+      _info="$(_show "${_basename}" --info)"
 
-      local _maybe_scoped_id
-      _maybe_scoped_id="$(_index get_id "${_basename}")"
-
-      local _maybe_scoped_basename="${_basename}"
-
-      if _notebooks current --selected
-      then
-        local _notebook_display_name
-        _notebook_display_name="$(
-          _notebooks show "${_notebook_path}" --display-name --no-color
-        )"
-
-        _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
-        _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
-      fi
-
-      local _title
-      _title="$(_get_title "${_notebook_path}/${_basename}")"
-
-      if [[ -n "${_title}" ]]
-      then
-        printf "Updated %s %s '%s'\\n"                        \
-          "$(_id_brackets_color "${_maybe_scoped_id}")"       \
-          "$(_highlight         "${_maybe_scoped_basename}")" \
-          "${_title}"
-      else
-        printf "Updated %s %s\\n"                             \
-          "$(_id_brackets_color "${_maybe_scoped_id}")"       \
-          "$(_highlight         "${_maybe_scoped_basename}")"
-      fi
+      printf "Updated: %s\\n" "${_info}"
     fi
   else
     _exit_1 printf "Selection not found.\\n"
@@ -9742,6 +9654,7 @@ _show() {
   local _password=
   local _print_filename=0
   local _print_id=0
+  local _print_info=0
   local _print_path=0
   local _render=0
   local _selector=
@@ -9763,6 +9676,9 @@ _show() {
         ;;
       --id|--index)
         _print_id=1
+        ;;
+      --info)
+        _print_info=1
         ;;
       --no-color|--nocolor|--raw)
         _show_color_enabled=0
@@ -9854,6 +9770,45 @@ _show() {
   if ((_print_title))
   then
     _get_title "${_notebook_path}/${_basename}"
+    return 0
+  fi
+
+  if ((_print_info))
+  then
+    local _id
+    _id="$(_index get_id "${_basename}")"
+
+    local _maybe_scoped_id
+    _maybe_scoped_id="${_id}"
+
+    local _maybe_scoped_basename="${_basename}"
+
+    if _notebooks current --selected
+    then
+      local _notebook_display_name
+      _notebook_display_name="$(
+        _notebooks show "${_notebook_path}" --display-name --no-color
+      )"
+
+      _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
+      _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
+    fi
+
+    local _title
+    _title="$(_get_title "${_notebook_path}/${_basename}")"
+
+    if [[ -n "${_title}" ]]
+    then
+      printf "%s %s \"%s\"\\n"                        \
+        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
+        "$(_highlight         "${_maybe_scoped_basename}")" \
+        "${_title}"
+    else
+      printf "%s %s\\n"                             \
+        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
+        "$(_highlight         "${_maybe_scoped_basename}")"
+    fi
+
     return 0
   fi
 

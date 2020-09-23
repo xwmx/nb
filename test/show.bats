@@ -420,6 +420,48 @@ load test_helper
   [[ "${output}" == "Example Title" ]]
 }
 
+# `show <id> --info` ##########################################################
+
+@test "\`show <id> --info\` exits with status 0 and prints unscoped note info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --info
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ 1               ]]
+  [[ "${output}" =~ example.md      ]]
+  [[ "${output}" =~ Example\ Title  ]]
+  [[ ! "${output}" =~ home          ]]
+}
+
+@test "\`show <id> --info\` exits with status 0 and prints scoped note info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add one
+    run "${_NB}" one:add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show one:1 --info
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ one:1           ]]
+  [[ "${output}" =~ one:example.md  ]]
+  [[ "${output}" =~ Example\ Title  ]]
+}
+
 # `show <notebook>` ###########################################################
 
 @test "\`show <notebook>\` exits with status 0 and runs ls in the notebook." {
