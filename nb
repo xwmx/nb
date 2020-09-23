@@ -10774,20 +10774,20 @@ do
           fi
         fi
 
-        ___identifier_or_subcommand_or_url="${__opt#*:}"
+        __identifier_or_subcommand_or_url="${__opt#*:}"
 
-        if [[ -z "${___identifier_or_subcommand_or_url:-}" ]]
+        if [[ -z "${__identifier_or_subcommand_or_url:-}" ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
-          if _is_valid_subcommand "${___identifier_or_subcommand_or_url}"
+          if _is_valid_subcommand "${__identifier_or_subcommand_or_url}"
           then
-            _SUBCOMMAND="${___identifier_or_subcommand_or_url}"
+            _SUBCOMMAND="${__identifier_or_subcommand_or_url}"
           else
-            if _string_is_url "${___identifier_or_subcommand_or_url}"
+            if _string_is_url "${__identifier_or_subcommand_or_url}"
             then
               _SUBCOMMAND="bookmark"
-              _ARGUMENTS+=("${___identifier_or_subcommand_or_url}")
+              _ARGUMENTS+=("${__identifier_or_subcommand_or_url}")
             else
               _ARGUMENTS+=("${__opt}")
             fi
