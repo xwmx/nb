@@ -10167,8 +10167,8 @@ Subcommands:
          Note that aliases must also be added with \`subcommands add\`.
 
 Description:
-  List and add subcommands. New subcommands and aliases are not persisted,
-  so \`add\` and \`alias\` are primarily for plugins.
+  List, add, and alias subcommands. New subcommands and aliases are not
+  persisted, so \`add\` and \`alias\` are primarily for plugins.
 HEREDOC
 _subcommands() {
   if [[ "${1:-}" == "add"       ]] &&
