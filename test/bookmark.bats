@@ -203,7 +203,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -249,7 +249,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -299,7 +299,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${lines[0]}" == "${_message}" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -359,7 +359,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -426,7 +426,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -492,7 +492,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -544,7 +544,7 @@ Example description."
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -604,7 +604,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -666,7 +666,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -722,7 +722,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -811,7 +811,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -874,7 +874,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -1039,7 +1039,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\                  ]]
+  [[ "${output}" =~ Deleted:                  ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -1074,7 +1074,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\                  ]]
+  [[ "${output}" =~ Updated:                  ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
