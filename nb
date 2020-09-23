@@ -5750,8 +5750,8 @@ _list() {
     _notebook_path="$(_notebooks current --path)"
   fi
 
-  local _notebook_display_name=
-  _notebook_display_name="$(
+  local _notebook_escaped_name=
+  _notebook_escaped_name="$(
     _notebooks show "${_notebook_path}" --escaped --no-color
   )"
 
@@ -5941,8 +5941,8 @@ HEREDOC
 
           if [[ -n "${_maybe_scope:-}" ]]
           then
-            _item_identifier="${_notebook_display_name}:${_item_identifier}"
-            _max_identifier="${_notebook_display_name}:${_max_id}"
+            _item_identifier="${_notebook_escaped_name}:${_item_identifier}"
+            _max_identifier="${_notebook_escaped_name}:${_max_id}"
           else
             _item_identifier="${_item_identifier}"
             _max_identifier="${_max_id}"
@@ -6610,8 +6610,8 @@ _move() {
   local _basename
   _basename="$(_show "${_selector}" --filename)"
 
-  local _notebook_display_name
-  _notebook_display_name="$(
+  local _notebook_escaped_name
+  _notebook_escaped_name="$(
     _notebooks current "${_selector}" --escaped --no-color
   )"
 
@@ -6623,8 +6623,8 @@ _move() {
     _notebooks show "${_target_notebook}" --path 2>/dev/null || :
   )"
 
-  local _target_notebook_display_name
-  _target_notebook_display_name="$(
+  local _target_notebook_escaped_name
+  _target_notebook_escaped_name="$(
     _notebooks show "${_target_notebook}" --escaped --no-color 2>/dev/null || :
   )"
 
@@ -6633,7 +6633,7 @@ _move() {
   then
     _exit_1 printf        \
       "Not found: %s\\n"  \
-      "$(_highlight "${_notebook_display_name}:${_selector}")"
+      "$(_highlight "${_notebook_escaped_name}:${_selector}")"
   elif [[ ! -e "${_target_notebook_path}/.git"        ]]
   then
     _exit_1 printf                        \
@@ -6643,15 +6643,15 @@ _move() {
   then
     _exit_1 printf            \
       "Already exists: %s\\n" \
-      "$(_highlight "${_target_notebook_display_name}:${_basename}")"
+      "$(_highlight "${_target_notebook_escaped_name}:${_basename}")"
   fi
 
   local _source_id=
   _source_id="$(_index get_id "${_basename}")"
 
   local _source_info=
-  _source_info="$(_id_brackets_color "${_notebook_display_name}:${_source_id}")"
-  _source_info="${_source_info} $(_highlight "${_notebook_display_name}:${_basename}")"
+  _source_info="$(_id_brackets_color "${_notebook_escaped_name}:${_source_id}")"
+  _source_info="${_source_info} $(_highlight "${_notebook_escaped_name}:${_basename}")"
 
   local _title=
   _title="$(_get_title "${_notebook_path}/${_basename}")"
@@ -7505,12 +7505,12 @@ HEREDOC
   #
   # Usage:
   #   _notebooks_show (<name> | <path> | <selector>) [--archived]
-  #                   [--escaped] [--path]
+  #                   [--escaped] [--path] [--unique-filename]
   _notebooks_show() {
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_color_enabled=1
     local _notebook_path=
-    local _print_display_name=0
+    local _print_escaped_name=0
     local _only_name=0
     local _only_path=0
     local _selector=
@@ -7523,7 +7523,7 @@ HEREDOC
           _test_archived=1
           ;;
         --escaped)
-          _print_display_name=1
+          _print_escaped_name=1
           ;;
         --name)
           _only_name=1
@@ -7615,28 +7615,28 @@ HEREDOC
       return 0
     fi
 
-    local _display_name="${_notebook_name}"
+    local _escaped_name="${_notebook_name}"
 
-    if [[ "${_display_name}" =~ \  ]]
+    if [[ "${_escaped_name}" =~ \  ]]
     then
-      _display_name="$(
-        printf "%s\\n" "${_display_name}" | sed -e "s/ /\\\ /g"
+      _escaped_name="$(
+        printf "%s\\n" "${_escaped_name}" | sed -e "s/ /\\\ /g"
       )"
     fi
 
-    if ((_print_display_name))
+    if ((_print_escaped_name))
     then
-      printf "%s\\n" "${_display_name:-}"
+      printf "%s\\n" "${_escaped_name:-}"
       return 0
     fi
 
     if ((_notebook_color_enabled)) &&
        [[ "${_notebook_path}" == "${NB_NOTEBOOK_PATH}" ]]
     then
-      _display_name="$(_highlight "${_display_name}")"
+      _escaped_name="$(_highlight "${_escaped_name}")"
     fi
 
-    local _notebook_line="${_display_name}"
+    local _notebook_line="${_escaped_name}"
 
     if [[ -e "${_notebook_path}/.archived" ]]
     then
@@ -8729,13 +8729,13 @@ _search() {
           if ((_all)) ||
              [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
           then
-            local _notebook_display_name=
-            _notebook_display_name="$(
+            local _notebook_escaped_name=
+            _notebook_escaped_name="$(
               _notebooks show "${__notebook_path}" --escaped --no-color
             )"
 
-            _id_filename="[${_notebook_display_name}:${_id}] ${_file_info}"
-            _id_filename_color="$(_id_brackets_color "${_notebook_display_name}:${_id}") ${_file_info_color}"
+            _id_filename="[${_notebook_escaped_name}:${_id}] ${_file_info}"
+            _id_filename_color="$(_id_brackets_color "${_notebook_escaped_name}:${_id}") ${_file_info_color}"
           else
             _id_filename="[${_id}] ${_file_info}"
             _id_filename_color="$(_id_brackets_color "${_id}") ${_file_info_color}"
@@ -9791,13 +9791,13 @@ _show() {
 
     if _notebooks current --selected
     then
-      local _notebook_display_name
-      _notebook_display_name="$(
+      local _notebook_escaped_name
+      _notebook_escaped_name="$(
         _notebooks show "${_notebook_path}" --escaped --no-color
       )"
 
-      _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
-      _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
+      _maybe_scoped_id="${_notebook_escaped_name}:${_maybe_scoped_id}"
+      _maybe_scoped_basename="${_notebook_escaped_name}:${_maybe_scoped_basename}"
     fi
 
     local _title
