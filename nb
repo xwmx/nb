@@ -2881,6 +2881,7 @@ Usage:
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
+  ${_ME} git checkpoint [<message>]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
@@ -4866,7 +4867,12 @@ _export() {
 
 describe "git" <<HEREDOC
 Usage:
+  ${_ME} git checkpoint [<message>]
   ${_ME} git <git options>...
+
+Subcommands:
+  checkpoint  Create a new git commit in the current notebook and sync with
+              the remote if \`${_ME} set auto_sync\` is enabled.
 
 Description:
   Run \`git\` commands within the current notebook directory.
@@ -4877,16 +4883,22 @@ Examples:
   ${_ME} git log
 HEREDOC
 _git() {
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
-
-  cd "${_notebook_path}" || _exit_1 printf "_git() \`cd\` failed.\\n"
-
-  if [[ -n "${1:-}" ]]
+  if [[ "${1:-}" == "checkpoint" ]]
   then
-    git "${@}"
+    shift
+    _git_checkpoint "${@}"
   else
-    git
+    local _notebook_path
+    _notebook_path="$(_notebooks current --path)"
+
+    cd "${_notebook_path}" || _exit_1 printf "_git() \`cd\` failed.\\n"
+
+    if [[ -n "${1:-}" ]]
+    then
+      git "${@}"
+    else
+      git
+    fi
   fi
 }
 
