@@ -2268,9 +2268,8 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 Plugins can be created using [`nb` subcommands](#nb-help), which represent
 `nb`'s public API. Within plugins, subcommands can be called using their
-function names. Subcommand functions have the same names as the subcommands
-with a leading underscore. Options can be used to output information in
-formats suitable for parsing and processing:
+function names, which are named with leading underscores. Options can be
+used to output information in formats suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
