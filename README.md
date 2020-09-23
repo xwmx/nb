@@ -2264,13 +2264,13 @@ You can install any plugin you create locally with
 `nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
 anywhere else online and install it with `nb plugins install <url>`.
 
-#### Internal Functions and Variables
+#### API
 
-Plugins have full access to all internal functions and variables,
-which are identified by leading underscores. `nb` subcommands, which
-represent `nb`'s public API, should be called using their internal
-function names. Options can be used to output information in formats
-suitable for parsing and processing:
+Plugins can be created using [`nb` subcommands](#nb-help), which represent
+`nb`'s public API. Within plugins, subcommands can be called using their
+function names. Subcommand functions have the same names as the subcommands
+with a leading underscore. Options can be used to output information in
+formats suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
@@ -2282,12 +2282,6 @@ _notebooks --names --no-color --unarchived --global
 # list all filenames in the current notebook
 _list --filenames --no-id --no-indicator
 ```
-
-`nb` includes a variety of helper and utility functions that can be
-leveraged when creating plugins. Plugins can also define their own helper
-and utility functions, and can override functions in `nb`, including
-entire subcommands. As a result, plugins can be used to customize and
-extend just about anything in `nb`.
 
 ### > `nb` Interactive Shell
 
