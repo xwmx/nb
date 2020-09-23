@@ -4791,7 +4791,7 @@ _git() {
   if [[ "${1:-}" == "checkpoint" ]]
   then
     shift
-    _git_checkpoint "${@}"
+    _git_checkpoint "${@:-}"
   else
     local _notebook_path
     _notebook_path="$(_notebooks current --path)"
