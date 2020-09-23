@@ -2472,6 +2472,8 @@ Usage:
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
   nb export notebook <name> [<path>]
+  nb export pandoc (<id> | <filename> | <path> | <title>)
+            [<pandoc options>...]
   nb git <git options>...
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]

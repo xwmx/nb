@@ -2886,6 +2886,8 @@ Usage:
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
+  ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
+            [<pandoc options>...]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
