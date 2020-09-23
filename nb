@@ -4225,7 +4225,6 @@ Shortcut Alias: \`d\`
 HEREDOC
 _delete() {
   local _force=0
-  local _note_info_line=
   local _selector=
   local _title=
 
