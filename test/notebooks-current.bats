@@ -273,7 +273,7 @@ _setup_notebooks() {
   [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when passed a valid selection." {
+@test "\`notebooks current --selected\` exits with 0 when passed a valid selector." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -288,7 +288,7 @@ _setup_notebooks() {
   [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when passed an invalid selection." {
+@test "\`notebooks current --selected\` exits with 0 when passed an invalid selector." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"

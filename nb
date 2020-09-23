@@ -1930,10 +1930,10 @@ _get_http_status() {
   fi
 }
 
-# _get_selection_basename()
+# _get_selector_basename()
 #
 # Usage:
-#   _get_selection_basename <selection>
+#   _get_selector_basename <selector>
 #
 # Description:
 #   Determine the basename of the file that is identified by the given <id>,
@@ -1945,41 +1945,41 @@ _get_http_status() {
 #     example.md
 #     notebook:1
 #     notebook:example.md
-_get_selection_basename() {
+_get_selector_basename() {
   local _basename=
   local _identifier=
-  local _selection="${1:-}"
+  local _selector="${1:-}"
 
-  local _selection_notebook_path
-  _selection_notebook_path="$(_notebooks current --path)"
+  local _selector_notebook_path
+  _selector_notebook_path="$(_notebooks current --path)"
 
-  if [[ -z "${_selection}" ]]
+  if [[ -z "${_selector}" ]]
   then
     _basename=
   else
-    _selection_notebook_path="$(
-      _notebooks current "${_selection}" --path
+    _selector_notebook_path="$(
+      _notebooks current "${_selector}" --path
     )"
-    _identifier="$(_get_selection_identifier "${_selection}")"
+    _identifier="$(_get_selector_identifier "${_selector}")"
 
-    if [[ -e "${_identifier}"                               ]] &&
-       [[ "${_identifier}" =~ ${_selection_notebook_path}   ]]
-    then # <selection> is a full path.
+    if [[ -e "${_identifier}"                             ]] &&
+       [[ "${_identifier}" =~ ${_selector_notebook_path}  ]]
+    then # <selector> is a full path.
       _basename="$(basename "${_identifier}")"
-    elif [[ -e "${_selection_notebook_path}/${_identifier}" ]]
-    then # <selection> is a filename.
+    elif [[ -e "${_selector_notebook_path}/${_identifier}" ]]
+    then # <selector> is a filename.
       _basename="${_identifier}"
     elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
-    then # <selection> is an id.
+    then # <selector> is an id.
       _basename="$(_index get_basename "${_identifier}")"
-    else # <selection> might be a title.
+    else # <selector> might be a title.
       local _title=
       local _filenames=
-      _filenames=($(_list_files "${_selection_notebook_path}"))
+      _filenames=($(_list_files "${_selector_notebook_path}"))
 
       for __file in "${_filenames[@]:-}"
       do
-        _title="$(_get_title "${_selection_notebook_path}/${__file}")"
+        _title="$(_get_title "${_selector_notebook_path}/${__file}")"
 
         if [[ -n "${_title}"                  ]] &&
            [[ "${_title}" == "${_identifier}" ]]
@@ -1994,14 +1994,14 @@ _get_selection_basename() {
   printf "%s\\n" "${_basename}"
 }
 
-# _get_selection_identifier()
+# _get_selector_identifier()
 #
 # Usage:
-#   _get_selection_identifier <selection>
+#   _get_selector_identifier <selector>
 #
 # Description:
-#   Given <selection>, print the identifier portion.
-_get_selection_identifier() {
+#   Given <selector>, print the identifier portion.
+_get_selector_identifier() {
   printf "%s\\n" "${1#*:}"
 }
 
@@ -2909,13 +2909,13 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [<name> | <path> | <selection>] [--global | --local]
+  ${_ME} notebooks current [<name> | <path> | <selector>] [--global | --local]
                        [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
-  ${_ME} notebooks select <selection>
+  ${_ME} notebooks select <selector>
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3400,7 +3400,7 @@ _bookmark() {
   local _quote=
   local _related_urls=()
   local _save_source=0
-  local _selection=
+  local _selector=
   local _skip_content=0
   local _subcommand=
   local _tag_list=
@@ -3485,7 +3485,7 @@ _bookmark() {
             _subcommand="url"
           fi
 
-          _selection="${__val:-}"
+          _selector="${__val:-}"
 
           shift
         else
@@ -3535,16 +3535,16 @@ _bookmark() {
   if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
   then
     local _basename
-    _basename="$(_get_selection_basename "${_selection}")"
+    _basename="$(_get_selector_basename "${_selector}")"
 
     local _notebook_path
-    _notebook_path="$(_notebooks current "${_selection}" --path)"
+    _notebook_path="$(_notebooks current "${_selector}" --path)"
 
     if [[ -z "${_basename}" ]]
     then
       if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
       then
-        local _maybe_notebook="${_selection:-}"
+        local _maybe_notebook="${_selector:-}"
         _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
 
         if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
@@ -3552,7 +3552,7 @@ _bookmark() {
           _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
         fi
       fi
-      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
     fi
 
     local _target_path="${_notebook_path}/${_basename}"
@@ -3583,17 +3583,17 @@ _bookmark() {
         then
           if [[ -n "${_password}" ]]
           then
-            _edit "${_selection}" --password "${_password}"
+            _edit "${_selector}" --password "${_password}"
           else
-            _edit "${_selection}"
+            _edit "${_selector}"
           fi
         elif [[ "${_subcommand}" == "peek" ]]
         then
           if [[ -n "${_password}" ]]
           then
-            _show "${_selection}" --password "${_password}"
+            _show "${_selector}" --password "${_password}"
           else
-            _show "${_selection}"
+            _show "${_selector}"
           fi
         fi
 
@@ -4260,7 +4260,7 @@ HEREDOC
 _delete() {
   local _force=0
   local _note_info_line=
-  local _selection=
+  local _selector=
   local _title=
 
   for __arg in "${@:-}"
@@ -4270,28 +4270,28 @@ _delete() {
         _force=1
         ;;
       *)
-        if [[ -z "${_selection}" ]]
+        if [[ -z "${_selector}" ]]
         then
-          _selection="${__arg}"
+          _selector="${__arg}"
         fi
         ;;
     esac
   done
 
-  if [[ -z "${_selection:-}" ]]
+  if [[ -z "${_selector:-}" ]]
   then
     _exit_1 _help "delete"
   fi
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="$(_get_selector_basename "${_selector}")"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
   fi
 
   local _id
@@ -4429,9 +4429,9 @@ _edit() {
         shift
         ;;
       *)
-        if [[ -z "${_selection:-}" ]]
+        if [[ -z "${_selector:-}" ]]
         then
-          _selection="${__arg:-}"
+          _selector="${__arg:-}"
         fi
         ;;
     esac
@@ -4439,20 +4439,20 @@ _edit() {
     shift
   done
 
-  if [[ -z "${_selection:-}" ]]
+  if [[ -z "${_selector:-}" ]]
   then
     _exit_1 _help "edit"
   fi
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection:-}")"
+  _basename="$(_get_selector_basename "${_selector:-}")"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
   fi
 
   if [[ -n "${_basename}" ]] || [[ -e "${_notebook_path}/${_basename}" ]]
@@ -4750,7 +4750,7 @@ _export() {
   local _force=0
   local _notebook_export=0
   local _pandoc_only=0
-  local _selection=
+  local _selector=
   local _target_path=
 
   for __arg in "${@:-}"
@@ -4766,9 +4766,9 @@ _export() {
         _force=1
         ;;
       *)
-        if [[ -z "${_selection:-}" ]]
+        if [[ -z "${_selector:-}" ]]
         then
-          _selection="${__arg}"
+          _selector="${__arg}"
         elif ! ((_pandoc_only)) && [[ -z "${_target_path:-}" ]]
         then
           _target_path="${__arg}"
@@ -4779,26 +4779,26 @@ _export() {
     esac
   done
 
-  if [[ -z "${_selection:-}" ]]
+  if [[ -z "${_selector:-}" ]]
   then
     _exit_1 _help "export"
   fi
 
   if ((_notebook_export))
   then
-    _notebooks export "${_selection:-}" "${_target_path:-}"
+    _notebooks export "${_selector:-}" "${_target_path:-}"
     return 0
   fi
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="$(_get_selector_basename "${_selector}")"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
   fi
 
   if ((_pandoc_only))
@@ -4864,7 +4864,7 @@ _export() {
       cp "${_notebook_path}/${_basename}" "${_target_path}"
     fi &&
       printf "Exported %s to %s\\n"       \
-        "$(_highlight "${_selection}")"   \
+        "$(_highlight "${_selector}")"    \
         "$(_highlight "${_target_path}")"
   fi
 }
@@ -4956,11 +4956,11 @@ _helpers() {
     *http*)
       _get_http_status                "${_options[@]}"
       ;;
-    *selection*basename*)
-      _get_selection_basename         "${_options[@]}"
+    *selector*basename*)
+      _get_selector_basename          "${_options[@]}"
       ;;
     *identifier*)
-      _get_selection_identifier       "${_options[@]}"
+      _get_selector_identifier        "${_options[@]}"
       ;;
     *title*)
       _get_title                      "${_options[@]}"
@@ -5034,13 +5034,13 @@ Examples:
   ${_ME} 3 history
 HEREDOC
 _history() {
-  local _selection="${1:-}"
+  local _selector="${1:-}"
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="$(_get_selector_basename "${_selector}")"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
@@ -5736,7 +5736,7 @@ _list() {
   local _print_excerpt=0
   local _print_indicators=1
   local _reverse=0
-  local _selection=
+  local _selector=
   local _sort=0
   local _type=
   local _use_pager=0
@@ -5804,7 +5804,7 @@ _list() {
         then
           _type="${__arg:2}"
         else
-          _selection="${__arg:-}"
+          _selector="${__arg:-}"
         fi
         ;;
     esac
@@ -5812,20 +5812,20 @@ _list() {
     shift
   done
 
-  local _selection_basename=
-  local _selection_identifier=
+  local _selector_basename=
+  local _selector_identifier=
 
-  if [[ -n "${_selection:-}" ]]
+  if [[ -n "${_selector:-}" ]]
   then
-    _selection_basename="$(_get_selection_basename "${_selection}")"
-    _selection_identifier="$(_get_selection_identifier "${_selection}")"
+    _selector_basename="$(_get_selector_basename "${_selector}")"
+    _selector_identifier="$(_get_selector_identifier "${_selector}")"
   fi
 
   local _notebook_path=
 
-  if [[ "${_selection:-}" =~ : ]]
+  if [[ "${_selector:-}" =~ : ]]
   then
-    _notebook_path="$(_notebooks current "${_selection:-}" --path)"
+    _notebook_path="$(_notebooks current "${_selector:-}" --path)"
   else
     _notebook_path="$(_notebooks current --path)"
   fi
@@ -5854,7 +5854,7 @@ _list() {
 
   # Use code block to capture all output for piping to pager.
   {
-    if ! ((_filenames_count)) && [[ -z "${_selection_identifier:-}" ]]
+    if ! ((_filenames_count)) && [[ -z "${_selector_identifier:-}" ]]
     then
       if ((_hard_empty))
       then
@@ -5906,13 +5906,13 @@ HEREDOC
       do
         local _maybe_title=
 
-        if [[ -n "${_selection_identifier:-}" ]]
+        if [[ -n "${_selector_identifier:-}" ]]
         then
-          # If a valid <selection> has been specified, skip the rest of the
-          # loop unless the <selection> basename matches the current one.
-          if [[ -n "${_selection_basename}" ]]
+          # If a valid <selector> has been specified, skip the rest of the
+          # loop unless the <selector> basename matches the current one.
+          if [[ -n "${_selector_basename}" ]]
           then
-            if [[ "${__basename}" != "${_selection_basename}" ]]
+            if [[ "${__basename}" != "${_selector_basename}" ]]
             then
               continue
             fi
@@ -5920,13 +5920,13 @@ HEREDOC
             # Turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
-            if [[ "${__basename:-}" =~ ${_selection_identifier} ]]
+            if [[ "${__basename:-}" =~ ${_selector_identifier} ]]
             then
               : # include the note in the list
             else
               _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
 
-              if [[ "${_maybe_title:-}" =~ ${_selection_identifier} ]]
+              if [[ "${_maybe_title:-}" =~ ${_selector_identifier} ]]
               then
                 : # include the note in the list
               else
@@ -6157,10 +6157,10 @@ HEREDOC
         _counter=$((_counter+1))
       done
 
-      if ! ((_counter)) && [[ -n "${_selection:-}" ]]
+      if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
         _return_1 \
-          printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+          printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
       fi
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
@@ -6557,7 +6557,7 @@ _ls() {
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
       *:*)
-        _args+=("$(_get_selection_identifier "${__arg}")")
+        _args+=("$(_get_selector_identifier "${__arg}")")
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
@@ -6608,14 +6608,14 @@ _ls() {
         then # current notebook is empty
           _list -n "${_limit}" "${_args[@]:-}"
         else
-          local _selection="${_args[0]:-}"
+          local _selector="${_args[0]:-}"
 
           if _notebooks current --selected
           then
-            _selection="$(_notebooks current --name):${_selection}"
+            _selector="$(_notebooks current --name):${_selector}"
           fi
 
-          _return_1 printf "Not found: %s\\n" "$(_highlight "${_selection}")"
+          _return_1 printf "Not found: %s\\n" "$(_highlight "${_selector}")"
         fi
       fi
     }
@@ -6656,7 +6656,7 @@ HEREDOC
 _move() {
   local _basename=
   local _force=0
-  local _selection=
+  local _selector=
   local _target_notebook=
 
   for __arg in "${@:-}"
@@ -6666,9 +6666,9 @@ _move() {
         _force=1
         ;;
       *)
-        if [[ -z "${_selection}" ]]
+        if [[ -z "${_selector}" ]]
         then
-          _selection="${__arg}"
+          _selector="${__arg}"
         elif [[ -z "${_target_notebook}" ]]
         then
           _target_notebook="${__arg}"
@@ -6677,7 +6677,7 @@ _move() {
     esac
   done
 
-  if [[ -z "${_selection:-}" ]] || [[ -z "${_target_notebook:-}" ]]
+  if [[ -z "${_selector:-}" ]] || [[ -z "${_target_notebook:-}" ]]
   then
     _exit_1 _help "move"
   fi
@@ -6688,15 +6688,15 @@ _move() {
   fi
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="$(_get_selector_basename "${_selector}")"
 
   local _notebook_display_name
   _notebook_display_name="$(
-    _notebooks show "${_selection}" --display-name --no-color
+    _notebooks show "${_selector}" --display-name --no-color
   )"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   local _target_notebook_path
   _target_notebook_path="$(
@@ -6713,7 +6713,7 @@ _move() {
   then
     _exit_1 printf        \
       "Not found: %s\\n"  \
-      "$(_highlight "${_notebook_display_name}:${_selection}")"
+      "$(_highlight "${_notebook_display_name}:${_selector}")"
   elif [[ ! -e "${_target_notebook_path}/.git"        ]]
   then
     _exit_1 printf                        \
@@ -6799,13 +6799,13 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [<name> | <path> | <selection>] [--global | --local]
+  ${_ME} notebooks current [<name> | <path> | <selector>] [--global | --local]
                        [--path | --selected]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
-  ${_ME} notebooks select <selection>
+  ${_ME} notebooks select <selector>
   ${_ME} notebooks use <name>
 
 Options:
@@ -6835,7 +6835,7 @@ Subcommands:
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name. When provides with <name>,
-             <path>, or <selection>, use that as the current notebook.
+             <path>, or <selector>, use that as the current notebook.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.
@@ -6845,7 +6845,7 @@ Subcommands:
              \`ranger\` [1], \`mc\` [2], \`exa\` [3], or \`ls\`.
              Shortcut Alias: \`p\`
   rename     Rename a notebook.
-  select     Set the current notebook from a colon-prefixed selection.
+  select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or
              notebook <name>.
@@ -6901,14 +6901,14 @@ _notebooks() {
   # _notebooks_current()
   #
   # Usage:
-  #   _notebooks_current (<name> | <path> | <selection>) [--global | --local]
+  #   _notebooks_current (<name> | <path> | <selector>) [--global | --local]
   #                      [--path | --scoped]
   _notebooks_current() {
     local _print_global=0
     local _print_local=0
     local _print_path=0
     local _return_selected=0
-    local _selection=
+    local _selector=
 
     for __arg in "${@:-}"
     do
@@ -6926,14 +6926,14 @@ _notebooks() {
           _return_selected=1
           ;;
         [^-]*)
-          _selection="${__arg}"
+          _selector="${__arg}"
           ;;
       esac
     done
 
-    if [[ -n "${_selection:-}" ]]
+    if [[ -n "${_selector:-}" ]]
     then
-      _notebooks_select "${_selection}" || :
+      _notebooks_select "${_selector}" || :
     fi
 
     if ((_print_local))
@@ -7554,18 +7554,18 @@ HEREDOC
   # _notebooks_select()
   #
   # Usage:
-  #   _notebook_select <selection>
+  #   _notebook_select <selector>
   _notebooks_select() {
-    local _selection="${1:-}"
+    local _selector="${1:-}"
 
-    if [[ -z "${_selection:-}" ]]
+    if [[ -z "${_selector:-}" ]]
     then
       _exit_1 _help "notebooks"
     fi
 
     local _notebook_path=
     _notebook_path="$(
-      _notebooks_show "${_selection:-}" --path 2>/dev/null || :
+      _notebooks_show "${_selector:-}" --path 2>/dev/null || :
     )"
 
     if [[ -n "${_notebook_path:-}" ]]
@@ -7580,7 +7580,7 @@ HEREDOC
   # _notebooks_show()
   #
   # Usage:
-  #   _notebooks_show (<name> | <path> | <selection>) [--archived]
+  #   _notebooks_show (<name> | <path> | <selector>) [--archived]
   #                   [--display-name] [--path]
   _notebooks_show() {
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
@@ -7589,7 +7589,7 @@ HEREDOC
     local _print_display_name=0
     local _only_name=0
     local _only_path=0
-    local _selection=
+    local _selector=
     local _test_archived=0
 
     for __arg in "${@:-}"
@@ -7611,44 +7611,44 @@ HEREDOC
           _only_path=1
           ;;
         *)
-          if [[ -z "${_selection}" ]]
+          if [[ -z "${_selector}" ]]
           then
-            _selection="${__arg}"
+            _selector="${__arg}"
           fi
           ;;
       esac
     done
 
-    if [[ -z "${_selection:-}"      ]]
+    if [[ -z "${_selector:-}"      ]]
     then
       _exit_1 _help "notebooks"
-    elif [[ "${_selection:-}" =~ /  ]]
+    elif [[ "${_selector:-}" =~ /  ]]
     then
-      if [[ -d "${_selection}/.git"   ]] &&
-         [[ -f "${_selection}/.index" ]]
+      if [[ -d "${_selector}/.git"   ]] &&
+         [[ -f "${_selector}/.index" ]]
       then
-        if [[ -n "${_local_notebook_path:-}"                ]] &&
-           [[ "${_selection}" == "${_local_notebook_path}"  ]]
+        if [[ -n "${_local_notebook_path:-}"              ]] &&
+           [[ "${_selector}" == "${_local_notebook_path}" ]]
         then
           _notebook_path="${_local_notebook_path}"
         else
-          _notebook_path="${_selection}"
+          _notebook_path="${_selector}"
         fi
       fi
-    elif [[ -n "${_selection:-}" ]]
+    elif [[ -n "${_selector:-}" ]]
     then
-      local _selection_notebook="${_selection%%:*}"
+      local _selector_notebook="${_selector%%:*}"
 
-      if [[ -n "${_selection_notebook:-}" ]]
+      if [[ -n "${_selector_notebook:-}" ]]
       then
-        if [[ "${_selection_notebook:-}" == "local" ]] &&
-           [[ -n "${_local_notebook_path:-}"              ]]
+        if [[ "${_selector_notebook:-}" == "local"  ]] &&
+           [[ -n "${_local_notebook_path:-}"        ]]
         then
           _notebook_path="${_local_notebook_path}"
-        elif [[ -d "${NB_DIR}/${_selection_notebook:-}/.git"    ]] &&
-             [[ -f "${NB_DIR}/${_selection_notebook:-}/.index"  ]]
+        elif [[ -d "${NB_DIR}/${_selector_notebook:-}/.git"    ]] &&
+             [[ -f "${NB_DIR}/${_selector_notebook:-}/.index"  ]]
         then
-          _notebook_path="${NB_DIR}/${_selection_notebook}"
+          _notebook_path="${NB_DIR}/${_selector_notebook}"
         fi
       fi
     fi
@@ -7656,7 +7656,7 @@ HEREDOC
     if [[ -z "${_notebook_path:-}" ]]
     then
       _return_1 \
-        printf "Notebook not found: %s\\n" "$(_highlight "${_selection}")"
+        printf "Notebook not found: %s\\n" "$(_highlight "${_selector}")"
       return 1
     fi
 
@@ -8280,7 +8280,7 @@ HEREDOC
 _rename() {
   local _force=0
   local _reset=0
-  local _selection=
+  local _selector=
   local _target_basename=
   local _target_name=
   local _to_target_type=
@@ -8304,9 +8304,9 @@ _rename() {
         _to_target_type="note"
         ;;
       *)
-        if [[ -z "${_selection}" ]]
+        if [[ -z "${_selector}" ]]
         then
-          _selection="${__arg}"
+          _selector="${__arg}"
         elif [[ -z "${_target_name}" ]]
         then
           _target_name="${__arg}"
@@ -8317,16 +8317,16 @@ _rename() {
     shift
   done
 
-  if [[ -z "${_selection}" ]]
+  if [[ -z "${_selector}" ]]
   then
     _exit_1 _help "rename"
   fi
 
   local _source_basename
-  _source_basename="$(_get_selection_basename "${_selection}")"
+  _source_basename="$(_get_selector_basename "${_selector}")"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   local _source_path="${_notebook_path}/${_source_basename}"
 
@@ -9737,7 +9737,7 @@ _show() {
   local _print_id=0
   local _print_path=0
   local _render=0
-  local _selection=
+  local _selector=
   local _show_color_enabled="${_COLOR_ENABLED}"
   local _print_title=0
   local _tool=
@@ -9779,9 +9779,9 @@ _show() {
         shift
         ;;
       *)
-        if [[ -z "${_selection:-}" ]]
+        if [[ -z "${_selector:-}" ]]
         then
-          _selection="${__arg}"
+          _selector="${__arg}"
         fi
 
         _ls_arguments+=("${__arg}")
@@ -9791,20 +9791,20 @@ _show() {
     shift
   done
 
-  if [[ -z "${_selection:-}" ]]
+  if [[ -z "${_selector:-}" ]]
   then
     _exit_1 _help "show"
   fi
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   local _basename
-  _basename="$(_get_selection_basename "${_selection}")"
+  _basename="$(_get_selector_basename "${_selector}")"
 
   if [[ -z "${_basename}" ]]
   then
-    local _maybe_notebook="${_selection:-}"
+    local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
 
     if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
@@ -9813,7 +9813,7 @@ _show() {
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
-      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selection}")"
+      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
     fi
   fi
 
@@ -10782,7 +10782,12 @@ done
 # Renamed.
 _get_notebook_identifier() { _notebooks show "${@}" --display-name; }
 
-# _set_selection_notebook() <selection>
+# _get_selection_basename()
+#
+# Renamed.
+_get_selection_basename() { _get_selector_basename "${@}"; }
+
+# _set_selection_notebook() <selector>
 #
 # Selection notebook is now handled in option parsing and through functions..
 _set_selection_notebook() {

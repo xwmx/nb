@@ -585,9 +585,9 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
 }
 
-# `list <selection>` ##########################################################
+# `list <selector>` ###########################################################
 
-@test "\`list <selection>\` exits with 0 and displays the selection." {
+@test "\`list <selector>\` exits with 0 and displays the selector." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -625,7 +625,7 @@ HEREDOC
 }
 
 
-@test "\`list <query selection>\` exits with 0 and displays the selections." {
+@test "\`list <query selector>\` exits with 0 and displays the selectors." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -665,7 +665,7 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`list <invalid-selection>\` exits with 1 and displays a message." {
+@test "\`list <invalid-selector>\` exits with 1 and displays a message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add

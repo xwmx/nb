@@ -65,7 +65,7 @@ load test_helper
   [[ "${output}" == "one" ]]
 }
 
-@test "\`notebooks show <selection>\` exits with 0 and prints the notebook name." {
+@test "\`notebooks show <selector>\` exits with 0 and prints the notebook name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one

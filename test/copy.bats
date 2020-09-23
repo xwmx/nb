@@ -188,7 +188,7 @@ load test_helper
   [[ "${#_files[@]}" == 1 ]]
 }
 
-# `copy <selection>` filenames ################################################
+# `copy <selector>` filenames #################################################
 
 @test "\`copy <name>\` with text file copies the note with sequential names." {
   _setup() {

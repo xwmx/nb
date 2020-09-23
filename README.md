@@ -2496,13 +2496,13 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [<name> | <path> | <selection>] [--global | --local]
+  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
                        [--path | --selected]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
-  nb notebooks select <selection>
+  nb notebooks select <selector>
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3172,13 +3172,13 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [<name> | <path> | <selection>] [--global | --local]
+  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
                        [--path | --selected]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
-  nb notebooks select <selection>
+  nb notebooks select <selector>
   nb notebooks use <name>
 
 Options:
@@ -3208,7 +3208,7 @@ Subcommands:
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name. When provides with <name>,
-             <path>, or <selection>, use that as the current notebook.
+             <path>, or <selector>, use that as the current notebook.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.
@@ -3218,7 +3218,7 @@ Subcommands:
              `ranger` [1], `mc` [2], `exa` [3], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
-  select     Set the current notebook from a colon-prefixed selection.
+  select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or
              notebook <name>.
