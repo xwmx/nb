@@ -2437,6 +2437,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}")
         done
+
         grep --color=never "${_grep_patterns[@]}" \
           | grep --color=never -v \
               -e '\.bookmark\.'   \
@@ -2456,6 +2457,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
         done
+
         grep --color=never "${_grep_patterns[@]}"
       elif [[ "${_type}" =~ ^audio$|^music$ ]]
       then
@@ -2463,6 +2465,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
         done
+
         grep --color=never "${_grep_patterns[@]}"
       elif [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]]
       then
@@ -2470,6 +2473,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
         done
+
         grep --color=never "${_grep_patterns[@]}"
       elif [[ "${_type}" =~ ^encrypted$ ]]
       then
@@ -2477,6 +2481,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}$")
         done
+
         grep --color=never "${_grep_patterns[@]}"
       elif [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$ ]]
       then
@@ -2484,6 +2489,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
         done
+
         grep --color=never "${_grep_patterns[@]}"
       elif [[ "${_type}" =~ ^video$|^videos$ ]]
       then
@@ -2491,6 +2497,7 @@ _list_files() {
         do
           _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
         done
+
         grep --color=never "${_grep_patterns[@]}"
       else
         grep --color=never -e "${_type}$"
