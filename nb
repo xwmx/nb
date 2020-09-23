@@ -950,24 +950,24 @@ _git_checkpoint() {
             then
               _conflicted_text_files+=("${__file}")
 
-              git -C "${_target_directory}" add       \
+              git -C "${_target_directory}" add         \
                 "${__file}"
             else
-              git -C "${_target_directory}" checkout  \
+              git -C "${_target_directory}" checkout    \
                 "origin/${_git_branch}" -- "${__file}"
 
               local _conflicted_file=
               _conflicted_file="$(
-                _notebooks show "${_target_directory}" \
+                _notebooks show "${_target_directory}"  \
                   --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
               )"
 
               _conflicted_binary_files+=("${_conflicted_file}")
 
-              git -C "${_target_directory}" mv        \
+              git -C "${_target_directory}" mv          \
                 "${__file}" "${_conflicted_file}"
 
-              git -C "${_target_directory}" checkout  \
+              git -C "${_target_directory}" checkout    \
                 "${_git_branch}" -- "${__file}"
 
               git -C "${_target_directory}" add "${_conflicted_file}"
