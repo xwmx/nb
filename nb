@@ -6685,7 +6685,7 @@ _move() {
 
   local _notebook_display_name
   _notebook_display_name="$(
-    _notebooks show "${_selector}" --display-name --no-color
+    _notebooks current "${_selector}" --display-name --no-color
   )"
 
   local _notebook_path
