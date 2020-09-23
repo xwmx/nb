@@ -3738,6 +3738,7 @@ Usage:
 
 Subcommands:
   alias  Create an <alias> of a given subcommand <name>, with linked help.
+         Aliases are not persisted, so this is primarily for plugins.
 
 Description:
   List available subcommands.
