@@ -2912,6 +2912,8 @@ Usage:
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+                   [--escaped] [--path]
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -5750,7 +5752,7 @@ _list() {
 
   local _notebook_display_name=
   _notebook_display_name="$(
-    _notebooks show "${_notebook_path}" --display-name --no-color
+    _notebooks show "${_notebook_path}" --escaped --no-color
   )"
 
   local _list_files_options=("${_notebook_path}")
@@ -5766,7 +5768,7 @@ _list() {
 
   if _notebooks current --selected
   then
-    _maybe_scope="$(_notebooks show "${_notebook_path}" --display-name --no-color):"
+    _maybe_scope="$(_notebooks show "${_notebook_path}" --escaped --no-color):"
     _maybe_scope_padded_right="${_maybe_scope} "
   fi
 
@@ -6169,7 +6171,7 @@ _ls() {
 
     if _notebooks current --selected
     then
-      _maybe_scope="$(_notebooks current --display-name --no-color):"
+      _maybe_scope="$(_notebooks current --escaped --no-color):"
       _maybe_scope_padded_left=" ${_maybe_scope}"
       _maybe_scope_padded_right="${_maybe_scope} "
     fi
@@ -6610,7 +6612,7 @@ _move() {
 
   local _notebook_display_name
   _notebook_display_name="$(
-    _notebooks current "${_selector}" --display-name --no-color
+    _notebooks current "${_selector}" --escaped --no-color
   )"
 
   local _notebook_path
@@ -6623,7 +6625,7 @@ _move() {
 
   local _target_notebook_display_name
   _target_notebook_display_name="$(
-    _notebooks show "${_target_notebook}" --display-name --no-color 2>/dev/null || :
+    _notebooks show "${_target_notebook}" --escaped --no-color 2>/dev/null || :
   )"
 
   if [[ -z "${_basename}"                             ]] ||
@@ -6724,16 +6726,19 @@ Usage:
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped] [--path]
   ${_ME} notebooks use <name>
 
 Options:
-  --archived    Only list archived notebooks.
+  --archived    List archived notebooks, or return archival status with \`show\`.
+  --escaped     Print the notebook name with spaces escaped.
   --global      List global notebooks or the notebook set globally with \`use\`.
   --local       Exit with 0 if current within a local notebook, or otherwise
                 exit with 1.
   -f, --force   Skip the confirmation prompt.
-  --names       Only print each notebook's name.
-  --path        Print the path of the current notebook.
+  --names       Only print the notebook name.
+  --path        Print the path of the notebook.
   --paths       Print the path of each notebook.
   --selected    Exit with 0 if the current notebook differs from the global
                 notebook set with \`use\`, otherwise exit with 1.
@@ -6767,6 +6772,7 @@ Subcommands:
              Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or
              notebook <name>.
+  show       Show and return information about a specified notebook.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
   use        Switch to a notebook.
 
@@ -7499,7 +7505,7 @@ HEREDOC
   #
   # Usage:
   #   _notebooks_show (<name> | <path> | <selector>) [--archived]
-  #                   [--display-name] [--path]
+  #                   [--escaped] [--path]
   _notebooks_show() {
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_color_enabled=1
@@ -7516,7 +7522,7 @@ HEREDOC
         --archived)
           _test_archived=1
           ;;
-        --display-name)
+        --escaped)
           _print_display_name=1
           ;;
         --name)
@@ -8725,7 +8731,7 @@ _search() {
           then
             local _notebook_display_name=
             _notebook_display_name="$(
-              _notebooks show "${__notebook_path}" --display-name --no-color
+              _notebooks show "${__notebook_path}" --escaped --no-color
             )"
 
             _id_filename="[${_notebook_display_name}:${_id}] ${_file_info}"
@@ -9787,7 +9793,7 @@ _show() {
     then
       local _notebook_display_name
       _notebook_display_name="$(
-        _notebooks show "${_notebook_path}" --display-name --no-color
+        _notebooks show "${_notebook_path}" --escaped --no-color
       )"
 
       _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
@@ -10740,7 +10746,7 @@ done
 # _get_notebook_identifier()
 #
 # Renamed.
-_get_notebook_identifier() { _notebooks show "${@}" --display-name; }
+_get_notebook_identifier() { _notebooks show "${@}" --escaped; }
 
 # _get_selection_basename()
 #

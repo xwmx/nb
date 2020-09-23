@@ -105,15 +105,15 @@ load test_helper
   [[ "${output}" == "${NB_DIR}/one" ]]
 }
 
-# `notebooks show --display-name` #############################################
+# `notebooks show --escaped` ##################################################
 
-@test "\`notebooks show --display-name\` with exits with 0 and prints display name." {
+@test "\`notebooks show --escaped\` with exits with 0 and prints display name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "long example"
   }
 
-  run "${_NB}" notebooks show "long example" --display-name
+  run "${_NB}" notebooks show "long example" --escaped
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

@@ -2497,6 +2497,8 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                   [--escaped] [--path]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3178,16 +3180,19 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped] [--path]
   nb notebooks use <name>
 
 Options:
-  --archived    Only list archived notebooks.
+  --archived    List archived notebooks, or return archival status with `show`.
+  --escaped     Print the notebook name with spaces escaped.
   --global      List global notebooks or the notebook set globally with `use`.
-  --local       Exit with 0 if current within a local notebook, otherwise exit
-                with 1.
+  --local       Exit with 0 if current within a local notebook, or otherwise
+                exit with 1.
   -f, --force   Skip the confirmation prompt.
-  --names       Only print each notebook's name.
-  --path        Print the path of the current notebook.
+  --names       Only print the notebook name.
+  --path        Print the path of the notebook.
   --paths       Print the path of each notebook.
   --selected    Exit with 0 if the current notebook differs from the global
                 notebook set with `use`, otherwise exit with 1.
@@ -3219,6 +3224,7 @@ Subcommands:
   rename     Rename a notebook.
   select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
+  show       Show and return information about a specified notebook.
   status     Print the archival status of the current notebook or
              notebook <name>.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
