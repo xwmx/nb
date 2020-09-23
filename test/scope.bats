@@ -269,3 +269,18 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ ${status} -eq 0        ]]
   [[ "${output}" =~ "first" ]]
 }
+
+@test "\`nb show <current>:first --dump\` exits with 0 and prints scoped file content." {
+  {
+    _setup_scope &>/dev/null
+    run "${_NB}" use one
+  }
+
+  run "${_NB}" show one:first --dump
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${output}" =~ "first" ]]
+}
