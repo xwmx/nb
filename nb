@@ -3255,7 +3255,7 @@ _add() {
     then
       local _notebook_display_name
       _notebook_display_name="$(
-        _notebooks show "${_notebook_path}" --display-name
+        _notebooks show "${_notebook_path}" --display-name --no-color
       )"
 
       _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
@@ -4303,7 +4303,9 @@ _delete() {
   if _notebooks current --selected
   then
     local _notebook_display_name
-    _notebook_display_name="$(_notebooks show "${_notebook_path}" --display-name)"
+    _notebook_display_name="$(
+      _notebooks show "${_notebook_path}" --display-name --no-color
+    )"
 
     _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
     _maybe_scoped_basename="${_notebook_display_name}:${_maybe_scoped_basename}"
@@ -4541,7 +4543,7 @@ _edit() {
       then
         local _notebook_display_name
         _notebook_display_name="$(
-          _notebooks show "${_notebook_path}" --display-name
+          _notebooks show "${_notebook_path}" --display-name --no-color
         )"
 
         _maybe_scoped_id="${_notebook_display_name}:${_maybe_scoped_id}"
@@ -5827,7 +5829,9 @@ _list() {
   fi
 
   local _notebook_display_name=
-  _notebook_display_name="$(_notebooks show "${_notebook_path}" --display-name)"
+  _notebook_display_name="$(
+    _notebooks show "${_notebook_path}" --display-name --no-color
+  )"
 
   local _list_files_options=("${_notebook_path}")
   local _filenames=()
@@ -5842,7 +5846,7 @@ _list() {
 
   if _notebooks current --selected
   then
-    _maybe_scope="$(_notebooks show "${_notebook_path}" --display-name):"
+    _maybe_scope="$(_notebooks show "${_notebook_path}" --display-name --no-color):"
     _maybe_scope_padded_right="${_maybe_scope} "
   fi
 
@@ -6245,7 +6249,7 @@ _ls() {
 
     if _notebooks current --selected
     then
-      _maybe_scope="$(_notebooks show --display-name):"
+      _maybe_scope="$(_notebooks current --display-name --no-color):"
       _maybe_scope_padded_left=" ${_maybe_scope}"
       _maybe_scope_padded_right="${_maybe_scope} "
     fi
@@ -6685,7 +6689,9 @@ _move() {
   _basename="$(_get_selection_basename "${_selection}")"
 
   local _notebook_display_name
-  _notebook_display_name="$(_notebooks show "${_selection}" --display-name)"
+  _notebook_display_name="$(
+    _notebooks show "${_selection}" --display-name --no-color
+  )"
 
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selection}" --path)"
@@ -6697,7 +6703,7 @@ _move() {
 
   local _target_notebook_display_name
   _target_notebook_display_name="$(
-    _notebooks show "${_target_notebook}" --display-name 2>/dev/null || :
+    _notebooks show "${_target_notebook}" --display-name --no-color 2>/dev/null || :
   )"
 
   if [[ -z "${_basename}"                             ]] ||
