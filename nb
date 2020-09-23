@@ -10775,7 +10775,8 @@ export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-"${NB_NOTEBOOK_PATH}"}"
 # Renamed.
 #
 # shellcheck disable=SC2034
-_SCOPE="$(_notebooks current --name)"
+# _SCOPE="$(_notebooks current --name)"
+_SCOPE="$(basename "${NB_NOTEBOOK_PATH}")"
 
 # $_SCOPED
 #
@@ -10783,7 +10784,8 @@ _SCOPE="$(_notebooks current --name)"
 #
 # shellcheck disable=SC2034
 _SCOPED="$(
-  if _notebooks current --selected
+  # if _notebooks current --selected
+  if [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]]
   then
     printf "1\\n"
   else
