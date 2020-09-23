@@ -3924,13 +3924,21 @@ _alias_subcommand "bookmark" "bookmarks"
 
 describe "commands" <<HEREDOC
 Usage:
-  ${_ME} commands
+  ${_ME} commands [alias <name> <alias>]
+
+Subcommands:
+  alias  Create an <alias> of a given subcommand <name>, with linked help.
 
 Description:
   List available commands.
 HEREDOC
 _commands() {
-  printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
+  if [[ "${1:-}" == "alias" ]]
+  then
+    _alias_subcommand "${2:-}" "${3:-}"
+  else
+    printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
+  fi
 }
 _alias_subcommand "commands" "subcommands"
 
