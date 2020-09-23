@@ -53,9 +53,9 @@ _setup_move() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1              ]]
-  [[ "${lines[0]}" =~ Not\ found  ]]
-  [[ "${lines[0]}" =~ home:1      ]]
+  [[ ${status} -eq 1                    ]]
+  [[ "${lines[0]}" =~ Note\ not\ found  ]]
+  [[ "${lines[0]}" =~ 1                 ]]
 
 }
 
@@ -71,9 +71,9 @@ _setup_move() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                ]]
-  [[ "${lines[0]}" =~ Not\ found    ]]
-  [[ "${lines[0]}" =~ home:invalid  ]]
+  [[ ${status} -eq 1                    ]]
+  [[ "${lines[0]}" =~ Note\ not\ found  ]]
+  [[ "${lines[0]}" =~ invalid           ]]
 
 }
 

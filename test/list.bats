@@ -624,7 +624,6 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
-
 @test "\`list <query selector>\` exits with 0 and displays the selectors." {
   {
     "${_NB}" init
@@ -850,13 +849,13 @@ Help information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
-  [[ ${status} -eq 0          ]]
+  [[ ${status} -eq 0              ]]
   [[ "${lines[0]}" =~ example:3   ]]
-  [[ "${lines[0]}" =~ three   ]]
+  [[ "${lines[0]}" =~ three       ]]
   [[ "${lines[1]}" =~ example:2   ]]
-  [[ "${lines[1]}" =~ two     ]]
+  [[ "${lines[1]}" =~ two         ]]
   [[ "${lines[2]}" =~ example:1   ]]
-  [[ "${lines[2]}" =~ one     ]]
+  [[ "${lines[2]}" =~ one         ]]
 }
 
 # help ########################################################################

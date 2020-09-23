@@ -3531,7 +3531,7 @@ _bookmark() {
   if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
   then
     local _basename
-    _basename="$(_get_selector_basename "${_selector}")"
+    _basename="$(_show "${_selector}" --filename)"
 
     local _notebook_path
     _notebook_path="$(_notebooks current "${_selector}" --path)"
@@ -4280,7 +4280,7 @@ _delete() {
   fi
 
   local _basename
-  _basename="$(_get_selector_basename "${_selector}")"
+  _basename="$(_show "${_selector}" --filename)"
 
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
@@ -4441,7 +4441,7 @@ _edit() {
   fi
 
   local _basename
-  _basename="$(_get_selector_basename "${_selector:-}")"
+  _basename="$(_show "${_selector:-}" --filename)"
 
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
@@ -4787,7 +4787,7 @@ _export() {
   fi
 
   local _basename
-  _basename="$(_get_selector_basename "${_selector}")"
+  _basename="$(_show "${_selector}" --filename)"
 
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
@@ -4963,9 +4963,6 @@ _helpers() {
     *http*)
       _get_http_status                "${_options[@]}"
       ;;
-    *selector*basename*)
-      _get_selector_basename          "${_options[@]}"
-      ;;
     *identifier*)
       _get_selector_identifier        "${_options[@]}"
       ;;
@@ -5043,8 +5040,11 @@ HEREDOC
 _history() {
   local _selector="${1:-}"
 
-  local _basename
-  _basename="$(_get_selector_basename "${_selector}")"
+  if [[ -n "${_selector:-}" ]]
+  then
+    local _basename
+    _basename="$(_show "${_selector}" --filename)"
+  fi
 
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
@@ -5824,7 +5824,7 @@ _list() {
 
   if [[ -n "${_selector:-}" ]]
   then
-    _selector_basename="$(_get_selector_basename "${_selector}")"
+    _selector_basename="$(_show "${_selector}" --filename 2>/dev/null || :)"
     _selector_identifier="$(_get_selector_identifier "${_selector}")"
   fi
 
@@ -6695,7 +6695,7 @@ _move() {
   fi
 
   local _basename
-  _basename="$(_get_selector_basename "${_selector}")"
+  _basename="$(_show "${_selector}" --filename)"
 
   local _notebook_display_name
   _notebook_display_name="$(
@@ -8330,7 +8330,7 @@ _rename() {
   fi
 
   local _source_basename
-  _source_basename="$(_get_selector_basename "${_selector}")"
+  _source_basename="$(_show "${_selector}" --filename)"
 
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
@@ -9809,7 +9809,7 @@ _show() {
   local _basename
   _basename="$(_get_selector_basename "${_selector}" "${_notebook_path}")"
 
-  if [[ -z "${_basename}" ]]
+  if [[ -z "${_basename:-}" ]]
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -9820,7 +9820,8 @@ _show() {
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
-      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+      _return_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+      return 1
     fi
   fi
 
@@ -9828,7 +9829,8 @@ _show() {
 
   if [[ -z "${_basename:-}" ]] && [[ ! -e "${_target_path}" ]]
   then
-    _exit_1 printf "Selection not found.\\n"
+    _return_1 printf "Selection not found.\\n"
+    return 1
   fi
 
   if ((_print_path))
@@ -10789,7 +10791,7 @@ _get_notebook_identifier() { _notebooks show "${@}" --display-name; }
 # _get_selection_basename()
 #
 # Renamed.
-_get_selection_basename() { _get_selector_basename "${@}"; }
+_get_selection_basename() { _show "${@}" --filename; }
 
 # _set_selection_notebook() <selector>
 #
