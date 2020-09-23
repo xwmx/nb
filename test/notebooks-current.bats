@@ -554,6 +554,34 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
 }
 
+@test "\`notebooks current <selector> --filename\` prints a scoped unique filename." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add one
+    "${_NB}" one:add "example.md" --content "Example"
+  }
+
+  run "${_NB}" notebooks current "one" --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
+
+  run "${_NB}" add "example.md" --content "Example"
+
+  run "${_NB}" notebooks current "one" --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
+}
+
 @test "\`notebooks current --filename <filename>\` prints a unique filename." {
   {
     "${_NB}" init
@@ -572,6 +600,34 @@ _setup_notebooks() {
   run "${_NB}" add "example.md" --content "Example"
 
   run "${_NB}" notebooks current --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-2.md  ]]
+}
+
+@test "\`notebooks current <selector> --filename <filename>\` prints a unique filename." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add one
+    "${_NB}" one:add "example.md" --content "Example"
+  }
+
+  run "${_NB}" notebooks current "one" --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  run "${_NB}" one:add "example.md" --content "Example"
+
+  run "${_NB}" notebooks current "one" --filename "example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
