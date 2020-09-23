@@ -7627,7 +7627,7 @@ HEREDOC
     if [[ -z "${_selector:-}"      ]]
     then
       _exit_1 _help "notebooks"
-    elif [[ "${_selector:-}" =~ /  ]]
+    elif [[ "${_selector:-}" =~ ^/  ]]
     then
       if [[ -d "${_selector}/.git"   ]] &&
          [[ -f "${_selector}/.index" ]]
