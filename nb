@@ -3076,10 +3076,10 @@ _add() {
   local _content=
   local _edit_before_commit=0
   local _encrypt=0
-  local _filename=
   local _file_type="${NB_DEFAULT_EXTENSION}"
   local _maybe_content_or_filename=
   local _password=
+  local _target_filename=
   local _title=
 
   while ((${#}))
@@ -3099,7 +3099,7 @@ _add() {
         _encrypt=1
         ;;
       -f|--filename)
-        _filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
@@ -3140,29 +3140,29 @@ _add() {
   then
     if  [[ "${_maybe_content_or_filename:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
         [[ -n "${_maybe_content_or_filename_extension:-}"         ]]  &&
-        [[ -z "${_filename}"                                      ]]  &&
+        [[ -z "${_target_filename}"                               ]]  &&
         ! _string_is_url "${_maybe_content_or_filename:-}"            &&
         ! _string_is_email "${_maybe_content_or_filename:-}"          &&
         ! _contains "${_maybe_content_or_filename_extension:-}"   \
                     "${_common_non_text_file_extension_tlds[@]}"
     then
-      _filename="${_maybe_content_or_filename}"
+      _target_filename="${_maybe_content_or_filename}"
     else
       _content="${_maybe_content_or_filename}"
     fi
   fi
 
-  if [[ -n "${_filename:-}" ]]
+  if [[ -n "${_target_filename:-}" ]]
   then
-    _basename="$(_notebooks current --filename "${_filename:-}")"
+    _basename="$(_notebooks current --filename "${_target_filename:-}")"
   elif [[ -n "${_title:-}" ]]
   then
-    _filename="$(
+    _target_filename="$(
       printf "%s" "${_title}"           \
         | tr '[:upper:]' '[:lower:]'    \
         | tr '[:space:]:*/"\\<>?|' '_'
     )"
-    _basename="$(_notebooks current --filename "${_filename}.${_file_type}")"
+    _basename="$(_notebooks current --filename "${_target_filename}.${_file_type}")"
   else
     _basename="$(_notebooks current --filename ".${_file_type}")" # !! note the '.'
   fi
@@ -3362,7 +3362,6 @@ _bookmark() {
   local _comment=
   local _edit_before_commit=0
   local _encrypt=0
-  local _filename=
   local _password=
   local _quote=
   local _related_urls=()
@@ -3371,6 +3370,7 @@ _bookmark() {
   local _skip_content=0
   local _subcommand=
   local _tag_list=
+  local _target_filename=
   local _title=
   local _url=
 
@@ -3391,7 +3391,7 @@ _bookmark() {
         _encrypt=1
         ;;
       -f|--filename)
-        _filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(__option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
@@ -3890,18 +3890,18 @@ HEREDOC
   then
     local _basename=
 
-    if [[ -z "${_filename:-}" ]]
+    if [[ -z "${_target_filename:-}" ]]
     then
       _basename="$(
         _notebooks current --filename "$(date -u '+%Y%m%d%H%M%S').bookmark.md"
       )"
     else
-      if [[ "${_filename}" =~ \. ]]
+      if [[ "${_target_filename}" =~ \. ]]
       then
-        _basename="$(_notebooks current --filename "${_filename}")"
+        _basename="$(_notebooks current --filename "${_target_filename}")"
       else
         _basename="$(
-          _notebooks current --filename "${_filename}.bookmark.md"
+          _notebooks current --filename "${_target_filename}.bookmark.md"
         )"
       fi
     fi
