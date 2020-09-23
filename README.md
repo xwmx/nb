@@ -2412,6 +2412,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
   <a href="#status">status</a> •
+  <a href="#subcommands">subcommands</a> •
   <a href="#sync">sync</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
@@ -2520,6 +2521,7 @@ Usage:
           [--filename | --id | --info | --path | --render | --title]
           [--type [<type>]]
   nb show <notebook>
+  nb subcommands [alias <name> <alias>]
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -3726,6 +3728,19 @@ Usage:
 
 Description:
   Run `git status` the current notebook.
+```
+
+#### `subcommands`
+
+```text
+Usage:
+  nb subcommands [alias <name> <alias>]
+
+Subcommands:
+  alias  Create an <alias> of a given subcommand <name>, with linked help.
+
+Description:
+  List available subcommands.
 ```
 
 #### `sync`

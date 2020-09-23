@@ -2933,6 +2933,7 @@ Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --info | --path | --render | --title]
   ${_ME} show <notebook>
+  ${_ME} subcommands [alias <name> <alias>]
   ${_ME} sync [-a | --all]
   ${_ME} update
   ${_ME} use <notebook>
@@ -10631,6 +10632,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   shell
   show
   status
+  subcommands
   sync
   todos
   u
