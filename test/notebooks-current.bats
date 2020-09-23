@@ -416,7 +416,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${NB_DIR}/one ]]
 }
 
-# # --local #####################################################################
+# --local #####################################################################
 
 @test "\`notebooks current --local\` exits with 1 and prints nothing when not in local." {
   {
@@ -523,4 +523,60 @@ _setup_notebooks() {
 
   [[ ${status} -eq 1 ]]
   [[ -z "${output}"  ]]
+}
+
+# `notebooks current --filename` ##############################################
+
+@test "\`notebooks current --filename\` prints a unique filename." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example"
+  }
+
+  run "${_NB}" notebooks current --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
+
+  run "${_NB}" add "example.md" --content "Example"
+
+  run "${_NB}" notebooks current --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
+}
+
+@test "\`notebooks current --filename <filename>\` prints a unique filename." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example"
+  }
+
+  run "${_NB}" notebooks current --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  run "${_NB}" add "example.md" --content "Example"
+
+  run "${_NB}" notebooks current --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-2.md  ]]
 }

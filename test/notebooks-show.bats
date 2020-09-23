@@ -121,3 +121,59 @@ load test_helper
   [[ ${status} -eq 0                ]]
   [[ "${output}" == "long\ example" ]]
 }
+
+# `notebooks show --filename` #################################################
+
+@test "\`notebooks show --filename\` prints a unique filename." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example"
+  }
+
+  run "${_NB}" notebooks show "home" --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
+
+  run "${_NB}" add "example.md" --content "Example"
+
+  run "${_NB}" notebooks show "home" --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
+}
+
+@test "\`notebooks show --filename <filename>\` prints a unique filename." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example"
+  }
+
+  run "${_NB}" notebooks show "home" --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-1.md  ]]
+
+  run "${_NB}" add "example.md" --content "Example"
+
+  run "${_NB}" notebooks show "home" --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${lines[0]}" =~ example-2.md  ]]
+}

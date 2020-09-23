@@ -2491,14 +2491,14 @@ Usage:
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [<name> | <path> | <selector>] [--global | --local]
-                       [--path | --selected]
+                       [--path | --selected | --filename [<filename>]]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
-                   [--escaped] [--path]
+                    [--escaped | --path | --filename [<filename>]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3174,29 +3174,35 @@ Usage:
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [<name> | <path> | <selector>] [--global | --local]
-                       [--path | --selected]
+                       [--path | --selected | --filename [<filename>]]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped] [--path]
+                    [--escaped | --path | --filename [<filename>]]
   nb notebooks use <name>
 
 Options:
-  --archived    List archived notebooks, or return archival status with `show`.
-  --escaped     Print the notebook name with spaces escaped.
-  --global      List global notebooks or the notebook set globally with `use`.
-  --local       Exit with 0 if current within a local notebook, or otherwise
-                exit with 1.
-  -f, --force   Skip the confirmation prompt.
-  --names       Only print the notebook name.
-  --path        Print the path of the notebook.
-  --paths       Print the path of each notebook.
-  --selected    Exit with 0 if the current notebook differs from the global
-                notebook set with `use`, otherwise exit with 1.
-  --unarchived  Only list unarchived notebooks.
+  --archived               List archived notebooks, or return archival status
+                           with `show`.
+  --escaped                Print the notebook name with spaces escaped.
+  --filename [<filename>]  Print an available filename for the notebooks. When
+                           <filename> is provided, check for an existing file
+                           and provide a filename with an appended sequence
+                           number for uniqueness.
+  --global                 List global notebooks or the notebook set globally
+                           with `use`.
+  --local                  Exit with 0 if current within a local notebook,
+                           otherwise exit with 1.
+  -f, --force              Skip the confirmation prompt.
+  --names                  Only print the notebook name.
+  --path                   Print the path of the notebook.
+  --paths                  Print the path of each notebook.
+  --selected               Exit with 0 if the current notebook differs from
+                           the current global notebook, otherwise exit with 1.
+  --unarchived             Only list unarchived notebooks.
 
 Subcommands:
   (default)  List notebooks.

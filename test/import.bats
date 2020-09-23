@@ -71,6 +71,25 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 }
 
+@test "\`import\` with valid <path> argument gets a unique filename." {
+  {
+    run "${_NB}" init
+    "${_NB}" add "example.md" --content "Example"
+  }
+
+  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+  [[ "${#_files[@]}" -eq 2      ]]
+  [[ "${lines[0]}" =~ Imported  ]]
+  [[ "${lines[0]}" =~ example-1 ]]
+  grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
+}
+
 # <directory path> ############################################################
 
 @test "\`import\` with valid <directory path> argument imports a directory." {

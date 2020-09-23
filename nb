@@ -958,9 +958,8 @@ _git_checkpoint() {
 
               local _conflicted_file=
               _conflicted_file="$(
-                _get_unique_basename                              \
-                  "${__file%%.*}--conflicted-copy.${__file#*.}"   \
-                  "${_target_directory}"
+                _notebooks show "${_target_directory}" \
+                  --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
               )"
 
               _conflicted_binary_files+=("${_conflicted_file}")
@@ -2906,14 +2905,14 @@ Usage:
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks current [<name> | <path> | <selector>] [--global | --local]
-                       [--path | --selected]
+                       [--path | --selected | --filename [<filename>]]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
-                   [--escaped] [--path]
+                    [--escaped | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3155,7 +3154,7 @@ _add() {
 
   if [[ -n "${_filename:-}" ]]
   then
-    _basename="$(_get_unique_basename "${_filename:-}")"
+    _basename="$(_notebooks current --filename "${_filename:-}")"
   elif [[ -n "${_title:-}" ]]
   then
     _filename="$(
@@ -3163,9 +3162,9 @@ _add() {
         | tr '[:upper:]' '[:lower:]'    \
         | tr '[:space:]:*/"\\<>?|' '_'
     )"
-    _basename="$(_get_unique_basename "${_filename}.${_file_type}")"
+    _basename="$(_notebooks current --filename "${_filename}.${_file_type}")"
   else
-    _basename="$(_get_unique_basename ".${_file_type}")" # !! note the '.'
+    _basename="$(_notebooks current --filename ".${_file_type}")" # !! note the '.'
   fi
 
   local _notebook_path
@@ -3893,13 +3892,17 @@ HEREDOC
 
     if [[ -z "${_filename:-}" ]]
     then
-      _basename="$(_get_unique_basename "$(date -u '+%Y%m%d%H%M%S').bookmark.md")"
+      _basename="$(
+        _notebooks current --filename "$(date -u '+%Y%m%d%H%M%S').bookmark.md"
+      )"
     else
       if [[ "${_filename}" =~ \. ]]
       then
-        _basename="$(_get_unique_basename "${_filename}")"
+        _basename="$(_notebooks current --filename "${_filename}")"
       else
-        _basename="$(_get_unique_basename "${_filename}.bookmark.md")"
+        _basename="$(
+          _notebooks current --filename "${_filename}.bookmark.md"
+        )"
       fi
     fi
 
@@ -5034,7 +5037,7 @@ _import() {
 
     if [[ -e "${_current_notebook_path}/${_target_basename}" ]]
     then
-      _target_basename="$(_get_unique_basename "${_target_basename}")"
+      _target_basename="$(_notebooks current --filename "${_target_basename}")"
     fi
     printf "%s\\n" "${_target_basename}"
   }
@@ -6720,29 +6723,35 @@ Usage:
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks current [<name> | <path> | <selector>] [--global | --local]
-                       [--path | --selected]
+                       [--path | --selected | --filename [<filename>]]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped] [--path]
+                    [--escaped | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
 
 Options:
-  --archived    List archived notebooks, or return archival status with \`show\`.
-  --escaped     Print the notebook name with spaces escaped.
-  --global      List global notebooks or the notebook set globally with \`use\`.
-  --local       Exit with 0 if current within a local notebook, or otherwise
-                exit with 1.
-  -f, --force   Skip the confirmation prompt.
-  --names       Only print the notebook name.
-  --path        Print the path of the notebook.
-  --paths       Print the path of each notebook.
-  --selected    Exit with 0 if the current notebook differs from the global
-                notebook set with \`use\`, otherwise exit with 1.
-  --unarchived  Only list unarchived notebooks.
+  --archived               List archived notebooks, or return archival status
+                           with \`show\`.
+  --escaped                Print the notebook name with spaces escaped.
+  --filename [<filename>]  Print an available filename for the notebooks. When
+                           <filename> is provided, check for an existing file
+                           and provide a filename with an appended sequence
+                           number for uniqueness.
+  --global                 List global notebooks or the notebook set globally
+                           with \`use\`.
+  --local                  Exit with 0 if current within a local notebook,
+                           otherwise exit with 1.
+  -f, --force              Skip the confirmation prompt.
+  --names                  Only print the notebook name.
+  --path                   Print the path of the notebook.
+  --paths                  Print the path of each notebook.
+  --selected               Exit with 0 if the current notebook differs from
+                           the current global notebook, otherwise exit with 1.
+  --unarchived             Only list unarchived notebooks.
 
 Subcommands:
   (default)  List notebooks.
@@ -6828,14 +6837,19 @@ _notebooks() {
   #   _notebooks_current (<name> | <path> | <selector>) [--global | --local]
   #                      [--path | --scoped]
   _notebooks_current() {
+    local _filename=
     local _print_global=0
     local _print_local=0
     local _print_path=0
+    local _print_unique_filename=0
     local _return_selected=0
     local _selector=
 
-    for __arg in "${@:-}"
+    while ((${#}))
     do
+      local __arg="${1:-}"
+      local __val="${2:-}"
+
       case "${__arg:-}" in
         --global)
           _print_global=1
@@ -6849,10 +6863,21 @@ _notebooks() {
         --scoped|--selected)
           _return_selected=1
           ;;
+        --filename|--basename)
+          _print_unique_filename=1
+
+          if __option_value_is_present "${__val:-}"
+          then
+            _filename="${__val}"
+            shift
+          fi
+          ;;
         [^-]*)
           _selector="${__arg}"
           ;;
       esac
+
+      shift
     done
 
     if [[ -n "${_selector:-}" ]]
@@ -6888,6 +6913,9 @@ _notebooks() {
     then
       [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]] &&
       [[ "${NB_NOTEBOOK_PATH}" != "${_LOCAL_NOTEBOOK_PATH}"  ]]
+    elif ((_print_unique_filename))
+    then
+      _notebooks_show "${NB_NOTEBOOK_PATH}" --filename "${_filename:-}"
     else
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
          [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
@@ -7505,19 +7533,24 @@ HEREDOC
   #
   # Usage:
   #   _notebooks_show (<name> | <path> | <selector>) [--archived]
-  #                   [--escaped] [--path] [--unique-filename]
+  #                   [--escaped] [--path] [--filename [<filename>]]
   _notebooks_show() {
+    local _filename=
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_color_enabled=1
     local _notebook_path=
     local _print_escaped_name=0
+    local _print_unique_filename=0
     local _only_name=0
     local _only_path=0
     local _selector=
     local _test_archived=0
 
-    for __arg in "${@:-}"
+    while ((${#}))
     do
+      local __arg="${1:-}"
+      local __val="${2:-}"
+
       case "${__arg}" in
         --archived)
           _test_archived=1
@@ -7534,6 +7567,15 @@ HEREDOC
         --path)
           _only_path=1
           ;;
+        --filename|--basename)
+          _print_unique_filename=1
+
+          if __option_value_is_present "${__val:-}"
+          then
+            _filename="${__val}"
+            shift
+          fi
+          ;;
         *)
           if [[ -z "${_selector}" ]]
           then
@@ -7541,6 +7583,8 @@ HEREDOC
           fi
           ;;
       esac
+
+      shift
     done
 
     if [[ -z "${_selector:-}"      ]]
@@ -7598,6 +7642,15 @@ HEREDOC
       else
         return 1
       fi
+    fi
+
+    if ((_print_unique_filename))
+    then
+      local _unique_file_name=
+      _unique_file_name="$(_get_unique_basename "${_filename:-}")"
+
+      printf "%s\\n" "${_unique_file_name:-}"
+      return 0
     fi
 
     local _notebook_name=
