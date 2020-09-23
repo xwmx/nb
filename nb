@@ -3920,28 +3920,6 @@ HEREDOC
 _alias_subcommand "bookmark" "b"
 _alias_subcommand "bookmark" "bookmarks"
 
-# commands ########################################################### commands
-
-describe "commands" <<HEREDOC
-Usage:
-  ${_ME} commands [alias <name> <alias>]
-
-Subcommands:
-  alias  Create an <alias> of a given subcommand <name>, with linked help.
-
-Description:
-  List available commands.
-HEREDOC
-_commands() {
-  if [[ "${1:-}" == "alias" ]]
-  then
-    _alias_subcommand "${2:-}" "${3:-}"
-  else
-    printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
-  fi
-}
-_alias_subcommand "commands" "subcommands"
-
 # completions ##################################################### completions
 
 describe "completions" <<HEREDOC
@@ -10175,6 +10153,28 @@ _status() {
 
   git -C "${_notebook_path}" status
 }
+
+# subcommands ##################################################### subcommands
+
+describe "subcommands" <<HEREDOC
+Usage:
+  ${_ME} subcommands [alias <name> <alias>]
+
+Subcommands:
+  alias  Create an <alias> of a given subcommand <name>, with linked help.
+
+Description:
+  List available subcommands.
+HEREDOC
+_subcommands() {
+  if [[ "${1:-}" == "alias" ]]
+  then
+    _alias_subcommand "${2:-}" "${3:-}"
+  else
+    printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
+  fi
+}
+_alias_subcommand "subcommands" "commands"
 
 # sync ################################################################### sync
 
