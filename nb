@@ -10757,18 +10757,19 @@ do
 
   case "${__opt}" in
     -h|--help)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
-         [[ "${_SUBCOMMAND:-}" == "run" ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        if [[ -n "${_SUBCOMMAND:-}" ]]
-        then
-          _ARGUMENTS+=("${_SUBCOMMAND}")
-        fi
+      case "${_SUBCOMMAND:-}" in
+        git|run)
+          _ARGUMENTS+=("${__opt}")
+          ;;
+        *)
+          if [[ -n "${_SUBCOMMAND:-}" ]]
+          then
+            _ARGUMENTS+=("${_SUBCOMMAND}")
+          fi
 
-        _SUBCOMMAND="help"
-      fi
+          _SUBCOMMAND="help"
+          ;;
+      esac
       ;;
     --debug)
       _USE_DEBUG=1
@@ -10867,10 +10868,10 @@ do
   esac
 done
 
-# _debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
-# _debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
-# _debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
-# _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
+_debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
+_debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
+_debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
+_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # Deprecated Functions and Variables
