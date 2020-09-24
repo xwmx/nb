@@ -2220,13 +2220,13 @@ have an `.nb-plugin` extension.
 
 Create a new subcommand in three easy steps:
 
-##### 1. Add the new subcommand name(s) with `_subcommands add <name>`.
+##### 1. Add the new subcommand name(s) with `_subcommands add <name>`:
 
 ```bash
 _subcommands add "example"
 ```
 
-##### 2. Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+##### 2. Define help and usage text with `_subcommands describe <subcommand> <usage>`:
 
 ```bash
 _subcommands describe "example" <<HEREDOC
@@ -2238,10 +2238,7 @@ Description:
 HEREDOC
 ```
 
-##### 3. Define the subcommand as a function.
-
-Create a function with the same name as the subcommand with a leading
-underscore:
+##### 3. Define the subcommand as a function, named with a leading underscore:
 
 ```bash
 _example() {
