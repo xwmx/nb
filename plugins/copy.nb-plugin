@@ -51,7 +51,8 @@ _copy() {
   local _source_filename
   _source_filename="$(_show "${_selector}" --filename)"
 
-  # Get the current notebook using the selector.
+  # Get the current notebook path, setting the selector notebook as the
+  # current notebook if present.
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
 
@@ -66,6 +67,7 @@ _copy() {
     printf "Not a file: %s\\n" "${_selector}"
     exit 1
   fi
+
   # Get a unique filename based on the source filename.
   local _target_filename
   _target_filename="$(_notebooks current --filename "${_source_filename}")"
@@ -95,5 +97,5 @@ _copy() {
 }
 
 # Use `_subcommands alias` to define a full alias with linked help / usage.
-# Note that aliases also have to be added with `_subcommands add <name>`.
+# Aliases also have to be added with `_subcommands add <name>`.
 _subcommands alias "copy" "duplicate"
