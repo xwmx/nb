@@ -78,6 +78,7 @@ _copy() {
     # Record the change in git.
     _git checkpoint "[nb] Add: ${_target_filename}"
 
+    # Print feedback.
     local _info
     _info="$(_show "${_target_filename}" --info-line)"
 
