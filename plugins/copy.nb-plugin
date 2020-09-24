@@ -14,8 +14,8 @@
 _subcommands add "copy"
 _subcommands add "duplicate"
 
-# Define help and usage text with `describe <subcommand> <usage>`.
-describe "copy" <<HEREDOC
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "copy" <<HEREDOC
 Usage:
   nb copy (<id> | <filename> | <path> | <title>)
 
@@ -48,13 +48,15 @@ _copy() {
   _notebook_path="$(_notebooks current "${_selection}" --path)"
 
   # Validate that the selection is a file.
-  if [[ -z "${_source_filename:-}"                    ]] ||
-     [[ ! -e "${_notebook_path}/${_source_filename}"  ]]
+  if [[ -z "${_source_filename:-}"                      ]] ||
+     [[ ! -e "${_notebook_path}/${_source_filename}"    ]]
   then
-    _exit_1 printf "Not found: %s\\n" "${_selection}"
-  elif [[ ! -f "${_notebook_path}/${_source_filename}" ]]
+    printf "Not found: %s\\n" "${_selection}"
+    exit 1
+  elif [[ ! -f "${_notebook_path}/${_source_filename}"  ]]
   then
-    _exit_1 printf "Not a file: %s\\n" "${_selection}"
+    printf "Not a file: %s\\n" "${_selection}"
+    exit 1
   fi
   # Get a unique filename based on the source filename.
   local _target_filename
@@ -83,5 +85,5 @@ _copy() {
   fi
 }
 # Use `_subcommands alias` to create a full alias, with linked help / usage.
-# NOTE: Aliases also have to be added to the $NB_PLUGIN_SUBCOMMANDS array.
+# NOTE: Aliases also have to be added with `_subcommands add <name>`.
 _subcommands alias "copy" "duplicate"
