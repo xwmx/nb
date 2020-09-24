@@ -2522,6 +2522,7 @@ Usage:
           [--type [<type>]]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
+                 [describe <name> <usage>]
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -3735,15 +3736,19 @@ Description:
 ```text
 Usage:
   nb subcommands [add <name>...] [alias <name> <alias>]
+                 [describe <name> <usage>]
 
 Subcommands:
-  add    Add a new subcommand.
-  alias  Create an <alias> of a given subcommand <name>, with linked help.
-         Note that aliases must also be added with `subcommands add`.
+  add       Add a new subcommand.
+  alias     Create an <alias> of a given subcommand <name>, with linked help.
+            Note that aliases must also be added with `subcommands add`.
+  describe  Set the usage text displayed with `nb help <subcommand>`.
+            This can be assigned as a heredoc, which is recommended, or
+            as a string argument.
 
 Description:
-  List, add, and alias subcommands. New subcommands and aliases are not
-  persisted, so `add` and `alias` are primarily for plugins.
+  List, add, and alias subcommands. New subcommands, aliases, and descriptions
+  are not persisted, so `add`, `alias`, `describe` are primarily for plugins.
 ```
 
 #### `sync`
