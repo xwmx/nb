@@ -2254,8 +2254,8 @@ With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
 For a full example, [`copy.nb-plugin`](plugins/copy.nb-plugin) adds
-copy / duplicate functionality to `nb` and demonstrates a variety of
-features available for creating new subcommands.
+copy / duplicate functionality to `nb` and demonstrates how to create a
+plugin using `nb` subcommands and simple shell scripting.
 
 You can install any plugin you create locally with
 `nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
@@ -2263,10 +2263,12 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 #### API
 
-Plugins can be created using [`nb` subcommands](#nb-help), which represent
-`nb`'s public API. Within plugins, subcommands can be called using their
-function names, which are named with leading underscores. Options can be
-used to output information in formats suitable for parsing and processing:
+The `nb` API is the [command line interface](#nb-help), which is designed for
+composability and provides a variety of powerful options for interacting with
+`nb` notes, bookmarks, notebooks, and other items. Within plugins, subcommands
+can be called using their function names, which are named with leading
+underscores. Options can be used to output information in formats suitable for
+parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
@@ -2277,6 +2279,9 @@ _notebooks --names --no-color --unarchived --global
 
 # list all filenames in the current notebook
 _list --filenames --no-id --no-indicator
+
+# print the path to the current notebook
+_notebooks current --path
 ```
 
 ### > `nb` Interactive Shell
