@@ -10781,22 +10781,24 @@ do
       _GIT_ENABLED=0
       ;;
     --version)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
-         [[ "${_SUBCOMMAND:-}" == "run" ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        _SUBCOMMAND="version"
-      fi
+      case "${_SUBCOMMAND:-}" in
+        git|run)
+          _ARGUMENTS+=("${__opt}")
+          ;;
+        *)
+          _SUBCOMMAND="version"
+          ;;
+      esac
       ;;
     -i|--interactive)
-      if [[ "${_SUBCOMMAND:-}" == "git" ]] ||
-         [[ "${_SUBCOMMAND:-}" == "run" ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        _SUBCOMMAND="shell"
-      fi
+      case "${_SUBCOMMAND:-}" in
+        git|run)
+          _ARGUMENTS+=("${__opt}")
+          ;;
+        *)
+          _SUBCOMMAND="shell"
+          ;;
+      esac
       ;;
     --welcome)
       _print_welcome
