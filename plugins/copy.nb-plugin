@@ -28,7 +28,7 @@ HEREDOC
 # Define the subcommand as a function, named with a leading underscore.
 _copy() {
   # The selector argument can be an <id>, <filename>, <path>, or <title>, with
-  # out withtout a preceeding notebook name, e.g., notebook-name:42
+  # or without a preceeding notebook name, e.g., notebook-name:42
   local _selector="${1:-}"
 
   # Check for the presence of a selector, exiting and printing help if not
