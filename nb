@@ -10186,7 +10186,7 @@ HEREDOC
 _subcommands() {
   case "${1:-}" in
     add)
-      if [[ -n "${2:-}"               ]]
+      if [[ -n "${2:-}" ]]
       then
         shift
 
@@ -10194,9 +10194,9 @@ _subcommands() {
       fi
       ;;
     alias)
-      if [[ "${1:-}" == "alias"     ]] &&
-         [[ -n "${2:-}"             ]] &&
-         [[ -n "${3:-}"             ]]
+      if [[ "${1:-}" == "alias" ]] &&
+         [[ -n "${2:-}"         ]] &&
+         [[ -n "${3:-}"         ]]
       then
         _alias_subcommand "${2:-}" "${3:-}"
       fi
