@@ -10194,8 +10194,7 @@ _subcommands() {
       fi
       ;;
     alias)
-      if [[ "${1:-}" == "alias" ]] &&
-         [[ -n "${2:-}"         ]] &&
+      if [[ -n "${2:-}"         ]] &&
          [[ -n "${3:-}"         ]]
       then
         _alias_subcommand "${2:-}" "${3:-}"
