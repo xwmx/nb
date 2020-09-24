@@ -420,9 +420,9 @@ load test_helper
   [[ "${output}" == "Example Title" ]]
 }
 
-# `show <id> --info` ##########################################################
+# `show <id> --info-line` #####################################################
 
-@test "\`show <id> --info\` exits with status 0 and prints unscoped note info." {
+@test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -430,7 +430,7 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" show 1 --info
+  run "${_NB}" show 1 --info-line
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -442,7 +442,7 @@ load test_helper
   [[ ! "${output}" =~ home          ]]
 }
 
-@test "\`show <id> --info\` exits with status 0 and prints scoped note info." {
+@test "\`show <id> --info-line\` exits with status 0 and prints scoped note info." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -451,7 +451,7 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" show one:1 --info
+  run "${_NB}" show one:1 --info-line
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

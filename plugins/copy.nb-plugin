@@ -79,7 +79,7 @@ _copy() {
     _git checkpoint "[nb] Add: ${_target_filename}"
 
     local _info
-    _info="$(_show "${_target_filename}" --info)"
+    _info="$(_show "${_target_filename}" --info-line)"
 
     printf "Added: %s\\n" "${_info}"
   fi

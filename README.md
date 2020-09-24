@@ -2518,7 +2518,7 @@ Usage:
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render | --title]
           [--type [<type>]]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
@@ -3660,14 +3660,14 @@ Example:
 ```text
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render | --title]
           [--type [<type>]]
   nb show <notebook>
 
 Options:
   --filename        Print the filename of the item.
   --id              Print the id number of the item.
-  --info            Print the id, filename, and title of the item.
+  --info-line       Print the id, filename, and title of the item.
   --path            Print the full path of the item.
   -p, --print       Print to standard output / terminal.
   --render          Use `pandoc` [1] to render the file to HTML and display with

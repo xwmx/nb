@@ -2938,7 +2938,7 @@ Usage:
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render | --title]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3250,7 +3250,7 @@ _add() {
   if [[ -e "${_target_path}" ]]
   then
     local _info
-    _info="$(_show "${_basename}" --info)"
+    _info="$(_show "${_basename}" --info-line)"
 
     printf "Added: %s\\n" "${_info}"
   fi &&
@@ -4260,7 +4260,7 @@ _delete() {
   fi
 
   local _info
-  _info="$(_show "${_basename}" --info)"
+  _info="$(_show "${_basename}" --info-line)"
 
   if ! ((_force))
   then
@@ -4470,7 +4470,7 @@ _edit() {
     if [[ "${_before}" != "${_after}" ]]
     then
       local _info
-      _info="$(_show "${_basename}" --info)"
+      _info="$(_show "${_basename}" --info-line)"
 
       printf "Updated: %s\\n" "${_info}"
     fi
@@ -9649,14 +9649,14 @@ HEREDOC
 describe "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render | --title]
           [--type [<type>]]
   ${_ME} show <notebook>
 
 Options:
   --filename        Print the filename of the item.
   --id              Print the id number of the item.
-  --info            Print the id, filename, and title of the item.
+  --info-line       Print the id, filename, and title of the item.
   --path            Print the full path of the item.
   -p, --print       Print to standard output / terminal.
   --render          Use \`pandoc\` [1] to render the file to HTML and display with
@@ -9740,7 +9740,7 @@ _show() {
       --id|--index)
         _print_id=1
         ;;
-      --info)
+      --info-line)
         _print_info=1
         ;;
       --no-color|--nocolor|--raw)
