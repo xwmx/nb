@@ -28,7 +28,15 @@ HEREDOC
 # Define the subcommand as a function, named with a leading underscore.
 _copy() {
   # The selector argument can be an <id>, <filename>, <path>, or <title>, with
-  # or without a preceeding notebook name, e.g., notebook-name:42
+  # or without a preceeding notebook name. Examples:
+  #   1
+  #   example.md
+  #   title
+  #   /path/to/example.md
+  #   notebook:1
+  #   notebook:example.md
+  #   notebook:title
+  #   notebook:/path/to/example.md
   local _selector="${1:-}"
 
   # Check for the presence of a selector, exiting and printing help if not
@@ -39,7 +47,7 @@ _copy() {
     exit 1
   fi
 
-  # Get the filename from the selector.
+  # Get the filename using the selector.
   local _source_filename
   _source_filename="$(_show "${_selector}" --filename)"
 
@@ -85,6 +93,7 @@ _copy() {
     printf "Added: %s\\n" "${_info}"
   fi
 }
-# Use `_subcommands alias` to create a full alias, with linked help / usage.
-# NOTE: Aliases also have to be added with `_subcommands add <name>`.
+
+# Use `_subcommands alias` to define a full alias with linked help / usage.
+# Note that aliases also have to be added with `_subcommands add <name>`.
 _subcommands alias "copy" "duplicate"

@@ -1942,8 +1942,12 @@ _get_http_status() {
 #   Examples:
 #     1
 #     example.md
+#     title
+#     /path/to/example.md
 #     notebook:1
 #     notebook:example.md
+#     notebook:title
+#     notebook:/path/to/example.md
 _get_selector_basename() {
   local _basename=
   local _identifier=
