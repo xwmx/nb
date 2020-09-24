@@ -2558,6 +2558,7 @@ Subcommands:
   shell        Start the `nb` interactive shell.
   show         Show a note or notebook.
   status       Run `git status` in the current notebook.
+  subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
@@ -3744,8 +3745,9 @@ Subcommands:
             as a string argument.
 
 Description:
-  List, add, and alias subcommands. New subcommands, aliases, and descriptions
-  are not persisted, so `add`, `alias`, `describe` are primarily for plugins.
+  List, add, alias, and describe subcommands. New subcommands, aliases, and
+  descriptions are not persisted, so `add`, `alias`, `describe` are
+  primarily for plugins.
 ```
 
 #### `sync`
