@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+###############################################################################
+# copy / duplicate
+#
+# A plugin for `nb` providing copy / duplicate functionality.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name(s) to the $NB_PLUGIN_SUBCOMMANDS array.
+NB_PLUGIN_SUBCOMMANDS+=(
+  copy
+  duplicate
+)
+
+# Define help and usage text with `describe <subcommand> <usage>`.
+describe "copy" <<HEREDOC
+Usage:
+  nb copy (<id> | <filename> | <path> | <title>)
+
+Description:
+  Create a copy of the specified item in the current notebook.
+
+Alias: \`duplicate\`
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_copy() {
+  local _selection="${1:-}"
+
+  # Check for the presence of a selection, exiting and printing help if not
+  # found.
+  if [[ -z "${_selection:-}" ]]
+  then
+    _exit_1 _help "copy"
+  fi
+
+  # Get the basename from the selection. The selection argument can be an
+  # <id>, <filename>, <path>, or <title>.
+  local _source_basename
+  _source_basename="$(_get_selection_basename "${_selection}")"
+
+  # Set the current notebook using the selection.
+  #
+  # NOTE: Important!
+  # This sets the current notebook for all subsequent operations.
+  _set_selection_notebook "${_selection}"
+
+  # Validate that the selection is a file.
+  if [[ -z "${_source_basename:-}"                    ]] ||
+     [[ ! -e "${_NOTEBOOK_PATH}/${_source_basename}"  ]]
+  then
+    _exit_1 printf "Not found: %s\\n" "${_selection}"
+  elif [[ ! -f "${_NOTEBOOK_PATH}/${_source_basename}" ]]
+  then
+    _exit_1 printf "Not a file: %s\\n" "${_selection}"
+  fi
+  # Get a unique basename based on the source basename.
+  local _target_basename
+  _target_basename="$(_get_unique_basename "${_source_basename}")"
+
+  if _file_is_text "${_source_basename}"
+  then # Text can use `_add()`.
+    # Print the source contents and pipe to `_add()`.
+    _show "${_source_basename}" --no-color --print | _add "${_target_basename}"
+  else # Binary files must be copied manually.
+    # Copy the binary file to the new basename.
+    cp                                        \
+      "${_NOTEBOOK_PATH}/${_source_basename}" \
+      "${_NOTEBOOK_PATH}/${_target_basename}"
+
+    # Add the new basename to the index.
+    _index add "${_target_basename}"
+
+    # Record the change in git.
+    _git_checkpoint "[nb] Add: ${_target_basename}"
+
+    # Operation complete.
+    #
+    # Build the feedback message for the user since we can't use `_add()` here.
+
+    # Get the new id.
+    local _id
+    _id="$(_index get_id "${_target_basename}")"
+
+    # Set the scoped basename and id to the current basename and id.
+    local _maybe_scoped_basename="${_target_basename}"
+    local _maybe_scoped_id="${_id}"
+
+    # $_SCOPED indicates whether the current notebook context
+    # differs from the configured current notebook, meaning the user used
+    # a selection with a notebook colon prefix. 1 == scoped, 0 == unscoped
+    if ((_SCOPED))
+    then # Selection includes a notebook prefix, e.g., "notebook:123".
+      # Add the notebook identifier to the id and basename.
+      local _notebook_identifier
+      _notebook_identifier="$(_get_notebook_identifier "${_SCOPE}")"
+
+      _maybe_scoped_basename="${_notebook_identifier}:${_target_basename}"
+      _maybe_scoped_id="${_notebook_identifier}:${_id}"
+    fi
+
+    # Print feedback with scoped id and basename.
+    printf "Added %s %s\\n"                         \
+      "$(_id_brackets_color "${_maybe_scoped_id}")" \
+      "$(_highlight "${_maybe_scoped_basename}")"
+  fi
+}
+# Use `_alias_subcommand` to create a full alias, with linked help / usage.
+# NOTE: Aliases also have to be added to the $NB_PLUGIN_SUBCOMMANDS array.
+_alias_subcommand "copy" "duplicate"

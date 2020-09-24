@@ -278,6 +278,10 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
+    "${_NB}" add "second.md" --title "two"
+    "${_NB}" add "third.md"  --title "three"
+
+    "${_NB}" edit "second.md" --content "New conent."
 
     echo "" > "${_NOTEBOOK_PATH}/.index"
 
@@ -289,8 +293,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                                    ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls "${_NOTEBOOK_PATH}")" ]]
+  ls -t -r "${_NOTEBOOK_PATH}"
+
+  [[ ${status} -eq 0                                                          ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls -t -r "${_NOTEBOOK_PATH}")" ]]
 }
 
 @test "\`index rebuild\` creates git commit." {

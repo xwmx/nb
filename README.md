@@ -1530,10 +1530,11 @@ Scoped notebook commands are also available in tab completion:
 
 #### Notebooks, Tags, and Taxonomy
 
-`nb` is optimized to work with multiple notebooks, so notebooks are a
-good way to organize your notes and bookmarks by top-level topic. Tags
-are searchable across notebooks and can be created ad hoc, making notebooks
-and tags distinct and complementary organizational systems in `nb`.
+`nb` is optimized to work well with a bunch of notebooks, so notebooks are
+a really good way to organize your notes and bookmarks by top-level topic.
+
+Tags are searchable across notebooks and can be created ad hoc, making
+notebooks and tags distinct and complementary organizational systems in `nb`.
 
 Search for a tag in or across notebooks with
 [`nb search`](#search) / [`nb q`](#search):
@@ -2219,16 +2220,16 @@ have an `.nb-plugin` extension.
 
 Create a new subcommand in three easy steps:
 
-##### 1. Add the new subcommand name(s) to the `$NB_PLUGIN_SUBCOMMANDS` array.
+##### 1. Add the new subcommand name with `_subcommands add <name>`:
 
 ```bash
-NB_PLUGIN_SUBCOMMANDS+=(example)
+_subcommands add "example"
 ```
 
-##### 2. Define help and usage text with `describe <subcommand> <usage>`.
+##### 2. Define help and usage text with `_subcommands describe <subcommand> <usage>`:
 
 ```bash
-describe "example" <<HEREDOC
+_subcommands describe "example" <<HEREDOC
 Usage:
   nb example
 
@@ -2237,10 +2238,7 @@ Description:
 HEREDOC
 ```
 
-##### 3. Define the subcommand as a function.
-
-Create a function with the same name as the subcommand with a leading
-underscore:
+##### 3. Define the subcommand as a function, named with a leading underscore:
 
 ```bash
 _example() {
@@ -2263,13 +2261,12 @@ You can install any plugin you create locally with
 `nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
 anywhere else online and install it with `nb plugins install <url>`.
 
-#### Internal Functions and Variables
+#### API
 
-Plugins have full access to all internal functions and variables,
-which are identified by leading underscores. `nb` subcommands, which
-represent `nb`'s stable public API, should be called using their internal
-function names. Options can be used to output information in formats
-suitable for parsing and processing:
+Plugins can be created using [`nb` subcommands](#nb-help), which represent
+`nb`'s public API. Within plugins, subcommands can be called using their
+function names, which are named with leading underscores. Options can be
+used to output information in formats suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
@@ -2281,12 +2278,6 @@ _notebooks --names --no-color --unarchived --global
 # list all filenames in the current notebook
 _list --filenames --no-id --no-indicator
 ```
-
-`nb` includes a variety of helper and utility functions that can be
-leveraged when creating plugins. Plugins can also define their own helper
-and utility functions, and can override functions in `nb`, including
-entire subcommands. As a result, plugins can be used to customize and
-extend just about anything in `nb`.
 
 ### > `nb` Interactive Shell
 
@@ -2418,6 +2409,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#shell">shell</a> •
   <a href="#show">show</a> •
   <a href="#status">status</a> •
+  <a href="#subcommands-1">subcommands</a> •
   <a href="#sync">sync</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
@@ -2471,6 +2463,9 @@ Usage:
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
   nb export notebook <name> [<path>]
+  nb export pandoc (<id> | <filename> | <path> | <title>)
+            [<pandoc options>...]
+  nb git checkpoint [<message>]
   nb git <git options>...
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
@@ -2493,11 +2488,15 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--path]
+  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
+                       [--path | --selected | --filename [<filename>]]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
+  nb notebooks select <selector>
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped | --path | --filename [<filename>]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -2516,8 +2515,11 @@ Usage:
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render | --title]
+          [--type [<type>]]
   nb show <notebook>
+  nb subcommands [add <name>...] [alias <name> <alias>]
+                 [describe <name> <usage>]
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -2932,7 +2934,12 @@ Examples:
 
 ```text
 Usage:
+  nb git checkpoint [<message>]
   nb git <git options>...
+
+Subcommands:
+  checkpoint  Create a new git commit in the current notebook and sync with
+              the remote if `nb set auto_sync` is enabled.
 
 Description:
   Run `git` commands within the current notebook directory.
@@ -3167,22 +3174,36 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--path]
+  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
+                       [--path | --selected | --filename [<filename>]]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
+  nb notebooks select <selector>
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped | --path | --filename [<filename>]]
   nb notebooks use <name>
 
 Options:
-  --archived    Only list archived notebooks.
-  --global      List global notebooks.
-  --local       List local notebook.
-  -f, --force   Skip the confirmation prompt.
-  --names       Only print each notebook's name.
-  --path        Print the path of the current notebook.
-  --paths       Print the path of each notebook.
-  --unarchived  Only list unarchived notebooks.
+  --archived               List archived notebooks, or return archival status
+                           with `show`.
+  --escaped                Print the notebook name with spaces escaped.
+  --filename [<filename>]  Print an available filename for the notebooks. When
+                           <filename> is provided, check for an existing file
+                           and provide a filename with an appended sequence
+                           number for uniqueness.
+  --global                 List global notebooks or the notebook set globally
+                           with `use`.
+  --local                  Exit with 0 if current within a local notebook,
+                           otherwise exit with 1.
+  -f, --force              Skip the confirmation prompt.
+  --names                  Only print the notebook name.
+  --path                   Print the path of the notebook.
+  --paths                  Print the path of each notebook.
+  --selected               Exit with 0 if the current notebook differs from
+                           the current global notebook, otherwise exit with 1.
+  --unarchived             Only list unarchived notebooks.
 
 Subcommands:
   (default)  List notebooks.
@@ -3197,7 +3218,8 @@ Subcommands:
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name.
+  current    Print the current notebook name. When provides with <name>,
+             <path>, or <selector>, use that as the current notebook.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.
@@ -3207,6 +3229,9 @@ Subcommands:
              `ranger` [1], `mc` [2], `exa` [3], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
+  select     Set the current notebook from a colon-prefixed selector.
+             Not persisted. Selection format: <notebook>:<identifier>
+  show       Show and return information about a specified notebook.
   status     Print the archival status of the current notebook or
              notebook <name>.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
@@ -3632,18 +3657,25 @@ Example:
 ```text
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render | --title]
+          [--type [<type>]]
   nb show <notebook>
 
 Options:
-  --filename   Print the filename of the item.
-  --id         Print the id number of the item.
-  --path       Print the full path of the item.
-  -p, --print  Print to standard output / terminal.
-  --render     Use `pandoc` [1] to render the file to HTML and display with
-               `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-               not available, `--render` is ignored.
-  --title      Print the title of the note.
+  --filename        Print the filename of the item.
+  --id              Print the id number of the item.
+  --info-line       Print the id, filename, and title of the item.
+  --path            Print the full path of the item.
+  -p, --print       Print to standard output / terminal.
+  --render          Use `pandoc` [1] to render the file to HTML and display with
+                    `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
+                    not available, `--render` is ignored.
+  --title           Print the title of the note.
+  --type [<type>]   Print the file extension or, when <type> is specified,
+                    return true if the item matches <type>. <type> can be a
+                    file extension or one of the following types:
+                    archive, audio, bookmark, document, folder, image,
+                    text, video
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -3694,6 +3726,26 @@ Usage:
 
 Description:
   Run `git status` the current notebook.
+```
+
+#### `subcommands`
+
+```text
+Usage:
+  nb subcommands [add <name>...] [alias <name> <alias>]
+                 [describe <name> <usage>]
+
+Subcommands:
+  add       Add a new subcommand.
+  alias     Create an <alias> of a given subcommand <name>, with linked help.
+            Note that aliases must also be added with `subcommands add`.
+  describe  Set the usage text displayed with `nb help <subcommand>`.
+            This can be assigned as a heredoc, which is recommended, or
+            as a string argument.
+
+Description:
+  List, add, and alias subcommands. New subcommands, aliases, and descriptions
+  are not persisted, so `add`, `alias`, `describe` are primarily for plugins.
 ```
 
 #### `sync`
@@ -3954,12 +4006,18 @@ so ids are preserved across systems.
 
 ##### Operations
 
-- Add:
-  - Append a new line containing the filename to `.index`.
-- Update:
-  - Overwrite the existing filename in `.index` with the new filename.
-- Delete:
-  - Delete the filename, preserving the newline, leaving the line blank.
+<dl>
+  <dt><code>add</code></dt>
+  <dd>Append a new line containing the filename to <code>.index</code>.</dd>
+  <dt><code>update</code></dt>
+  <dd>Overwrite the existing filename in <code>.index</code> with the new filename.</dd>
+  <dt><code>delete</code></dt>
+  <dd>Delete the filename, preserving the newline, leaving the line blank.</dd>
+  <dt><code>reconcile</code></dt>
+  <dd>Remove duplicate lines, preserving existing blank lines, <code>add</code> entries for new files, and <code>delete</code> entries for deleted files.</dd>
+  <dt><code>rebuild</code></dt>
+  <dd>Delete and rebuild <code>.index</code>, listing files by most recently modified, reversed.</dd>
+</dl>
 
 ##### `index` Subcommand
 
@@ -3986,7 +4044,8 @@ Subcommands:
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the notebook.
-  rebuild       Rebuild the index. Some ids might change.
+  rebuild       Rebuild the index, listing files by last modified, reversed.
+                Some ids will change. Prefer `nb index reconcile`.
   reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.

@@ -17,13 +17,13 @@ load test_helper
   _expected="0 notes.
 
 Add a note:
-  $(_highlight 'nb add')
+  $(_color_primary 'nb add')
 Add a bookmark:
-  $(_highlight "nb <url>")
+  $(_color_primary "nb <url>")
 Import a file:
-  $(_highlight "nb import (<path> | <url>)")
+  $(_color_primary "nb import (<path> | <url>)")
 Help information:
-  $(_highlight 'nb help')"
+  $(_color_primary 'nb help')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -37,7 +37,7 @@ Help information:
     "${_NB}" add "one.md" --title "one"
     "${_NB}" add "two.md" --title "two"
     "${_NB}" add "three.md" --title "three"
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list
@@ -58,7 +58,7 @@ Help information:
     "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
     "${_NB}" add "two.md" --content "Example Content."
     "${_NB}" add "three.md" --title "Three" --encrypt --password=example
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list
@@ -83,7 +83,7 @@ Help information:
     "${_NB}" add "one.md" --title "one"
     "${_NB}" add "two.md" --title "two"
     "${_NB}" add "three.md" --title "three"
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --no-id
@@ -106,7 +106,7 @@ Help information:
     "${_NB}" add "one.md" --title "one"
     "${_NB}" add "two.md" --title "two"
     "${_NB}" add "three.md" --title "three"
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --no-color
@@ -148,7 +148,7 @@ HEREDOC
 @test "\`list -e\` exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list -e
@@ -164,7 +164,7 @@ HEREDOC
 @test "\`list -e 2\` exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list -e 2
@@ -180,7 +180,7 @@ HEREDOC
 @test "\`list -e 0\` exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list -e 0
@@ -196,7 +196,7 @@ HEREDOC
 @test "\`list --excerpt\` exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --excerpt
@@ -212,7 +212,7 @@ HEREDOC
 @test "\`list --excerpt 2\` exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --excerpt 2
@@ -228,7 +228,7 @@ HEREDOC
 @test "\`list --excerpt 0\` exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --excerpt 0
@@ -268,7 +268,7 @@ HEREDOC
 @test "\`list -n\` exits with 0 and displays full list." {
   {
     _setup_list_limit
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list -n
@@ -284,7 +284,7 @@ HEREDOC
 @test "\`list -n 2\` exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list -n 2
@@ -301,7 +301,7 @@ HEREDOC
 @test "\`list --limit 2\` exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --limit 2
@@ -319,7 +319,7 @@ HEREDOC
 @test "\`list --2\` exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --2
@@ -357,7 +357,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --titles
@@ -398,7 +398,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --filenames
@@ -438,7 +438,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --bookmarks
@@ -475,7 +475,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --document
@@ -511,7 +511,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --documents
@@ -541,7 +541,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --document
@@ -571,7 +571,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list --documents
@@ -585,9 +585,9 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
 }
 
-# `list <selection>` ##########################################################
+# `list <selector>` ###########################################################
 
-@test "\`list <selection>\` exits with 0 and displays the selection." {
+@test "\`list <selector>\` exits with 0 and displays the selector." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -608,7 +608,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list 1 --filenames
@@ -624,8 +624,7 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
-
-@test "\`list <query selection>\` exits with 0 and displays the selections." {
+@test "\`list <query selector>\` exits with 0 and displays the selectors." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -646,7 +645,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list 'r' --filenames
@@ -665,7 +664,7 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`list <invalid-selection>\` exits with 1 and displays a message." {
+@test "\`list <invalid-selector>\` exits with 1 and displays a message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add
@@ -675,7 +674,7 @@ line three
 line four
 HEREDOC
     sleep 1
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }
 
   run "${_NB}" list invalid
@@ -733,13 +732,13 @@ HEREDOC
   _expected="0 notes.
 
 Add a note:
-  $(_highlight 'nb one:add')
+  $(_color_primary 'nb one:add')
 Add a bookmark:
-  $(_highlight 'nb one: <url>')
+  $(_color_primary 'nb one: <url>')
 Import a file:
-  $(_highlight 'nb one:import (<path> | <url>)')
+  $(_color_primary 'nb one:import (<path> | <url>)')
 Help information:
-  $(_highlight 'nb help')"
+  $(_color_primary 'nb help')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -759,9 +758,9 @@ Help information:
   _expected="0 bookmarks.
 
 Add a bookmark:
-  $(_highlight 'nb one: <url>')
+  $(_color_primary 'nb one: <url>')
 Help information:
-  $(_highlight 'nb help bookmark')"
+  $(_color_primary 'nb help bookmark')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -781,9 +780,9 @@ Help information:
   _expected="0 document files.
 
 Import a file:
-  $(_highlight 'nb one:import (<path> | <url>)')
+  $(_color_primary 'nb one:import (<path> | <url>)')
 Help information:
-  $(_highlight 'nb help import')"
+  $(_color_primary 'nb help import')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -807,6 +806,56 @@ Help information:
 
   run "${_NB}" one:list --hard-empty
   [[ ${status} -eq 0 ]]
+}
+
+# `list <notebook>` ###########################################################
+
+@test "\`list <notebook>\` exits with 1 and prints not found." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
+    "${_NB}" example:add "one.md" --title "one"
+    "${_NB}" example:add "two.md" --title "two"
+    "${_NB}" example:add "three.md" --title "three"
+    _files=($(ls "${NB_DIR}/example/"))
+
+    [[ "$("${_NB}" notebooks current)" == "home" ]]
+  }
+
+  run "${_NB}" list example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ ${status} -eq 1                    ]]
+  [[ "${lines[0]}" =~ Note\ not\ found  ]]
+  [[ "${lines[0]}" =~ example           ]]
+}
+
+@test "\`list <notebook>:\` exits with 0 and lists files in reverse order." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
+    "${_NB}" example:add "one.md" --title "one"
+    "${_NB}" example:add "two.md" --title "two"
+    "${_NB}" example:add "three.md" --title "three"
+    _files=($(ls "${NB_DIR}/example/"))
+  }
+
+  run "${_NB}" list example:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ example:3   ]]
+  [[ "${lines[0]}" =~ three       ]]
+  [[ "${lines[1]}" =~ example:2   ]]
+  [[ "${lines[1]}" =~ two         ]]
+  [[ "${lines[2]}" =~ example:1   ]]
+  [[ "${lines[2]}" =~ one         ]]
 }
 
 # help ########################################################################

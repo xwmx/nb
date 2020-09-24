@@ -5,13 +5,14 @@ load test_helper
 # `copy <name>` ###############################################################
 
 @test "\`copy <name>\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    [[ "${status}" == 0 ]]
-  }; _setup
+    [[ "${status}" == 0                   ]]
+    [[ "$("${_NB}" subcommands)" =~ copy  ]]
+  }
 
   run "${_NB}" copy "example.md"
 
@@ -27,9 +28,9 @@ load test_helper
 }
 
 @test "\`copy <name>\` with binary file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md"   \
       --title "Example"             \
       --content "Example content."  \
@@ -37,7 +38,7 @@ load test_helper
       --password password
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy "example.md.enc"
 
@@ -62,13 +63,13 @@ load test_helper
 # `copy <id>` #################################################################
 
 @test "\`copy <id>\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy 1
 
@@ -84,9 +85,9 @@ load test_helper
 }
 
 @test "\`copy <id>\` with binary file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md"   \
       --title "Example"             \
       --content "Example content."  \
@@ -94,7 +95,7 @@ load test_helper
       --password password
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy 1
 
@@ -119,13 +120,13 @@ load test_helper
 # `copy <title>` ##############################################################
 
 @test "\`copy <title>\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy Example
 
@@ -143,13 +144,13 @@ load test_helper
 # `copy <invalid>` ###############################################################
 
 @test "\`copy <invalid>\` exits with error message." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy "not-valid"
 
@@ -166,14 +167,14 @@ load test_helper
 # `copy <directory>` ##########################################################
 
 @test "\`copy <directory>\` exits with error message." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
 
     cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy "example"
 
@@ -191,13 +192,13 @@ load test_helper
 # `copy <selector>` filenames #################################################
 
 @test "\`copy <name>\` with text file copies the note with sequential names." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy "example.md"
 
@@ -255,9 +256,9 @@ load test_helper
 }
 
 @test "\`copy <name>\` with binary file copies the file with sequential names." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md"   \
       --title "Example"             \
       --content "Example content."  \
@@ -265,7 +266,7 @@ load test_helper
       --password password
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy "example.md.enc"
 
@@ -325,13 +326,13 @@ load test_helper
 # `<selector>` copy alternative ###############################################
 
 @test "\`<id> copy\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" 1 copy
 
@@ -349,15 +350,15 @@ load test_helper
 # `copy <scope:selector>` #####################################################
 
 @test "\`copy <scope>:<id>\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" notebooks add "one"
     run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
-  }; _setup
+  }
 
   run "${_NB}" copy one:1
 
@@ -373,15 +374,15 @@ load test_helper
 }
 
 @test "\`<scope>:<id> copy\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" notebooks add "one"
     run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
-  }; _setup
+  }
 
   run "${_NB}" one:1 copy
 
@@ -399,15 +400,15 @@ load test_helper
 # `<scope>:copy <selector>` ###################################################
 
 @test "\`<scope>:copy <id>\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" notebooks add "one"
     run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
-  }; _setup
+  }
 
   run "${_NB}" one:copy 1
 
@@ -423,15 +424,15 @@ load test_helper
 }
 
 @test "\`<id> <scope>:copy\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" notebooks add "one"
     run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
-  }; _setup
+  }
 
   run "${_NB}" 1 one:copy
 
@@ -449,13 +450,13 @@ load test_helper
 # duplicate ###################################################################
 
 @test "\`duplicate <id>\` with text file copies file." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" duplicate 1
 
@@ -473,13 +474,13 @@ load test_helper
 # help ########################################################################
 
 @test "\`copy\` with no argument exits with status 1 and prints usage." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" copy
 
@@ -493,13 +494,13 @@ load test_helper
 
 
 @test "\`help copy\` exits with status 0 and prints usage." {
-  _setup() {
+  {
     run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
     run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
-  }; _setup
+  }
 
   run "${_NB}" help copy
 

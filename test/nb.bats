@@ -27,22 +27,23 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[11]}: '%s'\\n" "${lines[11]}"
 
   [[ "${status}" -eq 0 ]]
 
-  [[ "${lines[8]}"  == "Initializing..."                              ]]
-  [[ "${lines[9]}"  =~ Created                                        ]]
-  [[ "${lines[10]}" =~ Created                                        ]]
-  [[ "${lines[11]}" =~ Created                                        ]]
-  [[ "${lines[14]}" == "0 notes."                                     ]]
-  [[ "${lines[15]}" == "Add a note:"                                  ]]
-  [[ "${lines[16]}" == "  $(_highlight 'nb add')"                     ]]
-  [[ "${lines[17]}" == "Add a bookmark:"                              ]]
-  [[ "${lines[18]}" == "  $(_highlight "nb <url>")"                   ]]
-  [[ "${lines[19]}" == "Import a file:"                               ]]
-  [[ "${lines[20]}" == "  $(_highlight "nb import (<path> | <url>)")" ]]
-  [[ "${lines[21]}" == "Help information:"                            ]]
-  [[ "${lines[22]}" == "  $(_highlight 'nb help')"                    ]]
+  [[ "${lines[8]}"  == "Initializing..."                                  ]]
+  [[ "${lines[9]}"  =~ Created                                            ]]
+  [[ "${lines[10]}" =~ Created                                            ]]
+  [[ "${lines[11]}" =~ Created                                            ]]
+  [[ "${lines[14]}" == "0 notes."                                         ]]
+  [[ "${lines[15]}" == "Add a note:"                                      ]]
+  [[ "${lines[16]}" == "  $(_color_primary 'nb add')"                     ]]
+  [[ "${lines[17]}" == "Add a bookmark:"                                  ]]
+  [[ "${lines[18]}" == "  $(_color_primary "nb <url>")"                   ]]
+  [[ "${lines[19]}" == "Import a file:"                                   ]]
+  [[ "${lines[20]}" == "  $(_color_primary "nb import (<path> | <url>)")" ]]
+  [[ "${lines[21]}" == "Help information:"                                ]]
+  [[ "${lines[22]}" == "  $(_color_primary 'nb help')"                    ]]
 }
 
 # `nb` (empty repo) ###########################################################
@@ -59,16 +60,16 @@ load test_helper
 
   [[ "${status}" -eq 0 ]]
 
-  [[ "${lines[1]}"  =~ ----                                           ]]
-  [[ "${lines[2]}"  == "0 notes."                                     ]]
-  [[ "${lines[3]}"  == "Add a note:"                                  ]]
-  [[ "${lines[4]}"  == "  $(_highlight 'nb add')"                     ]]
-  [[ "${lines[5]}"  == "Add a bookmark:"                              ]]
-  [[ "${lines[6]}"  == "  $(_highlight "nb <url>")"                   ]]
-  [[ "${lines[7]}"  == "Import a file:"                               ]]
-  [[ "${lines[8]}"  == "  $(_highlight "nb import (<path> | <url>)")" ]]
-  [[ "${lines[9]}"  == "Help information:"                            ]]
-  [[ "${lines[10]}" == "  $(_highlight 'nb help')"                    ]]
+  [[ "${lines[1]}"  =~ ----                                               ]]
+  [[ "${lines[2]}"  == "0 notes."                                         ]]
+  [[ "${lines[3]}"  == "Add a note:"                                      ]]
+  [[ "${lines[4]}"  == "  $(_color_primary 'nb add')"                     ]]
+  [[ "${lines[5]}"  == "Add a bookmark:"                                  ]]
+  [[ "${lines[6]}"  == "  $(_color_primary "nb <url>")"                   ]]
+  [[ "${lines[7]}"  == "Import a file:"                                   ]]
+  [[ "${lines[8]}"  == "  $(_color_primary "nb import (<path> | <url>)")" ]]
+  [[ "${lines[9]}"  == "Help information:"                                ]]
+  [[ "${lines[10]}" == "  $(_color_primary 'nb help')"                    ]]
 }
 
 # `nb` (non-empty repo) #######################################################
@@ -79,7 +80,7 @@ load test_helper
     "${_NB}" add "first.md" --title "one"
     "${_NB}" add "second.md" --title "two"
     "${_NB}" add "third.md" --title "three"
-    _files=($(ls -t "${_NOTEBOOK_PATH}/"))
+    _files=($(ls -t "${NB_DIR}/home/"))
   }
 
   run "${_NB}"
@@ -106,7 +107,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  _files=($(ls "${NB_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
   # Returns status 0
   [[ ${status} -eq 0 ]]
@@ -128,13 +129,13 @@ Example description.
 ## Content
 
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
-  printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+  printf "cat file: '%s'\\n" "$(cat "${NB_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
-  grep -q '# Example Domain' "${_NOTEBOOK_PATH}"/*
+  [[ "$(cat "${NB_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  grep -q '# Example Domain' "${NB_NOTEBOOK_PATH}"/*
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -142,11 +143,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_NOTEBOOK_PATH}/.index" ]]
+  [[ "$(ls "${NB_NOTEBOOK_PATH}")" == "$(cat "${NB_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }

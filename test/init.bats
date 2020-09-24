@@ -27,10 +27,10 @@ load test_helper
   [[ ${status} -eq 1 ]]
 }
 
-@test "\`init\` exits with status 1 when \`\$_NOTEBOOK_PATH\` exists." {
+@test "\`init\` exits with status 0 when \`\$NB_NOTEBOOK_PATH\` exists." {
   {
-    mkdir -p "${_NOTEBOOK_PATH}"
-    [[ -e "${_NOTEBOOK_PATH}" ]]
+    mkdir -p "${NB_NOTEBOOK_PATH}"
+    [[ -e "${NB_NOTEBOOK_PATH}" ]]
   }
 
   run "${_NB}" init
@@ -38,36 +38,36 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ already\ initialized  ]]
-  [[ ${status} -eq 1                        ]]
+  [[ "${output}" =~ already\ exists ]]
+  [[ ${status} -eq 0                ]]
 }
 
-@test "\`init\` creates \`\$NB_DIR\` and \`\$_NOTEBOOK_PATH\` directories." {
+@test "\`init\` creates \`\$NB_DIR\` and \`\$NB_NOTEBOOK_PATH\` directories." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ -d "${NB_DIR}"         ]]
-  [[ -d "${_NOTEBOOK_PATH}" ]]
+  [[ -d "${NB_NOTEBOOK_PATH}" ]]
 }
 
-@test "\`init\` creates a git directory in \`\$_NOTEBOOK_PATH\`." {
+@test "\`init\` creates a git directory in \`\$NB_NOTEBOOK_PATH\`." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -d "${_NOTEBOOK_PATH}/.git" ]]
+  [[ -d "${NB_NOTEBOOK_PATH}/.git" ]]
 }
 
-@test "\`init\` creates an .index \`\$_NOTEBOOK_PATH\`." {
+@test "\`init\` creates an .index \`\$NB_NOTEBOOK_PATH\`." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${NB_NOTEBOOK_PATH}/.index" ]]
 }
 
 @test "\`init\` exits with status 0 when \$NBRC_PATH\` exists." {
@@ -103,7 +103,7 @@ load test_helper
 @test "\`init\` creates git commit." {
   run "${_NB}" init
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_NOTEBOOK_PATH}" || return 1
 
   printf "\$(git log): '%s'\n" "$(git log)"
 
@@ -116,7 +116,7 @@ load test_helper
 
 # `init <remote-url>` #########################################################
 
-@test "\`init <remote-url>\` creates a clone in \`\$_NOTEBOOK_PATH\`." {
+@test "\`init <remote-url>\` creates a clone in \`\$NB_NOTEBOOK_PATH\`." {
   {
     _setup_remote_repo
   }
@@ -125,10 +125,10 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _origin="$(cd "${_NOTEBOOK_PATH}" && git config --get remote.origin.url)"
+  _origin="$(cd "${NB_NOTEBOOK_PATH}" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
 
-  [[ -d "${_NOTEBOOK_PATH}/.git"          ]]
+  [[ -d "${NB_NOTEBOOK_PATH}/.git"          ]]
   [[ "${_origin}" =~  ${_GIT_REMOTE_URL}  ]]
 }
 

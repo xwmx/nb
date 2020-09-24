@@ -34,9 +34,9 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
 @test "\`notebooks use <invalid>\` exits with 1 and prints error message." {
@@ -59,9 +59,9 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
 @test "\`notebooks use <name>\` exits with 0 and sets <name> in .current." {
@@ -73,19 +73,19 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using: $(_highlight 'one')'" "'${output}'"
+  _compare "'Now using: $(_color_primary 'one')'" "'${output}'"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "Now using: $(_highlight 'one')"  ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "one"           ]]
+  [[ ${status} -eq 0                                      ]]
+  [[ "${output}" == "Now using: $(_color_primary 'one')"  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "one"               ]]
 
   run "${_NB}" env
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
 }
 
 @test "\`notebooks use <name>:\` exits with 0 and sets <name> in .current." {
@@ -97,19 +97,20 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using: $(_highlight 'one')'" "'${output}'"
+  _compare "'Now using: $(_color_primary 'one')'" "'${output}'"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "Now using: $(_highlight 'one')"  ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "one"           ]]
+  [[ ${status} -eq 0                        ]]
+  [[ "${output}" =~ Now\ using:             ]]
+  [[ "${output}" =~ one                     ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "one" ]]
 
   run "${_NB}" env
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
 }
 
 @test "\`notebooks use\` in local exits with 1 and prints error message." {
@@ -137,8 +138,8 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${_TMP_DIR}/example" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${_TMP_DIR}/example" ]]
 }

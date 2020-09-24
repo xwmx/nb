@@ -224,18 +224,19 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
-  "${_NB}" notebooks add one
-  "${_NB}" use one
-  "${_NB}" add example.md --title "sweetish"
-  "${_NB}" notebooks add two
-  "${_NB}" use two
-  "${_NB}" add example.md --title "sweetish"
-  "${_NB}" two:notebook archive
+  run "${_NB}" notebooks add one
+  run "${_NB}" use one
+  run "${_NB}" add example.md --title "sweetish"
+  run "${_NB}" notebooks add two
+  run "${_NB}" use two
+  run "${_NB}" add example.md --title "sweetish"
+  run "${_NB}" notebooks archive two
+  [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
 @test "\`search <query> --all\` exits with status 0 and prints output." {
   {
-    _search_all_setup &>/dev/null
+    _search_all_setup
   }
 
   run "${_NB}" search 'sweetish' --all --use-grep
@@ -243,6 +244,9 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  "${_NB}" notebooks --paths --unarchived
+  "${_NB}" notebooks --paths --unarchived
+  "${_NB}" two:notebooks status
 
   [[ ${status} -eq 0                            ]]
   [[ "${lines[0]}" =~ home:2                    ]]
@@ -333,18 +337,6 @@ _search_all_setup() {
 
 # `search <query> [--all]` local ##############################################
 
-# TODO
-# _search_all_setup() {
-#   _setup_search
-#   "${_NB}" notebooks add one
-#   "${_NB}" use one
-#   "${_NB}" add example.md --title "sweetish"
-#   "${_NB}" notebooks add two
-#   "${_NB}" use two
-#   "${_NB}" add example.md --title "sweetish"
-#   "${_NB}" two:notebook archive
-# }
-
 @test "\`search <query>\` in local notebook exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
@@ -378,14 +370,11 @@ _search_all_setup() {
 @test "\`search <query> --all\` in local notebook exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
-
-    mkdir -p "${_TMP_DIR}/example"
+    "${_NB}" notebooks init "${_TMP_DIR}/example"
 
     cd "${_TMP_DIR}/example"
 
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
-
-    git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
 
     "${_NB}" add example-1.md --title "one" --content "sweetish"
     "${_NB}" add example-2.md --title "two"

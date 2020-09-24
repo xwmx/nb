@@ -162,7 +162,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -172,7 +172,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     run "${_NB}" init
   }
 
-  run "${_NB}" bookmark 'http invalid url'
+  run "${_NB}" bookmark 'http://invalid-url'
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -188,7 +188,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
 
-  _bookmark_content="<http invalid url>"
+  _bookmark_content="# (invalid-url)
+
+<http://invalid-url>"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -208,11 +210,11 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints error message
-  _message="${_ERROR_PREFIX} Unable to download page at $(_highlight "http invalid url")"
+  _message="${_ERROR_PREFIX} Unable to download page at $(_color_primary "http://invalid-url")"
   [[ "${lines[0]}" == "${_message}" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }

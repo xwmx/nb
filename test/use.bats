@@ -32,9 +32,9 @@ _setup_use() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[1]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[1]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
 @test "\`use <invalid>\` exits with 1 and prints error message." {
@@ -48,23 +48,23 @@ _setup_use() {
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
-  [[ ${status} -eq 1                                                            ]]
-  [[ "${lines[0]}" == "${_ERROR_PREFIX} Not found: $(_highlight "not-a-repo")"  ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home"                                    ]]
+  [[ ${status} -eq 1                                                                ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Not found: $(_color_primary "not-a-repo")"  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"                                        ]]
 
   run "${_NB}" env
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
 @test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
   {
     _setup_use
-    _expected="Now using: $(_highlight 'one')"
+    _expected="Now using: $(_color_primary 'one')"
   }
 
   run "${_NB}" use one
@@ -80,9 +80,9 @@ _setup_use() {
   run "${_NB}" env
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
 }
 
 # help ########################################################################

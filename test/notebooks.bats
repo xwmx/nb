@@ -19,7 +19,7 @@ _setup_notebooks() {
 @test "\`notebooks\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(_highlight 'home' --underline)
+    _expected="$(_color_primary 'home' --underline)
 one (${_GIT_REMOTE_URL})"
   }
 
@@ -60,7 +60,7 @@ one (${_GIT_REMOTE_URL})"
   printf "\${output}: '%s'\\n" "${output}"
 
   _expected="one (${_GIT_REMOTE_URL})
-$(_highlight 'home' --underline)"
+$(_color_primary 'home' --underline)"
   _compare "${_expected}" "${output}"
 
   [[ "${output}" == "${_expected}"  ]]
@@ -85,7 +85,7 @@ $(_highlight 'home' --underline)"
   {
     _setup_notebooks
 
-    _expected="$(_highlight 'home')"
+    _expected="$(_color_primary 'home')"
   }
 
   run "${_NB}" notebooks home --names
@@ -101,7 +101,7 @@ $(_highlight 'home' --underline)"
 @test "\`notebooks --names\` exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
-    _expected="$(_highlight 'home' --underline)
+    _expected="$(_color_primary 'home' --underline)
 one"
   }
 

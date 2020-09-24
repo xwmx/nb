@@ -80,7 +80,7 @@ load test_helper
 
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
 
-  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -107,7 +107,7 @@ load test_helper
 
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
 
-  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -139,7 +139,7 @@ load test_helper
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -171,7 +171,7 @@ load test_helper
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
 
   # Prints output
-  [[ "${output}" =~ Updated\            ]]
+  [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -245,7 +245,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -280,7 +280,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\                    ]]
+  [[ "${output}" =~ Updated:                    ]]
   [[ "${output}" =~ [0-9]+                      ]]
   [[ "${output}" =~ Note\ name\ with\ spaces.md ]]
 }
@@ -315,7 +315,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -351,7 +351,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -386,7 +386,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 
@@ -423,7 +423,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -461,7 +461,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -497,7 +497,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -561,7 +561,7 @@ load test_helper
   git log | grep -q '\[nb\] Edit'
 
   # Prints output
-  [[ "${output}" =~ Updated\        ]]
+  [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }

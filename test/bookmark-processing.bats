@@ -58,7 +58,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
@@ -115,7 +115,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints output
-  [[ "${output}" =~ Added\                    ]]
+  [[ "${output}" =~ Added:                    ]]
   [[ "${output}" =~ [0-9]+                    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }

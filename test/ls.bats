@@ -320,9 +320,9 @@ HEREDOC
   [[ "${lines[32]}" =~ \-\- ]]
 }
 
-# `ls <selection>` ############################################################
+# `ls <selector>` #############################################################
 
-@test "\`ls <selection>\` exits with 0 and displays the selection." {
+@test "\`ls <selector>\` exits with 0 and displays the selector." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -341,7 +341,7 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`ls <query selection>\` exits with 0 and displays the selections." {
+@test "\`ls <query selector>\` exits with 0 and displays the selectors." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -363,7 +363,7 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`ls <invalid-selection>\` exits with 1 and displays a message." {
+@test "\`ls <invalid-selector>\` exits with 1 and displays a message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add

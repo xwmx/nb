@@ -23,6 +23,7 @@ _setup_notebooks() {
 @test "\`sync\` notebooks exist after setup" {
   _setup_notebooks
 
+  [[ -d "${_GIT_REMOTE_PATH}"     ]]
   [[ "${NB_DIR_1}" == "${NB_DIR}" ]]
   [[ -d "${NB_DIR_1}/home/.git"   ]]
   [[ -d "${NB_DIR_2}/home/.git"   ]]

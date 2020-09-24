@@ -48,14 +48,14 @@ _setup_move() {
     run "${_NB}" init
   }
 
-  run "${_NB}" move 0 "destination"
+  run "${_NB}" move 1 "destination"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ nb\ move  ]]
+  [[ ${status} -eq 1                    ]]
+  [[ "${lines[0]}" =~ Note\ not\ found  ]]
+  [[ "${lines[0]}" =~ 1                 ]]
 
 }
 
@@ -71,9 +71,10 @@ _setup_move() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ nb\ move  ]]
+  [[ ${status} -eq 1                    ]]
+  [[ "${lines[0]}" =~ Note\ not\ found  ]]
+  [[ "${lines[0]}" =~ invalid           ]]
+
 }
 
 @test "\`move <selector> <invalid>\` exits with 1 and prints help." {
@@ -83,14 +84,14 @@ _setup_move() {
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" move 0 "invalid" --force
+  run "${_NB}" move 1 "invalid" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ nb\ move  ]]
+  [[ ${status} -eq 1                                ]]
+  [[ "${lines[0]}" =~ Target\ notebook\ not\ found  ]]
+  [[ "${lines[0]}" =~ invalid                       ]]
 }
 
 @test "\`move <selector> <notebook> (no force)\` returns 0 and moves note." {
@@ -119,15 +120,17 @@ _setup_move() {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
     run "${_NB}" use "one"
-    run "${_NB}" add
+    run "${_NB}" add "example"
 
-    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
-
-    echo "\${_filename:-}: ${_filename:-}"
+    _filenames=("$("${_NB}" list -n 1 --no-id --filenames)")
+    _filename="${_filenames[0]:-}"
 
     run "${_NB}" use "home"
 
-    [[ -n "${_filename}"                ]]
+    echo "\${_filenames:-}: ${_filenames[*]:-}"
+    echo "\${_filename:-}: ${_filenames[0]:-}"
+
+    [[ -n "${_filename:-}"              ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
   }
 

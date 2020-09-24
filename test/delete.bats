@@ -102,7 +102,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ Deleted\            ]]
+  [[ "${output}" =~ Deleted:            ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+    ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -132,7 +132,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ Deleted\            ]]
+  [[ "${output}" =~ Deleted:            ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+    ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -162,7 +162,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ Deleted\            ]]
+  [[ "${output}" =~ Deleted:            ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+    ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -192,7 +192,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ Deleted\            ]]
+  [[ "${output}" =~ Deleted:            ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+    ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
@@ -235,7 +235,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ Deleted:        ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -278,7 +278,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ Deleted:        ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -319,7 +319,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ Deleted:        ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -362,7 +362,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ Deleted:        ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -406,7 +406,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ Deleted:        ]]
   [[ "${output}" =~ [A-Za-z0-9]+    ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
@@ -449,7 +449,7 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted\        ]]
+  [[ "${output}" =~ Deleted:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ Example\ Folder ]]
 }

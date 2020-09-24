@@ -32,7 +32,11 @@ setup() {
   _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
 
   export NB_DIR="${_TMP_DIR}/notebooks"
-  export _NOTEBOOK_PATH="${NB_DIR}/home"
+
+  export NB_NOTEBOOK_PATH="${NB_DIR}/home"
+# Assign legacy $_NOTEBOOK_PATH. TODO: global search and replace.
+  export _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
+
   export NBRC_PATH="${_TMP_DIR}/.nbrc"
   export NB_COLOR_PRIMARY=3
   export NB_AUTO_SYNC=0
@@ -144,19 +148,19 @@ _get_hash() {
   fi
 }
 
-# _highlight()
+# _color_primary()
 #
 # Usage:
-#   _highlight <string> [--underline]
+#   _color_primary <string> [--underline]
 export _TPUT_COLOR_PRIMARY
 _TPUT_COLOR_PRIMARY="$(tput setaf 3)"
 export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
-_highlight() {
+_color_primary() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
   then
-    _die printf "Usage: _highlight <string>"
+    _die printf "Usage: _color_primary <string>"
   fi
 
   if [[ "${2:-}" == "--underline" ]]
