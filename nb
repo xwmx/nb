@@ -8515,7 +8515,7 @@ _search() {
         if [[ "${__arg:-}" =~ ^-- ]]
         then
           _type="${__arg:2}"
-        elif [[ -z "${_query}" ]]
+        elif [[ -z "${_query}"    ]]
         then
           _query="${__arg}"
         fi
