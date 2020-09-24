@@ -10184,19 +10184,21 @@ Description:
   are not persisted, so \`add\`, \`alias\`, \`describe\` are primarily for plugins.
 HEREDOC
 _subcommands() {
-  if [[ "${1:-}" == "add"       ]] &&
-     [[ -n "${2:-}"             ]]
+  if [[ "${1:-}" == "add"         ]] &&
+     [[ -n "${2:-}"               ]]
   then
     shift
 
     NB_PLUGIN_SUBCOMMANDS+=("${@:-}")
-  elif [[ "${1:-}" == "alias"   ]] &&
-       [[ -n "${2:-}"           ]] &&
-       [[ -n "${3:-}"           ]]
+  elif [[ "${1:-}" == "alias"     ]] &&
+       [[ -n "${2:-}"             ]] &&
+       [[ -n "${3:-}"             ]]
   then
     _alias_subcommand "${2:-}" "${3:-}"
-  elif [[ "${1:-}" == "describe" ]]
+  elif [[ "${1:-}" == "describe"  ]]
   then
+    shift
+
     describe "${@:-}"
   else
     printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
