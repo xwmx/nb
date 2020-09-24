@@ -2265,10 +2265,10 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 The `nb` API is the [command line interface](#nb-help), which is designed for
 composability and provides a variety of powerful options for interacting with
-`nb` notes, bookmarks, notebooks, and other items. Within plugins, subcommands
-can be called using their function names, which are named with leading
-underscores. Options can be used to output information in formats suitable for
-parsing and processing:
+notes, bookmarks, notebooks, and `nb` functionality. Within plugins,
+subcommands can be called using their function names, which are named with
+leading underscores. Options can be used to output information in formats
+suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
