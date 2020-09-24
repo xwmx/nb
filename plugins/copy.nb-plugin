@@ -10,7 +10,7 @@
 # https://github.com/xwmx/nb
 ###############################################################################
 
-# Add the new subcommand name(s) with `_subcommands add <name>`.
+# Add the new subcommand names with `_subcommands add <name>`.
 _subcommands add "copy"
 _subcommands add "duplicate"
 
