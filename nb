@@ -8277,10 +8277,10 @@ _rename() {
         _to_target_type="note"
         ;;
       *)
-        if [[ -z "${_selector}" ]]
+        if [[ -z "${_selector}"       ]]
         then
           _selector="${__arg}"
-        elif [[ -z "${_target_name}" ]]
+        elif [[ -z "${_target_name}"  ]]
         then
           _target_name="${__arg}"
         fi
@@ -8330,7 +8330,7 @@ _rename() {
     if [[ -z "${_target_file_type:-}"                 ]] ||
        [[ "${_target_file_type}" == "${_target_name}" ]]
     then # no file extension specified in _target_name
-      if [[ -n "${_source_file_type}" ]]
+      if [[ -n "${_source_file_type}"                 ]]
       then
         _target_file_type="${_source_file_type}"
       else
@@ -8340,10 +8340,10 @@ _rename() {
 
     if [[ -n "${_to_target_type:-}" ]]
     then
-      if [[ "${_to_target_type}" == "bookmark" ]]
+      if [[ "${_to_target_type}" == "bookmark"  ]]
       then
         _target_file_type="bookmark.md"
-      elif [[ "${_to_target_type}" == "note" ]]
+      elif [[ "${_to_target_type}" == "note"    ]]
       then
         _target_file_type="md"
       else
@@ -8394,7 +8394,7 @@ _rename() {
 
   mv "${_source_path}" "${_notebook_path}/${_target_basename}"  &&
     _index update "${_source_basename}" "${_target_basename}"   &&
-      _git_checkpoint "${_notebook_path}" \
+      _git_checkpoint "${_notebook_path}"     \
         "[nb] Rename: ${_source_basename} to ${_target_basename}"
 
   printf "%s renamed to %s\\n"                \
@@ -9165,15 +9165,15 @@ HEREDOC
             eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
           )"
 
-          if [[ "${_setting_name}" == "NB_COLOR_SECONDARY" ]]
+          if [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
           then
             _setting_name="$(_color_primary "${_setting_name}")"
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY" ]]
+          elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY"  ]]
           then
             _setting_name="$(tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
+          elif [[ "${_setting_name}" == "NB_COLOR_THEME"    ]]
           then
             _new_hi_color="$(
               NB_COLOR_THEME="nb" NB_COLOR_PRIMARY='' \
@@ -9206,7 +9206,7 @@ HEREDOC
     elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
          [[ "${1:-}" == 'NB_FOOTER'     ]]
     then
-      if [[ "${2:-}" =~ ^0$|^1$ ]]
+      if [[ "${2:-}" =~ ^0$|^1$         ]]
       then
         return 0
       else
@@ -9220,15 +9220,15 @@ HEREDOC
       else
         _return_1 printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
       fi
-    elif [[ "${1:-}" == 'NB_LIMIT' ]]
+    elif [[ "${1:-}" == 'NB_LIMIT'      ]]
     then
-      if [[ "${2:-}" =~ ^[0-9]+$ ]]
+      if [[ "${2:-}" =~ ^[0-9]+$        ]]
       then
         return 0
       else
         _return_1 printf "%s must be a number.\\n" "${1}"
       fi
-    elif [[ "${1:-}" == 'NB_DIR' ]]
+    elif [[ "${1:-}" == 'NB_DIR'        ]]
     then
       if [[ -z "${2:-}"   ]] ||
          [[ "${2}" == "/" ]] ||
@@ -9239,9 +9239,9 @@ HEREDOC
       then
         _return_1 printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}"
       fi
-    elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL' ]]
+    elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL'  ]]
     then
-      if [[ "${2:-}" =~ ^openssl$|^gpg$ ]]
+      if [[ "${2:-}" =~ ^openssl$|^gpg$       ]]
       then
         return 0
       else
@@ -9257,7 +9257,7 @@ HEREDOC
       else
         _return_1 printf "%s must be a number.\\n" "${1}"
       fi
-    elif [[ "${1:-}" == 'NB_COLOR_THEME' ]]
+    elif [[ "${1:-}" == 'NB_COLOR_THEME'      ]]
     then
       if _contains "${2:-}" "${_NB_COLOR_THEMES[@]}"
       then
@@ -9461,8 +9461,8 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
         local _index=
         _index="$((_setting_id-1))"
 
-        printf "%s\\n%s\\n"                     \
-          "${_settings_list_items[${_index}]}"  \
+        printf "%s\\n%s\\n"                       \
+          "${_settings_list_items[${_index}]}"    \
           "${_settings_help_items[${_index}]}"
 
         printf "\\n%s is currently set to %s\\n"  \
