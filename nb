@@ -283,7 +283,7 @@ __option_get_value() {
   else
     _exit_1 printf                        \
       "%s requires a valid argument.\\n"  \
-      "$(_highlight "${__arg}")"
+      "$(_color_primary "${__arg}")"
   fi
 }
 
@@ -622,13 +622,13 @@ __set_nb_color_primary() {
 # Supported Values: [0..255+]
 export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
 
-# _dim()
+# _color_dim()
 #
 # Usage:
-#   _dim <string>
+#   _color_dim <string>
 #
 # Print the given string with the dim color.
-_dim() {
+_color_dim() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
@@ -642,10 +642,10 @@ _dim() {
     "${_TPUT_SGR0}"
 }
 
-# _highlight()
+# _color_primary()
 #
 # Usage:
-#   _highlight <string> [--underline]
+#   _color_primary <string> [--underline]
 #
 # Description:
 #   Use `tput` to highlight the given string.
@@ -654,7 +654,7 @@ export _TPUT_SMUL=          ; _TPUT_SMUL="$(tput smul)"
 export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(tput setaf 8)"
 export _TPUT_COLOR_PRIMARY=
        _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
-_highlight() {
+_color_primary() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
@@ -678,16 +678,16 @@ _highlight() {
   fi
 }
 
-# _highlight_secondary()
+# _color_secondary()
 #
 # Usage:
-#   _highlight_secondary <string>
+#   _color_secondary <string>
 #
 # Description:
 #   Highlight the given string using the accent color.
 export _TPUT_COLOR_SECONDARY=
 _TPUT_COLOR_SECONDARY="$(tput setaf "${NB_COLOR_SECONDARY}")"
-_highlight_secondary() {
+_color_secondary() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
@@ -697,14 +697,14 @@ _highlight_secondary() {
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
 }
 
-# _id_brackets_color()
+# _color_id_brackets()
 #
 # Usage:
-#   _id_brackets_color <id>
+#   _color_id_brackets <id>
 #
 # Description:
 #   Print <id> with surrounding color brackets.
-_id_brackets_color() {
+_color_id_brackets() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
@@ -1139,7 +1139,7 @@ _git_required() {
   if ! _command_exists "git"
   then
     _exit_1 cat <<HEREDOC
-Welcome to $(_highlight "${_ME}")!
+Welcome to $(_color_primary "${_ME}")!
 
 Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
 
@@ -1157,9 +1157,9 @@ HEREDOC
      [[ -z "${_git_email}"  ]]
   then
     cat <<HEREDOC
-Welcome to $(_highlight "${_ME}")!
+Welcome to $(_color_primary "${_ME}")!
 
-Git requires some additional setup before using $(_highlight "${_ME}").
+Git requires some additional setup before using $(_color_primary "${_ME}").
 Enter the name and email address you'd like to use with Git.
 Edits you make will be attributed to this name and email address.
 HEREDOC
@@ -1167,7 +1167,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "$(_highlight "Name"): " __name
+        read -r -p "$(_color_primary "Name"): " __name
         if [[ -n "${__name}" ]]
         then
           git config --global user.name "${__name}"
@@ -1180,7 +1180,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "$(_highlight "Email"): " __email
+        read -r -p "$(_color_primary "Email"): " __email
         if [[ -n "${__email}" ]]
         then
           git config --global user.email "${__email}"
@@ -2523,7 +2523,7 @@ _print_line() {
   local _text_length="${#_text}"
   local _line=
   printf -v _line "%*s" "${_text_length}" ""
-  _highlight_secondary "${_line// /-}"
+  _color_secondary "${_line// /-}"
 }
 
 # _print_padding()
@@ -2566,7 +2566,7 @@ _print_welcome() {
   _print_line "$(printf "%-${_columns}s" '.')"
 
   cat <<HEREDOC
-${_padding}$(_highlight "Welcome") to
+${_padding}$(_color_primary "Welcome") to
 ${_padding}__          _
 ${_padding}\ \   _ __ | |__
 ${_padding} \ \ | '_ \| '_ \\
@@ -2784,12 +2784,12 @@ _help() {
   then
     # NOTE: this screen mirrors the content from README.md#-color-themes:
     # https://github.com/xwmx/nb#-color-themes
-    _highlight "__          _                     _"
-    _highlight "\ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
-    _highlight " \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
-    _highlight " / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
-    _highlight "/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
-    _highlight_secondary "\
+    _color_primary "__          _                     _"
+    _color_primary "\ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
+    _color_primary " \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
+    _color_primary " / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
+    _color_primary "/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
+    _color_secondary "\
 ---------------------------------------------------"
   cat <<HEREDOC
 \`${_ME}\` uses color to highlight various interface elements, including ids,
@@ -2798,46 +2798,46 @@ the current notebook name, the shell prompt, and divider lines.
 \`${_ME}\` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using \`${_ME} set color_theme\`:
 
-    $(_highlight "${_ME} set color_theme")
+    $(_color_primary "${_ME} set color_theme")
 
 Custom color themes are \`nb\` plugins with a \`.nb-theme\` file extension.
 A theme is defined with a single \`if\` statement indicating the name and
 assigning the color environment variables to \`tput\` ANSI color numbers:
 
-    $(_highlight_secondary "# turquoise.nb-theme")
-    $(_highlight "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
-    $(_highlight "then")
-    $(_highlight "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
-    $(_highlight "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
-    $(_highlight "fi")
+    $(_color_secondary "# turquoise.nb-theme")
+    $(_color_primary "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
+    $(_color_primary "then")
+    $(_color_primary "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
+    $(_color_primary "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
+    $(_color_primary "fi")
 
 View this theme as a complete file:
 
-    $(_highlight "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
 Themes can be installed using the \`nb plugins\` subcommand:
 
-    $(_dim ">") $(_highlight "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
-    $(_highlight_secondary "Plugin installed:")
-    $(_highlight_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
+    $(_color_dim ">") $(_color_primary "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_secondary "Plugin installed:")
+    $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
 
 Once a theme is installed, use it with \`nb set color_theme\`:
 
-    $(_dim ">") $(_highlight "set color_theme turquoise")
-    $(_highlight_secondary "NB_COLOR_THEME set to turquoise")
+    $(_color_dim ">") $(_color_primary "set color_theme turquoise")
+    $(_color_secondary "NB_COLOR_THEME set to turquoise")
 
 The primary and secondary colors can also be overridden individually,
 making color themes easily customizable:
 
-    $(_highlight_secondary "# open the settings prompt for the primary color")
-    $(_highlight "${_ME} set color_primary")
+    $(_color_secondary "# open the settings prompt for the primary color")
+    $(_color_primary "${_ME} set color_primary")
 
-    $(_highlight_secondary "# open the settings prompt for the secondary color")
-    $(_highlight "${_ME} set color_secondary")
+    $(_color_secondary "# open the settings prompt for the secondary color")
+    $(_color_primary "${_ME} set color_secondary")
 
 To view a table of available colors and numbers, run:
 
-    $(_highlight "${_ME} settings colors")
+    $(_color_primary "${_ME} settings colors")
 
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
@@ -3467,7 +3467,7 @@ _bookmark() {
         else
           _exit_1 \
             printf "%s requires a valid argument.\\n"  \
-            "$(_highlight "bookmark ${__arg}")"
+            "$(_color_primary "bookmark ${__arg}")"
         fi
         ;;
       *)
@@ -3528,7 +3528,7 @@ _bookmark() {
           _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
         fi
       fi
-      _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+      _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
     fi
 
     local _target_path="${_notebook_path}/${_basename}"
@@ -3617,7 +3617,7 @@ _bookmark() {
       if _contains "${_http_status}" "${_http_error_codes[@]}"
       then
         printf "Page no longer available: %s\\n" \
-          "$(_highlight "${_target_url}")"
+          "$(_color_primary "${_target_url}")"
         while true
         do
           read -r -p "\
@@ -3673,7 +3673,7 @@ Check the Wayback Machine for an archived version instead? [y/N] " __yn
       else
         _exit_1 printf \
           "%s doesn't know how to open URLs on your system.\\n" \
-          "$(_highlight "${_ME}")"
+          "$(_color_primary "${_ME}")"
       fi
     # `bookmark url`
     elif [[ "${_subcommand}" == "url" ]]
@@ -3689,11 +3689,11 @@ Check the Wayback Machine for an archived version instead? [y/N] " __yn
     if [[ -z "${_arguments[*]:-}" ]]
     then
       local _header=
-      _header="Add: $(_highlight "${_ME} <url>")"
-      _header="${_header} Help: $(_highlight "${_ME} help bookmark")"
+      _header="Add: $(_color_primary "${_ME} <url>")"
+      _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
 cat <<HEREDOC
 ${_header}
-$(_highlight_secondary "------------------------------------")
+$(_color_secondary "------------------------------------")
 HEREDOC
     fi
 
@@ -3716,7 +3716,7 @@ HEREDOC
      [[ "$(wc -c <"${_temp_file}")" == 0     ]]
   then
     _warn \
-      printf "Unable to download page at %s\\n" "$(_highlight "${_url}")"
+      printf "Unable to download page at %s\\n" "$(_color_primary "${_url}")"
   fi
 
   if _file_is_text "${_temp_file}"
@@ -4256,7 +4256,7 @@ _delete() {
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   local _info
@@ -4388,7 +4388,7 @@ _edit() {
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   if [[ -n "${_basename}" ]] || [[ -e "${_notebook_path}/${_basename}" ]]
@@ -4705,7 +4705,7 @@ _export() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   if ((_pandoc_only))
@@ -4731,7 +4731,7 @@ _export() {
     then
       if ! ((_force))
       then
-        printf "File exists at %s\\n" "$(_highlight "${_target_path}")"
+        printf "File exists at %s\\n" "$(_color_primary "${_target_path}")"
         while true
         do
           read -r -p "Overwrite existing file? [y/N] " __yn
@@ -4770,9 +4770,9 @@ _export() {
     else
       cp "${_notebook_path}/${_basename}" "${_target_path}"
     fi &&
-      printf "Exported %s to %s\\n"       \
-        "$(_highlight "${_selector}")"    \
-        "$(_highlight "${_target_path}")"
+      printf "Exported %s to %s\\n"           \
+        "$(_color_primary "${_selector}")"    \
+        "$(_color_primary "${_target_path}")"
   fi
 }
 
@@ -5102,9 +5102,9 @@ _import() {
         _index add "${_basename}" &&
           _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported '%s' to '%s'\\n" \
-        "$(_highlight "${_path}")"      \
-        "$(_highlight "${_basename}")"
+      printf "Imported '%s' to '%s'\\n"     \
+        "$(_color_primary "${_path}")"      \
+        "$(_color_primary "${_basename}")"
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -5138,9 +5138,9 @@ _import() {
 Source:
 ${_url}
 "
-      printf "Imported %s to %s\\n"     \
-        "$(_highlight "${_url}")"       \
-        "$(_highlight "${_basename}")"
+      printf "Imported %s to %s\\n"         \
+        "$(_color_primary "${_url}")"       \
+        "$(_color_primary "${_basename}")"
       ;;
     move)
       _import_validate_path "${_path:-}"
@@ -5151,9 +5151,9 @@ ${_url}
         _index add "${_basename}"                     &&
           _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s to %s\\n"     \
-        "$(_highlight "${_path}")"      \
-        "$(_highlight "${_basename}")"
+      printf "Imported %s to %s\\n"         \
+        "$(_color_primary "${_path}")"      \
+        "$(_color_primary "${_basename}")"
       ;;
     notebook)
       _notebooks import "${_path:-}" "${_target_notebook_name:-}"
@@ -5504,7 +5504,7 @@ _init() {
 
     _notebooks use "home" 1>/dev/null
 
-    printf "Created %s notebook.\\n" "$(_highlight "home")"
+    printf "Created %s notebook.\\n" "$(_color_primary "home")"
   }
 
   # Usage: _init_create_nb_dir
@@ -5512,12 +5512,12 @@ _init() {
     if [[ -d "${NB_DIR}" ]]
     then
       printf "%s data directory already exists: %s\\n" \
-        "$(_highlight "${_ME}")" \
+        "$(_color_primary "${_ME}")" \
         "${NB_DIR}"
     elif [[ -e "${NB_DIR}" ]]
     then
       _exit_1 cat <<HEREDOC
-Unable to set up the $(_highlight "${_ME}") data directory. File exists at:
+Unable to set up the $(_color_primary "${_ME}") data directory. File exists at:
 ${NB_DIR}
 HEREDOC
     else
@@ -5568,10 +5568,10 @@ HEREDOC
   if [[ -d "${_GLOBAL_NOTEBOOK_PATH}" ]]
   then
     _exit_1 cat <<HEREDOC
-$(_highlight "${_ME}") already initialized. To initialize a local notebook, use:
-  $(_highlight "${_ME} notebooks init")
+$(_color_primary "${_ME}") already initialized. To initialize a local notebook, use:
+  $(_color_primary "${_ME} notebooks init")
 More information:
-  $(_highlight "${_ME} help notebooks")
+  $(_color_primary "${_ME} help notebooks")
 HEREDOC
   fi
 
@@ -5783,9 +5783,9 @@ _list() {
 0 bookmarks.
 
 Add a bookmark:
-  $(_highlight "${_ME} ${_maybe_scope_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_scope_padded_right}<url>")
 Help information:
-  $(_highlight "${_ME} help bookmark")
+  $(_color_primary "${_ME} help bookmark")
 HEREDOC
       elif [[ "${_type}" =~ ^archive|^audio|^document|^image|^video ]]
       then
@@ -5795,22 +5795,22 @@ HEREDOC
 0 ${_type} files.
 
 Import a file:
-  $(_highlight "${_ME} ${_maybe_scope}import (<path> | <url>)")
+  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)")
 Help information:
-  $(_highlight "${_ME} help import")
+  $(_color_primary "${_ME} help import")
 HEREDOC
       else
         cat <<HEREDOC
 0 notes.
 
 Add a note:
-  $(_highlight "${_ME} ${_maybe_scope}add")
+  $(_color_primary "${_ME} ${_maybe_scope}add")
 Add a bookmark:
-  $(_highlight "${_ME} ${_maybe_scope_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_scope_padded_right}<url>")
 Import a file:
-  $(_highlight "${_ME} ${_maybe_scope}import (<path> | <url>)")
+  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)")
 Help information:
-  $(_highlight "${_ME} help")
+  $(_color_primary "${_ME} help")
 HEREDOC
       fi
 
@@ -5950,7 +5950,7 @@ HEREDOC
           _id_item="[${_item_identifier}]"
 
           local _id_item_color=
-          _id_item_color="$(_id_brackets_color "${_item_identifier}")"
+          _id_item_color="$(_color_id_brackets "${_item_identifier}")"
 
           # Use calculated number of spaces for nicer formatting.
           local _spaces=''
@@ -6078,7 +6078,7 @@ HEREDOC
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
         _return_1 \
-          printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+          printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
       fi
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
@@ -6161,7 +6161,7 @@ _ls() {
     local _footer_line_raw=
     local _footer_separator_raw=" ·"
     local _footer_separator_hi=
-    _footer_separator_hi="$(_highlight "${_footer_separator_raw}")"
+    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
     local _footer_test_line=
     local _maybe_scope=
     local _maybe_scope_padded_left=
@@ -6195,17 +6195,17 @@ _ls() {
     )
 
     local _commands_hi=(
-      "$(_dim '❯') $(_highlight_secondary "${_ME}${_maybe_scope_padded_left}")"
-      "$(_highlight_secondary "${_commands_raw[1]}")"
-      "$(_highlight_secondary "${_commands_raw[2]}")"
-      "$(_highlight_secondary "${_commands_raw[3]}")"
-      "$(_highlight_secondary "${_commands_raw[4]}")"
-      "$(_highlight_secondary "${_commands_raw[5]}")"
-      "$(_highlight_secondary "${_commands_raw[6]}")"
-      "$(_highlight_secondary "${_commands_raw[7]}")"
-      "$(_highlight_secondary "${_commands_raw[8]}")"
-      "$(_highlight_secondary "${_commands_raw[9]}")"
-      "$(_highlight_secondary "${_commands_raw[10]}")"
+      "$(_color_dim '❯') $(_color_secondary "${_ME}${_maybe_scope_padded_left}")"
+      "$(_color_secondary "${_commands_raw[1]}")"
+      "$(_color_secondary "${_commands_raw[2]}")"
+      "$(_color_secondary "${_commands_raw[3]}")"
+      "$(_color_secondary "${_commands_raw[4]}")"
+      "$(_color_secondary "${_commands_raw[5]}")"
+      "$(_color_secondary "${_commands_raw[6]}")"
+      "$(_color_secondary "${_commands_raw[7]}")"
+      "$(_color_secondary "${_commands_raw[8]}")"
+      "$(_color_secondary "${_commands_raw[9]}")"
+      "$(_color_secondary "${_commands_raw[10]}")"
     )
 
     _wrap off
@@ -6314,7 +6314,7 @@ _ls() {
     if ! ((_plain))
     then
       _separator=" ·"
-      _separator_hi="$(_dim "${_separator}")"
+      _separator_hi="$(_color_dim "${_separator}")"
     fi
 
     local _notebook_names_hi=
@@ -6345,7 +6345,7 @@ _ls() {
        if [[ "$(_notebooks current)" == "local" ]]
       then
         _notebook_names_hi=(
-          "$(_highlight "local" --underline)"
+          "$(_color_primary "local" --underline)"
           "${_notebook_names_hi[@]}"
         )
       else
@@ -6533,7 +6533,7 @@ _ls() {
             _selector="$(_notebooks current --name):${_selector}"
           fi
 
-          _return_1 printf "Not found: %s\\n" "$(_highlight "${_selector}")"
+          _return_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
         fi
       fi
     }
@@ -6631,25 +6631,25 @@ _move() {
   then
     _exit_1 printf        \
       "Not found: %s\\n"  \
-      "$(_highlight "${_notebook_escaped_name}:${_selector}")"
+      "$(_color_primary "${_notebook_escaped_name}:${_selector}")"
   elif [[ ! -e "${_target_notebook_path}/.git"        ]]
   then
     _exit_1 printf                        \
       "Target notebook not found: %s\\n"  \
-      "$(_highlight "${_target_notebook}")"
+      "$(_color_primary "${_target_notebook}")"
   elif [[ -e "${_target_notebook_path}/${_basename}"  ]]
   then
     _exit_1 printf            \
       "Already exists: %s\\n" \
-      "$(_highlight "${_target_notebook_escaped_name}:${_basename}")"
+      "$(_color_primary "${_target_notebook_escaped_name}:${_basename}")"
   fi
 
   local _source_id=
   _source_id="$(_index get_id "${_basename}")"
 
   local _source_info=
-  _source_info="$(_id_brackets_color "${_notebook_escaped_name}:${_source_id}")"
-  _source_info="${_source_info} $(_highlight "${_notebook_escaped_name}:${_basename}")"
+  _source_info="$(_color_id_brackets "${_notebook_escaped_name}:${_source_id}")"
+  _source_info="${_source_info} $(_color_primary "${_notebook_escaped_name}:${_basename}")"
 
   local _title=
   _title="$(_get_title "${_notebook_path}/${_basename}")"
@@ -6661,9 +6661,9 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving %s to %s\\n"             \
-      "${_source_info}"                     \
-      "$(_highlight "${_target_notebook}")"
+    printf "Moving %s to %s\\n" \
+      "${_source_info}"         \
+      "$(_color_primary "${_target_notebook}")"
     while true
     do
       read -r -p "Proceed? [y/N] " __yn
@@ -6700,9 +6700,9 @@ _move() {
   if [[ ! -e "${_notebook_path}/${_basename}"       ]] ||
      [[ -e "${_target_notebook_path}/${_basename}"  ]]
   then
-    printf "Moved to %s %s\\n"                              \
-      "$(_id_brackets_color "${_target_notebook}:${_id}")"  \
-      "$(_highlight "${_target_notebook}:${_basename}")"
+    printf "Moved to %s %s\\n"                                \
+      "$(_color_id_brackets "${_target_notebook}:${_id}")"    \
+      "$(_color_primary "${_target_notebook}:${_basename}")"
   fi
 }
 _alias_subcommand "move" "mv"
@@ -6808,7 +6808,7 @@ _notebooks() {
 
     if [[ -e "${NB_DIR}/${_name}" ]]
     then
-      _exit_1 printf "Already exists: %s\\n" "$(_highlight "${_name}")"
+      _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
     fi
 
     local _repo_url="${2:-}"
@@ -6823,7 +6823,7 @@ _notebooks() {
         _temp cache clear                             &&
         _git_checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
     fi
-    printf "Added notebook: %s\\n" "$(_highlight "${_name}")"
+    printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
   }
 
   # _notebooks_current()
@@ -6957,7 +6957,7 @@ HEREDOC
        [[ ! -e "${NB_DIR}/${_name}/.git"   ]] ||
        [[ ! -e "${NB_DIR}/${_name}/.index" ]]
     then
-      _exit_1 printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
+      _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
     fi
 
     local _notebook_names=
@@ -6969,17 +6969,17 @@ HEREDOC
     if ! ((_force))
     then
       cat <<HEREDOC
-Deleting $(_highlight "${_name}").
+Deleting $(_color_primary "${_name}").
 
 This action cannot be undone. This will permanently delete the
-$(_highlight "${_name}") notebook, all notes and files it contains,
+$(_color_primary "${_name}") notebook, all notes and files it contains,
 and the entire revision history.
 
 HEREDOC
       while true
       do
         read -r -p "\
-Please type $(_highlight "${_name}") to confirm: " __response
+Please type $(_color_primary "${_name}") to confirm: " __response
         if [[ "${__response}" == "${_name}" ]]
         then
           break
@@ -7015,7 +7015,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       rm -r -f "${NB_DIR:?}/${_name}"
     fi &&
       _temp cache clear &&
-      printf "Notebook deleted: %s\\n" "$(_highlight "${_name}")"
+      printf "Notebook deleted: %s\\n" "$(_color_primary "${_name}")"
   }
 
   # _notebooks_export()
@@ -7031,7 +7031,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ ! -d "${NB_DIR}/${_name}" ]]
     then
-      _exit_1 printf "Notebook not found: %s\\n" "$(_highlight "${_name}")"
+      _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
     fi
 
     local _target_path="${2:-}"
@@ -7058,8 +7058,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
     cp -R "${NB_DIR}/${_name}" "${_target_path}"  &&
       _temp cache clear                           &&
       printf "Exported notebook %s to %s\\n"  \
-        "$(_highlight "${_name}")"            \
-        "$(_highlight "${_target_path}")"
+        "$(_color_primary "${_name}")"        \
+        "$(_color_primary "${_target_path}")"
   }
 
   # _notebooks_import()
@@ -7083,7 +7083,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
 
     if [[ ! -d "${_path}" ]]
     then
-      _exit_1 printf "Not a directory: %s" "$(_highlight "${_path}")"
+      _exit_1 printf "Not a directory: %s" "$(_color_primary "${_path}")"
     fi
 
     local _target_basename="${2:-}"
@@ -7099,7 +7099,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       _temp cache clear                 &&
       _notebooks_add_new                &&
       printf "Imported notebook: %s\\n" \
-        "$(_highlight "$(basename "${_target_path}")")"
+        "$(_color_primary "$(basename "${_target_path}")")"
   }
 
   # _notebooks_init()
@@ -7140,7 +7140,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
         mkdir -p "${_path}"
       elif [[ -f "${_path}" ]]
       then
-        _exit_1 printf "File already exists: %s\\n" "$(_highlight "${_path}")"
+        _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
       fi
     else
       _path="${_CURRENT_WORKING_DIR}"
@@ -7152,10 +7152,10 @@ Please type $(_highlight "${_name}") to confirm: " __response
       local _error_message=
       if [[ -f "${_path}/.index" ]]
       then
-        printf "Notebook exists: %s\\n" "$(_highlight "${_path}")"
-        _error_message="Notebook exists: $(_highlight "${_path}")"
+        printf "Notebook exists: %s\\n" "$(_color_primary "${_path}")"
+        _error_message="Notebook exists: $(_color_primary "${_path}")"
       else
-        _error_message="Git repository exists: $(_highlight "${_path}")"
+        _error_message="Git repository exists: $(_color_primary "${_path}")"
       fi
 
       _exit_1 printf "%s\\n" "${_error_message}"
@@ -7170,7 +7170,8 @@ Please type $(_highlight "${_name}") to confirm: " __response
         touch "${_path}/.index"             &&
         _git_checkpoint "${_path}" "[nb] Initialize"
     fi
-    printf "Initialized local notebook: %s\\n" "$(_highlight "${_path}")"
+
+    printf "Initialized local notebook: %s\\n" "$(_color_primary "${_path}")"
   }
 
   # _notebooks_list()
@@ -7275,7 +7276,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
             elif ((_notebook_color_enabled))                  &&
                  [[ "${_current_notebook_name}" == "local" ]]
             then
-              _notebook_line="$(_highlight "local" --underline)"
+              _notebook_line="$(_color_primary "local" --underline)"
             else
               _notebook_line="local"
             fi
@@ -7298,12 +7299,12 @@ Please type $(_highlight "${_name}") to confirm: " __response
           else
             if [[ "${_current_notebook_name}" == "${_notebook_names[i]}" ]]
             then # it's the current repository.
-              _notebook_line="$(_highlight "${_notebook_names[i]}")"
+              _notebook_line="$(_color_primary "${_notebook_names[i]}")"
 
               if [[ "${#_notebook_names[@]}" -gt 1 ]]
               then
                 _notebook_line="$(
-                  _highlight "${_notebook_names[i]}" --underline
+                  _color_primary "${_notebook_names[i]}" --underline
                 )"
               fi
             else
@@ -7348,7 +7349,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       then
         _return_1 printf              \
           "Notebook not found: %s\\n" \
-          "$(_highlight "${_query_names[*]}" | tr '\r\n' ' ')"
+          "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')"
       else
         return 1
       fi
@@ -7404,7 +7405,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
       else
         _exit_1 printf \
           "%s doesn't know how to open directories on your system.\\n" \
-          "$(_highlight "${_ME}")"
+          "$(_color_primary "${_ME}")"
       fi
     elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
     then
@@ -7433,14 +7434,14 @@ Please type $(_highlight "${_name}") to confirm: " __response
             _git_checkpoint "${_notebook_path}" "[nb] Archived"
         fi
 
-        printf "%s archived.\\n" "$(_highlight "${_notebook_name}")"
+        printf "%s archived.\\n" "$(_color_primary "${_notebook_name}")"
       elif [[ "${_subcommand}" == "status" ]]
       then
         if [[ -e "${_dotfile_path}" ]]
         then
-          printf "%s is archived.\\n" "$(_highlight "${_notebook_name}")"
+          printf "%s is archived.\\n" "$(_color_primary "${_notebook_name}")"
         else
-          printf "%s is not archived.\\n" "$(_highlight "${_notebook_name}")"
+          printf "%s is not archived.\\n" "$(_color_primary "${_notebook_name}")"
         fi
       elif [[ "${_subcommand}" == "unarchive" ]]
       then
@@ -7450,7 +7451,7 @@ Please type $(_highlight "${_name}") to confirm: " __response
             _git_checkpoint "${_notebook_path}" "[nb] Unarchived"
         fi
 
-        printf "%s unarchived.\\n" "$(_highlight "${_notebook_name}")"
+        printf "%s unarchived.\\n" "$(_color_primary "${_notebook_name}")"
       fi
     fi
   }
@@ -7477,11 +7478,11 @@ HEREDOC
     elif [[ ! -d "${NB_DIR}/${_old}" ]]
     then
       _exit_1 printf "%s is not a valid notebook name.\\n" \
-        "$(_highlight "${_old}")"
+        "$(_color_primary "${_old}")"
     elif [[ -e "${NB_DIR}/${_new}" ]]
     then
       _exit_1 printf "A notebook named \"%s\" already exists.\\n" \
-        "$(_highlight "${_new}")"
+        "$(_color_primary "${_new}")"
     fi
 
     mv "${NB_DIR}/${_old}" "${NB_DIR}/${_new}"
@@ -7493,9 +7494,9 @@ HEREDOC
 
     _temp cache clear
 
-    printf "%s is now named %s\\n" \
-      "$(_highlight "${_old}")"    \
-      "$(_highlight "${_new}")"
+    printf "%s is now named %s\\n"  \
+      "$(_color_primary "${_old}")" \
+      "$(_color_primary "${_new}")"
   }
 
   # _notebooks_select()
@@ -7619,7 +7620,7 @@ HEREDOC
     if [[ -z "${_notebook_path:-}" ]]
     then
       _return_1 \
-        printf "Notebook not found: %s\\n" "$(_highlight "${_selector}")"
+        printf "Notebook not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
 
@@ -7681,7 +7682,7 @@ HEREDOC
     if ((_notebook_color_enabled)) &&
        [[ "${_notebook_path}" == "${NB_NOTEBOOK_PATH}" ]]
     then
-      _escaped_name="$(_highlight "${_escaped_name}")"
+      _escaped_name="$(_color_primary "${_escaped_name}")"
     fi
 
     local _notebook_line="${_escaped_name}"
@@ -7744,9 +7745,9 @@ HEREDOC
       _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_name}"
       NB_NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
 
-      printf "Now using: %s\\n" "$(_highlight "${_name}")"
+      printf "Now using: %s\\n" "$(_color_primary "${_name}")"
     else
-      _exit_1 printf "Not found: %s\\n" "$(_highlight "${_name}")"
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_name}")"
     fi
   }
 
@@ -7981,7 +7982,7 @@ _plugins() {
         if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
         then
           printf "Plugin installed:\\n%s\\n" \
-            "$(_highlight "${NB_DIR}/.plugins/${_basename}")"
+            "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
         else
           _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
         fi
@@ -8001,7 +8002,7 @@ _plugins() {
         if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
         then
           printf "Plugin installed:\\n%s\\n" \
-            "$(_highlight "${NB_DIR}/.plugins/${_basename}")"
+            "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
         else
           _exit_1 printf "Unable to download and install: %s\\n"  "${_url}"
         fi
@@ -8021,7 +8022,7 @@ _plugins() {
       then
         cat <<HEREDOC
 Uninstalling plugin. Warning: This will permanently delete the following file:
-$(_highlight "${_plugin_path}")
+$(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
@@ -8041,7 +8042,7 @@ HEREDOC
       if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:-?}"
       then
         printf "Plugin successfully uninstalled:\\n%s\\n" \
-          "$(_highlight "${_plugin_path}")"
+          "$(_color_primary "${_plugin_path}")"
       else
         _exit_1 printf "Unable to uninstall plugin:\\n%s\\n" "${_plugin_path}"
       fi
@@ -8140,7 +8141,7 @@ _remote() {
         then
           while true
           do
-            printf "Removing remote %s\\n" "$(_highlight "${_existing_url}")"
+            printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
             read -r -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
@@ -8155,7 +8156,7 @@ _remote() {
         fi
 
         git -C "${_notebook_path}" remote rm origin &&
-          printf "Removed remote %s\\n" "$(_highlight "${_existing_url}")" &&
+          printf "Removed remote %s\\n" "$(_color_primary "${_existing_url}")" &&
           return 0
       else
         _exit_1 printf "No remote configured.\\n"
@@ -8172,7 +8173,7 @@ _remote() {
         if [[ "${_existing_url}" == "${_url}" ]]
         then
           _exit_1 printf "Remote already set to %s\\n" \
-            "$(_highlight "${_url}")"
+            "$(_color_primary "${_url}")"
         fi
 
         if ! ((_force))
@@ -8180,8 +8181,8 @@ _remote() {
           while true
           do
             printf "Updating remote from %s to %s\\n" \
-              "$(_highlight "${_existing_url}")"      \
-              "$(_highlight "${_url}")"
+              "$(_color_primary "${_existing_url}")"  \
+              "$(_color_primary "${_url}")"
             read -r -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
@@ -8195,12 +8196,12 @@ _remote() {
           done
         fi
 
-        git -C "${_notebook_path}" remote set-url origin "${_url}"  &&
-          printf "Remote set to %s\\n" "$(_highlight "${_url}")"    &&
+        git -C "${_notebook_path}" remote set-url origin "${_url}"    &&
+          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
           return 0
       else
-        git -C "${_notebook_path}" remote add origin "${_url}"      &&
-          printf "Remote set to %s\\n" "$(_highlight "${_url}")"    &&
+        git -C "${_notebook_path}" remote add origin "${_url}"        &&
+          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
           return 0
       fi
       ;;
@@ -8365,7 +8366,7 @@ _rename() {
     if [[ -e "${_notebook_path}/${_target_basename}" ]]
     then
       _exit_1 printf "File already exists: %s\\n" \
-        "$(_highlight "${_target_basename}")"
+        "$(_color_primary "${_target_basename}")"
     fi
   else
     _exit_1 _help "rename"
@@ -8373,9 +8374,9 @@ _rename() {
 
   if ! ((_force))
   then
-    printf "Renaming %s to %s\\n"           \
-      "$(_highlight "${_source_basename}")" \
-      "$(_highlight "${_target_basename}")"
+    printf "Renaming %s to %s\\n"               \
+      "$(_color_primary "${_source_basename}")" \
+      "$(_color_primary "${_target_basename}")"
     while true
     do
       read -r -p "Proceed? [y/N] " __yn
@@ -8396,9 +8397,9 @@ _rename() {
       _git_checkpoint "${_notebook_path}" \
         "[nb] Rename: ${_source_basename} to ${_target_basename}"
 
-  printf "%s renamed to %s\\n"            \
-    "$(_highlight "${_source_basename}")" \
-    "$(_highlight "${_target_basename}")"
+  printf "%s renamed to %s\\n"                \
+    "$(_color_primary "${_source_basename}")" \
+    "$(_color_primary "${_target_basename}")"
 }
 
 # run ##################################################################### run
@@ -8783,10 +8784,10 @@ _search() {
             )"
 
             _id_filename="[${_notebook_escaped_name}:${_id}] ${_file_info}"
-            _id_filename_color="$(_id_brackets_color "${_notebook_escaped_name}:${_id}") ${_file_info_color}"
+            _id_filename_color="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") ${_file_info_color}"
           else
             _id_filename="[${_id}] ${_file_info}"
-            _id_filename_color="$(_id_brackets_color "${_id}") ${_file_info_color}"
+            _id_filename_color="$(_color_id_brackets "${_id}") ${_file_info_color}"
           fi
 
           if [[ "${_last_path}" != "${_path}" ]]
@@ -8836,7 +8837,7 @@ _search() {
                 | awk '{ print substr($0, 1, 2000) }'
             )"
             _content_line_with_hit+="$(
-              _highlight "... [${_line_length_diff} characters omitted]"
+              _color_primary "... [${_line_length_diff} characters omitted]"
             )"
           fi
 
@@ -9009,9 +9010,9 @@ _settings() {
         return 0
         ;;
       *)
-        _return_1 \
-          printf "Setting not found: %s\\n" \
-          "$(_highlight "${_id_or_name}")"
+        _return_1                               \
+          printf "Setting not found: %s\\n"     \
+          "$(_color_primary "${_id_or_name}")"
         ;;
     esac
   }
@@ -9025,16 +9026,16 @@ _settings() {
       _setting_name="$(_nb_settings_identify "${_setting_name}")"
     else
       cat <<HEREDOC
-$(_highlight "${_ME}") Settings
-$(_highlight_secondary "-----------")
+$(_color_primary "${_ME}") Settings
+$(_color_secondary "-----------")
 $(_settings list)
 
-Enter the number or name of the setting to change, or $(_highlight 'q') to quit.
+Enter the number or name of the setting to change, or $(_color_primary 'q') to quit.
 HEREDOC
 
       while true
       do
-        read -r -p "$(_highlight "Number or Name: ")" __setting
+        read -r -p "$(_color_primary "Number or Name: ")" __setting
         if [[ -n "${__setting}" ]]
         then
           case "${__setting}" in
@@ -9060,8 +9061,8 @@ HEREDOC
 
     _settings show "${_setting_name}"
 
-    local _hi_unset= && _hi_unset="$(_highlight 'unset')"
-    local _hi_q=     && _hi_q="$(_highlight 'q')"
+    local _hi_unset= && _hi_unset="$(_color_primary 'unset')"
+    local _hi_q=     && _hi_q="$(_color_primary 'q')"
 
     cat <<HEREDOC
 
@@ -9070,7 +9071,7 @@ HEREDOC
 
     while true
     do
-      read -r -p "$(_highlight "Value: ")" __value
+      read -r -p "$(_color_primary "Value: ")" __value
       if [[ -n "${__value}" ]]
       then
         case "${__value}" in
@@ -9138,8 +9139,8 @@ HEREDOC
         _setting_name="$(tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
         _value="$(tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
       else
-        _setting_name="$(_highlight "${_setting_name}")"  \
-        _value="$(_highlight "${_value}")"
+        _setting_name="$(_color_primary "${_setting_name}")"  \
+        _value="$(_color_primary "${_value}")"
       fi &&
       printf "%s set to %s\\n"  \
         "${_setting_name}"      \
@@ -9166,7 +9167,7 @@ HEREDOC
 
           if [[ "${_setting_name}" == "NB_COLOR_SECONDARY" ]]
           then
-            _setting_name="$(_highlight "${_setting_name}")"
+            _setting_name="$(_color_primary "${_setting_name}")"
             _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
           elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY" ]]
           then
@@ -9182,8 +9183,8 @@ HEREDOC
             _setting_name="$(tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
             _default_value="$(tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
           else
-            _setting_name="$(_highlight "${_setting_name}")"
-            _default_value="$(_highlight "${_default_value}")"
+            _setting_name="$(_color_primary "${_setting_name}")"
+            _default_value="$(_color_primary "${_default_value}")"
           fi
         } &&
         printf "%s restored to the default: %s\\n"  \
@@ -9272,68 +9273,68 @@ HEREDOC
   local _settings_list_items=()
   local _settings_help_items=()
 
-  _settings_list_items+=("$(_id_brackets_color '1')  auto_sync")
+  _settings_list_items+=("$(_color_id_brackets '1')  auto_sync")
   _settings_help_items+=("\
-    $(_highlight_secondary " ---------")
+    $(_color_secondary " ---------")
      By default, operations that trigger a git commit like \`add\`, \`edit\`,
      and \`delete\` will sync notebook changes to the remote repository, if
      one is set. To disable this behavior, set this to \"0\".
 
-     • Default Value: $(_highlight "1")")
+     • Default Value: $(_color_primary "1")")
 
-  _settings_list_items+=("$(_id_brackets_color '2')  color_primary")
+  _settings_list_items+=("$(_color_id_brackets '2')  color_primary")
   _settings_help_items+=("\
-    $(_highlight_secondary " -------------")
+    $(_color_secondary " -------------")
      The primary color used to highlight identifiers and messages. Often this
      can be set to an xterm color number between 0 and 255. Some terminals
      support many more colors.
 
-     • Default Value: $(_highlight "68") (blue) for 256 color terminals,
-                      $(_highlight "4")  (blue) for  8  color terminals.")
+     • Default Value: $(_color_primary "68") (blue) for 256 color terminals,
+                      $(_color_primary "4")  (blue) for  8  color terminals.")
 
-  _settings_list_items+=("$(_id_brackets_color '3')  color_secondary")
+  _settings_list_items+=("$(_color_id_brackets '3')  color_secondary")
   _settings_help_items+=("\
-    $(_highlight_secondary " ---------------")
+    $(_color_secondary " ---------------")
      The color used for lines and footer elements. Often this can be set to an
      xterm color number between 0 and 255. Some terminals support many more
      colors.
 
-     • Default Value: $(_highlight "8")")
+     • Default Value: $(_color_primary "8")")
 
-  _settings_list_items+=("$(_id_brackets_color '4')  color_theme")
+  _settings_list_items+=("$(_color_id_brackets '4')  color_theme")
   _settings_help_items+=("\
-    $(_highlight_secondary " -----------")
+    $(_color_secondary " -----------")
      The color theme.
 
      To view screenshots of the built-in themes, visit:
 
-         $(_highlight "https://git.io/nb-docs-color-themes")
+         $(_color_primary "https://git.io/nb-docs-color-themes")
 
      \`${_ME}\` supports custom, user-defined themes. To learn more, run:
 
-         $(_highlight "${_ME} help --colors")
+         $(_color_primary "${_ME} help --colors")
 
      • Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
   do
-    printf "         %s\\n" "$(_highlight "${__theme}")"
+    printf "         %s\\n" "$(_color_primary "${__theme}")"
   done)
 
-     • Default Value: $(_highlight "nb")")
+     • Default Value: $(_color_primary "nb")")
 
-  _settings_list_items+=("$(_id_brackets_color '5')  default_extension")
+  _settings_list_items+=("$(_color_id_brackets '5')  default_extension")
   _settings_help_items+=("\
-    $(_highlight_secondary " -----------------")
+    $(_color_secondary " -----------------")
      The default extension to use for note files. Change to \"org\" for Emacs
      Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
      whatever you prefer.
 
-     • Default Value: $(_highlight "md")")
+     • Default Value: $(_color_primary "md")")
 
-  _settings_list_items+=("$(_id_brackets_color '6')  editor")
+  _settings_list_items+=("$(_color_id_brackets '6')  editor")
   _settings_help_items+=("\
-    $(_highlight_secondary " ------")
+    $(_color_secondary " ------")
      The command line text editor to use with \`${_ME}\`.
 
      • Example Values:
@@ -9342,59 +9343,59 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then
-      printf "         %s\\n" "$(_highlight "${__editor}")"
+      printf "         %s\\n" "$(_color_primary "${__editor}")"
     fi
   done)")
 
-  _settings_list_items+=("$(_id_brackets_color '7')  encryption_tool")
+  _settings_list_items+=("$(_color_id_brackets '7')  encryption_tool")
   _settings_help_items+=("\
-    $(_highlight_secondary " ---------------")
+    $(_color_secondary " ---------------")
      The tool used for encrypting notes.
 
-     • Supported Values: $(_highlight "openssl"), $(_highlight "gpg")
-     • Default Value:    $(_highlight "openssl")")
+     • Supported Values: $(_color_primary "openssl"), $(_color_primary "gpg")
+     • Default Value:    $(_color_primary "openssl")")
 
-  _settings_list_items+=("$(_id_brackets_color '8')  footer")
+  _settings_list_items+=("$(_color_id_brackets '8')  footer")
   _settings_help_items+=("\
-    $(_highlight_secondary " ------")
+    $(_color_secondary " ------")
      By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
      To hide this footer, set this to \"0\".
 
-     • Default Value: $(_highlight "1")")
+     • Default Value: $(_color_primary "1")")
 
-  _settings_list_items+=("$(_id_brackets_color '9')  header")
+  _settings_list_items+=("$(_color_id_brackets '9')  header")
   _settings_help_items+=("\
-    $(_highlight_secondary " ------")
+    $(_color_secondary " ------")
      By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
      Set the alignment, or hide the header with \"0\".
 
      • Supported Values:
 
-       $(_highlight "0")  Hide Header
-       $(_highlight "1")  Dynamic Alignment
+       $(_color_primary "0")  Hide Header
+       $(_color_primary "1")  Dynamic Alignment
             - Left justified when list is shorter than terminal width.
             - Center aligned when list is longer than terminal width.
-       $(_highlight "2")  Center Aligned (default)
-       $(_highlight "3")  Left Justified
+       $(_color_primary "2")  Center Aligned (default)
+       $(_color_primary "3")  Left Justified
 
-     • Default Value: $(_highlight "2")")
+     • Default Value: $(_color_primary "2")")
 
-  _settings_list_items+=("$(_id_brackets_color '10') limit")
+  _settings_list_items+=("$(_color_id_brackets '10') limit")
   _settings_help_items+=("\
-    $(_highlight_secondary " -----")
+    $(_color_secondary " -----")
      The maximum number of notes included in the \`nb\` and \`nb ls\` lists.
 
-     • Default Value: $(_highlight "20")")
+     • Default Value: $(_color_primary "20")")
 
-  _settings_list_items+=("$(_id_brackets_color '11') nb_dir")
+  _settings_list_items+=("$(_color_id_brackets '11') nb_dir")
   _settings_help_items+=("\
-    $(_highlight_secondary " ------")
+    $(_color_secondary " ------")
      The location of the directory that contains the notebooks.
 
      For example, to sync all notebooks with Dropbox, create a folder at
      \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
-     • Default Value: $(_highlight '~/.nb')")
+     • Default Value: $(_color_primary '~/.nb')")
 
   while ((${#}))
   do
@@ -9465,8 +9466,8 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           "${_settings_help_items[${_index}]}"
 
         printf "\\n%s is currently set to %s\\n"  \
-          "$(_highlight "${_setting_name}")"      \
-          "$(_highlight "$(_nb_settings_get_value "${_setting_name}")")"
+          "$(_color_primary "${_setting_name}")"  \
+          "$(_color_primary "$(_nb_settings_get_value "${_setting_name}")")"
         return 0
         ;;
       reset|unset)
@@ -9544,7 +9545,7 @@ _shell() {
 
   local _initial_command=
   local _prompt=
-  _prompt="$(_highlight "${_ME}")$(_highlight_secondary ">") "
+  _prompt="$(_color_primary "${_ME}")$(_color_secondary ">") "
 
   for __arg in "${@:-}"
   do
@@ -9573,9 +9574,9 @@ __          _
  \ \ | '_ \| '_ \\
  / / | | | | |_) |
 /_/  |_| |_|_.__/
-$(_highlight_secondary "------------------")
-$(_highlight "${_ME} shell") started. Enter $(_highlight "ls") to list notes and notebooks.
-Enter $(_highlight "help") for usage information. Enter $(_highlight "exit") to exit.
+$(_color_secondary "------------------")
+$(_color_primary "${_ME} shell") started. Enter $(_color_primary "ls") to list notes and notebooks.
+Enter $(_color_primary "help") for usage information. Enter $(_color_primary "exit") to exit.
 HEREDOC
 
   if [[ -n "${_initial_command:-}" ]]
@@ -9807,7 +9808,7 @@ _show() {
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
-      _return_1 printf "Note not found: %s\\n" "$(_highlight "${_selector}")"
+      _return_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
   fi
@@ -9888,14 +9889,14 @@ _show() {
 
     if [[ -n "${_title}" ]]
     then
-      printf "%s %s \"%s\"\\n"                        \
-        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
-        "$(_highlight         "${_maybe_scoped_basename}")" \
+      printf "%s %s \"%s\"\\n"                              \
+        "$(_color_id_brackets "${_maybe_scoped_id}")"       \
+        "$(_color_primary     "${_maybe_scoped_basename}")" \
         "${_title}"
     else
-      printf "%s %s\\n"                             \
-        "$(_id_brackets_color "${_maybe_scoped_id}")"       \
-        "$(_highlight         "${_maybe_scoped_basename}")"
+      printf "%s %s\\n"                                     \
+        "$(_color_id_brackets "${_maybe_scoped_id}")"       \
+        "$(_color_primary         "${_maybe_scoped_basename}")"
     fi
 
     return 0
@@ -10021,7 +10022,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "mplayer" ]]
          }
     then
-      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
+      printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       mplayer "${_target_path}"
     elif _command_exists "afplay"         &&
          _file_is_audio "${_target_path}" &&
@@ -10030,7 +10031,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "afplay" ]]
          }
     then
-      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
+      printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       afplay "${_target_path}"
     elif _command_exists "mpg123"                   &&
          _file_is_audio "${_target_path}"           &&
@@ -10040,7 +10041,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "mpg123" ]]
          }
     then
-      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
+      printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       mpg123 "${_target_path}"
     elif _command_exists "ffplay"         &&
          _file_is_audio "${_target_path}" &&
@@ -10049,7 +10050,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "ffplay" ]]
          }
     then
-      printf "Playing audio. Press %s to quit.\\n" "$(_highlight "Ctrl-C")"
+      printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       ffplay -loglevel quiet "${_target_path}"
     elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
     then
@@ -10385,7 +10386,7 @@ HEREDOC
     then
       while true
       do
-        printf "Updating %s in place. " "$(_highlight "${_ME}")"
+        printf "Updating %s in place. " "$(_color_primary "${_ME}")"
         read -r -p "Proceed? [y/N] " __yn
         case ${__yn} in
           [Yy]*)
@@ -10405,7 +10406,7 @@ HEREDOC
         cat "${_temp_file}" | sudo tee "${_current_path}" > /dev/null
       fi
 
-      printf "%s updated to the latest version.\\n" "$(_highlight "${_ME}")"
+      printf "%s updated to the latest version.\\n" "$(_color_primary "${_ME}")"
       exit 0
     else
       printf "Already at the latest version.\\n"
@@ -10806,7 +10807,7 @@ do
             _ARGUMENTS+=("${__opt}")
           else
             _exit_1 printf \
-              "Notebook not found: %s\\n" "$(_highlight "${__opt%%:*}")"
+              "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"
           fi
         fi
 
@@ -10922,6 +10923,10 @@ _SCOPED="$(
     printf "0\\n"
   fi
 )"
+
+# Color functions.
+_highlight() { _color_primary "${@:-}"; }
+_id_brackets_color() { _color_id_brackets "${@:-}"; }
 
 ###############################################################################
 # _main()

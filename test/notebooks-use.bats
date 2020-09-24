@@ -73,11 +73,11 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using: $(_highlight 'one')'" "'${output}'"
+  _compare "'Now using: $(_color_primary 'one')'" "'${output}'"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "Now using: $(_highlight 'one')"  ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "one"           ]]
+  [[ ${status} -eq 0                                      ]]
+  [[ "${output}" == "Now using: $(_color_primary 'one')"  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "one"               ]]
 
   run "${_NB}" env
 
@@ -97,7 +97,7 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'Now using: $(_highlight 'one')'" "'${output}'"
+  _compare "'Now using: $(_color_primary 'one')'" "'${output}'"
 
   [[ ${status} -eq 0                        ]]
   [[ "${output}" =~ Now\ using:             ]]

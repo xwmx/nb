@@ -210,7 +210,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 
   # Prints error message
-  _message="${_ERROR_PREFIX} Unable to download page at $(_highlight "http://invalid-url")"
+  _message="${_ERROR_PREFIX} Unable to download page at $(_color_primary "http://invalid-url")"
   [[ "${lines[0]}" == "${_message}" ]]
 
   # Prints output

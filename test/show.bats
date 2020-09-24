@@ -106,8 +106,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                                        ]]
-  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_highlight "1")"  ]]
+  [[ ${status} -eq 1                                                            ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_color_primary "1")"  ]]
 }
 
 # `show <filename> --dump` ####################################################

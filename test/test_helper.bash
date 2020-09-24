@@ -148,19 +148,19 @@ _get_hash() {
   fi
 }
 
-# _highlight()
+# _color_primary()
 #
 # Usage:
-#   _highlight <string> [--underline]
+#   _color_primary <string> [--underline]
 export _TPUT_COLOR_PRIMARY
 _TPUT_COLOR_PRIMARY="$(tput setaf 3)"
 export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
-_highlight() {
+_color_primary() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
   then
-    _die printf "Usage: _highlight <string>"
+    _die printf "Usage: _color_primary <string>"
   fi
 
   if [[ "${2:-}" == "--underline" ]]

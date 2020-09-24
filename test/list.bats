@@ -17,13 +17,13 @@ load test_helper
   _expected="0 notes.
 
 Add a note:
-  $(_highlight 'nb add')
+  $(_color_primary 'nb add')
 Add a bookmark:
-  $(_highlight "nb <url>")
+  $(_color_primary "nb <url>")
 Import a file:
-  $(_highlight "nb import (<path> | <url>)")
+  $(_color_primary "nb import (<path> | <url>)")
 Help information:
-  $(_highlight 'nb help')"
+  $(_color_primary 'nb help')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -732,13 +732,13 @@ HEREDOC
   _expected="0 notes.
 
 Add a note:
-  $(_highlight 'nb one:add')
+  $(_color_primary 'nb one:add')
 Add a bookmark:
-  $(_highlight 'nb one: <url>')
+  $(_color_primary 'nb one: <url>')
 Import a file:
-  $(_highlight 'nb one:import (<path> | <url>)')
+  $(_color_primary 'nb one:import (<path> | <url>)')
 Help information:
-  $(_highlight 'nb help')"
+  $(_color_primary 'nb help')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -758,9 +758,9 @@ Help information:
   _expected="0 bookmarks.
 
 Add a bookmark:
-  $(_highlight 'nb one: <url>')
+  $(_color_primary 'nb one: <url>')
 Help information:
-  $(_highlight 'nb help bookmark')"
+  $(_color_primary 'nb help bookmark')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]
@@ -780,9 +780,9 @@ Help information:
   _expected="0 document files.
 
 Import a file:
-  $(_highlight 'nb one:import (<path> | <url>)')
+  $(_color_primary 'nb one:import (<path> | <url>)')
 Help information:
-  $(_highlight 'nb help import')"
+  $(_color_primary 'nb help import')"
 
   [[ ${status} -eq 0                ]]
   [[ "${_expected}" == "${output}"  ]]

@@ -48,9 +48,9 @@ _setup_use() {
   printf "\${output}: '%s'\\n" "${output}"
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
-  [[ ${status} -eq 1                                                            ]]
-  [[ "${lines[0]}" == "${_ERROR_PREFIX} Not found: $(_highlight "not-a-repo")"  ]]
-  [[ "$(cat "${NB_DIR}/.current")" == "home"                                    ]]
+  [[ ${status} -eq 1                                                                ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Not found: $(_color_primary "not-a-repo")"  ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"                                        ]]
 
   run "${_NB}" env
 
@@ -64,7 +64,7 @@ _setup_use() {
 @test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
   {
     _setup_use
-    _expected="Now using: $(_highlight 'one')"
+    _expected="Now using: $(_color_primary 'one')"
   }
 
   run "${_NB}" use one

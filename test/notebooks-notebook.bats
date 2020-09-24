@@ -26,8 +26,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "$(_highlight "home") archived."  ]]
+  [[ ${status} -eq 0                                      ]]
+  [[ "${output}" == "$(_color_primary "home") archived."  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -48,8 +48,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                ]]
-  [[ "${output}" == "$(_highlight "one") archived." ]]
+  [[ ${status} -eq 0                                    ]]
+  [[ "${output}" == "$(_color_primary "one") archived." ]]
 
   # Creates git commit
   cd "${NB_DIR}/one" || return 1
@@ -101,8 +101,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${output}" == "$(_highlight "home") unarchived."  ]]
+  [[ ${status} -eq 0                                        ]]
+  [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -124,8 +124,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "$(_highlight "one") unarchived." ]]
+  [[ ${status} -eq 0                                      ]]
+  [[ "${output}" == "$(_color_primary "one") unarchived." ]]
 
   # Creates git commit
   cd "${NB_DIR}/one" || return 1
@@ -146,8 +146,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${output}" == "$(_highlight "home") unarchived."  ]]
+  [[ ${status} -eq 0                                        ]]
+  [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -170,8 +170,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${output}" == "$(_highlight "home") is not archived." ]]
+  [[ ${status} -eq 0                                            ]]
+  [[ "${output}" == "$(_color_primary "home") is not archived." ]]
 
   run "${_NB}" notebooks archive
   run "${_NB}" notebooks status
@@ -179,8 +179,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${output}" == "$(_highlight "home") is archived." ]]
+  [[ ${status} -eq 0                                        ]]
+  [[ "${output}" == "$(_color_primary "home") is archived." ]]
 }
 
 @test "\`notebooks status <name>\` exits with 0 and prints status." {
@@ -193,8 +193,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${output}" == "$(_highlight "one") is not archived."  ]]
+  [[ ${status} -eq 0                                            ]]
+  [[ "${output}" == "$(_color_primary "one") is not archived."  ]]
 
   run "${_NB}" notebooks archive one
   run "${_NB}" notebooks status one
@@ -202,8 +202,8 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${output}" == "$(_highlight "one") is archived."  ]]
+  [[ ${status} -eq 0                                        ]]
+  [[ "${output}" == "$(_color_primary "one") is archived."  ]]
 }
 
 # help ########################################################################
