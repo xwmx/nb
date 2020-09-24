@@ -335,7 +335,7 @@ fi
 export NB_DIR="${NB_DIR:-"${HOME}/.nb"}"
 
 # Handle symlinked NB_DIR.
-if [[ -L "${NB_DIR:-}" ]]
+if [[ -L "${NB_DIR:-}"  ]]
 then
   NB_DIR="$(readlink "${NB_DIR}")"
 fi
