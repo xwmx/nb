@@ -2521,7 +2521,7 @@ Usage:
           [--filename | --id | --info | --path | --render | --title]
           [--type [<type>]]
   nb show <notebook>
-  nb subcommands [add <name>] [alias <name> <alias>]
+  nb subcommands [add <name>...] [alias <name> <alias>]
   nb sync [-a | --all]
   nb update
   nb use <notebook>
@@ -3734,7 +3734,7 @@ Description:
 
 ```text
 Usage:
-  nb subcommands [add <name>] [alias <name> <alias>]
+  nb subcommands [add <name>...] [alias <name> <alias>]
 
 Subcommands:
   add    Add a new subcommand.

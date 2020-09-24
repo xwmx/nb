@@ -2940,7 +2940,7 @@ Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
           [--filename | --id | --info | --path | --render | --title]
   ${_ME} show <notebook>
-  ${_ME} subcommands [add <name>] [alias <name> <alias>]
+  ${_ME} subcommands [add <name>...] [alias <name> <alias>]
   ${_ME} sync [-a | --all]
   ${_ME} update
   ${_ME} use <notebook>
@@ -10166,7 +10166,7 @@ _status() {
 
 describe "subcommands" <<HEREDOC
 Usage:
-  ${_ME} subcommands [add <name>] [alias <name> <alias>]
+  ${_ME} subcommands [add <name>...] [alias <name> <alias>]
 
 Subcommands:
   add    Add a new subcommand.
@@ -10181,7 +10181,9 @@ _subcommands() {
   if [[ "${1:-}" == "add"       ]] &&
      [[ -n "${2:-}"             ]]
   then
-    NB_PLUGIN_SUBCOMMANDS+=("${2}")
+    shift
+
+    NB_PLUGIN_SUBCOMMANDS+=("${@:-}")
   elif [[ "${1:-}" == "alias"   ]] &&
        [[ -n "${2:-}"           ]] &&
        [[ -n "${3:-}"           ]]
