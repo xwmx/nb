@@ -10781,14 +10781,12 @@ do
       _GIT_ENABLED=0
       ;;
     --version)
-      case "${_SUBCOMMAND:-}" in
-        git|run)
-          _ARGUMENTS+=("${__opt}")
-          ;;
-        *)
-          _SUBCOMMAND="version"
-          ;;
-      esac
+      if [[ -n "${_SUBCOMMAND:-}" ]]
+      then
+        _ARGUMENTS+=("${__opt}")
+      else
+        _SUBCOMMAND="version"
+      fi
       ;;
     -i|--interactive)
       case "${_SUBCOMMAND:-}" in
