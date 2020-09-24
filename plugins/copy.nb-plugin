@@ -27,9 +27,11 @@ HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
 _copy() {
+  # The selector argument can be an <id>, <filename>, <path>, or <title>, with
+  # out withtout a preceeding notebook name, e.g., notebook-name:42
   local _selector="${1:-}"
 
-  # Check for the presence of a selection, exiting and printing help if not
+  # Check for the presence of a selector, exiting and printing help if not
   # found.
   if [[ -z "${_selector:-}" ]]
   then
@@ -37,17 +39,15 @@ _copy() {
     exit 1
   fi
 
-  # Get the filename from the selection. The selection argument can be an
-  # <id>, <filename>, <path>, or <title>, with out withtout a preceeding
-  # notebook name, e.g., notebook:42
+  # Get the filename from the selector.
   local _source_filename
   _source_filename="$(_show "${_selector}" --filename)"
 
-  # Get the current notebook using the selection.
+  # Get the current notebook using the selector.
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
 
-  # Validate that the selection is a file.
+  # Validate that the selector represents a valid file.
   if [[ -z "${_source_filename:-}"                      ]] ||
      [[ ! -e "${_notebook_path}/${_source_filename}"    ]]
   then
