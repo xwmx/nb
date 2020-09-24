@@ -11,7 +11,8 @@
 ###############################################################################
 
 # Add the new subcommand name(s) with `_subcommands add <name>`.
-_subcommands add "copy" "duplicate"
+_subcommands add "copy"
+_subcommands add "duplicate"
 
 # Define help and usage text with `describe <subcommand> <usage>`.
 describe "copy" <<HEREDOC
