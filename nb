@@ -10863,24 +10863,18 @@ done
 # _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
-# Legacy Functions and Variables
+# Deprecated Functions and Variables
 #
 # TODO: Remove
 ###############################################################################
 
 # _get_notebook_identifier()
-#
-# Renamed.
 _get_notebook_identifier() { _notebooks show "${@}" --escaped; }
 
 # _get_selection_basename()
-#
-# Renamed.
 _get_selection_basename() { _show "${@}" --filename; }
 
 # _set_selection_notebook() <selector>
-#
-# Selection notebook is now handled in option parsing and through functions..
 _set_selection_notebook() {
   if [[ "${1:-}" =~ : ]]
   then
@@ -10895,24 +10889,15 @@ _set_selection_notebook() {
 }
 
 # $_NOTEBOOK_PATH
-#
-# Renamed.
-#
 # shellcheck disable=SC2034
 export _NOTEBOOK_PATH="${_NOTEBOOK_PATH:-"${NB_NOTEBOOK_PATH}"}"
 
 # $_SCOPE
-#
-# Renamed.
-#
 # shellcheck disable=SC2034
 # _SCOPE="$(_notebooks current --name)"
 _SCOPE="$(basename "${NB_NOTEBOOK_PATH}")"
 
 # $_SCOPED
-#
-# Renamed.
-#
 # shellcheck disable=SC2034
 _SCOPED="$(
   # if _notebooks current --selected
