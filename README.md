@@ -1,5 +1,5 @@
 <p align="center">
-  <img  src="docs/images/nb.png"
+  <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png"
         alt="nb"
         width="200">
 </p>
