@@ -2846,12 +2846,13 @@ To view a table of available colors and numbers, run:
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
-    cat <<HEREDOC
-__          _
-\ \   _ __ | |__
- \ \ | '_ \| '_ \\
- / / | | | | |_) |
-/_/  |_| |_|_.__/
+    _color_primary    "__          _"
+    _color_primary    "\ \   _ __ | |__"
+    _color_primary    " \ \ | '_ \| '_ \\"
+    _color_primary    " / / | | | | |_) |"
+    _color_primary    "/_/  |_| |_|_.__/"
+    _color_secondary  "------------------"
+   cat <<HEREDOC
 
 \`nb\` · notes & bookmarks
 
