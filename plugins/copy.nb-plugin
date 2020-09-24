@@ -27,11 +27,11 @@ HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
 _copy() {
-  local _selection="${1:-}"
+  local _selector="${1:-}"
 
   # Check for the presence of a selection, exiting and printing help if not
   # found.
-  if [[ -z "${_selection:-}" ]]
+  if [[ -z "${_selector:-}" ]]
   then
     _help "copy"
     exit 1
@@ -41,21 +41,21 @@ _copy() {
   # <id>, <filename>, <path>, or <title>, with out withtout a preceeding
   # notebook name, e.g., notebook:42
   local _source_filename
-  _source_filename="$(_show "${_selection}" --filename)"
+  _source_filename="$(_show "${_selector}" --filename)"
 
   # Get the current notebook using the selection.
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selection}" --path)"
+  _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   # Validate that the selection is a file.
   if [[ -z "${_source_filename:-}"                      ]] ||
      [[ ! -e "${_notebook_path}/${_source_filename}"    ]]
   then
-    printf "Not found: %s\\n" "${_selection}"
+    printf "Not found: %s\\n" "${_selector}"
     exit 1
   elif [[ ! -f "${_notebook_path}/${_source_filename}"  ]]
   then
-    printf "Not a file: %s\\n" "${_selection}"
+    printf "Not a file: %s\\n" "${_selector}"
     exit 1
   fi
   # Get a unique filename based on the source filename.
