@@ -27,7 +27,7 @@ _nb_subcommands() {
     local _cache_path="${1:-}"
 
     local _commands
-    IFS=$'\n' _commands=($(nb commands))
+    IFS=$'\n' _commands=($(nb subcommands))
 
     local _notebooks
     IFS=$'\n' _notebooks=($(nb notebooks --names --no-color --unarchived))
