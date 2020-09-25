@@ -2315,7 +2315,7 @@ notebook:title
 notebook:/path/to/example.md
 ```
 
-`nb` automatically scans argument for selectors with notebook names and
+`nb` automatically scans arguments for selectors with notebook names and
 updates the current notebook if a valid one is found.
 
 Identifier selectors are passed to subcommands as arguments along with
