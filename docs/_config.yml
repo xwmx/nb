@@ -54,6 +54,8 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #   - vendor/gems/
 #   - vendor/ruby/
 
+exclude:
+  - color-themes.md
 
 ###############################################################################
 # Just the Docs
