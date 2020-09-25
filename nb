@@ -856,7 +856,7 @@ _temp() {
     cleanup)
       if _temp_validate_directory "${_NB_TEMP_DIRECTORY:?}"
       then
-        rm -rf "${_NB_TEMP_DIRECTORY}"
+        rm -rf "${_NB_TEMP_DIRECTORY:?}"
       fi
       ;;
   esac
@@ -1334,7 +1334,7 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
       -in "${_encrypted_path}"    \
       -out "${_unencrypted_path}" \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
-        rm "${_unencrypted_path}"
+        rm "${_unencrypted_path:?}"
   else
     _exit_1 printf "Unable to decrypt file.\\n"
   fi
@@ -3169,7 +3169,7 @@ _add() {
 
     if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
     then
-      rm "${_decrypted_path}"
+      rm "${_decrypted_path:?}"
     fi
 
     _basename="${_basename}.enc"
@@ -3852,7 +3852,7 @@ HEREDOC
 
     printf "%s" "${_bookmark_content}" | _add "${_add_options[@]}"
 
-    [[ -f "${_temp_file:-}" ]] && rm "${_temp_file}"
+    [[ -f "${_temp_file:-}" ]] && rm "${_temp_file:?}"
   fi
 }
 _alias_subcommand "bookmark" "b"
@@ -4081,7 +4081,8 @@ HEREDOC
         then
           if [[ -f "${_completion_target}" ]]
           then
-            rm "${_completion_target}"
+            rm "${_completion_target:?}"
+
             printf "Completion script removed: %s\\n" \
               "${_completion_target}"
           fi
@@ -4214,9 +4215,9 @@ _delete() {
     if [[ -d "${_notebook_path}/${_basename}" ]] &&
        [[ -z "$(ls -A "${_notebook_path}/${_basename}")" ]]
     then
-      rm -r "${_notebook_path:?}/${_basename}"
+      rm -r "${_notebook_path:?}/${_basename:?}"
     else
-      git -C "${_notebook_path}" rm -r "${_basename}" 1>/dev/null
+      git -C "${_notebook_path}" rm -r "${_basename:?}" 1>/dev/null
     fi
 
     if [[ ! -e "${_notebook_path}/${_basename}" ]]
@@ -4385,13 +4386,13 @@ _edit() {
 
         if [[ -e "${_encrypted_path}" ]]
         then
-          rm "${_temp_encrypted_path}"
+          rm "${_temp_encrypted_path:?}"
         else
           mv "${_temp_encrypted_path}" "${_encrypted_path}"
         fi
       fi
 
-      rm "${_decrypted_path}"
+      rm "${_decrypted_path:?}"
     fi
 
     _git_checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
@@ -4478,7 +4479,7 @@ _env() {
         if [[ -e "${_deb_local_path}" ]]
         then
           dpkg -i "${_deb_local_path}"
-          rm "${_deb_local_path}"
+          rm "${_deb_local_path:?}"
         fi
       fi
     elif [[ -x "$(command -v dnf)" ]]
@@ -5265,7 +5266,7 @@ _index() {
         exec 3> "${_temp_file}"
         exec 4< "${_temp_file}"
 
-        rm "${_temp_file}"
+        rm "${_temp_file:?}"
 
         # Remove duplicates and preserve newlines.
         awk '!NF || !seen[$0]++' "${_reconcile_index_path}" >&3
@@ -7373,7 +7374,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       then
         if [[ -e "${_dotfile_path}" ]]
         then
-          rm "${_dotfile_path}" &&
+          rm "${_dotfile_path:?}" &&
             _git_checkpoint "${_notebook_path}" "[nb] Unarchived"
         fi
 
@@ -7965,7 +7966,7 @@ HEREDOC
         done
       fi
 
-      if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:-?}"
+      if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:?}"
       then
         printf "Plugin successfully uninstalled:\\n%s\\n" \
           "$(_color_primary "${_plugin_path}")"
@@ -9479,7 +9480,7 @@ _shell() {
       --clear-history)
         if [[ -e "${HISTFILE}" ]]
         then
-          rm "${HISTFILE}"
+          rm "${HISTFILE:?}"
           printf "History cleared.\\n"
           return 0
         fi
@@ -10151,7 +10152,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
   if [[ -n "${_decrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
   then
-    rm "${_decrypted_path}"
+    rm "${_decrypted_path:?}"
   fi
 }
 _alias_subcommand "show" "s"
@@ -10432,7 +10433,7 @@ HEREDOC
 
     if [[ -n "${_temp_file}" ]]
     then
-      rm "${_temp_file}"
+      rm "${_temp_file:?}"
     fi
   fi
 }
