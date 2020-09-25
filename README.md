@@ -2356,7 +2356,8 @@ _notebook_path="$(_notebooks current "${_selector}" --path)"
   exit 1
 ```
 
-See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a full example.
+See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a full example of
+this pattern in action.
 
 ### > `nb` Interactive Shell
 
