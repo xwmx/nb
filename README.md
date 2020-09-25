@@ -2328,7 +2328,7 @@ obtain the filename of a selector-specified file, use
 ```bash
 _example() {
   local _selector="${1:-}"
-  [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>" && exit 1
+  [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>\\n" && exit 1
 
   # Get the filename using the selector.
   local _filename
