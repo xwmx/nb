@@ -4217,7 +4217,7 @@ _delete() {
     then
       rm -r "${_notebook_path:?}/${_basename:?}"
     else
-      git -C "${_notebook_path}" rm -r "${_basename:?}" 1>/dev/null
+      git -C "${_notebook_path:?}" rm -r "${_basename:?}" 1>/dev/null
     fi
 
     if [[ ! -e "${_notebook_path}/${_basename}" ]]
