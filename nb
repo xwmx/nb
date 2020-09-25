@@ -9698,7 +9698,7 @@ _show() {
         _basename="$(_index get_basename "${_identifier}")"
       else # <selector> might be a title.
         local _title=
-        local _filenames=
+        local _filenames
         _filenames=($(_list_files "${_notebook_path}"))
 
         for __file in "${_filenames[@]:-}"
