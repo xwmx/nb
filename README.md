@@ -77,7 +77,7 @@ on any device.
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
-providing a full-featured, intuitive experience within a composable
+providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
 The entire program is a single well-tested shell script
 that can be copied or `curl`ed almost anywhere and just work, using
