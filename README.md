@@ -2336,12 +2336,10 @@ _example() {
 
 [`notebooks current --path`](#notebooks) returns the path to the current
 notebook, which is frequently useful for building paths in combination
-with `show <selector> --filename`. `notebooks current` takes an optional
-`<selector>` argument. `notebooks current <selector> --path` checks the
-selector for a valid notebook name and, if one is found, sets the current
-notebook to the selected notebook, then returns the path the updated
-notebook. If a valid notebook is not found, then
-`notebooks current --path` returns the path to the current notebook:
+with `show <selector> --filename`. `notebooks current --path` takes an
+optional `<selector>` argument that resolves the notebook, updates the
+current notebook if the selector contains a valid notebook name, then
+returns the path the now possibly-updated current notebook:
 
 ```bash
 # _example() continued:
