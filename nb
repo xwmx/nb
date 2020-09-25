@@ -850,7 +850,7 @@ _temp() {
       printf "%s\\n" "${_NB_TEMP_DIRECTORY:-}"
       ;;
     file)
-      [[ -z "${2:-}" ]] && return 1 # _exit_1 printf _help "temp"
+      [[ -z "${2:-}" ]] && return 1
       printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${2:-}"
       ;;
     cleanup)
