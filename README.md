@@ -2320,8 +2320,10 @@ called and updates the current notebook for the run if a notebook
 selector is found.
 
 Identifier selectors are passed to subcommands as arguments along with
-any subcommand options. To obtain the filename of the file specified in
-the selector, use [`show <selector> --filename`](#show):
+any subcommand options. Use [`show <selector>`](#show) to query
+information about the file specified in the selector. For example, to
+obtain the filename of a selector-specified file, use
+`show <selector> --filename`:
 
 ```bash
 _example() {
