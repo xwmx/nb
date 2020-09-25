@@ -2288,7 +2288,9 @@ _notebooks current --path
 
 [`nb` notebooks](#-notebooks) can be selected by the user on a per-command
 basis by prefixing the subcommand name or the note identifier (id, filename,
-path, or title) with the notebook name followed by a colon.
+path, or title) with the notebook name followed by a colon. This
+semantic unit is referred to within `nb` as a "selector" and comes in
+two types: subcommand selectors and identifier selectors.
 
 Subcommand Selectors:
 
