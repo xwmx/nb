@@ -30,9 +30,19 @@ twitter_username: jekyllrb
 github_username:  jekyll
 
 # Build settings
-theme: minima
+# theme: minima
 plugins:
   - jekyll-feed
+
+
+# Theme ###########
+
+remote_theme: pmarsceill/just-the-docs
+color_scheme: "light"
+search_enabled: true
+search.heading_level: 6
+toc_list: true
+
 
 # Exclude from processing.
 # The following items will not be processed, by default.
