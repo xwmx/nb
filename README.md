@@ -2500,8 +2500,10 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
+          [--filename | --id | --info-line | --path | --render |
+          --selector-id | --title]
+          [--type [<type>]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -3663,25 +3665,28 @@ Example:
 ```text
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render |
+          --selector-id | --title]
           [--type [<type>]]
   nb show <notebook>
 
 Options:
-  --filename        Print the filename of the item.
-  --id              Print the id number of the item.
-  --info-line       Print the id, filename, and title of the item.
-  --path            Print the full path of the item.
-  -p, --print       Print to standard output / terminal.
-  --render          Use `pandoc` [1] to render the file to HTML and display with
-                    `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                    not available, `--render` is ignored.
-  --title           Print the title of the note.
-  --type [<type>]   Print the file extension or, when <type> is specified,
-                    return true if the item matches <type>. <type> can be a
-                    file extension or one of the following types:
-                    archive, audio, bookmark, document, folder, image,
-                    text, video
+  --filename       Print the filename of the item.
+  --id             Print the id number of the item.
+  --info-line      Print the id, filename, and title of the item.
+  --path           Print the full path of the item.
+  -p, --print      Print to standard output / terminal.
+  --render         Use `pandoc` [1] to render the file to HTML and display with
+                   `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
+                   not available, `--render` is ignored.
+  --selector-id    Given a selector (e.g., notebook:example.md), print the
+                   identifier portion (example.md).
+  --title          Print the title of the note.
+  --type [<type>]  Print the file extension or, when <type> is specified,
+                   return true if the item matches <type>. <type> can be a
+                   file extension or one of the following types:
+                   archive, audio, bookmark, document, folder, image,
+                   text, video
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
