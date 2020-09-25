@@ -2337,8 +2337,7 @@ _example() {
 ```
 
 [`notebooks current --path`](#notebooks) returns the path to the current
-notebook, which is frequently useful for building paths in combination
-with `show <selector> --filename`. `notebooks current --path` takes an
+notebook, which is frequently useful. `notebooks current --path` takes an
 optional `<selector>` argument that resolves the notebook, updates the
 current notebook if the selector contains a valid notebook name, then
 returns the path the now possibly-updated current notebook:
@@ -2350,14 +2349,14 @@ returns the path the now possibly-updated current notebook:
 local _notebook_path
 _notebook_path="$(_notebooks current "${_selector}" --path)"
 
-# check for file existence with "${_notebook_path}/${_filename}"
-[[ ! -e "${_notebook_path}/${_filename}" ]] &&
-  printf "File not found.\\n" 1>&2          &&
-  exit 1
+# print the file at "${_notebook_path}/${_filename}" to standard output
+cat "${_notebook_path}/${_filename}"
 ```
 
-See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a full example of
-this pattern in action.
+See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a practical example using
+both [`_show <selector> --filename`](#show) and
+[`_notebooks current <selector> --path`](#notebooks) along with other
+subcommands called using their underscore-prefixed function names.
 
 ### > `nb` Interactive Shell
 
