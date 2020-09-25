@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Readme
+title: readme
 permalink: /
 ---
 
