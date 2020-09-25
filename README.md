@@ -2354,8 +2354,8 @@ cat "${_notebook_path}/${_filename}"
 ```
 
 See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a practical example using
-both [`_show <selector> --filename`](#show) and
-[`_notebooks current <selector> --path`](#notebooks) along with other
+both [`show <selector> --filename`](#show) and
+[`notebooks current <selector> --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
 ### > `nb` Interactive Shell
