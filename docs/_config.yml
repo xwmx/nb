@@ -62,8 +62,16 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # https://pmarsceill.github.io/just-the-docs/docs/configuration/
 
 remote_theme: pmarsceill/just-the-docs
+
 color_scheme: "light"
-search_enabled: true
-search.heading_level: 6
-toc_list: true
+
 logo: "/assets/images/nb.png"
+
+search_enabled: true
+
+search:
+  heading_level: 5
+  preview_words_after: 5
+  preview_words_before: 5
+
+toc_list: true
