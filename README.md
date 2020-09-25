@@ -2284,6 +2284,80 @@ _list --filenames --no-id --no-indicator
 _notebooks current --path
 ```
 
+##### Selectors
+
+[`nb` notebooks](#-notebooks) can be selected by the user on a per-command
+basis by prefixing the subcommand name or the note identifier (id, filename,
+path, or title) with the notebook name followed by a colon.
+
+Subcommand Selectors:
+
+```text
+notebook:
+notebook:show
+notebook:history
+notebook:a
+notebook:q
+```
+
+Idenitifer Selectors:
+
+```text
+1
+example.md
+title
+/path/to/example.md
+notebook:1
+notebook:example.md
+notebook:title
+notebook:/path/to/example.md
+```
+
+`nb` resolves subcommand selectors before subcommand functions are
+called and updates the current notebook for the run if a notebook
+selector is found.
+
+Identifier selectors are passed to subcommands as arguments along with
+any subcommand options. To obtain the filename of the file specified in
+the selector, use [`show <selector> --filename`](#show):
+
+```bash
+_example() {
+  local _selector="${1:-}"
+  [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>" && exit 1
+
+  # Get the filename using the selector.
+  local _filename
+  _filename="$(_show "${_selector}" --filename)"
+
+  # Rest of subcommand function...
+}
+```
+
+[`notebooks current --path`](#notebooks) returns the path to the current
+notebook, which is frequently useful for building paths in combination
+with `show <selector> --filename`. `notebooks current` takes an optional
+`<selector>` argument. `notebooks current <selector> --path` checks the
+selector for a valid notebook name and, if one is found, sets the current
+notebook to the selected notebook, then returns the path the updated
+notebook. If a valid notebook is not found, then
+`notebooks current --path` returns the current notebook:
+
+```bash
+# _example() continued:
+
+# return the notebook path, first setting it with <selector>
+local _notebook_path
+_notebook_path="$(_notebooks current "${_selector}" --path)"
+
+# build a path in combination with "${filename}"
+[[ ! -e "${_notebook_path}/${_filename}" ]] &&
+  printf "File not found.\\n"               &&
+  exit 1
+```
+
+See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a full example.
+
 ### > `nb` Interactive Shell
 
 `nb` has an interactive shell that can be started with
