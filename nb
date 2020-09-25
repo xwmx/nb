@@ -6937,9 +6937,9 @@ Please type $(_color_primary "${_name}") to confirm: " __response
 
     if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
     then
-      trash "${NB_DIR:?}/${_name}"
+      trash "${NB_DIR:?}/${_name:?}"
     else
-      rm -r -f "${NB_DIR:?}/${_name}"
+      rm -r -f "${NB_DIR:?}/${_name:?}"
     fi &&
       _temp cache clear &&
       printf "Notebook deleted: %s\\n" "$(_color_primary "${_name}")"
