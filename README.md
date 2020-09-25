@@ -2694,9 +2694,9 @@ Options:
                                recommended to omit the extension so the
                                default bookmark extension is used.
   -q, --quote <quote>          A quote or excerpt from the saved page.
-                               Alias: \`--excerpt\`
+                               Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
-                               Multiple \`--related\` flags can be used in a
+                               Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
   --skip-content               Omit page content from the note.
@@ -2824,9 +2824,9 @@ Options:
                                recommended to omit the extension so the
                                default bookmark extension is used.
   -q, --quote <quote>          A quote or excerpt from the saved page.
-                               Alias: \`--excerpt\`
+                               Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
-                               Multiple \`--related\` flags can be used in a
+                               Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
   --skip-content               Omit page content from the note.
