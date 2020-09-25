@@ -1,6 +1,6 @@
 # `nb` Color Themes
 
-`nb` includes several built-in color themes. The colors for built-in themes can be modified using the [`nb settings color_primary`](https://github.com/xwmx/nb#settings-list---long) and [`nb settings color_secondary`](https://github.com/xwmx/nb#settings-list---long).
+`nb` includes several built-in color themes. The colors for built-in themes can be overridden with [`nb settings color_primary`](https://github.com/xwmx/nb#settings-list---long) and [`nb settings color_secondary`](https://github.com/xwmx/nb#settings-list---long).
 
 `nb` also supports user-defined themes. For more information, see [`nb settings color_theme`](https://github.com/xwmx/nb#settings-list---long).
 
