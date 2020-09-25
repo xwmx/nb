@@ -72,9 +72,10 @@ _copy() {
   local _target_filename
   _target_filename="$(_notebooks current --filename "${_source_filename}")"
 
+  # Check if the file is a text file.
   if _show "${_source_filename}" --type text
-  then # Text can use `_add()`.
-    # Print the source contents and pipe to `_add()`.
+  then # Text can use `_add`.
+    # Print the source contents and pipe to `_add`.
     _show "${_source_filename}" --no-color --print | _add "${_target_filename}"
   else # Binary files must be copied manually.
     # Copy the binary file to the new filename.
