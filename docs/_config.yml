@@ -66,3 +66,4 @@ color_scheme: "light"
 search_enabled: true
 search.heading_level: 6
 toc_list: true
+logo: "/assets/images/nb.png"
