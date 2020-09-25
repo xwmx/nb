@@ -2350,7 +2350,7 @@ returns the path the now possibly-updated current notebook:
 local _notebook_path
 _notebook_path="$(_notebooks current "${_selector}" --path)"
 
-# build a path in combination with "${filename}"
+# check for file existence with "${_notebook_path}/${_filename}"
 [[ ! -e "${_notebook_path}/${_filename}" ]] &&
   printf "File not found.\\n" 1>&2          &&
   exit 1
