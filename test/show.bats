@@ -462,6 +462,134 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
+# `show <id> --selector-id` ###################################################
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector id." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show 42 --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ 42  ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector id without notebook." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show notebook:42 --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" =~ 42  ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector filename." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show example.md --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${output}" =~ example.md  ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector filename without notebook." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show notebook:example.md --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${output}" =~ example.md  ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector title." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show Example\ Title --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ Example\ Title  ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector title without notebook." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show notebook:Example\ Title --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ Example\ Title  ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector path." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show /example/path --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ \/example\/path ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints the selector path without notebook." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show notebook:/example/path --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ \/example\/path ]]
+}
+
+@test "\`show <id> --selector-id\` exits with status 0 and prints nothing when blank with notebook." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" show notebook: --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0  ]]
+  [[ -z "${output:-}" ]]
+}
+
 # `show <id> --type` ##########################################################
 
 @test "\`show <id> --type\` with note exits with status 0 and prints note type." {

@@ -3,14 +3,6 @@
 
 load test_helper
 
-_HELP_HEADER="\
-__          _
-\ \   _ __ | |__
- \ \ | '_ \| '_ \\
- / / | | | | |_) |
-/_/  |_| |_|_.__/"
-export _HELP_HEADER
-
 @test "\`help\` with no arguments exits with status 0." {
   run "${_NB}" help
 
@@ -20,21 +12,19 @@ export _HELP_HEADER
 @test "\`help\` with no arguments prints default help." {
   run "${_NB}" help
 
-  _compare "${_HELP_HEADER}" "$(IFS=$'\n'; echo "${lines[*]:0:11}")"
-
-  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
+  [[ "${output}" =~ notes\ \&\ bookmarks ]]
 }
 
 @test "\`-h\` prints default help." {
   run "${_NB}" -h
 
-  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
+  [[ "${output}" =~ notes\ \&\ bookmarks ]]
 }
 
 @test "\`--help\` prints default help." {
   run "${_NB}" --help
 
-  [[ $(IFS=$'\n'; echo "${lines[*]:0:5}") == "${_HELP_HEADER}" ]]
+  [[ "${output}" =~ notes\ \&\ bookmarks ]]
 }
 
 @test "\`help help\` prints \`help\` subcommand usage." {

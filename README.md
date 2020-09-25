@@ -1,5 +1,5 @@
 <p align="center">
-  <img  src="docs/images/nb.png"
+  <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png"
         alt="nb"
         width="200">
 </p>
@@ -77,7 +77,7 @@ on any device.
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
-providing a full-featured, intuitive experience within a composable
+providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
 The entire program is a single well-tested shell script
 that can be copied or `curl`ed almost anywhere and just work, using
@@ -1370,7 +1370,7 @@ nb history Example
 `nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
-### 📔📓📒 Notebooks
+### 📚 Notebooks
 
 You can create additional notebooks, each of which has its own version history.
 
@@ -2254,8 +2254,8 @@ With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
 For a full example, [`copy.nb-plugin`](plugins/copy.nb-plugin) adds
-copy / duplicate functionality to `nb` and demonstrates a variety of
-features available for creating new subcommands.
+copy / duplicate functionality to `nb` and demonstrates how to create a
+plugin using `nb` subcommands and simple shell scripting.
 
 You can install any plugin you create locally with
 `nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
@@ -2263,10 +2263,12 @@ anywhere else online and install it with `nb plugins install <url>`.
 
 #### API
 
-Plugins can be created using [`nb` subcommands](#nb-help), which represent
-`nb`'s public API. Within plugins, subcommands can be called using their
-function names, which are named with leading underscores. Options can be
-used to output information in formats suitable for parsing and processing:
+The `nb` API is the [command line interface](#nb-help), which is designed for
+composability and provides a variety of powerful options for interacting with
+notes, bookmarks, notebooks, and `nb` functionality. Within plugins,
+subcommands can be called using their function names, which are named with
+leading underscores. Options can be used to output information in formats
+suitable for parsing and processing:
 
 ```bash
 # print the content of note 3 to standard output with no color
@@ -2277,7 +2279,85 @@ _notebooks --names --no-color --unarchived --global
 
 # list all filenames in the current notebook
 _list --filenames --no-id --no-indicator
+
+# print the path to the current notebook
+_notebooks current --path
 ```
+
+##### Selectors
+
+[`nb` notebooks](#-notebooks) can be selected by the user on a per-command
+basis by prefixing the subcommand name or the note identifier (id, filename,
+path, or title) with the notebook name followed by a colon. A colon-prefixed
+argument is referred to as a "selector" and comes in two types: subcommand
+selectors and identifier selectors.
+
+*Subcommand Selectors*
+
+```text
+notebook:
+notebook:show
+notebook:history
+notebook:a
+notebook:q
+```
+
+*Idenitifer Selectors*
+
+```text
+1
+example.md
+title
+/path/to/example.md
+notebook:1
+notebook:example.md
+notebook:title
+notebook:/path/to/example.md
+```
+
+`nb` automatically scans arguments for selectors with notebook names and
+updates the current notebook if a valid one is found.
+
+Identifier selectors are passed to subcommands as arguments along with
+any subcommand options. Use [`show <selector>`](#show) to query
+information about the file specified in the selector. For example, to
+obtain the filename of a selector-specified file, use
+`show <selector> --filename`:
+
+```bash
+_example() {
+  local _selector="${1:-}"
+  [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>\\n" && exit 1
+
+  # Get the filename using the selector.
+  local _filename
+  _filename="$(_show "${_selector}" --filename)"
+
+  # Rest of subcommand function...
+}
+```
+
+[`notebooks current --path`](#notebooks) returns the path to the current
+notebook. It also takes an optional `<selector>` argument that resolves
+the notebook, updates the current notebook if the selector
+contains a valid notebook name, then returns the path the now
+possibly-updated current notebook:
+
+```bash
+# _example() continued:
+
+# return the notebook path, first setting it with <selector>
+local _notebook_path
+_notebook_path="$(_notebooks current "${_selector}" --path)"
+
+# print the file at "${_notebook_path}/${_filename}" to standard output
+cat "${_notebook_path}/${_filename}"
+```
+
+See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a practical example using
+both [`show <selector> --filename`](#show) and
+[`notebooks current <selector> --path`](#notebooks) along with other
+subcommands called using their underscore-prefixed function names.
 
 ### > `nb` Interactive Shell
 
@@ -2495,8 +2575,10 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
+          [--filename | --id | --info-line | --path | --render |
+          --selector-id | --title]
+          [--type [<type>]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -2558,6 +2640,7 @@ Subcommands:
   shell        Start the `nb` interactive shell.
   show         Show a note or notebook.
   status       Run `git status` in the current notebook.
+  subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
@@ -2611,9 +2694,9 @@ Options:
                                recommended to omit the extension so the
                                default bookmark extension is used.
   -q, --quote <quote>          A quote or excerpt from the saved page.
-                               Alias: \`--excerpt\`
+                               Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
-                               Multiple \`--related\` flags can be used in a
+                               Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
   --skip-content               Omit page content from the note.
@@ -2741,9 +2824,9 @@ Options:
                                recommended to omit the extension so the
                                default bookmark extension is used.
   -q, --quote <quote>          A quote or excerpt from the saved page.
-                               Alias: \`--excerpt\`
+                               Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
-                               Multiple \`--related\` flags can be used in a
+                               Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
   --skip-content               Omit page content from the note.
@@ -3657,25 +3740,28 @@ Example:
 ```text
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render | --title]
+          [--filename | --id | --info-line | --path | --render |
+          --selector-id | --title]
           [--type [<type>]]
   nb show <notebook>
 
 Options:
-  --filename        Print the filename of the item.
-  --id              Print the id number of the item.
-  --info-line       Print the id, filename, and title of the item.
-  --path            Print the full path of the item.
-  -p, --print       Print to standard output / terminal.
-  --render          Use `pandoc` [1] to render the file to HTML and display with
-                    `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                    not available, `--render` is ignored.
-  --title           Print the title of the note.
-  --type [<type>]   Print the file extension or, when <type> is specified,
-                    return true if the item matches <type>. <type> can be a
-                    file extension or one of the following types:
-                    archive, audio, bookmark, document, folder, image,
-                    text, video
+  --filename       Print the filename of the item.
+  --id             Print the id number of the item.
+  --info-line      Print the id, filename, and title of the item.
+  --path           Print the full path of the item.
+  -p, --print      Print to standard output / terminal.
+  --render         Use `pandoc` [1] to render the file to HTML and display with
+                   `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
+                   not available, `--render` is ignored.
+  --selector-id    Given a selector (e.g., notebook:example.md), print the
+                   identifier portion (example.md).
+  --title          Print the title of the note.
+  --type [<type>]  Print the file extension or, when <type> is specified,
+                   return true if the item matches <type>. <type> can be a
+                   file extension or one of the following types:
+                   archive, audio, bookmark, document, folder, image,
+                   text, video
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -3744,8 +3830,9 @@ Subcommands:
             as a string argument.
 
 Description:
-  List, add, and alias subcommands. New subcommands, aliases, and descriptions
-  are not persisted, so `add`, `alias`, `describe` are primarily for plugins.
+  List, add, alias, and describe subcommands. New subcommands, aliases, and
+  descriptions are not persisted, so `add`, `alias`, `describe` are
+  primarily for plugins.
 ```
 
 #### `sync`
