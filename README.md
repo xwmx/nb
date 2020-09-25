@@ -2292,7 +2292,7 @@ path, or title) with the notebook name followed by a colon. A colon-prefixed
 argument is referred to as a "selector" and comes in two types: subcommand
 selectors and identifier selectors.
 
-Subcommand Selectors:
+*Subcommand Selectors*
 
 ```text
 notebook:
@@ -2302,7 +2302,7 @@ notebook:a
 notebook:q
 ```
 
-Idenitifer Selectors:
+*Idenitifer Selectors*
 
 ```text
 1
