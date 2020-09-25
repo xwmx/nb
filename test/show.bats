@@ -4,463 +4,463 @@ load test_helper
 
 # `show` ######################################################################
 
-# @test "\`show\` with no argument exits with status 1 and prints help." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show\` with no argument exits with status 1 and prints help." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show
+  run "${_NB}" show
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 1              ]]
-#   [[ "${lines[0]}" =~ Usage\:     ]]
-#   [[ "${lines[1]}" =~ '  nb show' ]]
-# }
+  [[ ${status} -eq 1              ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[1]}" =~ '  nb show' ]]
+}
 
-# @test "\`show\` with no argument does not show the note file." {
-#   skip "TODO: Determine how to test for \`\$PAGER\`."
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show\` with no argument does not show the note file." {
+  skip "TODO: Determine how to test for \`\$PAGER\`."
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show
+  run "${_NB}" show
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
-# }
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+}
 
-# # `show --dump` ###############################################################
+# `show --dump` ###############################################################
 
-# @test "\`show --dump\` with argument exits with 0 and prints note with highlighting." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "# Example"
+@test "\`show --dump\` with argument exits with 0 and prints note with highlighting." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --dump
+  run "${_NB}" show 1 --dump
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                ]]
-#   [[ ! "${lines[0]}" =~ "# Example" ]]
-#   [[ "${lines[0]}" =~ "Example"     ]]
-# }
+  [[ ${status} -eq 0                ]]
+  [[ ! "${lines[0]}" =~ "# Example" ]]
+  [[ "${lines[0]}" =~ "Example"     ]]
+}
 
-# @test "\`show --dump --no-color\` with argument exits with 0 and prints note without highlighting." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "# Example"
+@test "\`show --dump --no-color\` with argument exits with 0 and prints note without highlighting." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --dump --no-color
+  run "${_NB}" show 1 --dump --no-color
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0              ]]
-#   [[ "${lines[0]}" =~ "# Example" ]]
-# }
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ "# Example" ]]
+}
 
-# @test "\`show --dump\` with no argument exits with 1 and prints help." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "# Example"
+@test "\`show --dump\` with no argument exits with 1 and prints help." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Example"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show --dump
+  run "${_NB}" show --dump
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 1              ]]
-#   [[ ! "${output}" =~ mock_editor ]]
-#   [[ "${lines[0]}" =~ Usage\:     ]]
-#   [[ "${lines[1]}" =~ '  nb show' ]]
+  [[ ${status} -eq 1              ]]
+  [[ ! "${output}" =~ mock_editor ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[1]}" =~ '  nb show' ]]
 
-# }
+}
 
-# # <selector> ##################################################################
+# <selector> ##################################################################
 
-# @test "\`show <selector>\` with empty repo exits with 1 and prints help." {
-#   {
-#     run "${_NB}" init
-#   }
+@test "\`show <selector>\` with empty repo exits with 1 and prints help." {
+  {
+    run "${_NB}" init
+  }
 
-#   run "${_NB}" show 1
+  run "${_NB}" show 1
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 1                                                            ]]
-#   [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_color_primary "1")"  ]]
-# }
+  [[ ${status} -eq 1                                                            ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_color_primary "1")"  ]]
+}
 
-# # `show <filename> --dump` ####################################################
+# `show <filename> --dump` ####################################################
 
-# @test "\`show <filename> --dump\` exits with status 0 and dumps note file." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <filename> --dump\` exits with status 0 and dumps note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show "${_filename}" --dump
+  run "${_NB}" show "${_filename}" --dump
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0            ]]
-#   [[ "${output}" =~ mock_editor ]]
-# }
+  [[ ${status} -eq 0            ]]
+  [[ "${output}" =~ mock_editor ]]
+}
 
-# # `show <id> --dump` ##########################################################
+# `show <id> --dump` ##########################################################
 
-# @test "\`show <id> --dump\` exits with status 0 and dumps note file." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <id> --dump\` exits with status 0 and dumps note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --dump
+  run "${_NB}" show 1 --dump
 
-#   printf "\${_filename}: %s\\n" "${_filename}"
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_filename}: %s\\n" "${_filename}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0            ]]
-#   [[ "${output}" =~ mock_editor ]]
-# }
+  [[ ${status} -eq 0            ]]
+  [[ "${output}" =~ mock_editor ]]
+}
 
-# # `show <path> --dump` #######################################################
+# `show <path> --dump` #######################################################
 
-# @test "\`show <path> --dump\` exits with status 0 and dumps note file." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <path> --dump\` exits with status 0 and dumps note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0            ]]
-#   [[ "${output}" =~ mock_editor ]]
-# }
+  [[ ${status} -eq 0            ]]
+  [[ "${output}" =~ mock_editor ]]
+}
 
-# # `show <title> --dump` #######################################################
+# `show <title> --dump` #######################################################
 
-# @test "\`show <title> --dump\` exits with status 0 and dumps note file." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <title> --dump\` exits with status 0 and dumps note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
-#   _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
-#   run "${_NB}" show "${_title}" --dump
+  run "${_NB}" show "${_title}" --dump
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0            ]]
-#   [[ "${output}" =~ mock_editor ]]
-# }
+  [[ ${status} -eq 0            ]]
+  [[ "${output}" =~ mock_editor ]]
+}
 
-# # `show <filename> --path` ####################################################
+# `show <filename> --path` ####################################################
 
-# @test "\`show <filename> --path\` exits with status 0 and prints note path." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <filename> --path\` exits with status 0 and prints note path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show "${_filename}" --path
+  run "${_NB}" show "${_filename}" --path
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                                  ]]
-#   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
-# }
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+}
 
-# # `show <id> --path` ##########################################################
+# `show <id> --path` ##########################################################
 
-# @test "\`show <id> --path\` exits with status 0 and prints note path." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <id> --path\` exits with status 0 and prints note path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --path
+  run "${_NB}" show 1 --path
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                                  ]]
-#   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
-# }
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+}
 
 
-# # `show <path> --path` #######################################################
+# `show <path> --path` #######################################################
 
-# @test "\`show <path> --path\` exits with status 0 and prints note path." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <path> --path\` exits with status 0 and prints note path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --path
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --path
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                                  ]]
-#   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
-# }
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+}
 
-# # `show <title> --path` #######################################################
+# `show <title> --path` #######################################################
 
-# @test "\`show <title> --path\` exits with status 0 and prints note path." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <title> --path\` exits with status 0 and prints note path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+  }
 
-#   run "${_NB}" show "${_title}" --path
+  run "${_NB}" show "${_title}" --path
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                                  ]]
-#   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
-# }
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+}
 
-# # `show <filename> --id` ######################################################
+# `show <filename> --id` ######################################################
 
-# @test "\`show <filename> --id\` exits with status 0 and prints note id." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <filename> --id\` exits with status 0 and prints note id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show "${_filename}" --id
+  run "${_NB}" show "${_filename}" --id
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0    ]]
-#   [[ "${output}" == "1" ]]
-# }
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" == "1" ]]
+}
 
-# # `show <id> --id` ############################################################
+# `show <id> --id` ############################################################
 
-# @test "\`show <id> --id\` exits with status 0 and prints note id." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <id> --id\` exits with status 0 and prints note id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --id
+  run "${_NB}" show 1 --id
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0    ]]
-#   [[ "${output}" == "1" ]]
-# }
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" == "1" ]]
+}
 
-# # `show <path> --id` ##########################################################
+# `show <path> --id` ##########################################################
 
-# @test "\`show <path> --id\` exits with status 0 and prints note id." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <path> --id\` exits with status 0 and prints note id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0    ]]
-#   [[ "${output}" == "1" ]]
-# }
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" == "1" ]]
+}
 
-# # `show <title> --id` #########################################################
+# `show <title> --id` #########################################################
 
-# @test "\`show <title> --id\` exits with status 0 and prints note id." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add
+@test "\`show <title> --id\` exits with status 0 and prints note id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+  }
 
-#   run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0    ]]
-#   [[ "${output}" == "1" ]]
-# }
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" == "1" ]]
+}
 
-# # encrypted ###################################################################
+# encrypted ###################################################################
 
-# @test "\`show\` with encrypted file show properly without errors." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "# Content" --encrypt --password=example
+@test "\`show\` with encrypted file show properly without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Content" --encrypt --password=example
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --password=example --dump
+  run "${_NB}" show 1 --password=example --dump
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   # Returns status 0
-#   [[ ${status} -eq 0 ]]
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
 
-#   # Prints file content
-#   [[ "${output}" =~ Content ]]
-# }
+  # Prints file content
+  [[ "${output}" =~ Content ]]
+}
 
-# # `show <id> --filename` ######################################################
+# `show <id> --filename` ######################################################
 
-# @test "\`show <id> --filename\` exits with status 0 and prints note filename." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "example.md"
+@test "\`show <id> --filename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --filename
+  run "${_NB}" show 1 --filename
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0              ]]
-#   [[ "${output}" == "example.md"  ]]
-# }
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
 
-# @test "\`show <id> --basename\` exits with status 0 and prints note filename." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "example.md"
+@test "\`show <id> --basename\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --basename
+  run "${_NB}" show 1 --basename
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0              ]]
-#   [[ "${output}" == "example.md"  ]]
-# }
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
 
-# # `show <id> --title` #########################################################
+# `show <id> --title` #########################################################
 
-# @test "\`show <id> --title\` exits with status 0 and prints note filename." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "example.md" --title "Example Title"
+@test "\`show <id> --title\` exits with status 0 and prints note filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --title
+  run "${_NB}" show 1 --title
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                ]]
-#   [[ "${output}" == "Example Title" ]]
-# }
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" == "Example Title" ]]
+}
 
-# # `show <id> --info-line` #####################################################
+# `show <id> --info-line` #####################################################
 
-# @test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" add "example.md" --title "Example Title"
+@test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show 1 --info-line
+  run "${_NB}" show 1 --info-line
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                ]]
-#   [[ "${output}" =~ 1               ]]
-#   [[ "${output}" =~ example.md      ]]
-#   [[ "${output}" =~ Example\ Title  ]]
-#   [[ ! "${output}" =~ home          ]]
-# }
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ 1               ]]
+  [[ "${output}" =~ example.md      ]]
+  [[ "${output}" =~ Example\ Title  ]]
+  [[ ! "${output}" =~ home          ]]
+}
 
-# @test "\`show <id> --info-line\` exits with status 0 and prints scoped note info." {
-#   {
-#     run "${_NB}" init
-#     run "${_NB}" notebooks add one
-#     run "${_NB}" one:add "example.md" --title "Example Title"
+@test "\`show <id> --info-line\` exits with status 0 and prints scoped note info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add one
+    run "${_NB}" one:add "example.md" --title "Example Title"
 
-#     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-#   }
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
 
-#   run "${_NB}" show one:1 --info-line
+  run "${_NB}" show one:1 --info-line
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ ${status} -eq 0                ]]
-#   [[ "${output}" =~ one:1           ]]
-#   [[ "${output}" =~ one:example.md  ]]
-#   [[ "${output}" =~ Example\ Title  ]]
-# }
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ one:1           ]]
+  [[ "${output}" =~ one:example.md  ]]
+  [[ "${output}" =~ Example\ Title  ]]
+}
 
 # `show <id> --selector-id` ###################################################
 
