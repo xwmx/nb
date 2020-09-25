@@ -40,23 +40,23 @@ _copy() {
   local _selector="${1:-}"
 
   # Check for the presence of a selector, exiting and printing help if not
-  # found.
+  # found:
   if [[ -z "${_selector:-}" ]]
   then
     _help "copy"
     exit 1
   fi
 
-  # Get the filename using the selector.
+  # Get the filename using the selector:
   local _source_filename
   _source_filename="$(_show "${_selector}" --filename)"
 
   # Get the current notebook path, setting the selector notebook as the
-  # current notebook if present.
+  # current notebook if present:
   local _notebook_path
   _notebook_path="$(_notebooks current "${_selector}" --path)"
 
-  # Validate that the selector represents a valid file.
+  # Validate that the selector represents a valid file:
   if [[ -z "${_source_filename:-}"                      ]] ||
      [[ ! -e "${_notebook_path}/${_source_filename}"    ]]
   then
@@ -68,28 +68,28 @@ _copy() {
     exit 1
   fi
 
-  # Get a unique filename based on the source filename.
+  # Get a unique filename based on the source filename:
   local _target_filename
   _target_filename="$(_notebooks current --filename "${_source_filename}")"
 
-  # Check if the file is a text file.
+  # Check if the file is a text file:
   if _show "${_source_filename}" --type text
   then # Text can use `_add`.
-    # Print the source contents and pipe to `_add`.
+    # Print the source contents and pipe to `_add`:
     _show "${_source_filename}" --no-color --print | _add "${_target_filename}"
   else # Binary files must be copied manually.
-    # Copy the binary file to the new filename.
+    # Copy the binary file to the new filename:
     cp                                        \
       "${_notebook_path}/${_source_filename}" \
       "${_notebook_path}/${_target_filename}"
 
-    # Add the new filename to the index.
+    # Add the new filename to the index:
     _index add "${_target_filename}"
 
-    # Record the change in git.
+    # Record the change in git:
     _git checkpoint "[nb] Add: ${_target_filename}"
 
-    # Print feedback.
+    # Print feedback:
     local _info
     _info="$(_show "${_target_filename}" --info-line)"
 
