@@ -2339,8 +2339,8 @@ _example() {
 ```
 
 [`notebooks current --path`](#notebooks) returns the path to the current
-notebook and takes an optional `<selector>` argument that resolves the
-notebook, updates the current notebook if the selector
+notebook. It also takes an optional `<selector>` argument that resolves
+the notebook, updates the current notebook if the selector
 contains a valid notebook name, then returns the path the now
 possibly-updated current notebook:
 
