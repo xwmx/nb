@@ -1931,76 +1931,6 @@ _get_http_status() {
   fi
 }
 
-# _get_selector_basename()
-#
-# Usage:
-#   _get_selector_basename <selector> [<notebook-path>]
-#
-# Description:
-#   Determine the basename of the file that is identified by the given <id>,
-#   <filename>, <path>, or <title> and is in the current notebook or a
-#   notebook specified with a colon prefix.
-#
-#   Examples:
-#     1
-#     example.md
-#     title
-#     /path/to/example.md
-#     notebook:1
-#     notebook:example.md
-#     notebook:title
-#     notebook:/path/to/example.md
-_get_selector_basename() {
-  local _basename=
-  local _identifier=
-  local _selector="${1:-}"
-  local _notebook_path="${2:-}"
-
-  if [[ -z "${_selector}" ]]
-  then
-    _basename=
-  else
-    if [[ -z "${_notebook_path:-}" ]]
-    then
-      _notebook_path="$(
-        _notebooks current "${_selector}" --path
-      )"
-    fi
-
-    _identifier="$(_get_selector_identifier "${_selector}")"
-
-    if [[ -e "${_identifier}"                   ]] &&
-       [[ "${_identifier}" =~ ${_notebook_path} ]]
-    then # <selector> is a full path.
-      _basename="$(basename "${_identifier}")"
-    elif [[ -e "${_notebook_path}/${_identifier}" ]]
-    then # <selector> is a filename.
-      _basename="${_identifier}"
-    elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
-    then # <selector> is an id.
-      _basename="$(_index get_basename "${_identifier}")"
-    else # <selector> might be a title.
-      local _title=
-      local _filenames=
-      _filenames=($(_list_files "${_notebook_path}"))
-
-      for __file in "${_filenames[@]:-}"
-      do
-        _title="$(_get_title "${_notebook_path}/${__file}")"
-
-        if [[ -n "${_title}"                  ]] &&
-           [[ "${_title}" == "${_identifier}" ]]
-        then
-          _basename="${__file}"
-          break
-        fi
-      done
-    fi
-  fi
-
-  printf "%s\\n" "${_basename}"
-}
-
 # _get_selector_identifier()
 #
 # Usage:
@@ -9718,6 +9648,76 @@ Alias: \`view\`
 Shortcut Alias: \`s\`
 HEREDOC
 _show() {
+  # _show_selector_basename()
+  #
+  # Usage:
+  #   _show_selector_basename <selector> [<notebook-path>]
+  #
+  # Description:
+  #   Determine the basename of the file that is identified by the given <id>,
+  #   <filename>, <path>, or <title> and is in the current notebook or a
+  #   notebook specified with a colon prefix.
+  #
+  #   Examples:
+  #     1
+  #     example.md
+  #     title
+  #     /path/to/example.md
+  #     notebook:1
+  #     notebook:example.md
+  #     notebook:title
+  #     notebook:/path/to/example.md
+  _show_selector_basename() {
+    local _basename=
+    local _identifier=
+    local _selector="${1:-}"
+    local _notebook_path="${2:-}"
+
+    if [[ -z "${_selector}" ]]
+    then
+      _basename=
+    else
+      if [[ -z "${_notebook_path:-}" ]]
+      then
+        _notebook_path="$(
+          _notebooks current "${_selector}" --path
+        )"
+      fi
+
+      _identifier="$(_get_selector_identifier "${_selector}")"
+
+      if [[ -e "${_identifier}"                   ]] &&
+         [[ "${_identifier}" =~ ${_notebook_path} ]]
+      then # <selector> is a full path.
+        _basename="$(basename "${_identifier}")"
+      elif [[ -e "${_notebook_path}/${_identifier}" ]]
+      then # <selector> is a filename.
+        _basename="${_identifier}"
+      elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
+      then # <selector> is an id.
+        _basename="$(_index get_basename "${_identifier}")"
+      else # <selector> might be a title.
+        local _title=
+        local _filenames=
+        _filenames=($(_list_files "${_notebook_path}"))
+
+        for __file in "${_filenames[@]:-}"
+        do
+          _title="$(_get_title "${_notebook_path}/${__file}")"
+
+          if [[ -n "${_title}"                  ]] &&
+             [[ "${_title}" == "${_identifier}" ]]
+          then
+            _basename="${__file}"
+            break
+          fi
+        done
+      fi
+    fi
+
+    printf "%s\\n" "${_basename}"
+  }
+
   local _ls_arguments=()
   local _print_output=0
   local _password=
@@ -9803,7 +9803,7 @@ _show() {
   _notebook_path="$(_notebooks current "${_selector}" --path)"
 
   local _basename
-  _basename="$(_get_selector_basename "${_selector}" "${_notebook_path}")"
+  _basename="$(_show_selector_basename "${_selector}" "${_notebook_path}")"
 
   if [[ -z "${_basename:-}" ]]
   then
