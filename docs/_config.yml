@@ -77,7 +77,7 @@ logo: "/assets/images/nb.png"
 search_enabled: true
 
 search:
-  heading_level: 5
+  heading_level: 6
   preview_words_after: 5
   preview_words_before: 5
 
