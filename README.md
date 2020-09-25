@@ -1370,7 +1370,7 @@ nb history Example
 `nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
-### 📔📓📒 Notebooks
+### 📚 Notebooks
 
 You can create additional notebooks, each of which has its own version history.
 
