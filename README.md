@@ -1,8 +1,8 @@
-<p align="center">
+<h1 align="center">
   <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png"
         alt="nb"
         width="200">
-</p>
+</h1>
 
 <p align="center">
   <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
@@ -12,7 +12,7 @@
   </a>
 </p>
 
-# `❯ nb`
+<br>
 
 `nb` is a command line note-taking, bookmarking, archiving,
 and knowledge base application with:
