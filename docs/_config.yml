@@ -29,7 +29,7 @@ remote_theme: pmarsceill/just-the-docs
 
 # Aux links for the upper right navigation
 aux_links:
-  "`nb` on GitHub":
+  "View `nb` on GitHub":
     - "//github.com/xwmx/nb"
 
 color_scheme: "light"
@@ -45,7 +45,7 @@ search:
 
 toc_list: true
 
-title: nb - CLI plain-text note-taking, bookmarking, and archiving.
+title: nb
 email: hi@williammelody.com
 description: >- # this means to ignore newlines until "baseurl:"
   CLI plain-text note-taking, bookmarking, and archiving with encryption,
@@ -60,6 +60,7 @@ url: "https://xwmx.github.io" # the base hostname & protocol for your site, e.g.
 # theme: minima
 # plugins:
 #   - jekyll-feed
+#   - jekyll-seo-tag
 
 # Exclude from processing.
 # The following items will not be processed, by default.

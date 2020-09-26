@@ -1,6 +1,6 @@
 ---
 layout: home
-title: readme
+title: nb - CLI plain-text note-taking, bookmarking, and archiving.
 permalink: /
 ---
 
