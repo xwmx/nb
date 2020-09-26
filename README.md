@@ -23,7 +23,7 @@ and knowledge base application with:
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - global and local [notebooks](#-notebooks),
-- customizable [color themes](#built-in-color-themes),
+- customizable [color themes](#-color-themes),
 - extensibility with [plugins](#-plugins),
 
 and more, all in a single portable, user-friendly script.
