@@ -1,0 +1,88 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you:
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+
+###############################################################################
+# Just the Docs
+#
+# https://github.com/pmarsceill/just-the-docs
+# https://pmarsceill.github.io/just-the-docs/docs/configuration/
+
+remote_theme: pmarsceill/just-the-docs
+
+# Aux links for the upper right navigation
+aux_links:
+  "nb on GitHub":
+    - "//github.com/xwmx/nb"
+
+color_scheme: "light"
+
+ga_tracking: "UA-190590-18"
+
+logo: "/assets/images/nb.png"
+
+search_enabled: true
+
+search:
+  heading_level: 3
+  preview_words_after: 5
+  preview_words_before: 5
+
+toc_list: true
+
+title: nb
+email: hi@williammelody.com
+description: >- # this means to ignore newlines until "baseurl:"
+  CLI plain-text note-taking, bookmarking, and archiving with encryption,
+  filtering and search, Git-backed versioning and syncing, Pandoc-backed
+  conversion, and more in a single portable script.
+baseurl: "/nb" # the subpath of your site, e.g. /blog
+url: "https://xwmx.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+# twitter_username: jekyllrb
+# github_username:  jekyll
+
+# Build settings
+# theme: minima
+# plugins:
+#   - jekyll-feed
+#   - jekyll-seo-tag
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
+
+exclude:
+  - color-themes.md

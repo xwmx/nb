@@ -14,11 +14,13 @@
 # customizable color themes, extensibility through plugins, and more, all in
 # a single portable, user-friendly script.
 #
-# https://github.com/xwmx/nb
+# ❯ https://github.com/xwmx/nb
+# ❯ https://xwmx.github.io/nb
 #
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
 # Copyright (c) 2015-present William Melody • hi@williammelody.com
+#                                           • https://www.williammelody.com
 #
 # AGPLv3
 #
@@ -56,7 +58,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.1.1"
+_VERSION="5.1.2"
 
 # $_ME
 #
@@ -4217,7 +4219,7 @@ _delete() {
     then
       rm -r "${_notebook_path:?}/${_basename:?}"
     else
-      git -C "${_notebook_path}" rm -r "${_basename:?}" 1>/dev/null
+      git -C "${_notebook_path:?}" rm -r "${_basename:?}" 1>/dev/null
     fi
 
     if [[ ! -e "${_notebook_path}/${_basename}" ]]

@@ -1,0 +1,23 @@
+// docs/_sass/custom/custom.scss
+//
+// Custom styles for Just the Docs.
+//
+// More info:
+// https://pmarsceill.github.io/just-the-docs/docs/customization/
+
+h4, h5, h6 {
+  code {
+    font-size: 1rem !important;
+  }
+}
+
+code {
+  border: 0;
+  font-family: 'Courier Prime', 'SFMono-Regular', Menlo, Consolas, Monospace;
+  font-size: 0.9rem;
+}
+
+pre {
+  font-size: 1.2rem;
+  line-height: 1rem;
+}
