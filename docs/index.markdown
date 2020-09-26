@@ -2466,7 +2466,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 <p align="center">
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a>
-  </br>---</br>
+  <br>---<br>
   <a href="#add">add</a> •
   <a href="#bookmark">bookmark</a> •
   <a href="#completions">completions</a> •
