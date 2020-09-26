@@ -259,7 +259,7 @@ Bash and Zsh tab completion should be enabled when `nb` is installed using
 the methods above, assuming you have the appropriate system
 permissions or installed with `sudo`. If completion isn't working after
 installing `nb`, see the [completion installation
-instructions](etc/README.md).
+instructions](https://github.com/xwmx/nb/tree/master/etc).
 
 #### Updating
 
@@ -2107,7 +2107,7 @@ fi
 ```
 
 View this theme as a complete file:
-[`plugins/turquoise.nb-theme`](plugins/turquoise.nb-theme)
+[`plugins/turquoise.nb-theme`](https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme)
 
 Themes can be installed using [`nb plugins`](#plugins):
 
@@ -2221,8 +2221,8 @@ have an `.nb-plugin` extension.
 
 `nb` includes two example plugins:
 
-- [`example.nb-plugin`](plugins/example.nb-plugin)
-- [`copy.nb-plugin`](plugins/copy.nb-plugin)
+- [`example.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin)
+- [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
 
 Create a new subcommand in three easy steps:
 
@@ -2254,13 +2254,15 @@ _example() {
 
 That's it! 🎉
 
-View the complete plugin: [`plugins/example.nb-plugin`](plugins/example.nb-plugin)
+View the complete plugin:
+[`plugins/example.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin)
 
 With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
-For a full example, [`copy.nb-plugin`](plugins/copy.nb-plugin) adds
-copy / duplicate functionality to `nb` and demonstrates how to create a
+For a full example,
+[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+adds copy / duplicate functionality to `nb` and demonstrates how to create a
 plugin using `nb` subcommands and simple shell scripting.
 
 You can install any plugin you create locally with
@@ -2360,8 +2362,9 @@ _notebook_path="$(_notebooks current "${_selector}" --path)"
 cat "${_notebook_path}/${_filename}"
 ```
 
-See [`copy.nb-plugin`](plugins/copy.nb-plugin) for a practical example using
-both [`show <selector> --filename`](#show) and
+See
+[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+for a practical example using both [`show <selector> --filename`](#show) and
 [`notebooks current <selector> --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
