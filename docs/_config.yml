@@ -18,6 +18,33 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
+
+###############################################################################
+# Just the Docs
+#
+# https://github.com/pmarsceill/just-the-docs
+# https://pmarsceill.github.io/just-the-docs/docs/configuration/
+
+remote_theme: pmarsceill/just-the-docs
+
+# Aux links for the upper right navigation
+aux_links:
+  "`nb` on GitHub":
+    - "//github.com/xwmx/nb"
+
+color_scheme: "light"
+
+logo: "/assets/images/nb.png"
+
+search_enabled: true
+
+search:
+  heading_level: 6
+  preview_words_after: 5
+  preview_words_before: 5
+
+toc_list: true
+
 title: nb
 email: hi@williammelody.com
 description: >- # this means to ignore newlines until "baseurl:"
@@ -56,29 +83,3 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 exclude:
   - color-themes.md
-
-###############################################################################
-# Just the Docs
-#
-# https://github.com/pmarsceill/just-the-docs
-# https://pmarsceill.github.io/just-the-docs/docs/configuration/
-
-remote_theme: pmarsceill/just-the-docs
-
-# Aux links for the upper right navigation
-aux_links:
-  "`nb` on GitHub":
-    - "//github.com/xwmx/nb"
-
-color_scheme: "light"
-
-logo: "/assets/images/nb.png"
-
-search_enabled: true
-
-search:
-  heading_level: 6
-  preview_words_after: 5
-  preview_words_before: 5
-
-toc_list: true
