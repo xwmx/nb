@@ -5,6 +5,9 @@ $(function() {
         var id = $(this).attr('id');
         $('.nav-list a').removeClass('active');
         $('.nav-list a[href="#' + id + '"]').addClass('active');
+      } else if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        $('.nav-list a').removeClass('active');
+        $('.nav-list a[href="#tests"').addClass('active');
       }
     });
   });
