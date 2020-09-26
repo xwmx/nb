@@ -1,9 +1,3 @@
----
-layout: home
-title: nb - CLI plain-text note-taking, bookmarking, and archiving.
-permalink: /
----
-
 <h1 align="center">
   <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png"
         alt="nb"
