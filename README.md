@@ -1667,9 +1667,9 @@ nb notebooks archive
 nb notebooks archive example
 ```
 
-When a notebook is archived it is not included in [`ls`](#ls)
-output, [`search --all`](#search), or tab completion, nor synced
-automatically with [`sync --all`](#sync).
+When a notebook is archived it is not included in [`nb`](#ls) /
+[`nb ls`](#ls) output, [`nb search --all`](#search), or tab completion,
+nor synced automatically with [`nb sync --all`](#sync).
 
 ```bash
 > nb ls
