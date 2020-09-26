@@ -34,6 +34,8 @@ aux_links:
 
 color_scheme: "light"
 
+ga_tracking: "UA-190590-18"
+
 logo: "/assets/images/nb.png"
 
 search_enabled: true
