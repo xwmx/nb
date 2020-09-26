@@ -1501,8 +1501,8 @@ nb move example:5 sample
 
 [`nb` tab completion](#tab-completion) is optimized for frequently running
 commands in various notebooks using the colon syntax, so installing the
-completion scripts is recommended and makes working with notebooks easy
-and fun.
+completion scripts is recommended and makes working with notebooks easy,
+fluid, and fun.
 
 For example, listing the contents of a notebook is usually as simple as typing
 the first two or three characters of the name, then press the \<tab\> key,
