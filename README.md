@@ -4169,7 +4169,7 @@ root.
 
 ---
 <p align="center">
-  Copyright (c) 2015-present William Melody • See LICENSE for details.
+  Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> • See LICENSE for details.
 </p>
 
 <p align="center">
