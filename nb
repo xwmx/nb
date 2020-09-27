@@ -4828,10 +4828,10 @@ _helpers() {
       _less_prompt                    "${_options[@]}"
       ;;
     line*wrap*off|unwrap)
-      _wrap off                  "${_options[@]}"
+      _wrap off                       "${_options[@]}"
       ;;
     line*wrap*on|wrap)
-      _wrap on                   "${_options[@]}"
+      _wrap on                        "${_options[@]}"
       ;;
     list*files)
       _list_files                     "${_options[@]}"
