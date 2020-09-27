@@ -1976,15 +1976,24 @@ _get_title() {
     then
       while IFS= read -r __line || [[ -n "${__line}" ]]
       do
-        if [[ "${__line}" =~ ^[[:space:]]*#\  ]] &&
+        if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+) ]] &&
            ! ((_in_code_block))
         then # line starts with an atx-style H1
-          _title="$(
-            printf "%s\\n" "${__line}"    \
-              | sed                       \
-                -e 's/^[[:space:]]*# //'  \
-                -e 's/ #$//'
-            )"
+          _title="${__line#${BASH_REMATCH[1]}}"
+
+          if [[ "${_title}" =~ ([[:space:]]+#[[:space:]]*)$ ]]
+          then
+            _title="${_title%${BASH_REMATCH[1]}}"
+          fi
+
+          # `sed` alternative:
+          # _title="$(
+          #   printf "%s\\n" "${__line}"    \
+          #     | sed                       \
+          #       -e 's/^[[:space:]]*# //'  \
+          #       -e 's/ #$//'
+          #   )"
+
           break
         elif [[ "${__line}" =~ ^---$ ]]
         then # start or end of front matter block
