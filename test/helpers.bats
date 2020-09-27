@@ -130,9 +130,9 @@ HEREDOC
     cat <<HEREDOC | "${_NB}" add "twelve.md"
 [](https://example.com/example.png)
 
-```text
+\`\`\`text
 # Example In Code Block
-```
+\`\`\`
 
 # Title Twelve
 line two
