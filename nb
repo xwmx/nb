@@ -58,7 +58,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.1.2"
+_VERSION="5.2.0"
 
 # $_ME
 #
@@ -230,23 +230,6 @@ _exit_1() {
     "${@}"
   } 1>&2
   exit 1
-}
-
-# _return_1()
-#
-# Usage:
-#   _return_1 <command>
-#
-# Description:
-#   Return with status 1 after executing the specified command with output
-#   redirected to standard error. The command is expected to print a message
-#   and should typically be either `echo`, `printf`, or `cat`.
-_return_1() {
-  {
-    printf "%s " "$(tput setaf 1)!$(tput sgr0)"
-    "${@}"
-  } 1>&2
-  return 1
 }
 
 # _warn()
@@ -1325,7 +1308,7 @@ _decrypt_file() {
           --output "${_unencrypted_path}" \
           --decrypt "${_encrypted_path}"
     else
-      _return_1 printf "\
+      _exit_1 printf "\
 This note was encrypted with GPG, but the GPG command was not found.\\n"
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
@@ -6015,8 +5998,9 @@ HEREDOC
 
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
-        _return_1 \
-          printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+        _warn \
+          printf "Note not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          return 1
       fi
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
@@ -6471,7 +6455,8 @@ _ls() {
             _selector="$(_notebooks current --name):${_selector}"
           fi
 
-          _return_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+          _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
+            return 1
         fi
       fi
     }
@@ -7285,9 +7270,10 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     then
       if [[ -n "${_query_names[*]:-}" ]]
       then
-        _return_1 printf              \
+        _warn printf                  \
           "Notebook not found: %s\\n" \
-          "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')"
+          "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')" &&
+            return 1
       else
         return 1
       fi
@@ -7557,7 +7543,7 @@ HEREDOC
 
     if [[ -z "${_notebook_path:-}" ]]
     then
-      _return_1 \
+      _warn \
         printf "Notebook not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
@@ -8948,9 +8934,10 @@ _settings() {
         return 0
         ;;
       *)
-        _return_1                               \
+        _warn                                   \
           printf "Setting not found: %s\\n"     \
-          "$(_color_primary "${_id_or_name}")"
+          "$(_color_primary "${_id_or_name}")"  &&
+            return 1
         ;;
     esac
   }
@@ -9139,7 +9126,8 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s requires a value.\\n" "${1:-}"
+        _warn printf "%s requires a value.\\n" "${1:-}" &&
+          return 1
       fi
     elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
          [[ "${1:-}" == 'NB_FOOTER'     ]]
@@ -9148,7 +9136,8 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s must be either \"0\" or \"1\".\\n" "${1}"
+        _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}" &&
+          return 1
       fi
     elif [[ "${1:-}" == 'NB_HEADER'     ]]
     then
@@ -9156,7 +9145,8 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
+        _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}" &&
+          return 1
       fi
     elif [[ "${1:-}" == 'NB_LIMIT'      ]]
     then
@@ -9164,7 +9154,8 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s must be a number.\\n" "${1}"
+        _warn printf "%s must be a number.\\n" "${1}" &&
+          return 1
       fi
     elif [[ "${1:-}" == 'NB_DIR'        ]]
     then
@@ -9175,7 +9166,8 @@ HEREDOC
           [[ ! -w "${2}" ]]
          }
       then
-        _return_1 printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}"
+        _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}" &&
+          return 1
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL'  ]]
     then
@@ -9183,8 +9175,9 @@ HEREDOC
       then
         return 0
       else
-        _return_1 \
-          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n"
+        _warn \
+          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n" &&
+            return 1
       fi
     elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
          [[ "${1:-}" == 'NB_COLOR_SECONDARY'  ]]
@@ -9193,7 +9186,7 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s must be a number.\\n" "${1}"
+        _warn printf "%s must be a number.\\n" "${1}" && return 1
       fi
     elif [[ "${1:-}" == 'NB_COLOR_THEME'      ]]
     then
@@ -9201,7 +9194,8 @@ HEREDOC
       then
         return 0
       else
-        _return_1 printf "%s must be one of the available themes.\\n" "${1}"
+        _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+          return 1
       fi
     else
       return 0
@@ -9829,7 +9823,7 @@ _show() {
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
-      _return_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+      _warn printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
   fi
@@ -9838,7 +9832,7 @@ _show() {
 
   if [[ -z "${_basename:-}" ]] && [[ ! -e "${_target_path}" ]]
   then
-    _return_1 printf "Selection not found.\\n"
+    _warn printf "Selection not found.\\n"
     return 1
   fi
 

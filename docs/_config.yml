@@ -18,7 +18,6 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-
 ###############################################################################
 # Just the Docs
 #
@@ -53,8 +52,11 @@ description: >- # this means to ignore newlines until "baseurl:"
   CLI plain-text note-taking, bookmarking, and archiving with encryption,
   filtering and search, Git-backed versioning and syncing, Pandoc-backed
   conversion, and more in a single portable script.
-baseurl: "/nb" # the subpath of your site, e.g. /blog
-url: "https://xwmx.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+# the subpath of your site, e.g. /blog
+baseurl: "/nb"
+# the base hostname & protocol for your site, e.g. http://example.com
+url: "https://xwmx.github.io"
+
 # twitter_username: jekyllrb
 # github_username:  jekyll
 

@@ -4,11 +4,11 @@ title: nb · CLI plain-text note-taking, bookmarking, and archiving.
 permalink: /
 ---
 
-<h1 align="center">
+<p align="center">
   <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/assets/images/nb.png"
         alt="nb"
         width="200">
-</h1>
+</p>
 
 <p align="center">
   <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
@@ -102,6 +102,10 @@ features. `nb` is flexible.
   🔍
   📔
 </p>
+
+<br/>
+
+<h1 align="center" id="nb"><code>nb</code></h1>
 
 <p align="center">
   <a href="#installation">Installation</a> •
