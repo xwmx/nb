@@ -67,7 +67,7 @@ __                _
 
 Part of
 HEREDOC
-        "${_NB_PATH:-}" help | sed -e '1,5d'
+        "${_NB_PATH:-}" help | sed -e '1,6d'
       fi  | sed -e "s/^  nb$/  notes/g"     \
           | sed -e "s/  nb /  notes /g"     \
           | sed -e "s/\`nb/\`notes/g"       \
