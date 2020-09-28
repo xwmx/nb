@@ -7,7 +7,7 @@
 # /_/  |_| |_|_.__/
 #
 # `nb` · notes & bookmarks
-
+#
 # Command line note-taking, bookmarking, archiving, and knowledge management
 # with plain-text data storage, encryption, filtering and search, Git-backed
 # versioning and syncing, Pandoc-backed conversion, global and local notebooks,
