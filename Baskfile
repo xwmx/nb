@@ -1,13 +1,30 @@
-desc "npm:deprecate" <<HEREDOC
+#!/usr/bin/env bash
+###############################################################################
+# Baskfile
+#
+# Run With Bask: https://github.com/xwmx/bask
+###############################################################################
+
+desc "g:web" <<HEREDOC
 Usage:
-  bask npm:deprecate
+  bask g:web
 
 Description:
-  Deprecate the "nb.sh" npm package.
+  Generate index.markdown.
 HEREDOC
-npm:deprecate() {
-  npm deprecate \
-    "nb.sh"  \
-"This package is available as 'notes.sh': https://www.npmjs.com/package/notes.sh"
-}
+g:web() {
+  local _target_file="./docs/index.markdown"
 
+  [[ ! -f "${_target_file:?}" ]] &&
+    _exit_1 printf "./docs/index.markdown not found.\\n"
+
+  cat << HEREDOC > "${_target_file:?}"
+---
+layout: home
+title: nb · CLI plain-text note-taking, bookmarking, and archiving.
+permalink: /
+---
+
+$(cat ./README.md)
+HEREDOC
+}
