@@ -1,6 +1,6 @@
 $(function() {
   $(window).scroll(function() {
-    $("#top, h1, h2, h3").each(function() {
+    $("#top, h2, h3").each(function() {
       if ($(window).scrollTop() >= $(this).offset().top - 200) {
         var id = $(this).attr('id');
         $('.nav-list a').removeClass('active');
