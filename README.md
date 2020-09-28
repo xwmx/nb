@@ -229,15 +229,19 @@ recommended dependencies on Ubuntu and WSL.
 
 ##### npm
 
-To install with [npm](https://www.npmjs.com/package/notes.sh):
+To install with [npm](https://www.npmjs.com/package/nb.sh):
 
 ```bash
-npm install -g notes.sh
+npm install -g nb.sh
 ```
 
 Installing through `npm` only installs completion scripts.
 On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
+
+*Note: the nb.sh package is also currently still available under its
+original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
+which comes with an extra `notes` pass-through wrapper for `nb`.*
 
 ##### bpkg
 
