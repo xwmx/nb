@@ -10,19 +10,43 @@ Usage:
   bask g:web
 
 Description:
-  Generate index.markdown.
+  Generate index.markdown from README.md.
 HEREDOC
 g:web() {
+  local _front_matter_lines=()
+  local _in_front_matter=0
   local _target_file="./docs/index.markdown"
 
   [[ ! -f "${_target_file:?}" ]] &&
     _exit_1 printf "./docs/index.markdown not found.\\n"
 
+  while IFS= read -r __line || [[ -n "${__line}" ]]
+  do
+    if [[ "${__line}" =~ ^---$ ]]
+    then
+      if ((_in_front_matter))
+      then
+        _in_front_matter=0
+      else
+        _in_front_matter=1
+      fi
+    elif ((_in_front_matter))
+    then
+      _front_matter_lines+=("${__line}")
+    elif [[ -n "${_front_matter_lines[*]:-}" ]]
+    then
+      break
+    fi
+  done < "${_target_file:?}"
+
+  if [[ -z "${_front_matter_lines[*]:?}" ]]
+  then
+    _exit_1 printf "Front matter not found.\\n"
+  fi
+
   cat << HEREDOC > "${_target_file:?}"
 ---
-layout: home
-title: nb · CLI plain-text note-taking, bookmarking, and archiving.
-permalink: /
+${_front_matter_lines[*]}
 ---
 
 $(cat ./README.md)
