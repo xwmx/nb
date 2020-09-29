@@ -113,6 +113,8 @@ features. `nb` is flexible.
   <a href="#help">Help</a>
 </p>
 
+### Installation
+
 #### Dependencies
 
 ##### Required
@@ -166,8 +168,6 @@ Also supported for various enhancements:
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
 [Ranger](https://ranger.github.io/)
-
-### Installation
 
 #### macOS / Homebrew
 
