@@ -36,7 +36,7 @@ Usage:
   bask g:web
 
 Description:
-  Generate index.markdown from README.md.
+  Regenerate index.markdown from README.md combined with existing front matter.
 HEREDOC
 g:web() {
   local _front_matter_lines=()
