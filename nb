@@ -2169,7 +2169,41 @@ _get_unique_path() {
 # References:
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
+  if ((_COLOR_ENABLED)) && hash "hicat" 2>/dev/null
+  then
+    local _arguments=()
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--lang" "md")
+      else
+        _arguments+=("--lang" "${1##*.}")
+      fi
+    fi
+
+    hicat "${_arguments[@]}"
+  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
+  then
+    local _arguments=("-O" "xterm256")
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--syntax-by-name" "md")
+      else
+        _arguments+=("--syntax" "${1}")
+      fi
+    fi
+
+    highlight "${_arguments[@]}"
+  elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=friendly")
     local _lexer=
