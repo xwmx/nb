@@ -245,7 +245,7 @@ the optional dependencies.
 
 *Note: `nb` is also currently still available under
 its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
-which comes with an extra `notes` pass-through wrapper for `nb`.*
+which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### bpkg
 
