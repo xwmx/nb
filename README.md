@@ -243,8 +243,8 @@ Installing through `npm` only installs completion scripts.
 On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
-*Note: the nb.sh package is also currently still available under its
-original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
+*Note: `nb` is also currently still available under
+its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
 which comes with an extra `notes` pass-through wrapper for `nb`.*
 
 ##### bpkg
