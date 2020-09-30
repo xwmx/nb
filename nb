@@ -2205,7 +2205,7 @@ _highlight_syntax_if_available() {
     highlight "${_arguments[@]}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
-    local _arguments=("-O" "style=friendly")
+    local _arguments=("-O" "style=default" "-f" "terminal")
     local _lexer=
     local _path=
 
