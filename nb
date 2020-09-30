@@ -6426,11 +6426,13 @@ _ls() {
     printf "\\n"
   }
 
-  local _args=()
+  local _all=0
+  local _arguments=()
   local _columns
   _columns="$(tput cols)"
   local _header_flags=()
-  local _limit="${NB_LIMIT}"
+  local _limit=
+  local _list_options=()
   local _notebook_names_raw
   _notebook_names_raw=($(
     _notebooks --names --no-color --unarchived --global || :
@@ -6444,7 +6446,7 @@ _ls() {
 
     case "${__arg}" in
       -a|--all)
-        _limit=999999999999999
+        _all=1
         ;;
       --auto-align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
@@ -6464,15 +6466,15 @@ _ls() {
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
       *:*)
-        _args+=("$(_show "${__arg}" --selector-id)")
+        _arguments+=("$(_show "${__arg}" --selector-id)")
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
-          _limit="${__arg:-}"
+          _limit="${__arg#\-\-}"
         elif [[ -n "${__arg:-}" ]]
         then
-          _args+=("${__arg}")
+          _arguments+=("${__arg}")
         fi
         ;;
     esac
@@ -6480,16 +6482,26 @@ _ls() {
     shift
   done
 
+  _list_options=(${_arguments[@]})
+
+  if [[ -n "${_limit:-}" ]]
+  then
+    _list_options+=("--limit" "${_limit}")
+  elif [[ -z "${_arguments:-}" ]] && ! ((_all))
+  then
+    _list_options+=("--limit" "${NB_LIMIT}")
+  fi
+
   {
-    if ((NB_HEADER)) && [[ -z "${_args[*]:-}" ]]
+    if ((NB_HEADER)) && [[ -z "${_arguments[*]:-}" ]]
     then
       _ls_print_header "${_header_flags[@]:-}"
     fi
 
-    _list -n "${_limit}" --error-on-empty "${_args[@]:-}" 2>/dev/null || {
-      if [[ -n "${_args[*]:-}" ]]
+    _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
+      if [[ -n "${_arguments[*]:-}" ]]
       then
-        local _maybe_notebook_name="${_args[0]:-}"
+        local _maybe_notebook_name="${_arguments[0]:-}"
 
         _maybe_notebook_name="$(
           printf "%s\\n" "${_maybe_notebook_name}" | sed 's/\:$//'
@@ -6505,7 +6517,7 @@ _ls() {
       if [[ -n "${_notebook_name:-}" ]] && ! _notebooks current --selected
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
-          _ls "${_args[@]:1}"
+          _ls "${_arguments[@]:1}"
         return 0
       else
         local _local_count
@@ -6513,9 +6525,9 @@ _ls() {
 
         if ! ((_local_count))
         then # current notebook is empty
-          _list -n "${_limit}" "${_args[@]:-}"
+          _list "${_list_options[@]:-}"
         else
-          local _selector="${_args[0]:-}"
+          local _selector="${_arguments[0]:-}"
 
           if _notebooks current --selected
           then
@@ -6528,7 +6540,7 @@ _ls() {
       fi
     }
 
-    if ((NB_FOOTER)) && [[ -z "${_args[*]:-}" ]]
+    if ((NB_FOOTER)) && [[ -z "${_arguments[*]:-}" ]]
     then
       _ls_print_footer
     fi
