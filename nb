@@ -5599,7 +5599,7 @@ _list() {
   fi
 
   local _excerpt_length=3
-  local _hard_empty=0
+  local _error_on_empty=0
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
@@ -5634,8 +5634,8 @@ _list() {
       --filename*)
         _list_filenames=1
         ;;
-      --hard-empty)
-        _hard_empty=1
+      --error-on-empty|--hard-empty)
+        _error_on_empty=1
         ;;
       --no-color|--nocolor)
         _list_color_enabled=0
@@ -5729,7 +5729,7 @@ _list() {
   {
     if ! ((_filenames_count)) && [[ -z "${_selector_identifier:-}" ]]
     then
-      if ((_hard_empty))
+      if ((_error_on_empty))
       then
         return 1
       elif [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
@@ -6453,7 +6453,7 @@ _ls() {
       _ls_print_header "${_header_flags[@]:-}"
     fi
 
-    _list -n "${_limit}" --hard-empty "${_args[@]:-}" 2>/dev/null || {
+    _list -n "${_limit}" --error-on-empty "${_args[@]:-}" 2>/dev/null || {
       if [[ -n "${_args[*]:-}" ]]
       then
         local _maybe_notebook_name="${_args[0]:-}"

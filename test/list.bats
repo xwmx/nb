@@ -788,9 +788,9 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-# `list --hard-empty` #########################################################
+# `list --error-on-empty` #####################################################
 
-@test "\`list --hard-empty\` with empty notebook returns 1." {
+@test "\`list --error-on-empty\` with empty notebook returns 1." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -799,12 +799,12 @@ Help information:
   run "${_NB}" one:list
   [[ ${status} -eq 0 ]]
 
-  run "${_NB}" one:list --hard-empty
+  run "${_NB}" one:list --error-on-empty
   [[ ${status} -eq 1 ]]
 
   "${_NB}" one:add "one.md" --title "one"
 
-  run "${_NB}" one:list --hard-empty
+  run "${_NB}" one:list --error-on-empty
   [[ ${status} -eq 0 ]]
 }
 
