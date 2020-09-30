@@ -664,6 +664,87 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
+@test "\`list <query selector> --limit\` exits with 0 and displays results and singular omitted message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list 'r' --filenames --limit 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${#lines[@]}" -eq 2                             ]]
+  [[ "${lines[0]}" =~ third.md                        ]]
+  [[ "${lines[0]}" =~ [*3*]                           ]]
+  [[ "${lines[0]}" =~ ${_files[2]}                    ]]
+  [[ "${lines[1]}" =~ 1\ match\ omitted\.\ 2\ total\. ]]
+}
+
+@test "\`list <query selector> --limit\` exits with 0 and displays results and plural omitted message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# three
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'fourth.md'
+# four
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list 'r' --filenames --limit 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                                    ]]
+  [[ "${#lines[@]}" -eq 2                               ]]
+  [[ "${lines[0]}" =~ fourth.md                         ]]
+  [[ "${lines[0]}" =~ [*4*]                             ]]
+  [[ "${lines[1]}" =~ 2\ matches\ omitted\.\ 3\ total\. ]]
+}
+
 @test "\`list <invalid-selector>\` exits with 1 and displays a message." {
   {
     "${_NB}" init

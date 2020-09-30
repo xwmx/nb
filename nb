@@ -5772,6 +5772,7 @@ HEREDOC
       return 0
     else
       local _counter=0
+      local _matches=0
       local _max_id
       _max_id="$(_index get_max_id)"
 
@@ -5795,13 +5796,15 @@ HEREDOC
 
             if [[ "${__basename:-}" =~ ${_selector_identifier} ]]
             then
-              : # include the note in the list
+              # include the note in the list
+              _matches=$((_matches+1))
             else
               _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
 
               if [[ "${_maybe_title:-}" =~ ${_selector_identifier} ]]
               then
-                : # include the note in the list
+                # include the note in the list
+                _matches=$((_matches+1))
               else
                 continue # don't include note in list
               fi
@@ -5812,13 +5815,15 @@ HEREDOC
           fi
         fi
 
-        if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
+        if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -ge "${_limit}" ]]
         then # the limit has been reached.
-          printf "%s omitted. %s total.\\n"   \
-            "$((_filenames_count-_counter))"  \
-            "${_filenames_count}"
-
-          break
+          if [[ -n "${_selector_identifier:-}" ]]
+          then
+            # Keep looking for matches to count total.
+            continue
+          else
+            break
+          fi
         fi
 
         local _title_or_basename="${__basename}"
@@ -6029,6 +6034,34 @@ HEREDOC
 
         _counter=$((_counter+1))
       done
+
+      if [[ -n "${_limit:-}" ]]
+      then
+        if [[ -n "${_selector_identifier:-}" ]]
+        then
+          if [[ "${_matches:-0}" -gt "${_limit}" ]]
+          then
+            local _label="matches"
+            local _omitted_count
+            _omitted_count=$((_matches-_counter))
+
+            [[ "${_omitted_count}" -eq 1 ]] && _label="match"
+
+            printf "%s %s omitted. %s total.\\n"  \
+              "${_omitted_count}"                 \
+              "${_label}"                         \
+              "${_matches}"
+            return 0
+          fi
+
+        elif [[ "${_filenames_count}" -gt "${_limit}" ]]
+        then
+          printf "%s omitted. %s total.\\n"   \
+            "$((_filenames_count-_counter))"  \
+            "${_filenames_count}"
+          return 0
+        fi
+      fi
 
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
