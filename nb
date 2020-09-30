@@ -5990,7 +5990,7 @@ _list() {
       _printed_counter=$((_printed_counter+1))
     done
 
-    if [[ "${_limit:-}"                                     ]] &&
+    if [[ -z "${_selector:-}"                               ]] &&
        [[ "${_filenames_counter}" -gt "${_printed_counter}" ]]
     then # the limit has been reached.
       printf "%s omitted. %s total.\\n"             \
