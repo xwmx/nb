@@ -8,6 +8,11 @@
 ###############################################################################
 
 setup() {
+  # Set terminal width.
+  #
+  # The number of lines with wrapped output depends on terminal width.
+  stty cols 81
+
   # `$_NB`
   #
   # The location of the `nb` script being tested.
