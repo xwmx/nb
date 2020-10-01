@@ -100,6 +100,8 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 # The original values of $LANG and $LC_ALL
 _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
+shopt -s extglob
+
 ###############################################################################
 # Utilities
 ###############################################################################
@@ -6432,6 +6434,7 @@ _ls() {
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
+  local _type=
   local _use_pager=0
 
   while ((${#}))
@@ -6460,21 +6463,34 @@ _ls() {
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
+      --[0-9]*)
+        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
+        then
+          _limit="${__arg#\-\-}"
+        else
+          _arguments+=("${__arg}")
+        fi
+        ;;
+      -*)
+        _arguments+=("${__arg}")
+
+        if __option_value_is_present "${__val:-}"
+        then
+          _arguments+=("${__val:-}")
+
+          shift
+        fi
+        ;;
       *:*)
         _arguments+=("$(_show "${__arg}" --selector-id)")
         ;;
       *)
-        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
-        then
-          _limit="${__arg#\-\-}"
-        elif [[ ! "${__arg:-}" =~ ^-  ]] &&
-             [[ -z "${_selector:-}"   ]]
+        if [[ -z "${_selector:-}"   ]]
         then
           _selector="${__arg}"
-          _arguments+=("${__arg}")
-        else
-          _arguments+=("${__arg}")
         fi
+
+        _arguments+=("${__arg}")
         ;;
     esac
 
@@ -6522,8 +6538,8 @@ _ls() {
         local _local_count
         _local_count="$(_count)"
 
-        if ! ((_local_count))
-        then # current notebook is empty
+        if ! ((_local_count)) || [[ -z "${_selector:-}" ]]
+        then
           _list "${_list_options[@]:-}"
         else
           if _notebooks current --selected
