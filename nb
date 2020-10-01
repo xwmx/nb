@@ -5738,7 +5738,7 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-      elif [[ "${_type}" =~ ^archive|^audio|^document|^image|^video ]]
+      elif [[ -n "${_type:-}" ]]
       then
         _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
 
