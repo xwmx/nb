@@ -226,6 +226,126 @@ HEREDOC
   [[ "${lines[4]}" =~ one   ]]
 }
 
+# `ls -s` / `ls --sort` / `ls -r` / `ls --reverse` ############################
+
+@test "\`ls --sort\` sorts items." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# title one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# title two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third-example.md"
+# title three
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" ls --sort
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 3           ]]
+  [[ "${lines[0]}" =~ title\ one    ]]
+  [[ "${lines[0]}" =~ [*1*]         ]]
+  [[ "${lines[1]}" =~ title\ two    ]]
+  [[ "${lines[1]}" =~ [*2*]         ]]
+  [[ "${lines[2]}" =~ title\ three  ]]
+  [[ "${lines[2]}" =~ [*3*]         ]]
+}
+
+@test "\`ls --sort --reverse\` reverse sorts items." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# title one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# title two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third-example.md"
+# title three
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" ls --sort --reverse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 3           ]]
+  [[ "${lines[0]}" =~ title\ three  ]]
+  [[ "${lines[0]}" =~ [*3*]         ]]
+  [[ "${lines[1]}" =~ title\ two    ]]
+  [[ "${lines[1]}" =~ [*2*]         ]]
+  [[ "${lines[2]}" =~ title\ one    ]]
+  [[ "${lines[2]}" =~ [*1*]         ]]
+}
+
+@test "\`ls --sort\` retains limit." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# title one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# title two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third-example.md"
+# title three
+line two
+line three
+line four
+HEREDOC
+
+  "${_NB}" set limit 2
+  }
+
+  run "${_NB}" ls --sort
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" -eq 3                   ]]
+  [[ "${lines[0]}" =~ title\ one            ]]
+  [[ "${lines[0]}" =~ [*1*]                 ]]
+  [[ "${lines[1]}" =~ title\ two            ]]
+  [[ "${lines[1]}" =~ [*2*]                 ]]
+  [[ "${lines[2]}" == "1 omitted. 3 total." ]]
+}
+
 # `ls -a` / `ls --all` ########################################################
 
 _setup_ls_all() {
