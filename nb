@@ -3487,7 +3487,7 @@ _bookmark() {
           _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
         fi
       fi
-      _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
     fi
 
     local _target_path="${_notebook_path}/${_basename}"
@@ -4216,7 +4216,7 @@ _delete() {
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   local _info
@@ -4348,7 +4348,7 @@ _edit() {
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   if [[ -n "${_basename}" ]] || [[ -e "${_notebook_path}/${_basename}" ]]
@@ -4665,7 +4665,7 @@ _export() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   if ((_pandoc_only))
@@ -6062,7 +6062,7 @@ HEREDOC
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
         _warn \
-          printf "Note not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
           return 1
       fi
     fi
@@ -9914,7 +9914,7 @@ _show() {
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
-      _warn printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+      _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
   fi
