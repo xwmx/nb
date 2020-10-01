@@ -2390,7 +2390,7 @@ _list_files() {
       then
         for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
         do
-          _grep_patterns+=("-e" "${__extension}")
+          _grep_patterns+=("-e" "${__extension}$")
         done
 
         grep --color=never "${_grep_patterns[@]}" \
