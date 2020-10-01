@@ -58,7 +58,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.2.3"
+_VERSION="5.2.4"
 
 # $_ME
 #
@@ -99,6 +99,8 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 #
 # The original values of $LANG and $LC_ALL
 _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
+
+shopt -s extglob
 
 ###############################################################################
 # Utilities
@@ -1717,7 +1719,10 @@ _file_is_image() {
 #   - Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
   bib
+  css
   html
+  js
+  jsx
   latex
   markdown
   md
@@ -1728,8 +1733,12 @@ export _TEXT_FILE_EXTENSIONS=(
   mkd
   mkdn
   org
+  py
+  rb
   Rmd
   rst
+  scss
+  sh
   tex
   text
   textile
@@ -2388,7 +2397,7 @@ _list_files() {
       then
         for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
         do
-          _grep_patterns+=("-e" "${__extension}")
+          _grep_patterns+=("-e" "${__extension}$")
         done
 
         grep --color=never "${_grep_patterns[@]}" \
@@ -2865,8 +2874,8 @@ $(_color_primary "Usage:")
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--global | --local]
-                       [--path | --selected | --filename [<filename>]]
+  ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -3485,7 +3494,7 @@ _bookmark() {
           _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
         fi
       fi
-      _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
     fi
 
     local _target_path="${_notebook_path}/${_basename}"
@@ -4214,7 +4223,7 @@ _delete() {
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   local _info
@@ -4346,7 +4355,7 @@ _edit() {
 
   if [[ -z "${_basename}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   if [[ -n "${_basename}" ]] || [[ -e "${_notebook_path}/${_basename}" ]]
@@ -4663,7 +4672,7 @@ _export() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
   then
-    _exit_1 printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   if ((_pandoc_only))
@@ -5736,7 +5745,7 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-      elif [[ "${_type}" =~ ^archive|^audio|^document|^image|^video ]]
+      elif [[ -n "${_type:-}" ]]
       then
         _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
 
@@ -6060,7 +6069,7 @@ HEREDOC
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
         _warn \
-          printf "Note not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
           return 1
       fi
     fi
@@ -6431,6 +6440,7 @@ _ls() {
   _notebook_names_raw=($(
     _notebooks --names --no-color --unarchived --global || :
   ))
+  local _selector=
   local _use_pager=0
 
   while ((${#}))
@@ -6459,17 +6469,35 @@ _ls() {
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
-      *:*)
-        _arguments+=("$(_show "${__arg}" --selector-id)")
-        ;;
-      *)
+      --[0-9]*)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${__arg#\-\-}"
-        elif [[ -n "${__arg:-}" ]]
-        then
+        else
           _arguments+=("${__arg}")
         fi
+        ;;
+      -*)
+        _arguments+=("${__arg}")
+
+        if __option_value_is_present "${__val:-}"
+        then
+          _arguments+=("${__val:-}")
+
+          shift
+        fi
+        ;;
+      *:*)
+        _arguments+=("$(_show "${__arg}" --selector-id)")
+        _selector="${__arg#*:}"
+        ;;
+      *)
+        if [[ -z "${_selector:-}"   ]]
+        then
+          _selector="${__arg}"
+        fi
+
+        _arguments+=("${__arg}")
         ;;
     esac
 
@@ -6481,7 +6509,7 @@ _ls() {
   if [[ -n "${_limit:-}" ]]
   then
     _list_options+=("--limit" "${_limit}")
-  elif [[ -z "${_arguments:-}" ]] && ! ((_all))
+  elif [[ -z "${_selector:-}" ]] && ! ((_all))
   then
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
@@ -6517,12 +6545,10 @@ _ls() {
         local _local_count
         _local_count="$(_count)"
 
-        if ! ((_local_count))
-        then # current notebook is empty
+        if ! ((_local_count)) || [[ -z "${_selector:-}" ]]
+        then
           _list "${_list_options[@]:-}"
         else
-          local _selector="${_arguments[0]:-}"
-
           if _notebooks current --selected
           then
             _selector="$(_notebooks current --name):${_selector}"
@@ -6713,8 +6739,8 @@ Usage:
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--global | --local]
-                       [--path | --selected | --filename [<filename>]]
+  ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
   ${_ME} notebooks init [<path> [<remote-url>]]
@@ -9895,7 +9921,7 @@ _show() {
         _ls "${_ls_arguments[@]:1}"
       return 0
     else
-      _warn printf "Note not found: %s\\n" "$(_color_primary "${_selector}")"
+      _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
   fi
@@ -10833,11 +10859,17 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
+# $__PREVIOUS_OPTION_WAS_FLAG
+#
+# Values: 0, 1
+#
+# Arithmethic boolean indicating if the previous option in the loop was a flag.
+__PREVIOUS_OPTION_WAS_FLAG=0
+
 # Parse program options.
 while ((${#}))
 do
   __opt="${1}"
-  __previous_option_was_flag=0
 
   shift
 
@@ -10936,7 +10968,7 @@ do
       break
       ;;
     *)
-      if ! ((__previous_option_was_flag)) &&
+      if ! ((__PREVIOUS_OPTION_WAS_FLAG)) &&
          [[ -z "${_SUBCOMMAND:-}" ]]      &&
          _is_valid_subcommand "${__opt}"
       then
@@ -10944,10 +10976,10 @@ do
       else
         if [[ "${__opt}" =~ ^- ]]
         then
-          __previous_option_was_flag=1
-        elif ((__previous_option_was_flag))
+          __PREVIOUS_OPTION_WAS_FLAG=1
+        elif ((__PREVIOUS_OPTION_WAS_FLAG))
         then
-          __previous_option_was_flag=0
+          __PREVIOUS_OPTION_WAS_FLAG=0
         fi
 
         _ARGUMENTS+=("${__opt}")

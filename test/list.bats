@@ -766,7 +766,7 @@ HEREDOC
 
   [[ ${status} -eq 1                      ]]
   [[ "${#lines[@]}" -eq 1                 ]]
-  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ Not\ found\:  ]]
   [[ "${lines[0]}" =~ invalid             ]]
 }
 
@@ -909,9 +909,9 @@ Help information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
-  [[ ${status} -eq 1                    ]]
-  [[ "${lines[0]}" =~ Note\ not\ found  ]]
-  [[ "${lines[0]}" =~ example           ]]
+  [[ ${status} -eq 1              ]]
+  [[ "${lines[0]}" =~ Not\ found  ]]
+  [[ "${lines[0]}" =~ example     ]]
 }
 
 @test "\`list <notebook>:\` exits with 0 and lists files in reverse order." {

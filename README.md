@@ -2543,8 +2543,8 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--global | --local]
-                       [--path | --selected | --filename [<filename>]]
+  nb notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
@@ -3268,8 +3268,8 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [--global | --local]
-                       [--path | --selected | --filename [<filename>]]
+  nb notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]

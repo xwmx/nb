@@ -157,8 +157,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" == 1                   ]]
-  [[ "${lines[0]}" =~ Note\ not\ found  ]]
+  [[ "${status}" == 1             ]]
+  [[ "${lines[0]}" =~ Not\ found  ]]
 
   _files=($(ls "${_NOTEBOOK_PATH}/"))
   [[ "${#_files[@]}" == 1 ]]
