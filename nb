@@ -3471,7 +3471,7 @@ _bookmark() {
     _basename="$(_show "${_selector}" --filename)"
 
     local _notebook_path
-    _notebook_path="$(_notebooks current "${_selector}" --path)"
+    _notebook_path="$(_notebooks current --path)"
 
     if [[ -z "${_basename}" ]]
     then
@@ -4210,7 +4210,7 @@ _delete() {
   _basename="$(_show "${_selector}" --filename)"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_basename}" ]]
   then
@@ -4342,7 +4342,7 @@ _edit() {
   _basename="$(_show "${_selector:-}" --filename)"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_basename}" ]]
   then
@@ -4659,7 +4659,7 @@ _export() {
   _basename="$(_show "${_selector}" --filename)"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
   then
@@ -4913,7 +4913,7 @@ _history() {
   fi
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
@@ -5695,13 +5695,7 @@ _list() {
   fi
 
   local _notebook_path=
-
-  if [[ "${_selector:-}" =~ : ]]
-  then
-    _notebook_path="$(_notebooks current "${_selector:-}" --path)"
-  else
-    _notebook_path="$(_notebooks current --path)"
-  fi
+  _notebook_path="$(_notebooks current --path)"
 
   local _notebook_escaped_name=
   _notebook_escaped_name="$(
@@ -6612,11 +6606,11 @@ _move() {
 
   local _notebook_escaped_name
   _notebook_escaped_name="$(
-    _notebooks current "${_selector}" --escaped --no-color
+    _notebooks current --escaped --no-color
   )"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   local _target_notebook_path
   _target_notebook_path="$(
@@ -8302,7 +8296,7 @@ _rename() {
   _source_basename="$(_show "${_selector}" --filename)"
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   local _source_path="${_notebook_path}/${_source_basename}"
 
@@ -10904,23 +10898,25 @@ do
       then
         _ARGUMENTS+=("${__opt}")
       else
-        if ! _notebooks select "${__opt}"
-        then
-          if [[ -n "${_SUBCOMMAND:-}" ]]
-          then
-            _ARGUMENTS+=("${__opt}")
-          else
-            _exit_1 printf \
-              "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"
-          fi
-        fi
-
         __identifier_or_subcommand_or_url="${__opt#*:}"
 
-        if [[ -z "${__identifier_or_subcommand_or_url:-}" ]]
+        if [[ -z "${__identifier_or_subcommand_or_url:-}" ]] &&
+           [[ -n "${_SUBCOMMAND:-}"                       ]] &&
+           [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$           ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
+          if ! _notebooks select "${__opt}"
+          then
+            if [[ -n "${_SUBCOMMAND:-}" ]]
+            then
+              _ARGUMENTS+=("${__opt}")
+            else
+              _exit_1 printf \
+                "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"
+            fi
+          fi
+
           if _is_valid_subcommand "${__identifier_or_subcommand_or_url}"
           then
             _SUBCOMMAND="${__identifier_or_subcommand_or_url}"

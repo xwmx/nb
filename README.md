@@ -2348,17 +2348,14 @@ _example() {
 ```
 
 [`notebooks current --path`](#notebooks) returns the path to the current
-notebook. It also takes an optional `<selector>` argument that resolves
-the notebook, updates the current notebook if the selector
-contains a valid notebook name, then returns the path the now
-possibly-updated current notebook:
+notebook:
 
 ```bash
 # _example() continued:
 
-# return the notebook path, first setting it with <selector>
+# return the notebook path
 local _notebook_path
-_notebook_path="$(_notebooks current "${_selector}" --path)"
+_notebook_path="$(_notebooks current --path)"
 
 # print the file at "${_notebook_path}/${_filename}" to standard output
 cat "${_notebook_path}/${_filename}"
