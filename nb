@@ -6434,7 +6434,6 @@ _ls() {
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
-  local _type=
   local _use_pager=0
 
   while ((${#}))
