@@ -2388,90 +2388,92 @@ _list_files() {
     then
       local _grep_patterns=()
 
-      if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
-      then
-        grep --color=never    \
-          -e '\.bookmark\.'   \
-          -e '\-bookmark\.'
-      elif [[ "${_type}" =~ ^note$|^notes$ ]]
-      then
-        for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$")
-        done
+      case "${_type}" in
+        bookmark|bookmarks)
+          grep --color=never    \
+            -e '\.bookmark\.'   \
+            -e '\-bookmark\.'
+          ;;
+        note|notes)
+          for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}" \
-          | grep --color=never -v \
-              -e '\.bookmark\.'   \
-              -e '\-bookmark\.'
-      elif [[ "${_type}" =~ ^folder$|^folders$|^directory$|^directories$ ]]
-      then
-        while read -r __line
-        do
-          if [[ -d "${_notebook_path}/${__line}" ]]
-          then
-            printf "%s\\n" "${__line}"
-          fi
-        done
-      elif [[ "${_type}" =~ ^archive$ ]]
-      then
-        for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}" \
+            | grep --color=never -v \
+                -e '\.bookmark\.'   \
+                -e '\-bookmark\.'
+          ;;
+        folder|folders|directory|directories)
+          while read -r __line
+          do
+            if [[ -d "${_notebook_path}/${__line}" ]]
+            then
+              printf "%s\\n" "${__line}"
+            fi
+          done
+          ;;
+        archive)
+          for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^audio$|^music$ ]]
-      then
-        for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        audio|music)
+          for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]]
-      then
-        for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        document|documents|doc|docs)
+          for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^encrypted$ ]]
-      then
-        for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        encrypted)
+          for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$ ]]
-      then
-        for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        image|images|picture|pictures)
+          for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^text$|^txt$ ]]
-      then
-        for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        text|txt)
+          for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^video$|^videos$ ]]
-      then
-        for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        video|videos)
+          for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      else
-        grep --color=never -e "${_type}$"
-      fi
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        *)
+          grep --color=never -e "${_type}$"
+          ;;
+      esac
     else
       cat
     fi
