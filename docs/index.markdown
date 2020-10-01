@@ -2354,17 +2354,14 @@ _example() {
 ```
 
 [`notebooks current --path`](#notebooks) returns the path to the current
-notebook. It also takes an optional `<selector>` argument that resolves
-the notebook, updates the current notebook if the selector
-contains a valid notebook name, then returns the path the now
-possibly-updated current notebook:
+notebook:
 
 ```bash
 # _example() continued:
 
-# return the notebook path, first setting it with <selector>
+# return the notebook path
 local _notebook_path
-_notebook_path="$(_notebooks current "${_selector}" --path)"
+_notebook_path="$(_notebooks current --path)"
 
 # print the file at "${_notebook_path}/${_filename}" to standard output
 cat "${_notebook_path}/${_filename}"
@@ -2373,7 +2370,7 @@ cat "${_notebook_path}/${_filename}"
 See
 [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
 for a practical example using both [`show <selector> --filename`](#show) and
-[`notebooks current <selector> --path`](#notebooks) along with other
+[`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
 ### > `nb` Interactive Shell
@@ -2552,7 +2549,7 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
+  nb notebooks current [--global | --local]
                        [--path | --selected | --filename [<filename>]]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
@@ -3277,7 +3274,7 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
+  nb notebooks current [--global | --local]
                        [--path | --selected | --filename [<filename>]]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
@@ -3321,8 +3318,7 @@ Subcommands:
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name. When provides with <name>,
-             <path>, or <selector>, use that as the current notebook.
+  current    Print the current notebook name or path.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.
