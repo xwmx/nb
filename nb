@@ -6483,6 +6483,7 @@ _ls() {
         ;;
       *:*)
         _arguments+=("$(_show "${__arg}" --selector-id)")
+        _selector="${__arg#*:}"
         ;;
       *)
         if [[ -z "${_selector:-}"   ]]
