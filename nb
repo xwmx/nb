@@ -1719,7 +1719,10 @@ _file_is_image() {
 #   - Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
   bib
+  css
   html
+  js
+  jsx
   latex
   markdown
   md
@@ -1730,8 +1733,12 @@ export _TEXT_FILE_EXTENSIONS=(
   mkd
   mkdn
   org
+  py
+  rb
   Rmd
   rst
+  scss
+  sh
   tex
   text
   textile
