@@ -859,8 +859,8 @@ go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
 
-When [Pandoc](https://pandoc.org/) is available, use the `--render` option to
-render the note to HTML and open it in your terminal browser:
+When [Pandoc](https://pandoc.org/) is available, use the `-r` / `--render`
+option to render the note to HTML and open it in your terminal browser:
 
 ```bash
 nb show example.md --render
@@ -2556,10 +2556,9 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -2577,9 +2576,9 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3755,10 +3754,9 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   nb show <notebook>
 
 Options:
@@ -3767,9 +3765,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  --render         Use `pandoc` [1] to render the file to HTML and display with
+  -r, --render     Use `pandoc` [1] to render the file to HTML and display with
                    `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                   not available, `--render` is ignored.
+                   not available, `-r` / `--render` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -3777,7 +3775,7 @@ Options:
                    return true if the item matches <type>. <type> can be a
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
-                   text, video
+                   text, vide
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or

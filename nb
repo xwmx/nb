@@ -2910,10 +2910,9 @@ $(_color_primary "Usage:")
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -9688,10 +9687,9 @@ HEREDOC
 
 describe "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   ${_ME} show <notebook>
 
 Options:
@@ -9700,9 +9698,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  --render         Use \`pandoc\` [1] to render the file to HTML and display with
+  -r, --render     Use \`pandoc\` [1] to render the file to HTML and display with
                    \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is
-                   not available, \`--render\` is ignored.
+                   not available, \`-r\` / \`--render\` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
