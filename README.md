@@ -3152,7 +3152,7 @@ Options:
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  video, audio, folder, text
 
 Description:
   List notes in the current notebook.
@@ -3207,7 +3207,7 @@ Options:
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  video, audio, folder, text
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -3511,7 +3511,7 @@ Options:
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder, text
 Description:
   Search notes. Uses the first available tool in the following list:
     1. `rg`    https://github.com/BurntSushi/ripgrep
