@@ -1818,9 +1818,9 @@ and `>>>>>>>`:
 
 When `nb` encounters a conflict in a binary file, such as an encrypted
 note, both versions of the file are saved in the notebook as individual
-files, one with `--conflicted-copy` appended to the filename. To
-resolve a conflicted copy of a binary file, compare both versions and
-merge them manually, then delete the `--conflicted-copy`.
+files, with `--conflicted-copy` appended to the filename of the version
+from the remote. To resolve a conflicted copy of a binary file, compare
+both versions and merge them manually, then delete the `--conflicted-copy`.
 
 `nb` handles git operations automatically, so you shouldn't ever need
 to use the `git` command line tool directly. If you do encounter a
