@@ -10836,11 +10836,17 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
+# $__PREVIOUS_OPTION_WAS_FLAG
+#
+# Values: 0, 1
+#
+# Arithmethic boolean indicating if the previous option in the loop was a flag.
+__PREVIOUS_OPTION_WAS_FLAG=0
+
 # Parse program options.
 while ((${#}))
 do
   __opt="${1}"
-  __previous_option_was_flag=0
 
   shift
 
@@ -10939,7 +10945,7 @@ do
       break
       ;;
     *)
-      if ! ((__previous_option_was_flag)) &&
+      if ! ((__PREVIOUS_OPTION_WAS_FLAG)) &&
          [[ -z "${_SUBCOMMAND:-}" ]]      &&
          _is_valid_subcommand "${__opt}"
       then
@@ -10947,10 +10953,10 @@ do
       else
         if [[ "${__opt}" =~ ^- ]]
         then
-          __previous_option_was_flag=1
-        elif ((__previous_option_was_flag))
+          __PREVIOUS_OPTION_WAS_FLAG=1
+        elif ((__PREVIOUS_OPTION_WAS_FLAG))
         then
-          __previous_option_was_flag=0
+          __PREVIOUS_OPTION_WAS_FLAG=0
         fi
 
         _ARGUMENTS+=("${__opt}")
