@@ -90,7 +90,7 @@ copied, or `curl`ed almost anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments. `nb` works great
 whether you have one notebook with just a few notes or dozens of
-notebooks containing many thousands of notes, bookmarks, and other items.
+notebooks containing thousands of notes, bookmarks, and other items.
 `nb` makes it easy to incorporate other tools, writing apps, and workflows.
 `nb` can be used a little, a lot, once in a while, or for just a subset of
 features. `nb` is flexible.
@@ -249,9 +249,9 @@ Installing through `npm` only installs completion scripts.
 On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
-*Note: the nb.sh package is also currently still available under its
-original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
-which comes with an extra `notes` pass-through wrapper for `nb`.*
+*Note: `nb` is also currently still available under
+its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
+which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### bpkg
 

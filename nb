@@ -58,7 +58,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.2.1"
+_VERSION="5.2.2"
 
 # $_ME
 #
@@ -2169,9 +2169,26 @@ _get_unique_path() {
 # References:
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
+  if ((_COLOR_ENABLED)) && hash "hicat" 2>/dev/null
+  then
+    local _arguments=()
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--lang" "md")
+      else
+        _arguments+=("--lang" "${1##*.}")
+      fi
+    fi
+
+    hicat "${_arguments[@]}"
+  elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
-    local _arguments=("-O" "style=friendly")
+    local _arguments=("-O" "style=default" "-f" "terminal")
     local _lexer=
     local _path=
 
@@ -2197,6 +2214,23 @@ _highlight_syntax_if_available() {
     _interactive_input      && _arguments+=("${_path}")
 
     pygmentize "${_arguments[@]}" 2>/dev/null
+  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
+  then
+    local _arguments=("-O" "xterm256")
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--syntax-by-name" "md")
+      else
+        _arguments+=("--syntax" "${1}")
+      fi
+    fi
+
+    highlight "${_arguments[@]}"
   else
     cat "${@}"
   fi
@@ -5565,7 +5599,7 @@ _list() {
   fi
 
   local _excerpt_length=3
-  local _hard_empty=0
+  local _error_on_empty=0
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
@@ -5600,8 +5634,8 @@ _list() {
       --filename*)
         _list_filenames=1
         ;;
-      --hard-empty)
-        _hard_empty=1
+      --error-on-empty|--hard-empty)
+        _error_on_empty=1
         ;;
       --no-color|--nocolor)
         _list_color_enabled=0
@@ -5695,7 +5729,7 @@ _list() {
   {
     if ! ((_filenames_count)) && [[ -z "${_selector_identifier:-}" ]]
     then
-      if ((_hard_empty))
+      if ((_error_on_empty))
       then
         return 1
       elif [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
@@ -5738,6 +5772,7 @@ HEREDOC
       return 0
     else
       local _counter=0
+      local _matches=0
       local _max_id
       _max_id="$(_index get_max_id)"
 
@@ -5761,13 +5796,15 @@ HEREDOC
 
             if [[ "${__basename:-}" =~ ${_selector_identifier} ]]
             then
-              : # include the note in the list
+              # include the note in the list
+              _matches=$((_matches+1))
             else
               _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
 
               if [[ "${_maybe_title:-}" =~ ${_selector_identifier} ]]
               then
-                : # include the note in the list
+                # include the note in the list
+                _matches=$((_matches+1))
               else
                 continue # don't include note in list
               fi
@@ -5778,13 +5815,15 @@ HEREDOC
           fi
         fi
 
-        if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -eq "${_limit}" ]]
+        if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -ge "${_limit}" ]]
         then # the limit has been reached.
-          printf "%s omitted. %s total.\\n"   \
-            "$((_filenames_count-_counter))"  \
-            "${_filenames_count}"
-
-          break
+          if [[ -n "${_selector_identifier:-}" ]]
+          then
+            # Keep looking for matches to count total.
+            continue
+          else
+            break
+          fi
         fi
 
         local _title_or_basename="${__basename}"
@@ -5995,6 +6034,34 @@ HEREDOC
 
         _counter=$((_counter+1))
       done
+
+      if [[ -n "${_limit:-}" ]]
+      then
+        if [[ -n "${_selector_identifier:-}" ]]
+        then
+          if [[ "${_matches:-0}" -gt "${_limit}" ]]
+          then
+            local _label="matches"
+            local _omitted_count
+            _omitted_count=$((_matches-_counter))
+
+            [[ "${_omitted_count}" -eq 1 ]] && _label="match"
+
+            printf "%s %s omitted. %s total.\\n"  \
+              "${_omitted_count}"                 \
+              "${_label}"                         \
+              "${_matches}"
+            return 0
+          fi
+
+        elif [[ "${_filenames_count}" -gt "${_limit}" ]]
+        then
+          printf "%s omitted. %s total.\\n"   \
+            "$((_filenames_count-_counter))"  \
+            "${_filenames_count}"
+          return 0
+        fi
+      fi
 
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
@@ -6359,11 +6426,13 @@ _ls() {
     printf "\\n"
   }
 
-  local _args=()
+  local _all=0
+  local _arguments=()
   local _columns
   _columns="$(tput cols)"
   local _header_flags=()
-  local _limit="${NB_LIMIT}"
+  local _limit=
+  local _list_options=()
   local _notebook_names_raw
   _notebook_names_raw=($(
     _notebooks --names --no-color --unarchived --global || :
@@ -6377,7 +6446,7 @@ _ls() {
 
     case "${__arg}" in
       -a|--all)
-        _limit=999999999999999
+        _all=1
         ;;
       --auto-align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
@@ -6397,15 +6466,15 @@ _ls() {
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
       *:*)
-        _args+=("$(_show "${__arg}" --selector-id)")
+        _arguments+=("$(_show "${__arg}" --selector-id)")
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
-          _limit="${__arg:-}"
+          _limit="${__arg#\-\-}"
         elif [[ -n "${__arg:-}" ]]
         then
-          _args+=("${__arg}")
+          _arguments+=("${__arg}")
         fi
         ;;
     esac
@@ -6413,16 +6482,26 @@ _ls() {
     shift
   done
 
+  _list_options=(${_arguments[@]:-})
+
+  if [[ -n "${_limit:-}" ]]
+  then
+    _list_options+=("--limit" "${_limit}")
+  elif [[ -z "${_arguments:-}" ]] && ! ((_all))
+  then
+    _list_options+=("--limit" "${NB_LIMIT}")
+  fi
+
   {
-    if ((NB_HEADER)) && [[ -z "${_args[*]:-}" ]]
+    if ((NB_HEADER)) && [[ -z "${_arguments[*]:-}" ]]
     then
       _ls_print_header "${_header_flags[@]:-}"
     fi
 
-    _list -n "${_limit}" --hard-empty "${_args[@]:-}" 2>/dev/null || {
-      if [[ -n "${_args[*]:-}" ]]
+    _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
+      if [[ -n "${_arguments[*]:-}" ]]
       then
-        local _maybe_notebook_name="${_args[0]:-}"
+        local _maybe_notebook_name="${_arguments[0]:-}"
 
         _maybe_notebook_name="$(
           printf "%s\\n" "${_maybe_notebook_name}" | sed 's/\:$//'
@@ -6438,7 +6517,7 @@ _ls() {
       if [[ -n "${_notebook_name:-}" ]] && ! _notebooks current --selected
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
-          _ls "${_args[@]:1}"
+          _ls "${_arguments[@]:1}"
         return 0
       else
         local _local_count
@@ -6446,9 +6525,9 @@ _ls() {
 
         if ! ((_local_count))
         then # current notebook is empty
-          _list -n "${_limit}" "${_args[@]:-}"
+          _list "${_list_options[@]:-}"
         else
-          local _selector="${_args[0]:-}"
+          local _selector="${_arguments[0]:-}"
 
           if _notebooks current --selected
           then
@@ -6461,7 +6540,7 @@ _ls() {
       fi
     }
 
-    if ((NB_FOOTER)) && [[ -z "${_args[*]:-}" ]]
+    if ((NB_FOOTER)) && [[ -z "${_arguments[*]:-}" ]]
     then
       _ls_print_footer
     fi

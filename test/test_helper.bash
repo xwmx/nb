@@ -8,6 +8,14 @@
 ###############################################################################
 
 setup() {
+  # Set terminal width.
+  #
+  # The number of lines with wrapped output depends on terminal width.
+  export _COLUMNS_ORIGINAL
+  _COLUMNS_ORIGINAL="$(tput cols)"
+
+  stty cols 81
+
   # `$_NB`
   #
   # The location of the `nb` script being tested.
@@ -81,6 +89,8 @@ teardown() {
   then
     rm -rf "${_TMP_DIR}"
   fi
+
+  stty cols "${_COLUMNS_ORIGINAL}"
 }
 
 ###############################################################################
