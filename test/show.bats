@@ -53,7 +53,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
-  [[ ! "${lines[0]}" =~ "# Example" ]]
+  [[ ! "${lines[0]}" == "# Example" ]]
   [[ "${lines[0]}" =~ "Example"     ]]
 }
 

@@ -51,10 +51,9 @@ _copy() {
   local _source_filename
   _source_filename="$(_show "${_selector}" --filename)"
 
-  # Get the current notebook path, setting the selector notebook as the
-  # current notebook if present:
+  # Get the current notebook path:
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   # Validate that the selector represents a valid file:
   if [[ -z "${_source_filename:-}"                      ]] ||
