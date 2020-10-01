@@ -6431,6 +6431,7 @@ _ls() {
   _notebook_names_raw=($(
     _notebooks --names --no-color --unarchived --global || :
   ))
+  local _selector=
   local _use_pager=0
 
   while ((${#}))
@@ -6466,8 +6467,12 @@ _ls() {
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${__arg#\-\-}"
-        elif [[ -n "${__arg:-}" ]]
+        elif [[ ! "${__arg:-}" =~ ^-  ]] &&
+             [[ -z "${_selector:-}"   ]]
         then
+          _selector="${__arg}"
+          _arguments+=("${__arg}")
+        else
           _arguments+=("${__arg}")
         fi
         ;;
@@ -6481,7 +6486,7 @@ _ls() {
   if [[ -n "${_limit:-}" ]]
   then
     _list_options+=("--limit" "${_limit}")
-  elif [[ -z "${_arguments:-}" ]] && ! ((_all))
+  elif [[ -z "${_selector:-}" ]] && ! ((_all))
   then
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
@@ -6521,8 +6526,6 @@ _ls() {
         then # current notebook is empty
           _list "${_list_options[@]:-}"
         else
-          local _selector="${_arguments[0]:-}"
-
           if _notebooks current --selected
           then
             _selector="$(_notebooks current --name):${_selector}"
