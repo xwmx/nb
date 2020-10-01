@@ -6482,7 +6482,7 @@ _ls() {
     shift
   done
 
-  _list_options=(${_arguments[@]})
+  _list_options=(${_arguments[@]:-})
 
   if [[ -n "${_limit:-}" ]]
   then
