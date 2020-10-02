@@ -1133,7 +1133,7 @@ Encrypted bookmarks require a password before they can be viewed or
 opened.
 
 [`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
-and filter bookmarks:
+and filter only bookmarks:
 
 ```bash
 > nb bookmark
@@ -1145,6 +1145,47 @@ Add: nb <url> Help: nb help bookmark
 
 > nb bookmark list two
 [2] 🔖 Example Two (example.com)
+```
+
+Bookmarks are included in `nb`, `nb ls`, and `nb list`:
+
+```bash
+> nb ls
+home
+----
+[8] 🔖 Example Bookmark Three (example.com)
+[7] Example Note Three
+[6] 🔒 example-encrypted-note.md.enc
+[5] 🔖 Example Bookmark Two (example.net)
+[4] Example Note Two
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[2] Example Note One
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+Use the [`--type <type>` / `--<type>`](#ls) option as a filter to display
+only bookmarks:
+
+```bash
+> nb --type bookmark
+[8] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
+
+> nb --bookmark
+[8] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+`nb` saves the domain in the title, making it easy to filter by domain:
+
+```bash
+> nb example.com
+[8] 🔖 Example Bookmark One (example.com)
+[1] 🔖 Example Bookmark One (example.com)
 ```
 
 ##### Shortcut Alias: `b`
