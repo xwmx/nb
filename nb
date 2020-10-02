@@ -2563,7 +2563,7 @@ ${_padding} / / | | | | |_) |
 ${_padding}/_/  |_| |_|_.__/
 HEREDOC
 
-  _print_line "$(printf "%-${_columns}s" '.')"
+  printf "\\n"
 }
 
 # _spinner()
@@ -5493,16 +5493,14 @@ _init() {
 
     _notebooks use "home" 1>/dev/null
 
-    printf "Created notebook: %s\\n" "$(_color_primary "home")"
+    printf "Created notebook:           %s\\n" "$(_color_primary "home")"
   }
 
   # Usage: _init_create_nb_dir
   _init_create_nb_dir() {
     if [[ -d "${NB_DIR}" ]]
     then
-      printf "%s data directory already exists: %s\\n" \
-        "$(_color_primary "${_ME}")" \
-        "${NB_DIR}"
+      printf "Data directory exists:      %s\\n" "$(_color_primary "${NB_DIR}")"
     elif [[ -e "${NB_DIR}" ]]
     then
       _exit_1 cat <<HEREDOC
@@ -5511,7 +5509,7 @@ ${NB_DIR}
 HEREDOC
     else
       mkdir -p "${NB_DIR}"
-      printf "Created data directory: %s\\n" "$(_color_primary "${NB_DIR}")"
+      printf "Created data directory:     %s\\n" "$(_color_primary "${NB_DIR}")"
     fi
   }
 
@@ -5519,7 +5517,7 @@ HEREDOC
   _init_create_rc_file() {
     if [[ -e "${NBRC_PATH}" ]]
     then
-      printf "Configuration file already exists: %s\\n" \
+      printf "Configuration file exists:  %s\\n" \
         "$(_color_primary "${NBRC_PATH}")"
     else
       cat <<HEREDOC > "${NBRC_PATH}"
@@ -5544,8 +5542,8 @@ HEREDOC
 
   # Usage: _init_print_header
   _init_print_header() {
-    _print_welcome &&
-      printf "Initializing...\\n"
+    _print_welcome
+    # printf "%s\\n" "$(_color_primary "Initializing...")"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
@@ -5564,10 +5562,12 @@ More information:
 HEREDOC
   fi
 
-  _init_print_header        &&
-    _init_create_nb_dir     &&
-    _init_create_rc_file    &&
-    _init_create_home_notebook "${1:-}"
+  _init_print_header                                &&
+    _init_create_nb_dir                 1>/dev/null &&
+    _init_create_rc_file                1>/dev/null &&
+    _init_create_home_notebook "${1:-}" 1>/dev/null &&
+    _print_line "$(printf "%-$(tput cols)s" '.')"
+
 }
 
 # list ################################################################### list
