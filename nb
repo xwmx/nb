@@ -5493,7 +5493,7 @@ _init() {
 
     _notebooks use "home" 1>/dev/null
 
-    printf "Created %s notebook.\\n" "$(_color_primary "home")"
+    printf "Created notebook: %s\\n" "$(_color_primary "home")"
   }
 
   # Usage: _init_create_nb_dir
@@ -5511,7 +5511,7 @@ ${NB_DIR}
 HEREDOC
     else
       mkdir -p "${NB_DIR}"
-      printf "Created %s\\n" "${NB_DIR}"
+      printf "Created data directory: %s\\n" "$(_color_primary "${NB_DIR}")"
     fi
   }
 
@@ -5520,16 +5520,16 @@ HEREDOC
     if [[ -e "${NBRC_PATH}" ]]
     then
       printf "Configuration file already exists: %s\\n" \
-        "${NBRC_PATH}"
+        "$(_color_primary "${NBRC_PATH}")"
     else
       cat <<HEREDOC > "${NBRC_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
 # .nbrc
 #
-# Configuration file for \`${_ME}\`, a command line note-taking and document
-# management tool with encryption, search, Git-backed syncing, and more in a
-# single portable script.
+# Configuration file for \`${_ME}\`, a command line note-taking, bookmarking,
+# and knowledge base application with encryption, search, Git-backed syncing,
+# and more in a single portable script.
 #
 # Edit this file manually or manage settings using the \`${_ME} settings\`
 # subcommand. Configuration options are set as environment variables, eg:
@@ -5538,7 +5538,7 @@ HEREDOC
 # https://github.com/${_REPO}
 ###############################################################################
 HEREDOC
-      printf "Created %s\\n" "${NBRC_PATH}"
+      printf "Created configuration file: %s\\n" "$(_color_primary "${NBRC_PATH}")"
     fi
   }
 
@@ -5551,7 +5551,7 @@ HEREDOC
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
   then
     _exit_1 printf "NB_DIR exists and is not a directory: %s\\n" \
-      "${NB_DIR}"
+      "$(_color_primary "${NB_DIR}")"
   fi
 
   if [[ -d "${_GLOBAL_NOTEBOOK_PATH}" ]]
