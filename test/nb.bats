@@ -31,19 +31,16 @@ load test_helper
 
   [[ "${status}" -eq 0 ]]
 
-  [[ "${lines[8]}"  == "Initializing..."                                  ]]
-  [[ "${lines[9]}"  =~ Created                                            ]]
-  [[ "${lines[10]}" =~ Created                                            ]]
-  [[ "${lines[11]}" =~ Created                                            ]]
-  [[ "${lines[14]}" == "0 notes."                                         ]]
-  [[ "${lines[15]}" == "Add a note:"                                      ]]
-  [[ "${lines[16]}" == "  $(_color_primary 'nb add')"                     ]]
-  [[ "${lines[17]}" == "Add a bookmark:"                                  ]]
-  [[ "${lines[18]}" == "  $(_color_primary "nb <url>")"                   ]]
-  [[ "${lines[19]}" == "Import a file:"                                   ]]
-  [[ "${lines[20]}" == "  $(_color_primary "nb import (<path> | <url>)")" ]]
-  [[ "${lines[21]}" == "Help information:"                                ]]
-  [[ "${lines[22]}" == "  $(_color_primary 'nb help')"                    ]]
+  [[ "${output}"    =~ Welcome                                            ]]
+  [[ "${lines[10]}" == "0 notes."                                         ]]
+  [[ "${lines[11]}" == "Add a note:"                                      ]]
+  [[ "${lines[12]}" == "  $(_color_primary 'nb add')"                     ]]
+  [[ "${lines[13]}" == "Add a bookmark:"                                  ]]
+  [[ "${lines[14]}" == "  $(_color_primary "nb <url>")"                   ]]
+  [[ "${lines[15]}" == "Import a file:"                                   ]]
+  [[ "${lines[16]}" == "  $(_color_primary "nb import (<path> | <url>)")" ]]
+  [[ "${lines[17]}" == "Help information:"                                ]]
+  [[ "${lines[18]}" == "  $(_color_primary 'nb help')"                    ]]
 }
 
 # `nb` (empty repo) ###########################################################
