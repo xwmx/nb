@@ -11,8 +11,8 @@
 # Command line note-taking, bookmarking, archiving, and knowledge management
 # with plain-text data storage, encryption, filtering and search, Git-backed
 # versioning and syncing, Pandoc-backed conversion, global and local notebooks,
-# customizable color themes, extensibility through plugins, and more, all in
-# a single portable, user-friendly script.
+# customizable color themes, extensibility through plugins, and more, in a
+# single portable, user-friendly script.
 #
 # ❯ https://github.com/xwmx/nb
 # ❯ https://xwmx.github.io/nb
@@ -2840,8 +2840,8 @@ HEREDOC
 Command line note-taking, bookmarking, archiving, and knowledge management
 with plain-text data storage, encryption, filtering and search, Git-backed
 versioning and syncing, Pandoc-backed conversion, global and local notebooks,
-customizable color themes, extensibility through plugins, and more, all in
-a single portable, user-friendly script.
+customizable color themes, extensibility through plugins, and more, in a
+single portable, user-friendly script.
 
 $(_color_primary "Help:")
   ${_ME} help               Display this help information.
