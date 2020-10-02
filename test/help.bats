@@ -12,19 +12,22 @@ load test_helper
 @test "\`help\` with no arguments prints default help." {
   run "${_NB}" help
 
-  [[ "${output}" =~ notes\ \&\ bookmarks ]]
+  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~ nb\ edit                  ]]
 }
 
 @test "\`-h\` prints default help." {
   run "${_NB}" -h
 
-  [[ "${output}" =~ notes\ \&\ bookmarks ]]
+  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~ nb\ edit                  ]]
 }
 
 @test "\`--help\` prints default help." {
   run "${_NB}" --help
 
-  [[ "${output}" =~ notes\ \&\ bookmarks ]]
+  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~ nb\ edit                  ]]
 }
 
 @test "\`help help\` prints \`help\` subcommand usage." {

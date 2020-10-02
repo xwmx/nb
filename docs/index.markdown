@@ -859,8 +859,8 @@ go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
 
-When [Pandoc](https://pandoc.org/) is available, use the `--render` option to
-render the note to HTML and open it in your terminal browser:
+When [Pandoc](https://pandoc.org/) is available, use the `-r` / `--render`
+option to render the note to HTML and open it in your terminal browser:
 
 ```bash
 nb show example.md --render
@@ -1200,10 +1200,10 @@ Wayback Machine](https://archive.org/web/) for an archived copy.
 `nb show` and `nb edit` can also be used to view and edit bookmark files,
 which include the cached page converted to Markdown.
 
-`nb show <id> --render` displays the bookmark file converted to HTML in
-the terminal web browser, including all bookmark fields and the cached page
-content, providing a cleaned-up, distraction-free, locally-served view of
-the page content along with all of your notes.
+`nb show <id> --render` / `nb show <id> -r` displays the bookmark file
+converted to HTML in the terminal web browser, including all bookmark fields
+and the cached page content, providing a cleaned-up, distraction-free,
+locally-served view of the page content along with all of your notes.
 
 ##### Shortcut Aliases: `o` and `p`
 
@@ -1824,9 +1824,9 @@ and `>>>>>>>`:
 
 When `nb` encounters a conflict in a binary file, such as an encrypted
 note, both versions of the file are saved in the notebook as individual
-files, one with `--conflicted-copy` appended to the filename. To
-resolve a conflicted copy of a binary file, compare both versions and
-merge them manually, then delete the `--conflicted-copy`.
+files, with `--conflicted-copy` appended to the filename of the version
+from the remote. To resolve a conflicted copy of a binary file, compare
+both versions and merge them manually, then delete the `--conflicted-copy`.
 
 `nb` handles git operations automatically, so you shouldn't ever need
 to use the `git` command line tool directly. If you do encounter a
@@ -2486,11 +2486,10 @@ __          _
  / / | | | | |_) |
 /_/  |_| |_|_.__/
 
-`nb` · notes & bookmarks
-
-Command line note-taking, bookmarking, and archiving with encryption, search,
-Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-in a single portable script.
+[nb] Command line note-taking, bookmarking, archiving with plain-text data
+storage, encryption, filtering and search, Git-backed versioning and syncing,
+Pandoc-backed conversion, global and local notebooks, customizable color
+themes, plugins, and more in a single portable, user-friendly script.
 
 Help:
   nb help               Display this help information.
@@ -2556,10 +2555,9 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -2577,9 +2575,9 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3158,7 +3156,7 @@ Options:
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  video, audio, folder, text
 
 Description:
   List notes in the current notebook.
@@ -3213,7 +3211,7 @@ Options:
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  video, audio, folder, text
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -3517,7 +3515,7 @@ Options:
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder, text
 Description:
   Search notes. Uses the first available tool in the following list:
     1. `rg`    https://github.com/BurntSushi/ripgrep
@@ -3755,10 +3753,9 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   nb show <notebook>
 
 Options:
@@ -3767,9 +3764,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  --render         Use `pandoc` [1] to render the file to HTML and display with
+  -r, --render     Use `pandoc` [1] to render the file to HTML and display with
                    `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                   not available, `--render` is ignored.
+                   not available, `-r` / `--render` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -3777,7 +3774,7 @@ Options:
                    return true if the item matches <type>. <type> can be a
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
-                   text, video
+                   text, vide
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or

@@ -6,21 +6,31 @@
 #  / / | | | | |_) |
 # /_/  |_| |_|_.__/
 #
-# `nb` · notes & bookmarks
-#
-# Command line note-taking, bookmarking, archiving, and knowledge management
-# with plain-text data storage, encryption, filtering and search, Git-backed
-# versioning and syncing, Pandoc-backed conversion, global and local notebooks,
-# customizable color themes, extensibility through plugins, and more, all in
-# a single portable, user-friendly script.
+# [nb] Command line note-taking, bookmarking, archiving with plain-text data
+# storage, encryption, filtering and search, Git-backed versioning and syncing,
+# Pandoc-backed conversion, global and local notebooks, customizable color
+# themes, plugins, and more in a single portable, user-friendly script.
 #
 # ❯ https://github.com/xwmx/nb
 # ❯ https://xwmx.github.io/nb
 #
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
-# Copyright (c) 2015-present William Melody • hi@williammelody.com
-#                                           • https://www.williammelody.com
+# Copyright (c) 2015-present William Melody ┯ hi@williammelody.com
+#                                           ┕ https://www.williammelody.com
+#
+# Overview
+# ========
+#
+# - Configuration and Setup
+# - Helper Functions (grouped, alphabetical order)
+# - Help
+# - Subcommand Functions (alphabetical order)
+# - Plugins
+# - Option Parsing
+# - _main() / Dispatch
+#
+# Target Bash Versions: >= 3.2.57
 #
 # AGPLv3
 #
@@ -58,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.2.4"
+_VERSION="5.2.5"
 
 # $_ME
 #
@@ -67,7 +77,7 @@ _ME="$(basename "${0}")"
 
 # $_MY_DIR
 #
-# The directory containing $_ME
+# The directory containing $_ME.
 _MY_DIR="$(cd "$(dirname "${0}")"; pwd)"
 
 # $_MY_PATH
@@ -97,10 +107,8 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 
 # $_LANG & $_LC_ALL
 #
-# The original values of $LANG and $LC_ALL
+# The original values of $LANG and $LC_ALL.
 _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
-
-shopt -s extglob
 
 ###############################################################################
 # Utilities
@@ -152,11 +160,17 @@ _contains() {
 
 # _sed_i()
 #
-# `sed -i` takes an extension on macOS, but that extension can cause errors in
-# GNU `sed`.
+# Usage:
+#   _sed_id <sed argument>...
 #
-# https://stackoverflow.com/q/43171648
-# https://stackoverflow.com/a/16746032
+# Description:
+#   `sed -i` takes an extension on macOS, but that extension can cause errors
+#   in GNU `sed`. Detect which `sed` is available and call it with the
+#   appropriate arguments.
+#
+# More info:
+#   https://stackoverflow.com/q/43171648
+#   https://stackoverflow.com/a/16746032
 _sed_i() {
   if sed --help >/dev/null 2>&1
   then # GNU
@@ -173,11 +187,14 @@ _sed_i() {
 # _debug()
 #
 # Usage:
-#   _debug printf "Debug info. Variable: %s\\n" "$0"
+#   _debug <command> <options>...
 #
-# A simple function for executing a specified command if the `$_USE_DEBUG`
-# variable has been set. The command is expected to print a message and
-# should typically be either `echo`, `printf`, or `cat`.
+# Description:
+#   Execute a command and print to standard error. The command is expected to
+#   print a message and should typically be either `echo`, `printf`, or `cat`.
+#
+# Example:
+#   _debug printf "Debug info. Variable: %s\\n" "$0"
 __DEBUG_COUNTER=0
 __DEBUG_START_TIME=
 _debug() {
@@ -214,7 +231,7 @@ _debug() {
 }
 
 ###############################################################################
-# Error Messaging
+# Error Messages
 ###############################################################################
 
 # _exit_1()
@@ -254,15 +271,15 @@ _warn() {
 # Option Helpers
 ###############################################################################
 
-# __option_get_value()
+# _option_get_value()
 #
 # Usage:
-#   __option_get_value <option> <value>
+#   _option_get_value <option> <value>
 #
 # Description:
 #   Given a flag (e.g., -e | --example) return the value or exit 1 if value
 #   is blank or appears to be another option.
-__option_get_value() {
+_option_get_value() {
   local __arg="${1:-}"
   local __val="${2:-}"
 
@@ -276,16 +293,16 @@ __option_get_value() {
   fi
 }
 
-# __option_value_is_present()
+# _option_value_is_present()
 #
 # Usage:
-#   __option_value_is_present <value>
+#   _option_value_is_present <value>
 #
 # Exit / Error Status:
 #   0 (success, true)  The argument is present and does not match as an option
 #                      flag.
 #   1 (error,  false)  The argument is blank or matches as an option flag.
-__option_value_is_present() {
+_option_value_is_present() {
   [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
 }
 
@@ -631,6 +648,29 @@ _color_dim() {
     "${_TPUT_SGR0}"
 }
 
+# _color_id_brackets()
+#
+# Usage:
+#   _color_id_brackets <id>
+#
+# Description:
+#   Print <id> with surrounding color brackets.
+_color_id_brackets() {
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
+
+  printf "%s%s[%s%s%s]%s"     \
+    "${_TPUT_SGR0}"           \
+    "${_TPUT_SETAF_8}"        \
+    "${_TPUT_COLOR_PRIMARY}"  \
+    "${1:-}"                  \
+    "${_TPUT_SETAF_8}"        \
+    "${_TPUT_SGR0}"
+}
+
 # _color_primary()
 #
 # Usage:
@@ -684,29 +724,6 @@ _color_secondary() {
   fi
 
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
-}
-
-# _color_id_brackets()
-#
-# Usage:
-#   _color_id_brackets <id>
-#
-# Description:
-#   Print <id> with surrounding color brackets.
-_color_id_brackets() {
-  if ! ((_COLOR_ENABLED))
-  then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
-    return 0
-  fi
-
-  printf "%s%s[%s%s%s]%s"     \
-    "${_TPUT_SGR0}"           \
-    "${_TPUT_SETAF_8}"        \
-    "${_TPUT_COLOR_PRIMARY}"  \
-    "${1:-}"                  \
-    "${_TPUT_SETAF_8}"        \
-    "${_TPUT_SGR0}"
 }
 
 # Current Notebook ########################################### Current Notebook
@@ -2354,7 +2371,7 @@ _list_files() {
         _sort=1
         ;;
       --type)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _type="${__val}"
           shift
@@ -2388,82 +2405,92 @@ _list_files() {
     then
       local _grep_patterns=()
 
-      if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
-      then
-        grep --color=never    \
-          -e '\.bookmark\.'   \
-          -e '\-bookmark\.'
-      elif [[ "${_type}" =~ ^note$|^notes$|^text$ ]]
-      then
-        for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$")
-        done
+      case "${_type}" in
+        bookmark|bookmarks)
+          grep --color=never    \
+            -e '\.bookmark\.'   \
+            -e '\-bookmark\.'
+          ;;
+        note|notes)
+          for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}" \
-          | grep --color=never -v \
-              -e '\.bookmark\.'   \
-              -e '\-bookmark\.'
-      elif [[ "${_type}" =~ ^folder$|^folders$|^directory$|^directories$ ]]
-      then
-        while read -r __line
-        do
-          if [[ -d "${_notebook_path}/${__line}" ]]
-          then
-            printf "%s\\n" "${__line}"
-          fi
-        done
-      elif [[ "${_type}" =~ ^archive$ ]]
-      then
-        for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}" \
+            | grep --color=never -v \
+                -e '\.bookmark\.'   \
+                -e '\-bookmark\.'
+          ;;
+        folder|folders|directory|directories)
+          while read -r __line
+          do
+            if [[ -d "${_notebook_path}/${__line}" ]]
+            then
+              printf "%s\\n" "${__line}"
+            fi
+          done
+          ;;
+        archive)
+          for __extension in "${_ARCHIVE_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^audio$|^music$ ]]
-      then
-        for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        audio|music)
+          for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$ ]]
-      then
-        for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        document|documents|doc|docs)
+          for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^encrypted$ ]]
-      then
-        for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        encrypted)
+          for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$ ]]
-      then
-        for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        image|images|picture|pictures)
+          for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      elif [[ "${_type}" =~ ^video$|^videos$ ]]
-      then
-        for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
-        do
-          _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
-        done
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        text|txt)
+          for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$")
+          done
 
-        grep --color=never "${_grep_patterns[@]}"
-      else
-        grep --color=never -e "${_type}$"
-      fi
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        video|videos)
+          for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+          done
+
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
+        *)
+          grep --color=never -e "${_type}$"
+          ;;
+      esac
     else
       cat
     fi
@@ -2812,11 +2839,10 @@ HEREDOC
     _color_secondary  "------------------"
    cat <<HEREDOC
 
-\`nb\` · notes & bookmarks
-
-Command line note-taking, bookmarking, and archiving with encryption, search,
-Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-in a single portable script.
+$(_color_id_brackets "nb") Command line note-taking, bookmarking, archiving with plain-text data
+storage, encryption, filtering and search, Git-backed versioning and syncing,
+Pandoc-backed conversion, global and local notebooks, customizable color
+themes, plugins, and more in a single portable, user-friendly script.
 
 $(_color_primary "Help:")
   ${_ME} help               Display this help information.
@@ -2900,10 +2926,9 @@ $(_color_primary "Usage:")
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3064,7 +3089,7 @@ _add() {
 
     case "${__arg}" in
       -c|--content)
-        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        _content="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
@@ -3074,19 +3099,19 @@ _add() {
         _encrypt=1
         ;;
       -f|--filename)
-        _target_filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -t|--title|--name)
-        _title="$(__option_get_value "${__arg}" "${__val:-}")"
+        _title="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --type)
-        _file_type="$(__option_get_value "${__arg}" "${__val:-}")"
+        _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       *)
@@ -3356,7 +3381,7 @@ _bookmark() {
 
     case "${__arg}" in
       -c|--comment)
-        _comment="$(__option_get_value "${__arg}" "${__val:-}")"
+        _comment="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
@@ -3366,19 +3391,19 @@ _bookmark() {
         _encrypt=1
         ;;
       -f|--filename)
-        _target_filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -q|--quote|--excerpt)
-        _quote="$(__option_get_value "${__arg}" "${__val:-}")"
+        _quote="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -r|--via|--also|--related)
-        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
+        _related_urls+=("$(_option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
       --save-source|--source|--save-html|--html|--raw-content|--raw-html)
@@ -3388,11 +3413,11 @@ _bookmark() {
         _skip_content=1
         ;;
       -t|--tag|--tags)
-        _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
+        _tag_list="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --title)
-        _title="$(__option_get_value "${__arg}" "${__val:-}")"
+        _title="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       delete)
@@ -3414,7 +3439,7 @@ _bookmark() {
         _subcommand="search"
         ;;
       open|o|peek|p|preview|url)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           if [[ "${__arg}" =~ ^open$|^o$ ]]
           then
@@ -4317,18 +4342,18 @@ _edit() {
 
     case "${__arg}" in
       -c|--content)
-        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        _content="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
         _edit_before_commit=1
         ;;
       -e|--editor)
-        _local_editor="$(__option_get_value "${__arg}" "${__val:-}")"
+        _local_editor="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       *)
@@ -5568,7 +5593,7 @@ Options:
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  video, audio, folder, text
 
 Description:
   List notes in the current notebook.
@@ -5634,7 +5659,7 @@ _list() {
         ;;
       -e|--excerpt)
         _print_excerpt=1
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _excerpt_length="${__val:-}"
           shift
@@ -5656,7 +5681,7 @@ _list() {
         _print_indicators=0
         ;;
       -n|--limit|--num|--number)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
           shift
@@ -5675,7 +5700,7 @@ _list() {
         : # Do nothing. This is now the default behavior. TODO: Remove.
         ;;
       -t|--type)
-        _type="$(__option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       *)
@@ -6110,7 +6135,7 @@ Options:
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  video, audio, folder, text
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -6456,7 +6481,7 @@ _ls() {
         _header_flags+=("${__arg}")
         ;;
       -n|--limit|--num|--number)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
         fi
@@ -6480,7 +6505,7 @@ _ls() {
       -*)
         _arguments+=("${__arg}")
 
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _arguments+=("${__val:-}")
 
@@ -6882,7 +6907,7 @@ _notebooks() {
         --filename|--basename)
           _print_unique_filename=1
 
-          if __option_value_is_present "${__val:-}"
+          if _option_value_is_present "${__val:-}"
           then
             _filename="${__val}"
             shift
@@ -7588,7 +7613,7 @@ HEREDOC
         --filename|--basename)
           _print_unique_filename=1
 
-          if __option_value_is_present "${__val:-}"
+          if _option_value_is_present "${__val:-}"
           then
             _filename="${__val}"
             shift
@@ -8464,7 +8489,7 @@ Options:
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder, text
 Description:
   Search notes. Uses the first available tool in the following list:
     1. \`rg\`    https://github.com/BurntSushi/ripgrep
@@ -8525,7 +8550,7 @@ _search() {
         _sort=1
         ;;
       --type)
-        _type="$(__option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --use-grep)
@@ -9678,10 +9703,9 @@ HEREDOC
 
 describe "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
+          --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>]]
   ${_ME} show <notebook>
 
 Options:
@@ -9690,9 +9714,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  --render         Use \`pandoc\` [1] to render the file to HTML and display with
+  -r, --render     Use \`pandoc\` [1] to render the file to HTML and display with
                    \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is
-                   not available, \`--render\` is ignored.
+                   not available, \`-r\` / \`--render\` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -9851,7 +9875,7 @@ _show() {
         _show_color_enabled=0
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -p|--print|--dump|--skip-pager|--no-pager)
@@ -9868,13 +9892,13 @@ _show() {
         _print_title=1
         ;;
       --tool)
-        _tool="$(__option_get_value "${__arg}" "${__val:-}")"
+        _tool="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --type)
         _type_check=1
 
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _type="${__val}"
           shift
