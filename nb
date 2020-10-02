@@ -26,12 +26,12 @@
 # ========
 #
 # - Configuration and Setup
-# - Helper Functions
+# - Helper Functions (grouped, alphabetical order)
 # - Help
-# - Subcommand Functions
+# - Subcommand Functions (alphabetical order)
 # - Plugins
 # - Option Parsing
-# - Dispatch
+# - Main / Dispatch
 #
 # Target Bash Versions: >= 3.2.57
 #
