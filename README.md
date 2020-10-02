@@ -1573,7 +1573,7 @@ example · home
 
 # view item
 > nb example:3 show
-# opens in `less`
+# opens item in `less`
 
 # edit item
 > nb example:3 edit
