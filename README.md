@@ -2485,8 +2485,6 @@ storage, encryption, filtering and search, Git-backed versioning and syncing,
 Pandoc-backed conversion, global and local notebooks, customizable color
 themes, plugins, and more in a single portable, user-friendly script.
 
-📝 🔖 🔒 🔍 📚 🔄 🎨 🔌
-
 Help:
   nb help               Display this help information.
   nb help <subcommand>  View help information for <subcommand>.
