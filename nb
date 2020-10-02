@@ -31,7 +31,7 @@
 # - Subcommand Functions (alphabetical order)
 # - Plugins
 # - Option Parsing
-# - Main / Dispatch
+# - _main() / Dispatch
 #
 # Target Bash Versions: >= 3.2.57
 #
