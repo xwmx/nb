@@ -110,8 +110,6 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 # The original values of $LANG and $LC_ALL
 _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
-shopt -s extglob
-
 ###############################################################################
 # Utilities
 ###############################################################################
