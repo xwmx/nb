@@ -1445,7 +1445,7 @@ nb notebooks add example
 `nb` and `nb ls` list the available notebooks above the list of notes:
 
 ```bash
-> nb ls
+> nb
 example · home
 --------------
 [3] Title Three
@@ -1662,7 +1662,7 @@ When `nb` runs within a local notebook, the local notebook is set as the
 current notebook:
 
 ```bash
-> nb ls
+> nb
 local · example · home
 ----------------------
 [3] Title Three
@@ -1761,7 +1761,7 @@ When a notebook is archived it is not included in [`nb`](#ls) /
 nor synced automatically with [`nb sync --all`](#sync).
 
 ```bash
-> nb ls
+> nb
 example1 · example2 · example3 · [1 archived]
 ---------------------------------------------
 [3] Title Three
@@ -1944,7 +1944,7 @@ Some imported file types have indicators to make them easier to identify in
 lists:
 
 ```bash
-> nb ls
+> nb
 home
 ----
 [5] 🌄 example-picture.png
