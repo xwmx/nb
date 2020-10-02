@@ -22,6 +22,19 @@
 # Copyright (c) 2015-present William Melody • hi@williammelody.com
 #                                           • https://www.williammelody.com
 #
+# Overview
+# ========
+#
+# - Configuration and Setup
+# - Helper Functions
+# - Help
+# - Subcommand Functions
+# - Plugins
+# - Option Parsing
+# - Dispatch
+#
+# Target Bash Versions: >= 3.2.57
+#
 # AGPLv3
 #
 # This program is free software: you can redistribute it and/or modify
