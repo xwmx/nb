@@ -6194,7 +6194,12 @@ _ls() {
     local _notebook_command="${_ME} notebooks add <name>"
     if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
     then
-      _notebook_command="${_ME} use <notebook>"
+      if [[ -n "${_maybe_scope:-}" ]]
+      then
+        _notebook_command="${_ME} use ${_maybe_scope%%:*}"
+      else
+        _notebook_command="${_ME} use <notebook>"
+      fi
     fi
 
     local _commands_raw=(
