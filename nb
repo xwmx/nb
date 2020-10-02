@@ -77,7 +77,7 @@ _ME="$(basename "${0}")"
 
 # $_MY_DIR
 #
-# The directory containing $_ME
+# The directory containing $_ME.
 _MY_DIR="$(cd "$(dirname "${0}")"; pwd)"
 
 # $_MY_PATH
@@ -107,7 +107,7 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 
 # $_LANG & $_LC_ALL
 #
-# The original values of $LANG and $LC_ALL
+# The original values of $LANG and $LC_ALL.
 _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
 ###############################################################################
@@ -160,11 +160,17 @@ _contains() {
 
 # _sed_i()
 #
-# `sed -i` takes an extension on macOS, but that extension can cause errors in
-# GNU `sed`.
+# Usage:
+#   _sed_id <sed argument>...
 #
-# https://stackoverflow.com/q/43171648
-# https://stackoverflow.com/a/16746032
+# Description:
+#   `sed -i` takes an extension on macOS, but that extension can cause errors
+#   in GNU `sed`. Detect which `sed` is available and call it with the
+#   appropriate arguments.
+#
+# More info:
+#   https://stackoverflow.com/q/43171648
+#   https://stackoverflow.com/a/16746032
 _sed_i() {
   if sed --help >/dev/null 2>&1
   then # GNU
@@ -181,11 +187,14 @@ _sed_i() {
 # _debug()
 #
 # Usage:
-#   _debug printf "Debug info. Variable: %s\\n" "$0"
+#   _debug <command> <options>...
 #
-# A simple function for executing a specified command if the `$_USE_DEBUG`
-# variable has been set. The command is expected to print a message and
-# should typically be either `echo`, `printf`, or `cat`.
+# Description:
+#   Execute a command and print to standard error. The command is expected to
+#   print a message and should typically be either `echo`, `printf`, or `cat`.
+#
+# Example:
+#   _debug printf "Debug info. Variable: %s\\n" "$0"
 __DEBUG_COUNTER=0
 __DEBUG_START_TIME=
 _debug() {
@@ -222,7 +231,7 @@ _debug() {
 }
 
 ###############################################################################
-# Error Messaging
+# Error Messages
 ###############################################################################
 
 # _exit_1()
