@@ -38,8 +38,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ already\ exists ]]
-  [[ ${status} -eq 0                ]]
+  [[ ! "${output}" =~ exists  ]]
+  [[ ${status} -eq 0          ]]
 }
 
 @test "\`init\` creates \`\$NB_DIR\` and \`\$NB_NOTEBOOK_PATH\` directories." {

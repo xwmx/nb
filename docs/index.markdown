@@ -1138,8 +1138,10 @@ nb https://example.com --encrypt
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
+#### Listing and Filtering Bookmarks
+
 [`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
-and filter bookmarks:
+and filter only bookmarks:
 
 ```bash
 > nb bookmark
@@ -1153,6 +1155,50 @@ Add: nb <url> Help: nb help bookmark
 [2] 🔖 Example Two (example.com)
 ```
 
+Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
+
+```bash
+> nb
+home
+----
+[7] 🔖 Example Bookmark Three (example.com)
+[6] Example Note Three
+[5] 🔖 Example Bookmark Two (example.net)
+[4] Example Note Two
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[2] Example Note One
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+Use the [`--type <type>` / `--<type>`](#ls) option as a filter to display
+only bookmarks:
+
+```bash
+> nb --type bookmark
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
+
+> nb --bookmark
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+`nb` saves the domain in the title, making it easy to filter by domain
+using any list subcommands:
+
+```bash
+> nb example.com
+[7] 🔖 Example Bookmark Three (example.com)
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+For more listing options, see [`nb help ls`](#ls), [`nb help list`](#list),
+and [`nb help bookmark`](#bookmark).
+
 ##### Shortcut Alias: `b`
 
 `bookmark` can also be used with the alias `b`:
@@ -1161,12 +1207,13 @@ Add: nb <url> Help: nb help bookmark
 > nb b
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
-[3] 🔖 🔒 example.bookmark.md.enc
-[2] 🔖 Example Two (example.com)
-[1] 🔖 Example One (example.com)
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
 
-> nb b two
-[2] 🔖 Example Two (example.com)
+> nb b example.net
+[5] 🔖 Example Bookmark Two (example.net)
 ```
 
 #### Opening and Viewing Bookmarked Pages
@@ -1398,7 +1445,7 @@ nb notebooks add example
 `nb` and `nb ls` list the available notebooks above the list of notes:
 
 ```bash
-> nb ls
+> nb
 example · home
 --------------
 [3] Title Three
@@ -1511,6 +1558,34 @@ nb move 3 example
 nb move example:5 sample
 ```
 
+##### Example Workflow
+
+The flexibility of `nb`'s argument handling makes it easy to build commands
+step by step as items are listed, filtered, viewed, and edited, particularly
+in combination with shell history:
+
+```bash
+# list items in the "example" notebook
+> nb example:
+example · home
+--------------
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
+
+# filter list
+> nb example: three
+[example:3] Title Three
+
+# view item
+> nb example:3 show
+# opens item in `less`
+
+# edit item
+> nb example:3 edit
+# opens item in $EDITOR
+```
+
 ##### Notebooks and Tab Completion
 
 [`nb` tab completion](#tab-completion) is optimized for frequently running
@@ -1587,7 +1662,7 @@ When `nb` runs within a local notebook, the local notebook is set as the
 current notebook:
 
 ```bash
-> nb ls
+> nb
 local · example · home
 ----------------------
 [3] Title Three
@@ -1614,7 +1689,7 @@ nb move 1 home
 # search the local notebook for <query string>
 nb search "query string"
 
-# search the local notebook and all global notebooks for <query string>
+# search the local notebook and all unarchived global notebooks for <query string>
 nb search "query string" --all
 ```
 
@@ -1686,7 +1761,7 @@ When a notebook is archived it is not included in [`nb`](#ls) /
 nor synced automatically with [`nb sync --all`](#sync).
 
 ```bash
-> nb ls
+> nb
 example1 · example2 · example3 · [1 archived]
 ---------------------------------------------
 [3] Title Three
@@ -1869,7 +1944,7 @@ Some imported file types have indicators to make them easier to identify in
 lists:
 
 ```bash
-> nb ls
+> nb
 home
 ----
 [5] 🌄 example-picture.png

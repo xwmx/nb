@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.2.5"
+_VERSION="5.2.6"
 
 # $_ME
 #
@@ -5493,16 +5493,14 @@ _init() {
 
     _notebooks use "home" 1>/dev/null
 
-    printf "Created %s notebook.\\n" "$(_color_primary "home")"
+    printf "Created notebook:           %s\\n" "$(_color_primary "home")"
   }
 
   # Usage: _init_create_nb_dir
   _init_create_nb_dir() {
     if [[ -d "${NB_DIR}" ]]
     then
-      printf "%s data directory already exists: %s\\n" \
-        "$(_color_primary "${_ME}")" \
-        "${NB_DIR}"
+      printf "Data directory exists:      %s\\n" "$(_color_primary "${NB_DIR}")"
     elif [[ -e "${NB_DIR}" ]]
     then
       _exit_1 cat <<HEREDOC
@@ -5511,7 +5509,7 @@ ${NB_DIR}
 HEREDOC
     else
       mkdir -p "${NB_DIR}"
-      printf "Created %s\\n" "${NB_DIR}"
+      printf "Created data directory:     %s\\n" "$(_color_primary "${NB_DIR}")"
     fi
   }
 
@@ -5519,17 +5517,17 @@ HEREDOC
   _init_create_rc_file() {
     if [[ -e "${NBRC_PATH}" ]]
     then
-      printf "Configuration file already exists: %s\\n" \
-        "${NBRC_PATH}"
+      printf "Configuration file exists:  %s\\n" \
+        "$(_color_primary "${NBRC_PATH}")"
     else
       cat <<HEREDOC > "${NBRC_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
 # .nbrc
 #
-# Configuration file for \`${_ME}\`, a command line note-taking and document
-# management tool with encryption, search, Git-backed syncing, and more in a
-# single portable script.
+# Configuration file for \`${_ME}\`, a command line note-taking, bookmarking,
+# and knowledge base application with encryption, search, Git-backed syncing,
+# and more in a single portable script.
 #
 # Edit this file manually or manage settings using the \`${_ME} settings\`
 # subcommand. Configuration options are set as environment variables, eg:
@@ -5538,20 +5536,19 @@ HEREDOC
 # https://github.com/${_REPO}
 ###############################################################################
 HEREDOC
-      printf "Created %s\\n" "${NBRC_PATH}"
+      printf "Created configuration file: %s\\n" "$(_color_primary "${NBRC_PATH}")"
     fi
   }
 
   # Usage: _init_print_header
   _init_print_header() {
-    _print_welcome &&
-      printf "Initializing...\\n"
+    printf "%s\\n" "$(_color_primary "Initializing...")"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
   then
     _exit_1 printf "NB_DIR exists and is not a directory: %s\\n" \
-      "${NB_DIR}"
+      "$(_color_primary "${NB_DIR}")"
   fi
 
   if [[ -d "${_GLOBAL_NOTEBOOK_PATH}" ]]
@@ -5564,10 +5561,12 @@ More information:
 HEREDOC
   fi
 
-  _init_print_header        &&
-    _init_create_nb_dir     &&
-    _init_create_rc_file    &&
-    _init_create_home_notebook "${1:-}"
+  _print_welcome                                    &&
+    _init_print_header                  1>/dev/null &&
+    _init_create_nb_dir                 1>/dev/null &&
+    _init_create_rc_file                1>/dev/null &&
+    _init_create_home_notebook "${1:-}" 1>/dev/null
+
 }
 
 # list ################################################################### list
@@ -6194,7 +6193,12 @@ _ls() {
     local _notebook_command="${_ME} notebooks add <name>"
     if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
     then
-      _notebook_command="${_ME} use <notebook>"
+      if [[ -n "${_maybe_scope:-}" ]]
+      then
+        _notebook_command="${_ME} use ${_maybe_scope%%:*}"
+      else
+        _notebook_command="${_ME} use <notebook>"
+      fi
     fi
 
     local _commands_raw=(
@@ -9799,7 +9803,7 @@ _show() {
       if [[ -z "${_notebook_path:-}" ]]
       then
         _notebook_path="$(
-          _notebooks current "${_selector}" --path
+          _notebooks show "${_selector}" --path
         )"
       fi
 
@@ -9929,12 +9933,17 @@ _show() {
   fi
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   local _basename
   _basename="$(_show_selector_basename "${_selector}" "${_notebook_path}")"
 
-  if [[ -z "${_basename:-}" ]]
+  local _target_path="${_notebook_path}/${_basename}"
+
+  if [[ -z "${_basename:-}" ]] && ! {
+    ((_print_path))   || ((_print_filename)) || ((_print_id))   ||
+    ((_print_title))  || ((_print_info))     || ((_type_check))
+  }
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -9950,11 +9959,9 @@ _show() {
     fi
   fi
 
-  local _target_path="${_notebook_path}/${_basename}"
-
-  if [[ -z "${_basename:-}" ]] && [[ ! -e "${_target_path}" ]]
+  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_target_path}" ]]
   then
-    _warn printf "Selection not found.\\n"
+    _warn printf "Not found: %s\\n" "${_selector:-}"
     return 1
   fi
 
