@@ -2563,7 +2563,7 @@ ${_padding} / / | | | | |_) |
 ${_padding}/_/  |_| |_|_.__/
 HEREDOC
 
-  printf "\\n"
+  _print_line "$(printf "%-${_columns}s" '.')"
 }
 
 # _spinner()
@@ -5542,8 +5542,7 @@ HEREDOC
 
   # Usage: _init_print_header
   _init_print_header() {
-    _print_welcome
-    # printf "%s\\n" "$(_color_primary "Initializing...")"
+    printf "%s\\n" "$(_color_primary "Initializing...")"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
@@ -5562,11 +5561,11 @@ More information:
 HEREDOC
   fi
 
-  _init_print_header                                &&
+  _print_welcome                                    &&
+    _init_print_header                  1>/dev/null &&
     _init_create_nb_dir                 1>/dev/null &&
     _init_create_rc_file                1>/dev/null &&
-    _init_create_home_notebook "${1:-}" 1>/dev/null &&
-    _print_line "$(printf "%-$(tput cols)s" '.')"
+    _init_create_home_notebook "${1:-}" 1>/dev/null
 
 }
 
