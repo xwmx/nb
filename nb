@@ -9934,7 +9934,12 @@ _show() {
   local _basename
   _basename="$(_show_selector_basename "${_selector}" "${_notebook_path}")"
 
-  if [[ -z "${_basename:-}" ]]
+  local _target_path="${_notebook_path}/${_basename}"
+
+  if [[ -z "${_basename:-}" ]] && ! {
+    ((_print_path))   || ((_print_filename)) || ((_print_id))   ||
+    ((_print_title))  || ((_print_info))     || ((_type_check))
+  }
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -9950,11 +9955,9 @@ _show() {
     fi
   fi
 
-  local _target_path="${_notebook_path}/${_basename}"
-
-  if [[ -z "${_basename:-}" ]] && [[ ! -e "${_target_path}" ]]
+  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_target_path}" ]]
   then
-    _warn printf "Selection not found.\\n"
+    _warn printf "Not found: %s\\n" "${_selector:-}"
     return 1
   fi
 
