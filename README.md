@@ -1571,7 +1571,7 @@ example · home
 > nb example: three
 [example:3] Title Three
 
-# view item in viewer
+# view item
 > nb example:3 show
 # opens in `less`
 
