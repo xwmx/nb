@@ -8,6 +8,8 @@
 #
 # `nb` · notes & bookmarks
 #
+# 📝 🔖 🔒 🔍 📚 🔄 🎨 🔌
+#
 # Command line note-taking, bookmarking, archiving, and knowledge management
 # with plain-text data storage, encryption, filtering and search, Git-backed
 # versioning and syncing, Pandoc-backed conversion, global and local notebooks,
@@ -19,8 +21,8 @@
 #
 # Based on Bash Boilerplate: https://github.com/xwmx/bash-boilerplate
 #
-# Copyright (c) 2015-present William Melody • hi@williammelody.com
-#                                           • https://www.williammelody.com
+# Copyright (c) 2015-present William Melody ┯ hi@williammelody.com
+#                                           ┕ https://www.williammelody.com
 #
 # Overview
 # ========
