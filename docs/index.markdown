@@ -1153,7 +1153,7 @@ Add: nb <url> Help: nb help bookmark
 [2] 🔖 Example Two (example.com)
 ```
 
-Bookmarks are included in `nb`, `nb ls`, and `nb list`:
+Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
 
 ```bash
 > nb
