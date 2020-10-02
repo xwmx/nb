@@ -1683,7 +1683,7 @@ nb move 1 home
 # search the local notebook for <query string>
 nb search "query string"
 
-# search the local notebook and all global notebooks for <query string>
+# search the local notebook and all unarchived global notebooks for <query string>
 nb search "query string" --all
 ```
 
