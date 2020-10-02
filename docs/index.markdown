@@ -1565,7 +1565,7 @@ step by step as items are listed, filtered, viewed, and edited, particularly
 in combination with shell history:
 
 ```bash
-# list notes from the "example" notebook
+# list items in the "example" notebook
 > nb example:
 example · home
 --------------
