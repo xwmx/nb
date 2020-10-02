@@ -644,6 +644,29 @@ _color_dim() {
     "${_TPUT_SGR0}"
 }
 
+# _color_id_brackets()
+#
+# Usage:
+#   _color_id_brackets <id>
+#
+# Description:
+#   Print <id> with surrounding color brackets.
+_color_id_brackets() {
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
+
+  printf "%s%s[%s%s%s]%s"     \
+    "${_TPUT_SGR0}"           \
+    "${_TPUT_SETAF_8}"        \
+    "${_TPUT_COLOR_PRIMARY}"  \
+    "${1:-}"                  \
+    "${_TPUT_SETAF_8}"        \
+    "${_TPUT_SGR0}"
+}
+
 # _color_primary()
 #
 # Usage:
@@ -697,29 +720,6 @@ _color_secondary() {
   fi
 
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
-}
-
-# _color_id_brackets()
-#
-# Usage:
-#   _color_id_brackets <id>
-#
-# Description:
-#   Print <id> with surrounding color brackets.
-_color_id_brackets() {
-  if ! ((_COLOR_ENABLED))
-  then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
-    return 0
-  fi
-
-  printf "%s%s[%s%s%s]%s"     \
-    "${_TPUT_SGR0}"           \
-    "${_TPUT_SETAF_8}"        \
-    "${_TPUT_COLOR_PRIMARY}"  \
-    "${1:-}"                  \
-    "${_TPUT_SETAF_8}"        \
-    "${_TPUT_SGR0}"
 }
 
 # Current Notebook ########################################### Current Notebook
