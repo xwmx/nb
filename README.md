@@ -1199,12 +1199,13 @@ and [`nb help bookmark`](#bookmark).
 > nb b
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
-[3] 🔖 🔒 example.bookmark.md.enc
-[2] 🔖 Example Two (example.com)
-[1] 🔖 Example One (example.com)
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
 
-> nb b two
-[2] 🔖 Example Two (example.com)
+> nb b example.net
+[5] 🔖 Example Bookmark Two (example.net)
 ```
 
 #### Opening and Viewing Bookmarked Pages
