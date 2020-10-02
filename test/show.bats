@@ -991,7 +991,7 @@ load test_helper
   [[ "${output}" == "${NB_NOTEBOOK_PATH}/example.md"  ]]
 }
 
-@test "\`show <selector> --filename\` with <selector> only matching notebook name prints message." {
+@test "\`show <selector> --path\` with <selector> only matching notebook name prints message." {
   {
     run "${_NB}" init
     run "${_NB}" add "sample.md" --title "sample"
