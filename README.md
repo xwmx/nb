@@ -1180,13 +1180,17 @@ only bookmarks:
 [1] 🔖 Example Bookmark One (example.com)
 ```
 
-`nb` saves the domain in the title, making it easy to filter by domain:
+`nb` saves the domain in the title, making it easy to filter by domain
+using any list subcommands:
 
 ```bash
 > nb example.com
 [8] 🔖 Example Bookmark One (example.com)
 [1] 🔖 Example Bookmark One (example.com)
 ```
+
+For more listing options, see [`nb help ls`](#ls), [`nb help list`](#list),
+and [`nb help bookmark`](#bookmark).
 
 ##### Shortcut Alias: `b`
 
