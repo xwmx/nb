@@ -9799,7 +9799,7 @@ _show() {
       if [[ -z "${_notebook_path:-}" ]]
       then
         _notebook_path="$(
-          _notebooks current "${_selector}" --path
+          _notebooks show "${_selector}" --path
         )"
       fi
 
@@ -9929,7 +9929,7 @@ _show() {
   fi
 
   local _notebook_path
-  _notebook_path="$(_notebooks current "${_selector}" --path)"
+  _notebook_path="$(_notebooks current --path)"
 
   local _basename
   _basename="$(_show_selector_basename "${_selector}" "${_notebook_path}")"
