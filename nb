@@ -271,15 +271,15 @@ _warn() {
 # Option Helpers
 ###############################################################################
 
-# __option_get_value()
+# _option_get_value()
 #
 # Usage:
-#   __option_get_value <option> <value>
+#   _option_get_value <option> <value>
 #
 # Description:
 #   Given a flag (e.g., -e | --example) return the value or exit 1 if value
 #   is blank or appears to be another option.
-__option_get_value() {
+_option_get_value() {
   local __arg="${1:-}"
   local __val="${2:-}"
 
@@ -293,16 +293,16 @@ __option_get_value() {
   fi
 }
 
-# __option_value_is_present()
+# _option_value_is_present()
 #
 # Usage:
-#   __option_value_is_present <value>
+#   _option_value_is_present <value>
 #
 # Exit / Error Status:
 #   0 (success, true)  The argument is present and does not match as an option
 #                      flag.
 #   1 (error,  false)  The argument is blank or matches as an option flag.
-__option_value_is_present() {
+_option_value_is_present() {
   [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
 }
 
@@ -2371,7 +2371,7 @@ _list_files() {
         _sort=1
         ;;
       --type)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _type="${__val}"
           shift
@@ -3089,7 +3089,7 @@ _add() {
 
     case "${__arg}" in
       -c|--content)
-        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        _content="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
@@ -3099,19 +3099,19 @@ _add() {
         _encrypt=1
         ;;
       -f|--filename)
-        _target_filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -t|--title|--name)
-        _title="$(__option_get_value "${__arg}" "${__val:-}")"
+        _title="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --type)
-        _file_type="$(__option_get_value "${__arg}" "${__val:-}")"
+        _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       *)
@@ -3381,7 +3381,7 @@ _bookmark() {
 
     case "${__arg}" in
       -c|--comment)
-        _comment="$(__option_get_value "${__arg}" "${__val:-}")"
+        _comment="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
@@ -3391,19 +3391,19 @@ _bookmark() {
         _encrypt=1
         ;;
       -f|--filename)
-        _target_filename="$(__option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -q|--quote|--excerpt)
-        _quote="$(__option_get_value "${__arg}" "${__val:-}")"
+        _quote="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -r|--via|--also|--related)
-        _related_urls+=("$(__option_get_value "${__arg}" "${__val:-}")")
+        _related_urls+=("$(_option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
       --save-source|--source|--save-html|--html|--raw-content|--raw-html)
@@ -3413,11 +3413,11 @@ _bookmark() {
         _skip_content=1
         ;;
       -t|--tag|--tags)
-        _tag_list="$(__option_get_value "${__arg}" "${__val:-}")"
+        _tag_list="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --title)
-        _title="$(__option_get_value "${__arg}" "${__val:-}")"
+        _title="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       delete)
@@ -3439,7 +3439,7 @@ _bookmark() {
         _subcommand="search"
         ;;
       open|o|peek|p|preview|url)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           if [[ "${__arg}" =~ ^open$|^o$ ]]
           then
@@ -4342,18 +4342,18 @@ _edit() {
 
     case "${__arg}" in
       -c|--content)
-        _content="$(__option_get_value "${__arg}" "${__val:-}")"
+        _content="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
         _edit_before_commit=1
         ;;
       -e|--editor)
-        _local_editor="$(__option_get_value "${__arg}" "${__val:-}")"
+        _local_editor="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       *)
@@ -5659,7 +5659,7 @@ _list() {
         ;;
       -e|--excerpt)
         _print_excerpt=1
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _excerpt_length="${__val:-}"
           shift
@@ -5681,7 +5681,7 @@ _list() {
         _print_indicators=0
         ;;
       -n|--limit|--num|--number)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
           shift
@@ -5700,7 +5700,7 @@ _list() {
         : # Do nothing. This is now the default behavior. TODO: Remove.
         ;;
       -t|--type)
-        _type="$(__option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       *)
@@ -6481,7 +6481,7 @@ _ls() {
         _header_flags+=("${__arg}")
         ;;
       -n|--limit|--num|--number)
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _limit="${__val:-}"
         fi
@@ -6505,7 +6505,7 @@ _ls() {
       -*)
         _arguments+=("${__arg}")
 
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _arguments+=("${__val:-}")
 
@@ -6907,7 +6907,7 @@ _notebooks() {
         --filename|--basename)
           _print_unique_filename=1
 
-          if __option_value_is_present "${__val:-}"
+          if _option_value_is_present "${__val:-}"
           then
             _filename="${__val}"
             shift
@@ -7613,7 +7613,7 @@ HEREDOC
         --filename|--basename)
           _print_unique_filename=1
 
-          if __option_value_is_present "${__val:-}"
+          if _option_value_is_present "${__val:-}"
           then
             _filename="${__val}"
             shift
@@ -8550,7 +8550,7 @@ _search() {
         _sort=1
         ;;
       --type)
-        _type="$(__option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --use-grep)
@@ -9875,7 +9875,7 @@ _show() {
         _show_color_enabled=0
         ;;
       --password)
-        _password="$(__option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -p|--print|--dump|--skip-pager|--no-pager)
@@ -9892,13 +9892,13 @@ _show() {
         _print_title=1
         ;;
       --tool)
-        _tool="$(__option_get_value "${__arg}" "${__val:-}")"
+        _tool="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --type)
         _type_check=1
 
-        if __option_value_is_present "${__val:-}"
+        if _option_value_is_present "${__val:-}"
         then
           _type="${__val}"
           shift
