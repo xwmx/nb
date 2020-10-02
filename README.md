@@ -1150,7 +1150,7 @@ Add: nb <url> Help: nb help bookmark
 Bookmarks are included in `nb`, `nb ls`, and `nb list`:
 
 ```bash
-> nb ls
+> nb
 home
 ----
 [7] 🔖 Example Bookmark Three (example.com)
