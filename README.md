@@ -2480,13 +2480,12 @@ __          _
  / / | | | | |_) |
 /_/  |_| |_|_.__/
 
-`nb` · notes & bookmarks
+[nb] Command line note-taking, bookmarking, archiving with plain-text data
+storage, encryption, filtering and search, Git-backed versioning and syncing,
+Pandoc-backed conversion, global and local notebooks, customizable color
+themes, plugins, and more in a single portable, user-friendly script.
 
-Command line note-taking, bookmarking, archiving, and knowledge management
-with plain-text data storage, encryption, filtering and search, Git-backed
-versioning and syncing, Pandoc-backed conversion, global and local notebooks,
-customizable color themes, extensibility through plugins, and more, in a
-single portable, user-friendly script.
+📝 🔖 🔒 🔍 📚 🔄 🎨 🔌
 
 Help:
   nb help               Display this help information.
