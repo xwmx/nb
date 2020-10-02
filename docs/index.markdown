@@ -1558,6 +1558,34 @@ nb move 3 example
 nb move example:5 sample
 ```
 
+##### Example Workflow
+
+The flexibility of `nb`'s argument handling makes it easy to build commands
+step by step as items are listed, filtered, viewed, and edited, particularly
+in combination with shell history:
+
+```bash
+# list notes from the "example" notebook
+> nb example:
+example · home
+--------------
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
+
+# filter list
+> nb example: three
+[example:3] Title Three
+
+# view item in viewer
+> nb example:3 show
+# opens in `less`
+
+# edit item
+> nb example:3 edit
+# opens item in $EDITOR
+```
+
 ##### Notebooks and Tab Completion
 
 [`nb` tab completion](#tab-completion) is optimized for frequently running
