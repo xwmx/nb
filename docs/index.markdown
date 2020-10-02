@@ -1159,9 +1159,8 @@ Bookmarks are included in `nb`, `nb ls`, and `nb list`:
 > nb ls
 home
 ----
-[8] 🔖 Example Bookmark Three (example.com)
-[7] Example Note Three
-[6] 🔒 example-encrypted-note.md.enc
+[7] 🔖 Example Bookmark Three (example.com)
+[6] Example Note Three
 [5] 🔖 Example Bookmark Two (example.net)
 [4] Example Note Two
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
@@ -1174,13 +1173,13 @@ only bookmarks:
 
 ```bash
 > nb --type bookmark
-[8] 🔖 Example Bookmark Three (example.com)
+[7] 🔖 Example Bookmark Three (example.com)
 [5] 🔖 Example Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
 [1] 🔖 Example Bookmark One (example.com)
 
 > nb --bookmark
-[8] 🔖 Example Bookmark Three (example.com)
+[7] 🔖 Example Bookmark Three (example.com)
 [5] 🔖 Example Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
 [1] 🔖 Example Bookmark One (example.com)
@@ -1191,7 +1190,7 @@ using any list subcommands:
 
 ```bash
 > nb example.com
-[8] 🔖 Example Bookmark One (example.com)
+[7] 🔖 Example Bookmark Three (example.com)
 [1] 🔖 Example Bookmark One (example.com)
 ```
 
