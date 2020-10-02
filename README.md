@@ -1132,6 +1132,8 @@ nb https://example.com --encrypt
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
+#### Listing and Filtering Bookmarks
+
 [`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
 and filter only bookmarks:
 
