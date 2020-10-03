@@ -190,8 +190,8 @@ To install with [npm](https://www.npmjs.com/package/nb.sh):
 npm install -g nb.sh
 ```
 
-Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+Installing `nb` through `npm` also installs completion scripts for Bash and
+Zsh. On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
 *Note: `nb` is also currently still available under
@@ -357,7 +357,7 @@ string as the content and the editor is not opened:
 
 ```bash
 > nb add "This is a note."
-Added [5] 20200101000000.md
+Added: [5] 20200101000000.md
 ```
 
 `nb add <string>` is useful for quickly jotting down notes directly
@@ -372,15 +372,15 @@ the filename.
 ```bash
 # create a new note containing "Note content."
 > echo "Note content." | nb add
-Added [6] 20200101000100.md
+Added: [6] 20200101000100.md
 
 # create a new note containing the clipboard contents on macOS
 > pbpaste | nb add
-Added [7] 20200101000200.md
+Added: [7] 20200101000200.md
 
 # create a new note containing the clipboard contents using xclip
 > xclip -o | nb add
-Added [8] 20200101000300.md
+Added: [8] 20200101000300.md
 ```
 
 Content can be passed with the `--content` option, which will also
@@ -399,7 +399,7 @@ short options:
 
 ```bash
 > nb add --filename "example.md" -t "Example Title" -c "Example content."
-Added [9] example.md 'Example Title'
+Added: [9] example.md "Example Title"
 ```
 
 The `-t <title>` / `--title <title>` option will also set the filename
@@ -407,7 +407,7 @@ to the title, with spaces replaced with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added [10] Example_Title.md 'Example Title'
+Added: [10] Example_Title.md "Example Title"
 ```
 
 Files can be created with any file type either by specifying the
@@ -1290,7 +1290,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added [3] 20200101000000.bookmark.md "Example Title (example.com)"
+Added: [3] 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -2474,7 +2474,7 @@ nb> edit 3 --content "New content."
 Updated [3] Example
 
 nb> bookmark https://example.com
-Added [4] example.bookmark.md "Example Title (example.com)"
+Added: [4] example.bookmark.md "Example Title (example.com)"
 
 nb> ls
 home
