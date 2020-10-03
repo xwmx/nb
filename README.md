@@ -1833,8 +1833,8 @@ pass the URL to [`nb notebooks add`](#notebooks) and `nb` will clone
 your existing notebook and start syncing changes automatically:
 
 ```bash
-# create a new notebook named Example cloned from a private GitLab repository
-nb notebooks add Example https://gitlab.com/example/example.git
+# create a new notebook named "example" cloned from a private GitLab repository
+nb notebooks add example https://gitlab.com/example/example.git
 ```
 
 Turn off syncing for a notebook by removing the remote:
