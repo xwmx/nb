@@ -1861,9 +1861,9 @@ _get_first_line() {
         then
           if [[ -z "${_first_line}" ]] && [[ -n "${__line}" ]]
           then
-            if [[ "${#__line}" -gt 120 ]]
+            if [[ "${#__line}" -gt 500 ]]
             then
-              _first_line="${__line:0:120}..."
+              _first_line="${__line:0:500}..."
             else
               _first_line="${__line}"
             fi
