@@ -4473,8 +4473,8 @@ Description:
   dependencies.
 HEREDOC
 _env() {
-  # Usage: _install_deb <name> <version> <repo>
-  _install_deb() {
+  # Usage: _env_install_deb <name> <version> <repo>
+  _env_install_deb() {
     local _name="${1:?}"
     local _repo="${3:?}"
     local _version="${2:?}"
@@ -4493,8 +4493,8 @@ _env() {
     fi
   }
 
-  # Usage: _max_version <version> <version>
-  _max_version() {
+  # Usage: _env_max_version <version> <version>
+  _env_max_version() {
     printf "%s\\n" "${@:?}"                           \
       | sort -r -t '.' -k 1,1 -k 2,2 -k 3,3 -k 4,4 -g \
       | head -n 1
@@ -4533,14 +4533,14 @@ _env() {
       local _os_version
       _os_version="$(lsb_release -d | awk '{print $3}')"
 
-      if [[ "$(_max_version "${_os_version}" "18.10")" == "${_os_version}" ]]
+      if [[ "$(_env_max_version "${_os_version}" "18.10")" == "${_os_version}" ]]
       then
         _apt_packages+=("ripgrep")
       else
         _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
       fi
 
-      if [[ "$(_max_version "${_os_version}" "19.10")" == "${_os_version}" ]]
+      if [[ "$(_env_max_version "${_os_version}" "19.10")" == "${_os_version}" ]]
       then
         _apt_packages+=("bat")
       else
@@ -4553,7 +4553,7 @@ _env() {
 
       for __package in "${_deb_packages[@]}"
       do
-        eval "_install_deb ${__package}"
+        eval "_env_install_deb ${__package}"
       done
     elif [[ -x "$(command -v dnf)" ]]
     then
