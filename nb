@@ -1173,7 +1173,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "$(_color_primary "Name"): " __name
+        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
         if [[ -n "${__name}" ]]
         then
           git config --global user.name "${__name}"
@@ -1186,7 +1186,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "$(_color_primary "Email"): " __email
+        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
         if [[ -n "${__email}" ]]
         then
           git config --global user.email "${__email}"
@@ -3611,7 +3611,7 @@ _bookmark() {
           "$(_color_primary "${_target_url}")"
         while true
         do
-          read -r -p "\
+          IFS='' read -r -e -d $'\n' -p "\
 Check the Wayback Machine for an archived version instead? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
@@ -4259,7 +4259,7 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      read -r -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -4726,7 +4726,7 @@ _export() {
         printf "File exists at %s\\n" "$(_color_primary "${_target_path}")"
         while true
         do
-          read -r -p "Overwrite existing file? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' -p "Overwrite existing file? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
               break
@@ -6717,7 +6717,7 @@ _move() {
       "$(_color_primary "${_target_notebook}")"
     while true
     do
-      read -r -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -7028,7 +7028,7 @@ and the entire revision history.
 HEREDOC
       while true
       do
-        read -r -p "\
+        IFS='' read -r -e -d $'\n' -p "\
 Please type $(_color_primary "${_name}") to confirm: " __response
         if [[ "${__response}" == "${_name}" ]]
         then
@@ -8077,7 +8077,7 @@ $(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
-          read -r -p "Proceed? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
               break
@@ -8193,7 +8193,7 @@ _remote() {
           while true
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
-            read -r -p "Proceed? [y/N] " __yn
+            IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
                 break
@@ -8234,7 +8234,7 @@ _remote() {
             printf "Updating remote from %s to %s\\n" \
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
-            read -r -p "Proceed? [y/N] " __yn
+            IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
                 break
@@ -8430,7 +8430,7 @@ _rename() {
       "$(_color_primary "${_target_basename}")"
     while true
     do
-      read -r -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -9087,7 +9087,7 @@ HEREDOC
 
       while true
       do
-        read -r -p "$(_color_primary "Number or Name: ")" __setting
+        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Number or Name: ")" __setting
         if [[ -n "${__setting}" ]]
         then
           case "${__setting}" in
@@ -9123,7 +9123,7 @@ HEREDOC
 
     while true
     do
-      read -r -p "$(_color_primary "Value: ")" __value
+      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
       if [[ -n "${__value}" ]]
       then
         case "${__value}" in
@@ -10540,7 +10540,7 @@ HEREDOC
       while true
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
-        read -r -p "Proceed? [y/N] " __yn
+        IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
         case ${__yn} in
           [Yy]*)
             break
