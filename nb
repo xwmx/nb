@@ -4482,8 +4482,8 @@ _env() {
     local _deb_filename="${_name}_${_version}_amd64.deb"
     local _deb_local_path="${HOME}/${_deb_filename}"
 
-    # Handle bats version prefix in URL.
-    [[ "${_name}" == "bats" ]] && _version="v${_version}"
+    # Handle bat version prefix in URL.
+    [[ "${_name}" == "bat" ]] && _version="v${_version}"
 
     wget \
       -O "${_deb_local_path}" \
