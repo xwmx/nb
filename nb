@@ -2195,7 +2195,27 @@ _get_unique_path() {
 # References:
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if ((_COLOR_ENABLED)) && hash "hicat" 2>/dev/null
+  if ((_COLOR_ENABLED)) && hash "bat" 2>/dev/null
+  then
+    local _arguments=()
+    local _theme="Dracula"
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--language" "md")
+      fi
+    fi
+
+    bat "${_arguments[@]}"  \
+      --paging never        \
+      --color always        \
+      --plain               \
+      --theme "${_theme:-}"
+  elif ((_COLOR_ENABLED)) && hash "hicat" 2>/dev/null
   then
     local _arguments=()
 
