@@ -172,7 +172,7 @@ brew install xwmx/taps/nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
-and completion scripts.
+and completion scripts for Bash and Zsh.
 
 #### Ubuntu, Windows WSL, and others
 
