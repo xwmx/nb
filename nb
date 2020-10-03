@@ -3003,7 +3003,7 @@ HEREDOC
                 "${PAGER}"
               elif ((_use_pager)) && _command_exists "less"
               then
-                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
               else
                 cat
               fi
