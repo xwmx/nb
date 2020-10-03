@@ -2189,10 +2189,11 @@ _get_unique_path() {
 #   _highlight_syntax_if_available [<path>] [<lexer>]
 #
 # Description:
-#   If Pygments is available, use it to highlight syntax. When it is not
-#   available, just pipe through `cat`.
+#   If `bat` or Pygments is available, use it to highlight syntax. When neither
+#   is available, pipe through `cat`.
 #
 # References:
+#   https://github.com/sharkdp/bat
 #   https://pygments.org/
 _highlight_syntax_if_available() {
   if ((_COLOR_ENABLED)) && hash "bat" 2>/dev/null
@@ -2215,23 +2216,6 @@ _highlight_syntax_if_available() {
       --color always        \
       --plain               \
       --theme "${_theme:-}"
-  elif ((_COLOR_ENABLED)) && hash "hicat" 2>/dev/null
-  then
-    local _arguments=()
-
-    if _interactive_input
-    then
-      _arguments+=("${1:-}")
-    else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--lang" "md")
-      else
-        _arguments+=("--lang" "${1##*.}")
-      fi
-    fi
-
-    hicat "${_arguments[@]}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
@@ -2260,23 +2244,6 @@ _highlight_syntax_if_available() {
     _interactive_input      && _arguments+=("${_path}")
 
     pygmentize "${_arguments[@]}" 2>/dev/null
-  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
-  then
-    local _arguments=("-O" "xterm256")
-
-    if _interactive_input
-    then
-      _arguments+=("${1:-}")
-    else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--syntax-by-name" "md")
-      else
-        _arguments+=("--syntax" "${1}")
-      fi
-    fi
-
-    highlight "${_arguments[@]}"
   else
     cat "${@}"
   fi
@@ -4506,6 +4473,26 @@ Description:
   dependencies.
 HEREDOC
 _env() {
+  # Usage: _install_deb <name> <version> <repo>
+  _install_deb() {
+    local _name="${1:?}"
+    local _repo="${3:?}"
+    local _version="${2:?}"
+
+    local _deb_filename="${_name}_${_version}_amd64.deb"
+    local _deb_local_path="${HOME}/${_deb_filename}"
+
+    wget \
+      -O "${_deb_local_path}" \
+      "https://github.com/${_repo}/releases/download/${_version}/${_deb_filename}"
+
+    if [[ -e "${_deb_local_path}" ]]
+    then
+      dpkg -i "${_deb_local_path}"
+      rm "${_deb_local_path:?}"
+    fi
+  }
+
   local _subcommand="${1:-}"
   if [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "install" ]]
   then
@@ -4526,44 +4513,46 @@ _env() {
     then
       _completions install --download
 
-      if [[ "$(lsb_release -d       \
-                | awk '{print $3}'  \
-                | sed -e 's/\.//g'  \
-                | sed -E 's/(\d\d\d\d).*/\1/g')" -gt "1810" ]]
+      local _apt_packages=(
+        bash-completion
+        curl
+        pandoc
+        python3-pygments
+        tig
+        w3m
+      )
+      local _deb_packages=()
+
+      local _os_version
+      _os_version="$(
+        lsb_release -d   \
+          | awk '{print $3}'                  \
+          | sed -e 's/\.//g'                  \
+          | sed -E 's/(\d\d\d\d).*/\1/g'
+      )"
+
+      if [[ "${_os_version}" -gt "1810" ]]
       then
-        apt update
-        apt-get install     \
-          bash-completion   \
-          curl              \
-          pandoc            \
-          python3-pygments  \
-          ripgrep           \
-          tig               \
-          w3m
+        _apt_packages+=("ripgrep")
       else
-        apt-get update
-        apt-get install     \
-          bash-completion   \
-          curl              \
-          pandoc            \
-          python3-pygments  \
-          tig               \
-          w3m
-
-        local _rg_version="12.1.1"
-        local _deb_filename="ripgrep_${_rg_version}_amd64.deb"
-        local _deb_local_path="${HOME}/${_deb_filename}"
-
-        wget \
-          -O "${_deb_local_path}" \
-          "https://github.com/BurntSushi/ripgrep/releases/download/${_rg_version}/${_deb_filename}"
-
-        if [[ -e "${_deb_local_path}" ]]
-        then
-          dpkg -i "${_deb_local_path}"
-          rm "${_deb_local_path:?}"
-        fi
+        _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
       fi
+
+      if [[ "${_os_version}" -gt "1910" ]]
+      then
+        _apt_packages+=("bat")
+      else
+        _deb_packages+=("bat 0.16.0 sharkdp/bat")
+      fi
+
+      apt update
+
+      apt-get install "${_apt_packages[@]}"
+
+      for __package in "${_deb_packages[@]}"
+      do
+        eval "_install_deb ${__package}"
+      done
     elif [[ -x "$(command -v dnf)" ]]
     then
       : # TODO: dnf install
@@ -9774,12 +9763,14 @@ Description:
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
-  If Pygments [4] is installed, notes are printed with syntax highlighting.
+  If \`bats\` [4] or Pygments [5] is installed, notes are printed with
+  syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
-    4. https://pygments.org/
+    4. https://github.com/sharkdp/bat
+    5. https://pygments.org/
 
 Examples:
   ${_ME} show 1

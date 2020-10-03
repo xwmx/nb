@@ -139,11 +139,11 @@ they are available.
 
 Recommended:
 
+- [`bat`](https://github.com/sharkdp/bat)
 - [Pandoc](https://pandoc.org/)
-- [Pygments](https://pygments.org/)
-- [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
-- [tig](https://github.com/jonas/tig)
-- [w3m](https://en.wikipedia.org/wiki/W3m)
+- [`rg` / ripgrep](https://github.com/BurntSushi/ripgrep)
+- [`tig`](https://github.com/jonas/tig)
+- [`w3m`](https://en.wikipedia.org/wiki/W3m)
 
 Also supported for various enhancements:
 
@@ -161,6 +161,7 @@ Also supported for various enhancements:
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
+[Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/)
 
 #### macOS / Homebrew
@@ -831,8 +832,8 @@ nb 3 show
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[Pygments](https://pygments.org/) is installed. You can navigate in
-`less` using the following keys:
+[`bat`](https://github.com/sharkdp/bat) or [Pygments](https://pygments.org/)
+is installed. You can navigate in `less` using the following keys:
 
 ```text
 Key               Function
@@ -3869,12 +3870,14 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  If Pygments [4] is installed, notes are printed with syntax highlighting.
+  If `bats` [4] or Pygments [5] is installed, notes are printed with
+  syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
-    4. https://pygments.org/
+    4. https://github.com/sharkdp/bat
+    5. https://pygments.org/
 
 Examples:
   nb show 1
