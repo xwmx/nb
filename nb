@@ -409,6 +409,13 @@ export NB_HEADER="${NB_HEADER:-2}"
 # Supported Values: any positive number
 export NB_LIMIT="${NB_LIMIT:-20}"
 
+# $NB_SYNTAX_THEME
+#
+# Default: 'dracula'
+#
+# Supported Values: Theme names listed with `bat --list-themes`
+export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-Dracula}"
+
 # $EDITOR ############################################################# $EDITOR
 
 # Set default $EDITOR if one has not been set.
@@ -2199,7 +2206,7 @@ _highlight_syntax_if_available() {
   if ((_COLOR_ENABLED)) && hash "bat" 2>/dev/null
   then
     local _arguments=()
-    local _theme="Dracula"
+    local _theme="${NB_SYNTAX_THEME}"
 
     if _interactive_input
     then
