@@ -4495,8 +4495,8 @@ _env() {
 
   # Usage: _max_version <version> <version>
   _max_version() {
-    printf "%s\\n" "${@:?}"                         \
-      | sort -t '.' -k 1,1 -k 2,2 -k 3,3 -k 4,4 -g  \
+    printf "%s\\n" "${@:?}"                           \
+      | sort -r -t '.' -k 1,1 -k 2,2 -k 3,3 -k 4,4 -g \
       | head -n 1
   }
 
