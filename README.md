@@ -176,6 +176,22 @@ and completion scripts.
 
 #### Ubuntu, Windows WSL, and others
 
+##### npm
+
+To install with [npm](https://www.npmjs.com/package/nb.sh):
+
+```bash
+npm install -g nb.sh
+```
+
+Installing through `npm` only installs completion scripts.
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
+
+*Note: `nb` is also currently still available under
+its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
+which comes with an extra `notes` executable wrapping `nb`.*
+
 ##### Download and Install
 
 To install as an administrator, copy and paste one of the following multi-line
@@ -230,22 +246,6 @@ sudo make install
 
 This will also install the completion scripts on all systems and the
 recommended dependencies on Ubuntu and WSL.
-
-##### npm
-
-To install with [npm](https://www.npmjs.com/package/nb.sh):
-
-```bash
-npm install -g nb.sh
-```
-
-Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
-the optional dependencies.
-
-*Note: `nb` is also currently still available under
-its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
-which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### bpkg
 
