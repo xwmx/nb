@@ -4493,6 +4493,13 @@ _env() {
     fi
   }
 
+  # Usage: _max_version <version> <version>
+  _max_version() {
+    printf "%s\\n" "${@:?}"                         \
+      | sort -t '.' -k 1,1 -k 2,2 -k 3,3 -k 4,4 -g  \
+      | head -n 1
+  }
+
   local _subcommand="${1:-}"
   if [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "install" ]]
   then
@@ -4524,21 +4531,16 @@ _env() {
       local _deb_packages=()
 
       local _os_version
-      _os_version="$(
-        lsb_release -d   \
-          | awk '{print $3}'                  \
-          | sed -e 's/\.//g'                  \
-          | sed -E 's/(\d\d\d\d).*/\1/g'
-      )"
+      _os_version="$(lsb_release -d | awk '{print $3}')"
 
-      if [[ "${_os_version}" -gt "1810" ]]
+      if [[ "$(_max_version "${_os_version}" "18.10")" == "${_os_version}" ]]
       then
         _apt_packages+=("ripgrep")
       else
         _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
       fi
 
-      if [[ "${_os_version}" -gt "1910" ]]
+      if [[ "$(_max_version "${_os_version}" "19.10")" == "${_os_version}" ]]
       then
         _apt_packages+=("bat")
       else
