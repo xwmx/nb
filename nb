@@ -8619,10 +8619,10 @@ Examples:
   # search with a regular expression
   ${_ME} search "\d\d\d-\d\d\d\d"
 
-  # search the current notebook for "example query
+  # search the current notebook for "example query"
   ${_ME} q "example query"
 
-  # search the notebook named "example" for "example query
+  # search the notebook named "example" for "example query"
   ${_ME} example:q "example query"
 
   # search all notebooks for "example query" and list matching items

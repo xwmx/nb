@@ -1371,10 +1371,10 @@ nb search "example" --type bookmark
 # search bookmarks for "example", alternative
 nb b q "example"
 
-# search the current notebook for "example query
+# search the current notebook for "example query"
 nb q "example query"
 
-# search the notebook named "example" for "example query
+# search the notebook named "example" for "example query"
 nb example:q "example query"
 
 # search all unarchived notebooks for "example query" and list matching items
@@ -3720,10 +3720,10 @@ Examples:
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
 
-  # search the current notebook for "example query
+  # search the current notebook for "example query"
   nb q "example query"
 
-  # search the notebook named "example" for "example query
+  # search the notebook named "example" for "example query"
   nb example:q "example query"
 
   # search all notebooks for "example query" and list matching items
