@@ -4075,7 +4075,6 @@ Examples:
   nb s example:12
   nb example:12 s
 
-
 Alias: `view`
 Shortcut Alias: `s`
 ```
