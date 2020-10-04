@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.2.6"
+_VERSION="5.3.0"
 
 # $_ME
 #
@@ -408,6 +408,13 @@ export NB_HEADER="${NB_HEADER:-2}"
 #
 # Supported Values: any positive number
 export NB_LIMIT="${NB_LIMIT:-20}"
+
+# $NB_SYNTAX_THEME
+#
+# Default: 'dracula'
+#
+# Supported Values: Theme names listed with `bat --list-themes`
+export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-Dracula}"
 
 # $EDITOR ############################################################# $EDITOR
 
@@ -1173,7 +1180,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "$(_color_primary "Name"): " __name
+        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
         if [[ -n "${__name}" ]]
         then
           git config --global user.name "${__name}"
@@ -1186,7 +1193,7 @@ HEREDOC
     then
       while true
       do
-        read -r -p "$(_color_primary "Email"): " __email
+        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
         if [[ -n "${__email}" ]]
         then
           git config --global user.email "${__email}"
@@ -1861,9 +1868,9 @@ _get_first_line() {
         then
           if [[ -z "${_first_line}" ]] && [[ -n "${__line}" ]]
           then
-            if [[ "${#__line}" -gt 120 ]]
+            if [[ "${#__line}" -gt 500 ]]
             then
-              _first_line="${__line:0:120}..."
+              _first_line="${__line:0:500}..."
             else
               _first_line="${__line}"
             fi
@@ -2189,15 +2196,17 @@ _get_unique_path() {
 #   _highlight_syntax_if_available [<path>] [<lexer>]
 #
 # Description:
-#   If Pygments is available, use it to highlight syntax. When it is not
-#   available, just pipe through `cat`.
+#   If `bat` or Pygments is available, use it to highlight syntax. When neither
+#   is available, pipe through `cat`.
 #
 # References:
+#   https://github.com/sharkdp/bat
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if ((_COLOR_ENABLED)) && hash "hicat" 2>/dev/null
+  if ((_COLOR_ENABLED)) && hash "bat" 2>/dev/null
   then
     local _arguments=()
+    local _theme="${NB_SYNTAX_THEME}"
 
     if _interactive_input
     then
@@ -2205,13 +2214,15 @@ _highlight_syntax_if_available() {
     else
       if [[ -z "${1:-}" ]]
       then
-        _arguments+=("--lang" "md")
-      else
-        _arguments+=("--lang" "${1##*.}")
+        _arguments+=("--language" "md")
       fi
     fi
 
-    hicat "${_arguments[@]}"
+    bat "${_arguments[@]}"  \
+      --paging never        \
+      --color always        \
+      --plain               \
+      --theme "${_theme:-}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
@@ -2240,23 +2251,6 @@ _highlight_syntax_if_available() {
     _interactive_input      && _arguments+=("${_path}")
 
     pygmentize "${_arguments[@]}" 2>/dev/null
-  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
-  then
-    local _arguments=("-O" "xterm256")
-
-    if _interactive_input
-    then
-      _arguments+=("${1:-}")
-    else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--syntax-by-name" "md")
-      else
-        _arguments+=("--syntax" "${1}")
-      fi
-    fi
-
-    highlight "${_arguments[@]}"
   else
     cat "${@}"
   fi
@@ -2828,6 +2822,10 @@ To view a table of available colors and numbers, run:
 
     $(_color_primary "${_ME} settings colors")
 
+To set the syntax highlighting color theme, use:
+
+    $(_color_primary "${_ME} set syntax_theme")
+
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
@@ -3009,7 +3007,7 @@ HEREDOC
                 "${PAGER}"
               elif ((_use_pager)) && _command_exists "less"
               then
-                less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
               else
                 cat
               fi
@@ -3611,7 +3609,7 @@ _bookmark() {
           "$(_color_primary "${_target_url}")"
         while true
         do
-          read -r -p "\
+          IFS='' read -r -e -d $'\n' -p "\
 Check the Wayback Machine for an archived version instead? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
@@ -4259,7 +4257,7 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      read -r -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -4486,6 +4484,36 @@ Description:
   dependencies.
 HEREDOC
 _env() {
+  # Usage: _env_install_deb <name> <version> <repo>
+  _env_install_deb() {
+    local _name="${1:?}"
+    local _repo="${3:?}"
+    local _version="${2:?}"
+
+    local _deb_filename="${_name}_${_version}_amd64.deb"
+    local _deb_local_path="${HOME}/${_deb_filename}"
+
+    # Handle bat version prefix in URL.
+    [[ "${_name}" == "bat" ]] && _version="v${_version}"
+
+    wget \
+      -O "${_deb_local_path}" \
+      "https://github.com/${_repo}/releases/download/${_version}/${_deb_filename}"
+
+    if [[ -e "${_deb_local_path}" ]]
+    then
+      dpkg -i "${_deb_local_path}"
+      rm "${_deb_local_path:?}"
+    fi
+  }
+
+  # Usage: _env_max_version <version> <version>
+  _env_max_version() {
+    printf "%s\\n" "${@:?}"                           \
+      | sort -r -t '.' -k 1,1 -k 2,2 -k 3,3 -k 4,4 -g \
+      | head -n 1
+  }
+
   local _subcommand="${1:-}"
   if [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "install" ]]
   then
@@ -4506,44 +4534,41 @@ _env() {
     then
       _completions install --download
 
-      if [[ "$(lsb_release -d       \
-                | awk '{print $3}'  \
-                | sed -e 's/\.//g'  \
-                | sed -E 's/(\d\d\d\d).*/\1/g')" -gt "1810" ]]
+      local _apt_packages=(
+        bash-completion
+        curl
+        pandoc
+        python3-pygments
+        tig
+        w3m
+      )
+      local _deb_packages=()
+
+      local _os_version
+      _os_version="$(lsb_release -d | awk '{print $3}')"
+
+      if [[ "$(_env_max_version "${_os_version}" "18.10")" == "${_os_version}" ]]
       then
-        apt update
-        apt-get install     \
-          bash-completion   \
-          curl              \
-          pandoc            \
-          python3-pygments  \
-          ripgrep           \
-          tig               \
-          w3m
+        _apt_packages+=("ripgrep")
       else
-        apt-get update
-        apt-get install     \
-          bash-completion   \
-          curl              \
-          pandoc            \
-          python3-pygments  \
-          tig               \
-          w3m
-
-        local _rg_version="12.1.1"
-        local _deb_filename="ripgrep_${_rg_version}_amd64.deb"
-        local _deb_local_path="${HOME}/${_deb_filename}"
-
-        wget \
-          -O "${_deb_local_path}" \
-          "https://github.com/BurntSushi/ripgrep/releases/download/${_rg_version}/${_deb_filename}"
-
-        if [[ -e "${_deb_local_path}" ]]
-        then
-          dpkg -i "${_deb_local_path}"
-          rm "${_deb_local_path:?}"
-        fi
+        _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
       fi
+
+      if [[ "$(_env_max_version "${_os_version}" "19.10")" == "${_os_version}" ]]
+      then
+        _apt_packages+=("bat")
+      else
+        _deb_packages+=("bat 0.16.0 sharkdp/bat")
+      fi
+
+      apt update
+
+      apt-get install "${_apt_packages[@]}"
+
+      for __package in "${_deb_packages[@]}"
+      do
+        eval "_env_install_deb ${__package}"
+      done
     elif [[ -x "$(command -v dnf)" ]]
     then
       : # TODO: dnf install
@@ -4574,6 +4599,7 @@ _env() {
     printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
     printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
     printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
+    printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -4726,7 +4752,7 @@ _export() {
         printf "File exists at %s\\n" "$(_color_primary "${_target_path}")"
         while true
         do
-          read -r -p "Overwrite existing file? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' -p "Overwrite existing file? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
               break
@@ -6717,7 +6743,7 @@ _move() {
       "$(_color_primary "${_target_notebook}")"
     while true
     do
-      read -r -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -7028,7 +7054,7 @@ and the entire revision history.
 HEREDOC
       while true
       do
-        read -r -p "\
+        IFS='' read -r -e -d $'\n' -p "\
 Please type $(_color_primary "${_name}") to confirm: " __response
         if [[ "${__response}" == "${_name}" ]]
         then
@@ -8077,7 +8103,7 @@ $(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
-          read -r -p "Proceed? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
           case ${__yn} in
             [Yy]*)
               break
@@ -8193,7 +8219,7 @@ _remote() {
           while true
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
-            read -r -p "Proceed? [y/N] " __yn
+            IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
                 break
@@ -8234,7 +8260,7 @@ _remote() {
             printf "Updating remote from %s to %s\\n" \
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
-            read -r -p "Proceed? [y/N] " __yn
+            IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
             case ${__yn} in
               [Yy]*)
                 break
@@ -8430,7 +8456,7 @@ _rename() {
       "$(_color_primary "${_target_basename}")"
     while true
     do
-      read -r -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -8957,6 +8983,15 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
+  # Usage: _nb_settings_bat_themes
+  _nb_settings_bat_themes() {
+    _command_exists "bat" ||
+      _exit_1 printf "bat required: https://github.com/sharkdp/bat"
+
+    bat --list-themes                 \
+      | grep --color=never 'Theme'  \
+      | sed 's/^Theme: //g'
+  }
   # Usage: _nb_settings_colors [<number>] [themes]
   _nb_settings_colors() {
     # Usage: _nb_settings_colors_print <number>
@@ -9060,6 +9095,10 @@ _settings() {
         ((_get_id)) && printf "11" || printf "NB_DIR"
         return 0
         ;;
+      12|*syntax*|*SYNTAX*)
+        ((_get_id)) && printf "12" || printf "NB_SYNTAX_THEME"
+        return 0
+        ;;
       *)
         _warn                                   \
           printf "Setting not found: %s\\n"     \
@@ -9087,7 +9126,7 @@ HEREDOC
 
       while true
       do
-        read -r -p "$(_color_primary "Number or Name: ")" __setting
+        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Number or Name: ")" __setting
         if [[ -n "${__setting}" ]]
         then
           case "${__setting}" in
@@ -9123,7 +9162,7 @@ HEREDOC
 
     while true
     do
-      read -r -p "$(_color_primary "Value: ")" __value
+      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
       if [[ -n "${__value}" ]]
       then
         case "${__value}" in
@@ -9324,6 +9363,23 @@ HEREDOC
         _warn printf "%s must be one of the available themes.\\n" "${1}" &&
           return 1
       fi
+    elif [[ "${1:-}" == 'NB_SYNTAX_THEME' ]]
+    then
+      if ! hash bat 2>/dev/null
+      then
+        printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+      else
+        local _theme_list
+        _theme_list=($(bat --list-themes --color never))
+
+        if _contains "${2:-}" "${_theme_list[@]}"
+        then
+          return 0
+        else
+          _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+          return 1
+        fi
+      fi
     else
       return 0
     fi
@@ -9455,6 +9511,28 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
      \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
      • Default Value: $(_color_primary '~/.nb')")
+
+  _settings_list_items+=("$(_color_id_brackets '12') syntax_theme")
+  _settings_help_items+=("\
+    $(_color_secondary " ------")
+     The syntax highlighting theme. View examples with:
+
+       bat --list-themes
+
+     $(if ! hash "bat" 2>/dev/null
+       then
+         printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+       else
+         printf "• Available themes:\\n"
+         printf "\\n"
+
+         for __theme in $(bat --list-themes --color never)
+        do
+          printf "         %s\\n" "$(_color_primary "${__theme}")"
+        done
+      fi)
+
+     • Default Value: $(_color_primary 'Dracula')")
 
   while ((${#}))
   do
@@ -9754,12 +9832,14 @@ Description:
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
-  If Pygments [4] is installed, notes are printed with syntax highlighting.
+  If \`bats\` [4] or Pygments [5] is installed, notes are printed with
+  syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
-    4. https://pygments.org/
+    4. https://github.com/sharkdp/bat
+    5. https://pygments.org/
 
 Examples:
   ${_ME} show 1
@@ -10540,7 +10620,7 @@ HEREDOC
       while true
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
-        read -r -p "Proceed? [y/N] " __yn
+        IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
         case ${__yn} in
           [Yy]*)
             break

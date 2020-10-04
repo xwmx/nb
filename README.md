@@ -139,11 +139,11 @@ they are available.
 
 Recommended:
 
+- [`bat`](https://github.com/sharkdp/bat)
 - [Pandoc](https://pandoc.org/)
-- [Pygments](https://pygments.org/)
-- [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
-- [tig](https://github.com/jonas/tig)
-- [w3m](https://en.wikipedia.org/wiki/W3m)
+- [`rg` / ripgrep](https://github.com/BurntSushi/ripgrep)
+- [`tig`](https://github.com/jonas/tig)
+- [`w3m`](https://en.wikipedia.org/wiki/W3m)
 
 Also supported for various enhancements:
 
@@ -161,6 +161,7 @@ Also supported for various enhancements:
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
+[Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/)
 
 #### macOS / Homebrew
@@ -172,9 +173,25 @@ brew install xwmx/taps/nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
-and completion scripts.
+above and completion scripts for Bash and Zsh.
 
 #### Ubuntu, Windows WSL, and others
+
+##### npm
+
+To install with [npm](https://www.npmjs.com/package/nb.sh):
+
+```bash
+npm install -g nb.sh
+```
+
+Installing `nb` through `npm` also installs completion scripts for Bash and
+Zsh. On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
+
+*Note: `nb` is also currently still available under
+its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
+which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### Download and Install
 
@@ -230,22 +247,6 @@ sudo make install
 
 This will also install the completion scripts on all systems and the
 recommended dependencies on Ubuntu and WSL.
-
-##### npm
-
-To install with [npm](https://www.npmjs.com/package/nb.sh):
-
-```bash
-npm install -g nb.sh
-```
-
-Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
-the optional dependencies.
-
-*Note: `nb` is also currently still available under
-its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
-which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### bpkg
 
@@ -351,7 +352,7 @@ string as the content and the editor is not opened:
 
 ```bash
 > nb add "This is a note."
-Added [5] 20200101000000.md
+Added: [5] 20200101000000.md
 ```
 
 `nb add <string>` is useful for quickly jotting down notes directly
@@ -366,15 +367,15 @@ the filename.
 ```bash
 # create a new note containing "Note content."
 > echo "Note content." | nb add
-Added [6] 20200101000100.md
+Added: [6] 20200101000100.md
 
 # create a new note containing the clipboard contents on macOS
 > pbpaste | nb add
-Added [7] 20200101000200.md
+Added: [7] 20200101000200.md
 
 # create a new note containing the clipboard contents using xclip
 > xclip -o | nb add
-Added [8] 20200101000300.md
+Added: [8] 20200101000300.md
 ```
 
 Content can be passed with the `--content` option, which will also
@@ -393,7 +394,7 @@ short options:
 
 ```bash
 > nb add --filename "example.md" -t "Example Title" -c "Example content."
-Added [9] example.md 'Example Title'
+Added: [9] example.md "Example Title"
 ```
 
 The `-t <title>` / `--title <title>` option will also set the filename
@@ -401,7 +402,7 @@ to the title, with spaces replaced with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added [10] Example_Title.md 'Example Title'
+Added: [10] Example_Title.md "Example Title"
 ```
 
 Files can be created with any file type either by specifying the
@@ -831,8 +832,8 @@ nb 3 show
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[Pygments](https://pygments.org/) is installed. You can navigate in
-`less` using the following keys:
+[`bat`](https://github.com/sharkdp/bat) or [Pygments](https://pygments.org/)
+is installed. You can navigate in `less` using the following keys:
 
 ```text
 Key               Function
@@ -1284,7 +1285,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added [3] 20200101000000.bookmark.md "Example Title (example.com)"
+Added: [3] 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -1833,8 +1834,8 @@ pass the URL to [`nb notebooks add`](#notebooks) and `nb` will clone
 your existing notebook and start syncing changes automatically:
 
 ```bash
-# create a new notebook named Example cloned from a private GitLab repository
-nb notebooks add Example https://gitlab.com/example/example.git
+# create a new notebook named "example" cloned from a private GitLab repository
+nb notebooks add example https://gitlab.com/example/example.git
 ```
 
 Turn off syncing for a notebook by removing the remote:
@@ -2219,6 +2220,14 @@ To view a table of available colors and numbers, run:
 nb set colors
 ```
 
+#### Syntax Highlighting Theme
+
+`nb` displays files with syntax highlighting when
+[`bat`](https://github.com/sharkdp/bat) is installed. Syntax highlighting
+color themes are available for both light and dark terminal backgrounds.
+To view a list of available themes and set the syntax highlighting color
+theme, use [`nb set syntax_theme`](#settings).
+
 ### $ Shell Theme Support
 
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
@@ -2468,7 +2477,7 @@ nb> edit 3 --content "New content."
 Updated [3] Example
 
 nb> bookmark https://example.com
-Added [4] example.bookmark.md "Example Title (example.com)"
+Added: [4] example.bookmark.md "Example Title (example.com)"
 
 nb> ls
 home
@@ -3784,6 +3793,40 @@ Alias: `set`
      `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
      • Default Value: ~/.nb
+
+[12] syntax_theme
+     ------
+     The syntax highlighting theme. View examples with:
+
+       bat --list-themes
+
+     • Available themes:
+
+         1337
+         DarkNeon
+         Dracula
+         GitHub
+         Monokai Extended
+         Monokai Extended Bright
+         Monokai Extended Light
+         Monokai Extended Origin
+         Nord
+         OneHalfDark
+         OneHalfLight
+         Solarized (dark)
+         Solarized (light)
+         Sublime Snazzy
+         TwoDark
+         ansi-dark
+         ansi-light
+         base16
+         base16-256
+         gruvbox
+         gruvbox-light
+         gruvbox-white
+         zenburn
+
+     • Default Value: Dracula
 ```
 
 #### `shell`
@@ -3869,12 +3912,14 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  If Pygments [4] is installed, notes are printed with syntax highlighting.
+  If `bats` [4] or Pygments [5] is installed, notes are printed with
+  syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
-    4. https://pygments.org/
+    4. https://github.com/sharkdp/bat
+    5. https://pygments.org/
 
 Examples:
   nb show 1
