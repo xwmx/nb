@@ -895,8 +895,20 @@ When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
 for each type.
 
-`nb show` is primarily intended for previewing notes and files within
-the terminal. To view files in the system's preferred GUI application,
+`nb show` also provides [options](#show) for querying information about an
+item. For example, use the `--added` and `--updated` flags to print the date
+and time that an item was added or updated:
+
+```bash
+> nb show 2 --added
+2020-01-01 01:01:00 -0700
+
+> nb show 2 --updated
+2020-02-02 02:02:00 -0700
+```
+
+`nb show` is primarily intended for viewing items within the terminal.
+To view files in the system's preferred GUI application,
 use [`nb open`](#open).
 
 ##### Shortcut Alias: `s`
