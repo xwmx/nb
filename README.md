@@ -905,6 +905,8 @@ and time that an item was added or updated:
 To view a file in the system's preferred GUI application,
 use [`nb open`](#open).
 
+For full `nb show` usage information, run [`nb help show`](#show).
+
 ##### Shortcut Alias: `s`
 
 `show` is aliased to `s`:
@@ -940,8 +942,6 @@ nb view "A Document Title"
 # show note by id, alternative
 nb 3 view
 ```
-
-For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
 
