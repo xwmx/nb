@@ -3785,6 +3785,40 @@ Alias: `set`
      `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
      • Default Value: ~/.nb
+
+[12] syntax_theme
+     ------
+     The syntax highlighting theme. View examples with:
+
+       bat --list-themes
+
+     • Available themes:
+
+         1337
+         DarkNeon
+         Dracula
+         GitHub
+         Monokai Extended
+         Monokai Extended Bright
+         Monokai Extended Light
+         Monokai Extended Origin
+         Nord
+         OneHalfDark
+         OneHalfLight
+         Solarized (dark)
+         Solarized (light)
+         Sublime Snazzy
+         TwoDark
+         ansi-dark
+         ansi-light
+         base16
+         base16-256
+         gruvbox
+         gruvbox-light
+         gruvbox-white
+         zenburn
+
+     • Default Value: Dracula
 ```
 
 #### `shell`

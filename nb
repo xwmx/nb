@@ -4595,6 +4595,7 @@ _env() {
     printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
     printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
     printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
+    printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:      %s\\n" "$(command -v ack)"
     printf "ag:       %s\\n" "$(command -v ag)"
@@ -8978,6 +8979,15 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
+  # Usage: _nb_settings_bat_themes
+  _nb_settings_bat_themes() {
+    _command_exists "bat" ||
+      _exit_1 printf "bat required: https://github.com/sharkdp/bat"
+
+    bat --list-themes                 \
+      | grep --color=never 'Theme'  \
+      | sed 's/^Theme: //g'
+  }
   # Usage: _nb_settings_colors [<number>] [themes]
   _nb_settings_colors() {
     # Usage: _nb_settings_colors_print <number>
@@ -9079,6 +9089,10 @@ _settings() {
         ;;
       11|*dir|*DIR)
         ((_get_id)) && printf "11" || printf "NB_DIR"
+        return 0
+        ;;
+      12|*syntax*|*SYNTAX*)
+        ((_get_id)) && printf "12" || printf "NB_SYNTAX_THEME"
         return 0
         ;;
       *)
@@ -9345,6 +9359,18 @@ HEREDOC
         _warn printf "%s must be one of the available themes.\\n" "${1}" &&
           return 1
       fi
+    elif [[ "${1:-}" == 'NB_SYNTAX_THEME' ]]
+    then
+      if ! hash bat 2>/dev/null
+      then
+         printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+      elif _contains "${2:-}" $(bat --list-themes --color never)
+      then
+        return 0
+      else
+        _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+          return 1
+      fi
     else
       return 0
     fi
@@ -9476,6 +9502,28 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
      \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
      • Default Value: $(_color_primary '~/.nb')")
+
+  _settings_list_items+=("$(_color_id_brackets '12') syntax_theme")
+  _settings_help_items+=("\
+    $(_color_secondary " ------")
+     The syntax highlighting theme. View examples with:
+
+       bat --list-themes
+
+     $(if ! hash "bat" 2>/dev/null
+       then
+         printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+       else
+         printf "• Available themes:\\n"
+         printf "\\n"
+
+         for __theme in $(bat --list-themes --color never)
+        do
+          printf "         %s\\n" "$(_color_primary "${__theme}")"
+        done
+      fi)
+
+     • Default Value: $(_color_primary 'Dracula')")
 
   while ((${#}))
   do
