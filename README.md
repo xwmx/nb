@@ -2912,6 +2912,7 @@ Examples:
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
   nb example:add -t "Title"
+  nb a
   nb a "Note content."
   nb example:a -t "Title"
 

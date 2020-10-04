@@ -3080,6 +3080,7 @@ Examples:
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
   ${_ME} example:add -t "Title"
+  ${_ME} a
   ${_ME} a "Note content."
   ${_ME} example:a -t "Title"
 
