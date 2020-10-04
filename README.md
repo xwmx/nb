@@ -2663,9 +2663,9 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3919,12 +3919,13 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb show <notebook>
 
 Options:
+  --added          Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -3940,7 +3941,8 @@ Options:
                    return true if the item matches <type>. <type> can be a
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
-                   text, vide
+                   text, video
+  --updated        Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or

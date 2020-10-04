@@ -2932,9 +2932,9 @@ $(_color_primary "Usage:")
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -9797,12 +9797,13 @@ HEREDOC
 
 describe "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   ${_ME} show <notebook>
 
 Options:
+  --added          Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -9819,6 +9820,7 @@ Options:
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
+  --updated        Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -9936,14 +9938,17 @@ _show() {
   local _ls_arguments=()
   local _print_output=0
   local _password=
+  local _print_added=0
   local _print_filename=0
   local _print_id=0
   local _print_info=0
   local _print_path=0
   local _print_selector_id=0
+  local _print_updated=0
   local _render=0
   local _selector=
   local _show_color_enabled="${_COLOR_ENABLED}"
+  local _skip_notebook_fallback=0
   local _print_title=0
   local _tool=
   local _type=
@@ -9957,15 +9962,23 @@ _show() {
     case "${__arg}" in
       --path)
         _print_path=1
+        _skip_notebook_fallback=1
+        ;;
+      --added*)
+        _print_added=1
+        _skip_notebook_fallback=1
         ;;
       --filename|--basename)
         _print_filename=1
+        _skip_notebook_fallback=1
         ;;
       --id|--index)
         _print_id=1
+        _skip_notebook_fallback=1
         ;;
       --info-line)
         _print_info=1
+        _skip_notebook_fallback=1
         ;;
       --no-color|--nocolor|--raw)
         _show_color_enabled=0
@@ -9983,9 +9996,11 @@ _show() {
         ;;
       --selector-id)
         _print_selector_id=1
+        _skip_notebook_fallback=1
         ;;
       --title)
         _print_title=1
+        _skip_notebook_fallback=1
         ;;
       --tool)
         _tool="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -9993,12 +10008,17 @@ _show() {
         ;;
       --type)
         _type_check=1
+        _skip_notebook_fallback=1
 
         if _option_value_is_present "${__val:-}"
         then
           _type="${__val}"
           shift
         fi
+        ;;
+      --updated*)
+        _print_updated=1
+        _skip_notebook_fallback=1
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
@@ -10032,10 +10052,7 @@ _show() {
 
   local _target_path="${_notebook_path}/${_basename}"
 
-  if [[ -z "${_basename:-}" ]] && ! {
-    ((_print_path))   || ((_print_filename)) || ((_print_id))   ||
-    ((_print_title))  || ((_print_info))     || ((_type_check))
-  }
+  if [[ -z "${_basename:-}" ]] && ! ((_skip_notebook_fallback))
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -10134,6 +10151,33 @@ _show() {
         "$(_color_id_brackets "${_maybe_scoped_id}")"       \
         "$(_color_primary         "${_maybe_scoped_basename}")"
     fi
+
+    return 0
+  fi
+
+  if ((_print_added))
+  then
+    git -C "${_notebook_path}" --no-pager \
+      log                                 \
+      --follow                            \
+      --diff-filter=A                     \
+      --date=iso-local                    \
+      --pretty=oneline                    \
+      --pretty='%ad'                      \
+      "${_basename}"
+
+    return 0
+  fi
+
+  if ((_print_updated))
+  then
+    git -C "${_notebook_path}" --no-pager \
+      log                                 \
+      -1                                  \
+      --follow                            \
+      --date=iso-local                    \
+      --pretty='%ad'                      \
+      "${_basename}"
 
     return 0
   fi
