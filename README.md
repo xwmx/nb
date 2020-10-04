@@ -3798,7 +3798,7 @@ Alias: `set`
      ------------
      The syntax highlighting theme. View examples with:
 
-       bat --list-themes
+         bat --list-themes
 
      • Available themes:
 
