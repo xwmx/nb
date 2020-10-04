@@ -160,6 +160,7 @@ Also supported for various enhancements:
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
@@ -339,11 +340,11 @@ nb add --title "Secret Document" --encrypt
 
 `nb add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-`$EDITOR` environment variable or [`nb set editor`](#settings-list---long).
+`$EDITOR` environment variable or [`nb set editor`](#editor).
 
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. The default file type can be changed to whatever you
-like using [`nb set default_extension`](#settings-list---long).
+like using [`nb set default_extension`](#default_extension).
 
 `nb add` behaves differently depending on the type of argument it
 receives. When a filename with extension is specified, a new note
@@ -429,7 +430,7 @@ For a full list of options available for `nb add`, run [`nb help add`](#add).
 Password-protected notes and [bookmarks](#-bookmarks) are created with
 the `-e` / `--encrypt` flag and are encrypted with AES-256 using OpenSSL
 by default. GPG is also supported and can be configured with
-[`nb set encryption_tool`](#settings-list---long).
+[`nb set encryption_tool`](#encryption_tool).
 
 Each protected note and bookmark is encrypted individually with its own
 password. When an encrypted item is viewed, edited, or opened, `nb`
@@ -489,8 +490,8 @@ Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
 `nb ls` also includes a footer with example commands for easy reference.
 The notebook header and command footer can be configured or hidden with
-[`nb set header`](#settings-list---long) and
-[`nb set footer`](#settings-list---long).
+[`nb set header`](#header) and
+[`nb set footer`](#footer).
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
@@ -698,7 +699,7 @@ title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
-limit can be changed with [`nb set limit <number>`](#settings-list---long).
+limit can be changed with [`nb set limit <number>`](#limit).
 To list a different number of items on a per-command basis, use the
 `-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
 
@@ -838,7 +839,10 @@ nb 3 show
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[`bat`](https://github.com/sharkdp/bat) or [Pygments](https://pygments.org/)
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
 is installed. You can navigate in `less` using the following keys:
 
 ```text
@@ -1646,7 +1650,7 @@ nb example:q "#tag"
 
 By default, all `nb` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
-stored in the directory configured in [`NB_DIR`](#settings-list---long), which is
+stored in the directory configured in [`nb set nb_dir`](#nb_dir), which is
 `~/.nb` by default.
 
 ##### Local Notebooks
@@ -1832,7 +1836,7 @@ system.
 Many services provide free private git repositories, so git syncing with
 `nb` is easy, free, and vendor-independent. You can also sync your notes
 using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
-your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
+your `nb` directory with [`nb set nb_dir <path>`](#nb_dir)
 and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
@@ -1855,7 +1859,7 @@ nb example:remote remove
 ```
 
 You can also turn off autosync with
-[`nb set auto_sync`](#settings-list---long) and sync manually with
+[`nb set auto_sync`](#auto_sync) and sync manually with
 [`nb sync`](#sync).
 
 #### Sync Conflict Resolution
@@ -2101,7 +2105,7 @@ current notebook name, the shell prompt, and divider lines.
 
 `nb` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using
-[`nb set color_theme`](#settings-list---long):
+[`nb set color_theme`](#color_theme):
 
 ```bash
 nb set color_theme
@@ -2201,8 +2205,8 @@ Plugin installed:
 /home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
-Once a theme is installed, use [`nb set color_theme`](#settings) to set it as
-the current theme:
+Once a theme is installed, use [`nb set color_theme`](#color_theme) to set it
+as the current theme:
 
 ```bash
 > nb set color_theme turquoise
@@ -2229,10 +2233,16 @@ nb set colors
 #### Syntax Highlighting Theme
 
 `nb` displays files with syntax highlighting when
-[`bat`](https://github.com/sharkdp/bat) is installed. Syntax highlighting
-color themes are available for both light and dark terminal backgrounds.
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
+is installed.
+
+When `bat` is installed, syntax highlighting color themes are
+available for both light and dark terminal backgrounds.
 To view a list of available themes and set the syntax highlighting color
-theme, use [`nb set syntax_theme`](#settings).
+theme, use [`nb set syntax_theme`](#syntax_theme).
 
 ### $ Shell Theme Support
 
@@ -3673,7 +3683,7 @@ Examples:
 Alias: `set`
 ```
 
-##### `settings list --long`
+##### `auto_sync`
 
 ```text
 [1]  auto_sync
@@ -3683,7 +3693,11 @@ Alias: `set`
      one is set. To disable this behavior, set this to "0".
 
      • Default Value: 1
+```
 
+##### `color_primary`
+
+```text
 [2]  color_primary
      -------------
      The primary color used to highlight identifiers and messages. Often this
@@ -3692,7 +3706,11 @@ Alias: `set`
 
      • Default Value: 68 (blue) for 256 color terminals,
                       4  (blue) for  8  color terminals.
+```
 
+##### `color_secondary`
+
+```text
 [3]  color_secondary
      ---------------
      The color used for lines and footer elements. Often this can be set to an
@@ -3700,7 +3718,11 @@ Alias: `set`
      colors.
 
      • Default Value: 8
+```
 
+##### `color_theme`
+
+```text
 [4]  color_theme
      -----------
      The color theme.
@@ -3728,7 +3750,11 @@ Alias: `set`
          utility
 
      • Default Value: nb
+```
 
+##### `default_extension`
+
+```text
 [5]  default_extension
      -----------------
      The default extension to use for note files. Change to "org" for Emacs
@@ -3736,7 +3762,11 @@ Alias: `set`
      whatever you prefer.
 
      • Default Value: md
+```
 
+##### `editor`
+
+```text
 [6]  editor
      ------
      The command line text editor to use with `nb`.
@@ -3754,21 +3784,33 @@ Alias: `set`
          subl
          vi
          vim
+```
 
+##### `encryption_tool`
+
+```text
 [7]  encryption_tool
      ---------------
      The tool used for encrypting notes.
 
      • Supported Values: openssl, gpg
      • Default Value:    openssl
+```
 
+##### `footer`
+
+```text
 [8]  footer
      ------
      By default, `nb` and `nb ls` include a footer with example commands.
      To hide this footer, set this to "0".
 
      • Default Value: 1
+```
 
+##### `header`
+
+```text
 [9]  header
      ------
      By default, `nb` and `nb ls` include a header listing available notebooks.
@@ -3776,21 +3818,29 @@ Alias: `set`
 
      • Supported Values:
 
-       0  Hide Header
-       1  Dynamic Alignment
-            - Left justified when list is shorter than terminal width.
-            - Center aligned when list is longer than terminal width.
-       2  Center Aligned (default)
-       3  Left Justified
+         0  Hide Header
+         1  Dynamic Alignment
+              - Left justified when list is shorter than terminal width.
+              - Center aligned when list is longer than terminal width.
+         2  Center Aligned (default)
+         3  Left Justified
 
      • Default Value: 1
+```
 
+##### `limit`
+
+```text
 [10] limit
      -----
      The maximum number of notes included in the `nb` and `nb ls` lists.
 
      • Default Value: 20
+```
 
+##### `nb_dir`
+
+```text
 [11] nb_dir
      ------
      The location of the directory that contains the notebooks.
@@ -3799,12 +3849,16 @@ Alias: `set`
      `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
      • Default Value: ~/.nb
+```
 
+##### `syntax_theme`
+
+```text
 [12] syntax_theme
-     ------
+     ------------
      The syntax highlighting theme. View examples with:
 
-       bat --list-themes
+         bat --list-themes
 
      • Available themes:
 
@@ -3832,7 +3886,7 @@ Alias: `set`
          gruvbox-white
          zenburn
 
-     • Default Value: Dracula
+     • Default Value: base16
 ```
 
 #### `shell`

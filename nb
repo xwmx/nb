@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.3.1"
+_VERSION="5.3.2"
 
 # $_ME
 #
@@ -411,10 +411,10 @@ export NB_LIMIT="${NB_LIMIT:-20}"
 
 # $NB_SYNTAX_THEME
 #
-# Default: 'dracula'
+# Default: 'base16'
 #
 # Supported Values: Theme names listed with `bat --list-themes`
-export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-Dracula}"
+export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-base16}"
 
 # $EDITOR ############################################################# $EDITOR
 
@@ -2223,6 +2223,23 @@ _highlight_syntax_if_available() {
       --color always        \
       --plain               \
       --theme "${_theme:-}"
+  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
+  then
+    local _arguments=("-O" "ansi")
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--syntax-by-name" "md")
+      else
+        _arguments+=("--syntax" "${1}")
+      fi
+    fi
+
+    highlight "${_arguments[@]}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
@@ -9517,11 +9534,11 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
     $(_color_secondary " ------------")
      The syntax highlighting theme. View examples with:
 
-       bat --list-themes
+         bat --list-themes
 
      $(if ! hash "bat" 2>/dev/null
        then
-         printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+         printf "Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
        else
          printf "• Available themes:\\n"
          printf "\\n"
@@ -9532,7 +9549,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
         done
       fi)
 
-     • Default Value: $(_color_primary 'Dracula')")
+     • Default Value: $(_color_primary 'base16')")
 
   while ((${#}))
   do
