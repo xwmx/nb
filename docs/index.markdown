@@ -1995,9 +1995,10 @@ You can also turn off autosync with
 
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
 cleanly merge overlapping local and remote changes, `nb` saves both
-versions within the file separated by git conflict markers. Use
-[`nb edit`](#edit) to remove the conflict markers and delete any unwanted
-text.
+versions within the file separated by git conflict markers and prints a
+message indicating which file(s) encountered a conflict.
+Use [`nb edit`](#edit) to remove the conflict markers and delete any
+unwanted text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
