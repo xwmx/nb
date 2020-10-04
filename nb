@@ -2193,7 +2193,7 @@ _get_unique_path() {
 # _highlight_syntax_if_available()
 #
 # Usage:
-#   _highlight_syntax_if_available [<path>] [<lexer>]
+#   _highlight_syntax_if_available [<path> | <extension>]
 #
 # Description:
 #   If `bat` or Pygments is available, use it to highlight syntax. When neither
@@ -2203,19 +2203,31 @@ _get_unique_path() {
 #   https://github.com/sharkdp/bat
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if ((_COLOR_ENABLED)) && hash "bat" 2>/dev/null
+  ((_COLOR_ENABLED)) || cat "${@:-}"
+
+  local _extension=
+  local _path=
+
+  if [[ "${1:-}" =~ / ]]
+  then
+    _path="${1}"
+  elif [[ -n "${1:-}" ]]
+  then
+    _extension="${1}"
+  else
+    _extension="md"
+  fi
+
+  if hash "bat" 2>/dev/null
   then
     local _arguments=()
     local _theme="${NB_SYNTAX_THEME}"
 
-    if _interactive_input
+    if [[ -n "${_path:-}" ]]
     then
-      _arguments+=("${1:-}")
+      _arguments+=("${_path}")
     else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--language" "md")
-      fi
+      _arguments+=("--language" "${_extension}")
     fi
 
     bat "${_arguments[@]}"  \
@@ -2223,49 +2235,28 @@ _highlight_syntax_if_available() {
       --color always        \
       --plain               \
       --theme "${_theme:-}"
-  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
+  elif hash "highlight" 2>/dev/null
   then
     local _arguments=("-O" "ansi")
 
-    if _interactive_input
+    if [[ -n "${_path:-}" ]]
     then
-      _arguments+=("${1:-}")
+      _arguments+=("${_path}")
     else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--syntax-by-name" "md")
-      else
-        _arguments+=("--syntax" "${1}")
-      fi
+      _arguments+=("--syntax" "${_extension}")
     fi
 
     highlight "${_arguments[@]}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
-    local _lexer=
-    local _path=
 
-    if _interactive_input
+    if [[ -n "${_path:-}" ]]
     then
-      _path="${1:-}"
-      _lexer="${2:-}"
+      _arguments+=("${_path}")
     else
-      _lexer="${1:-}"
+      _arguments+=("-l" "${_extension}")
     fi
-
-    if [[ -z "${_lexer:-}" ]]
-    then
-      if [[ "${_path}" =~ \.latex$|\.tex$|\.aux$|\.toc$ ]]
-      then
-        _lexer="latex"
-      else
-        _lexer="md"
-      fi
-    fi
-
-    [[ -n "${_lexer:-}" ]]  && _arguments+=("-l" "${_lexer}")
-    _interactive_input      && _arguments+=("${_path}")
 
     pygmentize "${_arguments[@]}" 2>/dev/null
   else
@@ -6102,7 +6093,7 @@ HEREDOC
             _print_line "$(printf "%-${_item_line_length}s" '.')"
           fi
           head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
-            | _highlight_syntax_if_available
+            | _highlight_syntax_if_available "${__basename##*.}"
           printf "\\n"
         fi
 
@@ -10364,12 +10355,12 @@ Can't show archives. Export archive and expand to edit.\\n"
     else # `show`
       # NOTE: Temp character is U+241F (unit separator)
       # https://graphemica.com/%E2%90%9F
-      < "${_target_path}" sed 's/^- /-␟/g'  \
-        | sed 's/^\* /\*␟/g'                \
-        | fold -s -w "$(tput cols)"         \
-        | sed 's/^-␟/- /g'                  \
-        | sed 's/^\*␟/\* /g'                \
-        | _highlight_syntax_if_available    \
+      < "${_target_path}" sed 's/^- /-␟/g'                        \
+        | sed 's/^\* /\*␟/g'                                      \
+        | fold -s -w "$(tput cols)"                               \
+        | sed 's/^-␟/- /g'                                        \
+        | sed 's/^\*␟/\* /g'                                      \
+        | _highlight_syntax_if_available "${_target_path##*.}"    \
         | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
           then
             "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
