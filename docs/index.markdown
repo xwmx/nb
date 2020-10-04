@@ -1199,10 +1199,10 @@ nb search "#tag1"
 nb q "#tag"
 ```
 
-`nb search` automatically searches archived page content:
+`nb search` / `nb q` automatically searches archived page content:
 
 ```bash
-> nb search "example query"
+> nb q "example query"
 [10] example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
