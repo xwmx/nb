@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.3.0"
+_VERSION="5.3.1"
 
 # $_ME
 #
@@ -9514,7 +9514,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
   _settings_list_items+=("$(_color_id_brackets '12') syntax_theme")
   _settings_help_items+=("\
-    $(_color_secondary " ------")
+    $(_color_secondary " ------------")
      The syntax highlighting theme. View examples with:
 
        bat --list-themes

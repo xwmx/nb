@@ -3795,7 +3795,7 @@ Alias: `set`
      • Default Value: ~/.nb
 
 [12] syntax_theme
-     ------
+     ------------
      The syntax highlighting theme. View examples with:
 
        bat --list-themes
