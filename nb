@@ -411,10 +411,10 @@ export NB_LIMIT="${NB_LIMIT:-20}"
 
 # $NB_SYNTAX_THEME
 #
-# Default: 'dracula'
+# Default: 'base16'
 #
 # Supported Values: Theme names listed with `bat --list-themes`
-export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-Dracula}"
+export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-base16}"
 
 # $EDITOR ############################################################# $EDITOR
 
@@ -9549,7 +9549,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
         done
       fi)
 
-     • Default Value: $(_color_primary 'Dracula')")
+     • Default Value: $(_color_primary 'base16')")
 
   while ((${#}))
   do

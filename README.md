@@ -3836,7 +3836,7 @@ Alias: `set`
          gruvbox-white
          zenburn
 
-     • Default Value: Dracula
+     • Default Value: base16
 ```
 
 #### `shell`
