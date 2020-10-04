@@ -2034,7 +2034,7 @@ both versions and merge them manually, then delete the `--conflicted-copy`.
 
 `nb` handles git operations automatically, so you shouldn't ever need
 to use the `git` command line tool directly. If you do encounter a
-conflict that `nb` says it can't merge, [`nb git`](#git) and
+conflict that `nb` says it can't merge at all, [`nb git`](#git) and
 [`nb run`](#run) can be used to resolve the conflict manually without
 changing the current working directory.
 
