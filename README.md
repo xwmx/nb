@@ -1988,8 +1988,8 @@ You can also turn off autosync with
 #### Sync Conflict Resolution
 
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
-merge overlapping local and remote changes, `nb` saves both versions
-within the file, separated by git conflict markers. Use
+cleanly merge overlapping local and remote changes, `nb` saves both
+versions within the file separated by git conflict markers. Use
 [`nb edit`](#edit) to remove the conflict markers and delete any unwanted
 text.
 
