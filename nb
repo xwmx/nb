@@ -6098,7 +6098,8 @@ HEREDOC
           else
             _print_line "$(printf "%-${_item_line_length}s" '.')"
           fi
-          head -"${_excerpt_length}" "${_notebook_path}/${__basename}"
+          head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
+            | _highlight_syntax_if_available
           printf "\\n"
         fi
 
