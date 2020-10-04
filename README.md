@@ -2912,6 +2912,8 @@ Examples:
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
   nb example:add -t "Title"
+  nb a "Note content."
+  nb example:a -t "Title"
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
@@ -2990,6 +2992,7 @@ Examples:
   nb bookmark list
   nb bookmark search "example query"
   nb bookmark open 5
+  nb b
 
 Shortcut Alias: `b`
 ```
@@ -3038,6 +3041,10 @@ Examples:
   nb example:delete 12
   nb delete example:12
   nb example:12 delete
+  nb d 3
+  nb 3 d
+  nb d example:12
+  nb example:12 d
 
 Shortcut Alias: `d`
 ```
@@ -3075,6 +3082,10 @@ Examples:
   nb example:edit 12
   nb edit example:12
   nb example:12 edit
+  nb e 3
+  nb 3 e
+  nb e example:12
+  nb example:12 e
 
 Shortcut Alias: `e`
 ```
@@ -3133,6 +3144,9 @@ Examples:
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   nb export example.md /path/to/example.docx
+
+  # Export note 12 in the "sample" notebook to HTML
+  nb export sample:12 /path/to/example.html
 ```
 
 #### `git`
@@ -3172,6 +3186,13 @@ Options:
 Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
+
+Examples:
+  nb help
+  nb help add
+  nb help import
+  nb h notebooks
+  nb h e
 
 Shortcut Alias: `h`
 ```
@@ -3381,6 +3402,7 @@ Examples:
   nb move example.md example-notebook
   nb example:move sample.md other-notebook
   nb move example:sample.md other-notebook
+  nb mv 1 example-notebook
 
 Shortcut Alias: `mv`
 ```
@@ -3464,8 +3486,10 @@ Description:
 
 Examples:
   nb notebooks --names
-  nb notebooks add Example1
-  nb notebooks add Example2 https://github.com/example/example.git
+  nb notebooks add sample
+  nb notebooks add example https://github.com/example/example.git
+  nb n current --path
+  nb n archive example
 
 Shortcut Alias: `n`
 ```
@@ -3489,6 +3513,10 @@ Examples:
   nb example:open 12
   nb open example:12
   nb example:12 open
+  nb o 3
+  nb 3 o
+  nb o example:12
+  nb example:12 o
 
 See also:
   nb help bookmark
@@ -3521,6 +3549,10 @@ Examples:
   nb example:peek 12
   nb peek example:12
   nb example:12 peek
+  nb p 3
+  nb 3 p
+  nb p example:12
+  nb example:12 p
 
 See also:
   nb help bookmark
@@ -3610,6 +3642,9 @@ Examples:
 
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  nb example:rename 3 "sample.md"
 ```
 
 #### `run`
@@ -3666,8 +3701,14 @@ Examples:
   # search for bookmarks containing the hashtag "#example"
   nb search "#example" --type bookmark
 
-  # search with a regular expression for notes containing phone numbers
-  nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
+  # search with a regular expression
+  nb search "\d\d\d-\d\d\d\d"
+
+  # search the current notebook for "example query"
+  nb q "example query"
+
+  # search the notebook named "example" for "example query
+  nb example:q "example query"
 
 Shortcut Alias: `q`
 ```
@@ -3709,9 +3750,10 @@ Description:
 
 Examples:
   nb settings
-  nb settings set 5 "org"
-  nb settings set color_primary 105
-  nb settings unset color_primary
+  nb set 5 "org"
+  nb set color_primary 105
+  nb set unset color_primary
+  nb set color_secondary unset
   nb settings colors
   nb settings colors 105
   nb set limit 15
@@ -4027,6 +4069,11 @@ Examples:
   nb example:show 12
   nb show example:12
   nb example:12 show
+  nb s 1
+  nb 1 s
+  nb s example:12
+  nb example:12 s
+
 
 Alias: `view`
 Shortcut Alias: `s`
