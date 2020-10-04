@@ -1302,10 +1302,13 @@ system's primary web browser:
 nb open 3
 
 # open bookmark 12 in the notebook named "example"
-nb peek example:12
+nb open example:12
 
 # open bookmark 12 in the notebook named "example", alternative
-nb example:12 peek
+nb example:12 open
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:open 12
 ```
 
 [`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
@@ -1315,13 +1318,16 @@ in your terminal web browser, such as
 
 ```bash
 # peek bookmark by id
-nb peek 12
+nb peek 3
 
 # peek bookmark 12 in the notebook named "example"
 nb peek example:12
 
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:12 peek
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:peek 12
 ```
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
@@ -1350,8 +1356,14 @@ nb o 3
 # open bookmark 12 in the notebook named "example"
 nb o example:12
 
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 o
+
 # peek bookmark by id
-nb p 12
+nb p 3
+
+# peek bookmark 12 in the notebook named "example"
+nb p example:12
 
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:12 p

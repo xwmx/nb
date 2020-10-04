@@ -930,8 +930,8 @@ available, `nb show` will open files in your system's preferred application
 for each type.
 
 `nb show` also provides [options](#show) for querying information about an
-item. For example, use the `--added` and `--updated` flags to print the date
-and time that an item was added or updated:
+item. For example, use the `--added` / `-a` and `--updated` / `-u` flags to
+print the date and time that an item was added or updated:
 
 ```bash
 > nb show 2 --added
@@ -1308,10 +1308,13 @@ system's primary web browser:
 nb open 3
 
 # open bookmark 12 in the notebook named "example"
-nb peek example:12
+nb open example:12
 
 # open bookmark 12 in the notebook named "example", alternative
-nb example:12 peek
+nb example:12 open
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:open 12
 ```
 
 [`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
@@ -1321,13 +1324,16 @@ in your terminal web browser, such as
 
 ```bash
 # peek bookmark by id
-nb peek 12
+nb peek 3
 
 # peek bookmark 12 in the notebook named "example"
 nb peek example:12
 
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:12 peek
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:peek 12
 ```
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
@@ -1356,8 +1362,14 @@ nb o 3
 # open bookmark 12 in the notebook named "example"
 nb o example:12
 
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 o
+
 # peek bookmark by id
-nb p 12
+nb p 3
+
+# peek bookmark 12 in the notebook named "example"
+nb p example:12
 
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:12 p
@@ -2766,9 +2778,10 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -4118,13 +4131,14 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   nb show <notebook>
 
 Options:
-  --added          Print the date and time when the item was added.
+  -a, --added      Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -4141,7 +4155,7 @@ Options:
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
-  --updated        Print the date and time of the last recorded change.
+  -u, --updated    Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
