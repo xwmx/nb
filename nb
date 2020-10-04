@@ -3072,6 +3072,7 @@ Examples:
   ${_ME} add example.md --title "Example Title" --content "Example content."
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
+  ${_ME} example:add -t "Title"
 
 Aliases: \`create\`, \`new\`
 Shortcut Alias: \`a\`
@@ -3320,12 +3321,12 @@ Description:
 
 Examples:
   ${_ME} https://example.com
-  ${_ME} bookmark https://example.com
-  ${_ME} bookmark https://example.com --encrypt
-  ${_ME} bookmark https://example.com --tags example,sample,demo
-  ${_ME} bookmark https://example.com/about -c "Example comment."
-  ${_ME} bookmark https://example.com/faqs -f example-filename
-  ${_ME} bookmark https://example.com --quote "Example quote or excerpt."
+  ${_ME} example: https://example.com
+  ${_ME} https://example.com --encrypt
+  ${_ME} https://example.com --tags example,sample,demo
+  ${_ME} https://example.com/about -c "Example comment."
+  ${_ME} https://example.com/faqs -f example-filename
+  ${_ME} https://example.com --quote "Example quote or excerpt."
   ${_ME} bookmark list
   ${_ME} bookmark search "example query"
   ${_ME} bookmark open 5
@@ -4218,6 +4219,8 @@ Examples:
   ${_ME} delete example.md
   ${_ME} delete "A Document Title"
   ${_ME} 3 delete --force
+  ${_ME} example:delete 12
+  ${_ME} delete example:12
 
 Shortcut Alias: \`d\`
 HEREDOC
@@ -4332,6 +4335,8 @@ Examples:
   ${_ME} edit "A Document Title"
   echo "Content to append." | ${_ME} edit 1
   ${_ME} 3 edit
+  ${_ME} example:edit 12
+  ${_ME} edit example:12
 
 Shortcut Alias: \`e\`
 HEREDOC
@@ -4820,6 +4825,7 @@ Examples:
   ${_ME} git status
   ${_ME} git diff
   ${_ME} git log
+  ${_ME} example:git status
 HEREDOC
 _git() {
   if [[ "${1:-}" == "checkpoint" ]]
@@ -4970,6 +4976,9 @@ Examples:
   ${_ME} history
   ${_ME} history example.md
   ${_ME} 3 history
+  ${_ME} example:history
+  ${_ME} example:history 12
+  ${_ME} history example:12
 HEREDOC
 _history() {
   local _selector="${1:-}"
@@ -5027,6 +5036,7 @@ Examples:
   ${_ME} import ~/Pictures/example.png
   ${_ME} import ~/Documents/example.docx
   ${_ME} import https://example.com/example.pdf
+  ${_ME} example:import https://example.com/example.jpg
 HEREDOC
 _import() {
   # _import_validate_path()
@@ -5653,6 +5663,7 @@ Examples:
   ${_ME} list "^Example.*"
   ${_ME} list --10
   ${_ME} list --type document
+  ${_ME} example:list
 HEREDOC
 _list() {
   local _size=
@@ -6197,6 +6208,7 @@ Indicators:
   📂  Folder
 
 Examples:
+  ${_ME}
   ${_ME} ls
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
@@ -6204,6 +6216,8 @@ Examples:
   ${_ME} ls "^Example.*"
   ${_ME} ls --10
   ${_ME} ls --type document
+  ${_ME} example:
+  ${_ME} example:ls
 HEREDOC
 _ls() {
   # _ls_print_footer()
@@ -6657,6 +6671,8 @@ Description:
 Examples:
   ${_ME} move 1 example-notebook
   ${_ME} move example.md example-notebook
+  ${_ME} example:move sample.md other-notebook
+  ${_ME} move example:sample.md other-notebook
 
 Shortcut Alias: \`mv\`
 HEREDOC
@@ -7932,6 +7948,8 @@ Examples:
   ${_ME} open 3
   ${_ME} open example.bookmark.md
   ${_ME} 3 open
+  ${_ME} example:open 12
+  ${_ME} open example:12
 
 See also:
   ${_ME} help bookmark
@@ -7970,6 +7988,8 @@ Examples:
   ${_ME} peek 3
   ${_ME} peek example.bookmark.md
   ${_ME} 3 peek
+  ${_ME} example:peek 3
+  ${_ME} peek example:3
 
 See also:
   ${_ME} help bookmark
@@ -8542,6 +8562,9 @@ Description:
 Examples:
   # search current notebook for "example query"
   ${_ME} search "example query"
+
+  # search the notebook "example" for "example query"
+  ${_ME} example:search "example query"
 
   # search all notebooks for "example query"
   ${_ME} search "example query" --all
@@ -9860,6 +9883,8 @@ Examples:
   ${_ME} show example.md --render
   ${_ME} show "A Document Title" --print --no-color
   ${_ME} 1 show
+  ${_ME} example:show 1
+  ${_ME} show example:1
 
 Alias: \`view\`
 Shortcut Alias: \`s\`
@@ -10717,6 +10742,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
+
+Example:
+  ${_ME} use example
 
 Shortcut Alias: \`u\`
 HEREDOC

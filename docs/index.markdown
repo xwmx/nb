@@ -2917,6 +2917,7 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb example:add -t "Title"
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
@@ -2986,12 +2987,12 @@ Description:
 
 Examples:
   nb https://example.com
-  nb bookmark https://example.com
-  nb bookmark https://example.com --encrypt
-  nb bookmark https://example.com --tags example,sample,demo
-  nb bookmark https://example.com/about -c "Example comment."
-  nb bookmark https://example.com/faqs -f example-filename
-  nb bookmark https://example.com --quote "Example quote or excerpt."
+  nb example: https://example.com
+  nb https://example.com --encrypt
+  nb https://example.com --tags example,sample,demo
+  nb https://example.com/about -c "Example comment."
+  nb https://example.com/faqs -f example-filename
+  nb https://example.com --quote "Example quote or excerpt."
   nb bookmark list
   nb bookmark search "example query"
   nb bookmark open 5
@@ -3040,6 +3041,8 @@ Examples:
   nb delete example.md
   nb delete "A Document Title"
   nb 3 delete --force
+  nb example:delete 12
+  nb delete example:12
 
 Shortcut Alias: `d`
 ```
@@ -3074,6 +3077,8 @@ Examples:
   nb edit "A Document Title"
   echo "Content to append." | nb edit 1
   nb 3 edit
+  nb example:edit 12
+  nb edit example:12
 
 Shortcut Alias: `e`
 ```
@@ -3152,6 +3157,7 @@ Examples:
   nb git status
   nb git diff
   nb git log
+  nb example:git status
 ```
 
 #### `help`
@@ -3190,6 +3196,9 @@ Examples:
   nb history
   nb history example.md
   nb 3 history
+  nb example:history
+  nb example:history 12
+  nb history example:12
 ```
 
 #### `import`
@@ -3220,6 +3229,7 @@ Examples:
   nb import ~/Pictures/example.png
   nb import ~/Documents/example.docx
   nb import https://example.com/example.pdf
+  nb example:import https://example.com/example.jpg
 ```
 
 #### `init`
@@ -3289,6 +3299,7 @@ Examples:
   nb list "^Example.*"
   nb list --10
   nb list --type document
+  nb example:list
 ```
 
 #### `ls`
@@ -3342,6 +3353,7 @@ Indicators:
   📂  Folder
 
 Examples:
+  nb
   nb ls
   nb ls example.md -e 10
   nb ls --excerpt --no-id
@@ -3349,6 +3361,8 @@ Examples:
   nb ls "^Example.*"
   nb ls --10
   nb ls --type document
+  nb example:
+  nb example:ls
 ```
 
 #### `move`
@@ -3366,6 +3380,8 @@ Description:
 Examples:
   nb move 1 example-notebook
   nb move example.md example-notebook
+  nb example:move sample.md other-notebook
+  nb move example:sample.md other-notebook
 
 Shortcut Alias: `mv`
 ```
@@ -3471,6 +3487,8 @@ Examples:
   nb open 3
   nb open example.bookmark.md
   nb 3 open
+  nb example:open 12
+  nb open example:12
 
 See also:
   nb help bookmark
@@ -3500,6 +3518,8 @@ Examples:
   nb peek 3
   nb peek example.bookmark.md
   nb 3 peek
+  nb example:peek 12
+  nb peek example:12
 
 See also:
   nb help bookmark
@@ -3632,6 +3652,9 @@ Description:
 Examples:
   # search current notebook for "example query"
   nb search "example query"
+
+  # search the notebook "example" for "example query"
+  nb example:search "example query"
 
   # search all notebooks for "example query"
   nb search "example query" --all
@@ -4000,6 +4023,8 @@ Examples:
   nb show example.md --render
   nb show "A Document Title" --print --no-color
   nb 1 show
+  nb example:show 1
+  nb show example:1
 
 Alias: `view`
 Shortcut Alias: `s`
@@ -4083,6 +4108,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+Example:
+  nb use example
 
 Shortcut Alias: `u`
 ```
