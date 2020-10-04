@@ -9367,13 +9367,18 @@ HEREDOC
     then
       if ! hash bat 2>/dev/null
       then
-         printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
-      elif _contains "${2:-}" $(bat --list-themes --color never)
-      then
-        return 0
+        printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
       else
-        _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+        local _theme_list
+        _theme_list=($(bat --list-themes --color never))
+
+        if _contains "${2:-}" "${_theme_list[@]}"
+        then
+          return 0
+        else
+          _warn printf "%s must be one of the available themes.\\n" "${1}" &&
           return 1
+        fi
       fi
     else
       return 0
