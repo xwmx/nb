@@ -2822,6 +2822,10 @@ To view a table of available colors and numbers, run:
 
     $(_color_primary "${_ME} settings colors")
 
+To set the syntax highlighting color theme, use:
+
+    $(_color_primary "${_ME} set syntax_theme")
+
 HEREDOC
   elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
   then
