@@ -7286,7 +7286,6 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       local _error_message=
       if [[ -f "${_path}/.index" ]]
       then
-        printf "Notebook exists: %s\\n" "$(_color_primary "${_path}")"
         _error_message="Notebook exists: $(_color_primary "${_path}")"
       else
         _error_message="Git repository exists: $(_color_primary "${_path}")"
