@@ -1368,6 +1368,9 @@ nb search "\d\d\d-\d\d\d\d"
 # search bookmarks for "example"
 nb search "example" --type bookmark
 
+# search bookmarks for "example", alternative
+nb b q "example"
+
 # search the current notebook for "example query
 nb q "example query"
 
