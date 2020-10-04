@@ -1996,7 +1996,7 @@ You can also turn off autosync with
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
 cleanly merge overlapping local and remote changes, `nb` saves both
 versions within the file separated by git conflict markers and prints a
-message indicating which file(s) encountered a conflict.
+message indicating which file(s) contain conflicting text.
 Use [`nb edit`](#edit) to remove the conflict markers and delete any
 unwanted text.
 
