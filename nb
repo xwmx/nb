@@ -10239,7 +10239,6 @@ _show() {
       --follow                            \
       --diff-filter=A                     \
       --date=iso-local                    \
-      --pretty=oneline                    \
       --pretty='%ad'                      \
       "${_basename}"
 
