@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.3.2"
+_VERSION="5.4.0"
 
 # $_ME
 #
@@ -2193,7 +2193,7 @@ _get_unique_path() {
 # _highlight_syntax_if_available()
 #
 # Usage:
-#   _highlight_syntax_if_available [<path>] [<lexer>]
+#   _highlight_syntax_if_available [<path> | <extension>]
 #
 # Description:
 #   If `bat` or Pygments is available, use it to highlight syntax. When neither
@@ -2203,19 +2203,31 @@ _get_unique_path() {
 #   https://github.com/sharkdp/bat
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  if ((_COLOR_ENABLED)) && hash "bat" 2>/dev/null
+  ((_COLOR_ENABLED)) || cat "${@:-}"
+
+  local _extension=
+  local _path=
+
+  if [[ "${1:-}" =~ / ]]
+  then
+    _path="${1}"
+  elif [[ -n "${1:-}" ]]
+  then
+    _extension="${1}"
+  else
+    _extension="md"
+  fi
+
+  if hash "bat" 2>/dev/null
   then
     local _arguments=()
     local _theme="${NB_SYNTAX_THEME}"
 
-    if _interactive_input
+    if [[ -n "${_path:-}" ]]
     then
-      _arguments+=("${1:-}")
+      _arguments+=("${_path}")
     else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--language" "md")
-      fi
+      _arguments+=("--language" "${_extension}")
     fi
 
     bat "${_arguments[@]}"  \
@@ -2223,49 +2235,28 @@ _highlight_syntax_if_available() {
       --color always        \
       --plain               \
       --theme "${_theme:-}"
-  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
+  elif hash "highlight" 2>/dev/null
   then
     local _arguments=("-O" "ansi")
 
-    if _interactive_input
+    if [[ -n "${_path:-}" ]]
     then
-      _arguments+=("${1:-}")
+      _arguments+=("${_path}")
     else
-      if [[ -z "${1:-}" ]]
-      then
-        _arguments+=("--syntax-by-name" "md")
-      else
-        _arguments+=("--syntax" "${1}")
-      fi
+      _arguments+=("--syntax" "${_extension}")
     fi
 
     highlight "${_arguments[@]}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
-    local _lexer=
-    local _path=
 
-    if _interactive_input
+    if [[ -n "${_path:-}" ]]
     then
-      _path="${1:-}"
-      _lexer="${2:-}"
+      _arguments+=("${_path}")
     else
-      _lexer="${1:-}"
+      _arguments+=("-l" "${_extension}")
     fi
-
-    if [[ -z "${_lexer:-}" ]]
-    then
-      if [[ "${_path}" =~ \.latex$|\.tex$|\.aux$|\.toc$ ]]
-      then
-        _lexer="latex"
-      else
-        _lexer="md"
-      fi
-    fi
-
-    [[ -n "${_lexer:-}" ]]  && _arguments+=("-l" "${_lexer}")
-    _interactive_input      && _arguments+=("${_path}")
 
     pygmentize "${_arguments[@]}" 2>/dev/null
   else
@@ -2731,6 +2722,13 @@ Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
 
+Examples:
+  ${_ME} help
+  ${_ME} help add
+  ${_ME} help import
+  ${_ME} h notebooks
+  ${_ME} h e
+
 Shortcut Alias: \`h\`
 HEREDOC
 _help() {
@@ -2815,13 +2813,13 @@ View this theme as a complete file:
 
     $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
-Themes can be installed using the \`nb plugins\` subcommand:
+Themes can be installed using the \`${_ME} plugins\` subcommand:
 
-    $(_color_dim ">") $(_color_primary "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_dim ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
     $(_color_secondary "Plugin installed:")
     $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
 
-Once a theme is installed, use it with \`nb set color_theme\`:
+Once a theme is installed, use it with \`${_ME} set color_theme\`:
 
     $(_color_dim ">") $(_color_primary "set color_theme turquoise")
     $(_color_secondary "NB_COLOR_THEME set to turquoise")
@@ -2941,9 +2939,9 @@ $(_color_primary "Usage:")
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3081,6 +3079,10 @@ Examples:
   ${_ME} add example.md --title "Example Title" --content "Example content."
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
+  ${_ME} example:add -t "Title"
+  ${_ME} a
+  ${_ME} a "Note content."
+  ${_ME} example:a -t "Title"
 
 Aliases: \`create\`, \`new\`
 Shortcut Alias: \`a\`
@@ -3301,7 +3303,7 @@ Options:
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
-             Bookmarks can also be added with \`nb <url>\`
+             Bookmarks can also be added with \`${_ME} <url>\`
   delete     Delete a bookmark.
   edit       Edit a bookmark.
   list       List bookmarks in the current notebook.
@@ -3329,15 +3331,16 @@ Description:
 
 Examples:
   ${_ME} https://example.com
-  ${_ME} bookmark https://example.com
-  ${_ME} bookmark https://example.com --encrypt
-  ${_ME} bookmark https://example.com --tags example,sample,demo
-  ${_ME} bookmark https://example.com/about -c "Example comment."
-  ${_ME} bookmark https://example.com/faqs -f example-filename
-  ${_ME} bookmark https://example.com --quote "Example quote or excerpt."
+  ${_ME} example: https://example.com
+  ${_ME} https://example.com --encrypt
+  ${_ME} https://example.com --tags example,sample,demo
+  ${_ME} https://example.com/about -c "Example comment."
+  ${_ME} https://example.com/faqs -f example-filename
+  ${_ME} https://example.com --quote "Example quote or excerpt."
   ${_ME} bookmark list
   ${_ME} bookmark search "example query"
   ${_ME} bookmark open 5
+  ${_ME} b
 
 Shortcut Alias: \`b\`
 HEREDOC
@@ -4227,6 +4230,13 @@ Examples:
   ${_ME} delete example.md
   ${_ME} delete "A Document Title"
   ${_ME} 3 delete --force
+  ${_ME} example:delete 12
+  ${_ME} delete example:12
+  ${_ME} example:12 delete
+  ${_ME} d 3
+  ${_ME} 3 d
+  ${_ME} d example:12
+  ${_ME} example:12 d
 
 Shortcut Alias: \`d\`
 HEREDOC
@@ -4341,6 +4351,13 @@ Examples:
   ${_ME} edit "A Document Title"
   echo "Content to append." | ${_ME} edit 1
   ${_ME} 3 edit
+  ${_ME} example:edit 12
+  ${_ME} edit example:12
+  ${_ME} example:12 edit
+  ${_ME} e 12
+  ${_ME} 12 e
+  ${_ME} e example:12
+  ${_ME} example:12 e
 
 Shortcut Alias: \`e\`
 HEREDOC
@@ -4686,6 +4703,9 @@ Examples:
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   ${_ME} export example.md /path/to/example.docx
+
+  # Export note 12 in the "sample" notebook to HTML
+  ${_ME} export sample:12 /path/to/example.html
 HEREDOC
 _export() {
   local _args=()
@@ -4829,6 +4849,7 @@ Examples:
   ${_ME} git status
   ${_ME} git diff
   ${_ME} git log
+  ${_ME} example:git status
 HEREDOC
 _git() {
   if [[ "${1:-}" == "checkpoint" ]]
@@ -4979,6 +5000,10 @@ Examples:
   ${_ME} history
   ${_ME} history example.md
   ${_ME} 3 history
+  ${_ME} example:history
+  ${_ME} example:history 12
+  ${_ME} history example:12
+  ${_ME} example:12 history
 HEREDOC
 _history() {
   local _selector="${1:-}"
@@ -5036,6 +5061,7 @@ Examples:
   ${_ME} import ~/Pictures/example.png
   ${_ME} import ~/Documents/example.docx
   ${_ME} import https://example.com/example.pdf
+  ${_ME} example:import https://example.com/example.jpg
 HEREDOC
 _import() {
   # _import_validate_path()
@@ -5662,6 +5688,7 @@ Examples:
   ${_ME} list "^Example.*"
   ${_ME} list --10
   ${_ME} list --type document
+  ${_ME} example:list
 HEREDOC
 _list() {
   local _size=
@@ -5814,7 +5841,10 @@ Help information:
 HEREDOC
       elif [[ -n "${_type:-}" ]]
       then
-        _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+        if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
+        then
+          _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+        fi
 
         cat <<HEREDOC
 0 ${_type} files.
@@ -6098,7 +6128,8 @@ HEREDOC
           else
             _print_line "$(printf "%-${_item_line_length}s" '.')"
           fi
-          head -"${_excerpt_length}" "${_notebook_path}/${__basename}"
+          head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
+            | _highlight_syntax_if_available "${__basename##*.}"
           printf "\\n"
         fi
 
@@ -6202,6 +6233,8 @@ Indicators:
   📂  Folder
 
 Examples:
+  ${_ME}
+  ${_ME} --all
   ${_ME} ls
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
@@ -6209,6 +6242,9 @@ Examples:
   ${_ME} ls "^Example.*"
   ${_ME} ls --10
   ${_ME} ls --type document
+  ${_ME} example:
+  ${_ME} example: -ae
+  ${_ME} example:ls
 HEREDOC
 _ls() {
   # _ls_print_footer()
@@ -6662,6 +6698,9 @@ Description:
 Examples:
   ${_ME} move 1 example-notebook
   ${_ME} move example.md example-notebook
+  ${_ME} example:move sample.md other-notebook
+  ${_ME} move example:sample.md other-notebook
+  ${_ME} mv 1 example-notebook
 
 Shortcut Alias: \`mv\`
 HEREDOC
@@ -6882,8 +6921,10 @@ Description:
 
 Examples:
   ${_ME} notebooks --names
-  ${_ME} notebooks add Example1
-  ${_ME} notebooks add Example2 https://github.com/example/example.git
+  ${_ME} notebooks add sample
+  ${_ME} notebooks add example https://github.com/example/example.git
+  ${_ME} n current --path
+  ${_ME} n archive example
 
 Shortcut Alias: \`n\`
 HEREDOC
@@ -7937,6 +7978,13 @@ Examples:
   ${_ME} open 3
   ${_ME} open example.bookmark.md
   ${_ME} 3 open
+  ${_ME} example:open 12
+  ${_ME} open example:12
+  ${_ME} example:12 open
+  ${_ME} o 3
+  ${_ME} 3 o
+  ${_ME} o example:12
+  ${_ME} example:12 o
 
 See also:
   ${_ME} help bookmark
@@ -7975,6 +8023,13 @@ Examples:
   ${_ME} peek 3
   ${_ME} peek example.bookmark.md
   ${_ME} 3 peek
+  ${_ME} example:peek 12
+  ${_ME} peek example:12
+  ${_ME} example:12 peek
+  ${_ME} p 3
+  ${_ME} 3 p
+  ${_ME} p example:12
+  ${_ME} example:12 p
 
 See also:
   ${_ME} help bookmark
@@ -8343,6 +8398,9 @@ Examples:
 
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   ${_ME} rename 3 --to-bookmark
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  ${_ME} example:rename 3 "sample.md"
 HEREDOC
 _rename() {
   local _force=0
@@ -8548,17 +8606,23 @@ Examples:
   # search current notebook for "example query"
   ${_ME} search "example query"
 
+  # search the notebook "example" for "example query"
+  ${_ME} example:search "example query"
+
   # search all notebooks for "example query"
   ${_ME} search "example query" --all
 
   # search notes for "Example" OR "Sample"
   ${_ME} search "Example|Sample"
 
-  # search for bookmarks containing the hashtag "#example"
-  ${_ME} search "#example" --type bookmark
+  # search with a regular expression
+  ${_ME} search "\d\d\d-\d\d\d\d"
 
-  # search with a regular expression for notes containing phone numbers
-  ${_ME} search "^(1?(-?\\d{3})-?)?(\\d{3})(-?\\d{4})$"
+  # search the current notebook for "example query
+  ${_ME} q "example query"
+
+  # search the notebook named "example" for "example query
+  ${_ME} example:q "example query"
 
 Shortcut Alias: \`q\`
 HEREDOC
@@ -8990,9 +9054,10 @@ Description:
 
 Examples:
   ${_ME} settings
-  ${_ME} settings set 5 "org"
-  ${_ME} settings set color_primary 105
-  ${_ME} settings unset color_primary
+  ${_ME} set 5 "org"
+  ${_ME} set color_primary 105
+  ${_ME} set unset color_primary
+  ${_ME} set color_secondary unset
   ${_ME} settings colors
   ${_ME} settings colors 105
   ${_ME} set limit 15
@@ -9187,7 +9252,7 @@ HEREDOC
             printf "Exiting...\\n"
             return 0
             ;;
-          reset|unset)
+          unset|default|reset)
             _nb_settings_unset "${_setting_name}" || continue
             break
             ;;
@@ -9210,7 +9275,7 @@ HEREDOC
     local _value=
 
     _setting_name="$(_nb_settings_identify "${1:-}")"  &&
-      if [[ "${2:-}" == "unset" ]]
+      if _contains "${2:-}" "unset" "default" "reset"
       then
         _nb_settings_unset "${_setting_name}" && return 0
       fi &&
@@ -9515,7 +9580,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
   _settings_list_items+=("$(_color_id_brackets '10') limit")
   _settings_help_items+=("\
     $(_color_secondary " -----")
-     The maximum number of notes included in the \`nb\` and \`nb ls\` lists.
+     The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
 
      • Default Value: $(_color_primary "20")")
 
@@ -9802,12 +9867,13 @@ HEREDOC
 
 describe "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   ${_ME} show <notebook>
 
 Options:
+  --added          Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -9824,6 +9890,7 @@ Options:
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
+  --updated        Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -9863,6 +9930,13 @@ Examples:
   ${_ME} show example.md --render
   ${_ME} show "A Document Title" --print --no-color
   ${_ME} 1 show
+  ${_ME} example:show 12
+  ${_ME} show example:12
+  ${_ME} example:12 show
+  ${_ME} s 1
+  ${_ME} 1 s
+  ${_ME} s example:12
+  ${_ME} example:12 s
 
 Alias: \`view\`
 Shortcut Alias: \`s\`
@@ -9941,14 +10015,17 @@ _show() {
   local _ls_arguments=()
   local _print_output=0
   local _password=
+  local _print_added=0
   local _print_filename=0
   local _print_id=0
   local _print_info=0
   local _print_path=0
   local _print_selector_id=0
+  local _print_updated=0
   local _render=0
   local _selector=
   local _show_color_enabled="${_COLOR_ENABLED}"
+  local _skip_notebook_fallback=0
   local _print_title=0
   local _tool=
   local _type=
@@ -9962,15 +10039,23 @@ _show() {
     case "${__arg}" in
       --path)
         _print_path=1
+        _skip_notebook_fallback=1
+        ;;
+      --added*)
+        _print_added=1
+        _skip_notebook_fallback=1
         ;;
       --filename|--basename)
         _print_filename=1
+        _skip_notebook_fallback=1
         ;;
       --id|--index)
         _print_id=1
+        _skip_notebook_fallback=1
         ;;
       --info-line)
         _print_info=1
+        _skip_notebook_fallback=1
         ;;
       --no-color|--nocolor|--raw)
         _show_color_enabled=0
@@ -9988,9 +10073,11 @@ _show() {
         ;;
       --selector-id)
         _print_selector_id=1
+        _skip_notebook_fallback=1
         ;;
       --title)
         _print_title=1
+        _skip_notebook_fallback=1
         ;;
       --tool)
         _tool="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -9998,12 +10085,17 @@ _show() {
         ;;
       --type)
         _type_check=1
+        _skip_notebook_fallback=1
 
         if _option_value_is_present "${__val:-}"
         then
           _type="${__val}"
           shift
         fi
+        ;;
+      --updated*)
+        _print_updated=1
+        _skip_notebook_fallback=1
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
@@ -10037,10 +10129,7 @@ _show() {
 
   local _target_path="${_notebook_path}/${_basename}"
 
-  if [[ -z "${_basename:-}" ]] && ! {
-    ((_print_path))   || ((_print_filename)) || ((_print_id))   ||
-    ((_print_title))  || ((_print_info))     || ((_type_check))
-  }
+  if [[ -z "${_basename:-}" ]] && ! ((_skip_notebook_fallback))
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -10139,6 +10228,33 @@ _show() {
         "$(_color_id_brackets "${_maybe_scoped_id}")"       \
         "$(_color_primary         "${_maybe_scoped_basename}")"
     fi
+
+    return 0
+  fi
+
+  if ((_print_added))
+  then
+    git -C "${_notebook_path}" --no-pager \
+      log                                 \
+      --follow                            \
+      --diff-filter=A                     \
+      --date=iso-local                    \
+      --pretty=oneline                    \
+      --pretty='%ad'                      \
+      "${_basename}"
+
+    return 0
+  fi
+
+  if ((_print_updated))
+  then
+    git -C "${_notebook_path}" --no-pager \
+      log                                 \
+      -1                                  \
+      --follow                            \
+      --date=iso-local                    \
+      --pretty='%ad'                      \
+      "${_basename}"
 
     return 0
   fi
@@ -10360,12 +10476,12 @@ Can't show archives. Export archive and expand to edit.\\n"
     else # `show`
       # NOTE: Temp character is U+241F (unit separator)
       # https://graphemica.com/%E2%90%9F
-      < "${_target_path}" sed 's/^- /-␟/g'  \
-        | sed 's/^\* /\*␟/g'                \
-        | fold -s -w "$(tput cols)"         \
-        | sed 's/^-␟/- /g'                  \
-        | sed 's/^\*␟/\* /g'                \
-        | _highlight_syntax_if_available    \
+      < "${_target_path}" sed 's/^- /-␟/g'                        \
+        | sed 's/^\* /\*␟/g'                                      \
+        | fold -s -w "$(tput cols)"                               \
+        | sed 's/^-␟/- /g'                                        \
+        | sed 's/^\*␟/\* /g'                                      \
+        | _highlight_syntax_if_available "${_target_path##*.}"    \
         | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
           then
             "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
@@ -10678,6 +10794,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
+
+Example:
+  ${_ME} use example
 
 Shortcut Alias: \`u\`
 HEREDOC

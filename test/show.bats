@@ -462,6 +462,56 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
+# `show <id> --added` #########################################################
+
+@test "\`show <id> --added\` exits with status 0 and prints the added timestamp." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --added
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
+}
+
+# `show <id> --updated` #######################################################
+
+@test "\`show <id> --updated\` exits with status 0 and prints the added timestamp." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _added="$("${_NB}" show 1 --added)"
+
+    run "${_NB}" show 1 --added
+
+    [[ "${output}" == "${_added}"  ]]
+
+    sleep 1
+
+    run "${_NB}" edit 1 --content "More content."
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --updated
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_added}: '%s'\\n" "${_added}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
+  [[ "${output}" != "${_added}"       ]]
+}
+
 # `show <id> --selector-id` ###################################################
 
 @test "\`show <id> --selector-id\` exits with status 0 and prints the selector id." {

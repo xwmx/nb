@@ -895,9 +895,23 @@ When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
 for each type.
 
-`nb show` is primarily intended for previewing notes and files within
-the terminal. To view files in the system's preferred GUI application,
+`nb show` also provides [options](#show) for querying information about an
+item. For example, use the `--added` and `--updated` flags to print the date
+and time that an item was added or updated:
+
+```bash
+> nb show 2 --added
+2020-01-01 01:01:00 -0700
+
+> nb show 2 --updated
+2020-02-02 02:02:00 -0700
+```
+
+`nb show` is primarily intended for viewing items within the terminal.
+To view a file in the system's preferred GUI application,
 use [`nb open`](#open).
+
+For full `nb show` usage information, run [`nb help show`](#show).
 
 ##### Shortcut Alias: `s`
 
@@ -934,8 +948,6 @@ nb view "A Document Title"
 # show note by id, alternative
 nb 3 view
 ```
-
-For `nb show` help information, run [`nb help show`](#show).
 
 #### Deleting Notes
 
@@ -2649,9 +2661,9 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -2669,9 +2681,9 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -2905,6 +2917,10 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb example:add -t "Title"
+  nb a
+  nb a "Note content."
+  nb example:a -t "Title"
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
@@ -2974,15 +2990,16 @@ Description:
 
 Examples:
   nb https://example.com
-  nb bookmark https://example.com
-  nb bookmark https://example.com --encrypt
-  nb bookmark https://example.com --tags example,sample,demo
-  nb bookmark https://example.com/about -c "Example comment."
-  nb bookmark https://example.com/faqs -f example-filename
-  nb bookmark https://example.com --quote "Example quote or excerpt."
+  nb example: https://example.com
+  nb https://example.com --encrypt
+  nb https://example.com --tags example,sample,demo
+  nb https://example.com/about -c "Example comment."
+  nb https://example.com/faqs -f example-filename
+  nb https://example.com --quote "Example quote or excerpt."
   nb bookmark list
   nb bookmark search "example query"
   nb bookmark open 5
+  nb b
 
 Shortcut Alias: `b`
 ```
@@ -3028,6 +3045,13 @@ Examples:
   nb delete example.md
   nb delete "A Document Title"
   nb 3 delete --force
+  nb example:delete 12
+  nb delete example:12
+  nb example:12 delete
+  nb d 3
+  nb 3 d
+  nb d example:12
+  nb example:12 d
 
 Shortcut Alias: `d`
 ```
@@ -3062,6 +3086,13 @@ Examples:
   nb edit "A Document Title"
   echo "Content to append." | nb edit 1
   nb 3 edit
+  nb example:edit 12
+  nb edit example:12
+  nb example:12 edit
+  nb e 3
+  nb 3 e
+  nb e example:12
+  nb example:12 e
 
 Shortcut Alias: `e`
 ```
@@ -3120,6 +3151,9 @@ Examples:
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   nb export example.md /path/to/example.docx
+
+  # Export note 12 in the "sample" notebook to HTML
+  nb export sample:12 /path/to/example.html
 ```
 
 #### `git`
@@ -3140,6 +3174,7 @@ Examples:
   nb git status
   nb git diff
   nb git log
+  nb example:git status
 ```
 
 #### `help`
@@ -3158,6 +3193,13 @@ Options:
 Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
+
+Examples:
+  nb help
+  nb help add
+  nb help import
+  nb h notebooks
+  nb h e
 
 Shortcut Alias: `h`
 ```
@@ -3178,6 +3220,10 @@ Examples:
   nb history
   nb history example.md
   nb 3 history
+  nb example:history
+  nb example:history 12
+  nb history example:12
+  nb example:12 history
 ```
 
 #### `import`
@@ -3208,6 +3254,7 @@ Examples:
   nb import ~/Pictures/example.png
   nb import ~/Documents/example.docx
   nb import https://example.com/example.pdf
+  nb example:import https://example.com/example.jpg
 ```
 
 #### `init`
@@ -3277,6 +3324,7 @@ Examples:
   nb list "^Example.*"
   nb list --10
   nb list --type document
+  nb example:list
 ```
 
 #### `ls`
@@ -3330,6 +3378,8 @@ Indicators:
   📂  Folder
 
 Examples:
+  nb
+  nb --all
   nb ls
   nb ls example.md -e 10
   nb ls --excerpt --no-id
@@ -3337,6 +3387,9 @@ Examples:
   nb ls "^Example.*"
   nb ls --10
   nb ls --type document
+  nb example:
+  nb example: -ae
+  nb example:ls
 ```
 
 #### `move`
@@ -3354,6 +3407,9 @@ Description:
 Examples:
   nb move 1 example-notebook
   nb move example.md example-notebook
+  nb example:move sample.md other-notebook
+  nb move example:sample.md other-notebook
+  nb mv 1 example-notebook
 
 Shortcut Alias: `mv`
 ```
@@ -3437,8 +3493,10 @@ Description:
 
 Examples:
   nb notebooks --names
-  nb notebooks add Example1
-  nb notebooks add Example2 https://github.com/example/example.git
+  nb notebooks add sample
+  nb notebooks add example https://github.com/example/example.git
+  nb n current --path
+  nb n archive example
 
 Shortcut Alias: `n`
 ```
@@ -3459,6 +3517,13 @@ Examples:
   nb open 3
   nb open example.bookmark.md
   nb 3 open
+  nb example:open 12
+  nb open example:12
+  nb example:12 open
+  nb o 3
+  nb 3 o
+  nb o example:12
+  nb example:12 o
 
 See also:
   nb help bookmark
@@ -3488,6 +3553,13 @@ Examples:
   nb peek 3
   nb peek example.bookmark.md
   nb 3 peek
+  nb example:peek 12
+  nb peek example:12
+  nb example:12 peek
+  nb p 3
+  nb 3 p
+  nb p example:12
+  nb example:12 p
 
 See also:
   nb help bookmark
@@ -3577,6 +3649,9 @@ Examples:
 
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  nb example:rename 3 "sample.md"
 ```
 
 #### `run`
@@ -3621,6 +3696,9 @@ Examples:
   # search current notebook for "example query"
   nb search "example query"
 
+  # search the notebook "example" for "example query"
+  nb example:search "example query"
+
   # search all notebooks for "example query"
   nb search "example query" --all
 
@@ -3630,8 +3708,14 @@ Examples:
   # search for bookmarks containing the hashtag "#example"
   nb search "#example" --type bookmark
 
-  # search with a regular expression for notes containing phone numbers
-  nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
+  # search with a regular expression
+  nb search "\d\d\d-\d\d\d\d"
+
+  # search the current notebook for "example query"
+  nb q "example query"
+
+  # search the notebook named "example" for "example query
+  nb example:q "example query"
 
 Shortcut Alias: `q`
 ```
@@ -3673,9 +3757,10 @@ Description:
 
 Examples:
   nb settings
-  nb settings set 5 "org"
-  nb settings set color_primary 105
-  nb settings unset color_primary
+  nb set 5 "org"
+  nb set color_primary 105
+  nb set unset color_primary
+  nb set color_secondary unset
   nb settings colors
   nb settings colors 105
   nb set limit 15
@@ -3925,12 +4010,13 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb show <notebook>
 
 Options:
+  --added          Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -3946,7 +4032,8 @@ Options:
                    return true if the item matches <type>. <type> can be a
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
-                   text, vide
+                   text, video
+  --updated        Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -3986,6 +4073,13 @@ Examples:
   nb show example.md --render
   nb show "A Document Title" --print --no-color
   nb 1 show
+  nb example:show 12
+  nb show example:12
+  nb example:12 show
+  nb s 1
+  nb 1 s
+  nb s example:12
+  nb example:12 s
 
 Alias: `view`
 Shortcut Alias: `s`
@@ -4069,6 +4163,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+Example:
+  nb use example
 
 Shortcut Alias: `u`
 ```
