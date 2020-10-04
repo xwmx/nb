@@ -4221,6 +4221,7 @@ Examples:
   ${_ME} 3 delete --force
   ${_ME} example:delete 12
   ${_ME} delete example:12
+  ${_ME} example:12 delete
 
 Shortcut Alias: \`d\`
 HEREDOC
@@ -4337,6 +4338,7 @@ Examples:
   ${_ME} 3 edit
   ${_ME} example:edit 12
   ${_ME} edit example:12
+  ${_ME} example:12 edit
 
 Shortcut Alias: \`e\`
 HEREDOC
@@ -4979,6 +4981,7 @@ Examples:
   ${_ME} example:history
   ${_ME} example:history 12
   ${_ME} history example:12
+  ${_ME} example:12 history
 HEREDOC
 _history() {
   local _selector="${1:-}"
@@ -7952,6 +7955,7 @@ Examples:
   ${_ME} 3 open
   ${_ME} example:open 12
   ${_ME} open example:12
+  ${_ME} example:12 open
 
 See also:
   ${_ME} help bookmark
@@ -7990,8 +7994,9 @@ Examples:
   ${_ME} peek 3
   ${_ME} peek example.bookmark.md
   ${_ME} 3 peek
-  ${_ME} example:peek 3
-  ${_ME} peek example:3
+  ${_ME} example:peek 12
+  ${_ME} peek example:12
+  ${_ME} example:12 peek
 
 See also:
   ${_ME} help bookmark
@@ -9885,8 +9890,9 @@ Examples:
   ${_ME} show example.md --render
   ${_ME} show "A Document Title" --print --no-color
   ${_ME} 1 show
-  ${_ME} example:show 1
-  ${_ME} show example:1
+  ${_ME} example:show 12
+  ${_ME} show example:12
+  ${_ME} example:12 show
 
 Alias: \`view\`
 Shortcut Alias: \`s\`

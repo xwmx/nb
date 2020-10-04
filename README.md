@@ -3037,6 +3037,7 @@ Examples:
   nb 3 delete --force
   nb example:delete 12
   nb delete example:12
+  nb example:12 delete
 
 Shortcut Alias: `d`
 ```
@@ -3073,6 +3074,7 @@ Examples:
   nb 3 edit
   nb example:edit 12
   nb edit example:12
+  nb example:12 edit
 
 Shortcut Alias: `e`
 ```
@@ -3485,6 +3487,7 @@ Examples:
   nb 3 open
   nb example:open 12
   nb open example:12
+  nb example:12 open
 
 See also:
   nb help bookmark
@@ -3516,6 +3519,7 @@ Examples:
   nb 3 peek
   nb example:peek 12
   nb peek example:12
+  nb example:12 peek
 
 See also:
   nb help bookmark
@@ -4019,8 +4023,9 @@ Examples:
   nb show example.md --render
   nb show "A Document Title" --print --no-color
   nb 1 show
-  nb example:show 1
-  nb show example:1
+  nb example:show 12
+  nb show example:12
+  nb example:12 show
 
 Alias: `view`
 Shortcut Alias: `s`
