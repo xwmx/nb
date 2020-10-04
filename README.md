@@ -2911,9 +2911,11 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb example:add
   nb example:add -t "Title"
   nb a
   nb a "Note content."
+  nb example:a
   nb example:a -t "Title"
 
 Aliases: `create`, `new`

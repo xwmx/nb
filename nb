@@ -3079,9 +3079,11 @@ Examples:
   ${_ME} add example.md --title "Example Title" --content "Example content."
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
+  ${_ME} example:add
   ${_ME} example:add -t "Title"
   ${_ME} a
   ${_ME} a "Note content."
+  ${_ME} example:a
   ${_ME} example:a -t "Title"
 
 Aliases: \`create\`, \`new\`
