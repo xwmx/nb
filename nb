@@ -9538,7 +9538,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
      $(if ! hash "bat" 2>/dev/null
        then
-         printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+         printf "Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
        else
          printf "• Available themes:\\n"
          printf "\\n"
