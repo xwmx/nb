@@ -2813,13 +2813,13 @@ View this theme as a complete file:
 
     $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
-Themes can be installed using the \`nb plugins\` subcommand:
+Themes can be installed using the \`${_ME} plugins\` subcommand:
 
-    $(_color_dim ">") $(_color_primary "nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_dim ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
     $(_color_secondary "Plugin installed:")
     $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
 
-Once a theme is installed, use it with \`nb set color_theme\`:
+Once a theme is installed, use it with \`${_ME} set color_theme\`:
 
     $(_color_dim ">") $(_color_primary "set color_theme turquoise")
     $(_color_secondary "NB_COLOR_THEME set to turquoise")
@@ -3302,7 +3302,7 @@ Options:
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
-             Bookmarks can also be added with \`nb <url>\`
+             Bookmarks can also be added with \`${_ME} <url>\`
   delete     Delete a bookmark.
   edit       Edit a bookmark.
   list       List bookmarks in the current notebook.
@@ -9579,7 +9579,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
   _settings_list_items+=("$(_color_id_brackets '10') limit")
   _settings_help_items+=("\
     $(_color_secondary " -----")
-     The maximum number of notes included in the \`nb\` and \`nb ls\` lists.
+     The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
 
      • Default Value: $(_color_primary "20")")
 
