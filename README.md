@@ -2222,10 +2222,11 @@ nb set colors
 
 #### Syntax Highlighting Theme
 
-[`bat`](https://github.com/sharkdp/bat) includes several syntax
-highlighting colors themes for both light and dark terminal themes.
-To view a list of available themes and set the color theme, use
-[`nb set syntax_theme`](#settings).
+`nb` displays files with syntax highlighting when
+[`bat`](https://github.com/sharkdp/bat) is installed. Syntax highlighting
+color themes are available for both light and dark terminal backgrounds.
+To view a list of available themes and set the syntax highlighting color
+theme, use [`nb set syntax_theme`](#settings).
 
 ### $ Shell Theme Support
 

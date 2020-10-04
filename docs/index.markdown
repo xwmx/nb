@@ -2226,6 +2226,14 @@ To view a table of available colors and numbers, run:
 nb set colors
 ```
 
+#### Syntax Highlighting Theme
+
+`nb` displays files with syntax highlighting when
+[`bat`](https://github.com/sharkdp/bat) is installed. Syntax highlighting
+color themes are available for both light and dark terminal backgrounds.
+To view a list of available themes and set the syntax highlighting color
+theme, use [`nb set syntax_theme`](#settings).
+
 ### $ Shell Theme Support
 
 - [`astral` Zsh Theme](https://github.com/xwmx/astral) - Displays the
@@ -3791,6 +3799,40 @@ Alias: `set`
      `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
      • Default Value: ~/.nb
+
+[12] syntax_theme
+     ------
+     The syntax highlighting theme. View examples with:
+
+       bat --list-themes
+
+     • Available themes:
+
+         1337
+         DarkNeon
+         Dracula
+         GitHub
+         Monokai Extended
+         Monokai Extended Bright
+         Monokai Extended Light
+         Monokai Extended Origin
+         Nord
+         OneHalfDark
+         OneHalfLight
+         Solarized (dark)
+         Solarized (light)
+         Sublime Snazzy
+         TwoDark
+         ansi-dark
+         ansi-light
+         base16
+         base16-256
+         gruvbox
+         gruvbox-light
+         gruvbox-white
+         zenburn
+
+     • Default Value: Dracula
 ```
 
 #### `shell`
