@@ -3683,7 +3683,7 @@ Examples:
 Alias: `set`
 ```
 
-##### `settings list --long`
+##### `auto_sync`
 
 ```text
 [1]  auto_sync
@@ -3693,7 +3693,11 @@ Alias: `set`
      one is set. To disable this behavior, set this to "0".
 
      • Default Value: 1
+```
 
+##### `color_primary`
+
+```text
 [2]  color_primary
      -------------
      The primary color used to highlight identifiers and messages. Often this
@@ -3702,7 +3706,11 @@ Alias: `set`
 
      • Default Value: 68 (blue) for 256 color terminals,
                       4  (blue) for  8  color terminals.
+```
 
+##### `color_secondary`
+
+```text
 [3]  color_secondary
      ---------------
      The color used for lines and footer elements. Often this can be set to an
@@ -3710,7 +3718,11 @@ Alias: `set`
      colors.
 
      • Default Value: 8
+```
 
+##### `color_theme`
+
+```text
 [4]  color_theme
      -----------
      The color theme.
@@ -3738,7 +3750,11 @@ Alias: `set`
          utility
 
      • Default Value: nb
+```
 
+##### `default_extension`
+
+```text
 [5]  default_extension
      -----------------
      The default extension to use for note files. Change to "org" for Emacs
@@ -3746,7 +3762,11 @@ Alias: `set`
      whatever you prefer.
 
      • Default Value: md
+```
 
+##### `editor`
+
+```text
 [6]  editor
      ------
      The command line text editor to use with `nb`.
@@ -3764,21 +3784,33 @@ Alias: `set`
          subl
          vi
          vim
+```
 
+##### `encryption_tool`
+
+```text
 [7]  encryption_tool
      ---------------
      The tool used for encrypting notes.
 
      • Supported Values: openssl, gpg
      • Default Value:    openssl
+```
 
+##### `footer`
+
+```text
 [8]  footer
      ------
      By default, `nb` and `nb ls` include a footer with example commands.
      To hide this footer, set this to "0".
 
      • Default Value: 1
+```
 
+##### `header`
+
+```text
 [9]  header
      ------
      By default, `nb` and `nb ls` include a header listing available notebooks.
@@ -3794,13 +3826,21 @@ Alias: `set`
        3  Left Justified
 
      • Default Value: 1
+```
 
+##### `limit`
+
+```text
 [10] limit
      -----
      The maximum number of notes included in the `nb` and `nb ls` lists.
 
      • Default Value: 20
+```
 
+##### `nb_dir`
+
+```text
 [11] nb_dir
      ------
      The location of the directory that contains the notebooks.
@@ -3809,7 +3849,11 @@ Alias: `set`
      `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
      • Default Value: ~/.nb
+```
 
+##### `syntax_theme`
+
+```text
 [12] syntax_theme
      ------------
      The syntax highlighting theme. View examples with:
