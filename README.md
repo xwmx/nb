@@ -334,11 +334,11 @@ nb add --title "Secret Document" --encrypt
 
 `nb add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-`$EDITOR` environment variable or [`nb set editor`](#settings-list---long).
+`$EDITOR` environment variable or [`nb set editor`](#editor).
 
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. The default file type can be changed to whatever you
-like using [`nb set default_extension`](#settings-list---long).
+like using [`nb set default_extension`](#default_extension).
 
 `nb add` behaves differently depending on the type of argument it
 receives. When a filename with extension is specified, a new note
@@ -424,7 +424,7 @@ For a full list of options available for `nb add`, run [`nb help add`](#add).
 Password-protected notes and [bookmarks](#-bookmarks) are created with
 the `-e` / `--encrypt` flag and are encrypted with AES-256 using OpenSSL
 by default. GPG is also supported and can be configured with
-[`nb set encryption_tool`](#settings-list---long).
+[`nb set encryption_tool`](#encryption_tool).
 
 Each protected note and bookmark is encrypted individually with its own
 password. When an encrypted item is viewed, edited, or opened, `nb`
@@ -484,8 +484,8 @@ Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
 `nb ls` also includes a footer with example commands for easy reference.
 The notebook header and command footer can be configured or hidden with
-[`nb set header`](#settings-list---long) and
-[`nb set footer`](#settings-list---long).
+[`nb set header`](#header) and
+[`nb set footer`](#footer).
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
@@ -693,7 +693,7 @@ title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
-limit can be changed with [`nb set limit <number>`](#settings-list---long).
+limit can be changed with [`nb set limit <number>`](#limit).
 To list a different number of items on a per-command basis, use the
 `-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
 
@@ -1644,7 +1644,7 @@ nb example:q "#tag"
 
 By default, all `nb` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
-stored in the directory configured in [`NB_DIR`](#settings-list---long), which is
+stored in the directory configured in [`nb set nb_dir`](#nb_dir), which is
 `~/.nb` by default.
 
 ##### Local Notebooks
@@ -1830,7 +1830,7 @@ system.
 Many services provide free private git repositories, so git syncing with
 `nb` is easy, free, and vendor-independent. You can also sync your notes
 using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
-your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
+your `nb` directory with [`nb set nb_dir <path>`](#nb_dir)
 and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
@@ -1853,7 +1853,7 @@ nb example:remote remove
 ```
 
 You can also turn off autosync with
-[`nb set auto_sync`](#settings-list---long) and sync manually with
+[`nb set auto_sync`](#auto_sync) and sync manually with
 [`nb sync`](#sync).
 
 #### Sync Conflict Resolution
@@ -2099,7 +2099,7 @@ current notebook name, the shell prompt, and divider lines.
 
 `nb` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using
-[`nb set color_theme`](#settings-list---long):
+[`nb set color_theme`](#color_theme):
 
 ```bash
 nb set color_theme
@@ -2199,8 +2199,8 @@ Plugin installed:
 /home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
-Once a theme is installed, use [`nb set color_theme`](#settings) to set it as
-the current theme:
+Once a theme is installed, use [`nb set color_theme`](#color_theme) to set it
+as the current theme:
 
 ```bash
 > nb set color_theme turquoise
@@ -2236,7 +2236,7 @@ is installed.
 When `bat` is installed, syntax highlighting color themes are
 available for both light and dark terminal backgrounds.
 To view a list of available themes and set the syntax highlighting color
-theme, use [`nb set syntax_theme`](#settings).
+theme, use [`nb set syntax_theme`](#syntax_theme).
 
 ### $ Shell Theme Support
 
