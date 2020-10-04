@@ -6209,6 +6209,7 @@ Indicators:
 
 Examples:
   ${_ME}
+  ${_ME} --all
   ${_ME} ls
   ${_ME} ls example.md -e 10
   ${_ME} ls --excerpt --no-id
@@ -6217,6 +6218,7 @@ Examples:
   ${_ME} ls --10
   ${_ME} ls --type document
   ${_ME} example:
+  ${_ME} example: -ae
   ${_ME} example:ls
 HEREDOC
 _ls() {

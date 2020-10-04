@@ -3348,6 +3348,7 @@ Indicators:
 
 Examples:
   nb
+  nb --all
   nb ls
   nb ls example.md -e 10
   nb ls --excerpt --no-id
@@ -3356,6 +3357,7 @@ Examples:
   nb ls --10
   nb ls --type document
   nb example:
+  nb example: -ae
   nb example:ls
 ```
 
