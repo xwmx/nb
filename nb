@@ -5003,21 +5003,30 @@ Examples:
   ${_ME} history example.md
   ${_ME} 3 history
   ${_ME} example:history
+  ${_ME} history example:
   ${_ME} example:history 12
   ${_ME} history example:12
   ${_ME} example:12 history
 HEREDOC
 _history() {
+  local _basename=
+  local _notebook_path=
   local _selector="${1:-}"
 
   if [[ -n "${_selector:-}" ]]
   then
-    local _basename
-    _basename="$(_show "${_selector}" --filename)"
+    if [[ "${_selector}" =~ :$ ]] ||
+       ! _basename="$(_show "${_selector}" --filename 2>/dev/null)"
+    then
+      if ! _notebook_path="$(_notebooks show "${_selector}" --path 2>/dev/null)"
+      then
+        _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
+      fi
+    fi
   fi
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  [[ -n "${_notebook_path:-}" ]] ||
+    _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
