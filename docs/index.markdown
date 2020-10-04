@@ -336,6 +336,9 @@ echo "Note content." | nb add
 
 # create a new password-protected, encrypted note titled "Secret Document"
 nb add --title "Secret Document" --encrypt
+
+# create a new note in the notebook named "example"
+nb example:add "This is a note."
 ```
 
 `nb add` with no arguments or input will open the new, blank note in your
@@ -460,6 +463,9 @@ nb a "This is a note."
 
 # create a new note containing the clipboard contents with xclip
 xclip -o | nb a
+
+# create a new note in the notebook named "example"
+nb example:a
 ```
 
 ##### Other Aliases: `create`, `new`
@@ -767,6 +773,15 @@ nb edit example.md
 
 # edit note by title
 nb edit "A Document Title"
+
+# edit note 12 in the notebook named "example"
+nb edit example:12
+
+# edit note 12 in the notebook named "example", alternative
+nb example:12 edit
+
+# edit note 12 in the notebook named "example", alternative
+nb example:edit 12
 ```
 
 `edit` and other subcommands that take an identifier can be called with the
@@ -816,6 +831,15 @@ nb e "A Document Title"
 
 # edit note by id, alternative
 nb 3 e
+
+# edit note 12 in the notebook named "example"
+nb e example:12
+
+# edit note 12 in the notebook named "example", alternative
+nb example:12 e
+
+# edit note 12 in the notebook named "example", alternative
+nb example:e 12
 ```
 
 For `nb edit` help information, run [`nb help edit`](#edit).
@@ -836,6 +860,15 @@ nb show "A Document Title"
 
 # show note by id, alternative
 nb 3 show
+
+# show note 12 in the notebook named "example"
+nb show example:12
+
+# show note 12 in the notebook named "example", alternative
+nb example:12 show
+
+# show note 12 in the notebook named "example", alternative
+nb example:show 12
 ```
 
 By default, `nb show` will open the note in
@@ -930,6 +963,15 @@ nb s "A Document Title"
 
 # show note by id, alternative
 nb 3 s
+
+# show note 12 in the notebook named "example"
+nb s example:12
+
+# show note 12 in the notebook named "example", alternative
+nb example:12 s
+
+# show note 12 in the notebook named "example", alternative
+nb example:s 12
 ```
 
 ##### Alias: `view`
@@ -967,6 +1009,15 @@ nb delete "A Document Title"
 
 # delete note by id, alternative
 nb 3 delete
+
+# delete note 12 in the notebook named "example"
+nb delete example:12
+
+# delete note 12 in the notebook named "example", alternative
+nb example:12 delete
+
+# show note 12 in the notebook named "example", alternative
+nb example:delete 12
 ```
 
 By default, `nb delete` will display a confirmation prompt. To skip, use the
@@ -992,6 +1043,15 @@ nb d "A Document Title"
 
 # delete note by id, alternative
 nb 3 d
+
+# delete note 12 in the notebook named "example"
+nb d example:12
+
+# delete note 12 in the notebook named "example", alternative
+nb example:12 d
+
+# delete note 12 in the notebook named "example", alternative
+nb example:d 12
 ```
 
 For `nb delete` help information, run [`nb help delete`](#delete).
@@ -1244,6 +1304,12 @@ system's primary web browser:
 ```bash
 # open bookmark by id
 nb open 3
+
+# open bookmark 12 in the notebook named "example"
+nb peek example:12
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 peek
 ```
 
 [`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
@@ -1254,6 +1320,12 @@ in your terminal web browser, such as
 ```bash
 # peek bookmark by id
 nb peek 12
+
+# peek bookmark 12 in the notebook named "example"
+nb peek example:12
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:12 peek
 ```
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
@@ -1279,8 +1351,14 @@ locally-served view of the page content along with all of your notes.
 # open bookmark by id
 nb o 3
 
+# open bookmark 12 in the notebook named "example"
+nb o example:12
+
 # peek bookmark by id
 nb p 12
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:12 p
 ```
 
 #### Bookmark File Format
