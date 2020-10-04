@@ -8610,8 +8610,8 @@ Examples:
   # search the notebook "example" for "example query"
   ${_ME} example:search "example query"
 
-  # search all notebooks for "example query"
-  ${_ME} search "example query" --all
+  # search all notebooks for "example query" and list matching items
+  ${_ME} search "example query" --all --list
 
   # search notes for "Example" OR "Sample"
   ${_ME} search "Example|Sample"
@@ -8624,6 +8624,9 @@ Examples:
 
   # search the notebook named "example" for "example query
   ${_ME} example:q "example query"
+
+  # search all notebooks for "example query" and list matching items
+  ${_ME} q -la "example query"
 
 Shortcut Alias: \`q\`
 HEREDOC

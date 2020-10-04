@@ -1356,8 +1356,11 @@ regular expressions and tags:
 # search current notebook for "example query"
 nb search "example query"
 
-# search all unarchived notebooks for "example query"
-nb search "example query" --all
+# search the notebook "example" for "example query"
+nb example:search "example query"
+
+# search all unarchived notebooks for "example query" and list matching items
+nb search "example query" --all --list
 
 # search for "Example" OR "Sample"
 nb search "Example|Sample"
@@ -1365,11 +1368,20 @@ nb search "Example|Sample"
 # search items containing the hashtag "#example"
 nb search "#example"
 
-# search with a regular expression for items containing phone numbers
-nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
+# search with a regular expression
+nb search "\d\d\d-\d\d\d\d"
 
 # search bookmarks for "example"
 nb search "example" --type bookmark
+
+# search the current notebook for "example query
+nb q "example query"
+
+# search the notebook named "example" for "example query
+nb example:q "example query"
+
+# search all unarchived notebooks for "example query" and list matching items
+nb q -la "example query"
 ```
 
 `nb search` prints the id number, filename, and title of each matched
@@ -3702,23 +3714,23 @@ Examples:
   # search the notebook "example" for "example query"
   nb example:search "example query"
 
-  # search all notebooks for "example query"
-  nb search "example query" --all
+  # search all notebooks for "example query" and list matching items
+  nb search "example query" --all --list
 
   # search notes for "Example" OR "Sample"
   nb search "Example|Sample"
 
-  # search for bookmarks containing the hashtag "#example"
-  nb search "#example" --type bookmark
-
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
 
-  # search the current notebook for "example query"
+  # search the current notebook for "example query
   nb q "example query"
 
   # search the notebook named "example" for "example query
   nb example:q "example query"
+
+  # search all notebooks for "example query" and list matching items
+  nb q -la "example query"
 
 Shortcut Alias: `q`
 ```
