@@ -1527,6 +1527,9 @@ nb q -l "example"
 
 # search for "example" in all unarchived notebooks
 nb q -a "example"
+
+# search for "example" in the notbook named "sample"
+nb sample:q "example"
 ```
 
 For more information about search, see [`nb help search`](#search).
