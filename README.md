@@ -1453,6 +1453,12 @@ nb history example.md
 
 # show history for note titled "Example"
 nb history Example
+
+# show history for the notebook named "example"
+nb example:history
+
+# show the history for the note 12 in the notebook named "example"
+nb history example:12
 ```
 
 `nb history` uses `git log` by default and prefers
