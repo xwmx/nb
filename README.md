@@ -902,7 +902,7 @@ and time that an item was added or updated:
 ```
 
 `nb show` is primarily intended for viewing items within the terminal.
-To view files in the system's preferred GUI application,
+To view a file in the system's preferred GUI application,
 use [`nb open`](#open).
 
 ##### Shortcut Alias: `s`
