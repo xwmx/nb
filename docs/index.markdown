@@ -160,6 +160,7 @@ Also supported for various enhancements:
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
@@ -838,7 +839,10 @@ nb 3 show
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[`bat`](https://github.com/sharkdp/bat) or [Pygments](https://pygments.org/)
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
 is installed. You can navigate in `less` using the following keys:
 
 ```text
@@ -2228,8 +2232,11 @@ nb set colors
 
 #### Syntax Highlighting Theme
 
-`nb` displays files with syntax highlighting when either
-[`bat`](https://github.com/sharkdp/bat) or [Pygments](https://pygments.org/)
+`nb` displays files with syntax highlighting when
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
 is installed.
 
 When `bat` is installed, syntax highlighting color themes are

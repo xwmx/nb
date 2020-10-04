@@ -2223,6 +2223,23 @@ _highlight_syntax_if_available() {
       --color always        \
       --plain               \
       --theme "${_theme:-}"
+  elif ((_COLOR_ENABLED)) && hash "highlight" 2>/dev/null
+  then
+    local _arguments=("-O" "ansi")
+
+    if _interactive_input
+    then
+      _arguments+=("${1:-}")
+    else
+      if [[ -z "${1:-}" ]]
+      then
+        _arguments+=("--syntax-by-name" "md")
+      else
+        _arguments+=("--syntax" "${1}")
+      fi
+    fi
+
+    highlight "${_arguments[@]}"
   elif ((_COLOR_ENABLED)) && hash "pygmentize" 2>/dev/null
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
