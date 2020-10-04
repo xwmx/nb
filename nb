@@ -9598,7 +9598,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
     $(_color_secondary " ------------")
      The syntax highlighting theme. View examples with:
 
-         bat --list-themes
+         $(_color_primary 'bat --list-themes')
 
      $(if ! hash "bat" 2>/dev/null
        then
