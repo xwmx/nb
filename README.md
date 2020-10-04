@@ -2643,9 +2643,9 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [--filename | --id |
-          --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
