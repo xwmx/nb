@@ -10226,7 +10226,7 @@ _show() {
     else
       printf "%s %s\\n"                                     \
         "$(_color_id_brackets "${_maybe_scoped_id}")"       \
-        "$(_color_primary         "${_maybe_scoped_basename}")"
+        "$(_color_primary     "${_maybe_scoped_basename}")"
     fi
 
     return 0
