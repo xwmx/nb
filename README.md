@@ -3812,12 +3812,12 @@ Alias: `set`
 
      • Supported Values:
 
-       0  Hide Header
-       1  Dynamic Alignment
-            - Left justified when list is shorter than terminal width.
-            - Center aligned when list is longer than terminal width.
-       2  Center Aligned (default)
-       3  Left Justified
+         0  Hide Header
+         1  Dynamic Alignment
+              - Left justified when list is shorter than terminal width.
+              - Center aligned when list is longer than terminal width.
+         2  Center Aligned (default)
+         3  Left Justified
 
      • Default Value: 1
 ```
