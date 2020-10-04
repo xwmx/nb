@@ -5076,7 +5076,7 @@ _import() {
       _exit_1 _help "import"
     elif [[ ! -e "${1:-}" ]]
     then
-      _exit_1 printf "File not found: %s\\n" "${1:-}"
+      _exit_1 printf "File not found: %s\\n" "$(_color_primary "${1:-}")"
     fi
   }
 
@@ -8165,7 +8165,7 @@ _plugins() {
          [[ -z "${_plugin_path:-}" ]]                               ||
          ! [[ -f "${_plugin_path}" ]]
       then
-        _exit_1 printf "Plugin not found: %s\\n" "${_name}"
+        _exit_1 printf "Plugin not found: %s\\n" "$(_color_primary "${_name}")"
       fi
 
       if ! ((_force))
@@ -10151,7 +10151,7 @@ _show() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_target_path}" ]]
   then
-    _warn printf "Not found: %s\\n" "${_selector:-}"
+    _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1
   fi
 
