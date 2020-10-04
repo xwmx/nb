@@ -9252,7 +9252,7 @@ HEREDOC
             printf "Exiting...\\n"
             return 0
             ;;
-          reset|unset)
+          unset|default|reset)
             _nb_settings_unset "${_setting_name}" || continue
             break
             ;;
@@ -9275,7 +9275,7 @@ HEREDOC
     local _value=
 
     _setting_name="$(_nb_settings_identify "${1:-}")"  &&
-      if [[ "${2:-}" == "unset" ]]
+      if _contains "${2:-}" "unset" "default" "reset"
       then
         _nb_settings_unset "${_setting_name}" && return 0
       fi &&
