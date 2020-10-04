@@ -2222,9 +2222,12 @@ nb set colors
 
 #### Syntax Highlighting Theme
 
-`nb` displays files with syntax highlighting when
-[`bat`](https://github.com/sharkdp/bat) is installed. Syntax highlighting
-color themes are available for both light and dark terminal backgrounds.
+`nb` displays files with syntax highlighting when either
+[`bat`](https://github.com/sharkdp/bat) or [Pygments](https://pygments.org/)
+is installed.
+
+When `bat` is installed, syntax highlighting color themes are
+available for both light and dark terminal backgrounds.
 To view a list of available themes and set the syntax highlighting color
 theme, use [`nb set syntax_theme`](#settings).
 
