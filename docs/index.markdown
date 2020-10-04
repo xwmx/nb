@@ -3201,6 +3201,7 @@ Examples:
   nb example:history
   nb example:history 12
   nb history example:12
+  nb example:12 history
 ```
 
 #### `import`
