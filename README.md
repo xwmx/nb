@@ -1460,7 +1460,7 @@ nb example:history
 # show history for the notebook named "example", alternative
 nb history example:
 
-# show the history for the note 12 in the notebook named "example"
+# show the history for note 12 in the notebook named "example"
 nb history example:12
 ```
 
