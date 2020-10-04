@@ -1189,6 +1189,9 @@ Search for tagged bookmarks with [`nb search`](#search):
 
 ```bash
 nb search "#tag1"
+
+# shortcut alias
+nb q "#tag"
 ```
 
 `nb search` automatically searches archived page content:
