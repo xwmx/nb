@@ -585,6 +585,35 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
 }
 
+@test "\`list --js\` exits with 0, displays empty list, and retains trailing 's'." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --js
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${#lines[@]}" == 5              ]]
+  [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
+}
+
 # `list <selector>` ###########################################################
 
 @test "\`list <selector>\` exits with 0 and displays the selector." {

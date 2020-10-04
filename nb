@@ -5814,7 +5814,10 @@ Help information:
 HEREDOC
       elif [[ -n "${_type:-}" ]]
       then
-        _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+        if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
+        then
+          _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+        fi
 
         cat <<HEREDOC
 0 ${_type} files.
