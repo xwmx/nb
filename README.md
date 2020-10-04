@@ -1185,12 +1185,11 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with [`nb search`](#search):
+Search for tagged bookmarks with [`nb search` / `nb q`](#search):
 
 ```bash
 nb search "#tag1"
 
-# shortcut alias
 nb q "#tag"
 ```
 
