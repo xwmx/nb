@@ -405,11 +405,12 @@ Added: [9] example.md "Example Title"
 ```
 
 The `-t <title>` / `--title <title>` option will also set the filename
-to the title, with spaces replaced with underscores:
+to the title, lowercased with spaces and non-filename characters replaced
+with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added: [10] Example_Title.md "Example Title"
+Added: [10] example_title.md "Example Title"
 ```
 
 Files can be created with any file type either by specifying the
@@ -2917,9 +2918,11 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb example:add
   nb example:add -t "Title"
   nb a
   nb a "Note content."
+  nb example:a
   nb example:a -t "Title"
 
 Aliases: `create`, `new`
