@@ -190,8 +190,8 @@ Installing `nb` through `npm` also installs completion scripts for Bash and
 Zsh. On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
-*Note: `nb` is also currently still available under
-its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
+*Note: `nb` is also available under its original package name,
+[notes.sh](https://www.npmjs.com/package/notes.sh),
 which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### Download and Install
@@ -330,6 +330,9 @@ echo "Note content." | nb add
 
 # create a new password-protected, encrypted note titled "Secret Document"
 nb add --title "Secret Document" --encrypt
+
+# create a new note in the notebook named "example"
+nb example:add "This is a note."
 ```
 
 `nb add` with no arguments or input will open the new, blank note in your
@@ -399,11 +402,12 @@ Added: [9] example.md "Example Title"
 ```
 
 The `-t <title>` / `--title <title>` option will also set the filename
-to the title, with spaces replaced with underscores:
+to the title, lowercased with spaces and non-filename characters replaced
+with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added: [10] Example_Title.md "Example Title"
+Added: [10] example_title.md "Example Title"
 ```
 
 Files can be created with any file type either by specifying the
@@ -453,6 +457,9 @@ nb a "This is a note."
 
 # create a new note containing the clipboard contents with xclip
 xclip -o | nb a
+
+# create a new note in the notebook named "example"
+nb example:a
 ```
 
 ##### Other Aliases: `create`, `new`
@@ -760,6 +767,15 @@ nb edit example.md
 
 # edit note by title
 nb edit "A Document Title"
+
+# edit note 12 in the notebook named "example"
+nb edit example:12
+
+# edit note 12 in the notebook named "example", alternative
+nb example:12 edit
+
+# edit note 12 in the notebook named "example", alternative
+nb example:edit 12
 ```
 
 `edit` and other subcommands that take an identifier can be called with the
@@ -809,6 +825,15 @@ nb e "A Document Title"
 
 # edit note by id, alternative
 nb 3 e
+
+# edit note 12 in the notebook named "example"
+nb e example:12
+
+# edit note 12 in the notebook named "example", alternative
+nb example:12 e
+
+# edit note 12 in the notebook named "example", alternative
+nb example:e 12
 ```
 
 For `nb edit` help information, run [`nb help edit`](#edit).
@@ -829,6 +854,15 @@ nb show "A Document Title"
 
 # show note by id, alternative
 nb 3 show
+
+# show note 12 in the notebook named "example"
+nb show example:12
+
+# show note 12 in the notebook named "example", alternative
+nb example:12 show
+
+# show note 12 in the notebook named "example", alternative
+nb example:show 12
 ```
 
 By default, `nb show` will open the note in
@@ -890,8 +924,8 @@ available, `nb show` will open files in your system's preferred application
 for each type.
 
 `nb show` also provides [options](#show) for querying information about an
-item. For example, use the `--added` and `--updated` flags to print the date
-and time that an item was added or updated:
+item. For example, use the `--added` / `-a` and `--updated` / `-u` flags to
+print the date and time that an item was added or updated:
 
 ```bash
 > nb show 2 --added
@@ -923,6 +957,15 @@ nb s "A Document Title"
 
 # show note by id, alternative
 nb 3 s
+
+# show note 12 in the notebook named "example"
+nb s example:12
+
+# show note 12 in the notebook named "example", alternative
+nb example:12 s
+
+# show note 12 in the notebook named "example", alternative
+nb example:s 12
 ```
 
 ##### Alias: `view`
@@ -960,6 +1003,15 @@ nb delete "A Document Title"
 
 # delete note by id, alternative
 nb 3 delete
+
+# delete note 12 in the notebook named "example"
+nb delete example:12
+
+# delete note 12 in the notebook named "example", alternative
+nb example:12 delete
+
+# show note 12 in the notebook named "example", alternative
+nb example:delete 12
 ```
 
 By default, `nb delete` will display a confirmation prompt. To skip, use the
@@ -985,6 +1037,15 @@ nb d "A Document Title"
 
 # delete note by id, alternative
 nb 3 d
+
+# delete note 12 in the notebook named "example"
+nb d example:12
+
+# delete note 12 in the notebook named "example", alternative
+nb example:12 d
+
+# delete note 12 in the notebook named "example", alternative
+nb example:d 12
 ```
 
 For `nb delete` help information, run [`nb help delete`](#delete).
@@ -1124,16 +1185,18 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with [`nb search`](#search):
+Search for tagged bookmarks with [`nb search` / `nb q`](#search):
 
 ```bash
 nb search "#tag1"
+
+nb q "#tag"
 ```
 
-`nb search` automatically searches archived page content:
+`nb search` / `nb q` automatically searches archived page content:
 
 ```bash
-> nb search "example query"
+> nb q "example query"
 [10] example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
@@ -1237,6 +1300,15 @@ system's primary web browser:
 ```bash
 # open bookmark by id
 nb open 3
+
+# open bookmark 12 in the notebook named "example"
+nb open example:12
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 open
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:open 12
 ```
 
 [`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
@@ -1246,7 +1318,16 @@ in your terminal web browser, such as
 
 ```bash
 # peek bookmark by id
-nb peek 12
+nb peek 3
+
+# peek bookmark 12 in the notebook named "example"
+nb peek example:12
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:12 peek
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:peek 12
 ```
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
@@ -1272,8 +1353,20 @@ locally-served view of the page content along with all of your notes.
 # open bookmark by id
 nb o 3
 
+# open bookmark 12 in the notebook named "example"
+nb o example:12
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 o
+
 # peek bookmark by id
-nb p 12
+nb p 3
+
+# peek bookmark 12 in the notebook named "example"
+nb p example:12
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:12 p
 ```
 
 #### Bookmark File Format
@@ -1349,8 +1442,11 @@ regular expressions and tags:
 # search current notebook for "example query"
 nb search "example query"
 
-# search all unarchived notebooks for "example query"
-nb search "example query" --all
+# search the notebook "example" for "example query"
+nb example:search "example query"
+
+# search all unarchived notebooks for "example query" and list matching items
+nb search "example query" --all --list
 
 # search for "Example" OR "Sample"
 nb search "Example|Sample"
@@ -1358,11 +1454,23 @@ nb search "Example|Sample"
 # search items containing the hashtag "#example"
 nb search "#example"
 
-# search with a regular expression for items containing phone numbers
-nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
+# search with a regular expression
+nb search "\d\d\d-\d\d\d\d"
 
 # search bookmarks for "example"
 nb search "example" --type bookmark
+
+# search bookmarks for "example", alternative
+nb b q "example"
+
+# search the current notebook for "example query"
+nb q "example query"
+
+# search the notebook named "example" for "example query"
+nb example:q "example query"
+
+# search all unarchived notebooks for "example query" and list matching items
+nb q -la "example query"
 ```
 
 `nb search` prints the id number, filename, and title of each matched
@@ -1413,6 +1521,9 @@ nb q -l "example"
 
 # search for "example" in all unarchived notebooks
 nb q -a "example"
+
+# search for "example" in the notbook named "sample"
+nb sample:q "example"
 ```
 
 For more information about search, see [`nb help search`](#search).
@@ -1437,6 +1548,15 @@ nb history example.md
 
 # show history for note titled "Example"
 nb history Example
+
+# show history for the notebook named "example"
+nb example:history
+
+# show history for the notebook named "example", alternative
+nb history example:
+
+# show the history for note 12 in the notebook named "example"
+nb history example:12
 ```
 
 `nb history` uses `git log` by default and prefers
@@ -1871,10 +1991,11 @@ You can also turn off autosync with
 #### Sync Conflict Resolution
 
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
-merge overlapping local and remote changes, `nb` saves both versions
-within the file, separated by git conflict markers. Use
-[`nb edit`](#edit) to remove the conflict markers and delete any unwanted
-text.
+cleanly merge overlapping local and remote changes, `nb` saves both
+versions within the file separated by git conflict markers and prints a
+message indicating which file(s) contain conflicting text.
+Use [`nb edit`](#edit) to remove the conflict markers and delete any
+unwanted text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
@@ -1916,7 +2037,7 @@ both versions and merge them manually, then delete the `--conflicted-copy`.
 
 `nb` handles git operations automatically, so you shouldn't ever need
 to use the `git` command line tool directly. If you do encounter a
-conflict that `nb` says it can't merge, [`nb git`](#git) and
+conflict that `nb` says it can't merge at all, [`nb git`](#git) and
 [`nb run`](#run) can be used to resolve the conflict manually without
 changing the current working directory.
 
@@ -2655,9 +2776,10 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -2911,9 +3033,11 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb example:add
   nb example:add -t "Title"
   nb a
   nb a "Note content."
+  nb example:a
   nb example:a -t "Title"
 
 Aliases: `create`, `new`
@@ -3214,6 +3338,7 @@ Examples:
   nb history
   nb history example.md
   nb 3 history
+  nb history example:
   nb example:history
   nb example:history 12
   nb history example:12
@@ -3693,14 +3818,11 @@ Examples:
   # search the notebook "example" for "example query"
   nb example:search "example query"
 
-  # search all notebooks for "example query"
-  nb search "example query" --all
+  # search all notebooks for "example query" and list matching items
+  nb search "example query" --all --list
 
   # search notes for "Example" OR "Sample"
   nb search "Example|Sample"
-
-  # search for bookmarks containing the hashtag "#example"
-  nb search "#example" --type bookmark
 
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
@@ -3708,8 +3830,11 @@ Examples:
   # search the current notebook for "example query"
   nb q "example query"
 
-  # search the notebook named "example" for "example query
+  # search the notebook named "example" for "example query"
   nb example:q "example query"
+
+  # search all notebooks for "example query" and list matching items
+  nb q -la "example query"
 
 Shortcut Alias: `q`
 ```
@@ -4004,13 +4129,14 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   nb show <notebook>
 
 Options:
-  --added          Print the date and time when the item was added.
+  -a, --added      Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -4027,7 +4153,7 @@ Options:
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
-  --updated        Print the date and time of the last recorded change.
+  -u, --updated    Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or

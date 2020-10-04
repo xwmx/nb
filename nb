@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.4.0"
+_VERSION="5.4.1"
 
 # $_ME
 #
@@ -2939,9 +2939,10 @@ $(_color_primary "Usage:")
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -3079,9 +3080,11 @@ Examples:
   ${_ME} add example.md --title "Example Title" --content "Example content."
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
+  ${_ME} example:add
   ${_ME} example:add -t "Title"
   ${_ME} a
   ${_ME} a "Note content."
+  ${_ME} example:a
   ${_ME} example:a -t "Title"
 
 Aliases: \`create\`, \`new\`
@@ -5001,21 +5004,30 @@ Examples:
   ${_ME} history example.md
   ${_ME} 3 history
   ${_ME} example:history
+  ${_ME} history example:
   ${_ME} example:history 12
   ${_ME} history example:12
   ${_ME} example:12 history
 HEREDOC
 _history() {
+  local _basename=
+  local _notebook_path=
   local _selector="${1:-}"
 
   if [[ -n "${_selector:-}" ]]
   then
-    local _basename
-    _basename="$(_show "${_selector}" --filename)"
+    if [[ "${_selector}" =~ :$ ]] ||
+       ! _basename="$(_show "${_selector}" --filename 2>/dev/null)"
+    then
+      if ! _notebook_path="$(_notebooks show "${_selector}" --path 2>/dev/null)"
+      then
+        _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
+      fi
+    fi
   fi
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  [[ -n "${_notebook_path:-}" ]] ||
+    _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
@@ -5074,7 +5086,7 @@ _import() {
       _exit_1 _help "import"
     elif [[ ! -e "${1:-}" ]]
     then
-      _exit_1 printf "File not found: %s\\n" "${1:-}"
+      _exit_1 printf "File not found: %s\\n" "$(_color_primary "${1:-}")"
     fi
   }
 
@@ -7286,7 +7298,6 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       local _error_message=
       if [[ -f "${_path}/.index" ]]
       then
-        printf "Notebook exists: %s\\n" "$(_color_primary "${_path}")"
         _error_message="Notebook exists: $(_color_primary "${_path}")"
       else
         _error_message="Git repository exists: $(_color_primary "${_path}")"
@@ -8164,7 +8175,7 @@ _plugins() {
          [[ -z "${_plugin_path:-}" ]]                               ||
          ! [[ -f "${_plugin_path}" ]]
       then
-        _exit_1 printf "Plugin not found: %s\\n" "${_name}"
+        _exit_1 printf "Plugin not found: %s\\n" "$(_color_primary "${_name}")"
       fi
 
       if ! ((_force))
@@ -8609,8 +8620,8 @@ Examples:
   # search the notebook "example" for "example query"
   ${_ME} example:search "example query"
 
-  # search all notebooks for "example query"
-  ${_ME} search "example query" --all
+  # search all notebooks for "example query" and list matching items
+  ${_ME} search "example query" --all --list
 
   # search notes for "Example" OR "Sample"
   ${_ME} search "Example|Sample"
@@ -8618,11 +8629,14 @@ Examples:
   # search with a regular expression
   ${_ME} search "\d\d\d-\d\d\d\d"
 
-  # search the current notebook for "example query
+  # search the current notebook for "example query"
   ${_ME} q "example query"
 
-  # search the notebook named "example" for "example query
+  # search the notebook named "example" for "example query"
   ${_ME} example:q "example query"
+
+  # search all notebooks for "example query" and list matching items
+  ${_ME} q -la "example query"
 
 Shortcut Alias: \`q\`
 HEREDOC
@@ -9599,7 +9613,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
     $(_color_secondary " ------------")
      The syntax highlighting theme. View examples with:
 
-         bat --list-themes
+         $(_color_primary 'bat --list-themes')
 
      $(if ! hash "bat" 2>/dev/null
        then
@@ -9867,13 +9881,14 @@ HEREDOC
 
 describe "show" <<HEREDOC
 Usage:
-  ${_ME} show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   ${_ME} show <notebook>
 
 Options:
-  --added          Print the date and time when the item was added.
+  -a, --added      Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -9890,7 +9905,7 @@ Options:
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
-  --updated        Print the date and time of the last recorded change.
+  -u, --updated    Print the date and time of the last recorded change.
 
 Description:
   Show a note or notebook. Notes in text file formats can be rendered or
@@ -10041,7 +10056,7 @@ _show() {
         _print_path=1
         _skip_notebook_fallback=1
         ;;
-      --added*)
+      -a|--added*)
         _print_added=1
         _skip_notebook_fallback=1
         ;;
@@ -10093,7 +10108,7 @@ _show() {
           shift
         fi
         ;;
-      --updated*)
+      -u|--updated*)
         _print_updated=1
         _skip_notebook_fallback=1
         ;;
@@ -10147,7 +10162,7 @@ _show() {
 
   if [[ -z "${_basename:-}" ]] || [[ ! -e "${_target_path}" ]]
   then
-    _warn printf "Not found: %s\\n" "${_selector:-}"
+    _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1
   fi
 
@@ -10226,7 +10241,7 @@ _show() {
     else
       printf "%s %s\\n"                                     \
         "$(_color_id_brackets "${_maybe_scoped_id}")"       \
-        "$(_color_primary         "${_maybe_scoped_basename}")"
+        "$(_color_primary     "${_maybe_scoped_basename}")"
     fi
 
     return 0
@@ -10239,7 +10254,6 @@ _show() {
       --follow                            \
       --diff-filter=A                     \
       --date=iso-local                    \
-      --pretty=oneline                    \
       --pretty='%ad'                      \
       "${_basename}"
 
