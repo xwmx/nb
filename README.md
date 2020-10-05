@@ -2083,7 +2083,7 @@ lists:
 > nb
 home
 ----
-[6] 📖 example.epub
+[6] 📖 example-ebook.epub
 [5] 🌄 example-picture.png
 [4] 📄 example-document.docx
 [3] 📹 example-video.mp4
