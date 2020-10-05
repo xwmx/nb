@@ -33,6 +33,16 @@ Description:
   for creating an ebook. Edit the title page and chapters using normal \`nb\`
   commands, then use \`nb ebook publish\` to generate an epub file.
 
+  Chapters are expected to be markdown files with a .md extension and a
+  sequential numeric prefix for ordering:
+
+    01-chapter1.md
+
+  title.txt contains the book metadata in a YAML block. For more information
+  about the fields for this file, visit:
+
+    https://pandoc.org/MANUAL.html#epub-metadata
+
 More info:
   https://pandoc.org/epub.html
 HEREDOC
@@ -105,14 +115,6 @@ HEREDOC
 
       local _pandoc_arguments=()
 
-      local _title_page_path="${_notebook_path}/title.txt"
-
-      if [[ ! -f "${_title_page_path}" ]]
-      then
-        printf "title.txt required.\\n"
-        exit 1
-      fi
-
       local _stylesheet_path="${_notebook_path}/stylesheet.css"
 
       if [[ -f "${_stylesheet:-}" ]]
@@ -120,7 +122,17 @@ HEREDOC
         _pandoc_arguments+=("--css" "${_stylesheet_path}")
       fi
 
-      local _chapter_paths=($(
+      local _title_page_path="${_notebook_path}/title.txt"
+
+      if [[ -f "${_title_page_path}" ]]
+      then
+        _pandoc_arguments+=("${_title_page_path}")
+      else
+        printf "title.txt required.\\n"
+        exit 1
+      fi
+
+      local _pandoc_arguments+=($(
         _list --sort --paths --no-id --no-indicator --type md
       ))
 
@@ -134,14 +146,10 @@ HEREDOC
 
       local _output_path="${_notebook_path}/${_output_filename}"
 
-      pandoc                        \
-        -o "${_output_path}"        \
-        --css "${_stylesheet_path}" \
-        "${_title_page_path}"       \
-        "${_chapter_paths[@]}"                                &&
-      _index add "${_output_filename}"                        &&
-      _git checkpoint "[nb] Added: %s" "${_output_filename}"  &&
-      printf "Added: %s\\n" "${_output_filename}"
+      pandoc -o "${_output_path}" "${_pandoc_arguments[@]}"       &&
+        _index add "${_output_filename}"                          &&
+          _git checkpoint "[nb] Added: %s" "${_output_filename}"  &&
+            printf "Added: %s\\n" "${_output_filename}"
       ;;
     *)
       _help "ebook" 1>&2 && exit 1
