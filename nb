@@ -2907,12 +2907,13 @@ $(_color_primary "Usage:")
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -5662,8 +5663,8 @@ describe "list" <<HEREDOC
 Usage:
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -5674,6 +5675,7 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
@@ -5730,6 +5732,7 @@ _list() {
   local _no_id=0
   local _print_excerpt=0
   local _print_indicators=1
+  local _list_paths=0
   local _reverse=0
   local _selector=
   local _sort=0
@@ -5777,6 +5780,9 @@ _list() {
         ;;
       -p|--pager|--less)
         _use_pager=1
+        ;;
+      --path|--paths)
+        _list_paths=1
         ;;
       -s|--sort)
         _sort=1
@@ -5945,9 +5951,12 @@ HEREDOC
           fi
         fi
 
-        local _title_or_basename="${__basename}"
+        local _title_basename_or_path="${__basename}"
 
-        if ! ((_list_filenames))
+        if ((_list_paths))
+        then
+          _title_basename_or_path="${_notebook_path}/${__basename}"
+        elif ! ((_list_filenames))
         then
           if [[ -z "${_maybe_title}" ]]
           then
@@ -5956,7 +5965,7 @@ HEREDOC
 
           if [[ -n "${_maybe_title}" ]]
           then # note file has title.
-            _title_or_basename="${_maybe_title}"
+            _title_basename_or_path="${_maybe_title}"
           fi
         fi
 
@@ -5994,7 +6003,7 @@ HEREDOC
             _indicators+="🔒 "
           fi
 
-          if [[ "${_title_or_basename}" =~ todo|Todo|TODO ]]
+          if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
           then
             _indicators+="✅ "
             _extra_length=1
@@ -6006,7 +6015,7 @@ HEREDOC
           fi
         fi
 
-        local _list_item="${_maybe_padded_indicators}${_title_or_basename}"
+        local _list_item="${_maybe_padded_indicators}${_title_basename_or_path}"
 
         if ! ((_no_id))
         then
@@ -6041,9 +6050,10 @@ HEREDOC
           printf -v _spaces '%*s' "${_spaces_length}" ""
         fi
 
-        if ! ((_list_filenames)) &&
-           ! ((_print_excerpt))  &&
-           [[ "${_title_or_basename}" == "${__basename}" ]]
+        if ! ((_list_filenames))  &&
+           ! ((_list_paths))      &&
+           ! ((_print_excerpt))   &&
+           [[ "${_title_basename_or_path}" == "${__basename}" ]]
         then
           local _first_line=
           _first_line="$(_get_first_line "${_notebook_path}/${__basename}")"
@@ -6071,6 +6081,7 @@ HEREDOC
 
         if ((_list_color_enabled))  &&
            ! ((_list_filenames))    &&
+           ! ((_list_paths))        &&
            ! ((_no_id))
         then
           # Calculate apparent length of the list item string, with byte and
@@ -6102,6 +6113,7 @@ HEREDOC
         if ((_list_color_enabled))  &&
            ! ((_print_excerpt))     &&
            ! ((_list_filenames))    &&
+           ! ((_list_paths))        &&
            ! ((_no_id))
         then
           if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
@@ -6124,6 +6136,7 @@ HEREDOC
         if ((_list_color_enabled))  &&
            ! ((_print_excerpt))     &&
            ! ((_list_filenames))    &&
+           ! ((_list_paths))        &&
            ! ((_no_id))
         then
           if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
@@ -6210,7 +6223,7 @@ describe "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
-        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
@@ -6225,6 +6238,7 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
