@@ -22,14 +22,19 @@ Usage:
 
 Subcommands:
   ebook new       Create a new notebook initialized with ebook files.
-  ebook publish   Generate a .epub file.
+  ebook publish   Generate a .epub file using the current notebook contents.
 
 Description:
   Ebook authoring with \`nb\`.
 
+  ebook.nb-plugin creates a notebook populated with initial placeholder files
+  for creating an ebook. Edit the title page and chapters using normal \`nb\`
+  commands, then use \`nb ebook publish\` to generate an epub file.
+
 More info:
   https://pandoc.org/epub.html
 HEREDOC
+
 _ebook() {
   local _subcommand="${1:-}"
 
