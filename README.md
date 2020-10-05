@@ -4353,15 +4353,25 @@ Description:
   for creating an ebook. Edit the title page and chapters using normal `nb`
   commands, then use `nb ebook publish` to generate an epub file.
 
-  Chapters are expected to be markdown files with a .md extension and filename
-  with a sequential numeric prefix for ordering:
+  Chapters are expected to be markdown files and have a filename with a
+  two-digit sequential numeric prefix for ordering:
 
-    01-chapter1.md
+    01-example.md
 
   title.txt contains the book metadata in a YAML block. For more information
   about the fields for this file, visit:
 
     https://pandoc.org/MANUAL.html#epub-metadata
+
+  stylesheet.css contains base styling for the generated ebook. It can be used
+  as it is and can also be edited using `nb edit`.
+
+  As with all `nb` notebooks, changes are recorded automatically in git,
+  providing automatic version control for all ebook content, source, and
+  metadata files.
+
+  Generated epub files are saved in the notebook and can be previewed in the
+  terminal with `nb show`. Export a generated epub file with `nb export`.
 
 More info:
   https://pandoc.org/epub.html
