@@ -2476,6 +2476,9 @@ _list_files() {
 
           grep --color=never "${_grep_patterns[@]}"
           ;;
+        markdown|md)
+          grep --color=never "-e" "\.md$" "-e" "\.markdown$"
+          ;;
         text|txt)
           for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
           do
