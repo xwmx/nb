@@ -4789,6 +4789,11 @@ _export() {
       _exit_1 _help "export"
     fi
 
+    if [[ -d "${_target_path}" ]]
+    then
+      _target_path="${_target_path}/${_basename}"
+    fi
+
     if [[ -e "${_target_path:-}" ]]
     then
       if ! ((_force))
