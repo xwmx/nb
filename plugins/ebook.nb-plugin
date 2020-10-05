@@ -43,7 +43,7 @@ Description:
 
   Create new chapters with \`nb add\`:
 
-    nb add --filename "03-chapter.md"
+    nb add --filename "04-chapter4.md"
 
   title.txt contains the book metadata in a YAML block. For more information
   about the fields for this file, visit:
