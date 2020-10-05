@@ -13,8 +13,10 @@
 # https://github.com/xwmx/nb
 ###############################################################################
 
+# Add the new subcommand name with `_subcommands add <name>`.
 _subcommands add "ebook"
 
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "ebook" <<HEREDOC
 Usage:
   nb ebook new <name>
@@ -35,6 +37,7 @@ More info:
   https://pandoc.org/epub.html
 HEREDOC
 
+# Define the subcommand as a function, named with a leading underscore.
 _ebook() {
   local _subcommand="${1:-}"
 
@@ -125,7 +128,9 @@ HEREDOC
       _notebook_name="$(_notebooks current --name)"
 
       local _output_filename
-      _output_filename="$(_notebooks current --filename "${_notebook_name}.epub")"
+      _output_filename="$(
+        _notebooks current --filename "${_notebook_name}.epub"
+      )"
 
       local _output_path="${_notebook_path}/${_output_filename}"
 
@@ -133,9 +138,9 @@ HEREDOC
         -o "${_output_path}"        \
         --css "${_stylesheet_path}" \
         "${_title_page_path}"       \
-        "${_chapter_paths[@]}"          &&
-      _index add "${_output_filename}"  &&
-      _git checkpoint "[nb] Added: %s" "${_output_filename}" &&
+        "${_chapter_paths[@]}"                                &&
+      _index add "${_output_filename}"                        &&
+      _git checkpoint "[nb] Added: %s" "${_output_filename}"  &&
       printf "Added: %s\\n" "${_output_filename}"
       ;;
     *)
