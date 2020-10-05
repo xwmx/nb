@@ -4179,14 +4179,15 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  If `bat` [4] or Pygments [5] is installed, notes are printed with
-  syntax highlighting.
+  If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
+  printed with syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
     4. https://github.com/sharkdp/bat
-    5. https://pygments.org/
+    5. http://www.andre-simon.de/doku/highlight/en/highlight.php
+    6. https://pygments.org/
 
 Examples:
   nb show 1
