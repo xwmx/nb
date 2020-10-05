@@ -73,7 +73,7 @@ _ebook() {
   [[ -z "${_subcommand:-}" ]] && _help "ebook" 1>&2 && exit 1
 
   case "${_subcommand:-}" in
-    a|add|create|new)
+    a|add|c|create|n|new)
       local _name="${2:-}"
 
       [[ -z "${_name:-}" ]] && _help "ebook" 1>&2 && exit 1
@@ -128,7 +128,7 @@ HEREDOC
         "01-chapter1.md" --content "# Chapter One" &&
           printf "Created: %s\\n" "$(basename "${_notebook_path}")"
       ;;
-    publish)
+    p|publish|g|generate|b|build)
       if ! hash pandoc 2>/dev/null
       then
         printf "Install Pandoc to generate an ebook: https://pandoc.org/\\n" 1>&2
