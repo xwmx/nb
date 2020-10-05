@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+###############################################################################
+# ebook.nb-plugin
+#
+# Ebook authoring with `nb`.
+#
+# Based on:
+#   https://pandoc.org/epub.html
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+_subcommands add "ebook"
+
+_subcommands describe "ebook" <<HEREDOC
+Usage:
+  nb ebook new <name>
+  nb ebook publish
+
+Subcommands:
+  ebook new       Create a new notebook initialized with ebook files.
+  ebook publish   Generate a .epub file.
+
+Description:
+  Ebook authoring with \`nb\`.
+
+More info:
+  https://pandoc.org/epub.html
+HEREDOC
+_ebook() {
+  local _subcommand="${1:-}"
+
+  [[ -z "${_subcommand:-}" ]] && _help "ebook" 1>&2 && exit 1
+
+  case "${_subcommand:-}" in
+    a|add|create|new)
+      local _name="${2:-}"
+
+      [[ -z "${_name:-}" ]] && _help "ebook" 1>&2 && exit 1
+
+      local _notebook_path
+
+      _notebooks add "${_name:-}"                                                   &&
+        _notebook_path="$(_notebooks show "${_name:-}" --path)"                     &&
+        cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "title.txt"       &&
+---
+title: Placeholder Title
+author: Placeholder Name
+rights:  Creative Commons Non-Commercial Share Alike 3.0
+language: en-US
+---
+HEREDOC
+        cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "stylesheet.css"  &&
+/* This defines styles and classes used in the book */
+body { margin: 5%; text-align: justify; font-size: medium; }
+code { font-family: monospace; }
+h1 { text-align: left; }
+h2 { text-align: left; }
+h3 { text-align: left; }
+h4 { text-align: left; }
+h5 { text-align: left; }
+h6 { text-align: left; }
+/* For title, author, and date on the cover page */
+h1.title { }
+p.author { }
+p.date { }
+nav#toc ol,
+nav#landmarks ol { padding: 0; margin-left: 1em; }
+nav#toc ol li,
+nav#landmarks ol li { list-style-type: none; margin: 0; padding: 0; }
+a.footnote-ref { vertical-align: super; }
+em, em em em, em em em em em { font-style: italic;}
+em em, em em em em { font-style: normal; }
+code{ white-space: pre-wrap; }
+span.smallcaps{ font-variant: small-caps; }
+span.underline{ text-decoration: underline; }
+q { quotes: "“" "”" "‘" "’"; }
+div.column{ display: inline-block; vertical-align: top; width: 50%; }
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+@media screen { /* Workaround for iBooks issue; see #6242 */
+  .sourceCode {
+    overflow: visible !important;
+    white-space: pre-wrap !important;
+  }
+}
+HEREDOC
+      NB_NOTEBOOK_PATH="${_notebook_path}" _add \
+        "01-chapter1.md" --content "# Chapter One" &&
+          printf "Created: %s\\n" "$(basename "${_notebook_path}")"
+      ;;
+    publish)
+      local _notebook_path
+      _notebook_path="$(_notebooks current --path)"
+
+      local _pandoc_arguments=()
+
+      local _title_page_path="${_notebook_path}/title.txt"
+
+      if [[ ! -f "${_title_page_path}" ]]
+      then
+        printf "title.txt required.\\n"
+        exit 1
+      fi
+
+      local _stylesheet_path="${_notebook_path}/stylesheet.css"
+
+      if [[ -f "${_stylesheet:-}" ]]
+      then
+        _pandoc_arguments+=("--css" "${_stylesheet_path}")
+      fi
+
+      local _chapter_paths=($(
+        _list --paths --no-id --no-indicator --type md
+      ))
+
+      local _notebook_name
+      _notebook_name="$(_notebooks current --name)"
+
+      local _output_filename
+      _output_filename="$(_notebooks current --filename "${_notebook_name}.epub")"
+
+      local _output_path="${_notebook_path}/${_output_filename}"
+
+      pandoc                        \
+        -o "${_output_path}"        \
+        --css "${_stylesheet_path}" \
+        "${_title_page_path}"       \
+        "${_chapter_paths[@]}"          &&
+      _index add "${_output_filename}"  &&
+      _git checkpoint "[nb] Added: %s" "${_output_filename}" &&
+      printf "Added: %s\\n" "${_output_filename}"
+      ;;
+    *)
+      _help "ebook" 1>&2 && exit 1
+      ;;
+  esac
+}
