@@ -4371,7 +4371,9 @@ Description:
   metadata files.
 
   Generated epub files are saved in the notebook and can be previewed in the
-  terminal with `nb show`. Export a generated epub file with `nb export`.
+  terminal with `nb show`. Export a generated epub file with `nb export`:
+
+    nb export 12 .
 
 More info:
   https://pandoc.org/epub.html
