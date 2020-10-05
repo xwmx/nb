@@ -2085,6 +2085,7 @@ lists:
 > nb
 home
 ----
+[6] 📖 example.epub
 [5] 🌄 example-picture.png
 [4] 📄 example-document.docx
 [3] 📹 example-video.mp4
@@ -3424,8 +3425,8 @@ Options:
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder, text
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notes in the current notebook.
@@ -3436,13 +3437,14 @@ Description:
   regular expression.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   nb list
@@ -3480,8 +3482,8 @@ Options:
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder, text
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -3497,13 +3499,14 @@ Description:
   `nb help list`.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   nb
