@@ -38,7 +38,41 @@ load test_helper
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
 }
 
-@test "\`export\` with valid <id> and <path> with diff file type converts." {
+@test "\`export\` with valid <id> and directory <path> exports a new note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example" --filename "example.md"
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_TMP_DIR}"
+  cat "${_TMP_DIR}/example.md"
+
+  [[ -e "${_TMP_DIR}/example.md" ]]
+  grep -q '# Export Example' "${_TMP_DIR}/example.md"
+}
+
+@test "\`export\` with valid <id> and different basename <path> exports a new note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example" --filename "example.md"
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/sample.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_TMP_DIR}"
+  cat "${_TMP_DIR}/sample.md"
+
+  [[ -e "${_TMP_DIR}/sample.md" ]]
+  grep -q '# Export Example' "${_TMP_DIR}/sample.md"
+}
+
+@test "\`export\` with valid <id> and <path> with diffferent file type converts." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Export Example"

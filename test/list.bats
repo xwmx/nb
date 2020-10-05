@@ -413,6 +413,50 @@ HEREDOC
   [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
+# `list --paths` ##############################################################
+
+@test "\`list --paths\` exits with 0 and displays a list of paths." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --paths
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${NB_NOTEBOOK_PATH}: '%s'\\n" "${NB_NOTEBOOK_PATH}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${lines[0]}" =~ third.md  ]] && [[ "${lines[0]}" =~ 3 ]]
+  [[ "${lines[0]}" =~ ${NB_NOTEBOOK_PATH}                   ]]
+
+  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ ${NB_NOTEBOOK_PATH}                   ]]
+
+  [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
+  [[ "${lines[2]}" =~ ${NB_NOTEBOOK_PATH}                   ]]
+}
+
 # `list --bookmarks` ##########################################################
 
 @test "\`list --bookmarks\` exits with 0 and displays a list of bookmarks." {

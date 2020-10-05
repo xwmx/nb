@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.4.1"
+_VERSION="5.5.0"
 
 # $_ME
 #
@@ -2413,6 +2413,9 @@ _list_files() {
             -e '\.bookmark\.'   \
             -e '\-bookmark\.'
           ;;
+        book|books)
+          grep --color=never -e 'epub$'
+          ;;
         note|notes)
           for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
           do
@@ -2452,7 +2455,7 @@ _list_files() {
         document|documents|doc|docs)
           for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
           do
-            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+            _grep_patterns+=("-e" "\.${__extension}$" "-e" "\.${__extension}\.enc$")
           done
 
           grep --color=never "${_grep_patterns[@]}"
@@ -2460,7 +2463,7 @@ _list_files() {
         encrypted)
           for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
           do
-            _grep_patterns+=("-e" "${__extension}$")
+            _grep_patterns+=("-e" "\.${__extension}$")
           done
 
           grep --color=never "${_grep_patterns[@]}"
@@ -2468,7 +2471,7 @@ _list_files() {
         image|images|picture|pictures)
           for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
           do
-            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+            _grep_patterns+=("-e" "\.${__extension}$" "-e" "\.${__extension}\.enc$")
           done
 
           grep --color=never "${_grep_patterns[@]}"
@@ -2476,7 +2479,7 @@ _list_files() {
         text|txt)
           for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
           do
-            _grep_patterns+=("-e" "${__extension}$")
+            _grep_patterns+=("-e" "\.${__extension}$")
           done
 
           grep --color=never "${_grep_patterns[@]}"
@@ -2484,13 +2487,13 @@ _list_files() {
         video|videos)
           for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
           do
-            _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
+            _grep_patterns+=("-e" "\.${__extension}$" "-e" "\.${__extension}\.enc$")
           done
 
           grep --color=never "${_grep_patterns[@]}"
           ;;
         *)
-          grep --color=never -e "${_type}$"
+          grep --color=never -e "\.${_type}$"
           ;;
       esac
     else
@@ -2901,12 +2904,13 @@ $(_color_primary "Usage:")
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [-n <limit> | --limit <limit> | --<limit>] [-p | --pager]
-        [-s | --sort] [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
+        [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -2921,7 +2925,7 @@ $(_color_primary "Usage:")
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+                    [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
@@ -4287,7 +4291,7 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -4316,7 +4320,7 @@ _delete() {
 
       _git_checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
-      printf "Deleted: %s\\n" "${_info}"
+      printf "Deleted:  %s\\n" "${_info}"
     fi
   else
     _exit_1 printf "Selection not found.\\n"
@@ -4783,6 +4787,12 @@ _export() {
     if [[ -z "${_target_path:-}" ]]
     then
       _exit_1 _help "export"
+    fi
+
+    if [[ -d "${_target_path}" ]]
+    then
+      _target_path="$(printf "%s\\n" "${_target_path}" | sed -e 's/\/$//g')"
+      _target_path="${_target_path}/${_basename}"
     fi
 
     if [[ -e "${_target_path:-}" ]]
@@ -5656,8 +5666,8 @@ describe "list" <<HEREDOC
 Usage:
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -5668,12 +5678,13 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder, text
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notes in the current notebook.
@@ -5684,13 +5695,14 @@ Description:
   regular expression.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   ${_ME} list
@@ -5723,6 +5735,7 @@ _list() {
   local _no_id=0
   local _print_excerpt=0
   local _print_indicators=1
+  local _list_paths=0
   local _reverse=0
   local _selector=
   local _sort=0
@@ -5770,6 +5783,9 @@ _list() {
         ;;
       -p|--pager|--less)
         _use_pager=1
+        ;;
+      --path|--paths)
+        _list_paths=1
         ;;
       -s|--sort)
         _sort=1
@@ -5938,9 +5954,12 @@ HEREDOC
           fi
         fi
 
-        local _title_or_basename="${__basename}"
+        local _title_basename_or_path="${__basename}"
 
-        if ! ((_list_filenames))
+        if ((_list_paths))
+        then
+          _title_basename_or_path="${_notebook_path}/${__basename}"
+        elif ! ((_list_filenames))
         then
           if [[ -z "${_maybe_title}" ]]
           then
@@ -5949,7 +5968,7 @@ HEREDOC
 
           if [[ -n "${_maybe_title}" ]]
           then # note file has title.
-            _title_or_basename="${_maybe_title}"
+            _title_basename_or_path="${_maybe_title}"
           fi
         fi
 
@@ -5977,6 +5996,9 @@ HEREDOC
           elif _file_is_audio "${_notebook_path}/${__basename}"
           then
             _indicators+="🔉 "
+          elif [[ "${__basename}" =~ epub$ ]]
+          then
+            _indicators+="📖 "
           fi
 
           if _file_is_encrypted "${_notebook_path}/${__basename}"
@@ -5984,7 +6006,7 @@ HEREDOC
             _indicators+="🔒 "
           fi
 
-          if [[ "${_title_or_basename}" =~ todo|Todo|TODO ]]
+          if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
           then
             _indicators+="✅ "
             _extra_length=1
@@ -5996,7 +6018,7 @@ HEREDOC
           fi
         fi
 
-        local _list_item="${_maybe_padded_indicators}${_title_or_basename}"
+        local _list_item="${_maybe_padded_indicators}${_title_basename_or_path}"
 
         if ! ((_no_id))
         then
@@ -6031,9 +6053,10 @@ HEREDOC
           printf -v _spaces '%*s' "${_spaces_length}" ""
         fi
 
-        if ! ((_list_filenames)) &&
-           ! ((_print_excerpt))  &&
-           [[ "${_title_or_basename}" == "${__basename}" ]]
+        if ! ((_list_filenames))  &&
+           ! ((_list_paths))      &&
+           ! ((_print_excerpt))   &&
+           [[ "${_title_basename_or_path}" == "${__basename}" ]]
         then
           local _first_line=
           _first_line="$(_get_first_line "${_notebook_path}/${__basename}")"
@@ -6061,6 +6084,7 @@ HEREDOC
 
         if ((_list_color_enabled))  &&
            ! ((_list_filenames))    &&
+           ! ((_list_paths))        &&
            ! ((_no_id))
         then
           # Calculate apparent length of the list item string, with byte and
@@ -6092,6 +6116,7 @@ HEREDOC
         if ((_list_color_enabled))  &&
            ! ((_print_excerpt))     &&
            ! ((_list_filenames))    &&
+           ! ((_list_paths))        &&
            ! ((_no_id))
         then
           if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
@@ -6114,6 +6139,7 @@ HEREDOC
         if ((_list_color_enabled))  &&
            ! ((_print_excerpt))     &&
            ! ((_list_filenames))    &&
+           ! ((_list_paths))        &&
            ! ((_no_id))
         then
           if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
@@ -6200,7 +6226,7 @@ describe "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
-        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
@@ -6215,12 +6241,13 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder, text
+                                  note, book, bookmark, document, archive,
+                                  image, video, audio, folder, text
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -6236,13 +6263,14 @@ Description:
   \`${_ME} help list\`.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   ${_ME}
@@ -6870,7 +6898,7 @@ Usage:
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+                    [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
 
 Options:
@@ -6886,9 +6914,8 @@ Options:
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
-  --names                  Only print the notebook name.
-  --path                   Print the path of the notebook.
-  --paths                  Print the path of each notebook.
+  --name, --names          Print the notebook name.
+  --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
   --unarchived             Only list unarchived notebooks.
@@ -6960,16 +6987,15 @@ _notebooks() {
     local _repo_url="${2:-}"
     if [[ -n "${_repo_url}" ]]
     then
-      git clone "${_repo_url}" "${NB_DIR}/${_name}"
-      printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
+      git clone "${_repo_url}" "${NB_DIR}/${_name}" &&
+        printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
       mkdir -p "${NB_DIR}/${_name}"
         git -C "${NB_DIR}/${_name}" init 1>/dev/null  &&
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
         _git_checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
-    fi
-    printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
+    fi && printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
   }
 
   # _notebooks_current()
@@ -7675,7 +7701,7 @@ HEREDOC
   #
   # Usage:
   #   _notebooks_show (<name> | <path> | <selector>) [--archived]
-  #                   [--escaped] [--path] [--filename [<filename>]]
+  #                   [--escaped | --name | --path | --filename [<filename>]]
   _notebooks_show() {
     local _filename=
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
@@ -7939,7 +7965,7 @@ HEREDOC
       shift
       _notebooks_current "${@:-}"
       ;;
-    delete)
+    d|delete)
       _notebooks_delete "${_name:-}" "${3:-}"
       ;;
     list)
@@ -7952,14 +7978,14 @@ HEREDOC
     select)
       _notebooks_select "${2:-}"
       ;;
-    show)
+    s|show)
       shift
       _notebooks_show "${@:-}"
       ;;
-    use)
+    u|use)
       _notebooks_use "${_name:-}"
       ;;
-    archive|open|peek|status|unarchive)
+    archive|open|o|peek|p|status|unarchive)
       _notebooks_notebook "${_subcommand}" "${_name:-}"
       ;;
     *)
@@ -9931,14 +9957,15 @@ Description:
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
-  If \`bats\` [4] or Pygments [5] is installed, notes are printed with
-  syntax highlighting.
+  If \`bat\` [4], \`highlight\` [5], or Pygments [6] is installed, notes are
+  printed with syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
     4. https://github.com/sharkdp/bat
-    5. https://pygments.org/
+    5. http://www.andre-simon.de/doku/highlight/en/highlight.php
+    6. https://pygments.org/
 
 Examples:
   ${_ME} show 1
@@ -10453,6 +10480,11 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
+    elif [[ "${_target_path}" =~ epub$ ]] &&
+         _command_exists "pandoc"         &&
+         _command_exists "w3m"
+    then
+      pandoc -f epub -t html "${_target_path}" | w3m -T text/html
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"

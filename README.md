@@ -918,6 +918,10 @@ tools include:
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
+- Word Documents:
+  - [Pandoc](https://pandoc.org/)
+- EPUB ebooks:
+  - [Pandoc](https://pandoc.org/) and [`w3m`](https://en.wikipedia.org/wiki/W3m)
 
 When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
@@ -2079,6 +2083,7 @@ lists:
 > nb
 home
 ----
+[6] 📖 example.epub
 [5] 🌄 example-picture.png
 [4] 📄 example-document.docx
 [3] 📹 example-video.mp4
@@ -2448,10 +2453,11 @@ Plugin successfully uninstalled:
 Plugins are written in a Bash-compatible shell scripting language and
 have an `.nb-plugin` extension.
 
-`nb` includes two example plugins:
+`nb` includes a few example plugins:
 
 - [`example.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin)
 - [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+- [`ebook.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin)
 
 Create a new subcommand in three easy steps:
 
@@ -2695,7 +2701,8 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 <p align="center">
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a> •
-  <a href="#subcommands">subcommands</a>
+  <a href="#subcommands">subcommands</a> •
+  <a href="#plugins-1">plugins</a>
 </p>
 
 #### `nb help`
@@ -2756,12 +2763,12 @@ Usage:
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
-        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
@@ -2776,6 +2783,9 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped | --name | --path | --filename [<filename>]]
+  nb notebooks use <name>
   nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
           [-r | --render] | --selector-id | --title | --type [<type>] |
@@ -3399,8 +3409,8 @@ Examples:
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -3411,12 +3421,13 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder, text
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notes in the current notebook.
@@ -3427,13 +3438,14 @@ Description:
   regular expression.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   nb list
@@ -3452,7 +3464,7 @@ Examples:
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
-        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
@@ -3467,12 +3479,13 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder, text
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -3488,13 +3501,14 @@ Description:
   `nb help list`.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   nb
@@ -3549,7 +3563,7 @@ Usage:
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+                    [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
 
 Options:
@@ -3565,9 +3579,8 @@ Options:
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
-  --names                  Only print the notebook name.
-  --path                   Print the path of the notebook.
-  --paths                  Print the path of each notebook.
+  --name, --names          Print the notebook name.
+  --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
   --unarchived             Only list unarchived notebooks.
@@ -4179,14 +4192,15 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  If `bats` [4] or Pygments [5] is installed, notes are printed with
-  syntax highlighting.
+  If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
+  printed with syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     3. https://en.wikipedia.org/wiki/W3m
     4. https://github.com/sharkdp/bat
-    5. https://pygments.org/
+    5. http://www.andre-simon.de/doku/highlight/en/highlight.php
+    6. https://pygments.org/
 
 Examples:
   nb show 1
@@ -4298,6 +4312,87 @@ Usage:
 
 Description:
   Display version information.
+```
+
+### Plugins
+
+<p align="center">
+  <a href="#copy">copy</a> •
+  <a href="#ebook">ebook</a> •
+  <a href="#example">example</a>
+</p>
+
+#### `copy`
+
+```text
+Usage:
+  nb copy (<id> | <filename> | <path> | <title>)
+
+Description:
+  Create a copy of the specified item in the current notebook.
+
+Alias: `duplicate`
+```
+
+#### `ebook`
+
+```text
+Usage:
+  nb ebook new <name>
+  nb ebook publish
+
+Subcommands:
+  ebook new      Create a new notebook initialized with placeholder files for
+                 authoring an ebook.
+  ebook publish  Generate a .epub file using the current notebook contents.
+
+Description:
+  Ebook authoring with `nb`.
+
+  `nb ebook new` creates a notebook populated with initial placeholder files
+  for creating an ebook. Edit the title page and chapters using normal `nb`
+  commands, then use `nb ebook publish` to generate an epub file.
+
+  Chapters are expected to be markdown files with a sequential numeric
+  filename prefixes for ordering:
+
+    01-example.md
+    02-sample.md
+    03-demo.md
+
+  Create new chapters with `nb add`:
+
+    nb add --filename "04-chapter4.md"
+
+  title.txt contains the book metadata in a YAML block. For more information
+  about the fields for this file, visit:
+
+    https://pandoc.org/MANUAL.html#epub-metadata
+
+  stylesheet.css contains base styling for the generated ebook. It can be used
+  as it is and can also be edited using `nb edit`.
+
+  As with all `nb` notebooks, changes are recorded automatically in git,
+  providing automatic version control for all ebook content, source, and
+  metadata files.
+
+  Generated epub files are saved in the notebook and can be previewed in the
+  terminal with `nb show`. Export a generated epub file with `nb export`:
+
+    nb export 12 .
+
+More info:
+  https://pandoc.org/epub.html
+```
+
+#### `example`
+
+```text
+Usage:
+  nb example
+
+Description:
+  Print "Hello, World!"
 ```
 
 ## Specifications
