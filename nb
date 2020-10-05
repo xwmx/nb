@@ -2476,9 +2476,6 @@ _list_files() {
 
           grep --color=never "${_grep_patterns[@]}"
           ;;
-        markdown|md)
-          grep --color=never "-e" "\.md$" "-e" "\.markdown$"
-          ;;
         text|txt)
           for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
           do
@@ -7962,7 +7959,7 @@ HEREDOC
       shift
       _notebooks_current "${@:-}"
       ;;
-    delete)
+    d|delete)
       _notebooks_delete "${_name:-}" "${3:-}"
       ;;
     list)
@@ -7975,11 +7972,11 @@ HEREDOC
     select)
       _notebooks_select "${2:-}"
       ;;
-    show)
+    s|show)
       shift
       _notebooks_show "${@:-}"
       ;;
-    use)
+    u|use)
       _notebooks_use "${_name:-}"
       ;;
     archive|open|peek|status|unarchive)
