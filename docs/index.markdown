@@ -4348,8 +4348,9 @@ Usage:
   nb ebook publish
 
 Subcommands:
-  ebook new       Create a new notebook initialized with ebook files.
-  ebook publish   Generate a .epub file using the current notebook contents.
+  ebook new      Create a new notebook initialized with placeholder files for
+                 authoring an ebook.
+  ebook publish  Generate a .epub file using the current notebook contents.
 
 Description:
   Ebook authoring with `nb`.
