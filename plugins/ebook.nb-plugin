@@ -110,6 +110,12 @@ HEREDOC
           printf "Created: %s\\n" "$(basename "${_notebook_path}")"
       ;;
     publish)
+      if ! hash pandoc 2>/dev/null
+      then
+        printf "Install Pandoc to generate an ebook: https://pandoc.org/\\n" 1>&2
+        exit 1
+      fi
+
       local _notebook_path
       _notebook_path="$(_notebooks current --path)"
 
