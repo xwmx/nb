@@ -918,6 +918,8 @@ tools include:
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
+- Word Documents:
+  - [Pandoc](https://pandoc.org/)
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) and [`w3m`](https://en.wikipedia.org/wiki/W3m)
 
