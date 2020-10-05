@@ -155,7 +155,7 @@ HEREDOC
       pandoc -o "${_output_path}" "${_pandoc_arguments[@]}"       &&
         _index add "${_output_filename}"                          &&
           _git checkpoint "[nb] Added: %s" "${_output_filename}"  &&
-            printf "Added: %s\\n" "${_output_filename}"
+            printf "Added: %s\\n" "$(_show "${_output_filename}" --info-line)"
       ;;
     *)
       _help "ebook" 1>&2 && exit 1
