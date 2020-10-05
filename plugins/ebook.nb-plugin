@@ -121,7 +121,7 @@ HEREDOC
       fi
 
       local _chapter_paths=($(
-        _list --paths --no-id --no-indicator --type md
+        _list --sort --paths --no-id --no-indicator --type md
       ))
 
       local _notebook_name
