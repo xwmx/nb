@@ -30,14 +30,20 @@ Subcommands:
 Description:
   Ebook authoring with \`nb\`.
 
-  ebook.nb-plugin creates a notebook populated with initial placeholder files
+  \`nb ebook new\` creates a notebook populated with initial placeholder files
   for creating an ebook. Edit the title page and chapters using normal \`nb\`
   commands, then use \`nb ebook publish\` to generate an epub file.
 
-  Chapters are expected to be markdown files and have a filename with a
-  two-digit sequential numeric prefix for ordering:
+  Chapters are expected to be markdown files with a sequential numeric
+  filename prefixes for ordering:
 
     01-example.md
+    02-sample.md
+    03-demo.md
+
+  Create new chapters with \`nb add\`:
+
+    nb add --filename "03-chapter.md"
 
   title.txt contains the book metadata in a YAML block. For more information
   about the fields for this file, visit:
