@@ -4791,6 +4791,7 @@ _export() {
 
     if [[ -d "${_target_path}" ]]
     then
+      _target_path="$(printf "%s\\n" "${_target_path}" | sed -e 's/\/$//g')"
       _target_path="${_target_path}/${_basename}"
     fi
 
