@@ -9931,7 +9931,7 @@ Description:
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
-  If \`bats\` [4] or Pygments [5] is installed, notes are printed with
+  If \`bat\` [4] or Pygments [5] is installed, notes are printed with
   syntax highlighting.
 
     1. https://pandoc.org/
