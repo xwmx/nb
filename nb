@@ -4291,7 +4291,7 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
       case ${__yn} in
         [Yy]*)
           break
@@ -4320,7 +4320,7 @@ _delete() {
 
       _git_checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
-      printf "Deleted: %s\\n" "${_info}"
+      printf "Deleted:  %s\\n" "${_info}"
     fi
   else
     _exit_1 printf "Selection not found.\\n"
