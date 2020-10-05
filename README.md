@@ -2776,6 +2776,9 @@ Usage:
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped | --name | --path | --filename [<filename>]]
+  nb notebooks use <name>
   nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
           [-r | --render] | --selector-id | --title | --type [<type>] |
@@ -3549,7 +3552,7 @@ Usage:
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+                    [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
 
 Options:
@@ -3565,9 +3568,8 @@ Options:
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
-  --names                  Only print the notebook name.
-  --path                   Print the path of the notebook.
-  --paths                  Print the path of each notebook.
+  --name, --names          Print the notebook name.
+  --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
   --unarchived             Only list unarchived notebooks.
