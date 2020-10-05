@@ -4358,8 +4358,8 @@ Description:
   for creating an ebook. Edit the title page and chapters using normal `nb`
   commands, then use `nb ebook publish` to generate an epub file.
 
-  Chapters are expected to be markdown files with a .md extension and a
-  sequential numeric prefix for ordering:
+  Chapters are expected to be markdown files with a .md extension and filename
+  with a sequential numeric prefix for ordering:
 
     01-chapter1.md
 
