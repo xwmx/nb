@@ -7985,7 +7985,7 @@ HEREDOC
     u|use)
       _notebooks_use "${_name:-}"
       ;;
-    archive|open|peek|status|unarchive)
+    archive|open|o|peek|p|status|unarchive)
       _notebooks_notebook "${_subcommand}" "${_name:-}"
       ;;
     *)
