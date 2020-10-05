@@ -2708,7 +2708,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a> •
   <a href="#subcommands">subcommands</a> •
-  <a href="#plugins">plugins</a>
+  <a href="#plugins-1">plugins</a>
 </p>
 
 #### `nb help`
