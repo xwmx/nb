@@ -2701,7 +2701,8 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 <p align="center">
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a> •
-  <a href="#subcommands">subcommands</a>
+  <a href="#subcommands">subcommands</a> •
+  <a href="#plugins">plugins</a>
 </p>
 
 #### `nb help`
@@ -4311,6 +4312,81 @@ Usage:
 
 Description:
   Display version information.
+```
+
+### Plugins
+
+<p align="center">
+  <a href="#copy">copy</a> •
+  <a href="#ebook">ebook</a> •
+  <a href="#example">example</a>
+</p>
+
+#### `copy`
+
+```text
+Usage:
+  nb copy (<id> | <filename> | <path> | <title>)
+
+Description:
+  Create a copy of the specified item in the current notebook.
+
+Alias: `duplicate`
+```
+
+#### `ebook`
+
+```text
+Usage:
+  nb ebook new <name>
+  nb ebook publish
+
+Subcommands:
+  ebook new       Create a new notebook initialized with ebook files.
+  ebook publish   Generate a .epub file using the current notebook contents.
+
+Description:
+  Ebook authoring with `nb`.
+
+  ebook.nb-plugin creates a notebook populated with initial placeholder files
+  for creating an ebook. Edit the title page and chapters using normal `nb`
+  commands, then use `nb ebook publish` to generate an epub file.
+
+  Chapters are expected to be markdown files with a .md extension and a
+  sequential numeric prefix for ordering:
+
+    01-chapter1.md
+
+  title.txt contains the book metadata in a YAML block. For more information
+  about the fields for this file, visit:
+
+    https://pandoc.org/MANUAL.html#epub-metadata
+
+More info:
+  https://pandoc.org/epub.html
+```
+
+#### `copy`
+
+```text
+Usage:
+  nb copy (<id> | <filename> | <path> | <title>)
+
+Description:
+  Create a copy of the specified item in the current notebook.
+
+Alias: `duplicate`
+```
+
+#### `example`
+
+```text
+
+Usage:
+  nb example
+
+Description:
+  Print "Hello, World!"
 ```
 
 ## Specifications
