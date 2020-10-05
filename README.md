@@ -4366,22 +4366,9 @@ More info:
   https://pandoc.org/epub.html
 ```
 
-#### `copy`
-
-```text
-Usage:
-  nb copy (<id> | <filename> | <path> | <title>)
-
-Description:
-  Create a copy of the specified item in the current notebook.
-
-Alias: `duplicate`
-```
-
 #### `example`
 
 ```text
-
 Usage:
   nb example
 
