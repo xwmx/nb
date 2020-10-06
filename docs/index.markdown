@@ -592,7 +592,7 @@ More example content:
 
 Several classes of file types are represented with emoji indicators to make
 them easily identifiable in lists. For example, bookmarks and encrypted notes
-are indicated with `🔖` and `🔒` indicators:
+are indicated with `🔖` and `🔒`:
 
 ```bash
 > nb ls
