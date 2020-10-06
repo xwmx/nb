@@ -599,9 +599,9 @@ are indicated with `🔖` and `🔒`:
 home
 ----
 [4] Example Note
-[3] 🔒 example-encrypted-note.md.enc
+[3] 🔒 encrypted-note.md.enc
 [2] 🔖 Example Bookmark (example.com)
-[1] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 🔒 encrypted.bookmark.md.enc
 ```
 
 Indicator file types include:
