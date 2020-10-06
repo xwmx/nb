@@ -2,9 +2,9 @@
 
 load test_helper
 
-# `ebook new <name>` ##########################################################
+# `ebook init <name>` #########################################################
 
-@test "\`ebook new <name>\` creates new ebook notebook." {
+@test "\`ebook init <name>\` creates new ebook notebook." {
   {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
@@ -12,7 +12,7 @@ load test_helper
     [[ "${status}" == 0 ]]
   }
 
-  run "${_NB}" ebook new "example-ebook"
+  run "${_NB}" ebook init "example-ebook"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -37,26 +37,97 @@ load test_helper
   [[ "${lines[3]}" =~ example-ebook:01-chapter1.md  ]]
   [[ -f "${NB_DIR}/example-ebook/01-chapter1.md"    ]]
 
-  [[ "${lines[4]}" =~ Created:                      ]]
+  [[ "${lines[4]}" =~ Ebook\ initialized:           ]]
   [[ "${lines[4]}" =~ example-ebook                 ]]
 }
 
-@test "\`ebook new\` with no name exits with status 1 and prints usage." {
+@test "\`ebook init\` sets up current notebook as ebook." {
   {
     run "${_NB}" init
+    run "${_NB}" notebooks add example
+    run "${_NB}" use example
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }
 
-  run "${_NB}" ebook new
+  run "${_NB}" ebook init --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  echo "ls example:"
+  ls "${NB_DIR}/example"
+  echo "ls home:"
+  ls "${NB_DIR}/home"
+
+  [[ "${status}" == 0                         ]]
+
+  [[ "${lines[0]}" =~ Adding\ the\ following  ]]
+  [[ "${lines[0]}" =~ current\ notebook       ]]
+  [[ "${lines[1]}" =~ title.txt               ]]
+  [[ "${lines[2]}" =~ stylesheet.css          ]]
+  [[ "${lines[3]}" =~ 01-chapter1.md          ]]
+
+  [[ "${lines[4]}" =~ Added:                  ]]
+  [[ "${lines[4]}" =~ 1                       ]]
+  [[ "${lines[4]}" =~ title.txt               ]]
+  [[ -f "${NB_DIR}/example/title.txt"         ]]
+
+  [[ "${lines[5]}" =~ Added:                  ]]
+  [[ "${lines[5]}" =~ 2                       ]]
+  [[ "${lines[5]}" =~ stylesheet.css          ]]
+  [[ -f "${NB_DIR}/example/stylesheet.css"    ]]
+
+  [[ "${lines[6]}" =~ Added:                  ]]
+  [[ "${lines[6]}" =~ 3                       ]]
+  [[ "${lines[6]}" =~ 01-chapter1.md          ]]
+  [[ -f "${NB_DIR}/example/01-chapter1.md"    ]]
+
+  [[ "${lines[7]}" =~ Ebook\ initialized:     ]]
+  [[ "${lines[7]}" =~ example                 ]]
+}
+
+@test "\`ebook init <existing>\` sets up <existing> notebook as ebook." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add example
+    run "${_NE}" example
+
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+
+    [[ "${status}" == 0 ]]
+  }
+
+  run "${_NB}" ebook init example --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1              ]]
-  [[ "${lines[0]}" =~ Usage\:     ]]
-  [[ "${lines[1]}" =~ nb\ ebook   ]]
+  [[ "${lines[0]}" =~ Adding\ the\ following  ]]
+  [[ "${lines[0]}" =~ example                 ]]
+  [[ "${lines[1]}" =~ title.txt               ]]
+  [[ "${lines[2]}" =~ stylesheet.css          ]]
+  [[ "${lines[3]}" =~ 01-chapter1.md          ]]
+
+  [[ "${status}" == 0                         ]]
+  [[ "${lines[4]}" =~ Added:                  ]]
+  [[ "${lines[4]}" =~ example:1               ]]
+  [[ "${lines[4]}" =~ example:title.txt       ]]
+  [[ -f "${NB_DIR}/example/title.txt"         ]]
+
+  [[ "${lines[5]}" =~ Added:                  ]]
+  [[ "${lines[5]}" =~ example:2               ]]
+  [[ "${lines[5]}" =~ example:stylesheet.css  ]]
+  [[ -f "${NB_DIR}/example/stylesheet.css"    ]]
+
+  [[ "${lines[6]}" =~ Added:                  ]]
+  [[ "${lines[6]}" =~ example:3               ]]
+  [[ "${lines[6]}" =~ example:01-chapter1.md  ]]
+  [[ -f "${NB_DIR}/example/01-chapter1.md"    ]]
+
+  [[ "${lines[7]}" =~ Ebook\ initialized:     ]]
+  [[ "${lines[7]}" =~ example                 ]]
 }
 
 # `ebook publish` #############################################################

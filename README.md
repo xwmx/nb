@@ -1994,6 +1994,10 @@ You can also turn off autosync with
 
 #### Sync Conflict Resolution
 
+`nb` handles git operations automatically, so you shouldn't ever need
+to use the `git` command line tool directly. `nb` merges changes when
+syncing and handles conflicts using a couple different strategies.
+
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
 cleanly merge overlapping local and remote changes, `nb` saves both
 versions within the file separated by git conflict markers and prints a
@@ -2039,11 +2043,12 @@ files, with `--conflicted-copy` appended to the filename of the version
 from the remote. To resolve a conflicted copy of a binary file, compare
 both versions and merge them manually, then delete the `--conflicted-copy`.
 
-`nb` handles git operations automatically, so you shouldn't ever need
-to use the `git` command line tool directly. If you do encounter a
-conflict that `nb` says it can't merge at all, [`nb git`](#git) and
-[`nb run`](#run) can be used to resolve the conflict manually without
-changing the current working directory.
+If you do encounter a conflict that `nb` says it can't merge at all,
+[`nb git`](#git) and [`nb run`](#run) can be used to perform git and
+shell operations within the notebook to resolve the conflict manually.
+Please also [open an issue](https://github.com/xwmx/nb/issues/new)
+with any relevant details that could inform a strategy for handling any
+such cases automatically.
 
 ### ↕️ Import / Export
 
@@ -2083,7 +2088,7 @@ lists:
 > nb
 home
 ----
-[6] 📖 example.epub
+[6] 📖 example-ebook.epub
 [5] 🌄 example-picture.png
 [4] 📄 example-document.docx
 [3] 📹 example-video.mp4

@@ -19,20 +19,22 @@ _subcommands add "ebook"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "ebook" <<HEREDOC
 Usage:
-  nb ebook new <name>
+  nb ebook init [<name>] [--force]
   nb ebook publish
 
 Subcommands:
-  ebook new      Create a new notebook initialized with placeholder files for
-                 authoring an ebook.
+  ebook init     Initialize the current notebook or notebook <name> with
+                 placeholder files for authoring an ebook, creating the
+                 notebook if it does not yet exist.
   ebook publish  Generate a .epub file using the current notebook contents.
 
 Description:
   Ebook authoring with \`nb\`.
 
-  \`nb ebook new\` creates a notebook populated with initial placeholder files
-  for creating an ebook. Edit the title page and chapters using normal \`nb\`
-  commands, then use \`nb ebook publish\` to generate an epub file.
+  \`nb ebook init\` populates an existing or new notebook with initial
+  placeholder files for creating an ebook. Edit the title page and
+  chapters using normal \`nb\` commands, then use \`nb ebook publish\`
+  to generate an epub file.
 
   Chapters are expected to be markdown files with a sequential numeric
   filename prefixes for ordering:
@@ -68,21 +70,81 @@ HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
 _ebook() {
-  local _subcommand="${1:-}"
+  local _force=0
+  local _name=
+  local _notebook_path=
+  local _prompt=0
+  local _subcommand=
+
+  for __arg in "${@}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      *)
+        if [[ -z "${_subcommand:-}" ]]
+        then
+          _subcommand="${__arg}"
+        else
+          _name="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
 
   [[ -z "${_subcommand:-}" ]] && _help "ebook" 1>&2 && exit 1
 
   case "${_subcommand:-}" in
-    a|add|c|create|n|new)
-      local _name="${2:-}"
+    a|add|c|create|init|n|new)
 
-      [[ -z "${_name:-}" ]] && _help "ebook" 1>&2 && exit 1
+      if [[ -z "${_name:-}" ]]
+      then
+        _prompt=1
+        cat <<HEREDOC
+Adding the following files to the current notebook:
+  title.txt
+  stylesheet.css
+  01-chapter1.md
+HEREDOC
 
-      local _notebook_path
+        _notebook_path="$(_notebooks current --path)"
+      elif _notebook_path="$(_notebooks show "${_name}" --path 2>/dev/null)"
+      then
+        _prompt=1
+        cat <<HEREDOC
+Adding the following files to ${_name}:
+  title.txt
+  stylesheet.css
+  01-chapter1.md
+HEREDOC
+      fi
 
-      _notebooks add "${_name:-}"                                                   &&
-        _notebook_path="$(_notebooks show "${_name:-}" --path)"                     &&
-        cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "title.txt"       &&
+      if ((_prompt)) && ! ((_force))
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      if [[ -n "${_name:-}" ]] && [[ -z "${_notebook_path:-}" ]]
+      then
+        _notebooks add "${_name}"
+        _notebook_path="$(_notebooks show "${_name}" --path)"
+      fi
+
+      cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "title.txt"       &&
 ---
 title: Placeholder Title
 author: Placeholder Name
@@ -90,7 +152,7 @@ rights:  Creative Commons Non-Commercial Share Alike 3.0
 language: en-US
 ---
 HEREDOC
-        cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "stylesheet.css"  &&
+      cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "stylesheet.css"  &&
 /* This defines styles and classes used in the book */
 body { margin: 5%; text-align: justify; font-size: medium; }
 code { font-family: monospace; }
@@ -126,7 +188,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 HEREDOC
       NB_NOTEBOOK_PATH="${_notebook_path}" _add \
         "01-chapter1.md" --content "# Chapter One" &&
-          printf "Created: %s\\n" "$(basename "${_notebook_path}")"
+          printf "Ebook initialized: %s\\n" "$(basename "${_notebook_path}")"
       ;;
     p|publish|g|generate|b|build)
       if ! hash pandoc 2>/dev/null
