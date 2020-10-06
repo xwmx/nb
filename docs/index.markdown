@@ -590,17 +590,31 @@ More example content:
 - three
 ```
 
-Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
-easily identifiable in lists:
+Several classes of file types are represented with emoji indicators to make
+them easily identifiable in lists. For example, bookmarks and encrypted notes
+are indicated with `🔖` and `🔒` indicators:
 
 ```bash
 > nb ls
 home
 ----
 [4] Example Note
-[3] 🔒 example-encrypted.md.enc
+[3] 🔒 example-encrypted-note.md.enc
 [2] 🔖 Example Bookmark (example.com)
 [1] 🔖 🔒 example-encrypted.bookmark.md.enc
+```
+
+Indicator file types include:
+
+```text
+ 🔉  Audio
+ 📖  Book
+ 🔖  Bookmark
+ 🔒  Encrypted
+ 📂  Folder
+ 🌄  Image
+ 📄  PDF, Word, or Open Office document
+ 📹  Video
 ```
 
 By default, items are listed starting with the most recently modified.
