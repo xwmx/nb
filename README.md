@@ -584,9 +584,9 @@ More example content:
 - three
 ```
 
-Several classes of file types are represented with emoji indicators to make
-them easily identifiable in lists. For example, bookmarks and encrypted notes
-are indicated with `🔖` and `🔒`:
+Several classes of file types are represented with emoji to make them
+easily identifiable in lists. For example, bookmarks and encrypted notes
+are listed with `🔖` and `🔒`:
 
 ```bash
 > nb ls
@@ -598,7 +598,7 @@ home
 [1] 🔖 🔒 encrypted.bookmark.md.enc
 ```
 
-Indicator file types include:
+File types include:
 
 ```text
  🔉  Audio
