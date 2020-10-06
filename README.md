@@ -1995,9 +1995,8 @@ You can also turn off autosync with
 #### Sync Conflict Resolution
 
 `nb` handles git operations automatically, so you shouldn't ever need
-to use the `git` command line tool directly. `nb` automatically merges
-changes when syncing and handles conflicts using a couple different
-strategies.
+to use the `git` command line tool directly. `nb` merges changes when
+syncing and handles conflicts using a couple different strategies.
 
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
 cleanly merge overlapping local and remote changes, `nb` saves both
