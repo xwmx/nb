@@ -2052,7 +2052,7 @@ both versions and merge them manually, then delete the `--conflicted-copy`.
 If you do encounter a conflict that `nb` says it can't merge at all,
 [`nb git`](#git) and [`nb run`](#run) can be used to perform git and
 shell operations within the notebook to resolve the conflict manually.
-Also, consider [opening an issue](https://github.com/xwmx/nb/issues/new)
+Please also [open an issue](https://github.com/xwmx/nb/issues/new)
 with any relevant details that could inform a strategy for handling any
 such cases automatically.
 
