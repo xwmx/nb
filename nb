@@ -5771,7 +5771,7 @@ _list() {
       --no-id*|--noid*|--no-index|--noindex)
         _no_id=1
         ;;
-      --no-indicator*|--noindicator*)
+      --no*indicator*|--no*emoji*|--no*unicode*)
         _print_indicators=0
         ;;
       -n|--limit|--num|--number)
