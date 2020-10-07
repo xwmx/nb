@@ -4634,8 +4634,8 @@ _env() {
         python3-pygments
         tig
         w3m
-	ripgrep
-	bat
+        ripgrep
+        bat
       )
 
       local _apt_packages=()
