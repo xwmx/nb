@@ -4530,21 +4530,73 @@ _env() {
     local _name="${1:?}"
     local _repo="${3:?}"
     local _version="${2:?}"
+    local _arch="$(uname -m)"
+    local _non_x86_64_bit="false"
 
-    local _deb_filename="${_name}_${_version}_amd64.deb"
-    local _deb_local_path="${HOME}/${_deb_filename}"
+    local _deb_filename=""
+    # Handle packages differently based on CPU architecture availability
+    if [[ "${_arch}" == 'x86_64' ]]
+    then
+      _deb_filename="${_name}_${_version}_amd64.deb"
+    else
+      _non_x86_64_bit="true"
+      if [[ "${_arch}" == 'aarch64' ]]
+      then
+        _deb_filename="${_name}_${_version}_arm64.deb"
+      elif [[ "${_arch}" == "arm"* ]]
+      then
+        _deb_filename="${_name}_${_version}_armhf.deb"
+      fi
+    fi
+    
+    local _unsupported_arch="false"
+   
+    local _deb_local_path
 
+    if [[ "${_deb_filename}" != "" ]]
+    then
+      _deb_local_path="${HOME}/${_deb_filename}"
+    else
+      _unsupported_arch="true"
+    fi
+
+    
+    # Set _skip_download variable to true for easily skipping download when exceptions are needed
+    local _skip_download="false"
+    # Set _skip_message variable to desired output describing why download is skipped if _akip_download is true
+    local _skip_message=""
+
+    ### Customizations needed per package
     # Handle bat version prefix in URL.
     [[ "${_name}" == "bat" ]] && _version="v${_version}"
+    
+    # Skip ripgrep download if not x86_84 bit (no deb is available for anything except x86_64)
+    [[ "${_name}" == "ripgrep" ]] && [[ "${_non_x86_64_bit}" == "true" ]] && \
+      _skip_download="true" && \
+      _skip_message="Please install ripgrep manually as no .deb package is available for ${_arch}."
 
-    wget \
+
+    # Skip download if unknown CPU architecture is detected
+    [[ "${_unsupported_arch}" == "true" ]] && \
+      _skip_download="true" && \
+      _skip_message="Please install "${_name}" dependencies manually as .deb packages are unavailable for ${_arch}."
+
+    ###
+
+    [[ "${_skip_download}" == "false" ]] && \
+      wget \
       -O "${_deb_local_path}" \
       "https://github.com/${_repo}/releases/download/${_version}/${_deb_filename}"
 
-    if [[ -e "${_deb_local_path}" ]]
+    if [[ -e "${_deb_local_path}" ]] && [[ "${_skip_download}" == "false" ]]
     then
       dpkg -i "${_deb_local_path}"
       rm "${_deb_local_path:?}"
+    fi
+
+    if [[ "${_skip_download}" == "true" ]] && [[ "${_skip_message}" != "" ]] 
+    then
+      echo "${_skip_message}"
     fi
   }
 
@@ -4575,41 +4627,77 @@ _env() {
     then
       _completions install --download
 
-      local _apt_packages=(
+      local _dependencies=(
         bash-completion
         curl
         pandoc
         python3-pygments
         tig
         w3m
+	ripgrep
+	bat
       )
+
+      local _apt_packages=()
       local _deb_packages=()
 
-      local _os_version
-      _os_version="$(lsb_release -d | awk '{print $3}')"
+      local _os_release="$(cat /etc/os-release)"
 
-      if [[ "$(_env_max_version "${_os_version}" "18.10")" == "${_os_version}" ]]
+      ### Make sure that the OS is Debian based
+      if echo "${_os_release}" | grep -q "ID_LIKE"
       then
-        _apt_packages+=("ripgrep")
-      else
-        _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
+	## Do further checking if based on Debian
+	if echo "${_os_release}" | grep -q "ID_LIKE=ubuntu" 
+	then
+	  local _based_on_debian="true"
+        elif echo "${_os_release}" | grep -q "ID_LIKE=debian"
+	then
+          local _based_on_debian="true"
+	fi
+      elif echo "${_os_release}" | grep -q "ID=ubuntu"
+      then
+	local _based_on_debian="true"
+      elif echo "${_os_release}" | grep -q "ID=debian"
+      then
+	local _based_on_debian="true"
+      fi
+      
+      ###
+
+      
+      if [[ "${_based_on_debian}" == "true" ]]
+      then
+	apt-get update
+	# Check if package is installed or needs to be installed
+	for _package in "${dependencies[@]}"
+	do
+	  # Check if executable is in $PATH or not
+	  if [[ ! -x "$(command -v ${_package})" ]] 
+	  then
+	    # Check if dependency is in apt repo
+            if apt-cache show "${_package}" | grep -q "Package: ^${_package}" 
+	    then
+	      _apt_packages+=("${_package}")
+	    fi
+	  fi
+	done
+        apt-get install -y "${_apt_packages[@]}"
+	# Force install of bat
+	apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
+        if [[ ! -x "$(command -v rg)" ]] 
+        then
+          _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
+        fi
+        if [[ ! -x "$(command -v batcat)" ]] 
+        then
+          _deb_packages+=("bat 0.16.0 sharkdp/bat")
+        fi
+        for __package in "${_deb_packages[@]}"
+        do
+          eval "_env_install_deb ${__package}"
+        done
       fi
 
-      if [[ "$(_env_max_version "${_os_version}" "19.10")" == "${_os_version}" ]]
-      then
-        _apt_packages+=("bat")
-      else
-        _deb_packages+=("bat 0.16.0 sharkdp/bat")
-      fi
-
-      apt update
-
-      apt-get install "${_apt_packages[@]}"
-
-      for __package in "${_deb_packages[@]}"
-      do
-        eval "_env_install_deb ${__package}"
-      done
     elif [[ -x "$(command -v dnf)" ]]
     then
       : # TODO: dnf install
