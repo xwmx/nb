@@ -170,7 +170,8 @@ Also supported for various enhancements:
 To install with [Homebrew](https://brew.sh/):
 
 ```bash
-brew install xwmx/taps/nb
+brew tap xwmx/taps
+brew install nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
