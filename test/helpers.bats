@@ -401,3 +401,100 @@ HEREDOC
   [[ ${status} -eq 0                                              ]]
   [[ "${lines[0]}" =~ example--conflicted-copy-2.bookmark.md.enc  ]]
 }
+
+# `_highlight_syntax_if_available()` ####################################################
+
+@test "\`_highlight_syntax_if_available <path>\` highlights a file at <path≥." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "# Example"
+  }
+
+  run "${_NB}" helpers highlight "${_NOTEBOOK_PATH}/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ -n "${output:-}"             ]]
+  [[ "${output}" !=  "# Example"  ]]
+}
+
+@test "\`_highlight_syntax_if_available <path> --no-color\` skips highlighting." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "# Example _Title_"
+  }
+
+  run "${_NB}" helpers highlight "${_NOTEBOOK_PATH}/example.md" --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                      ]]
+  [[ "${output}" ==  "# Example _Title_"  ]]
+}
+
+@test "\`_highlight_syntax_if_available\` highlights piped content." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                      ]]
+  [[ -n "${output:-}"                     ]]
+  [[ "${output}" !=  "# Example _Title_"  ]]
+}
+
+@test "\`_highlight_syntax_if_available() --no-color\` skips highlighting piped content." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight --no-color"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                      ]]
+  [[ "${output}" ==  "# Example _Title_"  ]]
+}
+
+@test "\`_highlight_syntax_if_available <extension>\` highlights piped content." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight 'md'"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                      ]]
+  [[ -n "${output:-}"                     ]]
+  [[ "${output}" !=  "# Example _Title_"  ]]
+}
+
+@test "\`_highlight_syntax_if_available <extension> --no-color\` skips highlighting." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight 'md' --no-color"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                      ]]
+  [[ "${output}" ==  "# Example _Title_"  ]]
+}

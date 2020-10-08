@@ -566,6 +566,76 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
+# $EDITOR #####################################################################
+
+@test "\`edit <id>\` with multi-word \$EDITOR edits properly without errors." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add --content "Example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+
+    "${_NB}" set editor "mock_editor --flag"
+  }
+
+  run "${_NB}" edit 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "\`edit <id>\` with multi-word \$EDITOR edits properly with filename with spaces." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add --filename "multi-word filename.md"
+
+    "${_NB}" set editor "mock_editor --flag"
+  }
+
+  run "${_NB}" edit 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file
+  [[ "$(cat "${_NOTEBOOK_PATH}/multi-word filename.md")" =~ mock_editor ]]
+
+  # Creates git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
 # help ########################################################################
 
 @test "\`help edit\` exits with status 0 and prints help information." {

@@ -176,7 +176,8 @@ Also supported for various enhancements:
 To install with [Homebrew](https://brew.sh/):
 
 ```bash
-brew install xwmx/taps/nb
+brew tap xwmx/taps
+brew install nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
@@ -590,17 +591,31 @@ More example content:
 - three
 ```
 
-Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
-easily identifiable in lists:
+Several classes of file types are represented with emoji to make them
+easily identifiable in lists. For example, bookmarks and encrypted notes
+are listed with `🔖` and `🔒`:
 
 ```bash
 > nb ls
 home
 ----
 [4] Example Note
-[3] 🔒 example-encrypted.md.enc
+[3] 🔒 encrypted-note.md.enc
 [2] 🔖 Example Bookmark (example.com)
-[1] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 🔒 encrypted.bookmark.md.enc
+```
+
+File types include:
+
+```text
+ 🔉  Audio
+ 📖  Book
+ 🔖  Bookmark
+ 🔒  Encrypted
+ 📂  Folder
+ 🌄  Image
+ 📄  PDF, Word, or Open Office document
+ 📹  Video
 ```
 
 By default, items are listed starting with the most recently modified.
@@ -4364,7 +4379,7 @@ Description:
   for creating an ebook. Edit the title page and chapters using normal `nb`
   commands, then use `nb ebook publish` to generate an epub file.
 
-  Chapters are expected to be markdown files with a sequential numeric
+  Chapters are expected to be markdown files with sequential numeric
   filename prefixes for ordering:
 
     01-example.md
