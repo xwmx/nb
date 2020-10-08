@@ -608,9 +608,6 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add --filename "multi-word filename.md"
 
-
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-
     "${_NB}" set editor "mock_editor --flag"
   }
 
@@ -623,7 +620,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/multi-word filename.md")" =~ mock_editor ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
