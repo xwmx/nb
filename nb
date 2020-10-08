@@ -1492,24 +1492,24 @@ Can't edit archives. Export archive and expand to edit.\\n"
     fi
   fi
 
-  local _editor_command=("${EDITOR}")
+  local _editor_command="${EDITOR}"
 
   if ((_wait)) &&
      [[ "${EDITOR}" =~ gvim|mvim ]]
   then
-    _editor_command+=("-f")
+    _editor_command="${_editor_command} -f"
   elif ((_wait)) &&
        [[ "${EDITOR}" =~ code|mate|subl ]]
   then
-    _editor_command+=("--wait")
+    _editor_command="${_editor_command} --wait"
   fi
 
   if [[ -d "${_file_path}" ]] &&
      [[ "${EDITOR}" =~ vim ]]
   then
-    cd "${_file_path}" && "${_editor_command[@]}"
+    cd "${_file_path}" && "${_editor_command:-}"
   else
-    eval "${_editor_command[*]} \"${_file_path}\""
+    eval "${_editor_command} \"${_file_path}\""
   fi
 }
 
