@@ -4914,97 +4914,97 @@ _helpers() {
 
   case "${_name:-}" in
     decrypt*)
-      _decrypt_file                   "${_options[@]}"
+      _decrypt_file                   "${_options[@]:-}"
       ;;
     download*)
-      _download_from                  "${_options[@]}"
+      _download_from                  "${_options[@]:-}"
       ;;
     edit*)
-      _edit_file                      "${_options[@]}"
+      _edit_file                      "${_options[@]:-}"
       ;;
     encrypt*)
-      _encrypt_file                   "${_options[@]}"
+      _encrypt_file                   "${_options[@]:-}"
       ;;
     *archive*)
-      _file_is_archive                "${_options[@]}"
+      _file_is_archive                "${_options[@]:-}"
       ;;
     *audio*)
-      _file_is_audio                  "${_options[@]}"
+      _file_is_audio                  "${_options[@]:-}"
       ;;
     *bookmark*)
-      _file_is_bookmark               "${_options[@]}"
+      _file_is_bookmark               "${_options[@]:-}"
       ;;
     *document*)
-      _file_is_document               "${_options[@]}"
+      _file_is_document               "${_options[@]:-}"
       ;;
     *encrypted*)
-      _file_is_encrypted              "${_options[@]}"
+      _file_is_encrypted              "${_options[@]:-}"
       ;;
     *image*)
-      _file_is_image                  "${_options[@]}"
+      _file_is_image                  "${_options[@]:-}"
       ;;
     *text*)
-      _file_is_text                   "${_options[@]}"
+      _file_is_text                   "${_options[@]:-}"
       ;;
     *video*)
-      _file_is_video                  "${_options[@]}"
+      _file_is_video                  "${_options[@]:-}"
       ;;
     *first*)
-      _get_first_line                 "${_options[@]}"
+      _get_first_line                 "${_options[@]:-}"
       ;;
     *hash*)
-      _get_hash                       "${_options[@]}"
+      _get_hash                       "${_options[@]:-}"
       ;;
     *http*)
-      _get_http_status                "${_options[@]}"
+      _get_http_status                "${_options[@]:-}"
       ;;
     *title*)
-      _get_title                      "${_options[@]}"
+      _get_title                      "${_options[@]:-}"
       ;;
     *unique*basename*)
-      _get_unique_basename            "${_options[@]}"
+      _get_unique_basename            "${_options[@]:-}"
       ;;
     *unique*path*)
-      _get_unique_path                "${_options[@]}"
+      _get_unique_path                "${_options[@]:-}"
       ;;
     *highlight*|*syntax*)
-      _highlight_syntax_if_available  "${_options[@]}"
+      _highlight_syntax_if_available  "${_options[@]:-}"
       ;;
     *interactive*|*input*)
-      _interactive_input              "${_options[@]}"
+      _interactive_input              "${_options[@]:-}"
       ;;
     join)
-      _join                           "${_options[@]}"
+      _join                           "${_options[@]:-}"
       ;;
     less*|*prompt)
-      _less_prompt                    "${_options[@]}"
+      _less_prompt                    "${_options[@]:-}"
       ;;
     line*wrap*off|unwrap)
-      _wrap off                       "${_options[@]}"
+      _wrap off                       "${_options[@]:-}"
       ;;
     line*wrap*on|wrap)
-      _wrap on                        "${_options[@]}"
+      _wrap on                        "${_options[@]:-}"
       ;;
     list*files)
-      _list_files                     "${_options[@]}"
+      _list_files                     "${_options[@]:-}"
       ;;
     print*line|line)
-      _print_line                     "${_options[@]}"
+      _print_line                     "${_options[@]:-}"
       ;;
     print*padding|padding)
-      _print_padding                  "${_options[@]}"
+      _print_padding                  "${_options[@]:-}"
       ;;
     print*welcome|welcome)
-      _print_welcome                  "${_options[@]}"
+      _print_welcome                  "${_options[@]:-}"
       ;;
     spinner)
-      _spinner                        "${_options[@]}"
+      _spinner                        "${_options[@]:-}"
       ;;
     is*email|email)
-      _string_is_email                "${_options[@]}"
+      _string_is_email                "${_options[@]:-}"
       ;;
     is*url|url)
-      _string_is_url                  "${_options[@]}"
+      _string_is_url                  "${_options[@]:-}"
       ;;
     *)
       _exit_1 _help "helpers"
