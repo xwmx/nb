@@ -401,3 +401,37 @@ HEREDOC
   [[ ${status} -eq 0                                              ]]
   [[ "${lines[0]}" =~ example--conflicted-copy-2.bookmark.md.enc  ]]
 }
+
+# `_highlight_syntax_if_available()` ####################################################
+
+@test "\`_highlight_syntax_if_available()\` highlights a file at <path≥." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "# Example"
+  }
+
+  run "${_NB}" helpers highlight "${_NOTEBOOK_PATH}/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" !=  "# Example"  ]]
+}
+
+@test "\`_highlight_syntax_if_available() --no-color\` skips highlighting." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "# Example"
+  }
+
+  run "${_NB}" helpers highlight "${_NOTEBOOK_PATH}/example.md" --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" ==  "# Example"  ]]
+}

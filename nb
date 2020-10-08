@@ -2203,9 +2203,19 @@ _get_unique_path() {
 #   https://github.com/sharkdp/bat
 #   https://pygments.org/
 _highlight_syntax_if_available() {
-  ((_COLOR_ENABLED)) || cat "${@:-}"
+  if ! ((_COLOR_ENABLED))
+  then
+    if [[ -n "${*:-}" ]]
+    then
+      cat "${@:-}"
+    else
+      cat
+    fi
 
-  local _extension=
+    return 0
+  fi
+
+  _extension=
   local _path=
 
   if [[ "${1:-}" =~ / ]]
@@ -2260,7 +2270,12 @@ _highlight_syntax_if_available() {
 
     pygmentize "${_arguments[@]}" 2>/dev/null
   else
-    cat "${@}"
+    if [[ -n "${*:-}" ]]
+    then
+      cat "${@:-}"
+    else
+      cat
+    fi
   fi
 }
 
