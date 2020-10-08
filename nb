@@ -1509,7 +1509,7 @@ Can't edit archives. Export archive and expand to edit.\\n"
   then
     cd "${_file_path}" && "${_editor_command[@]}"
   else
-    eval "${_editor_command[@]}" "${_file_path}"
+    eval "${_editor_command[@]} \"${_file_path}\""
   fi
 }
 
