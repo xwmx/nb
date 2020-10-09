@@ -2,10 +2,6 @@
 
 load test_helper
 
-_setup_remote() {
-  run "${_NB}" init
-}
-
 # remote ######################################################################
 
 @test "\`remote\` with no arguments and no remote prints message." {
@@ -26,7 +22,7 @@ _setup_remote() {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
-      git remote add origin "https://example.com/example.git"
+      git remote add origin "${_GIT_REMOTE_URL}"
   }
 
   run "${_NB}" remote
@@ -34,8 +30,8 @@ _setup_remote() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "https://example.com/example.git" ]]
-  [[ ${status} -eq 0                                    ]]
+  [[ "${lines[0]}" == "${_GIT_REMOTE_URL}"  ]]
+  [[ ${status} -eq 0                        ]]
 }
 
 # remote remove ###############################################################
@@ -58,17 +54,19 @@ _setup_remote() {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
-      git remote add origin "https://example.com/example.git"
+      git remote add origin "${_GIT_REMOTE_URL}"
   }
 
   run "${_NB}" remote remove --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" remote
 
-  [[ "${lines[0]}" =~ Removed\ remote                   ]]
-  [[ "${lines[0]}" =~ https\://example.com/example.git  ]]
-  [[ ${status} -eq 0                                    ]]
+  [[ "$("${_NB}" remote)" =~ No\ remote   ]]
+  [[ "${lines[0]}" =~ Removed\ remote     ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
+  [[ ${status} -eq 0                      ]]
 }
 
 # remote set ##################################################################
@@ -92,48 +90,48 @@ _setup_remote() {
     run "${_NB}" init
   }
 
-  run "${_NB}" remote set "https://example.com/example.git" --force
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ set\ to                   ]]
-  [[ "${lines[0]}" =~ https\://example.com/example.git  ]]
-  [[ ${status} -eq 0                                    ]]
+  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
+  [[ ${status} -eq 0                      ]]
 }
 
 @test "\`remote set\` with existing remote sets remote and prints message." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
-      git remote add origin "https://example.com/example.git"
+      git remote add origin "https://example.test/example.git"
   }
 
-  run "${_NB}" remote set "https://example.com/example2.git" --force
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ set\ to                   ]]
-  [[ "${lines[0]}" =~ https\://example.com/example2.git ]]
-  [[ ${status} -eq 0                                    ]]
+  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
+  [[ ${status} -eq 0                      ]]
 }
 
 @test "\`remote set\` to same URL as existing remote exits and prints message." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
-      git remote add origin "https://example.com/example.git"
+      git remote add origin "${_GIT_REMOTE_URL}"
   }
 
-  run "${_NB}" remote set "https://example.com/example.git" --force
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ already\ set\ to        ]]
-  [[ "${lines[0]}" =~ https://example.com/example.git ]]
-  [[ ${status} -eq 1                                  ]]
+  [[ "${lines[0]}" =~ Remote\ already\ set\ to  ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}        ]]
+  [[ ${status} -eq 1                            ]]
 }
 
 # help ########################################################################

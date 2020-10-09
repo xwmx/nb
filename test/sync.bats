@@ -6,8 +6,8 @@ load test_helper
 _setup_notebooks() {
   _setup_remote_repo
 
-  export NB_DIR_1="${_TMP_DIR}/notebooks-1"
-  export NB_DIR_2="${_TMP_DIR}/notebooks-2"
+  export NB_DIR_1="${_TMP_DIR}/notebook-1"
+  export NB_DIR_2="${_TMP_DIR}/notebook-2"
 
   export NB_DIR="${NB_DIR_1}"
 
@@ -28,6 +28,84 @@ _setup_notebooks() {
   [[ -d "${NB_DIR_1}/home/.git"   ]]
   [[ -d "${NB_DIR_2}/home/.git"   ]]
 }
+
+# remote set && sync #########################################################
+
+@test "\`sync\` fails gracefully with invalid remote." {
+  {
+    _setup_notebooks
+
+    run "${_NB}" remote remove --force
+
+    [[ "$("${_NB}" remote)" =~ No\ remote ]]
+
+    run "${_NB}" add "one.md" --content "Example content from 1."
+
+    [[ -f "${NB_DIR_1}/home/one.md"       ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md"     ]]
+  }
+
+  run "${_NB}" remote set "https://example.test/invalid.git" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}" =~ Remote\ set\ to ]]
+  [[ "${lines[0]}" =~ invalid         ]]
+  [[ ${status} -eq 0                  ]]
+
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "$output}" =~ Unable\ to\ fetch  ]]
+}
+
+@test "\`sync\` succeeds after \`remote set\`" {
+  {
+    _setup_notebooks
+
+    run "${_NB}" remote remove --force
+
+    [[ "$("${_NB}" remote)" =~ No\ remote ]]
+
+    run "${_NB}" add "one.md" --content "Example content from 1."
+
+    [[ -f "${NB_DIR_1}/home/one.md"       ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md"     ]]
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
+  [[ ${status} -eq 0                      ]]
+
+  # Sync 1, send changes to remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # Sync 2, pull changes from remote
+
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+# sync ########################################################################
 
 @test "\`sync\` succeeds when files are added and removed from two clones" {
   # skip
