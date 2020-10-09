@@ -42,8 +42,8 @@ _setup_notebooks() {
 
      NB_AUTO_SYNC=0 run "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"       ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md"     ]]
+    [[ -f "${NB_DIR_1}/home/one.md"   ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
   }
 
   run "${_NB}" sync
@@ -66,8 +66,8 @@ _setup_notebooks() {
 
     run "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"       ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md"     ]]
+    [[ -f "${NB_DIR_1}/home/one.md"   ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
   }
 
   run "${_NB}" remote set "https://example.test/invalid.git" --force
@@ -98,8 +98,8 @@ _setup_notebooks() {
 
     run "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"       ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md"     ]]
+    [[ -f "${NB_DIR_1}/home/one.md"   ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
   }
 
   run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
