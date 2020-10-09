@@ -9132,7 +9132,7 @@ _settings() {
     _command_exists "bat" ||
       _exit_1 printf "bat required: https://github.com/sharkdp/bat"
 
-    bat --list-themes                 \
+    bat --list-themes               \
       | grep --color=never 'Theme'  \
       | sed 's/^Theme: //g'
   }
