@@ -923,13 +923,26 @@ _git_checkpoint() {
    [[ -z "${_target_directory:-}" ]] &&
       _exit_1 printf "Usage: _get_checkpoint_sync <target-directory>"
 
+    if ! git -C "${_target_directory}" remote get-url origin &>/dev/null
+    then
+      return 0
+    fi
+
     local _git_branch=
     _git_branch="$(git -C "${_target_directory}" rev-parse --abbrev-ref HEAD)"
 
-    git -C "${_target_directory}" fetch &>/dev/null || {
+    if ! git -C "${_target_directory}" fetch &>/dev/null
+    then
       _warn printf "Unable to fetch from remote.\\n"
       return 1
-    }
+    fi
+
+    if ! git -C "${_target_directory}" show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
+    then
+      _warn printf \
+        "Remote branch not found: %s\\n" "$(_color_primary "${_git_branch}")"
+      return 1
+    fi
 
     if ! git -C "${_target_directory}" rebase "origin/${_git_branch}" &>/dev/null
     then
