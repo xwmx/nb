@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.5.4"
+_VERSION="5.5.5"
 
 # $_ME
 #
@@ -923,94 +923,105 @@ _git_checkpoint() {
    [[ -z "${_target_directory:-}" ]] &&
       _exit_1 printf "Usage: _get_checkpoint_sync <target-directory>"
 
+    if ! git -C "${_target_directory}" remote get-url origin &>/dev/null
+    then
+      return 0
+    fi
+
     local _git_branch=
     _git_branch="$(git -C "${_target_directory}" rev-parse --abbrev-ref HEAD)"
 
-    if git -C "${_target_directory}" show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
+    if ! git -C "${_target_directory}" fetch &>/dev/null
     then
-      git -C "${_target_directory}" fetch &>/dev/null || {
-        _warn printf "Unable to fetch from remote.\\n"
-        return 1
-      }
+      _warn printf "Unable to fetch from remote.\\n"
+      return 1
+    fi
 
-      if ! git -C "${_target_directory}" rebase "origin/${_git_branch}" &>/dev/null
+    if ! git -C "${_target_directory}" show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
+    then
+      _warn printf \
+        "Remote branch not found: %s\\n" "$(_color_primary "${_git_branch}")"
+      return 1
+    fi
+
+    if ! git -C "${_target_directory}" rebase "origin/${_git_branch}" &>/dev/null
+    then
+      local _merge_error=1
+
+      local _conflicted_files
+      _conflicted_files=($(
+        GIT_PAGER='' git -C "${_target_directory}" diff --name-only --diff-filter=U
+      ))
+
+      local _conflicted_text_files=()
+      local _conflicted_binary_files=()
+
+      if [[ -n "${_conflicted_files[*]:-}" ]]
       then
-        local _merge_error=1
-
-        local _conflicted_files
-        _conflicted_files=($(
-          GIT_PAGER='' git -C "${_target_directory}" diff --name-only --diff-filter=U
-        ))
-
-        local _conflicted_text_files=()
-        local _conflicted_binary_files=()
-
-        if [[ -n "${_conflicted_files[*]:-}" ]]
+        if _contains ".index" "${_conflicted_files[@]}"
         then
-          if _contains ".index" "${_conflicted_files[@]}"
-          then
-            # Remove git conflict markers to keep both.
-            # More info: https://stackoverflow.com/a/55187779
-            _sed_i              \
-              -e '/^<<<<<<</d'  \
-              -e '/^>>>>>>>/d'  \
-              -e '/=======/d'   \
-              "${_target_directory}/.index"
+          # Remove git conflict markers to keep both.
+          # More info: https://stackoverflow.com/a/55187779
+          _sed_i              \
+            -e '/^<<<<<<</d'  \
+            -e '/^>>>>>>>/d'  \
+            -e '/=======/d'   \
+            "${_target_directory}/.index"
 
-            git -C "${_target_directory}" add ".index"
-          fi
-
-          for __file in "${_conflicted_files[@]}"
-          do
-            [[ "${__file}" == ".index" ]] && continue
-
-            if _file_is_text "${__file}"
-            then
-              _conflicted_text_files+=("${__file}")
-
-              git -C "${_target_directory}" add         \
-                "${__file}"
-            else
-              git -C "${_target_directory}" checkout    \
-                "origin/${_git_branch}" -- "${__file}"
-
-              local _conflicted_file=
-              _conflicted_file="$(
-                _notebooks show "${_target_directory}"  \
-                  --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
-              )"
-
-              _conflicted_binary_files+=("${_conflicted_file}")
-
-              git -C "${_target_directory}" mv          \
-                "${__file}" "${_conflicted_file}"
-
-              git -C "${_target_directory}" checkout    \
-                "${_git_branch}" -- "${__file}"
-
-              git -C "${_target_directory}" add "${_conflicted_file}"
-              git -C "${_target_directory}" add "${__file}"
-            fi
-          done
-
-          GIT_EDITOR=true git -C "${_target_directory}" rebase \
-            --continue &>/dev/null &&
-              _merge_error=0
+          git -C "${_target_directory}" add ".index"
         fi
 
-        if ((_merge_error))
-        then
-          git -C "${_target_directory}" rebase --abort
+        for __file in "${_conflicted_files[@]}"
+        do
+          [[ "${__file}" == ".index" ]] && continue
 
-          _warn printf \
-            "Merge conflict. Use \`%s git\` to merge manually.\\n" \
-            "${_ME}"
-          return 1
-        else
-          if ((${#_conflicted_text_files[@]}))
+          if _file_is_text "${__file}"
           then
-            printf "\\n"
-            _warn cat <<HEREDOC
+            _conflicted_text_files+=("${__file}")
+
+            git -C "${_target_directory}" add         \
+              "${__file}"
+          else
+            git -C "${_target_directory}" checkout    \
+              "origin/${_git_branch}" -- "${__file}"
+
+            local _conflicted_file=
+            _conflicted_file="$(
+              _notebooks show "${_target_directory}"  \
+                --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
+            )"
+
+            _conflicted_binary_files+=("${_conflicted_file}")
+
+            git -C "${_target_directory}" mv          \
+              "${__file}" "${_conflicted_file}"
+
+            git -C "${_target_directory}" checkout    \
+              "${_git_branch}" -- "${__file}"
+
+            git -C "${_target_directory}" add "${_conflicted_file}"
+            git -C "${_target_directory}" add "${__file}"
+          fi
+        done
+
+        GIT_EDITOR=true git -C "${_target_directory}" rebase \
+          --continue &>/dev/null &&
+            _merge_error=0
+      fi
+
+      if ((_merge_error))
+      then
+        git -C "${_target_directory}" rebase --abort
+
+        _warn printf \
+          "Merge conflict. Use \`%s git\` to merge manually.\\n" \
+          "${_ME}"
+        return 1
+      else
+        if ((${#_conflicted_text_files[@]}))
+        then
+          printf "\\n"
+          _warn cat <<HEREDOC
 Files containing conflicts:
 
 $(for __file in "${_conflicted_text_files[@]}"
@@ -1020,12 +1031,12 @@ done)
 
 Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
 HEREDOC
-          fi
+        fi
 
-          if ((${#_conflicted_binary_files[@]}))
-          then
-            printf "\\n"
-            _warn cat <<HEREDOC
+        if ((${#_conflicted_binary_files[@]}))
+        then
+          printf "\\n"
+          _warn cat <<HEREDOC
 Conflicted copies of binary files:
 
 $(for __file in "${_conflicted_binary_files[@]}"
@@ -1033,17 +1044,16 @@ do
   printf "  %s:%s\\n" "${_target_directory}" "${__file}"
 done)
 HEREDOC
-          fi
         fi
       fi
+    fi
 
-      git -C "${_target_directory}" push origin "${_git_branch}" &>/dev/null || {
+    git -C "${_target_directory}" push  \
+      --set-upstream                    \
+      origin "${_git_branch}" &>/dev/null || {
         _warn printf "Unable to push to remote.\\n"
         return 1
       }
-    else
-      git push &>/dev/null
-    fi
   }
 
   local _message=
@@ -8381,8 +8391,12 @@ _remote() {
         _exit_1 _help "remote"
       fi
 
-      if ((_remote_exists))
+      if ! ((_remote_exists))
       then
+        git -C "${_notebook_path}" remote add origin "${_url}"        &&
+          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
+          return 0
+      else
         if [[ "${_existing_url}" == "${_url}" ]]
         then
           _exit_1 printf "Remote already set to %s\\n" \
@@ -8409,12 +8423,8 @@ _remote() {
           done
         fi
 
-        git -C "${_notebook_path}" remote set-url origin "${_url}"    &&
-          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
-          return 0
-      else
-        git -C "${_notebook_path}" remote add origin "${_url}"        &&
-          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
+        git -C "${_notebook_path}" remote set-url origin "${_url}"      &&
+          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"    &&
           return 0
       fi
       ;;
@@ -8809,8 +8819,6 @@ _search() {
         #   _search_args+=("--workers" "1")
         # fi
 
-        # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
-        # Determine how to test without relying on ordering.
         ag                                  \
           --hidden                          \
           --ignore-case                     \
@@ -9137,7 +9145,7 @@ _settings() {
     _command_exists "bat" ||
       _exit_1 printf "bat required: https://github.com/sharkdp/bat"
 
-    bat --list-themes                 \
+    bat --list-themes               \
       | grep --color=never 'Theme'  \
       | sed 's/^Theme: //g'
   }
