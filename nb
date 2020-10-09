@@ -1041,7 +1041,6 @@ HEREDOC
         _warn printf "Unable to push to remote.\\n"
         return 1
       }
-    # fi
   }
 
   local _message=
@@ -8807,8 +8806,6 @@ _search() {
         #   _search_args+=("--workers" "1")
         # fi
 
-        # TODO: `ag` outputs unordered results, which breaks tests/search.bats.
-        # Determine how to test without relying on ordering.
         ag                                  \
           --hidden                          \
           --ignore-case                     \
