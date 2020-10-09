@@ -95,7 +95,6 @@ _setup_notebooks() {
   export NB_DIR="${NB_DIR_2}"
 
   # Sync 2, pull changes from remote
-
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
