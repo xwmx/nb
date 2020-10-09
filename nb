@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.5.3"
+_VERSION="5.5.4"
 
 # $_ME
 #
@@ -126,6 +126,11 @@ _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 # Information on why `hash` is used here:
 # http://stackoverflow.com/a/677212
 _command_exists() {
+  if [[ "${1:-}" == "w3m" ]]
+  then # Detect WSL 1 (https://stackoverflow.com/a/38859331), where w3m errors.
+    [[ -f /proc/version ]] && grep -q Micro /proc/version && return 1
+  fi
+
   hash "${1}" 2>/dev/null
 }
 
@@ -3369,7 +3374,8 @@ HEREDOC
 _bookmark() {
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
-    _target_url="${1:-}"
+    local _target_url="${1:-}"
+
     if _command_exists 'w3m'
     then
       w3m "${_target_url}"
@@ -3381,15 +3387,21 @@ _bookmark() {
     elif _command_exists "curl" || _command_exists "wget"
     then
       _download_from "${_target_url}" \
-        | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-            then
-              "${PAGER}"
-            elif _command_exists "less"
-            then
-              less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-            else
-              cat
-            fi
+        | if _command_exists "pandoc"
+          then
+            pandoc --from html-native_divs-native_spans --to markdown \
+              | _highlight_syntax_if_available "md"
+          else
+            cat
+          fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+                then
+                  "${PAGER}"
+                elif _command_exists "less"
+                then
+                  less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                else
+                  cat
+                fi
 
       return 0
     else
