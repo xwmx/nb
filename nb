@@ -3374,7 +3374,8 @@ HEREDOC
 _bookmark() {
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
-    _target_url="${1:-}"
+    local _target_url="${1:-}"
+
     if _command_exists 'w3m'
     then
       w3m "${_target_url}"
@@ -3386,15 +3387,21 @@ _bookmark() {
     elif _command_exists "curl" || _command_exists "wget"
     then
       _download_from "${_target_url}" \
-        | if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-            then
-              "${PAGER}"
-            elif _command_exists "less"
-            then
-              less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-            else
-              cat
-            fi
+        | if _command_exists "pandoc"
+          then
+            pandoc --from html-native_divs-native_spans --to markdown \
+              | _highlight_syntax_if_available "md"
+          else
+            cat
+          fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
+                then
+                  "${PAGER}"
+                elif _command_exists "less"
+                then
+                  less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                else
+                  cat
+                fi
 
       return 0
     else
