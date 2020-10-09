@@ -126,6 +126,11 @@ _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 # Information on why `hash` is used here:
 # http://stackoverflow.com/a/677212
 _command_exists() {
+  if [[ "${1:-}" == "w3m" ]]
+  then # Detect WSL 1 (https://stackoverflow.com/a/38859331), where w3m errors.
+    [[ -f /proc/version ]] && grep -q Micro /proc/version && return 1
+  fi
+
   hash "${1}" 2>/dev/null
 }
 
