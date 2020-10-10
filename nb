@@ -817,10 +817,8 @@ fi
 
 # $TMPDIR
 #
-# Set $TMPDIR if it's blank or not set.
-#
-# NOTE: npm sets $TMPDIR to the working directory when running install hooks.
-if [[ -z "${TMPDIR:-}" ]] || [[ "${TMPDIR}" == "${PWD}" ]]
+# Reset $TMPDIR if it's set to the current working directory by npm.
+if [[ "${TMPDIR}" == "${PWD}" ]]
 then
   export TMPDIR="/tmp"
 fi
