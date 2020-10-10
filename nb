@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.5.7"
+_VERSION="5.5.8"
 
 # $_ME
 #
@@ -2329,9 +2329,9 @@ _interactive_input() {
 # More information:
 #   https://stackoverflow.com/a/17841619
 _join() {
-  local _delimiter="${1}"
+  local _delimiter="${1:-}"
   shift
-  printf "%s" "${1}"
+  printf "%s" "${1:-}"
   shift
   printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
 }
@@ -5783,6 +5783,7 @@ _list() {
   local _list_paths=0
   local _reverse=0
   local _selector=
+  local _filter_selectors=()
   local _sort=0
   local _type=
   local _use_pager=0
@@ -5853,13 +5854,21 @@ _list() {
         then
           _type="${__arg:2}"
         else
-          _selector="${__arg:-}"
+          if [[ -z "${_selector:-}" ]]
+          then
+            _selector="${__arg:-}"
+          fi
+
+          _filter_selectors+=("${__arg:-}")
         fi
         ;;
     esac
 
     shift
   done
+
+  local _filter_pattern=
+  _filter_pattern="$(_join "|" "${_filter_selectors[@]:-}")"
 
   local _selector_basename=
   local _selector_identifier=
@@ -5967,14 +5976,14 @@ HEREDOC
             # Turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
-            if [[ "${__basename:-}" =~ ${_selector_identifier} ]]
+            if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
             then
               # include the note in the list
               _matches=$((_matches+1))
             else
               _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
 
-              if [[ "${_maybe_title:-}" =~ ${_selector_identifier} ]]
+              if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
               then
                 # include the note in the list
                 _matches=$((_matches+1))
@@ -6249,8 +6258,16 @@ HEREDOC
 
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
+        local _filter_message=
+        _filter_message="$(_color_primary "${_selector}")"
+
+        if [[ -n "${_type:-}" ]]
+        then
+           _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
+        fi
+
         _warn \
-          printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          printf "Not found: %s\\n" "${_filter_message}" &&
           return 1
       fi
     fi
@@ -6634,6 +6651,7 @@ _ls() {
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
+  local _type=
   local _use_pager=0
 
   while ((${#}))
@@ -6662,6 +6680,11 @@ _ls() {
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
+      -t|--type)
+        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _arguments+=("${__arg}" "${__val:-}")
+        shift
+        ;;
       --[0-9]*)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
@@ -6669,6 +6692,10 @@ _ls() {
         else
           _arguments+=("${__arg}")
         fi
+        ;;
+      --[A-Za-z]*)
+        _type="${__arg:2}"
+        _arguments+=("${__arg}")
         ;;
       -*)
         _arguments+=("${__arg}")
@@ -6685,7 +6712,7 @@ _ls() {
         _selector="${__arg#*:}"
         ;;
       *)
-        if [[ -z "${_selector:-}"   ]]
+        if [[ -z "${_selector:-}" ]]
         then
           _selector="${__arg}"
         fi
@@ -6742,12 +6769,22 @@ _ls() {
         then
           _list "${_list_options[@]:-}"
         else
+        local _filter_message=
+        _filter_message="${_selector}"
+
           if _notebooks current --selected
           then
-            _selector="$(_notebooks current --name):${_selector}"
+            _filter_message="$(_notebooks current --name):${_filter_message}"
           fi
 
-          _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          _filter_message="$(_color_primary "${_filter_message}")"
+
+          if [[ -n "${_type:-}" ]]
+          then
+             _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
+          fi
+
+          _warn printf "Not found: %s\\n" "${_filter_message}" &&
             return 1
         fi
       fi

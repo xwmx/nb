@@ -566,6 +566,21 @@ filenames and titles:
 [3] Example Title
 ```
 
+Multiple words act like an `OR` filter, listing any title or filenames that match:
+
+```bash
+> nb ls example ideas
+[3] Example Title
+[1] Ideas
+```
+
+When multiple words are quoted, filter titles and filenames for that phrase:
+
+```bash
+> nb ls "example title"
+[3] Example Title
+```
+
 For full text search, see [Search](#-search).
 
 To view excerpts of notes, use the `--excerpt` or `-e` option, which
