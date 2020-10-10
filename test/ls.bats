@@ -483,6 +483,94 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
+@test "\`ls <multi-word selector>\` successfully filters list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# example plum
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# example pluot
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# sample pear
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'fourth.md'
+# sample plum
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls 'example plum' --filenames
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${#lines[@]}" -eq 1       ]]
+  [[ "${lines[0]}" =~ first.md  ]]
+  [[ "${lines[0]}" =~ [*1*]     ]]
+}
+
+@test "\`ls <multiple> <selectors>\` successfully filters list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# example plum
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# example pluot
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# sample pear
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'fourth.md'
+# sample plum
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls example plum --filenames
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${#lines[@]}" -eq 3       ]]
+  [[ "${lines[0]}" =~ fourth.md ]]
+  [[ "${lines[0]}" =~ [*4*]     ]]
+  [[ "${lines[1]}" =~ second.md ]]
+  [[ "${lines[1]}" =~ [*2*]     ]]
+  [[ "${lines[2]}" =~ first.md  ]]
+  [[ "${lines[2]}" =~ [*1*]     ]]
+}
+
 @test "\`ls <invalid-selector>\` exits with 1 and displays a message." {
   {
     "${_NB}" init

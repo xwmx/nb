@@ -2329,9 +2329,9 @@ _interactive_input() {
 # More information:
 #   https://stackoverflow.com/a/17841619
 _join() {
-  local _delimiter="${1}"
+  local _delimiter="${1:-}"
   shift
-  printf "%s" "${1}"
+  printf "%s" "${1:-}"
   shift
   printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
 }
@@ -5783,6 +5783,7 @@ _list() {
   local _list_paths=0
   local _reverse=0
   local _selector=
+  local _filter_selectors=()
   local _sort=0
   local _type=
   local _use_pager=0
@@ -5853,13 +5854,21 @@ _list() {
         then
           _type="${__arg:2}"
         else
-          _selector="${__arg:-}"
+          if [[ -z "${_selector:-}" ]]
+          then
+            _selector="${__arg:-}"
+          fi
+
+          _filter_selectors+=("${__arg:-}")
         fi
         ;;
     esac
 
     shift
   done
+
+  local _filter_pattern=
+  _filter_pattern="$(_join "|" "${_filter_selectors[@]}")"
 
   local _selector_basename=
   local _selector_identifier=
@@ -5967,14 +5976,14 @@ HEREDOC
             # Turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
-            if [[ "${__basename:-}" =~ ${_selector_identifier} ]]
+            if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
             then
               # include the note in the list
               _matches=$((_matches+1))
             else
               _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
 
-              if [[ "${_maybe_title:-}" =~ ${_selector_identifier} ]]
+              if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
               then
                 # include the note in the list
                 _matches=$((_matches+1))
