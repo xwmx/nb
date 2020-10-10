@@ -1,6 +1,6 @@
 {
   "name": "notes.sh",
-  "version": "5.5.6",
+  "version": "5.5.7",
   "description": "CLI note-taking, bookmarking, and archiving with encryption, search, Git-backed versioning and syncing, tagging, and more in a single portable script.",
   "global": true,
   "install": "make install",
@@ -14,9 +14,7 @@
     "notes": "bin/notes"
   },
   "scripts": {
-    "test": "bats test",
-    "postinstall": "./nb completions install",
-    "preuninstall": "./nb completions uninstall"
+    "test": "bats test"
   },
   "repository": {
     "type": "git",
