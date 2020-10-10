@@ -163,7 +163,8 @@ Also supported for various enhancements:
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
 [Pygments](https://pygments.org/),
-[Ranger](https://ranger.github.io/)
+[Ranger](https://ranger.github.io/),
+[readability-cli](https://gitlab.com/gardenappl/readability-cli)
 
 #### macOS / Homebrew
 
@@ -187,8 +188,9 @@ To install with [npm](https://www.npmjs.com/package/nb.sh):
 npm install -g nb.sh
 ```
 
-Installing `nb` through `npm` also installs completion scripts for Bash and
-Zsh. On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+To install Bash and Zsh completion scripts (recommended), run `nb completions install`.
+
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
 *Note: `nb` is also available under its original package name,
@@ -204,16 +206,16 @@ commands:
 # install using wget
 sudo wget https://raw.github.com/xwmx/nb/master/nb -O /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb env install
+  sudo nb completions install
 
 # install using curl
 sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb env install
+  sudo nb completions install
 ```
 
-This will also install the completion scripts on all systems and the
-recommended dependencies on Ubuntu and WSL.
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
 
 ###### User-only Installation
 
@@ -556,6 +558,21 @@ filenames and titles:
 
 ```bash
 > nb ls "^example.*"
+[3] Example Title
+```
+
+Multiple words act like an `OR` filter, listing any title or filenames that match:
+
+```bash
+> nb ls example ideas
+[3] Example Title
+[1] Ideas
+```
+
+When multiple words are quoted, filter titles and filenames for that phrase:
+
+```bash
+> nb ls "example title"
 [3] Example Title
 ```
 
@@ -1106,7 +1123,9 @@ permission.
 
 `nb` embeds the page content in the bookmark, making it available for full
 text search with [`nb search`](#search). When `pandoc` is installed, the
-HTML page content will be converted to Markdown.
+HTML page content will be converted to Markdown. When
+[readability-cli](https://gitlab.com/gardenappl/readability-cli) is also
+installed, markup is additionally cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -2955,13 +2974,18 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When `pandoc` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is additionally cleaned up
+  to focus on content.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
+
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
 
 Examples:
   bookmark https://example.com
@@ -3128,13 +3152,18 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When `pandoc` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is additionally cleaned up
+  to focus on content.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
+
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
 
 Examples:
   nb https://example.com
