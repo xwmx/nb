@@ -658,6 +658,136 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
 }
 
+@test "\`list <selection> --type\` filters by type." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list example --document
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${#lines[@]}" == 1          ]]
+  [[ "${lines[0]}" =~ example.doc ]]
+  [[ "${lines[0]}" =~ 3           ]]
+}
+
+@test "\`list <selection> --<invalid>\` prints message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list example --not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 1              ]]
+  [[ "${#lines[@]}" == 1          ]]
+  [[ "${lines[0]}" =~ Not\ found  ]]
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ Type        ]]
+  [[ "${lines[0]}" =~ not-valid   ]]
+}
+
+@test "\`list <selection> --documents\` with no matches prints message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list matchless-query --document
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 1                  ]]
+  [[ "${#lines[@]}" == 1              ]]
+  [[ "${lines[0]}" =~ Not\ found      ]]
+  [[ "${lines[0]}" =~ matchless-query ]]
+  [[ "${lines[0]}" =~ Type            ]]
+  [[ "${lines[0]}" =~ document        ]]
+}
+
 # `list <selector>` ###########################################################
 
 @test "\`list <selector>\` exits with 0 and displays the selector." {

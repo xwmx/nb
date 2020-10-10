@@ -6258,8 +6258,16 @@ HEREDOC
 
       if ! ((_counter)) && [[ -n "${_selector:-}" ]]
       then
+        local _filter_message=
+        _filter_message="$(_color_primary "${_selector}")"
+
+        if [[ -n "${_type:-}" ]]
+        then
+           _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
+        fi
+
         _warn \
-          printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          printf "Not found: %s\\n" "${_filter_message}" &&
           return 1
       fi
     fi
