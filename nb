@@ -818,7 +818,7 @@ fi
 # $TMPDIR
 #
 # Reset $TMPDIR if it's set to the current working directory by npm.
-if [[ "${TMPDIR}" == "${PWD}" ]]
+if [[ "${TMPDIR:-}" == "${PWD}" ]]
 then
   export TMPDIR="/tmp"
 fi
