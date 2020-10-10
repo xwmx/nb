@@ -13,9 +13,7 @@
     "bookmark": "bin/bookmark"
   },
   "scripts": {
-    "test": "bats test",
-    "postinstall": "./nb completions install",
-    "preuninstall": "./nb completions uninstall"
+    "test": "bats test"
   },
   "repository": {
     "type": "git",
