@@ -211,16 +211,16 @@ commands:
 # install using wget
 sudo wget https://raw.github.com/xwmx/nb/master/nb -O /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb env install
+  sudo nb completions install
 
 # install using curl
 sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb env install
+  sudo nb completions install
 ```
 
-This will also install the completion scripts on all systems and the
-recommended dependencies on Ubuntu and WSL.
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
 
 ###### User-only Installation
 
