@@ -815,6 +815,16 @@ then
   mkdir -p "${_NB_CACHE_PATH}"
 fi
 
+# $TMPDIR
+#
+# Set $TMPDIR if it's blank or not set.
+#
+# NOTE: npm sets $TMPDIR to the working directory when running install hooks.
+if [[ -z "${TMPDIR:-}" ]] || [[ "${TMPDIR}" == "${PWD}" ]]
+then
+  export TMPDIR="/tmp"
+fi
+
 # $_NB_TEMP_DIRECTORY
 #
 # The full path to the temp directory.
