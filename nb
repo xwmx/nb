@@ -8583,7 +8583,6 @@ _rename() {
   then
     local _file_type="${NB_DEFAULT_EXTENSION}"
 
-    # Assign filename with unicode timestamp.
     _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
   elif [[ -n "${_target_name:-}"    ]] ||
        [[ -n "${_to_target_type:-}" ]]
