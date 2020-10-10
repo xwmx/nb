@@ -5868,7 +5868,7 @@ _list() {
   done
 
   local _filter_pattern=
-  _filter_pattern="$(_join "|" "${_filter_selectors[@]}")"
+  _filter_pattern="$(_join "|" "${_filter_selectors[@]:-}")"
 
   local _selector_basename=
   local _selector_identifier=
