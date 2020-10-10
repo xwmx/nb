@@ -6651,6 +6651,7 @@ _ls() {
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
+  local _type=
   local _use_pager=0
 
   while ((${#}))
@@ -6679,6 +6680,11 @@ _ls() {
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
         ;;
+      -t|--type)
+        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _arguments+=("${__arg}" "${__val:-}")
+        shift
+        ;;
       --[0-9]*)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
@@ -6686,6 +6692,10 @@ _ls() {
         else
           _arguments+=("${__arg}")
         fi
+        ;;
+      --[A-Za-z]*)
+        _type="${__arg:2}"
+        _arguments+=("${__arg}")
         ;;
       -*)
         _arguments+=("${__arg}")
@@ -6702,7 +6712,7 @@ _ls() {
         _selector="${__arg#*:}"
         ;;
       *)
-        if [[ -z "${_selector:-}"   ]]
+        if [[ -z "${_selector:-}" ]]
         then
           _selector="${__arg}"
         fi
@@ -6759,12 +6769,22 @@ _ls() {
         then
           _list "${_list_options[@]:-}"
         else
+        local _filter_message=
+        _filter_message="${_selector}"
+
           if _notebooks current --selected
           then
-            _selector="$(_notebooks current --name):${_selector}"
+            _filter_message="$(_notebooks current --name):${_filter_message}"
           fi
 
-          _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")" &&
+          _filter_message="$(_color_primary "${_filter_message}")"
+
+          if [[ -n "${_type:-}" ]]
+          then
+             _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
+          fi
+
+          _warn printf "Not found: %s\\n" "${_filter_message}" &&
             return 1
         fi
       fi
