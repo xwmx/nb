@@ -3368,8 +3368,8 @@ Description:
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
-  When readability-cli [2] is install, markup is additionally cleaned up
-  to focus on content.
+  When readability-cli [2] is install, markup is cleaned up to focus on
+  content.
 
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
@@ -3933,7 +3933,7 @@ HEREDOC
     then
       local _processed_content
 
-      if _command_exists "pandoc"
+      if _command_exists "pandoc" || _command_exists "readable"
       then
         _processed_content="$(
           cat "${_temp_file}" \
@@ -3942,10 +3942,15 @@ HEREDOC
                 readable --base "${_url}" 2>/dev/null || cat
               else
                 cat
-              fi |  pandoc                                  \
-                      --from html-native_divs-native_spans  \
-                      --to markdown-grid_tables --wrap=none \
-                      2>/dev/null || cat
+              fi |  if _command_exists "pandoc"
+                    then
+                      pandoc                                  \
+                        --from html-native_divs-native_spans  \
+                        --to markdown-grid_tables --wrap=none \
+                        2>/dev/null || cat
+                    else
+                      cat
+                    fi
         )"
 
         if [[ -n "${_processed_content}" ]]

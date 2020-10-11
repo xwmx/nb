@@ -169,7 +169,8 @@ Also supported for various enhancements:
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
 [Pygments](https://pygments.org/),
-[Ranger](https://ranger.github.io/)
+[Ranger](https://ranger.github.io/),
+[readability-cli](https://gitlab.com/gardenappl/readability-cli)
 
 #### macOS / Homebrew
 
@@ -1128,7 +1129,9 @@ permission.
 
 `nb` embeds the page content in the bookmark, making it available for full
 text search with [`nb search`](#search). When `pandoc` is installed, the
-HTML page content will be converted to Markdown.
+HTML page content will be converted to Markdown. When
+[readability-cli](https://gitlab.com/gardenappl/readability-cli) is
+installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -2977,13 +2980,18 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When `pandoc` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is cleaned up to focus on
+  content.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
+
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
 
 Examples:
   bookmark https://example.com
@@ -3150,13 +3158,18 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When `pandoc` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is cleaned up to focus on
+  content.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
+
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
 
 Examples:
   nb https://example.com
