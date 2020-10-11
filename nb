@@ -2146,7 +2146,7 @@ _get_unique_basename() {
 
   if [[ -z "${_file_name}" ]]
   then
-    _file_name="$(date -u "+%Y%m%d%H%M%S")"
+    _file_name="$(date "+%Y%m%d%H%M%S")"
   fi
 
   local _file_type="${_file_basename#*.}"
@@ -3979,7 +3979,7 @@ HEREDOC
     if [[ -z "${_target_filename:-}" ]]
     then
       _basename="$(
-        _notebooks current --filename "$(date -u '+%Y%m%d%H%M%S').bookmark.md"
+        _notebooks current --filename "$(date '+%Y%m%d%H%M%S').bookmark.md"
       )"
     else
       if [[ "${_target_filename}" =~ \. ]]
@@ -8599,7 +8599,7 @@ _rename() {
   then
     local _file_type="${NB_DEFAULT_EXTENSION}"
 
-    _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
+    _target_basename="$(date -r "${_source_path}" "+%Y%m%d%H%M%S").${_file_type}"
   elif [[ -n "${_target_name:-}"    ]] ||
        [[ -n "${_to_target_type:-}" ]]
   then
