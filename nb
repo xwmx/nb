@@ -3623,7 +3623,15 @@ _bookmark() {
       then
         if [[ "${_subcommand}" == "open" ]]
         then
-          if [[ -n "${_password}" ]]
+          if [[ -d "${_target_path}" ]] &&
+             _command_exists "xdg-open"
+          then
+            xdg-open "${_target_path}" && return 0
+          elif [[ -d "${_target_path}"    ]] &&
+               [[ "${OSTYPE}" =~ ^darwin  ]]
+          then
+            open "${_target_path}" && return 0
+          elif [[ -n "${_password}" ]]
           then
             _edit "${_selector}" --password "${_password}"
           else
