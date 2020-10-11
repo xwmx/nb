@@ -5965,7 +5965,7 @@ Help information:
 HEREDOC
       else
         cat <<HEREDOC
-0 notes.
+0 items.
 
 Add a note:
   $(_color_primary "${_ME} ${_maybe_scope}add")

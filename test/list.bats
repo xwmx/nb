@@ -14,7 +14,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="0 notes.
+  _expected="0 items.
 
 Add a note:
   $(_color_primary 'nb add')
@@ -1101,7 +1101,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="0 notes.
+  _expected="0 items.
 
 Add a note:
   $(_color_primary 'nb one:add')
