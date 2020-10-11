@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.5.8"
+_VERSION="5.5.9"
 
 # $_ME
 #
@@ -2146,7 +2146,7 @@ _get_unique_basename() {
 
   if [[ -z "${_file_name}" ]]
   then
-    _file_name="$(date -u "+%Y%m%d%H%M%S")"
+    _file_name="$(date "+%Y%m%d%H%M%S")"
   fi
 
   local _file_type="${_file_basename#*.}"
@@ -3366,13 +3366,18 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When \`pandoc\` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is cleaned up to focus on
+  content.
 
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
+
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
 
 Examples:
   ${_ME} https://example.com
@@ -3926,15 +3931,26 @@ HEREDOC
   then
     if ! ((_skip_content))
     then
-      if _command_exists "pandoc"
+      local _processed_content
+
+      if _command_exists "pandoc" || _command_exists "readable"
       then
-        local _processed_content
         _processed_content="$(
-          cat "${_temp_file}"                       \
-            | pandoc                                \
-              --from html-native_divs-native_spans  \
-              --to markdown-grid_tables --wrap=none \
-              2>/dev/null || cat "${_temp_file}"
+          cat "${_temp_file}" \
+            | if _command_exists "readable"
+              then
+                readable --base "${_url}" 2>/dev/null || cat
+              else
+                cat
+              fi |  if _command_exists "pandoc"
+                    then
+                      pandoc                                  \
+                        --from html-native_divs-native_spans  \
+                        --to markdown-grid_tables --wrap=none \
+                        2>/dev/null || cat
+                    else
+                      cat
+                    fi
         )"
 
         if [[ -n "${_processed_content}" ]]
@@ -3963,7 +3979,7 @@ HEREDOC
     if [[ -z "${_target_filename:-}" ]]
     then
       _basename="$(
-        _notebooks current --filename "$(date -u '+%Y%m%d%H%M%S').bookmark.md"
+        _notebooks current --filename "$(date '+%Y%m%d%H%M%S').bookmark.md"
       )"
     else
       if [[ "${_target_filename}" =~ \. ]]
@@ -8583,8 +8599,7 @@ _rename() {
   then
     local _file_type="${NB_DEFAULT_EXTENSION}"
 
-    # Assign filename with unicode timestamp.
-    _target_basename="$(date -r "${_source_path}" -u "+%Y%m%d%H%M%S").${_file_type}"
+    _target_basename="$(date -r "${_source_path}" "+%Y%m%d%H%M%S").${_file_type}"
   elif [[ -n "${_target_name:-}"    ]] ||
        [[ -n "${_to_target_type:-}" ]]
   then
