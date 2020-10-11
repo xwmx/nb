@@ -1123,8 +1123,8 @@ permission.
 ```
 
 `nb` embeds the page content in the bookmark, making it available for full
-text search with [`nb search`](#search). When `pandoc` is installed, the
-HTML page content will be converted to Markdown. When
+text search with [`nb search`](#search). When [Pandoc](https://pandoc.org/)
+is installed, the HTML page content will be converted to Markdown. When
 [readability-cli](https://gitlab.com/gardenappl/readability-cli) is
 installed, markup is cleaned up to focus on content.
 
@@ -2132,7 +2132,8 @@ home
 ```
 
 Notes, bookmarks, and other files can be exported using [`nb export`](#export).
-If Pandoc is installed, notes can be automatically converted to any of the
+If [Pandoc](https://pandoc.org/) is installed, notes can be automatically
+converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
 By default, the output format is determined by the file extension:
 
