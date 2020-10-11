@@ -53,7 +53,7 @@ but `nb` works great without them.
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup for
   broken links,
-- and easy viewing of bookmarked pages in the terminal and your regular web browser.
+- easy viewing of bookmarked pages in the terminal and your regular web browser.
 
 Page information is automatically downloaded, compiled, and saved into normal Markdown
 documents made for humans, so bookmarks are easy to edit just like any other note.
