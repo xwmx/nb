@@ -1336,7 +1336,7 @@ _alias_subcommand() {
 #   1 (error,  false)  if not.
 _browser() {
   local _arguments=()
-  local _browser_command=
+  local _browser_command=()
   local _dump=0
 
   for __arg in "${@:-}"
@@ -1353,18 +1353,18 @@ _browser() {
 
   if [[ -n "${BROWSER:-}" ]]
   then
-    _browser_command="${BROWSER}"
+    IFS=' ' read -ra _browser_command <<< "${BROWSER}"
   else
     if _command_exists "w3m"
     then
-      _browser_command="w3m"
+      _browser_command+=("w3m")
     elif _command_exists "lynx"
     then
-      _browser_command="lynx"
+      _browser_command+=("lynx")
     fi
   fi
 
-  [[ -z "${_browser_command:-}" ]] && return 1
+  [[ -z "${_browser_command[*]:-}" ]] && return 1
 
   if _interactive_input
   then
@@ -1373,11 +1373,11 @@ _browser() {
     then
       return 0
     else
-      eval "${_browser_command} ${_arguments[*]:-}"
+      "${_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
     fi
   else
-    if [[ "${_browser_command}" =~ w3m ]]
+    if [[ "${_browser_command[*]:-}" =~ w3m ]]
     then
       # TODO: w3m doesn't handle arguments passed in an array.
       if ((_dump))
@@ -1386,16 +1386,17 @@ _browser() {
       else
         w3m -T text/html
       fi
+
       return 0
-    elif [[ "${_browser_command}" =~ lynx ]]
+    elif [[ "${_browser_command[*]:-}" =~ lynx ]]
     then
       _arguments+=("-stdin")
       ((_dump)) && _arguments+=("--dump")
 
-      lynx "${_arguments[@]:-}"
+      "${_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
     else
-      eval "${_browser_command} ${_arguments[*]:-}"
+      "${_browser_command[@]}" "${_arguments[@]:-}"
       return 0
     fi
   fi
