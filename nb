@@ -3855,8 +3855,8 @@ HEREDOC
       _description="$(
         cat "${_temp_file}" \
           | sed -E -n       \
-            's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null || :
+              's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
+              2>/dev/null || :
       )"
     fi
 
