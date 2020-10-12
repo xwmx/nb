@@ -426,6 +426,20 @@ nb add example.org
 nb add --type rst
 ```
 
+Notes can be tagged simply by adding hashtags anywhere in the document:
+
+```text
+#tag1 #tag2
+```
+
+Search for tagged notes and bookmarks with [`nb search` / `nb q`](#search):
+
+```bash
+nb search "#tag1"
+
+nb q "#tag2"
+```
+
 For a full list of options available for `nb add`, run [`nb help add`](#add).
 
 ##### Password-Protected Encrypted Notes and Bookmarks
