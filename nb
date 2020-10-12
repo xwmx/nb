@@ -1315,6 +1315,92 @@ _alias_subcommand() {
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
+# _browser()
+#
+# Usage:
+#   _browser [available | [<url>] [--dump] [<arguments>...]]
+#
+# Options:
+#   --dump    Print the page to standard output.
+#
+# Subcommands:
+#   (default)  View <url> or standard input in the preferred or available
+#              terminal web browser.
+#   available  Test is a terminal web browser is available.
+#
+# Description:
+#   Interact with the preferred or available terminal web browser.
+#
+# Exit / Error Status:
+#   0 (success, true)  If a terminal browser is available.
+#   1 (error,  false)  if not.
+_browser() {
+  local _arguments=()
+  local _browser_command=
+  local _dump=0
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --dump)
+        _dump=1
+        ;;
+      *)
+        _arguments+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if [[ -n "${BROWSER:-}" ]]
+  then
+    _browser_command="${BROWSER}"
+  else
+    if _command_exists "w3m"
+    then
+      _browser_command="w3m"
+    elif _command_exists "lynx"
+    then
+      _browser_command="lynx"
+    fi
+  fi
+
+  [[ -z "${_browser_command:-}" ]] && return 1
+
+  if _interactive_input
+  then
+    if [[ -z "${_arguments[*]:-}"             ]] ||
+       [[ "${_arguments[*]:-}" == "available" ]]
+    then
+      return 0
+    else
+      "${_browser_command}" "${_arguments[@]:-}"
+      return 0
+    fi
+  else
+    if [[ "${_browser_command}" =~ w3m ]]
+    then
+      # TODO: w3m doesn't handle arguments passed in an array.
+      if ((_dump))
+      then
+        w3m -T text/html -dump
+      else
+        w3m -T text/html
+      fi
+      return 0
+    elif [[ "${_browser_command}" =~ lynx ]]
+    then
+      _arguments+=("-stdin")
+      ((_dump)) && _arguments+=("--dump")
+
+      lynx "${_arguments[@]:-}"
+      return 0
+    else
+      eval "${_browser_command} ${_arguments[*]:-}"
+      return 0
+    fi
+  fi
+}
+
 # _decrypt_file()
 #
 # Usage:
@@ -2811,11 +2897,10 @@ _help() {
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
-      | if _command_exists "pandoc" && _command_exists "w3m"
+      | if _command_exists "pandoc" && _browser available
         then
-          pandoc --from markdown --to html \
-            | w3m -T text/html
-            return 0
+          pandoc --from markdown --to html | _browser
+          return 0
         else
           _highlight_syntax_if_available
         fi
@@ -3371,6 +3456,10 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
+  \`peek\` opens the page in \`w3m\` [3] or \`lynx\` [4] when available.
+  To specify a preferred browser, set the \`\$BROWSER\` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., \`export BROWSER="lynx"\`.
+
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
@@ -3378,6 +3467,8 @@ Description:
 
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   ${_ME} https://example.com
@@ -3399,13 +3490,9 @@ _bookmark() {
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
 
-    if _command_exists 'w3m'
+    if _browser available
     then
-      w3m "${_target_url}"
-      return 0
-    elif _command_exists 'lynx'
-    then
-      lynx "${_target_url}"
+      _browser "${_target_url}"
       return 0
     elif _command_exists "curl" || _command_exists "wget"
     then
@@ -4697,6 +4784,7 @@ _env() {
     printf "_ME=%s\\n" "${_ME:-}"
     printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
     printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
+    printf "BROWSER=%s\\n" "${BROWSER:-}"
     printf "EDITOR=%s\\n" "${EDITOR:-}"
     printf "PAGER=%s\\n" "${PAGER:-}"
     printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
@@ -4970,6 +5058,9 @@ _helpers() {
   local _options=("${@:2}")
 
   case "${_name:-}" in
+    browser*)
+      _browser                        "${_options[@]:-}"
+      ;;
     decrypt*)
       _decrypt_file                   "${_options[@]:-}"
       ;;
@@ -10011,6 +10102,8 @@ HEREDOC
 
 # show ################################################################### show
 
+# TODO: Vim highlighting bug. "\`
+
 describe "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
@@ -10026,9 +10119,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  -r, --render     Use \`pandoc\` [1] to render the file to HTML and display with
-                   \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is
-                   not available, \`-r\` / \`--render\` is ignored.
+  -r, --render     Use \`pandoc\` [1] to render the file to HTML and display
+                   in the terminal web browser. If either \`pandoc\` or a
+                   browser are unavailable, \`-r\` / \`--render\` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -10040,11 +10133,11 @@ Options:
   -u, --updated    Print the date and time of the last recorded change.
 
 Description:
-  Show a note or notebook. Notes in text file formats can be rendered or
+  Show an item or notebook. Notes in text file formats can be rendered or
   printed to standard output. Non-text files will be opened in your system's
   preferred app or program for that file type.
 
-  By default, the note will be opened using \`less\` or the program configured
+  By default, the item will be opened using \`less\` or the program configured
   in the \`\$PAGER\` environment variable. Use the following keys to navigate
   in \`less\` (see \`man less\` for more information):
 
@@ -10063,12 +10156,16 @@ Description:
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
+  \`-r\` / \`--render\` automatically uses either \`w3m\` [2] or \`lynx\` [3].
+  To specify a preferred browser, set the \`\$BROWSER\` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., \`export BROWSER="lynx"\`.
+
   If \`bat\` [4], \`highlight\` [5], or Pygments [6] is installed, notes are
   printed with syntax highlighting.
 
     1. https://pandoc.org/
-    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    3. https://en.wikipedia.org/wiki/W3m
+    2. https://en.wikipedia.org/wiki/W3m
+    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://github.com/sharkdp/bat
     5. http://www.andre-simon.de/doku/highlight/en/highlight.php
     6. https://pygments.org/
@@ -10588,9 +10685,9 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ epub$ ]] &&
          _command_exists "pandoc"         &&
-         _command_exists "w3m"
+         _browser available
     then
-      pandoc -f epub -t html "${_target_path}" | w3m -T text/html
+      pandoc -f epub -t html "${_target_path}" | _browser
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
@@ -10601,21 +10698,14 @@ Can't show archives. Export archive and expand to edit.\\n"
   elif ((_render))              &&
        ((_print_output))        &&
        _command_exists "pandoc" &&
-       _command_exists "w3m"
-  then # `show --render --print` with `pandoc` and `w3m` available.
-    pandoc "${_target_path}" \
-      | w3m -dump -T text/html
+       _browser available
+  then # `show --render --print` with `pandoc` and browser available.
+    pandoc "${_target_path}" | _browser --dump
   elif ((_render))              &&
        _command_exists "pandoc" &&
-       _command_exists "w3m"
-  then # `show --render` with `pandoc` and `w3m` available.
-    pandoc "${_target_path}" \
-      | w3m -T text/html
-  elif ((_render))              &&
-       _command_exists "pandoc" &&
-       _command_exists "lynx"
-  then # `show --render` with `pandoc` and `lynx` available.
-    pandoc "${_target_path}" | lynx -stdin
+       _browser available
+  then # `show --render` with `pandoc` and browser available.
+    pandoc "${_target_path}" | _browser
   else # default
     if ((_print_output))
     then # `show --print [--no-color]`

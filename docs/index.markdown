@@ -960,7 +960,9 @@ tools include:
 - Word Documents:
   - [Pandoc](https://pandoc.org/)
 - EPUB ebooks:
-  - [Pandoc](https://pandoc.org/) and [`w3m`](https://en.wikipedia.org/wiki/W3m)
+  - [Pandoc](https://pandoc.org/) with
+    [`w3m`](https://en.wikipedia.org/wiki/W3m) or
+    [`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 
 When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
@@ -2991,6 +2993,10 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
+  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
@@ -2998,6 +3004,8 @@ Description:
 
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   bookmark https://example.com
@@ -3169,6 +3177,10 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
+  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
@@ -3176,6 +3188,8 @@ Description:
 
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   nb https://example.com
@@ -4216,9 +4230,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  -r, --render     Use `pandoc` [1] to render the file to HTML and display with
-                   `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                   not available, `-r` / `--render` is ignored.
+  -r, --render     Use `pandoc` [1] to render the file to HTML and display
+                   in the terminal web browser. If either `pandoc` or a
+                   browser are unavailable, `-r` / `--render` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -4230,11 +4244,11 @@ Options:
   -u, --updated    Print the date and time of the last recorded change.
 
 Description:
-  Show a note or notebook. Notes in text file formats can be rendered or
+  Show an item or notebook. Notes in text file formats can be rendered or
   printed to standard output. Non-text files will be opened in your system's
   preferred app or program for that file type.
 
-  By default, the note will be opened using `less` or the program configured
+  By default, the item will be opened using `less` or the program configured
   in the `$PAGER` environment variable. Use the following keys to navigate
   in `less` (see `man less` for more information):
 
@@ -4253,12 +4267,16 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
+  `-r` / `--render` automatically uses either `w3m` [2] or `lynx` [3].
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
   If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
   printed with syntax highlighting.
 
     1. https://pandoc.org/
-    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    3. https://en.wikipedia.org/wiki/W3m
+    2. https://en.wikipedia.org/wiki/W3m
+    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://github.com/sharkdp/bat
     5. http://www.andre-simon.de/doku/highlight/en/highlight.php
     6. https://pygments.org/
