@@ -1996,6 +1996,10 @@ nb example:remote set https://github.com/example/example.git
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
+*Note: be sure to
+[add your key to ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+to avoid password prompts.*
+
 When you use `nb` on multiple systems, you can set a notebook on both
 systems to the same remote and `nb` will keep everything in sync in the
 background every time there's a change in that notebook.
