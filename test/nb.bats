@@ -32,7 +32,7 @@ load test_helper
   [[ "${status}" -eq 0 ]]
 
   [[ "${output}"    =~ Welcome                                            ]]
-  [[ "${lines[10]}" == "0 notes."                                         ]]
+  [[ "${lines[10]}" == "0 items."                                         ]]
   [[ "${lines[11]}" == "Add a note:"                                      ]]
   [[ "${lines[12]}" == "  $(_color_primary 'nb add')"                     ]]
   [[ "${lines[13]}" == "Add a bookmark:"                                  ]]
@@ -58,7 +58,7 @@ load test_helper
   [[ "${status}" -eq 0 ]]
 
   [[ "${lines[1]}"  =~ ----                                               ]]
-  [[ "${lines[2]}"  == "0 notes."                                         ]]
+  [[ "${lines[2]}"  == "0 items."                                         ]]
   [[ "${lines[3]}"  == "Add a note:"                                      ]]
   [[ "${lines[4]}"  == "  $(_color_primary 'nb add')"                     ]]
   [[ "${lines[5]}"  == "Add a bookmark:"                                  ]]

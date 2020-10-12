@@ -21,7 +21,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[3]}" =~ EDITOR=example-editor ]]
+  [[ "${lines[4]}" =~ EDITOR=example-editor ]]
 }
 
 @test "\`env\` with VISUAL sets editor." {
@@ -30,5 +30,5 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[3]}" =~ EDITOR=example-visual ]]
+  [[ "${lines[4]}" =~ EDITOR=example-visual ]]
 }

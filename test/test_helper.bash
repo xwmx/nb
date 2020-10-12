@@ -11,10 +11,13 @@ setup() {
   # Set terminal width.
   #
   # The number of lines with wrapped output depends on terminal width.
-  export _COLUMNS_ORIGINAL
-  _COLUMNS_ORIGINAL="$(tput cols)"
+  # export _COLUMNS_ORIGINAL
+  # _COLUMNS_ORIGINAL="$(tput cols)"
 
-  stty cols 81
+  # if [[ "${_COLUMNS_ORIGINAL}" -gt 80 ]]
+  # then
+  #   stty cols 80
+  # fi
 
   # `$_NB`
   #
@@ -90,7 +93,10 @@ teardown() {
     rm -rf "${_TMP_DIR}"
   fi
 
-  stty cols "${_COLUMNS_ORIGINAL}"
+  # if [[ "${_COLUMNS_ORIGINAL}" -gt 80 ]]
+  # then
+  #   stty cols "${_COLUMNS_ORIGINAL}"
+  # fi
 }
 
 ###############################################################################

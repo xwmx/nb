@@ -59,7 +59,7 @@ but `nb` works great without them.
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup for
   broken links,
-- and easy viewing of bookmarked pages in the terminal and your regular web browser.
+- easy viewing of bookmarked pages in the terminal and your regular web browser.
 
 Page information is automatically downloaded, compiled, and saved into normal Markdown
 documents made for humans, so bookmarks are easy to edit just like any other note.
@@ -170,7 +170,8 @@ Also supported for various enhancements:
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
-[readability-cli](https://gitlab.com/gardenappl/readability-cli)
+[readability-cli](https://gitlab.com/gardenappl/readability-cli),
+[`termpdf.py`](https://github.com/dsanson/termpdf.py)
 
 #### macOS / Homebrew
 
@@ -194,12 +195,13 @@ To install with [npm](https://www.npmjs.com/package/nb.sh):
 npm install -g nb.sh
 ```
 
-To install Bash and Zsh completion scripts (recommended), run `nb completions install`.
+After `npm` installation completes, run `sudo nb completions install` to
+install Bash and Zsh completion scripts (recommended).
 
 On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
-*Note: `nb` is also available under its original package name,
+*NB: `nb` is also available under its original package name,
 [notes.sh](https://www.npmjs.com/package/notes.sh),
 which comes with an extra `notes` executable wrapping `nb`.*
 
@@ -428,6 +430,20 @@ nb add example.org
 
 # open a new reStructuredText file in the editor
 nb add --type rst
+```
+
+Notes can be tagged simply by adding hashtags anywhere in the document:
+
+```text
+#tag1 #tag2
+```
+
+Search for tagged notes and bookmarks with [`nb search` / `nb q`](#search):
+
+```bash
+nb search "#tag1"
+
+nb q "#tag2"
 ```
 
 For a full list of options available for `nb add`, run [`nb help add`](#add).
@@ -925,7 +941,7 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-*Note: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
+*NB: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
 go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
@@ -943,6 +959,8 @@ depending on the tools available in the environment. Supported file types and
 tools include:
 
 - PDF files:
+  - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
+    with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
 - Audio files:
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
@@ -950,8 +968,10 @@ tools include:
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
 - Images:
-  - [ImageMagick](https://imagemagick.org/)
-  - [`imgcat`](https://www.iterm2.com/documentation-images.html)
+  - [ImageMagick](https://imagemagick.org/) with a terminal that
+    supports [sixels](https://en.wikipedia.org/wiki/Sixel)
+  - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
+    [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
@@ -959,7 +979,9 @@ tools include:
 - Word Documents:
   - [Pandoc](https://pandoc.org/)
 - EPUB ebooks:
-  - [Pandoc](https://pandoc.org/) and [`w3m`](https://en.wikipedia.org/wiki/W3m)
+  - [Pandoc](https://pandoc.org/) with
+    [`w3m`](https://en.wikipedia.org/wiki/W3m) or
+    [`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 
 When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
@@ -1128,8 +1150,8 @@ permission.
 ```
 
 `nb` embeds the page content in the bookmark, making it available for full
-text search with [`nb search`](#search). When `pandoc` is installed, the
-HTML page content will be converted to Markdown. When
+text search with [`nb search`](#search). When [Pandoc](https://pandoc.org/)
+is installed, the HTML page content will be converted to Markdown. When
 [readability-cli](https://gitlab.com/gardenappl/readability-cli) is
 installed, markup is cleaned up to focus on content.
 
@@ -1995,6 +2017,10 @@ nb example:remote set https://github.com/example/example.git
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
+*NB: be sure to
+[add your key to the ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+to avoid password prompts.*
+
 When you use `nb` on multiple systems, you can set a notebook on both
 systems to the same remote and `nb` will keep everything in sync in the
 background every time there's a change in that notebook.
@@ -2137,7 +2163,8 @@ home
 ```
 
 Notes, bookmarks, and other files can be exported using [`nb export`](#export).
-If Pandoc is installed, notes can be automatically converted to any of the
+If [Pandoc](https://pandoc.org/) is installed, notes can be automatically
+converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
 By default, the output format is determined by the file extension:
 
@@ -2985,6 +3012,10 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
+  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
@@ -2992,6 +3023,8 @@ Description:
 
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   bookmark https://example.com
@@ -3163,6 +3196,10 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
+  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
@@ -3170,6 +3207,8 @@ Description:
 
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   nb https://example.com
@@ -4210,9 +4249,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  -r, --render     Use `pandoc` [1] to render the file to HTML and display with
-                   `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                   not available, `-r` / `--render` is ignored.
+  -r, --render     Use `pandoc` [1] to render the file to HTML and display
+                   in the terminal web browser. If either `pandoc` or a
+                   browser are unavailable, `-r` / `--render` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -4224,11 +4263,11 @@ Options:
   -u, --updated    Print the date and time of the last recorded change.
 
 Description:
-  Show a note or notebook. Notes in text file formats can be rendered or
+  Show an item or notebook. Notes in text file formats can be rendered or
   printed to standard output. Non-text files will be opened in your system's
   preferred app or program for that file type.
 
-  By default, the note will be opened using `less` or the program configured
+  By default, the item will be opened using `less` or the program configured
   in the `$PAGER` environment variable. Use the following keys to navigate
   in `less` (see `man less` for more information):
 
@@ -4247,12 +4286,16 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
+  `-r` / `--render` automatically uses either `w3m` [2] or `lynx` [3].
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
   If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
   printed with syntax highlighting.
 
     1. https://pandoc.org/
-    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    3. https://en.wikipedia.org/wiki/W3m
+    2. https://en.wikipedia.org/wiki/W3m
+    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://github.com/sharkdp/bat
     5. http://www.andre-simon.de/doku/highlight/en/highlight.php
     6. https://pygments.org/

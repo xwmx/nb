@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.5.9"
+_VERSION="5.6.0"
 
 # $_ME
 #
@@ -1313,6 +1313,92 @@ _alias_subcommand() {
 
   eval "describe \"${_alias}\" \"\$____describe_${_subcommand}\""
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
+}
+
+# _browser()
+#
+# Usage:
+#   _browser [available | [<url>] [--dump] [<arguments>...]]
+#
+# Options:
+#   --dump    Print the page to standard output.
+#
+# Subcommands:
+#   (default)  View <url> or standard input in the preferred or available
+#              terminal web browser.
+#   available  Test if a terminal web browser is available.
+#
+# Description:
+#   Interact with the preferred or available terminal web browser.
+#
+# Exit / Error Status:
+#   0 (success, true)  If a terminal browser is available.
+#   1 (error,  false)  if not.
+_browser() {
+  local _arguments=()
+  local _browser_command=
+  local _dump=0
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --dump)
+        _dump=1
+        ;;
+      *)
+        _arguments+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if [[ -n "${BROWSER:-}" ]]
+  then
+    _browser_command="${BROWSER}"
+  else
+    if _command_exists "w3m"
+    then
+      _browser_command="w3m"
+    elif _command_exists "lynx"
+    then
+      _browser_command="lynx"
+    fi
+  fi
+
+  [[ -z "${_browser_command:-}" ]] && return 1
+
+  if _interactive_input
+  then
+    if [[ -z "${_arguments[*]:-}"             ]] ||
+       [[ "${_arguments[*]:-}" == "available" ]]
+    then
+      return 0
+    else
+      "${_browser_command}" "${_arguments[@]:-}"
+      return 0
+    fi
+  else
+    if [[ "${_browser_command}" =~ w3m ]]
+    then
+      # TODO: w3m doesn't handle arguments passed in an array.
+      if ((_dump))
+      then
+        w3m -T text/html -dump
+      else
+        w3m -T text/html
+      fi
+      return 0
+    elif [[ "${_browser_command}" =~ lynx ]]
+    then
+      _arguments+=("-stdin")
+      ((_dump)) && _arguments+=("--dump")
+
+      lynx "${_arguments[@]:-}"
+      return 0
+    else
+      eval "${_browser_command} ${_arguments[*]:-}"
+      return 0
+    fi
+  fi
 }
 
 # _decrypt_file()
@@ -2811,11 +2897,10 @@ _help() {
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
-      | if _command_exists "pandoc" && _command_exists "w3m"
+      | if _command_exists "pandoc" && _browser available
         then
-          pandoc --from markdown --to html \
-            | w3m -T text/html
-            return 0
+          pandoc --from markdown --to html | _browser
+          return 0
         else
           _highlight_syntax_if_available
         fi
@@ -3158,7 +3243,15 @@ _add() {
         _edit_before_commit=1
         ;;
       -e|--encrypt|--encrypted)
-        _encrypt=1
+        if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
+           ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
+        then
+          _exit_1 printf                        \
+            "Encryption tool not found: %s\\n"  \
+            "$(_color_primary "${NB_ENCRYPTION_TOOL:-}")"
+        else
+          _encrypt=1
+        fi
         ;;
       -f|--filename)
         _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -3371,6 +3464,10 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
+  \`peek\` opens the page in \`w3m\` [3] or \`lynx\` [4] when available.
+  To specify a preferred browser, set the \`\$BROWSER\` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., \`export BROWSER="lynx"\`.
+
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
@@ -3378,6 +3475,8 @@ Description:
 
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   ${_ME} https://example.com
@@ -3399,13 +3498,9 @@ _bookmark() {
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
 
-    if _command_exists 'w3m'
+    if _browser available
     then
-      w3m "${_target_url}"
-      return 0
-    elif _command_exists 'lynx'
-    then
-      lynx "${_target_url}"
+      _browser "${_target_url}"
       return 0
     elif _command_exists "curl" || _command_exists "wget"
     then
@@ -3623,7 +3718,15 @@ _bookmark() {
       then
         if [[ "${_subcommand}" == "open" ]]
         then
-          if [[ -n "${_password}" ]]
+          if [[ -d "${_target_path}" ]] &&
+             _command_exists "xdg-open"
+          then
+            xdg-open "${_target_path}" && return 0
+          elif [[ -d "${_target_path}"    ]] &&
+               [[ "${OSTYPE}" =~ ^darwin  ]]
+          then
+            open "${_target_path}" && return 0
+          elif [[ -n "${_password}" ]]
           then
             _edit "${_selector}" --password "${_password}"
           else
@@ -3847,8 +3950,8 @@ HEREDOC
       _description="$(
         cat "${_temp_file}" \
           | sed -E -n       \
-            's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null || :
+              's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
+              2>/dev/null || :
       )"
     fi
 
@@ -4689,6 +4792,7 @@ _env() {
     printf "_ME=%s\\n" "${_ME:-}"
     printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
     printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
+    printf "BROWSER=%s\\n" "${BROWSER:-}"
     printf "EDITOR=%s\\n" "${EDITOR:-}"
     printf "PAGER=%s\\n" "${PAGER:-}"
     printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
@@ -4703,29 +4807,32 @@ _env() {
     printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
     printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
-    printf "ack:      %s\\n" "$(command -v ack)"
-    printf "ag:       %s\\n" "$(command -v ag)"
-    printf "code:     %s\\n" "$(command -v code)"
-    printf "curl:     %s\\n" "$(command -v curl)"
-    printf "emacs:    %s\\n" "$(command -v emacs)"
-    printf "git:      %s\\n" "$(command -v git)"
-    printf "gvim:     %s\\n" "$(command -v gvim)"
-    printf "gpg:      %s\\n" "$(command -v gpg)"
-    printf "less:     %s\\n" "$(command -v less)"
-    printf "lynx:     %s\\n" "$(command -v lynx)"
-    printf "macdown:  %s\\n" "$(command -v macdown)"
-    printf "mate:     %s\\n" "$(command -v mate)"
-    printf "mvim:     %s\\n" "$(command -v mvim)"
-    printf "nano:     %s\\n" "$(command -v nano)"
-    printf "nvim:     %s\\n" "$(command -v nvim)"
-    printf "openssl:  %s\\n" "$(command -v openssl)"
-    printf "pandoc:   %s\\n" "$(command -v pandoc)"
-    printf "pygments: %s\\n" "$(command -v pygmentize)"
-    printf "rg:       %s\\n" "$(command -v rg)"
-    printf "subl:     %s\\n" "$(command -v subl)"
-    printf "tig:      %s\\n" "$(command -v tig)"
-    printf "w3m:      %s\\n" "$(command -v w3m)"
-    printf "vim:      %s\\n" "$(command -v vim)"
+    printf "ack:        %s\\n" "$(command -v ack)"
+    printf "ag:         %s\\n" "$(command -v ag)"
+    printf "bat:        %s\\n" "$(command -v bat)"
+    printf "code:       %s\\n" "$(command -v code)"
+    printf "curl:       %s\\n" "$(command -v curl)"
+    printf "emacs:      %s\\n" "$(command -v emacs)"
+    printf "git:        %s\\n" "$(command -v git)"
+    printf "gvim:       %s\\n" "$(command -v gvim)"
+    printf "gpg:        %s\\n" "$(command -v gpg)"
+    printf "highlight:  %s\\n" "$(command -v highlight)"
+    printf "less:       %s\\n" "$(command -v less)"
+    printf "lynx:       %s\\n" "$(command -v lynx)"
+    printf "macdown:    %s\\n" "$(command -v macdown)"
+    printf "mate:       %s\\n" "$(command -v mate)"
+    printf "mvim:       %s\\n" "$(command -v mvim)"
+    printf "nano:       %s\\n" "$(command -v nano)"
+    printf "nvim:       %s\\n" "$(command -v nvim)"
+    printf "openssl:    %s\\n" "$(command -v openssl)"
+    printf "pandoc:     %s\\n" "$(command -v pandoc)"
+    printf "pygments:   %s\\n" "$(command -v pygmentize)"
+    printf "readable:   %s\\n" "$(command -v readable)"
+    printf "rg:         %s\\n" "$(command -v rg)"
+    printf "subl:       %s\\n" "$(command -v subl)"
+    printf "tig:        %s\\n" "$(command -v tig)"
+    printf "w3m:        %s\\n" "$(command -v w3m)"
+    printf "vim:        %s\\n" "$(command -v vim)"
     printf "bash --version: %s\\n" "$(bash --version | head -1)"
     printf "uname -a: %s\\n" "$(uname -a)"
   fi
@@ -4959,6 +5066,9 @@ _helpers() {
   local _options=("${@:2}")
 
   case "${_name:-}" in
+    browser*)
+      _browser                        "${_options[@]:-}"
+      ;;
     decrypt*)
       _decrypt_file                   "${_options[@]:-}"
       ;;
@@ -5109,7 +5219,7 @@ _history() {
   fi
 
   if [[ -n "${_basename:-}" ]] && [[ -e "${_notebook_path}/${_basename}" ]]
-  then # `$_basename` is assigned and a note exists with that name.
+  then
     eval "${_log_command} -- \"${_basename}\""
   else
     eval "${_log_command}"
@@ -5954,7 +6064,7 @@ Help information:
 HEREDOC
       else
         cat <<HEREDOC
-0 notes.
+0 items.
 
 Add a note:
   $(_color_primary "${_ME} ${_maybe_scope}add")
@@ -9938,67 +10048,67 @@ HEREDOC
     eval "\"${_MY_PATH}\" ${_initial_command}"
   fi
 
-  while true
+  while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
   do
-    while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
-    do
-      history -s "${__input}"
-      if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    history -s "${__input}"
+
+    if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    then
+      return 0
+    else
+      # Strip leading 'n', 'nb', or 'notes'.
+      local _normalized_input=
+      _normalized_input="$(
+        printf "%s\\n" "${__input}" \
+          | sed -e 's/^n$//'        \
+          | sed -e 's/^n //'        \
+          | sed -e 's/^nb$//'       \
+          | sed -e 's/^nb //'       \
+          | sed -e 's/^notes$//'    \
+          | sed -e 's/^notes //'
+      )"
+
+      if [[ "${_normalized_input}" =~ ^help   ]] ||
+         [[ "${_normalized_input}" =~ ^help\  ]] ||
+         [[ "${_normalized_input}" =~ ^h$     ]] ||
+         [[ "${_normalized_input}" =~ ^h\     ]]
       then
-        return 0
-      else
-        # Strip leading 'n', 'nb', or 'notes'.
-        local _normalized_input=
+        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
+           [[ "${_normalized_input}" =~ ^printf\ .* ]]
+      then
+        eval "${_normalized_input}"
+      elif _command_name="$(
+        printf "%s\\n" "${_normalized_input}" \
+          | grep --only-matching --color=never \
+              -e '^code'    \
+              -e '^emacs'   \
+              -e '^gvim'    \
+              -e '^macdown' \
+              -e '^mate'    \
+              -e '^mvim'    \
+              -e '^nano'    \
+              -e '^nvim'    \
+              -e '^subl'    \
+              -e '^vim'
+      )"
+      then
         _normalized_input="$(
-          printf "%s\\n" "${__input}" \
-            | sed -e 's/^n$//'        \
-            | sed -e 's/^n //'        \
-            | sed -e 's/^nb$//'       \
-            | sed -e 's/^nb //'       \
-            | sed -e 's/^notes$//'    \
-            | sed -e 's/^notes //'
-        )"
-
-        if [[ "${_normalized_input}" =~ ^help   ]] ||
-           [[ "${_normalized_input}" =~ ^help\  ]] ||
-           [[ "${_normalized_input}" =~ ^h$     ]] ||
-           [[ "${_normalized_input}" =~ ^h\     ]]
-        then
-          eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-        elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
-             [[ "${_normalized_input}" =~ ^printf\ .* ]]
-        then
-          eval "${_normalized_input}"
-        elif _command_name="$(
           printf "%s\\n" "${_normalized_input}" \
-            | grep --only-matching --color=never \
-                -e '^code'    \
-                -e '^emacs'   \
-                -e '^gvim'    \
-                -e '^macdown' \
-                -e '^mate'    \
-                -e '^mvim'    \
-                -e '^nano'    \
-                -e '^nvim'    \
-                -e '^subl'    \
-                -e '^vim'
+            | sed -e "s/^${_command_name} //"
         )"
-        then
-          _normalized_input="$(
-            printf "%s\\n" "${_normalized_input}" \
-              | sed -e "s/^${_command_name} //"
-          )"
 
-          eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
-        else
-          eval "\"${_MY_PATH}\" ${_normalized_input}" || :
-        fi
+        eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
+      else
+        eval "\"${_MY_PATH}\" ${_normalized_input}" || :
       fi
-    done
+    fi
   done
 }
 
 # show ################################################################### show
+
+# TODO: Vim highlighting bug. "\`
 
 describe "show" <<HEREDOC
 Usage:
@@ -10015,9 +10125,9 @@ Options:
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  -r, --render     Use \`pandoc\` [1] to render the file to HTML and display with
-                   \`lynx\` [2] (if available) or \`w3m\` [3]. If \`pandoc\` is
-                   not available, \`-r\` / \`--render\` is ignored.
+  -r, --render     Use \`pandoc\` [1] to render the file to HTML and display
+                   in the terminal web browser. If either \`pandoc\` or a
+                   browser are unavailable, \`-r\` / \`--render\` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -10029,11 +10139,11 @@ Options:
   -u, --updated    Print the date and time of the last recorded change.
 
 Description:
-  Show a note or notebook. Notes in text file formats can be rendered or
+  Show an item or notebook. Notes in text file formats can be rendered or
   printed to standard output. Non-text files will be opened in your system's
   preferred app or program for that file type.
 
-  By default, the note will be opened using \`less\` or the program configured
+  By default, the item will be opened using \`less\` or the program configured
   in the \`\$PAGER\` environment variable. Use the following keys to navigate
   in \`less\` (see \`man less\` for more information):
 
@@ -10052,12 +10162,16 @@ Description:
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
+  \`-r\` / \`--render\` automatically uses either \`w3m\` [2] or \`lynx\` [3].
+  To specify a preferred browser, set the \`\$BROWSER\` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., \`export BROWSER="lynx"\`.
+
   If \`bat\` [4], \`highlight\` [5], or Pygments [6] is installed, notes are
   printed with syntax highlighting.
 
     1. https://pandoc.org/
-    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    3. https://en.wikipedia.org/wiki/W3m
+    2. https://en.wikipedia.org/wiki/W3m
+    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://github.com/sharkdp/bat
     5. http://www.andre-simon.de/doku/highlight/en/highlight.php
     6. https://pygments.org/
@@ -10545,6 +10659,11 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       ffplay -loglevel quiet "${_target_path}"
+    elif _command_exists "termpdf.py"     &&
+         [[ "${_target_path}" =~ pdf$ ]]  &&
+         [[ -n "${KITTY_WINDOW_ID:-}" ]]
+    then
+      termpdf.py "${_target_path}"
     elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
     then
       pdftotext "${_target_path}" - \
@@ -10577,9 +10696,9 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ epub$ ]] &&
          _command_exists "pandoc"         &&
-         _command_exists "w3m"
+         _browser available
     then
-      pandoc -f epub -t html "${_target_path}" | w3m -T text/html
+      pandoc -f epub -t html "${_target_path}" | _browser
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
@@ -10590,21 +10709,14 @@ Can't show archives. Export archive and expand to edit.\\n"
   elif ((_render))              &&
        ((_print_output))        &&
        _command_exists "pandoc" &&
-       _command_exists "w3m"
-  then # `show --render --print` with `pandoc` and `w3m` available.
-    pandoc "${_target_path}" \
-      | w3m -dump -T text/html
+       _browser available
+  then # `show --render --print` with `pandoc` and browser available.
+    pandoc "${_target_path}" | _browser --dump
   elif ((_render))              &&
        _command_exists "pandoc" &&
-       _command_exists "w3m"
-  then # `show --render` with `pandoc` and `w3m` available.
-    pandoc "${_target_path}" \
-      | w3m -T text/html
-  elif ((_render))              &&
-       _command_exists "pandoc" &&
-       _command_exists "lynx"
-  then # `show --render` with `pandoc` and `lynx` available.
-    pandoc "${_target_path}" | lynx -stdin
+       _browser available
+  then # `show --render` with `pandoc` and browser available.
+    pandoc "${_target_path}" | _browser
   else # default
     if ((_print_output))
     then # `show --print [--no-color]`
