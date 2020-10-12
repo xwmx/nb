@@ -200,7 +200,7 @@ install Bash and Zsh completion scripts (recommended).
 On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
-*Note: `nb` is also available under its original package name,
+*NB: `nb` is also available under its original package name,
 [notes.sh](https://www.npmjs.com/package/notes.sh),
 which comes with an extra `notes` executable wrapping `nb`.*
 
@@ -926,7 +926,7 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-*Note: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
+*NB: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
 go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
@@ -1996,8 +1996,8 @@ nb example:remote set https://github.com/example/example.git
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
-*Note: be sure to
-[add your key to ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+*NB: be sure to
+[add your key to the ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 to avoid password prompts.*
 
 When you use `nb` on multiple systems, you can set a notebook on both
