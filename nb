@@ -1326,7 +1326,7 @@ _alias_subcommand() {
 # Subcommands:
 #   (default)  View <url> or standard input in the preferred or available
 #              terminal web browser.
-#   available  Test is a terminal web browser is available.
+#   available  Test if a terminal web browser is available.
 #
 # Description:
 #   Interact with the preferred or available terminal web browser.
