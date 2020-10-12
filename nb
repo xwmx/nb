@@ -1373,7 +1373,7 @@ _browser() {
     then
       return 0
     else
-      "${_browser_command}" "${_arguments[@]:-}"
+      eval "${_browser_command} ${_arguments[*]:-}"
       return 0
     fi
   else
