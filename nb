@@ -10048,63 +10048,61 @@ HEREDOC
     eval "\"${_MY_PATH}\" ${_initial_command}"
   fi
 
-  while true
+  while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
   do
-    while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
-    do
-      history -s "${__input}"
-      if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    history -s "${__input}"
+
+    if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    then
+      return 0
+    else
+      # Strip leading 'n', 'nb', or 'notes'.
+      local _normalized_input=
+      _normalized_input="$(
+        printf "%s\\n" "${__input}" \
+          | sed -e 's/^n$//'        \
+          | sed -e 's/^n //'        \
+          | sed -e 's/^nb$//'       \
+          | sed -e 's/^nb //'       \
+          | sed -e 's/^notes$//'    \
+          | sed -e 's/^notes //'
+      )"
+
+      if [[ "${_normalized_input}" =~ ^help   ]] ||
+         [[ "${_normalized_input}" =~ ^help\  ]] ||
+         [[ "${_normalized_input}" =~ ^h$     ]] ||
+         [[ "${_normalized_input}" =~ ^h\     ]]
       then
-        return 0
-      else
-        # Strip leading 'n', 'nb', or 'notes'.
-        local _normalized_input=
+        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
+           [[ "${_normalized_input}" =~ ^printf\ .* ]]
+      then
+        eval "${_normalized_input}"
+      elif _command_name="$(
+        printf "%s\\n" "${_normalized_input}" \
+          | grep --only-matching --color=never \
+              -e '^code'    \
+              -e '^emacs'   \
+              -e '^gvim'    \
+              -e '^macdown' \
+              -e '^mate'    \
+              -e '^mvim'    \
+              -e '^nano'    \
+              -e '^nvim'    \
+              -e '^subl'    \
+              -e '^vim'
+      )"
+      then
         _normalized_input="$(
-          printf "%s\\n" "${__input}" \
-            | sed -e 's/^n$//'        \
-            | sed -e 's/^n //'        \
-            | sed -e 's/^nb$//'       \
-            | sed -e 's/^nb //'       \
-            | sed -e 's/^notes$//'    \
-            | sed -e 's/^notes //'
-        )"
-
-        if [[ "${_normalized_input}" =~ ^help   ]] ||
-           [[ "${_normalized_input}" =~ ^help\  ]] ||
-           [[ "${_normalized_input}" =~ ^h$     ]] ||
-           [[ "${_normalized_input}" =~ ^h\     ]]
-        then
-          eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-        elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
-             [[ "${_normalized_input}" =~ ^printf\ .* ]]
-        then
-          eval "${_normalized_input}"
-        elif _command_name="$(
           printf "%s\\n" "${_normalized_input}" \
-            | grep --only-matching --color=never \
-                -e '^code'    \
-                -e '^emacs'   \
-                -e '^gvim'    \
-                -e '^macdown' \
-                -e '^mate'    \
-                -e '^mvim'    \
-                -e '^nano'    \
-                -e '^nvim'    \
-                -e '^subl'    \
-                -e '^vim'
+            | sed -e "s/^${_command_name} //"
         )"
-        then
-          _normalized_input="$(
-            printf "%s\\n" "${_normalized_input}" \
-              | sed -e "s/^${_command_name} //"
-          )"
 
-          eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
-        else
-          eval "\"${_MY_PATH}\" ${_normalized_input}" || :
-        fi
+        eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
+      else
+        eval "\"${_MY_PATH}\" ${_normalized_input}" || :
       fi
-    done
+    fi
   done
 }
 
