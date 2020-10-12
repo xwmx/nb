@@ -170,7 +170,8 @@ Also supported for various enhancements:
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
-[readability-cli](https://gitlab.com/gardenappl/readability-cli)
+[readability-cli](https://gitlab.com/gardenappl/readability-cli),
+[`termpdf.py`](https://github.com/dsanson/termpdf.py)
 
 #### macOS / Homebrew
 
@@ -944,6 +945,8 @@ depending on the tools available in the environment. Supported file types and
 tools include:
 
 - PDF files:
+  - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
+    with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
 - Audio files:
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
