@@ -10659,7 +10659,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       ffplay -loglevel quiet "${_target_path}"
-    elif _command_exists "termpdf.py" && [[ "${_target_path}" =~ pdf$ ]]
+    elif _command_exists "termpdf.py"     &&
+         [[ "${_target_path}" =~ pdf$ ]]  &&
+         [[ -n "${KITTY_WINDOW_ID:-}" ]]
     then
       termpdf.py "${_target_path}"
     elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
