@@ -683,12 +683,33 @@ load test_helper
 
   run "${_NB}" add  "* Content" --encrypt --password=example
 
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
   _files=($(ls "${_NOTEBOOK_PATH}/"))
 
   [[ ${status} -eq 0                                                                ]]
   [[ "${#_files[@]}" -eq 1                                                          ]]
   [[ "${_files[0]}" =~ enc$                                                         ]]
   [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl  ]]
+}
+
+@test "\`add --encrypt\` with invalid encryption tool displays error message." {
+  {
+    run "${_NB}" init
+  }
+
+  NB_ENCRYPTION_TOOL="not-valid" run "${_NB}" add  "* Content" --encrypt --password=example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+  [[ ${status} -eq 1                              ]]
+  [[ "${#_files[@]}" -eq 0                        ]]
+  [[ "${output}" =~ Encryption\ tool\ not\ found: ]]
+  [[ "${output}" =~ not-valid                     ]]
 }
 
 # --password option ###########################################################

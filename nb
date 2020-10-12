@@ -3243,7 +3243,15 @@ _add() {
         _edit_before_commit=1
         ;;
       -e|--encrypt|--encrypted)
-        _encrypt=1
+        if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
+           ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
+        then
+          _exit_1 printf                        \
+            "Encryption tool not found: %s\\n"  \
+            "$(_color_primary "${NB_ENCRYPTION_TOOL:-}")"
+        else
+          _encrypt=1
+        fi
         ;;
       -f|--filename)
         _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
