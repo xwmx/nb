@@ -954,8 +954,10 @@ tools include:
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
 - Images:
-  - [ImageMagick](https://imagemagick.org/)
-  - [`imgcat`](https://www.iterm2.com/documentation-images.html)
+  - [ImageMagick](https://imagemagick.org/) with a terminal that
+    supports [sixels]((https://en.wikipedia.org/wiki/Sixel))
+  - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
+    [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
