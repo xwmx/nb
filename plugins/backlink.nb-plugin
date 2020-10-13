@@ -34,10 +34,9 @@ HEREDOC
 _backlink() {
   if ! hash "note-link-janitor" 2>/dev/null
   then
-    cat <<HEREDOC
+    printf "\
 note-link-janitor required:
-  https://github.com/andymatuschak/note-link-janitor
-HEREDOC
+  https://github.com/andymatuschak/note-link-janitor\\n" 2>/dev/null
     exit 1
   fi
 
