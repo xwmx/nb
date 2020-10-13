@@ -1382,9 +1382,9 @@ _browser() {
       # TODO: w3m doesn't handle arguments passed in an array.
       if ((_dump))
       then
-        w3m -T text/html -dump
+        "${_browser_command[@]:-}" -T text/html -dump
       else
-        w3m -T text/html
+        "${_browser_command[@]:-}" -T text/html
       fi
 
       return 0
