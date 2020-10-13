@@ -36,7 +36,7 @@ _backlink() {
   then
     printf "\
 note-link-janitor required:
-  https://github.com/andymatuschak/note-link-janitor\\n" 2>/dev/null
+  https://github.com/andymatuschak/note-link-janitor\\n" 1>&2
     exit 1
   fi
 
