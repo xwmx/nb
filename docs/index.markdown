@@ -2889,8 +2889,8 @@ Usage:
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
   nb plugins [<name>] [--paths]
-  nb plugins install [<path> | <url>]
-  nb plugins uninstall <name>
+  nb plugins install [<path> | <url>] [--force]
+  nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -3822,8 +3822,8 @@ Shortcut Alias: `p`
 
 ```text
 Usage:
-  nb plugins [<name>] [--paths]
-  nb plugins install [<path> | <url>]
+  nb plugins [<name>] [--paths] [--force]
+  nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name>
 
 Options:

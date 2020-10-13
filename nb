@@ -3049,8 +3049,8 @@ $(_color_primary "Usage:")
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} plugins [<name>] [--paths]
-  ${_ME} plugins install [<path> | <url>]
-  ${_ME} plugins uninstall <name>
+  ${_ME} plugins install [<path> | <url>] [--force]
+  ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -8295,10 +8295,11 @@ _alias_subcommand "peek" "preview"
 describe "plugins" <<HEREDOC
 Usage:
   ${_ME} plugins [<name>] [--paths]
-  ${_ME} plugins install [<path> | <url>]
-  ${_ME} plugins uninstall <name>
+  ${_ME} plugins install [<path> | <url>] [--force]
+  ${_ME} plugins uninstall <name> [--force]
 
 Options:
+  --force  Skip the confirmation prompt.
   --paths  Print the full path to each plugin.
 
 Subcommands:
