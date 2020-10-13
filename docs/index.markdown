@@ -167,6 +167,8 @@ Also supported for various enhancements:
 [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
+[note-link-janitor](https://github.com/andymatuschak/note-link-janitor)
+(via [plugin](https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin)),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
@@ -4415,10 +4417,26 @@ Description:
 ### Plugins
 
 <p align="center">
+  <a href="#backlink">backlink</a> •
   <a href="#copy">copy</a> •
   <a href="#ebook">ebook</a> •
   <a href="#example">example</a>
 </p>
+
+#### `backlink`
+
+```text
+Usage:
+  nb backlink [--force]
+
+Description:
+  Add backlinks to notes. Crawl notes in a notebook for [[wiki-style links]]
+  and append a "Backlinks" section to each linked file that lists passages
+  referencing the note.
+
+  Depends on note-link-janitor:
+    https://github.com/andymatuschak/note-link-janitor
+```
 
 #### `copy`
 

@@ -170,19 +170,22 @@ load test_helper
   [[ "${lines[0]}" =~ Not\ a\ valid ]]
 }
 
-@test "\`plugins install\` with existing plugin exits with error." {
+@test "\`plugins install\` with existing plugin reinstalls." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
   }; _setup
 
-  run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+  run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" == 1                     ]]
-  [[ "${lines[0]}" =~ already\ installed  ]]
+  [[ "${status}" == 0                           ]]
+  [[ -e "${NB_DIR}/.plugins/example.nb-plugin"  ]]
+  [[ "${output}" =~ already\ installed          ]]
+  [[ "${output}" =~ Plugin\ installed           ]]
+  [[ "${output}" =~ example.nb-plugin           ]]
 }
 
 # `plugins uninstall` #########################################################

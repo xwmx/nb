@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.6.0"
+_VERSION="5.6.1"
 
 # $_ME
 #
@@ -1318,26 +1318,23 @@ _alias_subcommand() {
 # _browser()
 #
 # Usage:
-#   _browser [available | [<url>] [--dump] [<arguments>...]]
+#   _browser [<url>] [--dump]
 #
 # Options:
 #   --dump    Print the page to standard output.
 #
-# Subcommands:
-#   (default)  View <url> or standard input in the preferred or available
-#              terminal web browser.
-#   available  Test if a terminal web browser is available.
-#
 # Description:
-#   Interact with the preferred or available terminal web browser.
+#   Interact with the preferred or available terminal web browser. When called
+#   with no input or arguments, test if a terminal web browser is available.
+#   With <url> or standard input, view in the preferred or available browser.
 #
 # Exit / Error Status:
 #   0 (success, true)  If a terminal browser is available.
 #   1 (error,  false)  if not.
 _browser() {
-  local _arguments=()
-  local _browser_command=
+  local _browser_command=()
   local _dump=0
+  local _url=
 
   for __arg in "${@:-}"
   do
@@ -1346,56 +1343,55 @@ _browser() {
         _dump=1
         ;;
       *)
-        _arguments+=("${__arg}")
+        [[ -z "${_url:-}" ]] && _url="${__arg}"
         ;;
     esac
   done
 
   if [[ -n "${BROWSER:-}" ]]
   then
-    _browser_command="${BROWSER}"
+    IFS=' ' read -ra _browser_command <<< "${BROWSER}"
   else
     if _command_exists "w3m"
     then
-      _browser_command="w3m"
+      _browser_command+=("w3m")
     elif _command_exists "lynx"
     then
-      _browser_command="lynx"
+      _browser_command+=("lynx")
     fi
   fi
 
-  [[ -z "${_browser_command:-}" ]] && return 1
+  [[ -z "${_browser_command[*]:-}" ]] && return 1
 
   if _interactive_input
   then
-    if [[ -z "${_arguments[*]:-}"             ]] ||
-       [[ "${_arguments[*]:-}" == "available" ]]
+    if [[ -z "${_url:-}" ]]
     then
       return 0
     else
-      "${_browser_command}" "${_arguments[@]:-}"
+      "${_browser_command[@]:-}" "${_url:-}"
       return 0
     fi
   else
-    if [[ "${_browser_command}" =~ w3m ]]
+    if [[ "${_browser_command[*]:-}" =~ w3m ]]
     then
-      # TODO: w3m doesn't handle arguments passed in an array.
       if ((_dump))
       then
-        w3m -T text/html -dump
+        "${_browser_command[@]:-}" -T text/html -dump
       else
-        w3m -T text/html
+        "${_browser_command[@]:-}" -T text/html
       fi
+
       return 0
-    elif [[ "${_browser_command}" =~ lynx ]]
+    elif [[ "${_browser_command[*]:-}" =~ lynx ]]
     then
       _arguments+=("-stdin")
       ((_dump)) && _arguments+=("--dump")
 
-      lynx "${_arguments[@]:-}"
+      "${_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
     else
-      eval "${_browser_command} ${_arguments[*]:-}"
+      "${_browser_command[@]}"
       return 0
     fi
   fi
@@ -2897,7 +2893,7 @@ _help() {
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
-      | if _command_exists "pandoc" && _browser available
+      | if _command_exists "pandoc" && _browser
         then
           pandoc --from markdown --to html | _browser
           return 0
@@ -3498,7 +3494,7 @@ _bookmark() {
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
 
-    if _browser available
+    if _browser
     then
       _browser "${_target_url}"
       return 0
@@ -3924,7 +3920,7 @@ HEREDOC
   if [[ -n "${_title:-}" ]]
   then
     if _command_exists "w3m"
-    then # convert html entities
+    then # convert html entities TODO: _browser --convert-entities
       _title="$(
         printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 99999
       )"
@@ -3958,7 +3954,7 @@ HEREDOC
     if [[ -n "${_description}" ]]
     then
       if _command_exists "w3m"
-      then # convert html entities
+      then # convert html entities TODO: _browser --convert-entities
         _description="$(
           printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 99999
         )"
@@ -8370,7 +8366,24 @@ _plugins() {
 
         if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
         then
-          _exit_1 printf "Plugin already installed: %s\\n" "${_basename}"
+          _warn printf "Plugin already installed: %s\\n" "${_basename}"
+
+          if ! ((_force))
+          then
+            while true
+            do
+              IFS='' read -r -e -d $'\n' -p "Reinstall? [y/N] " __yn
+              case ${__yn} in
+                [Yy]*)
+                  break
+                  ;;
+                *)
+                  printf "Exiting...\\n"
+                  exit 0
+                  ;;
+              esac
+            done
+          fi
         fi
 
         if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
@@ -10696,7 +10709,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ epub$ ]] &&
          _command_exists "pandoc"         &&
-         _browser available
+         _browser
     then
       pandoc -f epub -t html "${_target_path}" | _browser
     elif _command_exists "xdg-open"
@@ -10709,12 +10722,12 @@ Can't show archives. Export archive and expand to edit.\\n"
   elif ((_render))              &&
        ((_print_output))        &&
        _command_exists "pandoc" &&
-       _browser available
+       _browser
   then # `show --render --print` with `pandoc` and browser available.
     pandoc "${_target_path}" | _browser --dump
   elif ((_render))              &&
        _command_exists "pandoc" &&
-       _browser available
+       _browser
   then # `show --render` with `pandoc` and browser available.
     pandoc "${_target_path}" | _browser
   else # default
