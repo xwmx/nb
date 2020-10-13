@@ -42,7 +42,7 @@ HEREDOC
 
   if ! [[ "${1:-}" == "--force" ]]
   then
-    printf "Adding backlinks to notes.\\n"
+    printf "Adding backlinks to notes. This could update multiple files.\\n"
 
     while true
     do
