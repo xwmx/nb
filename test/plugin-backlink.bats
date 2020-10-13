@@ -4,7 +4,7 @@ load test_helper
 
 # `backlink` ##################################################################
 
-@test "\`nb backlink\` with links add backlinks." {
+@test "\`nb backlink\` with links adds backlinks." {
   if ! hash "note-link-janitor" 2>/dev/null
   then
     skip "note-link-janitor not installed."
