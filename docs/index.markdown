@@ -4417,10 +4417,26 @@ Description:
 ### Plugins
 
 <p align="center">
+  <a href="#backlink">backlink</a> •
   <a href="#copy">copy</a> •
   <a href="#ebook">ebook</a> •
   <a href="#example">example</a>
 </p>
+
+#### `backlink`
+
+```text
+Usage:
+  nb backlink [--force]
+
+Description:
+  Add backlinks to notes. Crawl notes in a notebook for [[wiki-style links]]
+  and append a "backlinks" section to each linked file that lists passages
+  referencing the note.
+
+  Depends on note-link-janitor:
+    https://github.com/andymatuschak/note-link-janitor
+```
 
 #### `copy`
 

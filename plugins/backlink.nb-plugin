@@ -23,8 +23,8 @@ Usage:
 
 Description:
   Add backlinks to notes. Crawl notes in a notebook for [[wiki-style links]]
-  then adds a special "backlinks" section which lists passages referencing
-  each referenced file.
+  and append a "backlinks" section to each linked file that lists passages
+  referencing the note.
 
   Depends on note-link-janitor:
     https://github.com/andymatuschak/note-link-janitor
