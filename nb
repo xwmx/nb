@@ -1379,7 +1379,7 @@ _browser() {
   else
     if [[ "${_browser_command[*]:-}" =~ w3m ]]
     then
-      # TODO: w3m doesn't handle arguments passed in an array.
+      # TODO: w3m doesn't handle arguments passed in an array well.
       if ((_dump))
       then
         "${_browser_command[@]:-}" -T text/html -dump
