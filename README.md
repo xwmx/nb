@@ -1408,8 +1408,8 @@ export BROWSER=lynx
 When `$BROWSER` is not set, `nb` looks for `w3m` and `lynx` and uses the
 first one it finds.
 
-`$BROWSER` can also be used to easy specify the terminal browser used
-for an individual command:
+`$BROWSER` can also be used to easy specify the terminal browser for an
+individual command:
 
 ```bash
 > BROWSER=lynx nb 12 peek
