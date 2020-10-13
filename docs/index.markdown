@@ -1404,6 +1404,24 @@ nb example:peek 12
 If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
+The preferred terminal web browser can be set using the `$BROWSER`
+environment variable, which can be set in .bashrc, .zshrc, or similar:
+
+```bash
+export BROWSER=lynx
+```
+
+`$BROWSER` can also be used to easy specify the terminal browser used
+for an individual command:
+
+```bash
+> BROWSER=lynx nb 12 peek
+# opens the URL from bookmark 12 in lynx
+
+> BROWSER=w3m nb 12 peek
+# opens the URL from bookmark 12 in w3m
+```
+
 `nb show` and `nb edit` can also be used to view and edit bookmark files,
 which include the cached page converted to Markdown.
 
