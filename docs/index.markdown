@@ -1405,11 +1405,15 @@ If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
 The preferred terminal web browser can be set using the `$BROWSER`
-environment variable, which can be set in .bashrc, .zshrc, or similar:
+environment variable, which can be set in `~/.bashrc`, `~/.zshrc`,
+or similar:
 
 ```bash
 export BROWSER=lynx
 ```
+
+When `$BROWSER` is not set, `nb` looks for `w3m` and `lynx` and uses the
+first one it finds.
 
 `$BROWSER` can also be used to easy specify the terminal browser used
 for an individual command:
