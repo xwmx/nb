@@ -32,12 +32,13 @@ HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
 _backlink() {
-  if ! _command_exists "note-link-janitor"
+  if ! hash "note-link-janitor" 2>/dev/null
   then
-    _exit_1 cat <<HEREDOC
+    cat <<HEREDOC
 note-link-janitor required:
   https://github.com/andymatuschak/note-link-janitor
 HEREDOC
+    exit 1
   fi
 
   if ! [[ "${1:-}" == "--force" ]]
