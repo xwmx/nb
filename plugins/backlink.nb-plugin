@@ -74,6 +74,6 @@ note-link-janitor required:
     _git checkpoint "[nb] Backlinked"
     printf "Backlinked!\\n"
   else
-    printf "No links found.\\n"
+    printf "No new links found.\\n"
   fi
 }

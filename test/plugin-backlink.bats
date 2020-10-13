@@ -130,8 +130,8 @@ Sample content three orange."
 
 Demo content one apricot plum."
 
-  [[ "${status}" == 0                   ]]
-  [[ "${output:-}" == "No links found." ]]
+  [[ "${status}" == 0                       ]]
+  [[ "${output:-}" == "No new links found." ]]
 
   diff <(cat "${_NOTEBOOK_PATH}/first.md")  <(echo "${_first_content}")
   diff <(cat "${_NOTEBOOK_PATH}/second.md") <(echo "${_second_content}")
