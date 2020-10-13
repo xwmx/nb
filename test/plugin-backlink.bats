@@ -38,9 +38,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # cat "${_NOTEBOOK_PATH}/first.md"
-  # cat "${_NOTEBOOK_PATH}/second.md"
-  # cat "${_NOTEBOOK_PATH}/third.md"
+  cat "${_NOTEBOOK_PATH}/first.md"
+  cat "${_NOTEBOOK_PATH}/second.md"
+  cat "${_NOTEBOOK_PATH}/third.md"
 
   _first_content="# one
 
@@ -114,9 +114,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # cat "${_NOTEBOOK_PATH}/first.md"
-  # cat "${_NOTEBOOK_PATH}/second.md"
-  # cat "${_NOTEBOOK_PATH}/third.md"
+  cat "${_NOTEBOOK_PATH}/first.md"
+  cat "${_NOTEBOOK_PATH}/second.md"
+  cat "${_NOTEBOOK_PATH}/third.md"
 
   _first_content="# one
 
