@@ -4455,6 +4455,11 @@ Description:
   and append a "Backlinks" section to each linked file that lists passages
   referencing the note.
 
+  To link to a note from within another note, surround the title of the
+  target note in double square brackets:
+
+      Example with link to [[Target Note Title]] in content.
+
   Depends on note-link-janitor:
     https://github.com/andymatuschak/note-link-janitor
 ```
