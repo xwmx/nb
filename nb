@@ -8366,7 +8366,24 @@ _plugins() {
 
         if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
         then
-          _exit_1 printf "Plugin already installed: %s\\n" "${_basename}"
+          _warn printf "Plugin already installed: %s\\n" "${_basename}"
+
+          if ! ((_force))
+          then
+            while true
+            do
+              IFS='' read -r -e -d $'\n' -p "Reinstall? [y/N] " __yn
+              case ${__yn} in
+                [Yy]*)
+                  break
+                  ;;
+                *)
+                  printf "Exiting...\\n"
+                  exit 0
+                  ;;
+              esac
+            done
+          fi
         fi
 
         if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
