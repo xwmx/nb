@@ -8782,11 +8782,15 @@ _rename() {
     _exit_1 _help "rename"
   fi
 
+  local _source_info
+  _source_info="$(_show "${_source_basename}" --info-line)"
+
   if ! ((_force))
   then
     printf "Renaming %s to %s\\n"               \
-      "$(_color_primary "${_source_basename}")" \
+      "${_source_info}"                         \
       "$(_color_primary "${_target_basename}")"
+
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
@@ -8808,7 +8812,7 @@ _rename() {
         "[nb] Rename: ${_source_basename} to ${_target_basename}"
 
   printf "%s renamed to %s\\n"                \
-    "$(_color_primary "${_source_basename}")" \
+    "${_source_info}"                         \
     "$(_color_primary "${_target_basename}")"
 }
 
