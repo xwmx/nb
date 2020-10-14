@@ -2347,7 +2347,6 @@ _highlight_syntax_if_available() {
   if hash "bat" 2>/dev/null
   then
     local _arguments=()
-    local _theme="${NB_SYNTAX_THEME}"
 
     if [[ -n "${_path:-}" ]]
     then
@@ -2360,7 +2359,7 @@ _highlight_syntax_if_available() {
       --paging never        \
       --color always        \
       --plain               \
-      --theme "${_theme:-}"
+      --theme "${NB_SYNTAX_THEME:-base16}"
   elif hash "highlight" 2>/dev/null
   then
     local _arguments=("-O" "ansi")
