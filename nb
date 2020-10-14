@@ -5003,7 +5003,7 @@ _export() {
       cp "${_notebook_path}/${_basename}" "${_target_path}"
     fi &&
       printf "Exported %s to %s\\n"           \
-        "$(_color_primary "${_selector}")"    \
+        "$(_show "${_basename}" --info-line)" \
         "$(_color_primary "${_target_path}")"
   fi
 }
@@ -5349,9 +5349,9 @@ _import() {
         _index add "${_basename}" &&
           _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported '%s' to '%s'\\n"     \
-        "$(_color_primary "${_path}")"      \
-        "$(_color_primary "${_basename}")"
+      printf "Imported %s from %s\\n"         \
+        "$(_show "${_basename}" --info-line)" \
+        "$(_color_primary "${_path}")"
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -5364,10 +5364,10 @@ _import() {
 
       if ((_convert))
       then
-        if ! _download_from "${_url}" \
-            | pandoc                  \
-              --from html             \
-              --to markdown           \
+        if ! _download_from "${_url}"             \
+            | pandoc                              \
+              --from html                         \
+              --to markdown                       \
               -o "${_notebook_path}/${_basename}"
         then
           _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
@@ -5385,9 +5385,9 @@ _import() {
 Source:
 ${_url}
 "
-      printf "Imported %s to %s\\n"         \
-        "$(_color_primary "${_url}")"       \
-        "$(_color_primary "${_basename}")"
+      printf "Imported %s from %s\\n"         \
+        "$(_show "${_basename}" --info-line)" \
+        "$(_color_primary "${_url}")"
       ;;
     move)
       _import_validate_path "${_path:-}"
@@ -5398,9 +5398,9 @@ ${_url}
         _index add "${_basename}"                     &&
           _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s to %s\\n"         \
-        "$(_color_primary "${_path}")"      \
-        "$(_color_primary "${_basename}")"
+      printf "Imported %s from %s\\n"         \
+        "$(_show "${_basename}" --info-line)" \
+        "$(_color_primary "${_path}")"
       ;;
     notebook)
       _notebooks import "${_path:-}" "${_target_notebook_name:-}"

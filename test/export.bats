@@ -36,6 +36,10 @@ load test_helper
 
   [[ -e "${_TMP_DIR}/example.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
+
+  # Prints output
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
 }
 
 @test "\`export\` with valid <id> and directory <path> exports a new note file." {
@@ -53,6 +57,10 @@ load test_helper
 
   [[ -e "${_TMP_DIR}/example.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
+
+  # Prints output
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
 }
 
 @test "\`export\` with valid <id> and different basename <path> exports a new note file." {
@@ -70,6 +78,11 @@ load test_helper
 
   [[ -e "${_TMP_DIR}/sample.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/sample.md"
+
+  # Prints output
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
+  [[ "${output}" =~ sample.md   ]]
 }
 
 @test "\`export\` with valid <id> and <path> with diffferent file type converts." {
@@ -84,6 +97,11 @@ load test_helper
 
   [[ -e "${_TMP_DIR}/example.html" ]]
   grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
+
+  # Prints output
+  [[ "${output}" =~ Exported        ]]
+  [[ "${output}" =~ Export\ Example ]]
+  [[ "${output}" =~ example.html    ]]
 }
 
 # `notebook` ##################################################################
