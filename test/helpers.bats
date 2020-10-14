@@ -212,6 +212,7 @@ load test_helper
 }
 
 @test "\`_file_is_encrypted()\` is true for encrypted extensionless file." {
+  skip "TODO"
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -236,6 +237,7 @@ load test_helper
 # `_file_is_text()` ###########################################################
 
 @test "\`_file_is_text()\` is false for encrypted .enc file." {
+  skip "TODO"
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"  --encrypt --password=password
@@ -290,6 +292,7 @@ load test_helper
 }
 
 @test "\`_file_is_text()\` is false for encrypted .not-valid file." {
+  skip "TODO"
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -308,6 +311,7 @@ load test_helper
 }
 
 @test "\`_file_is_text()\` is false for encrypted extensionless file." {
+  skip "TODO"
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
