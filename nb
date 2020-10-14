@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.6.1"
+_VERSION="5.6.2"
 
 # $_ME
 #
@@ -640,6 +640,22 @@ __set_nb_color_primary() {
 # Supported Values: [0..255+]
 export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
 
+# Color Variables
+#
+# Avoid multiple tput calls by assigning output to variables.
+export _TPUT_SGR0=
+if [[ -n "${TMUX:-}" ]]
+then
+  # Avoid `tmux` and `less` quirks: https://unix.stackexchange.com/a/446541
+  _TPUT_SGR0="$(printf '\033[m')"
+else
+  _TPUT_SGR0="$(tput sgr0)"
+fi
+export _TPUT_SMUL=          ; _TPUT_SMUL="$(tput smul)"
+export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(tput setaf 8)"
+export _TPUT_COLOR_PRIMARY=
+       _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
+
 # _color_dim()
 #
 # Usage:
@@ -690,11 +706,6 @@ _color_id_brackets() {
 #
 # Description:
 #   Use `tput` to highlight the given string.
-export _TPUT_SGR0=          ; _TPUT_SGR0="$(tput sgr0)"
-export _TPUT_SMUL=          ; _TPUT_SMUL="$(tput smul)"
-export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(tput setaf 8)"
-export _TPUT_COLOR_PRIMARY=
-       _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
 _color_primary() {
   if ! ((_COLOR_ENABLED))
   then
@@ -2336,7 +2347,6 @@ _highlight_syntax_if_available() {
   if hash "bat" 2>/dev/null
   then
     local _arguments=()
-    local _theme="${NB_SYNTAX_THEME}"
 
     if [[ -n "${_path:-}" ]]
     then
@@ -2349,7 +2359,7 @@ _highlight_syntax_if_available() {
       --paging never        \
       --color always        \
       --plain               \
-      --theme "${_theme:-}"
+      --theme "${NB_SYNTAX_THEME:-base16}"
   elif hash "highlight" 2>/dev/null
   then
     local _arguments=("-O" "ansi")
@@ -3049,8 +3059,8 @@ $(_color_primary "Usage:")
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
   ${_ME} plugins [<name>] [--paths]
-  ${_ME} plugins install [<path> | <url>]
-  ${_ME} plugins uninstall <name>
+  ${_ME} plugins install [<path> | <url>] [--force]
+  ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -5003,7 +5013,7 @@ _export() {
       cp "${_notebook_path}/${_basename}" "${_target_path}"
     fi &&
       printf "Exported %s to %s\\n"           \
-        "$(_color_primary "${_selector}")"    \
+        "$(_show "${_basename}" --info-line)" \
         "$(_color_primary "${_target_path}")"
   fi
 }
@@ -5037,13 +5047,11 @@ _git() {
     local _notebook_path
     _notebook_path="$(_notebooks current --path)"
 
-    cd "${_notebook_path}" || _exit_1 printf "_git() \`cd\` failed.\\n"
-
     if [[ -n "${1:-}" ]]
     then
-      git "${@}"
+      git -C "${_notebook_path}" "${@}"
     else
-      git
+      git -C "${_notebook_path}"
     fi
   fi
 }
@@ -5349,9 +5357,9 @@ _import() {
         _index add "${_basename}" &&
           _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported '%s' to '%s'\\n"     \
-        "$(_color_primary "${_path}")"      \
-        "$(_color_primary "${_basename}")"
+      printf "Imported %s from %s\\n"         \
+        "$(_show "${_basename}" --info-line)" \
+        "$(_color_primary "${_path}")"
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -5364,10 +5372,10 @@ _import() {
 
       if ((_convert))
       then
-        if ! _download_from "${_url}" \
-            | pandoc                  \
-              --from html             \
-              --to markdown           \
+        if ! _download_from "${_url}"             \
+            | pandoc                              \
+              --from html                         \
+              --to markdown                       \
               -o "${_notebook_path}/${_basename}"
         then
           _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
@@ -5385,9 +5393,9 @@ _import() {
 Source:
 ${_url}
 "
-      printf "Imported %s to %s\\n"         \
-        "$(_color_primary "${_url}")"       \
-        "$(_color_primary "${_basename}")"
+      printf "Imported %s from %s\\n"         \
+        "$(_show "${_basename}" --info-line)" \
+        "$(_color_primary "${_url}")"
       ;;
     move)
       _import_validate_path "${_path:-}"
@@ -5398,9 +5406,9 @@ ${_url}
         _index add "${_basename}"                     &&
           _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s to %s\\n"         \
-        "$(_color_primary "${_path}")"      \
-        "$(_color_primary "${_basename}")"
+      printf "Imported %s from %s\\n"         \
+        "$(_show "${_basename}" --info-line)" \
+        "$(_color_primary "${_path}")"
       ;;
     notebook)
       _notebooks import "${_path:-}" "${_target_notebook_name:-}"
@@ -7704,9 +7712,10 @@ Please type $(_color_primary "${_name}") to confirm: " __response
 
         if ! ((_only_names)) && ! ((_only_paths))
         then
-          cd "${_notebook_paths[i]}" ||
-            _exit_1 printf "_notebooks() \`cd\` failed."
-          _origin_url="$(git config --get remote.origin.url || echo '')"
+          _origin_url="$(
+            git -C "${_notebook_paths[i]}" config --get remote.origin.url || echo ''
+          )"
+
           if [[ -n "${_origin_url:-}" ]]
           then
             _notebook_line="${_notebook_line} (${_origin_url})"
@@ -8295,10 +8304,11 @@ _alias_subcommand "peek" "preview"
 describe "plugins" <<HEREDOC
 Usage:
   ${_ME} plugins [<name>] [--paths]
-  ${_ME} plugins install [<path> | <url>]
-  ${_ME} plugins uninstall <name>
+  ${_ME} plugins install [<path> | <url>] [--force]
+  ${_ME} plugins uninstall <name> [--force]
 
 Options:
+  --force  Skip the confirmation prompt.
   --paths  Print the full path to each plugin.
 
 Subcommands:
@@ -8781,11 +8791,15 @@ _rename() {
     _exit_1 _help "rename"
   fi
 
+  local _source_info
+  _source_info="$(_show "${_source_basename}" --info-line)"
+
   if ! ((_force))
   then
     printf "Renaming %s to %s\\n"               \
-      "$(_color_primary "${_source_basename}")" \
+      "${_source_info}"                         \
       "$(_color_primary "${_target_basename}")"
+
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
@@ -8807,7 +8821,7 @@ _rename() {
         "[nb] Rename: ${_source_basename} to ${_target_basename}"
 
   printf "%s renamed to %s\\n"                \
-    "$(_color_primary "${_source_basename}")" \
+    "${_source_info}"                         \
     "$(_color_primary "${_target_basename}")"
 }
 
@@ -9180,15 +9194,35 @@ _search() {
             NB_NOTEBOOK_PATH="${__notebook_path}" \
               _index get_id "${_filename_for_id}"
           )"
-          _title="$(_get_title "${_path}")"
 
-          if [[ -n "${_title}" ]]
+          if ((_filename_hit))
           then
-            _file_info="${_filename} \"${_title}\""
-            _file_info_color="${_filename_color} \"${_title}\""
+            _title="$(_get_title "${__notebook_path}/${_filename_for_id}")"
+
+            if [[ -n "${_title}" ]]
+            then
+              _file_info="${_filename} · ${_title}"
+              _file_info_color="${_filename_color} · ${_title}"
+            else
+              _file_info="${_filename}"
+              _file_info_color="${_filename_color}"
+            fi
           else
-            _file_info="${_filename}"
-            _file_info_color="${_filename_color}"
+            local _first_line=
+            _title="$(_get_title "${_path}")"
+
+            if [[ -n "${_title:-}" ]]
+            then
+              _file_info="${_title}"
+              _file_info_color="${_title}"
+            elif _first_line="$(_get_first_line "${_path}")"
+            then
+              _file_info="${_filename} · \"${_first_line}\""
+              _file_info_color="${_filename_color} · \"${_first_line}\""
+            else
+              _file_info="${_filename}"
+              _file_info_color="${_filename_color}"
+            fi
           fi
 
           if ((_all)) ||
@@ -9206,7 +9240,7 @@ _search() {
             _id_filename_color="$(_color_id_brackets "${_id}") ${_file_info_color}"
           fi
 
-          if [[ "${_last_path}" != "${_path}" ]]
+          if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
             printf "%s" "${_id_filename_color}"
@@ -9220,7 +9254,7 @@ _search() {
             continue
           fi
 
-          if [[ "${_last_path}" != "${_path}" ]]
+          if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
             _print_line "${_id_filename}"

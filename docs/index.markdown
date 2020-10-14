@@ -203,7 +203,7 @@ install Bash and Zsh completion scripts (recommended).
 On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
 the optional dependencies.
 
-*NB: `nb` is also available under its original package name,
+*`nb` is also available under its original package name,
 [notes.sh](https://www.npmjs.com/package/notes.sh),
 which comes with an extra `notes` executable wrapping `nb`.*
 
@@ -943,7 +943,7 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-*NB: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
+*If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
 go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
@@ -1403,6 +1403,27 @@ nb example:peek 12
 `open` and `peek` automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
+
+The preferred terminal web browser can be set using the `$BROWSER`
+environment variable, assigned in `~/.bashrc`, `~/.zshrc`, or similar:
+
+```bash
+export BROWSER=lynx
+```
+
+When `$BROWSER` is not set, `nb` looks for `w3m` and `lynx` and uses the
+first one it finds.
+
+`$BROWSER` can also be used to easy specify the terminal browser for an
+individual command:
+
+```bash
+> BROWSER=lynx nb 12 peek
+# opens the URL from bookmark 12 in lynx
+
+> BROWSER=w3m nb 12 peek
+# opens the URL from bookmark 12 in w3m
+```
 
 `nb show` and `nb edit` can also be used to view and edit bookmark files,
 which include the cached page converted to Markdown.
@@ -2019,8 +2040,7 @@ nb example:remote set https://github.com/example/example.git
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
-*NB: be sure to
-[add your key to the ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+*[Add your key to the ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 to avoid password prompts.*
 
 When you use `nb` on multiple systems, you can set a notebook on both
@@ -2868,8 +2888,8 @@ Usage:
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
   nb plugins [<name>] [--paths]
-  nb plugins install [<path> | <url>]
-  nb plugins uninstall <name>
+  nb plugins install [<path> | <url>] [--force]
+  nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -3801,8 +3821,8 @@ Shortcut Alias: `p`
 
 ```text
 Usage:
-  nb plugins [<name>] [--paths]
-  nb plugins install [<path> | <url>]
+  nb plugins [<name>] [--paths] [--force]
+  nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name>
 
 Options:
@@ -4434,8 +4454,15 @@ Description:
   and append a "Backlinks" section to each linked file that lists passages
   referencing the note.
 
+  To link to a note from within another note, surround the title of the
+  target note in double square brackets:
+
+      Example with link to [[Target Note Title]] in content.
+
   Depends on note-link-janitor:
     https://github.com/andymatuschak/note-link-janitor
+
+    Requirement: every note in the notebook must have a title.
 ```
 
 #### `copy`

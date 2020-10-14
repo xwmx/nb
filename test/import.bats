@@ -52,6 +52,14 @@ load test_helper
   [[ "${#_files[@]}" -eq 1        ]]
   [[ "${lines[0]}" =~ "Imported"  ]]
   grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Imported    ]]
+  [[ "${output}" =~ example.md  ]]
 }
 
 @test "\`import\` with valid <path> argument creates git commit." {
@@ -120,6 +128,14 @@ load test_helper
     sleep 1
   done
   git log | grep -q '\[nb\] Import'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Imported        ]]
+  [[ "${output}" =~ Example\ Folder ]]
 }
 
 @test "\`import move\` with valid <directory path> argument moves a directory." {
@@ -153,6 +169,14 @@ load test_helper
     sleep 1
   done
   git log | grep -q '\[nb\] Import'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Imported        ]]
+  [[ "${output}" =~ Example\ Folder ]]
 }
 
 # <url> ######################################################################
@@ -182,6 +206,14 @@ load test_helper
   done
   git log | grep -q '\[nb\] Import'
   git log | grep -q 'Source'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Imported          ]]
+  [[ "${output}" =~ example.com.html  ]]
 }
 
 @test "\`import --convert\` with valid <url> creates and converts a new note file." {
@@ -214,6 +246,14 @@ load test_helper
   done
   git log | grep -q '\[nb\] Import'
   git log | grep -q 'Source'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Imported          ]]
+  [[ "${output}" =~ example.com.html  ]]
 }
 
 # `notebook` ##################################################################
@@ -233,6 +273,10 @@ load test_helper
   [[ -d "${NB_DIR}/example"         ]]
   [[ "${lines[0]}" =~ "Imported"    ]]
   "${_NB}" notebooks | grep -q 'example'
+
+  # Prints output
+  [[ "${output}" =~ Imported  ]]
+  [[ "${output}" =~ example   ]]
 }
 
 # help ########################################################################
