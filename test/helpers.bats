@@ -39,6 +39,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.bookmark.md"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -56,6 +57,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.bookmark.md.enc"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -72,6 +74,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.md"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -88,6 +91,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.md.enc"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -107,6 +111,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -125,6 +130,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.md.enc"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -142,6 +148,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.bookmark.md.enc"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -161,6 +168,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.not-valid"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -177,6 +185,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.md"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -196,6 +205,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -236,6 +246,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.md.enc"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -252,6 +263,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.md"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -271,6 +283,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
@@ -288,6 +301,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example.not-valid"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
@@ -309,6 +323,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example"
 
   [[ ${status} -eq 1  ]]
   [[ -z "${output}"   ]]
