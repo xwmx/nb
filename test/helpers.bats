@@ -217,6 +217,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  file "${NB_DIR}/home/example"
 
   [[ ${status} -eq 0  ]]
   [[ -z "${output}"   ]]
