@@ -4460,6 +4460,8 @@ Description:
 
       Example with link to [[Target Note Title]] in content.
 
+  NB: All notes in a notebook must have titles.
+
   Depends on note-link-janitor:
     https://github.com/andymatuschak/note-link-janitor
 ```
