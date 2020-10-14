@@ -112,6 +112,39 @@ HEREDOC
   [[ "${#lines[@]}"   -eq 1         ]]
 }
 
+@test "\`search <one filename match>\` exits with status 0 and prints output." {
+  {
+    "${_NB}" init &>/dev/null
+    cat <<HEREDOC | "${_NB}" add "1-example.md"
+# one
+idyl
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+# two
+sweetish
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+# three
+sweetish
+HEREDOC
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search '1-example.md'
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}      -eq 0               ]]
+  [[ "${lines[0]}"  =~ 1-example.md     ]]
+  [[ "${lines[0]}"  =~ one              ]]
+  [[ "${lines[1]}"  =~ -*-              ]]
+  [[ "${lines[2]}"  =~ Filename\ Match  ]]
+  [[ "${lines[2]}"  =~ 1-example.md     ]]
+}
+
 # `search <multiple matches> [--path] [--list]` ###############################
 
 @test "\`search <multiple matches>\` exits with status 0 and prints output." {
@@ -177,6 +210,48 @@ HEREDOC
   [[ ! "${lines[1]}"  =~ third\.md  ]]
   [[ "${lines[1]}"    =~ three      ]]
   [[ "${#lines[@]}"   -eq 2         ]]
+}
+
+@test "\`search <multiple filename match>\` exits with status 0 and prints output." {
+  {
+    "${_NB}" init &>/dev/null
+    cat <<HEREDOC | "${_NB}" add "1-example.md"
+# one
+idyl
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+# two
+sweetish
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "2-example.md"
+# three
+sweetish
+HEREDOC
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search 'example.md'
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}      -eq 0               ]]
+  [[ "${lines[0]}"  =~ example.md       ]]
+  [[ "${lines[0]}"  =~ 1                ]]
+  [[ "${lines[0]}"  =~ one              ]]
+  [[ "${lines[1]}"  =~ -*-              ]]
+  [[ "${lines[2]}"  =~ Filename\ Match  ]]
+  [[ "${lines[2]}"  =~ example.md       ]]
+  [[ "${lines[2]}"  =~ 1                ]]
+  [[ "${lines[3]}"  =~ example.md       ]]
+  [[ "${lines[3]}"  =~ 2                ]]
+  [[ "${lines[3]}"  =~ three            ]]
+  [[ "${lines[4]}"  =~ -*-              ]]
+  [[ "${lines[5]}"  =~ Filename\ Match  ]]
+  [[ "${lines[5]}"  =~ example.md       ]]
+  [[ "${lines[5]}"  =~ 2                ]]
 }
 
 # `search --bookmarks` #################################################

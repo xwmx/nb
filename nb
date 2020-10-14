@@ -9231,7 +9231,7 @@ _search() {
             _id_filename_color="$(_color_id_brackets "${_id}") ${_file_info_color}"
           fi
 
-          if [[ "${_last_path}" != "${_path}" ]]
+          if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
             printf "%s" "${_id_filename_color}"
@@ -9245,7 +9245,7 @@ _search() {
             continue
           fi
 
-          if [[ "${_last_path}" != "${_path}" ]]
+          if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
             _print_line "${_id_filename}"
