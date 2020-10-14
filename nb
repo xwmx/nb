@@ -5047,13 +5047,11 @@ _git() {
     local _notebook_path
     _notebook_path="$(_notebooks current --path)"
 
-    cd "${_notebook_path}" || _exit_1 printf "_git() \`cd\` failed.\\n"
-
     if [[ -n "${1:-}" ]]
     then
-      git "${@}"
+      git -C "${_notebook_path}" "${@}"
     else
-      git
+      git -C "${_notebook_path}"
     fi
   fi
 }
@@ -7714,9 +7712,10 @@ Please type $(_color_primary "${_name}") to confirm: " __response
 
         if ! ((_only_names)) && ! ((_only_paths))
         then
-          cd "${_notebook_paths[i]}" ||
-            _exit_1 printf "_notebooks() \`cd\` failed."
-          _origin_url="$(git config --get remote.origin.url || echo '')"
+          _origin_url="$(
+            git -C "${_notebook_paths[i]}" config --get remote.origin.url || echo ''
+          )"
+
           if [[ -n "${_origin_url:-}" ]]
           then
             _notebook_line="${_notebook_line} (${_origin_url})"
