@@ -9181,15 +9181,35 @@ _search() {
             NB_NOTEBOOK_PATH="${__notebook_path}" \
               _index get_id "${_filename_for_id}"
           )"
-          _title="$(_get_title "${_path}")"
 
-          if [[ -n "${_title}" ]]
+          if ((_filename_hit))
           then
-            _file_info="${_filename} \"${_title}\""
-            _file_info_color="${_filename_color} \"${_title}\""
+            _title="$(_get_title "${__notebook_path}/${_filename_for_id}")"
+
+            if [[ -n "${_title}" ]]
+            then
+              _file_info="${_filename} · ${_title}"
+              _file_info_color="${_filename_color} · ${_title}"
+            else
+              _file_info="${_filename}"
+              _file_info_color="${_filename_color}"
+            fi
           else
-            _file_info="${_filename}"
-            _file_info_color="${_filename_color}"
+            local _first_line=
+            _title="$(_get_title "${_path}")"
+
+            if [[ -n "${_title:-}" ]]
+            then
+              _file_info="${_title}"
+              _file_info_color="${_title}"
+            elif _first_line="$(_get_first_line "${_path}")"
+            then
+              _file_info="${_filename} · \"${_first_line}\""
+              _file_info_color="${_filename_color} · \"${_first_line}\""
+            else
+              _file_info="${_filename}"
+              _file_info_color="${_filename_color}"
+            fi
           fi
 
           if ((_all)) ||

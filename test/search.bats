@@ -70,10 +70,11 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ "${lines[0]}" =~ first\.md\ \"one\"  ]]
-  [[ "${lines[1]}" =~ -*-                 ]]
-  [[ "${lines[2]}" =~ idyl                ]]
+  [[ ${status}        -eq 0         ]]
+  [[ ! "${lines[0]}"  =~ first\.md  ]]
+  [[ "${lines[0]}"    =~ one        ]]
+  [[ "${lines[1]}"    =~ -*-        ]]
+  [[ "${lines[2]}"    =~ idyl       ]]
 }
 
 @test "\`search <one match> --path\` exits with status 0 and prints path." {
@@ -88,9 +89,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                              ]]
-  [[ "${lines[0]}" =~ ${_NOTEBOOK_PATH}/first\.md ]]
-  [[ "${#lines[@]}" -eq 1                         ]]
+  [[ ${status}      -eq 0                           ]]
+  [[ "${lines[0]}"  =~ ${_NOTEBOOK_PATH}/first\.md  ]]
+  [[ "${#lines[@]}" -eq 1                           ]]
 }
 
 @test "\`search <one match> --list\` exits with status 0 and prints listing." {
@@ -105,9 +106,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ "${lines[0]}" =~ first\.md\ \"one\"  ]]
-  [[ "${#lines[@]}" -eq 1                 ]]
+  [[ ${status}        -eq 0         ]]
+  [[ ! "${lines[0]}"  =~ first\.md  ]]
+  [[ "${lines[0]}"    =~ one        ]]
+  [[ "${#lines[@]}"   -eq 1         ]]
 }
 
 # `search <multiple matches> [--path] [--list]` ###############################
@@ -125,14 +127,16 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${lines[0]}" =~ second\.md\ \"two\"   ]]
-  [[ "${lines[1]}" =~ -*-                   ]]
-  [[ "${lines[2]}" =~ sweetish              ]]
-  [[ "${lines[3]}" =~ third+\.md\ \"three\" ]]
-  [[ "${lines[4]}" =~ -*-                   ]]
-  [[ "${lines[5]}" =~ sweetish              ]]
-  [[ "${lines[0]}" != "${lines[3]}"         ]]
+  [[ ${status}        -eq 0             ]]
+  [[ ! "${lines[0]}"  =~ second\.md     ]]
+  [[ "${lines[0]}"    =~ two            ]]
+  [[ "${lines[1]}"    =~ -*-            ]]
+  [[ "${lines[2]}"    =~ sweetish       ]]
+  [[ ! "${lines[3]}"  =~ third\.md      ]]
+  [[ "${lines[3]}"    =~ three          ]]
+  [[ "${lines[4]}"    =~ -*-            ]]
+  [[ "${lines[5]}"    =~ sweetish       ]]
+  [[ "${lines[0]}"    != "${lines[3]}"  ]]
 }
 
 @test "\`search <multiple matches> --path\` exits with 0 and prints paths." {
@@ -167,10 +171,12 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${lines[0]}" =~ second\.md\ \"two\"   ]]
-  [[ "${lines[1]}" =~ third+\.md\ \"three\" ]]
-  [[ "${#lines[@]}" -eq 2                   ]]
+  [[ ${status}        -eq 0         ]]
+  [[ ! "${lines[0]}"  =~ second\.md ]]
+  [[ "${lines[0]}"    =~ two        ]]
+  [[ ! "${lines[1]}"  =~ third\.md  ]]
+  [[ "${lines[1]}"    =~ three      ]]
+  [[ "${#lines[@]}"   -eq 2         ]]
 }
 
 # `search --bookmarks` #################################################
@@ -210,14 +216,16 @@ HEREDOC
   printf "\${_filename}: '%s'\\n" "${_filename}"
   printf "\${lines[3]}: '%s'\\n"  "${lines[3]}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${lines[0]}" =~ fourth\.bookmark\.md\ \"four\"  ]]
-  [[ "${lines[1]}" =~ -*-                             ]]
-  [[ "${lines[2]}" =~ sweetish                        ]]
-  [[ "${lines[3]}" =~ sixth\.bookmark\.md\ \"six\"    ]]
-  [[ "${lines[4]}" =~ -*-                             ]]
-  [[ "${lines[5]}" =~ sweetish                        ]]
-  [[ "${lines[0]}" != "${lines[3]}"                   ]]
+  [[ ${status}        -eq 0                   ]]
+  [[ ! "${lines[0]}"  =~ fourth\.bookmark\.md ]]
+  [[ "${lines[0]}"    =~ four                 ]]
+  [[ "${lines[1]}"    =~ -*-                  ]]
+  [[ "${lines[2]}"    =~ sweetish             ]]
+  [[ ! "${lines[3]}"  =~ sixth\.bookmark\.md  ]]
+  [[ "${lines[3]}"    =~ six                  ]]
+  [[ "${lines[4]}"    =~ -*-                  ]]
+  [[ "${lines[5]}"    =~ sweetish             ]]
+  [[ "${lines[0]}"    != "${lines[3]}"        ]]
 }
 
 # `search <query> --all [--path]` #############################################
@@ -248,18 +256,21 @@ _search_all_setup() {
   "${_NB}" notebooks --paths --unarchived
   "${_NB}" two:notebooks status
 
-  [[ ${status} -eq 0                            ]]
-  [[ "${lines[0]}" =~ home:2                    ]]
-  [[ "${lines[0]}" =~ second\.md\ \"two\"       ]]
-  [[ "${lines[1]}" =~ -*-                       ]]
-  [[ "${lines[2]}" =~ sweetish                  ]]
-  [[ "${lines[3]}" =~ home:3                    ]]
-  [[ "${lines[3]}" =~ third\.md\ \"three\"      ]]
-  [[ "${lines[4]}" =~ -*-                       ]]
-  [[ "${lines[5]}" =~ sweetish                  ]]
-  [[ "${lines[6]}" =~ one:1                     ]]
-  [[ "${lines[6]}" =~ example\.md\ \"sweetish\" ]]
-  [[ "${#lines[@]}" -eq 9                       ]]
+  [[ ${status}        -eq 0           ]]
+  [[ "${lines[0]}"    =~ home:2       ]]
+  [[ ! "${lines[0]}"  =~ second\.md   ]]
+  [[ "${lines[0]}"    =~ two          ]]
+  [[ "${lines[1]}"    =~ -*-          ]]
+  [[ "${lines[2]}"    =~ sweetish     ]]
+  [[ "${lines[3]}"    =~ home:3       ]]
+  [[ "${lines[4]}"    =~ -*-          ]]
+  [[ ! "${lines[3]}"  =~ third\.md    ]]
+  [[ "${lines[3]}"    =~ three        ]]
+  [[ "${lines[5]}"    =~ sweetish     ]]
+  [[ "${lines[6]}"    =~ one:1        ]]
+  [[ ! "${lines[6]}"  =~ example\.md  ]]
+  [[ "${lines[6]}"    =~ sweetish     ]]
+  [[ "${#lines[@]}"   -eq 9           ]]
 }
 
 @test "\`search <query> -a\` exits with status 0 and prints output." {
@@ -273,18 +284,21 @@ _search_all_setup() {
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                            ]]
-  [[ "${lines[0]}" =~ home:2                    ]]
-  [[ "${lines[0]}" =~ second\.md\ \"two\"       ]]
-  [[ "${lines[1]}" =~ -*-                       ]]
-  [[ "${lines[2]}" =~ sweetish                  ]]
-  [[ "${lines[3]}" =~ home:3                    ]]
-  [[ "${lines[3]}" =~ third\.md\ \"three\"      ]]
-  [[ "${lines[4]}" =~ -*-                       ]]
-  [[ "${lines[5]}" =~ sweetish                  ]]
-  [[ "${lines[6]}" =~ one:1                     ]]
-  [[ "${lines[6]}" =~ example\.md\ \"sweetish\" ]]
-  [[ "${#lines[@]}" -eq 9                       ]]
+  [[ ${status}        -eq 0           ]]
+  [[ "${lines[0]}"    =~ home:2       ]]
+  [[ ! "${lines[0]}"  =~ second\.md   ]]
+  [[ "${lines[0]}"    =~ two          ]]
+  [[ "${lines[1]}"    =~ -*-          ]]
+  [[ "${lines[2]}"    =~ sweetish     ]]
+  [[ "${lines[3]}"    =~ home:3       ]]
+  [[ ! "${lines[3]}"  =~ third\.md    ]]
+  [[ "${lines[3]}"    =~ three        ]]
+  [[ "${lines[4]}"    =~ -*-          ]]
+  [[ "${lines[5]}"    =~ sweetish     ]]
+  [[ "${lines[6]}"    =~ one:1        ]]
+  [[ ! "${lines[6]}"  =~ example\.md  ]]
+  [[ "${lines[6]}"    =~ sweetish     ]]
+  [[ "${#lines[@]}"   -eq 9           ]]
 }
 
 @test "\`search <no matching query> --all\` exits with status 1 and not output." {
@@ -359,12 +373,13 @@ _search_all_setup() {
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${lines[0]}" =~ 1                     ]]
-  [[ "${lines[0]}" =~ example-1.md\ \"one\" ]]
-  [[ "${lines[1]}" =~ -*-                   ]]
-  [[ "${lines[2]}" =~ sweetish              ]]
-  [[ "${#lines[@]}" -eq 3                   ]]
+  [[ ${status}        -eq 0           ]]
+  [[ "${lines[0]}"    =~ 1            ]]
+  [[ ! "${lines[0]}"  =~ example-1.md ]]
+  [[ "${lines[0]}"    =~ one          ]]
+  [[ "${lines[1]}"    =~ -*-          ]]
+  [[ "${lines[2]}"    =~ sweetish     ]]
+  [[ "${#lines[@]}"   -eq 3           ]]
 }
 
 @test "\`search <query> --all\` in local notebook exits with status 0 and prints output." {
@@ -395,22 +410,26 @@ _search_all_setup() {
   printf "\${lines[7]}: '%s'\\n" "${lines[7]}"
   printf "\${lines[8]}: '%s'\\n" "${lines[8]}"
 
-  [[ ${status} -eq 0 ]]
-  [[ "${lines[0]}" =~ local:1                     ]]
-  [[ "${lines[0]}" =~ example-1.md\ \"one\"       ]]
-  [[ "${lines[1]}" =~ -*-                         ]]
-  [[ "${lines[2]}" =~ sweetish                    ]]
-  [[ "${lines[3]}" =~ home:2                      ]]
-  [[ "${lines[3]}" =~ second\.md\ \"two\"         ]]
-  [[ "${lines[4]}" =~ -*-                         ]]
-  [[ "${lines[5]}" =~ sweetish                    ]]
-  [[ "${lines[6]}" =~ home:3                      ]]
-  [[ "${lines[6]}" =~ third\.md\ \"three\"        ]]
-  [[ "${lines[7]}" =~ -*-                         ]]
-  [[ "${lines[8]}" =~ sweetish                    ]]
-  [[ "${lines[9]}" =~ one:1                       ]]
-  [[ "${lines[9]}" =~ example\.md\ \"sweetish\"   ]]
-  [[ "${#lines[@]}" -eq 12 ]]
+  [[ ${status}        -eq 0           ]]
+  [[ "${lines[0]}"    =~ local:1      ]]
+  [[ ! "${lines[0]}"  =~ example-1.md ]]
+  [[ "${lines[0]}"    =~ one          ]]
+  [[ "${lines[1]}"    =~ -*-          ]]
+  [[ "${lines[2]}"    =~ sweetish     ]]
+  [[ "${lines[3]}"    =~ home:2       ]]
+  [[ ! "${lines[3]}"  =~ second\.md   ]]
+  [[ "${lines[3]}"    =~ two          ]]
+  [[ "${lines[4]}"    =~ -*-          ]]
+  [[ "${lines[5]}"    =~ sweetish     ]]
+  [[ "${lines[6]}"    =~ home:3       ]]
+  [[ ! "${lines[6]}"  =~ third\.md    ]]
+  [[ "${lines[6]}"    =~ three        ]]
+  [[ "${lines[7]}"    =~ -*-          ]]
+  [[ "${lines[8]}"    =~ sweetish     ]]
+  [[ "${lines[9]}"    =~ one:1        ]]
+  [[ ! "${lines[9]}"  =~ example\.md  ]]
+  [[ "${lines[9]}"    =~ sweetish     ]]
+  [[ "${#lines[@]}"   -eq 12          ]]
 }
 
 # help ########################################################################
