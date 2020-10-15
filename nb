@@ -952,7 +952,7 @@ _git_checkpoint() {
 
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_target_directory}" fetch &>/dev/null
     then
-      _warn printf "\\nUnable to fetch from remote.\\n"
+      _warn printf "Unable to fetch from remote.\\n"
       return 1
     fi
 
