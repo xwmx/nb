@@ -10979,9 +10979,8 @@ _sync() {
       NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
     fi
 
-    NB_AUTO_SYNC=1 _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
-
-    if _git_index_is_dirty  "${NB_NOTEBOOK_PATH}" ||
+    if ! NB_AUTO_SYNC=1 _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner ||
+       _git_index_is_dirty  "${NB_NOTEBOOK_PATH}"                                   ||
        _git_out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
       _exit_1 printf "Syncing failed.\\n"
