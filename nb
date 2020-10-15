@@ -4812,7 +4812,10 @@ Please install %s manually. No .deb package available for %s."  \
 
       for __package in "${_deb_packages[@]}"
       do
-        _env_install_deb "${__package}"
+        local _arguments
+        IFS=' ' read -ra _arguments <<< "${__package:-}"
+
+        _env_install_deb "${_arguments[@]:-}"
       done
     elif [[ -x "$(command -v dnf)" ]]
     then
