@@ -3334,9 +3334,10 @@ _add() {
   then
     if [[ -z "${_password}" ]]
     then
+      # request password without displaying it
       printf "Password: "
       read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`.
+      printf "\\n" # print newline to stop `read`
 
       if [[ -z "${_password:-}" ]]
       then
@@ -3345,9 +3346,10 @@ _add() {
 
       local _password_confirmation=
 
+      # request password without displaying it
       printf "Confirm Password: "
       read -r -s _password_confirmation </dev/tty
-      printf "\\n" # print newline to stop `read`.
+      printf "\\n" # print newline to stop `read`
 
       if [[ "${_password}" != "${_password_confirmation}" ]]
       then
@@ -3756,10 +3758,10 @@ _bookmark() {
 
       if [[ -z "${_password}" ]]
       then
-        # Request password without displaying it
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
       fi
 
       if [[ -z "${_password}" ]]
@@ -4603,10 +4605,10 @@ _edit() {
 
       if [[ -z "${_password}" ]]
       then
-        # Request password without displaying it
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
       fi
 
       _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"
@@ -10565,10 +10567,10 @@ _show() {
 
     if [[ -z "${_password}" ]]
     then
-      # Request password without displaying it
+      # request password without displaying it
       printf "Password: "
       read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`.
+      printf "\\n" # print newline to stop `read`
     fi
 
     if [[ -z "${_password}" ]]
