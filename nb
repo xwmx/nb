@@ -143,7 +143,7 @@ _command_exists() {
 #   0 (success, true)  If the item is included in the list.
 #   1 (error,  false)  If not.
 #
-# Examples:
+# Example:
 #   _contains "${_query}" "${_list[@]}"
 _contains() {
   local _query="${1:-}"
