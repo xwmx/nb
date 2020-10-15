@@ -8137,7 +8137,7 @@ HEREDOC
   }
 
   _notebooks_add_new() {
-    local _notebook_list=("${@}")
+    local _notebook_list=("${@:-}")
 
     if [[ -z "${1:-}" ]]
     then
