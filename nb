@@ -3285,7 +3285,10 @@ _add() {
         _edit_before_commit=1
         ;;
       -e|--encrypt|--encrypted)
-        if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
+        if [[ "$NB_ENCRYPTION_TOOL" =~ "gpg-key" ]] && _command_exists "gpg"
+        then
+          _encrypt=1
+        elif [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
            ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
         then
           _exit_1 printf                        \
