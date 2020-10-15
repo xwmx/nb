@@ -123,8 +123,8 @@ _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 #   0 (success, true) If a command <name> is defined in the current environment.
 #   1 (error,  false) If not.
 #
-# Information on why `hash` is used here:
-# http://stackoverflow.com/a/677212
+# More Information:
+#   http://stackoverflow.com/a/677212
 _command_exists() {
   if [[ "${1:-}" == "w3m" ]]
   then # Detect WSL 1 (https://stackoverflow.com/a/38859331), where w3m errors.
@@ -143,7 +143,7 @@ _command_exists() {
 #   0 (success, true)  If the item is included in the list.
 #   1 (error,  false)  If not.
 #
-# Examples:
+# Example:
 #   _contains "${_query}" "${_list[@]}"
 _contains() {
   local _query="${1:-}"
@@ -173,7 +173,7 @@ _contains() {
 #   in GNU `sed`. Detect which `sed` is available and call it with the
 #   appropriate arguments.
 #
-# More info:
+# More Information:
 #   https://stackoverflow.com/q/43171648
 #   https://stackoverflow.com/a/16746032
 _sed_i() {
@@ -1728,25 +1728,22 @@ export _ARCHIVE_FILE_EXTENSIONS=(
   apk
   bz2
   dmg
-  dmg.sparsebundle
   gz
+  lz
   rar
   s7z
   sit
   sitx
   sparsebundle
   tar
-  tar.gz
   tgz
-  tar.Z
-  tar.bz2
   tbz2
-  tar.lz
-  tlz.
-  tar.xz
+  tlz
   txz
+  xz
   zip
   zipx
+  Z
 )
 _file_is_archive() {
   local _file_path="${1:-}"
@@ -2455,7 +2452,7 @@ _interactive_input() {
 # Example:
 #   _join "${_delimeter}" "${_list[@]}"
 #
-# More information:
+# More Information:
 #   https://stackoverflow.com/a/17841619
 _join() {
   local _delimiter="${1:-}"
@@ -2677,7 +2674,7 @@ _list_files() {
 # Description:
 #   Print a line of dashes the length of <text>.
 #
-# More information:
+# More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
   local _text="${1:-}"
@@ -3377,11 +3374,12 @@ _add() {
   then
     if [ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]
     then
-      if [[ -z "${_password}" ]]
+      if [[ -z "${_password:-}" ]]
       then
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
 
         if [[ -z "${_password:-}" ]]
         then
@@ -3392,7 +3390,7 @@ _add() {
 
         printf "Confirm Password: "
         read -r -s _password_confirmation </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
 
         if [[ "${_password}" != "${_password_confirmation}" ]]
         then
@@ -3804,10 +3802,10 @@ _bookmark() {
       then
         if [[ -z "${_password}" ]]
         then
-          # Request password without displaying it
+          # request password without displaying it
           printf "Password: "
           read -r -s _password </dev/tty
-          printf "\\n" # print newline to stop `read`.
+          printf "\\n" # print newline to stop `read`
         fi
 
         if [[ -z "${_password}" ]]
@@ -4319,7 +4317,7 @@ and installing the latest version with the following command (\`sudo\` might
 be necessary):
   ${_ME} completions install --download
 
-More information: ${__shell}
+More Information: ${__shell}
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
       else
@@ -4654,10 +4652,10 @@ _edit() {
     then
       if [[ -z "${_password}" ]]
       then
-        # Request password without displaying it
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
       fi
     fi
 
@@ -5599,6 +5597,7 @@ _index() {
         # Alternatives:
         # grep -n "^${1:-}$" "${2:-}" | cut -f1 -d:
         # awk 'match($0,v){print NR; exit}' v="^${1:-}$" "${2:-}"
+        # rg --color=never --line-number "^${1:-}$" "${2:-}" | cut -d: -f1
         sed -n "/^${1:-}$/=" "${2:-}"
       }
 
@@ -5872,7 +5871,7 @@ HEREDOC
     _exit_1 cat <<HEREDOC
 $(_color_primary "${_ME}") already initialized. To initialize a local notebook, use:
   $(_color_primary "${_ME} notebooks init")
-More information:
+More Information:
   $(_color_primary "${_ME} help notebooks")
 HEREDOC
   fi
@@ -6544,7 +6543,7 @@ _ls() {
   # _ls_print_footer()
   #
   # Usage:
-  #   _ls_print_footer
+  #   _ls_print_footer <notebook>...
   _ls_print_footer() {
     local _footer_line_hi=
     local _footer_line_raw=
@@ -6555,6 +6554,7 @@ _ls() {
     local _maybe_scope=
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
+    local _notebook_names=("${@:-}")
 
     if _notebooks current --selected
     then
@@ -6564,7 +6564,7 @@ _ls() {
     fi
 
     local _notebook_command="${_ME} notebooks add <name>"
-    if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
+    if [[ "${#_notebook_names[@]}" -gt 1 ]]
     then
       if [[ -n "${_maybe_scope:-}" ]]
       then
@@ -6646,7 +6646,7 @@ _ls() {
   # _ls_print_header()
   #
   # Usage:
-  #   _ls_print_header <alignment>
+  #   _ls_print_header <alignment> <notebook>...
   #
   # Description:
   #   Build word-wrapping notebook line. `fold` doesn't account for
@@ -6658,12 +6658,16 @@ _ls() {
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
   _ls_print_header() {
+    local _alignment="${1:-}"
+    shift
+
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
     local _line_number=0
     local _line_hi=
     local _line_raw=
+    local _notebook_names=("${@:-}")
     local _output_hi=
     local _output_raw=
     local _padding=
@@ -6673,34 +6677,26 @@ _ls() {
     [[ "${NB_HEADER}" == 2 ]] && _centered=1
     [[ "${NB_HEADER}" == 3 ]] && _justified=1
 
-    while ((${#}))
-    do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg}" in
-        --auto-align)
-          _auto_align=1
-          _centered=0
-          _justified=0
-          ;;
-        --centered)
-          _auto_align=0
-          _centered=1
-          _justified=0
-          ;;
-        --justified)
-          _auto_align=0
-          _centered=0
-          _justified=1
-          ;;
-        --plain)
-          _plain=1
-          ;;
-      esac
-
-      shift
-    done
+    case "${_alignment}" in
+      --auto-align)
+        _auto_align=1
+        _centered=0
+        _justified=0
+        ;;
+      --centered)
+        _auto_align=0
+        _centered=1
+        _justified=0
+        ;;
+      --justified)
+        _auto_align=0
+        _centered=0
+        _justified=1
+        ;;
+      --plain)
+        _plain=1
+        ;;
+    esac
 
     local _separator=
     local _separator_hi=
@@ -6711,10 +6707,8 @@ _ls() {
       _separator_hi="$(_color_dim "${_separator}")"
     fi
 
-    local _notebook_names_hi=
-    _notebook_names_hi=($(
-      _notebooks --names --unarchived --global || :
-    ))
+    local _current_notebook_name=
+    _current_notebook_name="$(_notebooks current)"
 
     local _notebook_names_archived=
     _notebook_names_archived=($(
@@ -6724,44 +6718,38 @@ _ls() {
 
     if ((_archived_count))
     then
-      _notebook_names_hi=(
-        "${_notebook_names_hi[@]}"
-        "[${_archived_count} archived]"
-      )
-      _notebook_names_raw=(
-        "${_notebook_names_raw[@]}"
+      _notebook_names=(
+        "${_notebook_names[@]}"
         "[${_archived_count} archived]"
       )
     fi
 
     if _notebooks current --local
     then
-       if [[ "$(_notebooks current)" == "local" ]]
-      then
-        _notebook_names_hi=(
-          "$(_color_primary "local" --underline)"
-          "${_notebook_names_hi[@]}"
-        )
-      else
-        _notebook_names_hi=(
-          "local"
-          "${_notebook_names_hi[@]}"
-        )
-      fi
-
-      _notebook_names_raw=(
+      _notebook_names=(
         "local"
-        "${_notebook_names_raw[@]}"
+        "${_notebook_names[@]}"
       )
     fi
 
-    for ((i=0; i < "${#_notebook_names_raw[@]}"; i++))
+    for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
+      local _maybe_highlighted_notebook_name=
+
+      if [[ "${_current_notebook_name}" == "${_notebook_names[i]}" ]]
+      then
+        _maybe_highlighted_notebook_name="$(
+          _color_primary "${_notebook_names[i]:-}"
+        )"
+      else
+        _maybe_highlighted_notebook_name="${_notebook_names[i]:-}"
+      fi
+
       if [[ -z "${_test_line}" ]]
       then # first item in line
-        _test_line="${_notebook_names_raw[i]}"
+        _test_line="${_notebook_names[i]}"
       else
-        _test_line="${_test_line}${_separator} ${_notebook_names_raw[i]}"
+        _test_line="${_test_line}${_separator} ${_notebook_names[i]}"
       fi
 
       if [[ "${#_test_line}" -gt "${_columns}" ]]
@@ -6781,21 +6769,21 @@ _ls() {
         _line_number=$((_line_number + 1))
 
         # Start the line for the next iteration using the current name.
-        _test_line="${_notebook_names_raw[i]}"
-        _line_hi="${_notebook_names_hi[i]:-}"
-        _line_raw="${_notebook_names_raw[i]}"
+        _test_line="${_notebook_names[i]}"
+        _line_hi="${_maybe_highlighted_notebook_name:-}"
+        _line_raw="${_notebook_names[i]}"
       else # add to line
         if [[ -z "${_line_hi}" ]]
         then # first item in highlighted line
-          _line_hi="${_notebook_names_hi[i]:-}"
-          _line_raw="${_notebook_names_raw[i]}"
+          _line_hi="${_maybe_highlighted_notebook_name:-}"
+          _line_raw="${_notebook_names[i]}"
         else
-          _line_hi="${_line_hi}${_separator_hi} ${_notebook_names_hi[i]:-}"
-          _line_raw="${_line_raw}${_separator} ${_notebook_names_raw[i]}"
+          _line_hi="${_line_hi}${_separator_hi} ${_maybe_highlighted_notebook_name:-}"
+          _line_raw="${_line_raw}${_separator} ${_notebook_names[i]}"
         fi
       fi
 
-      if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
+      if [[ "${#_notebook_names[@]}" == $((i+1)) ]]
       then # end of list
         if ((_line_number))  && ! ((_justified)) &&
            ((_auto_align))   ||   ((_centered))
@@ -6838,8 +6826,8 @@ _ls() {
   local _header_flags=()
   local _limit=
   local _list_options=()
-  local _notebook_names_raw
-  _notebook_names_raw=($(
+  local _notebook_names
+  _notebook_names=($(
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
@@ -6929,7 +6917,7 @@ _ls() {
   {
     if ((NB_HEADER)) && [[ -z "${_arguments[*]:-}" ]]
     then
-      _ls_print_header "${_header_flags[@]:-}"
+      _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
@@ -6984,7 +6972,7 @@ _ls() {
 
     if ((NB_FOOTER)) && [[ -z "${_arguments[*]:-}" ]]
     then
-      _ls_print_footer
+      _ls_print_footer "${_notebook_names[@]:-}"
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
@@ -7383,7 +7371,7 @@ _notebooks() {
           _force=1
           ;;
         *)
-          [[ -z "${_name:-}" ]] && _name="${__arg}"
+          [[ -z "${_name:-}" ]] && _name="${__arg%%:*}"
           ;;
       esac
     done
@@ -7406,7 +7394,7 @@ HEREDOC
       _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
     fi
 
-    local _notebook_names=
+    local _notebook_names=()
     _notebook_names=($(_notebooks --names --no-color))
 
     local _notebook_count=
@@ -7414,7 +7402,11 @@ HEREDOC
 
     if ! ((_force))
     then
-      cat <<HEREDOC
+      if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        printf "Moving to Trash: %s\\n" "$(_color_primary "${_name}")"
+      else
+        cat <<HEREDOC
 Deleting $(_color_primary "${_name}").
 
 This action cannot be undone. This will permanently delete the
@@ -7422,6 +7414,8 @@ $(_color_primary "${_name}") notebook, all notes and files it contains,
 and the entire revision history.
 
 HEREDOC
+      fi
+
       while true
       do
         IFS='' read -r -e -d $'\n' -p "\
@@ -7677,6 +7671,9 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     if [[ -z "${_query_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NB_DIR}"))
+
+      _notebooks_add_new "${_notebook_names[@]:-}"
+
       set +f
       _notebook_paths=($(ls -1 -d "${NB_DIR}"/*))
       set -f
@@ -7687,6 +7684,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}" "${_notebook_paths[@]:-}")
       fi
     else
+      _notebooks_add_new
+
       for __name in "${_query_names[@]}"
       do
         _notebook_names+=("${__name}")
@@ -8199,8 +8198,12 @@ HEREDOC
   }
 
   _notebooks_add_new() {
-    local _notebook_list=
-    _notebook_list=($(ls -1 "${NB_DIR}"))
+    local _notebook_list=("${@:-}")
+
+    if [[ -z "${1:-}" ]]
+    then
+      _notebook_list=($(ls -1 "${NB_DIR}"))
+    fi
 
     for __notebook_name in "${_notebook_list[@]:-}"
     do
@@ -8218,7 +8221,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if ! _contains "${_subcommand:-}" "current" "show"
+  if ! _contains "${_subcommand:-}" "current" "list" "show"
   then
     _notebooks_add_new
   fi
@@ -10657,10 +10660,10 @@ _show() {
     then
       if [[ -z "${_password}" ]]
       then
-        # Request password without displaying it
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
       fi
 
       if [[ -z "${_password}" ]]
