@@ -6244,8 +6244,6 @@ HEREDOC
 
         if ! ((_no_id))
         then
-          # NOTE: Plain version serves as the reference version and can be
-          # used for length calculations.
           local _item_identifier=
           local _max_identifier=
 
