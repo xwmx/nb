@@ -53,10 +53,10 @@ _setup_notebooks() {
 
   [[ "${lines[0]}" =~ Remote\ branch\ not\ found: ]]
   [[ "${lines[0]}" =~ example-branch              ]]
-  [[ ${status} -eq 0                              ]]
+  [[ ${status} -eq 1                              ]]
 }
 
-@test "\`sync\` fails gracefully with invalid remote." {
+@test "\`sync\` fails with invalid remote." {
   {
     _setup_notebooks
 
@@ -84,7 +84,7 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                  ]]
+  [[ ${status} -eq 1                  ]]
   [[ "$output}" =~ Unable\ to\ fetch  ]]
 }
 
