@@ -7342,7 +7342,11 @@ HEREDOC
 
     if ! ((_force))
     then
-      cat <<HEREDOC
+      if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        printf "Moving to Trash: %s\\n" "$(_color_primary "${_name}")"
+      else
+        cat <<HEREDOC
 Deleting $(_color_primary "${_name}").
 
 This action cannot be undone. This will permanently delete the
@@ -7350,6 +7354,8 @@ $(_color_primary "${_name}") notebook, all notes and files it contains,
 and the entire revision history.
 
 HEREDOC
+      fi
+
       while true
       do
         IFS='' read -r -e -d $'\n' -p "\
