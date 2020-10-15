@@ -4698,13 +4698,14 @@ HEREDOC
 _env() {
   # Usage: _env_install_deb <name> <version> <repo>
   _env_install_deb() {
-    local _arch
-    _arch="$(uname -m)"
     local _deb_filename=
     local _name="${1:?}"
-    local _x86_64_bit=1
     local _repo="${3:?}"
     local _version="${2:?}"
+    local _x86_64_bit=1
+
+    local _arch
+    _arch="$(uname -m)"
 
     case "${_arch:-}" in
       x86_64)
