@@ -1467,6 +1467,7 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
   then
     if _command_exists "gpg"
     then
+      export GPG_TTY=$(tty)
       printf "%s\\n"                     \
         | gpg                            \
         --quiet                          \
