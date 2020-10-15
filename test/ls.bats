@@ -129,9 +129,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0          ]]
+  [[ ${status} -eq 0            ]]
   [[ ! "${lines[0]}" =~ example ]]
-  [[ "${lines[0]}" =~ home  ]]
+  [[ "${lines[0]}" =~ home      ]]
 }
 
 # `ls` ########################################################################
