@@ -5549,6 +5549,7 @@ _index() {
         # Alternatives:
         # grep -n "^${1:-}$" "${2:-}" | cut -f1 -d:
         # awk 'match($0,v){print NR; exit}' v="^${1:-}$" "${2:-}"
+        # rg --color=never --line-number "^${1:-}$" "${2:-}" | cut -d: -f1
         sed -n "/^${1:-}$/=" "${2:-}"
       }
 
