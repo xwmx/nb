@@ -390,7 +390,7 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 #
 # Default: 'openssl'
 #
-# Supported Values: 'gpg' 'openssl'
+# Supported Values: 'gpg' 'gpg-key' 'openssl'
 export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
 # $NB_FOOTER
@@ -420,6 +420,13 @@ export NB_LIMIT="${NB_LIMIT:-20}"
 #
 # Supported Values: Theme names listed with `bat --list-themes`
 export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-base16}"
+
+# $NB_RECIPIENT
+#
+# Default: 'NULL'
+#
+# Supported Values: e-mail address, fingerprint
+export NB_RECIPIENT="${NB_RECIPIENT:-NULL}"
 
 # $EDITOR ############################################################# $EDITOR
 
@@ -1416,9 +1423,12 @@ _decrypt_file() {
   local _encrypted_path="${1:-}"
   local _password="${2:-}"
 
-  if [[ -z "${_password}" ]]
+  if [ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]
   then
-    _exit_1 printf "Password required.\\n"
+    if [[ -z "${_password}" ]]
+    then
+      _exit_1 printf "Password required.\\n"
+    fi
   fi
 
   if [[ -z "${_encrypted_path}" ]]
@@ -1438,7 +1448,7 @@ _decrypt_file() {
   local _file_command_response
   _file_command_response="$(file "${_encrypted_path}")"
 
-  if [[ "${_file_command_response}" =~ GPG ]]
+  if [[ "${_file_command_response}" =~ "GPG" && "${NB_ENCRYPTION_TOOL}" != "gpg-key" ]]
   then
     if _command_exists "gpg"
     then
@@ -1453,7 +1463,20 @@ _decrypt_file() {
       _exit_1 printf "\
 This note was encrypted with GPG, but the GPG command was not found.\\n"
     fi
-  elif [[ "${_file_command_response}" =~ openssl ]]
+  elif [[ "${_file_command_response}" =~ "PGP" ]]
+  then
+    if _command_exists "gpg"
+    then
+      printf "%s\\n"                     \
+        | gpg                            \
+        --quiet                          \
+        --output "${_unencrypted_path}"  \
+        --decrypt "${_encrypted_path}"
+    else
+        _exit_1 printf "\
+This note was encrypted with GPG, but the GPG command was not found.\\n"
+    fi
+  elif [[ "${_file_command_response}" =~ "openssl" && "${NB_ENCRYPTION_TOOL}" != "gpg-key" ]]
   then
     openssl enc                   \
       -d                          \
@@ -1638,9 +1661,12 @@ _encrypt_file() {
   local _encrypted_path="${2:-}"
   local _password="${3:-}"
 
-  if [[ -z "${_password}" ]]
+  if [ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]
   then
-    _exit_1 printf "Password required.\\n"
+    if [[ -z "${_password}" ]]
+    then
+      _exit_1 printf "Password required.\\n"
+    fi
   fi
 
   if [[ -z "${_unencrypted_path}" ]] ||
@@ -1660,6 +1686,16 @@ _encrypt_file() {
         --cipher-algo AES256          \
         --output "${_encrypted_path}" \
         "${_unencrypted_path}"
+  elif [[ "${NB_ENCRYPTION_TOOL}" == "gpg-key" ]]
+  then
+    printf "%s\\n"                    \
+      | gpg                           \
+        --quiet                       \
+        --batch                       \
+        --encrypt                     \
+        --recipient "${NB_RECIPIENT}" \
+        --output "${_encrypted_path}" \
+        "${_unencrypted_path}"
   elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl" ]]
   then
     openssl enc                   \
@@ -1669,7 +1705,7 @@ _encrypt_file() {
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
     _exit_1 \
-      printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
+      printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg', 'gpg-key' or 'openssl'.\\n"
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
@@ -3335,26 +3371,29 @@ _add() {
 
   if ((_encrypt))
   then
-    if [[ -z "${_password}" ]]
+    if [ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]
     then
-      printf "Password: "
-      read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`.
-
-      if [[ -z "${_password:-}" ]]
+      if [[ -z "${_password}" ]]
       then
-        _exit_1 printf "Password required.\\n"
-      fi
+        printf "Password: "
+        read -r -s _password </dev/tty
+        printf "\\n" # print newline to stop `read`.
 
-      local _password_confirmation=
+        if [[ -z "${_password:-}" ]]
+        then
+          _exit_1 printf "Password required.\\n"
+        fi
 
-      printf "Confirm Password: "
-      read -r -s _password_confirmation </dev/tty
-      printf "\\n" # print newline to stop `read`.
+        local _password_confirmation=
 
-      if [[ "${_password}" != "${_password_confirmation}" ]]
-      then
-        _exit_1 printf "Password mismatch.\\n"
+        printf "Confirm Password: "
+        read -r -s _password_confirmation </dev/tty
+        printf "\\n" # print newline to stop `read`.
+
+        if [[ "${_password}" != "${_password_confirmation}" ]]
+        then
+          _exit_1 printf "Password mismatch.\\n"
+        fi
       fi
     fi
 
@@ -3757,17 +3796,20 @@ _bookmark() {
       local _encrypted_path=
       _encrypted_path="${_target_path}"
 
-      if [[ -z "${_password}" ]]
+      if [ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]
       then
-        # Request password without displaying it
-        printf "Password: "
-        read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
-      fi
+        if [[ -z "${_password}" ]]
+        then
+          # Request password without displaying it
+          printf "Password: "
+          read -r -s _password </dev/tty
+          printf "\\n" # print newline to stop `read`.
+        fi
 
-      if [[ -z "${_password}" ]]
-      then
-        _exit_1 printf "Password required.\\n"
+        if [[ -z "${_password}" ]]
+        then
+          _exit_1 printf "Password required.\\n"
+        fi
       fi
 
       _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
@@ -4604,6 +4646,8 @@ _edit() {
     then
       _encrypted_path="${_target_file}"
 
+    if [ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]
+    then
       if [[ -z "${_password}" ]]
       then
         # Request password without displaying it
@@ -4611,6 +4655,7 @@ _edit() {
         read -r -s _password </dev/tty
         printf "\\n" # print newline to stop `read`.
       fi
+    fi
 
       _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"
 
@@ -4812,6 +4857,7 @@ _env() {
     printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
     printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
     printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
+    printf "NB_RECIPIENT=%s\\n" "${NB_RECIPIENT:-}"
     printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
     printf "ack:        %s\\n" "$(command -v ack)"
     printf "ag:         %s\\n" "$(command -v ag)"
@@ -6187,7 +6233,19 @@ HEREDOC
 
           if _file_is_encrypted "${_notebook_path}/${__basename}"
           then
-            _indicators+="🔒 "
+            if [[ "$(file "${_notebook_path}/${__basename}"  \
+                    --exclude=apptype     \
+                    --exclude=encoding    \
+                    --exclude=tokens      \
+                    --exclude=cdf         \
+                    --exclude=compress    \
+                    --exclude=elf         \
+                    --exclude=tar)" =~ PGP ]]
+            then
+              _indicators+="🔐 "
+            else
+              _indicators+="🔒 "
+            fi
           fi
 
           if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
@@ -9473,6 +9531,10 @@ _settings() {
         ((_get_id)) && printf "12" || printf "NB_SYNTAX_THEME"
         return 0
         ;;
+      13|*recipient*|*RECIPIENT*)
+        ((_get_id)) && printf "13" || printf "NB_RECIPIENT"
+        return 0
+        ;;
       *)
         _warn                                   \
           printf "Setting not found: %s\\n"     \
@@ -9711,12 +9773,12 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL'  ]]
     then
-      if [[ "${2:-}" =~ ^openssl$|^gpg$       ]]
+      if [[ "${2:-}" =~ ^openssl$|^gpg$|^gpg-key$  ]]
       then
         return 0
       else
         _warn \
-          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n" &&
+          printf "NB_ENCRYPTION_TOOL must be either \"openssl\", \"gpg\" or \"gpg-key\".\\n" &&
             return 1
       fi
     elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
@@ -9754,7 +9816,12 @@ HEREDOC
           return 1
         fi
       fi
-    else
+    elif [[ "${1:-}" == 'NB_RECIPIENT'  ]]
+    then
+      if [[ "${2:-}" =~ ^e-mail$|^fingerprint$  ]]
+      then
+        return 0
+      fi
       return 0
     fi
   }
@@ -9841,8 +9908,10 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
     $(_color_secondary " ---------------")
      The tool used for encrypting notes.
 
-     • Supported Values: $(_color_primary "openssl"), $(_color_primary "gpg")
-     • Default Value:    $(_color_primary "openssl")")
+     • Supported Values: $(_color_primary "openssl"), $(_color_primary "gpg"), $(_color_primary "gpg-key")
+     • Default Value:    $(_color_primary "openssl")
+
+     If you select gpg-key you MUST also set a valid recipient.")
 
   _settings_list_items+=("$(_color_id_brackets '8')  footer")
   _settings_help_items+=("\
@@ -9907,6 +9976,14 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
       fi)
 
      • Default Value: $(_color_primary 'base16')")
+
+   _settings_list_items+=("$(_color_id_brackets '13') recipient")
+   _settings_help_items+=("\
+    $(_color_secondary " ---------------")
+     Recipient used when encrypting with gpg-key.
+
+     • Supported Values: $(_color_primary "e-mail address"), $(_color_primary "fingerprint")
+     • Default Value:    $(_color_primary "NULL")")
 
   while ((${#}))
   do
@@ -10561,17 +10638,31 @@ _show() {
     local _encrypted_path
     _encrypted_path="${_target_path}"
 
-    if [[ -z "${_password}" ]]
+    if [[ "$(file "${_encrypted_path}"  \
+            --exclude=apptype     \
+            --exclude=encoding    \
+            --exclude=tokens      \
+            --exclude=cdf         \
+            --exclude=compress    \
+            --exclude=elf         \
+            --exclude=tar)" =~ PGP ]] &&
+       [[ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]]
     then
-      # Request password without displaying it
-      printf "Password: "
-      read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`.
-    fi
+      _exit_1 printf "encryption_tool needs to be set to 'gpg-key' to decrypt this file.\\n"
+    elif [[ "$NB_ENCRYPTION_TOOL" != "gpg-key" ]]
+    then
+      if [[ -z "${_password}" ]]
+      then
+        # Request password without displaying it
+        printf "Password: "
+        read -r -s _password </dev/tty
+        printf "\\n" # print newline to stop `read`.
+      fi
 
-    if [[ -z "${_password}" ]]
-    then
-      _exit_1 printf "Password required.\\n"
+      if [[ -z "${_password}" ]]
+      then
+        _exit_1 printf "Password required.\\n"
+      fi
     fi
 
     local _decrypted_path
