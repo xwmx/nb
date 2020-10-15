@@ -1691,25 +1691,22 @@ export _ARCHIVE_FILE_EXTENSIONS=(
   apk
   bz2
   dmg
-  dmg.sparsebundle
   gz
+  lz
   rar
   s7z
   sit
   sitx
   sparsebundle
   tar
-  tar.gz
   tgz
-  tar.Z
-  tar.bz2
   tbz2
-  tar.lz
-  tlz.
-  tar.xz
+  tlz
   txz
+  xz
   zip
   zipx
+  Z
 )
 _file_is_archive() {
   local _file_path="${1:-}"
