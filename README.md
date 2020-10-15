@@ -4120,8 +4120,10 @@ Alias: `set`
      ---------------
      The tool used for encrypting notes.
 
-     • Supported Values: openssl, gpg
+     • Supported Values: openssl, gpg, gpg-key
      • Default Value:    openssl
+
+     If you select gpg-key you MUST also set a valid recipient.
 ```
 
 ##### `footer`
@@ -4214,6 +4216,17 @@ Alias: `set`
          zenburn
 
      • Default Value: base16
+```
+
+##### `recipient`
+
+```text
+[13] recipient
+     ---------------
+     Recipient used when encrypting with gpg-key.
+
+     • Supported Values: e-mail address, fingerprint
+     • Default Value:    NULL
 ```
 
 #### `shell`
