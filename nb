@@ -4706,7 +4706,7 @@ _env() {
     local _repo="${3:?}"
     local _version="${2:?}"
 
-    case "${_arch}" in
+    case "${_arch:-}" in
       x86_64)
         _deb_filename="${_name}_${_version}_amd64.deb"
         ;;
@@ -4800,7 +4800,7 @@ Please install %s manually. No .deb package available for %s."  \
         fi
       done
 
-      apt-get install -y "${_apt_packages[@]}"
+      apt-get install -y "${_apt_packages[@]:-}"
 
       # force install of bat
       apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
