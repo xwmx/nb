@@ -6482,7 +6482,7 @@ _ls() {
   # _ls_print_footer()
   #
   # Usage:
-  #   _ls_print_footer
+  #   _ls_print_footer <notebook>...
   _ls_print_footer() {
     local _footer_line_hi=
     local _footer_line_raw=
@@ -6493,6 +6493,7 @@ _ls() {
     local _maybe_scope=
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
+    local _notebook_names_raw=("${@:-}")
 
     if _notebooks current --selected
     then
@@ -6584,7 +6585,7 @@ _ls() {
   # _ls_print_header()
   #
   # Usage:
-  #   _ls_print_header <alignment>
+  #   _ls_print_header <alignment> <notebook>...
   #
   # Description:
   #   Build word-wrapping notebook line. `fold` doesn't account for
@@ -6596,12 +6597,16 @@ _ls() {
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
   _ls_print_header() {
+    local _alignment="${1:-}"
+    shift
+
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
     local _line_number=0
     local _line_hi=
     local _line_raw=
+    local _notebook_names_raw=("${@:-}")
     local _output_hi=
     local _output_raw=
     local _padding=
@@ -6611,34 +6616,26 @@ _ls() {
     [[ "${NB_HEADER}" == 2 ]] && _centered=1
     [[ "${NB_HEADER}" == 3 ]] && _justified=1
 
-    while ((${#}))
-    do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg}" in
-        --auto-align)
-          _auto_align=1
-          _centered=0
-          _justified=0
-          ;;
-        --centered)
-          _auto_align=0
-          _centered=1
-          _justified=0
-          ;;
-        --justified)
-          _auto_align=0
-          _centered=0
-          _justified=1
-          ;;
-        --plain)
-          _plain=1
-          ;;
-      esac
-
-      shift
-    done
+    case "${_alignment}" in
+      --auto-align)
+        _auto_align=1
+        _centered=0
+        _justified=0
+        ;;
+      --centered)
+        _auto_align=0
+        _centered=1
+        _justified=0
+        ;;
+      --justified)
+        _auto_align=0
+        _centered=0
+        _justified=1
+        ;;
+      --plain)
+        _plain=1
+        ;;
+    esac
 
     local _separator=
     local _separator_hi=
@@ -6867,7 +6864,7 @@ _ls() {
   {
     if ((NB_HEADER)) && [[ -z "${_arguments[*]:-}" ]]
     then
-      _ls_print_header "${_header_flags[@]:-}"
+      _ls_print_header "${_header_flags[@]:-}" "${_notebook_names_raw[@]:-}"
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
@@ -6922,7 +6919,7 @@ _ls() {
 
     if ((NB_FOOTER)) && [[ -z "${_arguments[*]:-}" ]]
     then
-      _ls_print_footer
+      _ls_print_footer "${_notebook_names_raw[@]:-}"
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
