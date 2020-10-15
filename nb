@@ -7611,6 +7611,9 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     if [[ -z "${_query_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NB_DIR}"))
+
+      _notebooks_add_new "${_notebook_names[@]:-}"
+
       set +f
       _notebook_paths=($(ls -1 -d "${NB_DIR}"/*))
       set -f
@@ -7621,6 +7624,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}" "${_notebook_paths[@]:-}")
       fi
     else
+      _notebooks_add_new
+
       for __name in "${_query_names[@]}"
       do
         _notebook_names+=("${__name}")
@@ -8133,8 +8138,12 @@ HEREDOC
   }
 
   _notebooks_add_new() {
-    local _notebook_list=
-    _notebook_list=($(ls -1 "${NB_DIR}"))
+    local _notebook_list=("${@}")
+
+    if [[ -z "${1:-}" ]]
+    then
+      _notebook_list=($(ls -1 "${NB_DIR}"))
+    fi
 
     for __notebook_name in "${_notebook_list[@]:-}"
     do
@@ -8152,7 +8161,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if ! _contains "${_subcommand:-}" "current" "show"
+  if ! _contains "${_subcommand:-}" "current" "list" "show"
   then
     _notebooks_add_new
   fi
