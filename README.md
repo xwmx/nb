@@ -2674,7 +2674,7 @@ notebook:
 ```bash
 # _example() continued:
 
-# return the notebook path
+# get the notebook path
 local _notebook_path
 _notebook_path="$(_notebooks current --path)"
 
