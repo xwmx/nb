@@ -1625,6 +1625,12 @@ Can't edit archives. Export archive and expand to edit.\\n"
   then
     cd "${_file_path}" && "${_editor_command:-}"
   else
+    if [[ "${EDITOR}" =~ typora   ]] &&
+       [[ ! -f "${_file_path:-}"  ]]
+    then
+      touch "${_file_path:-}"
+    fi
+
     eval "${_editor_command} \"${_file_path}\""
   fi
 }
