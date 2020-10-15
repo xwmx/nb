@@ -1130,6 +1130,9 @@ HEREDOC
   then
     _spinner ${!}
   fi
+
+  wait ${!}
+  return ${?}
 }
 
 # _git_index_is_dirty()
