@@ -7334,7 +7334,7 @@ HEREDOC
       _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
     fi
 
-    local _notebook_names=
+    local _notebook_names=()
     _notebook_names=($(_notebooks --names --no-color))
 
     local _notebook_count=
