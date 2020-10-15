@@ -7311,7 +7311,7 @@ _notebooks() {
           _force=1
           ;;
         *)
-          [[ -z "${_name:-}" ]] && _name="${__arg}"
+          [[ -z "${_name:-}" ]] && _name="${__arg%%:*}"
           ;;
       esac
     done
