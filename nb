@@ -51,7 +51,7 @@
 ###############################################################################
 # Strict Mode
 #
-# More Information:
+# More information:
 #   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
 ###############################################################################
 
@@ -123,8 +123,8 @@ _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 #   0 (success, true) If a command <name> is defined in the current environment.
 #   1 (error,  false) If not.
 #
-# Information on why `hash` is used here:
-# http://stackoverflow.com/a/677212
+# More information:
+#   http://stackoverflow.com/a/677212
 _command_exists() {
   if [[ "${1:-}" == "w3m" ]]
   then # Detect WSL 1 (https://stackoverflow.com/a/38859331), where w3m errors.
@@ -173,7 +173,7 @@ _contains() {
 #   in GNU `sed`. Detect which `sed` is available and call it with the
 #   appropriate arguments.
 #
-# More info:
+# More information:
 #   https://stackoverflow.com/q/43171648
 #   https://stackoverflow.com/a/16746032
 _sed_i() {
@@ -2720,7 +2720,7 @@ HEREDOC
 #   (_spinner_example)
 #   ```
 #
-# More Information:
+# More information:
 #   http://fitnr.com/showing-a-bash-spinner.html
 _spinner() {
   local _delay=0.75
