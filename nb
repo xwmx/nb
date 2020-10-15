@@ -950,9 +950,9 @@ _git_checkpoint() {
     local _git_branch=
     _git_branch="$(git -C "${_target_directory}" rev-parse --abbrev-ref HEAD)"
 
-    if ! git -C "${_target_directory}" fetch &>/dev/null
+    if ! GIT_TERMINAL_PROMPT=0 git -C "${_target_directory}" fetch &>/dev/null
     then
-      _warn printf "Unable to fetch from remote.\\n"
+      _warn printf "\\nUnable to fetch from remote.\\n"
       return 1
     fi
 
@@ -1067,9 +1067,10 @@ HEREDOC
       fi
     fi
 
-    git -C "${_target_directory}" push  \
-      --set-upstream                    \
-      origin "${_git_branch}" &>/dev/null || {
+    GIT_TERMINAL_PROMPT=0 git -C "${_target_directory}" push  \
+      --set-upstream                                          \
+      origin "${_git_branch}"                                 \
+      &>/dev/null || {
         _warn printf "Unable to push to remote.\\n"
         return 1
       }
