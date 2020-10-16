@@ -23,7 +23,7 @@
 # ========
 #
 # - Configuration and Setup
-# - Helper Functions (grouped, alphabetical order)
+# - Helper Functions (alphabetical order)
 # - Help
 # - Subcommand Functions (alphabetical order)
 # - Plugins
