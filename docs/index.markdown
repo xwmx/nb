@@ -2847,6 +2847,7 @@ Usage:
   nb export notebook <name> [<path>]
   nb export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
+  nb git autosyncable [<notebook-path>]
   nb git checkpoint [<message>]
   nb git <git options>...
   nb help [<subcommand>] [-p | --print]
@@ -3404,12 +3405,15 @@ Examples:
 
 ```text
 Usage:
+  nb git autosyncable [<notebook-path>]
   nb git checkpoint [<message>]
   nb git <git options>...
 
 Subcommands:
-  checkpoint  Create a new git commit in the current notebook and sync with
-              the remote if `nb set auto_sync` is enabled.
+  autosyncable  Return status 0 (success, true) if autosync should trigger.
+                Otherwise return 1 (error,  false).
+  checkpoint    Create a new git commit in the current notebook and sync with
+                the remote if `nb set auto_sync` is enabled.
 
 Description:
   Run `git` commands within the current notebook directory.

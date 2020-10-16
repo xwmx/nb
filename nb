@@ -1102,64 +1102,6 @@ HEREDOC
   fi
 }
 
-# _git_should_autosync()
-#
-# Usage:
-#   _git_should_autosync <target directory>
-#
-# Exit / Error Status:
-#   0 (success, true)  If an autosync should be triggered.
-#   1 (error,  false)  If not.
-_git_should_autosync() {
-  ((_GIT_ENABLED)) || return 1
-
-  local _current_timestamp=
-  local _last_fetch_timestamp=
-  local _maybe_fetch_timestamp=
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory}" ]]
-  then
-    _exit_1 printf "Usage: _git_should_autosync <target directory>\\n"
-  fi
-
-  if ! ((NB_AUTO_SYNC))
-  then # autosync not enabled.
-    return 1
-  fi
-
-  if ! git -C "${_target_directory}" config --get remote.origin.url &>/dev/null
-  then # there is no remote configured.
-    return 1
-  fi
-
-  if [[ ! -e "${_target_directory}/.git/FETCH_HEAD" ]]
-  then # no previous fetches, but has an origin and autosync is enabled.
-    return 0
-  fi
-
-  if _maybe_fetch_timestamp="$(
-       stat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
-     )"
-  then # GNU
-    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  elif _maybe_fetch_timestamp="$(
-         gstat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
-       )"
-  then # GNU prefixed
-    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  else
-    _last_fetch_timestamp="$(
-      stat -f '%m' "${_target_directory}/.git/FETCH_HEAD"
-    )"
-  fi
-  _current_timestamp="$(date +%s)"
-
-  _diff=$((_current_timestamp-_last_fetch_timestamp))
-
-  [[ "${_diff}" -gt 300 ]]
-}
-
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -2890,6 +2832,7 @@ $(_color_primary "Usage:")
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
+  ${_ME} git autosyncable [<notebook-path>]
   ${_ME} git checkpoint [<message>]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand>] [-p | --print]
@@ -4930,12 +4873,15 @@ _export() {
 
 describe "git" <<HEREDOC
 Usage:
+  ${_ME} git autosyncable [<notebook-path>]
   ${_ME} git checkpoint [<message>]
   ${_ME} git <git options>...
 
 Subcommands:
-  checkpoint  Create a new git commit in the current notebook and sync with
-              the remote if \`${_ME} set auto_sync\` is enabled.
+  autosyncable  Return status 0 (success, true) if autosync should trigger.
+                Otherwise return 1 (error,  false).
+  checkpoint    Create a new git commit in the current notebook and sync with
+                the remote if \`${_ME} set auto_sync\` is enabled.
 
 Description:
   Run \`git\` commands within the current notebook directory.
@@ -4947,6 +4893,56 @@ Examples:
   ${_ME} example:git status
 HEREDOC
 _git() {
+  _git_autosyncable() {
+    ((_GIT_ENABLED)) || return 1
+
+    local _current_timestamp=
+    local _last_fetch_timestamp=
+    local _maybe_fetch_timestamp=
+    local _target_directory="${1:-}"
+
+    if [[ -z "${_target_directory}" ]]
+    then
+      _target_directory="$(_notebooks current --path)"
+    fi
+
+    if ! ((NB_AUTO_SYNC))
+    then # autosync not enabled.
+      return 1
+    fi
+
+    if ! git -C "${_target_directory}" config --get remote.origin.url &>/dev/null
+    then # there is no remote configured.
+      return 1
+    fi
+
+    if [[ ! -e "${_target_directory}/.git/FETCH_HEAD" ]]
+    then # no previous fetches, but has an origin and autosync is enabled.
+      return 0
+    fi
+
+    if _maybe_fetch_timestamp="$(
+         stat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
+       )"
+    then # GNU
+      _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+    elif _maybe_fetch_timestamp="$(
+           gstat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
+         )"
+    then # GNU prefixed
+      _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+    else
+      _last_fetch_timestamp="$(
+        stat -f '%m' "${_target_directory}/.git/FETCH_HEAD"
+      )"
+    fi
+    _current_timestamp="$(date +%s)"
+
+    _diff=$((_current_timestamp-_last_fetch_timestamp))
+
+    [[ "${_diff}" -gt 300 ]]
+  }
+
   # Usage: _git_sync <target directory>
   _git_sync() {
     local _target_directory="${1:-}"
@@ -5092,6 +5088,9 @@ HEREDOC
   }
 
   case "${1:-}" in
+    autosyncable)
+      _git_autosyncable "${2:-}"
+      ;;
     checkpoint)
       shift
       _git_checkpoint "${@:-}"
@@ -11694,13 +11693,13 @@ _main() {
         then
           _index reconcile
 
-          if _git_should_autosync "${NB_NOTEBOOK_PATH}"
+          if _git autosyncable "${NB_NOTEBOOK_PATH}"
           then
             "${_MY_PATH}" sync
           else
             _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Commit" --spinner
           fi
-        elif _git_should_autosync "${NB_NOTEBOOK_PATH}"
+        elif _git autosyncable "${NB_NOTEBOOK_PATH}"
         then
           ("${_MY_PATH}" sync &>/dev/null) &
         fi
