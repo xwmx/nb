@@ -6407,19 +6407,19 @@ HEREDOC
           fi
         fi
 
-        local _print_item=
-        local _print_item_color=
+        local _info_line=
+        local _info_line_color=
 
         if ((_no_id))
         then
-          _print_item="${_list_item}"
-          _print_item_color="${_list_item}"
+          _info_line="${_list_item}"
+          _info_line_color="${_list_item}"
         else
           local _list_item_id="${_id_item}${_spaces}${_list_item}"
           local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
 
-          _print_item="${_list_item_id}"
-          _print_item_color="${_list_item_id_color}"
+          _info_line="${_list_item_id}"
+          _info_line_color="${_list_item_id_color}"
         fi
 
         if ((_list_color_enabled))  &&
@@ -6428,7 +6428,7 @@ HEREDOC
            ! ((_no_id))
         then
           _visible_info_line_length="$(
-            _get_visible_line_length "${_print_item:-}" "${_extra_length:-0}"
+            _get_visible_line_length "${_info_line:-}" "${_extra_length:-0}"
           )"
         fi
 
@@ -6450,9 +6450,9 @@ HEREDOC
 
         if ((_list_color_enabled))
         then
-          printf "%s" "${_print_item_color}"
+          printf "%s" "${_info_line_color}"
         else
-          printf "%s" "${_print_item}"
+          printf "%s" "${_info_line}"
         fi
 
         if ((_list_color_enabled))  &&
