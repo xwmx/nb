@@ -6274,7 +6274,7 @@ HEREDOC
 
         if ((_print_indicators))
         then
-          # TODO: indicator logic duplicated here for performance (~20ms?)
+          # TODO: `show --indicators` duplicated for performance (~20ms?)
           if _file_is_bookmark "${_notebook_path}/${__basename}"
           then
             _indicators+="🔖 "
@@ -10344,6 +10344,8 @@ _show() {
   #
   # Description:
   #   Print a list of indicators based on the file type.
+  #
+  # NOTE: Indicator logic is also specified in `list` for performance.
   _show_indicators() {
     local _indicators=
     local _path="${1:-}"
