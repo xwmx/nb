@@ -6427,7 +6427,7 @@ HEREDOC
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          _item_line_length="$(
+          _visible_info_line_length="$(
             _get_visible_line_length "${_print_item:-}" "${_extra_length:-0}"
           )"
         fi
@@ -6438,7 +6438,7 @@ HEREDOC
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+          if [[ "${_visible_info_line_length}" -gt "${_columns}" ]] &&
              {
                [[ -n "${_maybe_title:-}" ]] ||
                [[ -n "${_first_line:-}"  ]]
@@ -6461,7 +6461,7 @@ HEREDOC
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+          if [[ "${_visible_info_line_length}" -gt "${_columns}" ]] &&
              {
                [[ -n "${_maybe_title:-}" ]] ||
                [[ -n "${_first_line:-}"  ]]
@@ -6478,12 +6478,12 @@ HEREDOC
            [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
            _file_is_text "${_notebook_path}/${__basename}"
         then # excerpt is specified with a non-zero digit, required by `head`.
-          if [[ -z "${_item_line_length:-}"               ]] ||
-             [[ "${_item_line_length}" -gt "${_columns}"  ]]
+          if [[ -z "${_visible_info_line_length:-}"               ]] ||
+             [[ "${_visible_info_line_length}" -gt "${_columns}"  ]]
           then
             _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
           else
-            _print_line "$(printf "%-${_item_line_length}s" '.')"
+            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
           fi
           head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
             | _highlight_syntax_if_available "${__basename##*.}"
