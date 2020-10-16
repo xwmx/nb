@@ -910,91 +910,6 @@ trap "_temp cleanup" EXIT
 # Supported Values: '0' '1'
 export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 
-# _git_checkpoint()
-#
-# Usage:
-#   _git_checkpoint <target directory> <commit message>
-#
-# Description:
-#   Commit all files in <target directory> with the provided commit message.
-_git_checkpoint() {
-  ((_GIT_ENABLED)) || return 0
-
-  # Usage: _git_checkpoint_commit <target directory> <message>
-  _git_checkpoint_commit() {
-   local _target_directory="${1:-}"
-   local _message="${2:-}"
-
-    if [[ -z "${_target_directory:-}" ]] || [[ -z "${_message:-}" ]]
-    then
-      _exit_1 printf \
-         "Usage: _git_checkpoint_commit <message> <target directory>"
-    fi
-
-    git -C "${_target_directory}" add --all &&
-      git -C "${_target_directory}" commit -a -m "${_message}"
-  }
-
-  local _message=
-  local _show_spinner=0
-  local _target_directory=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --spinner)
-        _show_spinner=1
-        ;;
-      *)
-        if [[ -z "${_target_directory}" ]] &&
-           [[ "${__arg}" =~ ^/          ]] &&
-           [[ -d "${__arg}"             ]]
-        then
-          _target_directory="${__arg}"
-        elif [[ -z "${_message}" ]]
-        then
-          _message="${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  if [[ -z "${_target_directory:-}" ]]
-  then
-    _target_directory="$(_notebooks current --path)"
-  fi
-
-  if [[ -z "${_message}" ]]
-  then
-    _message="[nb] Commit"
-  fi
-
-  if ((NB_AUTO_SYNC))
-  then
-    (
-      # Only sync when the index is dirty to avoid fetching from and pushing
-      # to origin.
-      if _git dirty "${_target_directory}"
-      then
-        _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
-      fi && GIT_TERMINAL_PROMPT=0 _git sync "${_target_directory}"
-    ) &
-  else
-    (
-      _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null ||
-        return 0
-    ) &
-  fi
-
-  if ((_show_spinner))
-  then
-    _spinner  ${!}
-  fi
-
-  wait        ${!}
-  return      ${?}
-}
-
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -3110,7 +3025,7 @@ _add() {
 
     printf "Added: %s\\n" "${_info}"
   fi &&
-    _git_checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
 }
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
@@ -4192,7 +4107,7 @@ _delete() {
     then
       _index delete "${_basename}"
 
-      _git_checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
+      _git checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
       printf "Deleted:  %s\\n" "${_info}"
     fi
@@ -4370,7 +4285,7 @@ _edit() {
       rm "${_decrypted_path:?}"
     fi
 
-    _git_checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
 
     if [[ "${_before}" != "${_after}" ]]
     then
@@ -4841,6 +4756,91 @@ _git() {
     _diff=$((_current_timestamp-_last_fetch_timestamp))
 
     [[ "${_diff}" -gt 300 ]]
+  }
+
+  # _git_checkpoint()
+  #
+  # Usage:
+  #   _git_checkpoint <target directory> <commit message>
+  #
+  # Description:
+  #   Commit all files in <target directory> with the provided commit message.
+  _git_checkpoint() {
+    ((_GIT_ENABLED)) || return 0
+
+    # Usage: _git_checkpoint_commit <target directory> <message>
+    _git_checkpoint_commit() {
+     local _target_directory="${1:-}"
+     local _message="${2:-}"
+
+      if [[ -z "${_target_directory:-}" ]] || [[ -z "${_message:-}" ]]
+      then
+        _exit_1 printf \
+           "Usage: _git_checkpoint_commit <message> <target directory>"
+      fi
+
+      git -C "${_target_directory}" add --all &&
+        git -C "${_target_directory}" commit -a -m "${_message}"
+    }
+
+    local _message=
+    local _show_spinner=0
+    local _target_directory=
+
+    for __arg in "${@:-}"
+    do
+      case "${__arg}" in
+        --spinner)
+          _show_spinner=1
+          ;;
+        *)
+          if [[ -z "${_target_directory}" ]] &&
+             [[ "${__arg}" =~ ^/          ]] &&
+             [[ -d "${__arg}"             ]]
+          then
+            _target_directory="${__arg}"
+          elif [[ -z "${_message}" ]]
+          then
+            _message="${__arg}"
+          fi
+          ;;
+      esac
+    done
+
+    if [[ -z "${_target_directory:-}" ]]
+    then
+      _target_directory="$(_notebooks current --path)"
+    fi
+
+    if [[ -z "${_message}" ]]
+    then
+      _message="[nb] Commit"
+    fi
+
+    if ((NB_AUTO_SYNC))
+    then
+      (
+        # Only sync when the index is dirty to avoid fetching from and pushing
+        # to origin.
+        if _git dirty "${_target_directory}"
+        then
+          _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
+        fi && GIT_TERMINAL_PROMPT=0 _git sync "${_target_directory}"
+      ) &
+    else
+      (
+        _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null ||
+          return 0
+      ) &
+    fi
+
+    if ((_show_spinner))
+    then
+      _spinner  ${!}
+    fi
+
+    wait        ${!}
+    return      ${?}
   }
 
   # Usage: _git_dirty <target directory>
