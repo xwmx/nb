@@ -995,27 +995,6 @@ _git_checkpoint() {
   return      ${?}
 }
 
-# _git_out_of_sync()
-#
-# Usage:
-#   _git_out_of_sync <target directory>
-#
-# Exit / Error Status:
-#   0 (success, true)  If <target diectory> is out of sync with the remote.
-#   1 (error,  false)  If <target diectory> is synced with the remote.
-_git_out_of_sync() {
-  ((_GIT_ENABLED)) || return 1
-
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory:-}" ]]
-  then
-    _exit_1 printf "Usage: _git_out_of_sync <target directory>\\n"
-  fi
-
-  git -C "${_target_directory}" status | grep -q 'diverged'
-}
-
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -4878,6 +4857,27 @@ _git() {
     [[ -n "$(git -C "${_target_path}" status --porcelain)" ]]
   }
 
+  # _git_out_of_sync()
+  #
+  # Usage:
+  #   _git_out_of_sync <target directory>
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  If <target diectory> is out of sync with the remote.
+  #   1 (error,  false)  If <target diectory> is synced with the remote.
+  _git_out_of_sync() {
+    ((_GIT_ENABLED)) || return 1
+
+    local _target_directory="${1:-}"
+
+    if [[ -z "${_target_directory:-}" ]]
+    then
+      _target_directory="$(_notebooks current --path)"
+    fi
+
+    git -C "${_target_directory}" status | grep -q 'diverged'
+  }
+
   # _git_required()
   #
   # Usage:
@@ -5097,6 +5097,9 @@ HEREDOC
       ;;
     dirty)
       _git_dirty "${2:-}"
+      ;;
+    out*of*sync|o|oos|out)
+      _git_out_of_sync "${2:-}"
       ;;
     required)
       _git_required
@@ -10998,7 +11001,7 @@ _sync() {
 
     if ! NB_AUTO_SYNC=1 _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner ||
        _git dirty           "${NB_NOTEBOOK_PATH}"                                   ||
-       _git_out_of_sync     "${NB_NOTEBOOK_PATH}"
+       _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
       _exit_1 printf "Syncing failed.\\n"
     fi
