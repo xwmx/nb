@@ -7129,20 +7129,7 @@ _move() {
       "$(_color_primary "${_target_notebook_escaped_name}:${_basename}")"
   fi
 
-  local _source_id=
-  _source_id="$(_index get_id "${_basename}")"
-
-  local _source_info=
-  _source_info="$(_color_id_brackets "${_notebook_escaped_name}:${_source_id}")"
-  _source_info="${_source_info} $(_color_primary "${_notebook_escaped_name}:${_basename}")"
-
-  local _title=
-  _title="$(_get_title "${_notebook_path}/${_basename}")"
-
-  if [[ -n "${_title}" ]]
-  then
-    _source_info="${_source_info} \"${_title}\""
-  fi
+  _source_info="$(_show "${_selector}" --info-line)"
 
   if ! ((_force))
   then
