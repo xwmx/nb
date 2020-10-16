@@ -6789,7 +6789,7 @@ _ls() {
       if [[ "${_current_notebook_name}" == "${_notebook_names[i]}" ]]
       then
         _maybe_highlighted_notebook_name="$(
-          _color_primary "${_notebook_names[i]:-}"
+          _color_primary "${_notebook_names[i]:-}" --underline
         )"
       else
         _maybe_highlighted_notebook_name="${_notebook_names[i]:-}"
