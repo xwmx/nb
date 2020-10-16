@@ -9436,20 +9436,10 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
-  # Usage: _nb_settings_bat_themes
-  _nb_settings_bat_themes() {
-    _command_exists "bat" ||
-      _exit_1 printf "bat required: https://github.com/sharkdp/bat"
-
-    bat --list-themes               \
-      | grep --color=never 'Theme'  \
-      | sed 's/^Theme: //g'
-  }
-
-  # Usage: _nb_settings_colors [<number>] [themes]
-  _nb_settings_colors() {
-    # Usage: _nb_settings_colors_print <number>
-    _nb_settings_colors_print() {
+  # Usage: _settings_colors [<number>] [themes]
+  _settings_colors() {
+    # Usage: _settings_colors_print <number>
+    _settings_colors_print() {
       printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
     }
 
@@ -9462,7 +9452,7 @@ _settings() {
         [[ "${1}" =~ [[:digit:]] ]] || _exit_1 \
           printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
 
-        _nb_settings_colors_print "${1:-}"
+        _settings_colors_print "${1:-}"
         printf "\\n"
       fi
     else
@@ -9473,22 +9463,22 @@ _settings() {
           printf "\\n"
         fi
 
-        _nb_settings_colors_print "${_i}"
+        _settings_colors_print "${_i}"
       done
 
       printf "\\n"
     fi
   }
 
-  # Usage: _nb_settings_get_value (<number> | <name>)
-  _nb_settings_get_value() {
+  # Usage: _settings_get_value (<number> | <name>)
+  _settings_get_value() {
     local _setting_name=
-    _setting_name="$(_nb_settings_identify "${1:-}")" &&
+    _setting_name="$(_settings_identify "${1:-}")" &&
       _env | grep "${_setting_name}" | cut -d= -f2
   }
 
-  # Usage: _nb_settings_identify [--id] (<number> | <name>)
-  _nb_settings_identify() {
+  # Usage: _settings_identify [--id] (<number> | <name>)
+  _settings_identify() {
     local _get_id=0
     local _id_or_name=
 
@@ -9562,13 +9552,13 @@ _settings() {
     esac
   }
 
-  # Usage: _nb_settings_prompt [<id> | <name>]
-  _nb_settings_prompt() {
+  # Usage: _settings_prompt [<id> | <name>]
+  _settings_prompt() {
     local _setting_name="${1:-}"
 
     if [[ -n "${_setting_name}" ]]
     then
-      _setting_name="$(_nb_settings_identify "${_setting_name}")"
+      _setting_name="$(_settings_identify "${_setting_name}")"
     else
       cat <<HEREDOC
 $(_color_primary "${_ME}") Settings
@@ -9590,7 +9580,7 @@ HEREDOC
               ;;
             *)
               _setting_name="$(
-                _nb_settings_identify "${__setting}"
+                _settings_identify "${__setting}"
               )" && break
               ;;
           esac
@@ -9601,7 +9591,7 @@ HEREDOC
     if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
        [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
     then
-      printf "%s\\n\\n" "$(_nb_settings_colors)"
+      printf "%s\\n\\n" "$(_settings_colors)"
     fi
 
     _settings show "${_setting_name}"
@@ -9625,11 +9615,11 @@ HEREDOC
             return 0
             ;;
           unset|default|reset)
-            _nb_settings_unset "${_setting_name}" || continue
+            _settings_unset "${_setting_name}" || continue
             break
             ;;
           *)
-            _nb_settings_set "${_setting_name}" "${__value}" || continue
+            _settings_set "${_setting_name}" "${__value}" || continue
             break
             ;;
         esac
@@ -9637,8 +9627,8 @@ HEREDOC
     done
   }
 
-  # Usage: _nb_settings_set (<number> | <name>) <value>
-  _nb_settings_set() {
+  # Usage: _settings_set (<number> | <name>) <value>
+  _settings_set() {
     local _attribution=
     _attribution="# Set by \`${_ME}\` • $(date)"
     local _entry=
@@ -9646,12 +9636,12 @@ HEREDOC
     local _stripped=
     local _value=
 
-    _setting_name="$(_nb_settings_identify "${1:-}")"  &&
+    _setting_name="$(_settings_identify "${1:-}")"  &&
       if _contains "${2:-}" "unset" "default" "reset"
       then
-        _nb_settings_unset "${_setting_name}" && return 0
+        _settings_unset "${_setting_name}" && return 0
       fi &&
-      _nb_settings_validate_value "${_setting_name}" "${2:-}" &&
+      _settings_validate_value "${_setting_name}" "${2:-}" &&
       {
         _value="${2:-}"
         if [[ "${_value}" =~ ^~ ]]
@@ -9666,9 +9656,9 @@ HEREDOC
       else
         _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}"
       fi &&
-      _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
-      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
-      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]] ||
+      _settings_unset "${_setting_name}" > /dev/null 2>&1     &&
+      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"         &&
+      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]]  ||
          [[ "${_setting_name}" == "NB_COLOR_SECONDARY"    ]]
       then
         _setting_name="$(tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
@@ -9692,12 +9682,12 @@ HEREDOC
         "${_value}"
   }
 
-  # Usage: _nb_settings_unset (<number> | <name>)
-  _nb_settings_unset() {
+  # Usage: _settings_unset (<number> | <name>)
+  _settings_unset() {
     local _setting_name=
     local _default_value=
 
-    _setting_name="$(_nb_settings_identify "${1:-}")" &&
+    _setting_name="$(_settings_identify "${1:-}")"      &&
       _sed_i                                            \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
         -e "s/^export ${_setting_name}.*Set by.*$//g"   \
@@ -9737,8 +9727,8 @@ HEREDOC
           "${_default_value}"
   }
 
-  # Usage: _nb_settings_validate_value (<number> | <name>) <value>
-  _nb_settings_validate_value() {
+  # Usage: _settings_validate_value (<number> | <name>) <value>
+  _settings_validate_value() {
     if [[ "${1:-}" == 'EDITOR'                ]] ||
        [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
     then
@@ -9998,7 +9988,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
     case "${__arg}" in
       color|colors)
-        _nb_settings_colors "${2:-}"
+        _settings_colors "${2:-}"
         return 0
         ;;
       edit)
@@ -10011,7 +10001,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           _exit_1 _help settings
         fi
 
-        _nb_settings_get_value "${2:-}"
+        _settings_get_value "${2:-}"
         return 0
         ;;
       list)
@@ -10038,7 +10028,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           _exit_1 _help "settings"
         fi
 
-        _nb_settings_set "${2:-}" "${3:-}"
+        _settings_set "${2:-}" "${3:-}"
         return 0
         ;;
       show|help|about|info|more)
@@ -10048,10 +10038,10 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
         fi
 
         local _setting_id=
-        _setting_id="$(_nb_settings_identify --id "${2:-}")"
+        _setting_id="$(_settings_identify --id "${2:-}")"
 
         local _setting_name=
-        _setting_name="$(_nb_settings_identify "${2:-}")"
+        _setting_name="$(_settings_identify "${2:-}")"
 
         local _index=
         _index="$((_setting_id-1))"
@@ -10062,7 +10052,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
         printf "\\n%s is currently set to %s\\n"  \
           "$(_color_primary "${_setting_name}")"  \
-          "$(_color_primary "$(_nb_settings_get_value "${_setting_name}")")"
+          "$(_color_primary "$(_settings_get_value "${_setting_name}")")"
         return 0
         ;;
       reset|unset)
@@ -10071,26 +10061,26 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           _exit_1 _help "settings"
         fi
 
-        _nb_settings_unset "${2:-}"
+        _settings_unset "${2:-}"
         return 0
         ;;
       *)
         local _setting_name=
         if [[ -n "${1:-}" ]]
         then
-          _setting_name="$(_nb_settings_identify "${1}")"
+          _setting_name="$(_settings_identify "${1}")"
         fi
 
         if [[ -n "${_setting_name:-}" ]]
         then
           if [[ -n "${2:-}" ]]
           then
-            _nb_settings_set "${_setting_name}" "${2}"
+            _settings_set "${_setting_name}" "${2}"
           else
-            _nb_settings_prompt "${_setting_name}"
+            _settings_prompt "${_setting_name}"
           fi
         else
-          _nb_settings_prompt
+          _settings_prompt
         fi
 
         return 0
