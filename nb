@@ -6274,6 +6274,7 @@ HEREDOC
 
         if ((_print_indicators))
         then
+          # TODO: indicator logic duplicated here for performance (~20ms?)
           if _file_is_bookmark "${_notebook_path}/${__basename}"
           then
             _indicators+="🔖 "
@@ -10349,6 +10350,48 @@ Alias: \`view\`
 Shortcut Alias: \`s\`
 HEREDOC
 _show() {
+  # _show_indicators()
+  #
+  # Usage:
+  #   _show_indicators <path>
+  #
+  # Description:
+  #   Print a list of indicators based on the file type.
+  _show_indicators() {
+    local _indicators=
+    local _path="${1:-}"
+
+    if _file_is_bookmark "${_path}"
+    then
+      _indicators+="🔖 "
+    elif _file_is_image "${_path}"
+    then
+      _indicators+="🌄 "
+    elif _file_is_document "${_path}"
+    then
+      _indicators+="📄 "
+    elif [[ -d "${_path}" ]]
+    then
+      _indicators+="📂 "
+    elif _file_is_video "${_path}"
+    then
+      _indicators+="📹 "
+    elif _file_is_audio "${_path}"
+    then
+      _indicators+="🔉 "
+    elif [[ "${_path}" =~ epub$ ]]
+    then
+      _indicators+="📖 "
+    fi
+
+    if _file_is_encrypted "${_path}"
+    then
+      _indicators+="🔒 "
+    fi
+
+    printf "%s\\n" "${_indicators:-}"
+  }
+
   # _show_selector_basename()
   #
   # Usage:
@@ -10433,6 +10476,7 @@ _show() {
   local _selector=
   local _show_color_enabled="${_COLOR_ENABLED}"
   local _skip_notebook_fallback=0
+  local _print_indicators=0
   local _print_title=0
   local _tool=
   local _type=
@@ -10459,6 +10503,9 @@ _show() {
       --id|--index)
         _print_id=1
         _skip_notebook_fallback=1
+        ;;
+      --indicators)
+        _print_indicators=1
         ;;
       --info-line)
         _print_info=1
@@ -10579,6 +10626,12 @@ _show() {
   if ((_print_title))
   then
     _get_title "${_notebook_path}/${_basename}"
+    return 0
+  fi
+
+  if ((_print_indicators))
+  then
+    _show_indicators "${_notebook_path}/${_basename}"
     return 0
   fi
 

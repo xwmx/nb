@@ -420,6 +420,64 @@ load test_helper
   [[ "${output}" == "Example Title" ]]
 }
 
+# `show <id> --indicators` ####################################################
+
+@test "\`show <id> --indicators\` exits with status 0 and prints bookmark indicator." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0 ]]
+  [[ "${output}"    =~ 🔖 ]]
+  [[ ! "${output}"  =~ 🔒 ]]
+}
+
+@test "\`show <id> --indicators\` exits with status 0 and prints encrypted indicator." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --encrypt --password=password
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0 ]]
+  [[ ! "${output}"  =~ 🔖 ]]
+  [[ "${output}"    =~ 🔒 ]]
+}
+
+@test "\`show <id> --indicators\` exits with status 0 and prints encrypted bookmark indicators." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md" \
+      --content "<https://example.test>"   \
+      --encrypt --password=password
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0 ]]
+  [[ "${output}"    =~ 🔖 ]]
+  [[ "${output}"    =~ 🔒 ]]
+}
+
 # `show <id> --info-line` #####################################################
 
 @test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
