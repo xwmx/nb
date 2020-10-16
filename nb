@@ -801,7 +801,7 @@ __set_notebook_paths() {
     fi
   }; __set_local_notebook_path
 
-  __set_global_notebook() {
+  __set_global_notebook_path() {
     if [[ -e "${NB_DIR}/.current" ]]
     then
       local _global_notebook_name=
@@ -812,7 +812,7 @@ __set_notebook_paths() {
         _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_global_notebook_name}"
       fi
     fi
-  }; __set_global_notebook
+  }; __set_global_notebook_path
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
