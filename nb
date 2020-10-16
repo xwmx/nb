@@ -2811,8 +2811,7 @@ $(_color_primary "Usage:")
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
-  ${_ME} git (autosyncable | dirty) [<notebook-path>]
-  ${_ME} git checkpoint [<message>]
+  ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
@@ -4852,13 +4851,10 @@ _export() {
 
 describe "git" <<HEREDOC
 Usage:
-  ${_ME} git (autosyncable | dirty) [<notebook-path>]
-  ${_ME} git checkpoint [<message>]
+  ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git options>...
 
 Subcommands:
-  autosyncable  Return status 0 (success, true) if autosync should trigger.
-                Otherwise return 1 (error, false).
   checkpoint    Create a new git commit in the current notebook and sync with
                 the remote if \`${_ME} set auto_sync\` is enabled.
   dirty         0 (success, true) If there are uncommitted changes in
@@ -4875,6 +4871,14 @@ Examples:
   ${_ME} example:git status
 HEREDOC
 _git() {
+  # _git_autosyncable()
+  #
+  # Usage:
+  #   _git_autosyncable [<target directory>]
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  If autosync should trigger.
+  #   1 (error,  false)  If autosync should not trigger.
   _git_autosyncable() {
     ((_GIT_ENABLED)) || return 1
 
