@@ -105,11 +105,6 @@ _REPO_MAIN_BRANCH="master"
 # The base URL for raw files.
 _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 
-# $_LANG & $_LC_ALL
-#
-# The original values of $LANG and $LC_ALL.
-_LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
-
 ###############################################################################
 # Utilities
 ###############################################################################
@@ -1693,6 +1688,8 @@ _get_visible_line_length() {
   local _string="${1:-}"
   local _extra_length="${2:-0}"
 
+  _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
+
   local _line_length_chars=
   _line_length_chars="${#_string}"
 
@@ -1701,7 +1698,7 @@ _get_visible_line_length() {
   local _line_length_bytes=
   _line_length_bytes="${#_string}"
 
-  LANG="${_LANG}" LC_ALL="${_LC_ALL}"
+  LANG="${_LANG:-}" LC_ALL="${_LC_ALL:-}"
 
   local _line_length_diff=
   _line_length_diff=$(((_line_length_bytes-_line_length_chars)/3))
