@@ -988,11 +988,11 @@ _git_checkpoint() {
 
   if ((_show_spinner))
   then
-    _spinner ${!}
+    _spinner  ${!}
   fi
 
-  wait ${!}
-  return ${?}
+  wait        ${!}
+  return      ${?}
 }
 
 # _git_index_is_dirty()
