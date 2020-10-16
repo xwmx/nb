@@ -5660,6 +5660,12 @@ _index() {
       # local _basename="${2:-}"
       # local _id
 
+      # if [[ -z "${_basename}" ]]
+      # then
+      #   _help index
+      #   return 1
+      # fi
+
       # _index_get_id "${_basename:-}" "${_index_path:-}" | {
       #   read -r _id
 
