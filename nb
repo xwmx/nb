@@ -981,7 +981,8 @@ _git_checkpoint() {
     ) &
   else
     (
-      _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
+      _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null ||
+        return 0
     ) &
   fi
 
