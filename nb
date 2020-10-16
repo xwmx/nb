@@ -4958,8 +4958,10 @@ HEREDOC
   _git_sync() {
     local _notebook_path="${1:-}"
 
-    [[ -z "${_notebook_path:-}" ]] &&
-      _exit_1 printf "Usage: _git_sync <target-directory>"
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _notebook_path="$(_notebooks current --path)"
+    fi
 
     if ! git -C "${_notebook_path}" remote get-url origin &>/dev/null
     then
@@ -5116,7 +5118,7 @@ HEREDOC
       _git_required
       ;;
     sync)
-      _git_sync "$(_notebooks current --path)"
+      _git_sync "${2:-}"
       ;;
     *)
       local _notebook_path
