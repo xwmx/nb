@@ -2848,7 +2848,7 @@ Usage:
   nb export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
   nb git [checkpoint [<message>] | dirty]
-  nb git <git options>...
+  nb git <git-options>...
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
@@ -3405,7 +3405,7 @@ Examples:
 ```text
 Usage:
   nb git [checkpoint [<message>] | dirty]
-  nb git <git options>...
+  nb git <git-options>...
 
 Subcommands:
   checkpoint    Create a new git commit in the current notebook and sync with
