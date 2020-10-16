@@ -3491,7 +3491,7 @@ Subcommands:
   (default) Copy or download the file in <path> or <url>.
   copy      Copy the file at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Copy the file at <path> into the current notebook.
+  move      Move the file at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
