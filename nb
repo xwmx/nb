@@ -166,7 +166,7 @@ _contains() {
 # _sed_i()
 #
 # Usage:
-#   _sed_id <sed argument>...
+#   _sed_id <sed-argument>...
 #
 # Description:
 #   `sed -i` takes an extension on macOS, but that extension can cause errors
@@ -1248,7 +1248,7 @@ Can't edit archives. Export archive and expand to edit.\\n"
 # _encrypt_file()
 #
 # Usage:
-#   _encrypt_file <unencrypted path> <encrypted path> <password>
+#   _encrypt_file <unencrypted-path> <encrypted-path> <password>
 _encrypt_file() {
   local _unencrypted_path="${1:-}"
   local _encrypted_path="${2:-}"
@@ -1835,7 +1835,7 @@ _get_title() {
 # _get_unique_basename()
 #
 # Usage:
-#   _get_unique_basename [<file name> | <file extension>] [<directory>]
+#   _get_unique_basename [<file-name> | <file-extension>] [<directory>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
