@@ -478,7 +478,7 @@ load test_helper
   [[ "${output}"    =~ 🔒 ]]
 }
 
-# `show <id> --info-line` #####################################################
+# # `show <id> --info-line` #####################################################
 
 @test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
   {
@@ -518,6 +518,55 @@ load test_helper
   [[ "${output}" =~ one:1           ]]
   [[ "${output}" =~ one:example.md  ]]
   [[ "${output}" =~ Example\ Title  ]]
+}
+
+@test "\`show <id> --info-line\` includes indicators." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md"  \
+      --title   "Example Title"             \
+      --content "<https://example.test>"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0                   ]]
+  [[ "${output}"    =~ 1                    ]]
+  [[ "${output}"    =~ example.bookmark.md  ]]
+  [[ "${output}"    =~ Example\ Title       ]]
+  [[ ! "${output}"  =~ home                 ]]
+  [[ "${output}"    =~ 🔖                   ]]
+  [[ ! "${output}"  =~ 🔒                   ]]
+}
+
+@test "\`show <id> --info-line\` includes encrypted indicators." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md"  \
+      --title   "Example Title"             \
+      --content "<https://example.test>"    \
+      --encrypt --password=password
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0                       ]]
+  [[ "${output}"    =~ 1                        ]]
+  [[ "${output}"    =~ example.bookmark.md.enc  ]]
+  [[ ! "${output}"  =~ Example\ Title           ]]
+  [[ ! "${output}"  =~ home                     ]]
+  [[ "${output}"    =~ 🔖                       ]]
+  [[ "${output}"    =~ 🔒                       ]]
 }
 
 # `show <id> --added` #########################################################

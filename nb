@@ -10674,20 +10674,29 @@ _show() {
       _maybe_scoped_basename="${_notebook_escaped_name}:${_maybe_scoped_basename}"
     fi
 
+    local _info_line=
+    _info_line+="$(_color_id_brackets "${_maybe_scoped_id}") "
+
+    local _indicators
+    _indicators="$(_show "${_notebook_path}/${_basename}" --indicators)"
+
+    if [[ -n "${_indicators:-}" ]]
+    then
+      _info_line+="${_indicators}"
+    fi
+
+    _info_line+="$(_color_primary "${_maybe_scoped_basename}") "
+
     local _title
     _title="$(_get_title "${_notebook_path}/${_basename}")"
 
-    if [[ -n "${_title}" ]]
+
+    if [[ -n "${_title:-}" ]]
     then
-      printf "%s %s \"%s\"\\n"                              \
-        "$(_color_id_brackets "${_maybe_scoped_id}")"       \
-        "$(_color_primary     "${_maybe_scoped_basename}")" \
-        "${_title}"
-    else
-      printf "%s %s\\n"                                     \
-        "$(_color_id_brackets "${_maybe_scoped_id}")"       \
-        "$(_color_primary     "${_maybe_scoped_basename}")"
+      _info_line+="\"${_title}\""
     fi
+
+    printf "%s\\n" "${_info_line:-}"
 
     return 0
   fi
