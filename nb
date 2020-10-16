@@ -4952,7 +4952,7 @@ _git() {
     local _target_directory="${1:-}"
 
     [[ -z "${_target_directory:-}" ]] &&
-      _exit_1 printf "Usage: _get_checkpoint_sync <target-directory>"
+      _exit_1 printf "Usage: _git_sync <target-directory>"
 
     if ! git -C "${_target_directory}" remote get-url origin &>/dev/null
     then
