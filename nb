@@ -9201,8 +9201,6 @@ _search() {
         local _filename_color=
         local _filename_hit=0
         local _id=
-        local _id_filename=
-        local _id_filename_color=
         local _path=
         local _skip=0
         local _title=
@@ -9348,6 +9346,9 @@ _search() {
               _show "${_filename_for_id}" --indicators
           )"
 
+          local _info_line=
+          local _info_line_color=
+
           if ((_all)) ||
              [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
           then
@@ -9356,35 +9357,35 @@ _search() {
               _notebooks show "${__notebook_path}" --escaped --no-color
             )"
 
-            _id_filename+="[${_notebook_escaped_name}:${_id}] "
+            _info_line="[${_notebook_escaped_name}:${_id}] "
+            _info_line_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
 
-            [[ -n "${_indicators:-}" ]] && _id_filename+="${_indicators}"
+            if [[ -n "${_indicators:-}" ]]
+            then
+              _info_line+="${_indicators}"
+              _info_line_color+="${_indicators}"
+            fi
 
-            _id_filename+="${_file_info}"
-
-            _id_filename_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
-
-            [[ -n "${_indicators:-}" ]] && _id_filename_color+="${_indicators}"
-
-            _id_filename_color+="${_file_info_color}"
+            _info_line+="${_file_info}"
+            _info_line_color+="${_file_info_color}"
           else
-            _id_filename+="[${_id}] "
+            _info_line="[${_id}] "
+            _info_line_color+="$(_color_id_brackets "${_id}") "
 
-            [[ -n "${_indicators:-}" ]] && _id_filename+="${_indicators}"
+            if [[ -n "${_indicators:-}" ]]
+            then
+              _info_line+="${_indicators}"
+              _info_line_color+="${_indicators}"
+            fi
 
-            _id_filename+="${_file_info}"
-
-            _id_filename_color+="$(_color_id_brackets "${_id}") "
-
-            [[ -n "${_indicators:-}" ]] && _id_filename_color+="${_indicators}"
-
-            _id_filename_color+="${_file_info_color}"
+            _info_line+="${_file_info}"
+            _info_line_color+="${_file_info_color}"
           fi
 
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
-            printf "%s" "${_id_filename_color}"
+            printf "%s" "${_info_line_color}"
             _wrap on
             printf "\\n"
           fi
@@ -9398,7 +9399,7 @@ _search() {
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
-            _print_line "${_id_filename}"
+            _print_line "${_info_line}"
             _wrap on
           fi
 
