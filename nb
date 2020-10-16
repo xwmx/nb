@@ -1016,71 +1016,6 @@ _git_out_of_sync() {
   git -C "${_target_directory}" status | grep -q 'diverged'
 }
 
-# _git_required()
-#
-# Usage:
-#   _git_required
-#
-# Description:
-#   Exit with `_exit_1` if `git` isn't found.
-_git_required() {
-  ((_GIT_ENABLED)) || return 0
-
-  if ! _command_exists "git"
-  then
-    _exit_1 cat <<HEREDOC
-Welcome to $(_color_primary "${_ME}")!
-
-Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
-
-About Git: https://git-scm.com/
-HEREDOC
-  fi
-
-  local _git_name=
-  _git_name="$(git config user.name || printf '')"
-
-  local _git_email=
-  _git_email="$(git config user.email || printf '')"
-
-  if [[ -z "${_git_name}"   ]] ||
-     [[ -z "${_git_email}"  ]]
-  then
-    cat <<HEREDOC
-Welcome to $(_color_primary "${_ME}")!
-
-Git requires some additional setup before using $(_color_primary "${_ME}").
-Enter the name and email address you'd like to use with Git.
-Edits you make will be attributed to this name and email address.
-HEREDOC
-    if [[ -z "${_git_name}" ]]
-    then
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
-        if [[ -n "${__name}" ]]
-        then
-          git config --global user.name "${__name}"
-          break
-        fi
-      done
-    fi
-
-    if [[ -z "${_git_email}" ]]
-    then
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
-        if [[ -n "${__email}" ]]
-        then
-          git config --global user.email "${__email}"
-          break
-        fi
-      done
-    fi
-  fi
-}
-
 ###############################################################################
 # Helpers
 ###############################################################################
@@ -4943,6 +4878,71 @@ _git() {
     [[ -n "$(git -C "${_target_path}" status --porcelain)" ]]
   }
 
+  # _git_required()
+  #
+  # Usage:
+  #   _git_required
+  #
+  # Description:
+  #   Exit with `_exit_1` if `git` isn't found.
+  _git_required() {
+    ((_GIT_ENABLED)) || return 0
+
+    if ! _command_exists "git"
+    then
+      _exit_1 cat <<HEREDOC
+Welcome to $(_color_primary "${_ME}")!
+
+Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
+
+About Git: https://git-scm.com/
+HEREDOC
+    fi
+
+    local _git_name=
+    _git_name="$(git config user.name || printf '')"
+
+    local _git_email=
+    _git_email="$(git config user.email || printf '')"
+
+    if [[ -z "${_git_name}"   ]] ||
+       [[ -z "${_git_email}"  ]]
+    then
+      cat <<HEREDOC
+Welcome to $(_color_primary "${_ME}")!
+
+Git requires some additional setup before using $(_color_primary "${_ME}").
+Enter the name and email address you'd like to use with Git.
+Edits you make will be attributed to this name and email address.
+HEREDOC
+      if [[ -z "${_git_name}" ]]
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
+          if [[ -n "${__name}" ]]
+          then
+            git config --global user.name "${__name}"
+            break
+          fi
+        done
+      fi
+
+      if [[ -z "${_git_email}" ]]
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
+          if [[ -n "${__email}" ]]
+          then
+            git config --global user.email "${__email}"
+            break
+          fi
+        done
+      fi
+    fi
+  }
+
   # Usage: _git_sync <target directory>
   _git_sync() {
     local _target_directory="${1:-}"
@@ -5097,6 +5097,9 @@ HEREDOC
       ;;
     dirty)
       _git_dirty "${2:-}"
+      ;;
+    required)
+      _git_required
       ;;
     sync)
       _git_sync "$(_notebooks current --path)"
@@ -11672,14 +11675,14 @@ _main() {
 
   case "${_SUBCOMMAND}" in
     init|sync)
-      _git_required
+      _git required
       "_${_SUBCOMMAND}" "${@}"
       ;;
     commands|completions|env|git|h|help*|r|run|set|settings|subcommands|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
-      _git_required
+      _git required
 
       # Call `_init()` if configuration hasn't been initialized.
       if [[ ! -e "${NB_DIR}"            ]] ||
