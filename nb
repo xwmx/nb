@@ -421,6 +421,13 @@ export NB_LIMIT="${NB_LIMIT:-20}"
 # Supported Values: Theme names listed with `bat --list-themes`
 export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-base16}"
 
+# $_GIT_ENABLED
+#
+# Default: '1'
+#
+# Supported Values: '0' '1'
+export _GIT_ENABLED="${_GIT_ENABLED:-1}"
+
 # $EDITOR ############################################################# $EDITOR
 
 # Set default $EDITOR if one has not been set.
@@ -898,17 +905,6 @@ _temp() {
 }
 
 trap "_temp cleanup" EXIT
-
-###############################################################################
-# Git
-###############################################################################
-
-# $_GIT_ENABLED
-#
-# Default: '1'
-#
-# Supported Values: '0' '1'
-export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 
 ###############################################################################
 # Helpers
