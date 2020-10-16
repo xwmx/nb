@@ -1673,47 +1673,6 @@ _get_http_status() {
   fi
 }
 
-# _get_visible_line_length()
-#
-# Usage:
-#   _get_visible_line_length <string> [<extra-length>]
-#
-# Describe:
-#   Calculate the apparent length of <string>, with byte and character
-#   calculations for handling unicode characters.
-#
-# More Information:
-#   https://stackoverflow.com/a/31009961
-_get_visible_line_length() {
-  local _string="${1:-}"
-  local _extra_length="${2:-0}"
-
-  _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
-
-  local _line_length_chars=
-  _line_length_chars="${#_string}"
-
-  LANG=C LC_ALL=C
-
-  local _line_length_bytes=
-  _line_length_bytes="${#_string}"
-
-  LANG="${_LANG:-}" LC_ALL="${_LC_ALL:-}"
-
-  local _line_length_diff=
-  _line_length_diff=$(((_line_length_bytes-_line_length_chars)/3))
-
-  local _line_length=
-  _line_length=$((_line_length_chars+_line_length_diff))
-
-  if ((_extra_length))
-  then
-    _line_length=$((_line_length+_extra_length))
-  fi
-
-  printf "%s\\n" "${_line_length:-0}"
-}
-
 # _get_title()
 #
 # Usage:
@@ -1953,6 +1912,47 @@ _get_unique_path() {
   done
 
   printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
+}
+
+# _get_visible_line_length()
+#
+# Usage:
+#   _get_visible_line_length <string> [<extra-length>]
+#
+# Describe:
+#   Calculate the apparent length of <string>, with byte and character
+#   calculations for handling unicode characters.
+#
+# More Information:
+#   https://stackoverflow.com/a/31009961
+_get_visible_line_length() {
+  local _string="${1:-}"
+  local _extra_length="${2:-0}"
+
+  _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
+
+  local _line_length_chars=
+  _line_length_chars="${#_string}"
+
+  LANG=C LC_ALL=C
+
+  local _line_length_bytes=
+  _line_length_bytes="${#_string}"
+
+  LANG="${_LANG:-}" LC_ALL="${_LC_ALL:-}"
+
+  local _line_length_diff=
+  _line_length_diff=$(((_line_length_bytes-_line_length_chars)/3))
+
+  local _line_length=
+  _line_length=$((_line_length_chars+_line_length_diff))
+
+  if ((_extra_length))
+  then
+    _line_length=$((_line_length+_extra_length))
+  fi
+
+  printf "%s\\n" "${_line_length:-0}"
 }
 
 # _highlight_syntax_if_available()
