@@ -5112,7 +5112,7 @@ HEREDOC
     out*of*sync|o|oos|out)
       _git_out_of_sync "${2:-}"
       ;;
-    required)
+    required|setup)
       _git_required
       ;;
     sync)
