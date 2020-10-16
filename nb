@@ -2621,7 +2621,7 @@ $(_color_primary "Usage:")
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  ${_ME} bookmark [list [<list options>...]]
+  ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
@@ -3037,7 +3037,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  ${_ME} bookmark list [<list options>...]
+  ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
