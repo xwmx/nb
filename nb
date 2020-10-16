@@ -974,7 +974,7 @@ _git_checkpoint() {
     (
       # Only sync when the index is dirty to avoid fetching from and pushing
       # to origin.
-      if _git_index_is_dirty "${_target_directory}"
+      if _git dirty "${_target_directory}"
       then
         _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
       fi && GIT_TERMINAL_PROMPT=0 _git sync "${_target_directory}"
@@ -993,27 +993,6 @@ _git_checkpoint() {
 
   wait        ${!}
   return      ${?}
-}
-
-# _git_index_is_dirty()
-#
-# Usage:
-#   _git_index_is_dirty <target directory>
-#
-# Exit / Error Status:
-#   0 (success, true)  If there are uncommitted changes in <target directory>.
-#   1 (error,  false)  If the <target director> is clean.
-_git_index_is_dirty() {
-  ((_GIT_ENABLED)) || return 1
-
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory:-}" ]]
-  then
-    _exit_1 printf "Usage: _git_index_is_dirty <target directory>\\n"
-  fi
-
-  [[ -n "$(git -C "${_target_directory}" status --porcelain)" ]]
 }
 
 # _git_out_of_sync()
@@ -2832,7 +2811,7 @@ $(_color_primary "Usage:")
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
-  ${_ME} git autosyncable [<notebook-path>]
+  ${_ME} git (autosyncable | dirty) [<notebook-path>]
   ${_ME} git checkpoint [<message>]
   ${_ME} git <git options>...
   ${_ME} help [<subcommand>] [-p | --print]
@@ -4873,15 +4852,18 @@ _export() {
 
 describe "git" <<HEREDOC
 Usage:
-  ${_ME} git autosyncable [<notebook-path>]
+  ${_ME} git (autosyncable | dirty) [<notebook-path>]
   ${_ME} git checkpoint [<message>]
   ${_ME} git <git options>...
 
 Subcommands:
   autosyncable  Return status 0 (success, true) if autosync should trigger.
-                Otherwise return 1 (error,  false).
+                Otherwise return 1 (error, false).
   checkpoint    Create a new git commit in the current notebook and sync with
                 the remote if \`${_ME} set auto_sync\` is enabled.
+  dirty         0 (success, true) If there are uncommitted changes in
+                <notebook-path>. 1 (error, false) If <notebook-path> is clean.
+
 
 Description:
   Run \`git\` commands within the current notebook directory.
@@ -4941,6 +4923,20 @@ _git() {
     _diff=$((_current_timestamp-_last_fetch_timestamp))
 
     [[ "${_diff}" -gt 300 ]]
+  }
+
+  # Usage: _git_dirty <target directory>
+  _git_dirty() {
+    ((_GIT_ENABLED)) || return 1
+
+    local _target_path="${1:-}"
+
+    if [[ -z "${_target_path:-}" ]]
+    then
+      _target_path="$(_notebooks current --path)"
+    fi
+
+    [[ -n "$(git -C "${_target_path}" status --porcelain)" ]]
   }
 
   # Usage: _git_sync <target directory>
@@ -5094,6 +5090,9 @@ HEREDOC
     checkpoint)
       shift
       _git_checkpoint "${@:-}"
+      ;;
+    dirty)
+      _git_dirty "${2:-}"
       ;;
     sync)
       _git_sync "$(_notebooks current --path)"
@@ -10991,7 +10990,7 @@ _sync() {
     fi
 
     if ! NB_AUTO_SYNC=1 _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner ||
-       _git_index_is_dirty  "${NB_NOTEBOOK_PATH}"                                   ||
+       _git dirty           "${NB_NOTEBOOK_PATH}"                                   ||
        _git_out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
       _exit_1 printf "Syncing failed.\\n"
@@ -11689,7 +11688,7 @@ _main() {
 
       if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
       then
-        if _git_index_is_dirty "${NB_NOTEBOOK_PATH}"
+        if _git dirty "${NB_NOTEBOOK_PATH}"
         then
           _index reconcile
 
