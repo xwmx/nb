@@ -254,6 +254,35 @@ HEREDOC
   [[ "${lines[5]}"  =~ 2                ]]
 }
 
+@test "\`search\` output includes indicators." {
+  {
+    _setup_search
+
+  cat <<HEREDOC | "${_NB}" add "fourth.bookmark.md"
+# four
+
+<https://example.com/>
+
+sweetish
+HEREDOC
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search 'sweetish' --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_filename}: '%s'\\n" "${_filename}"
+  printf "\${lines[3]}: '%s'\\n"  "${lines[3]}"
+
+  [[ ${status}        -eq 0                   ]]
+  [[ "${output}"      =~ 🔖                   ]]
+  [[ ! "${lines[0]}"  =~ fourth\.bookmark\.md ]]
+  [[ "${lines[0]}"    =~ four                 ]]
+  [[ "${lines[1]}"    =~ -*-                  ]]
+  [[ "${lines[2]}"    =~ sweetish             ]]
+}
+
 # `search --bookmarks` #################################################
 
 @test "\`search --bookmarks\` exits with status 0 and prints output." {
