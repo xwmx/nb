@@ -9445,6 +9445,7 @@ _settings() {
       | grep --color=never 'Theme'  \
       | sed 's/^Theme: //g'
   }
+
   # Usage: _nb_settings_colors [<number>] [themes]
   _nb_settings_colors() {
     # Usage: _nb_settings_colors_print <number>
