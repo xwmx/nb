@@ -4685,7 +4685,6 @@ Subcommands:
   dirty         0 (success, true) If there are uncommitted changes in
                 <notebook-path>. 1 (error, false) If <notebook-path> is clean.
 
-
 Description:
   Run \`git\` commands within the current notebook directory.
 
