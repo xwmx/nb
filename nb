@@ -9335,11 +9335,17 @@ _search() {
               _notebooks show "${__notebook_path}" --escaped --no-color
             )"
 
-            _id_filename="[${_notebook_escaped_name}:${_id}] ${_file_info}"
-            _id_filename_color="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") ${_file_info_color}"
+            _id_filename+="[${_notebook_escaped_name}:${_id}] "
+            _id_filename+="${_file_info}"
+
+            _id_filename_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
+            _id_filename_color+="${_file_info_color}"
           else
-            _id_filename="[${_id}] ${_file_info}"
-            _id_filename_color="$(_color_id_brackets "${_id}") ${_file_info_color}"
+            _id_filename+="[${_id}] "
+            _id_filename+="${_file_info}"
+
+            _id_filename_color+="$(_color_id_brackets "${_id}") "
+            _id_filename_color+="${_file_info_color}"
           fi
 
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
