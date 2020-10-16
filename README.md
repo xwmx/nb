@@ -579,7 +579,8 @@ filenames and titles:
 [3] Example Title
 ```
 
-Multiple words act like an `OR` filter, listing any title or filenames that match:
+Multiple words act like an `OR` filter, listing any titles or filenames that
+match any of the words:
 
 ```bash
 > nb ls example ideas
@@ -4063,6 +4064,10 @@ Alias: `set`
      `nb` supports custom, user-defined themes. To learn more, run:
 
          nb help --colors
+
+     To change the syntax highlighting theme, use:
+
+         nb set syntax_theme
 
      • Available themes:
 
