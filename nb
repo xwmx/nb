@@ -3412,6 +3412,7 @@ _bookmark() {
         do
           IFS='' read -r -e -d $'\n' -p "\
 Check the Wayback Machine for an archived version instead? [y/N] " __yn
+
           case ${__yn} in
             [Yy]*)
               _check_wayback=1
@@ -4077,6 +4078,7 @@ _delete() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
+
       case ${__yn} in
         [Yy]*)
           break
@@ -4628,9 +4630,11 @@ _export() {
       if ! ((_force))
       then
         printf "File exists at %s\\n" "$(_color_primary "${_target_path}")"
+
         while true
         do
           IFS='' read -r -e -d $'\n' -p "Overwrite existing file? [y/N] " __yn
+
           case ${__yn} in
             [Yy]*)
               break
@@ -4925,6 +4929,7 @@ HEREDOC
         while true
         do
           IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
+
           if [[ -n "${__name}" ]]
           then
             git config --global user.name "${__name}"
@@ -4938,6 +4943,7 @@ HEREDOC
         while true
         do
           IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
+
           if [[ -n "${__email}" ]]
           then
             git config --global user.email "${__email}"
@@ -7139,6 +7145,7 @@ _move() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
       case ${__yn} in
         [Yy]*)
           break
@@ -7457,6 +7464,7 @@ HEREDOC
       do
         IFS='' read -r -e -d $'\n' -p "\
 Please type $(_color_primary "${_name}") to confirm: " __response
+
         if [[ "${__response}" == "${_name}" ]]
         then
           break
@@ -8485,6 +8493,7 @@ _plugins() {
             while true
             do
               IFS='' read -r -e -d $'\n' -p "Reinstall? [y/N] " __yn
+
               case ${__yn} in
                 [Yy]*)
                   break
@@ -8546,6 +8555,7 @@ HEREDOC
         while true
         do
           IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
           case ${__yn} in
             [Yy]*)
               break
@@ -8661,7 +8671,9 @@ _remote() {
           while true
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
+
             IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
             case ${__yn} in
               [Yy]*)
                 break
@@ -8706,7 +8718,9 @@ _remote() {
             printf "Updating remote from %s to %s\\n" \
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
+
             IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
             case ${__yn} in
               [Yy]*)
                 break
@@ -8905,6 +8919,7 @@ _rename() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
       case ${__yn} in
         [Yy]*)
           break
@@ -9618,6 +9633,7 @@ HEREDOC
       while true
       do
         IFS='' read -r -e -d $'\n' -p "$(_color_primary "Number or Name: ")" __setting
+
         if [[ -n "${__setting}" ]]
         then
           case "${__setting}" in
@@ -9654,6 +9670,7 @@ HEREDOC
     while true
     do
       IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
+
       if [[ -n "${__value}" ]]
       then
         case "${__value}" in
@@ -11236,7 +11253,9 @@ HEREDOC
       while true
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
+
         IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
         case ${__yn} in
           [Yy]*)
             break
