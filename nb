@@ -5087,21 +5087,23 @@ Examples:
   ${_ME} example:git status
 HEREDOC
 _git() {
-  if [[ "${1:-}" == "checkpoint" ]]
-  then
-    shift
-    _git_checkpoint "${@:-}"
-  else
-    local _notebook_path
-    _notebook_path="$(_notebooks current --path)"
+  case "${1:-}" in
+    checkpoint)
+      shift
+      _git_checkpoint "${@:-}"
+      ;;
+    *)
+      local _notebook_path
+      _notebook_path="$(_notebooks current --path)"
 
-    if [[ -n "${1:-}" ]]
-    then
-      git -C "${_notebook_path}" "${@}"
-    else
-      git -C "${_notebook_path}"
-    fi
-  fi
+      if [[ -n "${1:-}" ]]
+      then
+        git -C "${_notebook_path}" "${@}"
+      else
+        git -C "${_notebook_path}"
+      fi
+      ;;
+  esac
 }
 
 # helpers ############################################################# helpers
