@@ -5653,6 +5653,33 @@ _index() {
       else
         printf "%s\\n" "${_id}"
       fi
+
+      # Alternative
+      # -----------
+
+      # local _basename="${2:-}"
+      # local _id
+
+      # _index_get_id "${_basename:-}" "${_index_path:-}" | {
+      #   read -r _id
+
+      #   if [[ -n "${_id:-}" ]]
+      #   then
+      #     printf "%s\\n" "${_id:-}"
+      #   else
+      #     _index reconcile &&
+      #       _index_get_id "${_basename:-}" "${_index_path:-}" | {
+      #           read -r _id
+
+      #           if [[ -n "${_id:-}" ]]
+      #           then
+      #             printf "%s\\n" "${_id:-}"
+      #           else
+      #             return 1
+      #           fi
+      #         }
+      #   fi
+      # }
       ;;
     get_max_id)
       wc -l < "${_index_path}" | tr -d '[:space:]'
