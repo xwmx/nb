@@ -10831,12 +10831,12 @@ Can't show archives. Export archive and expand to edit.\\n"
        ((_print_output))        &&
        _command_exists "pandoc" &&
        _browser
-  then # `show --render --print` with `pandoc` and browser available.
+  then # `show --render --print` with `pandoc` and browser available
     pandoc "${_target_path}" | _browser --dump
   elif ((_render))              &&
        _command_exists "pandoc" &&
        _browser
-  then # `show --render` with `pandoc` and browser available.
+  then # `show --render` with `pandoc` and browser available
     pandoc "${_target_path}" | _browser
   else # default
     if ((_print_output))
