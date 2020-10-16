@@ -9417,7 +9417,14 @@ _search() {
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
-            _print_line "${_info_line}"
+
+            local _visible_line_length
+            _visible_line_length="$(
+              _get_visible_line_length "${_info_line:-}"
+            )"
+
+            _print_line "$(printf "%-${_visible_line_length}s" '.')"
+
             _wrap on
           fi
 
