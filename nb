@@ -9882,6 +9882,10 @@ HEREDOC
 
          $(_color_primary "${_ME} help --colors")
 
+     To change the syntax highlighting theme, use:
+
+         $(_color_primary "${_ME} set syntax_theme")
+
      • Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
