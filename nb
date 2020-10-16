@@ -4710,11 +4710,11 @@ _git() {
     local _current_timestamp=
     local _last_fetch_timestamp=
     local _maybe_fetch_timestamp=
-    local _target_directory="${1:-}"
+    local _notebook_path="${1:-}"
 
-    if [[ -z "${_target_directory}" ]]
+    if [[ -z "${_notebook_path}" ]]
     then
-      _target_directory="$(_notebooks current --path)"
+      _notebook_path="$(_notebooks current --path)"
     fi
 
     if ! ((NB_AUTO_SYNC))
@@ -4722,29 +4722,29 @@ _git() {
       return 1
     fi
 
-    if ! git -C "${_target_directory}" config --get remote.origin.url &>/dev/null
+    if ! git -C "${_notebook_path}" config --get remote.origin.url &>/dev/null
     then # there is no remote configured.
       return 1
     fi
 
-    if [[ ! -e "${_target_directory}/.git/FETCH_HEAD" ]]
+    if [[ ! -e "${_notebook_path}/.git/FETCH_HEAD" ]]
     then # no previous fetches, but has an origin and autosync is enabled.
       return 0
     fi
 
     if _maybe_fetch_timestamp="$(
-         stat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
+         stat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
        )"
     then # GNU
       _last_fetch_timestamp="${_maybe_fetch_timestamp}"
     elif _maybe_fetch_timestamp="$(
-           gstat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
+           gstat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
          )"
     then # GNU prefixed
       _last_fetch_timestamp="${_maybe_fetch_timestamp}"
     else
       _last_fetch_timestamp="$(
-        stat -f '%m' "${_target_directory}/.git/FETCH_HEAD"
+        stat -f '%m' "${_notebook_path}/.git/FETCH_HEAD"
       )"
     fi
     _current_timestamp="$(date +%s)"
@@ -4766,22 +4766,22 @@ _git() {
 
     # Usage: _git_checkpoint_commit <notebook-path> <message>
     _git_checkpoint_commit() {
-     local _target_directory="${1:-}"
+     local _notebook_path="${1:-}"
      local _message="${2:-}"
 
-      if [[ -z "${_target_directory:-}" ]] || [[ -z "${_message:-}" ]]
+      if [[ -z "${_notebook_path:-}" ]] || [[ -z "${_message:-}" ]]
       then
         _exit_1 printf \
            "Usage: _git_checkpoint_commit <message> <notebook-path>"
       fi
 
-      git -C "${_target_directory}" add --all &&
-        git -C "${_target_directory}" commit -a -m "${_message}"
+      git -C "${_notebook_path}" add --all &&
+        git -C "${_notebook_path}" commit -a -m "${_message}"
     }
 
     local _message=
     local _show_spinner=0
-    local _target_directory=
+    local _notebook_path=
 
     for __arg in "${@:-}"
     do
@@ -4790,11 +4790,11 @@ _git() {
           _show_spinner=1
           ;;
         *)
-          if [[ -z "${_target_directory}" ]] &&
-             [[ "${__arg}" =~ ^/          ]] &&
-             [[ -d "${__arg}"             ]]
+          if [[ -z "${_notebook_path}"  ]] &&
+             [[ "${__arg}" =~ ^/        ]] &&
+             [[ -d "${__arg}"           ]]
           then
-            _target_directory="${__arg}"
+            _notebook_path="${__arg}"
           elif [[ -z "${_message}" ]]
           then
             _message="${__arg}"
@@ -4803,9 +4803,9 @@ _git() {
       esac
     done
 
-    if [[ -z "${_target_directory:-}" ]]
+    if [[ -z "${_notebook_path:-}" ]]
     then
-      _target_directory="$(_notebooks current --path)"
+      _notebook_path="$(_notebooks current --path)"
     fi
 
     if [[ -z "${_message}" ]]
@@ -4818,14 +4818,14 @@ _git() {
       (
         # Only sync when the index is dirty to avoid fetching from and pushing
         # to origin.
-        if _git dirty "${_target_directory}"
+        if _git dirty "${_notebook_path}"
         then
-          _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
-        fi && GIT_TERMINAL_PROMPT=0 _git sync "${_target_directory}"
+          _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
+        fi && GIT_TERMINAL_PROMPT=0 _git sync "${_notebook_path}"
       ) &
     else
       (
-        _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null ||
+        _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null ||
           return 0
       ) &
     fi
@@ -4874,14 +4874,14 @@ _git() {
   _git_out_of_sync() {
     ((_GIT_ENABLED)) || return 1
 
-    local _target_directory="${1:-}"
+    local _notebook_path="${1:-}"
 
-    if [[ -z "${_target_directory:-}" ]]
+    if [[ -z "${_notebook_path:-}" ]]
     then
-      _target_directory="$(_notebooks current --path)"
+      _notebook_path="$(_notebooks current --path)"
     fi
 
-    git -C "${_target_directory}" status | grep -q 'diverged'
+    git -C "${_notebook_path}" status | grep -q 'diverged'
   }
 
   # _git_required()
@@ -4957,27 +4957,27 @@ HEREDOC
   # Description:
   #   Sync <notebook-path> or the current notebook with the remote.
   _git_sync() {
-    local _target_directory="${1:-}"
+    local _notebook_path="${1:-}"
 
-    [[ -z "${_target_directory:-}" ]] &&
+    [[ -z "${_notebook_path:-}" ]] &&
       _exit_1 printf "Usage: _git_sync <target-directory>"
 
-    if ! git -C "${_target_directory}" remote get-url origin &>/dev/null
+    if ! git -C "${_notebook_path}" remote get-url origin &>/dev/null
     then
       return 0
     fi
 
     local _git_branch=
-    _git_branch="$(git -C "${_target_directory}" rev-parse --abbrev-ref HEAD)"
+    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
     if ! GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}" \
-           git -C "${_target_directory}" fetch &>/dev/null
+           git -C "${_notebook_path}" fetch &>/dev/null
     then
       _warn printf "Unable to fetch from remote.\\n"
       return 1
     fi
 
-    if ! git -C "${_target_directory}" show-branch \
+    if ! git -C "${_notebook_path}" show-branch \
            "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
       _warn printf \
@@ -4985,13 +4985,13 @@ HEREDOC
       return 1
     fi
 
-    if ! git -C "${_target_directory}" rebase "origin/${_git_branch}" &>/dev/null
+    if ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
     then
       local _merge_error=1
 
       local _conflicted_files
       _conflicted_files=($(
-        GIT_PAGER='' git -C "${_target_directory}" diff --name-only --diff-filter=U
+        GIT_PAGER='' git -C "${_notebook_path}" diff --name-only --diff-filter=U
       ))
 
       local _conflicted_text_files=()
@@ -5007,9 +5007,9 @@ HEREDOC
             -e '/^<<<<<<</d'  \
             -e '/^>>>>>>>/d'  \
             -e '/=======/d'   \
-            "${_target_directory}/.index"
+            "${_notebook_path}/.index"
 
-          git -C "${_target_directory}" add ".index"
+          git -C "${_notebook_path}" add ".index"
         fi
 
         for __file in "${_conflicted_files[@]}"
@@ -5020,39 +5020,39 @@ HEREDOC
           then
             _conflicted_text_files+=("${__file}")
 
-            git -C "${_target_directory}" add         \
+            git -C "${_notebook_path}" add            \
               "${__file}"
           else
-            git -C "${_target_directory}" checkout    \
+            git -C "${_notebook_path}" checkout       \
               "origin/${_git_branch}" -- "${__file}"
 
             local _conflicted_file=
             _conflicted_file="$(
-              _notebooks show "${_target_directory}"  \
+              _notebooks show "${_notebook_path}"     \
                 --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
             )"
 
             _conflicted_binary_files+=("${_conflicted_file}")
 
-            git -C "${_target_directory}" mv          \
+            git -C "${_notebook_path}" mv       \
               "${__file}" "${_conflicted_file}"
 
-            git -C "${_target_directory}" checkout    \
+            git -C "${_notebook_path}" checkout \
               "${_git_branch}" -- "${__file}"
 
-            git -C "${_target_directory}" add "${_conflicted_file}"
-            git -C "${_target_directory}" add "${__file}"
+            git -C "${_notebook_path}" add "${_conflicted_file}"
+            git -C "${_notebook_path}" add "${__file}"
           fi
         done
 
-        GIT_EDITOR=true git -C "${_target_directory}" rebase \
+        GIT_EDITOR=true git -C "${_notebook_path}" rebase \
           --continue &>/dev/null &&
             _merge_error=0
       fi
 
       if ((_merge_error))
       then
-        git -C "${_target_directory}" rebase --abort
+        git -C "${_notebook_path}" rebase --abort
 
         _warn printf \
           "Merge conflict. Use \`%s git\` to merge manually.\\n" \
@@ -5067,7 +5067,7 @@ Files containing conflicts:
 
 $(for __file in "${_conflicted_text_files[@]}"
 do
-  printf "  %s:%s\\n" "${_target_directory}" "${__file}"
+  printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
 done)
 
 Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
@@ -5082,17 +5082,17 @@ Conflicted copies of binary files:
 
 $(for __file in "${_conflicted_binary_files[@]}"
 do
-  printf "  %s:%s\\n" "${_target_directory}" "${__file}"
+  printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
 done)
 HEREDOC
         fi
       fi
     fi
 
-    GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}"   \
-      git -C "${_target_directory}" push              \
-      --set-upstream                                  \
-      origin "${_git_branch}"                         \
+    GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}" \
+      git -C "${_notebook_path}" push               \
+      --set-upstream                                \
+      origin "${_git_branch}"                       \
       &>/dev/null || {
         _warn printf "Unable to push to remote.\\n"
         return 1
