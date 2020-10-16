@@ -4756,10 +4756,10 @@ _git() {
   # _git_checkpoint()
   #
   # Usage:
-  #   _git_checkpoint <notebook-path> <commit message>
+  #   _git_checkpoint <notebook-path> <commit-message>
   #
   # Description:
-  #   Commit all files in <notebook-path> with the provided commit message.
+  #   Commit all files in <notebook-path> with the provided <commit-message>.
   _git_checkpoint() {
     ((_GIT_ENABLED)) || return 0
 
