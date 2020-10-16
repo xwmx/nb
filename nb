@@ -4699,7 +4699,7 @@ _git() {
   # _git_autosyncable()
   #
   # Usage:
-  #   _git_autosyncable [<target directory>]
+  #   _git_autosyncable [<notebook-path>]
   #
   # Exit / Error Status:
   #   0 (success, true)  If autosync should trigger.
@@ -4757,14 +4757,14 @@ _git() {
   # _git_checkpoint()
   #
   # Usage:
-  #   _git_checkpoint <target directory> <commit message>
+  #   _git_checkpoint <notebook-path> <commit message>
   #
   # Description:
-  #   Commit all files in <target directory> with the provided commit message.
+  #   Commit all files in <notebook-path> with the provided commit message.
   _git_checkpoint() {
     ((_GIT_ENABLED)) || return 0
 
-    # Usage: _git_checkpoint_commit <target directory> <message>
+    # Usage: _git_checkpoint_commit <notebook-path> <message>
     _git_checkpoint_commit() {
      local _target_directory="${1:-}"
      local _message="${2:-}"
@@ -4772,7 +4772,7 @@ _git() {
       if [[ -z "${_target_directory:-}" ]] || [[ -z "${_message:-}" ]]
       then
         _exit_1 printf \
-           "Usage: _git_checkpoint_commit <message> <target directory>"
+           "Usage: _git_checkpoint_commit <message> <notebook-path>"
       fi
 
       git -C "${_target_directory}" add --all &&
@@ -4839,7 +4839,15 @@ _git() {
     return      ${?}
   }
 
-  # Usage: _git_dirty <target directory>
+  # _git_dirty()
+  #
+  # Usage:
+  #   _git_dirty [<notebook-path>]
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  If there are uncommitted changes in <notebook-path>
+  #                      or the current notebook.
+  #   1 (error,  false)  If <notebook-path> or the current notebook is clean.
   _git_dirty() {
     ((_GIT_ENABLED)) || return 1
 
@@ -4856,11 +4864,13 @@ _git() {
   # _git_out_of_sync()
   #
   # Usage:
-  #   _git_out_of_sync <target directory>
+  #   _git_out_of_sync [<notebook-path>]
   #
   # Exit / Error Status:
-  #   0 (success, true)  If <target diectory> is out of sync with the remote.
-  #   1 (error,  false)  If <target diectory> is synced with the remote.
+  #   0 (success, true)  If <notebook-path> or the current notebook is out of
+  #                      sync with the remote.
+  #   1 (error,  false)  If <notebook-path> or the current notebook is synced
+  #                      with the remote.
   _git_out_of_sync() {
     ((_GIT_ENABLED)) || return 1
 
@@ -4939,7 +4949,13 @@ HEREDOC
     fi
   }
 
-  # Usage: _git_sync <target directory>
+  # _git_sync()
+  #
+  # Usage:
+  #   _git_sync [<notebook-path>]
+  #
+  # Description:
+  #   Sync <notebook-path> or the current notebook with the remote.
   _git_sync() {
     local _target_directory="${1:-}"
 
