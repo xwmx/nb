@@ -9485,6 +9485,16 @@ _search() {
       cat
       return 0
     else
+      if ((_all))
+      then
+        printf "Not found in any notebook: %s\\n" \
+          "$(_color_primary "${_query:-}")"
+      else
+        printf "Not found in %s: %s\\n"                       \
+          "$(_color_primary "$(_notebooks current --name)")"  \
+          "$(_color_primary "${_query:-}")"
+      fi
+
       return 1
     fi
   fi

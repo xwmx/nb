@@ -18,6 +18,18 @@ sweetish
 HEREDOC
 }
 
+_search_all_setup() {
+  _setup_search
+  run "${_NB}" notebooks add one
+  run "${_NB}" use one
+  run "${_NB}" add example.md --title "sweetish"
+  run "${_NB}" notebooks add two
+  run "${_NB}" use two
+  run "${_NB}" add example.md --title "sweetish"
+  run "${_NB}" notebooks archive two
+  [[ -e "${NB_DIR}/two/.archived" ]]
+}
+
 # `search` ####################################################################
 
 @test "\`search\` exits with status 1 and prints help information." {
@@ -39,7 +51,7 @@ HEREDOC
 
 # `search <no match>` #########################################################
 
-@test "\`search <no match>\` exits with status 1 and does not print output." {
+@test "\`search <no match>\` exits with status 1 and prints output." {
   {
     _setup_search
 
@@ -51,8 +63,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[ ${status}    -eq 1         ]]
+  [[ "${output}"  =~ Not\ found ]]
+  [[ "${output}"  =~ home       ]]
+  [[ "${output}"  =~ no\ match  ]]
 }
 
 # `search <one match> [--path] [--list]` ######################################
@@ -334,18 +348,6 @@ HEREDOC
 
 # `search <query> --all [--path]` #############################################
 
-_search_all_setup() {
-  _setup_search
-  run "${_NB}" notebooks add one
-  run "${_NB}" use one
-  run "${_NB}" add example.md --title "sweetish"
-  run "${_NB}" notebooks add two
-  run "${_NB}" use two
-  run "${_NB}" add example.md --title "sweetish"
-  run "${_NB}" notebooks archive two
-  [[ -e "${NB_DIR}/two/.archived" ]]
-}
-
 @test "\`search <query> --all\` exits with status 0 and prints output." {
   {
     _search_all_setup
@@ -405,7 +407,7 @@ _search_all_setup() {
   [[ "${#lines[@]}"   -eq 9           ]]
 }
 
-@test "\`search <no matching query> --all\` exits with status 1 and not output." {
+@test "\`search <no matching query> --all\` exits with status 1 and prints output." {
   {
     _search_all_setup  &>/dev/null
   }
@@ -416,9 +418,12 @@ _search_all_setup() {
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[ ${status}    -eq 1                 ]]
+  [[ "${output}"  =~ Not\ found         ]]
+  [[ "${output}"  =~ in\ any\ notebook  ]]
+  [[ "${output}"  =~ no\ match          ]]
 }
+
 
 @test "\`search <multiple matches> --all --path\` exits with 0 and prints paths." {
   {
@@ -438,7 +443,7 @@ _search_all_setup() {
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
-@test "\`search <no matching query> --all --path\` exits with 1 and no output." {
+@test "\`search <no matching query> --all --path\` exits with 1 and and prints output." {
   {
     _search_all_setup  &>/dev/null
   }
@@ -449,8 +454,10 @@ _search_all_setup() {
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[ ${status}    -eq 1                 ]]
+  [[ "${output}"  =~ Not\ found         ]]
+  [[ "${output}"  =~ in\ any\ notebook  ]]
+  [[ "${output}"  =~ no\ match          ]]
 }
 
 # `search <query> [--all]` local ##############################################
