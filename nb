@@ -11158,9 +11158,7 @@ Sync Conflict Resolution:
     https://github.com/xwmx/nb#sync-conflict-resolution
 HEREDOC
 _sync() {
-  local _current_notebook=
-  _current_notebook="$(_notebooks current)"
-  local _notebooks=("${_current_notebook}")
+  local _notebooks=()
   local _sync_all=0
 
   if [[ "${1:-}" =~ ^-a$|^--all$ ]]
@@ -11168,19 +11166,9 @@ _sync() {
     _sync_all=1
 
     local _notebook_names
-    _notebook_names=($(_notebooks --names --no-color --unarchived))
-
-    if [[ "$(_notebooks current)" == "local" ]]
-    then
-      _notebooks+=($(_notebooks --names --no-color --unarchived))
-    else
-      if _contains "${_current_notebook}" "${_notebook_names[@]}"
-      then
-        _notebooks=(${_notebook_names[@]})
-      else
-        _notebooks+=(${_notebook_names[@]})
-      fi
-    fi
+    _notebooks=($(_notebooks --names --no-color --unarchived))
+  else
+    _notebooks=($(_notebooks current))
   fi
 
   local _sync_successful=0
