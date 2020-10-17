@@ -2546,14 +2546,14 @@ _help() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      readme|README|-r|--readme)
-        _readme=1
-        ;;
       --pager)
         _use_pager=1
         ;;
-      -p|--print|--dump|--skip-pager|--no-pager)
+      -p|--print|--dump|--skip*pager|--no*pager)
         _use_pager=0
+        ;;
+      -r|*readme*|*README*)
+        _readme=1
         ;;
       --shell)
         _shell=1
@@ -2914,7 +2914,7 @@ _add() {
       --edit)
         _edit_before_commit=1
         ;;
-      -e|--encrypt|--encrypted)
+      -e|--encrypt*)
         if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
            ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
         then
@@ -3216,14 +3216,14 @@ _bookmark() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      -c|--comment)
+      -c|--comment*)
         _comment="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
         _edit_before_commit=1
         ;;
-      -e|--encrypt|--encrypted)
+      -e|--encrypt*)
         _encrypt=1
         ;;
       -f|--filename)
@@ -3242,13 +3242,13 @@ _bookmark() {
         _related_urls+=("$(_option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
-      --save-source|--source|--save-html|--html|--raw-content|--raw-html)
+      --save*source|--source|--save*html|--html|--raw*content|--raw*html)
         _save_source=1
         ;;
-      --skip-content|--skipcontent|--no-content|--nocontent)
+      --skip*content|--no*content)
         _skip_content=1
         ;;
-      -t|--tag|--tags)
+      -t|--tag*)
         _tag_list="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
@@ -4600,7 +4600,7 @@ _export() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      notebook|notebooks)
+      notebook*)
         _notebook_export=1
         ;;
       pandoc)
@@ -5153,7 +5153,7 @@ HEREDOC
   }
 
   case "${1:-}" in
-    autosyncable)
+    *autosync*)
       _git_autosyncable "${2:-}"
       ;;
     checkpoint)
@@ -5278,10 +5278,10 @@ _helpers() {
     list*files)
       _list_files                     "${_options[@]:-}"
       ;;
-    print*line|line)
+    *line)
       _print_line                     "${_options[@]:-}"
       ;;
-    print*padding|padding)
+    *padding)
       _print_padding                  "${_options[@]:-}"
       ;;
     print*welcome|welcome)
@@ -5290,10 +5290,10 @@ _helpers() {
     spinner)
       _spinner                        "${_options[@]:-}"
       ;;
-    is*email|email)
+    *email)
       _string_is_email                "${_options[@]:-}"
       ;;
-    is*url|url)
+    *url)
       _string_is_url                  "${_options[@]:-}"
       ;;
     *)
@@ -5438,7 +5438,7 @@ _import() {
       copy|download|move)
         _subcommand="${__arg}"
         ;;
-      notebook|notebooks)
+      notebook*)
         _subcommand="notebook"
         ;;
       --convert)
@@ -6105,13 +6105,13 @@ _list() {
       --filename*)
         _list_filenames=1
         ;;
-      --error-on-empty|--hard-empty)
+      --error*on*empty|--hard*empty)
         _error_on_empty=1
         ;;
-      --no-color|--nocolor)
+      --no*color)
         _list_color_enabled=0
         ;;
-      --no-id*|--noid*|--no-index|--noindex)
+      --no-id*|--noid*|--no*index)
         _no_id=1
         ;;
       --no*indicator*|--no*emoji*|--no*unicode*)
@@ -6127,7 +6127,7 @@ _list() {
       -p|--pager|--less)
         _use_pager=1
         ;;
-      --path|--paths)
+      --path*)
         _list_paths=1
         ;;
       -s|--sort)
@@ -6137,7 +6137,7 @@ _list() {
         _reverse=1
         ;;
       --titles)
-        : # Do nothing. This is now the default behavior. TODO: Remove.
+        : # Do nothing. This is the default behavior.
         ;;
       -t|--type)
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -6759,7 +6759,7 @@ _ls() {
     [[ "${NB_HEADER}" == 3 ]] && _justified=1
 
     case "${_alignment}" in
-      --auto-align)
+      --auto*align)
         _auto_align=1
         _centered=0
         _justified=0
@@ -6924,7 +6924,7 @@ _ls() {
       -a|--all)
         _all=1
         ;;
-      --auto-align|--centered|--justified|--plain)
+      --auto*align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
         ;;
       -n|--limit|--num|--number)
@@ -7713,7 +7713,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         --name*)
           _only_names=1
           ;;
-        --no-color|--nocolor)
+        --no*color)
           _notebook_color_enabled=0
           ;;
         --path*)
@@ -8070,7 +8070,7 @@ HEREDOC
         --name)
           _only_name=1
           ;;
-        --no-color|--nocolor)
+        --no*color)
           _notebook_color_enabled=0
           ;;
         --path)
@@ -8828,10 +8828,10 @@ _rename() {
       --reset)
         _reset=1
         ;;
-      --to-bookmark)
+      --to*bookmark)
         _to_target_type="bookmark"
         ;;
-      --to-note)
+      --to*note)
         _to_target_type="note"
         ;;
       *)
@@ -9064,7 +9064,7 @@ _search() {
       -l|--list)
         _only_list=1
         ;;
-      --no-color|--nocolor)
+      --no*color)
         _search_color_enabled=0
         ;;
       --path*)
@@ -9077,7 +9077,7 @@ _search() {
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      --use-grep)
+      --use*grep)
         # The `--use-grep` option bypasses other search tools. Intended to be
         # used primarily for testing.
         _use_grep=1
@@ -10591,25 +10591,25 @@ _show() {
       --indicators)
         _print_indicators=1
         ;;
-      --info-line)
+      --info*line)
         _print_info=1
         _skip_notebook_fallback=1
         ;;
-      --no-color|--nocolor|--raw)
+      --no*color|--raw)
         _show_color_enabled=0
         ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      -p|--print|--dump|--skip-pager|--no-pager)
+      -p|--print|--dump|--skip*pager|--no*pager)
         _print_output=1
         ;;
       -r|--render)
         _render=1
         _ls_arguments+=("${__arg}")
         ;;
-      --selector-id)
+      --selector*id)
         _print_selector_id=1
         _skip_notebook_fallback=1
         ;;
