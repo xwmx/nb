@@ -2041,9 +2041,6 @@ nb example:remote set https://github.com/example/example.git
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
-*[Add your key to the ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-to avoid password prompts.*
-
 When you use `nb` on multiple systems, you can set a notebook on both
 systems to the same remote and `nb` will keep everything in sync in the
 background every time there's a change in that notebook.
@@ -2080,6 +2077,16 @@ nb example:remote remove
 You can also turn off autosync with
 [`nb set auto_sync`](#auto_sync) and sync manually with
 [`nb sync`](#sync).
+
+#### Private Repositories and Git Credentials
+
+Syncing with private repositories requires configuring git to not prompt you
+for your credentials. For repositories cloned over HTTPS
+[you can cache your credentials with git
+](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git)
+and for repositories cloned over SSH you can
+[add your key to the ssh-agent
+](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
 #### Sync Conflict Resolution
 
