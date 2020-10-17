@@ -4856,8 +4856,7 @@ _git() {
     then
       (
         {
-          # Only sync when the index is dirty to avoid fetching from and pushing
-          # to origin.
+          # only sync when the index is dirty
           if _git dirty "${_notebook_path}"
           then
             _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
