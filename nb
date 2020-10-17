@@ -800,7 +800,7 @@ __set_notebook_paths() {
     if [[ -e "${NB_DIR}/.current" ]]
     then
       local _global_notebook_name=
-      _global_notebook_name="$(cat "${NB_DIR}/.current")"
+      _global_notebook_name="$(<"${NB_DIR}/.current")"
 
       if [[ -d "${NB_DIR}/${_global_notebook_name}" ]]
       then
