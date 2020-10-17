@@ -31,7 +31,7 @@ _setup_notebooks() {
 
 # sync errors #################################################################
 
-@test "\`sync\` returns error notebook has no remote." {
+@test "\`sync\` returns error when notebook has no remote." {
   {
     _setup_notebooks
 
