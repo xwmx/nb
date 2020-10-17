@@ -198,10 +198,10 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
   [[ ! -f "${NB_DIR_2}/home/one.md" ]]
 
-  [[ ${status}      -eq 0     ]]
-  [[ "${lines[0]}"  =~ Added  ]]
-  [[ "${lines[0]}"  =~ one    ]]
-  [[ ! "${output}"  =~ Sync   ]]
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ Added        ]]
+  [[ "${lines[0]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
 
   export NB_DIR="${NB_DIR_2}"
 
@@ -240,10 +240,10 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
   [[ ! -f "${NB_DIR_2}/home/one.md" ]]
 
-  [[ ${status}      -eq 0     ]]
-  [[ "${lines[0]}"  =~ Added  ]]
-  [[ "${lines[0]}"  =~ one    ]]
-  [[ ! "${output}"  =~ Sync   ]]
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ Added        ]]
+  [[ "${lines[0]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
 
   mv "${_GIT_REMOTE_PATH}.bak" "${_GIT_REMOTE_PATH}"
 
