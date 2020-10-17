@@ -7158,7 +7158,7 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving %s to %s\\n" \
+    printf "Moving   %s to %s\\n" \
       "${_source_info}"         \
       "$(_color_primary "${_target_notebook}")"
     while true
