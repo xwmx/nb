@@ -5332,14 +5332,17 @@ _history() {
     fi
   fi
 
-  [[ -n "${_notebook_path:-}" ]] ||
+  if [[ -z "${_notebook_path:-}" ]]
+  then
     _notebook_path="$(_notebooks current --path)"
+  fi
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
   local _log_command="git log"
+
   if _command_exists "tig"
-  then # tig <https://github.com/jonas/tig> is present.
+  then
     _log_command="tig --all"
   fi
 
