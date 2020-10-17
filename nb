@@ -4855,12 +4855,14 @@ _git() {
     if ((NB_AUTO_SYNC))
     then
       (
-        # Only sync when the index is dirty to avoid fetching from and pushing
-        # to origin.
-        if _git dirty "${_notebook_path}"
-        then
-          _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
-        fi && GIT_TERMINAL_PROMPT=0 _git sync "${_notebook_path}"  &>/dev/null
+        {
+          # Only sync when the index is dirty to avoid fetching from and pushing
+          # to origin.
+          if _git dirty "${_notebook_path}"
+          then
+            _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
+          fi && GIT_TERMINAL_PROMPT=0 _git sync "${_notebook_path}"  &>/dev/null
+        } || :
       ) &
     else
       (

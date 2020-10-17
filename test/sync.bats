@@ -158,7 +158,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
   [[ ${status} -eq 0                      ]]
 
-  # Sync 1, send changes to remote
+  # sync 1: send changes to remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -166,7 +166,7 @@ _setup_notebooks() {
 
   export NB_DIR="${NB_DIR_2}"
 
-  # Sync 2, pull changes from remote
+  # sync 2: pull changes from remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -176,9 +176,93 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_2}/home/one.md" ]]
 }
 
+# autosync ####################################################################
+
+@test "autosync succeeds after \`add\`." {
+  {
+    _setup_notebooks
+
+    [[ ! -f "${NB_DIR_1}/home/one.md" ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+  }
+
+  export NB_AUTO_SYNC=1
+
+  # sync 1: add with autosync
+  run "${_NB}" add "one.md" --content "Example content from 1."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0     ]]
+  [[ "${lines[0]}"  =~ Added  ]]
+  [[ "${lines[0]}"  =~ one    ]]
+  [[ ! "${output}"  =~ Sync   ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
+  [[ ${status} -eq 0              ]]
+  [[ -f "${NB_DIR_1}/home/one.md" ]]
+  [[ -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "autosync fails silently." {
+  {
+    _setup_notebooks
+    mv "${_GIT_REMOTE_PATH}" "${_GIT_REMOTE_PATH}.bak"
+
+    [[ ! -f "${NB_DIR_1}/home/one.md" ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+  }
+
+  export NB_AUTO_SYNC=1
+
+  # sync 1: add with autosync
+  run "${_NB}" add "one.md" --content "Example content from 1."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0     ]]
+  [[ "${lines[0]}"  =~ Added  ]]
+  [[ "${lines[0]}"  =~ one    ]]
+  [[ ! "${output}"  =~ Sync   ]]
+
+  mv "${_GIT_REMOTE_PATH}.bak" "${_GIT_REMOTE_PATH}"
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+}
+
 # sync ########################################################################
 
-@test "\`sync\` succeeds when files are added and removed from two clones" {
+@test "\`sync\` succeeds when files are added and removed from two clones." {
   # skip
   {
     _setup_notebooks
@@ -190,7 +274,7 @@ _setup_notebooks() {
     export NB_DIR="${NB_DIR_1}"
   }
 
-  # Sync 1, send changes to remote
+  # sync 1: send changes to remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -210,8 +294,7 @@ _setup_notebooks() {
 
   export NB_DIR="${NB_DIR_2}"
 
-  # Sync 2, pull changes from remote, rebasing, and sending new changes
-  # back to remote
+  # sync 2: pull changes from remote, rebase, send new changes back to remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -229,7 +312,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md"                   ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
 
-  # Sync 3, pull changes from remote
+  # sync 3: pull changes from remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -262,7 +345,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}one-2.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"  ]]
 
-  # Sync 4, send new changes to remote
+  # sync 4: send new changes to remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -282,8 +365,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}one-2.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"  ]]
 
-  # Sync 5, pull changes from remote, rebasing, and sending new changes back
-  # to remote
+  # sync 5: pull changes from remote, rebase, send new changes back to remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -305,7 +387,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"                     ]]
 
-  # Sync 6, pull changes from remote
+  # sync 6: pull changes from remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -327,7 +409,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md"  ]]
 
-  # Add more and remove notes to each clone
+  # add more notes to and remove notes from each clone
 
   export NB_DIR="${NB_DIR_1}"
   run "${_NB}" add "one-3.md" --content "Example content from 1."
@@ -351,7 +433,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
 
-  # Sync 7, push changes to remote
+  # sync 7: push changes to remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -375,7 +457,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
 
-  # Sync 8, pull changes from remote
+  # sync 8: pull changes from remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -399,7 +481,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"               ]]
 
-  # Sync 9, push changes to remote
+  # sync 9: push changes to remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -423,7 +505,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"               ]]
 
-  # Sync 10, pull changes from remote
+  # sync 10: pull changes from remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -448,7 +530,7 @@ _setup_notebooks() {
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
 }
 
-@test "\`sync\` succeeds when one file is edited on two clones" {
+@test "\`sync\` succeeds when one file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -499,7 +581,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
 }
 
-@test "\`sync\` succeeds when multiple files are edited on two clones" {
+@test "\`sync\` succeeds when multiple files are edited on two clones." {
   # skip
   _setup_notebooks
 
@@ -585,7 +667,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
 }
 
-@test "\`sync\` succeeds when the same filename is added on two clones" {
+@test "\`sync\` succeeds when the same filename is added on two clones." {
   # skip
   _setup_notebooks
 
@@ -629,7 +711,7 @@ This content is unique to 2.
   grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
 }
 
-@test "\`sync\` succeeds when an encrypted file is edited on two clones" {
+@test "\`sync\` succeeds when an encrypted file is edited on two clones." {
   # skip
 
   _setup_notebooks
