@@ -2075,7 +2075,7 @@ You can also turn off autosync with
 #### Private Repositories and Git Credentials
 
 Syncing with private repositories requires configuring git to not prompt you
-for your credentials. For repositories cloned over HTTPS
+for credentials. For repositories cloned over HTTPS
 [you can cache your credentials with git
 ](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git)
 and for repositories cloned over SSH you can
