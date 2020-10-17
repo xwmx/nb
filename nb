@@ -11153,6 +11153,9 @@ Sync Conflict Resolution:
   encrypted note or bookmark, both versions of the file are saved in the
   notebook as individual files, one with \`--conflicted-copy\` appended to
   the filename.
+
+  More Information:
+    https://github.com/xwmx/nb#sync-conflict-resolution
 HEREDOC
 _sync() {
   local _current_notebook=

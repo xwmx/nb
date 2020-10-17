@@ -4396,6 +4396,15 @@ Options:
 Description:
   Sync the current local notebook with the remote repository.
 
+Private Repositories and Git Credentials:
+  Syncing with private repositories requires configuring git to not prompt you
+  for your credentials. For repositories cloned over HTTPS you can cache your
+  credentials with git and for repositories cloned over SSH you can add your
+  key to the ssh-agent.
+
+  More Information:
+    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+
 Sync Conflict Resolution:
   When `nb sync` encounters a conflict in a text file and can't merge
   overlapping local and remote changes, both versions are saved in the
@@ -4404,8 +4413,11 @@ Sync Conflict Resolution:
 
   When `nb sync` encounters a conflict in a binary file, such as an
   encrypted note or bookmark, both versions of the file are saved in the
-  notebook as individual files, one with `--conflicted` appended to the
-  filename.
+  notebook as individual files, one with `--conflicted-copy` appended to
+  the filename.
+
+  More Information:
+    https://github.com/xwmx/nb#sync-conflict-resolution
 ```
 
 #### `update`
