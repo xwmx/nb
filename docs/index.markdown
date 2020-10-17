@@ -1484,7 +1484,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added: [3] 20200101000000.bookmark.md "Example Title (example.com)"
+Added: [3] 🔖 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -2744,7 +2744,7 @@ nb> edit 3 --content "New content."
 Updated [3] Example
 
 nb> bookmark https://example.com
-Added: [4] example.bookmark.md "Example Title (example.com)"
+Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
 
 nb> ls
 home
