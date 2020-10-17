@@ -11148,9 +11148,10 @@ _sync() {
 
   if [[ "${1:-}" =~ ^-a$|^--all$ ]]
   then
+    _sync_all=1
+
     local _notebook_names
     _notebook_names=($(_notebooks --names --no-color --unarchived))
-    _sync_all=1
 
     if [[ "$(_notebooks current)" == "local" ]]
     then
@@ -11165,7 +11166,7 @@ _sync() {
     fi
   fi
 
-  local _sync_all_successful=0
+  local _sync_successful=0
   local _sync_started=0
   local _syncable_count=0
 
@@ -11207,7 +11208,7 @@ HEREDOC
 
     printf "%s..." "$(_color_primary "${__notebook}")"
 
-    local _sync_successful=0
+    local _notebook_sync_successful=0
 
     _syncable_count="$((_syncable_count+1))"
 
@@ -11219,9 +11220,9 @@ HEREDOC
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
         _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
       _git sync "${NB_NOTEBOOK_PATH}"
-    fi && _sync_successful=1
+    fi && _notebook_sync_successful=1
 
-    if ! ((_sync_successful))                     ||
+    if ! ((_notebook_sync_successful))            ||
        _git dirty           "${NB_NOTEBOOK_PATH}" ||
        _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
@@ -11238,9 +11239,9 @@ Configuring Git Credentials:
   https://github.com/xwmx/nb#private-repositories-and-git-credentials
 HEREDOC
     fi
-  done && ((_syncable_count)) && _sync_all_successful=1
+  done && ((_syncable_count)) && _sync_successful=1
 
-  if ((_sync_all_successful))
+  if ((_sync_successful))
   then
     printf "Done!\\n"
   elif ! ((_syncable_count))
