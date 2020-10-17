@@ -178,7 +178,7 @@ _setup_notebooks() {
 
 # autosync ####################################################################
 
-@test "autosync succeeds after \`add\`." {
+@test "autosync on syncs with \`add\`." {
   {
     _setup_notebooks
 
@@ -188,7 +188,7 @@ _setup_notebooks() {
 
   export NB_AUTO_SYNC=1
 
-  # sync 1: add with autosync
+  # sync 1: add with autosync on
   run "${_NB}" add "one.md" --content "Example content from 1."
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -220,11 +220,53 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "autosync syncs dirty repo." {
+@test "autosync off does not sync with \`add\`." {
   {
     _setup_notebooks
 
-    touch "${NB_DIR_1}/home/one.md" 
+    [[ ! -f "${NB_DIR_1}/home/one.md" ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+  }
+
+  export NB_AUTO_SYNC=0
+
+  # sync 1: add with autosync off
+  run "${_NB}" add "one.md" --content "Example content from 1."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ Added        ]]
+  [[ "${lines[0]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "autosync on syncs dirty repo." {
+  {
+    _setup_notebooks
+
+    touch "${NB_DIR_1}/home/one.md"
 
     [[ -f "${NB_DIR_1}/home/one.md"   ]]
     [[ ! -f "${NB_DIR_2}/home/one.md" ]]
@@ -234,7 +276,7 @@ _setup_notebooks() {
 
   export NB_AUTO_SYNC=1
 
-  # sync 1: autosync with no subcommand
+  # sync 1: autosync on with no subcommand
   run "${_NB}"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -264,6 +306,52 @@ _setup_notebooks() {
   [[ ${status} -eq 0              ]]
   [[ -f "${NB_DIR_1}/home/one.md" ]]
   [[ -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "autosync off does not sync dirty repo." {
+  {
+    _setup_notebooks
+
+    touch "${NB_DIR_1}/home/one.md" 
+
+    [[ -f "${NB_DIR_1}/home/one.md"   ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+    "${_NB}" git dirty
+  }
+
+  export NB_AUTO_SYNC=0
+
+  # sync 1: autosync off with no subcommand
+  run "${_NB}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ home         ]]
+  [[ "${lines[2]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
 }
 
 @test "autosync fails silently." {
