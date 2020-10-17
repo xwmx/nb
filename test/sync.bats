@@ -32,7 +32,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
     run "${_NB}" global-remote:add "global-remote.md" \
-    --content "Example content from global-remote."
+      --content "Example content from global-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -64,7 +64,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-no-remote
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
-    --content "Example content from global-no-remote."
+      --content "Example content from global-no-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -191,7 +191,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
     run "${_NB}" global-remote:add "global-remote.md" \
-    --content "Example content from global-remote."
+      --content "Example content from global-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -235,7 +235,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-no-remote
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
-    --content "Example content from global-no-remote."
+      --content "Example content from global-no-remote."
 
     [[ ${status} -eq 0                                          ]]
 
