@@ -402,8 +402,13 @@ skip "Determine how to test interactive prompt."
 # `set NB_AUTO_SYNC` #######################################################
 
 @test "\`settings set NB_AUTO_SYNC\` with valid argument sets and exits." {
+  # shellcheck disable=SC1073,SC2030,SC2031
+  export NB_AUTO_SYNC=
+
   {
     "${_NB}" init
+
+    [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
   }
 
   run "${_NB}" settings set NB_AUTO_SYNC 0
@@ -420,8 +425,13 @@ skip "Determine how to test interactive prompt."
 }
 
 @test "\`settings set auto_sync\` with valid argument sets and exits." {
+  # shellcheck disable=SC1073,SC2030,SC2031
+  export NB_AUTO_SYNC=
+
   {
     "${_NB}" init
+
+    [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
   }
 
   run "${_NB}" settings set auto_sync 0
@@ -438,8 +448,13 @@ skip "Determine how to test interactive prompt."
 }
 
 @test "\`settings set NB_AUTO_SYNC\` with invalid argument exits with error." {
+  # shellcheck disable=SC1073,SC2030,SC2031
+  export NB_AUTO_SYNC=
+
   {
     "${_NB}" init
+
+    [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
   }
 
   run "${_NB}" settings set NB_AUTO_SYNC '0'
