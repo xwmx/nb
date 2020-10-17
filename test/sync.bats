@@ -178,7 +178,7 @@ _setup_notebooks() {
 
 # autosync ####################################################################
 
-@test "autosync on syncs with \`add\`." {
+@test "NB_AUTO_SYNC=1 syncs with \`add\`." {
   {
     _setup_notebooks
 
@@ -220,7 +220,7 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "autosync off does not sync with \`add\`." {
+@test "NB_AUTO_SYNC=0 does not sync with \`add\`." {
   {
     _setup_notebooks
 
@@ -262,7 +262,7 @@ _setup_notebooks() {
   [[ ! -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "autosync on syncs dirty repo." {
+@test "NB_AUTO_SYNC=1 syncs dirty repo." {
   {
     _setup_notebooks
 
@@ -308,7 +308,7 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "autosync off does not sync dirty repo." {
+@test "NB_AUTO_SYNC=0 does not sync dirty repo." {
   {
     _setup_notebooks
 
@@ -354,7 +354,7 @@ _setup_notebooks() {
   [[ ! -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "autosync fails silently." {
+@test "NB_AUTO_SYNC=1 with error fails silently." {
   {
     _setup_notebooks
     mv "${_GIT_REMOTE_PATH}" "${_GIT_REMOTE_PATH}.bak"
