@@ -48,6 +48,27 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
+@test "\`notebooks delete <notebook>:\` exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+    "${_NB}" notebooks use "one"
+    [[ "$(cat "${NB_DIR}/.current")" == "one" ]]
+  }
+
+  run "${_NB}" notebooks delete one: --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ "${lines[0]}" =~ Now\ using              ]]
+  [[ "${lines[0]}" =~ home                    ]]
+  [[ "${lines[1]}" =~ Notebook\ deleted\:     ]]
+  [[ "${lines[1]}" =~ one                     ]]
+  [[ ! -e "${NB_DIR}/one"                     ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
+}
+
 @test "\`notebooks delete <current>\` exits with 0 and deletes notebook." {
   {
     _setup_notebooks

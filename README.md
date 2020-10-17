@@ -579,7 +579,8 @@ filenames and titles:
 [3] Example Title
 ```
 
-Multiple words act like an `OR` filter, listing any title or filenames that match:
+Multiple words act like an `OR` filter, listing any titles or filenames that
+match any of the words:
 
 ```bash
 > nb ls example ideas
@@ -2034,9 +2035,6 @@ nb example:remote set https://github.com/example/example.git
 Any notebook with a remote URL will sync automatically every time a command is
 run in that notebook.
 
-*[Add your key to the ssh-agent](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-to avoid password prompts.*
-
 When you use `nb` on multiple systems, you can set a notebook on both
 systems to the same remote and `nb` will keep everything in sync in the
 background every time there's a change in that notebook.
@@ -2073,6 +2071,16 @@ nb example:remote remove
 You can also turn off autosync with
 [`nb set auto_sync`](#auto_sync) and sync manually with
 [`nb sync`](#sync).
+
+#### Private Repositories and Git Credentials
+
+Syncing with private repositories requires configuring git to not prompt you
+for credentials. For repositories cloned over HTTPS
+[you can cache your credentials with git
+](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git)
+and for repositories cloned over SSH you can
+[add your key to the ssh-agent
+](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
 #### Sync Conflict Resolution
 
@@ -2674,7 +2682,7 @@ notebook:
 ```bash
 # _example() continued:
 
-# return the notebook path
+# get the notebook path
 local _notebook_path
 _notebook_path="$(_notebooks current --path)"
 
@@ -2826,7 +2834,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  nb bookmark [list [<list options>...]]
+  nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
@@ -2841,8 +2849,8 @@ Usage:
   nb export notebook <name> [<path>]
   nb export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
-  nb git checkpoint [<message>]
-  nb git <git options>...
+  nb git [checkpoint [<message>] | dirty]
+  nb git <git-options>...
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
@@ -2980,7 +2988,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  bookmark list [<list options>...]
+  bookmark list [<list-options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   bookmark search <query>
@@ -3163,7 +3171,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  nb bookmark list [<list options>...]
+  nb bookmark list [<list-options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
@@ -3398,12 +3406,14 @@ Examples:
 
 ```text
 Usage:
-  nb git checkpoint [<message>]
-  nb git <git options>...
+  nb git [checkpoint [<message>] | dirty]
+  nb git <git-options>...
 
 Subcommands:
-  checkpoint  Create a new git commit in the current notebook and sync with
-              the remote if `nb set auto_sync` is enabled.
+  checkpoint    Create a new git commit in the current notebook and sync with
+                the remote if `nb set auto_sync` is enabled.
+  dirty         0 (success, true) if there are uncommitted changes in
+                <notebook-path>. 1 (error, false) if <notebook-path> is clean.
 
 Description:
   Run `git` commands within the current notebook directory.
@@ -3482,7 +3492,7 @@ Subcommands:
   (default) Copy or download the file in <path> or <url>.
   copy      Copy the file at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Copy the file at <path> into the current notebook.
+  move      Move the file at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -4062,6 +4072,10 @@ Alias: `set`
 
          nb help --colors
 
+     To change the syntax highlighting theme, use:
+
+         nb set syntax_theme
+
      • Available themes:
 
          blacklight
@@ -4376,6 +4390,15 @@ Options:
 Description:
   Sync the current local notebook with the remote repository.
 
+Private Repositories and Git Credentials:
+  Syncing with private repositories requires configuring git to not prompt you
+  for your credentials. For repositories cloned over HTTPS you can cache your
+  credentials with git and for repositories cloned over SSH you can add your
+  key to the ssh-agent.
+
+  More Information:
+    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+
 Sync Conflict Resolution:
   When `nb sync` encounters a conflict in a text file and can't merge
   overlapping local and remote changes, both versions are saved in the
@@ -4384,8 +4407,11 @@ Sync Conflict Resolution:
 
   When `nb sync` encounters a conflict in a binary file, such as an
   encrypted note or bookmark, both versions of the file are saved in the
-  notebook as individual files, one with `--conflicted` appended to the
-  filename.
+  notebook as individual files, one with `--conflicted-copy` appended to
+  the filename.
+
+  More Information:
+    https://github.com/xwmx/nb#sync-conflict-resolution
 ```
 
 #### `update`

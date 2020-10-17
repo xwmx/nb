@@ -20,13 +20,519 @@ _setup_notebooks() {
   export NB_DIR="${NB_DIR_1}"
 }
 
-@test "\`sync\` notebooks exist after setup" {
-  _setup_notebooks
+# sync --all #################################################################
 
-  [[ -d "${_GIT_REMOTE_PATH}"     ]]
-  [[ "${NB_DIR_1}" == "${NB_DIR}" ]]
-  [[ -d "${NB_DIR_1}/home/.git"   ]]
-  [[ -d "${NB_DIR_2}/home/.git"   ]]
+@test "\`sync --all\` with no local syncs global notebooks." {
+  export NB_AUTO_SYNC=0
+
+  {
+    _setup_notebooks
+
+    # global-remote
+
+    run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+    run "${_NB}" global-remote:add "global-remote.md" \
+    --content "Example content from global-remote."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[ ! -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+
+    # global-no-remote
+
+    run "${_NB}" notebooks add global-no-remote
+    run "${_NB}" global-no-remote:add "global-no-remote.md" \
+    --content "Example content from global-no-remote."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[ ! -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+
+    # example-archived
+
+    run "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
+    run "${_NB}" notebooks archive example-archived
+    run "${_NB}" example-archived:add "archived.md" \
+      --content "Example content from example-archived."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[   -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+  }
+
+  # sync 1: send changes to remote
+  run "${_NB}" sync --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${output}" =~ \
+    Syncing:\ .*global-remote.*....*home.*...Done!            ]]
+  [[ ! "${output}" =~ local                                   ]]
+  [[ ! "${output}" =~ archived                                ]]
+  [[ ! "${output}" =~ no-remote                               ]]
+
+  [[ ${status} -eq 0                                          ]]
+
+  # sync 2: sync all again to get changes
+  run "${_NB}" sync --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${output}" =~ \
+    Syncing:\ .*global-remote.*....*home.*...Done!            ]]
+  [[ ! "${output}" =~ local                                   ]]
+  [[ ! "${output}" =~ archived                                ]]
+  [[ ! "${output}" =~ no-remote                               ]]
+
+  [[ ${status} -eq 0                                          ]]
+
+  # NB_DIR_1
+
+  [[   -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+  [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+  [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+
+  [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+  [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+  [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+
+  [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+  [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+  [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+
+  [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+  [[   -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+  [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+
+  # NB_DIR_2
+
+  [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+  [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+  [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+}
+
+# local notebook ##############################################################
+
+@test "\`sync --all\` with local syncs local and global notebooks." {
+  export NB_AUTO_SYNC=0
+
+  {
+    _setup_notebooks
+
+    # global-remote
+
+    run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+    run "${_NB}" global-remote:add "global-remote.md" \
+    --content "Example content from global-remote."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[ ! -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/local.md"                ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/local.md"                         ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_2}/home/local.md"                         ]]
+
+    # local
+
+    [[ ! -f "${_TMP_DIR}/example-local/archived.md"             ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-remote.md"        ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-no-remote.md"     ]]
+    [[ ! -f "${_TMP_DIR}/example-local/local.md"                ]]
+
+    # global-no-remote
+
+    run "${_NB}" notebooks add global-no-remote
+    run "${_NB}" global-no-remote:add "global-no-remote.md" \
+    --content "Example content from global-no-remote."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[ ! -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/local.md"                ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/local.md"                         ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_2}/home/local.md"                         ]]
+
+    # local
+
+    [[ ! -f "${_TMP_DIR}/example-local/archived.md"             ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-remote.md"        ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-no-remote.md"     ]]
+    [[ ! -f "${_TMP_DIR}/example-local/local.md"                ]]
+
+    # example-archived
+
+    run "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
+    run "${_NB}" notebooks archive example-archived
+    run "${_NB}" example-archived:add "archived.md" \
+      --content "Example content from example-archived."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[   -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/local.md"                ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/local.md"                         ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_2}/home/local.md"                         ]]
+
+    # local
+
+    [[ ! -f "${_TMP_DIR}/example-local/archived.md"             ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-remote.md"        ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-no-remote.md"     ]]
+    [[ ! -f "${_TMP_DIR}/example-local/local.md"                ]]
+
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local" "${_GIT_REMOTE_URL}"
+
+    cd "${_TMP_DIR}/example-local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+
+    [[ ${status} -eq 0                              ]]
+    [[ "$("${_NB}" remote)" == "${_GIT_REMOTE_URL}" ]]
+
+    "${_NB}" notebooks current --local
+
+    run "${_NB}" add "local.md" --content "Example content from local."
+
+    [[ ${status} -eq 0                                          ]]
+
+    # NB_DIR_1
+
+    [[   -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/example-archived/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+    [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+    [[ ! -f "${NB_DIR_1}/global-remote/local.md"                ]]
+
+    [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+    [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+    [[ ! -f "${NB_DIR_1}/global-no-remote/local.md"             ]]
+
+    [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_1}/home/local.md"                         ]]
+
+    # NB_DIR_2
+
+    [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+    [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+    [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+    [[ ! -f "${NB_DIR_2}/home/local.md"                         ]]
+
+    # local
+
+    [[ ! -f "${_TMP_DIR}/example-local/archived.md"             ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-remote.md"        ]]
+    [[ ! -f "${_TMP_DIR}/example-local/global-no-remote.md"     ]]
+    [[   -f "${_TMP_DIR}/example-local/local.md"                ]]
+  }
+
+  # sync 1: send changes to remote
+  run "${_NB}" sync --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ! "${output}" =~ \
+    Syncing:\ .*local.*....*local.*....*global-remote.*....*home.*...Done!  ]]
+  [[   "${output}" =~ \
+    Syncing:\ .*local.*....*global-remote.*....*home.*...Done!              ]]
+
+  [[ ! "${output}" =~ archived                                ]]
+  [[ ! "${output}" =~ no-remote                               ]]
+
+  [[ ${status} -eq 0                                          ]]
+
+  # sync 2: sync all again to get changes
+  run "${_NB}" sync --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+
+  [[ ! "${output}" =~ \
+    Syncing:\ .*local.*....*local.*....*global-remote.*....*home.*...Done!  ]]
+  [[   "${output}" =~ \
+    Syncing:\ .*local.*....*global-remote.*....*home.*...Done!              ]]
+
+  [[ ! "${output}" =~ archived                                ]]
+  [[ ! "${output}" =~ no-remote                               ]]
+
+  [[ ${status} -eq 0                                          ]]
+
+  # NB_DIR_1
+
+  [[   -f "${NB_DIR_1}/example-archived/archived.md"          ]]
+  [[ ! -f "${NB_DIR_1}/example-archived/global-remote.md"     ]]
+  [[ ! -f "${NB_DIR_1}/example-archived/global-no-remote.md"  ]]
+  [[ ! -f "${NB_DIR_1}/example-archived/local.md"             ]]
+
+  [[ ! -f "${NB_DIR_1}/global-remote/archived.md"             ]]
+  [[   -f "${NB_DIR_1}/global-remote/global-remote.md"        ]]
+  [[ ! -f "${NB_DIR_1}/global-remote/global-no-remote.md"     ]]
+  [[   -f "${NB_DIR_1}/global-remote/local.md"                ]]
+
+  [[ ! -f "${NB_DIR_1}/global-no-remote/archived.md"          ]]
+  [[ ! -f "${NB_DIR_1}/global-no-remote/global-remote.md"     ]]
+  [[   -f "${NB_DIR_1}/global-no-remote/global-no-remote.md"  ]]
+  [[ ! -f "${NB_DIR_1}/global-no-remote/local.md"             ]]
+
+  [[ ! -f "${NB_DIR_1}/home/example-archived.md"              ]]
+  [[   -f "${NB_DIR_1}/home/global-remote.md"                 ]]
+  [[ ! -f "${NB_DIR_1}/home/global-no-remote.md"              ]]
+  [[   -f "${NB_DIR_1}/home/local.md"                         ]]
+
+  # NB_DIR_2
+
+  [[ ! -f "${NB_DIR_2}/home/archived.md"                      ]]
+  [[ ! -f "${NB_DIR_2}/home/global-remote.md"                 ]]
+  [[ ! -f "${NB_DIR_2}/home/global-no-remote.md"              ]]
+  [[ ! -f "${NB_DIR_2}/home/local.md"                         ]]
+
+  # local
+
+  [[ ! -f "${_TMP_DIR}/example-local/archived.md"             ]]
+  [[   -f "${_TMP_DIR}/example-local/global-remote.md"        ]]
+  [[ ! -f "${_TMP_DIR}/example-local/global-no-remote.md"     ]]
+  [[   -f "${_TMP_DIR}/example-local/local.md"                ]]
+}
+
+@test "\`sync\` succeeds with local notebook." {
+  {
+    _setup_notebooks
+
+    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
+    cd "${_TMP_DIR}/example-local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+
+    run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+
+    [[ ${status} -eq 0                              ]]
+    [[ "$("${_NB}" remote)" == "${_GIT_REMOTE_URL}" ]]
+    [[ "${lines[0]}" =~ Remote\ set\ to             ]]
+    [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
+
+    "${_NB}" notebooks current --local
+
+    run "${_NB}" add "local.md" --content "Example content from local."
+
+    [[ ${status} -eq 0                              ]]
+    [[ -f "${_TMP_DIR}/example-local/local.md"      ]]
+    [[ ! -f "${NB_DIR_1}/home/local.md"             ]]
+  }
+
+  # sync 1: send changes to remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ -f "${_TMP_DIR}/example-local/local.md"  ]]
+  [[ ! -f "${NB_DIR_1}/home/local.md"         ]]
+
+  cd ..
+
+  "${_NB}" notebooks current --local || true
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ -f "${_TMP_DIR}/example-local/local.md"  ]]
+  [[ -f "${NB_DIR_1}/home/local.md"           ]]
+}
+
+# sync errors #################################################################
+
+@test "\`sync\` returns error when notebook has no remote." {
+  {
+    _setup_notebooks
+
+    run "${_NB}" remote remove --force
+
+    "${_NB}" remote && return 1
+  }
+
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${output}" =~ No\ remote\ configured  ]]
+  [[ "${output}" =~ Set\ the\ remote        ]]
+  [[ ${status} -eq 1                        ]]
+}
+
+@test "\`sync --all\` returns error when no unarchived notebooks with remotes found." {
+  {
+    _setup_notebooks
+
+    run "${_NB}" notebooks add example
+    run "${_NB}" notebooks archive notebook-1
+    run "${_NB}" notebooks archive notebook-2
+    run "${_NB}" remote remove --force
+
+    "${_NB}" remote && return 1
+  }
+
+  run "${_NB}" sync --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${output}" =~ No\ unarchived\ notebooks ]]
+  [[ ${status} -eq 1                          ]]
 }
 
 # remote set && sync #########################################################
@@ -51,18 +557,19 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ branch\ not\ found: ]]
-  [[ "${lines[0]}" =~ example-branch              ]]
-  [[ ${status} -eq 0                              ]]
+  [[ ${status}      -eq 1                           ]]
+  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
+  [[ "${lines[0]}"  =~  example-branch              ]]
+  [[ ! "${output}"  =~  Done                        ]]
 }
 
-@test "\`sync\` fails gracefully with invalid remote." {
+@test "\`sync\` fails with invalid remote." {
   {
     _setup_notebooks
 
     run "${_NB}" remote remove --force
 
-    [[ "$("${_NB}" remote)" =~ No\ remote ]]
+    [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
     run "${_NB}" add "one.md" --content "Example content from 1."
 
@@ -84,8 +591,12 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                  ]]
-  [[ "$output}" =~ Unable\ to\ fetch  ]]
+  [[ ${status}      -eq 1                         ]]
+  [[ "${output}"    =~ Syncing\ failed            ]]
+  [[ "${output}"    =~ Misconfigured\ remote\ URL ]]
+  [[ "${output}"    =~ Network\ unavailable       ]]
+  [[ "${output}"    =~ Authentication\ error      ]]
+  [[ ! "${output}"  =~ Done                       ]]
 }
 
 @test "\`sync\` succeeds after \`remote set\`" {
@@ -94,7 +605,7 @@ _setup_notebooks() {
 
     run "${_NB}" remote remove --force
 
-    [[ "$("${_NB}" remote)" =~ No\ remote ]]
+    [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
     run "${_NB}" add "one.md" --content "Example content from 1."
 
@@ -111,7 +622,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
   [[ ${status} -eq 0                      ]]
 
-  # Sync 1, send changes to remote
+  # sync 1: send changes to remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -119,19 +630,238 @@ _setup_notebooks() {
 
   export NB_DIR="${NB_DIR_2}"
 
-  # Sync 2, pull changes from remote
+  # sync 2: pull changes from remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ -f "${NB_DIR_2}/home/one.md"   ]]
+}
+
+# autosync ####################################################################
+
+@test "NB_AUTO_SYNC=1 syncs with \`add\`." {
+  {
+    _setup_notebooks
+
+    [[ ! -f "${NB_DIR_1}/home/one.md" ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+  }
+
+  export NB_AUTO_SYNC=1
+
+  # sync 1: add with autosync on
+  run "${_NB}" add "one.md" --content "Example content from 1."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ Added        ]]
+  [[ "${lines[0]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
   [[ ${status} -eq 0              ]]
+  [[ -f "${NB_DIR_1}/home/one.md" ]]
   [[ -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "NB_AUTO_SYNC=0 does not sync with \`add\`." {
+  {
+    _setup_notebooks
+
+    [[ ! -f "${NB_DIR_1}/home/one.md" ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+  }
+
+  export NB_AUTO_SYNC=0
+
+  # sync 1: add with autosync off
+  run "${_NB}" add "one.md" --content "Example content from 1."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ Added        ]]
+  [[ "${lines[0]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "NB_AUTO_SYNC=1 syncs dirty repo." {
+  {
+    _setup_notebooks
+
+    touch "${NB_DIR_1}/home/one.md"
+
+    [[ -f "${NB_DIR_1}/home/one.md"   ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+    "${_NB}" git dirty
+  }
+
+  export NB_AUTO_SYNC=1
+
+  # sync 1: autosync on with no subcommand
+  run "${_NB}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ home         ]]
+  [[ "${lines[2]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
+  [[ ${status} -eq 0              ]]
+  [[ -f "${NB_DIR_1}/home/one.md" ]]
+  [[ -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "NB_AUTO_SYNC=0 does not sync dirty repo." {
+  {
+    _setup_notebooks
+
+    touch "${NB_DIR_1}/home/one.md" 
+
+    [[ -f "${NB_DIR_1}/home/one.md"   ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+    "${_NB}" git dirty
+  }
+
+  export NB_AUTO_SYNC=0
+
+  # sync 1: autosync off with no subcommand
+  run "${_NB}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" env
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ home         ]]
+  [[ "${lines[2]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR_1}/home/"
+  git -C "${NB_DIR_1}/home" status
+  ls -la "${NB_DIR_2}/home/"
+  git -C "${NB_DIR_2}/home" status
+
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+}
+
+@test "NB_AUTO_SYNC=1 with error fails silently." {
+  {
+    _setup_notebooks
+    mv "${_GIT_REMOTE_PATH}" "${_GIT_REMOTE_PATH}.bak"
+
+    [[ ! -f "${NB_DIR_1}/home/one.md" ]]
+    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+  }
+
+  export NB_AUTO_SYNC=1
+
+  # sync 1: add with autosync
+  run "${_NB}" add "one.md" --content "Example content from 1."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+
+  [[ ${status}      -eq 0           ]]
+  [[ "${lines[0]}"  =~ Added        ]]
+  [[ "${lines[0]}"  =~ one          ]]
+  [[ ! "${output}"  =~ Sync         ]]
+
+  mv "${_GIT_REMOTE_PATH}.bak" "${_GIT_REMOTE_PATH}"
+
+  export NB_DIR="${NB_DIR_2}"
+
+  # sync 2: pull changes from remote
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                ]]
+  [[ -f "${NB_DIR_1}/home/one.md"   ]]
+  [[ ! -f "${NB_DIR_2}/home/one.md" ]]
 }
 
 # sync ########################################################################
 
-@test "\`sync\` succeeds when files are added and removed from two clones" {
+@test "\`sync\` succeeds when files are added and removed from two clones." {
   # skip
   {
     _setup_notebooks
@@ -143,7 +873,7 @@ _setup_notebooks() {
     export NB_DIR="${NB_DIR_1}"
   }
 
-  # Sync 1, send changes to remote
+  # sync 1: send changes to remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -163,8 +893,7 @@ _setup_notebooks() {
 
   export NB_DIR="${NB_DIR_2}"
 
-  # Sync 2, pull changes from remote, rebasing, and sending new changes
-  # back to remote
+  # sync 2: pull changes from remote, rebase, send new changes back to remote
   run "${_NB}" sync
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -182,7 +911,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md"                   ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md"  ]]
 
-  # Sync 3, pull changes from remote
+  # sync 3: pull changes from remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -215,7 +944,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}one-2.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"  ]]
 
-  # Sync 4, send new changes to remote
+  # sync 4: send new changes to remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -235,8 +964,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_1}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}one-2.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/.index")" == "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"  ]]
 
-  # Sync 5, pull changes from remote, rebasing, and sending new changes back
-  # to remote
+  # sync 5: pull changes from remote, rebase, send new changes back to remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -258,7 +986,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md"                     ]]
 
-  # Sync 6, pull changes from remote
+  # sync 6: pull changes from remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -280,7 +1008,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md"  ]]
 
-  # Add more and remove notes to each clone
+  # add more notes to and remove notes from each clone
 
   export NB_DIR="${NB_DIR_1}"
   run "${_NB}" add "one-3.md" --content "Example content from 1."
@@ -304,7 +1032,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
 
-  # Sync 7, push changes to remote
+  # sync 7: push changes to remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -328,7 +1056,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
     "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"  ]]
 
-  # Sync 8, pull changes from remote
+  # sync 8: pull changes from remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -352,7 +1080,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"               ]]
 
-  # Sync 9, push changes to remote
+  # sync 9: push changes to remote
   export NB_DIR="${NB_DIR_1}"
 
   run "${_NB}" sync
@@ -376,7 +1104,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR_2}/home/.index")" == \
      "one.md${_NEWLINE}two.md${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md"               ]]
 
-  # Sync 10, pull changes from remote
+  # sync 10: pull changes from remote
   export NB_DIR="${NB_DIR_2}"
 
   run "${_NB}" sync
@@ -401,7 +1129,7 @@ _setup_notebooks() {
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
 }
 
-@test "\`sync\` succeeds when one file is edited on two clones" {
+@test "\`sync\` succeeds when one file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -452,7 +1180,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
 }
 
-@test "\`sync\` succeeds when multiple files are edited on two clones" {
+@test "\`sync\` succeeds when multiple files are edited on two clones." {
   # skip
   _setup_notebooks
 
@@ -538,7 +1266,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
 }
 
-@test "\`sync\` succeeds when the same filename is added on two clones" {
+@test "\`sync\` succeeds when the same filename is added on two clones." {
   # skip
   _setup_notebooks
 
@@ -582,7 +1310,7 @@ This content is unique to 2.
   grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
 }
 
-@test "\`sync\` succeeds when an encrypted file is edited on two clones" {
+@test "\`sync\` succeeds when an encrypted file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -727,4 +1455,13 @@ This content is unique to 2.
   [[ "$(
         "${_NB}" show one--conflicted-copy.md.enc --password password --print --no-color
       )" =~ Edit\ content\ from\ 2\.                                ]]
+}
+
+@test "\`sync\` notebooks exist after setup." {
+  _setup_notebooks
+
+  [[ -d "${_GIT_REMOTE_PATH}"     ]]
+  [[ "${NB_DIR_1}" == "${NB_DIR}" ]]
+  [[ -d "${NB_DIR_1}/home/.git"   ]]
+  [[ -d "${NB_DIR_2}/home/.git"   ]]
 }

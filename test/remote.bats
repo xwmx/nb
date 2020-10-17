@@ -15,7 +15,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${lines[0]}" =~ No\ remote\ configured  ]]
-  [[ ${status} -eq 0                          ]]
+  [[ ${status} -eq 1                          ]]
 }
 
 @test "\`remote\` with no arguments and existing remote prints url." {
@@ -61,12 +61,13 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  "${_NB}" remote
 
-  [[ "$("${_NB}" remote)" =~ No\ remote   ]]
-  [[ "${lines[0]}" =~ Removed\ remote     ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
-  [[ ${status} -eq 0                      ]]
+  "${_NB}" remote && return 1
+
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote  ]]
+  [[ "${lines[0]}" =~ Removed\ remote         ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}      ]]
+  [[ ${status} -eq 0                          ]]
 }
 
 # remote set ##################################################################

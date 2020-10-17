@@ -24,6 +24,116 @@ line four
 HEREDOC
 }
 
+# header ######################################################################
+
+@test "\`ls\` includes header." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${lines[0]}" =~ home  ]]
+}
+
+@test "\`NB_HEADER=0 ls\` does not include header." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  NB_HEADER=0 run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0          ]]
+  [[ ! "${lines[0]}" =~ home  ]]
+}
+
+@test "\`ls\` header shows added and deleted notebook." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0            ]]
+  [[ ! "${lines[0]}" =~ example ]]
+  [[ "${lines[0]}" =~ home      ]]
+
+  run "${_NB}" notebooks add example
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ example ]]
+  [[ "${lines[0]}" =~ home    ]]
+
+  run "${_NB}" notebooks delete home --force
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ example ]]
+  [[ ! "${lines[0]}" =~ home  ]]
+}
+
+@test "\`ls\` header shows externally added and deleted notebook." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0            ]]
+  [[ ! "${lines[0]}" =~ example ]]
+  [[ "${lines[0]}" =~ home      ]]
+
+  mkdir "${NB_DIR}/example"
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ example ]]
+  [[ "${lines[0]}" =~ home    ]]
+
+  mv "${NB_DIR}/example" "${_TMP_DIR}/"
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0            ]]
+  [[ ! "${lines[0]}" =~ example ]]
+  [[ "${lines[0]}" =~ home      ]]
+}
+
 # `ls` ########################################################################
 
 @test "\`ls\` exits with 0 and lists files." {
@@ -1091,38 +1201,4 @@ HEREDOC
 
   [[ ${status} -eq 0      ]]
   [[ ! "${lines[6]}" =~ ❯ ]]
-}
-
-# header ######################################################################
-
-@test "\`ls\` includes header." {
-  {
-    _setup_ls
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
-
-  [[ ${status} -eq 0        ]]
-  [[ "${lines[0]}" =~ home  ]]
-}
-
-@test "\`NB_HEADER=0 ls\` does not include header." {
-  {
-    _setup_ls
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
-  }
-
-  NB_HEADER=0 run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
-
-  [[ ${status} -eq 0          ]]
-  [[ ! "${lines[0]}" =~ home  ]]
 }

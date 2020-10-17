@@ -23,7 +23,7 @@
 # ========
 #
 # - Configuration and Setup
-# - Helper Functions (grouped, alphabetical order)
+# - Helper Functions (alphabetical order)
 # - Help
 # - Subcommand Functions (alphabetical order)
 # - Plugins
@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.6.2"
+_VERSION="5.7.0"
 
 # $_ME
 #
@@ -105,11 +105,6 @@ _REPO_MAIN_BRANCH="master"
 # The base URL for raw files.
 _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 
-# $_LANG & $_LC_ALL
-#
-# The original values of $LANG and $LC_ALL.
-_LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
-
 ###############################################################################
 # Utilities
 ###############################################################################
@@ -123,8 +118,8 @@ _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 #   0 (success, true) If a command <name> is defined in the current environment.
 #   1 (error,  false) If not.
 #
-# Information on why `hash` is used here:
-# http://stackoverflow.com/a/677212
+# More Information:
+#   http://stackoverflow.com/a/677212
 _command_exists() {
   if [[ "${1:-}" == "w3m" ]]
   then # Detect WSL 1 (https://stackoverflow.com/a/38859331), where w3m errors.
@@ -143,7 +138,7 @@ _command_exists() {
 #   0 (success, true)  If the item is included in the list.
 #   1 (error,  false)  If not.
 #
-# Examples:
+# Example:
 #   _contains "${_query}" "${_list[@]}"
 _contains() {
   local _query="${1:-}"
@@ -166,14 +161,14 @@ _contains() {
 # _sed_i()
 #
 # Usage:
-#   _sed_id <sed argument>...
+#   _sed_id <sed-argument>...
 #
 # Description:
 #   `sed -i` takes an extension on macOS, but that extension can cause errors
 #   in GNU `sed`. Detect which `sed` is available and call it with the
 #   appropriate arguments.
 #
-# More info:
+# More Information:
 #   https://stackoverflow.com/q/43171648
 #   https://stackoverflow.com/a/16746032
 _sed_i() {
@@ -375,7 +370,7 @@ fi
 #
 # Default: '1'
 #
-# When set to '1', each `_git_checkpoint()` call will automativally run
+# When set to '1', each `_git checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
@@ -420,6 +415,13 @@ export NB_LIMIT="${NB_LIMIT:-20}"
 #
 # Supported Values: Theme names listed with `bat --list-themes`
 export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-base16}"
+
+# $_GIT_ENABLED
+#
+# Default: '1'
+#
+# Supported Values: '0' '1'
+export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 
 # $EDITOR ############################################################# $EDITOR
 
@@ -794,18 +796,18 @@ __set_notebook_paths() {
     fi
   }; __set_local_notebook_path
 
-  __set_global_notebook() {
+  __set_global_notebook_path() {
     if [[ -e "${NB_DIR}/.current" ]]
     then
       local _global_notebook_name=
-      _global_notebook_name="$(cat "${NB_DIR}/.current")"
+      _global_notebook_name="$(<"${NB_DIR}/.current")"
 
       if [[ -d "${NB_DIR}/${_global_notebook_name}" ]]
       then
         _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_global_notebook_name}"
       fi
     fi
-  }; __set_global_notebook
+  }; __set_global_notebook_path
 
   if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
@@ -898,403 +900,6 @@ _temp() {
 }
 
 trap "_temp cleanup" EXIT
-
-###############################################################################
-# Git
-###############################################################################
-
-# $_GIT_ENABLED
-#
-# Default: '1'
-#
-# Supported Values: '0' '1'
-export _GIT_ENABLED="${_GIT_ENABLED:-1}"
-
-# _git_checkpoint()
-#
-# Usage:
-#   _git_checkpoint <target directory> <commit message>
-#
-# Description:
-#   Commit all files in <target directory> with the provided commit message.
-_git_checkpoint() {
-  ((_GIT_ENABLED)) || return 0
-
-  # Usage: _git_checkpoint_commit <target directory> <message>
-  _git_checkpoint_commit() {
-   local _target_directory="${1:-}"
-   local _message="${2:-}"
-
-    if [[ -z "${_target_directory:-}" ]] || [[ -z "${_message:-}" ]]
-    then
-      _exit_1 printf \
-         "Usage: _git_checkpoint_commit <message> <target directory>"
-    fi
-
-    git -C "${_target_directory}" add --all &&
-      git -C "${_target_directory}" commit -a -m "${_message}"
-  }
-
-  # Usage: _git_checkpoint_sync <target directory>
-  _git_checkpoint_sync() {
-   local _target_directory="${1:-}"
-
-   [[ -z "${_target_directory:-}" ]] &&
-      _exit_1 printf "Usage: _get_checkpoint_sync <target-directory>"
-
-    if ! git -C "${_target_directory}" remote get-url origin &>/dev/null
-    then
-      return 0
-    fi
-
-    local _git_branch=
-    _git_branch="$(git -C "${_target_directory}" rev-parse --abbrev-ref HEAD)"
-
-    if ! git -C "${_target_directory}" fetch &>/dev/null
-    then
-      _warn printf "Unable to fetch from remote.\\n"
-      return 1
-    fi
-
-    if ! git -C "${_target_directory}" show-branch "remotes/origin/${_git_branch}" > /dev/null 2>&1
-    then
-      _warn printf \
-        "Remote branch not found: %s\\n" "$(_color_primary "${_git_branch}")"
-      return 1
-    fi
-
-    if ! git -C "${_target_directory}" rebase "origin/${_git_branch}" &>/dev/null
-    then
-      local _merge_error=1
-
-      local _conflicted_files
-      _conflicted_files=($(
-        GIT_PAGER='' git -C "${_target_directory}" diff --name-only --diff-filter=U
-      ))
-
-      local _conflicted_text_files=()
-      local _conflicted_binary_files=()
-
-      if [[ -n "${_conflicted_files[*]:-}" ]]
-      then
-        if _contains ".index" "${_conflicted_files[@]}"
-        then
-          # Remove git conflict markers to keep both.
-          # More info: https://stackoverflow.com/a/55187779
-          _sed_i              \
-            -e '/^<<<<<<</d'  \
-            -e '/^>>>>>>>/d'  \
-            -e '/=======/d'   \
-            "${_target_directory}/.index"
-
-          git -C "${_target_directory}" add ".index"
-        fi
-
-        for __file in "${_conflicted_files[@]}"
-        do
-          [[ "${__file}" == ".index" ]] && continue
-
-          if _file_is_text "${__file}"
-          then
-            _conflicted_text_files+=("${__file}")
-
-            git -C "${_target_directory}" add         \
-              "${__file}"
-          else
-            git -C "${_target_directory}" checkout    \
-              "origin/${_git_branch}" -- "${__file}"
-
-            local _conflicted_file=
-            _conflicted_file="$(
-              _notebooks show "${_target_directory}"  \
-                --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
-            )"
-
-            _conflicted_binary_files+=("${_conflicted_file}")
-
-            git -C "${_target_directory}" mv          \
-              "${__file}" "${_conflicted_file}"
-
-            git -C "${_target_directory}" checkout    \
-              "${_git_branch}" -- "${__file}"
-
-            git -C "${_target_directory}" add "${_conflicted_file}"
-            git -C "${_target_directory}" add "${__file}"
-          fi
-        done
-
-        GIT_EDITOR=true git -C "${_target_directory}" rebase \
-          --continue &>/dev/null &&
-            _merge_error=0
-      fi
-
-      if ((_merge_error))
-      then
-        git -C "${_target_directory}" rebase --abort
-
-        _warn printf \
-          "Merge conflict. Use \`%s git\` to merge manually.\\n" \
-          "${_ME}"
-        return 1
-      else
-        if ((${#_conflicted_text_files[@]}))
-        then
-          printf "\\n"
-          _warn cat <<HEREDOC
-Files containing conflicts:
-
-$(for __file in "${_conflicted_text_files[@]}"
-do
-  printf "  %s:%s\\n" "${_target_directory}" "${__file}"
-done)
-
-Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
-HEREDOC
-        fi
-
-        if ((${#_conflicted_binary_files[@]}))
-        then
-          printf "\\n"
-          _warn cat <<HEREDOC
-Conflicted copies of binary files:
-
-$(for __file in "${_conflicted_binary_files[@]}"
-do
-  printf "  %s:%s\\n" "${_target_directory}" "${__file}"
-done)
-HEREDOC
-        fi
-      fi
-    fi
-
-    git -C "${_target_directory}" push  \
-      --set-upstream                    \
-      origin "${_git_branch}" &>/dev/null || {
-        _warn printf "Unable to push to remote.\\n"
-        return 1
-      }
-  }
-
-  local _message=
-  local _show_spinner=0
-  local _target_directory=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --spinner)
-        _show_spinner=1
-        ;;
-      *)
-        if [[ -z "${_target_directory}" ]] &&
-           [[ "${__arg}" =~ ^/          ]] &&
-           [[ -d "${__arg}"             ]]
-        then
-          _target_directory="${__arg}"
-        elif [[ -z "${_message}" ]]
-        then
-          _message="${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  if [[ -z "${_target_directory:-}" ]]
-  then
-    _target_directory="$(_notebooks current --path)"
-  fi
-
-  if [[ -z "${_message}" ]]
-  then
-    _message="[nb] Commit"
-  fi
-
-  if ((NB_AUTO_SYNC))
-  then
-    (
-      # Only sync when the index is dirty to avoid fetching from and pushing
-      # to origin.
-      if _git_index_is_dirty "${_target_directory}"
-      then
-        _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
-      fi && _git_checkpoint_sync "${_target_directory}"
-    ) &
-  else
-    (
-      _git_checkpoint_commit "${_target_directory}" "${_message}" &>/dev/null
-    ) &
-  fi
-
-  if ((_show_spinner))
-  then
-    _spinner ${!}
-  fi
-}
-
-# _git_index_is_dirty()
-#
-# Usage:
-#   _git_index_is_dirty <target directory>
-#
-# Exit / Error Status:
-#   0 (success, true)  If there are uncommitted changes in <target directory>.
-#   1 (error,  false)  If the <target director> is clean.
-_git_index_is_dirty() {
-  ((_GIT_ENABLED)) || return 1
-
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory:-}" ]]
-  then
-    _exit_1 printf "Usage: _git_index_is_dirty <target directory>\\n"
-  fi
-
-  [[ -n "$(git -C "${_target_directory}" status --porcelain)" ]]
-}
-
-# _git_out_of_sync()
-#
-# Usage:
-#   _git_out_of_sync <target directory>
-#
-# Exit / Error Status:
-#   0 (success, true)  If <target diectory> is out of sync with the remote.
-#   1 (error,  false)  If <target diectory> is synced with the remote.
-_git_out_of_sync() {
-  ((_GIT_ENABLED)) || return 1
-
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory:-}" ]]
-  then
-    _exit_1 printf "Usage: _git_out_of_sync <target directory>\\n"
-  fi
-
-  git -C "${_target_directory}" status | grep -q 'diverged'
-}
-
-# _git_required()
-#
-# Usage:
-#   _git_required
-#
-# Description:
-#   Exit with `_exit_1` if `git` isn't found.
-_git_required() {
-  ((_GIT_ENABLED)) || return 0
-
-  if ! _command_exists "git"
-  then
-    _exit_1 cat <<HEREDOC
-Welcome to $(_color_primary "${_ME}")!
-
-Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
-
-About Git: https://git-scm.com/
-HEREDOC
-  fi
-
-  local _git_name=
-  _git_name="$(git config user.name || printf '')"
-
-  local _git_email=
-  _git_email="$(git config user.email || printf '')"
-
-  if [[ -z "${_git_name}"   ]] ||
-     [[ -z "${_git_email}"  ]]
-  then
-    cat <<HEREDOC
-Welcome to $(_color_primary "${_ME}")!
-
-Git requires some additional setup before using $(_color_primary "${_ME}").
-Enter the name and email address you'd like to use with Git.
-Edits you make will be attributed to this name and email address.
-HEREDOC
-    if [[ -z "${_git_name}" ]]
-    then
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
-        if [[ -n "${__name}" ]]
-        then
-          git config --global user.name "${__name}"
-          break
-        fi
-      done
-    fi
-
-    if [[ -z "${_git_email}" ]]
-    then
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
-        if [[ -n "${__email}" ]]
-        then
-          git config --global user.email "${__email}"
-          break
-        fi
-      done
-    fi
-  fi
-}
-
-# _git_should_autosync()
-#
-# Usage:
-#   _git_should_autosync <target directory>
-#
-# Exit / Error Status:
-#   0 (success, true)  If an autosync should be triggered.
-#   1 (error,  false)  If not.
-_git_should_autosync() {
-  ((_GIT_ENABLED)) || return 1
-
-  local _current_timestamp=
-  local _last_fetch_timestamp=
-  local _maybe_fetch_timestamp=
-  local _target_directory="${1:-}"
-
-  if [[ -z "${_target_directory}" ]]
-  then
-    _exit_1 printf "Usage: _git_should_autosync <target directory>\\n"
-  fi
-
-  if ! ((NB_AUTO_SYNC))
-  then # autosync not enabled.
-    return 1
-  fi
-
-  if ! git -C "${_target_directory}" config --get remote.origin.url &>/dev/null
-  then # there is no remote configured.
-    return 1
-  fi
-
-  if [[ ! -e "${_target_directory}/.git/FETCH_HEAD" ]]
-  then # no previous fetches, but has an origin and autosync is enabled.
-    return 0
-  fi
-
-  if _maybe_fetch_timestamp="$(
-       stat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
-     )"
-  then # GNU
-    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  elif _maybe_fetch_timestamp="$(
-         gstat -c %Y "${_target_directory}/.git/FETCH_HEAD" 2>/dev/null
-       )"
-  then # GNU prefixed
-    _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-  else
-    _last_fetch_timestamp="$(
-      stat -f '%m' "${_target_directory}/.git/FETCH_HEAD"
-    )"
-  fi
-  _current_timestamp="$(date +%s)"
-
-  _diff=$((_current_timestamp-_last_fetch_timestamp))
-
-  [[ "${_diff}" -gt 300 ]]
-}
 
 ###############################################################################
 # Helpers
@@ -1625,6 +1230,12 @@ Can't edit archives. Export archive and expand to edit.\\n"
   then
     cd "${_file_path}" && "${_editor_command:-}"
   else
+    if [[ "${EDITOR}" =~ typora   ]] &&
+       [[ ! -f "${_file_path:-}"  ]]
+    then
+      touch "${_file_path:-}"
+    fi
+
     eval "${_editor_command} \"${_file_path}\""
   fi
 }
@@ -1632,7 +1243,7 @@ Can't edit archives. Export archive and expand to edit.\\n"
 # _encrypt_file()
 #
 # Usage:
-#   _encrypt_file <unencrypted path> <encrypted path> <password>
+#   _encrypt_file <unencrypted-path> <encrypted-path> <password>
 _encrypt_file() {
   local _unencrypted_path="${1:-}"
   local _encrypted_path="${2:-}"
@@ -1691,25 +1302,22 @@ export _ARCHIVE_FILE_EXTENSIONS=(
   apk
   bz2
   dmg
-  dmg.sparsebundle
   gz
+  lz
   rar
   s7z
   sit
   sitx
   sparsebundle
   tar
-  tar.gz
   tgz
-  tar.Z
-  tar.bz2
   tbz2
-  tar.lz
-  tlz.
-  tar.xz
+  tlz
   txz
+  xz
   zip
   zipx
+  Z
 )
 _file_is_archive() {
   local _file_path="${1:-}"
@@ -1856,7 +1464,7 @@ _file_is_image() {
 #   1 (error,  false)  if not.
 #
 # Resources:
-#   - Markdown: https://superuser.com/a/285878
+#   Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
   bib
   css
@@ -2222,7 +1830,7 @@ _get_title() {
 # _get_unique_basename()
 #
 # Usage:
-#   _get_unique_basename [<file name> | <file extension>] [<directory>]
+#   _get_unique_basename [<file-name> | <file-extension>] [<directory>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
@@ -2304,6 +1912,47 @@ _get_unique_path() {
   done
 
   printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
+}
+
+# _get_visible_line_length()
+#
+# Usage:
+#   _get_visible_line_length <string> [<extra-length>]
+#
+# Describe:
+#   Calculate the apparent length of <string>, with byte and character
+#   calculations for handling unicode characters.
+#
+# More Information:
+#   https://stackoverflow.com/a/31009961
+_get_visible_line_length() {
+  local _string="${1:-}"
+  local _extra_length="${2:-0}"
+
+  _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
+
+  local _line_length_chars=
+  _line_length_chars="${#_string}"
+
+  LANG=C LC_ALL=C
+
+  local _line_length_bytes=
+  _line_length_bytes="${#_string}"
+
+  LANG="${_LANG:-}" LC_ALL="${_LC_ALL:-}"
+
+  local _line_length_diff=
+  _line_length_diff=$(((_line_length_bytes-_line_length_chars)/3))
+
+  local _line_length=
+  _line_length=$((_line_length_chars+_line_length_diff))
+
+  if ((_extra_length))
+  then
+    _line_length=$((_line_length+_extra_length))
+  fi
+
+  printf "%s\\n" "${_line_length:-0}"
 }
 
 # _highlight_syntax_if_available()
@@ -2418,7 +2067,7 @@ _interactive_input() {
 # Example:
 #   _join "${_delimeter}" "${_list[@]}"
 #
-# More information:
+# More Information:
 #   https://stackoverflow.com/a/17841619
 _join() {
   local _delimiter="${1:-}"
@@ -2640,7 +2289,7 @@ _list_files() {
 # Description:
 #   Print a line of dashes the length of <text>.
 #
-# More information:
+# More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
   local _text="${1:-}"
@@ -3008,7 +2657,7 @@ $(_color_primary "Usage:")
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  ${_ME} bookmark [list [<list options>...]]
+  ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
@@ -3023,8 +2672,8 @@ $(_color_primary "Usage:")
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
-  ${_ME} git checkpoint [<message>]
-  ${_ME} git <git options>...
+  ${_ME} git [checkpoint [<message>] | dirty]
+  ${_ME} git <git-options>...
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<id> | <filename> | <path> | <title>]
@@ -3337,9 +2986,10 @@ _add() {
   then
     if [[ -z "${_password}" ]]
     then
+      # request password without displaying it
       printf "Password: "
       read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`.
+      printf "\\n" # print newline to stop `read`
 
       if [[ -z "${_password:-}" ]]
       then
@@ -3348,9 +2998,10 @@ _add() {
 
       local _password_confirmation=
 
+      # request password without displaying it
       printf "Confirm Password: "
       read -r -s _password_confirmation </dev/tty
-      printf "\\n" # print newline to stop `read`.
+      printf "\\n" # print newline to stop `read`
 
       if [[ "${_password}" != "${_password_confirmation}" ]]
       then
@@ -3406,7 +3057,7 @@ _add() {
 
     printf "Added: %s\\n" "${_info}"
   fi &&
-    _git_checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
 }
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
@@ -3422,7 +3073,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  ${_ME} bookmark list [<list options>...]
+  ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
@@ -3759,10 +3410,10 @@ _bookmark() {
 
       if [[ -z "${_password}" ]]
       then
-        # Request password without displaying it
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
       fi
 
       if [[ -z "${_password}" ]]
@@ -3797,6 +3448,7 @@ _bookmark() {
         do
           IFS='' read -r -e -d $'\n' -p "\
 Check the Wayback Machine for an archived version instead? [y/N] " __yn
+
           case ${__yn} in
             [Yy]*)
               _check_wayback=1
@@ -4273,7 +3925,7 @@ and installing the latest version with the following command (\`sudo\` might
 be necessary):
   ${_ME} completions install --download
 
-More information: ${__shell}
+More Information: ${__shell}
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
       else
@@ -4462,6 +4114,7 @@ _delete() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
+
       case ${__yn} in
         [Yy]*)
           break
@@ -4488,7 +4141,7 @@ _delete() {
     then
       _index delete "${_basename}"
 
-      _git_checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
+      _git checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
       printf "Deleted:  %s\\n" "${_info}"
     fi
@@ -4606,10 +4259,10 @@ _edit() {
 
       if [[ -z "${_password}" ]]
       then
-        # Request password without displaying it
+        # request password without displaying it
         printf "Password: "
         read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`.
+        printf "\\n" # print newline to stop `read`
       fi
 
       _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"
@@ -4666,7 +4319,7 @@ _edit() {
       rm "${_decrypted_path:?}"
     fi
 
-    _git_checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
 
     if [[ "${_before}" != "${_after}" ]]
     then
@@ -4683,6 +4336,8 @@ _alias_subcommand "edit" "e"
 
 # env ##################################################################### env
 
+# TODO: vim highlighting bug \`"
+
 describe "env" <<HEREDOC
 Usage:
   ${_ME} env [install]
@@ -4697,24 +4352,53 @@ HEREDOC
 _env() {
   # Usage: _env_install_deb <name> <version> <repo>
   _env_install_deb() {
+    local _deb_filename=
     local _name="${1:?}"
     local _repo="${3:?}"
     local _version="${2:?}"
+    local _x86_64_bit=1
 
-    local _deb_filename="${_name}_${_version}_amd64.deb"
-    local _deb_local_path="${HOME}/${_deb_filename}"
+    local _arch
+    _arch="$(uname -m)"
 
-    # Handle bat version prefix in URL.
+    case "${_arch:-}" in
+      x86_64)
+        _deb_filename="${_name}_${_version}_amd64.deb"
+        ;;
+      aarch64)
+        _x86_64_bit=0
+        _deb_filename="${_name}_${_version}_arm64.deb"
+        ;;
+      arm*)
+        _x86_64_bit=0
+        _deb_filename="${_name}_${_version}_armhf.deb"
+        ;;
+    esac
+
+    if [[ -z "${_deb_filename:-}"   ]]  || {
+         [[ "${_name}" == "ripgrep" ]]  && ! ((_x86_64_bit))
+       }
+    then
+      _warn printf "\
+Please install %s manually. No .deb package available for %s."  \
+        "$(_color_primary "${_name}")"                          \
+        "$(_color_primary "${_arch}")"
+      return 0
+    fi
+
+    local _deb_path="${HOME}/${_deb_filename}"
+
+    # handle bat version prefix in URL
     [[ "${_name}" == "bat" ]] && _version="v${_version}"
 
-    wget \
-      -O "${_deb_local_path}" \
+    wget                \
+      -O "${_deb_path}" \
       "https://github.com/${_repo}/releases/download/${_version}/${_deb_filename}"
 
-    if [[ -e "${_deb_local_path}" ]]
+    if [[ -e "${_deb_path}" ]]
     then
-      dpkg -i "${_deb_local_path}"
-      rm "${_deb_local_path:?}"
+      dpkg -i "${_deb_path}"
+      rm "${_deb_path:?}"
     fi
   }
 
@@ -4745,40 +4429,48 @@ _env() {
     then
       _completions install --download
 
-      local _apt_packages=(
+      local _apt_packages=()
+      local _deb_packages=()
+      local _dependencies=(
         bash-completion
         curl
         pandoc
         python3-pygments
         tig
         w3m
+        ripgrep
+        bat
       )
-      local _deb_packages=()
 
-      local _os_version
-      _os_version="$(lsb_release -d | awk '{print $3}')"
+      [[ "$(cat /etc/os-release)" =~ ubuntu|debian ]] || return 1
 
-      if [[ "$(_env_max_version "${_os_version}" "18.10")" == "${_os_version}" ]]
-      then
-        _apt_packages+=("ripgrep")
-      else
+      apt-get update
+
+      for __package in "${_dependencies[@]}"
+      do
+        if ! _command_exists "${__package}" &&
+           apt-cache show "${__package}" | grep -q "Package: ^${__package}"
+        then
+          _apt_packages+=("${__package}")
+        fi
+      done
+
+      apt-get install -y "${_apt_packages[@]:-}"
+
+      # force install of bat
+      apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
+
+      _command_exists "rg"      ||
         _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
-      fi
-
-      if [[ "$(_env_max_version "${_os_version}" "19.10")" == "${_os_version}" ]]
-      then
-        _apt_packages+=("bat")
-      else
+      _command_exists "batcat"  ||
         _deb_packages+=("bat 0.16.0 sharkdp/bat")
-      fi
-
-      apt update
-
-      apt-get install "${_apt_packages[@]}"
 
       for __package in "${_deb_packages[@]}"
       do
-        eval "_env_install_deb ${__package}"
+        local _arguments
+        IFS=' ' read -ra _arguments <<< "${__package:-}"
+
+        _env_install_deb "${_arguments[@]:-}"
       done
     elif [[ -x "$(command -v dnf)" ]]
     then
@@ -4974,9 +4666,11 @@ _export() {
       if ! ((_force))
       then
         printf "File exists at %s\\n" "$(_color_primary "${_target_path}")"
+
         while true
         do
           IFS='' read -r -e -d $'\n' -p "Overwrite existing file? [y/N] " __yn
+
           case ${__yn} in
             [Yy]*)
               break
@@ -5022,12 +4716,14 @@ _export() {
 
 describe "git" <<HEREDOC
 Usage:
-  ${_ME} git checkpoint [<message>]
-  ${_ME} git <git options>...
+  ${_ME} git [checkpoint [<message>] | dirty]
+  ${_ME} git <git-options>...
 
 Subcommands:
-  checkpoint  Create a new git commit in the current notebook and sync with
-              the remote if \`${_ME} set auto_sync\` is enabled.
+  checkpoint    Create a new git commit in the current notebook and sync with
+                the remote if \`${_ME} set auto_sync\` is enabled.
+  dirty         0 (success, true) if there are uncommitted changes in
+                <notebook-path>. 1 (error, false) if <notebook-path> is clean.
 
 Description:
   Run \`git\` commands within the current notebook directory.
@@ -5039,21 +4735,446 @@ Examples:
   ${_ME} example:git status
 HEREDOC
 _git() {
-  if [[ "${1:-}" == "checkpoint" ]]
-  then
-    shift
-    _git_checkpoint "${@:-}"
-  else
-    local _notebook_path
-    _notebook_path="$(_notebooks current --path)"
+  # _git_autosyncable()
+  #
+  # Usage:
+  #   _git_autosyncable [<notebook-path>]
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  If autosync should trigger.
+  #   1 (error,  false)  If autosync should not trigger.
+  _git_autosyncable() {
+    ((_GIT_ENABLED)) || return 1
 
-    if [[ -n "${1:-}" ]]
+    local _current_timestamp=
+    local _last_fetch_timestamp=
+    local _maybe_fetch_timestamp=
+    local _notebook_path="${1:-}"
+
+    if [[ -z "${_notebook_path}" ]]
     then
-      git -C "${_notebook_path}" "${@}"
-    else
-      git -C "${_notebook_path}"
+      _notebook_path="$(_notebooks current --path)"
     fi
-  fi
+
+    if ! ((NB_AUTO_SYNC))
+    then # autosync not enabled.
+      return 1
+    fi
+
+    if ! git -C "${_notebook_path}" config --get remote.origin.url &>/dev/null
+    then # there is no remote configured.
+      return 1
+    fi
+
+    if [[ ! -e "${_notebook_path}/.git/FETCH_HEAD" ]]
+    then # no previous fetches, but has an origin and autosync is enabled.
+      return 0
+    fi
+
+    if _maybe_fetch_timestamp="$(
+         stat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
+       )"
+    then # GNU
+      _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+    elif _maybe_fetch_timestamp="$(
+           gstat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
+         )"
+    then # GNU prefixed
+      _last_fetch_timestamp="${_maybe_fetch_timestamp}"
+    else
+      _last_fetch_timestamp="$(
+        stat -f '%m' "${_notebook_path}/.git/FETCH_HEAD"
+      )"
+    fi
+    _current_timestamp="$(date +%s)"
+
+    _diff=$((_current_timestamp-_last_fetch_timestamp))
+
+    [[ "${_diff}" -gt 60 ]]
+  }
+
+  # _git_checkpoint()
+  #
+  # Usage:
+  #   _git_checkpoint <notebook-path> <commit-message>
+  #
+  # Description:
+  #   Commit all files in <notebook-path> with the provided <commit-message>.
+  _git_checkpoint() {
+    ((_GIT_ENABLED)) || return 0
+
+    # Usage: _git_checkpoint_commit <notebook-path> <message>
+    _git_checkpoint_commit() {
+     local _notebook_path="${1:-}"
+     local _message="${2:-}"
+
+      if [[ -z "${_notebook_path:-}" ]] || [[ -z "${_message:-}" ]]
+      then
+        _exit_1 printf \
+           "Usage: _git_checkpoint_commit <message> <notebook-path>"
+      fi
+
+      git -C "${_notebook_path}" add --all &&
+        git -C "${_notebook_path}" commit -a -m "${_message}"
+    }
+
+    local _message=
+    local _show_spinner=0
+    local _notebook_path=
+
+    for __arg in "${@:-}"
+    do
+      case "${__arg}" in
+        --spinner)
+          _show_spinner=1
+          ;;
+        *)
+          if [[ -z "${_notebook_path}"  ]] &&
+             [[ "${__arg}" =~ ^/        ]] &&
+             [[ -d "${__arg}"           ]]
+          then
+            _notebook_path="${__arg}"
+          elif [[ -z "${_message}" ]]
+          then
+            _message="${__arg}"
+          fi
+          ;;
+      esac
+    done
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _notebook_path="$(_notebooks current --path)"
+    fi
+
+    if [[ -z "${_message}" ]]
+    then
+      _message="[nb] Commit"
+    fi
+
+    if ((NB_AUTO_SYNC))
+    then
+      (
+        {
+          # only sync when the index is dirty
+          if _git dirty "${_notebook_path}"
+          then
+            _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
+          fi && GIT_TERMINAL_PROMPT=0 _git sync "${_notebook_path}"  &>/dev/null
+        } || :
+      ) &
+    else
+      (
+        _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null ||
+          return 0
+      ) &
+    fi
+
+    if ((_show_spinner))
+    then
+      _spinner  ${!}
+    fi
+
+    wait        ${!}
+    return      ${?}
+  }
+
+  # _git_dirty()
+  #
+  # Usage:
+  #   _git_dirty [<notebook-path>]
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  If there are uncommitted changes in <notebook-path>
+  #                      or the current notebook.
+  #   1 (error,  false)  If <notebook-path> or the current notebook is clean.
+  _git_dirty() {
+    ((_GIT_ENABLED)) || return 1
+
+    local _target_path="${1:-}"
+
+    if [[ -z "${_target_path:-}" ]]
+    then
+      _target_path="$(_notebooks current --path)"
+    fi
+
+    [[ -n "$(git -C "${_target_path}" status --porcelain)" ]]
+  }
+
+  # _git_out_of_sync()
+  #
+  # Usage:
+  #   _git_out_of_sync [<notebook-path>]
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  If <notebook-path> or the current notebook is out of
+  #                      sync with the remote.
+  #   1 (error,  false)  If <notebook-path> or the current notebook is synced
+  #                      with the remote.
+  _git_out_of_sync() {
+    ((_GIT_ENABLED)) || return 1
+
+    local _notebook_path="${1:-}"
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _notebook_path="$(_notebooks current --path)"
+    fi
+
+    git -C "${_notebook_path}" status | grep -q 'diverged'
+  }
+
+  # _git_required()
+  #
+  # Usage:
+  #   _git_required
+  #
+  # Description:
+  #   Exit with `_exit_1` if `git` isn't found.
+  _git_required() {
+    ((_GIT_ENABLED)) || return 0
+
+    if ! _command_exists "git"
+    then
+      _exit_1 cat <<HEREDOC
+Welcome to $(_color_primary "${_ME}")!
+
+Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
+
+About Git: https://git-scm.com/
+HEREDOC
+    fi
+
+    local _git_name=
+    _git_name="$(git config user.name || printf '')"
+
+    local _git_email=
+    _git_email="$(git config user.email || printf '')"
+
+    if [[ -z "${_git_name}"   ]] ||
+       [[ -z "${_git_email}"  ]]
+    then
+      cat <<HEREDOC
+Welcome to $(_color_primary "${_ME}")!
+
+Git requires some additional setup before using $(_color_primary "${_ME}").
+Enter the name and email address you'd like to use with Git.
+Edits you make will be attributed to this name and email address.
+HEREDOC
+      if [[ -z "${_git_name}" ]]
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
+
+          if [[ -n "${__name}" ]]
+          then
+            git config --global user.name "${__name}"
+            break
+          fi
+        done
+      fi
+
+      if [[ -z "${_git_email}" ]]
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
+
+          if [[ -n "${__email}" ]]
+          then
+            git config --global user.email "${__email}"
+            break
+          fi
+        done
+      fi
+    fi
+  }
+
+  # _git_sync()
+  #
+  # Usage:
+  #   _git_sync [<notebook-path>]
+  #
+  # Description:
+  #   Sync <notebook-path> or the current notebook with the remote.
+  _git_sync() {
+    local _notebook_path="${1:-}"
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _notebook_path="$(_notebooks current --path)"
+    fi
+
+    if ! git -C "${_notebook_path}" remote get-url origin &>/dev/null
+    then
+      return 0
+    fi
+
+    local _git_branch=
+    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+
+    if ! GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}" \
+           git -C "${_notebook_path}" fetch &>/dev/null
+    then
+      _warn printf "Unable to fetch from remote.\\n"
+      return 1
+    fi
+
+    if ! git -C "${_notebook_path}" show-branch \
+           "remotes/origin/${_git_branch}" > /dev/null 2>&1
+    then
+      _warn printf \
+        "Remote branch not found: %s\\n" "$(_color_primary "${_git_branch}")"
+      return 1
+    fi
+
+    if ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
+    then
+      local _merge_error=1
+
+      local _conflicted_files
+      _conflicted_files=($(
+        GIT_PAGER='' git -C "${_notebook_path}" diff --name-only --diff-filter=U
+      ))
+
+      local _conflicted_text_files=()
+      local _conflicted_binary_files=()
+
+      if [[ -n "${_conflicted_files[*]:-}" ]]
+      then
+        if _contains ".index" "${_conflicted_files[@]}"
+        then
+          # Remove git conflict markers to keep both.
+          # More info: https://stackoverflow.com/a/55187779
+          _sed_i              \
+            -e '/^<<<<<<</d'  \
+            -e '/^>>>>>>>/d'  \
+            -e '/=======/d'   \
+            "${_notebook_path}/.index"
+
+          git -C "${_notebook_path}" add ".index"
+        fi
+
+        for __file in "${_conflicted_files[@]}"
+        do
+          [[ "${__file}" == ".index" ]] && continue
+
+          if _file_is_text "${__file}"
+          then
+            _conflicted_text_files+=("${__file}")
+
+            git -C "${_notebook_path}" add            \
+              "${__file}"
+          else
+            git -C "${_notebook_path}" checkout       \
+              "origin/${_git_branch}" -- "${__file}"
+
+            local _conflicted_file=
+            _conflicted_file="$(
+              _notebooks show "${_notebook_path}"     \
+                --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
+            )"
+
+            _conflicted_binary_files+=("${_conflicted_file}")
+
+            git -C "${_notebook_path}" mv       \
+              "${__file}" "${_conflicted_file}"
+
+            git -C "${_notebook_path}" checkout \
+              "${_git_branch}" -- "${__file}"
+
+            git -C "${_notebook_path}" add "${_conflicted_file}"
+            git -C "${_notebook_path}" add "${__file}"
+          fi
+        done
+
+        GIT_EDITOR=true git -C "${_notebook_path}" rebase \
+          --continue &>/dev/null &&
+            _merge_error=0
+      fi
+
+      if ((_merge_error))
+      then
+        git -C "${_notebook_path}" rebase --abort
+
+        _warn printf \
+          "Merge conflict. Use \`%s git\` to merge manually.\\n" \
+          "${_ME}"
+        return 1
+      else
+        if ((${#_conflicted_text_files[@]}))
+        then
+          printf "\\n"
+          _warn cat <<HEREDOC
+Files containing conflicts:
+
+$(for __file in "${_conflicted_text_files[@]}"
+do
+  printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
+done)
+
+Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
+HEREDOC
+        fi
+
+        if ((${#_conflicted_binary_files[@]}))
+        then
+          printf "\\n"
+          _warn cat <<HEREDOC
+Conflicted copies of binary files:
+
+$(for __file in "${_conflicted_binary_files[@]}"
+do
+  printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
+done)
+HEREDOC
+        fi
+      fi
+    fi
+
+    GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}" \
+      git -C "${_notebook_path}" push               \
+      --set-upstream                                \
+      origin "${_git_branch}"                       \
+      &>/dev/null || {
+        _warn printf "Unable to push to remote.\\n"
+        return 1
+      }
+  }
+
+  case "${1:-}" in
+    autosyncable)
+      _git_autosyncable "${2:-}"
+      ;;
+    checkpoint)
+      shift
+      _git_checkpoint "${@:-}"
+      ;;
+    dirty)
+      _git_dirty "${2:-}"
+      ;;
+    out*of*sync|o|oos|out)
+      _git_out_of_sync "${2:-}"
+      ;;
+    required|setup)
+      _git_required
+      ;;
+    sync)
+      _git_sync "${2:-}"
+      ;;
+    *)
+      local _notebook_path
+      _notebook_path="$(_notebooks current --path)"
+
+      if [[ -n "${1:-}" ]]
+      then
+        git -C "${_notebook_path}" "${@}"
+      else
+        git -C "${_notebook_path}"
+      fi
+      ;;
+  esac
 }
 
 # helpers ############################################################# helpers
@@ -5211,14 +5332,17 @@ _history() {
     fi
   fi
 
-  [[ -n "${_notebook_path:-}" ]] ||
+  if [[ -z "${_notebook_path:-}" ]]
+  then
     _notebook_path="$(_notebooks current --path)"
+  fi
 
   cd "${_notebook_path}" || _exit_1 printf "_history() \`cd\` failed.\\n"
 
   local _log_command="git log"
+
   if _command_exists "tig"
-  then # tig <https://github.com/jonas/tig> is present.
+  then
     _log_command="tig --all"
   fi
 
@@ -5247,7 +5371,7 @@ Subcommands:
   (default) Copy or download the file in <path> or <url>.
   copy      Copy the file at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Copy the file at <path> into the current notebook.
+  move      Move the file at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -5355,7 +5479,7 @@ _import() {
         cp "${_path}" "${_notebook_path}/${_basename}"
       fi &&
         _index add "${_basename}" &&
-          _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+          _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
       printf "Imported %s from %s\\n"         \
         "$(_show "${_basename}" --info-line)" \
@@ -5387,7 +5511,7 @@ _import() {
         fi
       fi &&
         _index add "${_basename}" &&
-          _git_checkpoint "${_notebook_path}" "\
+          _git checkpoint "${_notebook_path}" "\
 [nb] Import: ${_basename}
 
 Source:
@@ -5404,7 +5528,7 @@ ${_url}
 
       mv "${_path}" "${_notebook_path}/${_basename}"  &&
         _index add "${_basename}"                     &&
-          _git_checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+          _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
       printf "Imported %s from %s\\n"         \
         "$(_show "${_basename}" --info-line)" \
@@ -5549,6 +5673,7 @@ _index() {
         # Alternatives:
         # grep -n "^${1:-}$" "${2:-}" | cut -f1 -d:
         # awk 'match($0,v){print NR; exit}' v="^${1:-}$" "${2:-}"
+        # rg --color=never --line-number "^${1:-}$" "${2:-}" | cut -d: -f1
         sed -n "/^${1:-}$/=" "${2:-}"
       }
 
@@ -5574,6 +5699,39 @@ _index() {
       else
         printf "%s\\n" "${_id}"
       fi
+
+      # Alternative
+      # -----------
+
+      # local _basename="${2:-}"
+      # local _id
+
+      # if [[ -z "${_basename}" ]]
+      # then
+      #   _help index
+      #   return 1
+      # fi
+
+      # _index_get_id "${_basename:-}" "${_index_path:-}" | {
+      #   read -r _id
+
+      #   if [[ -n "${_id:-}" ]]
+      #   then
+      #     printf "%s\\n" "${_id:-}"
+      #   else
+      #     _index reconcile &&
+      #       _index_get_id "${_basename:-}" "${_index_path:-}" | {
+      #           read -r _id
+
+      #           if [[ -n "${_id:-}" ]]
+      #           then
+      #             printf "%s\\n" "${_id:-}"
+      #           else
+      #             return 1
+      #           fi
+      #         }
+      #   fi
+      # }
       ;;
     get_max_id)
       wc -l < "${_index_path}" | tr -d '[:space:]'
@@ -5581,7 +5739,7 @@ _index() {
       ;;
     rebuild)
       ls -t -r "${_notebook_path}" > "${_index_path}" &&
-        _git_checkpoint "${_notebook_path}" "[nb] Rebuild Index"
+        _git checkpoint "${_notebook_path}" "[nb] Rebuild Index"
       ;;
     reconcile)
       _index_reconcile_remove_duplicates() {
@@ -5754,7 +5912,7 @@ _init() {
       mkdir -p "${NB_DIR}/home"                   &&
         git -C "${NB_DIR}/home" init 1>/dev/null  &&
         touch "${NB_DIR}/home/.index"             &&
-        _git_checkpoint "${NB_DIR}/home" "[nb] Initialize"
+        _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
     fi
 
     _notebooks use "home" 1>/dev/null
@@ -5822,7 +5980,7 @@ HEREDOC
     _exit_1 cat <<HEREDOC
 $(_color_primary "${_ME}") already initialized. To initialize a local notebook, use:
   $(_color_primary "${_ME} notebooks init")
-More information:
+More Information:
   $(_color_primary "${_ME} help notebooks")
 HEREDOC
   fi
@@ -6162,6 +6320,7 @@ HEREDOC
 
         if ((_print_indicators))
         then
+          # TODO: `show --indicators` duplicated for performance (~20ms?)
           if _file_is_bookmark "${_notebook_path}/${__basename}"
           then
             _indicators+="🔖 "
@@ -6206,8 +6365,6 @@ HEREDOC
 
         if ! ((_no_id))
         then
-          # NOTE: Plain version serves as the reference version and can be
-          # used for length calculations.
           local _item_identifier=
           local _max_identifier=
 
@@ -6251,19 +6408,19 @@ HEREDOC
           fi
         fi
 
-        local _print_item=
-        local _print_item_color=
+        local _info_line=
+        local _info_line_color=
 
         if ((_no_id))
         then
-          _print_item="${_list_item}"
-          _print_item_color="${_list_item}"
+          _info_line="${_list_item}"
+          _info_line_color="${_list_item}"
         else
           local _list_item_id="${_id_item}${_spaces}${_list_item}"
           local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
 
-          _print_item="${_list_item_id}"
-          _print_item_color="${_list_item_id_color}"
+          _info_line="${_list_item_id}"
+          _info_line_color="${_list_item_id_color}"
         fi
 
         if ((_list_color_enabled))  &&
@@ -6271,30 +6428,9 @@ HEREDOC
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          # Calculate apparent length of the list item string, with byte and
-          # character calculations for handling unicode characters.
-          #
-          # More info: https://stackoverflow.com/a/31009961
-          local _item_line_length_chars=
-          _item_line_length_chars="${#_print_item}"
-
-          LANG=C LC_ALL=C
-
-          local _item_line_length_bytes=
-          _item_line_length_bytes="${#_print_item}"
-
-          LANG="${_LANG}" LC_ALL="${_LC_ALL}"
-
-          local _item_line_length_diff=
-          _item_line_length_diff=$(((_item_line_length_bytes-_item_line_length_chars)/3))
-
-          local _item_line_length=
-          _item_line_length=$((_item_line_length_chars+_item_line_length_diff))
-
-          if ((_extra_length))
-          then
-            _item_line_length=$((_item_line_length+_extra_length))
-          fi
+          _visible_info_line_length="$(
+            _get_visible_line_length "${_info_line:-}" "${_extra_length:-0}"
+          )"
         fi
 
         if ((_list_color_enabled))  &&
@@ -6303,7 +6439,7 @@ HEREDOC
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+          if [[ "${_visible_info_line_length}" -gt "${_columns}" ]] &&
              {
                [[ -n "${_maybe_title:-}" ]] ||
                [[ -n "${_first_line:-}"  ]]
@@ -6315,9 +6451,9 @@ HEREDOC
 
         if ((_list_color_enabled))
         then
-          printf "%s" "${_print_item_color}"
+          printf "%s" "${_info_line_color}"
         else
-          printf "%s" "${_print_item}"
+          printf "%s" "${_info_line}"
         fi
 
         if ((_list_color_enabled))  &&
@@ -6326,7 +6462,7 @@ HEREDOC
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          if [[ "${_item_line_length}" -gt "${_columns}" ]] &&
+          if [[ "${_visible_info_line_length}" -gt "${_columns}" ]] &&
              {
                [[ -n "${_maybe_title:-}" ]] ||
                [[ -n "${_first_line:-}"  ]]
@@ -6343,12 +6479,12 @@ HEREDOC
            [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
            _file_is_text "${_notebook_path}/${__basename}"
         then # excerpt is specified with a non-zero digit, required by `head`.
-          if [[ -z "${_item_line_length:-}"               ]] ||
-             [[ "${_item_line_length}" -gt "${_columns}"  ]]
+          if [[ -z "${_visible_info_line_length:-}"               ]] ||
+             [[ "${_visible_info_line_length}" -gt "${_columns}"  ]]
           then
             _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
           else
-            _print_line "$(printf "%-${_item_line_length}s" '.')"
+            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
           fi
           head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
             | _highlight_syntax_if_available "${__basename##*.}"
@@ -6482,7 +6618,7 @@ _ls() {
   # _ls_print_footer()
   #
   # Usage:
-  #   _ls_print_footer
+  #   _ls_print_footer <notebook>...
   _ls_print_footer() {
     local _footer_line_hi=
     local _footer_line_raw=
@@ -6493,6 +6629,7 @@ _ls() {
     local _maybe_scope=
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
+    local _notebook_names=("${@:-}")
 
     if _notebooks current --selected
     then
@@ -6502,7 +6639,7 @@ _ls() {
     fi
 
     local _notebook_command="${_ME} notebooks add <name>"
-    if [[ "${#_notebook_names_raw[@]}" -gt 1 ]]
+    if [[ "${#_notebook_names[@]}" -gt 1 ]]
     then
       if [[ -n "${_maybe_scope:-}" ]]
       then
@@ -6584,7 +6721,7 @@ _ls() {
   # _ls_print_header()
   #
   # Usage:
-  #   _ls_print_header <alignment>
+  #   _ls_print_header <alignment> <notebook>...
   #
   # Description:
   #   Build word-wrapping notebook line. `fold` doesn't account for
@@ -6596,12 +6733,16 @@ _ls() {
   #       | fold -s "-w$(tput cols)"  \
   #       && printf "\\n"
   _ls_print_header() {
+    local _alignment="${1:-}"
+    shift
+
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
     local _line_number=0
     local _line_hi=
     local _line_raw=
+    local _notebook_names=("${@:-}")
     local _output_hi=
     local _output_raw=
     local _padding=
@@ -6611,34 +6752,26 @@ _ls() {
     [[ "${NB_HEADER}" == 2 ]] && _centered=1
     [[ "${NB_HEADER}" == 3 ]] && _justified=1
 
-    while ((${#}))
-    do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg}" in
-        --auto-align)
-          _auto_align=1
-          _centered=0
-          _justified=0
-          ;;
-        --centered)
-          _auto_align=0
-          _centered=1
-          _justified=0
-          ;;
-        --justified)
-          _auto_align=0
-          _centered=0
-          _justified=1
-          ;;
-        --plain)
-          _plain=1
-          ;;
-      esac
-
-      shift
-    done
+    case "${_alignment}" in
+      --auto-align)
+        _auto_align=1
+        _centered=0
+        _justified=0
+        ;;
+      --centered)
+        _auto_align=0
+        _centered=1
+        _justified=0
+        ;;
+      --justified)
+        _auto_align=0
+        _centered=0
+        _justified=1
+        ;;
+      --plain)
+        _plain=1
+        ;;
+    esac
 
     local _separator=
     local _separator_hi=
@@ -6649,10 +6782,8 @@ _ls() {
       _separator_hi="$(_color_dim "${_separator}")"
     fi
 
-    local _notebook_names_hi=
-    _notebook_names_hi=($(
-      _notebooks --names --unarchived --global || :
-    ))
+    local _current_notebook_name=
+    _current_notebook_name="$(_notebooks current)"
 
     local _notebook_names_archived=
     _notebook_names_archived=($(
@@ -6662,44 +6793,38 @@ _ls() {
 
     if ((_archived_count))
     then
-      _notebook_names_hi=(
-        "${_notebook_names_hi[@]}"
-        "[${_archived_count} archived]"
-      )
-      _notebook_names_raw=(
-        "${_notebook_names_raw[@]}"
+      _notebook_names=(
+        "${_notebook_names[@]}"
         "[${_archived_count} archived]"
       )
     fi
 
     if _notebooks current --local
     then
-       if [[ "$(_notebooks current)" == "local" ]]
-      then
-        _notebook_names_hi=(
-          "$(_color_primary "local" --underline)"
-          "${_notebook_names_hi[@]}"
-        )
-      else
-        _notebook_names_hi=(
-          "local"
-          "${_notebook_names_hi[@]}"
-        )
-      fi
-
-      _notebook_names_raw=(
+      _notebook_names=(
         "local"
-        "${_notebook_names_raw[@]}"
+        "${_notebook_names[@]}"
       )
     fi
 
-    for ((i=0; i < "${#_notebook_names_raw[@]}"; i++))
+    for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
+      local _maybe_highlighted_notebook_name=
+
+      if [[ "${_current_notebook_name}" == "${_notebook_names[i]}" ]]
+      then
+        _maybe_highlighted_notebook_name="$(
+          _color_primary "${_notebook_names[i]:-}" --underline
+        )"
+      else
+        _maybe_highlighted_notebook_name="${_notebook_names[i]:-}"
+      fi
+
       if [[ -z "${_test_line}" ]]
       then # first item in line
-        _test_line="${_notebook_names_raw[i]}"
+        _test_line="${_notebook_names[i]}"
       else
-        _test_line="${_test_line}${_separator} ${_notebook_names_raw[i]}"
+        _test_line="${_test_line}${_separator} ${_notebook_names[i]}"
       fi
 
       if [[ "${#_test_line}" -gt "${_columns}" ]]
@@ -6719,21 +6844,21 @@ _ls() {
         _line_number=$((_line_number + 1))
 
         # Start the line for the next iteration using the current name.
-        _test_line="${_notebook_names_raw[i]}"
-        _line_hi="${_notebook_names_hi[i]:-}"
-        _line_raw="${_notebook_names_raw[i]}"
+        _test_line="${_notebook_names[i]}"
+        _line_hi="${_maybe_highlighted_notebook_name:-}"
+        _line_raw="${_notebook_names[i]}"
       else # add to line
         if [[ -z "${_line_hi}" ]]
         then # first item in highlighted line
-          _line_hi="${_notebook_names_hi[i]:-}"
-          _line_raw="${_notebook_names_raw[i]}"
+          _line_hi="${_maybe_highlighted_notebook_name:-}"
+          _line_raw="${_notebook_names[i]}"
         else
-          _line_hi="${_line_hi}${_separator_hi} ${_notebook_names_hi[i]:-}"
-          _line_raw="${_line_raw}${_separator} ${_notebook_names_raw[i]}"
+          _line_hi="${_line_hi}${_separator_hi} ${_maybe_highlighted_notebook_name:-}"
+          _line_raw="${_line_raw}${_separator} ${_notebook_names[i]}"
         fi
       fi
 
-      if [[ "${#_notebook_names_raw[@]}" == $((i+1)) ]]
+      if [[ "${#_notebook_names[@]}" == $((i+1)) ]]
       then # end of list
         if ((_line_number))  && ! ((_justified)) &&
            ((_auto_align))   ||   ((_centered))
@@ -6776,8 +6901,8 @@ _ls() {
   local _header_flags=()
   local _limit=
   local _list_options=()
-  local _notebook_names_raw
-  _notebook_names_raw=($(
+  local _notebook_names
+  _notebook_names=($(
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
@@ -6867,7 +6992,7 @@ _ls() {
   {
     if ((NB_HEADER)) && [[ -z "${_arguments[*]:-}" ]]
     then
-      _ls_print_header "${_header_flags[@]:-}"
+      _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
@@ -6922,7 +7047,7 @@ _ls() {
 
     if ((NB_FOOTER)) && [[ -z "${_arguments[*]:-}" ]]
     then
-      _ls_print_footer
+      _ls_print_footer "${_notebook_names[@]:-}"
     fi
   } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
       then
@@ -7029,29 +7154,17 @@ _move() {
       "$(_color_primary "${_target_notebook_escaped_name}:${_basename}")"
   fi
 
-  local _source_id=
-  _source_id="$(_index get_id "${_basename}")"
-
-  local _source_info=
-  _source_info="$(_color_id_brackets "${_notebook_escaped_name}:${_source_id}")"
-  _source_info="${_source_info} $(_color_primary "${_notebook_escaped_name}:${_basename}")"
-
-  local _title=
-  _title="$(_get_title "${_notebook_path}/${_basename}")"
-
-  if [[ -n "${_title}" ]]
-  then
-    _source_info="${_source_info} \"${_title}\""
-  fi
+  _source_info="$(_show "${_selector}" --info-line)"
 
   if ! ((_force))
   then
-    printf "Moving %s to %s\\n" \
+    printf "Moving   %s to %s\\n" \
       "${_source_info}"         \
       "$(_color_primary "${_target_notebook}")"
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
       case ${__yn} in
         [Yy]*)
           break
@@ -7206,7 +7319,7 @@ _notebooks() {
         git -C "${NB_DIR}/${_name}" init 1>/dev/null  &&
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
-        _git_checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
+        _git checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
     fi && printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
   }
 
@@ -7321,7 +7434,7 @@ _notebooks() {
           _force=1
           ;;
         *)
-          [[ -z "${_name:-}" ]] && _name="${__arg}"
+          [[ -z "${_name:-}" ]] && _name="${__arg%%:*}"
           ;;
       esac
     done
@@ -7344,7 +7457,7 @@ HEREDOC
       _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
     fi
 
-    local _notebook_names=
+    local _notebook_names=()
     _notebook_names=($(_notebooks --names --no-color))
 
     local _notebook_count=
@@ -7352,7 +7465,11 @@ HEREDOC
 
     if ! ((_force))
     then
-      cat <<HEREDOC
+      if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        printf "Moving to Trash: %s\\n" "$(_color_primary "${_name}")"
+      else
+        cat <<HEREDOC
 Deleting $(_color_primary "${_name}").
 
 This action cannot be undone. This will permanently delete the
@@ -7360,10 +7477,13 @@ $(_color_primary "${_name}") notebook, all notes and files it contains,
 and the entire revision history.
 
 HEREDOC
+      fi
+
       while true
       do
         IFS='' read -r -e -d $'\n' -p "\
 Please type $(_color_primary "${_name}") to confirm: " __response
+
         if [[ "${__response}" == "${_name}" ]]
         then
           break
@@ -7551,7 +7671,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     else
         git -C "${_path}" init 1>/dev/null  &&
         touch "${_path}/.index"             &&
-        _git_checkpoint "${_path}" "[nb] Initialize"
+        _git checkpoint "${_path}" "[nb] Initialize"
     fi
 
     printf "Initialized local notebook: %s\\n" "$(_color_primary "${_path}")"
@@ -7615,6 +7735,9 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     if [[ -z "${_query_names[*]:-}" ]]
     then
       _notebook_names=($(ls -1 "${NB_DIR}"))
+
+      _notebooks_add_new "${_notebook_names[@]:-}"
+
       set +f
       _notebook_paths=($(ls -1 -d "${NB_DIR}"/*))
       set -f
@@ -7625,6 +7748,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}" "${_notebook_paths[@]:-}")
       fi
     else
+      _notebooks_add_new
+
       for __name in "${_query_names[@]}"
       do
         _notebook_names+=("${__name}")
@@ -7816,7 +7941,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         if [[ ! -e "${_dotfile_path}" ]]
         then
           touch "${_dotfile_path}" &&
-            _git_checkpoint "${_notebook_path}" "[nb] Archived"
+            _git checkpoint "${_notebook_path}" "[nb] Archived"
         fi
 
         printf "%s archived.\\n" "$(_color_primary "${_notebook_name}")"
@@ -7833,7 +7958,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         if [[ -e "${_dotfile_path}" ]]
         then
           rm "${_dotfile_path:?}" &&
-            _git_checkpoint "${_notebook_path}" "[nb] Unarchived"
+            _git checkpoint "${_notebook_path}" "[nb] Unarchived"
         fi
 
         printf "%s unarchived.\\n" "$(_color_primary "${_notebook_name}")"
@@ -8137,8 +8262,12 @@ HEREDOC
   }
 
   _notebooks_add_new() {
-    local _notebook_list=
-    _notebook_list=($(ls -1 "${NB_DIR}"))
+    local _notebook_list=("${@:-}")
+
+    if [[ -z "${1:-}" ]]
+    then
+      _notebook_list=($(ls -1 "${NB_DIR}"))
+    fi
 
     for __notebook_name in "${_notebook_list[@]:-}"
     do
@@ -8148,7 +8277,7 @@ HEREDOC
           git -C "${NB_DIR}/${__notebook_name}" init 1>/dev/null  &&
           touch "${NB_DIR}/${__notebook_name}/.index"             &&
           _temp cache clear                                       &&
-          _git_checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
+          _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
       fi
     done
   }
@@ -8156,7 +8285,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if ! _contains "${_subcommand:-}" "current" "show"
+  if ! _contains "${_subcommand:-}" "current" "list" "show"
   then
     _notebooks_add_new
   fi
@@ -8383,6 +8512,7 @@ _plugins() {
             while true
             do
               IFS='' read -r -e -d $'\n' -p "Reinstall? [y/N] " __yn
+
               case ${__yn} in
                 [Yy]*)
                   break
@@ -8444,6 +8574,7 @@ HEREDOC
         while true
         do
           IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
           case ${__yn} in
             [Yy]*)
               break
@@ -8559,7 +8690,9 @@ _remote() {
           while true
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
+
             IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
             case ${__yn} in
               [Yy]*)
                 break
@@ -8604,7 +8737,9 @@ _remote() {
             printf "Updating remote from %s to %s\\n" \
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
+
             IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
             case ${__yn} in
               [Yy]*)
                 break
@@ -8627,8 +8762,8 @@ _remote() {
       then
         git -C "${_notebook_path}" remote get-url origin && return 0
       else
-        printf "No remote configured.\\n"
-        return 0
+        _warn printf "No remote configured.\\n"
+        return 1
       fi
       ;;
   esac
@@ -8803,6 +8938,7 @@ _rename() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
       case ${__yn} in
         [Yy]*)
           break
@@ -8817,7 +8953,7 @@ _rename() {
 
   mv "${_source_path}" "${_notebook_path}/${_target_basename}"  &&
     _index update "${_source_basename}" "${_target_basename}"   &&
-      _git_checkpoint "${_notebook_path}"     \
+      _git checkpoint "${_notebook_path}"     \
         "[nb] Rename: ${_source_basename} to ${_target_basename}"
 
   printf "%s renamed to %s\\n"                \
@@ -8972,6 +9108,9 @@ _search() {
 
     for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
+      local _max_id
+      _max_id="$(NB_NOTEBOOK_PATH="${__notebook_path}" _index get_max_id)"
+
       if _command_exists "rg" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
@@ -9084,8 +9223,6 @@ _search() {
         local _filename_color=
         local _filename_hit=0
         local _id=
-        local _id_filename=
-        local _id_filename_color=
         local _path=
         local _skip=0
         local _title=
@@ -9225,6 +9362,16 @@ _search() {
             fi
           fi
 
+          local _indicators=
+          _indicators="$(
+            NB_NOTEBOOK_PATH="${__notebook_path}" \
+              _show "${_filename_for_id}" --indicators
+          )"
+
+          local _info_line=
+          local _info_line_color=
+          local _max_identifier=
+
           if ((_all)) ||
              [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
           then
@@ -9233,17 +9380,45 @@ _search() {
               _notebooks show "${__notebook_path}" --escaped --no-color
             )"
 
-            _id_filename="[${_notebook_escaped_name}:${_id}] ${_file_info}"
-            _id_filename_color="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") ${_file_info_color}"
+            _info_line="[${_notebook_escaped_name}:${_id}] "
+            _info_line_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
+            _max_identifier="[${_notebook_escaped_name}:${_max_id}] "
           else
-            _id_filename="[${_id}] ${_file_info}"
-            _id_filename_color="$(_color_id_brackets "${_id}") ${_file_info_color}"
+            _info_line="[${_id}] "
+            _info_line_color+="$(_color_id_brackets "${_id}") "
+            _max_identifier="[${_max_id}] "
           fi
+
+          # Use calculated number of spaces for nicer formatting.
+          local _spaces=''
+          local _spaces_length=0
+
+          if ((_only_list))
+          then
+            _spaces_length=$(( ${#_max_identifier} - ${#_info_line} ))
+          fi
+
+          if ((_spaces_length))
+          then
+            printf -v _spaces '%*s' "${_spaces_length}" ""
+
+            _info_line+="${_spaces}"
+            _info_line_color+="${_spaces}"
+          fi
+
+          if [[ -n "${_indicators:-}" ]]
+          then
+            _info_line+="${_indicators}"
+            _info_line_color+="${_indicators}"
+          fi
+
+          _info_line+="${_file_info}"
+          _info_line_color+="${_file_info_color}"
 
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
-            printf "%s" "${_id_filename_color}"
+            printf "%s" "${_info_line_color}"
             _wrap on
             printf "\\n"
           fi
@@ -9257,7 +9432,14 @@ _search() {
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
             _wrap off
-            _print_line "${_id_filename}"
+
+            local _visible_line_length
+            _visible_line_length="$(
+              _get_visible_line_length "${_info_line:-}"
+            )"
+
+            _print_line "$(printf "%-${_visible_line_length}s" '.')"
+
             _wrap on
           fi
 
@@ -9303,6 +9485,16 @@ _search() {
       cat
       return 0
     else
+      if ((_all))
+      then
+        printf "Not found in any notebook: %s\\n" \
+          "$(_color_primary "${_query:-}")"
+      else
+        printf "Not found in %s: %s\\n"                       \
+          "$(_color_primary "$(_notebooks current --name)")"  \
+          "$(_color_primary "${_query:-}")"
+      fi
+
       return 1
     fi
   fi
@@ -9357,19 +9549,10 @@ Examples:
 Alias: \`set\`
 HEREDOC
 _settings() {
-  # Usage: _nb_settings_bat_themes
-  _nb_settings_bat_themes() {
-    _command_exists "bat" ||
-      _exit_1 printf "bat required: https://github.com/sharkdp/bat"
-
-    bat --list-themes               \
-      | grep --color=never 'Theme'  \
-      | sed 's/^Theme: //g'
-  }
-  # Usage: _nb_settings_colors [<number>] [themes]
-  _nb_settings_colors() {
-    # Usage: _nb_settings_colors_print <number>
-    _nb_settings_colors_print() {
+  # Usage: _settings_colors [<number>] [themes]
+  _settings_colors() {
+    # Usage: _settings_colors_print <number>
+    _settings_colors_print() {
       printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
     }
 
@@ -9382,7 +9565,7 @@ _settings() {
         [[ "${1}" =~ [[:digit:]] ]] || _exit_1 \
           printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
 
-        _nb_settings_colors_print "${1:-}"
+        _settings_colors_print "${1:-}"
         printf "\\n"
       fi
     else
@@ -9393,22 +9576,22 @@ _settings() {
           printf "\\n"
         fi
 
-        _nb_settings_colors_print "${_i}"
+        _settings_colors_print "${_i}"
       done
 
       printf "\\n"
     fi
   }
 
-  # Usage: _nb_settings_get_value (<number> | <name>)
-  _nb_settings_get_value() {
+  # Usage: _settings_get_value (<number> | <name>)
+  _settings_get_value() {
     local _setting_name=
-    _setting_name="$(_nb_settings_identify "${1:-}")" &&
+    _setting_name="$(_settings_identify "${1:-}")" &&
       _env | grep "${_setting_name}" | cut -d= -f2
   }
 
-  # Usage: _nb_settings_identify [--id] (<number> | <name>)
-  _nb_settings_identify() {
+  # Usage: _settings_identify [--id] (<number> | <name>)
+  _settings_identify() {
     local _get_id=0
     local _id_or_name=
 
@@ -9425,47 +9608,47 @@ _settings() {
     fi
 
     case "${_id_or_name}" in
-      1|*auto_sync|*AUTO_SYNC)
+      1|*auto*|*AUTO*|*sync*|*SYNC*)
         ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|*color_primary|*COLOR_PRIMARY|*primary_color|*PRIMARY_COLOR)
+      2|*primary*|*PRIMARY*)
         ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|*color_secondary|*COLOR_SECONDARY|*secondary_color|*SECONDARY_COLOR)
+      3|*secondary*|*SECONDARY*)
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|*color_theme*|*COLOR_THEME*|color_scheme|theme*)
+      4|*color*theme*|*COLOR*THEME*|*scheme*|theme*)
         ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      5|*default_extension|*DEFAULT_EXTENSION)
+      5|*ext*|*EXT*)
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      6|*editor|*EDITOR)
+      6|*editor*|*EDITOR*)
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
-      7|*encryption_tool|*ENCRYPTION_TOOL)
+      7|*encrypt*|*ENCRYPT*)
         ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|*footer|*FOOTER)
+      8|*footer*|*FOOTER*)
         ((_get_id)) && printf "8" || printf "NB_FOOTER"
         return 0
         ;;
-      9|*header|*HEADER)
+      9|*header*|*HEADER*)
         ((_get_id)) && printf "9" || printf "NB_HEADER"
         return 0
         ;;
-      10|*limit|*LIMIT)
+      10|*limit*|*LIMIT*)
         ((_get_id)) && printf "10" || printf "NB_LIMIT"
         return 0
         ;;
-      11|*dir|*DIR)
+      11|*dir*|*DIR*)
         ((_get_id)) && printf "11" || printf "NB_DIR"
         return 0
         ;;
@@ -9482,13 +9665,13 @@ _settings() {
     esac
   }
 
-  # Usage: _nb_settings_prompt [<id> | <name>]
-  _nb_settings_prompt() {
+  # Usage: _settings_prompt [<id> | <name>]
+  _settings_prompt() {
     local _setting_name="${1:-}"
 
     if [[ -n "${_setting_name}" ]]
     then
-      _setting_name="$(_nb_settings_identify "${_setting_name}")"
+      _setting_name="$(_settings_identify "${_setting_name}")"
     else
       cat <<HEREDOC
 $(_color_primary "${_ME}") Settings
@@ -9501,6 +9684,7 @@ HEREDOC
       while true
       do
         IFS='' read -r -e -d $'\n' -p "$(_color_primary "Number or Name: ")" __setting
+
         if [[ -n "${__setting}" ]]
         then
           case "${__setting}" in
@@ -9510,7 +9694,7 @@ HEREDOC
               ;;
             *)
               _setting_name="$(
-                _nb_settings_identify "${__setting}"
+                _settings_identify "${__setting}"
               )" && break
               ;;
           esac
@@ -9521,7 +9705,7 @@ HEREDOC
     if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
        [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
     then
-      printf "%s\\n\\n" "$(_nb_settings_colors)"
+      printf "%s\\n\\n" "$(_settings_colors)"
     fi
 
     _settings show "${_setting_name}"
@@ -9537,6 +9721,7 @@ HEREDOC
     while true
     do
       IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
+
       if [[ -n "${__value}" ]]
       then
         case "${__value}" in
@@ -9545,11 +9730,11 @@ HEREDOC
             return 0
             ;;
           unset|default|reset)
-            _nb_settings_unset "${_setting_name}" || continue
+            _settings_unset "${_setting_name}" || continue
             break
             ;;
           *)
-            _nb_settings_set "${_setting_name}" "${__value}" || continue
+            _settings_set "${_setting_name}" "${__value}" || continue
             break
             ;;
         esac
@@ -9557,8 +9742,8 @@ HEREDOC
     done
   }
 
-  # Usage: _nb_settings_set (<number> | <name>) <value>
-  _nb_settings_set() {
+  # Usage: _settings_set (<number> | <name>) <value>
+  _settings_set() {
     local _attribution=
     _attribution="# Set by \`${_ME}\` • $(date)"
     local _entry=
@@ -9566,12 +9751,12 @@ HEREDOC
     local _stripped=
     local _value=
 
-    _setting_name="$(_nb_settings_identify "${1:-}")"  &&
+    _setting_name="$(_settings_identify "${1:-}")"  &&
       if _contains "${2:-}" "unset" "default" "reset"
       then
-        _nb_settings_unset "${_setting_name}" && return 0
+        _settings_unset "${_setting_name}" && return 0
       fi &&
-      _nb_settings_validate_value "${_setting_name}" "${2:-}" &&
+      _settings_validate_value "${_setting_name}" "${2:-}" &&
       {
         _value="${2:-}"
         if [[ "${_value}" =~ ^~ ]]
@@ -9586,9 +9771,9 @@ HEREDOC
       else
         _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}"
       fi &&
-      _nb_settings_unset "${_setting_name}" > /dev/null 2>&1 &&
-      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"        &&
-      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]] ||
+      _settings_unset "${_setting_name}" > /dev/null 2>&1     &&
+      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"         &&
+      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]]  ||
          [[ "${_setting_name}" == "NB_COLOR_SECONDARY"    ]]
       then
         _setting_name="$(tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
@@ -9612,12 +9797,12 @@ HEREDOC
         "${_value}"
   }
 
-  # Usage: _nb_settings_unset (<number> | <name>)
-  _nb_settings_unset() {
+  # Usage: _settings_unset (<number> | <name>)
+  _settings_unset() {
     local _setting_name=
     local _default_value=
 
-    _setting_name="$(_nb_settings_identify "${1:-}")" &&
+    _setting_name="$(_settings_identify "${1:-}")"      &&
       _sed_i                                            \
         -e "s/^export ${_setting_name}.*Added by.*$//g" \
         -e "s/^export ${_setting_name}.*Set by.*$//g"   \
@@ -9657,8 +9842,8 @@ HEREDOC
           "${_default_value}"
   }
 
-  # Usage: _nb_settings_validate_value (<number> | <name>) <value>
-  _nb_settings_validate_value() {
+  # Usage: _settings_validate_value (<number> | <name>) <value>
+  _settings_validate_value() {
     if [[ "${1:-}" == 'EDITOR'                ]] ||
        [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
     then
@@ -9803,6 +9988,10 @@ HEREDOC
 
          $(_color_primary "${_ME} help --colors")
 
+     To change the syntax highlighting theme, use:
+
+         $(_color_primary "${_ME} set syntax_theme")
+
      • Available themes:
 
 $(for __theme in "${_NB_COLOR_THEMES[@]}"
@@ -9914,7 +10103,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
     case "${__arg}" in
       color|colors)
-        _nb_settings_colors "${2:-}"
+        _settings_colors "${2:-}"
         return 0
         ;;
       edit)
@@ -9927,7 +10116,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           _exit_1 _help settings
         fi
 
-        _nb_settings_get_value "${2:-}"
+        _settings_get_value "${2:-}"
         return 0
         ;;
       list)
@@ -9954,7 +10143,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           _exit_1 _help "settings"
         fi
 
-        _nb_settings_set "${2:-}" "${3:-}"
+        _settings_set "${2:-}" "${3:-}"
         return 0
         ;;
       show|help|about|info|more)
@@ -9964,10 +10153,10 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
         fi
 
         local _setting_id=
-        _setting_id="$(_nb_settings_identify --id "${2:-}")"
+        _setting_id="$(_settings_identify --id "${2:-}")"
 
         local _setting_name=
-        _setting_name="$(_nb_settings_identify "${2:-}")"
+        _setting_name="$(_settings_identify "${2:-}")"
 
         local _index=
         _index="$((_setting_id-1))"
@@ -9978,7 +10167,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
         printf "\\n%s is currently set to %s\\n"  \
           "$(_color_primary "${_setting_name}")"  \
-          "$(_color_primary "$(_nb_settings_get_value "${_setting_name}")")"
+          "$(_color_primary "$(_settings_get_value "${_setting_name}")")"
         return 0
         ;;
       reset|unset)
@@ -9987,26 +10176,26 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
           _exit_1 _help "settings"
         fi
 
-        _nb_settings_unset "${2:-}"
+        _settings_unset "${2:-}"
         return 0
         ;;
       *)
         local _setting_name=
         if [[ -n "${1:-}" ]]
         then
-          _setting_name="$(_nb_settings_identify "${1}")"
+          _setting_name="$(_settings_identify "${1}")"
         fi
 
         if [[ -n "${_setting_name:-}" ]]
         then
           if [[ -n "${2:-}" ]]
           then
-            _nb_settings_set "${_setting_name}" "${2}"
+            _settings_set "${_setting_name}" "${2}"
           else
-            _nb_settings_prompt "${_setting_name}"
+            _settings_prompt "${_setting_name}"
           fi
         else
-          _nb_settings_prompt
+          _settings_prompt
         fi
 
         return 0
@@ -10240,6 +10429,50 @@ Alias: \`view\`
 Shortcut Alias: \`s\`
 HEREDOC
 _show() {
+  # _show_indicators()
+  #
+  # Usage:
+  #   _show_indicators <path>
+  #
+  # Description:
+  #   Print a list of indicators based on the file type.
+  #
+  # NOTE: Indicator logic is also specified in `list` for performance.
+  _show_indicators() {
+    local _indicators=
+    local _path="${1:-}"
+
+    if _file_is_bookmark "${_path}"
+    then
+      _indicators+="🔖 "
+    elif _file_is_image "${_path}"
+    then
+      _indicators+="🌄 "
+    elif _file_is_document "${_path}"
+    then
+      _indicators+="📄 "
+    elif [[ -d "${_path}" ]]
+    then
+      _indicators+="📂 "
+    elif _file_is_video "${_path}"
+    then
+      _indicators+="📹 "
+    elif _file_is_audio "${_path}"
+    then
+      _indicators+="🔉 "
+    elif [[ "${_path}" =~ epub$ ]]
+    then
+      _indicators+="📖 "
+    fi
+
+    if _file_is_encrypted "${_path}"
+    then
+      _indicators+="🔒 "
+    fi
+
+    printf "%s\\n" "${_indicators:-}"
+  }
+
   # _show_selector_basename()
   #
   # Usage:
@@ -10324,6 +10557,7 @@ _show() {
   local _selector=
   local _show_color_enabled="${_COLOR_ENABLED}"
   local _skip_notebook_fallback=0
+  local _print_indicators=0
   local _print_title=0
   local _tool=
   local _type=
@@ -10350,6 +10584,9 @@ _show() {
       --id|--index)
         _print_id=1
         _skip_notebook_fallback=1
+        ;;
+      --indicators)
+        _print_indicators=1
         ;;
       --info-line)
         _print_info=1
@@ -10473,6 +10710,12 @@ _show() {
     return 0
   fi
 
+  if ((_print_indicators))
+  then
+    _show_indicators "${_notebook_path}/${_basename}"
+    return 0
+  fi
+
   if ((_type_check))
   then
     if [[ -z "${_type}" ]]
@@ -10512,20 +10755,29 @@ _show() {
       _maybe_scoped_basename="${_notebook_escaped_name}:${_maybe_scoped_basename}"
     fi
 
+    local _info_line=
+    _info_line+="$(_color_id_brackets "${_maybe_scoped_id}") "
+
+    local _indicators
+    _indicators="$(_show "${_notebook_path}/${_basename}" --indicators)"
+
+    if [[ -n "${_indicators:-}" ]]
+    then
+      _info_line+="${_indicators}"
+    fi
+
+    _info_line+="$(_color_primary "${_maybe_scoped_basename}") "
+
     local _title
     _title="$(_get_title "${_notebook_path}/${_basename}")"
 
-    if [[ -n "${_title}" ]]
+
+    if [[ -n "${_title:-}" ]]
     then
-      printf "%s %s \"%s\"\\n"                              \
-        "$(_color_id_brackets "${_maybe_scoped_id}")"       \
-        "$(_color_primary     "${_maybe_scoped_basename}")" \
-        "${_title}"
-    else
-      printf "%s %s\\n"                                     \
-        "$(_color_id_brackets "${_maybe_scoped_id}")"       \
-        "$(_color_primary     "${_maybe_scoped_basename}")"
+      _info_line+="\"${_title}\""
     fi
+
+    printf "%s\\n" "${_info_line:-}"
 
     return 0
   fi
@@ -10563,10 +10815,10 @@ _show() {
 
     if [[ -z "${_password}" ]]
     then
-      # Request password without displaying it
+      # request password without displaying it
       printf "Password: "
       read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`.
+      printf "\\n" # print newline to stop `read`
     fi
 
     if [[ -z "${_password}" ]]
@@ -10757,12 +11009,12 @@ Can't show archives. Export archive and expand to edit.\\n"
        ((_print_output))        &&
        _command_exists "pandoc" &&
        _browser
-  then # `show --render --print` with `pandoc` and browser available.
+  then # `show --render --print` with `pandoc` and browser available
     pandoc "${_target_path}" | _browser --dump
   elif ((_render))              &&
        _command_exists "pandoc" &&
        _browser
-  then # `show --render` with `pandoc` and browser available.
+  then # `show --render` with `pandoc` and browser available
     pandoc "${_target_path}" | _browser
   else # default
     if ((_print_output))
@@ -10882,6 +11134,15 @@ Options:
 Description:
   Sync the current local notebook with the remote repository.
 
+Private Repositories and Git Credentials:
+  Syncing with private repositories requires configuring git to not prompt you
+  for your credentials. For repositories cloned over HTTPS you can cache your
+  credentials with git and for repositories cloned over SSH you can add your
+  key to the ssh-agent.
+
+  More Information:
+    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+
 Sync Conflict Resolution:
   When \`${_ME} sync\` encounters a conflict in a text file and can't merge
   overlapping local and remote changes, both versions are saved in the
@@ -10892,37 +11153,30 @@ Sync Conflict Resolution:
   encrypted note or bookmark, both versions of the file are saved in the
   notebook as individual files, one with \`--conflicted-copy\` appended to
   the filename.
+
+  More Information:
+    https://github.com/xwmx/nb#sync-conflict-resolution
 HEREDOC
 _sync() {
-  local _current_notebook=
-  _current_notebook="$(_notebooks current)"
+  local _notebooks=()
+  local _sync_all=0
 
-  local _notebooks=("${_current_notebook}")
-
-  if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
+  if [[ "${1:-}" =~ ^-a$|^--all$ ]]
   then
-    local _notebook_names
-    _notebook_names=($(_notebooks --names --no-color --unarchived))
+    _sync_all=1
 
-    if [[ "$(_notebooks current)" == "local" ]]
-    then
-      _notebooks+=($(_notebooks --names --no-color --unarchived))
-    else
-      if _contains "${_current_notebook}" "${_notebook_names[@]}"
-      then
-        _notebooks=(${_notebook_names[@]})
-      else
-        _notebooks+=(${_notebook_names[@]})
-      fi
-    fi
+    local _notebook_names
+    _notebooks=($(_notebooks --names --no-color --unarchived))
+  else
+    _notebooks=($(_notebooks current))
   fi
 
-  printf "Syncing: "
+  local _sync_successful=0
+  local _sync_started=0
+  local _syncable_count=0
 
   for __notebook in "${_notebooks[@]:-}"
   do
-    printf "%s..." "${__notebook}"
-
     if [[ "${__notebook}" == "local"      ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
@@ -10931,14 +11185,87 @@ _sync() {
       NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
     fi
 
-    NB_AUTO_SYNC=1 _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
-
-    if _git_index_is_dirty  "${NB_NOTEBOOK_PATH}" ||
-       _git_out_of_sync     "${NB_NOTEBOOK_PATH}"
+    if ((_sync_all))
     then
-      _exit_1 printf "Syncing failed.\\n"
+      _remote &>/dev/null || continue
+    else
+      _remote 1>/dev/null || {
+        cat <<HEREDOC
+
+Set the remote for the current notebook:
+
+  $(_color_primary "${_ME} remote set <url>")
+
+Set the remote for a notebook named "example":
+
+  $(_color_primary "${_ME} example:remote set <url>")
+
+HEREDOC
+        return 1
+      }
     fi
-  done && printf "Done!\\n"
+
+    if ! ((_sync_started))
+    then
+      printf "Syncing: "
+      _sync_started=1
+    fi
+
+    printf "%s..." "$(_color_primary "${__notebook}")"
+
+    local _notebook_sync_successful=0
+
+    _syncable_count="$((_syncable_count+1))"
+
+    if ((_sync_all))
+    then # sync without prompt in background
+      GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+    else # sync with prompt in foreground
+      GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+      _git sync "${NB_NOTEBOOK_PATH}"
+    fi && _notebook_sync_successful=1
+
+    if ! ((_notebook_sync_successful))            ||
+       _git dirty           "${NB_NOTEBOOK_PATH}" ||
+       _git out_of_sync     "${NB_NOTEBOOK_PATH}"
+    then
+      _exit_1 cat <<HEREDOC
+Syncing failed.
+
+Reason unknown, but likely one of the following:
+
+- Misconfigured remote URL.
+- Network unavailable.
+- Authentication error, credentials not configured.
+
+Configuring Git Credentials:
+  https://github.com/xwmx/nb#private-repositories-and-git-credentials
+HEREDOC
+    fi
+  done && ((_syncable_count)) && _sync_successful=1
+
+  if ((_sync_successful))
+  then
+    printf "Done!\\n"
+  elif ! ((_syncable_count))
+  then
+    _exit_1 cat <<HEREDOC
+No unarchived notebooks with remotes found.
+
+Set the remote for the current notebook:
+
+  $(_color_primary "${_ME} remote set <url>")
+
+Set the remote for a notebook named "example":
+
+  $(_color_primary "${_ME} example:remote set <url>")
+
+HEREDOC
+  else
+    _exit_1 printf "Syncing failed.\\n"
+  fi
 }
 
 # todos ################################################################# todos
@@ -11053,7 +11380,9 @@ HEREDOC
       while true
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
+
         IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+
         case ${__yn} in
           [Yy]*)
             break
@@ -11611,14 +11940,14 @@ _main() {
 
   case "${_SUBCOMMAND}" in
     init|sync)
-      _git_required
+      _git required
       "_${_SUBCOMMAND}" "${@}"
       ;;
     commands|completions|env|git|h|help*|r|run|set|settings|subcommands|update|version)
       "_${_SUBCOMMAND}" "${@}"
       ;;
     *)
-      _git_required
+      _git required
 
       # Call `_init()` if configuration hasn't been initialized.
       if [[ ! -e "${NB_DIR}"            ]] ||
@@ -11631,19 +11960,14 @@ _main() {
 
       if [[ "${_SUBCOMMAND}" =~ ${_GIT_SUBCOMMANDS_PATTERN} ]]
       then
-        if _git_index_is_dirty "${NB_NOTEBOOK_PATH}"
+        if _git dirty "${NB_NOTEBOOK_PATH}"
         then
           _index reconcile
 
-          if _git_should_autosync "${NB_NOTEBOOK_PATH}"
-          then
-            "${_MY_PATH}" sync
-          else
-            _git_checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Commit" --spinner
-          fi
-        elif _git_should_autosync "${NB_NOTEBOOK_PATH}"
+          _git checkpoint "${NB_NOTEBOOK_PATH}" --spinner
+        elif _git autosyncable "${NB_NOTEBOOK_PATH}"
         then
-          ("${_MY_PATH}" sync &>/dev/null) &
+          (_git checkpoint "${NB_NOTEBOOK_PATH}" &>/dev/null) &
         fi
       fi
 
