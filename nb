@@ -8758,8 +8758,8 @@ _remote() {
       then
         git -C "${_notebook_path}" remote get-url origin && return 0
       else
-        printf "No remote configured.\\n"
-        return 0
+        _warn printf "No remote configured.\\n"
+        return 1
       fi
       ;;
   esac
@@ -11120,6 +11120,15 @@ Options:
 Description:
   Sync the current local notebook with the remote repository.
 
+Private Repositories and Git Credentials:
+  Syncing with private repositories requires configuring git to not prompt you
+  for your credentials. For repositories cloned over HTTPS you can cache your
+  credentials with git and for repositories cloned over SSH you can add your
+  key to the ssh-agent.
+
+  More Information:
+    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+
 Sync Conflict Resolution:
   When \`${_ME} sync\` encounters a conflict in a text file and can't merge
   overlapping local and remote changes, both versions are saved in the
@@ -11134,13 +11143,14 @@ HEREDOC
 _sync() {
   local _current_notebook=
   _current_notebook="$(_notebooks current)"
-
   local _notebooks=("${_current_notebook}")
+  local _sync_all=0
 
-  if [[ -n "${1:-}" ]] && [[ "${1}" =~ ^-a|--all$ ]]
+  if [[ "${1:-}" =~ ^-a$|^--all$ ]]
   then
     local _notebook_names
     _notebook_names=($(_notebooks --names --no-color --unarchived))
+    _sync_all=1
 
     if [[ "$(_notebooks current)" == "local" ]]
     then
@@ -11155,12 +11165,12 @@ _sync() {
     fi
   fi
 
-  printf "Syncing: "
+  local _sync_all_successful=0
+  local _sync_started=0
+  local _syncable_count=0
 
   for __notebook in "${_notebooks[@]:-}"
   do
-    printf "%s..." "$(_color_primary "${__notebook}")"
-
     if [[ "${__notebook}" == "local"      ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
     then
@@ -11169,26 +11179,87 @@ _sync() {
       NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
     fi
 
+    if ((_sync_all))
+    then
+      _remote &>/dev/null || continue
+    else
+      _remote 1>/dev/null || {
+        cat <<HEREDOC
+
+Set the remote for the current notebook:
+
+  $(_color_primary "${_ME} remote set <url>")
+
+Set the remote for a notebook named "example":
+
+  $(_color_primary "${_ME} example:remote set <url>")
+
+HEREDOC
+        return 1
+      }
+    fi
+
+    if ! ((_sync_started))
+    then
+      printf "Syncing: "
+      _sync_started=1
+    fi
+
+    printf "%s..." "$(_color_primary "${__notebook}")"
+
     local _sync_successful=0
 
-    if [[ "${#_notebooks[@]}" == 1 ]]
-    then # sync with prompt in foreground
+    _syncable_count="$((_syncable_count+1))"
+
+    if ((_sync_all))
+    then # sync without prompt in background
+      GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+    else # sync with prompt in foreground
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
         _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
       _git sync "${NB_NOTEBOOK_PATH}"
-    else # sync without prompt in background
-      GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
     fi && _sync_successful=1
 
     if ! ((_sync_successful))                     ||
        _git dirty           "${NB_NOTEBOOK_PATH}" ||
        _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
-      _exit_1 printf "Syncing failed.\\n"
-    fi
+      _exit_1 cat <<HEREDOC
+Syncing failed.
 
-  done && printf "Done!\\n"
+Reason unknown, but likely one of the following:
+
+- Misconfigured remote URL.
+- Network unavailable.
+- Authentication error, credentials not configured.
+
+Configuring Git Credentials:
+  https://github.com/xwmx/nb#private-repositories-and-git-credentials
+HEREDOC
+    fi
+  done && ((_syncable_count)) && _sync_all_successful=1
+
+  if ((_sync_all_successful))
+  then
+    printf "Done!\\n"
+  elif ! ((_syncable_count))
+  then
+    _exit_1 cat <<HEREDOC
+No unarchived notebooks with remotes found.
+
+Set the remote for the current notebook:
+
+  $(_color_primary "${_ME} remote set <url>")
+
+Set the remote for a notebook named "example":
+
+  $(_color_primary "${_ME} example:remote set <url>")
+
+HEREDOC
+  else
+    _exit_1 printf "Syncing failed.\\n"
+  fi
 }
 
 # todos ################################################################# todos

@@ -29,6 +29,48 @@ _setup_notebooks() {
   [[ -d "${NB_DIR_2}/home/.git"   ]]
 }
 
+# sync errors #################################################################
+
+@test "\`sync\` returns error notebook has no remote." {
+  {
+    _setup_notebooks
+
+    run "${_NB}" remote remove --force
+
+    "${_NB}" remote && return 1
+  }
+
+  run "${_NB}" sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${output}" =~ No\ remote\ configured  ]]
+  [[ "${output}" =~ Set\ the\ remote        ]]
+  [[ ${status} -eq 1                        ]]
+}
+
+@test "\`sync --all\` returns error when no unarchived notebooks with remotes found." {
+  {
+    _setup_notebooks
+
+    run "${_NB}" notebooks add example
+    run "${_NB}" notebooks archive notebook-1
+    run "${_NB}" notebooks archive notebook-2
+    run "${_NB}" remote remove --force
+
+    "${_NB}" remote && return 1
+  }
+
+  run "${_NB}" sync --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${output}" =~ No\ unarchived\ notebooks ]]
+  [[ ${status} -eq 1                          ]]
+}
+
 # remote set && sync #########################################################
 
 @test "\`sync\` returns error with missing remote branch." {
@@ -51,9 +93,10 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ branch\ not\ found: ]]
-  [[ "${lines[0]}" =~ example-branch              ]]
-  [[ ${status} -eq 1                              ]]
+  [[ ${status}      -eq 1                           ]]
+  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
+  [[ "${lines[0]}"  =~  example-branch              ]]
+  [[ ! "${output}"  =~  Done                        ]]
 }
 
 @test "\`sync\` fails with invalid remote." {
@@ -62,7 +105,7 @@ _setup_notebooks() {
 
     run "${_NB}" remote remove --force
 
-    [[ "$("${_NB}" remote)" =~ No\ remote ]]
+    [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
     run "${_NB}" add "one.md" --content "Example content from 1."
 
@@ -84,8 +127,12 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                  ]]
-  [[ "$output}" =~ Unable\ to\ fetch  ]]
+  [[ ${status}      -eq 1                         ]]
+  [[ "${output}"    =~ Syncing\ failed            ]]
+  [[ "${output}"    =~ Misconfigured\ remote\ URL ]]
+  [[ "${output}"    =~ Network\ unavailable       ]]
+  [[ "${output}"    =~ Authentication\ error      ]]
+  [[ ! "${output}"  =~ Done                       ]]
 }
 
 @test "\`sync\` succeeds after \`remote set\`" {
@@ -94,7 +141,7 @@ _setup_notebooks() {
 
     run "${_NB}" remote remove --force
 
-    [[ "$("${_NB}" remote)" =~ No\ remote ]]
+    [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
     run "${_NB}" add "one.md" --content "Example content from 1."
 
