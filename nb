@@ -11159,7 +11159,7 @@ _sync() {
 
   for __notebook in "${_notebooks[@]:-}"
   do
-    printf "%s..." "${__notebook}"
+    printf "%s..." "$(_color_primary "${__notebook}")"
 
     if [[ "${__notebook}" == "local"      ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
