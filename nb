@@ -9387,8 +9387,12 @@ _search() {
 
           # Use calculated number of spaces for nicer formatting.
           local _spaces=''
-          local _spaces_length=1
-          _spaces_length=$(( ${#_max_identifier} - ${#_info_line} ))
+          local _spaces_length=0
+
+          if ((_only_list))
+          then
+            _spaces_length=$(( ${#_max_identifier} - ${#_info_line} ))
+          fi
 
           if ((_spaces_length))
           then
