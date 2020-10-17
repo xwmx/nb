@@ -4860,7 +4860,25 @@ _git() {
         if _git dirty "${_notebook_path}"
         then
           _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
-        fi && GIT_TERMINAL_PROMPT=0 _git sync "${_notebook_path}"
+        fi && if ! GIT_TERMINAL_PROMPT=0 _git sync "${_notebook_path}"
+              then
+                local _command
+                _command="${_ME} "
+
+                if _notebooks current --selected
+                then
+                  _command+="$(
+                    _notebooks show "${_notebook_path}" --escaped
+                  )"
+                  _command+=":sync"
+                else
+                  _command+="sync"
+                fi
+
+                _warn printf "\
+Confirm that you can run %s successfully without prompts or errors.\\n" \
+                 "$(_color_primary "${_command}")"
+              fi
       ) &
     else
       (
