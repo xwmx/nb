@@ -9595,47 +9595,47 @@ _settings() {
     fi
 
     case "${_id_or_name}" in
-      1|*auto_sync|*AUTO_SYNC)
+      1|*auto*|*AUTO*|*sync*|*SYNC*)
         ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
         return 0
         ;;
-      2|*color_primary|*COLOR_PRIMARY|*primary_color|*PRIMARY_COLOR)
+      2|*primary*|*PRIMARY*)
         ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
-      3|*color_secondary|*COLOR_SECONDARY|*secondary_color|*SECONDARY_COLOR)
+      3|*secondary*|*SECONDARY*)
         ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
-      4|*color_theme*|*COLOR_THEME*|color_scheme|theme*)
+      4|*color*theme*|*COLOR*THEME*|*scheme*|theme*)
         ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
         return 0
         ;;
-      5|*default_extension|*DEFAULT_EXTENSION)
+      5|*ext*|*EXT*)
         ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
-      6|*editor|*EDITOR)
+      6|*editor*|*EDITOR*)
         ((_get_id)) && printf "6" || printf "EDITOR"
         return 0
         ;;
-      7|*encryption_tool|*ENCRYPTION_TOOL)
+      7|*encrypt*|*ENCRYPT*)
         ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
-      8|*footer|*FOOTER)
+      8|*footer*|*FOOTER*)
         ((_get_id)) && printf "8" || printf "NB_FOOTER"
         return 0
         ;;
-      9|*header|*HEADER)
+      9|*header*|*HEADER*)
         ((_get_id)) && printf "9" || printf "NB_HEADER"
         return 0
         ;;
-      10|*limit|*LIMIT)
+      10|*limit*|*LIMIT*)
         ((_get_id)) && printf "10" || printf "NB_LIMIT"
         return 0
         ;;
-      11|*dir|*DIR)
+      11|*dir*|*DIR*)
         ((_get_id)) && printf "11" || printf "NB_DIR"
         return 0
         ;;
