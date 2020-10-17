@@ -2281,6 +2281,28 @@ _list_files() {
   }
 }
 
+# _pager()
+#
+# Usage:
+#   _pager
+#
+# Description:
+#   Display standard input in the preferred pager, `less`, or `cat`.
+_pager() {
+  if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
+  then
+    "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+  elif _command_exists "less"
+  then
+    less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+  elif [[ -n "${PAGER:-}" ]]
+  then
+    "${PAGER}"
+  else
+    cat
+  fi
+}
+
 # _print_line()
 #
 # Usage:
@@ -2798,14 +2820,9 @@ HEREDOC
           sed -e "s/^  nb /  /" -e "/^  nb$/d"
         else
           cat
-        fi |  if ((_use_pager))               &&
-                 [[ -n "${PAGER:-}"        ]] &&
-                 [[ ! "${PAGER:-}" =~ less ]]
+        fi |  if ((_use_pager))
               then
-                "${PAGER}"
-              elif ((_use_pager)) && _command_exists "less"
-              then
-                less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                _pager
               else
                 cat
               fi
@@ -3168,15 +3185,7 @@ _bookmark() {
               | _highlight_syntax_if_available "md"
           else
             cat
-          fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-                then
-                  "${PAGER}"
-                elif _command_exists "less"
-                then
-                  less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-                else
-                  cat
-                fi
+          fi | _pager
 
       return 0
     else
@@ -6537,12 +6546,9 @@ HEREDOC
           return 1
       fi
     fi
-  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
+  } | if ((_use_pager))
       then
-        "${PAGER}"
-      elif ((_use_pager)) && _command_exists "less"
-      then
-        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+        _pager
       else
         cat
       fi
@@ -7049,12 +7055,9 @@ _ls() {
     then
       _ls_print_footer "${_notebook_names[@]:-}"
     fi
-  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
+  } | if ((_use_pager))
       then
-        "${PAGER}"
-      elif ((_use_pager)) && _command_exists "less"
-      then
-        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+        _pager
       else
         cat
       fi
@@ -10967,14 +10970,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       pdftotext "${_target_path}" - \
         | tr -d '\014'              \
-        | if [[ -n "${PAGER:-}"       ]] &&
-             [[ ! "${PAGER}" =~ less  ]] &&
-             ! ((_print_output))
+        | if ! ((_print_output))
           then
-            "${PAGER}"
-          elif _command_exists "less" && ! ((_print_output))
-          then
-            less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+            _pager
           else
             cat
           fi
@@ -10982,14 +10980,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       pandoc --from docx --to markdown "${_target_path}"  \
         | _highlight_syntax_if_available                  \
-        | if [[ -n "${PAGER:-}"      ]] &&
-             [[ ! "${PAGER}" =~ less ]] &&
-             ! ((_print_output))
+        | if ! ((_print_output))
           then
-            "${PAGER}"
-          elif _command_exists "less" && ! ((_print_output))
-          then
-            less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+            _pager
           else
             cat
           fi
@@ -11034,18 +11027,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         | sed 's/^-␟/- /g'                                        \
         | sed 's/^\*␟/\* /g'                                      \
         | _highlight_syntax_if_available "${_target_path##*.}"    \
-        | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
-          then
-            "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
-          elif _command_exists "less"
-          then
-            less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
-          elif [[ -n "${PAGER:-}" ]]
-          then
-            "${PAGER}"
-          else
-            cat
-          fi
+        | _pager
     fi
   fi
 
