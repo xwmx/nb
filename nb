@@ -9104,6 +9104,9 @@ _search() {
 
     for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
+      local _max_id
+      _max_id="$(_index get_max_id)"
+
       if _command_exists "rg" && ! ((_use_grep))
       then
         if ((_search_color_enabled))
@@ -9374,18 +9377,10 @@ _search() {
 
             _info_line="[${_notebook_escaped_name}:${_id}] "
             _info_line_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
-
-            if [[ -n "${_indicators:-}" ]]
-            then
-              _info_line+="${_indicators}"
-              _info_line_color+="${_indicators}"
-            fi
-
-            _info_line+="${_file_info}"
-            _info_line_color+="${_file_info_color}"
           else
             _info_line="[${_id}] "
             _info_line_color+="$(_color_id_brackets "${_id}") "
+          fi
 
             if [[ -n "${_indicators:-}" ]]
             then
@@ -9393,9 +9388,8 @@ _search() {
               _info_line_color+="${_indicators}"
             fi
 
-            _info_line+="${_file_info}"
-            _info_line_color+="${_file_info_color}"
-          fi
+          _info_line+="${_file_info}"
+          _info_line_color+="${_file_info_color}"
 
           if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
           then # match is in a different file than the last match
