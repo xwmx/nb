@@ -9105,7 +9105,7 @@ _search() {
     for __notebook_path in "${_target_notebook_paths[@]:-}"
     do
       local _max_id
-      _max_id="$(_index get_max_id)"
+      _max_id="$(NB_NOTEBOOK_PATH="${__notebook_path}" _index get_max_id)"
 
       if _command_exists "rg" && ! ((_use_grep))
       then
@@ -9366,6 +9366,7 @@ _search() {
 
           local _info_line=
           local _info_line_color=
+          local _max_identifier=
 
           if ((_all)) ||
              [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
@@ -9377,16 +9378,31 @@ _search() {
 
             _info_line="[${_notebook_escaped_name}:${_id}] "
             _info_line_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
+            _max_identifier="[${_notebook_escaped_name}:${_max_id}] "
           else
             _info_line="[${_id}] "
             _info_line_color+="$(_color_id_brackets "${_id}") "
+            _max_identifier="[${_max_id}] "
           fi
 
-            if [[ -n "${_indicators:-}" ]]
-            then
-              _info_line+="${_indicators}"
-              _info_line_color+="${_indicators}"
-            fi
+          # Use calculated number of spaces for nicer formatting.
+          local _spaces=''
+          local _spaces_length=1
+          _spaces_length=$(( ${#_max_identifier} - ${#_info_line} ))
+
+          if ((_spaces_length))
+          then
+            printf -v _spaces '%*s' "${_spaces_length}" ""
+
+            _info_line+="${_spaces}"
+            _info_line_color+="${_spaces}"
+          fi
+
+          if [[ -n "${_indicators:-}" ]]
+          then
+            _info_line+="${_indicators}"
+            _info_line_color+="${_indicators}"
+          fi
 
           _info_line+="${_file_info}"
           _info_line_color+="${_file_info_color}"
