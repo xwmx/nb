@@ -11169,12 +11169,25 @@ _sync() {
       NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
     fi
 
-    if ! NB_AUTO_SYNC=1 _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner ||
-       _git dirty           "${NB_NOTEBOOK_PATH}"                                   ||
+    local _sync_successful=0
+
+    if [[ "${#_notebooks[@]}" == 1 ]]
+    then # sync with prompt in foreground
+      GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+      _git sync "${NB_NOTEBOOK_PATH}"
+    else # sync without prompt in background
+      GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+    fi && _sync_successful=1
+
+    if ! ((_sync_successful))                     ||
+       _git dirty           "${NB_NOTEBOOK_PATH}" ||
        _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
       _exit_1 printf "Syncing failed.\\n"
     fi
+
   done && printf "Done!\\n"
 }
 
