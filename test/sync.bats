@@ -20,7 +20,7 @@ _setup_notebooks() {
   export NB_DIR="${NB_DIR_1}"
 }
 
-@test "\`sync\` notebooks exist after setup" {
+@test "\`sync\` notebooks exist after setup." {
   _setup_notebooks
 
   [[ -d "${_GIT_REMOTE_PATH}"     ]]
