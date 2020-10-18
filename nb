@@ -9704,13 +9704,20 @@ _settings() {
   _settings_prompt() {
     local _setting_name="${1:-}"
 
+    local _columns
+    _columns="$(tput cols)"
+
+    local _padding
+    _padding="$(_print_padding "-----------" "${_columns}")"
+
+    printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
+    _print_line "$(printf "%-${_columns}s" '.')"
+
     if [[ -n "${_setting_name}" ]]
     then
       _setting_name="$(_settings_identify "${_setting_name}")"
     else
       cat <<HEREDOC
-$(_color_primary "${_ME}") Settings
-$(_color_secondary "-----------")
 $(_settings list)
 
 Enter the number or name of the setting to change, or $(_color_primary 'q') to quit.
@@ -9737,6 +9744,8 @@ HEREDOC
         fi
       done
     fi
+
+    printf "\\n"
 
     if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
        [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
