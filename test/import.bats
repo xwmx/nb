@@ -213,24 +213,24 @@ load test_helper
   [[    -d "${_NOTEBOOK_PATH}/Example Folder"                   ]]
   [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.md"        ]]
   [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html"  ]]
-  [[    "${lines[0]}" =~ Example\ Folder                        ]]
+  [[    "${output}" =~ Example\ Folder                          ]]
 
   [[    -e "${_TMP_DIR}/fixtures/bin"                           ]]
   [[    -d "${_NOTEBOOK_PATH}/bin"                              ]]
   [[    -f "${_NOTEBOOK_PATH}/bin/bookmark"                     ]]
   [[    -f "${_NOTEBOOK_PATH}/bin/mock_editor"                  ]]
   [[    "${lines[1]}" =~ Imported                               ]]
-  [[    "${lines[1]}" =~ bin                                    ]]
+  [[    "${output}" =~ bin                                      ]]
 
   [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"     ]]
   [[    -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"        ]]
   [[    "${lines[2]}" =~ Imported                               ]]
-  [[    "${lines[2]}" =~ copy-deprecated.nb-plugin              ]]
+  [[    "${output}" =~ copy-deprecated.nb-plugin                ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"           ]]
   [[    -f "${_NOTEBOOK_PATH}/example.com-og.html"              ]]
   [[    "${lines[3]}" =~ Imported                               ]]
-  [[    "${lines[3]}" =~ example.com-og.html                    ]]
+  [[    "${output}" =~ example.com-og.html                      ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -408,24 +408,24 @@ load test_helper
   [[    -d "${_NOTEBOOK_PATH}/Example Folder"                   ]]
   [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.md"        ]]
   [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html"  ]]
-  [[    "${lines[0]}" =~ Example\ Folder                        ]]
+  [[    "${output}" =~ Example\ Folder                          ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/bin"                           ]]
   [[    -d "${_NOTEBOOK_PATH}/bin"                              ]]
   [[    -f "${_NOTEBOOK_PATH}/bin/bookmark"                     ]]
   [[    -f "${_NOTEBOOK_PATH}/bin/mock_editor"                  ]]
   [[    "${lines[1]}" =~ Imported                               ]]
-  [[    "${lines[1]}" =~ bin                                    ]]
+  [[    "${output}" =~ bin                                      ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"     ]]
   [[    -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"        ]]
   [[    "${lines[2]}" =~ Imported                               ]]
-  [[    "${lines[2]}" =~ copy-deprecated.nb-plugin              ]]
+  [[    "${output}" =~ copy-deprecated.nb-plugin                ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/example.com-og.html"           ]]
   [[    -f "${_NOTEBOOK_PATH}/example.com-og.html"              ]]
   [[    "${lines[3]}" =~ Imported                               ]]
-  [[    "${lines[3]}" =~ example.com-og.html                    ]]
+  [[    "${output}" =~ example.com-og.html                      ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
