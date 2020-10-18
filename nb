@@ -3583,7 +3583,8 @@ HEREDOC
 
   local _domain=
   _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
-  if [[ -n "${_domain}" ]]
+
+  if [[ -n "${_domain:-}" ]]
   then
     _title+=" (${_domain})"
   fi
