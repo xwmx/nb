@@ -1260,7 +1260,7 @@ nb q "#tag"
 
 ```bash
 > nb q "example query"
-[10] example.bookmark.md "Example Bookmark (example.com)"
+[10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1510,7 +1510,7 @@ Perform a full text search of bookmarks and archived page content:
 
 ```bash
 > bookmark search "example query"
-[10] example.bookmark.md "Example Bookmark (example.com)"
+[10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1563,7 +1563,7 @@ highlighting:
 
 ```bash
 > nb search "example"
-[314]  example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 ----------------------------------------------------------
 1:# Example Bookmark (example.com)
 
@@ -1579,7 +1579,7 @@ the `-l` or `--list` option:
 
 ```bash
 > nb search "example" --list
-[314]  example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 [2718] example.md "Example Note"
 ```
 
