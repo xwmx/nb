@@ -751,6 +751,29 @@ _color_secondary() {
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
 }
 
+# _color_yn_prompt()
+#
+# Usage:
+#   _color_yn_prompt
+#
+# Description:
+#   Print a colorized [y/N] prompt.
+_color_yn_prompt() {
+  if ! ((_COLOR_ENABLED))
+  then
+    return 0
+  fi
+
+  printf "%s%s[%sy%s/%sN%s]%s"  \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_SGR0}"
+}
+
 # Current Notebook ########################################### Current Notebook
 
 # $NB_NOTEBOOK_PATH
@@ -3456,7 +3479,7 @@ _bookmark() {
         while true
         do
           IFS='' read -r -e -d $'\n' -p "\
-Check the Wayback Machine for an archived version instead? [y/N] " __yn
+Check the Wayback Machine for an archived version instead? $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -4123,7 +4146,8 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?")  [y/N] " __yn
+      IFS='' read -r -e -d $'\n' \
+        -p "$(_color_primary "Proceed?")  $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -4679,7 +4703,8 @@ _export() {
 
         while true
         do
-          IFS='' read -r -e -d $'\n' -p "Overwrite existing file? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' \
+            -p "Overwrite existing file? $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -7163,11 +7188,12 @@ _move() {
   if ! ((_force))
   then
     printf "Moving   %s to %s\\n" \
-      "${_source_info}"         \
+      "${_source_info}"           \
       "$(_color_primary "${_target_notebook}")"
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?") [y/N] " __yn
+      IFS='' read -r -e -d $'\n'  \
+        -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -8515,7 +8541,8 @@ _plugins() {
           then
             while true
             do
-              IFS='' read -r -e -d $'\n' -p "Reinstall? [y/N] " __yn
+              IFS='' read -r -e -d $'\n' \
+                -p "Reinstall? $(_color_yn_prompt) " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -8577,7 +8604,8 @@ $(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
-          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?") [y/N] " __yn
+          IFS='' read -r -e -d $'\n' \
+            -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -8695,7 +8723,8 @@ _remote() {
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
 
-            IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?") [y/N] " __yn
+            IFS='' read -r -e -d $'\n' \
+              -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8742,7 +8771,8 @@ _remote() {
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
 
-            IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?") [y/N] " __yn
+            IFS='' read -r -e -d $'\n' \
+              -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8941,7 +8971,8 @@ _rename() {
 
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?") [y/N] " __yn
+      IFS='' read -r -e -d $'\n' \
+        -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -9687,7 +9718,8 @@ HEREDOC
 
       while true
       do
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Number or Name: ")" __setting
+        IFS='' read -r -e -d $'\n' \
+          -p "$(_color_primary "Number or Name: ")" __setting
 
         if [[ -n "${__setting}" ]]
         then
@@ -11365,7 +11397,8 @@ HEREDOC
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Proceed?") [y/N] " __yn
+        IFS='' read -r -e -d $'\n' \
+          -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
         case ${__yn} in
           [Yy]*)
