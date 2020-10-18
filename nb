@@ -2722,7 +2722,7 @@ $(_color_primary "Usage:")
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<id> | <filename> | <path> | <title>]
-  ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
+  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -5393,20 +5393,20 @@ _history() {
 
 describe "import" <<HEREDOC
 Usage:
-  ${_ME} import (<path> | <url>)
-  ${_ME} import copy <path>
+  ${_ME} import (<path>... | <url>)
+  ${_ME} import copy <path>...
   ${_ME} import download <url> [--convert]
-  ${_ME} import move <path>
+  ${_ME} import move <path>...
   ${_ME} import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
 
 Subcommands:
-  (default) Copy or download the file in <path> or <url>.
-  copy      Copy the file at <path> into the current notebook.
+  (default) Copy or download the file(s) at <path> or <url>.
+  copy      Copy the file(s) at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Move the file at <path> into the current notebook.
+  move      Move the file(s) at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -5418,6 +5418,8 @@ Examples:
   ${_ME} import ~/Documents/example.docx
   ${_ME} import https://example.com/example.pdf
   ${_ME} example:import https://example.com/example.jpg
+  ${_ME} import ./*
+  ${_ME} import ./*.md
 HEREDOC
 _import() {
   # _import_validate_path()
@@ -5454,7 +5456,7 @@ _import() {
   local _basename=
   local _convert=0
   local _target_notebook_name=
-  local _path=
+  local _paths=()
   local _subcommand=
   local _url=
 
@@ -5477,11 +5479,11 @@ _import() {
           then
             _url="${__arg:-}"
           elif [[ "${_subcommand}" == "notebook"  ]] &&
-               [[ -n "${_path:-}"                 ]]
+               [[ -n "${_paths[*]:-}"             ]]
           then
             _target_notebook_name="${__arg:-}"
           else
-            _path="${__arg:-}"
+            _paths+=("${__arg:-}")
           fi
         else
           if [[ "${__arg:-}" =~ ^http|^file\: ]]
@@ -5490,7 +5492,7 @@ _import() {
             _url="${__arg:-}"
           else
             _subcommand="copy"
-            _path="${__arg:-}"
+            _paths+=("${__arg:-}")
           fi
         fi
         ;;
@@ -5502,23 +5504,26 @@ _import() {
 
   case "${_subcommand}" in
     copy)
-      _import_validate_path "${_path:-}"
+      for __path in "${_paths[@]:-}"
+      do
+        _import_validate_path "${__path:-}"
 
-      _basename="$(basename -- "${_path}")"
-      _basename="$(_import_get_valid_basename "${_basename}")"
+        _basename="$(basename -- "${__path}")"
+        _basename="$(_import_get_valid_basename "${_basename}")"
 
-      if [[ -d "${_path}" ]]
-      then
-        cp -R "${_path}" "${_notebook_path}/${_basename}"
-      else
-        cp "${_path}" "${_notebook_path}/${_basename}"
-      fi &&
-        _index add "${_basename}" &&
-          _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+        if [[ -d "${__path}" ]]
+        then
+          cp -R "${__path}" "${_notebook_path}/${_basename}"
+        else
+          cp "${__path}" "${_notebook_path}/${_basename}"
+        fi &&
+          _index add "${_basename}" &&
+            _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s from %s\\n"         \
-        "$(_show "${_basename}" --info-line)" \
-        "$(_color_primary "${_path}")"
+        printf "Imported %s from %s\\n"         \
+          "$(_show "${_basename}" --info-line)" \
+          "$(_color_primary "${__path}")"
+      done
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -5557,20 +5562,23 @@ ${_url}
         "$(_color_primary "${_url}")"
       ;;
     move)
-      _import_validate_path "${_path:-}"
-      _basename="$(basename -- "${_path}")"
-      _basename="$(_import_get_valid_basename "${_basename}")"
+      for __path in "${_paths[@]:-}"
+      do
+        _import_validate_path "${__path:-}"
+        _basename="$(basename -- "${__path}")"
+        _basename="$(_import_get_valid_basename "${_basename}")"
 
-      mv "${_path}" "${_notebook_path}/${_basename}"  &&
-        _index add "${_basename}"                     &&
-          _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+        mv "${__path}" "${_notebook_path}/${_basename}" &&
+          _index add "${_basename}"                     &&
+            _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s from %s\\n"         \
-        "$(_show "${_basename}" --info-line)" \
-        "$(_color_primary "${_path}")"
+        printf "Imported %s from %s\\n"         \
+          "$(_show "${_basename}" --info-line)" \
+          "$(_color_primary "${__path}")"
+      done
       ;;
     notebook)
-      _notebooks import "${_path:-}" "${_target_notebook_name:-}"
+      _notebooks import "${_paths[0]:-}" "${_target_notebook_name:-}"
       return 0
       ;;
     *)
