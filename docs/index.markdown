@@ -2104,6 +2104,17 @@ to authenticate, but `nb` does not cache or otherwise handle git
 credentials in any way, so there will likely be multiple password
 prompts during each sync if credentials are not configured.
 
+To bypass `nb` syncing and run `git` commands directly within the current
+notebook, use [`nb git`](#git):
+
+```bash
+# run `git fetch` in the current notebook
+nb git fetch origin
+
+# run `git status` in the notebook named "example"
+nb example:git status
+```
+
 #### Sync Conflict Resolution
 
 `nb` handles git operations automatically, so you shouldn't ever need
