@@ -244,8 +244,7 @@ Help information:
       <("${_NB}" notebooks --no-color)        \
       <(printf "%s\\n" "${_notebooks[@]:-}")
 
-    [[ "$("${_NB}" notebooks current)" == "example"                 ]]
-    [[ "$("${_NB}" notebooks --no-color)" == "${_notebooks[*]:-}"   ]]
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
   }
 
   run "${_NB}" multi\ word:ls
@@ -309,12 +308,11 @@ Help information:
       "multi word"
     )
 
-    diff                                    \
-      <("${_NB}" notebooks --no-color)      \
+    diff                                      \
+      <("${_NB}" notebooks --no-color)        \
       <(printf "%s\\n" "${_notebooks[@]:-}")
 
-    [[ "$("${_NB}" notebooks current)" == "example"                 ]]
-    [[ "$("${_NB}" notebooks --no-color)" == "${_notebooks[*]:-}"   ]]
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
   }
 
   run "${_NB}" ls
