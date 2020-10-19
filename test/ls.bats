@@ -24,6 +24,116 @@ line four
 HEREDOC
 }
 
+# footer ######################################################################
+
+@test "\`ls\` includes footer." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${lines[6]}" =~ ❯ ]]
+}
+
+@test "\`NB_FOOTER=0 ls\` does not include footer." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  NB_FOOTER=0 run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0      ]]
+  [[ ! "${lines[6]}" =~ ❯ ]]
+}
+
+@test "\`ls\` footer includes command names." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status}      -eq 0                 ]]
+  [[ "${lines[6]}"  =~  ❯                 ]]
+  [[ "${lines[6]}"  =~  nb\ add           ]]
+  [[ "${lines[6]}"  =~  nb\ \<url\>       ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ \<id\>  ]]
+}
+
+@test "\`ls\` footer scopes command names to a selected notebook." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+    run "${_NB}" notebooks add "example"
+    run "${_NB}" use example
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" home:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status}      -eq 0                     ]]
+  [[ "${lines[6]}"  =~  ❯                     ]]
+  [[ "${lines[6]}"  =~  nb\ home:add          ]]
+  [[ "${lines[6]}"  =~  nb\ home:\ \<url\>    ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ home:\<id\> ]]
+}
+
+@test "\`ls\` footer escapes multi-word selected notebook names." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+    run "${_NB}" notebooks add "example"
+    run "${_NB}" use example
+    run "${_NB}" notebooks rename home "multi word"
+
+    _notebooks=(
+      "example"
+      "multi word"
+    )
+
+    diff <("${_NB}" notebooks --no-color) <(printf "%s\\n" "${_notebooks[*]:-}")
+
+    [[ "$("${_NB}" notebooks current)" == "example"                 ]]
+    [[ "$("${_NB}" notebooks --no-color)" == "${_notebooks[*]:-}"   ]]
+  }
+
+  run "${_NB}" multi\ word:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status}      -eq 0                               ]]
+  [[ "${lines[6]}"  =~  ❯                               ]]
+  [[ "${lines[6]}"  =~  nb\ multi\\\ word:add           ]]
+  [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
+}
+
 # header ######################################################################
 
 @test "\`ls\` includes header." {
@@ -56,6 +166,36 @@ HEREDOC
 
   [[ ${status} -eq 0          ]]
   [[ ! "${lines[0]}" =~ home  ]]
+}
+
+@test "\`ls\` header does not escape multi-word notebook names." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+    run "${_NB}" notebooks add "example"
+    run "${_NB}" use example
+    run "${_NB}" notebooks rename home "multi word"
+
+    _notebooks=(
+      "example"
+      "multi word"
+    )
+
+    diff <("${_NB}" notebooks --no-color) <(printf "%s\\n" "${_notebooks[*]:-}")
+
+    [[ "$("${_NB}" notebooks current)" == "example"                 ]]
+    [[ "$("${_NB}" notebooks --no-color)" == "${_notebooks[*]:-}"   ]]
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ multi\ word ]]
 }
 
 @test "\`ls\` header shows added and deleted notebook." {
@@ -1167,38 +1307,4 @@ HEREDOC
   [[ "${lines[0]}" =~ example:matchless-query ]]
   [[ "${lines[0]}" =~ Type                    ]]
   [[ "${lines[0]}" =~ document                ]]
-}
-
-# footer ######################################################################
-
-@test "\`ls\` includes footer." {
-  {
-    _setup_ls
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
-
-  [[ ${status} -eq 0    ]]
-  [[ "${lines[6]}" =~ ❯ ]]
-}
-
-@test "\`NB_FOOTER=0 ls\` does not include footer." {
-  {
-    _setup_ls
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
-  }
-
-  NB_FOOTER=0 run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
-
-  [[ ${status} -eq 0      ]]
-  [[ ! "${lines[6]}" =~ ❯ ]]
 }
