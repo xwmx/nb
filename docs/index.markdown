@@ -1266,7 +1266,7 @@ nb q "#tag"
 
 ```bash
 > nb q "example query"
-[10] example.bookmark.md "Example Bookmark (example.com)"
+[10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1484,7 +1484,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added: [3] 20200101000000.bookmark.md "Example Title (example.com)"
+Added: [3] 🔖 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -1516,7 +1516,7 @@ Perform a full text search of bookmarks and archived page content:
 
 ```bash
 > bookmark search "example query"
-[10] example.bookmark.md "Example Bookmark (example.com)"
+[10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1569,7 +1569,7 @@ highlighting:
 
 ```bash
 > nb search "example"
-[314]  example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 ----------------------------------------------------------
 1:# Example Bookmark (example.com)
 
@@ -1585,7 +1585,7 @@ the `-l` or `--list` option:
 
 ```bash
 > nb search "example" --list
-[314]  example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 [2718] example.md "Example Note"
 ```
 
@@ -2080,13 +2080,40 @@ You can also turn off autosync with
 
 #### Private Repositories and Git Credentials
 
-Syncing with private repositories requires configuring git to not prompt you
-for credentials. For repositories cloned over HTTPS
-[you can cache your credentials with git
-](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git)
-and for repositories cloned over SSH you can
-[add your key to the ssh-agent
+Syncing with private repositories requires configuring git to not prompt
+for credentials. For repositories cloned over HTTPS,
+[credentials can be cached with git
+](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git).
+For repositories cloned over SSH,
+[keys can be added to the ssh-agent
 ](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+
+To sync manually, use [`nb sync`](#sync):
+
+```bash
+# manually sync the current notebook
+nb sync
+
+# manually sync the notebook named "example"
+nb example:sync
+```
+
+If `nb sync` displays a password prompt, then follow the instructions
+above to configure your credentials. The password prompt can be used
+to authenticate, but `nb` does not cache or otherwise handle git
+credentials in any way, so there will likely be multiple password
+prompts during each sync if credentials are not configured.
+
+To bypass `nb` syncing and run `git` commands directly within the current
+notebook, use [`nb git`](#git):
+
+```bash
+# run `git fetch` in the current notebook
+nb git fetch origin
+
+# run `git status` in the notebook named "example"
+nb example:git status
+```
 
 #### Sync Conflict Resolution
 
@@ -2164,6 +2191,19 @@ nb import ~/Documents/example.docx
 
 # open .docx file in Word or your system's .docx viewer
 nb open example.docx
+```
+
+Multiple filenames and globbing are supported:
+
+```bash
+# import all files and directories in the current directory
+nb import ./*
+
+# import all markdown files in the current directory
+nb import ./*.md
+
+# import example.md and sample.md in the current directory
+nb import example.md sample.md
 ```
 
 `nb import` can also download and import files directly from the web:
@@ -2725,10 +2765,10 @@ home
 [1] Demo
 
 nb> edit 3 --content "New content."
-Updated [3] Example
+Updated: [3] Example
 
 nb> bookmark https://example.com
-Added: [4] example.bookmark.md "Example Title (example.com)"
+Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
 
 nb> ls
 home
@@ -2860,7 +2900,7 @@ Usage:
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
-  nb import [copy | download | move] (<path> | <url>) [--convert]
+  nb import [copy | download | move] (<path>... | <url>) [--convert]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -3485,20 +3525,20 @@ Examples:
 
 ```text
 Usage:
-  nb import (<path> | <url>)
-  nb import copy <path>
+  nb import (<path>... | <url>)
+  nb import copy <path>...
   nb import download <url> [--convert]
-  nb import move <path>
+  nb import move <path>...
   nb import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
 
 Subcommands:
-  (default) Copy or download the file in <path> or <url>.
-  copy      Copy the file at <path> into the current notebook.
+  (default) Copy or download the file(s) at <path> or <url>.
+  copy      Copy the file(s) at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Move the file at <path> into the current notebook.
+  move      Move the file(s) at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -3510,6 +3550,8 @@ Examples:
   nb import ~/Documents/example.docx
   nb import https://example.com/example.pdf
   nb example:import https://example.com/example.jpg
+  nb import ./*
+  nb import ./*.md
 ```
 
 #### `init`
@@ -4259,7 +4301,7 @@ Example:
   [3] Example
 
   nb> edit 3 --content "New content."
-  Updated [3] Example
+  Updated: [3] Example
 
   nb> notebook
   home
@@ -4397,10 +4439,11 @@ Description:
   Sync the current local notebook with the remote repository.
 
 Private Repositories and Git Credentials:
-  Syncing with private repositories requires configuring git to not prompt you
-  for your credentials. For repositories cloned over HTTPS you can cache your
-  credentials with git and for repositories cloned over SSH you can add your
-  key to the ssh-agent.
+  Syncing with private repositories requires configuring git to not prompt
+  for credentials.
+
+  For repositories cloned over HTTPS, credentials can be cached with git.
+  For repositories cloned over SSH, keys can be added to the ssh-agent.
 
   More Information:
     https://github.com/xwmx/nb#private-repositories-and-git-credentials

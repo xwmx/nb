@@ -95,10 +95,12 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  "${_NB}" remote
 
-  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
-  [[ ${status} -eq 0                      ]]
+  [[ "${lines[0]}" =~ Remote\ set\ to             ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
+  [[ ${status} -eq 0                              ]]
+  [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
 }
 
 @test "\`remote set\` with existing remote sets remote and prints message." {
@@ -113,9 +115,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
-  [[ ${status} -eq 0                      ]]
+  [[ "${lines[0]}" =~ Remote\ set\ to             ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
+  [[ ${status} -eq 0                              ]]
+  [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
 }
 
 @test "\`remote set\` to same URL as existing remote exits and prints message." {
@@ -130,9 +133,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ already\ set\ to  ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}        ]]
-  [[ ${status} -eq 1                            ]]
+  [[ "${lines[0]}" =~ Remote\ already\ set\ to    ]]
+  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
+  [[ ${status} -eq 1                              ]]
+  [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
 }
 
 # help ########################################################################

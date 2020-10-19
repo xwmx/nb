@@ -32,7 +32,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
     run "${_NB}" global-remote:add "global-remote.md" \
-    --content "Example content from global-remote."
+      --content "Example content from global-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -64,7 +64,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-no-remote
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
-    --content "Example content from global-no-remote."
+      --content "Example content from global-no-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -191,7 +191,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
     run "${_NB}" global-remote:add "global-remote.md" \
-    --content "Example content from global-remote."
+      --content "Example content from global-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -235,7 +235,7 @@ _setup_notebooks() {
 
     run "${_NB}" notebooks add global-no-remote
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
-    --content "Example content from global-no-remote."
+      --content "Example content from global-no-remote."
 
     [[ ${status} -eq 0                                          ]]
 
@@ -558,8 +558,8 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status}      -eq 1                           ]]
-  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
-  [[ "${lines[0]}"  =~  example-branch              ]]
+  [[ "${output}"    =~  Remote\ branch\ not\ found: ]]
+  [[ "${output}"    =~  example-branch              ]]
   [[ ! "${output}"  =~  Done                        ]]
 }
 
@@ -591,12 +591,10 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}      -eq 1                         ]]
-  [[ "${output}"    =~ Syncing\ failed            ]]
-  [[ "${output}"    =~ Misconfigured\ remote\ URL ]]
-  [[ "${output}"    =~ Network\ unavailable       ]]
-  [[ "${output}"    =~ Authentication\ error      ]]
-  [[ ! "${output}"  =~ Done                       ]]
+  [[ ${status}      -eq 1                                 ]]
+  [[ "${output}"    =~ unable\ to\ access\                ]]
+  [[ "${output}"    =~ https://example.test/invalid.git/  ]]
+  [[ ! "${output}"  =~ Done                               ]]
 }
 
 @test "\`sync\` succeeds after \`remote set\`" {

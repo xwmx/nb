@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.7.0"
+_VERSION="5.7.1"
 
 # $_ME
 #
@@ -749,6 +749,29 @@ _color_secondary() {
   fi
 
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
+}
+
+# _color_yn_prompt()
+#
+# Usage:
+#   _color_yn_prompt
+#
+# Description:
+#   Print a colorized [y/N] prompt.
+_color_yn_prompt() {
+  if ! ((_COLOR_ENABLED))
+  then
+    return 0
+  fi
+
+  printf "%s%s[%sy%s/%sN%s]%s"  \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_SGR0}"
 }
 
 # Current Notebook ########################################### Current Notebook
@@ -1914,10 +1937,10 @@ _get_unique_path() {
   printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
 }
 
-# _get_visible_line_length()
+# _get_visible_length()
 #
 # Usage:
-#   _get_visible_line_length <string> [<extra-length>]
+#   _get_visible_length <string> [<extra-length>]
 #
 # Describe:
 #   Calculate the apparent length of <string>, with byte and character
@@ -1925,34 +1948,34 @@ _get_unique_path() {
 #
 # More Information:
 #   https://stackoverflow.com/a/31009961
-_get_visible_line_length() {
+_get_visible_length() {
   local _string="${1:-}"
   local _extra_length="${2:-0}"
 
   _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
-  local _line_length_chars=
-  _line_length_chars="${#_string}"
+  local _length_chars=
+  _length_chars="${#_string}"
 
   LANG=C LC_ALL=C
 
-  local _line_length_bytes=
-  _line_length_bytes="${#_string}"
+  local _length_bytes=
+  _length_bytes="${#_string}"
 
   LANG="${_LANG:-}" LC_ALL="${_LC_ALL:-}"
 
-  local _line_length_diff=
-  _line_length_diff=$(((_line_length_bytes-_line_length_chars)/3))
+  local _difference=
+  _difference=$(((_length_bytes-_length_chars)/3))
 
-  local _line_length=
-  _line_length=$((_line_length_chars+_line_length_diff))
+  local _calculated_length=
+  _calculated_length=$((_length_chars+_difference))
 
   if ((_extra_length))
   then
-    _line_length=$((_line_length+_extra_length))
+    _calculated_length=$((_calculated_length+_extra_length))
   fi
 
-  printf "%s\\n" "${_line_length:-0}"
+  printf "%s\\n" "${_calculated_length:-0}"
 }
 
 # _highlight_syntax_if_available()
@@ -2281,6 +2304,28 @@ _list_files() {
   }
 }
 
+# _pager()
+#
+# Usage:
+#   _pager
+#
+# Description:
+#   Display standard input in the preferred pager, `less`, or `cat`.
+_pager() {
+  if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
+  then
+    "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+  elif _command_exists "less"
+  then
+    less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+  elif [[ -n "${PAGER:-}" ]]
+  then
+    "${PAGER}"
+  else
+    cat
+  fi
+}
+
 # _print_line()
 #
 # Usage:
@@ -2524,14 +2569,14 @@ _help() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      readme|README|-r|--readme)
-        _readme=1
-        ;;
       --pager)
         _use_pager=1
         ;;
-      -p|--print|--dump|--skip-pager|--no-pager)
+      -p|--print|--dump|--skip*pager|--no*pager)
         _use_pager=0
+        ;;
+      -r|*readme*|*README*)
+        _readme=1
         ;;
       --shell)
         _shell=1
@@ -2677,7 +2722,7 @@ $(_color_primary "Usage:")
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<id> | <filename> | <path> | <title>]
-  ${_ME} import [copy | download | move] (<path> | <url>) [--convert]
+  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -2798,14 +2843,9 @@ HEREDOC
           sed -e "s/^  nb /  /" -e "/^  nb$/d"
         else
           cat
-        fi |  if ((_use_pager))               &&
-                 [[ -n "${PAGER:-}"        ]] &&
-                 [[ ! "${PAGER:-}" =~ less ]]
+        fi |  if ((_use_pager))
               then
-                "${PAGER}"
-              elif ((_use_pager)) && _command_exists "less"
-              then
-                less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+                _pager
               else
                 cat
               fi
@@ -2897,7 +2937,7 @@ _add() {
       --edit)
         _edit_before_commit=1
         ;;
-      -e|--encrypt|--encrypted)
+      -e|--encrypt*)
         if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
            ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
         then
@@ -3168,15 +3208,7 @@ _bookmark() {
               | _highlight_syntax_if_available "md"
           else
             cat
-          fi |  if [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER:-}" =~ less ]]
-                then
-                  "${PAGER}"
-                elif _command_exists "less"
-                then
-                  less --CLEAR-SCREEN --prompt="$(_less_prompt)"
-                else
-                  cat
-                fi
+          fi | _pager
 
       return 0
     else
@@ -3207,14 +3239,14 @@ _bookmark() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      -c|--comment)
+      -c|--comment*)
         _comment="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --edit)
         _edit_before_commit=1
         ;;
-      -e|--encrypt|--encrypted)
+      -e|--encrypt*)
         _encrypt=1
         ;;
       -f|--filename)
@@ -3233,13 +3265,13 @@ _bookmark() {
         _related_urls+=("$(_option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
-      --save-source|--source|--save-html|--html|--raw-content|--raw-html)
+      --save*source|--source|--save*html|--html|--raw*content|--raw*html)
         _save_source=1
         ;;
-      --skip-content|--skipcontent|--no-content|--nocontent)
+      --skip*content|--no*content)
         _skip_content=1
         ;;
-      -t|--tag|--tags)
+      -t|--tag*)
         _tag_list="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
@@ -3447,7 +3479,7 @@ _bookmark() {
         while true
         do
           IFS='' read -r -e -d $'\n' -p "\
-Check the Wayback Machine for an archived version instead? [y/N] " __yn
+Check the Wayback Machine for an archived version instead? $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -3574,7 +3606,8 @@ HEREDOC
 
   local _domain=
   _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
-  if [[ -n "${_domain}" ]]
+
+  if [[ -n "${_domain:-}" ]]
   then
     _title+=" (${_domain})"
   fi
@@ -4113,7 +4146,8 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
+      IFS='' read -r -e -d $'\n' \
+        -p "$(_color_primary "Proceed?")  $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -4591,7 +4625,7 @@ _export() {
   for __arg in "${@:-}"
   do
     case "${__arg}" in
-      notebook|notebooks)
+      notebook*)
         _notebook_export=1
         ;;
       pandoc)
@@ -4669,7 +4703,8 @@ _export() {
 
         while true
         do
-          IFS='' read -r -e -d $'\n' -p "Overwrite existing file? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' \
+            -p "Overwrite existing file? $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -5000,6 +5035,7 @@ HEREDOC
   #   Sync <notebook-path> or the current notebook with the remote.
   _git_sync() {
     local _notebook_path="${1:-}"
+    local _prompt="${GIT_TERMINAL_PROMPT:-1}"
 
     if [[ -z "${_notebook_path:-}" ]]
     then
@@ -5014,11 +5050,19 @@ HEREDOC
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
-    if ! GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}" \
-           git -C "${_notebook_path}" fetch &>/dev/null
+    if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
     then
-      _warn printf "Unable to fetch from remote.\\n"
-      return 1
+      if ((_prompt))
+      then # fetch again, displaying git prompt and/or errors after newline
+        printf "\\n"
+
+        if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch
+        then
+          exit 1
+        fi
+      else
+        return 1
+      fi
     fi
 
     if ! git -C "${_notebook_path}" show-branch \
@@ -5144,7 +5188,7 @@ HEREDOC
   }
 
   case "${1:-}" in
-    autosyncable)
+    *autosync*)
       _git_autosyncable "${2:-}"
       ;;
     checkpoint)
@@ -5269,10 +5313,10 @@ _helpers() {
     list*files)
       _list_files                     "${_options[@]:-}"
       ;;
-    print*line|line)
+    *line)
       _print_line                     "${_options[@]:-}"
       ;;
-    print*padding|padding)
+    *padding)
       _print_padding                  "${_options[@]:-}"
       ;;
     print*welcome|welcome)
@@ -5281,10 +5325,10 @@ _helpers() {
     spinner)
       _spinner                        "${_options[@]:-}"
       ;;
-    is*email|email)
+    *email)
       _string_is_email                "${_options[@]:-}"
       ;;
-    is*url|url)
+    *url)
       _string_is_url                  "${_options[@]:-}"
       ;;
     *)
@@ -5358,20 +5402,20 @@ _history() {
 
 describe "import" <<HEREDOC
 Usage:
-  ${_ME} import (<path> | <url>)
-  ${_ME} import copy <path>
+  ${_ME} import (<path>... | <url>)
+  ${_ME} import copy <path>...
   ${_ME} import download <url> [--convert]
-  ${_ME} import move <path>
+  ${_ME} import move <path>...
   ${_ME} import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
 
 Subcommands:
-  (default) Copy or download the file in <path> or <url>.
-  copy      Copy the file at <path> into the current notebook.
+  (default) Copy or download the file(s) at <path> or <url>.
+  copy      Copy the file(s) at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Move the file at <path> into the current notebook.
+  move      Move the file(s) at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -5383,6 +5427,8 @@ Examples:
   ${_ME} import ~/Documents/example.docx
   ${_ME} import https://example.com/example.pdf
   ${_ME} example:import https://example.com/example.jpg
+  ${_ME} import ./*
+  ${_ME} import ./*.md
 HEREDOC
 _import() {
   # _import_validate_path()
@@ -5419,7 +5465,7 @@ _import() {
   local _basename=
   local _convert=0
   local _target_notebook_name=
-  local _path=
+  local _paths=()
   local _subcommand=
   local _url=
 
@@ -5429,7 +5475,7 @@ _import() {
       copy|download|move)
         _subcommand="${__arg}"
         ;;
-      notebook|notebooks)
+      notebook*)
         _subcommand="notebook"
         ;;
       --convert)
@@ -5442,11 +5488,11 @@ _import() {
           then
             _url="${__arg:-}"
           elif [[ "${_subcommand}" == "notebook"  ]] &&
-               [[ -n "${_path:-}"                 ]]
+               [[ -n "${_paths[*]:-}"             ]]
           then
             _target_notebook_name="${__arg:-}"
           else
-            _path="${__arg:-}"
+            _paths+=("${__arg:-}")
           fi
         else
           if [[ "${__arg:-}" =~ ^http|^file\: ]]
@@ -5455,7 +5501,7 @@ _import() {
             _url="${__arg:-}"
           else
             _subcommand="copy"
-            _path="${__arg:-}"
+            _paths+=("${__arg:-}")
           fi
         fi
         ;;
@@ -5467,23 +5513,26 @@ _import() {
 
   case "${_subcommand}" in
     copy)
-      _import_validate_path "${_path:-}"
+      for __path in "${_paths[@]:-}"
+      do
+        _import_validate_path "${__path:-}"
 
-      _basename="$(basename -- "${_path}")"
-      _basename="$(_import_get_valid_basename "${_basename}")"
+        _basename="$(basename -- "${__path}")"
+        _basename="$(_import_get_valid_basename "${_basename}")"
 
-      if [[ -d "${_path}" ]]
-      then
-        cp -R "${_path}" "${_notebook_path}/${_basename}"
-      else
-        cp "${_path}" "${_notebook_path}/${_basename}"
-      fi &&
-        _index add "${_basename}" &&
-          _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+        if [[ -d "${__path}" ]]
+        then
+          cp -R "${__path}" "${_notebook_path}/${_basename}"
+        else
+          cp "${__path}" "${_notebook_path}/${_basename}"
+        fi &&
+          _index add "${_basename}" &&
+            _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s from %s\\n"         \
-        "$(_show "${_basename}" --info-line)" \
-        "$(_color_primary "${_path}")"
+        printf "Imported %s from %s\\n"         \
+          "$(_show "${_basename}" --info-line)" \
+          "$(_color_primary "${__path}")"
+      done
       ;;
     download)
       _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
@@ -5522,20 +5571,23 @@ ${_url}
         "$(_color_primary "${_url}")"
       ;;
     move)
-      _import_validate_path "${_path:-}"
-      _basename="$(basename -- "${_path}")"
-      _basename="$(_import_get_valid_basename "${_basename}")"
+      for __path in "${_paths[@]:-}"
+      do
+        _import_validate_path "${__path:-}"
+        _basename="$(basename -- "${__path}")"
+        _basename="$(_import_get_valid_basename "${_basename}")"
 
-      mv "${_path}" "${_notebook_path}/${_basename}"  &&
-        _index add "${_basename}"                     &&
-          _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+        mv "${__path}" "${_notebook_path}/${_basename}" &&
+          _index add "${_basename}"                     &&
+            _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
 
-      printf "Imported %s from %s\\n"         \
-        "$(_show "${_basename}" --info-line)" \
-        "$(_color_primary "${_path}")"
+        printf "Imported %s from %s\\n"         \
+          "$(_show "${_basename}" --info-line)" \
+          "$(_color_primary "${__path}")"
+      done
       ;;
     notebook)
-      _notebooks import "${_path:-}" "${_target_notebook_name:-}"
+      _notebooks import "${_paths[0]:-}" "${_target_notebook_name:-}"
       return 0
       ;;
     *)
@@ -6096,13 +6148,13 @@ _list() {
       --filename*)
         _list_filenames=1
         ;;
-      --error-on-empty|--hard-empty)
+      --error*on*empty|--hard*empty)
         _error_on_empty=1
         ;;
-      --no-color|--nocolor)
+      --no*color)
         _list_color_enabled=0
         ;;
-      --no-id*|--noid*|--no-index|--noindex)
+      --no-id*|--noid*|--no*index)
         _no_id=1
         ;;
       --no*indicator*|--no*emoji*|--no*unicode*)
@@ -6118,7 +6170,7 @@ _list() {
       -p|--pager|--less)
         _use_pager=1
         ;;
-      --path|--paths)
+      --path*)
         _list_paths=1
         ;;
       -s|--sort)
@@ -6128,7 +6180,7 @@ _list() {
         _reverse=1
         ;;
       --titles)
-        : # Do nothing. This is now the default behavior. TODO: Remove.
+        : # Do nothing. This is the default behavior.
         ;;
       -t|--type)
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -6429,7 +6481,7 @@ HEREDOC
            ! ((_no_id))
         then
           _visible_info_line_length="$(
-            _get_visible_line_length "${_info_line:-}" "${_extra_length:-0}"
+            _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
           )"
         fi
 
@@ -6537,12 +6589,9 @@ HEREDOC
           return 1
       fi
     fi
-  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
+  } | if ((_use_pager))
       then
-        "${PAGER}"
-      elif ((_use_pager)) && _command_exists "less"
-      then
-        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+        _pager
       else
         cat
       fi
@@ -6753,7 +6802,7 @@ _ls() {
     [[ "${NB_HEADER}" == 3 ]] && _justified=1
 
     case "${_alignment}" in
-      --auto-align)
+      --auto*align)
         _auto_align=1
         _centered=0
         _justified=0
@@ -6918,7 +6967,7 @@ _ls() {
       -a|--all)
         _all=1
         ;;
-      --auto-align|--centered|--justified|--plain)
+      --auto*align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
         ;;
       -n|--limit|--num|--number)
@@ -7049,12 +7098,9 @@ _ls() {
     then
       _ls_print_footer "${_notebook_names[@]:-}"
     fi
-  } | if ((_use_pager)) && [[ -n "${PAGER:-}" ]] && [[ ! "${PAGER}" =~ less ]]
+  } | if ((_use_pager))
       then
-        "${PAGER}"
-      elif ((_use_pager)) && _command_exists "less"
-      then
-        less -r --CLEAR-SCREEN --prompt="$(_less_prompt)"
+        _pager
       else
         cat
       fi
@@ -7159,11 +7205,12 @@ _move() {
   if ! ((_force))
   then
     printf "Moving   %s to %s\\n" \
-      "${_source_info}"         \
+      "${_source_info}"           \
       "$(_color_primary "${_target_notebook}")"
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n'  \
+        -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -7710,7 +7757,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         --name*)
           _only_names=1
           ;;
-        --no-color|--nocolor)
+        --no*color)
           _notebook_color_enabled=0
           ;;
         --path*)
@@ -8067,7 +8114,7 @@ HEREDOC
         --name)
           _only_name=1
           ;;
-        --no-color|--nocolor)
+        --no*color)
           _notebook_color_enabled=0
           ;;
         --path)
@@ -8511,7 +8558,8 @@ _plugins() {
           then
             while true
             do
-              IFS='' read -r -e -d $'\n' -p "Reinstall? [y/N] " __yn
+              IFS='' read -r -e -d $'\n' \
+                -p "Reinstall? $(_color_yn_prompt) " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -8573,7 +8621,8 @@ $(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
-          IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+          IFS='' read -r -e -d $'\n' \
+            -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -8691,7 +8740,8 @@ _remote() {
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
 
-            IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+            IFS='' read -r -e -d $'\n' \
+              -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8738,7 +8788,8 @@ _remote() {
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
 
-            IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+            IFS='' read -r -e -d $'\n' \
+              -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8825,10 +8876,10 @@ _rename() {
       --reset)
         _reset=1
         ;;
-      --to-bookmark)
+      --to*bookmark)
         _to_target_type="bookmark"
         ;;
-      --to-note)
+      --to*note)
         _to_target_type="note"
         ;;
       *)
@@ -8937,7 +8988,8 @@ _rename() {
 
     while true
     do
-      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+      IFS='' read -r -e -d $'\n' \
+        -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -9061,7 +9113,7 @@ _search() {
       -l|--list)
         _only_list=1
         ;;
-      --no-color|--nocolor)
+      --no*color)
         _search_color_enabled=0
         ;;
       --path*)
@@ -9074,7 +9126,7 @@ _search() {
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      --use-grep)
+      --use*grep)
         # The `--use-grep` option bypasses other search tools. Intended to be
         # used primarily for testing.
         _use_grep=1
@@ -9435,7 +9487,7 @@ _search() {
 
             local _visible_line_length
             _visible_line_length="$(
-              _get_visible_line_length "${_info_line:-}"
+              _get_visible_length "${_info_line:-}"
             )"
 
             _print_line "$(printf "%-${_visible_line_length}s" '.')"
@@ -9669,13 +9721,20 @@ _settings() {
   _settings_prompt() {
     local _setting_name="${1:-}"
 
+    local _columns
+    _columns="$(tput cols)"
+
+    local _padding
+    _padding="$(_print_padding "-----------" "${_columns}")"
+
+    printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
+    _print_line "$(printf "%-${_columns}s" '.')"
+
     if [[ -n "${_setting_name}" ]]
     then
       _setting_name="$(_settings_identify "${_setting_name}")"
     else
       cat <<HEREDOC
-$(_color_primary "${_ME}") Settings
-$(_color_secondary "-----------")
 $(_settings list)
 
 Enter the number or name of the setting to change, or $(_color_primary 'q') to quit.
@@ -9683,7 +9742,8 @@ HEREDOC
 
       while true
       do
-        IFS='' read -r -e -d $'\n' -p "$(_color_primary "Number or Name: ")" __setting
+        IFS='' read -r -e -d $'\n' \
+          -p "$(_color_primary "Number or Name: ")" __setting
 
         if [[ -n "${__setting}" ]]
         then
@@ -9701,6 +9761,8 @@ HEREDOC
         fi
       done
     fi
+
+    printf "\\n"
 
     if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
        [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
@@ -10588,25 +10650,25 @@ _show() {
       --indicators)
         _print_indicators=1
         ;;
-      --info-line)
+      --info*line)
         _print_info=1
         _skip_notebook_fallback=1
         ;;
-      --no-color|--nocolor|--raw)
+      --no*color|--raw)
         _show_color_enabled=0
         ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      -p|--print|--dump|--skip-pager|--no-pager)
+      -p|--print|--dump|--skip*pager|--no*pager)
         _print_output=1
         ;;
       -r|--render)
         _render=1
         _ls_arguments+=("${__arg}")
         ;;
-      --selector-id)
+      --selector*id)
         _print_selector_id=1
         _skip_notebook_fallback=1
         ;;
@@ -10967,14 +11029,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       pdftotext "${_target_path}" - \
         | tr -d '\014'              \
-        | if [[ -n "${PAGER:-}"       ]] &&
-             [[ ! "${PAGER}" =~ less  ]] &&
-             ! ((_print_output))
+        | if ! ((_print_output))
           then
-            "${PAGER}"
-          elif _command_exists "less" && ! ((_print_output))
-          then
-            less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+            _pager
           else
             cat
           fi
@@ -10982,14 +11039,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       pandoc --from docx --to markdown "${_target_path}"  \
         | _highlight_syntax_if_available                  \
-        | if [[ -n "${PAGER:-}"      ]] &&
-             [[ ! "${PAGER}" =~ less ]] &&
-             ! ((_print_output))
+        | if ! ((_print_output))
           then
-            "${PAGER}"
-          elif _command_exists "less" && ! ((_print_output))
-          then
-            less --CLEAR-SCREEN --prompt="$(_less_prompt)"
+            _pager
           else
             cat
           fi
@@ -11034,18 +11086,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         | sed 's/^-␟/- /g'                                        \
         | sed 's/^\*␟/\* /g'                                      \
         | _highlight_syntax_if_available "${_target_path##*.}"    \
-        | if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
-          then
-            "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
-          elif _command_exists "less"
-          then
-            less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
-          elif [[ -n "${PAGER:-}" ]]
-          then
-            "${PAGER}"
-          else
-            cat
-          fi
+        | _pager
     fi
   fi
 
@@ -11135,10 +11176,11 @@ Description:
   Sync the current local notebook with the remote repository.
 
 Private Repositories and Git Credentials:
-  Syncing with private repositories requires configuring git to not prompt you
-  for your credentials. For repositories cloned over HTTPS you can cache your
-  credentials with git and for repositories cloned over SSH you can add your
-  key to the ssh-agent.
+  Syncing with private repositories requires configuring git to not prompt
+  for credentials.
+
+  For repositories cloned over HTTPS, credentials can be cached with git.
+  For repositories cloned over SSH, keys can be added to the ssh-agent.
 
   More Information:
     https://github.com/xwmx/nb#private-repositories-and-git-credentials
@@ -11224,6 +11266,7 @@ HEREDOC
     else # sync with prompt in foreground
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
         _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+
       _git sync "${NB_NOTEBOOK_PATH}"
     fi && _notebook_sync_successful=1
 
@@ -11232,13 +11275,13 @@ HEREDOC
        _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
       _exit_1 cat <<HEREDOC
-Syncing failed.
+Sync failed.
 
 Reason unknown, but likely one of the following:
 
-- Misconfigured remote URL.
+- Authentication error or credentials not configured.
 - Network unavailable.
-- Authentication error, credentials not configured.
+- Misconfigured remote URL.
 
 Configuring Git Credentials:
   https://github.com/xwmx/nb#private-repositories-and-git-credentials
@@ -11264,7 +11307,9 @@ Set the remote for a notebook named "example":
 
 HEREDOC
   else
-    _exit_1 printf "Syncing failed.\\n"
+    printf "\\n"
+
+    _exit_1 printf "Sync failed.\\n"
   fi
 }
 
@@ -11381,7 +11426,8 @@ HEREDOC
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
-        IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+        IFS='' read -r -e -d $'\n' \
+          -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
 
         case ${__yn} in
           [Yy]*)

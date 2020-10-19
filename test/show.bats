@@ -91,7 +91,6 @@ load test_helper
   [[ ! "${output}" =~ mock_editor ]]
   [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
-
 }
 
 # <selector> ##################################################################
