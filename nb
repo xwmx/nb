@@ -11257,6 +11257,9 @@ HEREDOC
     else # sync with prompt in foreground
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
         _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+
+      printf "\\n"
+
       _git sync "${NB_NOTEBOOK_PATH}"
     fi && _notebook_sync_successful=1
 
