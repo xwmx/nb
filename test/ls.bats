@@ -24,6 +24,131 @@ line four
 HEREDOC
 }
 
+# `scoped:ls` #################################################################
+
+@test "\`scoped:ls\` exits with 0 and lists files in reverse order." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "one.md" --title "one"
+    "${_NB}" one:add "two.md" --title "two"
+    "${_NB}" one:add "three.md" --title "three"
+    _files=($(ls "${NB_DIR}/one/"))
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ one:3   ]]
+  [[ "${lines[0]}" =~ three   ]]
+  [[ "${lines[1]}" =~ one:2   ]]
+  [[ "${lines[1]}" =~ two     ]]
+  [[ "${lines[2]}" =~ one:1   ]]
+  [[ "${lines[2]}" =~ one     ]]
+}
+
+@test "\`scoped:ls\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 items.
+
+Add a note:
+  $(_color_primary 'nb one:add')
+Add a bookmark:
+  $(_color_primary 'nb one: <url>')
+Import a file:
+  $(_color_primary 'nb one:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:ls\` escapes multi-word notebook name." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "multi word"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" multi\ word:ls
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 items.
+
+Add a note:
+  $(_color_primary 'nb multi\ word:add')
+Add a bookmark:
+  $(_color_primary 'nb multi\ word: <url>')
+Import a file:
+  $(_color_primary 'nb multi\ word:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:ls --bookmarks\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls --bookmarks
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 bookmarks.
+
+Add a bookmark:
+  $(_color_primary 'nb one: <url>')
+Help information:
+  $(_color_primary 'nb help bookmark')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:ls --documents\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls --documents
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 document files.
+
+Import a file:
+  $(_color_primary 'nb one:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help import')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
 # footer ######################################################################
 
 @test "\`ls\` includes footer." {
