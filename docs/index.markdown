@@ -2182,6 +2182,19 @@ nb import ~/Documents/example.docx
 nb open example.docx
 ```
 
+Multiple filenames and globbing are supported:
+
+```bash
+# import all files and directories in the current directory
+nb import ./*
+
+# import all markdown files in the current directory
+nb import ./*.md
+
+# import example.md and sample.md in the current directory
+nb import example.md sample.md
+```
+
 `nb import` can also download and import files directly from the web:
 
 ```bash
@@ -2741,7 +2754,7 @@ home
 [1] Demo
 
 nb> edit 3 --content "New content."
-Updated [3] Example
+Updated: [3] Example
 
 nb> bookmark https://example.com
 Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
@@ -2876,7 +2889,7 @@ Usage:
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
-  nb import [copy | download | move] (<path> | <url>) [--convert]
+  nb import [copy | download | move] (<path>... | <url>) [--convert]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -3501,20 +3514,20 @@ Examples:
 
 ```text
 Usage:
-  nb import (<path> | <url>)
-  nb import copy <path>
+  nb import (<path>... | <url>)
+  nb import copy <path>...
   nb import download <url> [--convert]
-  nb import move <path>
+  nb import move <path>...
   nb import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
 
 Subcommands:
-  (default) Copy or download the file in <path> or <url>.
-  copy      Copy the file at <path> into the current notebook.
+  (default) Copy or download the file(s) at <path> or <url>.
+  copy      Copy the file(s) at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Move the file at <path> into the current notebook.
+  move      Move the file(s) at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -3526,6 +3539,8 @@ Examples:
   nb import ~/Documents/example.docx
   nb import https://example.com/example.pdf
   nb example:import https://example.com/example.jpg
+  nb import ./*
+  nb import ./*.md
 ```
 
 #### `init`
@@ -4275,7 +4290,7 @@ Example:
   [3] Example
 
   nb> edit 3 --content "New content."
-  Updated [3] Example
+  Updated: [3] Example
 
   nb> notebook
   home

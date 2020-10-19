@@ -2748,7 +2748,7 @@ home
 [1] Demo
 
 nb> edit 3 --content "New content."
-Updated [3] Example
+Updated: [3] Example
 
 nb> bookmark https://example.com
 Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
@@ -4284,7 +4284,7 @@ Example:
   [3] Example
 
   nb> edit 3 --content "New content."
-  Updated [3] Example
+  Updated: [3] Example
 
   nb> notebook
   home
