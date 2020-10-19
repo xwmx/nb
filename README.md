@@ -4863,8 +4863,10 @@ at the root level of the notebook directory.
 ## Tests
 
 To run the [test suite](test), install
-[Bats](https://github.com/bats-core/bats-core) and run `bats test` in the project
-root.
+[Bats](https://github.com/bats-core/bats-core)
+and the
+[recommended dependencies](#optional),
+then run `bats test` in the project root.
 
 ---
 <p align="center">
