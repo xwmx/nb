@@ -10837,8 +10837,10 @@ _show() {
       _info_line+="\"${_title}\""
     fi
 
-    printf "%s\\n" "${_info_line:-}"
+    # trim leading and trailing whitepace
+    IFS=' ' read -r _info_line <<<"${_info_line:-}"
 
+    printf "%s\\n" "${_info_line:-}"
     return 0
   fi
 
