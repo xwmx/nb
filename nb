@@ -4147,8 +4147,8 @@ _delete() {
     printf "Deleting: %s\\n" "${_info}"
     while true
     do
-      IFS='' read -r -e -d $'\n' \
-        -p "$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
+      IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -4704,8 +4704,8 @@ _export() {
 
         while true
         do
-          IFS='' read -r -e -d $'\n' \
-            -p "$(_color_primary "Overwrite existing file?") $(_color_brackets_yn_prompt) " __yn
+          IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Overwrite existing file?") $(_color_brackets_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -7212,8 +7212,8 @@ _move() {
 
     while true
     do
-      IFS='' read -r -e -d $'\n'  \
-        -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+      IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -8561,8 +8561,8 @@ _plugins() {
           then
             while true
             do
-              IFS='' read -r -e -d $'\n' \
-                -p "$(_color_primary "Reinstall?") $(_color_brackets_yn_prompt) " __yn
+              IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Reinstall?") $(_color_brackets_yn_prompt) " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -8624,8 +8624,8 @@ $(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
-          IFS='' read -r -e -d $'\n' \
-            -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+          IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -8743,8 +8743,8 @@ _remote() {
           do
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
 
-            IFS='' read -r -e -d $'\n' \
-              -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+            IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8791,8 +8791,8 @@ _remote() {
               "$(_color_primary "${_existing_url}")"  \
               "$(_color_primary "${_url}")"
 
-            IFS='' read -r -e -d $'\n' \
-              -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+            IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8990,8 +8990,8 @@ _rename() {
 
     while true
     do
-      IFS='' read -r -e -d $'\n' \
-        -p "$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
+      IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -9744,8 +9744,8 @@ HEREDOC
 
       while true
       do
-        IFS='' read -r -e -d $'\n' \
-          -p "$(_color_primary "Number or Name: ")" __setting
+        IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Number or Name: ")" __setting
 
         if [[ -n "${__setting}" ]]
         then
@@ -11430,8 +11430,8 @@ HEREDOC
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
-        IFS='' read -r -e -d $'\n' \
-          -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+        IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
         case ${__yn} in
           [Yy]*)
