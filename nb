@@ -5053,12 +5053,12 @@ HEREDOC
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
     then
       if ((_prompt))
-      then # fetch again, displaying prompt preceeded by a newline on error
+      then # fetch again displaying prompt and/or errors preceeded by a newline
         printf "\\n"
 
-        if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch &>/dev/null
+        if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch
         then
-          return 1
+          exit 1
         fi
       else
         return 1
@@ -11279,9 +11279,9 @@ Sync failed.
 
 Reason unknown, but likely one of the following:
 
-- Misconfigured remote URL.
+- Authentication error or credentials not configured.
 - Network unavailable.
-- Authentication error, credentials not configured.
+- Misconfigured remote URL.
 
 Configuring Git Credentials:
   https://github.com/xwmx/nb#private-repositories-and-git-credentials
