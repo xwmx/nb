@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.7.1"
+_VERSION="5.7.2"
 
 # $_ME
 #
@@ -4704,7 +4704,7 @@ _export() {
         while true
         do
           IFS='' read -r -e -d $'\n' \
-            -p "Overwrite existing file? $(_color_yn_prompt) " __yn
+            -p "$(_color_primary "Overwrite existing file?") $(_color_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -4741,9 +4741,8 @@ _export() {
     else
       cp "${_notebook_path}/${_basename}" "${_target_path}"
     fi &&
-      printf "Exported %s to %s\\n"           \
-        "$(_show "${_basename}" --info-line)" \
-        "$(_color_primary "${_target_path}")"
+      printf "Exported: %s\\n"  "$(_show "${_basename}" --info-line)"
+      printf "To:        %s\\n" "$(_color_primary "${_target_path}")"
   fi
 }
 
@@ -7204,9 +7203,9 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving   %s to %s\\n" \
-      "${_source_info}"           \
-      "$(_color_primary "${_target_notebook}")"
+    printf "Moving:  %s\\n"  "${_source_info}"
+    printf "To:       %s\\n" "$(_color_primary "${_target_notebook}")"
+
     while true
     do
       IFS='' read -r -e -d $'\n'  \
@@ -8559,7 +8558,7 @@ _plugins() {
             while true
             do
               IFS='' read -r -e -d $'\n' \
-                -p "Reinstall? $(_color_yn_prompt) " __yn
+                -p "$(_color_primary "Reinstall?") $(_color_yn_prompt) " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -8982,14 +8981,13 @@ _rename() {
 
   if ! ((_force))
   then
-    printf "Renaming %s to %s\\n"               \
-      "${_source_info}"                         \
-      "$(_color_primary "${_target_basename}")"
+    printf "Renaming: %s\\n" "${_source_info}"
+    printf "To:        %s\\n" "$(_color_primary "${_target_basename}")"
 
     while true
     do
       IFS='' read -r -e -d $'\n' \
-        -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
+        -p "$(_color_primary "Proceed?")  $(_color_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -10839,8 +10837,10 @@ _show() {
       _info_line+="\"${_title}\""
     fi
 
-    printf "%s\\n" "${_info_line:-}"
+    # trim leading and trailing whitepace
+    IFS=' ' read -r _info_line <<<"${_info_line:-}"
 
+    printf "%s\\n" "${_info_line:-}"
     return 0
   fi
 
