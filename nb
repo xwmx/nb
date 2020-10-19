@@ -2839,7 +2839,7 @@ HEREDOC
   else
     printf "%s\\n" "$(describe --get "${_arguments[@]}")"
   fi |  if ((_shell))
-        then # Strip 'nb' command name from help output.
+        then
           sed -e "s/^  nb /  /" -e "/^  nb$/d"
         else
           cat
