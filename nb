@@ -8795,7 +8795,7 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
             printf "From: %s\\n" "${_existing_url}"
             printf "To:   %s\\n" "$(_color_primary "${_url}")"
 
-            _print_line "Proceed? [y/N]"
+            _print_line "--------------"
 
             IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
