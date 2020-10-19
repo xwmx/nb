@@ -5035,7 +5035,7 @@ HEREDOC
   #   Sync <notebook-path> or the current notebook with the remote.
   _git_sync() {
     local _notebook_path="${1:-}"
-    local _prompt="${GIT_TERMINAL_PROMPT:-0}"
+    local _prompt="${GIT_TERMINAL_PROMPT:-1}"
 
     if [[ -z "${_notebook_path:-}" ]]
     then
@@ -11274,10 +11274,8 @@ HEREDOC
        _git dirty           "${NB_NOTEBOOK_PATH}" ||
        _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
-      printf "\\n"
-
       _exit_1 cat <<HEREDOC
-Syncing failed.
+Sync failed.
 
 Reason unknown, but likely one of the following:
 
