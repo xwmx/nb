@@ -8661,9 +8661,16 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
       elif ((_print_paths))
       then
         # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
-        find "${NB_DIR}"/.plugins -type f -name "${_query}" | grep .
+        find "${NB_DIR}"/.plugins \
+          -type f                 \
+          -name "${_query}"       \
+          | grep .
       else
-        find "${NB_DIR}"/.plugins -type f -name "${_query}" -exec basename {} \; | grep .
+        find "${NB_DIR}"/.plugins \
+          -type f                 \
+          -name "${_query}"       \
+          -exec basename {} \;    \
+          | grep .
       fi || if [[ -n "${_name:-}" ]]
             then
               _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
@@ -8759,8 +8766,9 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
         fi
 
         git -C "${_notebook_path}" remote rm origin &&
-          printf "Removed remote %s\\n" "$(_color_primary "${_existing_url}")" &&
-          return 0
+          printf "Removed remote %s\\n"             \
+            "$(_color_primary "${_existing_url}")"  &&
+              return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
@@ -8812,8 +8820,8 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
           done
         fi
 
-        git -C "${_notebook_path}" remote set-url origin "${_url}"      &&
-          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"    &&
+        git -C "${_notebook_path}" remote set-url origin "${_url}"    &&
+          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
           return 0
       fi
       ;;
