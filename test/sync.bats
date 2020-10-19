@@ -558,8 +558,8 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status}      -eq 1                           ]]
-  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
-  [[ "${lines[0]}"  =~  example-branch              ]]
+  [[ "${output}"    =~  Remote\ branch\ not\ found: ]]
+  [[ "${output}"    =~  example-branch              ]]
   [[ ! "${output}"  =~  Done                        ]]
 }
 
