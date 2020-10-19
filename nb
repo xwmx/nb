@@ -688,7 +688,7 @@ _color_dim() {
 _color_id_brackets() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    printf "%s[%s]\\n" "${_TPUT_SGR0}" "${1:-}"
     return 0
   fi
 
@@ -761,6 +761,7 @@ _color_secondary() {
 _color_yn_prompt() {
   if ! ((_COLOR_ENABLED))
   then
+    printf "%s[y/N]\\n" "${_TPUT_SGR0}"
     return 0
   fi
 
@@ -2130,7 +2131,7 @@ _less_prompt() {
 _wrap() {
   if [[ "${1:-}" == "off"  ]]
   then
-    # NOTE: `tput` vs control sequence:
+    # NOTE: `tput` vs escape sequence:
     # https://unix.stackexchange.com/a/558771
     # https://unix.stackexchange.com/a/515938
     # https://superuser.com/a/189068
