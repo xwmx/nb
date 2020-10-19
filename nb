@@ -5053,7 +5053,7 @@ HEREDOC
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
     then
       if ((_prompt))
-      then # fetch again displaying prompt and/or errors preceeded by a newline
+      then # fetch again, displaying git prompt and/or errors after newline
         printf "\\n"
 
         if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch
