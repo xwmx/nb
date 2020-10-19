@@ -206,7 +206,6 @@ HEREDOC
       --content   "<http://example.test/>"      \
       --title     "Example Title Two"
 
-
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
@@ -244,7 +243,6 @@ HEREDOC
       --filename  "example-2.bookmark.md"       \
       --content   "<http://example.test/>"      \
       --title     "Example Title Two"
-
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
@@ -534,7 +532,6 @@ HEREDOC
   [[ "${output}"  =~ in\ any\ notebook  ]]
   [[ "${output}"  =~ no\ match          ]]
 }
-
 
 @test "\`search <multiple matches> --all --path\` exits with 0 and prints paths." {
   {
