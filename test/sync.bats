@@ -506,12 +506,13 @@ _setup_notebooks() {
 
   run "${_NB}" sync
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[2]}: '%s'\\n" "${lines[2]}"
 
-  [[ "${output}" =~ No\ remote\ configured  ]]
-  [[ "${output}" =~ Set\ the\ remote        ]]
-  [[ ${status} -eq 1                        ]]
+  [[ "${lines[0]}" =~ No\ remote\ configured  ]]
+  [[ "${lines[1]}" =~ Set\ the\ remote        ]]
+  [[ ${status} -eq 1                          ]]
 }
 
 @test "\`sync --all\` returns error when no unarchived notebooks with remotes found." {
@@ -531,8 +532,8 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ No\ unarchived\ notebooks ]]
-  [[ ${status} -eq 1                          ]]
+  [[ "${lines[0]}" =~ No\ unarchived\ notebooks ]]
+  [[ ${status} -eq 1                            ]]
 }
 
 # remote set && sync #########################################################
@@ -558,8 +559,8 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status}      -eq 1                           ]]
-  [[ "${output}"    =~  Remote\ branch\ not\ found: ]]
-  [[ "${output}"    =~  example-branch              ]]
+  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
+  [[ "${lines[0]}"  =~  example-branch              ]]
   [[ ! "${output}"  =~  Done                        ]]
 }
 
@@ -591,10 +592,12 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}      -eq 1                                 ]]
-  [[ "${output}"    =~ unable\ to\ access\                ]]
-  [[ "${output}"    =~ https://example.test/invalid.git/  ]]
-  [[ ! "${output}"  =~ Done                               ]]
+  [[ ${status}      -eq 1                                   ]]
+  [[ "${lines[0]}"  =~ Syncing                              ]]
+  [[ "${lines[0]}"  =~ home                                 ]]
+  [[ "${lines[1]}"  =~ unable\ to\ access\                  ]]
+  [[ "${lines[1]}"  =~ https://example.test/invalid.git/    ]]
+  [[ ! "${output}"  =~ Done                                 ]]
 }
 
 @test "\`sync\` succeeds after \`remote set\`" {
@@ -626,6 +629,8 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ "${lines[0]}" =~ Syncing:\ .*home.*...Done! ]]
+
   export NB_DIR="${NB_DIR_2}"
 
   # sync 2: pull changes from remote
@@ -633,6 +638,8 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}" =~ Syncing:\ .*home.*...Done! ]]
 
   [[ ${status} -eq 0                ]]
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
@@ -656,6 +663,7 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   "${_NB}" env
 
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
@@ -698,6 +706,7 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   "${_NB}" env
 
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
@@ -744,6 +753,7 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   "${_NB}" env
 
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
@@ -790,6 +800,7 @@ _setup_notebooks() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   "${_NB}" env
 
   [[ -f "${NB_DIR_1}/home/one.md"   ]]
