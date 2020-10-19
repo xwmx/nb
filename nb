@@ -1083,11 +1083,11 @@ This note was encrypted with GPG, but the GPG command was not found.\\n"
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
   then
-    openssl enc                   \
-      -d                          \
-      -aes-256-cbc                \
-      -in "${_encrypted_path}"    \
-      -out "${_unencrypted_path}" \
+    openssl enc                           \
+      -d                                  \
+      -aes-256-cbc                        \
+      -in "${_encrypted_path}"            \
+      -out "${_unencrypted_path}"         \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
         rm "${_unencrypted_path:?}"
   else
@@ -1296,10 +1296,10 @@ _encrypt_file() {
         "${_unencrypted_path}"
   elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl" ]]
   then
-    openssl enc                   \
-      -aes-256-cbc                \
-      -in "${_unencrypted_path}"  \
-      -out "${_encrypted_path}"   \
+    openssl enc                       \
+      -aes-256-cbc                    \
+      -in "${_unencrypted_path}"      \
+      -out "${_encrypted_path}"       \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
     _exit_1 \
