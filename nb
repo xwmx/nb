@@ -678,14 +678,14 @@ _color_dim() {
     "${_TPUT_SGR0}"
 }
 
-# _color_id_brackets()
+# _color_brackets_id()
 #
 # Usage:
-#   _color_id_brackets <id>
+#   _color_brackets_id <id>
 #
 # Description:
 #   Print <id> with surrounding color brackets.
-_color_id_brackets() {
+_color_brackets_id() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s[%s]\\n" "${_TPUT_SGR0}" "${1:-}"
@@ -698,6 +698,30 @@ _color_id_brackets() {
     "${_TPUT_COLOR_PRIMARY}"  \
     "${1:-}"                  \
     "${_TPUT_SETAF_8}"        \
+    "${_TPUT_SGR0}"
+}
+
+# _color_brackets_yn_prompt()
+#
+# Usage:
+#   _color_brackets_yn_prompt
+#
+# Description:
+#   Print a colorized [y/N] prompt.
+_color_brackets_yn_prompt() {
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s[y/N]\\n" "${_TPUT_SGR0}"
+    return 0
+  fi
+
+  printf "%s%s[%sy%s/%sN%s]%s"  \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SGR0}"             \
+    "${_TPUT_SETAF_8}"          \
     "${_TPUT_SGR0}"
 }
 
@@ -749,30 +773,6 @@ _color_secondary() {
   fi
 
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
-}
-
-# _color_yn_prompt()
-#
-# Usage:
-#   _color_yn_prompt
-#
-# Description:
-#   Print a colorized [y/N] prompt.
-_color_yn_prompt() {
-  if ! ((_COLOR_ENABLED))
-  then
-    printf "%s[y/N]\\n" "${_TPUT_SGR0}"
-    return 0
-  fi
-
-  printf "%s%s[%sy%s/%sN%s]%s"  \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SETAF_8}"          \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SETAF_8}"          \
-    "${_TPUT_SGR0}"
 }
 
 # Current Notebook ########################################### Current Notebook
@@ -2679,7 +2679,7 @@ HEREDOC
     _color_secondary  "------------------"
    cat <<HEREDOC
 
-$(_color_id_brackets "nb") Command line note-taking, bookmarking, archiving with plain-text data
+$(_color_brackets_id "nb") Command line note-taking, bookmarking, archiving with plain-text data
 storage, encryption, filtering and search, Git-backed versioning and syncing,
 Pandoc-backed conversion, global and local notebooks, customizable color
 themes, plugins, and more in a single portable, user-friendly script.
@@ -3480,7 +3480,7 @@ _bookmark() {
         while true
         do
           IFS='' read -r -e -d $'\n' -p "\
-Check the Wayback Machine for an archived version instead? $(_color_yn_prompt) " __yn
+Check the Wayback Machine for an archived version instead? $(_color_brackets_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -4148,7 +4148,7 @@ _delete() {
     while true
     do
       IFS='' read -r -e -d $'\n' \
-        -p "$(_color_primary "Proceed?")  $(_color_yn_prompt) " __yn
+        -p "$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -4705,7 +4705,7 @@ _export() {
         while true
         do
           IFS='' read -r -e -d $'\n' \
-            -p "$(_color_primary "Overwrite existing file?") $(_color_yn_prompt) " __yn
+            -p "$(_color_primary "Overwrite existing file?") $(_color_brackets_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -6437,7 +6437,7 @@ HEREDOC
           _id_item="[${_item_identifier}]"
 
           local _id_item_color=
-          _id_item_color="$(_color_id_brackets "${_item_identifier}")"
+          _id_item_color="$(_color_brackets_id "${_item_identifier}")"
 
           # Use calculated number of spaces for nicer formatting.
           local _spaces=''
@@ -7213,7 +7213,7 @@ _move() {
     while true
     do
       IFS='' read -r -e -d $'\n'  \
-        -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
+        -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -7249,7 +7249,7 @@ _move() {
      [[ -e "${_target_notebook_path}/${_basename}"  ]]
   then
     printf "Moved to %s %s\\n"                                \
-      "$(_color_id_brackets "${_target_notebook}:${_id}")"    \
+      "$(_color_brackets_id "${_target_notebook}:${_id}")"    \
       "$(_color_primary "${_target_notebook}:${_basename}")"
   fi
 }
@@ -8562,7 +8562,7 @@ _plugins() {
             while true
             do
               IFS='' read -r -e -d $'\n' \
-                -p "$(_color_primary "Reinstall?") $(_color_yn_prompt) " __yn
+                -p "$(_color_primary "Reinstall?") $(_color_brackets_yn_prompt) " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -8625,7 +8625,7 @@ HEREDOC
         while true
         do
           IFS='' read -r -e -d $'\n' \
-            -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
+            -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -8744,7 +8744,7 @@ _remote() {
             printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
 
             IFS='' read -r -e -d $'\n' \
-              -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
+              -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8792,7 +8792,7 @@ _remote() {
               "$(_color_primary "${_url}")"
 
             IFS='' read -r -e -d $'\n' \
-              -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
+              -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8991,7 +8991,7 @@ _rename() {
     while true
     do
       IFS='' read -r -e -d $'\n' \
-        -p "$(_color_primary "Proceed?")  $(_color_yn_prompt) " __yn
+        -p "$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -9435,11 +9435,11 @@ _search() {
             )"
 
             _info_line="[${_notebook_escaped_name}:${_id}] "
-            _info_line_color+="$(_color_id_brackets "${_notebook_escaped_name}:${_id}") "
+            _info_line_color+="$(_color_brackets_id "${_notebook_escaped_name}:${_id}") "
             _max_identifier="[${_notebook_escaped_name}:${_max_id}] "
           else
             _info_line="[${_id}] "
-            _info_line_color+="$(_color_id_brackets "${_id}") "
+            _info_line_color+="$(_color_brackets_id "${_id}") "
             _max_identifier="[${_max_id}] "
           fi
 
@@ -10011,7 +10011,7 @@ HEREDOC
   local _settings_list_items=()
   local _settings_help_items=()
 
-  _settings_list_items+=("$(_color_id_brackets '1')  auto_sync")
+  _settings_list_items+=("$(_color_brackets_id '1')  auto_sync")
   _settings_help_items+=("\
     $(_color_secondary " ---------")
      By default, operations that trigger a git commit like \`add\`, \`edit\`,
@@ -10020,7 +10020,7 @@ HEREDOC
 
      • Default Value: $(_color_primary "1")")
 
-  _settings_list_items+=("$(_color_id_brackets '2')  color_primary")
+  _settings_list_items+=("$(_color_brackets_id '2')  color_primary")
   _settings_help_items+=("\
     $(_color_secondary " -------------")
      The primary color used to highlight identifiers and messages. Often this
@@ -10030,7 +10030,7 @@ HEREDOC
      • Default Value: $(_color_primary "68") (blue) for 256 color terminals,
                       $(_color_primary "4")  (blue) for  8  color terminals.")
 
-  _settings_list_items+=("$(_color_id_brackets '3')  color_secondary")
+  _settings_list_items+=("$(_color_brackets_id '3')  color_secondary")
   _settings_help_items+=("\
     $(_color_secondary " ---------------")
      The color used for lines and footer elements. Often this can be set to an
@@ -10039,7 +10039,7 @@ HEREDOC
 
      • Default Value: $(_color_primary "8")")
 
-  _settings_list_items+=("$(_color_id_brackets '4')  color_theme")
+  _settings_list_items+=("$(_color_brackets_id '4')  color_theme")
   _settings_help_items+=("\
     $(_color_secondary " -----------")
      The color theme.
@@ -10065,7 +10065,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
 
      • Default Value: $(_color_primary "nb")")
 
-  _settings_list_items+=("$(_color_id_brackets '5')  default_extension")
+  _settings_list_items+=("$(_color_brackets_id '5')  default_extension")
   _settings_help_items+=("\
     $(_color_secondary " -----------------")
      The default extension to use for note files. Change to \"org\" for Emacs
@@ -10074,7 +10074,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
 
      • Default Value: $(_color_primary "md")")
 
-  _settings_list_items+=("$(_color_id_brackets '6')  editor")
+  _settings_list_items+=("$(_color_brackets_id '6')  editor")
   _settings_help_items+=("\
     $(_color_secondary " ------")
      The command line text editor to use with \`${_ME}\`.
@@ -10089,7 +10089,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
     fi
   done)")
 
-  _settings_list_items+=("$(_color_id_brackets '7')  encryption_tool")
+  _settings_list_items+=("$(_color_brackets_id '7')  encryption_tool")
   _settings_help_items+=("\
     $(_color_secondary " ---------------")
      The tool used for encrypting notes.
@@ -10097,7 +10097,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
      • Supported Values: $(_color_primary "openssl"), $(_color_primary "gpg")
      • Default Value:    $(_color_primary "openssl")")
 
-  _settings_list_items+=("$(_color_id_brackets '8')  footer")
+  _settings_list_items+=("$(_color_brackets_id '8')  footer")
   _settings_help_items+=("\
     $(_color_secondary " ------")
      By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
@@ -10105,7 +10105,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
      • Default Value: $(_color_primary "1")")
 
-  _settings_list_items+=("$(_color_id_brackets '9')  header")
+  _settings_list_items+=("$(_color_brackets_id '9')  header")
   _settings_help_items+=("\
     $(_color_secondary " ------")
      By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
@@ -10122,14 +10122,14 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
      • Default Value: $(_color_primary "2")")
 
-  _settings_list_items+=("$(_color_id_brackets '10') limit")
+  _settings_list_items+=("$(_color_brackets_id '10') limit")
   _settings_help_items+=("\
     $(_color_secondary " -----")
      The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
 
      • Default Value: $(_color_primary "20")")
 
-  _settings_list_items+=("$(_color_id_brackets '11') nb_dir")
+  _settings_list_items+=("$(_color_brackets_id '11') nb_dir")
   _settings_help_items+=("\
     $(_color_secondary " ------")
      The location of the directory that contains the notebooks.
@@ -10139,7 +10139,7 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 
      • Default Value: $(_color_primary '~/.nb')")
 
-  _settings_list_items+=("$(_color_id_brackets '12') syntax_theme")
+  _settings_list_items+=("$(_color_brackets_id '12') syntax_theme")
   _settings_help_items+=("\
     $(_color_secondary " ------------")
      The syntax highlighting theme. View examples with:
@@ -10820,7 +10820,7 @@ _show() {
     fi
 
     local _info_line=
-    _info_line+="$(_color_id_brackets "${_maybe_scoped_id}") "
+    _info_line+="$(_color_brackets_id "${_maybe_scoped_id}") "
 
     local _indicators
     _indicators="$(_show "${_notebook_path}/${_basename}" --indicators)"
@@ -11431,7 +11431,7 @@ HEREDOC
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
         IFS='' read -r -e -d $'\n' \
-          -p "$(_color_primary "Proceed?") $(_color_yn_prompt) " __yn
+          -p "$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
         case ${__yn} in
           [Yy]*)
@@ -11968,7 +11968,7 @@ _SCOPED="$(
 
 # Color functions.
 _highlight() { _color_primary "${@:-}"; }
-_id_brackets_color() { _color_id_brackets "${@:-}"; }
+_id_brackets_color() { _color_brackets_id "${@:-}"; }
 
 ###############################################################################
 # _main()
