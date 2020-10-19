@@ -6681,7 +6681,10 @@ _ls() {
 
     if _notebooks current --selected
     then
-      _maybe_scope="$(_notebooks current --escaped --no-color):"
+      _maybe_scope="$(
+        _notebooks show "$(_notebooks current)" --escaped --no-color
+      ):"
+
       _maybe_scope_padded_left=" ${_maybe_scope}"
       _maybe_scope_padded_right="${_maybe_scope} "
     fi
@@ -7165,7 +7168,7 @@ _move() {
 
   local _notebook_escaped_name
   _notebook_escaped_name="$(
-    _notebooks current --escaped --no-color
+    _notebooks show "$(_notebooks current)" --escaped --no-color
   )"
 
   local _notebook_path
