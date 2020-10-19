@@ -251,13 +251,12 @@ Help information:
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
 
   [[ ${status}      -eq 0                               ]]
   [[ "${lines[6]}"  =~  ❯                               ]]
   [[ "${lines[6]}"  =~  nb\ multi\\\ word:add           ]]
   [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
-  [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
+  [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
 }
 
 # header ######################################################################
