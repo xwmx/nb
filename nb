@@ -5035,6 +5035,7 @@ HEREDOC
   #   Sync <notebook-path> or the current notebook with the remote.
   _git_sync() {
     local _notebook_path="${1:-}"
+    local _prompt="${GIT_TERMINAL_PROMPT:-0}"
 
     if [[ -z "${_notebook_path:-}" ]]
     then
@@ -5049,11 +5050,19 @@ HEREDOC
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
-    if ! GIT_TERMINAL_PROMPT="${GIT_TERMINAL_PROMPT:-1}" \
-           git -C "${_notebook_path}" fetch &>/dev/null
+    if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
     then
-      _warn printf "Unable to fetch from remote.\\n"
-      return 1
+      if ((_prompt))
+      then # fetch again, displaying prompt preceeded by a newline on error
+        printf "\\n"
+
+        if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch &>/dev/null
+        then
+          return 1
+        fi
+      else
+        return 1
+      fi
     fi
 
     if ! git -C "${_notebook_path}" show-branch \
@@ -11258,8 +11267,6 @@ HEREDOC
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
         _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
 
-      printf "\\n"
-
       _git sync "${NB_NOTEBOOK_PATH}"
     fi && _notebook_sync_successful=1
 
@@ -11267,6 +11274,8 @@ HEREDOC
        _git dirty           "${NB_NOTEBOOK_PATH}" ||
        _git out_of_sync     "${NB_NOTEBOOK_PATH}"
     then
+      printf "\\n"
+
       _exit_1 cat <<HEREDOC
 Syncing failed.
 
@@ -11300,7 +11309,9 @@ Set the remote for a notebook named "example":
 
 HEREDOC
   else
-    _exit_1 printf "Syncing failed.\\n"
+    printf "\\n"
+
+    _exit_1 printf "Sync failed.\\n"
   fi
 }
 
