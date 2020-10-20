@@ -701,30 +701,6 @@ _color_brackets_id() {
     "${_TPUT_SGR0}"
 }
 
-# _color_brackets_yn_prompt()
-#
-# Usage:
-#   _color_brackets_yn_prompt
-#
-# Description:
-#   Print a colorized [y/N] prompt.
-_color_brackets_yn_prompt() {
-  if ! ((_COLOR_ENABLED))
-  then
-    printf "%s[y/N]\\n" "${_TPUT_SGR0}"
-    return 0
-  fi
-
-  printf "%s%s[%sy%s/%sN%s]%s"  \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SETAF_8}"          \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SGR0}"             \
-    "${_TPUT_SETAF_8}"          \
-    "${_TPUT_SGR0}"
-}
-
 # _color_primary()
 #
 # Usage:
@@ -3480,7 +3456,7 @@ _bookmark() {
         while true
         do
           IFS='' read -r -e -d $'\n' -p "\
-Check the Wayback Machine for an archived version instead? $(_color_brackets_yn_prompt) " __yn
+Check the Wayback Machine for an archived version instead? $(_color_brackets_id "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -4148,7 +4124,7 @@ _delete() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?")  $(_color_brackets_id "y/N") " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -4705,7 +4681,7 @@ _export() {
         while true
         do
           IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Overwrite existing file?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Overwrite existing file?") $(_color_brackets_id "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -7213,7 +7189,7 @@ _move() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?") $(_color_brackets_id "y/N") " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -8562,7 +8538,7 @@ _plugins() {
             while true
             do
               IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Reinstall?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Reinstall?") $(_color_brackets_id "y/N") " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -8625,7 +8601,7 @@ HEREDOC
         while true
         do
           IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?") $(_color_brackets_id "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -8751,7 +8727,7 @@ _remote() {
             printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url}")"
 
             IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?") $(_color_brackets_id "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -8810,7 +8786,7 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
           _print_line "--------------"
 
           IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?") $(_color_brackets_id "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -9015,7 +8991,7 @@ _rename() {
     while true
     do
       IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?")  $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?")  $(_color_brackets_id "y/N") " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -11455,7 +11431,7 @@ HEREDOC
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
         IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
+$(_color_primary "Proceed?") $(_color_brackets_id "y/N") " __yn
 
         case ${__yn} in
           [Yy]*)
