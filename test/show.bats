@@ -518,6 +518,26 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
+@test "\`show <id> --info-line\` prints escaped multi-word notebook name when scoped." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "multi word"
+    run "${_NB}" multi\ word:add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show multi\ word:1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ "${output}" =~ multi\\\ word:1           ]]
+  [[ "${output}" =~ multi\\\ word:example.md  ]]
+  [[ "${output}" =~ Example\ Title            ]]
+}
+
 @test "\`show <id> --info-line\` includes indicators." {
   {
     run "${_NB}" init
