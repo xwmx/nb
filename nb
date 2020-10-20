@@ -6445,11 +6445,8 @@ HEREDOC
           _info_line="${_list_item}"
           _info_line_color="${_list_item}"
         else
-          local _list_item_id="${_id_item}${_spaces}${_list_item}"
-          local _list_item_id_color="${_id_item_color}${_spaces}${_list_item}"
-
-          _info_line="${_list_item_id}"
-          _info_line_color="${_list_item_id_color}"
+          _info_line="${_id_item}${_spaces}${_list_item}"
+          _info_line_color="${_id_item_color}${_spaces}${_list_item}"
         fi
 
         if ((_list_color_enabled))  &&
