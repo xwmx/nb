@@ -6441,32 +6441,12 @@ HEREDOC
           _info_line_color="${_id_item_color}${_spaces}${_list_item}"
         fi
 
-        local _visible_info_line_length=
-
         if ((_list_color_enabled))  &&
            ! ((_list_filenames))    &&
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          _visible_info_line_length="$(
-            _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
-          )"
-        fi
-
-        if ((_list_color_enabled))  &&
-           ! ((_print_excerpt))     &&
-           ! ((_list_filenames))    &&
-           ! ((_list_paths))        &&
-           ! ((_no_id))
-        then
-          if [[ "${_visible_info_line_length}" -gt "${_columns}" ]] &&
-             {
-               [[ -n "${_maybe_title:-}" ]] ||
-               [[ -n "${_first_line:-}"  ]]
-             }
-          then
-            _wrap off
-          fi
+          _wrap off
         fi
 
         if ((_list_color_enabled))
@@ -6477,19 +6457,11 @@ HEREDOC
         fi
 
         if ((_list_color_enabled))  &&
-           ! ((_print_excerpt))     &&
            ! ((_list_filenames))    &&
            ! ((_list_paths))        &&
            ! ((_no_id))
         then
-          if [[ "${_visible_info_line_length}" -gt "${_columns}" ]] &&
-             {
-               [[ -n "${_maybe_title:-}" ]] ||
-               [[ -n "${_first_line:-}"  ]]
-             }
-          then
-            _wrap on
-          fi
+          _wrap on
         fi
 
         # End of line.
@@ -6499,6 +6471,11 @@ HEREDOC
            [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
            _file_is_text "${_notebook_path}/${__basename}"
         then # excerpt is specified with a non-zero digit, required by `head`.
+          local _visible_info_line_length=
+          _visible_info_line_length="$(
+            _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
+          )"
+
           if [[ -z "${_visible_info_line_length:-}"               ]] ||
              [[ "${_visible_info_line_length}" -gt "${_columns}"  ]]
           then
