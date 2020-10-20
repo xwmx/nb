@@ -6367,7 +6367,7 @@ HEREDOC
           elif _file_is_audio "${_notebook_path}/${__basename}"
           then
             _indicators+="🔉 "
-          elif [[ "${__basename}" =~ epub$ ]]
+          elif [[ "${__basename}" =~ \.epub$ ]]
           then
             _indicators+="📖 "
           fi
