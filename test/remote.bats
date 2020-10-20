@@ -34,6 +34,35 @@ load test_helper
   [[ ${status} -eq 0                        ]]
 }
 
+@test "\`remote\` with no arguments and does not trigger git commit." {
+  {
+    run "${_NB}" init
+    cd "${_NOTEBOOK_PATH}" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+
+    touch "${_NOTEBOOK_PATH}/example.md"
+
+    "${_NB}" git dirty
+  }
+
+  run "${_NB}" remote
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}" == "${_GIT_REMOTE_URL}"  ]]
+  [[ ${status} -eq 0                        ]]
+
+  # Does not create git commit
+  cd "${_NOTEBOOK_PATH}" || return 1
+  if [[ -n "$(git status --porcelain)" ]]
+  then
+    sleep 1
+  fi
+  ! git log | grep -q '\[nb\] Commit'
+  ! git log | grep -q '\[nb\] Sync'
+}
+
 # remote remove ###############################################################
 
 @test "\`remote remove\` with no existing remote returns 1 and prints message." {
