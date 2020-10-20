@@ -6392,8 +6392,28 @@ HEREDOC
 
         local _list_item="${_maybe_padded_indicators}${_title_basename_or_path}"
 
-        if ! ((_no_id))
+        if ! ((_list_filenames))  &&
+           ! ((_list_paths))      &&
+           ! ((_print_excerpt))   &&
+           [[ "${_title_basename_or_path}" == "${__basename}" ]]
         then
+          local _first_line=
+          _first_line="$(_get_first_line "${_notebook_path}/${__basename}")"
+
+          if [[ -n "${_first_line:-}" ]]
+          then
+            _list_item="${_list_item} · \"${_first_line}\""
+          fi
+        fi
+
+        local _info_line=
+        local _info_line_color=
+
+        if ((_no_id))
+        then
+          _info_line="${_list_item}"
+          _info_line_color="${_list_item}"
+        else
           local _item_identifier=
           local _max_identifier=
 
@@ -6417,34 +6437,12 @@ HEREDOC
           _id_item_color="$(_color_brackets "${_item_identifier}")"
 
           # Use calculated number of spaces for nicer formatting.
-          local _spaces=''
-          local _spaces_length=1
+          local _spaces_length=
           _spaces_length=$(( ${#_max_identifier} + 3 - ${#_id_item} ))
+
+          local _spaces=
           printf -v _spaces '%*s' "${_spaces_length}" ""
-        fi
 
-        if ! ((_list_filenames))  &&
-           ! ((_list_paths))      &&
-           ! ((_print_excerpt))   &&
-           [[ "${_title_basename_or_path}" == "${__basename}" ]]
-        then
-          local _first_line=
-          _first_line="$(_get_first_line "${_notebook_path}/${__basename}")"
-
-          if [[ -n "${_first_line:-}" ]]
-          then
-            _list_item="${_list_item} · \"${_first_line}\""
-          fi
-        fi
-
-        local _info_line=
-        local _info_line_color=
-
-        if ((_no_id))
-        then
-          _info_line="${_list_item}"
-          _info_line_color="${_list_item}"
-        else
           _info_line="${_id_item}${_spaces}${_list_item}"
           _info_line_color="${_id_item_color}${_spaces}${_list_item}"
         fi
