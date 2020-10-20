@@ -619,16 +619,17 @@ __load_themes() {
 #   nb settings colors
 #
 # Supported Values: [0..255+]
-__set_nb_color_primary() {
+__set_color_primary() {
   local _colors=
   _colors="$(tput colors)"
+
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-69}"
   else
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-4}"
   fi
-}; __set_nb_color_primary
+}; __set_color_primary
 
 # $NB_COLOR_SECONDARY
 #
