@@ -8748,7 +8748,7 @@ _remote() {
         then
           while true
           do
-            printf "Removing remote %s\\n" "$(_color_primary "${_existing_url}")"
+            printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url}")"
 
             IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
@@ -8766,7 +8766,7 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
         fi
 
         git -C "${_notebook_path}" remote rm origin &&
-          printf "Removed remote %s\\n"             \
+          printf "Removed remote: %s\\n"            \
             "$(_color_primary "${_existing_url}")"  &&
               return 0
       else
@@ -8781,7 +8781,7 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
 
       if ((_remote_exists)) && [[ "${_existing_url:-}" == "${_url:-}" ]]
       then
-        _exit_1 printf "Remote already set to %s\\n" \
+        _exit_1 printf "Remote already set to: %s\\n" \
           "$(_color_primary "${_url}")"
       fi
 
@@ -8824,16 +8824,16 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
         done
       fi
 
+      local _subcommand="add"
+
       if ((_remote_exists))
       then
-        git -C "${_notebook_path}" remote set-url origin "${_url}"    &&
-          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
-          return 0
-      else
-        git -C "${_notebook_path}" remote add origin "${_url}"        &&
-          printf "Remote set to %s\\n" "$(_color_primary "${_url}")"  &&
-          return 0
+        _subcommand="set-url"
       fi
+
+      git -C "${_notebook_path}" remote "${_subcommand}" origin "${_url}" &&
+        printf "Remote set to %s\\n" "$(_color_primary "${_url}")"        &&
+          return 0
       ;;
     *)
       if ((_remote_exists))
