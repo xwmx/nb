@@ -6384,7 +6384,7 @@ HEREDOC
           fi
         fi
 
-        local _list_item="${_indicators}${_title_basename_or_path}"
+        local _item_info="${_indicators}${_title_basename_or_path}"
 
         if ! ((_list_filenames))  &&
            ! ((_list_paths))      &&
@@ -6396,7 +6396,7 @@ HEREDOC
 
           if [[ -n "${_first_line:-}" ]]
           then
-            _list_item="${_list_item} · \"${_first_line}\""
+            _item_info="${_item_info} · \"${_first_line}\""
           fi
         fi
 
@@ -6405,8 +6405,8 @@ HEREDOC
 
         if ((_no_id))
         then
-          _info_line="${_list_item}"
-          _info_line_color="${_list_item}"
+          _info_line="${_item_info}"
+          _info_line_color="${_item_info}"
         else
           local _item_identifier=
           local _max_identifier=
@@ -6424,21 +6424,21 @@ HEREDOC
             _max_identifier="${_max_id}"
           fi
 
-          local _id_item=
-          _id_item="[${_item_identifier}]"
+          local _brackets_identifier=
+          _brackets_identifier="[${_item_identifier}]"
 
-          local _id_item_color=
-          _id_item_color="$(_color_brackets "${_item_identifier}")"
+          local _brackets_identifier_color=
+          _brackets_identifier_color="$(_color_brackets "${_item_identifier}")"
 
           # Use calculated number of spaces for nicer formatting.
           local _spaces_length=
-          _spaces_length=$(( ${#_max_identifier} + 3 - ${#_id_item} ))
+          _spaces_length=$(( ${#_max_identifier} + 1 - ${#_item_identifier} ))
 
           local _spaces=
           printf -v _spaces '%*s' "${_spaces_length}" ""
 
-          _info_line="${_id_item}${_spaces}${_list_item}"
-          _info_line_color="${_id_item_color}${_spaces}${_list_item}"
+          _info_line="${_brackets_identifier}${_spaces}${_item_info}"
+          _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
         fi
 
         if ((_list_color_enabled))  &&
