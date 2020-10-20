@@ -24,6 +24,241 @@ line four
 HEREDOC
 }
 
+# `scoped:ls` #################################################################
+
+@test "\`scoped:ls\` exits with 0 and lists files in reverse order." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "one.md" --title "one"
+    "${_NB}" one:add "two.md" --title "two"
+    "${_NB}" one:add "three.md" --title "three"
+    _files=($(ls "${NB_DIR}/one/"))
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${lines[0]}" =~ one:3   ]]
+  [[ "${lines[0]}" =~ three   ]]
+  [[ "${lines[1]}" =~ one:2   ]]
+  [[ "${lines[1]}" =~ two     ]]
+  [[ "${lines[2]}" =~ one:1   ]]
+  [[ "${lines[2]}" =~ one     ]]
+}
+
+@test "\`scoped:ls\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 items.
+
+Add a note:
+  $(_color_primary 'nb one:add')
+Add a bookmark:
+  $(_color_primary 'nb one: <url>')
+Import a file:
+  $(_color_primary 'nb one:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:ls\` escapes multi-word notebook name." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "multi word"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" multi\ word:ls
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 items.
+
+Add a note:
+  $(_color_primary 'nb multi\ word:add')
+Add a bookmark:
+  $(_color_primary 'nb multi\ word: <url>')
+Import a file:
+  $(_color_primary 'nb multi\ word:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:ls --bookmarks\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls --bookmarks
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 bookmarks.
+
+Add a bookmark:
+  $(_color_primary 'nb one: <url>')
+Help information:
+  $(_color_primary 'nb help bookmark')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:ls --documents\` with empty notebook prints help info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+  }
+
+  NB_FOOTER=0 NB_HEADER=0 run "${_NB}" one:ls --documents
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 document files.
+
+Import a file:
+  $(_color_primary 'nb one:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help import')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+# footer ######################################################################
+
+@test "\`ls\` includes footer." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${lines[6]}" =~ ❯ ]]
+}
+
+@test "\`NB_FOOTER=0 ls\` does not include footer." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  NB_FOOTER=0 run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status} -eq 0      ]]
+  [[ ! "${lines[6]}" =~ ❯ ]]
+}
+
+@test "\`ls\` footer includes command names." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status}      -eq 0                 ]]
+  [[ "${lines[6]}"  =~  ❯                 ]]
+  [[ "${lines[6]}"  =~  nb\ add           ]]
+  [[ "${lines[6]}"  =~  nb\ \<url\>       ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ \<id\>  ]]
+}
+
+@test "\`ls\` footer scopes command names to a selected notebook." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+    run "${_NB}" notebooks add "example"
+    run "${_NB}" use example
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" home:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${lines[0]}" "three"
+
+  [[ ${status}      -eq 0                     ]]
+  [[ "${lines[6]}"  =~  ❯                     ]]
+  [[ "${lines[6]}"  =~  nb\ home:add          ]]
+  [[ "${lines[6]}"  =~  nb\ home:\ \<url\>    ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ home:\<id\> ]]
+}
+
+@test "\`ls\` footer escapes multi-word selected notebook names." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+    run "${_NB}" notebooks add "example"
+    run "${_NB}" use example
+    run "${_NB}" notebooks rename home "multi word"
+
+    _notebooks=(
+      "example"
+      "multi word"
+    )
+
+    diff                                      \
+      <("${_NB}" notebooks --no-color)        \
+      <(printf "%s\\n" "${_notebooks[@]:-}")
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" multi\ word:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0                               ]]
+  [[ "${lines[6]}"  =~  ❯                               ]]
+  [[ "${lines[6]}"  =~  nb\ multi\\\ word:add           ]]
+  [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
+  [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
+}
+
 # header ######################################################################
 
 @test "\`ls\` includes header." {
@@ -56,6 +291,37 @@ HEREDOC
 
   [[ ${status} -eq 0          ]]
   [[ ! "${lines[0]}" =~ home  ]]
+}
+
+@test "\`ls\` header does not escape multi-word notebook names." {
+  {
+    _setup_ls
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+
+    run "${_NB}" notebooks add "example"
+    run "${_NB}" use example
+    run "${_NB}" notebooks rename home "multi word"
+
+    _notebooks=(
+      "example"
+      "multi word"
+    )
+
+    diff                                      \
+      <("${_NB}" notebooks --no-color)        \
+      <(printf "%s\\n" "${_notebooks[@]:-}")
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ multi\ word ]]
 }
 
 @test "\`ls\` header shows added and deleted notebook." {
@@ -1167,38 +1433,4 @@ HEREDOC
   [[ "${lines[0]}" =~ example:matchless-query ]]
   [[ "${lines[0]}" =~ Type                    ]]
   [[ "${lines[0]}" =~ document                ]]
-}
-
-# footer ######################################################################
-
-@test "\`ls\` includes footer." {
-  {
-    _setup_ls
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
-
-  [[ ${status} -eq 0    ]]
-  [[ "${lines[6]}" =~ ❯ ]]
-}
-
-@test "\`NB_FOOTER=0 ls\` does not include footer." {
-  {
-    _setup_ls
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
-  }
-
-  NB_FOOTER=0 run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${lines[0]}" "three"
-
-  [[ ${status} -eq 0      ]]
-  [[ ! "${lines[6]}" =~ ❯ ]]
 }

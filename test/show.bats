@@ -225,7 +225,6 @@ load test_helper
   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
 
-
 # `show <path> --path` #######################################################
 
 @test "\`show <path> --path\` exits with status 0 and prints note path." {

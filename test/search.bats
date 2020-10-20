@@ -91,6 +91,32 @@ _search_all_setup() {
   [[ "${lines[2]}"    =~ idyl       ]]
 }
 
+@test "\`search <one match>\` includes emoji indicator." {
+  {
+    _setup_search
+
+    run "${_NB}" add                        \
+      --filename  "example.bookmark.md"     \
+      --content   "<http://example.test/>"  \
+      --title     "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search 'example.test' --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}        -eq 0                   ]]
+  [[ ! "${lines[0]}"  =~ example.bookmark.md  ]]
+  [[ "${lines[0]}"    =~ Example\ Title       ]]
+  [[ "${lines[0]}"    =~ \]\ 🔖               ]]
+  [[ "${lines[1]}"    =~ -*-                  ]]
+  [[ "${lines[2]}"    =~ example.test         ]]
+}
+
 @test "\`search <one match> --path\` exits with status 0 and prints path." {
   {
     _setup_search
@@ -157,6 +183,89 @@ HEREDOC
   [[ "${lines[1]}"  =~ -*-              ]]
   [[ "${lines[2]}"  =~ Filename\ Match  ]]
   [[ "${lines[2]}"  =~ 1-example.md     ]]
+}
+
+# `search` spacing and alignment ##############################################
+
+@test "\`search --list\` / \`search -l\` includes extra spacing to align with max notebook id length." {
+  {
+    _setup_search
+
+    run "${_NB}" add                            \
+      --filename  "example-1.bookmark.md"       \
+      --content   "<http://example.test/>"      \
+      --title     "Example Title One"
+
+    for ((_i=0; _i < 11; _i++))
+    do
+      run "${_NB}" add "note ${_i}"
+    done
+
+    run "${_NB}" add                            \
+      --filename  "example-2.bookmark.md"       \
+      --content   "<http://example.test/>"      \
+      --title     "Example Title Two"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search 'example.test' --no-color --use-grep --list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}        -eq 0                     ]]
+  [[ ! "${lines[0]}"  =~ example-1.bookmark.md  ]]
+  [[ "${lines[0]}"    =~ Example\ Title\ One    ]]
+  [[ "${lines[0]}"    =~ \]\ \ 🔖               ]]
+
+  [[ ! "${lines[1]}"  =~ example-2.bookmark.md  ]]
+  [[ "${lines[1]}"    =~ Example\ Title\ Two    ]]
+  [[ "${lines[1]}"    =~ \]\ 🔖                 ]]
+}
+
+@test "\`search\` (no \`--list\` / \`-l\`) does not include extra spacing." {
+  {
+    _setup_search
+
+    run "${_NB}" add                            \
+      --filename  "example-1.bookmark.md"       \
+      --content   "<http://example.test/>"      \
+      --title     "Example Title One"
+
+    for ((_i=0; _i < 11; _i++))
+    do
+      run "${_NB}" add "note ${_i}"
+    done
+
+    run "${_NB}" add                            \
+      --filename  "example-2.bookmark.md"       \
+      --content   "<http://example.test/>"      \
+      --title     "Example Title Two"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search 'example.test' --no-color --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}        -eq 0                     ]]
+  [[ ! "${lines[0]}"  =~ example-1.bookmark.md  ]]
+  [[ "${lines[0]}"    =~ Example\ Title\ One    ]]
+  [[ "${lines[0]}"    =~ \]\ 🔖                 ]]
+  [[ ! "${lines[0]}"  =~ \]\ \ 🔖               ]]
+  [[ "${lines[1]}"    =~ -*-                    ]]
+  [[ "${lines[2]}"    =~ example.test           ]]
+
+  [[ ! "${lines[3]}"  =~ example-2.bookmark.md  ]]
+  [[ "${lines[3]}"    =~ Example\ Title\ Two    ]]
+  [[ "${lines[3]}"    =~ \]\ 🔖                 ]]
+  [[ "${lines[4]}"    =~ -*-                    ]]
+  [[ "${lines[5]}"    =~ example.test           ]]
 }
 
 # `search <multiple matches> [--path] [--list]` ###############################
@@ -423,7 +532,6 @@ HEREDOC
   [[ "${output}"  =~ in\ any\ notebook  ]]
   [[ "${output}"  =~ no\ match          ]]
 }
-
 
 @test "\`search <multiple matches> --all --path\` exits with 0 and prints paths." {
   {

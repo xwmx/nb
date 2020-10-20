@@ -1088,7 +1088,6 @@ HEREDOC
   [[ "${lines[2]}" =~ one     ]]
 }
 
-
 @test "\`scoped:list\` with empty notebook prints help info." {
   {
     "${_NB}" init
@@ -1109,6 +1108,33 @@ Add a bookmark:
   $(_color_primary 'nb one: <url>')
 Import a file:
   $(_color_primary 'nb one:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:list\` escapes multi-word notebook name." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "multi word"
+  }
+
+  run "${_NB}" multi\ word:list
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 items.
+
+Add a note:
+  $(_color_primary 'nb multi\ word:add')
+Add a bookmark:
+  $(_color_primary 'nb multi\ word: <url>')
+Import a file:
+  $(_color_primary 'nb multi\ word:import (<path> | <url>)')
 Help information:
   $(_color_primary 'nb help')"
 
