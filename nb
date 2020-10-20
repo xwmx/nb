@@ -6345,7 +6345,6 @@ HEREDOC
 
         local _extra_length=0
         local _indicators=
-        local _maybe_padded_indicators=
 
         if ((_print_indicators))
         then
@@ -6383,14 +6382,9 @@ HEREDOC
             _indicators+="✅ "
             _extra_length=1
           fi
-
-          if [[ -n "${_indicators:-}" ]]
-          then
-            _maybe_padded_indicators="${_indicators}"
-          fi
         fi
 
-        local _list_item="${_maybe_padded_indicators}${_title_basename_or_path}"
+        local _list_item="${_indicators}${_title_basename_or_path}"
 
         if ! ((_list_filenames))  &&
            ! ((_list_paths))      &&
