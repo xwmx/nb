@@ -6290,7 +6290,7 @@ HEREDOC
               continue
             fi
           else
-            # Turn on a case-insensitive matching (-s set nocasematch)
+            # turn on a case-insensitive matching (-s set nocasematch)
             shopt -s nocasematch
 
             if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
@@ -6309,7 +6309,7 @@ HEREDOC
               fi
             fi
 
-            # Turn off a case-insensitive matching (-u unset nocasematch)
+            # turn off a case-insensitive matching (-u unset nocasematch)
             shopt -u nocasematch
           fi
         fi
@@ -6318,7 +6318,7 @@ HEREDOC
         then # the limit has been reached.
           if [[ -n "${_selector_identifier:-}" ]]
           then
-            # Keep looking for matches to count total.
+            # keep looking for matches to count total
             continue
           else
             break
@@ -6338,7 +6338,7 @@ HEREDOC
           fi
 
           if [[ -n "${_maybe_title}" ]]
-          then # note file has title.
+          then
             _title_basename_or_path="${_maybe_title}"
           fi
         fi
@@ -6348,7 +6348,7 @@ HEREDOC
 
         if ((_print_indicators))
         then
-          # TODO: `show --indicators` duplicated for performance (~20ms?)
+          # TODO: `show --indicators` duplicated for performance
           if _file_is_bookmark "${_notebook_path}/${__basename}"
           then
             _indicators+="🔖 "
@@ -6427,7 +6427,7 @@ HEREDOC
           local _brackets_identifier_color=
           _brackets_identifier_color="$(_color_brackets "${_item_identifier}")"
 
-          # Use calculated number of spaces for nicer formatting.
+          # use calculated number of spaces for nicer formatting
           local _spaces_length=
           _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
 
@@ -6461,13 +6461,13 @@ HEREDOC
           _wrap on
         fi
 
-        # End of line.
+        # end of line
         printf "\\n"
 
         if ((_print_excerpt))                               &&
            [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
            _file_is_text "${_notebook_path}/${__basename}"
-        then # excerpt is specified with a non-zero digit, required by `head`.
+        then # excerpt is specified with a non-zero digit, required by `head`
           local _visible_info_line_length=
           _visible_info_line_length="$(
             _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
