@@ -8802,7 +8802,7 @@ $(_color_primary "Proceed?") $(_color_brackets_yn_prompt) " __yn
             printf "Adding remote to: %s\\n" \
               "$(_color_primary "$(_notebooks current --name)")"
 
-            _print_line "Adding remote to:  $(_notebooks current --name)"
+            _print_line "Adding remote to: $(_notebooks current --name)"
 
             printf "URL: %s\\n" "$(_color_primary "${_url}")"
           fi
