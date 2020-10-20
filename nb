@@ -11619,7 +11619,6 @@ _SUBCOMMANDS=(
   status
   subcommands
   sync
-  todos
   u
   update
   upgrade
@@ -11678,7 +11677,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   status
   subcommands
   sync
-  todos
   u
   update
   use
@@ -11722,7 +11720,6 @@ _GIT_SUBCOMMANDS=(
   preview
   q
   rename
-  todos
   s
   show
   search
