@@ -6467,8 +6467,8 @@ HEREDOC
         # End of line.
         printf "\\n"
 
-        if ((_print_excerpt)) &&
-           [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
+        if ((_print_excerpt))                               &&
+           [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
            _file_is_text "${_notebook_path}/${__basename}"
         then # excerpt is specified with a non-zero digit, required by `head`.
           local _visible_info_line_length=
