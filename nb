@@ -6447,6 +6447,8 @@ HEREDOC
           _info_line_color="${_id_item_color}${_spaces}${_list_item}"
         fi
 
+        local _visible_info_line_length=
+
         if ((_list_color_enabled))  &&
            ! ((_list_filenames))    &&
            ! ((_list_paths))        &&
