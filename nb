@@ -659,26 +659,6 @@ export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(tput setaf 8)"
 export _TPUT_COLOR_PRIMARY=
        _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}")"
 
-# _color_dim()
-#
-# Usage:
-#   _color_dim <string>
-#
-# Print the given string with the dim color.
-_color_dim() {
-  if ! ((_COLOR_ENABLED))
-  then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
-    return 0
-  fi
-
-  printf "%s%s%s%s"     \
-    "${_TPUT_SGR0}"     \
-    "${_TPUT_SETAF_8}"  \
-    "${1:-}"            \
-    "${_TPUT_SGR0}"
-}
-
 # _color_brackets()
 #
 # Usage:
@@ -699,6 +679,26 @@ _color_brackets() {
     "${_TPUT_COLOR_PRIMARY}"  \
     "${1:-}"                  \
     "${_TPUT_SETAF_8}"        \
+    "${_TPUT_SGR0}"
+}
+
+# _color_dim()
+#
+# Usage:
+#   _color_dim <string>
+#
+# Print the given string with the dim color.
+_color_dim() {
+  if ! ((_COLOR_ENABLED))
+  then
+    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    return 0
+  fi
+
+  printf "%s%s%s%s"     \
+    "${_TPUT_SGR0}"     \
+    "${_TPUT_SETAF_8}"  \
+    "${1:-}"            \
     "${_TPUT_SGR0}"
 }
 
