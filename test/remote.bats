@@ -42,6 +42,8 @@ load test_helper
 
     touch "${_NOTEBOOK_PATH}/example.md"
 
+    [[ -f "${_NOTEBOOK_PATH}/example.md" ]]
+
     "${_NB}" git dirty
   }
 
@@ -53,9 +55,13 @@ load test_helper
   [[ "${lines[0]}" == "${_GIT_REMOTE_URL}"  ]]
   [[ ${status} -eq 0                        ]]
 
+  [[ -f "${_NOTEBOOK_PATH}/example.md"      ]]
+
+  "${_NB}" git dirty
+
   # Does not create git commit
   cd "${_NOTEBOOK_PATH}" || return 1
-  if [[ -n "$(git status --porcelain)" ]]
+  if [[ -n "$(git status --porcelain)"      ]]
   then
     sleep 1
   fi
