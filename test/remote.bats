@@ -34,7 +34,7 @@ load test_helper
   [[ ${status} -eq 0                        ]]
 }
 
-@test "\`remote\` with no arguments and does not trigger git commit." {
+@test "\`remote\` with no arguments does not trigger git commit." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
