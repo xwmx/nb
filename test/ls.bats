@@ -256,7 +256,8 @@ Help information:
   [[ "${lines[6]}"  =~  ❯                               ]]
   [[ "${lines[6]}"  =~  nb\ multi\\\ word:add           ]]
   [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
-  [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]] ||
+    [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
 }
 
 # header ######################################################################
