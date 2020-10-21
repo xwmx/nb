@@ -6409,8 +6409,9 @@ HEREDOC
           _info_line_color="${_item_info}"
         else
           local _item_identifier=
+          # use `sed` directly instead of `_index get_id` for performance
           _item_identifier="$(
-            NB_NOTEBOOK_PATH="${_notebook_path}" _index get_id "${__basename}"
+            sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
           )"
 
           local _max_identifier="${_max_id}"
