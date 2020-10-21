@@ -2068,19 +2068,8 @@ nb remote remove
 nb example:remote remove
 ```
 
-You can also turn off autosync with
-[`nb set auto_sync`](#auto_sync) and sync manually with
-[`nb sync`](#sync).
-
-#### Private Repositories and Git Credentials
-
-Syncing with private repositories requires configuring git to not prompt
-for credentials. For repositories cloned over HTTPS,
-[credentials can be cached with git
-](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git).
-For repositories cloned over SSH,
-[keys can be added to the ssh-agent
-](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+Automatic git syncing can be turned on or off with
+[`nb set auto_sync`](#auto_sync).
 
 To sync manually, use [`nb sync`](#sync):
 
@@ -2092,12 +2081,6 @@ nb sync
 nb example:sync
 ```
 
-If `nb sync` displays a password prompt, then follow the instructions
-above to configure your credentials. The password prompt can be used
-to authenticate, but `nb` does not cache or otherwise handle git
-credentials in any way, so there will likely be multiple password
-prompts during each sync if credentials are not configured.
-
 To bypass `nb` syncing and run `git` commands directly within the current
 notebook, use [`nb git`](#git):
 
@@ -2108,6 +2091,24 @@ nb git fetch origin
 # run `git status` in the notebook named "example"
 nb example:git status
 ```
+
+#### Private Repositories and Git Credentials
+
+Syncing with private repositories requires configuring git to not prompt
+for credentials. For repositories cloned over HTTPS,
+[credentials can be cached with git
+](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git).
+For repositories cloned over SSH,
+[keys can be added to the ssh-agent
+](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+
+Use [`nb sync`](#sync) within a notebook to determine whether your
+configuration is working. If `nb sync` displays a password prompt,
+then follow the instructions above to configure your credentials.
+The password prompt can be used to authenticate, but `nb` does not
+cache or otherwise handle git credentials in any way, so there will
+likely be multiple password prompts during each sync if credentials
+are not configured.
 
 #### Sync Conflict Resolution
 
