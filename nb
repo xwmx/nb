@@ -10490,7 +10490,7 @@ _show() {
     elif _file_is_audio "${_path}"
     then
       _indicators+="🔉 "
-    elif [[ "${_path}" =~ epub$ ]]
+    elif [[ "${_path}" =~ \.epub$ ]]
     then
       _indicators+="📖 "
     fi
