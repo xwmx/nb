@@ -2081,7 +2081,7 @@ nb sync
 nb example:sync
 ```
 
-To bypass `nb` syncing and run `git` commands directly within the current
+To bypass `nb` syncing and run `git` commands directly within a
 notebook, use [`nb git`](#git):
 
 ```bash
