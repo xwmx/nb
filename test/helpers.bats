@@ -460,7 +460,7 @@ HEREDOC
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NB}" add "fourteen.org"
+    cat <<HEREDOC | "${_NB}" add "fifteen.org"
 # -*- mode: org; coding: utf-8; -*-
 * Header Information                                               :noexport:
 #+TITLE: Example
@@ -471,7 +471,7 @@ HEREDOC
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NB}" add "fifteen.latex"
+    cat <<HEREDOC | "${_NB}" add "sixteen.latex"
 \documentclass{article}
 \usepackage{graphicx}
 
@@ -536,6 +536,129 @@ HEREDOC
   [[ "${lines[13]}" == "[14] Example Multi-Line Org Title"  ]]
   [[ "${lines[14]}" == "[15] Example Multi-Line Org Title"  ]]
   [[ "${lines[15]}" == "[16] Introduction to \LaTeX{}"      ]]
+}
+
+# `_get_first_line()` #########################################################
+
+@test "\`_get_first_line()\` returns first line." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "one.md"
+line one
+line two
+line three
+line four
+HEREDOC
+
+    _files=($(ls "${_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/one.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0           ]]
+  [[ "${output}"  ==  "line one"  ]]
+}
+
+@test "\`_get_first_line()\` returns first line after newlines." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "two.md"
+
+
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/two.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0             ]]
+  [[ "${output}"  ==  "line three"  ]]
+}
+
+@test "\`_get_first_line()\` returns first line after code block." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "three.md"
+\`\`\`example
+example=code
+\`\`\`
+
+line one
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/three.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${_NOTEBOOK_PATH}/three.md"
+
+  [[ ${status}    -eq 0           ]]
+  [[ "${output}"  ==  "line one"  ]]
+}
+
+@test "\`_get_first_line()\` returns first line after code block and front matter." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "four.md"
+---
+front: matter
+title: Example Title
+---
+
+\`\`\`example
+example=code
+\`\`\`
+
+line one
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/four.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0           ]]
+  [[ "${output}"  ==  "line one"  ]]
+}
+
+@test "\`_get_first_line()\` returns first line after front matter." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "five.md"
+---
+front: matter
+title: Example Title
+---
+
+line one
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/five.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0           ]]
+  [[ "${output}"  ==  "line one"  ]]
 }
 
 # `_get_unique_basename()` ####################################################
