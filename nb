@@ -1240,7 +1240,8 @@ Can't edit archives. Export archive and expand to edit.\\n"
       touch "${_file_path:-}"
     fi
 
-    eval "${_editor_command} \"${_file_path}\""
+    escaped=${_file_path//$/\\$}
+    eval "${_editor_command} \"$escaped\""
   fi
 }
 
