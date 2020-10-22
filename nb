@@ -1569,8 +1569,8 @@ _get_first_line() {
     if _file_is_text "${_path}"
     then
 
-      # Alternative
-      # -----------
+      # `awk` alternative
+      # -----------------
       #       awk -f - "${_path}" <<'HEREDOC'
       # (state == 0) && /^---$/ { state=1; next }
       # (state == 1) && /^---$/ { state=0; next }
@@ -1738,7 +1738,8 @@ _get_title() {
             _title="${_title%${BASH_REMATCH[1]}}"
           fi
 
-          # `sed` alternative:
+          # `sed` alternative
+          # -----------------
           # _title="$(
           #   printf "%s\\n" "${__line}"    \
           #     | sed                       \
