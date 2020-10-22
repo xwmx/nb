@@ -1189,28 +1189,31 @@ _edit_file() {
 
   cd "${_current_notebook_path}" || return 1
 
-  if _file_is_encrypted "${_file_path}"
+  if [[ -e "${_file_path}" ]]
   then
-    _exit_1 printf "\
+    if _file_is_encrypted "${_file_path}"
+    then
+      _exit_1 printf "\
 File must be decrypted before editing.\\n"
-  fi
+    fi
 
-  if _file_is_archive "${_file_path}" &&
-     [[ ! "${_file_path}" =~ docx$ ]]
-  then
-    _exit_1 printf "\
+    if _file_is_archive "${_file_path}" &&
+       [[ ! "${_file_path}" =~ docx$ ]]
+    then
+      _exit_1 printf "\
 Can't edit archives. Export archive and expand to edit.\\n"
-  fi
+    fi
 
-  if ! _file_is_text "${_file_path}" &&
-     [[ ! -d "${_file_path}" ]]
-  then
-    if _command_exists "xdg-open"
+    if ! _file_is_text "${_file_path}" &&
+       [[ ! -d "${_file_path}" ]]
     then
-      xdg-open "${_file_path}" && return 0
-    elif [[ "${OSTYPE}" =~ ^darwin ]]
-    then
-      open "${_file_path}" && return 0
+      if _command_exists "xdg-open"
+      then
+        xdg-open "${_file_path}" && return 0
+      elif [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        open "${_file_path}" && return 0
+      fi
     fi
   fi
 
