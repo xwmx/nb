@@ -3543,7 +3543,8 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
       local _header=
       _header="Add: $(_color_primary "${_ME} <url>")"
       _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
-cat <<HEREDOC
+
+      cat <<HEREDOC
 ${_header}
 $(_color_secondary "------------------------------------")
 HEREDOC
