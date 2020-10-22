@@ -1569,6 +1569,17 @@ _get_first_line() {
     if _file_is_text "${_path}"
     then
 
+      # Alternative
+      # -----------
+      #       awk -f - "${_path}" <<'HEREDOC'
+      # (state == 0) && /^---$/ { state=1; next }
+      # (state == 1) && /^---$/ { state=0; next }
+      # (state == 0) && /^```/  { state=1; next }
+      # (state == 1) && /^```/  { state=0; next }
+      #
+      # (state == 0) && /^./    { print; exit   }
+      # HEREDOC
+
       # Avoid single line being ignored.
       # https://stackoverflow.com/a/10929511
       while IFS= read -r __line || [[ -n "${__line}" ]]
