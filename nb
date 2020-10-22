@@ -5720,7 +5720,8 @@ _index() {
         # grep -n "^${1:-}$" "${2:-}" | cut -f1 -d:
         # awk 'match($0,v){print NR; exit}' v="^${1:-}$" "${2:-}"
         # rg --color=never --line-number "^${1:-}$" "${2:-}" | cut -d: -f1
-        sed -n "/^${1:-}$/=" "${2:-}"
+        escaped=$(printf "%s" "${1:-}" | sed -e 's/[\[\*]/\\&/g')
+        sed -n "/^$escaped$/=" "${2:-}"
       }
 
       local _basename="${2:-}"
@@ -6428,7 +6429,8 @@ HEREDOC
           local _item_identifier=
           # use `sed` directly instead of `_index get_id` for performance
           _item_identifier="$(
-            sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
+            escaped=$(printf "%s" "${__basename:-}" | sed -e 's/[\[\*]/\\&/g')
+            sed -n "/^$escaped$/=" "${_notebook_path:-}/.index"
           )"
 
           local _max_identifier="${_max_id}"
