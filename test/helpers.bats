@@ -661,6 +661,31 @@ HEREDOC
   [[ "${output}"  ==  "line one"  ]]
 }
 
+@test "\`_get_first_line()\` returns nothing with only code block and front matter." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "four.md"
+---
+front: matter
+title: Example Title
+---
+
+\`\`\`example
+example=code
+\`\`\`
+
+HEREDOC
+  }
+
+  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/four.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0 ]]
+  [[ -z "${output}"     ]]
+}
+
 # `_get_unique_basename()` ####################################################
 
 @test "\`_get_unique_basename()\` works for notes" {
