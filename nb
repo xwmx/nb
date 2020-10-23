@@ -1502,13 +1502,14 @@ _file_is_text() {
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
+  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}"    ||
     {
-      ! _file_is_image    "${_file_path:-}" &&
-      ! _file_is_document "${_file_path:-}" &&
-      ! _file_is_audio    "${_file_path:-}" &&
-      ! _file_is_video    "${_file_path:-}" &&
-      ! _file_is_archive  "${_file_path:-}" &&
+      ! _file_is_image    "${_file_path:-}"                           &&
+      ! _file_is_document "${_file_path:-}"                           &&
+      ! _file_is_audio    "${_file_path:-}"                           &&
+      ! _file_is_video    "${_file_path:-}"                           &&
+      ! _file_is_archive  "${_file_path:-}"                           &&
+      ! _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}"  &&
       [[ "$(file "${_file_path:-}"  \
               --exclude=apptype     \
               --exclude=encoding    \
