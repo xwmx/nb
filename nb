@@ -6443,8 +6443,7 @@ HEREDOC
             _max_identifier="${_notebook_escaped_name}:${_max_id}"
           fi
 
-          local _brackets_identifier=
-          _brackets_identifier="[${_item_identifier}]"
+          local _brackets_identifier="[${_item_identifier}]"
 
           # avoid calling `_color_brackets` for performance
           local _brackets_identifier_color="\
