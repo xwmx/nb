@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.7.6"
+_VERSION="5.7.7"
 
 # $_ME
 #
@@ -1385,6 +1385,8 @@ export _DOCUMENT_FILE_EXTENSIONS=(
   odt
   pdf
   rtf
+  xls
+  xlsx
 )
 _file_is_document() {
   local _file_path="${1:-}"
@@ -1502,13 +1504,16 @@ _file_is_text() {
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
+  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}"      ||
     {
-      ! _file_is_image    "${_file_path:-}" &&
-      ! _file_is_document "${_file_path:-}" &&
-      ! _file_is_audio    "${_file_path:-}" &&
-      ! _file_is_video    "${_file_path:-}" &&
-      ! _file_is_archive  "${_file_path:-}" &&
+      ! _file_is_image    "${_file_path:-}"                             &&
+      ! _file_is_document "${_file_path:-}"                             &&
+      ! _file_is_audio    "${_file_path:-}"                             &&
+      ! _file_is_video    "${_file_path:-}"                             &&
+      ! _file_is_archive  "${_file_path:-}"                             &&
+      [[ ! "${_file_type}" =~ \.epub$   ]]                              &&
+      [[ ! -d "${_file_path:-}"         ]]                              &&
+      ! _contains "${_file_type:-}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}"  &&
       [[ "$(file "${_file_path:-}"  \
               --exclude=apptype     \
               --exclude=encoding    \
@@ -1551,44 +1556,96 @@ _file_is_video() {
   LC_ALL=C _contains "${_file_type}" "${_VIDEO_FILE_EXTENSIONS[@]}"
 }
 
-# _get_first_line()
+# _get_content()
 #
 # Usage:
-#   _get_first_line <path>
+#   _get_content <path> [--title]
+#
+# Options:
+#   --title  Print the title or nothing if a title is not found.
 #
 # Description:
-#   Print the first line of the file at <path>, skipping any front matter.
-_get_first_line() {
+#   Print the title or first line of the text document at <path>. When a title
+#   is not found, print the first line, prefixed with '__first_line:'.
+#
+#   Supports both Markdown h1 styles, YAML front matter, Org Mode, and LaTeX.
+#
+#   - Markdown
+#     - Supported:
+#       - # This is a Title
+#       - This is a Title
+#         ===============
+#       - ---
+#         title: This is a Title
+#         ---
+#     - https://daringfireball.net/projects/markdown/syntax#header
+#     - https://jekyllrb.com/docs/front-matter/
+#   - Org Mode
+#     - Supported:
+#       - #+TITLE: This is a Title
+#     - https://orgmode.org/guide/Export-Settings.html
+#   - LaTeX
+#     - Supported:
+#       - \title{This is a Title}
+_get_content() {
+  local _counter=0
   local _first_line=
   local _in_code_block=0
   local _in_front_matter=0
+  local _maybe_title=
   local _path="${1:-}"
+  local _title=
+
+  if [[ "${2:-}" == --title ]]
+  then
+    local _only_title=1
+  else
+    local _only_title=0
+  fi
 
   if [[ -z "${_path}" ]]
   then
     return 1
   elif [[ -e "${_path}" ]]
   then
-    if _file_is_text "${_path}"
+
+    # `awk` `_get_first_line` alternative
+    # -----------------------------------
+    #       awk -f - "${_path}" <<'HEREDOC'
+    # (state == 0) && /^---$/ { state=1; next }
+    # (state == 1) && /^---$/ { state=0; next }
+    # (state == 0) && /^```/  { state=1; next }
+    # (state == 1) && /^```/  { state=0; next }
+    #
+    # (state == 0) && /^./    { print; exit   }
+    # HEREDOC
+
+    if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
-
-      # `awk` alternative
-      # -----------------
-      #       awk -f - "${_path}" <<'HEREDOC'
-      # (state == 0) && /^---$/ { state=1; next }
-      # (state == 1) && /^---$/ { state=0; next }
-      # (state == 0) && /^```/  { state=1; next }
-      # (state == 1) && /^```/  { state=0; next }
-      #
-      # (state == 0) && /^./    { print; exit   }
-      # HEREDOC
-
-      # Avoid single line being ignored.
-      # https://stackoverflow.com/a/10929511
       while IFS= read -r __line || [[ -n "${__line}" ]]
       do
-        if [[ "${__line}" =~ ^---$ ]]
-        then
+        if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+) ]] &&
+           ! ((_in_code_block))
+        then # line starts with an atx-style H1
+          _title="${__line#${BASH_REMATCH[1]}}"
+
+          if [[ "${_title}" =~ ([[:space:]]+#[[:space:]]*)$ ]]
+          then
+            _title="${_title%${BASH_REMATCH[1]}}"
+          fi
+
+          # `sed` alternative
+          # -----------------
+          # _title="$(
+          #   printf "%s\\n" "${__line}"    \
+          #     | sed                       \
+          #       -e 's/^[[:space:]]*# //'  \
+          #       -e 's/ #$//'
+          #   )"
+
+          break
+        elif [[ "${__line}" =~ ^---$ ]]
+        then # start or end of front matter block
           if ((_in_front_matter))
           then
             _in_front_matter=0
@@ -1603,23 +1660,114 @@ _get_first_line() {
           else
             _in_code_block=1
           fi
+        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\: ]]
+        then # front matter title
+          _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
+          break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
-          if [[ -z "${_first_line}" ]] && [[ -n "${__line}" ]]
-          then
-            if [[ "${#__line}" -gt 500 ]]
-            then
-              _first_line="${__line:0:500}..."
-            else
-              _first_line="${__line}"
-            fi
+          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
+          then  # potential setext-style H1
+            _maybe_title="${__line}"
+          elif [[ -n "${_maybe_title}"              ]] &&
+               [[ "${__line}" =~ ^[[:space:]]*\=+$  ]]
+          then # underline for setext-style H1 on previous line
+            _title="$(
+              printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
+            )"
             break
+          elif [[ -n "${_maybe_title}" ]]
+          then # in normal content, title not found
+            if ! ((_only_title))
+            then
+              if [[ "${#_maybe_title}" -gt 500 ]]
+              then
+                _first_line="${_maybe_title:0:500}..."
+              else
+                _first_line="${_maybe_title}"
+              fi
+            fi
+
+            if [[ ! "${_maybe_title}" =~ ^\[ ]]
+            then # only break with first non-link line
+              break
+            fi
+          else
+            continue
           fi
         fi
       done < "${_path}"
+    elif [[ "${_path}" =~ \.latex$|\.tex$ ]]
+    then
+      while IFS= read -r __line || [[ -n "${__line}" ]]
+      do
+        _counter="$((_counter+1))"
 
-      printf "%s\\n" "${_first_line}"
+        if [[ "${__line}" =~  ^\\title\{ ]]
+        then
+          _title="$(
+            printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
+          )"
+          break
+        elif [[ -n "${__line:-}"      ]] &&
+             [[ ! "${__line}" =~ ^\\  ]] &&
+             [[ "${_counter}" -gt 20  ]]
+        then
+          break
+        else
+          continue
+        fi
+      done < "${_path}"
+    elif [[ "${_path}" =~ \.org$ ]]
+    then
+      while IFS= read -r __line || [[ -n "${__line}" ]]
+      do
+        _counter="$((_counter+1))"
+
+        # NOTE: Titles can be defined with multiple #+TITLE: lines.
+        if [[ "${__line}" =~ ^\#\+TITLE\: ]]
+        then
+          if [[ -n "${_title:-}" ]]
+          then
+            _title="${_title} "
+          fi
+
+          _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
+        elif [[ -n "${__line:-}"      ]] &&
+             [[ ! "${__line}" =~ ^\#  ]] &&
+             [[ "${_counter}" -gt 5   ]]
+        then
+          break
+        else
+          continue
+        fi
+      done < "${_path}"
+    elif ! ((_only_title)) &&
+         LC_ALL=C _contains "${_path##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
+    then
+      while IFS= read -r __line || [[ -n "${__line:-}" ]]
+      do
+        if [[ -n "${__line}" ]]
+        then
+          if [[ "${#__line}" -gt 500 ]]
+          then
+            _first_line="${__line:0:500}..."
+          else
+            _first_line="${__line}"
+          fi
+          break
+        fi
+      done < "${_path}"
     fi
+
+    if [[ -n "${_title:-}"        ]]
+    then
+      printf "%s\\n" "${_title}"
+    elif [[ -n "${_first_line:-}" ]]
+    then
+      printf "%s\\n" "__first_line:${_first_line}"
+    fi
+
   fi
 }
 
@@ -1685,161 +1833,6 @@ _get_http_status() {
   elif _command_exists "wget"
   then
     wget -S "${_url}" 2>&1 | grep "HTTP/" | awk '{print $2}' || return 0
-  fi
-}
-
-# _get_title()
-#
-# Usage:
-#   _get_title <path>
-#
-# Description:
-#   Print the title, if present, of the note at the path. Supports both
-#   Markdown h1 styles and YAML front matter.
-#
-#   - Markdown
-#     - Supported:
-#       - # This is a Title
-#       - This is a Title
-#         ===============
-#       - ---
-#         title: This is a Title
-#         ---
-#     - https://daringfireball.net/projects/markdown/syntax#header
-#     - https://jekyllrb.com/docs/front-matter/
-#   - Org Mode
-#     - Supported:
-#       - #+TITLE: This is a Title
-#     - https://orgmode.org/guide/Export-Settings.html
-#   - Latex
-#     - Supported:
-#       - \title{This is a Title}
-_get_title() {
-  local _counter=0
-  local _in_code_block=0
-  local _in_front_matter=0
-  local _maybe_title=
-  local _path="${1:-}"
-  local _title=
-
-  if [[ -z "${_path}" ]]
-  then
-    return 1
-  elif [[ -e "${_path}" ]]
-  then
-    if [[ "${_path}" =~ \.md$|\.markdown$ ]]
-    then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
-      do
-        if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+) ]] &&
-           ! ((_in_code_block))
-        then # line starts with an atx-style H1
-          _title="${__line#${BASH_REMATCH[1]}}"
-
-          if [[ "${_title}" =~ ([[:space:]]+#[[:space:]]*)$ ]]
-          then
-            _title="${_title%${BASH_REMATCH[1]}}"
-          fi
-
-          # `sed` alternative
-          # -----------------
-          # _title="$(
-          #   printf "%s\\n" "${__line}"    \
-          #     | sed                       \
-          #       -e 's/^[[:space:]]*# //'  \
-          #       -e 's/ #$//'
-          #   )"
-
-          break
-        elif [[ "${__line}" =~ ^---$ ]]
-        then # start or end of front matter block
-          if ((_in_front_matter))
-          then
-            _in_front_matter=0
-          else
-            _in_front_matter=1
-          fi
-        elif [[ "${__line}" =~ ^\`\`\` ]]
-        then # start or end of code block
-          if ((_in_code_block))
-          then
-            _in_code_block=0
-          else
-            _in_code_block=1
-          fi
-        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\: ]]
-        then # front matter title
-          _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
-          break
-        elif ! ((_in_front_matter)) && ! ((_in_code_block))
-        then
-          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
-          then  # potential setext-style H1
-            _maybe_title="${__line}"
-          elif [[ -n "${_maybe_title}"             ]] &&
-               [[ "${__line}" =~ ^[[:space:]]*\=+$ ]]
-          then # underline for setext-style H1 on previous line
-            _title="$(
-              printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
-            )"
-            break
-          elif [[ -n "${_maybe_title}"       ]] &&
-               [[ ! "${_maybe_title}" =~ ^\[ ]]
-          then # in normal content, title not found
-            break
-          else
-            continue
-          fi
-        fi
-      done < "${_path}"
-    elif [[ "${_path}" =~ \.latex$|\.tex$ ]]
-    then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
-      do
-        _counter="$((_counter+1))"
-
-        if [[ "${__line}" =~  ^\\title\{ ]]
-        then
-          _title="$(
-            printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
-          )"
-          break
-        elif [[ -n "${__line:-}"      ]] &&
-             [[ ! "${__line}" =~ ^\\  ]] &&
-             [[ "${_counter}" -gt 20  ]]
-        then
-          break
-        else
-          continue
-        fi
-      done < "${_path}"
-    elif [[ "${_path}" =~ \.org$ ]]
-    then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
-      do
-        _counter="$((_counter+1))"
-
-        # NOTE: Titles can be defined with multiple #+TITLE: lines.
-        if [[ "${__line}" =~ ^\#\+TITLE\: ]]
-        then
-          if [[ -n "${_title:-}" ]]
-          then
-            _title="${_title} "
-          fi
-
-          _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
-        elif [[ -n "${__line:-}"      ]] &&
-             [[ ! "${__line}" =~ ^\#  ]] &&
-             [[ "${_counter}" -gt 5   ]]
-        then
-          break
-        else
-          continue
-        fi
-      done < "${_path}"
-    fi
-
-    printf "%s\\n" "${_title}"
   fi
 }
 
@@ -5267,17 +5260,14 @@ _helpers() {
     *video*)
       _file_is_video                  "${_options[@]:-}"
       ;;
-    *first*)
-      _get_first_line                 "${_options[@]:-}"
+    *content*)
+      _get_content                    "${_options[@]:-}"
       ;;
     *hash*)
       _get_hash                       "${_options[@]:-}"
       ;;
     *http*)
       _get_http_status                "${_options[@]:-}"
-      ;;
-    *title*)
-      _get_title                      "${_options[@]:-}"
       ;;
     *unique*basename*)
       _get_unique_basename            "${_options[@]:-}"
@@ -6293,7 +6283,9 @@ HEREDOC
 
       for __basename in "${_filenames[@]:-}"
       do
+        local _first_line=
         local _maybe_title=
+        local _title_basename_or_path="${__basename}"
 
         if [[ -n "${_selector_identifier:-}" ]]
         then
@@ -6314,7 +6306,13 @@ HEREDOC
               # include the note in the list
               _matches=$((_matches+1))
             else
-              _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
+              _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+
+              if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
+              then
+                _first_line="${_maybe_title#__first_line:}"
+                _maybe_title=
+              fi
 
               if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
               then
@@ -6341,8 +6339,6 @@ HEREDOC
           fi
         fi
 
-        local _title_basename_or_path="${__basename}"
-
         if ((_list_paths))
         then
           _title_basename_or_path="${_notebook_path}/${__basename}"
@@ -6350,12 +6346,18 @@ HEREDOC
         then
           if [[ -z "${_maybe_title}" ]]
           then
-            _maybe_title="$(_get_title "${_notebook_path}/${__basename}")"
+            _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
           fi
 
           if [[ -n "${_maybe_title}" ]]
           then
-            _title_basename_or_path="${_maybe_title}"
+            if [[ "${_maybe_title}" =~ ^__first_line: ]]
+            then
+              _first_line="${_maybe_title#__first_line:}"
+              _maybe_title=
+            else
+              _title_basename_or_path="${_maybe_title}"
+            fi
           fi
         fi
 
@@ -6368,29 +6370,32 @@ HEREDOC
           if _file_is_bookmark "${_notebook_path}/${__basename}"
           then
             _indicators+="🔖 "
-          elif _file_is_image "${_notebook_path}/${__basename}"
+          elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
           then
-            _indicators+="🌄 "
-          elif _file_is_document "${_notebook_path}/${__basename}"
-          then
-            _indicators+="📄 "
-          elif [[ -d "${_notebook_path}/${__basename}" ]]
-          then
-            _indicators+="📂 "
-          elif _file_is_video "${_notebook_path}/${__basename}"
-          then
-            _indicators+="📹 "
-          elif _file_is_audio "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔉 "
-          elif [[ "${__basename}" =~ \.epub$ ]]
-          then
-            _indicators+="📖 "
-          fi
+            if _file_is_image "${_notebook_path}/${__basename}"
+            then
+              _indicators+="🌄 "
+            elif _file_is_document "${_notebook_path}/${__basename}"
+            then
+              _indicators+="📄 "
+            elif [[ -d "${_notebook_path}/${__basename}" ]]
+            then
+              _indicators+="📂 "
+            elif _file_is_video "${_notebook_path}/${__basename}"
+            then
+              _indicators+="📹 "
+            elif _file_is_audio "${_notebook_path}/${__basename}"
+            then
+              _indicators+="🔉 "
+            elif [[ "${__basename}" =~ \.epub$ ]]
+            then
+              _indicators+="📖 "
+            fi
 
-          if _file_is_encrypted "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔒 "
+            if _file_is_encrypted "${_notebook_path}/${__basename}"
+            then
+              _indicators+="🔒 "
+            fi
           fi
 
           if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
@@ -6407,9 +6412,6 @@ HEREDOC
            ! ((_print_excerpt))   &&
            [[ "${_title_basename_or_path}" == "${__basename}" ]]
         then
-          local _first_line=
-          _first_line="$(_get_first_line "${_notebook_path}/${__basename}")"
-
           if [[ -n "${_first_line:-}" ]]
           then
             _item_info="${_item_info} · \"${_first_line}\""
@@ -6438,11 +6440,18 @@ HEREDOC
             _max_identifier="${_notebook_escaped_name}:${_max_id}"
           fi
 
-          local _brackets_identifier=
-          _brackets_identifier="[${_item_identifier}]"
+          local _brackets_identifier="[${_item_identifier}]"
 
-          local _brackets_identifier_color=
-          _brackets_identifier_color="$(_color_brackets "${_item_identifier}")"
+          # avoid calling `_color_brackets` for performance
+          local _brackets_identifier_color="\
+${_TPUT_SGR0}\
+${_TPUT_SETAF_8}\
+[\
+${_TPUT_COLOR_PRIMARY}\
+${_item_identifier:-}\
+${_TPUT_SETAF_8}\
+]\
+${_TPUT_SGR0}"
 
           # use calculated number of spaces for nicer formatting
           local _spaces_length=
@@ -9262,7 +9271,7 @@ _search() {
         local _id=
         local _path=
         local _skip=0
-        local _title=
+        local _content=
 
         # Use `sed` to remove color and 'matches' suffix from output.
         # https://unix.stackexchange.com/a/140255
@@ -9371,28 +9380,30 @@ _search() {
 
           if ((_filename_hit))
           then
-            _title="$(_get_title "${__notebook_path}/${_filename_for_id}")"
+            _content="$(
+              _get_content "${__notebook_path}/${_filename_for_id}"
+            )"
 
-            if [[ -n "${_title}" ]]
+            if [[ -n "${_content}"                  ]] &&
+               [[ ! "${_content}" =~ ^__first_line: ]]
             then
-              _file_info="${_filename} · ${_title}"
-              _file_info_color="${_filename_color} · ${_title}"
+              _file_info="${_filename} · ${_content}"
+              _file_info_color="${_filename_color} · ${_content}"
             else
               _file_info="${_filename}"
               _file_info_color="${_filename_color}"
             fi
           else
-            local _first_line=
-            _title="$(_get_title "${_path}")"
+            _content="$(_get_content "${_path}")"
 
-            if [[ -n "${_title:-}" ]]
+            if [[ "${_content:-}" =~ ^__first_line: ]]
             then
-              _file_info="${_title}"
-              _file_info_color="${_title}"
-            elif _first_line="$(_get_first_line "${_path}")"
+              _file_info="${_filename} · \"${_content#__first_line:}\""
+              _file_info_color="${_filename_color} · \"${_content#__first_line:}\""
+            elif [[ -n "${_content:-}" ]]
             then
-              _file_info="${_filename} · \"${_first_line}\""
-              _file_info_color="${_filename_color} · \"${_first_line}\""
+              _file_info="${_content}"
+              _file_info_color="${_content}"
             else
               _file_info="${_filename}"
               _file_info_color="${_filename_color}"
@@ -10575,7 +10586,7 @@ _show() {
 
         for __file in "${_filenames[@]:-}"
         do
-          _title="$(_get_title "${_notebook_path}/${__file}")"
+          _title="$(_get_content "${_notebook_path}/${__file}" --title)"
 
           if [[ -n "${_title}"                  ]] &&
              [[ "${_title}" == "${_identifier}" ]]
@@ -10753,7 +10764,7 @@ _show() {
 
   if ((_print_title))
   then
-    _get_title "${_notebook_path}/${_basename}"
+    _get_content "${_notebook_path}/${_basename}" --title
     return 0
   fi
 
@@ -10816,7 +10827,7 @@ _show() {
     _info_line+="$(_color_primary "${_maybe_scoped_basename}") "
 
     local _title
-    _title="$(_get_title "${_notebook_path}/${_basename}")"
+    _title="$(_get_content "${_notebook_path}/${_basename}" --title)"
 
 
     if [[ -n "${_title:-}" ]]

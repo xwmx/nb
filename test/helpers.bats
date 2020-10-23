@@ -538,9 +538,9 @@ HEREDOC
   [[ "${lines[15]}" == "[16] Introduction to \LaTeX{}"      ]]
 }
 
-# `_get_first_line()` #########################################################
+# `_get_content()` #########################################################
 
-@test "\`_get_first_line()\` returns first line." {
+@test "\`_get_content()\` returns first line when no title." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "one.md"
@@ -553,16 +553,16 @@ HEREDOC
     _files=($(ls "${_NOTEBOOK_PATH}/"))
   }
 
-  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/one.md"
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/one.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0           ]]
-  [[ "${output}"  ==  "line one"  ]]
+  [[ ${status}    -eq 0                         ]]
+  [[ "${output}"  ==  "__first_line:line one"   ]]
 }
 
-@test "\`_get_first_line()\` returns first line after newlines." {
+@test "\`_get_content()\` returns first line after newlines." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "two.md"
@@ -573,16 +573,16 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/two.md"
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/two.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0             ]]
-  [[ "${output}"  ==  "line three"  ]]
+  [[ ${status}    -eq 0                         ]]
+  [[ "${output}"  ==  "__first_line:line three" ]]
 }
 
-@test "\`_get_first_line()\` returns first line after code block." {
+@test "\`_get_content()\` returns first line after code block." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "three.md"
@@ -597,23 +597,22 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/three.md"
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/three.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/three.md"
 
-  [[ ${status}    -eq 0           ]]
-  [[ "${output}"  ==  "line one"  ]]
+  [[ ${status}    -eq 0                       ]]
+  [[ "${output}"  ==  "__first_line:line one" ]]
 }
 
-@test "\`_get_first_line()\` returns first line after code block and front matter." {
+@test "\`_get_content()\` returns first line after code block and front matter." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "four.md"
 ---
 front: matter
-title: Example Title
 ---
 
 \`\`\`example
@@ -627,22 +626,21 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/four.md"
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/four.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0           ]]
-  [[ "${output}"  ==  "line one"  ]]
+  [[ ${status}    -eq 0                       ]]
+  [[ "${output}"  ==  "__first_line:line one" ]]
 }
 
-@test "\`_get_first_line()\` returns first line after front matter." {
+@test "\`_get_content()\` returns first line after front matter." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "five.md"
 ---
 front: matter
-title: Example Title
 ---
 
 line one
@@ -652,22 +650,21 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/five.md"
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/five.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0           ]]
-  [[ "${output}"  ==  "line one"  ]]
+  [[ ${status}    -eq 0                       ]]
+  [[ "${output}"  ==  "__first_line:line one" ]]
 }
 
-@test "\`_get_first_line()\` returns nothing with only code block and front matter." {
+@test "\`_get_content()\` returns nothing with only code block and front matter." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "four.md"
 ---
 front: matter
-title: Example Title
 ---
 
 \`\`\`example
@@ -677,7 +674,7 @@ example=code
 HEREDOC
   }
 
-  run "${_NB}" helpers get_first_line "${_NOTEBOOK_PATH}/four.md"
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/four.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
