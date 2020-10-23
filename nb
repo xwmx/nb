@@ -6373,29 +6373,32 @@ HEREDOC
           if _file_is_bookmark "${_notebook_path}/${__basename}"
           then
             _indicators+="🔖 "
-          elif _file_is_image "${_notebook_path}/${__basename}"
+          elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
           then
-            _indicators+="🌄 "
-          elif _file_is_document "${_notebook_path}/${__basename}"
-          then
-            _indicators+="📄 "
-          elif [[ -d "${_notebook_path}/${__basename}" ]]
-          then
-            _indicators+="📂 "
-          elif _file_is_video "${_notebook_path}/${__basename}"
-          then
-            _indicators+="📹 "
-          elif _file_is_audio "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔉 "
-          elif [[ "${__basename}" =~ \.epub$ ]]
-          then
-            _indicators+="📖 "
-          fi
+            if _file_is_image "${_notebook_path}/${__basename}"
+            then
+              _indicators+="🌄 "
+            elif _file_is_document "${_notebook_path}/${__basename}"
+            then
+              _indicators+="📄 "
+            elif [[ -d "${_notebook_path}/${__basename}" ]]
+            then
+              _indicators+="📂 "
+            elif _file_is_video "${_notebook_path}/${__basename}"
+            then
+              _indicators+="📹 "
+            elif _file_is_audio "${_notebook_path}/${__basename}"
+            then
+              _indicators+="🔉 "
+            elif [[ "${__basename}" =~ \.epub$ ]]
+            then
+              _indicators+="📖 "
+            fi
 
-          if _file_is_encrypted "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔒 "
+            if _file_is_encrypted "${_notebook_path}/${__basename}"
+            then
+              _indicators+="🔒 "
+            fi
           fi
 
           if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
