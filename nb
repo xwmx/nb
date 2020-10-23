@@ -6441,8 +6441,16 @@ HEREDOC
           local _brackets_identifier=
           _brackets_identifier="[${_item_identifier}]"
 
-          local _brackets_identifier_color=
-          _brackets_identifier_color="$(_color_brackets "${_item_identifier}")"
+          # avoid calling `_color_brackets` for performance
+          local _brackets_identifier_color="\
+${_TPUT_SGR0}\
+${_TPUT_SETAF_8}\
+[\
+${_TPUT_COLOR_PRIMARY}\
+${_item_identifier:-}\
+${_TPUT_SETAF_8}\
+]\
+${_TPUT_SGR0}"
 
           # use calculated number of spaces for nicer formatting
           local _spaces_length=
