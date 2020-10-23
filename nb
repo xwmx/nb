@@ -1709,11 +1709,18 @@ _get_content() {
             printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
           )"
           break
-        elif [[ -n "${__line:-}"      ]] &&
-             [[ ! "${__line}" =~ ^\\  ]] &&
-             [[ "${_counter}" -gt 20  ]]
+        elif [[ -n "${__line:-}"      ]]
         then
-          break
+          if [[ -z "${_first_line:-}" ]]
+          then
+            _first_line="${__line}"
+          fi
+
+          if [[ ! "${__line}" =~ ^\\  ]] &&
+             [[ "${_counter}" -gt 20  ]]
+          then
+            break
+          fi
         else
           continue
         fi
@@ -1733,11 +1740,19 @@ _get_content() {
           fi
 
           _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
-        elif [[ -n "${__line:-}"      ]] &&
-             [[ ! "${__line}" =~ ^\#  ]] &&
-             [[ "${_counter}" -gt 5   ]]
+        elif [[ -n "${__line:-}"      ]]
         then
-          break
+
+          if [[ -z "${_first_line:-}" ]]
+          then
+            _first_line="${__line}"
+          fi
+
+          if [[ ! "${__line}" =~ ^\#  ]] &&
+             [[ "${_counter}" -gt 5   ]]
+          then
+            break
+          fi
         else
           continue
         fi

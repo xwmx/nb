@@ -683,6 +683,79 @@ HEREDOC
   [[ -z "${output}"     ]]
 }
 
+@test "\`_get_content()\` returns first line in Org file." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.org"
+
+
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/example.org"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0                         ]]
+  [[ "${output}"  ==  "__first_line:line three" ]]
+}
+
+@test "\`_get_content()\` returns first line in LaTeX file." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.latex"
+
+
+\documentclass{article}
+\usepackage{graphicx}
+
+\begin{document}
+
+\author{Author's Name}
+
+\maketitle
+
+\begin{abstract}
+The abstract text goes here.
+\end{abstract}
+
+\section{Introduction}
+Here is the text of your introduction.
+
+\begin{equation}
+    \label{simple_equation}
+    \alpha = \sqrt{ \beta }
+\end{equation}
+
+\subsection{Subsection Heading Here}
+Write your subsection text here.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=3.0in]{myfigure}
+    \caption{Simulation Results}
+    \label{simulationfigure}
+\end{figure}
+
+\section{Conclusion}
+Write your conclusion here.
+
+\end{document}
+HEREDOC
+}
+
+  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/example.latex"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}    -eq 0                                       ]]
+  [[ "${output}"  ==  "__first_line:\\documentclass{article}" ]]
+}
+
 # `_get_unique_basename()` ####################################################
 
 @test "\`_get_unique_basename()\` works for notes" {
