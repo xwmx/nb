@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.7.5"
+_VERSION="5.7.6"
 
 # $_ME
 #
@@ -1189,28 +1189,31 @@ _edit_file() {
 
   cd "${_current_notebook_path}" || return 1
 
-  if _file_is_encrypted "${_file_path}"
+  if [[ -e "${_file_path}" ]]
   then
-    _exit_1 printf "\
+    if _file_is_encrypted "${_file_path}"
+    then
+      _exit_1 printf "\
 File must be decrypted before editing.\\n"
-  fi
+    fi
 
-  if _file_is_archive "${_file_path}" &&
-     [[ ! "${_file_path}" =~ docx$ ]]
-  then
-    _exit_1 printf "\
+    if _file_is_archive "${_file_path}" &&
+       [[ ! "${_file_path}" =~ docx$ ]]
+    then
+      _exit_1 printf "\
 Can't edit archives. Export archive and expand to edit.\\n"
-  fi
+    fi
 
-  if ! _file_is_text "${_file_path}" &&
-     [[ ! -d "${_file_path}" ]]
-  then
-    if _command_exists "xdg-open"
+    if ! _file_is_text "${_file_path}" &&
+       [[ ! -d "${_file_path}" ]]
     then
-      xdg-open "${_file_path}" && return 0
-    elif [[ "${OSTYPE}" =~ ^darwin ]]
-    then
-      open "${_file_path}" && return 0
+      if _command_exists "xdg-open"
+      then
+        xdg-open "${_file_path}" && return 0
+      elif [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        open "${_file_path}" && return 0
+      fi
     fi
   fi
 
@@ -1569,6 +1572,17 @@ _get_first_line() {
     if _file_is_text "${_path}"
     then
 
+      # `awk` alternative
+      # -----------------
+      #       awk -f - "${_path}" <<'HEREDOC'
+      # (state == 0) && /^---$/ { state=1; next }
+      # (state == 1) && /^---$/ { state=0; next }
+      # (state == 0) && /^```/  { state=1; next }
+      # (state == 1) && /^```/  { state=0; next }
+      #
+      # (state == 0) && /^./    { print; exit   }
+      # HEREDOC
+
       # Avoid single line being ignored.
       # https://stackoverflow.com/a/10929511
       while IFS= read -r __line || [[ -n "${__line}" ]]
@@ -1727,7 +1741,8 @@ _get_title() {
             _title="${_title%${BASH_REMATCH[1]}}"
           fi
 
-          # `sed` alternative:
+          # `sed` alternative
+          # -----------------
           # _title="$(
           #   printf "%s\\n" "${__line}"    \
           #     | sed                       \
@@ -3528,7 +3543,8 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
       local _header=
       _header="Add: $(_color_primary "${_ME} <url>")"
       _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
-cat <<HEREDOC
+
+      cat <<HEREDOC
 ${_header}
 $(_color_secondary "------------------------------------")
 HEREDOC
@@ -6409,8 +6425,9 @@ HEREDOC
           _info_line_color="${_item_info}"
         else
           local _item_identifier=
+          # use `sed` directly instead of `_index get_id` for performance
           _item_identifier="$(
-            NB_NOTEBOOK_PATH="${_notebook_path}" _index get_id "${__basename}"
+            sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
           )"
 
           local _max_identifier="${_max_id}"
