@@ -1574,7 +1574,7 @@ _get_first_line() {
     return 1
   elif [[ -e "${_path}" ]]
   then
-    if _file_is_text "${_path}"
+    if LC_ALL=C _contains "${_path##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
     then
 
       # `awk` alternative
