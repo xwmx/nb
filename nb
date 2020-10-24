@@ -6232,10 +6232,6 @@ _list() {
   ((_reverse))          && _list_files_options+=("--reverse")
   ((_sort))             && _list_files_options+=("--sort")
 
-  _filenames=($(_list_files "${_list_files_options[@]}")) || :
-
-  local _filenames_count="${#_filenames[@]}"
-
   if _notebooks current --selected
   then
     _maybe_scope="$(_notebooks show "${_notebook_path}" --escaped --no-color):"
@@ -6502,11 +6498,11 @@ ${_TPUT_SGR0}"
           return 0
         fi
 
-      elif [[ "${_filenames_count}" -gt "${_limit}" ]]
+      elif [[ "${_filenames_counter}" -gt "${_limit}" ]]
       then
         printf "%s omitted. %s total.\\n"   \
-          "$((_filenames_count-_printed_counter))"  \
-          "${_filenames_count}"
+          "$((_filenames_counter-_printed_counter))"  \
+          "${_filenames_counter}"
         return 0
       fi
     fi
