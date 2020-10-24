@@ -75,6 +75,37 @@ Help information:
   [[ "${lines[2]}" =~ 🔖            ]]
 }
 
+@test "\`list\` includes ids." {
+  {
+    "${_NB}" init
+    "${_NB}" add "one.md" --title "one"
+    "${_NB}" add "two.md" --title "two"
+    "${_NB}" add "three.md" --title "three"
+    "${_NB}" add "four.md" --title "four"
+    "${_NB}" add "five.md" --title "five"
+
+    run "${_NB}" delete "one.md" --force
+    run "${_NB}" delete "four.md" --force
+
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${lines[0]}" =~ five  ]]
+  [[ "${lines[0]}" =~ 5     ]]
+  [[ "${lines[1]}" =~ three ]]
+  [[ "${lines[1]}" =~ 3     ]]
+  [[ "${lines[2]}" =~ two   ]]
+  [[ "${lines[2]}" =~ 2     ]]
+  [[ -z "${lines[3]:-}"     ]]
+}
+
 # `list --no-id` ##############################################################
 
 @test "\`list --no-id\` exits with 0 and lists files in reverse order." {
