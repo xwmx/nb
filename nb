@@ -6684,6 +6684,16 @@ _list() {
   local _max_id
   _max_id="$(_index get_max_id "${_list_path}")"
 
+  if ! ((_no_id))
+  then
+    declare -A _index_map
+    __i=0
+    while IFS= read -r line; do
+      __i=$((++__i))
+      _index_map[$line]=$__i
+    done < "${_notebook_path:-}/.index"
+  fi
+
   # Use code blocks to capture all output for piping to pager.
   {
     _list_files "${_list_files_options[@]}" || :
@@ -6839,11 +6849,7 @@ _list() {
         _info_line="${_item_info}"
         _info_line_color="${_item_info}"
       else
-        local _item_id=
-        # use `sed` directly instead of `_index get_id` for performance
-        _item_id="$(
-          sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
-        )"
+        local _item_id=${_index_map[${__basename:-}]}
 
         if [[ -n "${_maybe_scope:-}" ]]
         then
