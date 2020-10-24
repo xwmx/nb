@@ -357,11 +357,58 @@ skip "Determine how to test interactive prompt."
   [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
 }
 
+@test "\`settings set\` with 'default' value unsets and exits." {
+  {
+    "${_NB}" init
+    run "${_NB}" settings set color_secondary 42
+    [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
+  }
+
+  run "${_NB}" settings set color_secondary default
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" =~ NB_COLOR_SECONDARY                ]]
+  [[ "${output}" =~ restored                          ]]
+  [[ "${output}" =~ 8                                 ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+}
+
+@test "\`settings set\` with 'reset' value unsets and exits." {
+  {
+    "${_NB}" init
+    run "${_NB}" settings set color_secondary 42
+    [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
+  }
+
+  run "${_NB}" settings set color_secondary reset
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" =~ NB_COLOR_SECONDARY                ]]
+  [[ "${output}" =~ restored                          ]]
+  [[ "${output}" =~ 8                                 ]]
+  [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+}
+
 # `set NB_AUTO_SYNC` #######################################################
 
 @test "\`settings set NB_AUTO_SYNC\` with valid argument sets and exits." {
+  # shellcheck disable=SC1073,SC2030,SC2031
+  export NB_AUTO_SYNC=
+
   {
     "${_NB}" init
+
+    [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
   }
 
   run "${_NB}" settings set NB_AUTO_SYNC 0
@@ -378,8 +425,13 @@ skip "Determine how to test interactive prompt."
 }
 
 @test "\`settings set auto_sync\` with valid argument sets and exits." {
+  # shellcheck disable=SC1073,SC2030,SC2031
+  export NB_AUTO_SYNC=
+
   {
     "${_NB}" init
+
+    [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
   }
 
   run "${_NB}" settings set auto_sync 0
@@ -396,8 +448,13 @@ skip "Determine how to test interactive prompt."
 }
 
 @test "\`settings set NB_AUTO_SYNC\` with invalid argument exits with error." {
+  # shellcheck disable=SC1073,SC2030,SC2031
+  export NB_AUTO_SYNC=
+
   {
     "${_NB}" init
+
+    [[ "$("${_NB}" settings get NB_AUTO_SYNC)" == '1' ]]
   }
 
   run "${_NB}" settings set NB_AUTO_SYNC '0'
@@ -956,6 +1013,67 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ NB_LIMIT                  ]]
   [[ "${output}" =~ must\ be\                 ]]
   [[ "$("${_NB}" settings get NB_LIMIT)" == 7 ]]
+}
+
+# `set NB_SYNTAX_THEME` #######################################################
+
+@test "\`settings set NB_SYNTAX_THEME\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_SYNTAX_THEME "Monokai Extended"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                                  ]]
+  [[ "${output}" =~ NB_SYNTAX_THEME                                   ]]
+  [[ "${output}" =~ set\ to\                                          ]]
+  [[ "${output}" =~ Monokai\ Extended                                 ]]
+  [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Monokai Extended" ]]
+}
+
+@test "\`settings set syntax\` with valid argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set syntax "Solarized (dark)"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                                  ]]
+  [[ "${output}" =~ NB_SYNTAX_THEME                                   ]]
+  [[ "${output}" =~ set\ to\                                          ]]
+  [[ "${output}" =~ Solarized\ \(dark\)                               ]]
+  [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Solarized (dark)" ]]
+}
+
+@test "\`settings set NB_SYNTAX_THEME\` with invalid argument exits with error." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set NB_SYNTAX_THEME "Solarized (dark)"
+
+  [[ ${status} -eq 0                                                  ]]
+  [[ "${output}" =~ NB_SYNTAX_THEME                                   ]]
+  [[ "${output}" =~ set\ to\                                          ]]
+  [[ "${output}" =~ Solarized\ \(dark\)                               ]]
+  [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Solarized (dark)" ]]
+
+  run "${_NB}" settings set NB_SYNTAX_THEME not-a-valid-theme
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "get NB_LIMIT: '%s'\\n" "$("${_NB}" settings get NB_LIMIT)"
+
+  [[ ${status} -eq 1                                                  ]]
+  [[ "${output}" =~ NB_SYNTAX_THEME                                   ]]
+  [[ "${output}" =~ must\ be\                                         ]]
+  [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Solarized (dark)" ]]
 }
 
 # `list` ######################################################################

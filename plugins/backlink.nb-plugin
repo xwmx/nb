@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+###############################################################################
+# backlink.nb-plugin
+#
+# Add backlinks to notes.
+#
+# Depends on note-link-janitor:
+#   https://github.com/andymatuschak/note-link-janitor
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "backlink"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "backlink" <<HEREDOC
+Usage:
+  nb backlink [--force]
+
+Description:
+  Add backlinks to notes. Crawl notes in a notebook for [[wiki-style links]]
+  and append a "Backlinks" section to each linked file that lists passages
+  referencing the note.
+
+  To link to a note from within another note, surround the title of the
+  target note in double square brackets:
+
+      Example with link to [[Target Note Title]] in content.
+
+  Depends on note-link-janitor:
+    https://github.com/andymatuschak/note-link-janitor
+
+    Requirement: every note in the notebook must have a title.
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_backlink() {
+  if ! hash "note-link-janitor" 2>/dev/null
+  then
+    printf "\
+note-link-janitor required:
+  https://github.com/andymatuschak/note-link-janitor\\n" 1>&2
+    exit 1
+  fi
+
+  if ! [[ "${1:-}" == "--force" ]]
+  then
+    printf "Adding backlinks to notes. This could update multiple files.\\n"
+
+    while true
+    do
+      IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
+      case ${__yn} in
+        [Yy]*)
+          break
+          ;;
+        *)
+          printf "Exiting...\\n"
+          exit 0
+          ;;
+      esac
+    done
+  fi
+
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+
+  note-link-janitor "${_notebook_path}"
+
+  if [[ -n "$(_git status --porcelain)" ]]
+  then
+    _git checkpoint "[nb] Backlinked"
+    printf "Backlinked!\\n"
+  else
+    printf "No new links found.\\n"
+  fi
+}

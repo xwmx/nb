@@ -53,7 +53,7 @@ but `nb` works great without them.
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup for
   broken links,
-- and easy viewing of bookmarked pages in the terminal and your regular web browser.
+- easy viewing of bookmarked pages in the terminal and your regular web browser.
 
 Page information is automatically downloaded, compiled, and saved into normal Markdown
 documents made for humans, so bookmarks are easy to edit just like any other note.
@@ -139,11 +139,11 @@ they are available.
 
 Recommended:
 
+- [`bat`](https://github.com/sharkdp/bat)
 - [Pandoc](https://pandoc.org/)
-- [Pygments](https://pygments.org/)
-- [rg - ripgrep](https://github.com/BurntSushi/ripgrep)
-- [tig](https://github.com/jonas/tig)
-- [w3m](https://en.wikipedia.org/wiki/W3m)
+- [`rg` / ripgrep](https://github.com/BurntSushi/ripgrep)
+- [`tig`](https://github.com/jonas/tig)
+- [`w3m`](https://en.wikipedia.org/wiki/W3m)
 
 Also supported for various enhancements:
 
@@ -154,27 +154,52 @@ Also supported for various enhancements:
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
 [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
+[note-link-janitor](https://github.com/andymatuschak/note-link-janitor)
+(via [plugin](https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin)),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
-[Ranger](https://ranger.github.io/)
+[Pygments](https://pygments.org/),
+[Ranger](https://ranger.github.io/),
+[readability-cli](https://gitlab.com/gardenappl/readability-cli),
+[`termpdf.py`](https://github.com/dsanson/termpdf.py)
 
 #### macOS / Homebrew
 
 To install with [Homebrew](https://brew.sh/):
 
 ```bash
-brew install xwmx/taps/nb
+brew tap xwmx/taps
+brew install nb
 ```
 
 Installing `nb` with Homebrew also installs the recommended dependencies
-and completion scripts.
+above and completion scripts for Bash and Zsh.
 
 #### Ubuntu, Windows WSL, and others
+
+##### npm
+
+To install with [npm](https://www.npmjs.com/package/nb.sh):
+
+```bash
+npm install -g nb.sh
+```
+
+After `npm` installation completes, run `sudo nb completions install` to
+install Bash and Zsh completion scripts (recommended).
+
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
+
+*`nb` is also available under its original package name,
+[notes.sh](https://www.npmjs.com/package/notes.sh),
+which comes with an extra `notes` executable wrapping `nb`.*
 
 ##### Download and Install
 
@@ -185,16 +210,16 @@ commands:
 # install using wget
 sudo wget https://raw.github.com/xwmx/nb/master/nb -O /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb env install
+  sudo nb completions install
 
 # install using curl
 sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb env install
+  sudo nb completions install
 ```
 
-This will also install the completion scripts on all systems and the
-recommended dependencies on Ubuntu and WSL.
+On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
+the optional dependencies.
 
 ###### User-only Installation
 
@@ -230,22 +255,6 @@ sudo make install
 
 This will also install the completion scripts on all systems and the
 recommended dependencies on Ubuntu and WSL.
-
-##### npm
-
-To install with [npm](https://www.npmjs.com/package/nb.sh):
-
-```bash
-npm install -g nb.sh
-```
-
-Installing through `npm` only installs completion scripts.
-On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
-the optional dependencies.
-
-*Note: `nb` is also currently still available under
-its original package name, [notes.sh](https://www.npmjs.com/package/notes.sh),
-which comes with an extra `notes` pass-through wrapper for `nb`.*
 
 ##### bpkg
 
@@ -328,15 +337,18 @@ echo "Note content." | nb add
 
 # create a new password-protected, encrypted note titled "Secret Document"
 nb add --title "Secret Document" --encrypt
+
+# create a new note in the notebook named "example"
+nb example:add "This is a note."
 ```
 
 `nb add` with no arguments or input will open the new, blank note in your
 environment's preferred text editor. You can change your editor using the
-`$EDITOR` environment variable or [`nb set editor`](#settings-list---long).
+`$EDITOR` environment variable or [`nb set editor`](#editor).
 
 `nb` files are [Markdown](https://daringfireball.net/projects/markdown/)
 files by default. The default file type can be changed to whatever you
-like using [`nb set default_extension`](#settings-list---long).
+like using [`nb set default_extension`](#default_extension).
 
 `nb add` behaves differently depending on the type of argument it
 receives. When a filename with extension is specified, a new note
@@ -351,7 +363,7 @@ string as the content and the editor is not opened:
 
 ```bash
 > nb add "This is a note."
-Added [5] 20200101000000.md
+Added: [5] 20200101000000.md
 ```
 
 `nb add <string>` is useful for quickly jotting down notes directly
@@ -366,15 +378,15 @@ the filename.
 ```bash
 # create a new note containing "Note content."
 > echo "Note content." | nb add
-Added [6] 20200101000100.md
+Added: [6] 20200101000100.md
 
 # create a new note containing the clipboard contents on macOS
 > pbpaste | nb add
-Added [7] 20200101000200.md
+Added: [7] 20200101000200.md
 
 # create a new note containing the clipboard contents using xclip
 > xclip -o | nb add
-Added [8] 20200101000300.md
+Added: [8] 20200101000300.md
 ```
 
 Content can be passed with the `--content` option, which will also
@@ -393,15 +405,16 @@ short options:
 
 ```bash
 > nb add --filename "example.md" -t "Example Title" -c "Example content."
-Added [9] example.md 'Example Title'
+Added: [9] example.md "Example Title"
 ```
 
 The `-t <title>` / `--title <title>` option will also set the filename
-to the title, with spaces replaced with underscores:
+to the title, lowercased with spaces and non-filename characters replaced
+with underscores:
 
 ```bash
 > nb add --title "Example Title" "Example content."
-Added [10] Example_Title.md 'Example Title'
+Added: [10] example_title.md "Example Title"
 ```
 
 Files can be created with any file type either by specifying the
@@ -415,6 +428,20 @@ nb add example.org
 nb add --type rst
 ```
 
+Notes can be tagged simply by adding hashtags anywhere in the document:
+
+```text
+#tag1 #tag2
+```
+
+Search for tagged notes and bookmarks with [`nb search` / `nb q`](#search):
+
+```bash
+nb search "#tag1"
+
+nb q "#tag2"
+```
+
 For a full list of options available for `nb add`, run [`nb help add`](#add).
 
 ##### Password-Protected Encrypted Notes and Bookmarks
@@ -422,7 +449,7 @@ For a full list of options available for `nb add`, run [`nb help add`](#add).
 Password-protected notes and [bookmarks](#-bookmarks) are created with
 the `-e` / `--encrypt` flag and are encrypted with AES-256 using OpenSSL
 by default. GPG is also supported and can be configured with
-[`nb set encryption_tool`](#settings-list---long).
+[`nb set encryption_tool`](#encryption_tool).
 
 Each protected note and bookmark is encrypted individually with its own
 password. When an encrypted item is viewed, edited, or opened, `nb`
@@ -451,6 +478,9 @@ nb a "This is a note."
 
 # create a new note containing the clipboard contents with xclip
 xclip -o | nb a
+
+# create a new note in the notebook named "example"
+nb example:a
 ```
 
 ##### Other Aliases: `create`, `new`
@@ -482,8 +512,8 @@ Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
 `nb ls` also includes a footer with example commands for easy reference.
 The notebook header and command footer can be configured or hidden with
-[`nb set header`](#settings-list---long) and
-[`nb set footer`](#settings-list---long).
+[`nb set header`](#header) and
+[`nb set footer`](#footer).
 
 Notes from the current notebook are listed in the order they were last
 modified. By default, each note is listed with its id, filename, and an
@@ -549,6 +579,22 @@ filenames and titles:
 [3] Example Title
 ```
 
+Multiple words act like an `OR` filter, listing any titles or filenames that
+match any of the words:
+
+```bash
+> nb ls example ideas
+[3] Example Title
+[1] Ideas
+```
+
+When multiple words are quoted, filter titles and filenames for that phrase:
+
+```bash
+> nb ls "example title"
+[3] Example Title
+```
+
 For full text search, see [Search](#-search).
 
 To view excerpts of notes, use the `--excerpt` or `-e` option, which
@@ -575,17 +621,31 @@ More example content:
 - three
 ```
 
-Bookmarks and encrypted notes are indicated with `🔖` and `🔒`, making them
-easily identifiable in lists:
+Several classes of file types are represented with emoji to make them
+easily identifiable in lists. For example, bookmarks and encrypted notes
+are listed with `🔖` and `🔒`:
 
 ```bash
 > nb ls
 home
 ----
 [4] Example Note
-[3] 🔒 example-encrypted.md.enc
+[3] 🔒 encrypted-note.md.enc
 [2] 🔖 Example Bookmark (example.com)
-[1] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 🔒 encrypted.bookmark.md.enc
+```
+
+File types include:
+
+```text
+ 🔉  Audio
+ 📖  Book
+ 🔖  Bookmark
+ 🔒  Encrypted
+ 📂  Folder
+ 🌄  Image
+ 📄  PDF, Word, or Open Office document
+ 📹  Video
 ```
 
 By default, items are listed starting with the most recently modified.
@@ -691,7 +751,7 @@ title: Ideas
 ```
 
 `nb` and `nb ls` display the 20 most recently modified items. The default
-limit can be changed with [`nb set limit <number>`](#settings-list---long).
+limit can be changed with [`nb set limit <number>`](#limit).
 To list a different number of items on a per-command basis, use the
 `-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
 
@@ -758,6 +818,15 @@ nb edit example.md
 
 # edit note by title
 nb edit "A Document Title"
+
+# edit note 12 in the notebook named "example"
+nb edit example:12
+
+# edit note 12 in the notebook named "example", alternative
+nb example:12 edit
+
+# edit note 12 in the notebook named "example", alternative
+nb example:edit 12
 ```
 
 `edit` and other subcommands that take an identifier can be called with the
@@ -807,6 +876,15 @@ nb e "A Document Title"
 
 # edit note by id, alternative
 nb 3 e
+
+# edit note 12 in the notebook named "example"
+nb e example:12
+
+# edit note 12 in the notebook named "example", alternative
+nb example:12 e
+
+# edit note 12 in the notebook named "example", alternative
+nb example:e 12
 ```
 
 For `nb edit` help information, run [`nb help edit`](#edit).
@@ -827,12 +905,24 @@ nb show "A Document Title"
 
 # show note by id, alternative
 nb 3 show
+
+# show note 12 in the notebook named "example"
+nb show example:12
+
+# show note 12 in the notebook named "example", alternative
+nb example:12 show
+
+# show note 12 in the notebook named "example", alternative
+nb example:show 12
 ```
 
 By default, `nb show` will open the note in
 [`less`](https://linux.die.net/man/1/less), with syntax highlighting if
-[Pygments](https://pygments.org/) is installed. You can navigate in
-`less` using the following keys:
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
+is installed. You can navigate in `less` using the following keys:
 
 ```text
 Key               Function
@@ -848,13 +938,13 @@ n                 Jump to next <query> match
 q                 Quit
 ```
 
-*Note: If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
+*If `less` scrolling isn't working in [iTerm2](https://www.iterm2.com/),
 go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
 
-When [Pandoc](https://pandoc.org/) is available, use the `--render` option to
-render the note to HTML and open it in your terminal browser:
+When [Pandoc](https://pandoc.org/) is available, use the `-r` / `--render`
+option to render the note to HTML and open it in your terminal browser:
 
 ```bash
 nb show example.md --render
@@ -866,6 +956,8 @@ depending on the tools available in the environment. Supported file types and
 tools include:
 
 - PDF files:
+  - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
+    with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
 - Audio files:
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
@@ -873,20 +965,42 @@ tools include:
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
 - Images:
-  - [ImageMagick](https://imagemagick.org/)
-  - [`imgcat`](https://www.iterm2.com/documentation-images.html)
+  - [ImageMagick](https://imagemagick.org/) with a terminal that
+    supports [sixels](https://en.wikipedia.org/wiki/Sixel)
+  - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
+    [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
+- Word Documents:
+  - [Pandoc](https://pandoc.org/)
+- EPUB ebooks:
+  - [Pandoc](https://pandoc.org/) with
+    [`w3m`](https://en.wikipedia.org/wiki/W3m) or
+    [`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 
 When using `nb show` with other file types or if the above tools are not
 available, `nb show` will open files in your system's preferred application
 for each type.
 
-`nb show` is primarily intended for previewing notes and files within
-the terminal. To view files in the system's preferred GUI application,
+`nb show` also provides [options](#show) for querying information about an
+item. For example, use the `--added` / `-a` and `--updated` / `-u` flags to
+print the date and time that an item was added or updated:
+
+```bash
+> nb show 2 --added
+2020-01-01 01:01:00 -0700
+
+> nb show 2 --updated
+2020-02-02 02:02:00 -0700
+```
+
+`nb show` is primarily intended for viewing items within the terminal.
+To view a file in the system's preferred GUI application,
 use [`nb open`](#open).
+
+For full `nb show` usage information, run [`nb help show`](#show).
 
 ##### Shortcut Alias: `s`
 
@@ -904,6 +1018,15 @@ nb s "A Document Title"
 
 # show note by id, alternative
 nb 3 s
+
+# show note 12 in the notebook named "example"
+nb s example:12
+
+# show note 12 in the notebook named "example", alternative
+nb example:12 s
+
+# show note 12 in the notebook named "example", alternative
+nb example:s 12
 ```
 
 ##### Alias: `view`
@@ -924,8 +1047,6 @@ nb view "A Document Title"
 nb 3 view
 ```
 
-For `nb show` help information, run [`nb help show`](#show).
-
 #### Deleting Notes
 
 To delete a note, pass its id, filename, or title to
@@ -943,6 +1064,15 @@ nb delete "A Document Title"
 
 # delete note by id, alternative
 nb 3 delete
+
+# delete note 12 in the notebook named "example"
+nb delete example:12
+
+# delete note 12 in the notebook named "example", alternative
+nb example:12 delete
+
+# show note 12 in the notebook named "example", alternative
+nb example:delete 12
 ```
 
 By default, `nb delete` will display a confirmation prompt. To skip, use the
@@ -968,6 +1098,15 @@ nb d "A Document Title"
 
 # delete note by id, alternative
 nb 3 d
+
+# delete note 12 in the notebook named "example"
+nb d example:12
+
+# delete note 12 in the notebook named "example", alternative
+nb example:12 d
+
+# delete note 12 in the notebook named "example", alternative
+nb example:d 12
 ```
 
 For `nb delete` help information, run [`nb help delete`](#delete).
@@ -1008,8 +1147,10 @@ permission.
 ```
 
 `nb` embeds the page content in the bookmark, making it available for full
-text search with [`nb search`](#search). When `pandoc` is installed, the
-HTML page content will be converted to Markdown.
+text search with [`nb search`](#search). When [Pandoc](https://pandoc.org/)
+is installed, the HTML page content will be converted to Markdown. When
+[readability-cli](https://gitlab.com/gardenappl/readability-cli) is
+installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -1107,17 +1248,19 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with [`nb search`](#search):
+Search for tagged bookmarks with [`nb search` / `nb q`](#search):
 
 ```bash
 nb search "#tag1"
+
+nb q "#tag"
 ```
 
-`nb search` automatically searches archived page content:
+`nb search` / `nb q` automatically searches archived page content:
 
 ```bash
-> nb search "example query"
-[10] example.bookmark.md "Example Bookmark (example.com)"
+> nb q "example query"
+[10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1132,8 +1275,10 @@ nb https://example.com --encrypt
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
+#### Listing and Filtering Bookmarks
+
 [`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
-and filter bookmarks:
+and filter only bookmarks:
 
 ```bash
 > nb bookmark
@@ -1147,6 +1292,50 @@ Add: nb <url> Help: nb help bookmark
 [2] 🔖 Example Two (example.com)
 ```
 
+Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
+
+```bash
+> nb
+home
+----
+[7] 🔖 Example Bookmark Three (example.com)
+[6] Example Note Three
+[5] 🔖 Example Bookmark Two (example.net)
+[4] Example Note Two
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[2] Example Note One
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+Use the [`--type <type>` / `--<type>`](#ls) option as a filter to display
+only bookmarks:
+
+```bash
+> nb --type bookmark
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
+
+> nb --bookmark
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+`nb` saves the domain in the title, making it easy to filter by domain
+using any list subcommands:
+
+```bash
+> nb example.com
+[7] 🔖 Example Bookmark Three (example.com)
+[1] 🔖 Example Bookmark One (example.com)
+```
+
+For more listing options, see [`nb help ls`](#ls), [`nb help list`](#list),
+and [`nb help bookmark`](#bookmark).
+
 ##### Shortcut Alias: `b`
 
 `bookmark` can also be used with the alias `b`:
@@ -1155,12 +1344,13 @@ Add: nb <url> Help: nb help bookmark
 > nb b
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
-[3] 🔖 🔒 example.bookmark.md.enc
-[2] 🔖 Example Two (example.com)
-[1] 🔖 Example One (example.com)
+[7] 🔖 Example Bookmark Three (example.com)
+[5] 🔖 Example Bookmark Two (example.net)
+[3] 🔖 🔒 example-encrypted.bookmark.md.enc
+[1] 🔖 Example Bookmark One (example.com)
 
-> nb b two
-[2] 🔖 Example Two (example.com)
+> nb b example.net
+[5] 🔖 Example Bookmark Two (example.net)
 ```
 
 #### Opening and Viewing Bookmarked Pages
@@ -1173,6 +1363,15 @@ system's primary web browser:
 ```bash
 # open bookmark by id
 nb open 3
+
+# open bookmark 12 in the notebook named "example"
+nb open example:12
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 open
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:open 12
 ```
 
 [`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
@@ -1182,7 +1381,16 @@ in your terminal web browser, such as
 
 ```bash
 # peek bookmark by id
-nb peek 12
+nb peek 3
+
+# peek bookmark 12 in the notebook named "example"
+nb peek example:12
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:12 peek
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:peek 12
 ```
 `open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
@@ -1191,13 +1399,34 @@ nb peek 12
 If the page has been removed, `nb` can check the [Internet Archive
 Wayback Machine](https://archive.org/web/) for an archived copy.
 
+The preferred terminal web browser can be set using the `$BROWSER`
+environment variable, assigned in `~/.bashrc`, `~/.zshrc`, or similar:
+
+```bash
+export BROWSER=lynx
+```
+
+When `$BROWSER` is not set, `nb` looks for `w3m` and `lynx` and uses the
+first one it finds.
+
+`$BROWSER` can also be used to easy specify the terminal browser for an
+individual command:
+
+```bash
+> BROWSER=lynx nb 12 peek
+# opens the URL from bookmark 12 in lynx
+
+> BROWSER=w3m nb 12 peek
+# opens the URL from bookmark 12 in w3m
+```
+
 `nb show` and `nb edit` can also be used to view and edit bookmark files,
 which include the cached page converted to Markdown.
 
-`nb show <id> --render` displays the bookmark file converted to HTML in
-the terminal web browser, including all bookmark fields and the cached page
-content, providing a cleaned-up, distraction-free, locally-served view of
-the page content along with all of your notes.
+`nb show <id> --render` / `nb show <id> -r` displays the bookmark file
+converted to HTML in the terminal web browser, including all bookmark fields
+and the cached page content, providing a cleaned-up, distraction-free,
+locally-served view of the page content along with all of your notes.
 
 ##### Shortcut Aliases: `o` and `p`
 
@@ -1208,8 +1437,20 @@ the page content along with all of your notes.
 # open bookmark by id
 nb o 3
 
+# open bookmark 12 in the notebook named "example"
+nb o example:12
+
+# open bookmark 12 in the notebook named "example", alternative
+nb example:12 o
+
 # peek bookmark by id
-nb p 12
+nb p 3
+
+# peek bookmark 12 in the notebook named "example"
+nb p example:12
+
+# peek bookmark 12 in the notebook named "example", alternative
+nb example:12 p
 ```
 
 #### Bookmark File Format
@@ -1237,7 +1478,7 @@ Bookmark a page:
 
 ```bash
 > bookmark https://example.com --tags tag1,tag2
-Added [3] 20200101000000.bookmark.md "Example Title (example.com)"
+Added: [3] 🔖 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
@@ -1269,7 +1510,7 @@ Perform a full text search of bookmarks and archived page content:
 
 ```bash
 > bookmark search "example query"
-[10] example.bookmark.md "Example Bookmark (example.com)"
+[10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ---------------------------------------------------------
 5:Lorem ipsum example query.
 ```
@@ -1285,8 +1526,11 @@ regular expressions and tags:
 # search current notebook for "example query"
 nb search "example query"
 
-# search all unarchived notebooks for "example query"
-nb search "example query" --all
+# search the notebook "example" for "example query"
+nb example:search "example query"
+
+# search all unarchived notebooks for "example query" and list matching items
+nb search "example query" --all --list
 
 # search for "Example" OR "Sample"
 nb search "Example|Sample"
@@ -1294,11 +1538,23 @@ nb search "Example|Sample"
 # search items containing the hashtag "#example"
 nb search "#example"
 
-# search with a regular expression for items containing phone numbers
-nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
+# search with a regular expression
+nb search "\d\d\d-\d\d\d\d"
 
 # search bookmarks for "example"
 nb search "example" --type bookmark
+
+# search bookmarks for "example", alternative
+nb b q "example"
+
+# search the current notebook for "example query"
+nb q "example query"
+
+# search the notebook named "example" for "example query"
+nb example:q "example query"
+
+# search all unarchived notebooks for "example query" and list matching items
+nb q -la "example query"
 ```
 
 `nb search` prints the id number, filename, and title of each matched
@@ -1307,7 +1563,7 @@ highlighting:
 
 ```bash
 > nb search "example"
-[314]  example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 ----------------------------------------------------------
 1:# Example Bookmark (example.com)
 
@@ -1323,7 +1579,7 @@ the `-l` or `--list` option:
 
 ```bash
 > nb search "example" --list
-[314]  example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 [2718] example.md "Example Note"
 ```
 
@@ -1349,6 +1605,9 @@ nb q -l "example"
 
 # search for "example" in all unarchived notebooks
 nb q -a "example"
+
+# search for "example" in the notbook named "sample"
+nb sample:q "example"
 ```
 
 For more information about search, see [`nb help search`](#search).
@@ -1373,6 +1632,15 @@ nb history example.md
 
 # show history for note titled "Example"
 nb history Example
+
+# show history for the notebook named "example"
+nb example:history
+
+# show history for the notebook named "example", alternative
+nb history example:
+
+# show the history for note 12 in the notebook named "example"
+nb history example:12
 ```
 
 `nb history` uses `git log` by default and prefers
@@ -1392,7 +1660,7 @@ nb notebooks add example
 `nb` and `nb ls` list the available notebooks above the list of notes:
 
 ```bash
-> nb ls
+> nb
 example · home
 --------------
 [3] Title Three
@@ -1505,6 +1773,34 @@ nb move 3 example
 nb move example:5 sample
 ```
 
+##### Example Workflow
+
+The flexibility of `nb`'s argument handling makes it easy to build commands
+step by step as items are listed, filtered, viewed, and edited, particularly
+in combination with shell history:
+
+```bash
+# list items in the "example" notebook
+> nb example:
+example · home
+--------------
+[example:3] Title Three
+[example:2] Title Two
+[example:1] Title One
+
+# filter list
+> nb example: three
+[example:3] Title Three
+
+# view item
+> nb example:3 show
+# opens item in `less`
+
+# edit item
+> nb example:3 edit
+# opens item in $EDITOR
+```
+
 ##### Notebooks and Tab Completion
 
 [`nb` tab completion](#tab-completion) is optimized for frequently running
@@ -1564,7 +1860,7 @@ nb example:q "#tag"
 
 By default, all `nb` notebooks are global, making them always accessible in
 the terminal regardless of the current working directory. Global notebooks are
-stored in the directory configured in [`NB_DIR`](#settings-list---long), which is
+stored in the directory configured in [`nb set nb_dir`](#nb_dir), which is
 `~/.nb` by default.
 
 ##### Local Notebooks
@@ -1581,7 +1877,7 @@ When `nb` runs within a local notebook, the local notebook is set as the
 current notebook:
 
 ```bash
-> nb ls
+> nb
 local · example · home
 ----------------------
 [3] Title Three
@@ -1608,7 +1904,7 @@ nb move 1 home
 # search the local notebook for <query string>
 nb search "query string"
 
-# search the local notebook and all global notebooks for <query string>
+# search the local notebook and all unarchived global notebooks for <query string>
 nb search "query string" --all
 ```
 
@@ -1680,7 +1976,7 @@ When a notebook is archived it is not included in [`nb`](#ls) /
 nor synced automatically with [`nb sync --all`](#sync).
 
 ```bash
-> nb ls
+> nb
 example1 · example2 · example3 · [1 archived]
 ---------------------------------------------
 [3] Title Three
@@ -1750,7 +2046,7 @@ system.
 Many services provide free private git repositories, so git syncing with
 `nb` is easy, free, and vendor-independent. You can also sync your notes
 using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
-your `nb` directory with [`nb set nb_dir <path>`](#settings-list---long)
+your `nb` directory with [`nb set nb_dir <path>`](#nb_dir)
 and git syncing will still work simultaneously.
 
 When you have an existing `nb` notebook in a git repository, simply
@@ -1758,8 +2054,8 @@ pass the URL to [`nb notebooks add`](#notebooks) and `nb` will clone
 your existing notebook and start syncing changes automatically:
 
 ```bash
-# create a new notebook named Example cloned from a private GitLab repository
-nb notebooks add Example https://gitlab.com/example/example.git
+# create a new notebook named "example" cloned from a private GitLab repository
+nb notebooks add example https://gitlab.com/example/example.git
 ```
 
 Turn off syncing for a notebook by removing the remote:
@@ -1772,17 +2068,60 @@ nb remote remove
 nb example:remote remove
 ```
 
-You can also turn off autosync with
-[`nb set auto_sync`](#settings-list---long) and sync manually with
-[`nb sync`](#sync).
+Automatic git syncing can be turned on or off with
+[`nb set auto_sync`](#auto_sync).
+
+To sync manually, use [`nb sync`](#sync):
+
+```bash
+# manually sync the current notebook
+nb sync
+
+# manually sync the notebook named "example"
+nb example:sync
+```
+
+To bypass `nb` syncing and run `git` commands directly within a
+notebook, use [`nb git`](#git):
+
+```bash
+# run `git fetch` in the current notebook
+nb git fetch origin
+
+# run `git status` in the notebook named "example"
+nb example:git status
+```
+
+#### Private Repositories and Git Credentials
+
+Syncing with private repositories requires configuring git to not prompt
+for credentials. For repositories cloned over HTTPS,
+[credentials can be cached with git
+](https://docs.github.com/en/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git).
+For repositories cloned over SSH,
+[keys can be added to the ssh-agent
+](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+
+Use [`nb sync`](#sync) within a notebook to determine whether your
+configuration is working. If `nb sync` displays a password prompt,
+then follow the instructions above to configure your credentials.
+The password prompt can be used to authenticate, but `nb` does not
+cache or otherwise handle git credentials in any way, so there will
+likely be multiple password prompts during each sync if credentials
+are not configured.
 
 #### Sync Conflict Resolution
 
+`nb` handles git operations automatically, so you shouldn't ever need
+to use the `git` command line tool directly. `nb` merges changes when
+syncing and handles conflicts using a couple different strategies.
+
 When [`nb sync`](#sync) encounters a conflict in a text file and can't
-merge overlapping local and remote changes, `nb` saves both versions
-within the file, separated by git conflict markers. Use
-[`nb edit`](#edit) to remove the conflict markers and delete any unwanted
-text.
+cleanly merge overlapping local and remote changes, `nb` saves both
+versions within the file separated by git conflict markers and prints a
+message indicating which file(s) contain conflicting text.
+Use [`nb edit`](#edit) to remove the conflict markers and delete any
+unwanted text.
 
 For example, in the following file, the second list item was changed on
 two systems, and git has no way to determine which one we want to keep:
@@ -1818,15 +2157,16 @@ and `>>>>>>>`:
 
 When `nb` encounters a conflict in a binary file, such as an encrypted
 note, both versions of the file are saved in the notebook as individual
-files, one with `--conflicted-copy` appended to the filename. To
-resolve a conflicted copy of a binary file, compare both versions and
-merge them manually, then delete the `--conflicted-copy`.
+files, with `--conflicted-copy` appended to the filename of the version
+from the remote. To resolve a conflicted copy of a binary file, compare
+both versions and merge them manually, then delete the `--conflicted-copy`.
 
-`nb` handles git operations automatically, so you shouldn't ever need
-to use the `git` command line tool directly. If you do encounter a
-conflict that `nb` says it can't merge, [`nb git`](#git) and
-[`nb run`](#run) can be used to resolve the conflict manually without
-changing the current working directory.
+If you do encounter a conflict that `nb` says it can't merge at all,
+[`nb git`](#git) and [`nb run`](#run) can be used to perform git and
+shell operations within the notebook to resolve the conflict manually.
+Please also [open an issue](https://github.com/xwmx/nb/issues/new)
+with any relevant details that could inform a strategy for handling any
+such cases automatically.
 
 ### ↕️ Import / Export
 
@@ -1848,6 +2188,19 @@ nb import ~/Documents/example.docx
 nb open example.docx
 ```
 
+Multiple filenames and globbing are supported:
+
+```bash
+# import all files and directories in the current directory
+nb import ./*
+
+# import all markdown files in the current directory
+nb import ./*.md
+
+# import example.md and sample.md in the current directory
+nb import example.md sample.md
+```
+
 `nb import` can also download and import files directly from the web:
 
 ```bash
@@ -1863,9 +2216,10 @@ Some imported file types have indicators to make them easier to identify in
 lists:
 
 ```bash
-> nb ls
+> nb
 home
 ----
+[6] 📖 example-ebook.epub
 [5] 🌄 example-picture.png
 [4] 📄 example-document.docx
 [3] 📹 example-video.mp4
@@ -1874,7 +2228,8 @@ home
 ```
 
 Notes, bookmarks, and other files can be exported using [`nb export`](#export).
-If Pandoc is installed, notes can be automatically converted to any of the
+If [Pandoc](https://pandoc.org/) is installed, notes can be automatically
+converted to any of the
 [formats supported by Pandoc](https://pandoc.org/MANUAL.html#option--to).
 By default, the output format is determined by the file extension:
 
@@ -2019,7 +2374,7 @@ current notebook name, the shell prompt, and divider lines.
 
 `nb` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using
-[`nb set color_theme`](#settings-list---long):
+[`nb set color_theme`](#color_theme):
 
 ```bash
 nb set color_theme
@@ -2119,8 +2474,8 @@ Plugin installed:
 /home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
-Once a theme is installed, use [`nb set color_theme`](#settings) to set it as
-the current theme:
+Once a theme is installed, use [`nb set color_theme`](#color_theme) to set it
+as the current theme:
 
 ```bash
 > nb set color_theme turquoise
@@ -2143,6 +2498,20 @@ To view a table of available colors and numbers, run:
 ```bash
 nb set colors
 ```
+
+#### Syntax Highlighting Theme
+
+`nb` displays files with syntax highlighting when
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
+is installed.
+
+When `bat` is installed, syntax highlighting color themes are
+available for both light and dark terminal backgrounds.
+To view a list of available themes and set the syntax highlighting color
+theme, use [`nb set syntax_theme`](#syntax_theme).
 
 ### $ Shell Theme Support
 
@@ -2221,10 +2590,11 @@ Plugin successfully uninstalled:
 Plugins are written in a Bash-compatible shell scripting language and
 have an `.nb-plugin` extension.
 
-`nb` includes two example plugins:
+`nb` includes a few example plugins:
 
 - [`example.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin)
 - [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+- [`ebook.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin)
 
 Create a new subcommand in three easy steps:
 
@@ -2348,17 +2718,14 @@ _example() {
 ```
 
 [`notebooks current --path`](#notebooks) returns the path to the current
-notebook. It also takes an optional `<selector>` argument that resolves
-the notebook, updates the current notebook if the selector
-contains a valid notebook name, then returns the path the now
-possibly-updated current notebook:
+notebook:
 
 ```bash
 # _example() continued:
 
-# return the notebook path, first setting it with <selector>
+# get the notebook path
 local _notebook_path
-_notebook_path="$(_notebooks current "${_selector}" --path)"
+_notebook_path="$(_notebooks current --path)"
 
 # print the file at "${_notebook_path}/${_filename}" to standard output
 cat "${_notebook_path}/${_filename}"
@@ -2367,7 +2734,7 @@ cat "${_notebook_path}/${_filename}"
 See
 [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
 for a practical example using both [`show <selector> --filename`](#show) and
-[`notebooks current <selector> --path`](#notebooks) along with other
+[`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
 ### > `nb` Interactive Shell
@@ -2393,10 +2760,10 @@ home
 [1] Demo
 
 nb> edit 3 --content "New content."
-Updated [3] Example
+Updated: [3] Example
 
 nb> bookmark https://example.com
-Added [4] example.bookmark.md "Example Title (example.com)"
+Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
 
 nb> ls
 home
@@ -2471,7 +2838,8 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 <p align="center">
   <a href="#nb-help">nb</a> •
   <a href="#bookmark-help">bookmark</a> •
-  <a href="#subcommands">subcommands</a>
+  <a href="#subcommands">subcommands</a> •
+  <a href="#plugins-1">plugins</a>
 </p>
 
 #### `nb help`
@@ -2483,11 +2851,10 @@ __          _
  / / | | | | |_) |
 /_/  |_| |_|_.__/
 
-`nb` · notes & bookmarks
-
-Command line note-taking, bookmarking, and archiving with encryption, search,
-Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-in a single portable script.
+[nb] Command line note-taking, bookmarking, archiving with plain-text data
+storage, encryption, filtering and search, Git-backed versioning and syncing,
+Pandoc-backed conversion, global and local notebooks, customizable color
+themes, plugins, and more in a single portable, user-friendly script.
 
 Help:
   nb help               Display this help information.
@@ -2508,7 +2875,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  nb bookmark [list [<list options>...]]
+  nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
@@ -2523,22 +2890,22 @@ Usage:
   nb export notebook <name> [<path>]
   nb export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
-  nb git checkpoint [<message>]
-  nb git <git options>...
+  nb git [checkpoint [<message>] | dirty]
+  nb git <git-options>...
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<id> | <filename> | <path> | <title>]
-  nb import [copy | download | move] (<path> | <url>) [--convert]
+  nb import [copy | download | move] (<path>... | <url>) [--convert]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
-        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
@@ -2546,23 +2913,26 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
-                       [--path | --selected | --filename [<filename>]]
+  nb notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  nb notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped | --name | --path | --filename [<filename>]]
+  nb notebooks use <name>
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
   nb plugins [<name>] [--paths]
-  nb plugins install [<path> | <url>]
-  nb plugins uninstall <name>
+  nb plugins install [<path> | <url>] [--force]
+  nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
   nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
             (<name> | --reset | --to-bookmark | --to-note)
@@ -2574,9 +2944,9 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
+          --id | --info-line | --path | [-p | --print] [-r | --render] |
+          --selector-id | --title | --type [<type>] | --updated]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -2659,7 +3029,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  bookmark list [<list options>...]
+  bookmark list [<list-options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   bookmark search <query>
@@ -2702,13 +3072,24 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When `pandoc` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is cleaned up to focus on
+  content.
+
+  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
+
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   bookmark https://example.com
@@ -2810,6 +3191,12 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb example:add
+  nb example:add -t "Title"
+  nb a
+  nb a "Note content."
+  nb example:a
+  nb example:a -t "Title"
 
 Aliases: `create`, `new`
 Shortcut Alias: `a`
@@ -2825,7 +3212,7 @@ Usage:
               [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
               [--title <title>]
-  nb bookmark list [<list options>...]
+  nb bookmark list [<list-options>...]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
@@ -2869,25 +3256,37 @@ Description:
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
-  bookmarked page available for full-text search. When `pandoc` is
+  bookmarked page available for full-text search. When Pandoc [1] is
   installed, the HTML content will be converted to Markdown before saving.
+  When readability-cli [2] is install, markup is cleaned up to focus on
+  content.
+
+  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
 
     <https://www.example.com>
 
+    1. https://pandoc.org/
+    2. https://gitlab.com/gardenappl/readability-cli
+    3. https://en.wikipedia.org/wiki/W3m
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+
 Examples:
   nb https://example.com
-  nb bookmark https://example.com
-  nb bookmark https://example.com --encrypt
-  nb bookmark https://example.com --tags example,sample,demo
-  nb bookmark https://example.com/about -c "Example comment."
-  nb bookmark https://example.com/faqs -f example-filename
-  nb bookmark https://example.com --quote "Example quote or excerpt."
+  nb example: https://example.com
+  nb https://example.com --encrypt
+  nb https://example.com --tags example,sample,demo
+  nb https://example.com/about -c "Example comment."
+  nb https://example.com/faqs -f example-filename
+  nb https://example.com --quote "Example quote or excerpt."
   nb bookmark list
   nb bookmark search "example query"
   nb bookmark open 5
+  nb b
 
 Shortcut Alias: `b`
 ```
@@ -2933,6 +3332,13 @@ Examples:
   nb delete example.md
   nb delete "A Document Title"
   nb 3 delete --force
+  nb example:delete 12
+  nb delete example:12
+  nb example:12 delete
+  nb d 3
+  nb 3 d
+  nb d example:12
+  nb example:12 d
 
 Shortcut Alias: `d`
 ```
@@ -2967,6 +3373,13 @@ Examples:
   nb edit "A Document Title"
   echo "Content to append." | nb edit 1
   nb 3 edit
+  nb example:edit 12
+  nb edit example:12
+  nb example:12 edit
+  nb e 3
+  nb 3 e
+  nb e example:12
+  nb example:12 e
 
 Shortcut Alias: `e`
 ```
@@ -3025,18 +3438,23 @@ Examples:
 
   # Export a Markdown note to a .docx Microsoft Office Word document
   nb export example.md /path/to/example.docx
+
+  # Export note 12 in the "sample" notebook to HTML
+  nb export sample:12 /path/to/example.html
 ```
 
 #### `git`
 
 ```text
 Usage:
-  nb git checkpoint [<message>]
-  nb git <git options>...
+  nb git [checkpoint [<message>] | dirty]
+  nb git <git-options>...
 
 Subcommands:
-  checkpoint  Create a new git commit in the current notebook and sync with
-              the remote if `nb set auto_sync` is enabled.
+  checkpoint    Create a new git commit in the current notebook and sync with
+                the remote if `nb set auto_sync` is enabled.
+  dirty         0 (success, true) if there are uncommitted changes in
+                <notebook-path>. 1 (error, false) if <notebook-path> is clean.
 
 Description:
   Run `git` commands within the current notebook directory.
@@ -3045,6 +3463,7 @@ Examples:
   nb git status
   nb git diff
   nb git log
+  nb example:git status
 ```
 
 #### `help`
@@ -3063,6 +3482,13 @@ Options:
 Description:
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
+
+Examples:
+  nb help
+  nb help add
+  nb help import
+  nb h notebooks
+  nb h e
 
 Shortcut Alias: `h`
 ```
@@ -3083,26 +3509,31 @@ Examples:
   nb history
   nb history example.md
   nb 3 history
+  nb history example:
+  nb example:history
+  nb example:history 12
+  nb history example:12
+  nb example:12 history
 ```
 
 #### `import`
 
 ```text
 Usage:
-  nb import (<path> | <url>)
-  nb import copy <path>
+  nb import (<path>... | <url>)
+  nb import copy <path>...
   nb import download <url> [--convert]
-  nb import move <path>
+  nb import move <path>...
   nb import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
 
 Subcommands:
-  (default) Copy or download the file in <path> or <url>.
-  copy      Copy the file at <path> into the current notebook.
+  (default) Copy or download the file(s) at <path> or <url>.
+  copy      Copy the file(s) at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
-  move      Copy the file at <path> into the current notebook.
+  move      Move the file(s) at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
 Description:
@@ -3113,6 +3544,9 @@ Examples:
   nb import ~/Pictures/example.png
   nb import ~/Documents/example.docx
   nb import https://example.com/example.pdf
+  nb example:import https://example.com/example.jpg
+  nb import ./*
+  nb import ./*.md
 ```
 
 #### `init`
@@ -3138,8 +3572,8 @@ Examples:
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [-s | --sort] [-r | --reverse]
-          [-t <type> | --type <type> | --<type>]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -3150,12 +3584,13 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notes in the current notebook.
@@ -3166,13 +3601,14 @@ Description:
   regular expression.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
   nb list
@@ -3182,6 +3618,7 @@ Examples:
   nb list "^Example.*"
   nb list --10
   nb list --type document
+  nb example:list
 ```
 
 #### `ls`
@@ -3190,7 +3627,7 @@ Examples:
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
-        [-p | --pager] [-s | --sort] [-r | --reverse]
+        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
@@ -3205,12 +3642,13 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
+  --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
-                                  note, bookmark, document, archive, image,
-                                  video, audio, folder
+                                  archive, audio, book, bookmark, document,
+                                  folder, image, note, text, video
 
 Description:
   List notebooks and notes in the current notebook, displaying note titles
@@ -3226,15 +3664,18 @@ Description:
   `nb help list`.
 
 Indicators:
+  🔉  Audio
+  📖  Book
   🔖  Bookmark
   🔒  Encrypted
+  📂  Folder
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
-  🔉  Audio
-  📂  Folder
 
 Examples:
+  nb
+  nb --all
   nb ls
   nb ls example.md -e 10
   nb ls --excerpt --no-id
@@ -3242,6 +3683,9 @@ Examples:
   nb ls "^Example.*"
   nb ls --10
   nb ls --type document
+  nb example:
+  nb example: -ae
+  nb example:ls
 ```
 
 #### `move`
@@ -3259,6 +3703,9 @@ Description:
 Examples:
   nb move 1 example-notebook
   nb move example.md example-notebook
+  nb example:move sample.md other-notebook
+  nb move example:sample.md other-notebook
+  nb mv 1 example-notebook
 
 Shortcut Alias: `mv`
 ```
@@ -3271,15 +3718,15 @@ Usage:
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks current [<name> | <path> | <selector>] [--global | --local]
-                       [--path | --selected | --filename [<filename>]]
+  nb notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
   nb notebooks init [<path> [<remote-url>]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --path | --filename [<filename>]]
+                    [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
 
 Options:
@@ -3295,9 +3742,8 @@ Options:
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
-  --names                  Only print the notebook name.
-  --path                   Print the path of the notebook.
-  --paths                  Print the path of each notebook.
+  --name, --names          Print the notebook name.
+  --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
   --unarchived             Only list unarchived notebooks.
@@ -3315,8 +3761,7 @@ Subcommands:
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name. When provides with <name>,
-             <path>, or <selector>, use that as the current notebook.
+  current    Print the current notebook name or path.
   delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in your
              file browser, explorer, or finder.
@@ -3343,8 +3788,10 @@ Description:
 
 Examples:
   nb notebooks --names
-  nb notebooks add Example1
-  nb notebooks add Example2 https://github.com/example/example.git
+  nb notebooks add sample
+  nb notebooks add example https://github.com/example/example.git
+  nb n current --path
+  nb n archive example
 
 Shortcut Alias: `n`
 ```
@@ -3365,6 +3812,13 @@ Examples:
   nb open 3
   nb open example.bookmark.md
   nb 3 open
+  nb example:open 12
+  nb open example:12
+  nb example:12 open
+  nb o 3
+  nb 3 o
+  nb o example:12
+  nb example:12 o
 
 See also:
   nb help bookmark
@@ -3394,6 +3848,13 @@ Examples:
   nb peek 3
   nb peek example.bookmark.md
   nb 3 peek
+  nb example:peek 12
+  nb peek example:12
+  nb example:12 peek
+  nb p 3
+  nb 3 p
+  nb p example:12
+  nb example:12 p
 
 See also:
   nb help bookmark
@@ -3407,8 +3868,8 @@ Shortcut Alias: `p`
 
 ```text
 Usage:
-  nb plugins [<name>] [--paths]
-  nb plugins install [<path> | <url>]
+  nb plugins [<name>] [--paths] [--force]
+  nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name>
 
 Options:
@@ -3483,6 +3944,9 @@ Examples:
 
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  nb example:rename 3 "sample.md"
 ```
 
 #### `run`
@@ -3515,7 +3979,7 @@ Options:
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
-                                video, audio, folder
+                                video, audio, folder, text
 Description:
   Search notes. Uses the first available tool in the following list:
     1. `rg`    https://github.com/BurntSushi/ripgrep
@@ -3527,17 +3991,26 @@ Examples:
   # search current notebook for "example query"
   nb search "example query"
 
-  # search all notebooks for "example query"
-  nb search "example query" --all
+  # search the notebook "example" for "example query"
+  nb example:search "example query"
+
+  # search all notebooks for "example query" and list matching items
+  nb search "example query" --all --list
 
   # search notes for "Example" OR "Sample"
   nb search "Example|Sample"
 
-  # search for bookmarks containing the hashtag "#example"
-  nb search "#example" --type bookmark
+  # search with a regular expression
+  nb search "\d\d\d-\d\d\d\d"
 
-  # search with a regular expression for notes containing phone numbers
-  nb search "^(1?(-?\d{3})-?)?(\d{3})(-?\d{4})$"
+  # search the current notebook for "example query"
+  nb q "example query"
+
+  # search the notebook named "example" for "example query"
+  nb example:q "example query"
+
+  # search all notebooks for "example query" and list matching items
+  nb q -la "example query"
 
 Shortcut Alias: `q`
 ```
@@ -3579,9 +4052,10 @@ Description:
 
 Examples:
   nb settings
-  nb settings set 5 "org"
-  nb settings set color_primary 105
-  nb settings unset color_primary
+  nb set 5 "org"
+  nb set color_primary 105
+  nb set unset color_primary
+  nb set color_secondary unset
   nb settings colors
   nb settings colors 105
   nb set limit 15
@@ -3589,7 +4063,7 @@ Examples:
 Alias: `set`
 ```
 
-##### `settings list --long`
+##### `auto_sync`
 
 ```text
 [1]  auto_sync
@@ -3599,7 +4073,11 @@ Alias: `set`
      one is set. To disable this behavior, set this to "0".
 
      • Default Value: 1
+```
 
+##### `color_primary`
+
+```text
 [2]  color_primary
      -------------
      The primary color used to highlight identifiers and messages. Often this
@@ -3608,7 +4086,11 @@ Alias: `set`
 
      • Default Value: 68 (blue) for 256 color terminals,
                       4  (blue) for  8  color terminals.
+```
 
+##### `color_secondary`
+
+```text
 [3]  color_secondary
      ---------------
      The color used for lines and footer elements. Often this can be set to an
@@ -3616,7 +4098,11 @@ Alias: `set`
      colors.
 
      • Default Value: 8
+```
 
+##### `color_theme`
+
+```text
 [4]  color_theme
      -----------
      The color theme.
@@ -3628,6 +4114,10 @@ Alias: `set`
      `nb` supports custom, user-defined themes. To learn more, run:
 
          nb help --colors
+
+     To change the syntax highlighting theme, use:
+
+         nb set syntax_theme
 
      • Available themes:
 
@@ -3644,7 +4134,11 @@ Alias: `set`
          utility
 
      • Default Value: nb
+```
 
+##### `default_extension`
+
+```text
 [5]  default_extension
      -----------------
      The default extension to use for note files. Change to "org" for Emacs
@@ -3652,7 +4146,11 @@ Alias: `set`
      whatever you prefer.
 
      • Default Value: md
+```
 
+##### `editor`
+
+```text
 [6]  editor
      ------
      The command line text editor to use with `nb`.
@@ -3670,21 +4168,33 @@ Alias: `set`
          subl
          vi
          vim
+```
 
+##### `encryption_tool`
+
+```text
 [7]  encryption_tool
      ---------------
      The tool used for encrypting notes.
 
      • Supported Values: openssl, gpg
      • Default Value:    openssl
+```
 
+##### `footer`
+
+```text
 [8]  footer
      ------
      By default, `nb` and `nb ls` include a footer with example commands.
      To hide this footer, set this to "0".
 
      • Default Value: 1
+```
 
+##### `header`
+
+```text
 [9]  header
      ------
      By default, `nb` and `nb ls` include a header listing available notebooks.
@@ -3692,21 +4202,29 @@ Alias: `set`
 
      • Supported Values:
 
-       0  Hide Header
-       1  Dynamic Alignment
-            - Left justified when list is shorter than terminal width.
-            - Center aligned when list is longer than terminal width.
-       2  Center Aligned (default)
-       3  Left Justified
+         0  Hide Header
+         1  Dynamic Alignment
+              - Left justified when list is shorter than terminal width.
+              - Center aligned when list is longer than terminal width.
+         2  Center Aligned (default)
+         3  Left Justified
 
      • Default Value: 1
+```
 
+##### `limit`
+
+```text
 [10] limit
      -----
      The maximum number of notes included in the `nb` and `nb ls` lists.
 
      • Default Value: 20
+```
 
+##### `nb_dir`
+
+```text
 [11] nb_dir
      ------
      The location of the directory that contains the notebooks.
@@ -3715,6 +4233,44 @@ Alias: `set`
      `~/Dropbox/Notes` and run: `nb settings set nb_dir ~/Dropbox/Notes`
 
      • Default Value: ~/.nb
+```
+
+##### `syntax_theme`
+
+```text
+[12] syntax_theme
+     ------------
+     The syntax highlighting theme. View examples with:
+
+         bat --list-themes
+
+     • Available themes:
+
+         1337
+         DarkNeon
+         Dracula
+         GitHub
+         Monokai Extended
+         Monokai Extended Bright
+         Monokai Extended Light
+         Monokai Extended Origin
+         Nord
+         OneHalfDark
+         OneHalfLight
+         Solarized (dark)
+         Solarized (light)
+         Sublime Snazzy
+         TwoDark
+         ansi-dark
+         ansi-light
+         base16
+         base16-256
+         gruvbox
+         gruvbox-light
+         gruvbox-white
+         zenburn
+
+     • Default Value: base16
 ```
 
 #### `shell`
@@ -3740,7 +4296,7 @@ Example:
   [3] Example
 
   nb> edit 3 --content "New content."
-  Updated [3] Example
+  Updated: [3] Example
 
   nb> notebook
   home
@@ -3753,21 +4309,22 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [-p | --print]
-          [--filename | --id | --info-line | --path | --render |
-          --selector-id | --title]
-          [--type [<type>]]
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]]
   nb show <notebook>
 
 Options:
+  -a, --added      Print the date and time when the item was added.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
-  --render         Use `pandoc` [1] to render the file to HTML and display with
-                   `lynx` [2] (if available) or `w3m` [3]. If `pandoc` is
-                   not available, `--render` is ignored.
+  -r, --render     Use `pandoc` [1] to render the file to HTML and display
+                   in the terminal web browser. If either `pandoc` or a
+                   browser are unavailable, `-r` / `--render` is ignored.
   --selector-id    Given a selector (e.g., notebook:example.md), print the
                    identifier portion (example.md).
   --title          Print the title of the note.
@@ -3776,13 +4333,14 @@ Options:
                    file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
+  -u, --updated    Print the date and time of the last recorded change.
 
 Description:
-  Show a note or notebook. Notes in text file formats can be rendered or
+  Show an item or notebook. Notes in text file formats can be rendered or
   printed to standard output. Non-text files will be opened in your system's
   preferred app or program for that file type.
 
-  By default, the note will be opened using `less` or the program configured
+  By default, the item will be opened using `less` or the program configured
   in the `$PAGER` environment variable. Use the following keys to navigate
   in `less` (see `man less` for more information):
 
@@ -3801,18 +4359,32 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  If Pygments [4] is installed, notes are printed with syntax highlighting.
+  `-r` / `--render` automatically uses either `w3m` [2] or `lynx` [3].
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+
+  If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
+  printed with syntax highlighting.
 
     1. https://pandoc.org/
-    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    3. https://en.wikipedia.org/wiki/W3m
-    4. https://pygments.org/
+    2. https://en.wikipedia.org/wiki/W3m
+    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    4. https://github.com/sharkdp/bat
+    5. http://www.andre-simon.de/doku/highlight/en/highlight.php
+    6. https://pygments.org/
 
 Examples:
   nb show 1
   nb show example.md --render
   nb show "A Document Title" --print --no-color
   nb 1 show
+  nb example:show 12
+  nb show example:12
+  nb example:12 show
+  nb s 1
+  nb 1 s
+  nb s example:12
+  nb example:12 s
 
 Alias: `view`
 Shortcut Alias: `s`
@@ -3861,6 +4433,16 @@ Options:
 Description:
   Sync the current local notebook with the remote repository.
 
+Private Repositories and Git Credentials:
+  Syncing with private repositories requires configuring git to not prompt
+  for credentials.
+
+  For repositories cloned over HTTPS, credentials can be cached with git.
+  For repositories cloned over SSH, keys can be added to the ssh-agent.
+
+  More Information:
+    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+
 Sync Conflict Resolution:
   When `nb sync` encounters a conflict in a text file and can't merge
   overlapping local and remote changes, both versions are saved in the
@@ -3869,8 +4451,11 @@ Sync Conflict Resolution:
 
   When `nb sync` encounters a conflict in a binary file, such as an
   encrypted note or bookmark, both versions of the file are saved in the
-  notebook as individual files, one with `--conflicted` appended to the
-  filename.
+  notebook as individual files, one with `--conflicted-copy` appended to
+  the filename.
+
+  More Information:
+    https://github.com/xwmx/nb#sync-conflict-resolution
 ```
 
 #### `update`
@@ -3897,6 +4482,9 @@ Usage:
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
 
+Example:
+  nb use example
+
 Shortcut Alias: `u`
 ```
 
@@ -3908,6 +4496,110 @@ Usage:
 
 Description:
   Display version information.
+```
+
+### Plugins
+
+<p align="center">
+  <a href="#backlink">backlink</a> •
+  <a href="#copy">copy</a> •
+  <a href="#ebook">ebook</a> •
+  <a href="#example">example</a>
+</p>
+
+#### `backlink`
+
+```text
+Usage:
+  nb backlink [--force]
+
+Description:
+  Add backlinks to notes. Crawl notes in a notebook for [[wiki-style links]]
+  and append a "Backlinks" section to each linked file that lists passages
+  referencing the note.
+
+  To link to a note from within another note, surround the title of the
+  target note in double square brackets:
+
+      Example with link to [[Target Note Title]] in content.
+
+  Depends on note-link-janitor:
+    https://github.com/andymatuschak/note-link-janitor
+
+    Requirement: every note in the notebook must have a title.
+```
+
+#### `copy`
+
+```text
+Usage:
+  nb copy (<id> | <filename> | <path> | <title>)
+
+Description:
+  Create a copy of the specified item in the current notebook.
+
+Alias: `duplicate`
+```
+
+#### `ebook`
+
+```text
+Usage:
+  nb ebook new <name>
+  nb ebook publish
+
+Subcommands:
+  ebook new      Create a new notebook initialized with placeholder files for
+                 authoring an ebook.
+  ebook publish  Generate a .epub file using the current notebook contents.
+
+Description:
+  Ebook authoring with `nb`.
+
+  `nb ebook new` creates a notebook populated with initial placeholder files
+  for creating an ebook. Edit the title page and chapters using normal `nb`
+  commands, then use `nb ebook publish` to generate an epub file.
+
+  Chapters are expected to be markdown files with sequential numeric
+  filename prefixes for ordering:
+
+    01-example.md
+    02-sample.md
+    03-demo.md
+
+  Create new chapters with `nb add`:
+
+    nb add --filename "04-chapter4.md"
+
+  title.txt contains the book metadata in a YAML block. For more information
+  about the fields for this file, visit:
+
+    https://pandoc.org/MANUAL.html#epub-metadata
+
+  stylesheet.css contains base styling for the generated ebook. It can be used
+  as it is and can also be edited using `nb edit`.
+
+  As with all `nb` notebooks, changes are recorded automatically in git,
+  providing automatic version control for all ebook content, source, and
+  metadata files.
+
+  Generated epub files are saved in the notebook and can be previewed in the
+  terminal with `nb show`. Export a generated epub file with `nb export`:
+
+    nb export 12 .
+
+More info:
+  https://pandoc.org/epub.html
+```
+
+#### `example`
+
+```text
+Usage:
+  nb example
+
+Description:
+  Print "Hello, World!"
 ```
 
 ## Specifications
@@ -4172,8 +4864,10 @@ at the root level of the notebook directory.
 ## Tests
 
 To run the [test suite](test), install
-[Bats](https://github.com/bats-core/bats-core) and run `bats test` in the project
-root.
+[Bats](https://github.com/bats-core/bats-core)
+and the
+[recommended dependencies](#optional),
+then run `bats test` in the project root.
 
 ---
 <p align="center">

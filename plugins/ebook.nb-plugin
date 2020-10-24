@@ -1,0 +1,256 @@
+#!/usr/bin/env bash
+###############################################################################
+# ebook.nb-plugin
+#
+# Ebook authoring with `nb`.
+#
+# Based on:
+#   https://pandoc.org/epub.html
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "ebook"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "ebook" <<HEREDOC
+Usage:
+  nb ebook init [<name>] [--force]
+  nb ebook publish
+
+Subcommands:
+  ebook init     Initialize the current notebook or notebook <name> with
+                 placeholder files for authoring an ebook, creating the
+                 notebook if it does not yet exist.
+  ebook publish  Generate a .epub file using the current notebook contents.
+
+Description:
+  Ebook authoring with \`nb\`.
+
+  \`nb ebook init\` populates an existing or new notebook with initial
+  placeholder files for creating an ebook. Edit the title page and
+  chapters using normal \`nb\` commands, then use \`nb ebook publish\`
+  to generate an epub file.
+
+  Chapters are expected to be markdown files with sequential numeric
+  filename prefixes for ordering:
+
+    01-example.md
+    02-sample.md
+    03-demo.md
+
+  Create new chapters with \`nb add\`:
+
+    nb add --filename "04-chapter4.md"
+
+  title.txt contains the book metadata in a YAML block. For more information
+  about the fields for this file, visit:
+
+    https://pandoc.org/MANUAL.html#epub-metadata
+
+  stylesheet.css contains base styling for the generated ebook. It can be used
+  as it is and can also be edited using \`nb edit\`.
+
+  As with all \`nb\` notebooks, changes are recorded automatically in git,
+  providing automatic version control for all ebook content, source, and
+  metadata files.
+
+  Generated epub files are saved in the notebook and can be previewed in the
+  terminal with \`nb show\`. Export a generated epub file with \`nb export\`:
+
+    nb export 12 .
+
+More info:
+  https://pandoc.org/epub.html
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_ebook() {
+  local _force=0
+  local _name=
+  local _notebook_path=
+  local _prompt=0
+  local _subcommand=
+
+  for __arg in "${@}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      *)
+        if [[ -z "${_subcommand:-}" ]]
+        then
+          _subcommand="${__arg}"
+        else
+          _name="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+
+  [[ -z "${_subcommand:-}" ]] && _help "ebook" 1>&2 && exit 1
+
+  case "${_subcommand:-}" in
+    a|add|c|create|init|n|new)
+
+      if [[ -z "${_name:-}" ]]
+      then
+        _prompt=1
+        cat <<HEREDOC
+Adding the following files to the current notebook:
+  title.txt
+  stylesheet.css
+  01-chapter1.md
+HEREDOC
+
+        _notebook_path="$(_notebooks current --path)"
+      elif _notebook_path="$(_notebooks show "${_name}" --path 2>/dev/null)"
+      then
+        _prompt=1
+        cat <<HEREDOC
+Adding the following files to ${_name}:
+  title.txt
+  stylesheet.css
+  01-chapter1.md
+HEREDOC
+      fi
+
+      if ((_prompt)) && ! ((_force))
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      if [[ -n "${_name:-}" ]] && [[ -z "${_notebook_path:-}" ]]
+      then
+        _notebooks add "${_name}"
+        _notebook_path="$(_notebooks show "${_name}" --path)"
+      fi
+
+      cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "title.txt"       &&
+---
+title: Placeholder Title
+author: Placeholder Name
+rights:  Creative Commons Non-Commercial Share Alike 3.0
+language: en-US
+---
+HEREDOC
+      cat <<HEREDOC | NB_NOTEBOOK_PATH="${_notebook_path}" _add "stylesheet.css"  &&
+/* This defines styles and classes used in the book */
+body { margin: 5%; text-align: justify; font-size: medium; }
+code { font-family: monospace; }
+h1 { text-align: left; }
+h2 { text-align: left; }
+h3 { text-align: left; }
+h4 { text-align: left; }
+h5 { text-align: left; }
+h6 { text-align: left; }
+/* For title, author, and date on the cover page */
+h1.title { }
+p.author { }
+p.date { }
+nav#toc ol,
+nav#landmarks ol { padding: 0; margin-left: 1em; }
+nav#toc ol li,
+nav#landmarks ol li { list-style-type: none; margin: 0; padding: 0; }
+a.footnote-ref { vertical-align: super; }
+em, em em em, em em em em em { font-style: italic;}
+em em, em em em em { font-style: normal; }
+code{ white-space: pre-wrap; }
+span.smallcaps{ font-variant: small-caps; }
+span.underline{ text-decoration: underline; }
+q { quotes: "“" "”" "‘" "’"; }
+div.column{ display: inline-block; vertical-align: top; width: 50%; }
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+@media screen { /* Workaround for iBooks issue; see #6242 */
+  .sourceCode {
+    overflow: visible !important;
+    white-space: pre-wrap !important;
+  }
+}
+HEREDOC
+      NB_NOTEBOOK_PATH="${_notebook_path}" _add \
+        "01-chapter1.md" --content "# Chapter One" &&
+          printf "Ebook initialized: %s\\n" "$(basename "${_notebook_path}")"
+      ;;
+    p|publish|g|generate|b|build)
+      if ! hash pandoc 2>/dev/null
+      then
+        printf "Install Pandoc to generate an ebook: https://pandoc.org/\\n" 1>&2
+        exit 1
+      fi
+
+      local _pandoc_arguments=()
+
+      local _notebook_path
+      _notebook_path="$(_notebooks current --path)"
+
+      local _notebook_name
+      _notebook_name="$(_notebooks current --name)"
+
+      local _stylesheet_path="${_notebook_path}/stylesheet.css"
+
+      if [[ -f "${_stylesheet:-}" ]]
+      then
+        _pandoc_arguments+=("--css" "${_stylesheet_path}")
+      fi
+
+      local _title_page_path="${_notebook_path}/title.txt"
+
+      if [[ -f "${_title_page_path}" ]]
+      then
+        _pandoc_arguments+=("${_title_page_path}")
+      else
+        printf "title.txt required.\\n"
+        exit 1
+      fi
+
+      local _chapter_filenames=($(
+        _list '^[0-9]{1,}-' --sort --filenames --no-id --no-indicator | sort -n
+      ))
+
+      if [[ -z "${_chapter_filenames[*]:-}" ]]
+      then
+        printf "No chapters found.\\n" 1>&2
+        exit 1
+      fi
+
+      for __filename in "${_chapter_filenames[@]:-}"
+      do
+        _pandoc_arguments+=("${_notebook_path}/${__filename}")
+      done
+
+      local _output_filename
+      _output_filename="$(
+        _notebooks current --filename "${_notebook_name}.epub"
+      )"
+
+      local _output_path="${_notebook_path}/${_output_filename}"
+
+      pandoc -o "${_output_path}" "${_pandoc_arguments[@]}"       &&
+        _index add "${_output_filename}"                          &&
+          _git checkpoint "[nb] Added: %s" "${_output_filename}"  &&
+            printf "Added: %s\\n" "$(_show "${_output_filename}" --info-line)"
+      ;;
+    *)
+      _help "ebook" 1>&2 && exit 1
+      ;;
+  esac
+}

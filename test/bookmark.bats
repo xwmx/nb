@@ -1096,7 +1096,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ ${status} -eq 1 ]]
 
   # Prints output
-  [[ "${output}" =~ Note\ not\ found ]]
+  [[ "${output}" =~ Not\ found ]]
 }
 
 @test "\`bookmark url\` prints note url." {

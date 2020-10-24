@@ -112,7 +112,7 @@ _setup_scope() {
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
-  [[ "${lines[2]}" =~ 0\ notes\.  ]]
+  [[ "${lines[2]}" =~ 0\ items\.  ]]
 }
 
 @test "\`nb invalid:\` exits with 1 and prints error." {

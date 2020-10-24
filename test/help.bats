@@ -12,43 +12,26 @@ load test_helper
 @test "\`help\` with no arguments prints default help." {
   run "${_NB}" help
 
-  [[ "${output}" =~ notes\ \&\ bookmarks ]]
+  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~ nb\ edit                  ]]
 }
 
 @test "\`-h\` prints default help." {
   run "${_NB}" -h
 
-  [[ "${output}" =~ notes\ \&\ bookmarks ]]
+  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~ nb\ edit                  ]]
 }
 
 @test "\`--help\` prints default help." {
   run "${_NB}" --help
 
-  [[ "${output}" =~ notes\ \&\ bookmarks ]]
+  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~ nb\ edit                  ]]
 }
 
 @test "\`help help\` prints \`help\` subcommand usage." {
   run "${_NB}" help help
 
-  _expected="$(
-    cat <<HEREDOC
-Usage:
-  nb help [<subcommand>] [-p | --print]
-  nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
-
-Options:
-  -c, --colors  View information about color themes and color settings.
-  -p, --print   Print to standard output / terminal.
-  -r, --readme  View the \`nb\` README file.
-  -s, --short   Print shorter help without subcommand descriptions.
-
-Description:
-  Print the program help information. When a subcommand name is passed, print
-  the help information for the subcommand.
-
-Shortcut Alias: \`h\`
-HEREDOC
-  )"
-  _compare "'${_expected}'" "'${output}'"
-  [[ "${output}" == "${_expected}" ]]
+  [[ "${output}" =~ Shortcut\ Alias\:\ \`h\` ]]
 }

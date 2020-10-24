@@ -53,7 +53,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
-  [[ ! "${lines[0]}" =~ "# Example" ]]
+  [[ ! "${lines[0]}" == "# Example" ]]
   [[ "${lines[0]}" =~ "Example"     ]]
 }
 
@@ -91,7 +91,6 @@ load test_helper
   [[ ! "${output}" =~ mock_editor ]]
   [[ "${lines[0]}" =~ Usage\:     ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
-
 }
 
 # <selector> ##################################################################
@@ -106,8 +105,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                                            ]]
-  [[ "${lines[0]}" == "${_ERROR_PREFIX} Note not found: $(_color_primary "1")"  ]]
+  [[ ${status} -eq 1                                                      ]]
+  [[ "${lines[0]}" == "${_ERROR_PREFIX} Not found: $(_color_primary "1")" ]]
 }
 
 # `show <filename> --dump` ####################################################
@@ -225,7 +224,6 @@ load test_helper
   [[ ${status} -eq 0                                  ]]
   [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
 }
-
 
 # `show <path> --path` #######################################################
 
@@ -420,7 +418,65 @@ load test_helper
   [[ "${output}" == "Example Title" ]]
 }
 
-# `show <id> --info-line` #####################################################
+# `show <id> --indicators` ####################################################
+
+@test "\`show <id> --indicators\` exits with status 0 and prints bookmark indicator." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0 ]]
+  [[ "${output}"    =~ 🔖 ]]
+  [[ ! "${output}"  =~ 🔒 ]]
+}
+
+@test "\`show <id> --indicators\` exits with status 0 and prints encrypted indicator." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --encrypt --password=password
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0 ]]
+  [[ ! "${output}"  =~ 🔖 ]]
+  [[ "${output}"    =~ 🔒 ]]
+}
+
+@test "\`show <id> --indicators\` exits with status 0 and prints encrypted bookmark indicators." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md" \
+      --content "<https://example.test>"   \
+      --encrypt --password=password
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0 ]]
+  [[ "${output}"    =~ 🔖 ]]
+  [[ "${output}"    =~ 🔒 ]]
+}
+
+# # `show <id> --info-line` #####################################################
 
 @test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
   {
@@ -460,6 +516,171 @@ load test_helper
   [[ "${output}" =~ one:1           ]]
   [[ "${output}" =~ one:example.md  ]]
   [[ "${output}" =~ Example\ Title  ]]
+}
+
+@test "\`show <id> --info-line\` prints escaped multi-word notebook name when scoped." {
+  {
+    run "${_NB}" init
+    run "${_NB}" notebooks add "multi word"
+    run "${_NB}" multi\ word:add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show multi\ word:1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ "${output}" =~ multi\\\ word:1           ]]
+  [[ "${output}" =~ multi\\\ word:example.md  ]]
+  [[ "${output}" =~ Example\ Title            ]]
+}
+
+@test "\`show <id> --info-line\` includes indicators." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md"  \
+      --title   "Example Title"             \
+      --content "<https://example.test>"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0                   ]]
+  [[ "${output}"    =~ 1                    ]]
+  [[ "${output}"    =~ example.bookmark.md  ]]
+  [[ "${output}"    =~ Example\ Title       ]]
+  [[ ! "${output}"  =~ home                 ]]
+  [[ "${output}"    =~ 🔖                   ]]
+  [[ ! "${output}"  =~ 🔒                   ]]
+}
+
+@test "\`show <id> --info-line\` includes encrypted indicators." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.bookmark.md"  \
+      --title   "Example Title"             \
+      --content "<https://example.test>"    \
+      --encrypt --password=password
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status}      -eq 0                       ]]
+  [[ "${output}"    =~ 1                        ]]
+  [[ "${output}"    =~ example.bookmark.md.enc  ]]
+  [[ ! "${output}"  =~ Example\ Title           ]]
+  [[ ! "${output}"  =~ home                     ]]
+  [[ "${output}"    =~ 🔖                       ]]
+  [[ "${output}"    =~ 🔒                       ]]
+}
+
+# `show <id> --added` #########################################################
+
+@test "\`show <id> --added\` exits with status 0 and prints the added timestamp." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --added
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
+}
+
+@test "\`show <id> -a\` exits with status 0 and prints the added timestamp." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 -a
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
+}
+
+# `show <id> --updated` #######################################################
+
+@test "\`show <id> --updated\` exits with status 0 and prints the added timestamp." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _added="$("${_NB}" show 1 --added)"
+
+    run "${_NB}" show 1 --added
+
+    [[ "${output}" == "${_added}"  ]]
+
+    sleep 1
+
+    run "${_NB}" edit 1 --content "More content."
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --updated
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_added}: '%s'\\n" "${_added}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
+  [[ "${output}" != "${_added}"       ]]
+}
+
+@test "\`show <id> -u\` exits with status 0 and prints the added timestamp." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "Example Title"
+
+    _added="$("${_NB}" show 1 --added)"
+
+    run "${_NB}" show 1 -u
+
+    [[ "${output}" == "${_added}"  ]]
+
+    sleep 1
+
+    run "${_NB}" edit 1 --content "More content."
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show 1 --updated
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_added}: '%s'\\n" "${_added}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
+  [[ "${output}" != "${_added}"       ]]
 }
 
 # `show <id> --selector-id` ###################################################
@@ -933,6 +1154,188 @@ load test_helper
 
   [[ ${status} -eq 0              ]]
   [[ "${output}" == "example.md"  ]]
+}
+
+# `show <selector>` (notebook name) ###########################################
+
+@test "\`show <selector> --filename\` with <selector> matching notebook name and note prints filename." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "example"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${output}" == "example.md"  ]]
+}
+
+@test "\`show <selector> --filename\` with <selector> only matching notebook name prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "sample.md" --title "sample"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --filename
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1                ]]
+  [[ "${output:-}" =~ Not\ found\:  ]]
+}
+
+@test "\`show <selector> --path\` with <selector> matching notebook name and note prints path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "example"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "${NB_NOTEBOOK_PATH}/example.md"  ]]
+}
+
+@test "\`show <selector> --path\` with <selector> only matching notebook name prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "sample.md" --title "sample"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1                ]]
+  [[ "${output:-}" =~ Not\ found\:  ]]
+}
+
+@test "\`show <selector> --id\` with <selector> matching notebook name and note prints id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "example"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example.md --id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0    ]]
+  [[ "${output}" == "1" ]]
+}
+
+@test "\`show <selector> --id\` with <selector> only matching notebook name prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "sample.md" --title "sample"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1                ]]
+  [[ "${output:-}" =~ Not\ found\:  ]]
+}
+
+@test "\`show <selector> --title\` with <selector> matching notebook name and note prints title." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "example"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --title
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${output}" == "example" ]]
+}
+
+@test "\`show <selector> --title\` with <selector> only matching notebook name prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "sample.md" --title "sample"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --title
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 1                ]]
+  [[ "${output:-}" =~ Not\ found\:  ]]
+}
+
+@test "\`show <selector> --selector-id\` with <selector> matching notebook name and note prints selector-id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "example.md" --title "example"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${output}" == "example" ]]
+}
+
+@test "\`show <selector> --selector-id\` with <selector> only matching notebook name prints selector id." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "sample.md" --title "sample"
+    run "${_NB}" notebooks add "example"
+
+    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" show example --selector-id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0          ]]
+  [[ "${output}" == "example" ]]
 }
 
 # help ########################################################################

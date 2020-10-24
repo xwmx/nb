@@ -14,7 +14,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="0 notes.
+  _expected="0 items.
 
 Add a note:
   $(_color_primary 'nb add')
@@ -73,6 +73,37 @@ Help information:
   [[ "${lines[1]}" =~ two.md        ]]
   [[ "${lines[2]}" =~ bookmark      ]]
   [[ "${lines[2]}" =~ 🔖            ]]
+}
+
+@test "\`list\` includes ids." {
+  {
+    "${_NB}" init
+    "${_NB}" add "one.md" --title "one"
+    "${_NB}" add "two.md" --title "two"
+    "${_NB}" add "three.md" --title "three"
+    "${_NB}" add "four.md" --title "four"
+    "${_NB}" add "five.md" --title "five"
+
+    run "${_NB}" delete "one.md" --force
+    run "${_NB}" delete "four.md" --force
+
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _compare "${_files[@]}" "${lines[@]}"
+
+  [[ ${status} -eq 0        ]]
+  [[ "${lines[0]}" =~ five  ]]
+  [[ "${lines[0]}" =~ 5     ]]
+  [[ "${lines[1]}" =~ three ]]
+  [[ "${lines[1]}" =~ 3     ]]
+  [[ "${lines[2]}" =~ two   ]]
+  [[ "${lines[2]}" =~ 2     ]]
+  [[ -z "${lines[3]:-}"     ]]
 }
 
 # `list --no-id` ##############################################################
@@ -413,6 +444,50 @@ HEREDOC
   [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
 }
 
+# `list --paths` ##############################################################
+
+@test "\`list --paths\` exits with 0 and displays a list of paths." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --paths
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${NB_NOTEBOOK_PATH}: '%s'\\n" "${NB_NOTEBOOK_PATH}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${lines[0]}" =~ third.md  ]] && [[ "${lines[0]}" =~ 3 ]]
+  [[ "${lines[0]}" =~ ${NB_NOTEBOOK_PATH}                   ]]
+
+  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${lines[1]}" =~ ${NB_NOTEBOOK_PATH}                   ]]
+
+  [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
+  [[ "${lines[2]}" =~ ${NB_NOTEBOOK_PATH}                   ]]
+}
+
 # `list --bookmarks` ##########################################################
 
 @test "\`list --bookmarks\` exits with 0 and displays a list of bookmarks." {
@@ -585,6 +660,165 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
 }
 
+@test "\`list --js\` exits with 0, displays empty list, and retains trailing 's'." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list --js
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                  ]]
+  [[ "${#lines[@]}" == 5              ]]
+  [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
+}
+
+@test "\`list <selection> --type\` filters by type." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list example --document
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0              ]]
+  [[ "${#lines[@]}" == 1          ]]
+  [[ "${lines[0]}" =~ example.doc ]]
+  [[ "${lines[0]}" =~ 3           ]]
+}
+
+@test "\`list <selection> --<invalid>\` prints message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list example --not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 1              ]]
+  [[ "${#lines[@]}" == 1          ]]
+  [[ "${lines[0]}" =~ Not\ found  ]]
+  [[ "${lines[0]}" =~ example     ]]
+  [[ "${lines[0]}" =~ Type        ]]
+  [[ "${lines[0]}" =~ not-valid   ]]
+}
+
+@test "\`list <selection> --documents\` with no matches prints message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list matchless-query --document
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 1                  ]]
+  [[ "${#lines[@]}" == 1              ]]
+  [[ "${lines[0]}" =~ Not\ found      ]]
+  [[ "${lines[0]}" =~ matchless-query ]]
+  [[ "${lines[0]}" =~ Type            ]]
+  [[ "${lines[0]}" =~ document        ]]
+}
+
 # `list <selector>` ###########################################################
 
 @test "\`list <selector>\` exits with 0 and displays the selector." {
@@ -664,6 +898,175 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
+@test "\`list <query selector> --limit\` exits with 0 and displays results and singular omitted message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# three
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list 'r' --filenames --limit 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                                  ]]
+  [[ "${#lines[@]}" -eq 2                             ]]
+  [[ "${lines[0]}" =~ third.md                        ]]
+  [[ "${lines[0]}" =~ [*3*]                           ]]
+  [[ "${lines[0]}" =~ ${_files[2]}                    ]]
+  [[ "${lines[1]}" =~ 1\ match\ omitted\.\ 2\ total\. ]]
+}
+
+@test "\`list <query selector> --limit\` exits with 0 and displays results and plural omitted message." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# three
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'fourth.md'
+# four
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list 'r' --filenames --limit 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                                    ]]
+  [[ "${#lines[@]}" -eq 2                               ]]
+  [[ "${lines[0]}" =~ fourth.md                         ]]
+  [[ "${lines[0]}" =~ [*4*]                             ]]
+  [[ "${lines[1]}" =~ 2\ matches\ omitted\.\ 3\ total\. ]]
+}
+
+@test "\`list <multi-word selector>\` successfully filters list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# example plum
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# example pluot
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# sample pear
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'fourth.md'
+# sample plum
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list 'example plum' --filenames
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${#lines[@]}" -eq 1       ]]
+  [[ "${lines[0]}" =~ first.md  ]]
+  [[ "${lines[0]}" =~ [*1*]     ]]
+}
+
+@test "\`list <multiple> <selectors>\` successfully filters list." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add 'first.md'
+# example plum
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'second.md'
+# example pluot
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'third.md'
+# sample pear
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add 'fourth.md'
+# sample plum
+line two
+line three
+line four
+HEREDOC
+    _files=($(ls "${NB_NOTEBOOK_PATH}/"))
+  }
+
+  run "${_NB}" list example plum --filenames
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${#lines[@]}" -eq 3       ]]
+  [[ "${lines[0]}" =~ fourth.md ]]
+  [[ "${lines[0]}" =~ [*4*]     ]]
+  [[ "${lines[1]}" =~ second.md ]]
+  [[ "${lines[1]}" =~ [*2*]     ]]
+  [[ "${lines[2]}" =~ first.md  ]]
+  [[ "${lines[2]}" =~ [*1*]     ]]
+}
+
 @test "\`list <invalid-selector>\` exits with 1 and displays a message." {
   {
     "${_NB}" init
@@ -685,7 +1088,7 @@ HEREDOC
 
   [[ ${status} -eq 1                      ]]
   [[ "${#lines[@]}" -eq 1                 ]]
-  [[ "${lines[0]}" =~ Note\ not\ found\:  ]]
+  [[ "${lines[0]}" =~ Not\ found\:  ]]
   [[ "${lines[0]}" =~ invalid             ]]
 }
 
@@ -716,7 +1119,6 @@ HEREDOC
   [[ "${lines[2]}" =~ one     ]]
 }
 
-
 @test "\`scoped:list\` with empty notebook prints help info." {
   {
     "${_NB}" init
@@ -729,7 +1131,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="0 notes.
+  _expected="0 items.
 
 Add a note:
   $(_color_primary 'nb one:add')
@@ -737,6 +1139,33 @@ Add a bookmark:
   $(_color_primary 'nb one: <url>')
 Import a file:
   $(_color_primary 'nb one:import (<path> | <url>)')
+Help information:
+  $(_color_primary 'nb help')"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${_expected}" == "${output}"  ]]
+}
+
+@test "\`scoped:list\` escapes multi-word notebook name." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "multi word"
+  }
+
+  run "${_NB}" multi\ word:list
+  [[ ${status} -eq 0 ]]
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 items.
+
+Add a note:
+  $(_color_primary 'nb multi\ word:add')
+Add a bookmark:
+  $(_color_primary 'nb multi\ word: <url>')
+Import a file:
+  $(_color_primary 'nb multi\ word:import (<path> | <url>)')
 Help information:
   $(_color_primary 'nb help')"
 
@@ -788,9 +1217,9 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-# `list --hard-empty` #########################################################
+# `list --error-on-empty` #####################################################
 
-@test "\`list --hard-empty\` with empty notebook returns 1." {
+@test "\`list --error-on-empty\` with empty notebook returns 1." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -799,12 +1228,12 @@ Help information:
   run "${_NB}" one:list
   [[ ${status} -eq 0 ]]
 
-  run "${_NB}" one:list --hard-empty
+  run "${_NB}" one:list --error-on-empty
   [[ ${status} -eq 1 ]]
 
   "${_NB}" one:add "one.md" --title "one"
 
-  run "${_NB}" one:list --hard-empty
+  run "${_NB}" one:list --error-on-empty
   [[ ${status} -eq 0 ]]
 }
 
@@ -828,9 +1257,9 @@ Help information:
   printf "\${output}: '%s'\\n" "${output}"
   _compare "${_files[@]}" "${lines[@]}"
 
-  [[ ${status} -eq 1                    ]]
-  [[ "${lines[0]}" =~ Note\ not\ found  ]]
-  [[ "${lines[0]}" =~ example           ]]
+  [[ ${status} -eq 1              ]]
+  [[ "${lines[0]}" =~ Not\ found  ]]
+  [[ "${lines[0]}" =~ example     ]]
 }
 
 @test "\`list <notebook>:\` exits with 0 and lists files in reverse order." {

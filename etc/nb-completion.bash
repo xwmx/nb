@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ###############################################################################
 # __          _
 # \ \   _ __ | |__
@@ -77,7 +78,7 @@ _nb_subcommands() {
       _directory_path="$(dirname "${_cache_path}")"
       mkdir -p "${_directory_path}"
 
-      printf "" > "${_cache_path}"
+      echo >! "${_cache_path}"
 
       {
         (IFS=$' '; printf "%s\\n" "${_commands[*]}")

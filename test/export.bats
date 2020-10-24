@@ -36,9 +36,56 @@ load test_helper
 
   [[ -e "${_TMP_DIR}/example.md" ]]
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
+
+  # Prints output
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
 }
 
-@test "\`export\` with valid <id> and <path> with diff file type converts." {
+@test "\`export\` with valid <id> and directory <path> exports a new note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example" --filename "example.md"
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_TMP_DIR}"
+  cat "${_TMP_DIR}/example.md"
+
+  [[ -e "${_TMP_DIR}/example.md" ]]
+  grep -q '# Export Example' "${_TMP_DIR}/example.md"
+
+  # Prints output
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
+}
+
+@test "\`export\` with valid <id> and different basename <path> exports a new note file." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "# Export Example" --filename "example.md"
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/sample.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_TMP_DIR}"
+  cat "${_TMP_DIR}/sample.md"
+
+  [[ -e "${_TMP_DIR}/sample.md" ]]
+  grep -q '# Export Example' "${_TMP_DIR}/sample.md"
+
+  # Prints output
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
+  [[ "${output}" =~ sample.md   ]]
+}
+
+@test "\`export\` with valid <id> and <path> with diffferent file type converts." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Export Example"
@@ -50,6 +97,11 @@ load test_helper
 
   [[ -e "${_TMP_DIR}/example.html" ]]
   grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
+
+  # Prints output
+  [[ "${output}" =~ Exported        ]]
+  [[ "${output}" =~ Export\ Example ]]
+  [[ "${output}" =~ example.html    ]]
 }
 
 # `notebook` ##################################################################
@@ -101,8 +153,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                  ]]
-  [[ "${output}" =~ 'Note not found'  ]]
+  [[ ${status} -eq 1            ]]
+  [[ "${output}" =~ 'Not found' ]]
 }
 
 # help ########################################################################
