@@ -6465,7 +6465,8 @@ HEREDOC
           then # get from cached .index
             local _item_identifier="${_index_map["${__basename:-}"]}"
           else # get from .index
-            local _item_identifier="$(
+            local _item_identifier
+            _item_identifier="$(
               sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
             )"
           fi
