@@ -6301,7 +6301,14 @@ _list() {
 
       if [[ -n "${_limit:-}" ]] && [[ "${_printed_counter}" -ge "${_limit}" ]]
       then # the limit has been reached
-        continue
+        if [[ -n "${_selector_identifier:-}" ]]
+        then
+          # keep looking for matches to count total
+          continue
+        else
+          _filenames_counter="$(_count)"
+          break
+        fi
       fi
 
       if ((_list_paths))
