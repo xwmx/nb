@@ -6291,18 +6291,28 @@ HEREDOC
 
       return 0
     else
+      local _bash_major_version="${BASH_VERSION%%.*}"
       local _counter=0
       local _matches=0
       local _max_id
       _max_id="$(_index get_max_id)"
 
-      if ! ((_no_id))
-      then
+      if ! ((_no_id)) && [[ "${_bash_major_version:-0}" -ge 4 ]]
+      then # cache .index
         declare -A _index_map
-        __i=0
-        while IFS= read -r line; do
-          __i=$((++__i))
-          _index_map[$line]=$__i
+
+        local _id=0
+
+        while IFS= read -r _line
+        do
+          _id=$((_id+1))
+
+          if [[ -n "${_line:-}" ]]
+          then
+            _index_map["${_line}"]="${_id}"
+          else
+            _index_map["___x_nb_blank_x___"]="${_id}"
+          fi
         done < "${_notebook_path:-}/.index"
       fi
 
@@ -6451,7 +6461,17 @@ HEREDOC
           _info_line="${_item_info}"
           _info_line_color="${_item_info}"
         else
-          local _item_identifier=${_index_map[${__basename:-}]}
+          if [[ "${_bash_major_version:-0}" -ge 4 ]]
+          then # get from cache map
+            local _item_identifier="${_index_map["${__basename:-}"]}"
+          else # get from .index
+            local _item_identifier="$(
+              sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
+            )"
+          fi
+
+
+
           local _max_identifier="${_max_id}"
 
           if [[ -n "${_maybe_scope:-}" ]]
