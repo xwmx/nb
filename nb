@@ -6281,6 +6281,16 @@ HEREDOC
       local _max_id
       _max_id="$(_index get_max_id)"
 
+      if ! ((_no_id))
+      then
+        declare -A _index_map
+        __i=0
+        while IFS= read -r line; do
+          __i=$((++__i))
+          _index_map[$line]=$__i
+        done < "${_notebook_path:-}/.index"
+      fi
+
       for __basename in "${_filenames[@]:-}"
       do
         local _first_line=
@@ -6426,12 +6436,7 @@ HEREDOC
           _info_line="${_item_info}"
           _info_line_color="${_item_info}"
         else
-          local _item_identifier=
-          # use `sed` directly instead of `_index get_id` for performance
-          _item_identifier="$(
-            sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
-          )"
-
+          local _item_identifier=${_index_map[${__basename:-}]}
           local _max_identifier="${_max_id}"
 
           if [[ -n "${_maybe_scope:-}" ]]
