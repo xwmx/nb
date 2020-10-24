@@ -6462,7 +6462,7 @@ HEREDOC
           _info_line_color="${_item_info}"
         else
           if [[ "${_bash_major_version:-0}" -ge 4 ]]
-          then # get from cache map
+          then # get from cached .index
             local _item_identifier="${_index_map["${__basename:-}"]}"
           else # get from .index
             local _item_identifier="$(
