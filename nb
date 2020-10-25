@@ -6308,6 +6308,7 @@ _list() {
           _filenames_count="$(
             _count "${_list_files_options[@]}"
           )"
+
           break
         fi
       fi
