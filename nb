@@ -4073,7 +4073,7 @@ HEREDOC
 _count() {
   local _list_files_options=(${@:-})
 
-  _list_files "${_list_files_options[@]}" | wc -l | tr -d ' '
+  _list_files "${_list_files_options[@]:-}" | wc -l | tr -d ' '
 }
 
 # delete ############################################################### delete
