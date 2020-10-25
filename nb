@@ -1854,19 +1854,21 @@ _get_http_status() {
 # _get_unique_basename()
 #
 # Usage:
-#   _get_unique_basename [<file-name> | <file-extension>] [<directory>]
+#   _get_unique_basename [<file-path> | <file-extension>] [<notebook-path>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
 _get_unique_basename() {
-  local _file_basename="${1:-}"
-  local _file_name="${_file_basename%%.*}"
+  local _file_path="${1:-}"
+  local _notebook_path="${2:-"$(_notebooks current --path)"}"
 
-  local _directory="${2:-}"
+  local _file_basename="${_file_path##*\/}"
+  local _file_name="${_file_path%%.*}"
+  local _folder_path=
 
-  if [[ -z "${_directory:-}" ]]
+  if [[ "${_file_path:-}" =~ / ]]
   then
-    _directory="$(_notebooks current --path)"
+    _folder_path="${_file_path%\/*}"
   fi
 
   if [[ -z "${_file_name}" ]]
@@ -1874,7 +1876,8 @@ _get_unique_basename() {
     _file_name="$(date "+%Y%m%d%H%M%S")"
   fi
 
-  local _file_type="${_file_basename#*.}"
+  local _file_type="${_file_path#*.}"
+
   if [[ -z "${_file_type}" ]]
   then
     _file_type="md"
@@ -1889,9 +1892,22 @@ _get_unique_basename() {
     _file_type="md"
   fi
 
-  basename "$(
-    _get_unique_path "${_directory}/${_file_name}.${_file_type}"
-  )"
+  local _unique_path=
+
+  if [[ -n "${_folder_path:-}" ]]
+  then
+    _unique_path="$(
+      _get_unique_path "${_notebook_path}/${_folder_path}/${_file_name}.${_file_type}"
+    )"
+
+    printf "%s/%s" "${_folder_path}" "$(basename "${_unique_path}")"
+  else
+    _unique_path="$(
+      _get_unique_path "${_notebook_path}/${_file_name}.${_file_type}"
+    )"
+
+    printf "%s" "$(basename "${_unique_path}")"
+  fi
 }
 
 # _get_unique_path()
@@ -2915,12 +2931,12 @@ Shortcut Alias: \`a\`
 HEREDOC
 _add() {
   local _arguments=()
-  local _basename=
   local _content=
+  local _content_or_filename_or_path=
+  local _content_or_filename_extension=
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _content_or_filename=
   local _password=
   local _target_filename=
   local _title=
@@ -2966,9 +2982,9 @@ _add() {
         shift
         ;;
       *)
-        if [[ -z "${_content_or_filename:-}" ]]
+        if [[ -z "${_content_or_filename_or_path:-}" ]]
         then
-          _content_or_filename="${__arg:-}"
+          _content_or_filename_or_path="${__arg:-}"
         else
           _arguments+=("${__arg:-}")
         fi
@@ -2985,27 +3001,47 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _content_or_filename_extension="${_content_or_filename##*\.}"
+  local _content_or_filename_extension="${_content_or_filename_or_path##*\.}"
+  local _folder_path=
 
-  if [[ -n "${_content_or_filename:-}" ]]
+  if [[ -n "${_content_or_filename_or_path:-}" ]]
   then
-    if  [[ "${_content_or_filename:-}" =~ \.[A-Za-z0-9]+$         ]]  &&
-        [[ -n "${_content_or_filename_extension:-}"               ]]  &&
-        [[ -z "${_target_filename}"                               ]]  &&
-        ! _string_is_url "${_content_or_filename:-}"                  &&
-        ! _string_is_email "${_content_or_filename:-}"                &&
-        ! _contains "${_content_or_filename_extension:-}"         \
+    if  [[ "${_content_or_filename_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
+        [[ -n "${_content_or_filename_extension:-}"                 ]]  &&
+        [[ -z "${_target_filename}"                                 ]]  &&
+        ! _string_is_url "${_content_or_filename_or_path:-}"            &&
+        ! _string_is_email "${_content_or_filename_or_path:-}"          &&
+        ! _contains "${_content_or_filename_extension:-}"           \
                     "${_common_non_text_file_extension_tlds[@]}"
     then
-      _target_filename="${_content_or_filename}"
+      if [[ "${_content_or_filename_or_path}" =~ / ]]
+      then
+        _folder_path="${_content_or_filename_or_path%\/*}"
+      fi
+
+      _target_filename="${_content_or_filename_or_path##*\/}"
     else
-      _content="${_content_or_filename}"
+      _content="${_content_or_filename_or_path}"
     fi
   fi
 
-  if [[ -n "${_target_filename:-}" ]]
+  local _target_relative_path=
+
+  if [[ -n "${_folder_path:-}" ]]
   then
-    _basename="$(_notebooks current --filename "${_target_filename:-}")"
+    _target_relative_path="${_folder_path}/${_target_filename}"
+  else
+    _target_relative_path="${_target_filename}"
+  fi
+
+  local _target_unique_relative_path=
+
+  if [[ -n "${_target_relative_path:-}" ]]
+  then
+    _target_unique_relative_path="$(
+      _notebooks current --filename "${_target_relative_path:-}"
+    )"
+
   elif [[ -n "${_title:-}" ]]
   then
     _target_filename="$(
@@ -3013,15 +3049,22 @@ _add() {
         | tr '[:upper:]' '[:lower:]'    \
         | tr '[:space:]:*/"\\<>?|' '_'
     )"
-    _basename="$(_notebooks current --filename "${_target_filename}.${_file_type}")"
+    _target_unique_relative_path="$(
+      _notebooks current --filename "${_target_filename}.${_file_type}"
+    )"
   else
-    _basename="$(_notebooks current --filename ".${_file_type}")" # !! note the '.'
+    _target_unique_relative_path="$(
+      _notebooks current --filename ".${_file_type}"  # !! note the '.'
+    )"
   fi
 
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
-  _target_path="${_notebook_path}/${_basename}"
+  local _target_basename
+  _target_basename="$(basename "${_target_unique_relative_path}")"
+
+  local _target_path="${_notebook_path}/${_target_unique_relative_path}"
 
   if ((_encrypt))
   then
@@ -3050,7 +3093,23 @@ _add() {
       fi
     fi
 
-    _target_path="$(_temp file "${_basename}")"
+    if [[ -n "${_folder_path:-}" ]]
+    then
+      mkdir -p "$(_temp directory)/${_folder_path}"
+    fi
+
+    _target_path="$(_temp directory)/${_target_unique_relative_path}"
+  fi
+
+  if [[ -n "${_folder_path:-}" ]] && [[ ! -d "${_folder_path:-}" ]]
+  then
+    if [[ -e "${_folder_path:-}" ]]
+    then
+      _exit_1 printf "File exists at: %s\\n" \
+        "$(_color_primary "${_folder_path:-}")"
+    else
+      mkdir -p "${_notebook_path:?}/${_folder_path}"
+    fi
   fi
 
   if [[ -n "${_title}" ]]
@@ -3075,10 +3134,33 @@ _add() {
     _edit_file "${_target_path}"
   fi
 
+  # walk up and delete empty directories when file not created
+  if [[ ! -e "${_target_path:?}"                  ]] &&
+     [[ -n "${_folder_path:-}"                    ]] &&
+     [[ -e "${_notebook_path:?}/${_folder_path}"  ]]
+  then
+    cd "${_notebook_path:?}/${_folder_path:?}"
+
+    while [[ "${PWD:?}" =~ ^${_notebook_path:?}       ]] &&
+          [[ "${PWD:?}" != "${_notebook_path:?}"      ]] &&
+          [[ -z "$(find "${PWD}/." ! -name . -prune)" ]]
+    do
+      local _empty_directory_path="${PWD:?}"
+
+      cd ..
+
+      if [[ -d "${_empty_directory_path:?}"                             ]] &&
+         [[ -z "$(find "${_empty_directory_path}/." ! -name . -prune)"  ]]
+      then
+        rm -r "${_empty_directory_path:?}"
+      fi
+    done
+  fi
+
   if ((_encrypt)) && [[ -e "${_target_path}" ]]
   then
     local _decrypted_path="${_target_path}"
-    local _encrypted_path="${_notebook_path}/${_basename}.enc"
+    local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
 
     _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
 
@@ -3087,18 +3169,18 @@ _add() {
       rm "${_decrypted_path:?}"
     fi
 
-    _basename="${_basename}.enc"
+    _target_unique_relative_path="${_target_unique_relative_path}.enc"
     _target_path="${_encrypted_path}"
   fi
 
   if [[ -e "${_target_path}" ]]
   then
     local _info
-    _info="$(_show "${_basename}" --info-line)"
+    _info="$(_show "${_target_unique_relative_path}" --info-line)"
 
     printf "Added: %s\\n" "${_info}"
   fi &&
-    _git checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Add: ${_target_unique_relative_path}"
 }
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
@@ -5602,12 +5684,12 @@ Usage:
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
-  ${_ME} index rebuild
-  ${_ME} index reconcile
+  ${_ME} index rebuild [--ancestors]
+  ${_ME} index reconcile [--ancestors]
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verify
-  ${_ME} index <subcommand> <options>... [<notebook-path>]
+  ${_ME} index <subcommand> <options>...
 
 Subcommands:
   add           Add <filename> to the index.
@@ -5626,8 +5708,7 @@ Description:
   Manage the index for the current notebook. This subcommand is used
   internally by \`${_ME}\` and using it manually will probably corrupt
   the index. If something goes wrong with the index, fix it with
-  \`${_ME} index reconcile\`. All subcommands take an optional
-  <notebook-path> that can be used to circumvent the notebook lookup.
+  \`${_ME} index reconcile\`.
 
   The index is a text file named '.index' in the notebook directory. .index
   contains a list of filenames and the line number of each filename
@@ -5636,17 +5717,18 @@ Description:
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
-  local _notebook_path="${2:-}"
+  local _folder_path="${_INDEX_FOLDER_PATH:-"${NB_NOTEBOOK_PATH}"}"
 
   # Use `$NB_NOTEBOOK_PATH` directly for performance.
   local _notebook_path="${NB_NOTEBOOK_PATH}"
 
-  local _index_path="${_notebook_path}/.index"
+  local _index_path="${_folder_path}/.index"
 
-  if [[ ! -e "${_index_path}"           ]] &&
-     [[ ! "${_subcommand}" == "rebuild" ]]
+  if [[ ! -e "${_index_path}"             ]] &&
+     [[ ! "${_subcommand}" == "rebuild"   ]] &&
+     [[ ! "${_subcommand}" == "reconcile" ]]
   then
-    _index rebuild
+    _index reconcile --ancestors
   fi
 
   case "${_subcommand}" in
@@ -5658,7 +5740,7 @@ _index() {
         _exit_1 _help index
       fi
 
-      if [[ ! -e "${_notebook_path}/${_basename}" ]]
+      if [[ ! -e "${_folder_path}/${_basename}" ]]
       then
         _exit_1 printf "File not found: %s\\n" "${_basename}"
       fi
@@ -5787,8 +5869,31 @@ _index() {
       printf "\\n"
       ;;
     rebuild)
-      ls -t -r "${_notebook_path}" > "${_index_path}" &&
-        _git checkpoint "${_notebook_path}" "[nb] Rebuild Index"
+      local _top_path="${_folder_path:?}"
+
+      if [[ "${2:-}" == "--ancestors" ]]
+      then
+        _top_path="${_notebook_path:?}"
+      fi
+
+      local _rebuild_type="Rebuild"
+
+      if [[ ! -e "${_folder_path:?}/.index" ]]
+      then
+        _rebuild_type="Initialize"
+      fi
+
+      cd "${_folder_path:?}"
+
+      while [[ "${PWD:?}" =~ ${_top_path:?} ]]
+      do
+        ls -t -r "${PWD:?}" > "${PWD:?}/.index"
+
+        cd ..
+      done  &&
+        _git checkpoint "${_notebook_path}" "[nb] ${_rebuild_type:-Rebuild} Index"
+
+      return 0
       ;;
     reconcile)
       _index_reconcile_remove_duplicates() {
@@ -5811,59 +5916,78 @@ _index() {
         exec 4<&-
       }
 
-      local -a _index_list=()
-      _index_list=($(<"${_index_path}"))
+      local _top_path="${_folder_path:?}"
 
-      local -a _file_list=()
-      _file_list=($(ls "${_notebook_path}"))
+      if [[ "${2:-}" == "--ancestors" ]]
+      then
+        _top_path="${_notebook_path:?}"
+      fi
 
-      _index_reconcile_remove_duplicates "${_index_path}"
+      cd "${_folder_path:?}"
 
-      local -a _index_file_list_diff=()
-      _index_file_list_diff=($(
-        printf "%s\\n"          \
-          "${_index_list[@]:-}" \
-          "${_file_list[@]:-}"  \
-          | sort                \
-          | uniq -u
-      ))
-
-      local -a _diff_in_index=()
-      _diff_in_index=($(
-        printf "%s\\n"                    \
-          "${_index_list[@]:-}"           \
-          "${_index_file_list_diff[@]:-}" \
-          | sort                          \
-          | uniq -d                       \
-          | uniq
-      ))
-
-      for __item in "${_diff_in_index[@]:-}"
+      while [[ "${PWD:?}" =~ ^${_top_path} ]]
       do
-        if [[ -n "${__item}" ]]
+        if [[ ! -e "${PWD:?}/.index" ]]
         then
-          _contains "${__item}" "${_file_list[@]:-}" ||
-            _index delete "${__item}"
+          ls -t -r "${PWD:?}" > "${PWD:?}/.index"
         fi
-      done
 
-      local -a _diff_in_file_list=()
-      _diff_in_file_list=($(
-        printf "%s\\n"                    \
-          "${_file_list[@]:-}"            \
-          "${_index_file_list_diff[@]:-}" \
-          | sort                          \
-          | uniq -d                       \
-          | uniq
-      ))
+        local -a _index_list=()
+        _index_list=($(<"${PWD:?}/.index"))
 
-      for __item in "${_diff_in_file_list[@]:-}"
-      do
-        if [[ -n "${__item}" ]]
-        then
-          _contains "${__item}" "${_index_list[@]:-}" ||
-            _index add "${__item}"
-        fi
+        local -a _file_list=()
+        _file_list=($(ls "${PWD:?}"))
+
+        _index_reconcile_remove_duplicates "${PWD:?}/.index"
+
+        local -a _index_file_list_diff=()
+        _index_file_list_diff=($(
+          printf "%s\\n"          \
+            "${_index_list[@]:-}" \
+            "${_file_list[@]:-}"  \
+            | sort                \
+            | uniq -u
+        ))
+
+        local -a _diff_in_index=()
+        _diff_in_index=($(
+          printf "%s\\n"                    \
+            "${_index_list[@]:-}"           \
+            "${_index_file_list_diff[@]:-}" \
+            | sort                          \
+            | uniq -d                       \
+            | uniq
+        ))
+
+        for __item in "${_diff_in_index[@]:-}"
+        do
+          if [[ -n "${__item}" ]]
+          then
+            _contains "${__item}" "${_file_list[@]:-}" ||
+              _INDEX_FOLDER_PATH="${PWD:?}" _index delete "${__item}"
+          fi
+        done
+
+        local -a _diff_in_file_list=()
+        _diff_in_file_list=($(
+          printf "%s\\n"                    \
+            "${_file_list[@]:-}"            \
+            "${_index_file_list_diff[@]:-}" \
+            | sort                          \
+            | uniq -d                       \
+            | uniq
+        ))
+
+        for __item in "${_diff_in_file_list[@]:-}"
+        do
+          if [[ -n "${__item}" ]]
+          then
+            _contains "${__item}" "${_index_list[@]:-}" ||
+              _INDEX_FOLDER_PATH="${PWD:?}" _index add "${__item}"
+          fi
+        done
+
+        cd ..
       done
       ;;
     show)
@@ -5892,7 +6016,7 @@ _index() {
       _index_list=($(<"${_index_path}"))
 
       local -a _file_list=()
-      _file_list=($(ls "${_notebook_path}"))
+      _file_list=($(ls "${_folder_path}"))
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
@@ -7366,13 +7490,13 @@ _notebooks() {
   #
   # Usage:
   #   _notebooks_current (<name> | <path> | <selector>) [--global | --local]
-  #                      [--path | --scoped]
+  #                      [--path | --scoped] [--filename]
   _notebooks_current() {
-    local _filename=
+    local _file_path=
     local _print_global=0
     local _print_local=0
     local _print_path=0
-    local _print_unique_filename=0
+    local _print_unique_file_path=0
     local _return_selected=0
     local _selector=
 
@@ -7394,12 +7518,12 @@ _notebooks() {
         --scoped|--selected)
           _return_selected=1
           ;;
-        --filename|--basename)
-          _print_unique_filename=1
+        --filename|--basename|--file*path)
+          _print_unique_file_path=1
 
           if _option_value_is_present "${__val:-}"
           then
-            _filename="${__val}"
+            _file_path="${__val}"
             shift
           fi
           ;;
@@ -7444,9 +7568,9 @@ _notebooks() {
     then
       [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]] &&
       [[ "${NB_NOTEBOOK_PATH}" != "${_LOCAL_NOTEBOOK_PATH}"  ]]
-    elif ((_print_unique_filename))
+    elif ((_print_unique_file_path))
     then
-      _notebooks_show "${NB_NOTEBOOK_PATH}" --filename "${_filename:-}"
+      _notebooks_show "${NB_NOTEBOOK_PATH}" --filename "${_file_path:-}"
     else
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
          [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
@@ -7693,6 +7817,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
        [[ -d "${_path}/.git"  ]]
     then
       local _error_message=
+
       if [[ -f "${_path}/.index" ]]
       then
         _error_message="Notebook exists: $(_color_primary "${_path}")"
@@ -8080,12 +8205,12 @@ HEREDOC
   #   _notebooks_show (<name> | <path> | <selector>) [--archived]
   #                   [--escaped | --name | --path | --filename [<filename>]]
   _notebooks_show() {
-    local _filename=
+    local _file_path=
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_color_enabled=1
     local _notebook_path=
     local _print_escaped_name=0
-    local _print_unique_filename=0
+    local _print_unique_file_path=0
     local _only_name=0
     local _only_path=0
     local _selector=
@@ -8112,12 +8237,12 @@ HEREDOC
         --path)
           _only_path=1
           ;;
-        --filename|--basename)
-          _print_unique_filename=1
+        --filename|--basename|--file*path)
+          _print_unique_file_path=1
 
           if _option_value_is_present "${__val:-}"
           then
-            _filename="${__val}"
+            _file_path="${__val}"
             shift
           fi
           ;;
@@ -8189,12 +8314,12 @@ HEREDOC
       fi
     fi
 
-    if ((_print_unique_filename))
+    if ((_print_unique_file_path))
     then
-      local _unique_file_name=
-      _unique_file_name="$(_get_unique_basename "${_filename:-}")"
+      local _unique_file_path=
+      _unique_file_path="$(_get_unique_basename "${_file_path:-}")"
 
-      printf "%s\\n" "${_unique_file_name:-}"
+      printf "%s\\n" "${_unique_file_path:-}"
       return 0
     fi
 
@@ -10552,10 +10677,10 @@ _show() {
     printf "%s\\n" "${_indicators:-}"
   }
 
-  # _show_selector_basename()
+  # _show_selector_relative_path()
   #
   # Usage:
-  #   _show_selector_basename <selector> [<notebook-path>]
+  #   _show_selector_relative_path <selector> [<notebook-path>]
   #
   # Description:
   #   Determine the basename of the file that is identified by the given <id>,
@@ -10566,21 +10691,21 @@ _show() {
   #     1
   #     example.md
   #     title
+  #     relative/path/to/example.md
   #     /path/to/example.md
   #     notebook:1
   #     notebook:example.md
   #     notebook:title
+  #     notebook:relative/path/to/example.md
   #     notebook:/path/to/example.md
-  _show_selector_basename() {
-    local _basename=
+  _show_selector_relative_path() {
     local _identifier=
+    local _relative_path=
     local _selector="${1:-}"
     local _notebook_path="${2:-}"
 
-    if [[ -z "${_selector}" ]]
+    if [[ -n "${_selector}" ]]
     then
-      _basename=
-    else
       if [[ -z "${_notebook_path:-}" ]]
       then
         _notebook_path="$(
@@ -10592,15 +10717,23 @@ _show() {
 
       if [[ -e "${_identifier}"                   ]] &&
          [[ "${_identifier}" =~ ${_notebook_path} ]]
-      then # <selector> is a full path.
-        _basename="$(basename "${_identifier}")"
+      then # <selector> is a full path
+        _relative_path="${_identifier/"${_notebook_path}"\//}"
       elif [[ -e "${_notebook_path}/${_identifier}" ]]
-      then # <selector> is a filename.
-        _basename="${_identifier}"
-      elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
-      then # <selector> is an id.
-        _basename="$(_index get_basename "${_identifier}")"
-      else # <selector> might be a title.
+      then # <selector> is a relative path
+        _relative_path="${_identifier}"
+      elif [[ "${_identifier##*\/}" =~ ^[0-9]+$ ]]
+      then # <selector> is an id
+        if [[ "${_identifier}" =~ / ]]
+        then
+          _relative_path="${_identifier%\/*}/$(
+            _INDEX_FOLDER_PATH="${_notebook_path}/${_identifier%\/*}" \
+              _index get_basename "${_identifier##*\/}"
+          )"
+        else
+          _relative_path="$(_index get_basename "${_identifier}")"
+        fi
+      else # <selector> might be a title
         local _title=
         local _filenames
         _filenames=($(_list_files "${_notebook_path}"))
@@ -10612,14 +10745,14 @@ _show() {
           if [[ -n "${_title}"                  ]] &&
              [[ "${_title}" == "${_identifier}" ]]
           then
-            _basename="${__file}"
+            _relative_path="${__file}"
             break
           fi
         done
       fi
     fi
 
-    printf "%s\\n" "${_basename}"
+    printf "%s\\n" "${_relative_path:-}"
   }
 
   local _ls_arguments=()
@@ -10630,6 +10763,7 @@ _show() {
   local _print_id=0
   local _print_info=0
   local _print_path=0
+  local _print_relative_path=0
   local _print_selector_id=0
   local _print_updated=0
   local _render=0
@@ -10680,6 +10814,9 @@ _show() {
         ;;
       -p|--print|--dump|--skip*pager|--no*pager)
         _print_output=1
+        ;;
+      --relative-path)
+        _print_relative_path=1
         ;;
       -r|--render)
         _render=1
@@ -10738,12 +10875,24 @@ _show() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
+  local _relative_path
+  _relative_path="$(
+    _show_selector_relative_path "${_selector}" "${_notebook_path}"
+  )"
+
+  local _folder_path="${_notebook_path:?}"
+
+  if [[ "${_relative_path:-}" =~ / ]]
+  then
+    _folder_path="${_notebook_path}/${_relative_path%\/*}"
+  fi
+
   local _basename
-  _basename="$(_show_selector_basename "${_selector}" "${_notebook_path}")"
+  _basename="$(basename "${_relative_path}")"
 
-  local _target_path="${_notebook_path}/${_basename}"
+  local _target_path="${_notebook_path}/${_relative_path}"
 
-  if [[ -z "${_basename:-}" ]] && ! ((_skip_notebook_fallback))
+  if [[ -z "${_relative_path:-}" ]] && ! ((_skip_notebook_fallback))
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -10759,7 +10908,7 @@ _show() {
     fi
   fi
 
-  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_target_path}" ]]
+  if [[ -z "${_relative_path:-}" ]] || [[ ! -e "${_target_path}" ]]
   then
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1
@@ -10777,21 +10926,29 @@ _show() {
     return 0
   fi
 
+  if ((_print_relative_path))
+  then
+    printf "%s\\n" "${_relative_path}"
+    return 0
+  fi
+
   if ((_print_id))
   then
-    printf "%s\\n" "$(_index get_id "${_basename}")"
+    printf "%s\\n" "$(
+      _INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_relative_path}"
+    )"
     return 0
   fi
 
   if ((_print_title))
   then
-    _get_content "${_notebook_path}/${_basename}" --title
+    _get_content "${_notebook_path}/${_relative_path}" --title
     return 0
   fi
 
   if ((_print_indicators))
   then
-    _show_indicators "${_notebook_path}/${_basename}"
+    _show_indicators "${_notebook_path}/${_relative_path}"
     return 0
   fi
 
@@ -10799,15 +10956,15 @@ _show() {
   then
     if [[ -z "${_type}" ]]
     then
-      printf "%s\\n" "${_basename#*.}"
+      printf "%s\\n" "${_relative_path#*.}"
       return 0
     else
       if _contains "${_type}" archive audio bookmark document folder image text video
       then
-        "_file_is_${_type}" "${_notebook_path}/${_basename}"
+        "_file_is_${_type}" "${_notebook_path}/${_relative_path}"
         return $?
       else
-        [[ "${_type}" == "${_basename#*.}" ]]
+        [[ "${_type}" == "${_relative_path#*.}" ]]
         return $?
       fi
     fi
@@ -10816,12 +10973,12 @@ _show() {
   if ((_print_info))
   then
     local _id
-    _id="$(_index get_id "${_basename}")"
+    _id="$(_INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_basename}")"
 
     local _maybe_scoped_id
     _maybe_scoped_id="${_id}"
 
-    local _maybe_scoped_basename="${_basename}"
+    local _maybe_scoped_relative_path="${_relative_path// /\\ }"
 
     if _notebooks current --selected
     then
@@ -10831,25 +10988,24 @@ _show() {
       )"
 
       _maybe_scoped_id="${_notebook_escaped_name}:${_maybe_scoped_id}"
-      _maybe_scoped_basename="${_notebook_escaped_name}:${_maybe_scoped_basename}"
+      _maybe_scoped_relative_path="${_notebook_escaped_name}:${_maybe_scoped_relative_path}"
     fi
 
     local _info_line=
     _info_line+="$(_color_brackets "${_maybe_scoped_id}") "
 
     local _indicators
-    _indicators="$(_show "${_notebook_path}/${_basename}" --indicators)"
+    _indicators="$(_show "${_notebook_path}/${_relative_path}" --indicators)"
 
     if [[ -n "${_indicators:-}" ]]
     then
       _info_line+="${_indicators}"
     fi
 
-    _info_line+="$(_color_primary "${_maybe_scoped_basename}") "
+    _info_line+="$(_color_primary "${_maybe_scoped_relative_path}") "
 
     local _title
-    _title="$(_get_content "${_notebook_path}/${_basename}" --title)"
-
+    _title="$(_get_content "${_notebook_path}/${_relative_path}" --title)"
 
     if [[ -n "${_title:-}" ]]
     then
@@ -10871,7 +11027,7 @@ _show() {
       --diff-filter=A                     \
       --date=iso-local                    \
       --pretty='%ad'                      \
-      "${_basename}"
+      "${_relative_path}"
 
     return 0
   fi
@@ -10884,7 +11040,7 @@ _show() {
       --follow                            \
       --date=iso-local                    \
       --pretty='%ad'                      \
-      "${_basename}"
+      "${_relative_path}"
 
     return 0
   fi

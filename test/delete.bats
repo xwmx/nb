@@ -372,7 +372,7 @@ load test_helper
 @test "\`delete\` with <title> argument deletes properly without errors." {
   {
     run "${_NB}" init
-    run "${_NB}" add
+    run "${_NB}" add --title "Example Title"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -381,7 +381,7 @@ load test_helper
     [[ -e "${_NOTEBOOK_PATH}/${_filename}"   ]]
   }
 
-  run "${_NB}" delete "${_title}" --force
+  run "${_NB}" delete "Example Title" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -449,9 +449,9 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted:        ]]
-  [[ "${output}" =~ [0-9]+          ]]
-  [[ "${output}" =~ Example\ Folder ]]
+  [[ "${output}" =~ Deleted:          ]]
+  [[ "${output}" =~ [0-9]+            ]]
+  [[ "${output}" =~ Example\\\ Folder ]]
 }
 
 # help ########################################################################

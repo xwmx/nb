@@ -397,13 +397,12 @@ load test_helper
 @test "\`edit\` with <title> argument edits properly without errors." {
   {
     run "${_NB}" init
-    run "${_NB}" add
+    run "${_NB}" add --title "Example Title"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
 
-  run "${_NB}" edit "${_title}"
+  run "${_NB}" edit "Example Title"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

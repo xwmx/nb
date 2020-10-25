@@ -172,7 +172,7 @@ load test_helper
 @test "\`show <title> --dump\` exits with status 0 and dumps note file." {
   {
     run "${_NB}" init
-    run "${_NB}" add
+    run "${_NB}" add --title "Example Title"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
@@ -183,8 +183,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${output}" =~ mock_editor ]]
+  [[ ${status} -eq 0                ]]
+  [[ "${output}" =~ Example\ Title  ]]
 }
 
 # `show <filename> --path` ####################################################
@@ -249,7 +249,7 @@ load test_helper
 @test "\`show <title> --path\` exits with status 0 and prints note path." {
   {
     run "${_NB}" init
-    run "${_NB}" add
+    run "${_NB}" add --title "Example Title"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
