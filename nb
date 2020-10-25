@@ -6508,7 +6508,7 @@ ${_TPUT_SGR0}"
 
       elif [[ "${_filenames_counter}" -gt "${_limit}" ]]
       then
-        printf "%s omitted. %s total.\\n"   \
+        printf "%s omitted. %s total.\\n"             \
           "$((_filenames_counter-_printed_counter))"  \
           "${_filenames_counter}"
         return 0
