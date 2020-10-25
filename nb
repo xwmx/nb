@@ -4073,11 +4073,6 @@ HEREDOC
 _count() {
   local _list_files_options=(${@:-})
 
-  if [[ -z "${_list_files_options[*]:-}" ]]
-  then
-    _list_files_options+=("$(_notebooks current --path)")
-  fi
-
   _list_files "${_list_files_options[@]}" | wc -l | tr -d ' '
 }
 
