@@ -6239,8 +6239,8 @@ _list() {
 
   local _counter=0
   local _matches=0
-  local _filenames_counter=0
-  local _printed_counter=0
+  local _filenames_count=0
+  local _printed_count=0
 
   local _max_id
   _max_id="$(_index get_max_id)"
@@ -6251,7 +6251,7 @@ _list() {
   } | {
     while read -r __basename
     do
-      _filenames_counter=$((_filenames_counter+1))
+      _filenames_count=$((_filenames_count+1))
 
       local _first_line=
       local _maybe_title=
@@ -6298,14 +6298,14 @@ _list() {
         fi
       fi
 
-      if [[ -n "${_limit:-}" ]] && [[ "${_printed_counter}" -ge "${_limit}" ]]
+      if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
       then # the limit has been reached
         if [[ -n "${_selector_identifier:-}" ]]
         then
           # keep looking for matches to count total
           continue
         else
-          _filenames_counter="$(
+          _filenames_count="$(
             _count "${_list_files_options[@]}"
           )"
           break
@@ -6484,7 +6484,7 @@ ${_TPUT_SGR0}"
         printf "\\n"
       fi
 
-      _printed_counter=$((_printed_counter+1))
+      _printed_count=$((_printed_count+1))
     done
 
     if [[ -n "${_limit:-}" ]]
@@ -6495,7 +6495,7 @@ ${_TPUT_SGR0}"
         then
           local _label="matches"
           local _omitted_count
-          _omitted_count=$((_matches-_printed_counter))
+          _omitted_count=$((_matches-_printed_count))
 
           [[ "${_omitted_count}" -eq 1 ]] && _label="match"
 
@@ -6506,16 +6506,16 @@ ${_TPUT_SGR0}"
           return 0
         fi
 
-      elif [[ "${_filenames_counter}" -gt "${_limit}" ]]
+      elif [[ "${_filenames_count}" -gt "${_limit}" ]]
       then
-        printf "%s omitted. %s total.\\n"             \
-          "$((_filenames_counter-_printed_counter))"  \
-          "${_filenames_counter}"
+        printf "%s omitted. %s total.\\n"         \
+          "$((_filenames_count-_printed_count))"  \
+          "${_filenames_count}"
         return 0
       fi
     fi
 
-    if  ! ((_printed_counter)) && [[ -n "${_selector:-}" ]]
+    if  ! ((_printed_count)) && [[ -n "${_selector:-}" ]]
     then
       local _filter_message=
       _filter_message="$(_color_primary "${_selector}")"
@@ -6530,7 +6530,7 @@ ${_TPUT_SGR0}"
         return 1
     fi
 
-    if ! ((_filenames_counter)) && [[ -z "${_selector_identifier:-}" ]]
+    if ! ((_filenames_count)) && [[ -z "${_selector_identifier:-}" ]]
     then
       if ((_error_on_empty))
       then
