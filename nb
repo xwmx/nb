@@ -4071,10 +4071,9 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _list_files_options=(${@:-})
 
-  _list_files "${_notebook_path}" | wc -l | tr -d ' '
+  _list_files "${_list_files_options[@]:-}" | wc -l | tr -d ' '
 }
 
 # delete ############################################################### delete
@@ -6232,18 +6231,331 @@ _list() {
   ((_reverse))          && _list_files_options+=("--reverse")
   ((_sort))             && _list_files_options+=("--sort")
 
-  _filenames=($(_list_files "${_list_files_options[@]}")) || :
-
-  local _filenames_count="${#_filenames[@]}"
-
   if _notebooks current --selected
   then
     _maybe_scope="$(_notebooks show "${_notebook_path}" --escaped --no-color):"
     _maybe_scope_padded_right="${_maybe_scope} "
   fi
 
-  # Use code block to capture all output for piping to pager.
+  local _bash_major_version="${BASH_VERSION%%.*}"
+  local _counter=0
+  local _matches=0
+  local _filenames_count=0
+  local _printed_count=0
+
+  local _max_id
+  _max_id="$(_index get_max_id)"
+
+  if ! ((_no_id)) && [[ "${_bash_major_version:-0}" -ge 4 ]]
+  then # cache .index
+    declare -A _index_map
+
+    local _id=0
+
+    while IFS= read -r _line
+    do
+      _id=$((_id+1))
+
+      if [[ -n "${_line:-}" ]]
+      then
+        _index_map["${_line}"]="${_id}"
+      else
+        _index_map["___x_nb_blank_x___"]="${_id}"
+      fi
+    done < "${_notebook_path:-}/.index"
+  fi
+
+  # Use code blocks to capture all output for piping to pager.
   {
+    _list_files "${_list_files_options[@]}" || :
+  } | {
+    while read -r __basename
+    do
+      _filenames_count=$((_filenames_count+1))
+
+      local _first_line=
+      local _maybe_title=
+      local _title_basename_or_path="${__basename}"
+
+      if [[ -n "${_selector_identifier:-}" ]]
+      then
+        # If a valid <selector> has been specified, skip the rest of the
+        # loop unless the <selector> basename matches the current one.
+        if [[ -n "${_selector_basename}" ]]
+        then
+          if [[ "${__basename}" != "${_selector_basename}" ]]
+          then
+            continue
+          fi
+        else
+          # turn on a case-insensitive matching (-s set nocasematch)
+          shopt -s nocasematch
+
+          if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
+          then
+            # include the note in the list
+            _matches=$((_matches+1))
+          else
+            _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+
+            if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
+            then
+              _first_line="${_maybe_title#__first_line:}"
+              _maybe_title=
+            fi
+
+            if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
+            then
+              # include the note in the list
+              _matches=$((_matches+1))
+            else
+              continue # don't include note in list
+            fi
+          fi
+
+          # turn off a case-insensitive matching (-u unset nocasematch)
+          shopt -u nocasematch
+        fi
+      fi
+
+      if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
+      then # the limit has been reached
+        if [[ -n "${_selector_identifier:-}" ]]
+        then
+          # keep looking for matches to count total
+          continue
+        else
+          _filenames_count="$(
+            _count "${_list_files_options[@]}"
+          )"
+
+          break
+        fi
+      fi
+
+      if ((_list_paths))
+      then
+        _title_basename_or_path="${_notebook_path}/${__basename}"
+      elif ! ((_list_filenames))
+      then
+        if [[ -z "${_maybe_title}" ]]
+        then
+          _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+        fi
+
+        if [[ -n "${_maybe_title}" ]]
+        then
+          if [[ "${_maybe_title}" =~ ^__first_line: ]]
+          then
+            _first_line="${_maybe_title#__first_line:}"
+            _maybe_title=
+          else
+            _title_basename_or_path="${_maybe_title}"
+          fi
+        fi
+      fi
+
+      local _extra_length=0
+      local _indicators=
+
+      if ((_print_indicators))
+      then
+        # TODO: `show --indicators` duplicated for performance
+        if _file_is_bookmark "${_notebook_path}/${__basename}"
+        then
+          _indicators+="🔖 "
+        elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
+        then
+          if _file_is_image "${_notebook_path}/${__basename}"
+          then
+            _indicators+="🌄 "
+          elif _file_is_document "${_notebook_path}/${__basename}"
+          then
+            _indicators+="📄 "
+          elif [[ -d "${_notebook_path}/${__basename}" ]]
+          then
+            _indicators+="📂 "
+          elif _file_is_video "${_notebook_path}/${__basename}"
+          then
+            _indicators+="📹 "
+          elif _file_is_audio "${_notebook_path}/${__basename}"
+          then
+            _indicators+="🔉 "
+          elif [[ "${__basename}" =~ \.epub$ ]]
+          then
+            _indicators+="📖 "
+          fi
+
+          if _file_is_encrypted "${_notebook_path}/${__basename}"
+          then
+            _indicators+="🔒 "
+          fi
+        fi
+
+        if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
+        then
+          _indicators+="✅ "
+          _extra_length=1
+        fi
+      fi
+
+      local _item_info="${_indicators}${_title_basename_or_path}"
+
+      if ! ((_list_filenames))  &&
+         ! ((_list_paths))      &&
+         ! ((_print_excerpt))   &&
+         [[ "${_title_basename_or_path}" == "${__basename}" ]]
+      then
+        if [[ -n "${_first_line:-}" ]]
+        then
+          _item_info="${_item_info} · \"${_first_line}\""
+        fi
+      fi
+
+      local _info_line=
+      local _info_line_color=
+
+      if ((_no_id))
+      then
+        _info_line="${_item_info}"
+        _info_line_color="${_item_info}"
+      else
+        if [[ "${_bash_major_version:-0}" -ge 4 ]]
+        then # get from cached .index
+          local _item_identifier="${_index_map["${__basename:-}"]}"
+        else # get from .index
+          local _item_identifier
+          # use `sed` directly instead of `_index get_id` for performance
+          _item_identifier="$(
+            sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
+          )"
+        fi
+
+        local _max_identifier="${_max_id}"
+
+        if [[ -n "${_maybe_scope:-}" ]]
+        then
+          _item_identifier="${_notebook_escaped_name}:${_item_identifier}"
+          _max_identifier="${_notebook_escaped_name}:${_max_id}"
+        fi
+
+        local _brackets_identifier="[${_item_identifier}]"
+
+        # avoid calling `_color_brackets` for performance
+        local _brackets_identifier_color="\
+${_TPUT_SGR0}\
+${_TPUT_SETAF_8}\
+[\
+${_TPUT_COLOR_PRIMARY}\
+${_item_identifier:-}\
+${_TPUT_SETAF_8}\
+]\
+${_TPUT_SGR0}"
+
+        # use calculated number of spaces for nicer formatting
+        local _spaces_length=
+        _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
+
+        local _spaces=
+        printf -v _spaces '%*s' "${_spaces_length}" ""
+
+        _info_line="${_brackets_identifier}${_spaces}${_item_info}"
+        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
+      fi
+
+      if ((_list_color_enabled))  &&
+         ! ((_list_filenames))    &&
+         ! ((_list_paths))        &&
+         ! ((_no_id))
+      then
+        _wrap off
+      fi
+
+      if ((_list_color_enabled))
+      then
+        printf "%s" "${_info_line_color}"
+      else
+        printf "%s" "${_info_line}"
+      fi
+
+      if ((_list_color_enabled))  &&
+         ! ((_list_filenames))    &&
+         ! ((_list_paths))        &&
+         ! ((_no_id))
+      then
+        _wrap on
+      fi
+
+      # end of line
+      printf "\\n"
+
+      if ((_print_excerpt))                               &&
+         [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
+         _file_is_text "${_notebook_path}/${__basename}"
+      then # excerpt is specified with a non-zero digit, required by `head`
+        local _visible_info_line_length=
+        _visible_info_line_length="$(
+          _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
+        )"
+
+        if [[ -z "${_visible_info_line_length:-}"               ]] ||
+           [[ "${_visible_info_line_length}" -gt "${_columns}"  ]]
+        then
+          _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+        else
+          _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
+        fi
+        head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
+          | _highlight_syntax_if_available "${__basename##*.}"
+        printf "\\n"
+      fi
+
+      _printed_count=$((_printed_count+1))
+    done
+
+    if [[ -n "${_limit:-}" ]]
+    then
+      if [[ -n "${_selector_identifier:-}" ]]
+      then
+        if [[ "${_matches:-0}" -gt "${_limit}" ]]
+        then
+          local _label="matches"
+          local _omitted_count
+          _omitted_count=$((_matches-_printed_count))
+
+          [[ "${_omitted_count}" -eq 1 ]] && _label="match"
+
+          printf "%s %s omitted. %s total.\\n"  \
+            "${_omitted_count}"                 \
+            "${_label}"                         \
+            "${_matches}"
+          return 0
+        fi
+
+      elif [[ "${_filenames_count}" -gt "${_limit}" ]]
+      then
+        printf "%s omitted. %s total.\\n"         \
+          "$((_filenames_count-_printed_count))"  \
+          "${_filenames_count}"
+        return 0
+      fi
+    fi
+
+    if ! ((_printed_count)) && [[ -n "${_selector:-}" ]]
+    then
+      local _filter_message=
+      _filter_message="$(_color_primary "${_selector}")"
+
+      if [[ -n "${_type:-}" ]]
+      then
+         _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
+      fi
+
+      _warn \
+        printf "Not found: %s\\n" "${_filter_message}" &&
+        return 1
+    fi
+
     if ! ((_filenames_count)) && [[ -z "${_selector_identifier:-}" ]]
     then
       if ((_error_on_empty))
@@ -6259,14 +6571,14 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-      elif [[ -n "${_type:-}" ]]
+    elif [[ -n "${_type:-}" ]]
+    then
+      if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
       then
-        if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
-        then
-          _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
-        fi
+        _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+      fi
 
-        cat <<HEREDOC
+      cat <<HEREDOC
 0 ${_type} files.
 
 Import a file:
@@ -6274,8 +6586,8 @@ Import a file:
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
-      else
-        cat <<HEREDOC
+    else
+      cat <<HEREDOC
 0 items.
 
 Add a note:
@@ -6287,323 +6599,16 @@ Import a file:
 Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
-      fi
-
-      return 0
-    else
-      local _bash_major_version="${BASH_VERSION%%.*}"
-      local _counter=0
-      local _matches=0
-      local _max_id
-      _max_id="$(_index get_max_id)"
-
-      if ! ((_no_id)) && [[ "${_bash_major_version:-0}" -ge 4 ]]
-      then # cache .index
-        declare -A _index_map
-
-        local _id=0
-
-        while IFS= read -r _line
-        do
-          _id=$((_id+1))
-
-          if [[ -n "${_line:-}" ]]
-          then
-            _index_map["${_line}"]="${_id}"
-          else
-            _index_map["___x_nb_blank_x___"]="${_id}"
-          fi
-        done < "${_notebook_path:-}/.index"
-      fi
-
-      for __basename in "${_filenames[@]:-}"
-      do
-        local _first_line=
-        local _maybe_title=
-        local _title_basename_or_path="${__basename}"
-
-        if [[ -n "${_selector_identifier:-}" ]]
-        then
-          # If a valid <selector> has been specified, skip the rest of the
-          # loop unless the <selector> basename matches the current one.
-          if [[ -n "${_selector_basename}" ]]
-          then
-            if [[ "${__basename}" != "${_selector_basename}" ]]
-            then
-              continue
-            fi
-          else
-            # turn on a case-insensitive matching (-s set nocasematch)
-            shopt -s nocasematch
-
-            if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
-            then
-              # include the note in the list
-              _matches=$((_matches+1))
-            else
-              _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
-
-              if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
-              then
-                _first_line="${_maybe_title#__first_line:}"
-                _maybe_title=
-              fi
-
-              if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
-              then
-                # include the note in the list
-                _matches=$((_matches+1))
-              else
-                continue # don't include note in list
-              fi
-            fi
-
-            # turn off a case-insensitive matching (-u unset nocasematch)
-            shopt -u nocasematch
-          fi
-        fi
-
-        if [[ -n "${_limit:-}" ]] && [[ "${_counter}" -ge "${_limit}" ]]
-        then # the limit has been reached.
-          if [[ -n "${_selector_identifier:-}" ]]
-          then
-            # keep looking for matches to count total
-            continue
-          else
-            break
-          fi
-        fi
-
-        if ((_list_paths))
-        then
-          _title_basename_or_path="${_notebook_path}/${__basename}"
-        elif ! ((_list_filenames))
-        then
-          if [[ -z "${_maybe_title}" ]]
-          then
-            _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
-          fi
-
-          if [[ -n "${_maybe_title}" ]]
-          then
-            if [[ "${_maybe_title}" =~ ^__first_line: ]]
-            then
-              _first_line="${_maybe_title#__first_line:}"
-              _maybe_title=
-            else
-              _title_basename_or_path="${_maybe_title}"
-            fi
-          fi
-        fi
-
-        local _extra_length=0
-        local _indicators=
-
-        if ((_print_indicators))
-        then
-          # TODO: `show --indicators` duplicated for performance
-          if _file_is_bookmark "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔖 "
-          elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
-          then
-            if _file_is_image "${_notebook_path}/${__basename}"
-            then
-              _indicators+="🌄 "
-            elif _file_is_document "${_notebook_path}/${__basename}"
-            then
-              _indicators+="📄 "
-            elif [[ -d "${_notebook_path}/${__basename}" ]]
-            then
-              _indicators+="📂 "
-            elif _file_is_video "${_notebook_path}/${__basename}"
-            then
-              _indicators+="📹 "
-            elif _file_is_audio "${_notebook_path}/${__basename}"
-            then
-              _indicators+="🔉 "
-            elif [[ "${__basename}" =~ \.epub$ ]]
-            then
-              _indicators+="📖 "
-            fi
-
-            if _file_is_encrypted "${_notebook_path}/${__basename}"
-            then
-              _indicators+="🔒 "
-            fi
-          fi
-
-          if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
-          then
-            _indicators+="✅ "
-            _extra_length=1
-          fi
-        fi
-
-        local _item_info="${_indicators}${_title_basename_or_path}"
-
-        if ! ((_list_filenames))  &&
-           ! ((_list_paths))      &&
-           ! ((_print_excerpt))   &&
-           [[ "${_title_basename_or_path}" == "${__basename}" ]]
-        then
-          if [[ -n "${_first_line:-}" ]]
-          then
-            _item_info="${_item_info} · \"${_first_line}\""
-          fi
-        fi
-
-        local _info_line=
-        local _info_line_color=
-
-        if ((_no_id))
-        then
-          _info_line="${_item_info}"
-          _info_line_color="${_item_info}"
-        else
-          if [[ "${_bash_major_version:-0}" -ge 4 ]]
-          then # get from cached .index
-            local _item_identifier="${_index_map["${__basename:-}"]}"
-          else # get from .index
-            local _item_identifier
-            _item_identifier="$(
-              sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
-            )"
-          fi
-
-
-
-          local _max_identifier="${_max_id}"
-
-          if [[ -n "${_maybe_scope:-}" ]]
-          then
-            _item_identifier="${_notebook_escaped_name}:${_item_identifier}"
-            _max_identifier="${_notebook_escaped_name}:${_max_id}"
-          fi
-
-          local _brackets_identifier="[${_item_identifier}]"
-
-          # avoid calling `_color_brackets` for performance
-          local _brackets_identifier_color="\
-${_TPUT_SGR0}\
-${_TPUT_SETAF_8}\
-[\
-${_TPUT_COLOR_PRIMARY}\
-${_item_identifier:-}\
-${_TPUT_SETAF_8}\
-]\
-${_TPUT_SGR0}"
-
-          # use calculated number of spaces for nicer formatting
-          local _spaces_length=
-          _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
-
-          local _spaces=
-          printf -v _spaces '%*s' "${_spaces_length}" ""
-
-          _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-          _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
-        fi
-
-        if ((_list_color_enabled))  &&
-           ! ((_list_filenames))    &&
-           ! ((_list_paths))        &&
-           ! ((_no_id))
-        then
-          _wrap off
-        fi
-
-        if ((_list_color_enabled))
-        then
-          printf "%s" "${_info_line_color}"
-        else
-          printf "%s" "${_info_line}"
-        fi
-
-        if ((_list_color_enabled))  &&
-           ! ((_list_filenames))    &&
-           ! ((_list_paths))        &&
-           ! ((_no_id))
-        then
-          _wrap on
-        fi
-
-        # end of line
-        printf "\\n"
-
-        if ((_print_excerpt))                               &&
-           [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
-           _file_is_text "${_notebook_path}/${__basename}"
-        then # excerpt is specified with a non-zero digit, required by `head`
-          local _visible_info_line_length=
-          _visible_info_line_length="$(
-            _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
-          )"
-
-          if [[ -z "${_visible_info_line_length:-}"               ]] ||
-             [[ "${_visible_info_line_length}" -gt "${_columns}"  ]]
-          then
-            _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
-          else
-            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
-          fi
-          head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
-            | _highlight_syntax_if_available "${__basename##*.}"
-          printf "\\n"
-        fi
-
-        _counter=$((_counter+1))
-      done
-
-      if [[ -n "${_limit:-}" ]]
-      then
-        if [[ -n "${_selector_identifier:-}" ]]
-        then
-          if [[ "${_matches:-0}" -gt "${_limit}" ]]
-          then
-            local _label="matches"
-            local _omitted_count
-            _omitted_count=$((_matches-_counter))
-
-            [[ "${_omitted_count}" -eq 1 ]] && _label="match"
-
-            printf "%s %s omitted. %s total.\\n"  \
-              "${_omitted_count}"                 \
-              "${_label}"                         \
-              "${_matches}"
-            return 0
-          fi
-
-        elif [[ "${_filenames_count}" -gt "${_limit}" ]]
-        then
-          printf "%s omitted. %s total.\\n"   \
-            "$((_filenames_count-_counter))"  \
-            "${_filenames_count}"
-          return 0
-        fi
-      fi
-
-      if ! ((_counter)) && [[ -n "${_selector:-}" ]]
-      then
-        local _filter_message=
-        _filter_message="$(_color_primary "${_selector}")"
-
-        if [[ -n "${_type:-}" ]]
-        then
-           _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
-        fi
-
-        _warn \
-          printf "Not found: %s\\n" "${_filter_message}" &&
-          return 1
-      fi
     fi
-  } | if ((_use_pager))
-      then
-        _pager
-      else
-        cat
-      fi
+
+    return 0
+  fi
+} | if ((_use_pager))
+    then
+      _pager
+    else
+      cat
+    fi
 }
 
 # ls ####################################################################### ls
