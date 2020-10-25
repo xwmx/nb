@@ -42,6 +42,45 @@ HEREDOC
   [[ "${lines[0]}" -eq 3  ]]
 }
 
+@test "\`count --type <type>\` exits with 0 and counts items of type." {
+  {
+    "${_NB}" init
+
+    cat <<HEREDOC | "${_NB}" add "example.md"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "example.doc"
+line one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "sample.md"
+line one
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" count --type document
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0      ]]
+  [[ "${lines[0]}" -eq 2  ]]
+}
+
 # help ########################################################################
 
 @test "\`help count\` exits with status 0." {

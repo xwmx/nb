@@ -4071,10 +4071,14 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _list_files_options=(${@:-})
 
-  _list_files "${_notebook_path}" | wc -l | tr -d ' '
+  if [[ -z "${_list_files_options[*]:-}" ]]
+  then
+    _list_files_options+=("$(_notebooks current --path)")
+  fi
+
+  _list_files "${_list_files_options[@]}" | wc -l | tr -d ' '
 }
 
 # delete ############################################################### delete
@@ -6306,7 +6310,9 @@ _list() {
           # keep looking for matches to count total
           continue
         else
-          _filenames_counter="$(_count)"
+          _filenames_counter="$(
+            _count "${_list_files_options[@]}"
+          )"
           break
         fi
       fi
