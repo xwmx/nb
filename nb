@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.7.7"
+_VERSION="5.7.8"
 
 # $_ME
 #
@@ -2920,7 +2920,7 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _maybe_content_or_filename=
+  local _content_or_filename=
   local _password=
   local _target_filename=
   local _title=
@@ -2966,9 +2966,9 @@ _add() {
         shift
         ;;
       *)
-        if [[ -z "${_maybe_content_or_filename:-}" ]]
+        if [[ -z "${_content_or_filename:-}" ]]
         then
-          _maybe_content_or_filename="${__arg:-}"
+          _content_or_filename="${__arg:-}"
         else
           _arguments+=("${__arg:-}")
         fi
@@ -2985,21 +2985,21 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _maybe_content_or_filename_extension="${_maybe_content_or_filename##*\.}"
+  local _content_or_filename_extension="${_content_or_filename##*\.}"
 
-  if [[ -n "${_maybe_content_or_filename:-}" ]]
+  if [[ -n "${_content_or_filename:-}" ]]
   then
-    if  [[ "${_maybe_content_or_filename:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
-        [[ -n "${_maybe_content_or_filename_extension:-}"         ]]  &&
+    if  [[ "${_content_or_filename:-}" =~ \.[A-Za-z0-9]+$         ]]  &&
+        [[ -n "${_content_or_filename_extension:-}"               ]]  &&
         [[ -z "${_target_filename}"                               ]]  &&
-        ! _string_is_url "${_maybe_content_or_filename:-}"            &&
-        ! _string_is_email "${_maybe_content_or_filename:-}"          &&
-        ! _contains "${_maybe_content_or_filename_extension:-}"   \
+        ! _string_is_url "${_content_or_filename:-}"                  &&
+        ! _string_is_email "${_content_or_filename:-}"                &&
+        ! _contains "${_content_or_filename_extension:-}"         \
                     "${_common_non_text_file_extension_tlds[@]}"
     then
-      _target_filename="${_maybe_content_or_filename}"
+      _target_filename="${_content_or_filename}"
     else
-      _content="${_maybe_content_or_filename}"
+      _content="${_content_or_filename}"
     fi
   fi
 
