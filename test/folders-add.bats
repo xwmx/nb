@@ -2,10 +2,253 @@
 
 load test_helper
 
+# folder/ #####################################################################
+
+@test "'add folder/' creates new folder without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+  }
+
+  run "${_NB}" add "Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+
+  echo "${_files[@]}"
+
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ "${#_files[@]}"  == 5                                    ]]
+  [[ "${_files[3]}"   == ".index"                             ]]
+  [[ "${_files[4]}"   == "Example Folder"                     ]]
+
+  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+
+  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ "${#_folder_files[@]}" == 3                                ]]
+  [[ "${_folder_files[2]}"  == ".index"                         ]]
+  [[ "${_folder_files[3]}"  != "Sample Folder"                  ]]
+
+  # Commits to git:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+
+  cat "${_NOTEBOOK_PATH}/.index"
+  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+
+  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:             ]]
+  [[ "${output}" =~ Example\\\ Folder  ]]
+}
+
+@test "'add folder/folder/' creates new folder without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+  }
+
+  run "${_NB}" add "Example Folder/Sample Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+
+  echo "${_files[@]}"
+
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ "${#_files[@]}"  == 5                                    ]]
+  [[ "${_files[3]}"   == ".index"                             ]]
+  [[ "${_files[4]}"   == "Example Folder"                     ]]
+
+  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ "${#_folder_files[@]}" == 4                              ]]
+  [[ "${_folder_files[2]}"  == ".index"                       ]]
+  [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
+
+  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+
+  printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
+
+  [[ "${#_folder_folder_files[@]}"  == 3                      ]]
+  [[ "${_folder_folder_files[2]}"   == ".index"               ]]
+
+  # Commits to git:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+
+  cat "${_NOTEBOOK_PATH}/.index"
+  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
+  ls -la "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
+  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"  ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                              ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder  ]]
+}
+
+@test "'add folder/folder/folder/' creates new folder without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                  ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                           ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                    ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"             ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder"        ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/.index" ]]
+  }
+
+  run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+
+  echo "${_files[@]}"
+
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ "${#_files[@]}"  == 5                                    ]]
+  [[ "${_files[3]}"   == ".index"                             ]]
+  [[ "${_files[4]}"   == "Example Folder"                     ]]
+
+  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ "${#_folder_files[@]}" == 4                              ]]
+  [[ "${_folder_files[2]}"  == ".index"                       ]]
+  [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
+
+  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+
+  printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
+
+  [[ "${#_folder_folder_files[@]}"  == 4                      ]]
+  [[ "${_folder_folder_files[2]}"   == ".index"               ]]
+  [[ "${_folder_folder_files[3]}"   == "Demo Folder"          ]]
+
+  _folder_folder_folder_files=($(
+    ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+  ))
+
+  printf "_folder_folder_folder_files: '%s'" "${_folder_folder_folder_files[@]}"
+
+  [[ "${#_folder_folder_folder_files[@]}"  == 3               ]]
+  [[ "${_folder_folder_folder_files[2]}"   == ".index"        ]]
+
+  # Commits to git:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                 ]]
+
+  cat "${_NOTEBOOK_PATH}/.index"
+  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
+  ls -la "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   ]]
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index"           ]]
+  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index")"  ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                                            ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+}
+
+# --type folder ###############################################################
+
 @test "'add folder/folder --type folder' creates new folder without errors." {
   {
     run "${_NB}" init
 
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
   }
@@ -59,7 +302,7 @@ load test_helper
 
   [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
   [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                 ]]
 
   [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
   [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"  ]]
@@ -70,11 +313,17 @@ load test_helper
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder  ]]
 }
 
+# folder/example.md ###########################################################
+
 @test "'add folder/folder/example.md' creates new note without errors." {
   {
     run "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md" ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" --content "# Example Title"
@@ -131,7 +380,7 @@ load test_helper
 
   [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                       ]]
   [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"               ]]
 
   [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
   [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
@@ -147,7 +396,11 @@ load test_helper
   {
     run "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md" ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   EDITOR=mock_editor_no_op \
@@ -200,7 +453,11 @@ load test_helper
   {
     run "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md" ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" \

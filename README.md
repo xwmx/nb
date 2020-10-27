@@ -3190,6 +3190,8 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
+  nb add example/sample/
+  nb add folder/document.md
   nb example:add
   nb example:add -t "Title"
   nb a
