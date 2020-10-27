@@ -3068,6 +3068,12 @@ _add() {
 
   local _target_path="${_notebook_path}/${_target_unique_relative_path}"
 
+  if [[ -e "${_target_path:-}" ]]
+  then
+    _exit_1 printf "Already exists: %s\\n" \
+      "$(_color_primary "${_target_unique_relative_path}")"
+  fi
+
   if _contains "${_file_type:-}" "folder" "directory"
   then
     if ! mkdir -p "${_target_path:?}" 2>/dev/null

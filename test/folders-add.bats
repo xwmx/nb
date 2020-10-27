@@ -4,6 +4,66 @@ load test_helper
 
 # error handling ##############################################################
 
+@test "'add folder/folder/example.md' with existing file at target exits with error and prints message." {
+  {
+    run "${_NB}" init
+
+    _folder_path="${_NOTEBOOK_PATH:?}/Example Folder/Sample Folder"
+    _file_path="${_folder_path}/example-filename.md"
+
+    run mkdir -p "${_folder_path}"
+
+    printf "# Example Title" > "${_file_path}"
+    cat "${_file_path}"
+
+    _INDEX_FOLDER_PATH="${_folder_path}" run "${_NB}" index reconcile --ancestors
+
+    [[ "${status}" -eq 0  ]]
+    [[ -e "${_file_path}" ]]
+
+    _file_content="$(cat "${_file_path}")"
+    printf "_file_content: '%s'\\n" "${_file_content:-}"
+
+    [[   "${_file_content}" =~ Example\ Title      ]]
+    [[ ! "${_file_content}" =~ Example\ Title\ Two ]]
+  }
+
+  run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" --content "# Example Title Two"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 1 ]]
+
+  _file_content="$(cat "${_file_path}")"
+  printf "_file_content: '%s'" "${_file_content:-}"
+
+  [[   "${_file_content}" =~ Example\ Title      ]]
+  [[ ! "${_file_content}" =~ Example\ Title\ Two ]]
+
+  # Does not create git commit:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add'
+
+  # Does not change index::
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Already\ exists:                                    ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/example-filename.md  ]]
+}
+
 @test "'add folder/folder/example.md' with existing file in path exits with error and prints message." {
   {
     run "${_NB}" init
