@@ -3070,7 +3070,12 @@ _add() {
 
   if _contains "${_file_type:-}" "folder" "directory"
   then
-    mkdir -p "${_target_path:?}"
+    if ! mkdir -p "${_target_path:?}" 2>/dev/null
+    then
+      _exit_1 printf "Unable to create folder: %s\\n" \
+        "$(_color_primary "${_target_unique_relative_path}")"
+    fi
+
     touch "${_target_path:?}/.index"
 
     if [[ -n "${_folder_path:-}" ]]
@@ -3108,7 +3113,11 @@ _add() {
 
       if [[ -n "${_folder_path:-}" ]]
       then
-        mkdir -p "$(_temp directory)/${_folder_path}"
+        if ! mkdir -p "$(_temp directory)/${_folder_path}" 2>/dev/null
+        then
+          _exit_1 printf "Unable to create temporary folder: %s\\n" \
+            "$(_color_primary "$(_temp directory)/${_folder_path}")"
+        fi
       fi
 
       _target_path="$(_temp directory)/${_target_unique_relative_path}"
@@ -3121,7 +3130,11 @@ _add() {
         _exit_1 printf "File exists at: %s\\n" \
           "$(_color_primary "${_folder_path:-}")"
       else
-        mkdir -p "${_notebook_path:?}/${_folder_path}"
+        if ! mkdir -p "${_notebook_path:?}/${_folder_path}" 2>/dev/null
+        then
+          _exit_1 printf "Unable to create folder: %s\\n" \
+            "$(_color_primary "${_folder_path}")"
+        fi
       fi
     fi
 

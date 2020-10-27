@@ -2,6 +2,120 @@
 
 load test_helper
 
+# error handling ##############################################################
+
+@test "'add folder/folder/example.md' with existing file in path exits with error and prints message." {
+  {
+    run "${_NB}" init
+
+    touch "${_NOTEBOOK_PATH:-}/Example Folder"
+
+    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
+  }
+
+  run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" --content "# Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 1 ]]
+
+  # Does not create path, target file, and indexes:
+
+  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+
+  echo "${_files[@]}"
+
+  [[ -f "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ "${#_files[@]}"  == 5                                    ]]
+  [[ "${_files[3]}"   == ".index"                             ]]
+  [[ "${_files[4]}"   == "Example Folder"                     ]]
+
+  [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md" ]]
+
+  # Does not create git commit:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add'
+
+  # Does not change index::
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Unable\ to\ create\ folder:     ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder  ]]
+}
+
+@test "'add folder/folder/' with existing file in path exits with error and prints message." {
+  {
+    run "${_NB}" init
+
+    touch "${_NOTEBOOK_PATH:-}/Example Folder"
+
+    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+  }
+
+  run "${_NB}" add "Example Folder/Sample Folder" --type "folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 1 ]]
+
+  # Does not create path, target file, and indexes:
+
+  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+
+  echo "${_files[@]}"
+
+  [[ -f "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ "${#_files[@]}"  == 5                                    ]]
+  [[ "${_files[3]}"   == ".index"                             ]]
+  [[ "${_files[4]}"   == "Example Folder"                     ]]
+
+
+  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"    ]]
+
+  # Does not commit to git:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add'
+
+  # Does not change:
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Unable\ to\ create\ folder:     ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder  ]]
+}
+
 # folder/ #####################################################################
 
 @test "'add folder/' creates new folder without errors." {
