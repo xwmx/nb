@@ -533,7 +533,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with extension-less --filename option uses default extension." {
+@test "\`add\` with extensionless --filename option creates file without extension." {
   {
     run "${_NB}" init
   }
@@ -553,7 +553,9 @@ load test_helper
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
-  [[ -n "$(ls example.md)" ]]
+  [[   -n "$(ls example)"                   ]]
+  [[   -e "${_NOTEBOOK_PATH:?}/example"     ]]
+  [[ ! -e "${_NOTEBOOK_PATH:?}/example.md"  ]]
 
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 

@@ -3158,8 +3158,7 @@ Options:
   --edit                      Open the note in the editor before saving when
                               content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
-  -f, --filename <filename>   The filename for the new note. The default
-                              extension is used when the extension is omitted.
+  -f, --filename <filename>   The filename for the new note.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename will be derived from the
                               title, unless `--filename` is specified.

@@ -1862,7 +1862,6 @@ _get_unique_basename() {
   local _file_path="${1:-}"
   local _notebook_path="${2:-"$(_notebooks current --path)"}"
 
-  local _file_basename="${_file_path##*\/}"
   local _file_name="${_file_path%%.*}"
   local _folder_path=
 
@@ -1877,20 +1876,6 @@ _get_unique_basename() {
   fi
 
   local _file_type="${_file_path#*.}"
-
-  if [[ -z "${_file_type}" ]]
-  then
-    _file_type="md"
-  fi
-
-  if [[ -n "${_file_type:-}"                ]] &&
-     [[ "${_file_basename}" =~ \.           ]] &&
-     [[ "${_file_name}" != "${_file_type}"  ]]
-  then
-    _file_type="${_file_type}"
-  else
-    _file_type="md"
-  fi
 
   local _unique_path=
 
@@ -2886,8 +2871,7 @@ Options:
   --edit                      Open the note in the editor before saving when
                               content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
-  -f, --filename <filename>   The filename for the new note. The default
-                              extension is used when the extension is omitted.
+  -f, --filename <filename>   The filename for the new note.
   -t, --title <title>         The title for a new note. If \`--title\` is
                               present, the filename will be derived from the
                               title, unless \`--filename\` is specified.
@@ -3006,13 +2990,16 @@ _add() {
 
   if [[ -n "${_content_or_filename_or_path:-}" ]]
   then
-    if  [[ "${_content_or_filename_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
-        [[ -n "${_content_or_filename_extension:-}"                 ]]  &&
-        [[ -z "${_target_filename}"                                 ]]  &&
-        ! _string_is_url "${_content_or_filename_or_path:-}"            &&
-        ! _string_is_email "${_content_or_filename_or_path:-}"          &&
-        ! _contains "${_content_or_filename_extension:-}"           \
-                    "${_common_non_text_file_extension_tlds[@]}"
+    if  _contains "${_file_type:-}" "folder" "directory" ||
+        {
+          [[ "${_content_or_filename_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
+          [[ -n "${_content_or_filename_extension:-}"                 ]]  &&
+          [[ -z "${_target_filename}"                                 ]]  &&
+          ! _string_is_url "${_content_or_filename_or_path:-}"            &&
+          ! _string_is_email "${_content_or_filename_or_path:-}"          &&
+          ! _contains "${_content_or_filename_extension:-}"           \
+                      "${_common_non_text_file_extension_tlds[@]}"
+        }
     then
       if [[ "${_content_or_filename_or_path}" =~ / ]]
       then
@@ -3042,7 +3029,8 @@ _add() {
       _notebooks current --filename "${_target_relative_path:-}"
     )"
 
-  elif [[ -n "${_title:-}" ]]
+  elif [[ -n "${_title:-}" ]] &&
+       ! _contains "${_file_type:-}" "folder" "directory"
   then
     _target_filename="$(
       printf "%s" "${_title}"           \
@@ -3066,111 +3054,123 @@ _add() {
 
   local _target_path="${_notebook_path}/${_target_unique_relative_path}"
 
-  if ((_encrypt))
+  if _contains "${_file_type:-}" "folder" "directory"
   then
-    if [[ -z "${_password}" ]]
-    then
-      # request password without displaying it
-      printf "%s: " "$(_color_primary "Password")"
-      read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`
-
-      if [[ -z "${_password:-}" ]]
-      then
-        _exit_1 printf "Password required.\\n"
-      fi
-
-      local _password_confirmation=
-
-      # request password without displaying it
-      printf "%s: " "$(_color_primary "Confirm Password")"
-      read -r -s _password_confirmation </dev/tty
-      printf "\\n" # print newline to stop `read`
-
-      if [[ "${_password}" != "${_password_confirmation}" ]]
-      then
-        _exit_1 printf "Password mismatch.\\n"
-      fi
-    fi
+    mkdir -p "${_target_path:?}"
+    touch "${_target_path:?}/.index"
 
     if [[ -n "${_folder_path:-}" ]]
     then
-      mkdir -p "$(_temp directory)/${_folder_path}"
+      _INDEX_FOLDER_PATH="${_notebook_path}/${_folder_path}" \
+        _index reconcile --ancestors
     fi
-
-    _target_path="$(_temp directory)/${_target_unique_relative_path}"
-  fi
-
-  if [[ -n "${_folder_path:-}" ]] && [[ ! -d "${_folder_path:-}" ]]
-  then
-    if [[ -e "${_folder_path:-}" ]]
+  else
+    if ((_encrypt))
     then
-      _exit_1 printf "File exists at: %s\\n" \
-        "$(_color_primary "${_folder_path:-}")"
-    else
-      mkdir -p "${_notebook_path:?}/${_folder_path}"
-    fi
-  fi
-
-  if [[ -n "${_title}" ]]
-  then
-    printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
-  fi
-
-  if [[ -n "${_content}" ]]
-  then
-    printf "%s\\n" "${_content}" >> "${_target_path}"
-  fi
-
-  if ! _interactive_input
-  then # piped input
-    cat >> "${_target_path}"
-  fi
-
-  if ((_edit_before_commit)) || {
-    _interactive_input && [[ -z "${_content:-}" ]]
-  }
-  then
-    _edit_file "${_target_path}"
-  fi
-
-  # walk up and delete empty directories when file not created
-  if [[ ! -e "${_target_path:?}"                  ]] &&
-     [[ -n "${_folder_path:-}"                    ]] &&
-     [[ -e "${_notebook_path:?}/${_folder_path}"  ]]
-  then
-    cd "${_notebook_path:?}/${_folder_path:?}"
-
-    while [[ "${PWD:?}" =~ ^${_notebook_path:?}       ]] &&
-          [[ "${PWD:?}" != "${_notebook_path:?}"      ]] &&
-          [[ -z "$(find "${PWD}/." ! -name . -prune)" ]]
-    do
-      local _empty_directory_path="${PWD:?}"
-
-      cd ..
-
-      if [[ -d "${_empty_directory_path:?}"                             ]] &&
-         [[ -z "$(find "${_empty_directory_path}/." ! -name . -prune)"  ]]
+      if [[ -z "${_password}" ]]
       then
-        rm -r "${_empty_directory_path:?}"
+        # request password without displaying it
+        printf "%s: " "$(_color_primary "Password")"
+        read -r -s _password </dev/tty
+        printf "\\n" # print newline to stop `read`
+
+        if [[ -z "${_password:-}" ]]
+        then
+          _exit_1 printf "Password required.\\n"
+        fi
+
+        local _password_confirmation=
+
+        # request password without displaying it
+        printf "%s: " "$(_color_primary "Confirm Password")"
+        read -r -s _password_confirmation </dev/tty
+        printf "\\n" # print newline to stop `read`
+
+        if [[ "${_password}" != "${_password_confirmation}" ]]
+        then
+          _exit_1 printf "Password mismatch.\\n"
+        fi
       fi
-    done
-  fi
 
-  if ((_encrypt)) && [[ -e "${_target_path}" ]]
-  then
-    local _decrypted_path="${_target_path}"
-    local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
+      if [[ -n "${_folder_path:-}" ]]
+      then
+        mkdir -p "$(_temp directory)/${_folder_path}"
+      fi
 
-    _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
-
-    if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
-    then
-      rm "${_decrypted_path:?}"
+      _target_path="$(_temp directory)/${_target_unique_relative_path}"
     fi
 
-    _target_unique_relative_path="${_target_unique_relative_path}.enc"
-    _target_path="${_encrypted_path}"
+    if [[ -n "${_folder_path:-}" ]] && [[ ! -d "${_folder_path:-}" ]]
+    then
+      if [[ -e "${_folder_path:-}" ]]
+      then
+        _exit_1 printf "File exists at: %s\\n" \
+          "$(_color_primary "${_folder_path:-}")"
+      else
+        mkdir -p "${_notebook_path:?}/${_folder_path}"
+      fi
+    fi
+
+    if [[ -n "${_title}" ]]
+    then
+      printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
+    fi
+
+    if [[ -n "${_content}" ]]
+    then
+      printf "%s\\n" "${_content}" >> "${_target_path}"
+    fi
+
+    if ! _interactive_input
+    then # piped input
+      cat >> "${_target_path}"
+    fi
+
+    if ((_edit_before_commit)) || {
+      _interactive_input && [[ -z "${_content:-}" ]]
+    }
+    then
+      _edit_file "${_target_path}"
+    fi
+
+    # walk up and delete empty directories when file not created
+    if [[ ! -e "${_target_path:?}"                  ]] &&
+       [[ -n "${_folder_path:-}"                    ]] &&
+       [[ -e "${_notebook_path:?}/${_folder_path}"  ]]
+    then
+      cd "${_notebook_path:?}/${_folder_path:?}"
+
+      while [[ "${PWD:?}" =~ ^${_notebook_path:?}       ]] &&
+            [[ "${PWD:?}" != "${_notebook_path:?}"      ]] &&
+            [[ -z "$(find "${PWD}/." ! -name . -prune)" ]]
+      do
+        local _empty_directory_path="${PWD:?}"
+
+        cd ..
+
+        if [[ -d "${_empty_directory_path:?}"                             ]] &&
+           [[ -z "$(find "${_empty_directory_path}/." ! -name . -prune)"  ]]
+        then
+          rm -r "${_empty_directory_path:?}"
+        fi
+      done
+    fi
+
+    if ((_encrypt)) && [[ -e "${_target_path}" ]]
+    then
+      local _decrypted_path="${_target_path}"
+      local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
+
+      _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+
+      if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
+      then
+        rm "${_decrypted_path:?}"
+      fi
+
+      _target_unique_relative_path="${_target_unique_relative_path}.enc"
+      _target_path="${_encrypted_path}"
+    fi
   fi
 
   if [[ -e "${_target_path}" ]]
