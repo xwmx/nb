@@ -2154,20 +2154,15 @@ _wrap() {
 # _list_files()
 #
 # Usage:
-#   _list_files <notebook-path> [--sort] [--reverse] [--type <type>]
+#   _list_files <path> [--sort] [--reverse] [--type <type>]
 #
 # Description:
 #   List files in the current notebook.
 _list_files() {
-  local _notebook_path=
+  local _path=
   local _reverse=0
   local _sort=0
   local _type=
-
-  if [[ -z "${_notebook_path:-}" ]]
-  then
-    _notebook_path="$(_notebooks current --path)"
-  fi
 
   while ((${#}))
   do
@@ -2189,20 +2184,25 @@ _list_files() {
         fi
         ;;
       *)
-        if [[ -z "${_notebook_path:-}" ]]
+        if [[ -z "${_path:-}" ]]
         then
-          _notebook_path="${__arg}"
+          _path="${__arg}"
         fi
     esac
 
     shift
   done
 
+  if [[ -z "${_path:-}" ]]
+  then
+    _path="$(_notebooks current --path)"
+  fi
+
   if ((_sort))
   then
-    cat "${_notebook_path}/.index"
+    cat "${_path}/.index"
   else
-    ls -t -1 "${_notebook_path}"
+    ls -t -1 "${_path}"
   fi | {
     if ((_reverse))
     then
@@ -2239,7 +2239,7 @@ _list_files() {
         folder|folders|directory|directories)
           while read -r __line
           do
-            if [[ -d "${_notebook_path}/${__line}" ]]
+            if [[ -d "${_path}/${__line}" ]]
             then
               printf "%s\\n" "${__line}"
             fi
@@ -5949,6 +5949,8 @@ _index() {
 
       local _top_path="${_folder_path:?}"
 
+      [[ -d "${_top_path}" ]] || return 0
+
       if [[ "${2:-}" == "--ancestors" ]]
       then
         _top_path="${_notebook_path:?}"
@@ -6270,6 +6272,7 @@ _list() {
   local _maybe_scope=
   local _maybe_scope_padded_right=
   local _no_id=0
+  local _path=
   local _print_excerpt=0
   local _print_indicators=1
   local _list_paths=0
@@ -6338,6 +6341,9 @@ _list() {
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      */)
+        _path="${__arg:-}"
+        ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
@@ -6362,13 +6368,20 @@ _list() {
   local _filter_pattern=
   _filter_pattern="$(_join "|" "${_filter_selectors[@]:-}")"
 
-  local _selector_basename=
   local _selector_identifier=
+  local _selector_relative_path=
 
   if [[ -n "${_selector:-}" ]]
   then
-    _selector_basename="$(_show "${_selector}" --filename 2>/dev/null || :)"
     _selector_identifier="$(_show "${_selector}" --selector-id)"
+    _selector_relative_path="$(_show "${_selector}" --relative-path 2>/dev/null || :)"
+  fi
+
+  local _selector_basename="${_selector_relative_path##*\/}"
+
+  if [[ "${_selector_relative_path:-}" =~ / ]]
+  then
+    _path="${_selector_relative_path%\/*}/"
   fi
 
   local _notebook_path=
@@ -6379,7 +6392,25 @@ _list() {
     _notebooks show "${_notebook_path}" --escaped --no-color
   )"
 
-  local _list_files_options=("${_notebook_path}")
+  local _list_path="${_notebook_path}"
+  local _id_path=
+
+  if [[ -n "${_path:-}" ]]
+  then
+    _id_path="${_path// /\\ }"
+
+    _list_path="${_notebook_path}/${_path}"
+
+    if [[ -d "${_list_path}" ]]
+    then
+      _INDEX_FOLDER_PATH="${_list_path}" _index reconcile --ancestors
+    elif [[ ! -e "${_list_path}" ]]
+    then
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_path:-}")"
+    fi
+  fi
+
+  local _list_files_options=("${_list_path}")
   local _filenames=()
 
   [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
@@ -6398,7 +6429,7 @@ _list() {
   local _printed_count=0
 
   local _max_id
-  _max_id="$(_index get_max_id)"
+  _max_id="$(_INDEX_FOLDER_PATH="${_list_path}" _index get_max_id)"
 
   # Use code blocks to capture all output for piping to pager.
   {
@@ -6431,7 +6462,7 @@ _list() {
             # include the note in the list
             _matches=$((_matches+1))
           else
-            _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+            _maybe_title="$(_get_content "${_list_path}/${__basename}")"
 
             if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
             then
@@ -6470,12 +6501,12 @@ _list() {
 
       if ((_list_paths))
       then
-        _title_basename_or_path="${_notebook_path}/${__basename}"
+        _title_basename_or_path="${_list_path}/${__basename}"
       elif ! ((_list_filenames))
       then
         if [[ -z "${_maybe_title}" ]]
         then
-          _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+          _maybe_title="$(_get_content "${_list_path}/${__basename}")"
         fi
 
         if [[ -n "${_maybe_title}" ]]
@@ -6496,35 +6527,35 @@ _list() {
       if ((_print_indicators))
       then
         # TODO: `show --indicators` duplicated for performance
-        if _file_is_bookmark "${_notebook_path}/${__basename}"
+        if _file_is_bookmark "${_list_path}/${__basename}"
         then
           _indicators+="🔖 "
         elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
         then
-          if _file_is_image "${_notebook_path}/${__basename}"
+          if _file_is_image "${_list_path}/${__basename}"
           then
             _indicators+="🌄 "
-          elif _file_is_document "${_notebook_path}/${__basename}"
+          elif _file_is_document "${_list_path}/${__basename}"
           then
             _indicators+="📄 "
-          elif [[ -d "${_notebook_path}/${__basename}" ]]
+          elif [[ -d "${_list_path}/${__basename}" ]]
           then
             _indicators+="📂 "
-          elif _file_is_video "${_notebook_path}/${__basename}"
+          elif _file_is_video "${_list_path}/${__basename}"
           then
             _indicators+="📹 "
-          elif _file_is_audio "${_notebook_path}/${__basename}"
+          elif _file_is_audio "${_list_path}/${__basename}"
           then
             _indicators+="🔉 "
           elif [[ "${__basename}" =~ \.epub$ ]]
           then
             _indicators+="📖 "
           fi
+        fi
 
-          if _file_is_encrypted "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔒 "
-          fi
+        if _file_is_encrypted "${_list_path}/${__basename}"
+        then
+          _indicators+="🔒 "
         fi
 
         if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
@@ -6558,18 +6589,18 @@ _list() {
         local _item_identifier=
         # use `sed` directly instead of `_index get_id` for performance
         _item_identifier="$(
-          sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
+          sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
         )"
 
         local _max_identifier="${_max_id}"
 
         if [[ -n "${_maybe_scope:-}" ]]
         then
-          _item_identifier="${_notebook_escaped_name}:${_item_identifier}"
-          _max_identifier="${_notebook_escaped_name}:${_max_id}"
+          _item_identifier="${_notebook_escaped_name}:${_id_path}${_item_identifier}"
+          _max_identifier="${_notebook_escaped_name}:${_id_path}${_max_id}"
         fi
 
-        local _brackets_identifier="[${_item_identifier}]"
+        local _brackets_identifier="[${_id_path:-}${_item_identifier:-}]"
 
         # avoid calling `_color_brackets` for performance
         local _brackets_identifier_color="\
@@ -6577,7 +6608,7 @@ ${_TPUT_SGR0}\
 ${_TPUT_SETAF_8}\
 [\
 ${_TPUT_COLOR_PRIMARY}\
-${_item_identifier:-}\
+${_id_path:-}${_item_identifier:-}\
 ${_TPUT_SETAF_8}\
 ]\
 ${_TPUT_SGR0}"
@@ -6621,7 +6652,7 @@ ${_TPUT_SGR0}"
 
       if ((_print_excerpt))                               &&
          [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
-         _file_is_text "${_notebook_path}/${__basename}"
+         _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
         local _visible_info_line_length=
         _visible_info_line_length="$(
@@ -6635,7 +6666,7 @@ ${_TPUT_SGR0}"
         else
           _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
         fi
-        head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
+        head -"${_excerpt_length}" "${_list_path}/${__basename}" \
           | _highlight_syntax_if_available "${__basename##*.}"
         printf "\\n"
       fi
