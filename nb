@@ -1851,48 +1851,53 @@ _get_http_status() {
   fi
 }
 
-# _get_unique_basename()
+# _get_unique_relative_path()
 #
 # Usage:
-#   _get_unique_basename [<file-path> | <file-extension>] [<notebook-path>]
+#   _get_unique_relative_path [<file-path>[<extention>] [<notebook-path>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
-_get_unique_basename() {
+_get_unique_relative_path() {
   local _file_path="${1:-}"
   local _notebook_path="${2:-"$(_notebooks current --path)"}"
 
-  local _file_name="${_file_path%%.*}"
+  local _file_basename="${_file_path##*/}" # strip ancestors
+  local _file_name="${_file_basename%%.*}"  # strip extension
+  local _file_type=
   local _folder_path=
+  local _unique_path=
+
+  if [[ -z "${_file_name:-}" ]]
+  then
+    _file_name="$(date "+%Y%m%d%H%M%S")"
+  fi
 
   if [[ "${_file_path:-}" =~ / ]]
   then
     _folder_path="${_file_path%\/*}"
   fi
 
-  if [[ -z "${_file_name}" ]]
+  if [[ "${_file_basename:-}" =~ \. ]]
   then
-    _file_name="$(date "+%Y%m%d%H%M%S")"
+    _file_type="${_file_basename#*.}"
   fi
 
-  local _file_type="${_file_path#*.}"
-
-  local _unique_path=
-
-  if [[ -n "${_folder_path:-}" ]]
+  if [[ "${_file_basename:-}" =~ ^\. ]]
   then
-    _unique_path="$(
-      _get_unique_path "${_notebook_path}/${_folder_path}/${_file_name}.${_file_type}"
-    )"
-
-    printf "%s/%s" "${_folder_path}" "$(basename "${_unique_path}")"
-  else
-    _unique_path="$(
-      _get_unique_path "${_notebook_path}/${_file_name}.${_file_type}"
-    )"
-
-    printf "%s" "$(basename "${_unique_path}")"
+    _file_basename="${_file_name}.${_file_type}"
   fi
+
+  _unique_path="$(
+    if [[ -n "${_folder_path:-}" ]]
+    then
+      _get_unique_path "${_notebook_path}/${_folder_path}/${_file_basename}"
+    else
+      _get_unique_path "${_notebook_path}/${_file_basename}"
+    fi
+  )"
+
+  printf "%s" "${_unique_path#${_notebook_path}/}"
 }
 
 # _get_unique_path()
@@ -3042,7 +3047,6 @@ _add() {
     _target_unique_relative_path="$(
       _notebooks current --filename "${_target_relative_path:-}"
     )"
-
   elif [[ -n "${_title:-}" ]] &&
        ! _contains "${_file_type:-}" "folder" "directory"
   then
@@ -3067,12 +3071,6 @@ _add() {
   _target_basename="$(basename "${_target_unique_relative_path}")"
 
   local _target_path="${_notebook_path}/${_target_unique_relative_path}"
-
-  if [[ -e "${_target_path:-}" ]]
-  then
-    _exit_1 printf "Already exists: %s\\n" \
-      "$(_color_primary "${_target_unique_relative_path}")"
-  fi
 
   if _contains "${_file_type:-}" "folder" "directory"
   then
@@ -5398,8 +5396,8 @@ _helpers() {
     *http*)
       _get_http_status                "${_options[@]:-}"
       ;;
-    *unique*basename*)
-      _get_unique_basename            "${_options[@]:-}"
+    *unique*basename*|*unique*relative*)
+      _get_unique_relative_path            "${_options[@]:-}"
       ;;
     *unique*path*)
       _get_unique_path                "${_options[@]:-}"
@@ -8350,7 +8348,7 @@ HEREDOC
     if ((_print_unique_file_path))
     then
       local _unique_file_path=
-      _unique_file_path="$(_get_unique_basename "${_file_path:-}")"
+      _unique_file_path="$(_get_unique_relative_path "${_file_path:-}")"
 
       printf "%s\\n" "${_unique_file_path:-}"
       return 0
