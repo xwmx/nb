@@ -10,7 +10,7 @@ _setup_move() {
 
 # no argument #################################################################
 
-@test "\`move\` with no arguments exits with status 1." {
+@test "'move' with no arguments exits with status 1." {
   {
     _setup_move
 
@@ -43,7 +43,7 @@ _setup_move() {
 
 # <selector> ##################################################################
 
-@test "\`move <selector> <notebook>\` with empty repo exits with 1 and prints help." {
+@test "'move <selector> <notebook>' with empty repo exits with 1 and prints help." {
   {
     run "${_NB}" init
   }
@@ -59,7 +59,7 @@ _setup_move() {
 
 }
 
-@test "\`move <invalid> <notebook>\` exits with 1 and prints help." {
+@test "'move <invalid> <notebook>' exits with 1 and prints help." {
   {
     _setup_move
 
@@ -77,7 +77,7 @@ _setup_move() {
 
 }
 
-@test "\`move <selector> <invalid>\` exits with 1 and prints help." {
+@test "'move <selector> <invalid>' exits with 1 and prints help." {
   {
     _setup_move
 
@@ -94,7 +94,7 @@ _setup_move() {
   [[ "${lines[0]}" =~ invalid                       ]]
 }
 
-@test "\`move <selector> <notebook> (no force)\` returns 0 and moves note." {
+@test "'move <selector> <notebook> (no force)' returns 0 and moves note." {
   skip "Determine how to test interactive prompt."
   {
     _setup_move
@@ -115,7 +115,7 @@ _setup_move() {
 
 # <scope>:<selector> ##########################################################
 
-@test "\`move <scope>:<selector> <notebook>\` with <filename> argument moves note." {
+@test "'move <scope>:<selector> <notebook>' with <filename> argument moves note." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -145,7 +145,7 @@ _setup_move() {
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "\`<scope>:move <selector> <notebook>\` with <filename> argument moves note." {
+@test "'<scope>:move <selector> <notebook>' with <filename> argument moves note." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -173,7 +173,7 @@ _setup_move() {
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "\`<scope>:<selector> move <notebook>\` with <filename> argument moves note." {
+@test "'<scope>:<selector> move <notebook>' with <filename> argument moves note." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -201,7 +201,7 @@ _setup_move() {
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "\`<selector> <scope>:move <notebook>\` with <filename> argument moves note." {
+@test "'<selector> <scope>:move <notebook>' with <filename> argument moves note." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -231,7 +231,7 @@ _setup_move() {
 
 # <filename> ##################################################################
 
-@test "\`move\` with <filename> argument successfully moves note." {
+@test "'move' with <filename> argument successfully moves note." {
   {
     _setup_move
 
@@ -266,7 +266,7 @@ _setup_move() {
 
 # <id> ########################################################################
 
-@test "\`move\` with <id> argument successfully moves note." {
+@test "'move' with <id> argument successfully moves note." {
   {
     _setup_move
 
@@ -299,7 +299,7 @@ _setup_move() {
   [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<id> move\` successfully moves note." {
+@test "'<id> move' successfully moves note." {
   {
     _setup_move
 
@@ -332,7 +332,7 @@ _setup_move() {
   [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`move\` with <id> argument and trailing colon on destination successfully moves note." {
+@test "'move' with <id> argument and trailing colon on destination successfully moves note." {
   {
     _setup_move
 
@@ -367,7 +367,7 @@ _setup_move() {
 
 # <path> ######################################################################
 
-@test "\`move\` with <path> argument successfully moves note." {
+@test "'move' with <path> argument successfully moves note." {
   {
     _setup_move
 
@@ -402,7 +402,7 @@ _setup_move() {
 
 # <title> #####################################################################
 
-@test "\`move\` with <title> argument successfully moves note." {
+@test "'move' with <title> argument successfully moves note." {
   {
     _setup_move
 
@@ -438,7 +438,7 @@ _setup_move() {
 
 # <folder> ####################################################################
 
-@test "\`move\` with <folder> argument successfully moves note." {
+@test "'move' with <folder> argument successfully moves note." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "destination"
@@ -475,7 +475,7 @@ _setup_move() {
 
 # local #######################################################################
 
-@test "\`move\` to local with <filename> argument successfully moves note." {
+@test "'move' to local with <filename> argument successfully moves note." {
   {
     _setup_move
 
@@ -514,7 +514,7 @@ _setup_move() {
   [[ "${output}" =~ local:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`move\` from local with <filename> argument successfully moves note." {
+@test "'move' from local with <filename> argument successfully moves note." {
   {
     _setup_move
 
@@ -555,7 +555,7 @@ _setup_move() {
   [[ "${output}" =~ home:local-example.md ]]
 }
 
-@test "\`move\` from local with local:<filename> argument successfully moves note." {
+@test "'move' from local with local:<filename> argument successfully moves note." {
   {
     _setup_move
 
@@ -598,13 +598,13 @@ _setup_move() {
 
 # help ########################################################################
 
-@test "\`help move\` exits with status 0." {
+@test "'help move' exits with status 0." {
   run "${_NB}" help move
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help move\` prints help information." {
+@test "'help move' prints help information." {
   run "${_NB}" help move
 
   printf "\${status}: '%s'\\n" "${status}"
