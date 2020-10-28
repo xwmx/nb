@@ -4382,24 +4382,27 @@ _edit() {
     _exit_1 _help "edit"
   fi
 
-  local _basename
-  _basename="$(_show "${_selector:-}" --filename)"
+  local _relative_path
+  _relative_path="$(_show "${_selector:-}" --relative-path)"
+
+  local _basename="${_relative_path##*\/}"
+  local _folder_path="${_relative_path%\/*}"
 
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
-  if [[ -z "${_basename}" ]]
+  if [[ -z "${_relative_path}" ]]
   then
-    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
 
-  if [[ -n "${_basename}" ]] || [[ -e "${_notebook_path}/${_basename}" ]]
+  if [[ -n "${_relative_path}" ]] || [[ -e "${_notebook_path}/${_relative_path}" ]]
   then # _basename is assigned and a note exists with that name.
     local _before
-    _before="$(_get_hash "${_notebook_path}/${_basename}")"
+    _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
     local _decrypted_path=
     local _encrypted_path=
-    local _target_file="${_notebook_path}/${_basename}"
+    local _target_file="${_notebook_path}/${_relative_path}"
 
     if _file_is_encrypted "${_target_file}"
     then
@@ -4442,7 +4445,7 @@ _edit() {
       fi
     fi
 
-    _after="$(_get_hash "${_notebook_path}/${_basename}")"
+    _after="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
     if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path:-}" ]]
     then
@@ -4467,12 +4470,12 @@ _edit() {
       rm "${_decrypted_path:?}"
     fi
 
-    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_relative_path}"
 
     if [[ "${_before}" != "${_after}" ]]
     then
       local _info
-      _info="$(_show "${_basename}" --info-line)"
+      _info="$(_show "${_relative_path}" --info-line)"
 
       printf "Updated: %s\\n" "${_info}"
     fi
@@ -11037,10 +11040,17 @@ _show() {
     local _id
     _id="$(_INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_basename}")"
 
-    local _maybe_scoped_id
-    _maybe_scoped_id="${_id}"
-
     local _maybe_scoped_relative_path="${_relative_path// /\\ }"
+
+    local _escaped_folder=
+
+    if [[ -n "${_folder_path:-}" ]]
+    then
+      _escaped_folder="${_maybe_scoped_relative_path%\/*}/"
+    fi
+
+    local _maybe_scoped_id
+    _maybe_scoped_id="${_escaped_folder}${_id}"
 
     if _notebooks current --selected
     then

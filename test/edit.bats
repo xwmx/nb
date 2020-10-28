@@ -473,7 +473,6 @@ load test_helper
     run "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
   }
 
   run "${_NB}" edit 1 --content "Example content."
@@ -507,7 +506,6 @@ load test_helper
     run "${_NB}" add "Example initial content."
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
     _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
 
     [[ ! "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]

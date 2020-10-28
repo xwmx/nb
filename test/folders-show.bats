@@ -185,12 +185,13 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/"
 
-  [[ ${status}      -eq 0                                                     ]]
-  [[ "${output}"    =~ 1                                                      ]]
-  [[ "${output}"    =~ Example\\\ Folder/Sample\\\ Folder/example.bookmark.md ]]
-  [[ "${output}"    =~ Example\ Title                                         ]]
-  [[ ! "${output}"  =~ home                                                   ]]
-  [[ "${output}"    =~ 🔖                                                     ]]
+  [[   ${status}      -eq 0                                                       ]]
+  [[   "${output}"    =~  1                                                       ]]
+  [[   "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/example.bookmark.md  ]]
+  [[   "${output}"    =~  Example\ Title                                          ]]
+  [[   "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1                    ]]
+  [[ ! "${output}"    =~ home                                                     ]]
+  [[   "${output}"    =~  🔖                                                      ]]
 }
 
 @test "\`show notebook:folder/folder/example.md --info-line\` displays info line." {
@@ -239,12 +240,12 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/"
 
-  [[ ${status}      -eq 0                                                     ]]
-  [[ "${output}"    =~ 1                                                      ]]
-  [[ "${output}"    =~ Example\\\ Folder/Sample\\\ Folder/example.bookmark.md ]]
-  [[ "${output}"    =~ Example\ Title                                         ]]
-  [[ "${output}"    =~ home                                                   ]]
-  [[ "${output}"    =~ 🔖                                                     ]]
+  [[ ${status}      -eq 0                                                       ]]
+  [[ "${output}"    =~  1                                                       ]]
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/example.bookmark.md  ]]
+  [[ "${output}"    =~  Example\ Title                                          ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1               ]]
+  [[ "${output}"    =~  🔖                                                      ]]
 }
 
 # show <path-with-folder> --selector-id #######################################
