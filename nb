@@ -4742,6 +4742,8 @@ _export() {
   local _args=()
   local _force=0
   local _notebook_export=0
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _pandoc_only=0
   local _selector=
   local _target_path=
@@ -4783,13 +4785,13 @@ _export() {
     return 0
   fi
 
-  local _basename
-  _basename="$(_show "${_selector}" --filename)"
+  local _relative_path
+  _relative_path="$(_show "${_selector}" --relative-path)"
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _basename="${_relative_path##*\/}"
 
-  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
+  if [[ -z "${_relative_path:-}"                      ]] ||
+     [[ ! -e "${_notebook_path}/${_relative_path:-}"  ]]
   then
     _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
@@ -4800,9 +4802,9 @@ _export() {
     then
       if [[ -n "${_args[*]:-}" ]]
       then
-        pandoc "${_notebook_path}/${_basename}" "${_args[@]:-}"
+        pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
       else
-        pandoc "${_notebook_path}/${_basename}"
+        pandoc "${_notebook_path}/${_relative_path}"
       fi
     else
       _exit_1 printf "Pandoc required. https://pandoc.org/\\n"
@@ -4851,21 +4853,21 @@ $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
     then
       if [[ -n "${_args[*]:-}" ]]
       then
-        pandoc                              \
-          -o "${_target_path}"              \
-          --standalone                      \
-          "${_notebook_path}/${_basename}"  \
+        pandoc                                    \
+          -o "${_target_path}"                    \
+          --standalone                            \
+          "${_notebook_path}/${_relative_path}"   \
           "${_args[@]:-}"
       else
         pandoc                  \
           -o "${_target_path}"  \
           --standalone          \
-          "${_notebook_path}/${_basename}"
+          "${_notebook_path}/${_relative_path}"
       fi
     else
-      cp "${_notebook_path}/${_basename}" "${_target_path}"
+      cp "${_notebook_path}/${_relative_path}" "${_target_path}"
     fi &&
-      printf "Exported: %s\\n"  "$(_show "${_basename}" --info-line)"
+      printf "Exported: %s\\n"  "$(_show "${_relative_path}" --info-line)"
       printf "To:        %s\\n" "$(_color_primary "${_target_path}")"
   fi
 }
