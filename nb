@@ -12188,6 +12188,9 @@ _get_notebook_identifier() { _notebooks show "${@}" --escaped; }
 # _get_selection_basename()
 _get_selection_basename() { _show "${@}" --filename; }
 
+# _get_unique_basename()
+_get_unique_basename() { _get_unique_relative_path "${@:-}"; }
+
 # _set_selection_notebook() <selector>
 _set_selection_notebook() {
   if [[ "${1:-}" =~ : ]]
