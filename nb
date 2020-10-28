@@ -6275,6 +6275,8 @@ _list() {
   local _maybe_scope=
   local _maybe_scope_padded_right=
   local _no_id=0
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _path=
   local _print_excerpt=0
   local _print_indicators=1
@@ -6344,9 +6346,6 @@ _list() {
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      */)
-        _path="${__arg:-}"
-        ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
@@ -6382,13 +6381,15 @@ _list() {
 
   local _selector_basename="${_selector_relative_path##*\/}"
 
-  if [[ "${_selector_relative_path:-}" =~ / ]]
+  if [[ "${_selector}" =~ /$ ]]
   then
-    _path="${_selector_relative_path%\/*}/"
+    _path="${_selector_relative_path}"
+    _selector_basename=
+    _selector_identifier=
+  elif [[ "${_selector_relative_path:-}" =~ / ]]
+  then
+    _path="${_selector_relative_path%\/*}"
   fi
-
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
 
   local _notebook_escaped_name=
   _notebook_escaped_name="$(
@@ -6400,7 +6401,7 @@ _list() {
 
   if [[ -n "${_path:-}" ]]
   then
-    _id_path="${_path// /\\ }"
+    _id_path="${_path// /\\ }/"
 
     _list_path="${_notebook_path}/${_path}"
 
@@ -6414,7 +6415,6 @@ _list() {
   fi
 
   local _list_files_options=("${_list_path}")
-  local _filenames=()
 
   [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
   ((_reverse))          && _list_files_options+=("--reverse")
@@ -10766,7 +10766,7 @@ _show() {
   _show_selector_relative_path() {
     local _identifier=
     local _relative_path=
-    local _selector="${1:-}"
+    local _selector="${1%/}" # strip trailing /
     local _notebook_path="${2:-}"
 
     if [[ -n "${_selector}" ]]
@@ -10947,7 +10947,8 @@ _show() {
 
   if ((_print_selector_id))
   then
-    printf "%s\\n" "${_selector#*:}"
+    local _selector_id="${_selector#*:}"  # strip notebook name
+    printf "%s\\n" "${_selector_id%/}"    # strip trailing /
     return 0
   fi
 
