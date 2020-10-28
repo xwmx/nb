@@ -10799,21 +10799,35 @@ _show() {
           _relative_path="$(_index get_basename "${_identifier}")"
         fi
       else # <selector> might be a title
-        local _title=
-        local _filenames
-        _filenames=($(_list_files "${_notebook_path}"))
+        local _folder_path=
+        local _search_path="${_notebook_path}"
 
-        for __file in "${_filenames[@]:-}"
-        do
-          _title="$(_get_content "${_notebook_path}/${__file}" --title)"
+        if [[ "${_identifier}" =~ / ]]
+        then
+          _folder_path="${_identifier%\/*}"
+          _search_path="${_notebook_path}/${_folder_path}"
+        fi
 
-          if [[ -n "${_title}"                  ]] &&
-             [[ "${_title}" == "${_identifier}" ]]
-          then
-            _relative_path="${__file}"
-            break
-          fi
-        done
+        local _maybe_title="${_identifier##*\/}"
+
+        _relative_path="$(
+          _list_files "${_search_path}" \
+            | while read -r __filename || [[ -n "${__filename:-}" ]]
+              do
+                local _title
+                _title="$(
+                  _get_content "${_search_path}/${__filename}" --title
+                )"
+
+                if [[ -n "${_title}"                    ]] &&
+                   [[ "${_title}" == "${_maybe_title}"  ]]
+                 then
+                   local _full_path="${_search_path}/${__filename}"
+                   printf "%s\\n" "${_full_path/"${_notebook_path}"\//}"
+                   break
+                 fi
+              done
+        )"
       fi
     fi
 
@@ -10946,10 +10960,12 @@ _show() {
   )"
 
   local _folder_path="${_notebook_path:?}"
+  local _relative_folder_path=
 
   if [[ "${_relative_path:-}" =~ / ]]
   then
     _folder_path="${_notebook_path}/${_relative_path%\/*}"
+    _relative_folder_path="${_relative_path%\/*}"
   fi
 
   local _basename
@@ -11042,15 +11058,15 @@ _show() {
 
     local _maybe_scoped_relative_path="${_relative_path// /\\ }"
 
-    local _escaped_folder=
+    local _escaped_relative_folder_path=
 
-    if [[ -n "${_folder_path:-}" ]]
+    if [[ -n "${_relative_folder_path:-}" ]]
     then
-      _escaped_folder="${_maybe_scoped_relative_path%\/*}/"
+      _escaped_relative_folder_path="${_relative_folder_path// /\\ }/"
     fi
 
     local _maybe_scoped_id
-    _maybe_scoped_id="${_escaped_folder}${_id}"
+    _maybe_scoped_id="${_escaped_relative_folder_path}${_id}"
 
     if _notebooks current --selected
     then

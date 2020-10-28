@@ -4,7 +4,52 @@ load test_helper
 
 # show <path-with-folder> --relative-path ###################################o##
 
-@test "\`show folder/folder/example.md --relative-path\` displays relative path." {
+@test "\`show folder/folder/<title> --relative-path\` displays relative path." {
+  {
+    run "${_NB}" init
+
+    mkdir "${_NOTEBOOK_PATH}/Example Folder"
+    # TODO: Must create folder with first document, since git doesn't
+    # recognize empty folders.
+    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+
+    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
+
+    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
+# Example Title
+
+<https://example.test>
+HEREDOC
+
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
+
+    run "${_NB}" list
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    "${_NB}" git log
+
+    [[ "${status}" -eq 0              ]]
+    [[ "${output}" =~ 1               ]]
+    [[ "${output}" =~ 📂              ]]
+    [[ "${output}" =~ Example\ Folder ]]
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder/Example Title" --relative-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/"
+
+  [[ ${status}    -eq 0                                                   ]]
+  [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
+}
+
+@test "\`show folder/folder/<filename> --relative-path\` displays relative path." {
   {
     run "${_NB}" init
 
@@ -49,7 +94,7 @@ HEREDOC
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
 }
 
-@test "\`show folder/folder/1 --relative-path\` displays relative path." {
+@test "\`show folder/folder/<id> --relative-path\` displays relative path." {
   {
     run "${_NB}" init
 
@@ -98,7 +143,7 @@ HEREDOC
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
 }
 
-@test "\`show demo:folder/folder/1 --relative-path\` displays relative path." {
+@test "\`show notebook:folder/folder/<id> --relative-path\` displays relative path." {
   {
     run "${_NB}" init
 
@@ -144,7 +189,7 @@ HEREDOC
 
 # show <path-with-folder> --info-line #########################################
 
-@test "\`show folder/folder/example.md --info-line\` displays info line." {
+@test "\`show folder/folder/<filename> --info-line\` displays info line." {
   {
     run "${_NB}" init
 
@@ -194,7 +239,7 @@ HEREDOC
   [[   "${output}"    =~  🔖                                                      ]]
 }
 
-@test "\`show notebook:folder/folder/example.md --info-line\` displays info line." {
+@test "\`show notebook:folder/folder/<filename> --info-line\` displays info line." {
   {
     run "${_NB}" init
 
@@ -250,7 +295,7 @@ HEREDOC
 
 # show <path-with-folder> --selector-id #######################################
 
-@test "\`show folder/folder/example.md --selector-id\` displays selector id." {
+@test "\`show folder/folder/<filename> --selector-id\` displays selector id." {
   {
     run "${_NB}" init
 
@@ -294,7 +339,7 @@ HEREDOC
   [[ "${output}"  =~ Example\ Folder/Sample\ Folder/example.md  ]]
 }
 
-@test "\`show demo:folder/folder/example.md --selector-id\` displays selector id." {
+@test "\`show demo:folder/folder/<filename> --selector-id\` displays selector id." {
   {
     run "${_NB}" init
 
