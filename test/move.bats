@@ -404,13 +404,12 @@ _setup_move() {
 
 @test "'move' with <title> argument successfully moves note." {
   {
-    _setup_move
-
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+    run "${_NB}" init
+    run "${_NB}" add --title "Example Title" --filename "example.md"
+    run "${_NB}" notebooks add "destination"
   }
 
-  run "${_NB}" move "${_title}" "destination" --force
+  run "${_NB}" move "Example Title" "destination" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -419,8 +418,8 @@ _setup_move() {
   [[ ${status} -eq 0 ]]
 
   # moves note file
-  [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"    ]]
-  [[ -e "${NB_DIR}/destination/${_filename}"  ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -431,9 +430,9 @@ _setup_move() {
   git log | grep -q '\[nb\] Delete'
 
   # prints output
-  [[ "${output}" =~ Moved\ to                   ]]
-  [[ "${output}" =~ destination:[A-Za-z0-9]*    ]]
-  [[ "${output}" =~ destination:[A-Za-z0-9]+.md ]]
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ destination:[A-Za-z0-9]*  ]]
+  [[ "${output}" =~ destination:example.md    ]]
 }
 
 # <folder> ####################################################################
