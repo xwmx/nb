@@ -61,13 +61,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -75,7 +78,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                        ]]
   [[ "${output}" =~ Example\\\ Folder/1                             ]]
   [[ "${output}" =~ 🔖                                              ]]
@@ -99,13 +103,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -113,7 +120,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                                        ]]
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                              ]]
@@ -142,13 +150,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${NB_DIR}/home/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -156,7 +167,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                            ]]
   [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                  ]]
@@ -185,13 +197,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -199,7 +214,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                                            ]]
   [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
   [[ "${output}" =~ 🔖                                                                  ]]
@@ -225,13 +241,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -239,7 +258,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                        ]]
   [[ "${output}" =~ Example\\\ Folder/1                             ]]
   [[ "${output}" =~ 🔖                                              ]]
@@ -263,13 +283,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -277,7 +300,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                                        ]]
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                              ]]
@@ -306,13 +330,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${NB_DIR}/home/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -320,7 +347,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                            ]]
   [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                  ]]
@@ -349,13 +377,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -363,7 +394,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                                            ]]
   [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
   [[ "${output}" =~ 🔖                                                                  ]]
@@ -391,13 +423,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -405,7 +440,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                        ]]
   [[ "${output}" =~ Example\\\ Folder/1                             ]]
   [[ "${output}" =~ 🔖                                              ]]
@@ -431,13 +467,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -445,7 +484,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                                                        ]]
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                              ]]

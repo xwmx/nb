@@ -16,7 +16,6 @@ load test_helper
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
-
   }
 
   run "${_NB}" export "Example Folder/not-valid" "${_TMP_DIR}/example.md"
@@ -52,7 +51,6 @@ load test_helper
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
-
   }
 
   run "${_NB}" export "Example Folder/Example File.bookmark.md" "${_TMP_DIR}/example.md"
@@ -132,7 +130,7 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    [[ ! -e "${_TMP_DIR}/example.md" ]]
+    [[ ! -e "${_TMP_DIR}/example.md"            ]]
   }
 
   run "${_NB}" export "home:Example Folder/Example File.bookmark.md" "${_TMP_DIR}/example.md"
@@ -174,10 +172,12 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    [[ ! -e "${_TMP_DIR}/example.md" ]]
+    [[ ! -e "${_TMP_DIR}/example.md"            ]]
   }
 
-  run "${_NB}" export "home:Example Folder/Sample Folder/Example File.bookmark.md" "${_TMP_DIR}/example.md"
+  run "${_NB}" export                                             \
+    "home:Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_TMP_DIR}/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -294,7 +294,7 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    [[ ! -e "${_TMP_DIR}/example.md" ]]
+    [[ ! -e "${_TMP_DIR}/example.md"            ]]
   }
 
   run "${_NB}" export "home:Example Folder/1" "${_TMP_DIR}/example.md"
@@ -336,7 +336,7 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    [[ ! -e "${_TMP_DIR}/example.md" ]]
+    [[ ! -e "${_TMP_DIR}/example.md"            ]]
   }
 
   run "${_NB}" export "home:Example Folder/Sample Folder/1" "${_TMP_DIR}/example.md"
@@ -463,7 +463,7 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    [[ ! -e "${_TMP_DIR}/example.md" ]]
+    [[ ! -e "${_TMP_DIR}/example.md"            ]]
   }
 
   run "${_NB}" export "home:Example Folder/Example Title" "${_TMP_DIR}/example.md"
@@ -508,7 +508,7 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    [[ ! -e "${_TMP_DIR}/example.md" ]]
+    [[ ! -e "${_TMP_DIR}/example.md"            ]]
   }
 
   run "${_NB}" export "home:Example Folder/Sample Folder/Example Title" "${_TMP_DIR}/example.md"

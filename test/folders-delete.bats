@@ -132,7 +132,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Delete'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Deleted:                                                        ]]
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                              ]]
@@ -366,7 +367,8 @@ load test_helper
   done
   git log | grep -q '\[nb\] Delete'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Deleted:                                            ]]
   [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
   [[ "${output}" =~ 🔖                                                  ]]
