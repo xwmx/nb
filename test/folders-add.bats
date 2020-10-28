@@ -77,7 +77,6 @@ load test_helper
 
     _folder_path="${_NOTEBOOK_PATH:?}/Example Folder/Sample Folder"
     _existing_folder_path="${_folder_path}/Demo Folder"
-    _new_folder_path="${_folder_path}/Demo Folder-1"
 
     mkdir -p "${_existing_folder_path}"
     touch "${_existing_folder_path}/.index"
