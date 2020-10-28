@@ -4218,6 +4218,8 @@ Shortcut Alias: \`d\`
 HEREDOC
 _delete() {
   local _force=0
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _selector=
   local _title=
 
@@ -4241,19 +4243,24 @@ _delete() {
     _exit_1 _help "delete"
   fi
 
-  local _basename
-  _basename="$(_show "${_selector}" --filename)"
+  local _relative_path
+  _relative_path="$(_show "${_selector}" --relative-path)"
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _basename="${_relative_path##*\/}"
+  local _folder_path="${_notebook_path}"
 
-  if [[ -z "${_basename}" ]]
+  if [[ "${_relative_path:-}" =~ / ]]
   then
-    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+    _folder_path="${_notebook_path}/${_relative_path%\/*}"
+  fi
+
+  if [[ -z "${_relative_path}" ]]
+  then
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
 
   local _info
-  _info="$(_show "${_basename}" --info-line)"
+  _info="$(_show "${_relative_path}" --info-line)"
 
   if ! ((_force))
   then
@@ -4275,19 +4282,19 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
     done
   fi
 
-  if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
   then
-    if [[ -d "${_notebook_path}/${_basename}" ]] &&
-       [[ -z "$(ls -A "${_notebook_path}/${_basename}")" ]]
+    if [[ -d "${_notebook_path}/${_relative_path}"            ]] &&
+       [[ -z "$(ls -A "${_notebook_path}/${_relative_path}")" ]]
     then
-      rm -r "${_notebook_path:?}/${_basename:?}"
+      rm -r "${_notebook_path:?}/${_relative_path:?}"
     else
-      git -C "${_notebook_path:?}" rm -r "${_basename:?}" 1>/dev/null
+      git -C "${_notebook_path:?}" rm -r "${_relative_path:?}" 1>/dev/null
     fi
 
-    if [[ ! -e "${_notebook_path}/${_basename}" ]]
+    if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
     then
-      _index delete "${_basename}"
+      _INDEX_FOLDER_PATH="${_folder_path}" _index delete "${_basename}"
 
       _git checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
