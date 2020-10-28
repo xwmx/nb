@@ -77,9 +77,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.org')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.org               ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.org                   ]]
 }
 
 @test "\`rename\` with extension-less <filename> argument uses source extension." {
@@ -117,9 +117,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 @test "\`rename\` bookmark with extension-less <filename> argument uses source extension." {
@@ -159,9 +159,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ sample\ name.bookmark.md ]]
-  [[ "${output}" =~ renamed\ to                       ]]
-  [[ "${output}" =~ EXAMPLE.bookmark.md               ]]
+  [[ "${output}" =~ initial\\\ sample\\\ name.bookmark.md ]]
+  [[ "${output}" =~ renamed\ to                           ]]
+  [[ "${output}" =~ EXAMPLE.bookmark.md                   ]]
 }
 
 @test "\`rename\` bookmark with extension <filename> argument uses target extension." {
@@ -201,9 +201,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ sample\ name.bookmark.md ]]
-  [[ "${output}" =~ renamed\ to                       ]]
-  [[ "${output}" =~ EXAMPLE.md                        ]]
+  [[ "${output}" =~ initial\\\ sample\\\ name.bookmark.md ]]
+  [[ "${output}" =~ renamed\ to                           ]]
+  [[ "${output}" =~ EXAMPLE.md                            ]]
 }
 
 @test "\`rename\` note with bookmark extension <filename> argument uses target extension." {
@@ -243,9 +243,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.bookmark.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ sample\ name.md          ]]
-  [[ "${output}" =~ renamed\ to                       ]]
-  [[ "${output}" =~ EXAMPLE.bookmark.md               ]]
+  [[ "${output}" =~ initial\\\ sample\\\ name.md          ]]
+  [[ "${output}" =~ renamed\ to                           ]]
+  [[ "${output}" =~ EXAMPLE.bookmark.md                   ]]
 }
 
 @test "\`rename\` with existing <filename> exits with status 1." {
@@ -308,9 +308,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 @test "\`<id> rename\` with extension-less <filename> argument uses source extension." {
@@ -348,9 +348,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 # <filename> --reset ##########################################################
@@ -642,9 +642,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 @test "\`<scope>:rename <id>\` with extension-less <filename> argument uses source extension." {
@@ -684,9 +684,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 @test "\`<scope>:<id> rename\` with extension-less <filename> argument uses source extension." {
@@ -726,9 +726,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 @test "\`<id> <scope>:rename\` with extension-less <filename> argument uses source extension." {
@@ -768,9 +768,9 @@ _setup_rename() {
   [[ "$("${_NB}" index get_id 'EXAMPLE.md')" == '1' ]]
 
   # Prints output
-  [[ "${output}" =~ initial\ example\ name.md ]]
-  [[ "${output}" =~ renamed\ to               ]]
-  [[ "${output}" =~ EXAMPLE.md                ]]
+  [[ "${output}" =~ initial\\\ example\\\ name.md ]]
+  [[ "${output}" =~ renamed\ to                   ]]
+  [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
 # help ########################################################################
