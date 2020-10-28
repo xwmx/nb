@@ -2,6 +2,46 @@
 
 load test_helper
 
+@test "'edit folder/<filename>' with invalid filename returns with error and message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Sample File.bookmark.md"                  \
+      --content "<https://example.test>"
+
+    run "${_NB}" add "Example Folder/"
+
+    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --content "<https://example.test>"
+  }
+
+  run "${_NB}" edit "Example Folder/not-valid" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ ${status} -eq 1 ]]
+
+  # Does not update file:
+
+  [[ ! "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
+
+  # Does not create git commit:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Not\ found:               ]]
+  [[ "${output}" =~ Example\ Folder/not-valid ]]
+}
+
 # <filename> ##################################################################
 
 @test "'edit folder/<filename>' edits properly without errors." {
