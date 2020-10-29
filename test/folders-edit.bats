@@ -492,7 +492,7 @@ load test_helper
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
 }
 
-@test "'edit notebook:folder/<id>' edits properly without errors." {
+@test "'edit notebook:folder/<title>' edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                  \
@@ -537,7 +537,7 @@ load test_helper
   [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
 }
 
-@test "'edit notebook:folder/folder/<id>' edits properly without errors." {
+@test "'edit notebook:folder/folder/<title>' edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                                \
