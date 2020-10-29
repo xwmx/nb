@@ -115,7 +115,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
   # Deletes file:
