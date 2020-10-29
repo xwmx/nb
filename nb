@@ -5734,29 +5734,33 @@ Usage:
   ${_ME} index verify
   ${_ME} index <subcommand> <options>...
 
+Options:
+  --ancestors   Perform the action on all folders within the notebook that
+                are ancestors of the current folder.
+
 Subcommands:
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
-  get_max_id    Get the maximum id for the notebook.
+  get_max_id    Get the maximum id for the folder.
   rebuild       Rebuild the index, listing files by last modified, reversed.
                 Some ids will change. Prefer \`${_ME} index reconcile\`.
   reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
-  verify        Verify that the index matches the notebook contents.
+  verify        Verify that the index matches the folder contents.
 
 Description:
-  Manage the index for the current notebook. This subcommand is used
+  Manage the index for the current folder. This subcommand is used
   internally by \`${_ME}\` and using it manually will probably corrupt
-  the index. If something goes wrong with the index, fix it with
+  the index. If something goes wrong with an index, fix it with
   \`${_ME} index reconcile\`.
 
-  The index is a text file named '.index' in the notebook directory. .index
-  contains a list of filenames and the line number of each filename
-  represents the id. .index is included in the git repository so ids are
-  preserved across systems.
+  An index is a text file named '.index' in any folder within a notebook.
+  .index contains a list of filenames and the line number of each filename
+  represents the id. .index files are included in the git repository so
+  ids are preserved across systems.
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
