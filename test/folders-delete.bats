@@ -516,7 +516,7 @@ load test_helper
   [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
 }
 
-@test "'delete notebook:folder/<id>' deletes properly without errors." {
+@test "'delete notebook:folder/<title>' deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                  \
@@ -567,7 +567,7 @@ load test_helper
   [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
 }
 
-@test "'delete notebook:folder/folder/<id>' deletes properly without errors." {
+@test "'delete notebook:folder/folder/<title>' deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                                \
