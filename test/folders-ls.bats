@@ -2,9 +2,9 @@
 
 load test_helper
 
-# list <id>/ ##################################################################
+# ls <id>/ ####################################################################
 
-@test "'list folder/folder/<id>/' exits with 0 and lists files in folder in reverse order." {
+@test "'ls folder/folder/<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
 
@@ -19,23 +19,27 @@ load test_helper
       --encrypt --password=password
   }
 
-  run "${_NB}" list Example\ Folder/Sample\ Folder/1/
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/1/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0     ]]
 
-  [[   "${lines[0]}"  =~ three  ]]
-  [[   "${lines[0]}"  =~ 🔖\ 🔒 ]]
-  [[   "${lines[1]}"  =~ two    ]]
-  [[   "${lines[1]}"  =~ 🔖     ]]
-  [[   "${lines[2]}"  =~ one    ]]
-  [[ ! "${lines[2]}"  =~ 🔖     ]]
-  [[ ! "${lines[2]}"  =~ 🔒     ]]
+  [[   "${lines[0]}"  =~ home   ]]
+  [[   "${lines[1]}"  =~ ----   ]]
+  [[   "${lines[2]}"  =~ three  ]]
+  [[   "${lines[2]}"  =~ 🔖\ 🔒 ]]
+  [[   "${lines[3]}"  =~ two    ]]
+  [[   "${lines[3]}"  =~ 🔖     ]]
+  [[   "${lines[4]}"  =~ one    ]]
+  [[ ! "${lines[4]}"  =~ 🔖     ]]
+  [[ ! "${lines[4]}"  =~ 🔒     ]]
+  [[   "${lines[5]}"  =~ ----   ]]
+  [[   "${lines[6]}"  =~ add    ]]
 }
 
-@test "'list folder/<id>/' exits with 0 and lists files in folder in reverse order." {
+@test "'ls folder/<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
 
@@ -50,7 +54,7 @@ load test_helper
       --encrypt --password=password
   }
 
-  run "${_NB}" list Example\ Folder/1/
+  run "${_NB}" ls Example\ Folder/1/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -58,17 +62,21 @@ load test_helper
 
   [[   "${status}"    -eq 0     ]]
 
-  [[   "${lines[0]}"  =~ three  ]]
-  [[   "${lines[0]}"  =~ 🔖\ 🔒 ]]
-  [[   "${lines[1]}"  =~ two    ]]
-  [[   "${lines[1]}"  =~ 🔖     ]]
-  [[   "${lines[2]}"  =~ one    ]]
-  [[   "${lines[3]}"  =~ Demo    ]]
-  [[ ! "${lines[2]}"  =~ 🔖     ]]
-  [[ ! "${lines[2]}"  =~ 🔒     ]]
+  [[   "${lines[0]}"  =~ home   ]]
+  [[   "${lines[1]}"  =~ -----  ]]
+  [[   "${lines[2]}"  =~ three  ]]
+  [[   "${lines[2]}"  =~ 🔖\ 🔒 ]]
+  [[   "${lines[3]}"  =~ two    ]]
+  [[   "${lines[3]}"  =~ 🔖     ]]
+  [[   "${lines[4]}"  =~ one    ]]
+  [[   "${lines[5]}"  =~ Demo   ]]
+  [[ ! "${lines[4]}"  =~ 🔖     ]]
+  [[ ! "${lines[4]}"  =~ 🔒     ]]
+  [[   "${lines[6]}"  =~ ----   ]]
+  [[   "${lines[7]}"  =~ add    ]]
 }
 
-@test "'list <id>/' exits with 0 and lists files in folder in reverse order." {
+@test "'ls <id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
 
@@ -83,25 +91,29 @@ load test_helper
       --encrypt --password=password
   }
 
-  run "${_NB}" list 1/
+  run "${_NB}" ls 1/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0     ]]
 
-  [[   "${lines[0]}"  =~ three  ]]
-  [[   "${lines[0]}"  =~ 🔖\ 🔒 ]]
-  [[   "${lines[1]}"  =~ two    ]]
-  [[   "${lines[1]}"  =~ 🔖     ]]
-  [[   "${lines[2]}"  =~ one    ]]
-  [[ ! "${lines[2]}"  =~ 🔖     ]]
-  [[ ! "${lines[2]}"  =~ 🔒     ]]
+  [[   "${lines[0]}"  =~ home   ]]
+  [[   "${lines[1]}"  =~ -----  ]]
+  [[   "${lines[2]}"  =~ three  ]]
+  [[   "${lines[2]}"  =~ 🔖\ 🔒 ]]
+  [[   "${lines[3]}"  =~ two    ]]
+  [[   "${lines[3]}"  =~ 🔖     ]]
+  [[   "${lines[4]}"  =~ one    ]]
+  [[ ! "${lines[4]}"  =~ 🔖     ]]
+  [[ ! "${lines[4]}"  =~ 🔒     ]]
+  [[   "${lines[5]}"  =~ ----   ]]
+  [[   "${lines[6]}"  =~ add    ]]
 }
 
-# list folder ################################################################
+# ls folder ###################################################################
 
-@test "'list folder/folder/folder' exits with 0 and prints the folder/folder/folder list item." {
+@test "'ls folder/folder/folder' exits with 0 and prints the folder/folder/folder list item." {
   {
     "${_NB}" init
 
@@ -123,23 +135,28 @@ load test_helper
       --content "Content two."
   }
 
-  run "${_NB}" list Example\ Folder/Sample\ Folder/Demo\ Folder
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/Demo\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                                 ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-  [[   "${lines[0]}"  =~  📂                                                ]]
+  [[   "${lines[0]}"  =~ home                                               ]]
+  [[   "${lines[1]}"  =~ -----                                              ]]
 
-  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
-  [[   "${#lines[@]}" -eq 1                                                 ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
+  [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+  [[   "${lines[2]}"  =~  📂                                                ]]
+
+  [[ ! "${lines[2]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
+  [[   "${lines[2]}"  =~  Demo\ Folder                                      ]]
+
+  [[   "${lines[3]}"  =~ ----                                               ]]
+  [[   "${lines[4]}"  =~ add                                                ]]
 }
 
-@test "'list folder/folder' exits with 0 and prints the folder/folder list item." {
+@test "'ls folder/folder' exits with 0 and prints the folder/folder list item." {
   {
     "${_NB}" init
 
@@ -156,23 +173,28 @@ load test_helper
       --title "Two"
   }
 
-  run "${_NB}" list Example\ Folder/Sample\ Folder
+  run "${_NB}" ls Example\ Folder/Sample\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                   ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/3                 ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[   "${lines[0]}"  =~ home                                 ]]
+  [[   "${lines[1]}"  =~ -----                                ]]
 
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/3                 ]]
+  [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[2]}"  =~  📂                                  ]]
+
+  [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
+
+  [[   "${lines[3]}"  =~ ----                                 ]]
+  [[   "${lines[4]}"  =~ add                                  ]]
 }
 
-@test "'list folder' exits with 0 and prints the folder list item." {
+@test "'ls folder' exits with 0 and prints the folder list item." {
   {
     "${_NB}" init
 
@@ -187,7 +209,7 @@ load test_helper
       --encrypt --password=password
   }
 
-  run "${_NB}" list Example\ Folder
+  run "${_NB}" ls Example\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -209,9 +231,9 @@ load test_helper
   [[   "${#lines[@]}" -eq 1                 ]]
 }
 
-# list folder/ ################################################################
+# ls folder/ ##################################################################
 
-@test "'list folder/' exits with 0 and lists files in folder in reverse order." {
+@test "'ls folder/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
 
@@ -226,23 +248,29 @@ load test_helper
       --encrypt --password=password
   }
 
-  run "${_NB}" list Example\ Folder/
+  run "${_NB}" ls Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0     ]]
 
-  [[   "${lines[0]}"  =~ three  ]]
-  [[   "${lines[0]}"  =~ 🔖\ 🔒 ]]
-  [[   "${lines[1]}"  =~ two    ]]
-  [[   "${lines[1]}"  =~ 🔖     ]]
-  [[   "${lines[2]}"  =~ one    ]]
-  [[ ! "${lines[2]}"  =~ 🔖     ]]
-  [[ ! "${lines[2]}"  =~ 🔒     ]]
+  [[   "${lines[0]}"  =~ home   ]]
+  [[   "${lines[1]}"  =~ -----  ]]
+
+  [[   "${lines[2]}"  =~ three  ]]
+  [[   "${lines[2]}"  =~ 🔖\ 🔒 ]]
+  [[   "${lines[3]}"  =~ two    ]]
+  [[   "${lines[3]}"  =~ 🔖     ]]
+  [[   "${lines[4]}"  =~ one    ]]
+  [[ ! "${lines[4]}"  =~ 🔖     ]]
+  [[ ! "${lines[4]}"  =~ 🔒     ]]
+
+  [[   "${lines[5]}"  =~ ----   ]]
+  [[   "${lines[6]}"  =~ add    ]]
 }
 
-@test "'list folder/folder/' exits with 0 and lists files in folder/folder in reverse order." {
+@test "'ls folder/folder/' exits with 0 and lists files in folder/folder in reverse order." {
   {
     "${_NB}" init
     "${_NB}" add "Example Folder/Sample Folder"
@@ -260,43 +288,55 @@ load test_helper
       --encrypt --password=password
   }
 
-  run "${_NB}" list Example\ Folder/
+  run "${_NB}" ls Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0               ]]
 
-  [[ ! "${lines[0]}"  =~ three            ]]
-  [[ ! "${lines[0]}"  =~ 🔖\ 🔒           ]]
-  [[ ! "${lines[1]}"  =~ two              ]]
-  [[ ! "${lines[1]}"  =~ 🔖               ]]
-  [[ ! "${lines[2]}"  =~ one              ]]
-  [[ ! "${lines[2]}"  =~ 🔖               ]]
-  [[ ! "${lines[2]}"  =~ 🔒               ]]
+  [[   "${lines[0]}"  =~ home             ]]
+  [[   "${lines[1]}"  =~ -----            ]]
 
-  [[   "${lines[0]}"  =~ Sample\ Folder   ]]
-  [[   "${lines[1]}"  =~ file\ 3          ]]
-  [[   "${lines[2]}"  =~ file\ 2          ]]
-  [[   "${lines[3]}"  =~ file\ 1          ]]
+  [[ ! "${lines[2]}"  =~ three            ]]
+  [[ ! "${lines[2]}"  =~ 🔖\ 🔒           ]]
+  [[ ! "${lines[3]}"  =~ two              ]]
+  [[ ! "${lines[3]}"  =~ 🔖               ]]
+  [[ ! "${lines[4]}"  =~ one              ]]
+  [[ ! "${lines[4]}"  =~ 🔖               ]]
+  [[ ! "${lines[4]}"  =~ 🔒               ]]
 
-  run "${_NB}" list Example\ Folder/Sample\ Folder/
+  [[   "${lines[2]}"  =~ Sample\ Folder   ]]
+  [[   "${lines[3]}"  =~ file\ 3          ]]
+  [[   "${lines[4]}"  =~ file\ 2          ]]
+  [[   "${lines[5]}"  =~ file\ 1          ]]
+
+  [[   "${lines[6]}"  =~ ----             ]]
+  [[   "${lines[7]}"  =~ add              ]]
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0     ]]
 
-  [[   "${lines[0]}"  =~ three  ]]
-  [[   "${lines[0]}"  =~ 🔖\ 🔒 ]]
-  [[   "${lines[1]}"  =~ two    ]]
-  [[   "${lines[1]}"  =~ 🔖     ]]
-  [[   "${lines[2]}"  =~ one    ]]
-  [[ ! "${lines[2]}"  =~ 🔖     ]]
-  [[ ! "${lines[2]}"  =~ 🔒     ]]
+  [[   "${lines[0]}"  =~ home   ]]
+  [[   "${lines[1]}"  =~ -----  ]]
+
+  [[   "${lines[2]}"  =~ three  ]]
+  [[   "${lines[2]}"  =~ 🔖\ 🔒 ]]
+  [[   "${lines[3]}"  =~ two    ]]
+  [[   "${lines[3]}"  =~ 🔖     ]]
+  [[   "${lines[4]}"  =~ one    ]]
+  [[ ! "${lines[4]}"  =~ 🔖     ]]
+  [[ ! "${lines[4]}"  =~ 🔒     ]]
+
+  [[   "${lines[5]}"  =~ ----   ]]
+  [[   "${lines[6]}"  =~ add    ]]
 }
 
-@test "'list folder/folder/folder/' exits with 0 and lists files in folder/folder/folder in reverse order." {
+@test "'ls folder/folder/folder/' exits with 0 and lists files in folder/folder/folder in reverse order." {
   {
     "${_NB}" init
 
@@ -322,50 +362,68 @@ load test_helper
       --content "Example content three."
   }
 
-  run "${_NB}" list Example\ Folder/
+  run "${_NB}" ls Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0               ]]
 
-  [[ ! "${lines[0]}"  =~  three           ]]
-  [[ ! "${lines[0]}"  =~  🔖\ 🔒          ]]
-  [[ ! "${lines[1]}"  =~  two             ]]
-  [[ ! "${lines[1]}"  =~  🔖              ]]
-  [[ ! "${lines[2]}"  =~  one             ]]
-  [[ ! "${lines[2]}"  =~  🔖              ]]
-  [[ ! "${lines[2]}"  =~  🔒              ]]
+  [[   "${lines[0]}"  =~ home             ]]
+  [[   "${lines[1]}"  =~ -----            ]]
 
-  [[   "${lines[0]}"  =~  Sample\ Folder  ]]
-  [[   "${lines[1]}"  =~  file\ 3         ]]
-  [[   "${lines[2]}"  =~  file\ 2         ]]
-  [[   "${lines[3]}"  =~  file\ 1         ]]
+  [[ ! "${lines[2]}"  =~  three           ]]
+  [[ ! "${lines[2]}"  =~  🔖\ 🔒          ]]
+  [[ ! "${lines[3]}"  =~  two             ]]
+  [[ ! "${lines[3]}"  =~  🔖              ]]
+  [[ ! "${lines[4]}"  =~  one             ]]
+  [[ ! "${lines[4]}"  =~  🔖              ]]
+  [[ ! "${lines[4]}"  =~  🔒              ]]
 
-  run "${_NB}" list Example\ Folder/Sample\ Folder/
+  [[   "${lines[2]}"  =~  Sample\ Folder  ]]
+  [[   "${lines[3]}"  =~  file\ 3         ]]
+  [[   "${lines[4]}"  =~  file\ 2         ]]
+  [[   "${lines[5]}"  =~  file\ 1         ]]
+
+  [[   "${lines[6]}"  =~ ----             ]]
+  [[   "${lines[7]}"  =~ add              ]]
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0             ]]
 
-  [[   "${lines[0]}"  =~  Demo\ Folder  ]]
-  [[   "${lines[1]}"  =~  three         ]]
-  [[   "${lines[1]}"  =~  🔖\ 🔒        ]]
-  [[   "${lines[2]}"  =~  two           ]]
-  [[   "${lines[2]}"  =~  🔖            ]]
-  [[   "${lines[3]}"  =~  one           ]]
-  [[ ! "${lines[3]}"  =~  🔖            ]]
-  [[ ! "${lines[3]}"  =~  🔒            ]]
+  [[   "${lines[0]}"  =~ home           ]]
+  [[   "${lines[1]}"  =~ -----          ]]
 
-  run "${_NB}" list Example\ Folder/Sample\ Folder/Demo\ Folder/
+  [[   "${lines[2]}"  =~  Demo\ Folder  ]]
+  [[   "${lines[3]}"  =~  three         ]]
+  [[   "${lines[3]}"  =~  🔖\ 🔒        ]]
+  [[   "${lines[4]}"  =~  two           ]]
+  [[   "${lines[4]}"  =~  🔖            ]]
+  [[   "${lines[5]}"  =~  one           ]]
+  [[ ! "${lines[5]}"  =~  🔖            ]]
+  [[ ! "${lines[5]}"  =~  🔒            ]]
+
+  [[   "${lines[6]}"  =~ ----           ]]
+  [[   "${lines[7]}"  =~ add            ]]
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/Demo\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                   ]]
 
-  [[   "${lines[0]}"  =~  Document\ Three.md  ]]
-  [[   "${lines[1]}"  =~  Document\ Two.md    ]]
-  [[   "${lines[2]}"  =~  Document\ One.md    ]]
+  [[   "${lines[0]}"  =~ home                 ]]
+  [[   "${lines[1]}"  =~ -----                ]]
+
+  [[   "${lines[2]}"  =~  Document\ Three.md  ]]
+  [[   "${lines[3]}"  =~  Document\ Two.md    ]]
+  [[   "${lines[4]}"  =~  Document\ One.md    ]]
+
+  [[   "${lines[5]}"  =~ ----                 ]]
+  [[   "${lines[6]}"  =~ add                  ]]
 }
