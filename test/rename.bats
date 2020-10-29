@@ -73,6 +73,8 @@ _setup_rename() {
   done
   git log | grep -q '\[nb\] Rename'
 
+  "${_NB}" index show
+
   # Updates index
   [[ "$("${_NB}" index get_id 'EXAMPLE.org')" == '1' ]]
 
@@ -103,7 +105,8 @@ _setup_rename() {
 
   # Renames note file
   [[ ! -e "${_NOTEBOOK_PATH}/${_filename}"  ]]
-  [[ -e "${_NOTEBOOK_PATH}/EXAMPLE.md"      ]]
+  [[ ! -e "${_NOTEBOOK_PATH}/EXAMPLE"       ]]
+  [[   -e "${_NOTEBOOK_PATH}/EXAMPLE.md"    ]]
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
@@ -357,9 +360,10 @@ _setup_rename() {
 
 @test "'rename --reset' with <filename> argument renames without errors." {
   {
-    _setup_rename
+    run "${_NB}" init
+    run "${_NB}" add "initial example name.md"
 
-    _original=$("${_NB}" list -n 1 --no-id --filenames | head -1)
+    _original="initial example name.md"
 
     _filename="test.md"
 

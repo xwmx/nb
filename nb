@@ -9080,9 +9080,8 @@ HEREDOC
 _rename() {
   local _force=0
   local _reset=0
-  local _selector=
-  local _target_basename=
-  local _target_name=
+  local _source_selector=
+  local _target_selector=
   local _to_target_type=
 
   while ((${#}))
@@ -9104,12 +9103,12 @@ _rename() {
         _to_target_type="note"
         ;;
       *)
-        if [[ -z "${_selector}"       ]]
+        if [[ -z "${_source_selector}" ]]
         then
-          _selector="${__arg}"
-        elif [[ -z "${_target_name}"  ]]
+          _source_selector="${__arg}"
+        elif [[ -z "${_target_selector}" ]]
         then
-          _target_name="${__arg}"
+          _target_selector="${__arg}"
         fi
         ;;
     esac
@@ -9117,46 +9116,71 @@ _rename() {
     shift
   done
 
-  if [[ -z "${_selector}" ]]
+  if [[ -z "${_source_selector}" ]]
   then
     _exit_1 _help "rename"
   fi
 
-  local _source_basename
-  _source_basename="$(_show "${_selector}" --filename)"
+  local _source_relative_path
+  _source_relative_path="$(_show "${_source_selector}" --relative-path)"
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
-
-  local _source_path="${_notebook_path}/${_source_basename}"
-
-  if [[ -z "${_source_basename}" ]]
+  if [[ -z "${_source_relative_path}" ]]
   then
     _exit_1 _help "rename"
   fi
+
+  local _source_notebook_path
+  _source_notebook_path="$(
+    _notebooks show "${_source_selector}" --path 2>/dev/null || :
+  )"
+
+  if [[ -z "${_source_notebook_path:-}" ]]
+  then
+    _source_notebook_path="$(_notebooks current --path)"
+  fi
+
+  local _source_basename="${_source_relative_path##*\/}"
+  local _source_folder_path="${_source_notebook_path}"
+  local _source_path="${_source_notebook_path}/${_source_relative_path}"
+
+  if [[ "${_source_relative_path:-}" =~ / ]]
+  then
+    _source_folder_path="${_source_notebook_path}/${_source_relative_path%\/*}"
+  fi
+
+  local _source_file_name="${_source_basename%%.*}"
+  local _source_file_type="${_source_basename#*.}"
+
+  if [[ -z "${_source_file_type:-}"                     ]] ||
+     [[ "${_source_file_type}" == "${_source_basename}" ]]
+  then
+    _source_file_type=
+  fi
+
+  local _target_selector_relative_path=
 
   if ((_reset))
   then
-    local _file_type="${NB_DEFAULT_EXTENSION}"
+    local _target_file_name=
+    _target_file_name="$(
+      date -r "${_source_notebook_path}/${_source_relative_path}" "+%Y%m%d%H%M%S"
+    )"
+    local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
-    _target_basename="$(date -r "${_source_path}" "+%Y%m%d%H%M%S").${_file_type}"
-  elif [[ -n "${_target_name:-}"    ]] ||
-       [[ -n "${_to_target_type:-}" ]]
+    _target_basename="${_target_file_name}.${_target_file_type}"
+  elif [[ -n "${_target_selector:-}"  ]] ||
+       [[ -n "${_to_target_type:-}"   ]]
   then
-    local _source_file_name="${_source_basename%%.*}"
-    local _source_file_type="${_source_basename#*.}"
-    if [[ -z "${_source_file_type:-}"                     ]] ||
-       [[ "${_source_file_type}" == "${_source_basename}" ]]
-    then
-      _source_file_type=
-    fi
+    _target_selector_relative_path="${_target_selector#*:}"
 
-    local _target_file_name="${_target_name%%.*}"
-    local _target_file_type="${_target_name#*.}"
-    if [[ -z "${_target_file_type:-}"                 ]] ||
-       [[ "${_target_file_type}" == "${_target_name}" ]]
+    local _target_basename="${_target_selector_relative_path##*\/}"
+    local _target_file_name="${_target_basename%%.*}"
+    local _target_file_type="${_target_basename#*.}"
+
+    if [[ -z "${_target_file_type:-}"                     ]] ||
+       [[ "${_target_file_type}" == "${_target_basename}" ]]
     then # no file extension specified in _target_name
-      if [[ -n "${_source_file_type}"                 ]]
+      if [[ -n "${_source_file_type}"                     ]]
       then
         _target_file_type="${_source_file_type}"
       else
@@ -9186,25 +9210,58 @@ _rename() {
     then
       _target_basename="${_target_file_name}.${_target_file_type}"
     else
-      _target_basename="${_target_name}"
-    fi
-
-    if [[ -e "${_notebook_path}/${_target_basename}" ]]
-    then
-      _exit_1 printf "File already exists: %s\\n" \
-        "$(_color_primary "${_target_basename}")"
+      _target_basename="${_target_file_name}"
     fi
   else
     _exit_1 _help "rename"
   fi
 
+  local _target_info=
+  local _target_notebook_path
+
+  if [[ "${_target_selector:-}" =~ : ]]
+  then
+    _target_notebook_path="$(
+      _notebooks show "${_target_selector:-}" --path 2>/dev/null || :
+    )"
+  fi
+
+  if [[ -z "${_target_notebook_path:-}" ]]
+  then
+    _target_notebook_path="$(_notebooks current --path)"
+  fi
+
+  if _notebooks current --selected ||
+     [[ "${_target_notebook_path}" != "$(_notebooks current --path)" ]]
+  then
+    _target_info="$(_notebooks show "${_target_notebook_path}" --escaped):"
+  fi
+
+  local _target_folder_path="${_target_notebook_path}"
+  local _target_relative_path="${_target_basename}"
+
+  if [[ "${_target_selector_relative_path:-}" =~ / ]]
+  then
+    _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
+
+    _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"
+  fi
+
+  _target_info+="${_target_relative_path}"
+
+  if [[ -e "${_target_notebook_path}/${_target_relative_path}" ]]
+  then
+    _exit_1 printf "File already exists: %s\\n" \
+      "$(_color_primary "${_target_info}")"
+  fi
+
   local _source_info
-  _source_info="$(_show "${_source_basename}" --info-line)"
+  _source_info="$(_show "${_source_relative_path}" --info-line)"
 
   if ! ((_force))
   then
     printf "Renaming: %s\\n" "${_source_info}"
-    printf "To:        %s\\n" "$(_color_primary "${_target_basename}")"
+    printf "To:        %s\\n" "$(_color_primary "${_target_info}")"
 
     while true
     do
@@ -9223,14 +9280,52 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
     done
   fi
 
-  mv "${_source_path}" "${_notebook_path}/${_target_basename}"  &&
-    _index update "${_source_basename}" "${_target_basename}"   &&
-      _git checkpoint "${_notebook_path}"     \
-        "[nb] Rename: ${_source_basename} to ${_target_basename}"
+  if [[ ! -e "${_target_folder_path}" ]]
+  then
+    mkdir -p "${_target_folder_path}" ||
+      _exit_1 printf "Unable to create foler: %s" \
+        "$(_color_primary "${_target_folder_path}")"
+  fi
 
-  printf "%s renamed to %s\\n"                \
-    "${_source_info}"                         \
-    "$(_color_primary "${_target_basename}")"
+  mv "${_source_path}" "${_target_notebook_path}/${_target_relative_path}" ||
+    _exit_1 printf "Rename failed.\\n"
+
+  if [[ "${_source_notebook_path}" == "${_target_notebook_path}" ]]
+  then
+    if [[ "${_source_folder_path}" == "${_target_folder_path}" ]]
+    then
+      _INDEX_FOLDER_PATH="${_source_folder_path}" \
+        _index update "${_source_basename}" "${_target_basename}"
+    else
+      _INDEX_FOLDER_PATH="${_source_folder_path}" \
+        _index delete "${_source_basename}" &&
+      _INDEX_FOLDER_PATH="${_target_folder_path}" \
+        _index add "${_target_basename}"
+    fi || _exit_1 printf "Rename index update failed.\\n"
+
+    _git checkpoint "${_target_notebook_path}"    \
+      "[nb] Rename: ${_source_relative_path} to ${_target_info}"
+
+    printf "%s renamed to %s\\n"                  \
+      "${_source_info}"                           \
+      "$(_color_primary "${_target_info}" | sed -e 's/ /\\ /g')"
+  else
+    _INDEX_FOLDER_PATH="${_source_folder_path}"   \
+      _index delete "${_source_basename}"
+
+    _git checkpoint "${_source_notebook_path}"    \
+      "[nb] Delete: ${_source_relative_path}"
+
+    _INDEX_FOLDER_PATH="${_target_folder_path}"   \
+      _index add "${_target_basename}"
+
+    _git checkpoint "${_target_notebook_path}"    \
+      "[nb] Add: ${_target_relative_path}"
+
+    printf "%s moved to %s\\n"                    \
+      "${_source_info}"                           \
+      "$(_color_primary "${_target_info}" | sed -e 's/ /\\ /g')"
+  fi
 }
 
 # run ##################################################################### run

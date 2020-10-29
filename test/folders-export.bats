@@ -45,8 +45,6 @@ load test_helper
     run "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/"
-
     run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
@@ -81,8 +79,6 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/Sample Folder"
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
@@ -119,8 +115,6 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/"
 
     run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
@@ -161,8 +155,6 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/Sample Folder"
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
@@ -208,8 +200,6 @@ load test_helper
     run "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/"
-
     run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
@@ -246,8 +236,6 @@ load test_helper
     run "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder"
-
     run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
@@ -283,8 +271,6 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/"
 
     run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
@@ -325,8 +311,6 @@ load test_helper
     run "${_NB}" init
     run "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/Sample Folder"
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
@@ -371,8 +355,6 @@ load test_helper
       --title   "Sample Title"                                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/"
-
     run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --title   "Example Title"                                 \
       --content "<https://2.example.test>"
@@ -410,8 +392,6 @@ load test_helper
     run "${_NB}" add "Sample File.bookmark.md"                                \
       --title   "Sample Title"                                                \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/Sample Folder"
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --title   "Example Title"                                               \
@@ -451,8 +431,6 @@ load test_helper
     run "${_NB}" add "Sample File.bookmark.md"                  \
       --title   "Sample Title"                                  \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/"
 
     run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --title   "Example Title"                                 \
@@ -496,8 +474,6 @@ load test_helper
     run "${_NB}" add "Sample File.bookmark.md"                                \
       --title   "Sample Title"                                                \
       --content "<https://1.example.test>"
-
-    run "${_NB}" add "Example Folder/Sample Folder"
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --title   "Example Title"                                               \
