@@ -11,7 +11,7 @@ _setup_notebooks() {
 
 # `notebooks current` #########################################################
 
-@test "\`notebooks current\` exits with 0 and prints the current notebook name." {
+@test "'notebooks current' exits with 0 and prints the current notebook name." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -26,7 +26,7 @@ _setup_notebooks() {
   [[ "${output}" =~ one ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the notebook path." {
+@test "'notebooks current --path' exits with 0 and prints the notebook path." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -41,7 +41,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${NB_DIR}/one ]]
 }
 
-@test "\`notebooks current\` exits with 0 and prints the local notebook." {
+@test "'notebooks current' exits with 0 and prints the local notebook." {
   {
     _setup_notebooks
 
@@ -65,7 +65,7 @@ _setup_notebooks() {
   [[ "${output}" =~ local ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the local notebook path." {
+@test "'notebooks current --path' exits with 0 and prints the local notebook path." {
   {
     _setup_notebooks
 
@@ -90,7 +90,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${_TMP_DIR}/example ]]
 }
 
-@test "\`notebooks current\` exits with 0 and prints the scoped notebook name." {
+@test "'notebooks current' exits with 0 and prints the scoped notebook name." {
   {
     _setup_notebooks
 
@@ -106,7 +106,7 @@ _setup_notebooks() {
   [[ "${output}" =~ home  ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the scoped notebook path." {
+@test "'notebooks current --path' exits with 0 and prints the scoped notebook path." {
   {
     _setup_notebooks
 
@@ -122,7 +122,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with name." {
+@test "'notebooks current --path' exits with 0 and prints the selected notebook path with name." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -137,7 +137,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with colon name." {
+@test "'notebooks current --path' exits with 0 and prints the selected notebook path with colon name." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -152,7 +152,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with path." {
+@test "'notebooks current --path' exits with 0 and prints the selected notebook path with path." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -167,7 +167,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the selected notebook path with identifier." {
+@test "'notebooks current --path' exits with 0 and prints the selected notebook path with identifier." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -182,7 +182,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the currrent notebook path with not valid notebook selector." {
+@test "'notebooks current --path' exits with 0 and prints the currrent notebook path with not valid notebook selector." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -196,7 +196,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/one" ]]
 }
 
-@test "\`notebooks current --path\` exits with 0 and prints the currrent notebook path with not valid path." {
+@test "'notebooks current --path' exits with 0 and prints the currrent notebook path with not valid path." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -212,7 +212,7 @@ _setup_notebooks() {
 
 # --selected ####################################################################
 
-@test "\`notebooks current --selected\` exits with 1 when unscoped." {
+@test "'notebooks current --selected' exits with 1 when unscoped." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -228,7 +228,7 @@ _setup_notebooks() {
   # [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when scoped." {
+@test "'notebooks current --selected' exits with 0 when scoped." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -243,7 +243,7 @@ _setup_notebooks() {
   [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when passed a valid name." {
+@test "'notebooks current --selected' exits with 0 when passed a valid name." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -258,7 +258,7 @@ _setup_notebooks() {
   [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when passed a name with colon." {
+@test "'notebooks current --selected' exits with 0 when passed a name with colon." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -273,7 +273,7 @@ _setup_notebooks() {
   [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when passed a valid selector." {
+@test "'notebooks current --selected' exits with 0 when passed a valid selector." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -288,7 +288,7 @@ _setup_notebooks() {
   [[ -z "${output}"   ]]
 }
 
-@test "\`notebooks current --selected\` exits with 0 when passed an invalid selector." {
+@test "'notebooks current --selected' exits with 0 when passed an invalid selector." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -305,7 +305,7 @@ _setup_notebooks() {
 
 # --global ####################################################################
 
-@test "\`notebooks current --global\` exits with 0 and prints the current global notebook name." {
+@test "'notebooks current --global' exits with 0 and prints the current global notebook name." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -320,7 +320,7 @@ _setup_notebooks() {
   [[ "${output}" =~ one ]]
 }
 
-@test "\`notebooks current --global --path\` exits with 0 and prints the notebook path." {
+@test "'notebooks current --global --path' exits with 0 and prints the notebook path." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -335,7 +335,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${NB_DIR}/one ]]
 }
 
-@test "\`notebooks current --global\` in a local notebook exits with 0 and prints the global notebook." {
+@test "'notebooks current --global' in a local notebook exits with 0 and prints the global notebook." {
   {
     _setup_notebooks
 
@@ -359,7 +359,7 @@ _setup_notebooks() {
   [[ "${output}" =~ one ]]
 }
 
-@test "\`notebooks current --global --path\` in a local notebook exits with 0 and prints the global notebook path." {
+@test "'notebooks current --global --path' in a local notebook exits with 0 and prints the global notebook path." {
   {
     _setup_notebooks
 
@@ -384,7 +384,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${NB_DIR}/one ]]
 }
 
-@test "\`notebooks current --global\` with selected exits with 0 and prints the global notebook name." {
+@test "'notebooks current --global' with selected exits with 0 and prints the global notebook name." {
   {
     _setup_notebooks
 
@@ -400,7 +400,7 @@ _setup_notebooks() {
   [[ "${output}" =~ one ]]
 }
 
-@test "\`notebooks current --global --path\` with selected exits with 0 and prints the scoped notebook path." {
+@test "'notebooks current --global --path' with selected exits with 0 and prints the scoped notebook path." {
   {
     _setup_notebooks
 
@@ -418,7 +418,7 @@ _setup_notebooks() {
 
 # --local #####################################################################
 
-@test "\`notebooks current --local\` exits with 1 and prints nothing when not in local." {
+@test "'notebooks current --local' exits with 1 and prints nothing when not in local." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -433,7 +433,7 @@ _setup_notebooks() {
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local --path\` exits with 1 and prints nothing when not in local." {
+@test "'notebooks current --local --path' exits with 1 and prints nothing when not in local." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -448,7 +448,7 @@ _setup_notebooks() {
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local\` in a local notebook exits with 0 and prints nothing." {
+@test "'notebooks current --local' in a local notebook exits with 0 and prints nothing." {
   {
     _setup_notebooks
 
@@ -470,7 +470,7 @@ _setup_notebooks() {
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local --path\` in a local notebook exits with 0 and prints the local notebook path." {
+@test "'notebooks current --local --path' in a local notebook exits with 0 and prints the local notebook path." {
   {
     _setup_notebooks
 
@@ -493,7 +493,7 @@ _setup_notebooks() {
   [[ "${output}" =~ ${_TMP_DIR}/example ]]
 }
 
-@test "\`notebooks current --local\` with selected exits with 1 and prints nothing." {
+@test "'notebooks current --local' with selected exits with 1 and prints nothing." {
   {
     _setup_notebooks
 
@@ -509,7 +509,7 @@ _setup_notebooks() {
   [[ -z "${output}"  ]]
 }
 
-@test "\`notebooks current --local --path\` with selected exits with 1 and prints nothing." {
+@test "'notebooks current --local --path' with selected exits with 1 and prints nothing." {
   {
     _setup_notebooks
 
@@ -527,7 +527,7 @@ _setup_notebooks() {
 
 # `notebooks current --filename` ##############################################
 
-@test "\`notebooks current --filename\` prints a unique filename." {
+@test "'notebooks current --filename' prints a unique filename." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -554,7 +554,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
 }
 
-@test "\`notebooks current <selector> --filename\` prints a scoped unique filename." {
+@test "'notebooks current <selector> --filename' prints a scoped unique filename." {
   {
     "${_NB}" init
     "${_NB}" notebooks add one
@@ -582,7 +582,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
 }
 
-@test "\`notebooks current --filename <filename>\` prints a unique filename." {
+@test "'notebooks current --filename <filename>' prints a unique filename." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -609,7 +609,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example-2.md  ]]
 }
 
-@test "\`notebooks current <selector> --filename <filename>\` prints a unique filename." {
+@test "'notebooks current <selector> --filename <filename>' prints a unique filename." {
   {
     "${_NB}" init
     "${_NB}" notebooks add one

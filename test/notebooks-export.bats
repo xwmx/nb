@@ -13,7 +13,7 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
-@test "\`notebooks export\` with no arguments exits with status 1 and prints help." {
+@test "'notebooks export' with no arguments exits with status 1 and prints help." {
   {
     run "${_NB}" init
   }
@@ -27,7 +27,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ Usage\: ]]
 }
 
-@test "\`notebooks export\` with valid <name> exports to current directory." {
+@test "'notebooks export' with valid <name> exports to current directory." {
   {
     run "${_NB}" init
   }
@@ -51,7 +51,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "Exported"    ]]
 }
 
-@test "\`notebooks export\` with valid <name> exports to current directory uniquely." {
+@test "'notebooks export' with valid <name> exports to current directory uniquely." {
   {
     run "${_NB}" init
 
@@ -76,7 +76,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "Exported"      ]]
 }
 
-@test "\`notebooks export\` with invalid <name> exits with 1." {
+@test "'notebooks export' with invalid <name> exits with 1." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "example"
@@ -96,7 +96,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "not found"     ]]
 }
 
-@test "\`notebooks export\` with valid <name> and <path> exports." {
+@test "'notebooks export' with valid <name> and <path> exports." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "example"
@@ -116,7 +116,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "Exported"    ]]
 }
 
-@test "\`notebooks export\` with valid <name> and <path> exports uniquely." {
+@test "'notebooks export' with valid <name> and <path> exports uniquely." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "example"
@@ -137,7 +137,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "Exported"      ]]
 }
 
-@test "\`notebooks export\` with valid <name> and <path> ending in existing name exports." {
+@test "'notebooks export' with valid <name> and <path> ending in existing name exports." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "example"
@@ -158,7 +158,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "Exported"          ]]
 }
 
-@test "\`notebooks export\` with valid <name> and relative <path> exports." {
+@test "'notebooks export' with valid <name> and relative <path> exports." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "example"

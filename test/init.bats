@@ -4,7 +4,7 @@ load test_helper
 
 # `init` ######################################################################
 
-@test "\`init\` exits with status 0." {
+@test "'init' exits with status 0." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -13,7 +13,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`init\` exits with status 1 when \`\$NB_DIR\` exists as a file." {
+@test "'init' exits with status 1 when '\$NB_DIR' exists as a file." {
   {
     touch "${NB_DIR}"
     [[ -e "${NB_DIR}" ]]
@@ -27,7 +27,7 @@ load test_helper
   [[ ${status} -eq 1 ]]
 }
 
-@test "\`init\` exits with status 0 when \`\$NB_NOTEBOOK_PATH\` exists." {
+@test "'init' exits with status 0 when '\$NB_NOTEBOOK_PATH' exists." {
   {
     mkdir -p "${NB_NOTEBOOK_PATH}"
     [[ -e "${NB_NOTEBOOK_PATH}" ]]
@@ -42,7 +42,7 @@ load test_helper
   [[ ${status} -eq 0          ]]
 }
 
-@test "\`init\` creates \`\$NB_DIR\` and \`\$NB_NOTEBOOK_PATH\` directories." {
+@test "'init' creates '\$NB_DIR' and '\$NB_NOTEBOOK_PATH' directories." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -52,7 +52,7 @@ load test_helper
   [[ -d "${NB_NOTEBOOK_PATH}" ]]
 }
 
-@test "\`init\` creates a git directory in \`\$NB_NOTEBOOK_PATH\`." {
+@test "'init' creates a git directory in '\$NB_NOTEBOOK_PATH'." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -61,7 +61,7 @@ load test_helper
   [[ -d "${NB_NOTEBOOK_PATH}/.git" ]]
 }
 
-@test "\`init\` creates an .index \`\$NB_NOTEBOOK_PATH\`." {
+@test "'init' creates an .index '\$NB_NOTEBOOK_PATH'." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -70,7 +70,7 @@ load test_helper
   [[ -e "${NB_NOTEBOOK_PATH}/.index" ]]
 }
 
-@test "\`init\` exits with status 0 when \$NBRC_PATH\` exists." {
+@test "'init' exits with status 0 when '\$NBRC_PATH' exists." {
   {
     touch "${NBRC_PATH}"
     [[ -e "${NBRC_PATH}" ]]
@@ -84,7 +84,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`init\` creates a .nbrc file at \`\$NBRC_PATH\`." {
+@test "'init' creates a .nbrc file at '\$NBRC_PATH'." {
   {
     [[ ! -e "${NBRC_PATH}" ]]
   }
@@ -100,7 +100,7 @@ load test_helper
   cat "${NBRC_PATH}" | grep -q "NB_ENCRYPTION_TOOL"
 }
 
-@test "\`init\` creates git commit." {
+@test "'init' creates git commit." {
   run "${_NB}" init
 
   cd "${NB_NOTEBOOK_PATH}" || return 1
@@ -116,7 +116,7 @@ load test_helper
 
 # `init <remote-url>` #########################################################
 
-@test "\`init <remote-url>\` creates a clone in \`\$NB_NOTEBOOK_PATH\`." {
+@test "'init <remote-url>' creates a clone in '\$NB_NOTEBOOK_PATH'." {
   {
     _setup_remote_repo
   }
@@ -134,13 +134,13 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help init\` exits with status 0." {
+@test "'help init' exits with status 0." {
   run "${_NB}" help init
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help init\` prints help information." {
+@test "'help init' prints help information." {
   run "${_NB}" help init
 
   printf "\${status}: '%s'\\n" "${status}"

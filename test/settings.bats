@@ -5,7 +5,7 @@ load test_helper
 
 # #############################################################################
 
-@test "\`settings\` with no arguments start prompt." {
+@test "'settings' with no arguments start prompt." {
 skip "Determine how to test interactive prompt."
   {
     "${_NB}" init
@@ -20,7 +20,7 @@ skip "Determine how to test interactive prompt."
   [[ "${lines[0]}" =~ Settings  ]]
 }
 
-@test "\`settings\` with two arguments calls \`settings set\`." {
+@test "'settings' with two arguments calls 'settings set'." {
   {
     "${_NB}" init
   }
@@ -83,7 +83,7 @@ skip "Determine how to test interactive prompt."
 
 # `colors` ####################################################################
 
-@test "\`settings colors\` prints colors." {
+@test "'settings colors' prints colors." {
   {
     "${_NB}" init
   }
@@ -99,7 +99,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ ' 106'  ]]
 }
 
-@test "\`settings colors <number>\` prints color." {
+@test "'settings colors <number>' prints color." {
   {
     "${_NB}" init
   }
@@ -114,7 +114,7 @@ skip "Determine how to test interactive prompt."
   [[ ! "${output}" =~ ' 106'  ]]
 }
 
-@test "\`settings colors themes\` prints theme list." {
+@test "'settings colors themes' prints theme list." {
   {
     "${_NB}" init
   }
@@ -130,7 +130,7 @@ skip "Determine how to test interactive prompt."
 
 # `edit` ######################################################################
 
-@test "\`settings edit\` edits .nbrc." {
+@test "'settings edit' edits .nbrc." {
   {
     "${_NB}" init
   }
@@ -146,7 +146,7 @@ skip "Determine how to test interactive prompt."
 
 # `get` #######################################################################
 
-@test "\`settings get\` with no argument exits with error." {
+@test "'settings get' with no argument exits with error." {
   {
     "${_NB}" init
   }
@@ -159,7 +159,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'Usage' ]]
 }
 
-@test "\`settings get\` with invalid argument exits with error." {
+@test "'settings get' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -174,7 +174,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EXAMPLE               ]]
 }
 
-@test "\`settings get\` with argument exits and prints." {
+@test "'settings get' with argument exits and prints." {
   {
     "${_NB}" init
   }
@@ -188,7 +188,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ ${NB_DIR} ]]
 }
 
-@test "\`settings get\` with lowercase argument exits and prints." {
+@test "'settings get' with lowercase argument exits and prints." {
   {
     "${_NB}" init
   }
@@ -204,7 +204,7 @@ skip "Determine how to test interactive prompt."
 
 # `list` ######################################################################
 
-@test "\`settings list\` lists available settings." {
+@test "'settings list' lists available settings." {
   {
     "${_NB}" init
   }
@@ -221,7 +221,7 @@ skip "Determine how to test interactive prompt."
   [[ "${lines[1]}" =~ color_primary ]]
 }
 
-@test "\`settings list --long\` lists available settings with \`show\`." {
+@test "'settings list --long' lists available settings with 'show'." {
   {
     "${_NB}" init
   }
@@ -239,7 +239,7 @@ skip "Determine how to test interactive prompt."
 
 # `set` #######################################################################
 
-@test "\`settings set\` with no argument exits with error." {
+@test "'settings set' with no argument exits with error." {
   {
     "${_NB}" init
   }
@@ -253,7 +253,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'Usage' ]]
 }
 
-@test "\`settings set\` with invalid argument exits with error." {
+@test "'settings set' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -268,7 +268,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EXAMPLE               ]]
 }
 
-@test "\`settings set\` with one argument exits with error." {
+@test "'settings set' with one argument exits with error." {
   {
     "${_NB}" init
   }
@@ -282,7 +282,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'Usage' ]]
 }
 
-@test "\`settings set\` with argument exits and sets." {
+@test "'settings set' with argument exits and sets." {
   {
     "${_NB}" init
   }
@@ -300,7 +300,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"'  ]]
 }
 
-@test "\`settings set\` with multi-word argument exits and sets." {
+@test "'settings set' with multi-word argument exits and sets." {
   {
     "${_NB}" init
   }
@@ -318,7 +318,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example editor"' ]]
 }
 
-@test "\`settings set\` with lowercase setting name exits and sets." {
+@test "'settings set' with lowercase setting name exits and sets." {
   {
     "${_NB}" init
   }
@@ -336,7 +336,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="example"'  ]]
 }
 
-@test "\`settings set\` with 'unset' value unsets and exits." {
+@test "'settings set' with 'unset' value unsets and exits." {
   {
     "${_NB}" init
     run "${_NB}" settings set color_secondary 42
@@ -357,7 +357,7 @@ skip "Determine how to test interactive prompt."
   [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
 }
 
-@test "\`settings set\` with 'default' value unsets and exits." {
+@test "'settings set' with 'default' value unsets and exits." {
   {
     "${_NB}" init
     run "${_NB}" settings set color_secondary 42
@@ -378,7 +378,7 @@ skip "Determine how to test interactive prompt."
   [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
 }
 
-@test "\`settings set\` with 'reset' value unsets and exits." {
+@test "'settings set' with 'reset' value unsets and exits." {
   {
     "${_NB}" init
     run "${_NB}" settings set color_secondary 42
@@ -401,7 +401,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_AUTO_SYNC` #######################################################
 
-@test "\`settings set NB_AUTO_SYNC\` with valid argument sets and exits." {
+@test "'settings set NB_AUTO_SYNC' with valid argument sets and exits." {
   # shellcheck disable=SC1073,SC2030,SC2031
   export NB_AUTO_SYNC=
 
@@ -424,7 +424,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"' ]]
 }
 
-@test "\`settings set auto_sync\` with valid argument sets and exits." {
+@test "'settings set auto_sync' with valid argument sets and exits." {
   # shellcheck disable=SC1073,SC2030,SC2031
   export NB_AUTO_SYNC=
 
@@ -447,7 +447,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_AUTO_SYNC="${NB_AUTO_SYNC:-0}"' ]]
 }
 
-@test "\`settings set NB_AUTO_SYNC\` with invalid argument exits with error." {
+@test "'settings set NB_AUTO_SYNC' with invalid argument exits with error." {
   # shellcheck disable=SC1073,SC2030,SC2031
   export NB_AUTO_SYNC=
 
@@ -480,7 +480,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_COLOR_PRIMARY` ######################################################
 
-@test "\`settings set NB_COLOR_PRIMARY\` with valid argument sets and exits." {
+@test "'settings set NB_COLOR_PRIMARY' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -499,7 +499,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-123}"' ]]
 }
 
-@test "\`settings set color_primary\` with valid argument sets and exits." {
+@test "'settings set color_primary' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -518,7 +518,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-123}"' ]]
 }
 
-@test "\`settings set NB_COLOR_PRIMARY\` with invalid argument exits with error." {
+@test "'settings set NB_COLOR_PRIMARY' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -546,7 +546,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_COLOR_SECONDARY` ####################################################
 
-@test "\`settings set NB_COLOR_SECONDARY\` with valid argument sets and exits." {
+@test "'settings set NB_COLOR_SECONDARY' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -565,7 +565,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-123}"' ]]
 }
 
-@test "\`settings set color_secondary\` with valid argument sets and exits." {
+@test "'settings set color_secondary' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -584,7 +584,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-123}"' ]]
 }
 
-@test "\`settings set NB_COLOR_SECONDARY\` with invalid argument exits with error." {
+@test "'settings set NB_COLOR_SECONDARY' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -611,7 +611,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_COLOR_THEME` ##############################################################
 
-@test "\`settings set NB_COLOR_THEME\` with valid argument sets and exits." {
+@test "'settings set NB_COLOR_THEME' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -630,7 +630,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_THEME="${NB_COLOR_THEME:-console}"' ]]
 }
 
-@test "\`settings set color_theme\` with valid argument sets and exits." {
+@test "'settings set color_theme' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -649,7 +649,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(cat "${NBRC_PATH}")" =~ 'NB_COLOR_THEME="${NB_COLOR_THEME:-console}"' ]]
 }
 
-@test "\`settings set NB_COLOR_THEME\` with invalid argument exits with error." {
+@test "'settings set NB_COLOR_THEME' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -676,7 +676,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_DIR` #############################################################
 
-@test "\`settings set NB_DIR\` with full path argument sets and exits." {
+@test "'settings set NB_DIR' with full path argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -694,7 +694,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == '/tmp/path/to/data/dir' ]]
 }
 
-@test "\`settings set nb_dir\` with full path argument sets and exits." {
+@test "'settings set nb_dir' with full path argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -712,7 +712,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == '/tmp/path/to/data/dir' ]]
 }
 
-@test "\`settings set NB_DIR\` with spaces sets and exits." {
+@test "'settings set NB_DIR' with spaces sets and exits." {
   {
     "${_NB}" init
   }
@@ -730,7 +730,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == '/tmp/path to data/dir' ]]
 }
 
-@test "\`settings set NB_DIR\` with unquoted ~/ sets with \$HOME." {
+@test "'settings set NB_DIR' with unquoted ~/ sets with \$HOME." {
   {
     "${_NB}" init
   }
@@ -747,7 +747,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path"  ]]
 }
 
-@test "\`settings set NB_DIR\` with quoted ~/ sets with \$HOME." {
+@test "'settings set NB_DIR' with quoted ~/ sets with \$HOME." {
   {
     "${_NB}" init
   }
@@ -764,7 +764,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_DIR='' "${_NB}" settings get NB_DIR)" == "${HOME}/tmp/path"  ]]
 }
 
-@test "\`settings set NB_DIR\` with invalid directory exits with error." {
+@test "'settings set NB_DIR' with invalid directory exits with error." {
   {
     "${_NB}" init
   }
@@ -781,7 +781,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_ENCRYPTION_TOOL` #################################################
 
-@test "\`settings set NB_ENCRYPTION_TOOL\` with valid argument sets and exits." {
+@test "'settings set NB_ENCRYPTION_TOOL' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -798,7 +798,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
-@test "\`settings set encryption_tool\` with valid argument sets and exits." {
+@test "'settings set encryption_tool' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -815,7 +815,7 @@ skip "Determine how to test interactive prompt."
   [[ "$(NB_ENCRYPTION_TOOL='' "${_NB}" settings get NB_ENCRYPTION_TOOL)" == 'gpg' ]]
 }
 
-@test "\`settings set NB_ENCRYPTION_TOOL\` with invalid argument exits with error." {
+@test "'settings set NB_ENCRYPTION_TOOL' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -840,7 +840,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_FOOTER` #############################################################
 
-@test "\`settings set NB_FOOTER\` with valid argument sets and exits." {
+@test "'settings set NB_FOOTER' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -857,7 +857,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_FOOTER)" == '0'  ]]
 }
 
-@test "\`settings set footer\` with valid argument sets and exits." {
+@test "'settings set footer' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -874,7 +874,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_FOOTER)" == '0'  ]]
 }
 
-@test "\`settings set NB_FOOTER\` with invalid argument exits with error." {
+@test "'settings set NB_FOOTER' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -899,7 +899,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_HEADER` #############################################################
 
-@test "\`settings set NB_HEADER\` with valid argument sets and exits." {
+@test "'settings set NB_HEADER' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -916,7 +916,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_HEADER)" == '0'  ]]
 }
 
-@test "\`settings set header\` with valid argument sets and exits." {
+@test "'settings set header' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -933,7 +933,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_HEADER)" == '0'  ]]
 }
 
-@test "\`settings set NB_HEADER\` with invalid argument exits with error." {
+@test "'settings set NB_HEADER' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -958,7 +958,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_LIMIT` ##############################################################
 
-@test "\`settings set NB_LIMIT\` with valid argument sets and exits." {
+@test "'settings set NB_LIMIT' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -975,7 +975,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_LIMIT)" == 5 ]]
 }
 
-@test "\`settings set limit\` with valid argument sets and exits." {
+@test "'settings set limit' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -992,7 +992,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_LIMIT)" == 6 ]]
 }
 
-@test "\`settings set NB_LIMIT\` with invalid argument exits with error." {
+@test "'settings set NB_LIMIT' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -1017,7 +1017,7 @@ skip "Determine how to test interactive prompt."
 
 # `set NB_SYNTAX_THEME` #######################################################
 
-@test "\`settings set NB_SYNTAX_THEME\` with valid argument sets and exits." {
+@test "'settings set NB_SYNTAX_THEME' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -1034,7 +1034,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Monokai Extended" ]]
 }
 
-@test "\`settings set syntax\` with valid argument sets and exits." {
+@test "'settings set syntax' with valid argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -1051,7 +1051,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Solarized (dark)" ]]
 }
 
-@test "\`settings set NB_SYNTAX_THEME\` with invalid argument exits with error." {
+@test "'settings set NB_SYNTAX_THEME' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -1078,7 +1078,7 @@ skip "Determine how to test interactive prompt."
 
 # `list` ######################################################################
 
-@test "\`settings show <name>\` in lowercase shows setting." {
+@test "'settings show <name>' in lowercase shows setting." {
   {
     "${_NB}" init
   }
@@ -1093,7 +1093,7 @@ skip "Determine how to test interactive prompt."
   [[ "${lines[1]}" =~ --------- ]]
 }
 
-@test "\`settings show <name>\` in lowercase with no prefix shows setting." {
+@test "'settings show <name>' in lowercase with no prefix shows setting." {
   {
     "${_NB}" init
   }
@@ -1108,7 +1108,7 @@ skip "Determine how to test interactive prompt."
   [[ "${lines[1]}" =~ --------- ]]
 }
 
-@test "\`settings show <name>\` in uppercase shows setting." {
+@test "'settings show <name>' in uppercase shows setting." {
   {
     "${_NB}" init
   }
@@ -1123,7 +1123,7 @@ skip "Determine how to test interactive prompt."
   [[ "${lines[1]}" =~ ----------- ]]
 }
 
-@test "\`settings show <id>\` shows setting." {
+@test "'settings show <id>' shows setting." {
   {
     "${_NB}" init
   }
@@ -1140,7 +1140,7 @@ skip "Determine how to test interactive prompt."
 
 # `unset` #####################################################################
 
-@test "\`settings unset\` with no argument exits with error." {
+@test "'settings unset' with no argument exits with error." {
   {
     "${_NB}" init
   }
@@ -1154,7 +1154,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ 'Usage' ]]
 }
 
-@test "\`settings unset\` with invalid argument exits with error." {
+@test "'settings unset' with invalid argument exits with error." {
   {
     "${_NB}" init
   }
@@ -1169,7 +1169,7 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ EXAMPLE               ]]
 }
 
-@test "\`settings unset\` with argument unset, prints, and exits." {
+@test "'settings unset' with argument unset, prints, and exits." {
   {
     "${_NB}" init
     run "${_NB}" settings set EDITOR sample

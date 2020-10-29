@@ -15,7 +15,7 @@ _setup_notebooks() {
 
 # `notebooks add <name>` ######################################################
 
-@test "\`notebooks add\` exits with 1 and prints error message." {
+@test "'notebooks add' exits with 1 and prints error message." {
   {
     _setup_notebooks
   }
@@ -33,7 +33,7 @@ _setup_notebooks() {
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
 }
 
-@test "\`notebooks add <existing>\` exits with 1 and prints error message." {
+@test "'notebooks add <existing>' exits with 1 and prints error message." {
   {
     _setup_notebooks
   }
@@ -49,7 +49,7 @@ _setup_notebooks() {
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
 }
 
-@test "\`notebooks add <name>\` exits with 0 and adds a notebook." {
+@test "'notebooks add <name>' exits with 0 and adds a notebook." {
   {
     _setup_notebooks
   }
@@ -66,7 +66,7 @@ _setup_notebooks() {
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
-@test "\`notebooks add <name>\` creates git commit." {
+@test "'notebooks add <name>' creates git commit." {
   {
     _setup_notebooks
   }
@@ -90,7 +90,7 @@ _setup_notebooks() {
   git log | grep -q '\[nb\] Initialize'
 }
 
-@test "\`notebooks add <name> <remote-url>\` exits with 0 and adds a notebook." {
+@test "'notebooks add <name> <remote-url>' exits with 0 and adds a notebook." {
   {
     _setup_notebooks
     _setup_remote_repo
@@ -114,7 +114,7 @@ _setup_notebooks() {
   [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
 }
 
-@test "\`notebooks a <name>\` exits with 0 and adds a notebook." {
+@test "'notebooks a <name>' exits with 0 and adds a notebook." {
   {
     _setup_notebooks
   }
@@ -131,7 +131,7 @@ _setup_notebooks() {
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
-@test "\`notebooks create <name>\` exits with 0 and adds a notebook." {
+@test "'notebooks create <name>' exits with 0 and adds a notebook." {
   {
     _setup_notebooks
   }
@@ -147,7 +147,7 @@ _setup_notebooks() {
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
-@test "\`notebooks new <name>\` exits with 0 and adds a notebook." {
+@test "'notebooks new <name>' exits with 0 and adds a notebook." {
   {
     _setup_notebooks
   }

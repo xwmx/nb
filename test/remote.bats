@@ -4,7 +4,7 @@ load test_helper
 
 # remote ######################################################################
 
-@test "\`remote\` with no arguments and no remote prints message." {
+@test "'remote' with no arguments and no remote prints message." {
   {
     run "${_NB}" init
   }
@@ -18,7 +18,7 @@ load test_helper
   [[ ${status} -eq 1                          ]]
 }
 
-@test "\`remote\` with no arguments and existing remote prints url." {
+@test "'remote' with no arguments and existing remote prints url." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
@@ -34,7 +34,7 @@ load test_helper
   [[ ${status} -eq 0                        ]]
 }
 
-@test "\`remote\` with no arguments does not trigger git commit." {
+@test "'remote' with no arguments does not trigger git commit." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
@@ -71,7 +71,7 @@ load test_helper
 
 # remote remove ###############################################################
 
-@test "\`remote remove\` with no existing remote returns 1 and prints message." {
+@test "'remote remove' with no existing remote returns 1 and prints message." {
   {
     run "${_NB}" init
   }
@@ -85,7 +85,7 @@ load test_helper
   [[ ${status} -eq 1                          ]]
 }
 
-@test "\`remote remove\` with existing remote removes remote and prints message." {
+@test "'remote remove' with existing remote removes remote and prints message." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
@@ -105,7 +105,7 @@ load test_helper
   [[ ${status} -eq 0                          ]]
 }
 
-@test "\`remote unset\` with existing remote removes remote and prints message." {
+@test "'remote unset' with existing remote removes remote and prints message." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
@@ -127,7 +127,7 @@ load test_helper
 
 # remote set ##################################################################
 
-@test "\`remote set\` with no URL exits with 1 and prints help." {
+@test "'remote set' with no URL exits with 1 and prints help." {
   {
     run "${_NB}" init
   }
@@ -141,7 +141,7 @@ load test_helper
   [[ ${status} -eq 1          ]]
 }
 
-@test "\`remote set\` with no existing remote sets remote and prints message." {
+@test "'remote set' with no existing remote sets remote and prints message." {
   {
     run "${_NB}" init
   }
@@ -158,7 +158,7 @@ load test_helper
   [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
 }
 
-@test "\`remote set\` with existing remote sets remote and prints message." {
+@test "'remote set' with existing remote sets remote and prints message." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
@@ -176,7 +176,7 @@ load test_helper
   [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
 }
 
-@test "\`remote set\` to same URL as existing remote exits and prints message." {
+@test "'remote set' to same URL as existing remote exits and prints message." {
   {
     run "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
@@ -196,7 +196,7 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help remote\` exits with 0 and prints help information." {
+@test "'help remote' exits with 0 and prints help information." {
   run "${_NB}" help remote
 
   printf "\${status}: '%s'\\n" "${status}"

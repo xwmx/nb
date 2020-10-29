@@ -4,7 +4,7 @@ load test_helper
 
 # `show <id> --info-line` #####################################################
 
-@test "\`show <id> --info-line\` exits with status 0 and prints unscoped note info." {
+@test "'show <id> --info-line' exits with status 0 and prints unscoped note info." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -24,7 +24,7 @@ load test_helper
   [[ ! "${output}" =~ home          ]]
 }
 
-@test "\`show <id> --info-line\` exits with status 0 and prints scoped note info." {
+@test "'show <id> --info-line' exits with status 0 and prints scoped note info." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -44,7 +44,7 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
-@test "\`show <id> --info-line\` prints escaped multi-word notebook name when scoped." {
+@test "'show <id> --info-line' prints escaped multi-word notebook name when scoped." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "multi word"
@@ -64,7 +64,7 @@ load test_helper
   [[ "${output}" =~ Example\ Title            ]]
 }
 
-@test "\`show <id> --info-line\` includes indicators." {
+@test "'show <id> --info-line' includes indicators." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.bookmark.md"  \
@@ -88,7 +88,7 @@ load test_helper
   [[ ! "${output}"  =~ 🔒                   ]]
 }
 
-@test "\`show <id> --info-line\` includes encrypted indicators." {
+@test "'show <id> --info-line' includes encrypted indicators." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.bookmark.md"  \

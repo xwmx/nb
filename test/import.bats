@@ -4,7 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`import\` with no arguments exits with status 1 and prints help." {
+@test "'import' with no arguments exits with status 1 and prints help." {
   {
     run "${_NB}" init
   }
@@ -18,7 +18,7 @@ load test_helper
   [[ "${lines[0]}" =~ Usage\: ]]
 }
 
-@test "\`import\` with no arguments does not create git commit." {
+@test "'import' with no arguments does not create git commit." {
   {
     run "${_NB}" init
   }
@@ -37,7 +37,7 @@ load test_helper
 
 # <path> ######################################################################
 
-@test "\`import\` with valid <path> argument creates a new note file." {
+@test "'import' with valid <path> argument creates a new note file." {
   {
     run "${_NB}" init
   }
@@ -62,7 +62,7 @@ load test_helper
   [[ "${output}" =~ example.md  ]]
 }
 
-@test "\`import\` with valid <path> argument creates git commit." {
+@test "'import' with valid <path> argument creates git commit." {
   {
     run "${_NB}" init
   }
@@ -79,7 +79,7 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 }
 
-@test "\`import\` with valid <path> argument gets a unique filename." {
+@test "'import' with valid <path> argument gets a unique filename." {
   {
     run "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -100,7 +100,7 @@ load test_helper
 
 # <directory path> ############################################################
 
-@test "\`import\` with valid <directory path> argument imports a directory." {
+@test "'import' with valid <directory path> argument imports a directory." {
   {
     run "${_NB}" init
   }
@@ -138,7 +138,7 @@ load test_helper
   [[ "${output}" =~ Example\ Folder ]]
 }
 
-@test "\`import move\` with valid <directory path> argument moves a directory." {
+@test "'import move' with valid <directory path> argument moves a directory." {
   {
     run "${_NB}" init
     cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_TMP_DIR}"
@@ -181,7 +181,7 @@ load test_helper
 
 # * (glob) arguments ##########################################################
 
-@test "\`import\` with valid * (glob) argument copies multiple files and directories." {
+@test "'import' with valid * (glob) argument copies multiple files and directories." {
   {
     run "${_NB}" init
 
@@ -246,7 +246,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 }
 
-@test "\`import\` with valid *.md (glob) argument copies multiple markdown files." {
+@test "'import' with valid *.md (glob) argument copies multiple markdown files." {
   {
     run "${_NB}" init
 
@@ -311,7 +311,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 }
 
-@test "\`import\` with multiple arguments copies multiple files or directories." {
+@test "'import' with multiple arguments copies multiple files or directories." {
   {
     run "${_NB}" init
 
@@ -376,7 +376,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 }
 
-@test "\`import move\` with valid * (glob) argument moves multiple files and directories." {
+@test "'import move' with valid * (glob) argument moves multiple files and directories." {
   {
     run "${_NB}" init
 
@@ -441,7 +441,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 }
 
-@test "\`import move\` with valid *.md (glob) argument moves multiple markdown files." {
+@test "'import move' with valid *.md (glob) argument moves multiple markdown files." {
   {
     run "${_NB}" init
 
@@ -506,7 +506,7 @@ load test_helper
   [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
 }
 
-@test "\`import move\` with multiple arguments moves multiple files or directories." {
+@test "'import move' with multiple arguments moves multiple files or directories." {
   {
     run "${_NB}" init
 
@@ -573,7 +573,7 @@ load test_helper
 
 # <url> ######################################################################
 
-@test "\`import\` with valid <url> argument creates a new note file." {
+@test "'import' with valid <url> argument creates a new note file." {
   {
     run "${_NB}" init
   }
@@ -608,7 +608,7 @@ load test_helper
   [[ "${output}" =~ example.com.html  ]]
 }
 
-@test "\`import --convert\` with valid <url> creates and converts a new note file." {
+@test "'import --convert' with valid <url> creates and converts a new note file." {
   {
     run "${_NB}" init
   }
@@ -650,7 +650,7 @@ load test_helper
 
 # `notebook` ##################################################################
 
-@test "\`import notebook\` with valid <path> and <name> imports." {
+@test "'import notebook' with valid <path> and <name> imports." {
   run "${_NB}" init
 
   run "${_NB}" import notebook                      \
@@ -674,7 +674,7 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help import\` returns usage information." {
+@test "'help import' returns usage information." {
   run "${_NB}" help import
 
   printf "\${status}: '%s'\\n" "${status}"

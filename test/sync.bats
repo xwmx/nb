@@ -22,7 +22,7 @@ _setup_notebooks() {
 
 # sync --all #################################################################
 
-@test "\`sync --all\` with no local syncs global notebooks." {
+@test "'sync --all' with no local syncs global notebooks." {
   export NB_AUTO_SYNC=0
 
   {
@@ -181,7 +181,7 @@ _setup_notebooks() {
 
 # local notebook ##############################################################
 
-@test "\`sync --all\` with local syncs local and global notebooks." {
+@test "'sync --all' with local syncs local and global notebooks." {
   export NB_AUTO_SYNC=0
 
   {
@@ -442,7 +442,7 @@ _setup_notebooks() {
   [[   -f "${_TMP_DIR}/example-local/local.md"                ]]
 }
 
-@test "\`sync\` succeeds with local notebook." {
+@test "'sync' succeeds with local notebook." {
   {
     _setup_notebooks
 
@@ -495,7 +495,7 @@ _setup_notebooks() {
 
 # sync errors #################################################################
 
-@test "\`sync\` returns error when notebook has no remote." {
+@test "'sync' returns error when notebook has no remote." {
   {
     _setup_notebooks
 
@@ -515,7 +515,7 @@ _setup_notebooks() {
   [[ ${status} -eq 1                          ]]
 }
 
-@test "\`sync --all\` returns error when no unarchived notebooks with remotes found." {
+@test "'sync --all' returns error when no unarchived notebooks with remotes found." {
   {
     _setup_notebooks
 
@@ -538,7 +538,7 @@ _setup_notebooks() {
 
 # remote set && sync #########################################################
 
-@test "\`sync\` returns error with missing remote branch." {
+@test "'sync' returns error with missing remote branch." {
   {
     _setup_notebooks
 
@@ -564,7 +564,7 @@ _setup_notebooks() {
   [[ ! "${output}"  =~  Done                        ]]
 }
 
-@test "\`sync\` fails with invalid remote." {
+@test "'sync' fails with invalid remote." {
   {
     _setup_notebooks
 
@@ -600,7 +600,7 @@ _setup_notebooks() {
   [[ ! "${output}"  =~ Done                                 ]]
 }
 
-@test "\`sync\` succeeds after \`remote set\`" {
+@test "'sync' succeeds after 'remote set'" {
   {
     _setup_notebooks
 
@@ -648,7 +648,7 @@ _setup_notebooks() {
 
 # autosync ####################################################################
 
-@test "NB_AUTO_SYNC=1 syncs with \`add\`." {
+@test "NB_AUTO_SYNC=1 syncs with 'add'." {
   {
     _setup_notebooks
 
@@ -691,7 +691,7 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "NB_AUTO_SYNC=0 does not sync with \`add\`." {
+@test "NB_AUTO_SYNC=0 does not sync with 'add'." {
   {
     _setup_notebooks
 
@@ -870,7 +870,7 @@ _setup_notebooks() {
 
 # sync ########################################################################
 
-@test "\`sync\` succeeds when files are added and removed from two clones." {
+@test "'sync' succeeds when files are added and removed from two clones." {
   # skip
   {
     _setup_notebooks
@@ -1138,7 +1138,7 @@ _setup_notebooks() {
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
 }
 
-@test "\`sync\` succeeds when one file is edited on two clones." {
+@test "'sync' succeeds when one file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -1189,7 +1189,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
 }
 
-@test "\`sync\` succeeds when multiple files are edited on two clones." {
+@test "'sync' succeeds when multiple files are edited on two clones." {
   # skip
   _setup_notebooks
 
@@ -1275,7 +1275,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
 }
 
-@test "\`sync\` succeeds when the same filename is added on two clones." {
+@test "'sync' succeeds when the same filename is added on two clones." {
   # skip
   _setup_notebooks
 
@@ -1319,7 +1319,7 @@ This content is unique to 2.
   grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
 }
 
-@test "\`sync\` succeeds when an encrypted file is edited on two clones." {
+@test "'sync' succeeds when an encrypted file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -1466,7 +1466,7 @@ This content is unique to 2.
       )" =~ Edit\ content\ from\ 2\.                                ]]
 }
 
-@test "\`sync\` notebooks exist after setup." {
+@test "'sync' notebooks exist after setup." {
   _setup_notebooks
 
   [[ -d "${_GIT_REMOTE_PATH}"     ]]

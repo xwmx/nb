@@ -4,7 +4,7 @@ load test_helper
 
 # `_get_unique_relative_path()` ###############################################
 
-@test "\`_get_unique_relative_path()\` prints generated filename for extension." {
+@test "'_get_unique_relative_path()' prints generated filename for extension." {
   {
     run "${_NB}" init
   }
@@ -19,7 +19,7 @@ load test_helper
   [[ "${lines[0]}" =~ [0-9]+.rst ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints generated filename for extension with nested notebook path." {
+@test "'_get_unique_relative_path()' prints generated filename for extension with nested notebook path." {
   {
     run "${_NB}" init
 
@@ -37,7 +37,7 @@ load test_helper
   [[ "${lines[0]}" =~ ${_NOTEBOOK_PATH}/[0-9]+.rst  ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints generated filename for extension with one-level relative path." {
+@test "'_get_unique_relative_path()' prints generated filename for extension with one-level relative path." {
   {
     run "${_NB}" init
 
@@ -55,7 +55,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/[0-9]+.rst  ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints generated filename for extension with two-level relative path." {
+@test "'_get_unique_relative_path()' prints generated filename for extension with two-level relative path." {
   {
     run "${_NB}" init
 
@@ -76,7 +76,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/[0-9]+.rst ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints one-level file path." {
+@test "'_get_unique_relative_path()' prints one-level file path." {
   {
     run "${_NB}" init
 
@@ -109,7 +109,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/example-1.txt ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints one-level folder path." {
+@test "'_get_unique_relative_path()' prints one-level folder path." {
   {
     run "${_NB}" init
 
@@ -141,7 +141,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder-1 ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints two-level file path." {
+@test "'_get_unique_relative_path()' prints two-level file path." {
   {
     run "${_NB}" init
 
@@ -179,7 +179,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/example-1.txt  ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints two-level folder path." {
+@test "'_get_unique_relative_path()' prints two-level folder path." {
   {
     run "${_NB}" init
 
@@ -218,7 +218,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder-1  ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints three-level file path." {
+@test "'_get_unique_relative_path()' prints three-level file path." {
   {
     run "${_NB}" init
 
@@ -260,7 +260,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/Demo\ Folder/example-1.txt ]]
 }
 
-@test "\`_get_unique_relative_path()\` prints three-level folder path." {
+@test "'_get_unique_relative_path()' prints three-level folder path." {
   {
     run "${_NB}" init
 
@@ -306,7 +306,7 @@ load test_helper
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/Demo\ Folder-1 ]]
 }
 
-@test "\`_get_unique_relative_path()\` works for notes." {
+@test "'_get_unique_relative_path()' works for notes." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -332,7 +332,7 @@ load test_helper
   [[ "${lines[0]}" =~ example-2.md  ]]
 }
 
-@test "\`_get_unique_relative_path()\` works for encrypted notes." {
+@test "'_get_unique_relative_path()' works for encrypted notes." {
   {
     run "${_NB}" init
   }
@@ -368,7 +368,7 @@ load test_helper
   [[ "${lines[0]}" =~ example-2.md.enc  ]]
 }
 
-@test "\`_get_unique_relative_path()\` works for bookmarks." {
+@test "'_get_unique_relative_path()' works for bookmarks." {
   {
     "${_NB}" init
     "${_NB}" add "example.bookmark.md" --content "<https://example.com>"
@@ -394,7 +394,7 @@ load test_helper
   [[ "${lines[0]}" =~ example-2.bookmark.md ]]
 }
 
-@test "\`_get_unique_relative_path()\` works for encrypted bookmarks." {
+@test "'_get_unique_relative_path()' works for encrypted bookmarks." {
   {
     run "${_NB}" init
   }
@@ -434,7 +434,7 @@ load test_helper
   [[ "${lines[0]}" =~ example-2.bookmark.md.enc ]]
 }
 
-@test "\`_get_unique_relative_path()\` works for encrypted conflicted bookmarks." {
+@test "'_get_unique_relative_path()' works for encrypted conflicted bookmarks." {
   {
     local _filename="example.bookmark.md"
 

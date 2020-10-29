@@ -5,7 +5,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`edit\` with no argument exits and prints help." {
+@test "'edit' with no argument exits and prints help." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -41,7 +41,7 @@ load test_helper
 
 # <selector> ##################################################################
 
-@test "\`edit <selector>\` with empty repo exits with 1 and prints message." {
+@test "'edit <selector>' with empty repo exits with 1 and prints message." {
   {
     run "${_NB}" init
   }
@@ -58,7 +58,7 @@ load test_helper
 
 # <scope>:<selector> ##########################################################
 
-@test "\`edit <scope>:<selector>\` with <filename> argument prints scoped output." {
+@test "'edit <scope>:<selector>' with <filename> argument prints scoped output." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -85,7 +85,7 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<scope>:edit <selector>\` with <filename> argument prints scoped output." {
+@test "'<scope>:edit <selector>' with <filename> argument prints scoped output." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -112,7 +112,7 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<scope>:<selector> edit\` alternative with edits properly without errors." {
+@test "'<scope>:<selector> edit' alternative with edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -144,7 +144,7 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<selector> <scope>:edit\` alternative with edits properly without errors." {
+@test "'<selector> <scope>:edit' alternative with edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -178,7 +178,7 @@ load test_helper
 
 # <selector> (no changes) #####################################################
 
-@test "\`edit\` with no changes does not print output." {
+@test "'edit' with no changes does not print output." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --content "Example content."
@@ -196,7 +196,7 @@ load test_helper
   [[ -z ${output}     ]]
 }
 
-@test "\`edit\` encrypted with no changes does not print output." {
+@test "'edit' encrypted with no changes does not print output." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --content "Example content." \
@@ -217,7 +217,7 @@ load test_helper
 
 # <filename> ##################################################################
 
-@test "\`edit\` with <filename> argument edits properly without errors." {
+@test "'edit' with <filename> argument edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -250,7 +250,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`edit\` with <filename> with spaces edits properly without errors." {
+@test "'edit' with <filename> with spaces edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "Note name with spaces.md"
@@ -287,7 +287,7 @@ load test_helper
 
 # <id> ########################################################################
 
-@test "\`edit <id>\` edits properly without errors." {
+@test "'edit <id>' edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -320,7 +320,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`<id> edit\` alternative edits properly without errors." {
+@test "'<id> edit' alternative edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "Example initial content."
@@ -358,7 +358,7 @@ load test_helper
 
 # <path> ######################################################################
 
-@test "\`edit\` with <path> argument edits properly without errors." {
+@test "'edit' with <path> argument edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -394,7 +394,7 @@ load test_helper
 
 # <title> #####################################################################
 
-@test "\`edit\` with <title> argument edits properly without errors." {
+@test "'edit' with <title> argument edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add --title "Example Title"
@@ -429,7 +429,7 @@ load test_helper
 
 # piped #######################################################################
 
-@test "\`edit\` with piped content edits properly without errors." {
+@test "'edit' with piped content edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
@@ -467,7 +467,7 @@ load test_helper
 
 # --content option ############################################################
 
-@test "\`edit\` with --content option edits without errors." {
+@test "'edit' with --content option edits without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -500,7 +500,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`edit\` with empty --content option exits with 1" {
+@test "'edit' with empty --content option exits with 1" {
   {
     run "${_NB}" init
     run "${_NB}" add "Example initial content."
@@ -529,7 +529,7 @@ load test_helper
 
 # encrypted ###################################################################
 
-@test "\`edit\` with encrypted file edits properly without errors." {
+@test "'edit' with encrypted file edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Content" --encrypt --password=example
@@ -563,7 +563,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`edit\` with piped content and encrypted file edits properly without errors." {
+@test "'edit' with piped content and encrypted file edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Example" --encrypt --password=example
@@ -599,7 +599,7 @@ load test_helper
 
 # $EDITOR #####################################################################
 
-@test "\`edit <id>\` with multi-word \$EDITOR edits properly without errors." {
+@test "'edit <id>' with multi-word \$EDITOR edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add --content "Example"
@@ -634,7 +634,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`edit <id>\` with multi-word \$EDITOR edits properly with filename with spaces." {
+@test "'edit <id>' with multi-word \$EDITOR edits properly with filename with spaces." {
   {
     run "${_NB}" init
     run "${_NB}" add --filename "multi-word filename.md"
@@ -669,7 +669,7 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help edit\` exits with status 0 and prints help information." {
+@test "'help edit' exits with status 0 and prints help information." {
   run "${_NB}" help edit
 
   printf "\${status}: '%s'\\n" "${status}"

@@ -16,7 +16,7 @@ _setup_notebooks() {
 
 # `notebooks` #################################################################
 
-@test "\`notebooks\` exits with 0 and prints all notebook names." {
+@test "'notebooks' exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
     _expected="$(_color_primary 'home' --underline)
@@ -33,7 +33,7 @@ one (${_GIT_REMOTE_URL})"
   [[ "${output}" == "${_expected}"  ]]
 }
 
-@test "\`notebooks <name>\` exits with 0 and prints the given notebook." {
+@test "'notebooks <name>' exits with 0 and prints the given notebook." {
   {
     _setup_notebooks
   }
@@ -49,7 +49,7 @@ one (${_GIT_REMOTE_URL})"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks <name> <name>\` exits with 0 and prints the given notebooks." {
+@test "'notebooks <name> <name>' exits with 0 and prints the given notebooks." {
   {
     _setup_notebooks
   }
@@ -67,7 +67,7 @@ $(_color_primary 'home' --underline)"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks <invalid>\` exits with 1 and prints the given notebook." {
+@test "'notebooks <invalid>' exits with 1 and prints the given notebook." {
   {
     _setup_notebooks
   }
@@ -81,7 +81,7 @@ $(_color_primary 'home' --underline)"
   [[ "${output}" =~ Notebook\ not\ found  ]]
 }
 
-@test "\`notebooks <name> --names\` exits with 0 and prints the given notebook name." {
+@test "'notebooks <name> --names' exits with 0 and prints the given notebook name." {
   {
     _setup_notebooks
 
@@ -98,7 +98,7 @@ $(_color_primary 'home' --underline)"
   [[ "${output}" == "${_expected}"  ]]
 }
 
-@test "\`notebooks --names\` exits with 0 and prints all notebook names." {
+@test "'notebooks --names' exits with 0 and prints all notebook names." {
   {
     _setup_notebooks
     _expected="$(_color_primary 'home' --underline)
@@ -115,7 +115,7 @@ one"
   [[ "${output}" == "${_expected}"  ]]
 }
 
-@test "\`notebooks --no-color\` exits with 0 and prints all notebook names with no highlighting." {
+@test "'notebooks --no-color' exits with 0 and prints all notebook names with no highlighting." {
   {
     _setup_notebooks
   }
@@ -132,7 +132,7 @@ one (${_GIT_REMOTE_URL})"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks <name> --no-color\` exits with 0 and prints the given notebook name with no highlighting." {
+@test "'notebooks <name> --no-color' exits with 0 and prints the given notebook name with no highlighting." {
   {
     _setup_notebooks
   }
@@ -148,7 +148,7 @@ one (${_GIT_REMOTE_URL})"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --names --no-color\` exits with 0 and prints all notebook names with no highlighting." {
+@test "'notebooks --names --no-color' exits with 0 and prints all notebook names with no highlighting." {
   {
     _setup_notebooks
   }
@@ -165,7 +165,7 @@ one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --names --no-color --archived\` exits with 0 and prints archived." {
+@test "'notebooks --names --no-color --archived' exits with 0 and prints archived." {
   {
     _setup_notebooks
     run "${_NB}" one:notebook archive
@@ -182,7 +182,7 @@ one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --names --no-color --unarchived\` exits with 0 and prints unarchived." {
+@test "'notebooks --names --no-color --unarchived' exits with 0 and prints unarchived." {
   {
     _setup_notebooks
     run "${_NB}" one:notebook archive
@@ -199,7 +199,7 @@ one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --names --no-color\` prints local and global." {
+@test "'notebooks --names --no-color' prints local and global." {
   {
     _setup_notebooks
 
@@ -223,7 +223,7 @@ one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --names --no-color --local\` exits with 0 and prints local." {
+@test "'notebooks --names --no-color --local' exits with 0 and prints local." {
   {
     _setup_notebooks
 
@@ -246,7 +246,7 @@ one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --names --no-color --local\` with no local exits with 1." {
+@test "'notebooks --names --no-color --local' with no local exits with 1." {
   {
     _setup_notebooks
 
@@ -266,7 +266,7 @@ one"
   [[ ${status} -eq 1  ]]
 }
 
-@test "\`notebooks --names --no-color --global\` exits with 0 and prints global." {
+@test "'notebooks --names --no-color --global' exits with 0 and prints global." {
   {
     _setup_notebooks
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
@@ -286,7 +286,7 @@ one"
 
 # `notebooks --paths` #########################################################
 
-@test "\`notebooks --paths\` prints local and global." {
+@test "'notebooks --paths' prints local and global." {
   {
     _setup_notebooks
 
@@ -310,7 +310,7 @@ ${NB_DIR}/one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --paths --local\` exits with 0 and prints local." {
+@test "'notebooks --paths --local' exits with 0 and prints local." {
   {
     _setup_notebooks
 
@@ -333,7 +333,7 @@ ${NB_DIR}/one"
   [[ ${status} -eq 0                ]]
 }
 
-@test "\`notebooks --paths --local\` with no local exits with 1." {
+@test "'notebooks --paths --local' with no local exits with 1." {
   {
     _setup_notebooks
 
@@ -353,7 +353,7 @@ ${NB_DIR}/one"
   [[ ${status} -eq 1  ]]
 }
 
-@test "\`notebooks --paths --global\` exits with 0 and prints global." {
+@test "'notebooks --paths --global' exits with 0 and prints global." {
   {
     _setup_notebooks
     run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
@@ -373,13 +373,13 @@ ${NB_DIR}/one"
 
 # help ########################################################################
 
-@test "\`help notebooks\` exits with status 0." {
+@test "'help notebooks' exits with status 0." {
   run "${_NB}" help notebooks
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help notebooks\` prints help information." {
+@test "'help notebooks' prints help information." {
   run "${_NB}" help notebooks
 
   printf "\${status}: '%s'\\n" "${status}"

@@ -9,7 +9,7 @@ _setup_rename() {
 
 # no argument #################################################################
 
-@test "\`rename\` with no arguments exits with 1, does nothing, and prints help." {
+@test "'rename' with no arguments exits with 1, does nothing, and prints help." {
   {
     _setup_rename
 
@@ -42,7 +42,7 @@ _setup_rename() {
 
 # <filename> ##################################################################
 
-@test "\`rename\` with <filename> argument renames without errors." {
+@test "'rename' with <filename> argument renames without errors." {
   {
     _setup_rename
 
@@ -82,7 +82,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.org                   ]]
 }
 
-@test "\`rename\` with extension-less <filename> argument uses source extension." {
+@test "'rename' with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
 
@@ -122,7 +122,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
-@test "\`rename\` bookmark with extension-less <filename> argument uses source extension." {
+@test "'rename' bookmark with extension-less <filename> argument uses source extension." {
   {
     "${_NB}" init
 
@@ -164,7 +164,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.bookmark.md                   ]]
 }
 
-@test "\`rename\` bookmark with extension <filename> argument uses target extension." {
+@test "'rename' bookmark with extension <filename> argument uses target extension." {
   {
     "${_NB}" init
 
@@ -206,7 +206,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.md                            ]]
 }
 
-@test "\`rename\` note with bookmark extension <filename> argument uses target extension." {
+@test "'rename' note with bookmark extension <filename> argument uses target extension." {
   {
     "${_NB}" init
 
@@ -248,7 +248,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.bookmark.md                   ]]
 }
 
-@test "\`rename\` with existing <filename> exits with status 1." {
+@test "'rename' with existing <filename> exits with status 1." {
   {
     _setup_rename
 
@@ -273,7 +273,7 @@ _setup_rename() {
 
 # <id> ########################################################################
 
-@test "\`rename <id>\` with extension-less <filename> argument uses source extension." {
+@test "'rename <id>' with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
 
@@ -313,7 +313,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
-@test "\`<id> rename\` with extension-less <filename> argument uses source extension." {
+@test "'<id> rename' with extension-less <filename> argument uses source extension." {
   {
     _setup_rename
 
@@ -355,7 +355,7 @@ _setup_rename() {
 
 # <filename> --reset ##########################################################
 
-@test "\`rename --reset\` with <filename> argument renames without errors." {
+@test "'rename --reset' with <filename> argument renames without errors." {
   {
     _setup_rename
 
@@ -409,7 +409,7 @@ _setup_rename() {
 
 # <filename> --to- ############################################################
 
-@test "\`rename --to-bookmark\` with note renames without errors." {
+@test "'rename --to-bookmark' with note renames without errors." {
   {
     "${_NB}" init
 
@@ -459,7 +459,7 @@ _setup_rename() {
   [[ "${output}" =~ example.bookmark.md ]]
 }
 
-@test "\`rename 1 sample --to-bookmark\` with note renames without errors." {
+@test "'rename 1 sample --to-bookmark' with note renames without errors." {
   {
     "${_NB}" init
 
@@ -507,7 +507,7 @@ _setup_rename() {
   [[ "${output}" =~ sample.bookmark.md  ]]
 }
 
-@test "\`rename 1 sample.demo --to-bookmark\` discards extension and renames." {
+@test "'rename 1 sample.demo --to-bookmark' discards extension and renames." {
   {
     "${_NB}" init
 
@@ -555,7 +555,7 @@ _setup_rename() {
   [[ "${output}" =~ sample.bookmark.md  ]]
 }
 
-@test "\`rename --to-note\` with bookmark renames without errors." {
+@test "'rename --to-note' with bookmark renames without errors." {
   {
     "${_NB}" init
 
@@ -605,7 +605,7 @@ _setup_rename() {
 
 # <scope> #####################################################################
 
-@test "\`rename <scope>:<id>\` with extension-less <filename> argument uses source extension." {
+@test "'rename <scope>:<id>' with extension-less <filename> argument uses source extension." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -647,7 +647,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
-@test "\`<scope>:rename <id>\` with extension-less <filename> argument uses source extension." {
+@test "'<scope>:rename <id>' with extension-less <filename> argument uses source extension." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -689,7 +689,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
-@test "\`<scope>:<id> rename\` with extension-less <filename> argument uses source extension." {
+@test "'<scope>:<id> rename' with extension-less <filename> argument uses source extension." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -731,7 +731,7 @@ _setup_rename() {
   [[ "${output}" =~ EXAMPLE.md                    ]]
 }
 
-@test "\`<id> <scope>:rename\` with extension-less <filename> argument uses source extension." {
+@test "'<id> <scope>:rename' with extension-less <filename> argument uses source extension." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -775,13 +775,13 @@ _setup_rename() {
 
 # help ########################################################################
 
-@test "\`help rename\` exits with status 0." {
+@test "'help rename' exits with status 0." {
   run "${_NB}" help rename
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help rename\` prints help information." {
+@test "'help rename' prints help information." {
   run "${_NB}" help rename
 
   printf "\${status}: '%s'\\n" "${status}"

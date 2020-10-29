@@ -4,7 +4,7 @@ load test_helper
 
 # `notebooks show` ############################################################
 
-@test "\`notebooks show\` with no id exits with 1 and prints help." {
+@test "'notebooks show' with no id exits with 1 and prints help." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -19,7 +19,7 @@ load test_helper
   [[ "${output}" =~ Usage ]]
 }
 
-@test "\`notebooks show example\` with exits with 1 and prints message." {
+@test "'notebooks show example' with exits with 1 and prints message." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -35,7 +35,7 @@ load test_helper
   [[ "${output}" =~ example               ]]
 }
 
-@test "\`notebooks show <id>\` exits with 0 and prints the notebook name." {
+@test "'notebooks show <id>' exits with 0 and prints the notebook name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -50,7 +50,7 @@ load test_helper
   [[ "${output}" == "one" ]]
 }
 
-@test "\`notebooks show <path>\` exits with 0 and prints the notebook name." {
+@test "'notebooks show <path>' exits with 0 and prints the notebook name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -65,7 +65,7 @@ load test_helper
   [[ "${output}" == "one" ]]
 }
 
-@test "\`notebooks show <selector>\` exits with 0 and prints the notebook name." {
+@test "'notebooks show <selector>' exits with 0 and prints the notebook name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -90,7 +90,7 @@ load test_helper
 
 # `notebooks show --path` #####################################################
 
-@test "\`notebooks show --path\` with exits with 0 and prints path." {
+@test "'notebooks show --path' with exits with 0 and prints path." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add one
@@ -107,7 +107,7 @@ load test_helper
 
 # `notebooks show --escaped` ##################################################
 
-@test "\`notebooks show --escaped\` with exits with 0 and prints display name." {
+@test "'notebooks show --escaped' with exits with 0 and prints display name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "long example"
@@ -124,7 +124,7 @@ load test_helper
 
 # `notebooks show --filename` #################################################
 
-@test "\`notebooks show --filename\` prints a unique filename." {
+@test "'notebooks show --filename' prints a unique filename." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -151,7 +151,7 @@ load test_helper
   [[ "${lines[0]}" =~ ^[0-9]+.md  ]]
 }
 
-@test "\`notebooks show --filename <filename>\` prints a unique filename." {
+@test "'notebooks show --filename <filename>' prints a unique filename." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"

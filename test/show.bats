@@ -4,7 +4,7 @@ load test_helper
 
 # `show` ######################################################################
 
-@test "\`show\` with no argument exits with status 1 and prints help." {
+@test "'show' with no argument exits with status 1 and prints help." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -22,8 +22,8 @@ load test_helper
   [[ "${lines[1]}" =~ '  nb show' ]]
 }
 
-@test "\`show\` with no argument does not show the note file." {
-  skip "TODO: Determine how to test for \`\$PAGER\`."
+@test "'show' with no argument does not show the note file." {
+  skip "TODO: Determine how to test for '\$PAGER'."
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -39,7 +39,7 @@ load test_helper
 
 # `show --dump` ###############################################################
 
-@test "\`show --dump\` with argument exits with 0 and prints note with highlighting." {
+@test "'show --dump' with argument exits with 0 and prints note with highlighting." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
@@ -57,7 +57,7 @@ load test_helper
   [[ "${lines[0]}" =~ "Example"     ]]
 }
 
-@test "\`show --dump --no-color\` with argument exits with 0 and prints note without highlighting." {
+@test "'show --dump --no-color' with argument exits with 0 and prints note without highlighting." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
@@ -74,7 +74,7 @@ load test_helper
   [[ "${lines[0]}" =~ "# Example" ]]
 }
 
-@test "\`show --dump\` with no argument exits with 1 and prints help." {
+@test "'show --dump' with no argument exits with 1 and prints help." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Example"
@@ -95,7 +95,7 @@ load test_helper
 
 # <selector> ##################################################################
 
-@test "\`show <selector>\` with empty repo exits with 1 and prints help." {
+@test "'show <selector>' with empty repo exits with 1 and prints help." {
   {
     run "${_NB}" init
   }
@@ -111,7 +111,7 @@ load test_helper
 
 # `show <filename> --dump` ####################################################
 
-@test "\`show <filename> --dump\` exits with status 0 and dumps note file." {
+@test "'show <filename> --dump' exits with status 0 and dumps note file." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -130,7 +130,7 @@ load test_helper
 
 # `show <id> --dump` ##########################################################
 
-@test "\`show <id> --dump\` exits with status 0 and dumps note file." {
+@test "'show <id> --dump' exits with status 0 and dumps note file." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -150,7 +150,7 @@ load test_helper
 
 # `show <path> --dump` #######################################################
 
-@test "\`show <path> --dump\` exits with status 0 and dumps note file." {
+@test "'show <path> --dump' exits with status 0 and dumps note file." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -169,7 +169,7 @@ load test_helper
 
 # `show <title> --dump` #######################################################
 
-@test "\`show <title> --dump\` exits with status 0 and dumps note file." {
+@test "'show <title> --dump' exits with status 0 and dumps note file." {
   {
     run "${_NB}" init
     run "${_NB}" add --title "Example Title"
@@ -189,7 +189,7 @@ load test_helper
 
 # `show <filename> --path` ####################################################
 
-@test "\`show <filename> --path\` exits with status 0 and prints note path." {
+@test "'show <filename> --path' exits with status 0 and prints note path." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -208,7 +208,7 @@ load test_helper
 
 # `show <id> --path` ##########################################################
 
-@test "\`show <id> --path\` exits with status 0 and prints note path." {
+@test "'show <id> --path' exits with status 0 and prints note path." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -227,7 +227,7 @@ load test_helper
 
 # `show <path> --path` #######################################################
 
-@test "\`show <path> --path\` exits with status 0 and prints note path." {
+@test "'show <path> --path' exits with status 0 and prints note path." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -246,7 +246,7 @@ load test_helper
 
 # `show <title> --path` #######################################################
 
-@test "\`show <title> --path\` exits with status 0 and prints note path." {
+@test "'show <title> --path' exits with status 0 and prints note path." {
   {
     run "${_NB}" init
     run "${_NB}" add --title "Example Title"
@@ -266,7 +266,7 @@ load test_helper
 
 # `show <filename> --id` ######################################################
 
-@test "\`show <filename> --id\` exits with status 0 and prints note id." {
+@test "'show <filename> --id' exits with status 0 and prints note id." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -285,7 +285,7 @@ load test_helper
 
 # `show <id> --id` ############################################################
 
-@test "\`show <id> --id\` exits with status 0 and prints note id." {
+@test "'show <id> --id' exits with status 0 and prints note id." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -304,7 +304,7 @@ load test_helper
 
 # `show <path> --id` ##########################################################
 
-@test "\`show <path> --id\` exits with status 0 and prints note id." {
+@test "'show <path> --id' exits with status 0 and prints note id." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -323,7 +323,7 @@ load test_helper
 
 # `show <title> --id` #########################################################
 
-@test "\`show <title> --id\` exits with status 0 and prints note id." {
+@test "'show <title> --id' exits with status 0 and prints note id." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -343,7 +343,7 @@ load test_helper
 
 # encrypted ###################################################################
 
-@test "\`show\` with encrypted file show properly without errors." {
+@test "'show' with encrypted file show properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add "# Content" --encrypt --password=example
@@ -365,7 +365,7 @@ load test_helper
 
 # `show <id> --filename` ######################################################
 
-@test "\`show <id> --filename\` exits with status 0 and prints note filename." {
+@test "'show <id> --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
@@ -382,7 +382,7 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
-@test "\`show <id> --basename\` exits with status 0 and prints note filename." {
+@test "'show <id> --basename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
@@ -401,7 +401,7 @@ load test_helper
 
 # `show <id> --title` #########################################################
 
-@test "\`show <id> --title\` exits with status 0 and prints note filename." {
+@test "'show <id> --title' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -420,7 +420,7 @@ load test_helper
 
 # `show <id> --indicators` ####################################################
 
-@test "\`show <id> --indicators\` exits with status 0 and prints bookmark indicator." {
+@test "'show <id> --indicators' exits with status 0 and prints bookmark indicator." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
@@ -438,7 +438,7 @@ load test_helper
   [[ ! "${output}"  =~ 🔒 ]]
 }
 
-@test "\`show <id> --indicators\` exits with status 0 and prints encrypted indicator." {
+@test "'show <id> --indicators' exits with status 0 and prints encrypted indicator." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --encrypt --password=password
@@ -456,7 +456,7 @@ load test_helper
   [[ "${output}"    =~ 🔒 ]]
 }
 
-@test "\`show <id> --indicators\` exits with status 0 and prints encrypted bookmark indicators." {
+@test "'show <id> --indicators' exits with status 0 and prints encrypted bookmark indicators." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.bookmark.md" \
@@ -478,7 +478,7 @@ load test_helper
 
 # `show <id> --added` #########################################################
 
-@test "\`show <id> --added\` exits with status 0 and prints the added timestamp." {
+@test "'show <id> --added' exits with status 0 and prints the added timestamp." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -495,7 +495,7 @@ load test_helper
   [[ "${output}" =~ [0-9]{4}-[0-9]{2} ]]
 }
 
-@test "\`show <id> -a\` exits with status 0 and prints the added timestamp." {
+@test "'show <id> -a' exits with status 0 and prints the added timestamp." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -514,7 +514,7 @@ load test_helper
 
 # `show <id> --updated` #######################################################
 
-@test "\`show <id> --updated\` exits with status 0 and prints the added timestamp." {
+@test "'show <id> --updated' exits with status 0 and prints the added timestamp." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -543,7 +543,7 @@ load test_helper
   [[ "${output}" != "${_added}"       ]]
 }
 
-@test "\`show <id> -u\` exits with status 0 and prints the added timestamp." {
+@test "'show <id> -u' exits with status 0 and prints the added timestamp." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "Example Title"
@@ -574,7 +574,7 @@ load test_helper
 
 # `show <id> --selector-id` ###################################################
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector id." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector id." {
   {
     run "${_NB}" init
   }
@@ -588,7 +588,7 @@ load test_helper
   [[ "${output}" =~ 42  ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector id without notebook." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector id without notebook." {
   {
     run "${_NB}" init
   }
@@ -602,7 +602,7 @@ load test_helper
   [[ "${output}" =~ 42  ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector filename." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector filename." {
   {
     run "${_NB}" init
   }
@@ -616,7 +616,7 @@ load test_helper
   [[ "${output}" =~ example.md  ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector filename without notebook." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector filename without notebook." {
   {
     run "${_NB}" init
   }
@@ -630,7 +630,7 @@ load test_helper
   [[ "${output}" =~ example.md  ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector title." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector title." {
   {
     run "${_NB}" init
   }
@@ -644,7 +644,7 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector title without notebook." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector title without notebook." {
   {
     run "${_NB}" init
   }
@@ -658,7 +658,7 @@ load test_helper
   [[ "${output}" =~ Example\ Title  ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector path." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector path." {
   {
     run "${_NB}" init
   }
@@ -672,7 +672,7 @@ load test_helper
   [[ "${output}" =~ \/example\/path ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints the selector path without notebook." {
+@test "'show <id> --selector-id' exits with status 0 and prints the selector path without notebook." {
   {
     run "${_NB}" init
   }
@@ -686,7 +686,7 @@ load test_helper
   [[ "${output}" =~ \/example\/path ]]
 }
 
-@test "\`show <id> --selector-id\` exits with status 0 and prints nothing when blank with notebook." {
+@test "'show <id> --selector-id' exits with status 0 and prints nothing when blank with notebook." {
   {
     run "${_NB}" init
   }
@@ -702,7 +702,7 @@ load test_helper
 
 # `show <id> --type` ##########################################################
 
-@test "\`show <id> --type\` with note exits with status 0 and prints note type." {
+@test "'show <id> --type' with note exits with status 0 and prints note type." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -719,7 +719,7 @@ load test_helper
   [[ "${output}" == "md"  ]]
 }
 
-@test "\`show <id> --type\` with bookmark exits with status 0 and prints note type." {
+@test "'show <id> --type' with bookmark exits with status 0 and prints note type." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -736,7 +736,7 @@ load test_helper
   [[ "${output}" == "bookmark.md"  ]]
 }
 
-@test "\`show <id> --type <extension>\` exits with status 0 when note matches." {
+@test "'show <id> --type <extension>' exits with status 0 when note matches." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -753,7 +753,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`show <id> --type <extension>\` exits with status 0 when bookmark matches." {
+@test "'show <id> --type <extension>' exits with status 0 when bookmark matches." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -770,7 +770,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`show <id> --type <extension>\` exits with status 0 when bookmark matches one level." {
+@test "'show <id> --type <extension>' exits with status 0 when bookmark matches one level." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -787,7 +787,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`show <id> --type <type>\` exits with status 0 when note matches." {
+@test "'show <id> --type <type>' exits with status 0 when note matches." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -804,7 +804,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`show <id> --type <type>\` exits with status 0 when bookmark matches." {
+@test "'show <id> --type <type>' exits with status 0 when bookmark matches." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -821,7 +821,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`show <id> --type <type>\` exits with status 1 when no type match." {
+@test "'show <id> --type <type>' exits with status 1 when no type match." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -840,7 +840,7 @@ load test_helper
 
 # `show <notebook>` ###########################################################
 
-@test "\`show <notebook>\` exits with status 0 and runs ls in the notebook." {
+@test "'show <notebook>' exits with status 0 and runs ls in the notebook." {
   {
     run "${_NB}" init
     run "${_NB}" add "home-one.md"
@@ -863,7 +863,7 @@ load test_helper
   [[ "${lines[3]}" =~ example-one ]]
 }
 
-@test "\`show <notebook>:\` (with colon) exits with status 0 and runs ls in the notebook." {
+@test "'show <notebook>:' (with colon) exits with status 0 and runs ls in the notebook." {
   {
     run "${_NB}" init
     run "${_NB}" add "home-one.md"
@@ -886,7 +886,7 @@ load test_helper
   [[ "${lines[3]}" =~ example-one ]]
 }
 
-@test "\`show <notebook> --sort\` exits with status 0 and runs ls in the notebook." {
+@test "'show <notebook> --sort' exits with status 0 and runs ls in the notebook." {
   {
     run "${_NB}" init
     run "${_NB}" add "home-one.md"
@@ -908,7 +908,7 @@ load test_helper
 
 # `s <id>` #################################################################
 
-@test "\`s <id> --filename\` exits with status 0 and prints note filename." {
+@test "'s <id> --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
@@ -927,7 +927,7 @@ load test_helper
 
 # `view <id>` #################################################################
 
-@test "\`view <id> --filename\` exits with status 0 and prints note filename." {
+@test "'view <id> --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
@@ -946,7 +946,7 @@ load test_helper
 
 # `<id> show` alternative  ####################################################
 
-@test "\`<id> show --filename\` exits with status 0 and prints note filename." {
+@test "'<id> show --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md"
@@ -965,7 +965,7 @@ load test_helper
 
 # `<scoped>`  #################################################################
 
-@test "\`show <scope>:<id> --filename\` exits with status 0 and prints note filename." {
+@test "'show <scope>:<id> --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -985,7 +985,7 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
-@test "\`<scope>:<id> show --filename\` exits with status 0 and prints note filename." {
+@test "'<scope>:<id> show --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -1005,7 +1005,7 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
-@test "\`<scoped>:show <id> --filename\` exits with status 0 and prints note filename." {
+@test "'<scoped>:show <id> --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -1025,7 +1025,7 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
-@test "\`<id> <scoped>:show --filename\` exits with status 0 and prints note filename." {
+@test "'<id> <scoped>:show --filename' exits with status 0 and prints note filename." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -1047,7 +1047,7 @@ load test_helper
 
 # `show <selector>` (notebook name) ###########################################
 
-@test "\`show <selector> --filename\` with <selector> matching notebook name and note prints filename." {
+@test "'show <selector> --filename' with <selector> matching notebook name and note prints filename." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "example"
@@ -1065,7 +1065,7 @@ load test_helper
   [[ "${output}" == "example.md"  ]]
 }
 
-@test "\`show <selector> --filename\` with <selector> only matching notebook name prints message." {
+@test "'show <selector> --filename' with <selector> only matching notebook name prints message." {
   {
     run "${_NB}" init
     run "${_NB}" add "sample.md" --title "sample"
@@ -1083,7 +1083,7 @@ load test_helper
   [[ "${output:-}" =~ Not\ found\:  ]]
 }
 
-@test "\`show <selector> --path\` with <selector> matching notebook name and note prints path." {
+@test "'show <selector> --path' with <selector> matching notebook name and note prints path." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "example"
@@ -1101,7 +1101,7 @@ load test_helper
   [[ "${output}" == "${NB_NOTEBOOK_PATH}/example.md"  ]]
 }
 
-@test "\`show <selector> --path\` with <selector> only matching notebook name prints message." {
+@test "'show <selector> --path' with <selector> only matching notebook name prints message." {
   {
     run "${_NB}" init
     run "${_NB}" add "sample.md" --title "sample"
@@ -1119,7 +1119,7 @@ load test_helper
   [[ "${output:-}" =~ Not\ found\:  ]]
 }
 
-@test "\`show <selector> --id\` with <selector> matching notebook name and note prints id." {
+@test "'show <selector> --id' with <selector> matching notebook name and note prints id." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "example"
@@ -1137,7 +1137,7 @@ load test_helper
   [[ "${output}" == "1" ]]
 }
 
-@test "\`show <selector> --id\` with <selector> only matching notebook name prints message." {
+@test "'show <selector> --id' with <selector> only matching notebook name prints message." {
   {
     run "${_NB}" init
     run "${_NB}" add "sample.md" --title "sample"
@@ -1155,7 +1155,7 @@ load test_helper
   [[ "${output:-}" =~ Not\ found\:  ]]
 }
 
-@test "\`show <selector> --title\` with <selector> matching notebook name and note prints title." {
+@test "'show <selector> --title' with <selector> matching notebook name and note prints title." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "example"
@@ -1173,7 +1173,7 @@ load test_helper
   [[ "${output}" == "example" ]]
 }
 
-@test "\`show <selector> --title\` with <selector> only matching notebook name prints message." {
+@test "'show <selector> --title' with <selector> only matching notebook name prints message." {
   {
     run "${_NB}" init
     run "${_NB}" add "sample.md" --title "sample"
@@ -1191,7 +1191,7 @@ load test_helper
   [[ "${output:-}" =~ Not\ found\:  ]]
 }
 
-@test "\`show <selector> --selector-id\` with <selector> matching notebook name and note prints selector-id." {
+@test "'show <selector> --selector-id' with <selector> matching notebook name and note prints selector-id." {
   {
     run "${_NB}" init
     run "${_NB}" add "example.md" --title "example"
@@ -1209,7 +1209,7 @@ load test_helper
   [[ "${output}" == "example" ]]
 }
 
-@test "\`show <selector> --selector-id\` with <selector> only matching notebook name prints selector id." {
+@test "'show <selector> --selector-id' with <selector> only matching notebook name prints selector id." {
   {
     run "${_NB}" init
     run "${_NB}" add "sample.md" --title "sample"
@@ -1229,13 +1229,13 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help show\` exits with status 0." {
+@test "'help show' exits with status 0." {
   run "${_NB}" help show
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help show\` prints help information." {
+@test "'help show' prints help information." {
   run "${_NB}" help show
 
   printf "\${status}: '%s'\\n" "${status}"

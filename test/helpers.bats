@@ -4,7 +4,7 @@ load test_helper
 
 # `_clear_cache()` ############################################################
 
-@test "\`_clear_cache()\` clears the cache." {
+@test "'_clear_cache()' clears the cache." {
   {
     "${_NB}" init
 
@@ -28,7 +28,7 @@ load test_helper
 
 # `_file_is_bookmark()` #######################################################
 
-@test "\`_file_is_bookmark()\` is true for .bookmark.md file." {
+@test "'_file_is_bookmark()' is true for .bookmark.md file." {
   {
     "${_NB}" init
     "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
@@ -45,7 +45,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_bookmark()\` is true for encrypted .bookmark.md.enc file." {
+@test "'_file_is_bookmark()' is true for encrypted .bookmark.md.enc file." {
   {
     "${_NB}" init
     "${_NB}" add "example.bookmark.md" \
@@ -63,7 +63,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_bookmark()\` is false for .md file." {
+@test "'_file_is_bookmark()' is false for .md file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "<https://example.test>"
@@ -80,7 +80,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_bookmark()\` is false for encrypted non-bookmark .enc file." {
+@test "'_file_is_bookmark()' is false for encrypted non-bookmark .enc file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -97,7 +97,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_bookmark()\` is false for extensionless file." {
+@test "'_file_is_bookmark()' is false for extensionless file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "<https://example.test>"
@@ -119,7 +119,7 @@ load test_helper
 
 # `_file_is_encrypted()` ######################################################
 
-@test "\`_file_is_encrypted()\` is true for encrypted .enc file." {
+@test "'_file_is_encrypted()' is true for encrypted .enc file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -136,7 +136,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_encrypted()\` is true for encrypted bookmark.md.enc file." {
+@test "'_file_is_encrypted()' is true for encrypted bookmark.md.enc file." {
   {
     "${_NB}" init
     "${_NB}" add "example.bookmark.md" \
@@ -154,7 +154,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_encrypted()\` is true for encrypted .not-valid file." {
+@test "'_file_is_encrypted()' is true for encrypted .not-valid file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -174,7 +174,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_encrypted()\` is false for .md file." {
+@test "'_file_is_encrypted()' is false for .md file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -191,7 +191,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_encrypted()\` is false for extensionless text file." {
+@test "'_file_is_encrypted()' is false for extensionless text file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -211,7 +211,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_encrypted()\` is true for encrypted extensionless file." {
+@test "'_file_is_encrypted()' is true for encrypted extensionless file." {
   skip "TODO"
   {
     "${_NB}" init
@@ -236,7 +236,7 @@ load test_helper
 
 # `_file_is_text()` ###########################################################
 
-@test "\`_file_is_text()\` is false for encrypted .enc file." {
+@test "'_file_is_text()' is false for encrypted .enc file." {
   skip "TODO"
   {
     "${_NB}" init
@@ -254,7 +254,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_text()\` is true for .md file." {
+@test "'_file_is_text()' is true for .md file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -271,7 +271,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_text()\` is true for extensionless text file." {
+@test "'_file_is_text()' is true for extensionless text file." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"
@@ -291,7 +291,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_text()\` is false for encrypted .not-valid file." {
+@test "'_file_is_text()' is false for encrypted .not-valid file." {
   skip "TODO"
   {
     "${_NB}" init
@@ -310,7 +310,7 @@ load test_helper
   [[ -z "${output}"   ]]
 }
 
-@test "\`_file_is_text()\` is false for encrypted extensionless file." {
+@test "'_file_is_text()' is false for encrypted extensionless file." {
   skip "TODO"
   {
     "${_NB}" init
@@ -335,7 +335,7 @@ load test_helper
 
 # `_get_title()` ##############################################################
 
-@test "\`_get_title()\` detects and returns titles." {
+@test "'_get_title()' detects and returns titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "one.md"
@@ -540,7 +540,7 @@ HEREDOC
 
 # `_get_content()` #########################################################
 
-@test "\`_get_content()\` returns first line when no title." {
+@test "'_get_content()' returns first line when no title." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "one.md"
@@ -562,7 +562,7 @@ HEREDOC
   [[ "${output}"  ==  "__first_line:line one"   ]]
 }
 
-@test "\`_get_content()\` returns first line after newlines." {
+@test "'_get_content()' returns first line after newlines." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "two.md"
@@ -582,7 +582,7 @@ HEREDOC
   [[ "${output}"  ==  "__first_line:line three" ]]
 }
 
-@test "\`_get_content()\` returns first line after code block." {
+@test "'_get_content()' returns first line after code block." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "three.md"
@@ -607,7 +607,7 @@ HEREDOC
   [[ "${output}"  ==  "__first_line:line one" ]]
 }
 
-@test "\`_get_content()\` returns first line after code block and front matter." {
+@test "'_get_content()' returns first line after code block and front matter." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "four.md"
@@ -635,7 +635,7 @@ HEREDOC
   [[ "${output}"  ==  "__first_line:line one" ]]
 }
 
-@test "\`_get_content()\` returns first line after front matter." {
+@test "'_get_content()' returns first line after front matter." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "five.md"
@@ -659,7 +659,7 @@ HEREDOC
   [[ "${output}"  ==  "__first_line:line one" ]]
 }
 
-@test "\`_get_content()\` returns nothing with only code block and front matter." {
+@test "'_get_content()' returns nothing with only code block and front matter." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "four.md"
@@ -683,7 +683,7 @@ HEREDOC
   [[ -z "${output}"     ]]
 }
 
-@test "\`_get_content()\` returns first line in Org file." {
+@test "'_get_content()' returns first line in Org file." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.org"
@@ -703,7 +703,7 @@ HEREDOC
   [[ "${output}"  ==  "__first_line:line three" ]]
 }
 
-@test "\`_get_content()\` returns first line in LaTeX file." {
+@test "'_get_content()' returns first line in LaTeX file." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.latex"
@@ -758,7 +758,7 @@ HEREDOC
 
 # `_highlight_syntax_if_available()` ####################################################
 
-@test "\`_highlight_syntax_if_available <path>\` highlights a file at <path≥." {
+@test "'_highlight_syntax_if_available <path>' highlights a file at <path≥." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "# Example"
@@ -775,7 +775,7 @@ HEREDOC
   [[ "${output}" !=  "# Example"  ]]
 }
 
-@test "\`_highlight_syntax_if_available <path> --no-color\` skips highlighting." {
+@test "'_highlight_syntax_if_available <path> --no-color' skips highlighting." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "# Example _Title_"
@@ -791,7 +791,7 @@ HEREDOC
   [[ "${output}" ==  "# Example _Title_"  ]]
 }
 
-@test "\`_highlight_syntax_if_available\` highlights piped content." {
+@test "'_highlight_syntax_if_available' highlights piped content." {
   {
     "${_NB}" init
   }
@@ -807,7 +807,7 @@ HEREDOC
   [[ "${output}" !=  "# Example _Title_"  ]]
 }
 
-@test "\`_highlight_syntax_if_available() --no-color\` skips highlighting piped content." {
+@test "'_highlight_syntax_if_available() --no-color' skips highlighting piped content." {
   {
     "${_NB}" init
   }
@@ -822,7 +822,7 @@ HEREDOC
   [[ "${output}" ==  "# Example _Title_"  ]]
 }
 
-@test "\`_highlight_syntax_if_available <extension>\` highlights piped content." {
+@test "'_highlight_syntax_if_available <extension>' highlights piped content." {
   {
     "${_NB}" init
   }
@@ -838,7 +838,7 @@ HEREDOC
   [[ "${output}" !=  "# Example _Title_"  ]]
 }
 
-@test "\`_highlight_syntax_if_available <extension> --no-color\` skips highlighting." {
+@test "'_highlight_syntax_if_available <extension> --no-color' skips highlighting." {
   {
     "${_NB}" init
   }

@@ -2,7 +2,7 @@
 
 load test_helper
 
-@test "\`subcommands\` exits with 0 and prints subcommands." {
+@test "'subcommands' exits with 0 and prints subcommands." {
   {
     "${_NB}" init
   }

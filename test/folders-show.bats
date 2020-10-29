@@ -4,7 +4,7 @@ load test_helper
 
 # show <path-with-folder> --relative-path ###################################o##
 
-@test "\`show folder/folder/<title> --relative-path\` displays relative path." {
+@test "'show folder/folder/<title> --relative-path' displays relative path." {
   {
     run "${_NB}" init
 
@@ -49,7 +49,7 @@ HEREDOC
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
 }
 
-@test "\`show folder/folder/<filename> --relative-path\` displays relative path." {
+@test "'show folder/folder/<filename> --relative-path' displays relative path." {
   {
     run "${_NB}" init
 
@@ -94,7 +94,7 @@ HEREDOC
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
 }
 
-@test "\`show folder/folder/<id> --relative-path\` displays relative path." {
+@test "'show folder/folder/<id> --relative-path' displays relative path." {
   {
     run "${_NB}" init
 
@@ -143,7 +143,7 @@ HEREDOC
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
 }
 
-@test "\`show notebook:folder/folder/<id> --relative-path\` displays relative path." {
+@test "'show notebook:folder/folder/<id> --relative-path' displays relative path." {
   {
     run "${_NB}" init
 
@@ -189,7 +189,7 @@ HEREDOC
 
 # show <path-with-folder> --info-line #########################################
 
-@test "\`show folder/folder/<filename> --info-line\` displays info line." {
+@test "'show folder/folder/<filename> --info-line' displays info line." {
   {
     run "${_NB}" init
 
@@ -239,7 +239,7 @@ HEREDOC
   [[   "${output}"    =~  🔖                                                      ]]
 }
 
-@test "\`show notebook:folder/folder/<filename> --info-line\` displays info line." {
+@test "'show notebook:folder/folder/<filename> --info-line' displays info line." {
   {
     run "${_NB}" init
 
@@ -295,7 +295,7 @@ HEREDOC
 
 # show <path-with-folder> --selector-id #######################################
 
-@test "\`show folder/folder/<filename> --selector-id\` displays selector id." {
+@test "'show folder/folder/<filename> --selector-id' displays selector id." {
   {
     run "${_NB}" init
 
@@ -339,7 +339,7 @@ HEREDOC
   [[ "${output}"  =~ Example\ Folder/Sample\ Folder/example.md  ]]
 }
 
-@test "\`show demo:folder/folder/<filename> --selector-id\` displays selector id." {
+@test "'show demo:folder/folder/<filename> --selector-id' displays selector id." {
   {
     run "${_NB}" init
 

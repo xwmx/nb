@@ -4,7 +4,7 @@ load test_helper
 
 # `ebook init <name>` #########################################################
 
-@test "\`ebook init <name>\` creates new ebook notebook." {
+@test "'ebook init <name>' creates new ebook notebook." {
   {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
@@ -41,7 +41,7 @@ load test_helper
   [[ "${lines[4]}" =~ example-ebook                 ]]
 }
 
-@test "\`ebook init\` sets up current notebook as ebook." {
+@test "'ebook init' sets up current notebook as ebook." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add example
@@ -88,7 +88,7 @@ load test_helper
   [[ "${lines[7]}" =~ example                 ]]
 }
 
-@test "\`ebook init <existing>\` sets up <existing> notebook as ebook." {
+@test "'ebook init <existing>' sets up <existing> notebook as ebook." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add example
@@ -132,7 +132,7 @@ load test_helper
 
 # `ebook publish` #############################################################
 
-@test "\`ebook publish\` generates epub file." {
+@test "'ebook publish' generates epub file." {
   {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
@@ -187,7 +187,7 @@ Content three."
 
 # help ########################################################################
 
-@test "\`ebook\` with no argument exits with status 1 and prints usage." {
+@test "'ebook' with no argument exits with status 1 and prints usage." {
   {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
@@ -205,7 +205,7 @@ Content three."
   [[ "${lines[1]}" =~ nb\ ebook   ]]
 }
 
-@test "\`help ebook\` exits with status 0 and prints usage." {
+@test "'help ebook' exits with status 0 and prints usage." {
   {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"

@@ -13,7 +13,7 @@ _setup_scope() {
 
 # `nb <name>:notebook` #####################################################
 
-@test "\`nb one:notebook\` exits with 0 and scoped \`notebook\` output." {
+@test "'nb one:notebook' exits with 0 and scoped 'notebook' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -27,7 +27,7 @@ _setup_scope() {
   [[ "${output}" =~ "one" ]]
 }
 
-@test "\`nb two:notebook\` exits with 0 and scoped \`notebook\` output." {
+@test "'nb two:notebook' exits with 0 and scoped 'notebook' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -41,7 +41,7 @@ _setup_scope() {
   [[ "${output}" =~ "two" ]]
 }
 
-@test "\`nb one:invalid\` exits with 0 and scoped \`ls\` output." {
+@test "'nb one:invalid' exits with 0 and scoped 'ls' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -56,7 +56,7 @@ _setup_scope() {
   [[ "${lines[0]}" =~ one\:invalid  ]]
 }
 
-@test "\`nb one:1\` exits with 0 and scoped \`ls\` output." {
+@test "'nb one:1' exits with 0 and scoped 'ls' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -73,7 +73,7 @@ _setup_scope() {
 # `nb <name>:` ################################################################
 # NOTE: Additional tests in ls.bats ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-@test "\`nb one:\` exits with 0 and scoped \`ls\` output." {
+@test "'nb one:' exits with 0 and scoped 'ls' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -87,7 +87,7 @@ _setup_scope() {
   [[ "${lines[2]}" =~ "first" ]]
 }
 
-@test "\`nb one: --no-id\` exits with 0 and scoped \`ls\` output." {
+@test "'nb one: --no-id' exits with 0 and scoped 'ls' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -101,7 +101,7 @@ _setup_scope() {
   [[ "${lines[0]}" = "first"  ]]
 }
 
-@test "\`nb two:\` exits with 0 and scoped \`ls\` output." {
+@test "'nb two:' exits with 0 and scoped 'ls' output." {
   {
     _setup_scope &>/dev/null
   }
@@ -115,7 +115,7 @@ _setup_scope() {
   [[ "${lines[2]}" =~ 0\ items\.  ]]
 }
 
-@test "\`nb invalid:\` exits with 1 and prints error." {
+@test "'nb invalid:' exits with 1 and prints error." {
   {
     _setup_scope &>/dev/null
   }
@@ -132,7 +132,7 @@ _setup_scope() {
 
 # `nb <url>` ##################################################################
 
-@test "\`nb <name>: <url>\` creates bookmark." {
+@test "'nb <name>: <url>' creates bookmark." {
   {
     _setup_scope &>/dev/null
   }
@@ -193,7 +193,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`nb <name>:<url>\` (no space) creates bookmark." {
+@test "'nb <name>:<url>' (no space) creates bookmark." {
   {
     _setup_scope &>/dev/null
   }
@@ -256,7 +256,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # `nb show <notebook>:<identifier>` ########################################
 
-@test "\`nb show one:first --dump\` exits with 0 and prints scoped file content." {
+@test "'nb show one:first --dump' exits with 0 and prints scoped file content." {
   {
     _setup_scope &>/dev/null
   }
@@ -270,7 +270,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ "first" ]]
 }
 
-@test "\`nb show <current>:first --dump\` exits with 0 and prints scoped file content." {
+@test "'nb show <current>:first --dump' exits with 0 and prints scoped file content." {
   {
     _setup_scope &>/dev/null
     run "${_NB}" use one
