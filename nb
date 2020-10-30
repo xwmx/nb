@@ -1775,10 +1775,10 @@ _get_content() {
       done < "${_path}"
     fi
 
-    if [[ -n "${_title:-}"        ]]
+    if [[ -n "${_title:-}" ]]
     then
       printf "%s\\n" "${_title}"
-    elif [[ -n "${_first_line:-}" ]]
+    elif ! ((_only_title)) && [[ -n "${_first_line:-}" ]]
     then
       printf "%s\\n" "__first_line:${_first_line}"
     fi
