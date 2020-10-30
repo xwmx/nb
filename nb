@@ -2993,7 +2993,7 @@ _add() {
   )
 
   local _content_or_filename_extension="${_content_or_filename_or_folder_or_path##*\.}"
-  local _folder_path=
+  local _target_folder_relative_path=
 
   if [[ -n "${_content_or_filename_or_folder_or_path:-}" ]]
   then
@@ -3019,7 +3019,7 @@ _add() {
 
         if [[ "${_content_or_filename_or_folder_or_path}" =~ / ]]
         then
-          _folder_path="${_content_or_filename_or_folder_or_path%\/*}"
+          _target_folder_relative_path="${_content_or_filename_or_folder_or_path%\/*}"
         fi
 
         _target_filename="${_content_or_filename_or_folder_or_path##*\/}"
@@ -3033,9 +3033,9 @@ _add() {
 
   local _target_relative_path=
 
-  if [[ -n "${_folder_path:-}" ]]
+  if [[ -n "${_target_folder_relative_path:-}" ]]
   then
-    _target_relative_path="${_folder_path}/${_target_filename}"
+    _target_relative_path="${_target_folder_relative_path}/${_target_filename}"
   else
     _target_relative_path="${_target_filename}"
   fi
@@ -3082,9 +3082,9 @@ _add() {
 
     touch "${_target_path:?}/.index"
 
-    if [[ -n "${_folder_path:-}" ]]
+    if [[ -n "${_target_folder_relative_path:-}" ]]
     then
-      _INDEX_FOLDER_PATH="${_notebook_path}/${_folder_path}" \
+      _INDEX_FOLDER_PATH="${_notebook_path}/${_target_folder_relative_path}" \
         _index reconcile --ancestors
     fi
   else
@@ -3115,29 +3115,30 @@ _add() {
         fi
       fi
 
-      if [[ -n "${_folder_path:-}" ]]
+      if [[ -n "${_target_folder_relative_path:-}" ]]
       then
-        if ! mkdir -p "$(_temp directory)/${_folder_path}" 2>/dev/null
+        if ! mkdir -p "$(_temp directory)/${_target_folder_relative_path}" 2>/dev/null
         then
           _exit_1 printf "Unable to create temporary folder: %s\\n" \
-            "$(_color_primary "$(_temp directory)/${_folder_path}")"
+            "$(_color_primary "$(_temp directory)/${_target_folder_relative_path}")"
         fi
       fi
 
       _target_path="$(_temp directory)/${_target_unique_relative_path}"
     fi
 
-    if [[ -n "${_folder_path:-}" ]] && [[ ! -d "${_folder_path:-}" ]]
+    if [[ -n "${_target_folder_relative_path:-}"    ]] &&
+       [[ ! -d "${_target_folder_relative_path:-}"  ]]
     then
-      if [[ -e "${_folder_path:-}" ]]
+      if [[ -e "${_target_folder_relative_path:-}"  ]]
       then
         _exit_1 printf "File exists at: %s\\n" \
-          "$(_color_primary "${_folder_path:-}")"
+          "$(_color_primary "${_target_folder_relative_path:-}")"
       else
-        if ! mkdir -p "${_notebook_path:?}/${_folder_path}" 2>/dev/null
+        if ! mkdir -p "${_notebook_path:?}/${_target_folder_relative_path}" 2>/dev/null
         then
           _exit_1 printf "Unable to create folder: %s\\n" \
-            "$(_color_primary "${_folder_path}")"
+            "$(_color_primary "${_target_folder_relative_path}")"
         fi
       fi
     fi
@@ -3165,11 +3166,11 @@ _add() {
     fi
 
     # walk up and delete empty directories when file not created
-    if [[ ! -e "${_target_path:?}"                  ]] &&
-       [[ -n "${_folder_path:-}"                    ]] &&
-       [[ -e "${_notebook_path:?}/${_folder_path}"  ]]
+    if [[ ! -e "${_target_path:?}"                                  ]] &&
+       [[ -n "${_target_folder_relative_path:-}"                    ]] &&
+       [[ -e "${_notebook_path:?}/${_target_folder_relative_path}"  ]]
     then
-      cd "${_notebook_path:?}/${_folder_path:?}"
+      cd "${_notebook_path:?}/${_target_folder_relative_path:?}"
 
       while [[ "${PWD:?}" =~ ^${_notebook_path:?}       ]] &&
             [[ "${PWD:?}" != "${_notebook_path:?}"      ]] &&
