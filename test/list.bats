@@ -689,7 +689,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
 }
 
-@test "'list <selection> --type' filters by type." {
+@test "'list <selector> --type' filters by type." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -731,7 +731,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 3           ]]
 }
 
-@test "'list <selection> --<invalid>' prints message." {
+@test "'list <selector> --<invalid>' prints message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -775,7 +775,7 @@ HEREDOC
   [[ "${lines[0]}" =~ not-valid   ]]
 }
 
-@test "'list <selection> --documents' with no matches prints message." {
+@test "'list <selector> --documents' with no matches prints message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
