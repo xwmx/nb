@@ -32,12 +32,12 @@ function _nb_subcommands
       or return 1
     set -l _cache_path $argv[1]
 
-    nb subcommands | read -azd \n _commands
-    nb notebooks --names --no-color --unarchived | read -azd \n _notebooks
+    set -la _commands (nb subcommands)
+    set -la _notebooks (nb notebooks --names --no-color --unarchived)
     set -l _completions $_commands
 
     if test -e $_cache_path
-      read -azd \n __lines < $_cache_path
+      set -la __lines (cat $_cache_path)
       set -l _commands_cached $__lines[1]
       set -l _notebooks_cached $__lines[2]
     end
@@ -89,7 +89,7 @@ function _nb_subcommands
   end
 
   if test -e $_cache_path
-    read -azd \n _completions_cached < $_cache_path
+    set -la _completions_cached (cat $_cache_path)
     printf "%s\\n" $_completions_cached[3..-1]
 
     # write the func itself into a temporary file and execute it in background
