@@ -2,6 +2,31 @@
 
 load test_helper
 
+
+# first line #################################################################
+
+@test "'show <id> --info-line' exits with status 0 and does not print first line." {
+  {
+    run "${_NB}" init
+    cat <<HEREDOC | run "${_NB}" add "example.md"
+Example line one.
+
+Example line three (line two is blank).
+HEREDOC
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"  -eq 0                   ]]
+  [[   "${output}"  =~  1                   ]]
+  [[   "${output}"  =~  example.md          ]]
+  [[ ! "${output}"  =~  Example\ line\ one. ]]
+  [[ ! "${output}"  =~  __first_line        ]]
+}
+
 # `show <id> --info-line` #####################################################
 
 @test "'show <id> --info-line' exits with status 0 and prints unscoped note info." {
