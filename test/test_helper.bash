@@ -8,6 +8,9 @@
 ###############################################################################
 
 setup() {
+  # $IFS
+  IFS=$'\n\t'
+
   # Set terminal width.
   #
   # The number of lines with wrapped output depends on terminal width.
