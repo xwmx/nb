@@ -156,7 +156,7 @@ load test_helper
 
   # Does not create path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -211,7 +211,7 @@ load test_helper
 
   # Does not create path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -267,7 +267,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -276,7 +276,7 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 3                                ]]
@@ -334,7 +334,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -343,14 +343,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
 
@@ -413,7 +413,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -422,14 +422,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
 
@@ -438,7 +438,7 @@ load test_helper
   [[ "${_folder_folder_files[3]}"   == "Demo Folder"          ]]
 
   _folder_folder_folder_files=($(
-    ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+    LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
   ))
 
   printf "_folder_folder_folder_files: '%s'" "${_folder_folder_folder_files[@]}"
@@ -506,7 +506,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -515,7 +515,7 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"    ]]
   [[ "${#_folder_files[@]}" == 3                              ]]
@@ -570,7 +570,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -579,14 +579,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   [[ "${#_folder_folder_files[@]}"  == 3                      ]]
   [[ "${_folder_folder_files[2]}"   == ".index"               ]]
@@ -642,7 +642,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -651,14 +651,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
 
@@ -667,7 +667,7 @@ load test_helper
   [[ "${_folder_folder_files[3]}"   == "Demo Folder"          ]]
 
   _folder_folder_folder_files=($(
-    ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+    LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
   ))
 
   printf "_folder_folder_folder_files: '%s'" "${_folder_folder_folder_files[@]}"
@@ -734,7 +734,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -743,7 +743,7 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                               ]]
   [[ "${_files[4]}"   == "Example Folder"                       ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -e "${_NOTEBOOK_PATH}/Example Folder/example-filename.md"  ]]
   [[ "${#_folder_files[@]}" == 4                                ]]
@@ -800,7 +800,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -809,14 +809,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   [[ "${#_folder_folder_files[@]}"  == 4                      ]]
   [[ "${_folder_folder_files[2]}"   == ".index"               ]]
@@ -878,7 +878,7 @@ load test_helper
 
   # Does not create path:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -936,7 +936,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -945,14 +945,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   [[ "${#_folder_folder_files[@]}"  == 4                          ]]
   [[ "${_folder_folder_files[2]}"   == ".index"                   ]]
@@ -1011,7 +1011,7 @@ load test_helper
 
   # Removes only empty directories:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -1078,7 +1078,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
 
   echo "${_files[@]}"
 
@@ -1087,14 +1087,14 @@ load test_helper
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
 
   [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
@@ -1102,7 +1102,7 @@ load test_helper
   [[ "${_folder_folder_files[3]}"  == "Demo Folder"           ]]
 
   _folder_folder_folder_files=($(
-    ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+    LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
   ))
 
   [[ "${#_folder_folder_folder_files[@]}"  == 4                      ]]
