@@ -8234,7 +8234,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       if [[ "${_old}" == "local" ]] || [[ "${_new}" == "local" ]]
       then
         _exit_1 cat <<HEREDOC
-"local" refers to the local notbook and can not be renamed.
+"local" refers to the local notebook and can not be renamed.
 HEREDOC
       fi
     elif [[ ! -d "${NB_DIR}/${_old}" ]]
