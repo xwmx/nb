@@ -89,8 +89,7 @@ function _nb_subcommands
   end
 
   if test -e $_cache_path
-    set -la _completions_cached (cat $_cache_path)
-    printf "%s\\n" $_completions_cached[3..-1]
+    tail -n+3 $_cache_path
 
     # write the func itself into a temporary file and execute it in background
     set _tmp_file (mktemp -t nb-completion)
