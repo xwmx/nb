@@ -8,35 +8,13 @@ load test_helper
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
   run "${_NB}" show "Example Folder/Sample Folder/Example Title" --relative-path
@@ -53,35 +31,13 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
   run "${_NB}" show "Example Folder/Sample Folder/example.bookmark.md" --relative-path
@@ -98,35 +54,13 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
   run "${_NB}" show "Example Folder/Sample Folder/1" --relative-path
@@ -147,38 +81,18 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" notebooks add "one"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+    run "${_NB}" one:add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                    \
+      --title   "Example Title"
 
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${NB_DIR}/one/Example Folder"                                    ]]
+    [[ -d "${NB_DIR}/one/Example Folder/Sample Folder"                      ]]
+    [[ -f "${NB_DIR}/one/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
-  run "${_NB}" show "demo:Example Folder/Sample Folder/1" --relative-path
+  run "${_NB}" show "one:Example Folder/Sample Folder/1" --relative-path
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -193,35 +107,13 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
   run "${_NB}" show "Example Folder/Sample Folder/1" --info-line
@@ -235,7 +127,7 @@ HEREDOC
   [[   "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/example.bookmark.md  ]]
   [[   "${output}"    =~  Example\ Title                                          ]]
   [[   "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1                    ]]
-  [[ ! "${output}"    =~ home                                                     ]]
+  [[ ! "${output}"    =~  home                                                    ]]
   [[   "${output}"    =~  🔖                                                      ]]
 }
 
@@ -243,35 +135,13 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
 
     run "${_NB}" notebooks add "one"
     run "${_NB}" use "one"
@@ -299,35 +169,13 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
   run "${_NB}" show "Example Folder/Sample Folder/example.md" --selector-id
@@ -343,35 +191,13 @@ HEREDOC
   {
     run "${_NB}" init
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder"
-    # TODO: Must create folder with first document, since git doesn't
-    # recognize empty folders.
-    touch "${_NOTEBOOK_PATH}/Example Folder/.TODO-placeholder"
+    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
 
-    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
-
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                ]]
-    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  ]]
-
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"
-# Example Title
-
-<https://example.test>
-HEREDOC
-
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md" ]]
-
-    run "${_NB}" list
-
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
-
-    "${_NB}" git log
-
-    [[ "${status}" -eq 0              ]]
-    [[ "${output}" =~ 1               ]]
-    [[ "${output}" =~ 📂              ]]
-    [[ "${output}" =~ Example\ Folder ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
+    [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
   }
 
   run "${_NB}" show "demo:Example Folder/Sample Folder/example.md" --selector-id

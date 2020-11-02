@@ -8577,8 +8577,10 @@ HEREDOC
       local _maybe_notebook_path="${_selector}"
 
       while [[ -n "${_maybe_notebook_path:-}"         ]] &&
-            [[ ! -d "${_maybe_notebook_path}/.git"    ]] &&
-            [[ ! -f "${_maybe_notebook_path}/.index"  ]]
+            ! {
+              [[ -d "${_maybe_notebook_path}/.git"    ]] &&
+              [[ -f "${_maybe_notebook_path}/.index"  ]]
+            }
       do
         _maybe_notebook_path="${_maybe_notebook_path%/*}"
       done
@@ -8593,18 +8595,6 @@ HEREDOC
           _notebook_path="${_maybe_notebook_path}"
         fi
       fi
-
-      # if [[ -d "${_selector}/.git"   ]] &&
-      #    [[ -f "${_selector}/.index" ]]
-      # then
-      #   if [[ -n "${_local_notebook_path:-}"              ]] &&
-      #      [[ "${_selector}" == "${_local_notebook_path}" ]]
-      #   then
-      #     _notebook_path="${_local_notebook_path}"
-      #   else
-      #     _notebook_path="${_selector}"
-      #   fi
-      # fi
     elif [[ -n "${_selector:-}" ]]
     then
       local _selector_notebook="${_selector%%:*}"
