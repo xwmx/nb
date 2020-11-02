@@ -2908,7 +2908,8 @@ Usage:
         [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
-  nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+  nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
@@ -2934,8 +2935,6 @@ Usage:
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
-  nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
-            (<name> | --reset | --to-bookmark | --to-note)
   nb run <command> [<arguments>...]
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
@@ -2975,13 +2974,12 @@ Subcommands:
   init         Initialize the first notebook.
   list         List notes in the current notebook.
   ls           List notebooks and notes in the current notebook.
-  move         Move a note to a different notebook.
+  move         Move or rename a note.
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
   plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
-  rename       Rename a note.
   run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
@@ -3131,7 +3129,6 @@ For more information, see: `nb help`.
   <a href="#peek">peek</a> •
   <a href="#plugins">plugins</a> •
   <a href="#remote">remote</a> •
-  <a href="#rename">rename</a> •
   <a href="#run">run</a> •
   <a href="#search">search</a> •
   <a href="#settings">settings</a> •
@@ -3693,21 +3690,44 @@ Examples:
 
 ```text
 Usage:
-  nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+  nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
 
 Options:
-  -f, --force   Skip the confirmation prompt.
+  -f, --force     Skip the confirmation prompt.
+  --reset         Reset the filename to the last modified timestamp.
+  --to-bookmark   Preserve the existing filename and replace the extension
+                  with ".bookmark.md" to convert the note to a bookmark.
+  --to-note       Preserve the existing filename and replace the bookmark's
+                  ".bookmark.md" extension with ".md" to convert the bookmark
+                  to a Markdown note.
 
 Description:
-  Move the specified note to <notebook>.
+  Move or rename a note. Move the note to <path> or change the file type.
+  When file extension is omitted, the existing extension will be used.
+
+  `move` and `rename` are aliases and can be used interchangably.
 
 Examples:
-  nb move 1 example-notebook
-  nb move example.md example-notebook
-  nb example:move sample.md other-notebook
-  nb move example:sample.md other-notebook
-  nb mv 1 example-notebook
+  # Move "example.md" to "example.org"
+  nb move example.md sample.org
 
+  # Rename note 3 ("example.md") to "New Name.md"
+  nb rename 3 "New Name"
+
+  # Rename "example.bookmark.md" to "New Name.bookmark.md"
+  nb move example.bookmark.md "New Name"
+
+  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
+  nb rename 3 --to-bookmark
+
+  # Move note 12 to "Sample Folder" in the "demo" notebook
+  nb example:move 12 demo:Sample\ Folder/
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  nb example:move 12 "sample.md"
+
+Alias: `rename`
 Shortcut Alias: `mv`
 ```
 
@@ -3911,43 +3931,6 @@ Description:
 Examples:
   nb remote set https://github.com/example/example.git
   nb remote remove
-```
-
-#### `rename`
-
-```text
-Usage:
-  nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
-            (<name> | --reset | --to-bookmark | --to-note)
-
-Options:
-  -f, --force     Skip the confirmation prompt.
-  --reset         Reset the filename to the last modified timestamp.
-  --to-bookmark   Preserve the existing filename and replace the extension
-                  with ".bookmark.md" to convert the note to a bookmark.
-  --to-note       Preserve the existing filename and replace the bookmark's
-                  ".bookmark.md" extension with ".md" to convert the bookmark
-                  to a Markdown note.
-
-Description:
-  Rename a note. Set the filename to <name> for the specified note file. When
-  file extension is omitted, the existing extension will be used.
-
-Examples:
-  # Rename "example.md" to "example.org"
-  nb rename example.md example.org
-
-  # Rename note 3 ("example.md") to "New Name.md"
-  nb rename 3 "New Name"
-
-  # Rename "example.bookmark.md" to "New Name.bookmark.md"
-  nb rename example.bookmark.md "New Name"
-
-  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
-  nb rename 3 --to-bookmark
-
-  # Rename note 12 in the "example" notebook to "sample.md"
-  nb example:rename 3 "sample.md"
 ```
 
 #### `run`

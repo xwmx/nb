@@ -3,6 +3,119 @@
 load test_helper
 
 
+# folders #####################################################################
+
+@test "'show <relative-path> --info-line' exits with status 0 and prints nested file info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+  }
+
+  run "${_NB}" show "Example Folder/example.md" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                     ]]
+  [[    "${output}" =~  1                     ]]
+  [[    "${output}" =~  Example\\\ Folder/1   ]]
+  [[    "${output}" =~  example.md            ]]
+  [[    "${output}" =~  Example\ Title        ]]
+  [[ !  "${output}" =~  home                  ]]
+}
+
+@test "'show <relative-path> --info-line' exits with status 0 and prints nested folder info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/"
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                                   ]]
+  [[    "${output}" =~  1                                   ]]
+  [[    "${output}" =~  Example\\\ Folder/1                 ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[ !  "${output}" =~  home                                ]]
+}
+
+@test "'show <folder>/<id> --info-line' exits with status 0 and prints nested file info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+  }
+
+  run "${_NB}" show "Example Folder/1" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                     ]]
+  [[    "${output}" =~  1                     ]]
+  [[    "${output}" =~  Example\\\ Folder/1   ]]
+  [[    "${output}" =~  example.md            ]]
+  [[    "${output}" =~  Example\ Title        ]]
+  [[ !  "${output}" =~  home                  ]]
+}
+
+@test "'show <folder>/<id> --info-line' exits with status 0 and prints nested folder info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/"
+  }
+
+  run "${_NB}" show "Example Folder/1" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                                   ]]
+  [[    "${output}" =~  1                                   ]]
+  [[    "${output}" =~  Example\\\ Folder/1                 ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[ !  "${output}" =~  home                                ]]
+}
+
+@test "'show <folder>/<folder-id>/<id> --info-line' exits with status 0 and prints nested file info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/example.md" --title "Example Title"
+  }
+
+  run "${_NB}" show "Example Folder/1/1" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                                             ]]
+  [[    "${output}" =~  1                                             ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder/example.md ]]
+  [[    "${output}" =~  Example\ Title                                ]]
+  [[ !  "${output}" =~  home                                          ]]
+}
+
+@test "'show <folder>/<folder-id>/<id> --info-line' exits with status 0 and prints nested folder info." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+  }
+
+  run "${_NB}" show "Example Folder/1/1" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                                                 ]]
+  [[    "${output}" =~  1                                                 ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder/1              ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+  [[ !  "${output}" =~  home                                              ]]
+}
+
 # first line #################################################################
 
 @test "'show <id> --info-line' with path in title prints title." {
