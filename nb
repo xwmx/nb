@@ -7304,7 +7304,7 @@ Subcommands:
              Shortcut Alias: \`o\`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             \`ranger\` [1], \`mc\` [2], \`exa\` [3], or \`ls\`.
+             \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`exa\` [4], or \`ls\`.
              Shortcut Alias: \`p\`
   rename     Rename a notebook.
   select     Set the current notebook from a colon-prefixed selector.
@@ -7317,7 +7317,8 @@ Subcommands:
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
+    3. https://vifm.info/
+    4. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
@@ -7964,6 +7965,9 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       elif _command_exists "mc"
       then
         mc "${_notebook_path}"
+      elif _command_exists "vifm"
+      then
+        vifm "${_notebook_path}"
       elif _command_exists "exa"
       then
         exa -lah --git "${_notebook_path}"
@@ -8431,11 +8435,12 @@ Description:
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, \`peek\` is the equivalent of \`show\`. When
   used with a notebook, \`peek\` opens the notebook folder first tool found in
-  the following list: \`ranger\` [1], \`mc\` [2], \`exa\` [3], or \`ls\`.
+  the following list: \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`exa\` [4], or \`ls\`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
+    3. https://vifm.info/
+    4. https://github.com/ogham/exa
 
 Examples:
   ${_ME} peek 3
@@ -10938,6 +10943,14 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       mc "${_target_path}"
+    elif [[ -d "${_target_path}" ]] &&
+         _command_exists "vifm"       &&
+         {
+           [[ -z "${_tool}"      ]] ||
+           [[ "${_tool}" == "vifm" ]]
+         }
+    then
+      vifm "${_target_path}"
     elif [[ -d "${_target_path}"  ]] &&
          _command_exists "exa"       &&
          {
