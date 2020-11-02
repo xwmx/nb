@@ -55,6 +55,164 @@ load test_helper
   [[ "${output}" =~ Example\ Folder/not-valid ]]
 }
 
+# into folder/ ################################################################
+
+@test "'move <notebook>:<selector> <notebook>:folder/' with existing folder moves item into folder." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Sample File.bookmark.md"  \
+      --title   "Sample Title"                  \
+      --content "<https://1.example.test>"
+
+    run "${_NB}" add "Example Folder/"
+
+    [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
+    [[   -d "${NB_DIR}/home/Example Folder"                         ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md" ]]
+  }
+
+  run "${_NB}" move           \
+    "Sample File.bookmark.md" \
+    "Example Folder/"         \
+    --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
+  [[   -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[   -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md" ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move:'
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to:                                    ]]
+  [[ "${output}" =~ Example\\\ Folder/1                           ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ File.bookmark.md  ]]
+}
+
+@test "'move <selector> folder/' creates folder and moves item into folder." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Sample File.bookmark.md"  \
+      --title   "Sample Title"                  \
+      --content "<https://1.example.test>"
+
+    [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
+    [[ ! -d "${NB_DIR}/home/Example Folder"                         ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md" ]]
+  }
+
+  run "${_NB}" move           \
+    "Sample File.bookmark.md" \
+    "Example Folder/"         \
+    --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
+  [[   -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[   -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md" ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move:'
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to:                                    ]]
+  [[ "${output}" =~ Example\\\ Folder/1                           ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ File.bookmark.md  ]]
+}
+
+@test "'move <notebook>:<selector> <notebook>:folder/' moves item into folder." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Sample File.bookmark.md"  \
+      --title   "Sample Title"                  \
+      --content "<https://1.example.test>"
+
+    run "${_NB}" notebooks add "one"
+    run "${_NB}" notebooks use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+
+    run "${_NB}" notebooks add "two"
+
+    [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
+    [[ ! -d "${NB_DIR}/home/Example Folder"                         ]]
+    [[ ! -d "${NB_DIR}/two/Example Folder"                          ]]
+    [[ ! -e "${NB_DIR}/two/Example Folder/Sample File.bookmark.md"  ]]
+  }
+
+  run "${_NB}" move                 \
+    "home:Sample File.bookmark.md"  \
+    "two:Example Folder/"           \
+    --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[   -d "${NB_DIR}/two/Example Folder"                          ]]
+  [[   -e "${NB_DIR}/two/Example Folder/Sample File.bookmark.md"  ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete:'
+
+  cd "${NB_DIR}/two" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add:'
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to:                                        ]]
+  [[ "${output}" =~ two:Example\\\ Folder/1                           ]]
+  [[ "${output}" =~ two:Example\\\ Folder/Sample\\\ File.bookmark.md  ]]
+}
+
 # <filename> ##################################################################
 
 @test "'move notebook:folder/folder/<filename>' moves across notebooks and levels without errors." {
@@ -101,7 +259,6 @@ load test_helper
   # Creates git commits:
 
   cd "${NB_DIR}/home" || return 1
-  # git log --stat
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -109,7 +266,6 @@ load test_helper
   git log | grep -q '\[nb\] Delete:'
 
   cd "${NB_DIR}/two" || return 1
-  git log --stat
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
