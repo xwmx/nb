@@ -30,16 +30,16 @@ function _nb_subcommands
   function _cache_completions
     argparse -n _cache_completions -N 1 "e/erase=" -- $argv
       or return 1
-    set -l _cache_path $argv[1]
+    set _cache_path $argv[1]
 
-    set -la _commands (nb subcommands)
-    set -la _notebooks (nb notebooks --names --no-color --unarchived)
+    set _commands (nb subcommands)
+    set _notebooks (nb notebooks --names --no-color --unarchived)
     set -l _completions $_commands
 
     if test -e $_cache_path
-      set -la __lines (cat $_cache_path)
-      set -l _commands_cached $__lines[1]
-      set -l _notebooks_cached $__lines[2]
+      set __lines (head -n2 $_cache_path)
+      set _commands_cached $__lines[1]
+      set _notebooks_cached $__lines[2]
     end
 
     if test "$_commands_cached" != (string join " " $_commands)
@@ -64,25 +64,25 @@ function _nb_subcommands
       end > $_cache_path
     end
 
-    if set -lq _flag_erase
+    if set -q _flag_erase
       rm $_flag_erase
     end
   end
 
-  set -l _nb_dir (nb env | grep "NB_DIR" | cut -d = -f 2)
+  set _nb_dir (nb env | grep "NB_DIR" | cut -d = -f 2)
 
   if test -z $_nb_dir
     or not test -e $_nb_dir
     return
   else if test -L $_nb_dir
-    set -l _nb_dir (realpath $_nb_dir)
+    set _nb_dir (realpath $_nb_dir)
   end
 
   if not test -d $_nb_dir
     return
   end
 
-  set -l _cache_path $_nb_dir/.cache/nb-completion-cache-zsh
+  set _cache_path $_nb_dir/.cache/nb-completion-cache-fish
 
   if not test -e $_cache_path
     _cache_completions $_cache_path
@@ -93,7 +93,7 @@ function _nb_subcommands
     printf "%s\\n" $_completions_cached[3..-1]
 
     # write the func itself into a temporary file and execute it in background
-    set -l _tmp_file (mktemp -t nb-completion)
+    set _tmp_file (mktemp -t nb-completion)
     begin
       functions _cache_completions
       echo "_cache_completions -e $_tmp_file $_cache_path"
