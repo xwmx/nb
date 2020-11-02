@@ -34,7 +34,6 @@ function _nb_subcommands
 
     set _commands (nb subcommands)
     set _notebooks (nb notebooks --names --no-color --unarchived)
-    set -l _completions $_commands
 
     if test -e $_cache_path
       set __lines (head -n2 $_cache_path)
@@ -44,12 +43,60 @@ function _nb_subcommands
 
     if test "$_commands_cached" != (string join " " $_commands)
       or test "$_notebooks_cached" != (string join " " $_notebooks)
+
+      for __command in $_commands
+        if eval set -q __desc_$__command
+          set -a _completions $__command\t$___desc
+          continue
+        end
+
+        set ___help (nb help $__command | string join \t)
+
+        # Read the description up to 40 chars.
+        set ___desc (string match -r 'Description:\t  (.*?)\.' $___help)[2]
+        if test -z $___desc
+          set -a _completions $__command
+          continue
+        end
+        set ___desc (string replace -a \t '' $___desc | string sub -l 40)
+        if test (string length $___desc) = 40
+          set ___desc (string sub -l 38 $___desc)……
+        end
+
+        set -a _completions $__command\t$___desc
+        eval set __desc_$__command \$___desc
+
+        # When __command is an alias for another command, also set the
+        # description for that.
+        set ___original_name (string match -r 'Usage:\s+nb\s+(\S+)' $___help)[2]
+        if test -n $___original_name
+          and test "$___original_name" != $__command
+          and not set -q __desc_$___original_name
+          eval set __desc_$___original_name \$___desc
+        end
+
+        # When __command has aliases, also set the description for them.
+        set ___aliases (string match -r 'Aliases: `([^\t]*)`' $___help)[2]
+        if test -n $___aliases
+          set ___aliases (string split '`, `' $___aliases)
+          for ___alias in $___aliases
+            if not eval set -q __desc_$___alias
+              eval set __desc_$___alias \$___desc
+            end
+          end
+        end
+      end
+
       # Construct <nootbook>:<subcommand> completions.
       for __notebook in $_notebooks
         for __command in $_commands
           if test -n $__notebook
             and test -n $__command
-            set -a _completions $__notbook:$__command
+            if eval set -q __desc_$__command
+              eval set -a _completions \$__notebook:\$__command\\t\$__desc_$__command
+            else
+              set -a _completions $__notebook:$__command
+            end
           end
         end
       end
