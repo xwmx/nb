@@ -289,39 +289,39 @@ HEREDOC
 
     # Add files:
 
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/two.bookmark.md"
+    cat <<HEREDOC > "${_NOTEBOOK_PATH}/2.bookmark.md"
 # Root-Level Example Title Two
 
 <https://root-2.example.test>
 HEREDOC
 
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/one.bookmark.md"
+    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/1.bookmark.md"
 # Example Title One
 
 <https://1.example.test>
 HEREDOC
 
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/two.bookmark.md"
+    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/2.bookmark.md"
 # Example Title Two
 
 <https://2.example.test>
 HEREDOC
-    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/three.bookmark.md"
+    cat <<HEREDOC > "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/3.bookmark.md"
 # Example Title Three
 
 <https://3.example.test>
 HEREDOC
 
-    [[ -f "${_NOTEBOOK_PATH}/two.bookmark.md"                                 ]]
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/one.bookmark.md"    ]]
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/two.bookmark.md"    ]]
-    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/three.bookmark.md"  ]]
+    [[ -f "${_NOTEBOOK_PATH}/2.bookmark.md"                               ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/1.bookmark.md"  ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/2.bookmark.md"  ]]
+    [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/3.bookmark.md"  ]]
 
     # Confirm the initial .index file configuration::
 
-    [[   -e "${_NOTEBOOK_PATH}/.index"                              ]]
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ Example\ Folder     ]]
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ two.bookmark.md     ]]
+    [[   -e "${_NOTEBOOK_PATH}/.index"                          ]]
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ Example\ Folder ]]
+    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ 2.bookmark.md   ]]
 
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/.index"               ]]
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
@@ -335,15 +335,15 @@ HEREDOC
 
   "${_NB}" git log --stat
 
-  [[ ${status} -eq 0                    ]]
-  [[ "${lines[0]}" =~ two.bookmark.md$  ]]
+  [[ ${status} -eq 0                  ]]
+  [[ "${lines[0]}" =~ 2.bookmark.md$  ]]
 
   # .index is reconciled in notebook root:
 
   cat "${_NOTEBOOK_PATH}/.index"
 
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ Example\ Folder ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ two.bookmark.md ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ 2.bookmark.md   ]]
 
   # .index is generated in ancestor:
 
@@ -354,9 +354,9 @@ HEREDOC
 
   cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ one.bookmark.md    ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ two.bookmark.md    ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ three.bookmark.md  ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ 1.bookmark.md  ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ 2.bookmark.md  ]]
+  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ 3.bookmark.md  ]]
 }
 
 # get_id #########################################################################
