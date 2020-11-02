@@ -45,9 +45,9 @@ function _nb_subcommands
     if test "$_commands_cached" != (string join " " $_commands)
       or test "$_notebooks_cached" != (string join " " $_notebooks)
       # Construct <nootbook>:<subcommand> completions.
-      for __notbook in $_notebooks
+      for __notebook in $_notebooks
         for __command in $_commands
-          if test -n $__notbook
+          if test -n $__notebook
             and test -n $__command
             set -a _completions $__notbook:$__command
           end
@@ -60,7 +60,7 @@ function _nb_subcommands
       begin
         echo $_commands
         echo $_notebooks
-        printf "%s\\n" $_completions
+        printf "%s\n" $_completions
       end > $_cache_path
     end
 
