@@ -41,12 +41,12 @@ HEREDOC
 
   $ubuntu_setup = <<-HEREDOC
 # Install node and npm:
-sudo apt update -y
-sudo apt install nodejs -y
-sudo apt install npm -y
+# sudo apt update -y
+# sudo apt install nodejs -y
+# sudo apt install npm -y
 
 # Install nvm (https://github.com/nvm-sh/nvm):
-# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 HEREDOC
 
   # Ubuntu 20.10
