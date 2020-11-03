@@ -197,11 +197,12 @@ To install with [npm](https://www.npmjs.com/package/nb.sh):
 npm install -g nb.sh
 ```
 
-After `npm` installation completes, run `sudo nb completions install` to
-install Bash and Zsh completion scripts (recommended).
+After `npm` installation completes, run
+`sudo "$(which nb)" completions install`
+to install Bash and Zsh completion scripts (recommended).
 
-On Ubuntu and WSL, you can run [`sudo nb env install`](#env) to install
-the optional dependencies.
+On Ubuntu and WSL, you can run [`sudo "$(which nb)" env install`](#env)
+to install the optional dependencies.
 
 *`nb` is also available under its original package name,
 [notes.sh](https://www.npmjs.com/package/notes.sh),
