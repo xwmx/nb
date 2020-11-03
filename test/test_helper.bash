@@ -173,8 +173,9 @@ _get_hash() {
 #   _color_primary <string> [--underline]
 export _TPUT_COLOR_PRIMARY
 _TPUT_COLOR_PRIMARY="$(tput setaf 3)"
-export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
-export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
+export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
+export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
 _color_primary() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]

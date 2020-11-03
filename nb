@@ -2336,7 +2336,7 @@ _pager() {
 # _print_line()
 #
 # Usage:
-#   _print_line <text>
+#   _print_line <text> [--dim]
 #
 # Description:
 #   Print a line of dashes the length of <text>.
@@ -2348,7 +2348,13 @@ _print_line() {
   local _text_length="${#_text}"
   local _line=
   printf -v _line "%*s" "${_text_length}" ""
-  _color_secondary "${_line// /-}"
+
+  if [[ "${2:-}" == "--dim" ]]
+  then
+    _color_dim "${_line// /-}"
+  else
+    _color_secondary "${_line// /-}"
+  fi
 }
 
 # _print_padding()
@@ -7322,6 +7328,20 @@ _ls() {
     }
     then
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
+    fi
+
+    if [[ "${_selector}" =~ / ]]
+    then
+      printf "📂 "
+
+      local _selector_path
+      _selector_path="$(_resolve_selector_folders "${_selector}/")/"
+
+      printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
+
+      _print_line "$(printf "%-${_columns}s" '.')" --dim
+
+      printf "\\n"
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
