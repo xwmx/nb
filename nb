@@ -6802,7 +6802,7 @@ ${_TPUT_SGR0}"
       fi
     fi
 
-    if ! ((_printed_count)) && [[ -n "${_selector:-}" ]]
+    if ! ((_printed_count)) && [[ -n "${_selector_identifier:-}" ]]
     then
       local _filter_message=
       _filter_message="$(_color_primary "${_selector}")"
