@@ -7369,9 +7369,9 @@ _ls() {
         local _local_count
         _local_count="$(_count)"
 
-        if ! ((_local_count))         ||
-           [[ -z "${_selector:-}" ]]  ||
-           [[ "${_selector}"      ]]
+        if ! ((_local_count))           ||
+           [[ -z "${_selector:-}"   ]]  ||
+           [[ "${_selector}" =~ /$  ]]
         then
           _list "${_list_options[@]:-}"
         else
