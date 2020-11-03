@@ -2,6 +2,104 @@
 
 load test_helper
 
+# empty #######################################################################
+
+@test "'ls <folder>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/"
+  }
+
+  run "${_NB}" ls Example\ Folder/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                 ]]
+  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+}
+
+@test "'ls <id>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/"
+  }
+
+  run "${_NB}" ls 1/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                 ]]
+  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+}
+
+@test "'ls <folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/"
+  }
+
+  run "${_NB}" ls Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0           ]]
+  [[   "${lines[0]}"  =~  0\ items\.  ]]
+}
+
+@test "'ls <id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/"
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0           ]]
+  [[   "${lines[0]}"  =~  0\ items\.  ]]
+}
+
+@test "'ls <folder>/<folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/"
+  }
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0           ]]
+  [[   "${lines[0]}"  =~  0\ items\.  ]]
+}
+
+@test "'ls <id>/<id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/"
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0           ]]
+  [[   "${lines[0]}"  =~  0\ items\.  ]]
+}
+
 # ls <id>/ ####################################################################
 
 @test "'ls folder/folder/<id>/' exits with 0 and lists files in folder in reverse order." {

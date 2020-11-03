@@ -7353,8 +7353,8 @@ _ls() {
         then
           _list "${_list_options[@]:-}"
         else
-        local _filter_message=
-        _filter_message="${_selector}"
+          local _filter_message=
+          _filter_message="${_selector}"
 
           if _notebooks current --selected
           then
