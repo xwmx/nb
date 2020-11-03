@@ -17,7 +17,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
   [[   "${lines[4]}"  =~  0\ audio\ files\.     ]]
 }
 
@@ -34,7 +35,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
   [[   "${lines[4]}"  =~  0\ audio\ files\.     ]]
 }
 
@@ -51,7 +53,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
   [[   "${lines[4]}"  =~  0\ items\.            ]]
 }
 
@@ -68,7 +71,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
   [[   "${lines[4]}"  =~  0\ items\.            ]]
 }
 
@@ -85,7 +89,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
   [[   "${lines[2]}"  =~  Sample\ Folder        ]]
   [[   "${lines[4]}"  =~  0\ items\.            ]]
 }
@@ -103,7 +108,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
   [[   "${lines[4]}"  =~  0\ items\.            ]]
 }
 
@@ -133,7 +139,8 @@ load test_helper
 
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ ----                 ]]
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[   "${lines[2]}"  =~ Sample\ Folder       ]]
   [[   "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -173,7 +180,8 @@ load test_helper
 
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[   "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -213,7 +221,8 @@ load test_helper
 
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[ ! "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -256,7 +265,8 @@ load test_helper
 
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[ ! "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -305,7 +315,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                                               ]]
   [[   "${lines[1]}"  =~ -----                                              ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder                                ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder                                   ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                               ]]
   [[   "${lines[2]}"  =~ Sample\ Folder                                     ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder                                       ]]
   [[   "${lines[3]}"  =~ ----                                               ]]
@@ -348,7 +359,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                                 ]]
   [[   "${lines[1]}"  =~ -----                                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder                  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
   [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
   [[   "${lines[3]}"  =~ ----                                 ]]
@@ -428,7 +440,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[ ! "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -473,7 +486,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[ ! "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -504,7 +518,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[   "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -557,7 +572,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[ ! "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -588,7 +604,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[   "${lines[2]}"  =~ Sample\ Folder       ]]
   [[ ! "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]
@@ -615,7 +632,8 @@ load test_helper
   [[   "${lines[0]}"  =~ home                 ]]
   [[   "${lines[1]}"  =~ -----                ]]
 
-  [[   "${lines[2]}"  =~ 📂\ Example\ Folder  ]]
+  [[   "${lines[2]}"  =~ ^Example\ Folder     ]]
+  [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder ]]
   [[   "${lines[2]}"  =~ Sample\ Folder       ]]
   [[   "${lines[2]}"  =~ Demo\ Folder         ]]
   [[   "${lines[3]}"  =~ ----                 ]]

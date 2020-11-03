@@ -7332,7 +7332,7 @@ _ls() {
 
     if [[ "${_selector}" =~ / ]]
     then
-      printf "📂 "
+      # printf "📂 " # TODO: Review
 
       local _selector_path
       _selector_path="$(_resolve_selector_folders "${_selector}/")/"
