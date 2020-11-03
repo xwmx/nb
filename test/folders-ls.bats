@@ -111,6 +111,45 @@ load test_helper
   [[   "${lines[6]}"  =~ add    ]]
 }
 
+@test "'<id>/' exits with 0 and lists files in folder in reverse order." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "example-1.md"
+    "${_NB}" add "example-2.md"
+    "${_NB}" add "example-3.md"
+
+    "${_NB}" add "Example Folder/"
+
+    "${_NB}" add "Example Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/three.bookmark.md" \
+      --content "<https://example.test>"            \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" 4/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0     ]]
+
+  [[   "${lines[0]}"  =~ home   ]]
+  [[   "${lines[1]}"  =~ -----  ]]
+  [[   "${lines[2]}"  =~ three  ]]
+  [[   "${lines[2]}"  =~ 🔖\ 🔒 ]]
+  [[   "${lines[3]}"  =~ two    ]]
+  [[   "${lines[3]}"  =~ 🔖     ]]
+  [[   "${lines[4]}"  =~ one    ]]
+  [[ ! "${lines[4]}"  =~ 🔖     ]]
+  [[ ! "${lines[4]}"  =~ 🔒     ]]
+  [[   "${lines[5]}"  =~ ----   ]]
+  [[   "${lines[6]}"  =~ add    ]]
+}
+
 # ls folder ###################################################################
 
 @test "'ls folder/folder/folder' exits with 0 and prints the folder/folder/folder list item." {
