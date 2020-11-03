@@ -102,6 +102,12 @@ features. `nb` is flexible.
 <h1 align="center" id="nb"><code>nb</code></h1>
 
 <p align="center">
+	Versions: 6.0.0-alpha
+	•
+	<a href="https://github.com/xwmx/nb/tree/5.7.8">5.7.8</a>
+</p>
+
+<p align="center">
   <a href="#installation">Installation</a> •
   <a href="#overview">Overview</a> •
   <a href="#help">Help</a>
