@@ -17,7 +17,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                 ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+  [[   "${lines[2]}"  =~  0\ audio\ files\. ]]
 }
 
 @test "'ls <id>/ --type' with empty folder displays message." {
@@ -33,7 +33,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                 ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+  [[   "${lines[2]}"  =~  0\ audio\ files\. ]]
 }
 
 @test "'ls <folder>/' with empty folder displays message." {
@@ -49,7 +49,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
+  [[   "${lines[2]}"  =~  0\ items\.  ]]
 }
 
 @test "'ls <id>/' with empty folder displays message." {
@@ -65,7 +65,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
+  [[   "${lines[2]}"  =~  0\ items\.  ]]
 }
 
 @test "'ls <folder>/<folder>/' with empty folder displays message." {
@@ -81,7 +81,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
+  [[   "${lines[2]}"  =~  0\ items\.  ]]
 }
 
 @test "'ls <id>/<id>/' with empty folder displays message." {
@@ -97,7 +97,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
+  [[   "${lines[2]}"  =~  0\ items\.  ]]
 }
 
 # ls <id>/ ####################################################################
