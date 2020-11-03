@@ -10868,12 +10868,7 @@ _show() {
       fi
 
       _identifier="$(_show "${_selector}" --selector-id)"
-
-
-      # _warn echo "i: ${_identifier}"
-      # _warn echo "s: ${_selector}"
-      # _warn echo "np: ${_notebook_path}"
-      # _warn ls -la "${_notebook_path}"
+      _identifier="${_identifier%/}" # strip trailing /
 
       if [[ -e "${_identifier}"                     ]] &&
          [[ "${_identifier}" =~ ^${_notebook_path}  ]]
@@ -11054,8 +11049,7 @@ _show() {
 
   if ((_print_selector_id))
   then
-    local _selector_id="${_selector#*:}"  # strip notebook name
-    printf "%s\\n" "${_selector_id%/}"    # strip trailing /
+    printf "%s\\n" "${_selector#*:}" # strip notebook name
     return 0
   fi
 
