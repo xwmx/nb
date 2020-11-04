@@ -3012,6 +3012,8 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _password=
   local _target_filename=
   local _title=
@@ -3080,34 +3082,61 @@ _add() {
   )
 
   local _content_or_filename_extension="${_content_or_filename_or_path##*\.}"
+  local _selector_content=
   local _target_folder_relative_path=
 
   if [[ -n "${_content_or_filename_or_path:-}" ]]
   then
-    if  ! _string_is_url "${_content_or_filename_or_path:-}"      &&
-        ! _string_is_email "${_content_or_filename_or_path:-}"    &&
-        ! _contains "${_content_or_filename_extension:-}"         \
-                    "${_common_non_text_file_extension_tlds[@]}"
+    if  _string_is_url "${_content_or_filename_or_path:-}"      ||
+        _string_is_email "${_content_or_filename_or_path:-}"    ||
+        _contains "${_content_or_filename_extension:-}"         \
+                  "${_common_non_text_file_extension_tlds[@]}"
     then
-      if [[ "${_content_or_filename_or_path}" =~ / ]]
+      _selector_content="${_content_or_filename_or_path}"
+    else
+      local _selector_target="${_content_or_filename_or_path}"
+
+      if [[ "${_selector_target}" =~ : ]]
       then
-        _target_folder_relative_path="${_content_or_filename_or_path%\/*}"
+        local _selector_notebook_path
+        _selector_notebook_path="$(
+          _notebook show "${_selector_target%%:*}" --path 2>/dev/null || :
+        )"
+
+        if [[ -n "${_selector_notebook_path}" ]]
+        then
+          _notebook_path="${_selector_notebook_path}"
+          _selector_target="${_selector_target#*:}"
+        else
+          _selector_content="${_selector_target}"
+        fi
       fi
 
-      if  _contains "${_file_type:-}" "folder" "directory" || {
-          [[ "${_content_or_filename_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
-          [[ -n "${_content_or_filename_extension:-}"                 ]]  &&
-          [[ -z "${_target_filename}"                                 ]]
-        }
+      if ! [[ "${_selector_content:-}" ]]
       then
-        _target_filename="${_content_or_filename_or_path##*\/}"
-      elif [[ ! "${_content_or_filename_or_path}" =~ / ]]
-      then
-        _content="${_content_or_filename_or_path}"
+        if [[ "${_selector_target}" =~ / ]]
+        then
+          _target_folder_relative_path="${_selector_target%\/*}"
+        fi
+
+        if  _contains "${_file_type:-}" "folder" "directory"      || {
+            [[ "${_selector_target:-}" =~ \.[A-Za-z0-9]+$     ]]  &&
+            [[ -n "${_content_or_filename_extension:-}"       ]]  &&
+            [[ -z "${_target_filename}"                       ]]
+          }
+        then
+          _target_filename="${_selector_target##*\/}"
+        elif [[ ! "${_selector_target}" =~ / ]]
+        then
+          _selector_content="${_content_or_filename_or_path}"
+        fi
       fi
-    else
-      _content="${_content_or_filename_or_path}"
     fi
+  fi
+
+  if [[ -n "${_selector_content:-}" ]]
+  then
+    _content="${_selector_content}"
   fi
 
   if [[ -z "${_target_filename:-}" ]]
@@ -3143,9 +3172,6 @@ _add() {
   _target_unique_relative_path="$(
     _notebooks current --filename "${_target_relative_path}"
   )"
-
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
 
   local _target_basename
   _target_basename="$(basename "${_target_unique_relative_path}")"
