@@ -1863,9 +1863,9 @@ _get_unique_relative_path() {
   local _notebook_path="${2:-"$(_notebooks current --path)"}"
 
   local _file_basename="${_file_path##*/}" # strip ancestors
-  local _file_name="${_file_basename%%.*}"  # strip extension
-  local _file_type=
+  local _file_name="${_file_basename%%.*}" # strip extension
   local _folder_path=
+  local _target_basename=
   local _unique_path=
 
   if [[ -z "${_file_name:-}" ]]
@@ -1878,22 +1878,24 @@ _get_unique_relative_path() {
     _folder_path="${_file_path%\/*}"
   fi
 
-  if [[ "${_file_basename:-}" =~ \. ]]
-  then
-    _file_type="${_file_basename#*.}"
-  fi
-
   if [[ "${_file_basename:-}" =~ ^\. ]]
   then
-    _file_basename="${_file_name}.${_file_type}"
+    local _file_type="${_file_basename#*.}"
+
+    _target_basename="${_file_name}.${_file_type}"
+  elif [[ -n "${_file_basename:-}" ]]
+  then
+    _target_basename="${_file_basename}"
+  else
+    _target_basename="${_file_name}"
   fi
 
   _unique_path="$(
     if [[ -n "${_folder_path:-}" ]]
     then
-      _get_unique_path "${_notebook_path}/${_folder_path}/${_file_basename}"
+      _get_unique_path "${_notebook_path}/${_folder_path}/${_target_basename}"
     else
-      _get_unique_path "${_notebook_path}/${_file_basename}"
+      _get_unique_path "${_notebook_path}/${_target_basename}"
     fi
   )"
 
@@ -3005,7 +3007,7 @@ HEREDOC
 _add() {
   local _arguments=()
   local _content=
-  local _content_or_filename_or_folder_or_path=
+  local _content_or_filename_or_path=
   local _content_or_filename_extension=
   local _edit_before_commit=0
   local _encrypt=0
@@ -3058,9 +3060,9 @@ _add() {
         _file_type="folder"
         ;;
       *)
-        if [[ -z "${_content_or_filename_or_folder_or_path:-}" ]]
+        if [[ -z "${_content_or_filename_or_path:-}" ]]
         then
-          _content_or_filename_or_folder_or_path="${__arg:-}"
+          _content_or_filename_or_path="${__arg:-}"
         else
           _arguments+=("${__arg:-}")
         fi
@@ -3077,39 +3079,53 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _content_or_filename_extension="${_content_or_filename_or_folder_or_path##*\.}"
+  local _content_or_filename_extension="${_content_or_filename_or_path##*\.}"
   local _target_folder_relative_path=
 
-  if [[ -n "${_content_or_filename_or_folder_or_path:-}" ]]
+  if [[ -n "${_content_or_filename_or_path:-}" ]]
   then
-    if  ! _string_is_url "${_content_or_filename_or_folder_or_path:-}"    &&
-        ! _string_is_email "${_content_or_filename_or_folder_or_path:-}"  &&
-        ! _contains "${_content_or_filename_extension:-}"                 \
-                      "${_common_non_text_file_extension_tlds[@]}"
+    if  ! _string_is_url "${_content_or_filename_or_path:-}"      &&
+        ! _string_is_email "${_content_or_filename_or_path:-}"    &&
+        ! _contains "${_content_or_filename_extension:-}"         \
+                    "${_common_non_text_file_extension_tlds[@]}"
     then
+      if [[ "${_content_or_filename_or_path}" =~ / ]]
+      then
+        _target_folder_relative_path="${_content_or_filename_or_path%\/*}"
+      fi
+
       if  _contains "${_file_type:-}" "folder" "directory" || {
-          [[ "${_content_or_filename_or_folder_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
-          [[ -n "${_content_or_filename_extension:-}"                           ]]  &&
-          [[ -z "${_target_filename}"                                           ]]
+          [[ "${_content_or_filename_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
+          [[ -n "${_content_or_filename_extension:-}"                 ]]  &&
+          [[ -z "${_target_filename}"                                 ]]
         }
       then
-        if [[ "${_content_or_filename_or_folder_or_path:-}" =~ /$ ]]
-        then # Remove trailing slash
-          _content_or_filename_or_folder_or_path="${_content_or_filename_or_folder_or_path%/}"
-          _file_type="folder"
-        fi
-
-        if [[ "${_content_or_filename_or_folder_or_path}" =~ / ]]
-        then
-          _target_folder_relative_path="${_content_or_filename_or_folder_or_path%\/*}"
-        fi
-
-        _target_filename="${_content_or_filename_or_folder_or_path##*\/}"
-      else
-        _content="${_content_or_filename_or_folder_or_path}"
+        _target_filename="${_content_or_filename_or_path##*\/}"
+      elif [[ ! "${_content_or_filename_or_path}" =~ / ]]
+      then
+        _content="${_content_or_filename_or_path}"
       fi
     else
-      _content="${_content_or_filename_or_folder_or_path}"
+      _content="${_content_or_filename_or_path}"
+    fi
+  fi
+
+  if [[ -z "${_target_filename:-}" ]]
+  then
+    if [[ -n "${_title:-}" ]] &&
+       ! _contains "${_file_type:-}" "folder" "directory"
+    then
+      _target_filename="$(
+        printf "%s" "${_title}"           \
+          | tr '[:upper:]' '[:lower:]'    \
+          | tr '[:space:]:*/"\\<>?|' '_'
+      )"
+    fi
+
+    if [[ -n "${_file_type}" ]] && [[ "${_file_type:-}" != "folder" ]]
+    then
+      # NOTE: ${_target_filename} can be blank, resulting in '.type'
+      _target_filename="${_target_filename:-}.${_file_type}"
     fi
   fi
 
@@ -3117,34 +3133,16 @@ _add() {
 
   if [[ -n "${_target_folder_relative_path:-}" ]]
   then
-    _target_relative_path="${_target_folder_relative_path}/${_target_filename}"
+    _target_relative_path="${_target_folder_relative_path}/${_target_filename:-}"
   else
-    _target_relative_path="${_target_filename}"
+    _target_relative_path="${_target_filename:-}"
   fi
 
   local _target_unique_relative_path=
 
-  if [[ -n "${_target_relative_path:-}" ]]
-  then
-    _target_unique_relative_path="$(
-      _notebooks current --filename "${_target_relative_path:-}"
-    )"
-  elif [[ -n "${_title:-}" ]] &&
-       ! _contains "${_file_type:-}" "folder" "directory"
-  then
-    _target_filename="$(
-      printf "%s" "${_title}"           \
-        | tr '[:upper:]' '[:lower:]'    \
-        | tr '[:space:]:*/"\\<>?|' '_'
-    )"
-    _target_unique_relative_path="$(
-      _notebooks current --filename "${_target_filename}.${_file_type}"
-    )"
-  else
-    _target_unique_relative_path="$(
-      _notebooks current --filename ".${_file_type}"  # !! note the '.'
-    )"
-  fi
+  _target_unique_relative_path="$(
+    _notebooks current --filename "${_target_relative_path}"
+  )"
 
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
@@ -12246,6 +12244,8 @@ do
             if [[ -n "${_SUBCOMMAND:-}" ]]
             then
               _ARGUMENTS+=("${__opt}")
+
+              continue
             else
               _exit_1 printf \
                 "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"

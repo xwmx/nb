@@ -2,6 +2,211 @@
 
 load test_helper
 
+# folder/ #####################################################################
+
+@test "'add folder <folder>/' (trailing slash) creates new nested folder without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+  }
+
+  run "${_NB}" add folder "Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+
+  echo "_files: ${_files[*]}"
+
+  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ "${#_files[@]}"  == 5                                    ]]
+  [[ "${_files[3]}"   == ".index"                             ]]
+  [[ "${_files[4]}"   == "Example Folder"                     ]]
+
+  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+
+  echo "_folder_files: ${_folder_files[*]}"
+
+  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ "${#_folder_files[@]}" == 4                                ]]
+  [[ "${_folder_files[2]}"  == ".index"                         ]]
+  [[ "${_folder_files[3]}"  != "Sample Folder"                  ]]
+
+  # Commits to git:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+
+  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
+       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+
+  cat "${_NOTEBOOK_PATH}/.index"
+  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+
+  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+
+  # Prints output:
+
+  [[    "${output}" =~ Added:                             ]]
+  [[    "${output}" =~ 📂                                 ]]
+  [[    "${output}" =~ Example\\\ Folder/[0-9][0-9][0-9]+ ]]
+  [[ !  "${output}" =~ \.                                 ]]
+  [[ !  "${output}" =~ folder                             ]]
+}
+
+@test "'add <folder>/ --filename' creates new note without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
+  }
+
+  run "${_NB}" add Example\ Folder/ --content "# Example Title" \
+    --filename "example-filename.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
+
+  echo "${_files[@]}"
+
+  [[ -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[    "${#_files[@]}"  == 5                                   ]]
+  [[    "${_files[3]}"   == ".index"                            ]]
+  [[    "${_files[4]}"   == "Example Folder"                    ]]
+
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
+
+  [[    "${#_folder_files[@]}"  == 4                            ]]
+  [[    "${_folder_files[2]}"   == ".index"                     ]]
+  [[    "${_folder_files[3]}"   =~ example-filename.md          ]]
+  [[ -e "${NB_DIR}/home/Example Folder/${_folder_files[3]}"     ]]
+
+  printf "File:\\n"
+  cat "${NB_DIR}/home/Example Folder/${_folder_files[3]}"
+
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
+
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"            ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                                ]]
+  [[ "${output}" =~ Example\\\ Folder/example-filename.md ]]
+}
+
+@test "'add <folder>/' creates new note without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
+  }
+
+  run "${_NB}" add Example\ Folder/ --content "# Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
+
+  echo "${_files[@]}"
+
+  [[ -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[    "${#_files[@]}"  == 5                                   ]]
+  [[    "${_files[3]}"   == ".index"                            ]]
+  [[    "${_files[4]}"   == "Example Folder"                    ]]
+
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
+
+  [[    "${#_folder_files[@]}"  == 4                            ]]
+  [[    "${_folder_files[2]}"   == ".index"                     ]]
+  [[    "${_folder_files[3]}"   =~ [0-9]+.md                    ]]
+  [[ -e "${NB_DIR}/home/Example Folder/${_folder_files[3]}"     ]]
+
+  printf "File:\\n"
+  cat "${NB_DIR}/home/Example Folder/${_folder_files[3]}"
+
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
+
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"            ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                      ]]
+  [[ "${output}" =~ Example\\\ Folder/[0-9]+.md ]]
+}
+
 # uniqueness ##################################################################
 
 @test "'add <folder>/<folder>/example.md' with existing file at target creates file with unique filename." {
@@ -256,73 +461,6 @@ load test_helper
   }
 
   run "${_NB}" add folder "Example Folder"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  "${_NB}" git log --stat
-  "${_NB}" git status
-
-  [[ "${status}" -eq 0 ]]
-
-  # Creates path, target file, and indexes:
-
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
-
-  echo "${_files[@]}"
-
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
-  [[ "${#_files[@]}"  == 5                                    ]]
-  [[ "${_files[3]}"   == ".index"                             ]]
-  [[ "${_files[4]}"   == "Example Folder"                     ]]
-
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
-
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
-  [[ "${#_folder_files[@]}" == 3                                ]]
-  [[ "${_folder_files[2]}"  == ".index"                         ]]
-  [[ "${_folder_files[3]}"  != "Sample Folder"                  ]]
-
-  # Commits to git:
-
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-
-  # Adds to index:
-
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
-
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
-
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
-
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
-
-  # Prints output:
-
-  [[ "${output}" =~ Added:             ]]
-  [[ "${output}" =~ Example\\\ Folder  ]]
-}
-
-@test "'add folder <folder>/' (trailing slash) creates new folder without errors." {
-  {
-    run "${_NB}" init
-
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
-  }
-
-  run "${_NB}" add folder "Example Folder/"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

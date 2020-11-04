@@ -4,6 +4,62 @@ load test_helper
 
 # `_get_unique_relative_path()` ###############################################
 
+@test "'_get_unique_relative_path()' with no arguments prints generated filename without extension." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" helpers get_unique_relative_path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0            ]]
+  [[ "${lines[0]}" =~ ^[0-9]+$  ]]
+}
+
+@test "'_get_unique_relative_path()' prints generated filename without extension with one-level relative path." {
+  {
+    run "${_NB}" init
+
+    mkdir "${_NOTEBOOK_PATH}/Example Folder"
+    touch "${_NOTEBOOK_PATH}/Example Folder/.index"
+  }
+
+  run "${_NB}" helpers get_unique_relative_path "Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ "${lines[0]}" =~ Example\ Folder/[0-9]+$ ]]
+}
+
+@test "'_get_unique_relative_path()' prints generated filename without extension with two-level relative path." {
+  {
+    run "${_NB}" init
+
+    mkdir "${_NOTEBOOK_PATH}/Example Folder"
+    touch "${_NOTEBOOK_PATH}/Example Folder/.index"
+
+    mkdir "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+    touch "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
+  }
+
+  run "${_NB}" helpers get_unique_relative_path "Example Folder/Sample Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                                          ]]
+  [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/[0-9]+$  ]]
+}
+
+# file extension ##############################################################
+
 @test "'_get_unique_relative_path()' prints generated filename for extension." {
   {
     run "${_NB}" init
@@ -75,6 +131,8 @@ load test_helper
   [[ ${status} -eq 0                                            ]]
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/[0-9]+.rst ]]
 }
+
+# file path ###################################################################
 
 @test "'_get_unique_relative_path()' prints one-level file path." {
   {
@@ -305,6 +363,8 @@ load test_helper
   [[ ${status} -eq 0                                                ]]
   [[ "${lines[0]}" =~ Example\ Folder/Sample\ Folder/Demo\ Folder-1 ]]
 }
+
+# types #######################################################################
 
 @test "'_get_unique_relative_path()' works for notes." {
   {
