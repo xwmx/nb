@@ -333,6 +333,8 @@ load test_helper
   {
     "${_NB}" init
 
+    "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
+
     "${_NB}" add "Example Folder/Sample Folder/one.md"            \
       --title "one"
     "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
@@ -417,7 +419,7 @@ load test_helper
   [[   "${lines[8]}"  =~ add                  ]]
 }
 
-@test "'<id>/' exits with 0 and lists files in folder in reverse order." {
+@test "'notebook:<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
 
@@ -671,7 +673,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
+    "${_NB}" add "Example Folder" --type folder
   }
 
   run "${_NB}" ls 1/ --type audio
