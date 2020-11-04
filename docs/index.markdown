@@ -108,6 +108,12 @@ features. `nb` is flexible.
 <h1 align="center" id="nb"><code>nb</code></h1>
 
 <p align="center">
+	Versions: 6.0.0-alpha
+	•
+	<a href="https://github.com/xwmx/nb/tree/5.7.8">5.7.8</a>
+</p>
+
+<p align="center">
   <a href="#installation">Installation</a> •
   <a href="#overview">Overview</a> •
   <a href="#help">Help</a>
@@ -2875,6 +2881,7 @@ Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
+  nb add folder [<name>]
   nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -2966,7 +2973,7 @@ Usage:
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
-  add          Add a new note.
+  add          Add a note, folder, or a file of a specified type.
   bookmark     Add, open, list, and search bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -3155,6 +3162,7 @@ Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
+  nb add folder [<name>]
 
 Options:
   -c, --content <content>     The content for the new note.
@@ -3169,10 +3177,10 @@ Options:
                               extension.
 
 Description:
-  Create a new note.
+  Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, currently set to "example". If a non-option argument is
+  `$EDITOR`, currently set to "vim". If a non-option argument is
   passed, `nb` will treat it as a <filename≥ if a file extension is found.
   If no file extension is found, `nb` will treat the string as
   <content> and will create a new note without opening the editor.
@@ -3193,8 +3201,8 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
-  nb add example/sample/
-  nb add folder/document.md
+  nb add example/document.md
+  nb add folder sample/demo
   nb example:add
   nb example:add -t "Title"
   nb a

@@ -8,8 +8,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder"
-
     "${_NB}" add "Example Folder/one.md"                            \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"                   \
@@ -62,8 +60,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder"
-
     "${_NB}" add "Example Folder/one.md"                        \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"               \
@@ -111,8 +107,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
-
     "${_NB}" add "Example Folder/1.md"          \
       --title "one"
     "${_NB}" add "Example Folder/2.bookmark.md" \
@@ -154,8 +148,6 @@ load test_helper
 @test "'ls notebook:folder/folder/folder' exits with 0 and prints the folder/folder/folder list item." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder"
 
     "${_NB}" add "Example Folder/one.md"                            \
       --title "one"
@@ -209,8 +201,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder"
-
     "${_NB}" add "Example Folder/one.md"                        \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"               \
@@ -258,8 +248,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
-
     "${_NB}" add "Example Folder/1.md"          \
       --title "one"
     "${_NB}" add "Example Folder/2.bookmark.md" \
@@ -301,8 +289,6 @@ load test_helper
 @test "'ls notebook:folder/folder/<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
 
     "${_NB}" add "Example Folder/Sample Folder/Demo Folder/one.md"            \
       --title "one"
@@ -346,8 +332,6 @@ load test_helper
 @test "'ls notebook:folder/<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
 
     "${_NB}" add "Example Folder/Sample Folder/one.md"            \
       --title "one"
@@ -393,8 +377,6 @@ load test_helper
 @test "'ls notebook:<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/"
 
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
@@ -443,8 +425,6 @@ load test_helper
     "${_NB}" add "example-2.md"
     "${_NB}" add "example-3.md"
 
-    "${_NB}" add "Example Folder/"
-
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"   \
@@ -491,8 +471,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
-
     "${_NB}" add "Example Folder/Sample Folder/Demo Folder/one.md"            \
       --title "one"
     "${_NB}" add "Example Folder/Sample Folder/Demo Folder/two.bookmark.md"   \
@@ -536,7 +514,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
 
     "${_NB}" add "Example Folder/Sample Folder/one.md"            \
       --title "one"
@@ -581,8 +559,6 @@ load test_helper
 @test "'ls notebook:folder/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/"
 
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
@@ -631,8 +607,6 @@ load test_helper
     "${_NB}" add "example-2.md"
     "${_NB}" add "example-3.md"
 
-    "${_NB}" add "Example Folder/"
-
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"   \
@@ -679,7 +653,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
+    "${_NB}" add "Example Folder" --type folder
   }
 
   run "${_NB}" ls Example\ Folder/ --type audio
@@ -715,7 +689,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
+    "${_NB}" add "Example Folder" --type folder
   }
 
   run "${_NB}" ls Example\ Folder/
@@ -733,7 +707,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
+    "${_NB}" add "Example Folder" --type folder
   }
 
   run "${_NB}" ls 1/
@@ -751,7 +725,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder/"
+    "${_NB}" add "Example Folder/Sample Folder" --type folder
   }
 
   run "${_NB}" ls Example\ Folder/Sample\ Folder/
@@ -770,7 +744,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
+    "${_NB}" add "Example Folder" --type folder
   }
 
   run "${_NB}" ls 1/
@@ -789,8 +763,6 @@ load test_helper
 @test "'ls folder/folder/<id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
 
     "${_NB}" add "Example Folder/Sample Folder/Demo Folder/one.md"            \
       --title "one"
@@ -830,7 +802,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
 
     "${_NB}" add "Example Folder/Sample Folder/one.md"            \
       --title "one"
@@ -871,8 +843,6 @@ load test_helper
 @test "'ls <id>/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/"
 
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
@@ -916,8 +886,6 @@ load test_helper
     "${_NB}" add "example-2.md"
     "${_NB}" add "example-3.md"
 
-    "${_NB}" add "Example Folder/"
-
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"   \
@@ -957,8 +925,6 @@ load test_helper
 @test "'ls folder/folder/folder' exits with 0 and prints the folder/folder/folder list item." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder"
 
     "${_NB}" add "Example Folder/one.md"                            \
       --title "one"
@@ -1007,8 +973,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/Sample Folder"
-
     "${_NB}" add "Example Folder/one.md"                        \
       --title "one"
     "${_NB}" add "Example Folder/two.bookmark.md"               \
@@ -1051,8 +1015,6 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder/"
-
     "${_NB}" add "Example Folder/1.md"          \
       --title "one"
     "${_NB}" add "Example Folder/2.bookmark.md" \
@@ -1089,8 +1051,6 @@ load test_helper
 @test "'ls folder/' exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/"
 
     "${_NB}" add "Example Folder/one.md"            \
       --title "one"
@@ -1132,7 +1092,6 @@ load test_helper
 @test "'ls folder/folder/' exits with 0 and lists files in folder/folder in reverse order." {
   {
     "${_NB}" init
-    "${_NB}" add "Example Folder/Sample Folder"
 
     "${_NB}" add "Example Folder/file 1.md"  --content "Example content one."
     "${_NB}" add "Example Folder/file 2.md"  --content "Example content two."
@@ -1210,8 +1169,6 @@ load test_helper
 @test "'ls folder/folder/folder/' exits with 0 and lists files in folder/folder/folder in reverse order." {
   {
     "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/Demo Folder"
 
     "${_NB}" add "Example Folder/file 1.md" --content "Example content one."
     "${_NB}" add "Example Folder/file 2.md" --content "Example content two."

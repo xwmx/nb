@@ -64,7 +64,7 @@ load test_helper
       --title   "Sample Title"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/"
+    run "${_NB}" add "Example Folder" --type folder
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
     [[   -d "${NB_DIR}/home/Example Folder"                         ]]

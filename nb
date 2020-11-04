@@ -2785,6 +2785,7 @@ $(_color_primary "Usage:")
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -2877,7 +2878,7 @@ HEREDOC
 $(_color_primary "Subcommands:")
   (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
                When a <url> is provided, create a new bookmark.
-  add          Add a new note.
+  add          Add a note, folder, or a file of a specified type.
   bookmark     Add, open, list, and search bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -2950,6 +2951,7 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add folder [<name>]
 
 Options:
   -c, --content <content>     The content for the new note.
@@ -2964,7 +2966,7 @@ Options:
                               extension.
 
 Description:
-  Create a new note.
+  Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with
   \`\$EDITOR\`, currently set to "${EDITOR}". If a non-option argument is
@@ -2988,8 +2990,8 @@ Examples:
   ${_ME} add example.md --title "Example Title" --content "Example content."
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
-  ${_ME} add example/sample/
-  ${_ME} add folder/document.md
+  ${_ME} add example/document.md
+  ${_ME} add folder sample/demo
   ${_ME} example:add
   ${_ME} example:add -t "Title"
   ${_ME} a
@@ -3052,6 +3054,9 @@ _add() {
         _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      folder|directory)
+        _file_type="folder"
+        ;;
       *)
         if [[ -z "${_content_or_filename_or_folder_or_path:-}" ]]
         then
@@ -3082,10 +3087,7 @@ _add() {
         ! _contains "${_content_or_filename_extension:-}"                 \
                       "${_common_non_text_file_extension_tlds[@]}"
     then
-      if {
-          [[ "${_content_or_filename_or_folder_or_path:-}" =~ /$ ]] ||
-          _contains "${_file_type:-}" "folder" "directory"
-        } || {
+      if  _contains "${_file_type:-}" "folder" "directory" || {
           [[ "${_content_or_filename_or_folder_or_path:-}" =~ \.[A-Za-z0-9]+$   ]]  &&
           [[ -n "${_content_or_filename_extension:-}"                           ]]  &&
           [[ -z "${_target_filename}"                                           ]]
