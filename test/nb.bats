@@ -5,7 +5,7 @@ load test_helper
 
 # `nb` (pre-init) #############################################################
 
-@test "\`nb\` (pre-init) exits with status 0 and prints \`ls\` ouput." {
+@test "'nb' (pre-init) exits with status 0 and prints 'ls' ouput." {
   {
     printf "\${NB_DIR}: %s\\n" "${NB_DIR}"
     printf "\${NBRC_PATH}: %s\\n" "${NBRC_PATH}"
@@ -45,7 +45,7 @@ load test_helper
 
 # `nb` (empty repo) ###########################################################
 
-@test "\`nb\` with empty repo exits with status 0 and \`ls\` output." {
+@test "'nb' with empty repo exits with status 0 and 'ls' output." {
   {
     run "${_NB}" init
   }
@@ -71,7 +71,7 @@ load test_helper
 
 # `nb` (non-empty repo) #######################################################
 
-@test "\`nb\` with a non-empty repo exits with 0 and prints list." {
+@test "'nb' with a non-empty repo exits with 0 and prints list." {
   {
     run "${_NB}" init
     "${_NB}" add "first.md" --title "one"
@@ -94,7 +94,7 @@ load test_helper
 
 # `nb <url>` ##################################################################
 
-@test "\`nb\` with <url> creates bookmark." {
+@test "'nb' with <url> creates bookmark." {
   {
     run "${_NB}" init
   }
@@ -151,7 +151,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # `nb` NB_DIR #################################################################
 
-@test "\`nb\` with invalid NB_DIR exits with 1." {
+@test "'nb' with invalid NB_DIR exits with 1." {
   {
     run "${_NB}" init
   }

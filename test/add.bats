@@ -5,7 +5,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`add\` with no arguments creates new note file created with \$EDITOR." {
+@test "'add' with no arguments creates new note file created with \$EDITOR." {
   {
     run "${_NB}" init
   }
@@ -37,7 +37,7 @@ load test_helper
 
 # <filename> argument #########################################################
 
-@test "\`add\` with filename argument creates new note without errors." {
+@test "'add' with filename argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -75,7 +75,7 @@ load test_helper
   [[ "${output}" =~ example-filename.md ]]
 }
 
-@test "\`add\` with .org filename argument creates new note without errors." {
+@test "'add' with .org filename argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -115,7 +115,7 @@ load test_helper
 
 # <content> argument ##########################################################
 
-@test "\`add\` with content argument creates new note without errors." {
+@test "'add' with content argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -153,7 +153,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with scope and content argument creates new note without errors." {
+@test "'add' with scope and content argument creates new note without errors." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add Example
@@ -194,7 +194,7 @@ load test_helper
   [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with URL content argument creates new note without errors." {
+@test "'add' with URL content argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -234,7 +234,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with scope and URL content argument creates new note without errors." {
+@test "'add' with scope and URL content argument creates new note without errors." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add Example
@@ -275,7 +275,7 @@ load test_helper
   [[ "${output}" =~ Example:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with email address content argument creates new note without errors." {
+@test "'add' with email address content argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -315,7 +315,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with 'http:' non-URL content argument creates new note without errors." {
+@test "'add' with 'http:' non-URL content argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -355,7 +355,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`add\` with 'example.com' common TLD domain content argument creates new note without errors." {
+@test "'add' with 'example.com' common TLD domain content argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -397,7 +397,7 @@ load test_helper
 
 # --content option ############################################################
 
-@test "\`add\` with --content option exits with 0, creates new note, creates commit." {
+@test "'add' with --content option exits with 0, creates new note, creates commit." {
   {
     run "${_NB}" init
   }
@@ -423,7 +423,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with URL --content option exits with 0, creates new note, creates commit." {
+@test "'add' with URL --content option exits with 0, creates new note, creates commit." {
   {
     run "${_NB}" init
   }
@@ -452,7 +452,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with empty --content option exits with 1" {
+@test "'add' with empty --content option exits with 1" {
   {
     run "${_NB}" init
   }
@@ -471,7 +471,7 @@ load test_helper
 
 # --filename option ###########################################################
 
-@test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
+@test "'add' with --filename option exits with 0, creates new note, creates commit." {
   {
     run "${_NB}" init
   }
@@ -502,7 +502,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with --filename option overrides content or filename argument." {
+@test "'add' with --filename option overrides content or filename argument." {
   {
     run "${_NB}" init
   }
@@ -533,7 +533,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with extension-less --filename option uses default extension." {
+@test "'add' with extensionless --filename option creates file without extension." {
   {
     run "${_NB}" init
   }
@@ -553,7 +553,9 @@ load test_helper
 
   cd "${_NOTEBOOK_PATH}" || return 1
 
-  [[ -n "$(ls example.md)" ]]
+  [[   -n "$(ls example)"                   ]]
+  [[   -e "${_NOTEBOOK_PATH:?}/example"     ]]
+  [[ ! -e "${_NOTEBOOK_PATH:?}/example.md"  ]]
 
   grep -q '# mock_editor' "${_NOTEBOOK_PATH}"/*
 
@@ -564,7 +566,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with empty --filename option exits with 1" {
+@test "'add' with empty --filename option exits with 1" {
   {
     run "${_NB}" init
   }
@@ -587,7 +589,7 @@ load test_helper
 
 # --title option ##############################################################
 
-@test "\`add\` with --title option exits with 0, creates new note, creates commit." {
+@test "'add' with --title option exits with 0, creates new note, creates commit." {
   {
     run "${_NB}" init
   }
@@ -622,7 +624,7 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with empty --title option exits with 1" {
+@test "'add' with empty --title option exits with 1" {
   {
     run "${_NB}" init
   }
@@ -645,7 +647,7 @@ load test_helper
 
 # --type option ###############################################################
 
-@test "\`add --type org\` with content argument creates a new .org note file." {
+@test "'add --type org' with content argument creates a new .org note file." {
   {
     run "${_NB}" init
   }
@@ -663,7 +665,7 @@ load test_helper
   [[ "${_files[0]}" =~ org$ ]]
 }
 
-@test "\`add --type ''\` without argument exits with 1." {
+@test "'add --type ''' without argument exits with 1." {
   run "${_NB}" init
   run "${_NB}" add  "* Content" --type
 
@@ -676,7 +678,7 @@ load test_helper
 
 # --encrypt option ############################################################
 
-@test "\`add --encrypt\` with content argument creates a new .enc note file." {
+@test "'add --encrypt' with content argument creates a new .enc note file." {
   {
     run "${_NB}" init
   }
@@ -694,7 +696,7 @@ load test_helper
   [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl  ]]
 }
 
-@test "\`add --encrypt\` with invalid encryption tool displays error message." {
+@test "'add --encrypt' with invalid encryption tool displays error message." {
   {
     run "${_NB}" init
   }
@@ -714,7 +716,7 @@ load test_helper
 
 # --password option ###########################################################
 
-@test "\`add --password\` without argument exits with 1." {
+@test "'add --password' without argument exits with 1." {
   {
     run "${_NB}" init
   }
@@ -730,7 +732,7 @@ load test_helper
 
 # piped #######################################################################
 
-@test "\`add\` with piped content creates new note without errors." {
+@test "'add' with piped content creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -768,7 +770,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`add --type org\` with piped content creates a new .org note file." {
+@test "'add --type org' with piped content creates a new .org note file." {
   {
     run "${_NB}" init
   }
@@ -786,7 +788,7 @@ load test_helper
   [[ "${_files[0]}" =~ org$ ]]
 }
 
-@test "\`add --type ''\` with piped content exits with 1." {
+@test "'add --type ''' with piped content exits with 1." {
   {
     run "${_NB}" init
   }
@@ -802,7 +804,7 @@ load test_helper
 
 # aliases ####################################################################
 
-@test "\`a\` with no arguments creates new note file created with \$EDITOR." {
+@test "'a' with no arguments creates new note file created with \$EDITOR." {
   {
     run "${_NB}" init
   }
@@ -833,7 +835,7 @@ load test_helper
 }
 
 
-@test "\`create\` with no arguments creates new note file created with \$EDITOR." {
+@test "'create' with no arguments creates new note file created with \$EDITOR." {
   {
     run "${_NB}" init
   }
@@ -864,7 +866,7 @@ load test_helper
 }
 
 
-@test "\`new\` with no arguments creates new note file created with \$EDITOR." {
+@test "'new' with no arguments creates new note file created with \$EDITOR." {
   {
     run "${_NB}" init
   }
@@ -896,13 +898,13 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help add\` exits with status 0." {
+@test "'help add' exits with status 0." {
   run "${_NB}" help add
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help add\` returns usage information." {
+@test "'help add' returns usage information." {
   run "${_NB}" help add
 
   printf "\${status}: '%s'\\n" "${status}"

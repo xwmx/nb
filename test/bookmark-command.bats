@@ -4,7 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`bookmark\` command with no argument exits with 0, prints message, and lists." {
+@test "'bookmark' command with no argument exits with 0, prints message, and lists." {
   {
     run "${_NB}" init
   }
@@ -35,7 +35,7 @@ load test_helper
 
 # <url> or <list option...> argument ##########################################
 
-@test "\`bookmark <query>\` command exits with 0 and displays a list of bookmarks with titles." {
+@test "'bookmark <query>' command exits with 0 and displays a list of bookmarks with titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -74,7 +74,7 @@ HEREDOC
   [[ "${#lines[@]}" == "1" ]]
 }
 
-@test "\`bookmark --sort\` command exits with 0 and displays a sorted list of bookmarks." {
+@test "'bookmark --sort' command exits with 0 and displays a sorted list of bookmarks." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -112,7 +112,7 @@ HEREDOC
   [[ "${lines[1]}" =~ Example\ Bookmark\ Title ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
-@test "\`bookmark\` command with valid <url> argument creates new note without errors." {
+@test "'bookmark' command with valid <url> argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -167,7 +167,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`bookmark\` with invalid <url> argument creates new bookmark without downloading." {
+@test "'bookmark' with invalid <url> argument creates new bookmark without downloading." {
   {
     run "${_NB}" init
   }

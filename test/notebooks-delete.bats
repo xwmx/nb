@@ -14,7 +14,7 @@ _setup_notebooks() {
 
 # `notebooks delete` ##########################################################
 
-@test "\`notebooks delete <valid>\` exits with 0 and deletes notebook." {
+@test "'notebooks delete <valid>' exits with 0 and deletes notebook." {
   {
     _setup_notebooks
   }
@@ -31,7 +31,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks delete -f <valid>\` parses arguments and deletes notebook." {
+@test "'notebooks delete -f <valid>' parses arguments and deletes notebook." {
   {
     _setup_notebooks
   }
@@ -48,7 +48,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks delete <notebook>:\` exits with 0 and deletes notebook." {
+@test "'notebooks delete <notebook>:' exits with 0 and deletes notebook." {
   {
     _setup_notebooks
     "${_NB}" notebooks use "one"
@@ -69,7 +69,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks delete <current>\` exits with 0 and deletes notebook." {
+@test "'notebooks delete <current>' exits with 0 and deletes notebook." {
   {
     _setup_notebooks
     "${_NB}" notebooks use "one"
@@ -90,7 +90,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks delete <home>\` exits with 0 and deletes notebook." {
+@test "'notebooks delete <home>' exits with 0 and deletes notebook." {
   {
     _setup_notebooks
     [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
@@ -110,7 +110,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "one"     ]]
 }
 
-@test "\`notebooks delete <home>\` last notebook exits with 0 and deletes notebook." {
+@test "'notebooks delete <home>' last notebook exits with 0 and deletes notebook." {
   {
     _setup_notebooks
     [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
@@ -133,7 +133,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks delete <no name>\` exits with 1." {
+@test "'notebooks delete <no name>' exits with 1." {
   {
     "${_NB}" init
   }
@@ -148,7 +148,7 @@ _setup_notebooks() {
   [[ -e "${NB_DIR}/home"    ]]
 }
 
-@test "\`notebooks delete <not-valid>\` exits with 1." {
+@test "'notebooks delete <not-valid>' exits with 1." {
   {
     "${_NB}" init
   }
@@ -163,7 +163,7 @@ _setup_notebooks() {
   [[ -e "${NB_DIR}/home"                    ]]
 }
 
-@test "\`notebooks delete local\` in local exits with 1." {
+@test "'notebooks delete local' in local exits with 1." {
   {
     "${_NB}" init
     run "${_NB}" notebooks add local
@@ -185,7 +185,7 @@ _setup_notebooks() {
   [[ -e "${NB_DIR}/local"             ]]
 }
 
-@test "\`notebooks delete local\` outside local deletes." {
+@test "'notebooks delete local' outside local deletes." {
   {
     _pwd="${PWD}"
     "${_NB}" init

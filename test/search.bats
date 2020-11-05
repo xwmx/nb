@@ -32,7 +32,7 @@ _search_all_setup() {
 
 # `search` ####################################################################
 
-@test "\`search\` exits with status 1 and prints help information." {
+@test "'search' exits with status 1 and prints help information." {
   {
     _setup_search
 
@@ -51,7 +51,7 @@ _search_all_setup() {
 
 # `search <no match>` #########################################################
 
-@test "\`search <no match>\` exits with status 1 and prints output." {
+@test "'search <no match>' exits with status 1 and prints output." {
   {
     _setup_search
 
@@ -71,7 +71,7 @@ _search_all_setup() {
 
 # `search <one match> [--path] [--list]` ######################################
 
-@test "\`search <one match>\` exits with status 0 and prints output." {
+@test "'search <one match>' exits with status 0 and prints output." {
   {
     _setup_search
 
@@ -91,7 +91,7 @@ _search_all_setup() {
   [[ "${lines[2]}"    =~ idyl       ]]
 }
 
-@test "\`search <one match>\` includes emoji indicator." {
+@test "'search <one match>' includes emoji indicator." {
   {
     _setup_search
 
@@ -117,7 +117,7 @@ _search_all_setup() {
   [[ "${lines[2]}"    =~ example.test         ]]
 }
 
-@test "\`search <one match> --path\` exits with status 0 and prints path." {
+@test "'search <one match> --path' exits with status 0 and prints path." {
   {
     _setup_search
 
@@ -134,7 +134,7 @@ _search_all_setup() {
   [[ "${#lines[@]}" -eq 1                           ]]
 }
 
-@test "\`search <one match> --list\` exits with status 0 and prints listing." {
+@test "'search <one match> --list' exits with status 0 and prints listing." {
   {
     _setup_search
 
@@ -152,7 +152,7 @@ _search_all_setup() {
   [[ "${#lines[@]}"   -eq 1         ]]
 }
 
-@test "\`search <one filename match>\` exits with status 0 and prints output." {
+@test "'search <one filename match>' exits with status 0 and prints output." {
   {
     "${_NB}" init &>/dev/null
     cat <<HEREDOC | "${_NB}" add "1-example.md"
@@ -187,7 +187,7 @@ HEREDOC
 
 # `search` spacing and alignment ##############################################
 
-@test "\`search --list\` / \`search -l\` includes extra spacing to align with max notebook id length." {
+@test "'search --list' / 'search -l' includes extra spacing to align with max notebook id length." {
   {
     _setup_search
 
@@ -225,7 +225,7 @@ HEREDOC
   [[ "${lines[1]}"    =~ \]\ 🔖                 ]]
 }
 
-@test "\`search\` (no \`--list\` / \`-l\`) does not include extra spacing." {
+@test "'search' (no '--list' / '-l') does not include extra spacing." {
   {
     _setup_search
 
@@ -270,7 +270,7 @@ HEREDOC
 
 # `search <multiple matches> [--path] [--list]` ###############################
 
-@test "\`search <multiple matches>\` exits with status 0 and prints output." {
+@test "'search <multiple matches>' exits with status 0 and prints output." {
   {
     _setup_search
 
@@ -295,7 +295,7 @@ HEREDOC
   [[ "${lines[0]}"    != "${lines[3]}"  ]]
 }
 
-@test "\`search <multiple matches> --path\` exits with 0 and prints paths." {
+@test "'search <multiple matches> --path' exits with 0 and prints paths." {
   {
     _setup_search
 
@@ -314,7 +314,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 2                           ]]
 }
 
-@test "\`search <multiple matches> --list\` exits with 0 and prints listings." {
+@test "'search <multiple matches> --list' exits with 0 and prints listings." {
   {
     _setup_search
 
@@ -335,7 +335,7 @@ HEREDOC
   [[ "${#lines[@]}"   -eq 2         ]]
 }
 
-@test "\`search <multiple filename match>\` exits with status 0 and prints output." {
+@test "'search <multiple filename match>' exits with status 0 and prints output." {
   {
     "${_NB}" init &>/dev/null
     cat <<HEREDOC | "${_NB}" add "1-example.md"
@@ -377,7 +377,7 @@ HEREDOC
   [[ "${lines[5]}"  =~ 2                ]]
 }
 
-@test "\`search\` output includes indicators." {
+@test "'search' output includes indicators." {
   {
     _setup_search
 
@@ -408,7 +408,7 @@ HEREDOC
 
 # `search --bookmarks` #################################################
 
-@test "\`search --bookmarks\` exits with status 0 and prints output." {
+@test "'search --bookmarks' exits with status 0 and prints output." {
   {
     _setup_search
 
@@ -457,7 +457,7 @@ HEREDOC
 
 # `search <query> --all [--path]` #############################################
 
-@test "\`search <query> --all\` exits with status 0 and prints output." {
+@test "'search <query> --all' exits with status 0 and prints output." {
   {
     _search_all_setup
   }
@@ -488,7 +488,7 @@ HEREDOC
   [[ "${#lines[@]}"   -eq 9           ]]
 }
 
-@test "\`search <query> -a\` exits with status 0 and prints output." {
+@test "'search <query> -a' exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
   }
@@ -516,7 +516,7 @@ HEREDOC
   [[ "${#lines[@]}"   -eq 9           ]]
 }
 
-@test "\`search <no matching query> --all\` exits with status 1 and prints output." {
+@test "'search <no matching query> --all' exits with status 1 and prints output." {
   {
     _search_all_setup  &>/dev/null
   }
@@ -533,7 +533,7 @@ HEREDOC
   [[ "${output}"  =~ no\ match          ]]
 }
 
-@test "\`search <multiple matches> --all --path\` exits with 0 and prints paths." {
+@test "'search <multiple matches> --all --path' exits with 0 and prints paths." {
   {
     _search_all_setup  &>/dev/null
   }
@@ -551,7 +551,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
-@test "\`search <no matching query> --all --path\` exits with 1 and and prints output." {
+@test "'search <no matching query> --all --path' exits with 1 and and prints output." {
   {
     _search_all_setup  &>/dev/null
   }
@@ -570,7 +570,7 @@ HEREDOC
 
 # `search <query> [--all]` local ##############################################
 
-@test "\`search <query>\` in local notebook exits with status 0 and prints output." {
+@test "'search <query>' in local notebook exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
 
@@ -601,7 +601,7 @@ HEREDOC
   [[ "${#lines[@]}"   -eq 3           ]]
 }
 
-@test "\`search <query> --all\` in local notebook exits with status 0 and prints output." {
+@test "'search <query> --all' in local notebook exits with status 0 and prints output." {
   {
     _search_all_setup &>/dev/null
     "${_NB}" notebooks init "${_TMP_DIR}/example"
@@ -653,13 +653,13 @@ HEREDOC
 
 # help ########################################################################
 
-@test "\`help search\` exits with status 0." {
+@test "'help search' exits with status 0." {
   run "${_NB}" help search
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help search\` prints help information." {
+@test "'help search' prints help information." {
   run "${_NB}" help search
 
   printf "\${status}: '%s'\\n" "${status}"

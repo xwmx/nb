@@ -4,7 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`bookmark\` with no argument exits with 0, prints message, and lists." {
+@test "'bookmark' with no argument exits with 0, prints message, and lists." {
   {
     run "${_NB}" init
   }
@@ -35,7 +35,7 @@ load test_helper
 
 # <url> or <list option...> argument ##########################################
 
-@test "\`bookmark <query>\` exits with 0 and displays a list of bookmarks with titles." {
+@test "'bookmark <query>' exits with 0 and displays a list of bookmarks with titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -74,7 +74,7 @@ HEREDOC
   [[ "${#lines[@]}" == "1"                      ]]
 }
 
-@test "\`bookmark --sort\` exits with 0 and displays a sorted list of bookmarks." {
+@test "'bookmark --sort' exits with 0 and displays a sorted list of bookmarks." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -112,7 +112,7 @@ HEREDOC
   [[ "${lines[1]}" =~ Example\ Bookmark\ Title  ]] && [[ "${lines[1]}" =~ 4 ]]
 }
 
-@test "\`bookmark -n <num>\` exits with 0 and displays limited list." {
+@test "'bookmark -n <num>' exits with 0 and displays limited list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -150,7 +150,7 @@ HEREDOC
   [[ "${lines[1]}" == '1 omitted. 2 total.'   ]]
 }
 
-@test "\`bookmark\` with valid <url> argument creates new note without errors." {
+@test "'bookmark' with valid <url> argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -208,7 +208,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`bookmark\` with pdf <url> argument creates new note without errors." {
+@test "'bookmark' with pdf <url> argument creates new note without errors." {
   {
     run "${_NB}" init
   }
@@ -254,7 +254,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`bookmark\` with invalid <url> argument creates new bookmark without downloading." {
+@test "'bookmark' with invalid <url> argument creates new bookmark without downloading." {
   run "${_NB}" init
 
   run "${_NB}" bookmark 'http://invalid-url'
@@ -306,7 +306,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --comment option ############################################################
 
-@test "\`bookmark\` with --comment option creates new note with comment." {
+@test "'bookmark' with --comment option creates new note with comment." {
   {
     run "${_NB}" init
   }
@@ -366,7 +366,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --quote option ##############################################################
 
-@test "\`bookmark\` with --quote option creates new note with quote." {
+@test "'bookmark' with --quote option creates new note with quote." {
   {
     run "${_NB}" init
   }
@@ -433,7 +433,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --save-source option ########################################################
 
-@test "\`bookmark --save-source\` creates new note with HTML content." {
+@test "'bookmark --save-source' creates new note with HTML content." {
   {
     run "${_NB}" init
   }
@@ -473,6 +473,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")
 $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 \`\`\`"
 
+  # TODO: vim highlighting bug \`"
+
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
 
@@ -499,7 +501,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 
 # --skip-content option #######################################################
 
-@test "\`bookmark\` with --skip-content option creates new note with no page content." {
+@test "'bookmark' with --skip-content option creates new note with no page content." {
   {
     run "${_NB}" init
   }
@@ -551,7 +553,7 @@ Example description."
 
 # --tags option ###############################################################
 
-@test "\`bookmark\` with --tags option creates new note with tags." {
+@test "'bookmark' with --tags option creates new note with tags." {
   {
     run "${_NB}" init
   }
@@ -609,7 +611,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`bookmark\` with --tags option and hashtags creates new note with tags." {
+@test "'bookmark' with --tags option and hashtags creates new note with tags." {
   {
     run "${_NB}" init
   }
@@ -673,7 +675,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --title option ##############################################################
 
-@test "\`bookmark\` with --title option creates new note with title." {
+@test "'bookmark' with --title option creates new note with title." {
   {
     run "${_NB}" init
   }
@@ -729,7 +731,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --related option ############################################################
 
-@test "\`bookmark\` with invalid --related <url> argument exits with 1." {
+@test "'bookmark' with invalid --related <url> argument exits with 1." {
   {
     run "${_NB}" init
   }
@@ -758,7 +760,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${lines[0]}" =~ requires\ a\ valid\ argument ]]
 }
 
-@test "\`bookmark\` with one --related URL creates new note." {
+@test "'bookmark' with one --related URL creates new note." {
   {
     run "${_NB}" init
   }
@@ -816,7 +818,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`bookmark\` with three --related URLs creates new note." {
+@test "'bookmark' with three --related URLs creates new note." {
   {
     run "${_NB}" init
   }
@@ -881,7 +883,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --encrypt option ############################################################
 
-@test "\`bookmark --encrypt\` with content argument creates a new .enc bookmark." {
+@test "'bookmark --encrypt' with content argument creates a new .enc bookmark." {
   {
     run "${_NB}" init
   }
@@ -897,7 +899,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "$(file "${_NOTEBOOK_PATH}/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl  ]]
 }
 
-@test "\`bookmark --encrypt --password\` without argument exits with 1." {
+@test "'bookmark --encrypt --password' without argument exits with 1." {
   {
     run "${_NB}" init
   }
@@ -913,7 +915,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # --filename option ###########################################################
 
-@test "\`add\` with --filename option exits with 0, creates new note, creates commit." {
+@test "'add' with --filename option exits with 0, creates new note, creates commit." {
   {
     run "${_NB}" init
   }
@@ -942,7 +944,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with --filename option uses specified extension." {
+@test "'add' with --filename option uses specified extension." {
   {
     run "${_NB}" init
   }
@@ -971,7 +973,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   git log | grep -q '\[nb\] Add'
 }
 
-@test "\`add\` with extension-less --filename option uses default extension." {
+@test "'add' with extension-less --filename option uses default extension." {
   {
     run "${_NB}" init
   }
@@ -1002,7 +1004,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # `bookmark delete` ###########################################################
 
-@test "\`bookmark delete\` deletes properly without errors." {
+@test "'bookmark delete' deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -1046,7 +1048,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # `bookmark edit` #############################################################
 
-@test "\`bookmark edit\` edits properly without errors." {
+@test "'bookmark edit' edits properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -1081,7 +1083,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 # `bookmark url` ##############################################################
 
-@test "\`bookmark url\` with invalid note prints error." {
+@test "'bookmark url' with invalid note prints error." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -1099,7 +1101,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ Not\ found ]]
 }
 
-@test "\`bookmark url\` prints note url." {
+@test "'bookmark url' prints note url." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -1117,7 +1119,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" == "${_BOOKMARK_URL}" ]]
 }
 
-@test "\`bookmark url\` with multiple URLs prints first url in <>." {
+@test "'bookmark url' with multiple URLs prints first url in <>." {
   {
     run "${_NB}" init
     run "${_NB}" add example.bookmark.md \
@@ -1141,7 +1143,7 @@ https://example.com
 
 # encrypted ###################################################################
 
-@test "\`bookmark url\` with encrypted bookmark should print without errors." {
+@test "'bookmark url' with encrypted bookmark should print without errors." {
   {
     run "${_NB}" init
     run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
@@ -1162,7 +1164,7 @@ https://example.com
 
 # `bookmark list` #############################################################
 
-@test "\`bookmark list\` exits with 0 and displays a list of bookmarks with titles." {
+@test "'bookmark list' exits with 0 and displays a list of bookmarks with titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1200,7 +1202,7 @@ HEREDOC
   [[ "${lines[1]}" =~ second.bookmark.md        ]] && [[ "${lines[1]}" =~ 2 ]]
 }
 
-@test "\`bookmark list\` with no bookmarks prints message." {
+@test "'bookmark list' with no bookmarks prints message." {
   {
     "${_NB}" init
     _expected="0 bookmarks.
@@ -1224,7 +1226,7 @@ Help information:
 
 # `bookmark list --sort` ######################################################
 
-@test "\`bookmark list --sort\` exits with 0 and displays a sorted list of bookmarks." {
+@test "'bookmark list --sort' exits with 0 and displays a sorted list of bookmarks." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1264,7 +1266,7 @@ HEREDOC
 
 # help ########################################################################
 
-@test "\`help bookmark\` exits with status 0 and prints." {
+@test "'help bookmark' exits with status 0 and prints." {
   run "${_NB}" help bookmark
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -1275,7 +1277,7 @@ HEREDOC
   [[ "${lines[1]}" =~  nb\ bookmark ]]
 }
 
-@test "\`bookmark help\` exits with status 0 and prints." {
+@test "'bookmark help' exits with status 0 and prints." {
   {
     "${_NB}" init
   }

@@ -4,7 +4,7 @@ load test_helper
 
 # git checkpoint ##############################################################
 
-@test "\`git checkpoint\` with no message and clean repo does not create new commit." {
+@test "'git checkpoint' with no message and clean repo does not create new commit." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -32,7 +32,7 @@ load test_helper
   git log | grep -q -v '\[nb\] Commit'
 }
 
-@test "\`git checkpoint\` with no message and dirty repo creates a new commit with the default message." {
+@test "'git checkpoint' with no message and dirty repo creates a new commit with the default message." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -60,7 +60,7 @@ load test_helper
   git log | grep -q '\[nb\] Commit'
 }
 
-@test "\`git checkpoint <message>\` with dirty repo creates a new commit with <message>." {
+@test "'git checkpoint <message>' with dirty repo creates a new commit with <message>." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -91,7 +91,7 @@ load test_helper
 
 # git dirty ###################################################################
 
-@test "\`git dirty\` with dirty repo returns 0 and does not create commit." {
+@test "'git dirty' with dirty repo returns 0 and does not create commit." {
   {
     run "${_NB}" init
     touch "${NB_DIR:?}/home/example.md"
@@ -112,7 +112,7 @@ load test_helper
   git log | grep -v -q 'Commit'
 }
 
-@test "\`<notebook>:git dirty\` with dirty repo returns 0 and does not create commit." {
+@test "'<notebook>:git dirty' with dirty repo returns 0 and does not create commit." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -134,7 +134,7 @@ load test_helper
   git log | grep -v -q 'Commit'
 }
 
-@test "\`git dirty\` with clean repo returns 1 and does not create commit." {
+@test "'git dirty' with clean repo returns 1 and does not create commit." {
   {
     run "${_NB}" init
 
@@ -154,7 +154,7 @@ load test_helper
   git log | grep -v -q 'Commit'
 }
 
-@test "\`<notebook>:git dirty\` with clean repo returns 1 and does not create commit." {
+@test "'<notebook>:git dirty' with clean repo returns 1 and does not create commit." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"

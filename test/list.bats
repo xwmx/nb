@@ -4,7 +4,7 @@ load test_helper
 
 # `list` (empty) ##############################################################
 
-@test "\`list\` (empty) exits with 0 and lists files." {
+@test "'list' (empty) exits with 0 and lists files." {
   {
     run "${_NB}" init
   }
@@ -31,7 +31,7 @@ Help information:
 
 # `list` ######################################################################
 
-@test "\`list\` exits with 0 and lists files in reverse order." {
+@test "'list' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"
@@ -52,7 +52,7 @@ Help information:
   [[ "${lines[2]}" =~ one   ]]
 }
 
-@test "\`list\` includes indicators." {
+@test "'list' includes indicators." {
   {
     "${_NB}" init
     "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
@@ -75,7 +75,7 @@ Help information:
   [[ "${lines[2]}" =~ 🔖            ]]
 }
 
-@test "\`list\` includes ids." {
+@test "'list' includes ids." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"
@@ -108,7 +108,7 @@ Help information:
 
 # `list --no-id` ##############################################################
 
-@test "\`list --no-id\` exits with 0 and lists files in reverse order." {
+@test "'list --no-id' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"
@@ -131,7 +131,7 @@ Help information:
 
 # `list --no-color` ###########################################################
 
-@test "\`list --no-color\` exits with 0 and lists files in reverse order." {
+@test "'list --no-color' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"
@@ -176,7 +176,7 @@ line four
 HEREDOC
 }
 
-@test "\`list -e\` exits with 0 and displays 5 line list items." {
+@test "'list -e' exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -192,7 +192,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 15  ]]
 }
 
-@test "\`list -e 2\` exits with 0 and displays 4 line list items." {
+@test "'list -e 2' exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -208,7 +208,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 12  ]]
 }
 
-@test "\`list -e 0\` exits with 0 and displays 1 line list items." {
+@test "'list -e 0' exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -224,7 +224,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
-@test "\`list --excerpt\` exits with 0 and displays 5 line list items." {
+@test "'list --excerpt' exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -240,7 +240,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 15  ]]
 }
 
-@test "\`list --excerpt 2\` exits with 0 and displays 4 line list items." {
+@test "'list --excerpt 2' exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -256,7 +256,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 12  ]]
 }
 
-@test "\`list --excerpt 0\` exits with 0 and displays 1 line list items." {
+@test "'list --excerpt 0' exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -296,7 +296,7 @@ line four
 HEREDOC
 }
 
-@test "\`list -n\` exits with 0 and displays full list." {
+@test "'list -n' exits with 0 and displays full list." {
   {
     _setup_list_limit
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -312,7 +312,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
-@test "\`list -n 2\` exits with 0 and displays list with 2 items." {
+@test "'list -n 2' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -329,7 +329,7 @@ HEREDOC
   [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
 }
 
-@test "\`list --limit 2\` exits with 0 and displays list with 2 items." {
+@test "'list --limit 2' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -347,7 +347,7 @@ HEREDOC
 
 }
 
-@test "\`list --2\` exits with 0 and displays list with 2 items." {
+@test "'list --2' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
@@ -367,7 +367,7 @@ HEREDOC
 
 # `list --titles` #############################################################
 
-@test "\`list --titles\` exits with 0 and displays a list of titles." {
+@test "'list --titles' exits with 0 and displays a list of titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -408,7 +408,7 @@ HEREDOC
 
 # `list --filenames` ##########################################################
 
-@test "\`list --filenames\` exits with 0 and displays a list of filenames." {
+@test "'list --filenames' exits with 0 and displays a list of filenames." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -446,7 +446,7 @@ HEREDOC
 
 # `list --paths` ##############################################################
 
-@test "\`list --paths\` exits with 0 and displays a list of paths." {
+@test "'list --paths' exits with 0 and displays a list of paths." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -490,7 +490,7 @@ HEREDOC
 
 # `list --bookmarks` ##########################################################
 
-@test "\`list --bookmarks\` exits with 0 and displays a list of bookmarks." {
+@test "'list --bookmarks' exits with 0 and displays a list of bookmarks." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -529,7 +529,7 @@ HEREDOC
 
 # `list --type` ###############################################################
 
-@test "\`list --document\` exits with 0 and displays a list of documents." {
+@test "'list --document' exits with 0 and displays a list of documents." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -565,7 +565,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 2           ]]
 }
 
-@test "\`list --documents\` exits with 0 and displays a list of documents." {
+@test "'list --documents' exits with 0 and displays a list of documents." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -601,7 +601,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 2           ]]
 }
 
-@test "\`list --document\` exits with 0 and displays empty list." {
+@test "'list --document' exits with 0 and displays empty list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -631,7 +631,7 @@ HEREDOC
 }
 
 
-@test "\`list --documents\` exits with 0 and displays empty list." {
+@test "'list --documents' exits with 0 and displays empty list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -660,7 +660,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
 }
 
-@test "\`list --js\` exits with 0, displays empty list, and retains trailing 's'." {
+@test "'list --js' exits with 0, displays empty list, and retains trailing 's'." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -689,7 +689,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
 }
 
-@test "\`list <selection> --type\` filters by type." {
+@test "'list <selector> --type' filters by type." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -731,7 +731,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 3           ]]
 }
 
-@test "\`list <selection> --<invalid>\` prints message." {
+@test "'list <selector> --<invalid>' prints message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -775,7 +775,7 @@ HEREDOC
   [[ "${lines[0]}" =~ not-valid   ]]
 }
 
-@test "\`list <selection> --documents\` with no matches prints message." {
+@test "'list <selector> --documents' with no matches prints message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -821,7 +821,7 @@ HEREDOC
 
 # `list <selector>` ###########################################################
 
-@test "\`list <selector>\` exits with 0 and displays the selector." {
+@test "'list <selector>' exits with 0 and displays the selector." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -858,7 +858,7 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`list <query selector>\` exits with 0 and displays the selectors." {
+@test "'list <query selector>' exits with 0 and displays the selectors." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -898,7 +898,7 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`list <query selector> --limit\` exits with 0 and displays results and singular omitted message." {
+@test "'list <query selector> --limit' exits with 0 and displays results and singular omitted message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -936,7 +936,7 @@ HEREDOC
   [[ "${lines[1]}" =~ 1\ match\ omitted\.\ 2\ total\. ]]
 }
 
-@test "\`list <query selector> --limit\` exits with 0 and displays results and plural omitted message." {
+@test "'list <query selector> --limit' exits with 0 and displays results and plural omitted message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -979,7 +979,7 @@ HEREDOC
   [[ "${lines[1]}" =~ 2\ matches\ omitted\.\ 3\ total\. ]]
 }
 
-@test "\`list <multi-word selector>\` successfully filters list." {
+@test "'list <multi-word selector>' successfully filters list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -1021,7 +1021,7 @@ HEREDOC
   [[ "${lines[0]}" =~ [*1*]     ]]
 }
 
-@test "\`list <multiple> <selectors>\` successfully filters list." {
+@test "'list <multiple> <selectors>' successfully filters list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -1067,7 +1067,7 @@ HEREDOC
   [[ "${lines[2]}" =~ [*1*]     ]]
 }
 
-@test "\`list <invalid-selector>\` exits with 1 and displays a message." {
+@test "'list <invalid-selector>' exits with 1 and displays a message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add
@@ -1094,7 +1094,7 @@ HEREDOC
 
 # `scoped:list` ###############################################################
 
-@test "\`scoped:list\` exits with 0 and lists files in reverse order." {
+@test "'scoped:list' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -1119,7 +1119,7 @@ HEREDOC
   [[ "${lines[2]}" =~ one     ]]
 }
 
-@test "\`scoped:list\` with empty notebook prints help info." {
+@test "'scoped:list' with empty notebook prints help info." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -1146,7 +1146,7 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-@test "\`scoped:list\` escapes multi-word notebook name." {
+@test "'scoped:list' escapes multi-word notebook name." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "multi word"
@@ -1173,7 +1173,7 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-@test "\`scoped:list --bookmarks\` with empty notebook prints help info." {
+@test "'scoped:list --bookmarks' with empty notebook prints help info." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -1195,7 +1195,7 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-@test "\`scoped:list --documents\` with empty notebook prints help info." {
+@test "'scoped:list --documents' with empty notebook prints help info." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -1219,7 +1219,7 @@ Help information:
 
 # `list --error-on-empty` #####################################################
 
-@test "\`list --error-on-empty\` with empty notebook returns 1." {
+@test "'list --error-on-empty' with empty notebook returns 1." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -1239,7 +1239,7 @@ Help information:
 
 # `list <notebook>` ###########################################################
 
-@test "\`list <notebook>\` exits with 1 and prints not found." {
+@test "'list <notebook>' exits with 1 and prints not found." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "example"
@@ -1262,7 +1262,7 @@ Help information:
   [[ "${lines[0]}" =~ example     ]]
 }
 
-@test "\`list <notebook>:\` exits with 0 and lists files in reverse order." {
+@test "'list <notebook>:' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "example"
@@ -1289,13 +1289,13 @@ Help information:
 
 # help ########################################################################
 
-@test "\`help list\` exits with status 0." {
+@test "'help list' exits with status 0." {
   run "${_NB}" help list
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help list\` prints help information." {
+@test "'help list' prints help information." {
   run "${_NB}" help list
 
   printf "\${status}: '%s'\\n" "${status}"

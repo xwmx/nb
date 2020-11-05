@@ -4,7 +4,7 @@ load test_helper
 
 # `bookmarks` #################################################################
 
-@test "\`bookmarks\` exits with 0 and displays a list of bookmarks with titles." {
+@test "'bookmarks' exits with 0 and displays a list of bookmarks with titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -46,7 +46,7 @@ HEREDOC
 
 # `bookmarks --sort` ##########################################################
 
-@test "\`bookmarks --sort\` exits with 0 and displays a sorted list of bookmarks." {
+@test "'bookmarks --sort' exits with 0 and displays a sorted list of bookmarks." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"

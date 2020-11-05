@@ -4,7 +4,7 @@ load test_helper
 
 # `copy <name>` ###############################################################
 
-@test "\`copy <name>\` with text file copies file." {
+@test "'copy <name>' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -26,7 +26,7 @@ load test_helper
      "$(_get_hash "${NB_DIR_2}/home/example-1.md")" ]]
 }
 
-@test "\`copy <name>\` with binary file copies file." {
+@test "'copy <name>' with binary file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -61,7 +61,7 @@ load test_helper
 
 # `copy <id>` #################################################################
 
-@test "\`copy <id>\` with text file copies file." {
+@test "'copy <id>' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -83,7 +83,7 @@ load test_helper
      "$(_get_hash "${NB_DIR_2}/home/example-1.md")" ]]
 }
 
-@test "\`copy <id>\` with binary file copies file." {
+@test "'copy <id>' with binary file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -118,7 +118,7 @@ load test_helper
 
 # `copy <title>` ##############################################################
 
-@test "\`copy <title>\` with text file copies file." {
+@test "'copy <title>' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -142,7 +142,7 @@ load test_helper
 
 # `copy <invalid>` ###############################################################
 
-@test "\`copy <invalid>\` exits with error message." {
+@test "'copy <invalid>' exits with error message." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -165,7 +165,7 @@ load test_helper
 
 # `copy <directory>` ##########################################################
 
-@test "\`copy <directory>\` exits with error message." {
+@test "'copy <directory>' exits with error message." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -190,7 +190,7 @@ load test_helper
 
 # `copy <selector>` filenames #################################################
 
-@test "\`copy <name>\` with text file copies the note with sequential names." {
+@test "'copy <name>' with text file copies the note with sequential names." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -254,7 +254,7 @@ load test_helper
   [[ "${lines[0]}" =~ example-2-2.md  ]]
 }
 
-@test "\`copy <name>\` with binary file copies the file with sequential names." {
+@test "'copy <name>' with binary file copies the file with sequential names." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -324,7 +324,7 @@ load test_helper
 
 # `<selector>` copy alternative ###############################################
 
-@test "\`<id> copy\` with text file copies file." {
+@test "'<id> copy' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -348,7 +348,7 @@ load test_helper
 
 # `copy <scope:selector>` #####################################################
 
-@test "\`copy <scope>:<id>\` with text file copies file." {
+@test "'copy <scope>:<id>' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -372,7 +372,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
 }
 
-@test "\`<scope>:<id> copy\` with text file copies file." {
+@test "'<scope>:<id> copy' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -398,7 +398,7 @@ load test_helper
 
 # `<scope>:copy <selector>` ###################################################
 
-@test "\`<scope>:copy <id>\` with text file copies file." {
+@test "'<scope>:copy <id>' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -422,7 +422,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
 }
 
-@test "\`<id> <scope>:copy\` with text file copies file." {
+@test "'<id> <scope>:copy' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -448,7 +448,7 @@ load test_helper
 
 # duplicate ###################################################################
 
-@test "\`duplicate <id>\` with text file copies file." {
+@test "'duplicate <id>' with text file copies file." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -472,7 +472,7 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`copy\` with no argument exits with status 1 and prints usage." {
+@test "'copy' with no argument exits with status 1 and prints usage." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
@@ -492,7 +492,7 @@ load test_helper
 }
 
 
-@test "\`help copy\` exits with status 0 and prints usage." {
+@test "'help copy' exits with status 0 and prints usage." {
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"

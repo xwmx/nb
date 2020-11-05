@@ -4,7 +4,7 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`delete\` with no argument exits with 1, prints help, and does not delete." {
+@test "'delete' with no argument exits with 1, prints help, and does not delete." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -40,7 +40,7 @@ load test_helper
 
 # <selector> ##################################################################
 
-@test "\`delete <selector>\` with empty repo exits with 1 and prints message." {
+@test "'delete <selector>' with empty repo exits with 1 and prints message." {
   {
     run "${_NB}" init
   }
@@ -55,7 +55,7 @@ load test_helper
   [[ "${lines[0]}" =~ 1             ]]
 }
 
-@test "\`delete <selector> (no force)\` returns 0 and deletes note." {
+@test "'delete <selector> (no force)' returns 0 and deletes note." {
   skip "Determine how to test interactive prompt."
   {
     run "${_NB}" init
@@ -77,7 +77,7 @@ load test_helper
 
 # <scope>:<selector> ##########################################################
 
-@test "\`delete <scope>:<selector>\` with <filename> argument prints scoped output." {
+@test "'delete <scope>:<selector>' with <filename> argument prints scoped output." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -107,7 +107,7 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<scope>:delete <selector>\` with <filename> argument prints scoped output." {
+@test "'<scope>:delete <selector>' with <filename> argument prints scoped output." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -137,7 +137,7 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<scope>:<selector> delete\` with <filename> argument prints scoped output." {
+@test "'<scope>:<selector> delete' with <filename> argument prints scoped output." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -167,7 +167,7 @@ load test_helper
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
 }
 
-@test "\`<selector> <scope>:delete\` with <filename> argument prints scoped output." {
+@test "'<selector> <scope>:delete' with <filename> argument prints scoped output." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
@@ -199,7 +199,7 @@ load test_helper
 
 # <filename> ##################################################################
 
-@test "\`delete\` with <filename> argument deletes properly without errors." {
+@test "'delete' with <filename> argument deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -242,7 +242,7 @@ load test_helper
 
 # <id> ########################################################################
 
-@test "\`delete <id>\` deletes properly without errors." {
+@test "'delete <id>' deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -283,7 +283,7 @@ load test_helper
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
 }
 
-@test "\`<id> delete\` with deletes properly without errors." {
+@test "'<id> delete' with deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -326,7 +326,7 @@ load test_helper
 
 # <path> ######################################################################
 
-@test "\`delete\` with <path> argument deletes properly without errors." {
+@test "'delete' with <path> argument deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" add
@@ -369,19 +369,18 @@ load test_helper
 
 # <title> #####################################################################
 
-@test "\`delete\` with <title> argument deletes properly without errors." {
+@test "'delete' with <title> argument deletes properly without errors." {
   {
     run "${_NB}" init
-    run "${_NB}" add
+    run "${_NB}" add --title "Example Title"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
 
     [[ -e "${_NOTEBOOK_PATH}/${_filename}"   ]]
   }
 
-  run "${_NB}" delete "${_title}" --force
+  run "${_NB}" delete "Example Title" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -413,7 +412,7 @@ load test_helper
 
 # <folder> #################################################################
 
-@test "\`delete\` with <folder> argument deletes properly without errors." {
+@test "'delete' with <folder> argument deletes properly without errors." {
   {
     run "${_NB}" init
     run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
@@ -449,20 +448,20 @@ load test_helper
   [[ "${_original_index}" != "$(cat "${_NOTEBOOK_PATH}/.index")"        ]]
 
   # Prints output
-  [[ "${output}" =~ Deleted:        ]]
-  [[ "${output}" =~ [0-9]+          ]]
-  [[ "${output}" =~ Example\ Folder ]]
+  [[ "${output}" =~ Deleted:          ]]
+  [[ "${output}" =~ [0-9]+            ]]
+  [[ "${output}" =~ Example\\\ Folder ]]
 }
 
 # help ########################################################################
 
-@test "\`help delete\` exits with status 0." {
+@test "'help delete' exits with status 0." {
   run "${_NB}" help delete
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help delete\` prints help information." {
+@test "'help delete' prints help information." {
   run "${_NB}" help delete
 
   printf "\${status}: '%s'\\n" "${status}"

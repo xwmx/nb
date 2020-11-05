@@ -5,7 +5,7 @@ load test_helper
 export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
 export _OG_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.html"
 
-@test "\`bookmark\` extracts title and meta description tag content." {
+@test "'bookmark' extracts title and meta description tag content." {
   {
     run "${_NB}" init
   }
@@ -63,7 +63,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "\`bookmark\` extracts open graph title and description tag content." {
+@test "'bookmark' extracts open graph title and description tag content." {
   {
     run "${_NB}" init
   }

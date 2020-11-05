@@ -4,7 +4,7 @@ load test_helper
 
 # `backlink` ##################################################################
 
-@test "\`nb backlink\` with links adds backlinks." {
+@test "'nb backlink' with links adds backlinks." {
   if ! hash "note-link-janitor" 2>/dev/null
   then
     skip "note-link-janitor not installed."
@@ -80,7 +80,7 @@ Demo content [[one]] apricot plum.
   git log | grep -q '\[nb\] Backlinked'
 }
 
-@test "\`nb backlink\` with no links does not add backlinks." {
+@test "'nb backlink' with no links does not add backlinks." {
   if ! hash "note-link-janitor" 2>/dev/null
   then
     skip "note-link-janitor not installed."
@@ -148,7 +148,7 @@ Demo content one apricot plum."
 
 # help ########################################################################
 
-@test "\`help backlink\` exits with status 0 and prints usage." {
+@test "'help backlink' exits with status 0 and prints usage." {
   if ! hash "note-link-janitor" 2>/dev//null
   then
     skip "note-link-janitor not installed."

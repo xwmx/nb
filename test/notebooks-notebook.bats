@@ -16,7 +16,7 @@ _setup_notebook() {
 
 # `notebooks archive` #########################################################
 
-@test "\`notebooks archive\` exits with 0 and archives." {
+@test "'notebooks archive' exits with 0 and archives." {
   {
     _setup_notebook
   }
@@ -38,7 +38,7 @@ _setup_notebook() {
   git log | grep -q '\[nb\] Archived'
 }
 
-@test "\`notebooks archive <name>\` exits with 0 and archives." {
+@test "'notebooks archive <name>' exits with 0 and archives." {
   {
     _setup_notebook
   }
@@ -63,7 +63,7 @@ _setup_notebook() {
   git log | grep -q '\[nb\] Archived'
 }
 
-@test "\`notebooks archive\` does not create git commit if already archived." {
+@test "'notebooks archive' does not create git commit if already archived." {
   {
     _setup_notebook
     touch "${_NOTEBOOK_PATH}/.archived"
@@ -90,7 +90,7 @@ _setup_notebook() {
 
 # `notebooks unarchive` #######################################################
 
-@test "\`notebooks unarchive\` exits with 0 and unarchives." {
+@test "'notebooks unarchive' exits with 0 and unarchives." {
   {
     _setup_notebook
     run "${_NB}" notebooks archive
@@ -113,7 +113,7 @@ _setup_notebook() {
   git log | grep '\[nb\] Unarchived'
 }
 
-@test "\`notebooks unarchive <name>\` exits with 0 and unarchives." {
+@test "'notebooks unarchive <name>' exits with 0 and unarchives." {
   {
     _setup_notebook
     run "${_NB}" notebooks archive one
@@ -136,7 +136,7 @@ _setup_notebook() {
   git log | grep '\[nb\] Unarchived'
 }
 
-@test "\`notebooks unarchive\` does not create git commit if already unarchived." {
+@test "'notebooks unarchive' does not create git commit if already unarchived." {
   {
     _setup_notebook
   }
@@ -160,7 +160,7 @@ _setup_notebook() {
 
 # `notebooks status` ##########################################################
 
-@test "\`notebooks status\` exits with 0 and prints status." {
+@test "'notebooks status' exits with 0 and prints status." {
   {
     _setup_notebook
   }
@@ -183,7 +183,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") is archived." ]]
 }
 
-@test "\`notebooks status <name>\` exits with 0 and prints status." {
+@test "'notebooks status <name>' exits with 0 and prints status." {
   {
     _setup_notebook
   }
@@ -208,13 +208,13 @@ _setup_notebook() {
 
 # help ########################################################################
 
-@test "\`help notebooks\` exits with status 0." {
+@test "'help notebooks' exits with status 0." {
   run "${_NB}" help notebooks
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help notebooks\` prints help information." {
+@test "'help notebooks' prints help information." {
   run "${_NB}" help notebooks
 
   printf "\${status}: '%s'\\n" "${status}"

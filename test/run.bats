@@ -2,7 +2,7 @@
 
 load test_helper
 
-@test "\`run\` exits with status 0 and prints output." {
+@test "'run' exits with status 0 and prints output." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"
@@ -21,7 +21,7 @@ load test_helper
   [[ "${output}" == "${_files}" ]]
 }
 
-@test "\`run\` with no command exits with status 1 and prints message." {
+@test "'run' with no command exits with status 1 and prints message." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"

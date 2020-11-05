@@ -14,7 +14,7 @@ _setup_notebooks() {
 
 # no argument #################################################################
 
-@test "\`notebooks import\` with no arguments exits with status 1 and prints help." {
+@test "'notebooks import' with no arguments exits with status 1 and prints help." {
   {
     run "${_NB}" init
   }
@@ -28,7 +28,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ Usage\: ]]
 }
 
-@test "\`notebooks import\` with valid directory <path> imports." {
+@test "'notebooks import' with valid directory <path> imports." {
   {
     run "${_NB}" init
   }
@@ -46,7 +46,7 @@ _setup_notebooks() {
   "${_NB}" notebooks | grep -q 'Example Folder'
 }
 
-@test "\`notebooks import\` with relative <path> imports." {
+@test "'notebooks import' with relative <path> imports." {
   {
     run "${_NB}" init
 
@@ -70,7 +70,7 @@ _setup_notebooks() {
   "${_NB}" notebooks | grep -q 'example'
 }
 
-@test "\`notebooks import\` with existing notebook imports with unique name." {
+@test "'notebooks import' with existing notebook imports with unique name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "Example Folder"
@@ -91,7 +91,7 @@ _setup_notebooks() {
   "${_NB}" notebooks | grep -q 'Example Folder-1'
 }
 
-@test "\`notebooks import\` with invalid file <path> argument exits with 1." {
+@test "'notebooks import' with invalid file <path> argument exits with 1." {
   {
     run "${_NB}" init
   }
@@ -108,7 +108,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ "Not a directory" ]]
 }
 
-@test "\`notebooks import\` with valid <name> argument imports." {
+@test "'notebooks import' with valid <name> argument imports." {
   {
     run "${_NB}" init
   }
@@ -130,7 +130,7 @@ _setup_notebooks() {
   "${_NB}" notebooks | grep -q 'example'
 }
 
-@test "\`notebooks import\` with existing notebook <name> imports with unique name." {
+@test "'notebooks import' with existing notebook <name> imports with unique name." {
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "example"

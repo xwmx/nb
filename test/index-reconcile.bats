@@ -4,7 +4,7 @@ load test_helper
 
 # reconcile ###################################################################
 
-@test "\`index reconcile\` does not modify a valid index." {
+@test "'index reconcile' does not modify a valid index." {
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
@@ -31,7 +31,7 @@ load test_helper
   [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "${_existing_index}"  ]]
 }
 
-@test "\`index reconcile\` updates when file has been deleted." {
+@test "'index reconcile' updates when file has been deleted." {
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
@@ -54,7 +54,7 @@ load test_helper
   "${_NB}" index verify
 }
 
-@test "\`index reconcile\` updates when file has been added." {
+@test "'index reconcile' updates when file has been added." {
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
@@ -77,7 +77,7 @@ load test_helper
   "${_NB}" index verify
 }
 
-@test "\`index reconcile\` updates when files have been added and deleted." {
+@test "'index reconcile' updates when files have been added and deleted." {
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"

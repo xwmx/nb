@@ -28,7 +28,7 @@ _setup_notebooks() {
 
 # `notebooks rename` ##########################################################
 
-@test "\`notebooks rename <valid-old> <valid-new>\` exits with 0 and renames notebook." {
+@test "'notebooks rename <valid-old> <valid-new>' exits with 0 and renames notebook." {
   {
     _setup_notebooks
   }
@@ -47,7 +47,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks rename home <valid-new>\` exits with 0,  renames notebook, and updates .current." {
+@test "'notebooks rename home <valid-new>' exits with 0,  renames notebook, and updates .current." {
   {
     _setup_notebooks
   }
@@ -66,7 +66,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "new-name"  ]]
 }
 
-@test "\`notebooks rename <invalid-old> <valid-new>\` exits with 1 and does not rename notebook." {
+@test "'notebooks rename <invalid-old> <valid-new>' exits with 1 and does not rename notebook." {
   {
     _setup_notebooks
   }
@@ -87,7 +87,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"            ]]
 }
 
-@test "\`notebooks rename <valid-old> <invalid-new>\` exits with 1 and does not rename notebook." {
+@test "'notebooks rename <valid-old> <invalid-new>' exits with 1 and does not rename notebook." {
   {
     _setup_notebooks
   }
@@ -108,7 +108,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks rename local <new-name>\` in local exits with 1." {
+@test "'notebooks rename local <new-name>' in local exits with 1." {
   {
     "${_NB}" init
 
@@ -135,7 +135,7 @@ _setup_notebooks() {
   [[ -e "${NB_DIR}/local"                       ]]
 }
 
-@test "\`notebooks rename local <new-name>\` outside local deletes." {
+@test "'notebooks rename local <new-name>' outside local deletes." {
   {
     _pwd="${PWD}"
 

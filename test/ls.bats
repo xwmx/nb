@@ -26,7 +26,7 @@ HEREDOC
 
 # `scoped:ls` #################################################################
 
-@test "\`scoped:ls\` exits with 0 and lists files in reverse order." {
+@test "'scoped:ls' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -51,7 +51,7 @@ HEREDOC
   [[ "${lines[2]}" =~ one     ]]
 }
 
-@test "\`scoped:ls\` with empty notebook prints help info." {
+@test "'scoped:ls' with empty notebook prints help info." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -78,7 +78,7 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-@test "\`scoped:ls\` escapes multi-word notebook name." {
+@test "'scoped:ls' escapes multi-word notebook name." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "multi word"
@@ -105,7 +105,7 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-@test "\`scoped:ls --bookmarks\` with empty notebook prints help info." {
+@test "'scoped:ls --bookmarks' with empty notebook prints help info." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -127,7 +127,7 @@ Help information:
   [[ "${_expected}" == "${output}"  ]]
 }
 
-@test "\`scoped:ls --documents\` with empty notebook prints help info." {
+@test "'scoped:ls --documents' with empty notebook prints help info." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -151,7 +151,7 @@ Help information:
 
 # footer ######################################################################
 
-@test "\`ls\` includes footer." {
+@test "'ls' includes footer." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -167,7 +167,7 @@ Help information:
   [[ "${lines[6]}" =~ ❯ ]]
 }
 
-@test "\`NB_FOOTER=0 ls\` does not include footer." {
+@test "'NB_FOOTER=0 ls' does not include footer." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -183,7 +183,7 @@ Help information:
   [[ ! "${lines[6]}" =~ ❯ ]]
 }
 
-@test "\`ls\` footer includes command names." {
+@test "'ls' footer includes command names." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -202,7 +202,7 @@ Help information:
   [[ "${lines[6]}"  =~  nb\ edit\ \<id\>  ]]
 }
 
-@test "\`ls\` footer scopes command names to a selected notebook." {
+@test "'ls' footer scopes command names to a selected notebook." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -226,7 +226,7 @@ Help information:
   [[ "${lines[6]}"  =~  nb\ edit\ home:\<id\> ]]
 }
 
-@test "\`ls\` footer escapes multi-word selected notebook names." {
+@test "'ls' footer escapes multi-word selected notebook names." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -262,7 +262,7 @@ Help information:
 
 # header ######################################################################
 
-@test "\`ls\` includes header." {
+@test "'ls' includes header." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -278,7 +278,7 @@ Help information:
   [[ "${lines[0]}" =~ home  ]]
 }
 
-@test "\`NB_HEADER=0 ls\` does not include header." {
+@test "'NB_HEADER=0 ls' does not include header." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -294,7 +294,7 @@ Help information:
   [[ ! "${lines[0]}" =~ home  ]]
 }
 
-@test "\`ls\` header does not escape multi-word notebook names." {
+@test "'ls' header does not escape multi-word notebook names." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -325,7 +325,7 @@ Help information:
   [[ "${lines[0]}" =~ multi\ word ]]
 }
 
-@test "\`ls\` header shows added and deleted notebook." {
+@test "'ls' header shows added and deleted notebook." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -363,7 +363,7 @@ Help information:
   [[ ! "${lines[0]}" =~ home  ]]
 }
 
-@test "\`ls\` header shows externally added and deleted notebook." {
+@test "'ls' header shows externally added and deleted notebook." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -403,7 +403,7 @@ Help information:
 
 # `ls` ########################################################################
 
-@test "\`ls\` exits with 0 and lists files." {
+@test "'ls' exits with 0 and lists files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -423,7 +423,7 @@ Help information:
   [[ "${lines[4]}" =~ one     ]]
 }
 
-@test "\`ls\` exits with 0 and includes archive count." {
+@test "'ls' exits with 0 and includes archive count." {
   {
     _setup_ls
     "${_NB}" notebooks add one
@@ -446,7 +446,7 @@ Help information:
   [[ "${lines[4]}" =~ one                   ]]
 }
 
-@test "\`ls\` with local includes it in notebook list." {
+@test "'ls' with local includes it in notebook list." {
   {
     _setup_ls
     mkdir -p "${_TMP_DIR}/example"
@@ -472,7 +472,7 @@ Help information:
 
 # `ls -e [<excerpt length>]` ##################################################
 
-@test "\`ls -e <excerpt length>\` exits with 0 and displays excerpts." {
+@test "'ls -e <excerpt length>' exits with 0 and displays excerpts." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -490,7 +490,7 @@ Help information:
 
 # `ls -n <number>`, ls --limit <number>, ls --<number> ########################
 
-@test "\`ls -n 0\` exits with 0 and lists 0 files." {
+@test "'ls -n 0' exits with 0 and lists 0 files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -506,7 +506,7 @@ Help information:
   [[ "${lines[2]}" =~ 3\ omitted\.\ 3\ total\.  ]]
 }
 
-@test "\`ls -n 1\` exits with 0 and lists 1 file." {
+@test "'ls -n 1' exits with 0 and lists 1 file." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -524,7 +524,7 @@ Help information:
   [[ "${lines[3]}" =~ 2\ omitted\.\ 3\ total\.  ]]
 }
 
-@test "\`ls -n 2\` exits with 0 and lists 2 files." {
+@test "'ls -n 2' exits with 0 and lists 2 files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -543,7 +543,7 @@ Help information:
   [[ "${lines[4]}" =~ 1\ omitted\.\ 3\ total\.  ]]
 }
 
-@test "\`ls -n 3\` exits with 0 and lists 3 files." {
+@test "'ls -n 3' exits with 0 and lists 3 files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -563,7 +563,7 @@ Help information:
   [[ "${lines[4]}" =~ one   ]]
 }
 
-@test "\`ls --limit 3\` exits with 0 and lists 3 files." {
+@test "'ls --limit 3' exits with 0 and lists 3 files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -583,7 +583,7 @@ Help information:
   [[ "${lines[4]}" =~ one   ]]
 }
 
-@test "\`ls --3\` exits with 0 and lists 3 files." {
+@test "'ls --3' exits with 0 and lists 3 files." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -605,7 +605,7 @@ Help information:
 
 # `ls -s` / `ls --sort` / `ls -r` / `ls --reverse` ############################
 
-@test "\`ls --sort\` sorts items." {
+@test "'ls --sort' sorts items." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first-home.md"
@@ -644,7 +644,7 @@ HEREDOC
   [[ "${lines[2]}" =~ [*3*]         ]]
 }
 
-@test "\`ls --sort --reverse\` reverse sorts items." {
+@test "'ls --sort --reverse' reverse sorts items." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first-home.md"
@@ -683,7 +683,7 @@ HEREDOC
   [[ "${lines[2]}" =~ [*1*]         ]]
 }
 
-@test "\`ls --sort\` retains limit." {
+@test "'ls --sort' retains limit." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first-home.md"
@@ -739,7 +739,7 @@ HEREDOC
   done
 }
 
-@test "\`ls --2\` exits with 0 and lists 2 items." {
+@test "'ls --2' exits with 0 and lists 2 items." {
   {
     _setup_ls_all
   }
@@ -755,7 +755,7 @@ HEREDOC
   [[ "${lines[3]}" =~ '29'  ]]
 }
 
-@test "\`ls\` exits with 0 and lists 20 items." {
+@test "'ls' exits with 0 and lists 20 items." {
   {
     _setup_ls_all
   }
@@ -775,7 +775,7 @@ HEREDOC
   [[ "${lines[22]}" =~ 'omitted'  ]]
 }
 
-@test "\`ls -a\` exits with 0 and lists all items." {
+@test "'ls -a' exits with 0 and lists all items." {
   {
     _setup_ls_all
   }
@@ -796,7 +796,7 @@ HEREDOC
   [[ "${lines[32]}" =~ \-\- ]]
 }
 
-@test "\`ls --all\` exits with 0 and lists all items." {
+@test "'ls --all' exits with 0 and lists all items." {
   {
     _setup_ls_all
   }
@@ -819,7 +819,7 @@ HEREDOC
 
 # `ls <selector>` #############################################################
 
-@test "\`ls <selector>\` exits with 0 and displays the selector." {
+@test "'ls <selector>' exits with 0 and displays the selector." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -838,7 +838,7 @@ HEREDOC
   [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`ls <query selector>\` exits with 0 and displays the selectors." {
+@test "'ls <query selector>' exits with 0 and displays the selectors." {
   {
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
@@ -860,7 +860,7 @@ HEREDOC
   [[ "${lines[1]}" =~ ${_files[0]}  ]]
 }
 
-@test "\`ls <multi-word selector>\` successfully filters list." {
+@test "'ls <multi-word selector>' successfully filters list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -902,7 +902,7 @@ HEREDOC
   [[ "${lines[0]}" =~ [*1*]     ]]
 }
 
-@test "\`ls <multiple> <selectors>\` successfully filters list." {
+@test "'ls <multiple> <selectors>' successfully filters list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -948,7 +948,7 @@ HEREDOC
   [[ "${lines[2]}" =~ [*1*]     ]]
 }
 
-@test "\`ls <invalid-selector>\` exits with 1 and displays a message." {
+@test "'ls <invalid-selector>' exits with 1 and displays a message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add
@@ -973,7 +973,7 @@ HEREDOC
   [[ "${lines[0]}" =~ not-valid     ]]
 }
 
-@test "\`ls <notebook>\` exits with 0 and runs ls in the notebook." {
+@test "'ls <notebook>' exits with 0 and runs ls in the notebook." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first-home.md"
@@ -1015,7 +1015,7 @@ HEREDOC
   [[ "${lines[3]}" =~ [*1*]         ]]
 }
 
-@test "\`ls <notebook>:\` (with colon) exits with 0 and runs ls in the notebook." {
+@test "'ls <notebook>:' (with colon) exits with 0 and runs ls in the notebook." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first-home.md"
@@ -1057,7 +1057,7 @@ HEREDOC
   [[ "${lines[3]}" =~ [*1*]         ]]
 }
 
-@test "\`ls <notebook> --sort\` exits with 0 and runs ls in the notebook." {
+@test "'ls <notebook> --sort' exits with 0 and runs ls in the notebook." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first-home.md"
@@ -1101,7 +1101,7 @@ HEREDOC
 
 # `ls --type` #################################################################
 
-@test "\`ls --document\` exits with 0 and displays a list of documents." {
+@test "'ls --document' exits with 0 and displays a list of documents." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1137,7 +1137,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 2           ]]
 }
 
-@test "\`ls --documents\` exits with 0 and displays a list of documents." {
+@test "'ls --documents' exits with 0 and displays a list of documents." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1173,7 +1173,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 2           ]]
 }
 
-@test "\`ls --document\` exits with 0 and displays empty list." {
+@test "'ls --document' exits with 0 and displays empty list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1203,7 +1203,7 @@ HEREDOC
 }
 
 
-@test "\`ls --documents\` exits with 0 and displays empty list." {
+@test "'ls --documents' exits with 0 and displays empty list." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1232,7 +1232,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
 }
 
-@test "\`ls --js\` exits with 0, displays empty list, and retains trailing 's'." {
+@test "'ls --js' exits with 0, displays empty list, and retains trailing 's'." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -1261,7 +1261,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
 }
 
-@test "\`ls <selection> --type\` filters by type." {
+@test "'ls <selection> --type' filters by type." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -1303,7 +1303,7 @@ HEREDOC
   [[ "${lines[0]}" =~ 3           ]]
 }
 
-@test "\`ls <selection> --<invalid>\` prints message." {
+@test "'ls <selection> --<invalid>' prints message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -1347,7 +1347,7 @@ HEREDOC
   [[ "${lines[0]}" =~ not-valid   ]]
 }
 
-@test "\`ls <selection> --documents\` with no matches prints message." {
+@test "'ls <selection> --documents' with no matches prints message." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "example.md"
@@ -1391,7 +1391,7 @@ HEREDOC
   [[ "${lines[0]}" =~ document        ]]
 }
 
-@test "\`<notebook>: <selection> --documents\` with no matches prints message." {
+@test "'<notebook>: <selection> --documents' with no matches prints message." {
   {
     "${_NB}" init
     "${_NB}" notebooks add example

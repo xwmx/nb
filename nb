@@ -68,7 +68,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="5.7.8"
+_VERSION="6.0.0-alpha"
 
 # $_ME
 #
@@ -1622,7 +1622,7 @@ _get_content() {
 
     if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
+      while IFS= read -r __line || [[ -n "${__line:-}" ]]
       do
         if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+) ]] &&
            ! ((_in_code_block))
@@ -1775,10 +1775,10 @@ _get_content() {
       done < "${_path}"
     fi
 
-    if [[ -n "${_title:-}"        ]]
+    if [[ -n "${_title:-}" ]]
     then
       printf "%s\\n" "${_title}"
-    elif [[ -n "${_first_line:-}" ]]
+    elif ! ((_only_title)) && [[ -n "${_first_line:-}" ]]
     then
       printf "%s\\n" "__first_line:${_first_line}"
     fi
@@ -1851,47 +1851,55 @@ _get_http_status() {
   fi
 }
 
-# _get_unique_basename()
+# _get_unique_relative_path()
 #
 # Usage:
-#   _get_unique_basename [<file-name> | <file-extension>] [<directory>]
+#   _get_unique_relative_path [<file-path>[<extention>] [<notebook-path>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
-_get_unique_basename() {
-  local _file_basename="${1:-}"
-  local _file_name="${_file_basename%%.*}"
+_get_unique_relative_path() {
+  local _file_path="${1:-}"
+  local _notebook_path="${2:-"$(_notebooks current --path)"}"
 
-  local _directory="${2:-}"
+  local _file_basename="${_file_path##*/}" # strip ancestors
+  local _file_name="${_file_basename%%.*}" # strip extension
+  local _folder_path=
+  local _target_basename=
+  local _unique_path=
 
-  if [[ -z "${_directory:-}" ]]
-  then
-    _directory="$(_notebooks current --path)"
-  fi
-
-  if [[ -z "${_file_name}" ]]
+  if [[ -z "${_file_name:-}" ]]
   then
     _file_name="$(date "+%Y%m%d%H%M%S")"
   fi
 
-  local _file_type="${_file_basename#*.}"
-  if [[ -z "${_file_type}" ]]
+  if [[ "${_file_path:-}" =~ / ]]
   then
-    _file_type="md"
+    _folder_path="${_file_path%\/*}"
   fi
 
-  if [[ -n "${_file_type:-}"                ]] &&
-     [[ "${_file_basename}" =~ \.           ]] &&
-     [[ "${_file_name}" != "${_file_type}"  ]]
+  if [[ "${_file_basename:-}" =~ ^\. ]]
   then
-    _file_type="${_file_type}"
+    local _file_type="${_file_basename#*.}"
+
+    _target_basename="${_file_name}.${_file_type}"
+  elif [[ -n "${_file_basename:-}" ]]
+  then
+    _target_basename="${_file_basename}"
   else
-    _file_type="md"
+    _target_basename="${_file_name}"
   fi
 
-  basename "$(
-    _get_unique_path "${_directory}/${_file_name}.${_file_type}"
+  _unique_path="$(
+    if [[ -n "${_folder_path:-}" ]]
+    then
+      _get_unique_path "${_notebook_path}/${_folder_path}/${_target_basename}"
+    else
+      _get_unique_path "${_notebook_path}/${_target_basename}"
+    fi
   )"
+
+  printf "%s" "${_unique_path#${_notebook_path}/}"
 }
 
 # _get_unique_path()
@@ -2148,20 +2156,15 @@ _wrap() {
 # _list_files()
 #
 # Usage:
-#   _list_files <notebook-path> [--sort] [--reverse] [--type <type>]
+#   _list_files <path> [--sort] [--reverse] [--type <type>]
 #
 # Description:
 #   List files in the current notebook.
 _list_files() {
-  local _notebook_path=
+  local _path=
   local _reverse=0
   local _sort=0
   local _type=
-
-  if [[ -z "${_notebook_path:-}" ]]
-  then
-    _notebook_path="$(_notebooks current --path)"
-  fi
 
   while ((${#}))
   do
@@ -2183,20 +2186,25 @@ _list_files() {
         fi
         ;;
       *)
-        if [[ -z "${_notebook_path:-}" ]]
+        if [[ -z "${_path:-}" ]]
         then
-          _notebook_path="${__arg}"
+          _path="${__arg}"
         fi
     esac
 
     shift
   done
 
+  if [[ -z "${_path:-}" ]]
+  then
+    _path="$(_notebooks current --path)"
+  fi
+
   if ((_sort))
   then
-    cat "${_notebook_path}/.index"
+    cat "${_path}/.index"
   else
-    ls -t -1 "${_notebook_path}"
+    ls -t -1 "${_path}"
   fi | {
     if ((_reverse))
     then
@@ -2233,7 +2241,7 @@ _list_files() {
         folder|folders|directory|directories)
           while read -r __line
           do
-            if [[ -d "${_notebook_path}/${__line}" ]]
+            if [[ -d "${_path}/${__line}" ]]
             then
               printf "%s\\n" "${__line}"
             fi
@@ -2330,7 +2338,7 @@ _pager() {
 # _print_line()
 #
 # Usage:
-#   _print_line <text>
+#   _print_line <text> [--dim]
 #
 # Description:
 #   Print a line of dashes the length of <text>.
@@ -2342,7 +2350,13 @@ _print_line() {
   local _text_length="${#_text}"
   local _line=
   printf -v _line "%*s" "${_text_length}" ""
-  _color_secondary "${_line// /-}"
+
+  if [[ "${2:-}" == "--dim" ]]
+  then
+    _color_dim "${_line// /-}"
+  else
+    _color_secondary "${_line// /-}"
+  fi
 }
 
 # _print_padding()
@@ -2394,6 +2408,124 @@ ${_padding}/_/  |_| |_|_.__/
 HEREDOC
 
   _print_line "$(printf "%-${_columns}s" '.')"
+}
+
+# _resolve_selector_folders()
+#
+# Usage:
+#   _resolve_selector_folders <selector> [<notebook-path>] [--build]
+#
+# Options:
+#   --build  Build a new path that includes segments that don't exist yet.
+#
+# Description:
+#   Resolve a selector path, which can be a mix of folder names and ids.
+_resolve_selector_folders() {
+  local _build_path=0
+  local _folder_relative_path=
+  local _selector=
+  local _selector_notebook_path=
+  local _notebook_path=
+  local _parent_folder_path=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --build)
+        _build_path=1
+        ;;
+      *)
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${__arg}"
+        else
+          _notebook_path="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  local _selector_path="${_selector#*:}"
+
+
+  if [[ "${_selector}" =~ : ]]
+  then
+    _selector_notebook_path="$(
+      _notebooks show "${_selector%%:*}" --path
+    )"
+
+    if [[ -n "${_selector_notebook_path:-}" ]]
+    then
+      _notebook_path="${_selector_notebook_path}"
+    fi
+  fi
+
+  if [[ -z "${_notebook_path:-}" ]]
+  then
+    _notebook_path="$(_notebooks current --path)"
+  fi
+
+  if [[ "${_selector_path}" =~ ^/ ]]
+  then
+    _selector="${_selector_path#${_notebook_path}/}"
+  fi
+
+  [[ ! "${_selector_path}" =~ / ]] && return 0
+
+  while [[ "${_selector_path}" =~ / ]]
+  do
+    local _folder_name="${_selector_path%%\/*}"
+
+    if [[ -z "${_folder_relative_path:-}" ]]
+    then
+      _parent_folder_path="${_notebook_path}"
+    else
+      _parent_folder_path="${_notebook_path}/${_folder_relative_path}"
+    fi
+
+    if [[ -d "${_parent_folder_path:?}/${_folder_name:?}" ]]
+    then
+      if [[ -z "${_folder_relative_path:-}" ]]
+      then
+        _folder_relative_path="${_folder_name}"
+      else
+        _folder_relative_path+="/${_folder_name}"
+      fi
+
+      _selector_path="${_selector_path#*/}"
+
+      continue
+    else
+      if [[ ! -e "${_parent_folder_path:?}/${_folder_name:?}" ]] &&
+         [[ "${_folder_name}" =~ ^[0-9]+$                     ]]
+      then # path segment might be an id
+        _folder_name="$(
+          _INDEX_FOLDER_PATH="${_parent_folder_path}" \
+            _index get_basename "${_folder_name}"
+        )"
+      fi
+
+      if [[ -d "${_parent_folder_path:?}/${_folder_name:-}" ]] ||
+         ((_build_path))
+      then
+        if [[ -z "${_folder_relative_path:-}" ]]
+        then
+          _folder_relative_path="${_folder_name}"
+        else
+          _folder_relative_path+="/${_folder_name}"
+        fi
+
+        _selector_path="${_selector_path#*/}"
+
+        continue
+      fi
+    fi
+
+    _exit_1 printf "Not a folder: %s\\n" \
+      "$(_color_primary "${_parent_folder_path:?}/${_folder_name:-}")"
+  done
+
+  printf "%s\\n" "${_folder_relative_path:-}"
 }
 
 # _spinner()
@@ -2697,6 +2829,7 @@ $(_color_primary "Usage:")
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -2736,7 +2869,8 @@ $(_color_primary "Usage:")
         [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+  ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
@@ -2757,8 +2891,6 @@ $(_color_primary "Usage:")
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [remove | set <url> [-f | --force]]
-  ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
-            (<name> | --reset | --to-bookmark | --to-note)
   ${_ME} run <command> [<arguments>...]
   ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
@@ -2790,7 +2922,7 @@ HEREDOC
 $(_color_primary "Subcommands:")
   (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
                When a <url> is provided, create a new bookmark.
-  add          Add a new note.
+  add          Add a note, folder, or a file of a specified type.
   bookmark     Add, open, list, and search bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -2804,13 +2936,12 @@ $(_color_primary "Subcommands:")
   init         Initialize the first notebook.
   list         List notes in the current notebook.
   ls           List notebooks and notes in the current notebook.
-  move         Move a note to a different notebook.
+  move         Move or rename a note.
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
   plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
-  rename       Rename a note.
   run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
@@ -2864,14 +2995,14 @@ Usage:
   ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add folder [<name>]
 
 Options:
   -c, --content <content>     The content for the new note.
   --edit                      Open the note in the editor before saving when
                               content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
-  -f, --filename <filename>   The filename for the new note. The default
-                              extension is used when the extension is omitted.
+  -f, --filename <filename>   The filename for the new note.
   -t, --title <title>         The title for a new note. If \`--title\` is
                               present, the filename will be derived from the
                               title, unless \`--filename\` is specified.
@@ -2879,7 +3010,7 @@ Options:
                               extension.
 
 Description:
-  Create a new note.
+  Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with
   \`\$EDITOR\`, currently set to "${EDITOR}". If a non-option argument is
@@ -2903,6 +3034,8 @@ Examples:
   ${_ME} add example.md --title "Example Title" --content "Example content."
   echo "Note content." | ${_ME} add
   ${_ME} add -t "Secret Document" --encrypt
+  ${_ME} add example/document.md
+  ${_ME} add folder sample/demo
   ${_ME} example:add
   ${_ME} example:add -t "Title"
   ${_ME} a
@@ -2915,12 +3048,14 @@ Shortcut Alias: \`a\`
 HEREDOC
 _add() {
   local _arguments=()
-  local _basename=
   local _content=
+  local _content_or_filename_or_path=
+  local _content_or_filename_extension=
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _content_or_filename=
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _password=
   local _target_filename=
   local _title=
@@ -2965,10 +3100,13 @@ _add() {
         _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      folder|directory)
+        _file_type="folder"
+        ;;
       *)
-        if [[ -z "${_content_or_filename:-}" ]]
+        if [[ -z "${_content_or_filename_or_path:-}" ]]
         then
-          _content_or_filename="${__arg:-}"
+          _content_or_filename_or_path="${__arg:-}"
         else
           _arguments+=("${__arg:-}")
         fi
@@ -2985,120 +3123,255 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _content_or_filename_extension="${_content_or_filename##*\.}"
+  local _content_or_filename_extension="${_content_or_filename_or_path##*\.}"
+  local _selector_content=
+  local _target_folder_relative_path=
 
-  if [[ -n "${_content_or_filename:-}" ]]
+  if [[ -n "${_content_or_filename_or_path:-}" ]]
   then
-    if  [[ "${_content_or_filename:-}" =~ \.[A-Za-z0-9]+$         ]]  &&
-        [[ -n "${_content_or_filename_extension:-}"               ]]  &&
-        [[ -z "${_target_filename}"                               ]]  &&
-        ! _string_is_url "${_content_or_filename:-}"                  &&
-        ! _string_is_email "${_content_or_filename:-}"                &&
-        ! _contains "${_content_or_filename_extension:-}"         \
-                    "${_common_non_text_file_extension_tlds[@]}"
+    if  _string_is_url "${_content_or_filename_or_path:-}"      ||
+        _string_is_email "${_content_or_filename_or_path:-}"    ||
+        _contains "${_content_or_filename_extension:-}"         \
+                  "${_common_non_text_file_extension_tlds[@]}"
     then
-      _target_filename="${_content_or_filename}"
+      _selector_content="${_content_or_filename_or_path}"
     else
-      _content="${_content_or_filename}"
+      local _selector_target="${_content_or_filename_or_path}"
+
+      if [[ "${_selector_target}" =~ : ]]
+      then
+        local _selector_notebook_path
+        _selector_notebook_path="$(
+          _notebook show "${_selector_target%%:*}" --path 2>/dev/null || :
+        )"
+
+        if [[ -n "${_selector_notebook_path}" ]]
+        then
+          _notebook_path="${_selector_notebook_path}"
+          _selector_target="${_selector_target#*:}"
+        else
+          _selector_content="${_selector_target}"
+        fi
+      fi
+
+      if ! [[ "${_selector_content:-}" ]]
+      then
+        if [[ "${_selector_target}" =~ / ]]
+        then
+          _target_folder_relative_path="${_selector_target%\/*}"
+        fi
+
+        if  _contains "${_file_type:-}" "folder" "directory"      || {
+            [[ "${_selector_target:-}" =~ \.[A-Za-z0-9]+$     ]]  &&
+            [[ -n "${_content_or_filename_extension:-}"       ]]  &&
+            [[ -z "${_target_filename}"                       ]]
+          }
+        then
+          _target_filename="${_selector_target##*\/}"
+        elif [[ ! "${_selector_target}" =~ / ]]
+        then
+          _selector_content="${_content_or_filename_or_path}"
+        fi
+      fi
     fi
   fi
 
-  if [[ -n "${_target_filename:-}" ]]
+  if [[ -n "${_selector_content:-}" ]]
   then
-    _basename="$(_notebooks current --filename "${_target_filename:-}")"
-  elif [[ -n "${_title:-}" ]]
+    _content="${_selector_content}"
+  fi
+
+  if [[ -z "${_target_filename:-}" ]]
   then
-    _target_filename="$(
-      printf "%s" "${_title}"           \
-        | tr '[:upper:]' '[:lower:]'    \
-        | tr '[:space:]:*/"\\<>?|' '_'
-    )"
-    _basename="$(_notebooks current --filename "${_target_filename}.${_file_type}")"
+    if [[ -n "${_title:-}" ]] &&
+       ! _contains "${_file_type:-}" "folder" "directory"
+    then
+      _target_filename="$(
+        printf "%s" "${_title}"           \
+          | tr '[:upper:]' '[:lower:]'    \
+          | tr '[:space:]:*/"\\<>?|' '_'
+      )"
+    fi
+
+    if [[ -n "${_file_type}" ]] && [[ "${_file_type:-}" != "folder" ]]
+    then
+      # NOTE: ${_target_filename} can be blank, resulting in '.type'
+      _target_filename="${_target_filename:-}.${_file_type}"
+    fi
+  fi
+
+  local _target_relative_path=
+
+  if [[ -n "${_target_folder_relative_path:-}" ]]
+  then
+    if [[ "${_target_folder_relative_path}" =~ /$ ]]
+    then
+      _target_folder_relative_path="$(
+        _resolve_selector_folders "${_target_folder_relative_path}/" --build
+      )"
+    else
+      _target_folder_relative_path="$(
+        _resolve_selector_folders "${_target_folder_relative_path}/${_target_filename:-}" --build
+      )"
+    fi
+
+    _target_relative_path="${_target_folder_relative_path}/${_target_filename:-}"
   else
-    _basename="$(_notebooks current --filename ".${_file_type}")" # !! note the '.'
+    _target_relative_path="${_target_filename:-}"
   fi
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _target_unique_relative_path=
 
-  _target_path="${_notebook_path}/${_basename}"
+  _target_unique_relative_path="$(
+    _notebooks current --filename "${_target_relative_path}"
+  )"
 
-  if ((_encrypt))
+  local _target_basename
+  _target_basename="$(basename "${_target_unique_relative_path}")"
+
+  local _target_path="${_notebook_path}/${_target_unique_relative_path}"
+
+  if _contains "${_file_type:-}" "folder" "directory"
   then
-    if [[ -z "${_password}" ]]
+    if ! mkdir -p "${_target_path:?}" 2>/dev/null
     then
-      # request password without displaying it
-      printf "%s: " "$(_color_primary "Password")"
-      read -r -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`
+      _exit_1 printf "Unable to create folder: %s\\n" \
+        "$(_color_primary "${_target_unique_relative_path}")"
+    fi
 
-      if [[ -z "${_password:-}" ]]
+    touch "${_target_path:?}/.index"
+
+    if [[ -n "${_target_folder_relative_path:-}" ]]
+    then
+      _INDEX_FOLDER_PATH="${_notebook_path}/${_target_folder_relative_path}" \
+        _index reconcile --ancestors
+    fi
+  else
+    if ((_encrypt))
+    then
+      if [[ -z "${_password}" ]]
       then
-        _exit_1 printf "Password required.\\n"
+        # request password without displaying it
+        printf "%s: " "$(_color_primary "Password")"
+        read -r -s _password </dev/tty
+        printf "\\n" # print newline to stop `read`
+
+        if [[ -z "${_password:-}" ]]
+        then
+          _exit_1 printf "Password required.\\n"
+        fi
+
+        local _password_confirmation=
+
+        # request password without displaying it
+        printf "%s: " "$(_color_primary "Confirm Password")"
+        read -r -s _password_confirmation </dev/tty
+        printf "\\n" # print newline to stop `read`
+
+        if [[ "${_password}" != "${_password_confirmation}" ]]
+        then
+          _exit_1 printf "Password mismatch.\\n"
+        fi
       fi
 
-      local _password_confirmation=
-
-      # request password without displaying it
-      printf "%s: " "$(_color_primary "Confirm Password")"
-      read -r -s _password_confirmation </dev/tty
-      printf "\\n" # print newline to stop `read`
-
-      if [[ "${_password}" != "${_password_confirmation}" ]]
+      if [[ -n "${_target_folder_relative_path:-}" ]]
       then
-        _exit_1 printf "Password mismatch.\\n"
+        if ! mkdir -p "$(_temp directory)/${_target_folder_relative_path}" 2>/dev/null
+        then
+          _exit_1 printf "Unable to create temporary folder: %s\\n" \
+            "$(_color_primary "$(_temp directory)/${_target_folder_relative_path}")"
+        fi
+      fi
+
+      _target_path="$(_temp directory)/${_target_unique_relative_path}"
+    fi
+
+    if [[ -n "${_target_folder_relative_path:-}"    ]] &&
+       [[ ! -d "${_target_folder_relative_path:-}"  ]]
+    then
+      if [[ -e "${_target_folder_relative_path:-}"  ]]
+      then
+        _exit_1 printf "File exists at: %s\\n" \
+          "$(_color_primary "${_target_folder_relative_path:-}")"
+      else
+        if ! mkdir -p "${_notebook_path:?}/${_target_folder_relative_path}" 2>/dev/null
+        then
+          _exit_1 printf "Unable to create folder: %s\\n" \
+            "$(_color_primary "${_target_folder_relative_path}")"
+        fi
       fi
     fi
 
-    _target_path="$(_temp file "${_basename}")"
-  fi
-
-  if [[ -n "${_title}" ]]
-  then
-    printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
-  fi
-
-  if [[ -n "${_content}" ]]
-  then
-    printf "%s\\n" "${_content}" >> "${_target_path}"
-  fi
-
-  if ! _interactive_input
-  then # piped input
-    cat >> "${_target_path}"
-  fi
-
-  if ((_edit_before_commit)) || {
-    _interactive_input && [[ -z "${_content:-}" ]]
-  }
-  then
-    _edit_file "${_target_path}"
-  fi
-
-  if ((_encrypt)) && [[ -e "${_target_path}" ]]
-  then
-    local _decrypted_path="${_target_path}"
-    local _encrypted_path="${_notebook_path}/${_basename}.enc"
-
-    _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
-
-    if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
+    if [[ -n "${_title}" ]]
     then
-      rm "${_decrypted_path:?}"
+      printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
     fi
 
-    _basename="${_basename}.enc"
-    _target_path="${_encrypted_path}"
+    if [[ -n "${_content}" ]]
+    then
+      printf "%s\\n" "${_content}" >> "${_target_path}"
+    fi
+
+    if ! _interactive_input
+    then # piped input
+      cat >> "${_target_path}"
+    fi
+
+    if ((_edit_before_commit)) || {
+      _interactive_input && [[ -z "${_content:-}" ]]
+    }
+    then
+      _edit_file "${_target_path}"
+    fi
+
+    # walk up and delete empty directories when file not created
+    if [[ ! -e "${_target_path:?}"                                  ]] &&
+       [[ -n "${_target_folder_relative_path:-}"                    ]] &&
+       [[ -e "${_notebook_path:?}/${_target_folder_relative_path}"  ]]
+    then
+      cd "${_notebook_path:?}/${_target_folder_relative_path:?}"
+
+      while [[ "${PWD:?}" =~ ^${_notebook_path:?}       ]] &&
+            [[ "${PWD:?}" != "${_notebook_path:?}"      ]] &&
+            [[ -z "$(find "${PWD}/." ! -name . -prune)" ]]
+      do
+        local _empty_directory_path="${PWD:?}"
+
+        cd ..
+
+        if [[ -d "${_empty_directory_path:?}"                             ]] &&
+           [[ -z "$(find "${_empty_directory_path}/." ! -name . -prune)"  ]]
+        then
+          rm -r "${_empty_directory_path:?}"
+        fi
+      done
+    fi
+
+    if ((_encrypt)) && [[ -e "${_target_path}" ]]
+    then
+      local _decrypted_path="${_target_path}"
+      local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
+
+      _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+
+      if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
+      then
+        rm "${_decrypted_path:?}"
+      fi
+
+      _target_unique_relative_path="${_target_unique_relative_path}.enc"
+      _target_path="${_encrypted_path}"
+    fi
   fi
 
   if [[ -e "${_target_path}" ]]
   then
     local _info
-    _info="$(_show "${_basename}" --info-line)"
+    _info="$(_show "${_target_unique_relative_path}" --info-line)"
 
     printf "Added: %s\\n" "${_info}"
   fi &&
-    _git checkpoint "${_notebook_path}" "[nb] Add: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Add: ${_target_unique_relative_path}"
 }
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
@@ -4105,6 +4378,8 @@ Shortcut Alias: \`d\`
 HEREDOC
 _delete() {
   local _force=0
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _selector=
   local _title=
 
@@ -4128,19 +4403,24 @@ _delete() {
     _exit_1 _help "delete"
   fi
 
-  local _basename
-  _basename="$(_show "${_selector}" --filename)"
+  local _relative_path
+  _relative_path="$(_show "${_selector}" --relative-path)"
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _basename="${_relative_path##*\/}"
+  local _folder_path="${_notebook_path}"
 
-  if [[ -z "${_basename}" ]]
+  if [[ "${_relative_path:-}" =~ / ]]
   then
-    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+    _folder_path="${_notebook_path}/${_relative_path%\/*}"
+  fi
+
+  if [[ -z "${_relative_path}" ]]
+  then
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
 
   local _info
-  _info="$(_show "${_basename}" --info-line)"
+  _info="$(_show "${_relative_path}" --info-line)"
 
   if ! ((_force))
   then
@@ -4162,19 +4442,19 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
     done
   fi
 
-  if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_basename}" ]]
+  if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
   then
-    if [[ -d "${_notebook_path}/${_basename}" ]] &&
-       [[ -z "$(ls -A "${_notebook_path}/${_basename}")" ]]
+    if [[ -d "${_notebook_path}/${_relative_path}"            ]] &&
+       [[ -z "$(ls -A "${_notebook_path}/${_relative_path}")" ]]
     then
-      rm -r "${_notebook_path:?}/${_basename:?}"
+      rm -r "${_notebook_path:?}/${_relative_path:?}"
     else
-      git -C "${_notebook_path:?}" rm -r "${_basename:?}" 1>/dev/null
+      git -C "${_notebook_path:?}" rm -r "${_relative_path:?}" 1>/dev/null
     fi
 
-    if [[ ! -e "${_notebook_path}/${_basename}" ]]
+    if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
     then
-      _index delete "${_basename}"
+      _INDEX_FOLDER_PATH="${_folder_path}" _index delete "${_basename}"
 
       _git checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
@@ -4269,24 +4549,27 @@ _edit() {
     _exit_1 _help "edit"
   fi
 
-  local _basename
-  _basename="$(_show "${_selector:-}" --filename)"
+  local _relative_path
+  _relative_path="$(_show "${_selector:-}" --relative-path)"
+
+  local _basename="${_relative_path##*\/}"
+  local _folder_path="${_relative_path%\/*}"
 
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
-  if [[ -z "${_basename}" ]]
+  if [[ -z "${_relative_path}" ]]
   then
-    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
 
-  if [[ -n "${_basename}" ]] || [[ -e "${_notebook_path}/${_basename}" ]]
+  if [[ -n "${_relative_path}" ]] || [[ -e "${_notebook_path}/${_relative_path}" ]]
   then # _basename is assigned and a note exists with that name.
     local _before
-    _before="$(_get_hash "${_notebook_path}/${_basename}")"
+    _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
     local _decrypted_path=
     local _encrypted_path=
-    local _target_file="${_notebook_path}/${_basename}"
+    local _target_file="${_notebook_path}/${_relative_path}"
 
     if _file_is_encrypted "${_target_file}"
     then
@@ -4329,7 +4612,7 @@ _edit() {
       fi
     fi
 
-    _after="$(_get_hash "${_notebook_path}/${_basename}")"
+    _after="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
     if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path:-}" ]]
     then
@@ -4354,12 +4637,12 @@ _edit() {
       rm "${_decrypted_path:?}"
     fi
 
-    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_basename}"
+    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_relative_path}"
 
     if [[ "${_before}" != "${_after}" ]]
     then
       local _info
-      _info="$(_show "${_basename}" --info-line)"
+      _info="$(_show "${_relative_path}" --info-line)"
 
       printf "Updated: %s\\n" "${_info}"
     fi
@@ -4619,6 +4902,8 @@ _export() {
   local _args=()
   local _force=0
   local _notebook_export=0
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
   local _pandoc_only=0
   local _selector=
   local _target_path=
@@ -4660,13 +4945,13 @@ _export() {
     return 0
   fi
 
-  local _basename
-  _basename="$(_show "${_selector}" --filename)"
+  local _relative_path
+  _relative_path="$(_show "${_selector}" --relative-path)"
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _basename="${_relative_path##*\/}"
 
-  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_notebook_path}/${_basename:-}" ]]
+  if [[ -z "${_relative_path:-}"                      ]] ||
+     [[ ! -e "${_notebook_path}/${_relative_path:-}"  ]]
   then
     _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
@@ -4677,9 +4962,9 @@ _export() {
     then
       if [[ -n "${_args[*]:-}" ]]
       then
-        pandoc "${_notebook_path}/${_basename}" "${_args[@]:-}"
+        pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
       else
-        pandoc "${_notebook_path}/${_basename}"
+        pandoc "${_notebook_path}/${_relative_path}"
       fi
     else
       _exit_1 printf "Pandoc required. https://pandoc.org/\\n"
@@ -4728,21 +5013,21 @@ $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
     then
       if [[ -n "${_args[*]:-}" ]]
       then
-        pandoc                              \
-          -o "${_target_path}"              \
-          --standalone                      \
-          "${_notebook_path}/${_basename}"  \
+        pandoc                                    \
+          -o "${_target_path}"                    \
+          --standalone                            \
+          "${_notebook_path}/${_relative_path}"   \
           "${_args[@]:-}"
       else
         pandoc                  \
           -o "${_target_path}"  \
           --standalone          \
-          "${_notebook_path}/${_basename}"
+          "${_notebook_path}/${_relative_path}"
       fi
     else
-      cp "${_notebook_path}/${_basename}" "${_target_path}"
+      cp "${_notebook_path}/${_relative_path}" "${_target_path}"
     fi &&
-      printf "Exported: %s\\n"  "$(_show "${_basename}" --info-line)"
+      printf "Exported: %s\\n"  "$(_show "${_relative_path}" --info-line)"
       printf "To:        %s\\n" "$(_color_primary "${_target_path}")"
   fi
 }
@@ -5283,8 +5568,8 @@ _helpers() {
     *http*)
       _get_http_status                "${_options[@]:-}"
       ;;
-    *unique*basename*)
-      _get_unique_basename            "${_options[@]:-}"
+    *unique*basename*|*unique*relative*)
+      _get_unique_relative_path            "${_options[@]:-}"
       ;;
     *unique*path*)
       _get_unique_path                "${_options[@]:-}"
@@ -5318,6 +5603,9 @@ _helpers() {
       ;;
     print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
+      ;;
+    resolve*)
+      _resolve_selector_folders       "${_options[@]:-}"
       ;;
     spinner)
       _spinner                        "${_options[@]:-}"
@@ -5602,51 +5890,55 @@ Usage:
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
-  ${_ME} index rebuild
-  ${_ME} index reconcile
+  ${_ME} index rebuild [--ancestors]
+  ${_ME} index reconcile [--ancestors]
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verify
-  ${_ME} index <subcommand> <options>... [<notebook-path>]
+  ${_ME} index <subcommand> <options>...
+
+Options:
+  --ancestors   Perform the action on all folders within the notebook that
+                are ancestors of the current folder.
 
 Subcommands:
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
-  get_max_id    Get the maximum id for the notebook.
+  get_max_id    Get the maximum id for the folder.
   rebuild       Rebuild the index, listing files by last modified, reversed.
                 Some ids will change. Prefer \`${_ME} index reconcile\`.
   reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
-  verify        Verify that the index matches the notebook contents.
+  verify        Verify that the index matches the folder contents.
 
 Description:
-  Manage the index for the current notebook. This subcommand is used
+  Manage the index for the current folder. This subcommand is used
   internally by \`${_ME}\` and using it manually will probably corrupt
-  the index. If something goes wrong with the index, fix it with
-  \`${_ME} index reconcile\`. All subcommands take an optional
-  <notebook-path> that can be used to circumvent the notebook lookup.
+  the index. If something goes wrong with an index, fix it with
+  \`${_ME} index reconcile\`.
 
-  The index is a text file named '.index' in the notebook directory. .index
-  contains a list of filenames and the line number of each filename
-  represents the id. .index is included in the git repository so ids are
-  preserved across systems.
+  An index is a text file named '.index' in any folder within a notebook.
+  .index contains a list of filenames and the line number of each filename
+  represents the id. .index files are included in the git repository so
+  ids are preserved across systems.
 HEREDOC
 _index() {
   local _subcommand="${1:-}"
-  local _notebook_path="${2:-}"
+  local _folder_path="${_INDEX_FOLDER_PATH:-"${NB_NOTEBOOK_PATH}"}"
 
-  # Use `$NB_NOTEBOOK_PATH` directly for performance.
-  local _notebook_path="${NB_NOTEBOOK_PATH}"
+  local _notebook_and_relative_path="${_folder_path#${NB_DIR}/}"
+  local _notebook_path="${NB_DIR}/${_notebook_and_relative_path%%/*}"
 
-  local _index_path="${_notebook_path}/.index"
+  local _index_path="${_folder_path}/.index"
 
-  if [[ ! -e "${_index_path}"           ]] &&
-     [[ ! "${_subcommand}" == "rebuild" ]]
+  if [[ ! -e "${_index_path}"             ]] &&
+     [[ ! "${_subcommand}" == "rebuild"   ]] &&
+     [[ ! "${_subcommand}" == "reconcile" ]]
   then
-    _index rebuild
+    _index reconcile --ancestors
   fi
 
   case "${_subcommand}" in
@@ -5658,7 +5950,7 @@ _index() {
         _exit_1 _help index
       fi
 
-      if [[ ! -e "${_notebook_path}/${_basename}" ]]
+      if [[ ! -e "${_folder_path}/${_basename}" ]]
       then
         _exit_1 printf "File not found: %s\\n" "${_basename}"
       fi
@@ -5787,8 +6079,31 @@ _index() {
       printf "\\n"
       ;;
     rebuild)
-      ls -t -r "${_notebook_path}" > "${_index_path}" &&
-        _git checkpoint "${_notebook_path}" "[nb] Rebuild Index"
+      local _top_path="${_folder_path:?}"
+
+      if [[ "${2:-}" == "--ancestors" ]]
+      then
+        _top_path="${_notebook_path:?}"
+      fi
+
+      local _rebuild_type="Rebuild"
+
+      if [[ ! -e "${_folder_path:?}/.index" ]]
+      then
+        _rebuild_type="Initialize"
+      fi
+
+      cd "${_folder_path:?}"
+
+      while [[ "${PWD:?}" =~ ${_top_path:?} ]]
+      do
+        ls -t -r "${PWD:?}" > "${PWD:?}/.index"
+
+        cd ..
+      done  &&
+        _git checkpoint "${_notebook_path}" "[nb] ${_rebuild_type:-Rebuild} Index"
+
+      return 0
       ;;
     reconcile)
       _index_reconcile_remove_duplicates() {
@@ -5811,59 +6126,80 @@ _index() {
         exec 4<&-
       }
 
-      local -a _index_list=()
-      _index_list=($(<"${_index_path}"))
+      local _top_path="${_folder_path:?}"
 
-      local -a _file_list=()
-      _file_list=($(ls "${_notebook_path}"))
+      [[ -d "${_top_path}" ]] || return 0
 
-      _index_reconcile_remove_duplicates "${_index_path}"
+      if [[ "${2:-}" == "--ancestors" ]]
+      then
+        _top_path="${_notebook_path:?}"
+      fi
 
-      local -a _index_file_list_diff=()
-      _index_file_list_diff=($(
-        printf "%s\\n"          \
-          "${_index_list[@]:-}" \
-          "${_file_list[@]:-}"  \
-          | sort                \
-          | uniq -u
-      ))
+      cd "${_folder_path:?}"
 
-      local -a _diff_in_index=()
-      _diff_in_index=($(
-        printf "%s\\n"                    \
-          "${_index_list[@]:-}"           \
-          "${_index_file_list_diff[@]:-}" \
-          | sort                          \
-          | uniq -d                       \
-          | uniq
-      ))
-
-      for __item in "${_diff_in_index[@]:-}"
+      while [[ "${PWD:?}" =~ ^${_top_path} ]]
       do
-        if [[ -n "${__item}" ]]
+        if [[ ! -e "${PWD:?}/.index" ]]
         then
-          _contains "${__item}" "${_file_list[@]:-}" ||
-            _index delete "${__item}"
+          ls -t -r "${PWD:?}" > "${PWD:?}/.index"
         fi
-      done
 
-      local -a _diff_in_file_list=()
-      _diff_in_file_list=($(
-        printf "%s\\n"                    \
-          "${_file_list[@]:-}"            \
-          "${_index_file_list_diff[@]:-}" \
-          | sort                          \
-          | uniq -d                       \
-          | uniq
-      ))
+        local -a _index_list=()
+        _index_list=($(<"${PWD:?}/.index"))
 
-      for __item in "${_diff_in_file_list[@]:-}"
-      do
-        if [[ -n "${__item}" ]]
-        then
-          _contains "${__item}" "${_index_list[@]:-}" ||
-            _index add "${__item}"
-        fi
+        local -a _file_list=()
+        _file_list=($(ls "${PWD:?}"))
+
+        _index_reconcile_remove_duplicates "${PWD:?}/.index"
+
+        local -a _index_file_list_diff=()
+        _index_file_list_diff=($(
+          printf "%s\\n"          \
+            "${_index_list[@]:-}" \
+            "${_file_list[@]:-}"  \
+            | sort                \
+            | uniq -u
+        ))
+
+        local -a _diff_in_index=()
+        _diff_in_index=($(
+          printf "%s\\n"                    \
+            "${_index_list[@]:-}"           \
+            "${_index_file_list_diff[@]:-}" \
+            | sort                          \
+            | uniq -d                       \
+            | uniq
+        ))
+
+        for __item in "${_diff_in_index[@]:-}"
+        do
+          if [[ -n "${__item}" ]]
+          then
+            _contains "${__item}" "${_file_list[@]:-}" ||
+              _INDEX_FOLDER_PATH="${PWD:?}" _index delete "${__item}"
+          fi
+        done
+
+        local -a _diff_in_file_list=()
+        _diff_in_file_list=($(
+          printf "%s\\n"                    \
+            "${_file_list[@]:-}"            \
+            "${_index_file_list_diff[@]:-}" \
+            | sort                          \
+            | uniq -d                       \
+            | uniq
+        ))
+
+        for __item in "${_diff_in_file_list[@]:-}"
+        do
+          if [[ -n "${__item}" ]]
+          then
+            _contains "${__item}" "${_index_list[@]:-}" ||
+              _INDEX_FOLDER_PATH="${PWD:?}" _index add "${__item}"
+          fi
+        done
+
+        cd ..
       done
       ;;
     show)
@@ -5892,7 +6228,7 @@ _index() {
       _index_list=($(<"${_index_path}"))
 
       local -a _file_list=()
-      _file_list=($(ls "${_notebook_path}"))
+      _file_list=($(ls "${_folder_path}"))
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
@@ -6115,6 +6451,9 @@ _list() {
   local _maybe_scope=
   local _maybe_scope_padded_right=
   local _no_id=0
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+  local _path=
   local _print_excerpt=0
   local _print_indicators=1
   local _list_paths=0
@@ -6207,25 +6546,59 @@ _list() {
   local _filter_pattern=
   _filter_pattern="$(_join "|" "${_filter_selectors[@]:-}")"
 
-  local _selector_basename=
   local _selector_identifier=
+  local _selector_relative_path=
 
   if [[ -n "${_selector:-}" ]]
   then
-    _selector_basename="$(_show "${_selector}" --filename 2>/dev/null || :)"
     _selector_identifier="$(_show "${_selector}" --selector-id)"
+    _selector_relative_path="$(
+      _show "${_selector}" --relative-path 2>/dev/null || :
+    )"
+
+    if [[ "${_selector}" =~ /$ ]] && [[ -z "${_selector_relative_path:-}" ]]
+    then
+      _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+      return 1
+    fi
   fi
 
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
+  local _selector_basename="${_selector_relative_path##*\/}"
+
+  if [[ "${_selector}" =~ /$ ]]
+  then
+    _path="${_selector_relative_path}"
+    _selector_basename=
+    _selector_identifier=
+  elif [[ "${_selector_relative_path:-}" =~ / ]]
+  then
+    _path="${_selector_relative_path%\/*}"
+  fi
 
   local _notebook_escaped_name=
   _notebook_escaped_name="$(
     _notebooks show "${_notebook_path}" --escaped --no-color
   )"
 
-  local _list_files_options=("${_notebook_path}")
-  local _filenames=()
+  local _list_path="${_notebook_path}"
+  local _id_path=
+
+  if [[ -n "${_path:-}" ]]
+  then
+    _id_path="${_path// /\\ }/"
+
+    _list_path="${_notebook_path}/${_path}"
+
+    if [[ -d "${_list_path}" ]]
+    then
+      _INDEX_FOLDER_PATH="${_list_path}" _index reconcile --ancestors
+    elif [[ ! -e "${_list_path}" ]]
+    then
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_path:-}")"
+    fi
+  fi
+
+  local _list_files_options=("${_list_path}")
 
   [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
   ((_reverse))          && _list_files_options+=("--reverse")
@@ -6243,7 +6616,7 @@ _list() {
   local _printed_count=0
 
   local _max_id
-  _max_id="$(_index get_max_id)"
+  _max_id="$(_INDEX_FOLDER_PATH="${_list_path}" _index get_max_id)"
 
   # Use code blocks to capture all output for piping to pager.
   {
@@ -6276,7 +6649,7 @@ _list() {
             # include the note in the list
             _matches=$((_matches+1))
           else
-            _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+            _maybe_title="$(_get_content "${_list_path}/${__basename}")"
 
             if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
             then
@@ -6315,12 +6688,12 @@ _list() {
 
       if ((_list_paths))
       then
-        _title_basename_or_path="${_notebook_path}/${__basename}"
+        _title_basename_or_path="${_list_path}/${__basename}"
       elif ! ((_list_filenames))
       then
         if [[ -z "${_maybe_title}" ]]
         then
-          _maybe_title="$(_get_content "${_notebook_path}/${__basename}")"
+          _maybe_title="$(_get_content "${_list_path}/${__basename}")"
         fi
 
         if [[ -n "${_maybe_title}" ]]
@@ -6341,35 +6714,35 @@ _list() {
       if ((_print_indicators))
       then
         # TODO: `show --indicators` duplicated for performance
-        if _file_is_bookmark "${_notebook_path}/${__basename}"
+        if _file_is_bookmark "${_list_path}/${__basename}"
         then
           _indicators+="🔖 "
         elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
         then
-          if _file_is_image "${_notebook_path}/${__basename}"
+          if _file_is_image "${_list_path}/${__basename}"
           then
             _indicators+="🌄 "
-          elif _file_is_document "${_notebook_path}/${__basename}"
+          elif _file_is_document "${_list_path}/${__basename}"
           then
             _indicators+="📄 "
-          elif [[ -d "${_notebook_path}/${__basename}" ]]
+          elif [[ -d "${_list_path}/${__basename}" ]]
           then
             _indicators+="📂 "
-          elif _file_is_video "${_notebook_path}/${__basename}"
+          elif _file_is_video "${_list_path}/${__basename}"
           then
             _indicators+="📹 "
-          elif _file_is_audio "${_notebook_path}/${__basename}"
+          elif _file_is_audio "${_list_path}/${__basename}"
           then
             _indicators+="🔉 "
           elif [[ "${__basename}" =~ \.epub$ ]]
           then
             _indicators+="📖 "
           fi
+        fi
 
-          if _file_is_encrypted "${_notebook_path}/${__basename}"
-          then
-            _indicators+="🔒 "
-          fi
+        if _file_is_encrypted "${_list_path}/${__basename}"
+        then
+          _indicators+="🔒 "
         fi
 
         if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
@@ -6400,21 +6773,22 @@ _list() {
         _info_line="${_item_info}"
         _info_line_color="${_item_info}"
       else
-        local _item_identifier=
+        local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
-        _item_identifier="$(
-          sed -n "/^${__basename:-}$/=" "${_notebook_path:-}/.index"
+        _item_id="$(
+          sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
         )"
-
-        local _max_identifier="${_max_id}"
 
         if [[ -n "${_maybe_scope:-}" ]]
         then
-          _item_identifier="${_notebook_escaped_name}:${_item_identifier}"
-          _max_identifier="${_notebook_escaped_name}:${_max_id}"
+          local _item_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_item_id:-}"
+          local _max_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_max_id:-}"
+        else
+          local _item_identifier="${_id_path:-}${_item_id:-}"
+          local _max_identifier="${_id_path:-}${_max_id:-}"
         fi
 
-        local _brackets_identifier="[${_item_identifier}]"
+        local _brackets_identifier="[${_id_path:-}${_item_identifier:-}]"
 
         # avoid calling `_color_brackets` for performance
         local _brackets_identifier_color="\
@@ -6466,7 +6840,7 @@ ${_TPUT_SGR0}"
 
       if ((_print_excerpt))                               &&
          [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
-         _file_is_text "${_notebook_path}/${__basename}"
+         _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
         local _visible_info_line_length=
         _visible_info_line_length="$(
@@ -6480,7 +6854,7 @@ ${_TPUT_SGR0}"
         else
           _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
         fi
-        head -"${_excerpt_length}" "${_notebook_path}/${__basename}" \
+        head -"${_excerpt_length}" "${_list_path}/${__basename}" \
           | _highlight_syntax_if_available "${__basename##*.}"
         printf "\\n"
       fi
@@ -6516,7 +6890,7 @@ ${_TPUT_SGR0}"
       fi
     fi
 
-    if ! ((_printed_count)) && [[ -n "${_selector:-}" ]]
+    if ! ((_printed_count)) && [[ -n "${_selector_identifier:-}" ]]
     then
       local _filter_message=
       _filter_message="$(_color_primary "${_selector}")"
@@ -7031,9 +7405,25 @@ _ls() {
   fi
 
   {
-    if ((NB_HEADER)) && [[ -z "${_arguments[*]:-}" ]]
+    if ((NB_HEADER)) && {
+      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
+    }
     then
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
+    fi
+
+    if [[ "${_selector}" =~ / ]]
+    then
+      # printf "📂 " # TODO: Review
+
+      local _selector_path
+      _selector_path="$(_resolve_selector_folders "${_selector}")/"
+
+      printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
+
+      _print_line "$(printf "%-${_columns}s" '.')" --dim
+
+      printf "\\n"
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
@@ -7061,12 +7451,14 @@ _ls() {
         local _local_count
         _local_count="$(_count)"
 
-        if ! ((_local_count)) || [[ -z "${_selector:-}" ]]
+        if ! ((_local_count))           ||
+           [[ -z "${_selector:-}"   ]]  ||
+           [[ "${_selector}" =~ /$  ]]
         then
           _list "${_list_options[@]:-}"
         else
-        local _filter_message=
-        _filter_message="${_selector}"
+          local _filter_message=
+          _filter_message="${_selector}"
 
           if _notebooks current --selected
           then
@@ -7086,7 +7478,9 @@ _ls() {
       fi
     }
 
-    if ((NB_FOOTER)) && [[ -z "${_arguments[*]:-}" ]]
+    if ((NB_FOOTER)) && {
+      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
+    }
     then
       _ls_print_footer "${_notebook_names[@]:-}"
     fi
@@ -7102,107 +7496,235 @@ _ls() {
 
 describe "move" <<HEREDOC
 Usage:
-  ${_ME} move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
+  ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
 
 Options:
-  -f, --force   Skip the confirmation prompt.
+  -f, --force     Skip the confirmation prompt.
+  --reset         Reset the filename to the last modified timestamp.
+  --to-bookmark   Preserve the existing filename and replace the extension
+                  with ".bookmark.md" to convert the note to a bookmark.
+  --to-note       Preserve the existing filename and replace the bookmark's
+                  ".bookmark.md" extension with ".md" to convert the bookmark
+                  to a Markdown note.
 
 Description:
-  Move the specified note to <notebook>.
+  Move or rename a note. Move the note to <path> or change the file type.
+  When file extension is omitted, the existing extension will be used.
+
+  \`move\` and \`rename\` are aliases and can be used interchangably.
 
 Examples:
-  ${_ME} move 1 example-notebook
-  ${_ME} move example.md example-notebook
-  ${_ME} example:move sample.md other-notebook
-  ${_ME} move example:sample.md other-notebook
-  ${_ME} mv 1 example-notebook
+  # Move "example.md" to "example.org"
+  ${_ME} move example.md sample.org
 
+  # Rename note 3 ("example.md") to "New Name.md"
+  ${_ME} rename 3 "New Name"
+
+  # Rename "example.bookmark.md" to "New Name.bookmark.md"
+  ${_ME} move example.bookmark.md "New Name"
+
+  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
+  ${_ME} rename 3 --to-bookmark
+
+  # Move note 12 to "Sample Folder" in the "demo" notebook
+  ${_ME} example:move 12 demo:Sample\ Folder/
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  ${_ME} example:move 12 "sample.md"
+
+Alias: \`rename\`
 Shortcut Alias: \`mv\`
 HEREDOC
 _move() {
-  local _basename=
   local _force=0
-  local _selector=
-  local _target_notebook=
+  local _reset=0
+  local _source_selector=
+  local _target_selector=
+  local _to_target_type=
 
-  for __arg in "${@:-}"
+  while ((${#}))
   do
+    local __arg="${1:-}"
+    local __val="${2:-}"
+
     case "${__arg}" in
       -f|--force)
         _force=1
         ;;
+      --reset)
+        _reset=1
+        ;;
+      --to*bookmark)
+        _to_target_type="bookmark"
+        ;;
+      --to*note)
+        _to_target_type="note"
+        ;;
       *)
-        if [[ -z "${_selector}" ]]
+        if [[ -z "${_source_selector}" ]]
         then
-          _selector="${__arg}"
-        elif [[ -z "${_target_notebook}" ]]
+          _source_selector="${__arg}"
+        elif [[ -z "${_target_selector}" ]]
         then
-          _target_notebook="${__arg}"
+          _target_selector="${__arg}"
         fi
         ;;
     esac
+
+    shift
   done
 
-  if [[ -z "${_selector:-}" ]] || [[ -z "${_target_notebook:-}" ]]
+  if [[ -z "${_source_selector}" ]]
   then
     _exit_1 _help "move"
   fi
 
-  if [[ "${_target_notebook}" =~ :$ ]]
+  local _source_relative_path
+  _source_relative_path="$(_show "${_source_selector}" --relative-path)"
+
+  if [[ -z "${_source_relative_path}" ]]
   then
-    _target_notebook="$(printf "%s\\n" "${_target_notebook}" | tr -d ':')"
+    _exit_1 _help "move"
   fi
 
-  local _basename
-  _basename="$(_show "${_selector}" --filename)"
-
-  local _notebook_escaped_name
-  _notebook_escaped_name="$(
-    _notebooks show "$(_notebooks current)" --escaped --no-color
+  local _source_notebook_path
+  _source_notebook_path="$(
+    _notebooks show "${_source_selector}" --path 2>/dev/null || :
   )"
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  if [[ -z "${_source_notebook_path:-}" ]]
+  then
+    _source_notebook_path="$(_notebooks current --path)"
+  fi
 
+  local _source_basename="${_source_relative_path##*\/}"
+  local _source_folder_path="${_source_notebook_path}"
+  local _source_path="${_source_notebook_path}/${_source_relative_path}"
+
+  if [[ "${_source_relative_path:-}" =~ / ]]
+  then
+    _source_folder_path="${_source_notebook_path}/${_source_relative_path%\/*}"
+  fi
+
+  local _source_file_name="${_source_basename%%.*}"
+  local _source_file_type="${_source_basename#*.}"
+
+  if [[ -z "${_source_file_type:-}"                     ]] ||
+     [[ "${_source_file_type}" == "${_source_basename}" ]]
+  then
+    _source_file_type=
+  fi
+
+  local _target_selector_relative_path=
+
+  if ((_reset))
+  then
+    local _target_file_name=
+    _target_file_name="$(
+      date -r "${_source_notebook_path}/${_source_relative_path}" "+%Y%m%d%H%M%S"
+    )"
+    local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
+
+    _target_basename="${_target_file_name}.${_target_file_type}"
+  elif [[ -n "${_target_selector:-}"  ]] ||
+       [[ -n "${_to_target_type:-}"   ]]
+  then
+    _target_selector_relative_path="${_target_selector#*:}"
+
+    local _target_basename="${_target_selector_relative_path##*\/}"
+    local _target_file_name="${_target_basename%%.*}"
+    local _target_file_type="${_target_basename#*.}"
+
+    if [[ -z "${_target_file_type:-}"                     ]] ||
+       [[ "${_target_file_type}" == "${_target_basename}" ]]
+    then # no file extension specified in _target_name
+      if [[ -n "${_source_file_type}"                     ]]
+      then
+        _target_file_type="${_source_file_type}"
+      else
+        _target_file_type=
+      fi
+    fi
+
+    if [[ -n "${_to_target_type:-}" ]]
+    then
+      if [[ "${_to_target_type}" == "bookmark"  ]]
+      then
+        _target_file_type="bookmark.md"
+      elif [[ "${_to_target_type}" == "note"    ]]
+      then
+        _target_file_type="md"
+      else
+        _exit_1 _help "move"
+      fi
+    fi
+
+    if [[ -z "${_target_file_name:-}" ]]
+    then
+      _target_file_name="${_source_file_name}"
+    fi
+
+    if [[ -n "${_target_file_type:-}" ]]
+    then
+      _target_basename="${_target_file_name}.${_target_file_type}"
+    else
+      _target_basename="${_target_file_name}"
+    fi
+  else
+    _exit_1 _help "move"
+  fi
+
+  local _target_info=
   local _target_notebook_path
-  _target_notebook_path="$(
-    _notebooks show "${_target_notebook}" --path 2>/dev/null || :
-  )"
 
-  local _target_notebook_escaped_name
-  _target_notebook_escaped_name="$(
-    _notebooks show "${_target_notebook}" --escaped --no-color 2>/dev/null || :
-  )"
+  if [[ "${_target_selector:-}" =~ : ]]
+  then
+    _target_notebook_path="$(
+      _notebooks show "${_target_selector:-}" --path 2>/dev/null || :
+    )"
 
-  if [[ -z "${_basename}"                             ]] ||
-     [[ ! -e "${_notebook_path}/${_basename}"         ]]
-  then
-    _exit_1 printf        \
-      "Not found: %s\\n"  \
-      "$(_color_primary "${_notebook_escaped_name}:${_selector}")"
-  elif [[ ! -e "${_target_notebook_path}/.git"        ]]
-  then
-    _exit_1 printf                        \
-      "Target notebook not found: %s\\n"  \
-      "$(_color_primary "${_target_notebook}")"
-  elif [[ -e "${_target_notebook_path}/${_basename}"  ]]
-  then
-    _exit_1 printf            \
-      "Already exists: %s\\n" \
-      "$(_color_primary "${_target_notebook_escaped_name}:${_basename}")"
+    if [[ -z "${_target_notebook_path:-}" ]]
+    then
+      _exit_1 printf "Target notebook not found: %s\\n" "${_target_selector%%:*}"
+    fi
+  else
+    _target_notebook_path="$(_notebooks current --path)"
   fi
 
-  _source_info="$(_show "${_selector}" --info-line)"
+  if _notebooks current --selected ||
+     [[ "${_target_notebook_path}" != "$(_notebooks current --path)" ]]
+  then
+    _target_info="$(_notebooks show "${_target_notebook_path}" --escaped):"
+  fi
+
+  local _target_folder_path="${_target_notebook_path}"
+  local _target_relative_path="${_target_basename}"
+
+  if [[ "${_target_selector_relative_path:-}" =~ / ]]
+  then
+    _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
+
+    _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"
+  fi
+
+  _target_info+="${_target_relative_path}"
+
+  if [[ -e "${_target_notebook_path}/${_target_relative_path}" ]]
+  then
+    _exit_1 printf "File already exists: %s\\n" \
+      "$(_color_primary "${_target_info}")"
+  fi
 
   if ! ((_force))
   then
-    printf "Moving:  %s\\n"  "${_source_info}"
-    printf "To:       %s\\n" "$(_color_primary "${_target_notebook}")"
+    printf "Moving: %s\\n"  "$(_show "${_source_relative_path}" --info-line)"
+    printf "To:      %s\\n" "$(_color_primary "${_target_info}")"
 
     while true
     do
       IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -7216,33 +7738,51 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
     done
   fi
 
-  if [[ -d "${_notebook_path}/${_basename}" ]]
+  if [[ ! -e "${_target_folder_path}" ]]
   then
-    NB_NOTEBOOK_PATH="${_target_notebook_path}"     \
-      _import "${_notebook_path}/${_basename}" 1> /dev/null
+    mkdir -p "${_target_folder_path}" ||
+      _exit_1 printf "Unable to create folder: %s\\n" \
+        "$(_color_primary "${_target_folder_path}")"
+  fi
+
+  mv "${_source_path}" "${_target_notebook_path}/${_target_relative_path}" ||
+    _exit_1 printf "Move failed.\\n"
+
+  if [[ "${_source_notebook_path}" == "${_target_notebook_path}" ]]
+  then
+    if [[ "${_source_folder_path}" == "${_target_folder_path}" ]]
+    then
+      _INDEX_FOLDER_PATH="${_source_folder_path}" \
+        _index update "${_source_basename}" "${_target_basename}"
+    else
+      _INDEX_FOLDER_PATH="${_source_folder_path}" \
+        _index delete "${_source_basename}" &&
+      _INDEX_FOLDER_PATH="${_target_folder_path}" \
+        _index add "${_target_basename}"
+    fi || _exit_1 printf "Move index update failed.\\n"
+
+    _git checkpoint "${_target_notebook_path}"    \
+      "[nb] Move: ${_source_relative_path} to ${_target_relative_path}"
   else
-    cat "${_notebook_path}/${_basename}"            \
-      | NB_NOTEBOOK_PATH="${_target_notebook_path}" \
-        _add "${_basename}" 1> /dev/null
+    _INDEX_FOLDER_PATH="${_source_folder_path}"   \
+      _index delete "${_source_basename}"
+
+    _git checkpoint "${_source_notebook_path}"    \
+      "[nb] Delete: ${_source_relative_path}"
+
+    _INDEX_FOLDER_PATH="${_target_folder_path}"   \
+      _index add "${_target_basename}"
+
+    _git checkpoint "${_target_notebook_path}"    \
+      "[nb] Add: ${_target_relative_path}"
   fi
 
-  NB_NOTEBOOK_PATH="${_notebook_path}"              \
-    _delete "${_basename}" --force 1> /dev/null
-
-  local _id
-  _id="$(
-    NB_NOTEBOOK_PATH="${_target_notebook_path}" _index get_id "${_basename}"
+  printf "Moved to: %s\\n" "$(
+    _show "${_target_notebook_path}/${_target_relative_path}" --info-line
   )"
-
-  if [[ ! -e "${_notebook_path}/${_basename}"       ]] ||
-     [[ -e "${_target_notebook_path}/${_basename}"  ]]
-  then
-    printf "Moved to %s %s\\n"                                \
-      "$(_color_brackets "${_target_notebook}:${_id}")"       \
-      "$(_color_primary "${_target_notebook}:${_basename}")"
-  fi
 }
 _alias_subcommand "move" "mv"
+_alias_subcommand "move" "rename"
 
 # notebooks ######################################################### notebooks
 
@@ -7366,13 +7906,13 @@ _notebooks() {
   #
   # Usage:
   #   _notebooks_current (<name> | <path> | <selector>) [--global | --local]
-  #                      [--path | --scoped]
+  #                      [--path | --scoped] [--filename]
   _notebooks_current() {
-    local _filename=
+    local _file_path=
     local _print_global=0
     local _print_local=0
     local _print_path=0
-    local _print_unique_filename=0
+    local _print_unique_file_path=0
     local _return_selected=0
     local _selector=
 
@@ -7394,12 +7934,12 @@ _notebooks() {
         --scoped|--selected)
           _return_selected=1
           ;;
-        --filename|--basename)
-          _print_unique_filename=1
+        --filename|--basename|--file*path)
+          _print_unique_file_path=1
 
           if _option_value_is_present "${__val:-}"
           then
-            _filename="${__val}"
+            _file_path="${__val}"
             shift
           fi
           ;;
@@ -7444,9 +7984,9 @@ _notebooks() {
     then
       [[ "${NB_NOTEBOOK_PATH}" != "${_GLOBAL_NOTEBOOK_PATH}" ]] &&
       [[ "${NB_NOTEBOOK_PATH}" != "${_LOCAL_NOTEBOOK_PATH}"  ]]
-    elif ((_print_unique_filename))
+    elif ((_print_unique_file_path))
     then
-      _notebooks_show "${NB_NOTEBOOK_PATH}" --filename "${_filename:-}"
+      _notebooks_show "${NB_NOTEBOOK_PATH}" --filename "${_file_path:-}"
     else
       if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
          [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
@@ -7693,6 +8233,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
        [[ -d "${_path}/.git"  ]]
     then
       local _error_message=
+
       if [[ -f "${_path}/.index" ]]
       then
         _error_message="Notebook exists: $(_color_primary "${_path}")"
@@ -8021,7 +8562,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       if [[ "${_old}" == "local" ]] || [[ "${_new}" == "local" ]]
       then
         _exit_1 cat <<HEREDOC
-"local" refers to the local notbook and can not be renamed.
+"local" refers to the local notebook and can not be renamed.
 HEREDOC
       fi
     elif [[ ! -d "${NB_DIR}/${_old}" ]]
@@ -8080,12 +8621,12 @@ HEREDOC
   #   _notebooks_show (<name> | <path> | <selector>) [--archived]
   #                   [--escaped | --name | --path | --filename [<filename>]]
   _notebooks_show() {
-    local _filename=
+    local _file_path=
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_color_enabled=1
     local _notebook_path=
     local _print_escaped_name=0
-    local _print_unique_filename=0
+    local _print_unique_file_path=0
     local _only_name=0
     local _only_path=0
     local _selector=
@@ -8112,12 +8653,12 @@ HEREDOC
         --path)
           _only_path=1
           ;;
-        --filename|--basename)
-          _print_unique_filename=1
+        --filename|--basename|--file*path)
+          _print_unique_file_path=1
 
           if _option_value_is_present "${__val:-}"
           then
-            _filename="${__val}"
+            _file_path="${__val}"
             shift
           fi
           ;;
@@ -8137,15 +8678,25 @@ HEREDOC
       _exit_1 _help "notebooks"
     elif [[ "${_selector:-}" =~ ^/  ]]
     then
-      if [[ -d "${_selector}/.git"   ]] &&
-         [[ -f "${_selector}/.index" ]]
+      local _maybe_notebook_path="${_selector}"
+
+      while [[ -n "${_maybe_notebook_path:-}"         ]] &&
+            ! {
+              [[ -d "${_maybe_notebook_path}/.git"    ]] &&
+              [[ -f "${_maybe_notebook_path}/.index"  ]]
+            }
+      do
+        _maybe_notebook_path="${_maybe_notebook_path%/*}"
+      done
+
+      if [[ -n "${_maybe_notebook_path:-}" ]]
       then
-        if [[ -n "${_local_notebook_path:-}"              ]] &&
-           [[ "${_selector}" == "${_local_notebook_path}" ]]
+        if [[ -n "${_local_notebook_path:-}"                          ]] &&
+           [[ "${_maybe_notebook_path}" == "${_local_notebook_path}"  ]]
         then
           _notebook_path="${_local_notebook_path}"
         else
-          _notebook_path="${_selector}"
+          _notebook_path="${_maybe_notebook_path}"
         fi
       fi
     elif [[ -n "${_selector:-}" ]]
@@ -8189,12 +8740,14 @@ HEREDOC
       fi
     fi
 
-    if ((_print_unique_filename))
+    if ((_print_unique_file_path))
     then
-      local _unique_file_name=
-      _unique_file_name="$(_get_unique_basename "${_filename:-}")"
+      local _unique_file_path=
+      _unique_file_path="$(
+        _get_unique_relative_path "${_file_path:-".${NB_DEFAULT_EXTENSION}"}"
+      )"
 
-      printf "%s\\n" "${_unique_file_name:-}"
+      printf "%s\\n" "${_unique_file_path:-}"
       return 0
     fi
 
@@ -8834,198 +9387,6 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
       fi
       ;;
   esac
-}
-
-# rename ############################################################### rename
-
-describe "rename" <<HEREDOC
-Usage:
-  ${_ME} rename (<id> | <filename> | <path> | <title>) [-f | --force]
-            (<name> | --reset | --to-bookmark | --to-note)
-
-Options:
-  -f, --force     Skip the confirmation prompt.
-  --reset         Reset the filename to the last modified timestamp.
-  --to-bookmark   Preserve the existing filename and replace the extension
-                  with ".bookmark.md" to convert the note to a bookmark.
-  --to-note       Preserve the existing filename and replace the bookmark's
-                  ".bookmark.md" extension with ".md" to convert the bookmark
-                  to a Markdown note.
-
-Description:
-  Rename a note. Set the filename to <name> for the specified note file. When
-  file extension is omitted, the existing extension will be used.
-
-Examples:
-  # Rename "example.md" to "example.org"
-  ${_ME} rename example.md example.org
-
-  # Rename note 3 ("example.md") to "New Name.md"
-  ${_ME} rename 3 "New Name"
-
-  # Rename "example.bookmark.md" to "New Name.bookmark.md"
-  ${_ME} rename example.bookmark.md "New Name"
-
-  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
-  ${_ME} rename 3 --to-bookmark
-
-  # Rename note 12 in the "example" notebook to "sample.md"
-  ${_ME} example:rename 3 "sample.md"
-HEREDOC
-_rename() {
-  local _force=0
-  local _reset=0
-  local _selector=
-  local _target_basename=
-  local _target_name=
-  local _to_target_type=
-
-  while ((${#}))
-  do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
-      -f|--force)
-        _force=1
-        ;;
-      --reset)
-        _reset=1
-        ;;
-      --to*bookmark)
-        _to_target_type="bookmark"
-        ;;
-      --to*note)
-        _to_target_type="note"
-        ;;
-      *)
-        if [[ -z "${_selector}"       ]]
-        then
-          _selector="${__arg}"
-        elif [[ -z "${_target_name}"  ]]
-        then
-          _target_name="${__arg}"
-        fi
-        ;;
-    esac
-
-    shift
-  done
-
-  if [[ -z "${_selector}" ]]
-  then
-    _exit_1 _help "rename"
-  fi
-
-  local _source_basename
-  _source_basename="$(_show "${_selector}" --filename)"
-
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
-
-  local _source_path="${_notebook_path}/${_source_basename}"
-
-  if [[ -z "${_source_basename}" ]]
-  then
-    _exit_1 _help "rename"
-  fi
-
-  if ((_reset))
-  then
-    local _file_type="${NB_DEFAULT_EXTENSION}"
-
-    _target_basename="$(date -r "${_source_path}" "+%Y%m%d%H%M%S").${_file_type}"
-  elif [[ -n "${_target_name:-}"    ]] ||
-       [[ -n "${_to_target_type:-}" ]]
-  then
-    local _source_file_name="${_source_basename%%.*}"
-    local _source_file_type="${_source_basename#*.}"
-    if [[ -z "${_source_file_type:-}"                     ]] ||
-       [[ "${_source_file_type}" == "${_source_basename}" ]]
-    then
-      _source_file_type=
-    fi
-
-    local _target_file_name="${_target_name%%.*}"
-    local _target_file_type="${_target_name#*.}"
-    if [[ -z "${_target_file_type:-}"                 ]] ||
-       [[ "${_target_file_type}" == "${_target_name}" ]]
-    then # no file extension specified in _target_name
-      if [[ -n "${_source_file_type}"                 ]]
-      then
-        _target_file_type="${_source_file_type}"
-      else
-        _target_file_type=
-      fi
-    fi
-
-    if [[ -n "${_to_target_type:-}" ]]
-    then
-      if [[ "${_to_target_type}" == "bookmark"  ]]
-      then
-        _target_file_type="bookmark.md"
-      elif [[ "${_to_target_type}" == "note"    ]]
-      then
-        _target_file_type="md"
-      else
-        _exit_1 _help "rename"
-      fi
-    fi
-
-    if [[ -z "${_target_file_name:-}" ]]
-    then
-      _target_file_name="${_source_file_name}"
-    fi
-
-    if [[ -n "${_target_file_type:-}" ]]
-    then
-      _target_basename="${_target_file_name}.${_target_file_type}"
-    else
-      _target_basename="${_target_name}"
-    fi
-
-    if [[ -e "${_notebook_path}/${_target_basename}" ]]
-    then
-      _exit_1 printf "File already exists: %s\\n" \
-        "$(_color_primary "${_target_basename}")"
-    fi
-  else
-    _exit_1 _help "rename"
-  fi
-
-  local _source_info
-  _source_info="$(_show "${_source_basename}" --info-line)"
-
-  if ! ((_force))
-  then
-    printf "Renaming: %s\\n" "${_source_info}"
-    printf "To:        %s\\n" "$(_color_primary "${_target_basename}")"
-
-    while true
-    do
-      IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
-
-      case ${__yn} in
-        [Yy]*)
-          break
-          ;;
-        *)
-          printf "Exiting...\\n"
-          exit 0
-          ;;
-      esac
-    done
-  fi
-
-  mv "${_source_path}" "${_notebook_path}/${_target_basename}"  &&
-    _index update "${_source_basename}" "${_target_basename}"   &&
-      _git checkpoint "${_notebook_path}"     \
-        "[nb] Rename: ${_source_basename} to ${_target_basename}"
-
-  printf "%s renamed to %s\\n"                \
-    "${_source_info}"                         \
-    "$(_color_primary "${_target_basename}")"
 }
 
 # run ##################################################################### run
@@ -10552,10 +10913,10 @@ _show() {
     printf "%s\\n" "${_indicators:-}"
   }
 
-  # _show_selector_basename()
+  # _show_selector_relative_path()
   #
   # Usage:
-  #   _show_selector_basename <selector> [<notebook-path>]
+  #   _show_selector_relative_path <selector> [<notebook-path>]
   #
   # Description:
   #   Determine the basename of the file that is identified by the given <id>,
@@ -10566,21 +10927,21 @@ _show() {
   #     1
   #     example.md
   #     title
+  #     relative/path/to/example.md
   #     /path/to/example.md
   #     notebook:1
   #     notebook:example.md
   #     notebook:title
+  #     notebook:relative/path/to/example.md
   #     notebook:/path/to/example.md
-  _show_selector_basename() {
-    local _basename=
+  _show_selector_relative_path() {
     local _identifier=
-    local _selector="${1:-}"
+    local _relative_path=
+    local _selector="${1%/}" # strip trailing /
     local _notebook_path="${2:-}"
 
-    if [[ -z "${_selector}" ]]
+    if [[ -n "${_selector}" ]]
     then
-      _basename=
-    else
       if [[ -z "${_notebook_path:-}" ]]
       then
         _notebook_path="$(
@@ -10589,37 +10950,75 @@ _show() {
       fi
 
       _identifier="$(_show "${_selector}" --selector-id)"
+      _identifier="${_identifier%/}" # strip trailing /
 
-      if [[ -e "${_identifier}"                   ]] &&
-         [[ "${_identifier}" =~ ${_notebook_path} ]]
-      then # <selector> is a full path.
-        _basename="$(basename "${_identifier}")"
+      if [[ -e "${_identifier}"                     ]] &&
+         [[ "${_identifier}" =~ ^${_notebook_path}  ]]
+      then # <selector> is a full path
+        _relative_path="${_identifier/"${_notebook_path}"\//}"
+      elif [[ "${_identifier}" =~ ^/ ]]
+      then
+        _notebook_path="$(
+          _notebooks show "${_identifier}" --path
+        )"
+
+        _relative_path="${_identifier/"${_notebook_path}"\//}"
       elif [[ -e "${_notebook_path}/${_identifier}" ]]
-      then # <selector> is a filename.
-        _basename="${_identifier}"
-      elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
-      then # <selector> is an id.
-        _basename="$(_index get_basename "${_identifier}")"
-      else # <selector> might be a title.
-        local _title=
-        local _filenames
-        _filenames=($(_list_files "${_notebook_path}"))
+      then # <selector> is a relative path
+        _relative_path="${_identifier}"
+      else
+        local _folder_path="${_notebook_path}"
+        local _folder_relative_path=
+        _folder_relative_path="$(
+          _resolve_selector_folders "${_selector}" "${_notebook_path}"
+        )"
 
-        for __file in "${_filenames[@]:-}"
-        do
-          _title="$(_get_content "${_notebook_path}/${__file}" --title)"
+        if [[ -n "${_folder_relative_path:-}" ]]
+        then
+          _folder_path="${_notebook_path}/${_folder_relative_path}"
+        fi
 
-          if [[ -n "${_title}"                  ]] &&
-             [[ "${_title}" == "${_identifier}" ]]
+        _identifier="${_identifier##*/}"
+
+        if [[ -e "${_folder_path}/${_identifier}" ]]
+        then
+          _relative_path="${_folder_relative_path}/${_identifier}"
+        elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
+        then # <selector> is an id
+          _relative_path="$(
+            _INDEX_FOLDER_PATH="${_folder_path}" \
+              _index get_basename "${_identifier}")"
+
+          if [[ -n "${_folder_relative_path:-}" ]]
           then
-            _basename="${__file}"
-            break
+            _relative_path="${_folder_relative_path}/${_relative_path}"
           fi
-        done
+        else # <selector> might be a title
+          local _maybe_title="${_identifier##*\/}"
+
+          _relative_path="$(
+            _list_files "${_folder_path}" \
+              | while read -r __filename || [[ -n "${__filename:-}" ]]
+                do
+                  local _title
+                  _title="$(
+                    _get_content "${_folder_path}/${__filename}" --title
+                  )"
+
+                  if [[ -n "${_title}"                    ]] &&
+                     [[ "${_title}" == "${_maybe_title}"  ]]
+                   then
+                     local _full_path="${_folder_path}/${__filename}"
+                     printf "%s\\n" "${_full_path/"${_notebook_path}"\//}"
+                     break
+                   fi
+                done
+          )"
+        fi
       fi
     fi
 
-    printf "%s\\n" "${_basename}"
+    printf "%s\\n" "${_relative_path:-}"
   }
 
   local _ls_arguments=()
@@ -10630,6 +11029,7 @@ _show() {
   local _print_id=0
   local _print_info=0
   local _print_path=0
+  local _print_relative_path=0
   local _print_selector_id=0
   local _print_updated=0
   local _render=0
@@ -10681,6 +11081,9 @@ _show() {
       -p|--print|--dump|--skip*pager|--no*pager)
         _print_output=1
         ;;
+      --relative-path)
+        _print_relative_path=1
+        ;;
       -r|--render)
         _render=1
         _ls_arguments+=("${__arg}")
@@ -10731,19 +11134,50 @@ _show() {
 
   if ((_print_selector_id))
   then
-    printf "%s\\n" "${_selector#*:}"
+    printf "%s\\n" "${_selector#*:}" # strip notebook name
     return 0
   fi
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _notebook_path=
+
+  if [[ "${_selector:-}" =~ : ]]
+  then
+    _notebook_path="$(_notebooks show "${_selector}" --path)"
+  elif [[ "${_selector:-}" =~ ^${NB_DIR} ]]
+  then
+    local _selector_relative_path="${_selector#${NB_DIR}/}"
+
+    _notebook_path="$(_notebooks show "${_selector_relative_path%%/*}" --path)"
+  elif [[ "${_selector:-}" =~ ^/ ]]
+  then
+    _notebook_path="$(_notebooks show "${_selector}" --path)"
+  fi
+
+  if [[ -z "${_notebook_path:-}" ]]
+  then
+    _notebook_path="$(_notebooks current --path)"
+  fi
+
+  local _relative_path
+  _relative_path="$(
+    _show_selector_relative_path "${_selector}" "${_notebook_path}"
+  )"
+
+  local _folder_path="${_notebook_path:?}"
+  local _relative_folder_path=
+
+  if [[ "${_relative_path:-}" =~ / ]]
+  then
+    _folder_path="${_notebook_path}/${_relative_path%\/*}"
+    _relative_folder_path="${_relative_path%\/*}"
+  fi
 
   local _basename
-  _basename="$(_show_selector_basename "${_selector}" "${_notebook_path}")"
+  _basename="$(basename "${_relative_path}")"
 
-  local _target_path="${_notebook_path}/${_basename}"
+  local _target_path="${_notebook_path}/${_relative_path}"
 
-  if [[ -z "${_basename:-}" ]] && ! ((_skip_notebook_fallback))
+  if [[ -z "${_relative_path:-}" ]] && ! ((_skip_notebook_fallback))
   then
     local _maybe_notebook="${_selector:-}"
     _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -10759,7 +11193,7 @@ _show() {
     fi
   fi
 
-  if [[ -z "${_basename:-}" ]] || [[ ! -e "${_target_path}" ]]
+  if [[ -z "${_relative_path:-}" ]] || [[ ! -e "${_target_path}" ]]
   then
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1
@@ -10767,7 +11201,7 @@ _show() {
 
   if ((_print_path))
   then # `show --path`
-    printf "%s/%s\\n" "${_notebook_path}" "${_basename}"
+    printf "%s/%s\\n" "${_notebook_path}" "${_relative_path}"
     return 0
   fi
 
@@ -10777,21 +11211,29 @@ _show() {
     return 0
   fi
 
+  if ((_print_relative_path))
+  then
+    printf "%s\\n" "${_relative_path}"
+    return 0
+  fi
+
   if ((_print_id))
   then
-    printf "%s\\n" "$(_index get_id "${_basename}")"
+    printf "%s\\n" "$(
+      _INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_relative_path}"
+    )"
     return 0
   fi
 
   if ((_print_title))
   then
-    _get_content "${_notebook_path}/${_basename}" --title
+    _get_content "${_notebook_path}/${_relative_path}" --title
     return 0
   fi
 
   if ((_print_indicators))
   then
-    _show_indicators "${_notebook_path}/${_basename}"
+    _show_indicators "${_notebook_path}/${_relative_path}"
     return 0
   fi
 
@@ -10799,15 +11241,15 @@ _show() {
   then
     if [[ -z "${_type}" ]]
     then
-      printf "%s\\n" "${_basename#*.}"
+      printf "%s\\n" "${_relative_path#*.}"
       return 0
     else
       if _contains "${_type}" archive audio bookmark document folder image text video
       then
-        "_file_is_${_type}" "${_notebook_path}/${_basename}"
+        "_file_is_${_type}" "${_notebook_path}/${_relative_path}"
         return $?
       else
-        [[ "${_type}" == "${_basename#*.}" ]]
+        [[ "${_type}" == "${_relative_path#*.}" ]]
         return $?
       fi
     fi
@@ -10816,14 +11258,22 @@ _show() {
   if ((_print_info))
   then
     local _id
-    _id="$(_index get_id "${_basename}")"
+    _id="$(_INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_basename}")"
+
+    local _maybe_scoped_relative_path="${_relative_path// /\\ }"
+
+    local _escaped_relative_folder_path=
+
+    if [[ -n "${_relative_folder_path:-}" ]]
+    then
+      _escaped_relative_folder_path="${_relative_folder_path// /\\ }/"
+    fi
 
     local _maybe_scoped_id
-    _maybe_scoped_id="${_id}"
+    _maybe_scoped_id="${_escaped_relative_folder_path}${_id}"
 
-    local _maybe_scoped_basename="${_basename}"
-
-    if _notebooks current --selected
+    if _notebooks current --selected ||
+       [[ "${_notebook_path}" != "$(_notebooks current --path)" ]]
     then
       local _notebook_escaped_name
       _notebook_escaped_name="$(
@@ -10831,25 +11281,24 @@ _show() {
       )"
 
       _maybe_scoped_id="${_notebook_escaped_name}:${_maybe_scoped_id}"
-      _maybe_scoped_basename="${_notebook_escaped_name}:${_maybe_scoped_basename}"
+      _maybe_scoped_relative_path="${_notebook_escaped_name}:${_maybe_scoped_relative_path}"
     fi
 
-    local _info_line=
+    local _info_line
     _info_line+="$(_color_brackets "${_maybe_scoped_id}") "
 
     local _indicators
-    _indicators="$(_show "${_notebook_path}/${_basename}" --indicators)"
+    _indicators="$(_show "${_notebook_path}/${_relative_path}" --indicators)"
 
     if [[ -n "${_indicators:-}" ]]
     then
       _info_line+="${_indicators}"
     fi
 
-    _info_line+="$(_color_primary "${_maybe_scoped_basename}") "
+    _info_line+="$(_color_primary "${_maybe_scoped_relative_path}") "
 
     local _title
-    _title="$(_get_content "${_notebook_path}/${_basename}" --title)"
-
+    _title="$(_get_content "${_notebook_path}/${_relative_path}" --title)"
 
     if [[ -n "${_title:-}" ]]
     then
@@ -10871,7 +11320,7 @@ _show() {
       --diff-filter=A                     \
       --date=iso-local                    \
       --pretty='%ad'                      \
-      "${_basename}"
+      "${_relative_path}"
 
     return 0
   fi
@@ -10884,7 +11333,7 @@ _show() {
       --follow                            \
       --date=iso-local                    \
       --pretty='%ad'                      \
-      "${_basename}"
+      "${_relative_path}"
 
     return 0
   fi
@@ -11866,6 +12315,10 @@ do
       elif _notebooks current --selected
       then
         _ARGUMENTS+=("${__opt}")
+      elif [[ "${_SUBCOMMAND:-}" == "move" ]] &&
+           ((${#_ARGUMENTS[@]}))
+      then
+        _ARGUMENTS+=("${__opt}")
       else
         __identifier_or_subcommand_or_url="${__opt#*:}"
 
@@ -11880,6 +12333,8 @@ do
             if [[ -n "${_SUBCOMMAND:-}" ]]
             then
               _ARGUMENTS+=("${__opt}")
+
+              continue
             else
               _exit_1 printf \
                 "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"
@@ -11942,6 +12397,9 @@ _get_notebook_identifier() { _notebooks show "${@}" --escaped; }
 
 # _get_selection_basename()
 _get_selection_basename() { _show "${@}" --filename; }
+
+# _get_unique_basename()
+_get_unique_basename() { _get_unique_relative_path "${@:-}"; }
 
 # _set_selection_notebook() <selector>
 _set_selection_notebook() {

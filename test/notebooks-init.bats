@@ -15,7 +15,7 @@ _setup_notebooks() {
 
 # `notebooks init` ############################################################
 
-@test "\`notebooks init\` with no arguments initializes the current directory" {
+@test "'notebooks init' with no arguments initializes the current directory" {
   {
     _setup_notebooks
 
@@ -38,7 +38,7 @@ _setup_notebooks() {
   [[ -f "${_TMP_DIR}/example/.index"                ]]
 }
 
-@test "\`notebooks init\` in existing notebook exits with 1 and prints error message." {
+@test "'notebooks init' in existing notebook exits with 1 and prints error message." {
   {
     _setup_notebooks
 
@@ -61,7 +61,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example           ]]
 }
 
-@test "\`notebooks init\` in existing git repo exits with 1 and prints error message." {
+@test "'notebooks init' in existing git repo exits with 1 and prints error message." {
   {
     _setup_notebooks
 
@@ -84,7 +84,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example                   ]]
 }
 
-@test "\`notebooks init <relative path>\` with no arguments succeeds." {
+@test "'notebooks init <relative path>' with no arguments succeeds." {
   {
     _setup_notebooks
 
@@ -105,7 +105,7 @@ _setup_notebooks() {
   [[ -f "${_TMP_DIR}/example/.index"                ]]
 }
 
-@test "\`notebooks init <relative path>\` in existing notebook exits with 1." {
+@test "'notebooks init <relative path>' in existing notebook exits with 1." {
   {
     _setup_notebooks
 
@@ -132,7 +132,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example           ]]
 }
 
-@test "\`notebooks init <relative path>\` in existing git repo exits with 1." {
+@test "'notebooks init <relative path>' in existing git repo exits with 1." {
   {
     _setup_notebooks
 
@@ -159,7 +159,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example                 ]]
 }
 
-@test "\`notebooks init <absolute path>\` with no arguments succeeds." {
+@test "'notebooks init <absolute path>' with no arguments succeeds." {
   {
     _setup_notebooks
   }
@@ -184,7 +184,7 @@ _setup_notebooks() {
   git log | grep '\[nb\] Initialize'
 }
 
-@test "\`notebooks init <absolute path>\` in existing notebook exits with 1." {
+@test "'notebooks init <absolute path>' in existing notebook exits with 1." {
   {
     _setup_notebooks
 
@@ -207,7 +207,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example           ]]
 }
 
-@test "\`notebooks init <absolute path>\` in existing git repo exits with 1." {
+@test "'notebooks init <absolute path>' in existing git repo exits with 1." {
   {
     _setup_notebooks
 
@@ -230,7 +230,7 @@ _setup_notebooks() {
   [[ "${lines[0]}" =~ example                 ]]
 }
 
-@test "\`notebooks init <path> <remote-url>\` exits with 0 and adds a notebook." {
+@test "'notebooks init <path> <remote-url>' exits with 0 and adds a notebook." {
   {
     _setup_notebooks
     _setup_remote_repo
