@@ -151,4 +151,4 @@ function _nb_subcommands
   end
 end
 
-complete -c nb -fa "(_nb_subcommands)"
+complete -c nb -n "__fish_use_subcommand" -fa "(_nb_subcommands)"
