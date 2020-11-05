@@ -6779,16 +6779,13 @@ _list() {
           sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
         )"
 
-        local _item_identifier="${_item_id:-}"
-        local _max_identifier="${_max_id:-}"
-
         if [[ -n "${_maybe_scope:-}" ]]
         then
-          _item_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_item_id:-}"
-          _max_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_max_id:-}"
+          local _item_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_item_id:-}"
+          local _max_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_max_id:-}"
         else
-          _item_identifier="${_id_path:-}${_item_id:-}"
-          _max_identifier="${_id_path:-}${_max_id:-}"
+          local _item_identifier="${_id_path:-}${_item_id:-}"
+          local _max_identifier="${_id_path:-}${_max_id:-}"
         fi
 
         local _brackets_identifier="[${_id_path:-}${_item_identifier:-}]"
