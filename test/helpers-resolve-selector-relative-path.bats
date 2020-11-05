@@ -4,7 +4,7 @@ load test_helper
 
 # _resolve_selector_folders() (notebooks, folder and file ids) ################
 
-@test "'_resolve_selector_folders()' resolves selector with notebook and root-level id file path." {
+@test "'_resolve_selector_folders()' resolves selector with notebook and root-level file id path." {
   {
     run "${_NB}" init
     run "${_NB}" add "A Folder/"
@@ -240,7 +240,7 @@ load test_helper
 
 # _resolve_selector_folders() (folder ids) ####################################
 
-@test "'_resolve_selector_folders()' resolves selector with root-level folder id path." {
+@test "'_resolve_selector_folders()' resolves selector with root-level folder id path, no slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "A Folder/"
@@ -259,7 +259,48 @@ load test_helper
   [[ -z "${output}"         ]]
 }
 
-@test "'_resolve_selector_folders()' resolves selector with first-level folder id path." {
+@test "'_resolve_selector_folders()' resolves selector with root-level folder id path, yes slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder/"
+    run "${_NB}" add "Example Folder/"
+
+    [[ -d "${NB_DIR}/home/A Folder"       ]]
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders 2/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with first-level folder id path, no slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder/"
+    run "${_NB}" add "Example Folder/A Nested Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/"
+
+    [[ -d "${NB_DIR}/home/A Folder"                       ]]
+    [[ -d "${NB_DIR}/home/Example Folder"                 ]]
+    [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"   ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders "2/2"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with first-level folder id path, yes slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "A Folder/"
@@ -277,11 +318,36 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                 ]]
-  [[ "${output}"  ==  "Example Folder"  ]]
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder"  ]]
 }
 
-@test "'_resolve_selector_folders()' resolves selector with second-level folder id path." {
+@test "'_resolve_selector_folders()' resolves selector with second-level folder id path, no slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder/"
+    run "${_NB}" add "Example Folder/A Nested Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+
+    [[ -d "${NB_DIR}/home/A Folder"                                     ]]
+    [[ -d "${NB_DIR}/home/Example Folder"                               ]]
+    [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder"               ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                 ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/A Nested Folder" ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"     ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders "2/2/2"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with second-level folder id path, yes slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "A Folder/"
@@ -302,11 +368,39 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                               ]]
-  [[ "${output}"  ==  "Example Folder/Sample Folder"  ]]
+  [[ "${status}"  -eq 0                                           ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder"  ]]
 }
 
-@test "'_resolve_selector_folders()' resolves selector with third-level folder id path." {
+@test "'_resolve_selector_folders()' resolves selector with third-level folder id path, no slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder/"
+    run "${_NB}" add "Example Folder/A Nested Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+
+    [[ -d "${NB_DIR}/home/A Folder"                                                 ]]
+    [[ -d "${NB_DIR}/home/Example Folder"                                           ]]
+    [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder"                           ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                             ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/A Nested Folder"             ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"                 ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/A Nested Folder" ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Test Folder"     ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders "2/2/2/2"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                           ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with third-level folder id path, yes slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "A Folder/"
@@ -330,13 +424,13 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                                           ]]
-  [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder"  ]]
+  [[ "${status}"  -eq 0                                                       ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder/Test Folder"  ]]
 }
 
 # _resolve_selector_folders() (folder) ########################################
 
-@test "'_resolve_selector_folders()' resolves selector with root-level folder path." {
+@test "'_resolve_selector_folders()' resolves selector with root-level folder path, no slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "Example Folder/"
@@ -353,7 +447,41 @@ load test_helper
   [[ -z "${output}"         ]]
 }
 
-@test "'_resolve_selector_folders()' resolves selector with first-level folder path." {
+@test "'_resolve_selector_folders()' resolves selector with root-level folder path, yes slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/"
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders "Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with first-level folder path, no slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/"
+
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders "Example Folder/Sample Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with first-level folder path, yes slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "Example Folder/Sample Folder/"
@@ -366,11 +494,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                 ]]
-  [[ "${output}"  ==  "Example Folder"  ]]
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder"  ]]
 }
 
-@test "'_resolve_selector_folders()' resolves selector with second-level folder path." {
+@test "'_resolve_selector_folders()' resolves selector with second-level folder path, no slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
@@ -388,7 +516,25 @@ load test_helper
   [[ "${output}"  ==  "Example Folder/Sample Folder"  ]]
 }
 
-@test "'_resolve_selector_folders()' resolves selector with third-level folder path." {
+@test "'_resolve_selector_folders()' resolves selector with second-level folder path, yes slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder" ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders \
+    "Example Folder/Sample Folder/Demo Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                           ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with third-level folder path, no slash." {
   {
     run "${_NB}" init
     run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
@@ -404,6 +550,24 @@ load test_helper
 
   [[ "${status}"  -eq 0                                           ]]
   [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder"  ]]
+}
+
+@test "'_resolve_selector_folders()' resolves selector with third-level folder path, yes slash." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Test Folder" ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders \
+    "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                                       ]]
+  [[ "${output}"  ==  "Example Folder/Sample Folder/Demo Folder/Test Folder"  ]]
 }
 
 # _resolve_selector_folders() (file) ##########################################
