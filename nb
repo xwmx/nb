@@ -7416,7 +7416,7 @@ _ls() {
       # printf "📂 " # TODO: Review
 
       local _selector_path
-      _selector_path="$(_resolve_selector_folders "${_selector}/")/"
+      _selector_path="$(_resolve_selector_folders "${_selector}")/"
 
       printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
 
