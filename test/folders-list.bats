@@ -2,6 +2,73 @@
 
 load test_helper
 
+# list notebook:<id> ##########################################################
+
+@test "'list notebook:<id>/<folder>' exits with 0 and prints the folder/folder list item." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/one.md"                        \
+      --title "one"
+    "${_NB}" add "Example Folder/two.bookmark.md"               \
+      --content "<https://example.test>"
+
+    "${_NB}" add "Example Folder/Sample Folder/one.bookmark.md" \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/two.md"          \
+      --title "Two"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+}
+
+  run "${_NB}" list home:1/Sample\ Folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                   ]]
+
+  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+}
+
+@test "'list <id>/<folder>' exits with 0 and prints the folder/folder list item." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/one.md"                        \
+      --title "one"
+    "${_NB}" add "Example Folder/two.bookmark.md"               \
+      --content "<https://example.test>"
+
+    "${_NB}" add "Example Folder/Sample Folder/one.bookmark.md" \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/two.md"          \
+      --title "Two"
+}
+
+  run "${_NB}" list 1/Sample\ Folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                   ]]
+
+  [[   "${lines[0]}"  =~  Example\\\ Folder/3                 ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+}
+
 # empty #######################################################################
 
 @test "'list <folder>/ --type' with empty folder displays message." {
@@ -88,10 +155,10 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder/Sample Folder" --type folder
   }
 
-  run "${_NB}" list 1/
+  run "${_NB}" list 1/1/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

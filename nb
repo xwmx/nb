@@ -2420,22 +2420,40 @@ HEREDOC
 _resolve_selector_folders() {
   local _folder_relative_path=
   local _selector="${1:?}"
-  local _notebook_path="${2:-"$(_notebooks current --path)"}"
+  local _selector_notebook_path=
+  local _selector_path="${_selector#*:}"
+  local _notebook_path="${2:-}"
   local _parent_folder_path=
 
-  _selector="${_selector%/}"  # remove trailing slash
-  _selector="${_selector#*:}" # TODO: handle notebooks here?
-
-  if [[ "${_selector}" =~ ^/ ]]
+  if [[ "${_selector}" =~ : ]]
   then
-    _selector="${_selector#${_notebook_path}/}"
+    _selector_notebook_path="$(
+      _notebooks show "${_selector%%:*}" --path
+    )"
+
+    if [[ -n "${_selector_notebook_path:-}" ]]
+    then
+      _notebook_path="${_selector_notebook_path}"
+    fi
   fi
 
-  [[ ! "${_selector}" =~ / ]] && return 0
+  if [[ -z "${_notebook_path:-}" ]]
+  then
+    _notebook_path="$(_notebooks current --path)"
+  fi
 
-  while [[ "${_selector}" =~ / ]]
+  _selector_path="${_selector_path%/}"  # remove trailing slash
+
+  if [[ "${_selector_path}" =~ ^/ ]]
+  then
+    _selector="${_selector_path#${_notebook_path}/}"
+  fi
+
+  [[ ! "${_selector_path}" =~ / ]] && return 0
+
+  while [[ "${_selector_path}" =~ / ]]
   do
-    local _folder_name="${_selector%%\/*}"
+    local _folder_name="${_selector_path%%\/*}"
 
     if [[ -z "${_folder_relative_path:-}" ]]
     then
@@ -2453,7 +2471,7 @@ _resolve_selector_folders() {
         _folder_relative_path+="/${_folder_name}"
       fi
 
-      _selector="${_selector#*/}"
+      _selector_path="${_selector_path#*/}"
 
       continue
     elif [[ ! -e "${_parent_folder_path:?}/${_folder_name:?}" ]] &&
@@ -2473,7 +2491,7 @@ _resolve_selector_folders() {
           _folder_relative_path+="/${_folder_name}"
         fi
 
-        _selector="${_selector#*/}"
+        _selector_path="${_selector_path#*/}"
 
         continue
       fi
@@ -6499,7 +6517,9 @@ _list() {
   if [[ -n "${_selector:-}" ]]
   then
     _selector_identifier="$(_show "${_selector}" --selector-id)"
-    _selector_relative_path="$(_show "${_selector}" --relative-path 2>/dev/null || :)"
+    _selector_relative_path="$(
+      _show "${_selector}" --relative-path 2>/dev/null || :
+    )"
 
     if [[ "${_selector}" =~ /$ ]] && [[ -z "${_selector_relative_path:-}" ]]
     then
@@ -10924,7 +10944,10 @@ _show() {
 
         _identifier="${_identifier##*/}"
 
-        if [[ "${_identifier}" =~ ^[0-9]+$ ]]
+        if [[ -e "${_folder_path}/${_identifier}" ]]
+        then
+          _relative_path="${_folder_relative_path}/${_identifier}"
+        elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
         then # <selector> is an id
           _relative_path="$(
             _INDEX_FOLDER_PATH="${_folder_path}" \
@@ -10934,7 +10957,7 @@ _show() {
           then
             _relative_path="${_folder_relative_path}/${_relative_path}"
           fi
-        else # <delector> might be a title
+        else # <selector> might be a title
           local _maybe_title="${_identifier##*\/}"
 
           _relative_path="$(
