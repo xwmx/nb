@@ -31,7 +31,7 @@ load test_helper
 
   [[   "${status}"    -eq 0                                   ]]
 
-  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
+  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/3        ]]
   [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
   [[   "${lines[0]}"  =~  📂                                  ]]
 

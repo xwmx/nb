@@ -40,7 +40,7 @@ load test_helper
   [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
   [[   "${lines[3]}"  =~ ----                                 ]]
 
-  [[   "${lines[4]}"  =~  home:Example\\\ Folder/3            ]]
+  [[   "${lines[4]}"  =~  [^/]home:Example\\\ Folder/3        ]]
   [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
   [[   "${lines[4]}"  =~  📂                                  ]]
 
@@ -92,7 +92,7 @@ load test_helper
   [[ ! "${lines[2]}"  =~ Demo\ Folder                                       ]]
   [[   "${lines[3]}"  =~ ----                                               ]]
 
-  [[   "${lines[4]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
+  [[   "${lines[4]}"  =~  [^/]home:Example\\\ Folder/Sample\\\ Folder/3     ]]
   [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
   [[   "${lines[4]}"  =~  📂                                                ]]
 
@@ -139,7 +139,7 @@ load test_helper
   [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
   [[   "${lines[3]}"  =~ ----                                 ]]
 
-  [[   "${lines[4]}"  =~  home:Example\\\ Folder/3            ]]
+  [[   "${lines[4]}"  =~  [^/]home:Example\\\ Folder/3        ]]
   [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
   [[   "${lines[4]}"  =~  📂                                  ]]
 
@@ -173,21 +173,21 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                       ]]
+  [[   "${status}"    -eq 0                           ]]
 
-  [[ ! "${lines[0]}"  =~  3\.bookmark\.md         ]]
-  [[ ! "${lines[0]}"  =~  🔖\ 🔒                  ]]
-  [[ ! "${lines[1]}"  =~  2\.bookmark\.md         ]]
-  [[ ! "${lines[1]}"  =~  🔖                      ]]
-  [[ ! "${lines[2]}"  =~  one                     ]]
-  [[ ! "${lines[2]}"  =~  🔖                      ]]
-  [[ ! "${lines[2]}"  =~  🔒                      ]]
+  [[ ! "${lines[0]}"  =~  3\.bookmark\.md             ]]
+  [[ ! "${lines[0]}"  =~  🔖\ 🔒                      ]]
+  [[ ! "${lines[1]}"  =~  2\.bookmark\.md             ]]
+  [[ ! "${lines[1]}"  =~  🔖                          ]]
+  [[ ! "${lines[2]}"  =~  one                         ]]
+  [[ ! "${lines[2]}"  =~  🔖                          ]]
+  [[ ! "${lines[2]}"  =~  🔒                          ]]
 
-  [[ ! "${lines[0]}"  =~  home:Example\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  3                       ]]
-  [[   "${lines[0]}"  =~  📂                      ]]
-  [[   "${lines[0]}"  =~  Example\ Folder         ]]
-  [[   "${#lines[@]}" -eq 1                       ]]
+  [[ ! "${lines[0]}"  =~  [^/]home:Example\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  3                           ]]
+  [[   "${lines[0]}"  =~  📂                          ]]
+  [[   "${lines[0]}"  =~  Example\ Folder             ]]
+  [[   "${#lines[@]}" -eq 1                           ]]
 }
 
 # ls notebook:<id> ############################################################
