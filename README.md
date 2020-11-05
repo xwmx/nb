@@ -104,7 +104,7 @@ features. `nb` is flexible.
 <p align="center">
 	Versions: 6.0.0-alpha
 	•
-	<a href="https://github.com/xwmx/nb/tree/5.7.8">5.7.8</a>
+	<a href="https://github.com/xwmx/nb/tree/5.7.8#nb">5.7.8</a>
 </p>
 
 <p align="center">
