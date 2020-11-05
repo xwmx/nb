@@ -4862,7 +4862,9 @@ at the root level of the notebook directory.
 
 ## Tests
 
-To run the [test suite](test), install
+With over 1,000 tests spanning more than 30,000 lines, `nb` is really
+mostly a [test suite](https://github.com/xwmx/nb/tree/master/test).
+To run the tests locally, install
 [Bats](https://github.com/bats-core/bats-core)
 and the
 [recommended dependencies](#optional),
