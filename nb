@@ -1622,7 +1622,7 @@ _get_content() {
 
     if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
+      while IFS= read -r __line || [[ -n "${__line:-}" ]]
       do
         if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+) ]] &&
            ! ((_in_code_block))
@@ -2413,17 +2413,40 @@ HEREDOC
 # _resolve_selector_folders()
 #
 # Usage:
-#   _resolve_selector_folders <selector> <notebook-path>
+#   _resolve_selector_folders <selector> [<notebook-path>] [--build]
+#
+# Options:
+#   --build  Build a new path that includes segments that don't exist yet.
 #
 # Description:
 #   Resolve a selector path, which can be a mix of folder names and ids.
 _resolve_selector_folders() {
+  local _build_path=0
   local _folder_relative_path=
-  local _selector="${1:?}"
+  local _selector=
   local _selector_notebook_path=
-  local _selector_path="${_selector#*:}"
-  local _notebook_path="${2:-}"
+  local _notebook_path=
   local _parent_folder_path=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --build)
+        _build_path=1
+        ;;
+      *)
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${__arg}"
+        else
+          _notebook_path="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  local _selector_path="${_selector#*:}"
+
 
   if [[ "${_selector}" =~ : ]]
   then
@@ -2441,8 +2464,6 @@ _resolve_selector_folders() {
   then
     _notebook_path="$(_notebooks current --path)"
   fi
-
-  _selector_path="${_selector_path%/}"  # remove trailing slash
 
   if [[ "${_selector_path}" =~ ^/ ]]
   then
@@ -2474,15 +2495,18 @@ _resolve_selector_folders() {
       _selector_path="${_selector_path#*/}"
 
       continue
-    elif [[ ! -e "${_parent_folder_path:?}/${_folder_name:?}" ]] &&
+    else
+      if [[ ! -e "${_parent_folder_path:?}/${_folder_name:?}" ]] &&
          [[ "${_folder_name}" =~ ^[0-9]+$                     ]]
-    then
-      _folder_name="$(
-        _INDEX_FOLDER_PATH="${_parent_folder_path}" \
-          _index get_basename "${_folder_name}"
-      )"
+      then # path segment might be an id
+        _folder_name="$(
+          _INDEX_FOLDER_PATH="${_parent_folder_path}" \
+            _index get_basename "${_folder_name}"
+        )"
+      fi
 
-      if [[ -d "${_parent_folder_path:?}/${_folder_name:-}" ]]
+      if [[ -d "${_parent_folder_path:?}/${_folder_name:-}" ]] ||
+         ((_build_path))
       then
         if [[ -z "${_folder_relative_path:-}" ]]
         then
@@ -3180,6 +3204,17 @@ _add() {
 
   if [[ -n "${_target_folder_relative_path:-}" ]]
   then
+    if [[ "${_target_folder_relative_path}" =~ /$ ]]
+    then
+      _target_folder_relative_path="$(
+        _resolve_selector_folders "${_target_folder_relative_path}/" --build
+      )"
+    else
+      _target_folder_relative_path="$(
+        _resolve_selector_folders "${_target_folder_relative_path}/${_target_filename:-}" --build
+      )"
+    fi
+
     _target_relative_path="${_target_folder_relative_path}/${_target_filename:-}"
   else
     _target_relative_path="${_target_filename:-}"
@@ -8707,9 +8742,7 @@ HEREDOC
     if ((_print_unique_file_path))
     then
       local _unique_file_path=
-      _unique_file_path="$(
-        _get_unique_relative_path "${_file_path:-".${NB_DEFAULT_EXTENSION}"}"
-      )"
+      _unique_file_path="$(_get_unique_relative_path "${_file_path:-}")"
 
       printf "%s\\n" "${_unique_file_path:-}"
       return 0
