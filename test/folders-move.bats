@@ -2,6 +2,122 @@
 
 load test_helper
 
+# intermediate folders ########################################################
+
+@test "'move notebook:folder/<id>' moves across notebooks and creates intermediate folders." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Test Folder/Sample File.bookmark.md"  \
+      --title   "Sample Title"                              \
+      --content "<https://1.example.test>"
+
+    run "${_NB}" notebooks add "one"
+
+    [[   -d "${NB_DIR}/home/Test Folder"                                              ]]
+    [[   -f "${NB_DIR}/home/Test Folder/Sample File.bookmark.md"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                             ]]
+    [[ ! -e "${NB_DIR}/one/Example Folder"                                            ]]
+    [[ ! -e "${NB_DIR}/one/Example Folder/Sample Folder"                              ]]
+    [[ ! -e "${NB_DIR}/one/Example Folder/Sample Folder/Demo Folder"                  ]]
+    [[ ! -e "${NB_DIR}/one/Example Folder/Sample Folder/Demo Folder/Example File.md"  ]]
+  }
+
+  run "${_NB}" move                                                 \
+    "Test Folder/1"                                                 \
+    "one:Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+    --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[   -d "${NB_DIR}/home/Test Folder"                                              ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md"                   ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                             ]]
+  [[   -d "${NB_DIR}/one/Example Folder"                                            ]]
+  [[   -d "${NB_DIR}/one/Example Folder/Sample Folder"                              ]]
+  [[   -d "${NB_DIR}/one/Example Folder/Sample Folder/Demo Folder"                  ]]
+  [[   -f "${NB_DIR}/one/Example Folder/Sample Folder/Demo Folder/Example File.md"  ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete:'
+
+  cd "${NB_DIR}/one" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add:'
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to:                                                                ]]
+  [[ "${output}" =~ one:Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/1                   ]]
+  [[ "${output}" =~ one:Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/Example\\\ File.md  ]]
+}
+
+@test "'move folder/<id>' moves and creates intermediate folders." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/Sample File.bookmark.md"   \
+      --title   "Sample Title"                                  \
+      --content "<https://1.example.test>"
+
+
+    [[   -d "${NB_DIR}/home/Example Folder"                                           ]]
+    [[   -f "${NB_DIR}/home/Example Folder/Sample File.bookmark.md"                   ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"                 ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Example File.md" ]]
+  }
+
+  run "${_NB}" move                                             \
+    "Example Folder/1"                                          \
+    "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+    --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[   -d "${NB_DIR}/home/Example Folder"                                           ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md"                   ]]
+  [[   -d "${NB_DIR}/home/Example Folder/Sample Folder"                             ]]
+  [[   -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"                 ]]
+  [[   -f "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Example File.md" ]]
+
+  # Creates git commit:
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move:'
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to:                                                            ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/1                   ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/Example\\\ File.md  ]]
+}
+
 # error handling ##############################################################
 
 @test "'move folder/<filename>' with invalid filename returns with error and message." {
@@ -89,7 +205,7 @@ load test_helper
   [[   -d "${NB_DIR}/home/Example Folder"                         ]]
   [[   -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md" ]]
 
-  # Creates git commits:
+  # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
@@ -135,7 +251,7 @@ load test_helper
   [[   -d "${NB_DIR}/home/Example Folder"                         ]]
   [[   -e "${NB_DIR}/home/Example Folder/Sample File.bookmark.md" ]]
 
-  # Creates git commits:
+  # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]

@@ -12256,6 +12256,10 @@ do
       elif _notebooks current --selected
       then
         _ARGUMENTS+=("${__opt}")
+      elif [[ "${_SUBCOMMAND:-}" == "move" ]] &&
+           ((${#_ARGUMENTS[@]}))
+      then
+        _ARGUMENTS+=("${__opt}")
       else
         __identifier_or_subcommand_or_url="${__opt#*:}"
 
