@@ -906,6 +906,11 @@ trap "_temp cleanup" EXIT
 # Helpers
 ###############################################################################
 
+# $_COLUMNS
+#
+# The terminal width in number of columns (characters).
+_COLUMNS="$(tput cols)"
+
 # $_NEWLINE
 #
 # Assign newline with ANSI-C quoting for string building.
@@ -2390,13 +2395,10 @@ _print_padding() {
 # Description:
 #   Print the welcome message.
 _print_welcome() {
-  local _columns
-  _columns="$(tput cols)"
-
   local _padding
-  _padding="$(_print_padding " / / | | | | |_) |" "${_columns}")"
+  _padding="$(_print_padding " / / | | | | |_) |" "${_COLUMNS}")"
 
-  _print_line "$(printf "%-${_columns}s" '.')"
+  _print_line "$(printf "%-${_COLUMNS}s" '.')"
 
   cat <<HEREDOC
 ${_padding}$(_color_primary "Welcome") to
@@ -2407,7 +2409,7 @@ ${_padding} / / | | | | |_) |
 ${_padding}/_/  |_| |_|_.__/
 HEREDOC
 
-  _print_line "$(printf "%-${_columns}s" '.')"
+  _print_line "$(printf "%-${_COLUMNS}s" '.')"
 }
 
 # _resolve_selector_folders()
@@ -6433,16 +6435,6 @@ Examples:
   ${_ME} example:list
 HEREDOC
 _list() {
-  local _size=
-  _size="$(stty size)"
-
-  local _columns="${_size##* }"
-
-  if [[ -z "${_columns:-}" ]] || [[ "${_columns}" -lt 5 ]]
-  then
-    _columns="$(tput cols)"
-  fi
-
   local _excerpt_length=3
   local _error_on_empty=0
   local _limit=
@@ -6848,9 +6840,9 @@ ${_TPUT_SGR0}"
         )"
 
         if [[ -z "${_visible_info_line_length:-}"               ]] ||
-           [[ "${_visible_info_line_length}" -gt "${_columns}"  ]]
+           [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
         then
-          _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+          _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
         else
           _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
         fi
@@ -7093,7 +7085,7 @@ _ls() {
     )
 
     _wrap off
-    _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+    _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
     printf "%s" "${_TPUT_SGR0}"
     _wrap on
     printf "\\n"
@@ -7107,7 +7099,7 @@ _ls() {
         _footer_test_line="${_footer_test_line}${_footer_separator_raw} ${_commands_raw[i]}"
       fi
 
-      if [[ "${#_footer_test_line}" -gt "${_columns}" ]]
+      if [[ "${#_footer_test_line}" -gt "${_COLUMNS}" ]]
       then # wrap to next line
         printf "%s\\n" "${_footer_line_hi}"
 
@@ -7242,7 +7234,7 @@ _ls() {
         _test_line="${_test_line}${_separator} ${_notebook_names[i]}"
       fi
 
-      if [[ "${#_test_line}" -gt "${_columns}" ]]
+      if [[ "${#_test_line}" -gt "${_COLUMNS}" ]]
       then # wrap to next line
         # Use the existing value of $_line_[highlighted|raw] without the
         # current name.
@@ -7250,7 +7242,7 @@ _ls() {
         then
           _centered=1
           _padding="$(
-            _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+            _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
           )"
         fi
 
@@ -7281,7 +7273,7 @@ _ls() {
           _centered=1
         fi
         _padding="$(
-          _print_padding "${_line_raw}" "${_columns}" "${_centered}"
+          _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
         )"
 
         _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
@@ -7296,7 +7288,7 @@ _ls() {
 
     if ((_centered))
     then # print full-width line.
-      _print_line "$(printf "%-${_columns}s" '.')" | tr -d '\n'
+      _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
     else # print line the length of the first line.
       _print_line "$(
         # $_output_raw generates a line 2 characters too long. TODO: Review
@@ -7311,8 +7303,6 @@ _ls() {
 
   local _all=0
   local _arguments=()
-  local _columns
-  _columns="$(tput cols)"
   local _header_flags=()
   local _limit=
   local _list_options=()
@@ -7421,7 +7411,7 @@ _ls() {
 
       printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
 
-      _print_line "$(printf "%-${_columns}s" '.')" --dim
+      _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
 
       printf "\\n"
     fi
@@ -10099,14 +10089,11 @@ _settings() {
   _settings_prompt() {
     local _setting_name="${1:-}"
 
-    local _columns
-    _columns="$(tput cols)"
-
     local _padding
-    _padding="$(_print_padding "-----------" "${_columns}")"
+    _padding="$(_print_padding "-----------" "${_COLUMNS}")"
 
     printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
-    _print_line "$(printf "%-${_columns}s" '.')"
+    _print_line "$(printf "%-${_COLUMNS}s" '.')"
 
     if [[ -n "${_setting_name}" ]]
     then
