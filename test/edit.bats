@@ -20,21 +20,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 1
+  # Returns status 1:
+
   [[ ${status} -eq 1 ]]
 
-  # Does not update note file
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
+  # Does not update note file:
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Does not create git commit
+  # Does not create git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   if [[ -n "$(git status --porcelain)" ]]
   then
     sleep 1
   fi
   ! git log | grep -q '\[nb\] Edit'
 
-  # Prints help information
+  # Prints help information:
+
   [[ "${lines[0]}" =~ Usage\:       ]]
   [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }
@@ -78,6 +88,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
+    "$(cat "${NB_DIR}/one/${_filename}")"
+
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
 
   [[ "${output}" =~ Updated:            ]]
@@ -104,6 +117,9 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
+    "$(cat "${NB_DIR}/one/${_filename}")"
 
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
 
@@ -132,13 +148,19 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR}/one/${_filename}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
+    "$(cat "${NB_DIR}/one/${_filename}")"
+
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
@@ -164,13 +186,19 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR}/one/${_filename}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
+    "$(cat "${NB_DIR}/one/${_filename}")"
+
   [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
   [[ "${output}" =~ one:[A-Za-z0-9]+.md ]]
@@ -230,21 +258,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -265,21 +303,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor  ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:                    ]]
   [[ "${output}" =~ [0-9]+                      ]]
   [[ "${output}" =~ Note\ name\ with\ spaces.md ]]
@@ -300,21 +348,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -336,21 +394,31 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${_NOTEBOOK_PATH}/${_filename}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -371,25 +439,34 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-
 }
 
 # <title> #####################################################################
@@ -407,21 +484,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -443,23 +530,33 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" != "${_original}" ]]
   grep -q '# Example' "${_NOTEBOOK_PATH}"/*
   grep -q '## Piped' "${_NOTEBOOK_PATH}"/*
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -480,21 +577,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ Example\ content\.  ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -516,14 +623,21 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Exits with status 1
+  # Exits with status 1:
+
   [[ ${status} -eq 1 ]]
 
-  # Does not update note file
-  [[ ! "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor   ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_original}"  ]]
+  # Does not update note file:
 
-  # Prints error message
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
+  [[ ! "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor   ]]
+
+  diff <(cat "${_NOTEBOOK_PATH}/${_filename}") <(printf "%s\\n" "${_original}")
+
+  # Prints error message:
+
   [[ "${output}" =~ requires\ a\ valid\ argument ]]
 }
 
@@ -543,21 +657,28 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Exits with status 0
+  # Exits with status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates file
+  # Updates file:
+
   [[ "$(_get_hash "${_NOTEBOOK_PATH}/${_filename}")" != "${_original_hash}" ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -577,21 +698,28 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates file
+  # Updates file:
+
   [[ "$(_get_hash "${_NOTEBOOK_PATH}/${_filename}")" != "${_original_hash}" ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -614,21 +742,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
+    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
@@ -647,21 +785,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
+  # Returns status 0:
+
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/multi-word filename.md" \
+    "$(cat "${_NOTEBOOK_PATH}/multi-word filename.md")"
+
   [[ "$(cat "${_NOTEBOOK_PATH}/multi-word filename.md")" =~ mock_editor ]]
 
-  # Creates git commit
+  # Creates git commit:
+
   cd "${_NOTEBOOK_PATH}" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
   git log | grep -q '\[nb\] Edit'
 
-  # Prints output
+  # Prints output:
+
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
