@@ -16,7 +16,6 @@ jobs:
       - name: Setup
         run: |
           brew install bat
-          brew install bats-core
           brew install pandoc
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
@@ -29,9 +28,9 @@ jobs:
       - name: Setup
         run: |
           sudo add-apt-repository ppa:duggan/bats --yes
-          sudo apt-get update   -qq
-          sudo apt-get install  -qq bats
-          sudo apt-get install  -qq python-pygments
+          sudo apt-get update
+          sudo apt-get install bats -y
+          sudo apt-get install python-pygments -y
           curl -LO https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
           sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
           curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
