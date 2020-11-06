@@ -21,6 +21,8 @@ jobs:
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
       - name: Run tests
+        env:
+          TERM: dumb
         run: bats test
   test-ubuntu-latest:
     name: "Test: Ubuntu Latest"
@@ -38,4 +40,6 @@ jobs:
           curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
           sudo dpkg -i bat_0.16.0_amd64.deb
       - name: Run tests
+        env:
+          TERM: dumb
         run: bats test
