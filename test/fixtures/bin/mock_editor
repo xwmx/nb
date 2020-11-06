@@ -1,8 +1,25 @@
 #!/usr/bin/env bash
+###############################################################################
+# mock_editor
+###############################################################################
 
-# Allow clobber. More info:
-# https://stackoverflow.com/a/6762399
+###############################################################################
+# Shell Options & Strict Mode
+#
+# More Information:
+#   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
+###############################################################################
+
+set -o errexit
+set -o noglob
+set -o nounset
+set -o pipefail
+
 set +o noclobber
+
+IFS=$'\n\t'
+
+###############################################################################
 
 # _mock_editor()
 #
