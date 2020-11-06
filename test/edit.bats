@@ -86,6 +86,12 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  printf "EDITOR: '%s'\\n" "${EDITOR:-}"
+  touch "${_TMP_DIR}/editor-test.md"
+  "${EDITOR}" "${_TMP_DIR}/editor-test.md"
+  printf "cat \${_TMP_DIR}/editor-test.md: '%s'\\n" \
+    "$(cat "${_TMP_DIR}/editor-test.md")"
+
   printf "cat %s:\\n%s\\n" "${NB_DIR}/one/example.md" \
     "$(cat "${NB_DIR}/one/example.md")"
 
@@ -115,6 +121,8 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  printf "EDITOR: '%s'\\n" "${EDITOR:-}"
 
   printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
     "$(cat "${NB_DIR}/one/${_filename}")"
@@ -151,6 +159,8 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file:
+
+  printf "EDITOR: '%s'\\n" "${EDITOR:-}"
 
   printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
     "$(cat "${NB_DIR}/one/${_filename}")"
@@ -261,6 +271,8 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Updates note file:
+
+  printf "EDITOR: '%s'\\n" "${EDITOR:-}"
 
   printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
     "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
