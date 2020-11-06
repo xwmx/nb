@@ -9,8 +9,8 @@ on:
     branches: [ github-actions ]
 
 jobs:
-  test-macos-10.15:
-    name: "Tests: MacOS 10.15"
+  test-macos-10-15:
+    name: "Test: macOS Catalina 10.15"
     runs-on: macos-10.15
     steps:
       - name: Setup
@@ -23,15 +23,15 @@ jobs:
       - name: Run tests
         run: bats test
   test-ubuntu-latest:
-    name: "Tests: Ubuntu Latest"
+    name: "Test: Ubuntu Latest"
     runs-on: ubuntu-latest
     steps:
       - name: Setup
         run: |
           sudo add-apt-repository ppa:duggan/bats --yes
           sudo apt-get update   -qq
-          sudo apt-get install -qq bats
-          sudo apt-get install -qq python-pygments
+          sudo apt-get install  -qq bats
+          sudo apt-get install  -qq python-pygments
           curl -LO https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
           sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
           curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
