@@ -17,6 +17,8 @@ jobs:
       - name: Setup
         run: |
           brew install bat
+          brew unlink  bats
+          brew install bats-core
           brew install pandoc
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
