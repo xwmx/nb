@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Allow clobber. More info:
+# https://stackoverflow.com/a/6762399
+set +o noclobber
+
 # _mock_editor()
 #
 # Usage:
@@ -20,11 +24,6 @@ _mock_editor() {
   then
     printf "Usage: _mock_editor <filename>\n"
     return 1
-  fi
-
-  if [[ -e "${_filename}" ]]
-  then
-    printf "Already exists: %s\n" "${_filename}"
   fi
 
   printf "# mock_editor %s\n" "${_filename%.*}" >> "${_filename}"
