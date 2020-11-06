@@ -13,6 +13,7 @@ jobs:
     name: "Test: macOS Catalina 10.15"
     runs-on: macos-10.15
     steps:
+      - uses: actions/checkout@v1
       - name: Setup
         run: |
           brew install bat
@@ -25,6 +26,7 @@ jobs:
     name: "Test: Ubuntu Latest"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - name: Setup
         run: |
           sudo add-apt-repository ppa:duggan/bats --yes
