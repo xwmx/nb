@@ -79,8 +79,9 @@ on any device.
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
-The entire program is a single well-tested shell script that can be installed,
-copied, or `curl`ed almost anywhere and just work, using
+The entire program is a single [well-tested](https://github.com/xwmx/nb#tests)
+shell script that can be
+installed, copied, or `curl`ed almost anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments. `nb` works great
 whether you have one notebook with just a few notes or dozens of
