@@ -2125,7 +2125,7 @@ _less_prompt() {
   local _prompt="\
 > scroll for more, h for help, or q to quit"
 
-  if [[ "$(tput cols)" -gt 81 ]]
+  if [[ "${_COLUMNS}" -gt 81 ]]
   then
     _prompt="\
 > scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
@@ -11537,7 +11537,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       # https://graphemica.com/%E2%90%9F
       < "${_target_path}" sed 's/^- /-␟/g'                        \
         | sed 's/^\* /\*␟/g'                                      \
-        | fold -s -w "$(tput cols)"                               \
+        | fold -s -w "${_COLUMNS}"                                \
         | sed 's/^-␟/- /g'                                        \
         | sed 's/^\*␟/\* /g'                                      \
         | _highlight_syntax_if_available "${_target_path##*.}"    \
