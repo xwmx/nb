@@ -20,6 +20,7 @@ jobs:
           brew unlink  bats
           brew install bats-core
           brew install pandoc
+          brew install w3m
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
       - name: Run tests
@@ -37,6 +38,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install bats -y
           sudo apt-get install python-pygments -y
+          sudo apt-get install w3m
           curl -LO https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
           sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
           curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
