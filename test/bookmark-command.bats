@@ -195,7 +195,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]
+  diff <(cat "${_NOTEBOOK_PATH}/${_filename}") <(printf "%s\\n" "${_bookmark_content}")
 
   # Creates git commit
   cd "${_NOTEBOOK_PATH}" || return 1
