@@ -49,16 +49,19 @@
 ###############################################################################
 
 ###############################################################################
-# Strict Mode
+# Shell Options & Strict Mode
 #
 # More Information:
 #   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
 ###############################################################################
 
-set -o nounset
 set -o errexit
-set -o pipefail
 set -o noglob
+set -o nounset
+set -o pipefail
+
+set +o noclobber
+
 IFS=$'\n\t'
 
 ###############################################################################

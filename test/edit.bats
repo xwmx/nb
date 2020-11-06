@@ -8,11 +8,9 @@ load test_helper
 @test "'edit' with no argument exits and prints help." {
   {
     run "${_NB}" init
-    run "${_NB}" add
+    run "${_NB}" add "Example initial content." --filename "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-
-    _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+    _original="$(cat "${NB_DIR}/home/example.md")"
   }
 
   run "${_NB}" edit
@@ -24,16 +22,21 @@ load test_helper
 
   [[ ${status} -eq 1 ]]
 
-  printf "cat %s:\\n%s\\n" "${_NOTEBOOK_PATH}/${_filename}" \
-    "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/example.md" \
+    "$(cat "${NB_DIR}/home/example.md")"
 
   # Does not update note file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ mock_editor ]]
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/example.md" \
+    "$(cat "${NB_DIR}/home/example.md")"
+
+  diff <(cat "${NB_DIR}/home/example.md") <(printf "%s\\n" "${_original}")
+
+  [[ ! "$(cat "${NB_DIR}/home/example.md")" =~ mock_editor ]]
 
   # Does not create git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
 
   printf "git log --stat:\\n%s\\n" "$(git log --stat)"
 
@@ -72,26 +75,21 @@ load test_helper
   {
     run "${_NB}" init
     run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "Example initial content."
+    run "${_NB}" one:add "Example initial content." --filename "example.md"
 
-    _filename=$("${_NB}" one: -n 1 --no-id --filenames | head -1)
-
-    echo "\${_filename:-}: ${_filename:-}"
-
-    [[ -n "${_filename}"                        ]]
-    [[ -e "${NB_DIR}/one/${_filename}"          ]]
-    [[ ! "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
+    [[ -e "${NB_DIR}/one/example.md"                        ]]
+    [[ ! "$(cat "${NB_DIR}/one/example.md")" =~ mock_editor ]]
   }
 
-  run "${_NB}" edit "one:${_filename}"
+  run "${_NB}" edit "one:example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
-    "$(cat "${NB_DIR}/one/${_filename}")"
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/example.md" \
+    "$(cat "${NB_DIR}/one/example.md")"
 
-  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
+  [[ "$(cat "${NB_DIR}/one/example.md")" =~ mock_editor  ]]
 
   [[ "${output}" =~ Updated:            ]]
   [[ "${output}" =~ one\:[0-9]+         ]]
@@ -328,9 +326,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                    ]]
-  [[ "${output}" =~ [0-9]+                      ]]
-  [[ "${output}" =~ Note\ name\ with\ spaces.md ]]
+  [[ "${output}" =~ Updated:                          ]]
+  [[ "${output}" =~ [0-9]+                            ]]
+  [[ "${output}" =~ Note\\\ name\\\ with\\\ spaces.md ]]
 }
 
 # <id> ########################################################################
