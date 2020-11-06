@@ -87,8 +87,10 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   printf "EDITOR: '%s'\\n" "${EDITOR:-}"
+  printf "env EDITOR: '%s'\\n" "$("${_NB}" env | grep 'EDITOR')"
+
   touch "${_TMP_DIR}/editor-test.md"
-  "${EDITOR}" "${_TMP_DIR}/editor-test.md"
+  eval "${EDITOR} \"${_TMP_DIR}/editor-test.md\""
   printf "cat \${_TMP_DIR}/editor-test.md: '%s'\\n" \
     "$(cat "${_TMP_DIR}/editor-test.md")"
 
