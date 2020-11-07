@@ -1,5 +1,39 @@
 ###############################################################################
 # .github/workflows/test.yml
+#
+# NOTE: GitHub Actions does not allocate a TTY, preventing `nb` from detecting
+# piped input using `[[ -t 0 ]]` in the `_interactive_input()` function, thus
+# causing tests to fail. More information:
+#
+# https://github.com/actions/runner/issues/241
+#
+# faketty is a GitHub Action that uses work-arounds to provide a tty:
+#
+# https://github.com/marketplace/actions/faketty
+#
+# Scripts used by faketty for each platform:
+#
+# linux: faketty
+#
+# ```bash
+# #!/bin/bash
+
+# script -q -e -c "$*"
+# ```
+#
+# win32: faketty.ps1
+#
+# ```posh
+# Invoke-Expression "$args"
+# ```
+#
+# darwin: faketty
+#
+# ```bash
+# #!/bin/bash
+#
+# unbuffer $*
+# ```
 ###############################################################################
 
 name: Test
