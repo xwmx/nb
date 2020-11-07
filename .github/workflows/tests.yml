@@ -48,9 +48,6 @@ jobs:
     runs-on: macos-10.15
     steps:
       - uses: actions/checkout@v1
-      # https://github.com/marketplace/actions/faketty
-      - name: faketty
-        uses: Yuri6037/Action-FakeTTY@v1
       - name: Setup
         run: |
           brew install bat
@@ -63,15 +60,12 @@ jobs:
       - name: Set $TERM=xterm
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: Run tests
-        run:  faketty bats test
+        run:  unbuffer bats test
   test-ubuntu-latest:
     name: "Test: Ubuntu Latest"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      # https://github.com/marketplace/actions/faketty
-      - name: faketty
-        uses: Yuri6037/Action-FakeTTY@v1
       - name: Setup
         run: |
           sudo add-apt-repository ppa:duggan/bats --yes
@@ -93,4 +87,4 @@ jobs:
       - name: Set $TERM=xterm
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: Run tests
-        run:  faketty bats test
+        run:  script -q -e -c "bats test"
