@@ -29,6 +29,8 @@
 #
 # darwin: faketty
 #
+# requires: `brew install expect`
+#
 # ```bash
 # #!/bin/bash
 #
@@ -53,6 +55,7 @@ jobs:
           brew install bat
           brew unlink  bats
           brew install bats-core
+          brew install expect
           brew install pandoc
           brew install w3m
           git config --global user.name   "Example Name"
