@@ -1,5 +1,5 @@
 ###############################################################################
-# .github/workflows/test.yml
+# .github/workflows/tests.yml
 #
 # NOTE: GitHub Actions does not allocate a TTY, preventing `nb` from detecting
 # piped input using `[[ -t 0 ]]` in the `_interactive_input()` function, thus
@@ -17,7 +17,7 @@
 #
 # ```bash
 # #!/bin/bash
-
+#
 # script -q -e -c "$*"
 # ```
 #
