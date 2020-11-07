@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
-    <img  src="https://travis-ci.org/xwmx/nb.svg?branch=master"
+  <a href="https://github.com/xwmx/nb/actions" rel="nofollow">
+    <img  src="https://img.shields.io/github/workflow/status/xwmx/nb/nb%20%C2%B7%20Test%20Suite"
           alt="Build Status"
           style="max-width:100%;">
   </a>
