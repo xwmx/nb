@@ -45,6 +45,25 @@ on:
     branches: [ github-actions ]
 
 jobs:
+  test-macos-11:
+    name: "Test: macOS Big Sur 11.0"
+    runs-on: macos-11.0
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup
+        run: |
+          brew install bat
+          brew unlink  bats
+          brew install bats-core
+          brew install expect
+          brew install pandoc
+          brew install w3m
+          git config --global user.name   "Example Name"
+          git config --global user.email  "example@example.com"
+      - name: Set $TERM=xterm
+        run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
+      - name: Run tests
+        run:  unbuffer bats test
   test-macos-10-15:
     name: "Test: macOS Catalina 10.15"
     runs-on: macos-10.15
