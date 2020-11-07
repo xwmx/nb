@@ -4870,14 +4870,14 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With over 1,000 tests spanning more than 30,000 lines, `nb` is really
+With more than 1,000 tests spanning over 30,000 lines, `nb` is really
 mostly a [test suite](https://github.com/xwmx/nb/tree/master/test).
 [Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
 on the two most recent versions of both Ubuntu and macOS to account for
 differences between BSD and GNU tools and Bash versions.
 To run the tests locally, install [Bats](https://github.com/bats-core/bats-core)
 and the [recommended dependencies](#optional),
-then run `bats test` in the project root.
+then run `bats test` within the project root directory.
 
 ---
 <p align="center">
