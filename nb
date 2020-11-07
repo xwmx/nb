@@ -6384,7 +6384,6 @@ HEREDOC
     _init_create_nb_dir                 1>/dev/null &&
     _init_create_rc_file                1>/dev/null &&
     _init_create_home_notebook "${1:-}" 1>/dev/null
-
 }
 
 # list ################################################################### list
