@@ -1419,20 +1419,21 @@ _file_is_encrypted() {
   local _file_type="${_file_path##*.}"
 
   # `file` with 'soft' test is slow, so avoid calling it.
-  LC_ALL=C _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}"   ||
+  LC_ALL=C _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}" ||
     {
-      ! LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}"  &&
-      ! _file_is_image    "${_file_path:-}"                               &&
-      ! _file_is_document "${_file_path:-}"                               &&
-      ! _file_is_audio    "${_file_path:-}"                               &&
-      ! _file_is_video    "${_file_path:-}"                               &&
-      [[ "$(file "${_file_path:-}"  \
-              --exclude=apptype     \
-              --exclude=encoding    \
-              --exclude=tokens      \
-              --exclude=cdf         \
-              --exclude=compress    \
-              --exclude=elf         \
+      ! LC_ALL=C _contains "${_file_type}"  \
+        "${_TEXT_FILE_EXTENSIONS[@]}"       \
+        "${_IMAGE_FILE_EXTENSIONS[@]}"      \
+        "${_DOCUMENT_FILE_EXTENSIONS[@]}"   \
+        "${_AUDIO_FILE_EXTENSIONS[@]}"      \
+        "${_VIDEO_FILE_EXTENSIONS[@]}"      &&
+      [[ "$(file "${_file_path:-}"          \
+              --exclude=apptype             \
+              --exclude=encoding            \
+              --exclude=tokens              \
+              --exclude=cdf                 \
+              --exclude=compress            \
+              --exclude=elf                 \
               --exclude=tar)" =~ encrypted|openssl ]]
     }
 }
@@ -1514,25 +1515,26 @@ _file_is_text() {
   local _file_type="${_file_path##*.}"
 
   # Avoid calling `file` for better performance.
-  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}"      ||
+  LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}" ||
     {
-      ! _file_is_image    "${_file_path:-}"                             &&
-      ! _file_is_document "${_file_path:-}"                             &&
-      ! _file_is_audio    "${_file_path:-}"                             &&
-      ! _file_is_video    "${_file_path:-}"                             &&
-      ! _file_is_archive  "${_file_path:-}"                             &&
-      [[ ! "${_file_type}" =~ \.epub$   ]]                              &&
-      [[ ! -d "${_file_path:-}"         ]]                              &&
-      ! _contains "${_file_type:-}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}"  &&
-      [[ "$(file "${_file_path:-}"  \
-              --exclude=apptype     \
-              --exclude=encoding    \
-              --exclude=tokens      \
-              --exclude=cdf         \
-              --exclude=compress    \
-              --exclude=elf         \
-              --exclude=tar         \
-              --exclude=soft        \
+      ! LC_ALL=C _contains "${_file_type}"  \
+        "${_IMAGE_FILE_EXTENSIONS[@]}"      \
+        "${_DOCUMENT_FILE_EXTENSIONS[@]}"   \
+        "${_ENCRYPTED_FILE_EXTENSIONS[@]}"  \
+        "${_AUDIO_FILE_EXTENSIONS[@]}"      \
+        "${_VIDEO_FILE_EXTENSIONS[@]}"      \
+        "${_ARCHIVE_FILE_EXTENSIONS[@]}"    &&
+      [[ ! "${_file_type}" =~ \.epub$   ]]  &&
+      [[ ! -d "${_file_path:-}"         ]]  &&
+      [[ "$(file "${_file_path:-}"          \
+              --exclude=apptype             \
+              --exclude=encoding            \
+              --exclude=tokens              \
+              --exclude=cdf                 \
+              --exclude=compress            \
+              --exclude=elf                 \
+              --exclude=tar                 \
+              --exclude=soft                \
               -b --mime-type)" =~ ^text ]]
     }
 }
