@@ -2,8 +2,9 @@
 # .github/workflows/tests.yml
 #
 # NOTE: GitHub Actions does not allocate a TTY, preventing `nb` from detecting
-# piped input using `[[ -t 0 ]]` in the `_interactive_input()` function, thus
-# causing tests to fail. More information:
+# piped input using `[[ -t 0 ]]` in the `_interactive_input()` function.
+#
+# More information:
 #
 # https://github.com/actions/runner/issues/241
 #
