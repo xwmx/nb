@@ -1419,11 +1419,13 @@ _file_is_encrypted() {
   local _file_type="${_file_path##*.}"
 
   # `file` with 'soft' test is slow, so avoid calling it.
-  LC_ALL=C _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}" ||
+  LC_ALL=C _contains "${_file_type}" "${_ENCRYPTED_FILE_EXTENSIONS[@]}"   ||
     {
-      ! _file_is_text     "${_file_path:-}" &&
-      ! _file_is_image    "${_file_path:-}" &&
-      ! _file_is_document "${_file_path:-}" &&
+      ! LC_ALL=C _contains "${_file_type}" "${_TEXT_FILE_EXTENSIONS[@]}"  &&
+      ! _file_is_image    "${_file_path:-}"                               &&
+      ! _file_is_document "${_file_path:-}"                               &&
+      ! _file_is_audio    "${_file_path:-}"                               &&
+      ! _file_is_video    "${_file_path:-}"                               &&
       [[ "$(file "${_file_path:-}"  \
               --exclude=apptype     \
               --exclude=encoding    \
