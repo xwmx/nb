@@ -7,13 +7,13 @@
 #
 # https://github.com/actions/runner/issues/241
 #
-# faketty is a GitHub Action that uses work-arounds to provide a tty:
+# faketty is a GitHub action that uses work-arounds to provide a tty:
 #
 # https://github.com/marketplace/actions/faketty
 #
 # Scripts used by faketty for each platform:
 #
-# linux: faketty
+# linux: `faketty`
 #
 # ```bash
 # #!/bin/bash
@@ -21,13 +21,13 @@
 # script -q -e -c "$*"
 # ```
 #
-# win32: faketty.ps1
+# win32: `faketty.ps1`
 #
 # ```posh
 # Invoke-Expression "$args"
 # ```
 #
-# darwin: faketty
+# darwin: `faketty`
 #
 # requires: `brew install expect`
 #
