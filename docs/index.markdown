@@ -11,8 +11,8 @@ permalink: /
 </p>
 
 <p align="center">
-  <a href="https://travis-ci.org/xwmx/nb" rel="nofollow">
-    <img  src="https://travis-ci.org/xwmx/nb.svg?branch=master"
+  <a href="https://github.com/xwmx/nb/actions" rel="nofollow">
+    <img  src="https://img.shields.io/github/workflow/status/xwmx/nb/nb%20%C2%B7%20Test%20Suite"
           alt="Build Status"
           style="max-width:100%;">
   </a>
@@ -85,7 +85,7 @@ on any device.
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
-The entire program is a single [well-tested](https://github.com/xwmx/nb#tests)
+The entire program is a single [well-tested](#tests)
 shell script that can be
 installed, copied, or `curl`ed almost anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
@@ -4872,10 +4872,11 @@ at the root level of the notebook directory.
 
 With over 1,000 tests spanning more than 30,000 lines, `nb` is really
 mostly a [test suite](https://github.com/xwmx/nb/tree/master/test).
-To run the tests locally, install
-[Bats](https://github.com/bats-core/bats-core)
-and the
-[recommended dependencies](#optional),
+[Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
+on the most recent versions of Ubuntu and macOS to account for
+differences between BSD and GNU tools and Bash versions.
+To run the tests locally, install [Bats](https://github.com/bats-core/bats-core)
+and the [recommended dependencies](#optional),
 then run `bats test` in the project root.
 
 ---
