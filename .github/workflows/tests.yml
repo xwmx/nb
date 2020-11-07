@@ -83,9 +83,36 @@ jobs:
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: Run tests
         run:  unbuffer bats test
-  test-ubuntu-latest:
-    name: "Test: Ubuntu Latest"
-    runs-on: ubuntu-latest
+  test-ubuntu-2004:
+    name: "Test: Ubuntu 20.04"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup
+        run: |
+          sudo add-apt-repository ppa:duggan/bats --yes
+          sudo apt-get update
+          sudo apt-get install bats -y
+          sudo apt-get install python-pygments -y
+          sudo apt-get install w3m
+          curl -LO https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
+          sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
+          curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
+          sudo dpkg -i bat_0.16.0_amd64.deb
+          git config --global user.name   "Example Name"
+          git config --global user.email  "example@example.com"
+      - name: Install bats-core
+        run: |
+          git clone https://github.com/bats-core/bats-core.git "${HOME}/bats-core" &&
+            cd "${HOME}/bats-core"
+          sudo ./install.sh /usr/local
+      - name: Set $TERM=xterm
+        run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
+      - name: Run tests
+        run:  script -q -e -c "bats test"
+  test-ubuntu-1804:
+    name: "Test: Ubuntu 18.04"
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
       - name: Setup
