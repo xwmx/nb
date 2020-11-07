@@ -42,7 +42,9 @@ name: nb · Test Suite
 
 on:
   push:
-    branches: [ github-actions ]
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   test-macos-11:
