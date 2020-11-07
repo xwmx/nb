@@ -1866,7 +1866,7 @@ _get_http_status() {
 # _get_unique_relative_path()
 #
 # Usage:
-#   _get_unique_relative_path [<file-path>[<extention>] [<notebook-path>]
+#   _get_unique_relative_path [<file-path>[<extension>] [<notebook-path>]
 #
 # Description:
 #   Get a unique basename that doesn't conflict with any existing file.
