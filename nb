@@ -10319,7 +10319,7 @@ Example:
   $
 HEREDOC
 _shell() {
-  HISTFILE="${HOME}/.${_ME}_history"
+  HISTFILE="${NB_HIST:-${HOME}/.${_ME}_history}"
   set -o history
 
   local _initial_command=
