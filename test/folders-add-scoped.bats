@@ -31,6 +31,9 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
+  [[ -d "${NB_DIR}/home/Example Folder/folder"        ]]
+  [[ -f "${NB_DIR}/home/Example Folder/folder/.index" ]]
+
   _files=($(LC_ALL=C ls -a "${NB_DIR}/home"))
 
   echo "_files: ${_files[*]}"
