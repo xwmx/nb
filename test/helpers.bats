@@ -11,7 +11,7 @@ load test_helper
 #   Encrypted file detection tests error intermittently, so skip in some cases
 #   until resolved.
 _skip_encrypted_file_detection_tests() {
-  return 0 # skip "${1:-"TODO: intermittent encrypted file detection errors"}"
+  skip "${1:-"TODO: intermittent encrypted file detection errors"}"
 }
 
 # `_clear_cache()` ############################################################
