@@ -12,6 +12,44 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# <name> validation ###########################################################
+
+@test "'notebooks export <reserved>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks import                     \
+      "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
+      "${__name}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    ls "${NB_DIR}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+
+    [[ ! "${output}" =~ "Imported"      ]]
+    "${_NB}" notebooks | grep -q -v 'example'
+  done
+}
+
 # no argument #################################################################
 
 @test "'notebooks import' with no arguments exits with status 1 and prints help." {

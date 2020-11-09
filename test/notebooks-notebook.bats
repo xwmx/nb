@@ -14,6 +14,37 @@ _setup_notebook() {
   } > /dev/null 2>&1
 }
 
+# <name> validation ###########################################################
+
+@test "'notebooks archive <reserved>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks archive "${__name}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
 # `notebooks archive` #########################################################
 
 @test "'notebooks archive' exits with 0 and archives." {

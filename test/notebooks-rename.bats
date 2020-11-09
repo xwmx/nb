@@ -26,6 +26,67 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# <name> validation ###########################################################
+
+@test "'notebooks rename <reserved> <new>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks rename "${__name}" "example"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
+@test "'notebooks rename <old> <reserved>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks rename "example" "${__name}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
 # `notebooks rename` ##########################################################
 
 @test "'notebooks rename <valid-old> <valid-new>' exits with 0 and renames notebook." {

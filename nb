@@ -7867,17 +7867,29 @@ Examples:
 
 Shortcut Alias: \`n\`
 HEREDOC
+_RESERVED_NOTEBOOK_NAMES=(
+  ".cache"
+  ".current"
+  ".plugins"
+  ".readme"
+  "readme"
+  "readme.md"
+)
 _notebooks() {
+
   # _notebooks_add()
   #
   # Usage:
   #   _notebooks_add <name> [<remote_url>]
   _notebooks_add() {
     local _name="${1:-}"
+
     if [[ -z "${_name}" ]]
     then
       _exit_1 _help notebooks
     fi
+
+    _notebooks_validate_name "${_name}"
 
     if [[ -e "${NB_DIR}/${_name}" ]]
     then
@@ -7885,6 +7897,7 @@ _notebooks() {
     fi
 
     local _repo_url="${2:-}"
+
     if [[ -n "${_repo_url}" ]]
     then
       git clone "${_repo_url}" "${NB_DIR}/${_name}" &&
@@ -8025,6 +8038,8 @@ Use your system's shell or file explorer to delete local notebook directories.
 HEREDOC
     fi
 
+    _notebooks_validate_name "${_name}"
+
     if [[ ! -d "${NB_DIR}/${_name}"        ]] ||
        [[ ! -e "${NB_DIR}/${_name}/.git"   ]] ||
        [[ ! -e "${NB_DIR}/${_name}/.index" ]]
@@ -8108,6 +8123,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       _exit_1 _help "notebooks"
     fi
 
+    _notebooks_validate_name "${_name}"
+
     if [[ ! -d "${NB_DIR}/${_name}" ]]
     then
       _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
@@ -8147,6 +8164,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
   #   _notebooks_import <path> [<name>]
   _notebooks_import() {
     local _path="${1:-}"
+
     if [[ -z "${_path:-}" ]]
     then
       _exit_1 _help "notebooks"
@@ -8166,10 +8184,13 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     fi
 
     local _target_basename="${2:-}"
+
     if [[ -z "${_target_basename:-}" ]]
     then
       _target_basename="${_basename}"
     fi
+
+    _notebooks_validate_name "${_target_basename}"
 
     local _target_path=
     _target_path="$(_get_unique_path "${NB_DIR}/${_target_basename}")"
@@ -8457,6 +8478,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         _notebook_name=$(printf "%s\\n" "${_notebook_name}" | cut -f 1 -d ":")
       fi
 
+      _notebooks_validate_name "${_notebook_name}"
+
       local _notebook_path
       _notebook_path="$(_notebooks "${_notebook_name}" --path)"
     else
@@ -8549,6 +8572,9 @@ Please type $(_color_primary "${_name}") to confirm: " __response
   _notebooks_rename() {
     local _old="${1:-}"
     local _new="${2:-}"
+
+    _notebooks_validate_name "${_old}"
+    _notebooks_validate_name "${_new}"
 
     if [[ -z "${_old}" ]] || [[ -z "${_new}" ]]
     then
@@ -8815,6 +8841,8 @@ HEREDOC
       _exit_1 _help notebooks
     fi
 
+    _notebooks_validate_name "${_name}"
+
     if [[ -n "${_LOCAL_NOTEBOOK_PATH}" ]]
     then
       _exit_1 cat <<HEREDOC
@@ -8849,6 +8877,20 @@ HEREDOC
     fi
   }
 
+  # Usage: _notebooks_validate_name <name>
+  _notebooks_validate_name() {
+    if _contains                                                \
+      "$(printf "%s\\n" "${1:-}" | tr '[:upper:]' '[:lower:]')" \
+      "${_RESERVED_NOTEBOOK_NAMES[@]}"
+    then
+      _exit_1 printf "Name reserved for internal use: %s\\n"    \
+        "$(_color_primary "${1:-}")"
+    else
+      return 0
+    fi
+  }
+
+  # Usage: _notebooks_add_new [<notebook>...]
   _notebooks_add_new() {
     local _notebook_list=("${@:-}")
 

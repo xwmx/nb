@@ -13,6 +13,35 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# <name> validation ###########################################################
+
+@test "'notebooks add <reserved>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks add "${__name}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
 # `notebooks add <name>` ######################################################
 
 @test "'notebooks add' exits with 1 and prints error message." {
