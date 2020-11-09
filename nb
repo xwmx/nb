@@ -1789,10 +1789,10 @@ _get_content() {
 
     if [[ -n "${_title:-}" ]]
     then
-      printf "%s\\n" "${_title}"
+      printf "%s\\n" "${_title/%$'\r'}"
     elif ! ((_only_title)) && [[ -n "${_first_line:-}" ]]
     then
-      printf "%s\\n" "__first_line:${_first_line}"
+      printf "%s\\n" "__first_line:${_first_line/%$'\r'}"
     fi
 
   fi
