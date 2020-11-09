@@ -77,9 +77,8 @@ load test_helper
   [[    "${output}" =~ Added:                                     ]]
   [[    "${output}" =~ 📂                                         ]]
   [[    "${output}" =~ home:Example\\\ Folder/1                   ]]
-  [[    "${output}" =~ home:Example\\\ Folder/[0-9][0-9][0-9]+    ]]
+  [[    "${output}" =~ home:Example\\\ Folder/folder              ]]
   [[ !  "${output}" =~ \.                                         ]]
-  [[ !  "${output}" =~ folder                                     ]]
 }
 
 @test "'add notebook:<folder>/ --filename' creates new note without errors." {

@@ -3203,10 +3203,15 @@ _add() {
       )"
     fi
 
-    if [[ -n "${_file_type}" ]] && [[ "${_file_type:-}" != "folder" ]]
+    if [[ -n "${_file_type}"              ]] &&
+       [[ "${_file_type:-}" != "folder"   ]]
     then
       # NOTE: ${_target_filename} can be blank, resulting in '.type'
       _target_filename="${_target_filename:-}.${_file_type}"
+    elif [[ "${_file_type:-}" == "folder" ]] &&
+         [[ -z "${_target_filename:-}"    ]]
+    then
+      _target_filename="folder"
     fi
   fi
 
