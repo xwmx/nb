@@ -2,6 +2,231 @@
 
 load test_helper
 
+# error handling ##############################################################
+
+@test "'list <not-valid-id>/' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/three.bookmark.md" \
+      --content "<https://example.test>"            \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list 10/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1           ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:  ]]
+  [[   "${lines[0]}"  =~ 10           ]]
+
+  [[ ! "${output}"  =~ three          ]]
+  [[ ! "${output}"  =~ 🔖\ 🔒         ]]
+  [[ ! "${output}"  =~ two            ]]
+  [[ ! "${output}"  =~ 🔖             ]]
+  [[ ! "${output}"  =~ one            ]]
+}
+
+@test "'list not-valid/' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/three.bookmark.md" \
+      --content "<https://example.test>"            \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1           ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:  ]]
+  [[   "${lines[0]}"  =~ not-valid    ]]
+
+  [[ ! "${output}"  =~ three          ]]
+  [[ ! "${output}"  =~ 🔖\ 🔒         ]]
+  [[ ! "${output}"  =~ two            ]]
+  [[ ! "${output}"  =~ 🔖             ]]
+  [[ ! "${output}"  =~ one            ]]
+}
+
+@test "'list valid/<not-valid-id>/' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
+      --content "<https://example.test>"                          \
+      --encrypt --password=password
+    "${_NB}" add "Example Folder/Sample 2 Folder 2" --type folder
+  }
+
+  run "${_NB}" list Example\ Folder/10/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1                         ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:                ]]
+  [[   "${lines[0]}"  =~ Example\ Folder/10         ]]
+
+  [[ ! "${output}"  =~ three                        ]]
+  [[ ! "${output}"  =~ 🔖\ 🔒                       ]]
+  [[ ! "${output}"  =~ two                          ]]
+  [[ ! "${output}"  =~ 🔖                           ]]
+  [[ ! "${output}"  =~ one                          ]]
+}
+
+@test "'list valid/not-valid/' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
+      --content "<https://example.test>"                          \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list Example\ Folder/not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1                         ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:                ]]
+  [[   "${lines[0]}"  =~ Example\ Folder/not-valid  ]]
+
+  [[ ! "${output}"  =~ three                        ]]
+  [[ ! "${output}"  =~ 🔖\ 🔒                       ]]
+  [[ ! "${output}"  =~ two                          ]]
+  [[ ! "${output}"  =~ 🔖                           ]]
+  [[ ! "${output}"  =~ one                          ]]
+}
+
+@test "'list not-valid/not-valid/' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
+      --content "<https://example.test>"                          \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list not-valid/not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1                   ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:          ]]
+  [[   "${lines[0]}"  =~ not-valid/not-valid  ]]
+
+  [[ ! "${output}"  =~ three                  ]]
+  [[ ! "${output}"  =~ 🔖\ 🔒                 ]]
+  [[ ! "${output}"  =~ two                    ]]
+  [[ ! "${output}"  =~ 🔖                     ]]
+  [[ ! "${output}"  =~ one                    ]]
+}
+
+@test "'list not-valid' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/three.bookmark.md" \
+      --content "<https://example.test>"            \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1           ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:  ]]
+  [[   "${lines[0]}"  =~ not-valid    ]]
+}
+
+@test "'list valid/not-valid' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
+      --content "<https://example.test>"                          \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list Example\ Folder/not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1                         ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:                ]]
+  [[   "${lines[0]}"  =~ Example\ Folder/not-valid  ]]
+}
+
+@test "'list not-valid/not-valid' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
+      --title "one"
+    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
+      --content "<https://example.test>"
+    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
+      --content "<https://example.test>"                          \
+      --encrypt --password=password
+  }
+
+  run "${_NB}" list not-valid/not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1                   ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:          ]]
+  [[   "${lines[0]}"  =~ not-valid/not-valid  ]]
+}
+
 # list notebook:<id> ##########################################################
 
 @test "'list notebook:<id>/<folder>' exits with 0 and prints the folder/folder list item." {
@@ -165,170 +390,6 @@ load test_helper
 
   [[   "${status}"    -eq 0           ]]
   [[   "${lines[0]}"  =~  0\ items\.  ]]
-}
-
-# error handling ##############################################################
-
-@test "'list not-valid/' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/one.md"            \
-      --title "one"
-    "${_NB}" add "Example Folder/two.bookmark.md"   \
-      --content "<https://example.test>"
-    "${_NB}" add "Example Folder/three.bookmark.md" \
-      --content "<https://example.test>"            \
-      --encrypt --password=password
-  }
-
-  run "${_NB}" list not-valid/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 1           ]]
-
-  [[   "${lines[0]}"  =~ Not\ found:  ]]
-  [[   "${lines[0]}"  =~ not-valid    ]]
-
-  [[ ! "${output}"  =~ three          ]]
-  [[ ! "${output}"  =~ 🔖\ 🔒         ]]
-  [[ ! "${output}"  =~ two            ]]
-  [[ ! "${output}"  =~ 🔖             ]]
-  [[ ! "${output}"  =~ one            ]]
-}
-
-@test "'list valid/not-valid/' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
-      --title "one"
-    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
-      --content "<https://example.test>"
-    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
-      --content "<https://example.test>"                          \
-      --encrypt --password=password
-  }
-
-  run "${_NB}" list Example\ Folder/not-valid/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 1                         ]]
-
-  [[   "${lines[0]}"  =~ Not\ found:                ]]
-  [[   "${lines[0]}"  =~ Example\ Folder/not-valid  ]]
-
-  [[ ! "${output}"  =~ three                        ]]
-  [[ ! "${output}"  =~ 🔖\ 🔒                       ]]
-  [[ ! "${output}"  =~ two                          ]]
-  [[ ! "${output}"  =~ 🔖                           ]]
-  [[ ! "${output}"  =~ one                          ]]
-}
-
-@test "'list not-valid/not-valid/' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
-      --title "one"
-    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
-      --content "<https://example.test>"
-    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
-      --content "<https://example.test>"                          \
-      --encrypt --password=password
-  }
-
-  run "${_NB}" list not-valid/not-valid/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 1                   ]]
-
-  [[   "${lines[0]}"  =~ Not\ found:          ]]
-  [[   "${lines[0]}"  =~ not-valid/not-valid  ]]
-
-  [[ ! "${output}"  =~ three                  ]]
-  [[ ! "${output}"  =~ 🔖\ 🔒                 ]]
-  [[ ! "${output}"  =~ two                    ]]
-  [[ ! "${output}"  =~ 🔖                     ]]
-  [[ ! "${output}"  =~ one                    ]]
-}
-
-@test "'list not-valid' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/one.md"            \
-      --title "one"
-    "${_NB}" add "Example Folder/two.bookmark.md"   \
-      --content "<https://example.test>"
-    "${_NB}" add "Example Folder/three.bookmark.md" \
-      --content "<https://example.test>"            \
-      --encrypt --password=password
-  }
-
-  run "${_NB}" list not-valid
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 1           ]]
-
-  [[   "${lines[0]}"  =~ Not\ found:  ]]
-  [[   "${lines[0]}"  =~ not-valid    ]]
-}
-
-@test "'list valid/not-valid' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
-      --title "one"
-    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
-      --content "<https://example.test>"
-    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
-      --content "<https://example.test>"                          \
-      --encrypt --password=password
-  }
-
-  run "${_NB}" list Example\ Folder/not-valid
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 1                         ]]
-
-  [[   "${lines[0]}"  =~ Not\ found:                ]]
-  [[   "${lines[0]}"  =~ Example\ Folder/not-valid  ]]
-}
-
-@test "'list not-valid/not-valid' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder/one.md"            \
-      --title "one"
-    "${_NB}" add "Example Folder/Sample Folder/two.bookmark.md"   \
-      --content "<https://example.test>"
-    "${_NB}" add "Example Folder/Sample Folder/three.bookmark.md" \
-      --content "<https://example.test>"                          \
-      --encrypt --password=password
-  }
-
-  run "${_NB}" list not-valid/not-valid
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 1                   ]]
-
-  [[   "${lines[0]}"  =~ Not\ found:          ]]
-  [[   "${lines[0]}"  =~ not-valid/not-valid  ]]
 }
 
 # list <id>/ ##################################################################

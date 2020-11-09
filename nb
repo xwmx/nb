@@ -11020,13 +11020,19 @@ _show() {
           _relative_path="${_folder_relative_path}/${_identifier}"
         elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
         then # <selector> is an id
-          _relative_path="$(
+          local _basename
+          _basename="$(
             _INDEX_FOLDER_PATH="${_folder_path}" \
               _index get_basename "${_identifier}")"
 
-          if [[ -n "${_folder_relative_path:-}" ]]
+          if [[ -n "${_basename:-}" ]]
           then
-            _relative_path="${_folder_relative_path}/${_relative_path}"
+            if [[ -n "${_folder_relative_path:-}" ]]
+            then
+              _relative_path="${_folder_relative_path}/${_basename}"
+            else
+              _relative_path="${_basename}"
+            fi
           fi
         else # <selector> might be a title
           local _maybe_title="${_identifier##*\/}"

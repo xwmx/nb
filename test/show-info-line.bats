@@ -2,6 +2,39 @@
 
 load test_helper
 
+# error handling ##############################################################
+
+@test "'show <not-valid> --info-line' exits with status 1 and prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+  }
+
+  run "${_NB}" show "99" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 1           ]]
+  [[    "${output}" =~  Not\ found: ]]
+  [[    "${output}" =~  99          ]]
+}
+
+@test "'show <folder>/<not-valid> --info-line' exits with status 1 and prints message." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+  }
+
+  run "${_NB}" show "Example Folder/99" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 1           ]]
+  [[    "${output}" =~  Not\ found: ]]
+  [[    "${output}" =~  99          ]]
+}
 
 # folders #####################################################################
 
