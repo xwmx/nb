@@ -2510,7 +2510,8 @@ _resolve_selector_folders() {
       then # path segment might be an id
         _folder_name="$(
           _INDEX_FOLDER_PATH="${_parent_folder_path}" \
-            _index get_basename "${_folder_name}"
+            _index get_basename "${_folder_name}" ||
+              printf "%s\\n" "${_folder_name}"
         )"
       fi
 

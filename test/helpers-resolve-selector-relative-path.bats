@@ -2,12 +2,102 @@
 
 load test_helper
 
+# _resolve_selector_folders() (error handling) ################################
+
+@test "'_resolve_selector_folders()' return error message with not-valid path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example File.md" \
+      --content "Example content."
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"         ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1               ]]
+  [[    "${lines[0]}" =~  Not\ a\ folder: ]]
+  [[    "${lines[0]}" =~  not-valid       ]]
+}
+
+@test "'_resolve_selector_folders()' return error message with double not-valid two-level path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example File.md" \
+      --content "Example content."
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"         ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders not-valid/also-not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1               ]]
+  [[    "${lines[0]}" =~  Not\ a\ folder: ]]
+  [[    "${lines[0]}" =~  not-valid       ]]
+}
+
+@test "'_resolve_selector_folders()' return error message with second-level not-valid two-level path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example File.md" \
+      --content "Example content."
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"         ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders A\ Folder/not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1               ]]
+  [[    "${lines[0]}" =~  Not\ a\ folder: ]]
+  [[    "${lines[0]}" =~  not-valid       ]]
+}
+
+@test "'_resolve_selector_folders()' return error message with second-level not-valid id two-level path." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example File.md" \
+      --content "Example content."
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"         ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders A\ Folder/99/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1               ]]
+  [[    "${lines[0]}" =~  Not\ a\ folder: ]]
+  [[    "${lines[0]}" =~  99              ]]
+}
+
 # _resolve_selector_folders() (notebooks, folder and file ids) ################
 
 @test "'_resolve_selector_folders()' resolves selector with notebook and root-level file id path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
+    run "${_NB}" add "A Folder" --type folder
     run "${_NB}" add "Example File.md" \
       --content "Example content."
 
@@ -33,8 +123,8 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with notebook and first-level folder id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
 
     run "${_NB}" add "Example Folder/Example File.md" \
       --content "Example content."
@@ -63,9 +153,9 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with notebook and second-level folder id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.md" \
       --content "Example content."
@@ -96,10 +186,10 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with notebook and third-level folder id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder" --type folder
     run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Example File.md"
 
     run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Example File.md" \
@@ -135,7 +225,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with root-level id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
+    run "${_NB}" add "A Folder" --type folder
     run "${_NB}" add "Example File.md" \
       --content "Example content."
 
@@ -156,8 +246,8 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with first-level folder id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
 
     run "${_NB}" add "Example Folder/Example File.md" \
       --content "Example content."
@@ -181,9 +271,9 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with second-level folder id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
 
     run "${_NB}" add "Example Folder/Sample Folder/Example File.md" \
       --content "Example content."
@@ -209,10 +299,10 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with third-level folder id file path." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder" --type folder
     run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Example File.md"
 
     run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Example File.md" \
@@ -243,8 +333,8 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with root-level folder id path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"       ]]
     [[ -d "${NB_DIR}/home/Example Folder" ]]
@@ -262,8 +352,8 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with root-level folder id path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"       ]]
     [[ -d "${NB_DIR}/home/Example Folder" ]]
@@ -281,9 +371,9 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with first-level folder id path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"                       ]]
     [[ -d "${NB_DIR}/home/Example Folder"                 ]]
@@ -303,9 +393,9 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with first-level folder id path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"                       ]]
     [[ -d "${NB_DIR}/home/Example Folder"                 ]]
@@ -325,10 +415,10 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with second-level folder id path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"                                     ]]
     [[ -d "${NB_DIR}/home/Example Folder"                               ]]
@@ -350,10 +440,10 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with second-level folder id path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"                                     ]]
     [[ -d "${NB_DIR}/home/Example Folder"                               ]]
@@ -375,11 +465,11 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with third-level folder id path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"                                                 ]]
     [[ -d "${NB_DIR}/home/Example Folder"                                           ]]
@@ -403,11 +493,11 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with third-level folder id path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "A Folder/"
-    run "${_NB}" add "Example Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder/"
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+    run "${_NB}" add "A Folder" --type folder
+    run "${_NB}" add "Example Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/A Nested Folder" --type folder
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder" --type folder
 
     [[ -d "${NB_DIR}/home/A Folder"                                                 ]]
     [[ -d "${NB_DIR}/home/Example Folder"                                           ]]
@@ -433,7 +523,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with root-level folder path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/"
+    run "${_NB}" add "Example Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder" ]]
   }
@@ -450,7 +540,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with root-level folder path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/"
+    run "${_NB}" add "Example Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder" ]]
   }
@@ -467,7 +557,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with first-level folder path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
   }
@@ -484,7 +574,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with first-level folder path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
   }
@@ -501,7 +591,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with second-level folder path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder" ]]
   }
@@ -519,7 +609,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with second-level folder path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder" ]]
   }
@@ -537,7 +627,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with third-level folder path, no slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Test Folder" ]]
   }
@@ -555,7 +645,7 @@ load test_helper
 @test "'_resolve_selector_folders()' resolves selector with third-level folder path, yes slash." {
   {
     run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder/"
+    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/Test Folder" --type folder
 
     [[ -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Test Folder" ]]
   }
