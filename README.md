@@ -174,7 +174,8 @@ Also supported for various enhancements:
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
-[`termpdf.py`](https://github.com/dsanson/termpdf.py)
+[`termpdf.py`](https://github.com/dsanson/termpdf.py),
+[vifm](https://vifm.info/)
 
 #### macOS / Homebrew
 
@@ -3799,20 +3800,21 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `exa` [3], or `ls`.
+             `ranger` [1], `mc` [2], `vifm` [3], `exa` [4], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
   select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
-  show       Show and return information about a specified notebook.
   status     Print the archival status of the current notebook or
              notebook <name>.
+  show       Show and return information about a specified notebook.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
+    3. https://vifm.info/
+    4. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
