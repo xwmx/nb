@@ -2471,9 +2471,11 @@ _string_is_url() {
 # Usage:
 #   describe <name> <description>
 #   describe --get <name>
+#   describe --all
 #
 # Options:
 #   --get  Print the description for <name> if one has been set.
+#   --all  Print all descriptions in ASCII Delimited Text.
 #
 # Examples:
 # ```
@@ -2486,6 +2488,8 @@ _string_is_url() {
 # HEREDOC
 #
 # describe --get "list"
+#
+# describe --all
 # ```
 #
 # Set or print a description for a specified command or function <name>. The
@@ -2496,6 +2500,10 @@ _string_is_url() {
 #
 # When the `--get` option is used, the description for <name> is printed, if
 # one has been set.
+#
+# When the `--all` option is used, all descriptions are printed at once with
+# ASCII Delimited Text format.
+# https://ronaldduncan.wordpress.com/2009/10/31/text-file-formats-ascii-delimited-text-not-csv-or-tab-delimited-text/
 describe() {
   set +e
   [[ -z "${1:-}" ]] &&
