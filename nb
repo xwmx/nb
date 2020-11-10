@@ -11438,11 +11438,11 @@ Can't show archives. Export archive and expand to edit.\\n"
          }
     then
       mc "${_target_path}"
-    elif [[ -d "${_target_path}" ]] &&
-         _command_exists "vifm"       &&
+    elif [[ -d "${_target_path}"    ]] &&
+         _command_exists "vifm"        &&
          {
-           [[ -z "${_tool}"      ]] ||
-           [[ "${_tool}" == "vifm" ]]
+           [[ -z "${_tool}"         ]] ||
+           [[ "${_tool}" == "vifm"  ]]
          }
     then
       vifm "${_target_path}"
