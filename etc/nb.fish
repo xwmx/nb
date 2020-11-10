@@ -44,18 +44,26 @@ function _nb_subcommands
     if test "$_commands_cached" != (string join " " $_commands)
       or test "$_notebooks_cached" != (string join " " $_notebooks)
 
-      for __command in $_commands
+      # \036 means Record Separator (RS). Each record has help for each command.
+      nb subcommands describe --all | read -azd \036 _descriptions
+
+      set __count (count $_descriptions)
+      set __i 0
+      while test $__i -lt $__count
+        set __i (math $__i + 1)
+
+        # \037 means Unit Separator (US). Each unit has command and description.
+        echo $_descriptions[$__i] | read -azd \037 __columns
+        set __command $__columns[1]
+        set __help (echo $__columns[2] | string join \t)
+
         if eval set -q __desc_$__command
-          set -a _completions $__command\t$___desc
           continue
         end
 
-        set ___help (nb help $__command | string join \t)
-
         # Read the description up to 40 chars.
-        set ___desc (string match -r 'Description:\t  (.*?)\.' $___help)[2]
+        set ___desc (echo $__help | string match -r 'Description:\t  (.*?)\.')[2]
         if test -z $___desc
-          set -a _completions $__command
           continue
         end
         set ___desc (string replace -a \t '' $___desc | string sub -l 40)
@@ -63,7 +71,6 @@ function _nb_subcommands
           set ___desc (string sub -l 38 $___desc)……
         end
 
-        set -a _completions $__command\t$___desc
         eval set __desc_$__command \$___desc
 
         # When __command is an alias for another command, also set the
@@ -84,6 +91,14 @@ function _nb_subcommands
               eval set __desc_$___alias \$___desc
             end
           end
+        end
+      end
+
+      for __command in $_commands
+        if eval set -q __desc_$__command
+          eval set -a _completions \$__command\\t\$__desc_$__command:
+        else
+          set -a _completions $_commands
         end
       end
 

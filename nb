@@ -2515,18 +2515,30 @@ describe() {
     else
       printf "No additional information for \`%s\`\\n" "${_name}"
     fi
+  elif [[ "${1}" == "--all" ]]
+  then # getAll ---------------------------------------------------------------
+    (
+      # \036 means Record Separator (RS). Each record has help for each command.
+      IFS=$'\036'
+      printf "%s" "${_ALL_DESCRIPTIONS[*]}"
+    )
   else # set ------------------------------------------------------------------
+    local _describe_var="____describe_${1}"
     if [[ -n "${2:-}" ]]
     then # argument is present
-      read -r -d '' "____describe_${1}" <<HEREDOC
+      read -r -d '' "${_describe_var}" <<HEREDOC
 ${2}
 HEREDOC
     else # no argument is present, so assume piped input
-      read -r -d '' "____describe_${1}"
+      read -r -d '' "${_describe_var}"
     fi
+    # store all descriptions for completion.
+    # \037 means Unit Separator (US). Each unit has command and description.
+    _ALL_DESCRIPTIONS=("${_ALL_DESCRIPTIONS[@]}" "${1}"$'\037'"${!_describe_var}")
   fi
   set -e
 }
+_ALL_DESCRIPTIONS=()
 
 # Support legacy `desc` name.
 desc() { describe "${@}"; }
