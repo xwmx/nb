@@ -1776,10 +1776,10 @@ Notes can also be moved between notebooks:
 
 ```bash
 # move note 3 from the current notebook to "example"
-nb move 3 example
+nb move 3 example:
 
 # move note 5 in the notebook "example" to the notebook "sample"
-nb move example:5 sample
+nb move example:5 sample:
 ```
 
 ##### Example Workflow
@@ -1905,10 +1905,10 @@ nb add
 nb edit 15
 
 # move note titled "Todos" from the home notebook to the local notebook
-nb move home:Todos local
+nb move home:Todos local:
 
 # move note 1 from the local notebook to the home notebook
-nb move 1 home
+nb move 1 home:
 
 # search the local notebook for <query string>
 nb search "query string"
