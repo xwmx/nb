@@ -85,9 +85,8 @@ on any device.
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
-The entire program is a single [well-tested](#tests)
-shell script that can be
-installed, copied, or `curl`ed almost anywhere and just work, using
+The entire program is a single well-tested shell script that can be installed,
+copied, or `curl`ed almost anywhere and just work, using
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments. `nb` works great
 whether you have one notebook with just a few notes or dozens of
@@ -107,12 +106,6 @@ features. `nb` is flexible.
 <br/>
 
 <h1 align="center" id="nb"><code>nb</code></h1>
-
-<p align="center">
-	Versions: 6.0.0-alpha
-	•
-	<a href="https://github.com/xwmx/nb/tree/5.7.8#nb">5.7.8</a>
-</p>
 
 <p align="center">
   <a href="#installation">Installation</a> •
@@ -180,8 +173,7 @@ Also supported for various enhancements:
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
-[`termpdf.py`](https://github.com/dsanson/termpdf.py),
-[vifm](https://vifm.info/)
+[`termpdf.py`](https://github.com/dsanson/termpdf.py)
 
 #### macOS / Homebrew
 
@@ -2884,7 +2876,6 @@ Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
-  nb add folder [<name>]
   nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
               [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -2924,8 +2915,7 @@ Usage:
         [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
         [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
-  nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
+  nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url>]
@@ -2951,6 +2941,8 @@ Usage:
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
+  nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
+            (<name> | --reset | --to-bookmark | --to-note)
   nb run <command> [<arguments>...]
   nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
                     [-l | --list] [--path]
@@ -2976,7 +2968,7 @@ Usage:
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
-  add          Add a note, folder, or a file of a specified type.
+  add          Add a new note.
   bookmark     Add, open, list, and search bookmarks.
   completions  Install and uninstall completion scripts.
   count        Print the number of notes.
@@ -2990,12 +2982,13 @@ Subcommands:
   init         Initialize the first notebook.
   list         List notes in the current notebook.
   ls           List notebooks and notes in the current notebook.
-  move         Move or rename a note.
+  move         Move a note to a different notebook.
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
   plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
+  rename       Rename a note.
   run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
@@ -3145,6 +3138,7 @@ For more information, see: `nb help`.
   <a href="#peek">peek</a> •
   <a href="#plugins">plugins</a> •
   <a href="#remote">remote</a> •
+  <a href="#rename">rename</a> •
   <a href="#run">run</a> •
   <a href="#search">search</a> •
   <a href="#settings">settings</a> •
@@ -3165,14 +3159,14 @@ Usage:
   nb add [<filename> | <content>] [-c <content> | --content <content>]
          [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
          [-t <title> | --title <title>] [--type <type>]
-  nb add folder [<name>]
 
 Options:
   -c, --content <content>     The content for the new note.
   --edit                      Open the note in the editor before saving when
                               content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
-  -f, --filename <filename>   The filename for the new note.
+  -f, --filename <filename>   The filename for the new note. The default
+                              extension is used when the extension is omitted.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename will be derived from the
                               title, unless `--filename` is specified.
@@ -3180,7 +3174,7 @@ Options:
                               extension.
 
 Description:
-  Create a new note or folder.
+  Create a new note.
 
   If no arguments are passed, a new blank note file is opened with
   `$EDITOR`, currently set to "example". If a non-option argument is
@@ -3204,8 +3198,6 @@ Examples:
   nb add example.md --title "Example Title" --content "Example content."
   echo "Note content." | nb add
   nb add -t "Secret Document" --encrypt
-  nb add example/document.md
-  nb add folder sample/demo
   nb example:add
   nb example:add -t "Title"
   nb a
@@ -3707,44 +3699,21 @@ Examples:
 
 ```text
 Usage:
-  nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
+  nb move (<id> | <filename> | <path> | <title>) [-f | --force] <notebook>
 
 Options:
-  -f, --force     Skip the confirmation prompt.
-  --reset         Reset the filename to the last modified timestamp.
-  --to-bookmark   Preserve the existing filename and replace the extension
-                  with ".bookmark.md" to convert the note to a bookmark.
-  --to-note       Preserve the existing filename and replace the bookmark's
-                  ".bookmark.md" extension with ".md" to convert the bookmark
-                  to a Markdown note.
+  -f, --force   Skip the confirmation prompt.
 
 Description:
-  Move or rename a note. Move the note to <path> or change the file type.
-  When file extension is omitted, the existing extension will be used.
-
-  `move` and `rename` are aliases and can be used interchangably.
+  Move the specified note to <notebook>.
 
 Examples:
-  # Move "example.md" to "example.org"
-  nb move example.md sample.org
+  nb move 1 example-notebook
+  nb move example.md example-notebook
+  nb example:move sample.md other-notebook
+  nb move example:sample.md other-notebook
+  nb mv 1 example-notebook
 
-  # Rename note 3 ("example.md") to "New Name.md"
-  nb rename 3 "New Name"
-
-  # Rename "example.bookmark.md" to "New Name.bookmark.md"
-  nb move example.bookmark.md "New Name"
-
-  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
-  nb rename 3 --to-bookmark
-
-  # Move note 12 to "Sample Folder" in the "demo" notebook
-  nb example:move 12 demo:Sample\ Folder/
-
-  # Rename note 12 in the "example" notebook to "sample.md"
-  nb example:move 12 "sample.md"
-
-Alias: `rename`
 Shortcut Alias: `mv`
 ```
 
@@ -3806,21 +3775,20 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `vifm` [3], `exa` [4], or `ls`.
+             `ranger` [1], `mc` [2], `exa` [3], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook.
   select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
+  show       Show and return information about a specified notebook.
   status     Print the archival status of the current notebook or
              notebook <name>.
-  show       Show and return information about a specified notebook.
   unarchive  Remove "archived" status from current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://vifm.info/
-    4. https://github.com/ogham/exa
+    3. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
@@ -3949,6 +3917,43 @@ Description:
 Examples:
   nb remote set https://github.com/example/example.git
   nb remote remove
+```
+
+#### `rename`
+
+```text
+Usage:
+  nb rename (<id> | <filename> | <path> | <title>) [-f | --force]
+            (<name> | --reset | --to-bookmark | --to-note)
+
+Options:
+  -f, --force     Skip the confirmation prompt.
+  --reset         Reset the filename to the last modified timestamp.
+  --to-bookmark   Preserve the existing filename and replace the extension
+                  with ".bookmark.md" to convert the note to a bookmark.
+  --to-note       Preserve the existing filename and replace the bookmark's
+                  ".bookmark.md" extension with ".md" to convert the bookmark
+                  to a Markdown note.
+
+Description:
+  Rename a note. Set the filename to <name> for the specified note file. When
+  file extension is omitted, the existing extension will be used.
+
+Examples:
+  # Rename "example.md" to "example.org"
+  nb rename example.md example.org
+
+  # Rename note 3 ("example.md") to "New Name.md"
+  nb rename 3 "New Name"
+
+  # Rename "example.bookmark.md" to "New Name.bookmark.md"
+  nb rename example.bookmark.md "New Name"
+
+  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
+  nb rename 3 --to-bookmark
+
+  # Rename note 12 in the "example" notebook to "sample.md"
+  nb example:rename 3 "sample.md"
 ```
 
 #### `run`
@@ -4790,14 +4795,13 @@ Markdown.
 
 An `nb` notebook is a directory that contains a valid `.git` directory,
 indicating that it has been initialized as a git repository, and a `.index`
-file in the root directory.
+file.
 
-#### `.index` Files
+#### `.index` File
 
-A notebook folder index is a text file named `.index` in any folder
-within the notebook directory. `.index` contains a list of visible
-filenames within the folder, one per line, and the line number of each
-filename represents the id. `.index` files are included in the git repository
+The notebook index is a text file named `.index` in the notebook directory.
+`.index` contains a list of filenames, one per line, and the line number of
+each filename represents the id. `.index` is included in the git repository
 so ids are preserved across systems.
 
 ##### Operations
@@ -4817,8 +4821,7 @@ so ids are preserved across systems.
 
 ##### `index` Subcommand
 
-`nb` manages the `.index` of each folder within a notebook using an internal
-`index` subcommand.
+`nb` manages the `.index` using an internal `index` subcommand.
 
 ###### `nb help index`
 
@@ -4829,40 +4832,35 @@ Usage:
   nb index get_basename <id>
   nb index get_id <filename>
   nb index get_max_id
-  nb index rebuild [--ancestors]
-  nb index reconcile [--ancestors]
+  nb index rebuild
+  nb index reconcile
   nb index show
   nb index update <existing-filename> <new-filename>
   nb index verify
-  nb index <subcommand> <options>...
-
-Options:
-  --ancestors   Perform the action on all folders within the notebook that
-                are ancestors of the current folder.
 
 Subcommands:
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
-  get_max_id    Get the maximum id for the folder.
+  get_max_id    Get the maximum id for the notebook.
   rebuild       Rebuild the index, listing files by last modified, reversed.
                 Some ids will change. Prefer `nb index reconcile`.
   reconcile     Remove duplicates and update index for added and deleted files.
   show          Print the index.
   update        Overwrite the <existing-filename> entry with <new-filename>.
-  verify        Verify that the index matches the folder contents.
+  verify        Verify that the index matches the notebook contents.
 
 Description:
-  Manage the index for the current folder. This subcommand is used
+  Manage the index for the current notebook. This subcommand is used
   internally by `nb` and using it manually will probably corrupt
-  the index. If something goes wrong with an index, fix it with
+  the index. If something goes wrong with the index, fix it with
   `nb index reconcile`.
 
-  An index is a text file named '.index' in any folder within a notebook.
-  .index contains a list of filenames and the line number of each filename
-  represents the id. .index files are included in the git repository so
-  ids are preserved across systems.
+  The index is a text file named '.index' in the notebook directory. .index
+  contains a list of filenames and the line number of each filename
+  represents the id. .index is included in the git repository so ids are
+  preserved across systems.
 ```
 
 #### Archived Notebooks
@@ -4872,14 +4870,11 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,000 tests spanning over 30,000 lines, `nb` is really
-mostly a [test suite](https://github.com/xwmx/nb/tree/master/test).
-[Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
-on the two most recent versions of both Ubuntu and macOS to account for
-differences between BSD and GNU tools and Bash versions.
-To run the tests locally, install [Bats](https://github.com/bats-core/bats-core)
-and the [recommended dependencies](#optional),
-then run `bats test` within the project root directory.
+To run the [test suite](test), install
+[Bats](https://github.com/bats-core/bats-core)
+and the
+[recommended dependencies](#optional),
+then run `bats test` in the project root.
 
 ---
 <p align="center">
