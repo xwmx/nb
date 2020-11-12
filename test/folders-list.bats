@@ -52,7 +52,7 @@ load test_helper
   [[   "${lines[0]}"  =~  0\ items\.                  ]]
   [[   "${lines[2]}"  =~  add                         ]]
   [[   "${lines[2]}"  =~  Example\\\ Folder/          ]]
-  [[   "${lines[4]}"  =~  bookmark                    ]]
+  [[   "${lines[3]}"  =~  bookmark                    ]]
   [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\> ]]
 }
 
@@ -72,7 +72,7 @@ load test_helper
   [[   "${lines[0]}"  =~  0\ items\.                  ]]
   [[   "${lines[2]}"  =~  add                         ]]
   [[   "${lines[2]}"  =~  Example\\\ Folder/          ]]
-  [[   "${lines[4]}"  =~  bookmark                    ]]
+  [[   "${lines[3]}"  =~  bookmark                    ]]
   [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\> ]]
 }
 
@@ -92,7 +92,7 @@ load test_helper
   [[   "${lines[0]}"  =~  0\ items\.                                    ]]
   [[   "${lines[2]}"  =~  add                                           ]]
   [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/           ]]
-  [[   "${lines[4]}"  =~  bookmark                                      ]]
+  [[   "${lines[3]}"  =~  bookmark                                      ]]
   [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/\ \<url\>  ]]
 }
 
@@ -112,7 +112,7 @@ load test_helper
   [[   "${lines[0]}"  =~  0\ items\.                                    ]]
   [[   "${lines[2]}"  =~  add                                           ]]
   [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/           ]]
-  [[   "${lines[4]}"  =~  bookmark                                      ]]
+  [[   "${lines[3]}"  =~  bookmark                                      ]]
   [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/\ \<url\>  ]]
 }
 
