@@ -313,12 +313,6 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#tests">Tests</a>
 </p>
 
-*Some features described below are exclusive to the upcoming version,
-currently available as 6.0.0-alpha when installed directly from GitHub.
-If `nb` was installed with a package manager, please refer to the
-[5.7.8](https://github.com/xwmx/nb/tree/5.7.8#overview) documentation,
-also available at [https://xwmx.github.io/nb/](https://xwmx.github.io/nb/).*
-
 To get started, simply run:
 
 ```bash
