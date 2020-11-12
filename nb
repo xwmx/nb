@@ -4081,22 +4081,21 @@ HEREDOC
       fi
     fi
 
-    local _basename=
-
     if [[ -z "${_target_filename:-}" ]]
     then
       _relative_path="$(
-        _notebooks current --filename               \
+        _notebooks current --filename   \
           "${_relative_folder_path}$(date '+%Y%m%d%H%M%S').bookmark.md"
       )"
     else
       if [[ "${_target_filename}" =~ \. ]]
       then
-        _relative_path="$(_notebooks current --filename  \
-          "${_relative_folder_path}${_target_filename}")"
+        _relative_path="$(
+          _notebooks current --filename \
+            "${_relative_folder_path}${_target_filename}")"
       else
         _relative_path="$(
-          _notebooks current --filename             \
+          _notebooks current --filename \
             "${_relative_folder_path}${_target_filename}.bookmark.md"
         )"
       fi
