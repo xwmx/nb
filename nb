@@ -4058,33 +4058,51 @@ HEREDOC
     if ((_save_source))
     then
       _bookmark_content+="${_NEWLINE}## Source${_NEWLINE}"
-      _bookmark_content+="${_NEWLINE}\`\`\`html${_NEWLINE}"
+      _bookmark_content+="${_NEWLINE}\`\`\`html${_NEWLINE}" # \`"
       _bookmark_content+="$(cat "${_temp_file}")"
-      _bookmark_content+="${_NEWLINE}\`\`\`${_NEWLINE}"
+      _bookmark_content+="${_NEWLINE}\`\`\`${_NEWLINE}"     # \`"
     fi
   fi
 
   if [[ -n "${_bookmark_content}" ]]
   then
+    local _relative_folder_path=
+    local _relative_path=
+
+    if [[ "${_arguments[0]:-}" =~ / ]]
+    then
+      _relative_folder_path="$(
+        _resolve_selector_folders "${_arguments[0]}" --build
+      )"
+
+      if [[ -n "${_relative_folder_path:-}" ]]
+      then
+        _relative_folder_path="${_relative_folder_path}/"
+      fi
+    fi
+
     local _basename=
 
     if [[ -z "${_target_filename:-}" ]]
     then
-      _basename="$(
-        _notebooks current --filename "$(date '+%Y%m%d%H%M%S').bookmark.md"
+      _relative_path="$(
+        _notebooks current --filename               \
+          "${_relative_folder_path}$(date '+%Y%m%d%H%M%S').bookmark.md"
       )"
     else
       if [[ "${_target_filename}" =~ \. ]]
       then
-        _basename="$(_notebooks current --filename "${_target_filename}")"
+        _relative_path="$(_notebooks current --filename  \
+          "${_relative_folder_path}${_target_filename}")"
       else
-        _basename="$(
-          _notebooks current --filename "${_target_filename}.bookmark.md"
+        _relative_path="$(
+          _notebooks current --filename             \
+            "${_relative_folder_path}${_target_filename}.bookmark.md"
         )"
       fi
     fi
 
-    local _add_options=("--filename" "${_basename}")
+    local _add_options=("${_relative_path}")
 
     ((_encrypt))              && _add_options+=("--encrypt")
     ((_edit_before_commit))   && _add_options+=("--edit")
