@@ -39,7 +39,9 @@ load test_helper
 
   # Prints help information:
 
-  [[ "${lines[0]}" =~ ^Add\:  ]]
+  [[ "${lines[0]}" =~ ^Add\:                        ]]
+  [[ "${lines[2]}" =~ 0\ bookmarks.                 ]]
+  [[ "${lines[4]}" =~ Example\\\ Folder/\ \<url\>   ]]
 }
 
 # <url> #######################################################################

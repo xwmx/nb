@@ -48,10 +48,12 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                   ]]
-  [[   "${lines[0]}"  =~  0\ items\.          ]]
-  [[   "${lines[2]}"  =~  add                 ]]
-  [[   "${lines[2]}"  =~  Example\\\ Folder/  ]]
+  [[   "${status}"    -eq 0                           ]]
+  [[   "${lines[0]}"  =~  0\ items\.                  ]]
+  [[   "${lines[2]}"  =~  add                         ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/          ]]
+  [[   "${lines[4]}"  =~  bookmark                    ]]
+  [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\> ]]
 }
 
 @test "'list <id>/' with empty folder displays message." {
@@ -66,10 +68,12 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                   ]]
-  [[   "${lines[0]}"  =~  0\ items\.          ]]
-  [[   "${lines[2]}"  =~  add                 ]]
-  [[   "${lines[2]}"  =~  Example\\\ Folder/  ]]
+  [[   "${status}"    -eq 0                           ]]
+  [[   "${lines[0]}"  =~  0\ items\.                  ]]
+  [[   "${lines[2]}"  =~  add                         ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/          ]]
+  [[   "${lines[4]}"  =~  bookmark                    ]]
+  [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\> ]]
 }
 
 @test "'list <folder>/<folder>/' with empty folder displays message." {
@@ -84,10 +88,12 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
-  [[   "${lines[0]}"  =~  0\ items\.                          ]]
-  [[   "${lines[2]}"  =~  add                                 ]]
-  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/ ]]
+  [[   "${status}"    -eq 0                                             ]]
+  [[   "${lines[0]}"  =~  0\ items\.                                    ]]
+  [[   "${lines[2]}"  =~  add                                           ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/           ]]
+  [[   "${lines[4]}"  =~  bookmark                                      ]]
+  [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/\ \<url\>  ]]
 }
 
 @test "'list <id>/<id>/' with empty folder displays message." {
@@ -102,10 +108,12 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
-  [[   "${lines[0]}"  =~  0\ items\.                          ]]
-  [[   "${lines[2]}"  =~  add                                 ]]
-  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/ ]]
+  [[   "${status}"    -eq 0                                             ]]
+  [[   "${lines[0]}"  =~  0\ items\.                                    ]]
+  [[   "${lines[2]}"  =~  add                                           ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/           ]]
+  [[   "${lines[4]}"  =~  bookmark                                      ]]
+  [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/\ \<url\>  ]]
 }
 
 # error handling ##############################################################

@@ -6646,11 +6646,13 @@ _list() {
   local _list_path="${_notebook_path}"
   local _maybe_id_path=
   local _maybe_id_path_padded_left=
+  local _maybe_id_path_padded_right=
 
   if [[ -n "${_path:-}" ]]
   then
     _maybe_id_path="${_path// /\\ }/"
     _maybe_id_path_padded_left=" ${_maybe_id_path}"
+    _maybe_id_path_padded_right="${_maybe_id_path} "
 
     _list_path="${_notebook_path}/${_path}"
 
@@ -6981,7 +6983,7 @@ ${_TPUT_SGR0}"
 0 bookmarks.
 
 Add a bookmark:
-  $(_color_primary "${_ME} ${_maybe_scope_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_scope_padded_right}${_maybe_id_path_padded_right}<url>")
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
@@ -7007,7 +7009,7 @@ HEREDOC
 Add a note:
   $(_color_primary "${_ME} ${_maybe_scope}add${_maybe_id_path_padded_left}")
 Add a bookmark:
-  $(_color_primary "${_ME} ${_maybe_scope_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_scope_padded_right}${_maybe_id_path_padded_right}<url>")
 Import a file:
   $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)")
 Help information:
