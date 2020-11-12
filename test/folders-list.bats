@@ -2,6 +2,112 @@
 
 load test_helper
 
+# empty #######################################################################
+
+@test "'list <folder>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" list Example\ Folder/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                 ]]
+  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+}
+
+@test "'list <id>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" list 1/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                 ]]
+  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+}
+
+@test "'list <folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add folder "Example Folder"
+  }
+
+  run "${_NB}" list Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                   ]]
+  [[   "${lines[0]}"  =~  0\ items\.          ]]
+  [[   "${lines[2]}"  =~  add                 ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/  ]]
+}
+
+@test "'list <id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" list 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                   ]]
+  [[   "${lines[0]}"  =~  0\ items\.          ]]
+  [[   "${lines[2]}"  =~  add                 ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/  ]]
+}
+
+@test "'list <folder>/<folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder" --type folder
+  }
+
+  run "${_NB}" list Example\ Folder/Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                   ]]
+  [[   "${lines[0]}"  =~  0\ items\.                          ]]
+  [[   "${lines[2]}"  =~  add                                 ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/ ]]
+}
+
+@test "'list <id>/<id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder" --type folder
+  }
+
+  run "${_NB}" list 1/1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                   ]]
+  [[   "${lines[0]}"  =~  0\ items\.                          ]]
+  [[   "${lines[2]}"  =~  add                                 ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/ ]]
+}
+
 # error handling ##############################################################
 
 @test "'list <not-valid-id>/' exits with 1 and prints message." {
@@ -292,104 +398,6 @@ load test_helper
 
   [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
   [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
-}
-
-# empty #######################################################################
-
-@test "'list <folder>/ --type' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" list Example\ Folder/ --type audio
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                 ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
-}
-
-@test "'list <id>/ --type' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" list 1/ --type audio
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                 ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
-}
-
-@test "'list <folder>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add folder "Example Folder"
-  }
-
-  run "${_NB}" list Example\ Folder/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
-}
-
-@test "'list <id>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" list 1/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
-}
-
-@test "'list <folder>/<folder>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder" --type folder
-  }
-
-  run "${_NB}" list Example\ Folder/Sample\ Folder/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
-}
-
-@test "'list <id>/<id>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder" --type folder
-  }
-
-  run "${_NB}" list 1/1/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0           ]]
-  [[   "${lines[0]}"  =~  0\ items\.  ]]
 }
 
 # list <id>/ ##################################################################

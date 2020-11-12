@@ -6985,7 +6985,7 @@ HEREDOC
 0 items.
 
 Add a note:
-  $(_color_primary "${_ME} ${_maybe_scope}add")
+  $(_color_primary "${_ME} ${_maybe_scope}add ${_id_path:-}")
 Add a bookmark:
   $(_color_primary "${_ME} ${_maybe_scope_padded_right}<url>")
 Import a file:
