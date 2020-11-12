@@ -2542,11 +2542,10 @@ HEREDOC
     fi
     # store all descriptions for completion.
     # \037 means Unit Separator (US). Each unit has command and description.
-    _ALL_DESCRIPTIONS=("${_ALL_DESCRIPTIONS[@]}" "${1}"$'\037'"${!_describe_var}")
+    _ALL_DESCRIPTIONS=("${_ALL_DESCRIPTIONS[@]+"${_ALL_DESCRIPTIONS[@]}"}" "${1}"$'\037'"${!_describe_var}")
   fi
   set -e
 }
-_ALL_DESCRIPTIONS=()
 
 # Support legacy `desc` name.
 desc() { describe "${@}"; }
