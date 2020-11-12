@@ -6626,11 +6626,13 @@ _list() {
   )"
 
   local _list_path="${_notebook_path}"
-  local _id_path=
+  local _maybe_id_path=
+  local _maybe_id_path_padded_left=
 
   if [[ -n "${_path:-}" ]]
   then
-    _id_path="${_path// /\\ }/"
+    _maybe_id_path="${_path// /\\ }/"
+    _maybe_id_path_padded_left=" ${_maybe_id_path}"
 
     _list_path="${_notebook_path}/${_path}"
 
@@ -6826,14 +6828,14 @@ _list() {
 
         if [[ -n "${_maybe_scope:-}" ]]
         then
-          local _item_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_item_id:-}"
-          local _max_identifier="${_notebook_escaped_name:-}:${_id_path:-}${_max_id:-}"
+          local _item_identifier="${_notebook_escaped_name:-}:${_maybe_id_path:-}${_item_id:-}"
+          local _max_identifier="${_notebook_escaped_name:-}:${_maybe_id_path:-}${_max_id:-}"
         else
-          local _item_identifier="${_id_path:-}${_item_id:-}"
-          local _max_identifier="${_id_path:-}${_max_id:-}"
+          local _item_identifier="${_maybe_id_path:-}${_item_id:-}"
+          local _max_identifier="${_maybe_id_path:-}${_max_id:-}"
         fi
 
-        local _brackets_identifier="[${_id_path:-}${_item_identifier:-}]"
+        local _brackets_identifier="[${_maybe_id_path:-}${_item_identifier:-}]"
 
         # avoid calling `_color_brackets` for performance
         local _brackets_identifier_color="\
@@ -6985,7 +6987,7 @@ HEREDOC
 0 items.
 
 Add a note:
-  $(_color_primary "${_ME} ${_maybe_scope}add ${_id_path:-}")
+  $(_color_primary "${_ME} ${_maybe_scope}add${_maybe_id_path_padded_left}")
 Add a bookmark:
   $(_color_primary "${_ME} ${_maybe_scope_padded_right}<url>")
 Import a file:
