@@ -8,6 +8,7 @@ load test_helper
   _setup() {
     run "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+    sleep 1
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
   }; _setup
 
