@@ -9293,13 +9293,15 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         find "${NB_DIR}"/.plugins \
           -type f                 \
           -name "${_query}"       \
-          | grep .
+          | grep .                \
+          | sort
       else
         find "${NB_DIR}"/.plugins \
           -type f                 \
           -name "${_query}"       \
           -exec basename {} \;    \
-          | grep .
+          | grep .                \
+          | sort
       fi || if [[ -n "${_name:-}" ]]
             then
               _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
