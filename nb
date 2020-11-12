@@ -3842,7 +3842,7 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
   # `bookmark`
   if [[ -z "${_url:-}" ]]
   then
-    if [[ -z "${_arguments[*]:-}" ]]
+    if [[ -z "${_arguments[*]:-}" ]] || [[ "${_arguments[*]:-}" =~ / ]]
     then
       local _header=
       _header="Add: $(_color_primary "${_ME} <url>")"
