@@ -67,8 +67,7 @@ HEREDOC
 
   # Run `index reconcile`:
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index reconcile
+  run "${_NB}" index reconcile "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -173,8 +172,7 @@ HEREDOC
 
   # Run `index reconcile`:
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index reconcile --ancestors
+  run "${_NB}" index reconcile "${_NOTEBOOK_PATH}/Example Folder/Sample Folder" --ancestors
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

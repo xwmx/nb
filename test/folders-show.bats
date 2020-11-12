@@ -70,8 +70,9 @@ load test_helper
   _example_selector="Example Folder/Sample Folder/1"
   printf "'%s'\\n" "${_example_selector%\/*}"
   printf "'%s'\\n" "${_example_selector##*\/}"
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/${_example_selector%\/*}" \
-    "${_NB}" index get_basename "${_example_selector##*\/}"
+  "${_NB}" index get_basename   \
+    "${_example_selector##*\/}" \
+    "${_NOTEBOOK_PATH}/${_example_selector%\/*}"
 
   [[ ${status}    -eq 0                                                   ]]
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]

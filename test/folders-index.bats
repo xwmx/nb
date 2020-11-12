@@ -55,8 +55,7 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index
+  run "${_NB}" index "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -151,8 +150,7 @@ HEREDOC
     [[ ! "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ three.bookmark.md  ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index add "three.bookmark.md"
+  run "${_NB}" index add "three.bookmark.md" "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -243,8 +241,7 @@ HEREDOC
     [[ ! "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   =~ new.bookmark.md    ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index add "new.bookmark.md"
+  run "${_NB}" index add "new.bookmark.md" "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -332,8 +329,7 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index get_basename 2
+  run "${_NB}" index get_basename 2 "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -418,8 +414,7 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index get_id two.bookmark.md
+  run "${_NB}" index get_id two.bookmark.md "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -503,8 +498,7 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index get_max_id
+  run "${_NB}" index get_max_id "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -588,8 +582,7 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index delete "two.bookmark.md"
+  run "${_NB}" index delete "two.bookmark.md" "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -675,8 +668,7 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index show
+  run "${_NB}" index show "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -762,8 +754,10 @@ HEREDOC
     [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index update two.bookmark.md new-name.md
+  run "${_NB}" index update \
+    two.bookmark.md         \
+    new-name.md             \
+    "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -841,9 +835,9 @@ HEREDOC
 
     # Reconcile all .indexes in the path:
 
-    _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-      run "${_NB}" index reconcile --ancestors > /dev/null
-
+    run "${_NB}" index reconcile                        \
+      "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  \
+      --ancestors > /dev/null
 
     # .index is reconciled in notebook root:
 
@@ -866,8 +860,7 @@ HEREDOC
          "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index verify
+  run "${_NB}" index verify "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -927,8 +920,9 @@ HEREDOC
 
     # Reconcile all .indexes in the path:
 
-    _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-      run "${_NB}" index reconcile --ancestors > /dev/null
+    run "${_NB}" index reconcile                        \
+      "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"  \
+      --ancestors > /dev/null
 
 
     # .index is reconciled in notebook root:
@@ -959,8 +953,7 @@ HEREDOC
          "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" ]]
   }
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index verify
+  run "${_NB}" index verify "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

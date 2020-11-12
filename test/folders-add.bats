@@ -243,7 +243,7 @@ load test_helper
 
     run "${_NB}" add "Example Folder" --type folder
 
-    [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"         ]]
+    [[   -d "${NB_DIR:-}/home/Example Folder"         ]]
     [[   -f "${NB_DIR:-}/home/Example Folder/.index"     ]]
   }
 
@@ -291,6 +291,11 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 
   # Adds to index:
+
+  printf "ls  Example Folder:         '%s'\\n"  \
+    "$(ls "${NB_DIR}/home/Example Folder/")"
+  printf "cat Example Folder/.index:  '%s'\\n"  \
+    "$(cat "${NB_DIR}/home/Example Folder/.index")"
 
   [[ -e "${NB_DIR}/home/.index"                                   ]]
   [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
@@ -591,7 +596,7 @@ load test_helper
     printf "# Example Title" > "${_existing_file_path}"
     cat "${_existing_file_path}"
 
-    _INDEX_FOLDER_PATH="${_folder_path}" run "${_NB}" index reconcile --ancestors
+    run "${_NB}" index reconcile "${_folder_path}" --ancestors
 
     [[ "${status}" -eq 0            ]]
     [[ -e "${_existing_file_path}"  ]]
@@ -658,7 +663,7 @@ load test_helper
     [[ -d "${_existing_folder_path}"        ]]
     [[ -f "${_existing_folder_path}/.index" ]]
 
-    _INDEX_FOLDER_PATH="${_existing_folder_path}" run "${_NB}" index reconcile --ancestors
+    run "${_NB}" index reconcile "${_existing_folder_path}" --ancestors
 
     [[ "${status}" -eq 0              ]]
     [[ -e "${_existing_folder_path}"  ]]

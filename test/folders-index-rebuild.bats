@@ -67,8 +67,7 @@ HEREDOC
 
   # Run `index rebuild`:
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index rebuild
+  run "${_NB}" index rebuild "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -173,8 +172,7 @@ HEREDOC
 
   # Run `index rebuild`:
 
-  _INDEX_FOLDER_PATH="${_NOTEBOOK_PATH}/Example Folder/Sample Folder" \
-    run "${_NB}" index rebuild --ancestors
+  run "${_NB}" index rebuild "${_NOTEBOOK_PATH}/Example Folder/Sample Folder" --ancestors
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

@@ -2509,9 +2509,8 @@ _resolve_selector_folders() {
          [[ "${_folder_name}" =~ ^[0-9]+$                     ]]
       then # path segment might be an id
         _folder_name="$(
-          _INDEX_FOLDER_PATH="${_parent_folder_path}" \
-            _index get_basename "${_folder_name}" ||
-              printf "%s\\n" "${_folder_name}"
+          _index get_basename "${_folder_name}" "${_parent_folder_path}" ||
+            printf "%s\\n" "${_folder_name}"
         )"
       fi
 
@@ -3258,8 +3257,9 @@ _add() {
 
     if [[ -n "${_target_folder_relative_path:-}" ]]
     then
-      _INDEX_FOLDER_PATH="${_notebook_path}/${_target_folder_relative_path}" \
-        _index reconcile --ancestors
+      _index reconcile                                      \
+        "${_notebook_path}/${_target_folder_relative_path}" \
+        --ancestors
     fi
   else
     if ((_encrypt))
@@ -3364,6 +3364,8 @@ _add() {
 
     if ((_encrypt)) && [[ -e "${_target_path}" ]]
     then
+      _target_basename="${_target_basename}.enc"
+
       local _decrypted_path="${_target_path}"
       local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
 
@@ -3381,12 +3383,18 @@ _add() {
 
   if [[ -e "${_target_path}" ]]
   then
+    _index add                                                \
+      "${_target_basename}"                                   \
+      "${_notebook_path:?}/${_target_folder_relative_path:-}" &&
+      _git checkpoint                                         \
+        "${_notebook_path}"                                   \
+        "[nb] Add: ${_target_unique_relative_path}"
+
     local _info
     _info="$(_show "${_target_unique_relative_path}" --info-line)"
 
     printf "Added: %s\\n" "${_info}"
-  fi &&
-    _git checkpoint "${_notebook_path}" "[nb] Add: ${_target_unique_relative_path}"
+  fi
 }
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
@@ -4469,7 +4477,7 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
     if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
     then
-      _INDEX_FOLDER_PATH="${_folder_path}" _index delete "${_basename}"
+      _index delete "${_basename}" "${_folder_path}"
 
       _git checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
 
@@ -5910,7 +5918,7 @@ Usage:
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verify
-  ${_ME} index <subcommand> <options>...
+  ${_ME} index <subcommand> <options>... [<folder-path>]
 
 Options:
   --ancestors   Perform the action on all folders within the notebook that
@@ -5930,10 +5938,12 @@ Subcommands:
   verify        Verify that the index matches the folder contents.
 
 Description:
-  Manage the index for the current folder. This subcommand is used
-  internally by \`${_ME}\` and using it manually will probably corrupt
-  the index. If something goes wrong with an index, fix it with
-  \`${_ME} index reconcile\`.
+  Manage the index for the current folder or the folder at <folder-path>,
+  which can be passed as the final argument to any \`index\` subcommand.
+
+  \`index\` is used internally by \`${_ME}\` and using it manually will
+  probably corrupt the index. If something goes wrong with an index,
+  fix it with \`${_ME} index reconcile\`.
 
   An index is a text file named '.index' in any folder within a notebook.
   .index contains a list of filenames and the line number of each filename
@@ -5941,8 +5951,39 @@ Description:
   ids are preserved across systems.
 HEREDOC
 _index() {
+  local _ancestors=0
+  local _folder_path
   local _subcommand="${1:-}"
-  local _folder_path="${_INDEX_FOLDER_PATH:-"${NB_NOTEBOOK_PATH}"}"
+
+  case "${_subcommand:-}" in
+    get_max_id|show|verify)
+      _folder_path="${2:-}"
+      ;;
+    rebuild|reconcile)
+      if [[ "${3:-}" == "--ancestors" ]]
+      then
+        _ancestors=1
+        _folder_path="${2:-}"
+      elif [[ "${2:-}" == "--ancestors" ]]
+      then
+        _ancestors=1
+        _folder_path="${3:-}"
+      else
+        _folder_path="${2:-}"
+      fi
+      ;;
+    add|delete|get_basename|get_id)
+      _folder_path="${3:-}"
+      ;;
+    update)
+      _folder_path="${4:-}"
+      ;;
+    *)
+      [[ -d "${1:-}" ]] && _folder_path="${1:-}"
+      ;;
+  esac
+
+  _folder_path="${_folder_path:-"${NB_NOTEBOOK_PATH}"}"
 
   local _notebook_and_relative_path="${_folder_path#${NB_DIR}/}"
   local _notebook_path="${NB_DIR}/${_notebook_and_relative_path%%/*}"
@@ -5953,7 +5994,7 @@ _index() {
      [[ ! "${_subcommand}" == "rebuild"   ]] &&
      [[ ! "${_subcommand}" == "reconcile" ]]
   then
-    _index reconcile --ancestors
+    _index reconcile "${_folder_path}" --ancestors
   fi
 
   case "${_subcommand}" in
@@ -5967,7 +6008,7 @@ _index() {
 
       if [[ ! -e "${_folder_path}/${_basename}" ]]
       then
-        _exit_1 printf "File not found: %s\\n" "${_basename}"
+        _exit_1 printf "File not found: %s\\n" "${_folder_path}/${_basename}"
       fi
 
       if ! grep -q "^${_basename}$" "${_index_path}"
@@ -6096,7 +6137,7 @@ _index() {
     rebuild)
       local _top_path="${_folder_path:?}"
 
-      if [[ "${2:-}" == "--ancestors" ]]
+      if ((_ancestors))
       then
         _top_path="${_notebook_path:?}"
       fi
@@ -6145,7 +6186,7 @@ _index() {
 
       [[ -d "${_top_path}" ]] || return 0
 
-      if [[ "${2:-}" == "--ancestors" ]]
+      if ((_ancestors))
       then
         _top_path="${_notebook_path:?}"
       fi
@@ -6191,7 +6232,7 @@ _index() {
           if [[ -n "${__item}" ]]
           then
             _contains "${__item}" "${_file_list[@]:-}" ||
-              _INDEX_FOLDER_PATH="${PWD:?}" _index delete "${__item}"
+              _index delete "${__item}" "${PWD:?}"
           fi
         done
 
@@ -6210,7 +6251,7 @@ _index() {
           if [[ -n "${__item}" ]]
           then
             _contains "${__item}" "${_index_list[@]:-}" ||
-              _INDEX_FOLDER_PATH="${PWD:?}" _index add "${__item}"
+              _index add "${__item}" "${PWD:?}"
           fi
         done
 
@@ -6595,7 +6636,7 @@ _list() {
 
     if [[ -d "${_list_path}" ]]
     then
-      _INDEX_FOLDER_PATH="${_list_path}" _index reconcile --ancestors
+      _index reconcile "${_list_path}" --ancestors
     elif [[ ! -e "${_list_path}" ]]
     then
       _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_path:-}")"
@@ -6620,7 +6661,7 @@ _list() {
   local _printed_count=0
 
   local _max_id
-  _max_id="$(_INDEX_FOLDER_PATH="${_list_path}" _index get_max_id)"
+  _max_id="$(_index get_max_id "${_list_path}")"
 
   # Use code blocks to capture all output for piping to pager.
   {
@@ -7754,28 +7795,26 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
   then
     if [[ "${_source_folder_path}" == "${_target_folder_path}" ]]
     then
-      _INDEX_FOLDER_PATH="${_source_folder_path}" \
-        _index update "${_source_basename}" "${_target_basename}"
+      _index update               \
+        "${_source_basename}"     \
+        "${_target_basename}"     \
+        "${_source_folder_path}"
     else
-      _INDEX_FOLDER_PATH="${_source_folder_path}" \
-        _index delete "${_source_basename}" &&
-      _INDEX_FOLDER_PATH="${_target_folder_path}" \
-        _index add "${_target_basename}"
+      _index delete "${_source_basename}" "${_source_folder_path}" &&
+        _index add  "${_target_basename}" "${_target_folder_path}"
     fi || _exit_1 printf "Move index update failed.\\n"
 
-    _git checkpoint "${_target_notebook_path}"    \
+    _git checkpoint "${_target_notebook_path}"  \
       "[nb] Move: ${_source_relative_path} to ${_target_relative_path}"
   else
-    _INDEX_FOLDER_PATH="${_source_folder_path}"   \
-      _index delete "${_source_basename}"
+    _index delete "${_source_basename}" "${_source_folder_path}"
 
-    _git checkpoint "${_source_notebook_path}"    \
+    _git checkpoint "${_source_notebook_path}"  \
       "[nb] Delete: ${_source_relative_path}"
 
-    _INDEX_FOLDER_PATH="${_target_folder_path}"   \
-      _index add "${_target_basename}"
+    _index add "${_target_basename}" "${_target_folder_path}"
 
-    _git checkpoint "${_target_notebook_path}"    \
+    _git checkpoint "${_target_notebook_path}"  \
       "[nb] Add: ${_target_relative_path}"
   fi
 
@@ -11031,9 +11070,7 @@ _show() {
         elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
         then # <selector> is an id
           local _basename
-          _basename="$(
-            _INDEX_FOLDER_PATH="${_folder_path}" \
-              _index get_basename "${_identifier}")"
+          _basename="$(_index get_basename "${_identifier}" "${_folder_path}")"
 
           if [[ -n "${_basename:-}" ]]
           then
@@ -11271,7 +11308,7 @@ _show() {
   if ((_print_id))
   then
     printf "%s\\n" "$(
-      _INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_relative_path}"
+      _index get_id "${_relative_path}" "${_folder_path}"
     )"
     return 0
   fi
@@ -11309,7 +11346,7 @@ _show() {
   if ((_print_info))
   then
     local _id
-    _id="$(_INDEX_FOLDER_PATH="${_folder_path}" _index get_id "${_basename}")"
+    _id="$(_index get_id "${_basename}" "${_folder_path}")"
 
     local _maybe_scoped_relative_path="${_relative_path// /\\ }"
 

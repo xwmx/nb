@@ -4834,7 +4834,7 @@ Usage:
   nb index show
   nb index update <existing-filename> <new-filename>
   nb index verify
-  nb index <subcommand> <options>...
+  nb index <subcommand> <options>... [<folder-path>]
 
 Options:
   --ancestors   Perform the action on all folders within the notebook that
@@ -4854,10 +4854,12 @@ Subcommands:
   verify        Verify that the index matches the folder contents.
 
 Description:
-  Manage the index for the current folder. This subcommand is used
-  internally by `nb` and using it manually will probably corrupt
-  the index. If something goes wrong with an index, fix it with
-  `nb index reconcile`.
+  Manage the index for the current folder or the folder at <folder-path>,
+  which can be passed as the final argument to any `index` subcommand.
+
+  `index` is used internally by `nb` and using it manually will
+  probably corrupt the index. If something goes wrong with an index,
+  fix it with `nb index reconcile`.
 
   An index is a text file named '.index' in any folder within a notebook.
   .index contains a list of filenames and the line number of each filename
