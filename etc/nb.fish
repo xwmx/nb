@@ -96,7 +96,7 @@ function _nb_subcommands
 
       for __command in $_commands
         if eval set -q __desc_$__command
-          eval set -a _completions \$__command\\t\$__desc_$__command:
+          eval set -a _completions \$__command\\t\$__desc_$__command
         else
           set -a _completions $_commands
         end
