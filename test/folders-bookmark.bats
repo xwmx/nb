@@ -45,6 +45,169 @@ load test_helper
 
 # <url> #######################################################################
 
+@test "'bookmark <folder>/<folder> <url>' (no slash) with valid <url> argument creates new bookmark and folder without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -d "${NB_DIR}/home/Example Folder"                       ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/.index"                ]]
+    [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
+  }
+
+  run "${_NB}" bookmark Example\ Folder/Sample\ Folder "${_BOOKMARK_URL}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Creates folder:
+
+  [[   -d "${NB_DIR}/home/Example Folder"                       ]]
+  [[   -f "${NB_DIR}/home/Example Folder/.index"                ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
+
+  # Creates new file with bookmark filename in first-level folder:
+
+  _files=($(ls "${NB_DIR}/home/Example Folder")) && _filename="${_files[0]}"
+
+  [[        "${_filename}" =~ [A-Za-z0-9]+.bookmark.md    ]]
+  [[    -f  "${NB_DIR}/home/Example Folder/${_filename}"  ]]
+  [[ !  -f  "${NB_DIR}/home/${_filename}"                 ]]
+
+  # Creates new file with content:
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  _bookmark_content="\
+# Example Domain
+
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Content
+
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
+  printf "cat file: '%s'\\n" "$(cat "${NB_DIR}/home/Example Folder/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example Folder/${_filename}") \
+    <(printf "%s\\n" "${_bookmark_content}")
+
+  grep -q '# Example Domain' "${NB_DIR}/home/Example Folder"/*
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/Example Folder/.index"    ]]
+
+  diff                                            \
+    <(ls  "${NB_DIR}/home/Example Folder/")       \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                                      ]]
+  [[ "${output}" =~ [0-9]+                                      ]]
+  [[ "${output}" =~ Example\\\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
+}
+
+@test "'bookmark <folder> <url>' (no slash) with valid <url> argument creates new bookmark at root level without errors." {
+  {
+    run "${_NB}" init
+
+    [[ ! -d "${NB_DIR}/home/Example Folder"        ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
+  }
+
+  run "${_NB}" bookmark Example\ Folder "${_BOOKMARK_URL}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Does not create folder:
+
+  [[ ! -d "${NB_DIR}/home/Example Folder"        ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
+
+  # Creates new file with bookmark filename:
+
+  _files=($(ls "${NB_DIR}/home")) && _filename="${_files[0]}"
+
+  [[        "${_filename}" =~ [A-Za-z0-9]+.bookmark.md    ]]
+  [[    -f  "${NB_DIR}/home/${_filename}"                 ]]
+
+  # Creates new file with content:
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  _bookmark_content="\
+# Example Domain
+
+<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Content
+
+$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+
+  printf "cat file: '%s'\\n" "$(cat "${NB_DIR}/home/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/${_filename}") \
+    <(printf "%s\\n" "${_bookmark_content}")
+
+  grep -q '# Example Domain' "${NB_DIR}/home"/*
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                             \
+    <(ls  "${NB_DIR}/home/")       \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
+}
+
 @test "'bookmark <folder>/ <url>' with valid <url> argument creates new bookmark and folder without errors." {
   {
     run "${_NB}" init
