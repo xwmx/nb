@@ -5791,6 +5791,7 @@ _import() {
   local _target_notebook_name=
   local _paths=()
   local _subcommand=
+  local _selector_path=
   local _url=
 
   for __arg in "${@:-}"
@@ -5806,25 +5807,37 @@ _import() {
         _convert=1
         ;;
       *)
+        if [[ -z "${_subcommand:-}" ]]
+        then
+          if [[ "${__arg:-}" =~ ^http|^file\: ]]
+          then
+            _subcommand="download"
+          else
+            _subcommand="copy"
+          fi
+        fi
+
         if [[ -n "${_subcommand:-}" ]]
         then
-          if [[ "${_subcommand}" == "download" ]]
+          if [[ "${_subcommand}" == "download"  ]]
           then
-            _url="${__arg:-}"
+            if [[ -z "${_url:-}" ]]
+            then
+              _url="${__arg:-}"
+            else
+              _selector_path="${__arg:-}"
+            fi
+          elif [[ "${_subcommand}" =~ ^copy$|^move$ ]] &&
+               [[ -n "${_paths[*]:-}"               ]] &&
+               [[ ! "${__arg}" =~ ^/                ]] &&
+               [[ ! -e "${PWD}/${__arg}"            ]]
+          then
+            _selector_target="${__arg}"
           elif [[ "${_subcommand}" == "notebook"  ]] &&
                [[ -n "${_paths[*]:-}"             ]]
           then
             _target_notebook_name="${__arg:-}"
           else
-            _paths+=("${__arg:-}")
-          fi
-        else
-          if [[ "${__arg:-}" =~ ^http|^file\: ]]
-          then
-            _subcommand="download"
-            _url="${__arg:-}"
-          else
-            _subcommand="copy"
             _paths+=("${__arg:-}")
           fi
         fi
