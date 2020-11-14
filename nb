@@ -3883,7 +3883,7 @@ HEREDOC
       _title="$(
         cat "${_temp_file}"                               \
           | grep -o -E -i '.*<title[^>]*>[^<]*</title>'   \
-          | head -1                                       \
+          | head -n 1                                     \
           | sed 's/.*<title[^>]*>//'                      \
           | sed 's/.*<TITLE[^>]*>//'                      \
           | sed 's/<\/title>.*//'                         \
@@ -6920,7 +6920,7 @@ ${_TPUT_SGR0}"
         else
           _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
         fi
-        head -"${_excerpt_length}" "${_list_path}/${__basename}" \
+        head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
           | _highlight_syntax_if_available "${__basename##*.}"
         printf "\\n"
       fi
