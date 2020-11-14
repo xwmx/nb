@@ -5819,7 +5819,7 @@ _import() {
 
         if [[ -n "${_subcommand:-}" ]]
         then
-          if [[ "${_subcommand}" == "download"  ]]
+          if [[ "${_subcommand}" == "download" ]]
           then
             if [[ -z "${_url:-}" ]]
             then
@@ -5833,8 +5833,8 @@ _import() {
                [[ ! -e "${PWD}/${__arg}"            ]]
           then
             _selector_target="${__arg}"
-          elif [[ "${_subcommand}" == "notebook"  ]] &&
-               [[ -n "${_paths[*]:-}"             ]]
+          elif [[ "${_subcommand}" == "notebook"    ]] &&
+               [[ -n "${_paths[*]:-}"               ]]
           then
             _target_notebook_name="${__arg:-}"
           else
