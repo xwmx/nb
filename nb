@@ -3657,13 +3657,13 @@ _bookmark() {
   # `bookmark open`, `bookmark peek`, `bookmark url`
   if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
   then
-    local _basename
-    _basename="$(_show "${_selector}" --filename)"
+    local _relative_path
+    _relative_path="$(_show "${_selector}" --relative-path)"
 
     local _notebook_path
     _notebook_path="$(_notebooks current --path)"
 
-    if [[ -z "${_basename}" ]]
+    if [[ -z "${_relative_path}" ]]
     then
       if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
       then
@@ -3678,12 +3678,12 @@ _bookmark() {
       _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
     fi
 
-    local _target_path="${_notebook_path}/${_basename}"
+    local _target_path="${_notebook_path}/${_relative_path}"
 
     # handle non-bookmarks
     if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
     then
-      if [[ "${_basename}" =~ \.html$ ]]
+      if [[ "${_relative_path}" =~ \.html$ ]]
       then
         if [[ "${_subcommand}" == "open"  ]]
         then
@@ -3699,8 +3699,8 @@ _bookmark() {
           _bookmark_view_in_terminal_browser "file://${_target_path}"
           return 0
         fi
-      elif [[ ! "${_basename}" =~ .bookmark\.md$      ]] &&
-           [[ ! "${_basename}" =~ .bookmark\.md\.enc$ ]]
+      elif [[ ! "${_relative_path}" =~ .bookmark\.md$       ]] &&
+           [[ ! "${_relative_path}" =~ .bookmark\.md\.enc$  ]]
       then
         if [[ "${_subcommand}" == "open" ]]
         then

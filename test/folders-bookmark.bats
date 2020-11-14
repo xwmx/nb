@@ -43,6 +43,83 @@ load test_helper
   [[ "${lines[2]}" =~ Example\\\ Folder/\ \<url\>   ]]
 }
 
+# `bookmark url` ##############################################################
+
+@test "'bookmark url <folder>/<id>' with invalid <id> prints error." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder" --type folder
+    run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
+
+    _files=($(ls "${NB_DIR}/home/Example Folder")) && _filename="${_files[0]}"
+
+    [[ -d "${NB_DIR}/home/Example Folder"               ]]
+    [[ -f "${NB_DIR}/home/Example Folder/${_filename}"  ]]
+  }
+
+  run "${_NB}" bookmark url Example\ Folder/99
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 1 ]]
+
+  # Prints output
+  [[ "${output}" =~ Not\ found ]]
+}
+
+@test "'bookmark url' prints note url." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add "Example Folder" --type folder
+    run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
+
+    _files=($(ls "${NB_DIR}/home/Example Folder")) && _filename="${_files[0]}"
+
+    [[ -d "${NB_DIR}/home/Example Folder"               ]]
+    [[ -f "${NB_DIR}/home/Example Folder/${_filename}"  ]]
+  }
+
+  run "${_NB}" bookmark url Example\ Folder/1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Prints output
+  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+}
+
+@test "'bookmark url' with multiple URLs prints first url in <>." {
+  {
+    run "${_NB}" init
+    run "${_NB}" add Example\ Folder/example.bookmark.md \
+      --content "\
+https://example.com
+<${_BOOKMARK_URL}>
+<https://example.com>"
+
+    _files=($(ls "${NB_DIR}/home/Example Folder")) && _filename="${_files[0]}"
+
+    [[ -d "${NB_DIR}/home/Example Folder"               ]]
+    [[ -f "${NB_DIR}/home/Example Folder/${_filename}"  ]]
+  }
+
+  run "${_NB}" bookmark url Example\ Folder/1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Prints output
+  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+}
+
 # <url> #######################################################################
 
 @test "'bookmark <folder>/<folder> <url>' (no slash) with valid <url> argument creates new bookmark and folder without errors." {
