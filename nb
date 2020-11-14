@@ -5787,7 +5787,6 @@ _import() {
     printf "%s\\n" "${_target_basename}"
   }
 
-  local _basename=
   local _convert=0
   local _target_notebook_name=
   local _paths=()
@@ -5836,37 +5835,41 @@ _import() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
+  local _source_basename
+  local _target_basename
+
   case "${_subcommand}" in
     copy)
       for __path in "${_paths[@]:-}"
       do
         _import_validate_path "${__path:-}"
 
-        _basename="$(basename -- "${__path}")"
-        _basename="$(_import_get_valid_basename "${_basename}")"
+        _source_basename="$(basename -- "${__path}")"
+        _target_basename="$(_import_get_valid_basename "${_source_basename}")"
 
         if [[ -d "${__path}" ]]
         then
-          cp -R "${__path}" "${_notebook_path}/${_basename}"
+          cp -R "${__path}" "${_notebook_path}/${_target_basename}"
         else
-          cp "${__path}" "${_notebook_path}/${_basename}"
+          cp "${__path}" "${_notebook_path}/${_target_basename}"
         fi &&
-          _index add "${_basename}" &&
-            _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+          _index add "${_target_basename}" &&
+            _git checkpoint "${_notebook_path}" "[nb] Import: ${_target_basename}"
 
-        printf "Imported %s from %s\\n"         \
-          "$(_show "${_basename}" --info-line)" \
+        printf "Imported %s from %s\\n"                 \
+          "$(_show "${_target_basename}" --info-line)"  \
           "$(_color_primary "${__path}")"
       done
       ;;
     download)
-      _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
+      _source_basename="$(basename -- "${_url}" | tr -d '[:space:]')"
 
       if [[ "${_url}" =~ \/$ ]]
       then
-        _basename="${_basename}.html"
+        _source_basename="${_source_basename}.html"
       fi
-      _basename="$(_import_get_valid_basename "${_basename}")"
+
+      _target_basename="$(_import_get_valid_basename "${_source_basename}")"
 
       if ((_convert))
       then
@@ -5874,40 +5877,41 @@ _import() {
             | pandoc                              \
               --from html                         \
               --to markdown                       \
-              -o "${_notebook_path}/${_basename}"
+              -o "${_notebook_path}/${_target_basename}"
         then
           _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
         fi
       else
-        if ! _download_from "${_url}" "${_notebook_path}/${_basename}"
+        if ! _download_from "${_url}" "${_notebook_path}/${_target_basename}"
         then
           _exit_1 printf "Unable to download: %s\\n" "${_url}"
         fi
       fi &&
-        _index add "${_basename}" &&
+        _index add "${_target_basename}" &&
           _git checkpoint "${_notebook_path}" "\
-[nb] Import: ${_basename}
+[nb] Import: ${_target_basename}
 
 Source:
 ${_url}
 "
-      printf "Imported %s from %s\\n"         \
-        "$(_show "${_basename}" --info-line)" \
+      printf "Imported %s from %s\\n"                 \
+        "$(_show "${_target_basename}" --info-line)"  \
         "$(_color_primary "${_url}")"
       ;;
     move)
       for __path in "${_paths[@]:-}"
       do
         _import_validate_path "${__path:-}"
-        _basename="$(basename -- "${__path}")"
-        _basename="$(_import_get_valid_basename "${_basename}")"
 
-        mv "${__path}" "${_notebook_path}/${_basename}" &&
-          _index add "${_basename}"                     &&
-            _git checkpoint "${_notebook_path}" "[nb] Import: ${_basename}"
+        _source_basename="$(basename -- "${__path}")"
+        _target_basename="$(_import_get_valid_basename "${_source_basename}")"
 
-        printf "Imported %s from %s\\n"         \
-          "$(_show "${_basename}" --info-line)" \
+        mv "${__path}" "${_notebook_path}/${_target_basename}" &&
+          _index add "${_target_basename}"                     &&
+            _git checkpoint "${_notebook_path}" "[nb] Import: ${_target_basename}"
+
+        printf "Imported %s from %s\\n"                 \
+          "$(_show "${_target_basename}" --info-line)"  \
           "$(_color_primary "${__path}")"
       done
       ;;
