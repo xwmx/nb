@@ -5770,21 +5770,21 @@ _import() {
     fi
   }
 
-  # _import_get_valid_basename()
+  # _import_get_valid_relative_path()
   #
   # Usage:
-  #   _import_get_valid_basename <basename>
-  _import_get_valid_basename() {
-    local _target_basename="${1:-}"
+  #   _import_get_valid_relative_path [<relative-path> | <basename>]
+  _import_get_valid_relative_path() {
+    local _target_relative_path="${1:-}"
 
     local _current_notebook_path
     _current_notebook_path="$(_notebooks current --path)"
 
-    if [[ -e "${_current_notebook_path}/${_target_basename}" ]]
+    if [[ -e "${_current_notebook_path}/${_target_relative_path}" ]]
     then
-      _target_basename="$(_notebooks current --filename "${_target_basename}")"
+      _target_relative_path="$(_notebooks current --filename "${_target_relative_path}")"
     fi
-    printf "%s\\n" "${_target_basename}"
+    printf "%s\\n" "${_target_relative_path}"
   }
 
   local _convert=0
@@ -5845,7 +5845,7 @@ _import() {
         _import_validate_path "${__path:-}"
 
         _source_basename="$(basename -- "${__path}")"
-        _target_basename="$(_import_get_valid_basename "${_source_basename}")"
+        _target_basename="$(_import_get_valid_relative_path "${_source_basename}")"
 
         if [[ -d "${__path}" ]]
         then
@@ -5869,7 +5869,7 @@ _import() {
         _source_basename="${_source_basename}.html"
       fi
 
-      _target_basename="$(_import_get_valid_basename "${_source_basename}")"
+      _target_basename="$(_import_get_valid_relative_path "${_source_basename}")"
 
       if ((_convert))
       then
@@ -5904,7 +5904,7 @@ ${_url}
         _import_validate_path "${__path:-}"
 
         _source_basename="$(basename -- "${__path}")"
-        _target_basename="$(_import_get_valid_basename "${_source_basename}")"
+        _target_basename="$(_import_get_valid_relative_path "${_source_basename}")"
 
         mv "${__path}" "${_notebook_path}/${_target_basename}" &&
           _index add "${_target_basename}"                     &&
