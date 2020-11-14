@@ -5832,7 +5832,7 @@ _import() {
                [[ ! "${__arg}" =~ ^/                ]] &&
                [[ ! -e "${PWD}/${__arg}"            ]]
           then
-            _selector_target="${__arg}"
+            _selector_path="${__arg}"
           elif [[ "${_subcommand}" == "notebook"    ]] &&
                [[ -n "${_paths[*]:-}"               ]]
           then
