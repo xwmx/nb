@@ -35,6 +35,7 @@ func (config *configuration) load() error {
 	return nil
 }
 
+// run loads the configuration and environment, then runs the command.
 func run() error {
 	var config configuration
 
@@ -59,10 +60,13 @@ func run() error {
 	return nil
 }
 
+// main is the primary entry point for the program.
 func main() {
 	os.Exit(presentError(run()))
 }
 
+// presentError translates an error into a message presnted to the user and
+// returns the appropriate exit code.
 func presentError(err error) int {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
