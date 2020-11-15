@@ -1,25 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	// "fmt"
 	"os"
-
-	"github.com/urfave/cli/v2"
+	"os/exec"
+	"syscall"
 )
 
 func main() {
-	app := &cli.App{
-		Name:  "nb.go",
-		Usage: "nb.go <option>...",
-		Action: func(c *cli.Context) error {
-			fmt.Println("Hello, World!")
-			return nil
-		},
+	binary, lookErr := exec.LookPath("nb")
+	if lookErr != nil {
+		panic(lookErr)
 	}
 
-	err := app.Run(os.Args)
-	if err != nil {
-		log.Fatal(err)
+	args := os.Args
+	env := os.Environ()
+
+	execErr := syscall.Exec(binary, args, env)
+	if execErr != nil {
+		panic(execErr)
 	}
 }
