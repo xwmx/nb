@@ -36,7 +36,7 @@ func (config *configuration) load() error {
 	return nil
 }
 
-func runScript() int {
+func run() int {
 	var config configuration
 
 	err := config.load()
@@ -64,5 +64,5 @@ func runScript() int {
 }
 
 func main() {
-	os.Exit(runScript())
+	os.Exit(run())
 }
