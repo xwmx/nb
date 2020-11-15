@@ -2,15 +2,17 @@ package main
 
 import (
 	// "fmt"
+	"log"
 	"os"
 	"os/exec"
 	"syscall"
 )
 
-func main() {
+func runScript() int {
 	binary, lookErr := exec.LookPath("nb")
 	if lookErr != nil {
-		panic(lookErr)
+		log.Println(lookErr)
+		return 1
 	}
 
 	args := os.Args
@@ -18,6 +20,13 @@ func main() {
 
 	execErr := syscall.Exec(binary, args, env)
 	if execErr != nil {
-		panic(execErr)
+		log.Println(execErr)
+		return 1
 	}
+
+	return 0
+}
+
+func main() {
+	os.Exit(runScript())
 }
