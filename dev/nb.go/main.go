@@ -1,8 +1,7 @@
 package main
 
 import (
-	// "fmt"
-	"log"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -36,19 +35,17 @@ func (config *configuration) load() error {
 	return nil
 }
 
-func run() int {
+func run() error {
 	var config configuration
 
 	err := config.load()
 	if err != nil {
-		log.Println(err)
-		return 1
+		return err
 	}
 
 	binary, lookErr := exec.LookPath("nb")
 	if lookErr != nil {
-		log.Println(lookErr)
-		return 1
+		return lookErr
 	}
 
 	args := os.Args
@@ -56,13 +53,21 @@ func run() int {
 
 	execErr := syscall.Exec(binary, args, env)
 	if execErr != nil {
-		log.Println(execErr)
+		return execErr
+	}
+
+	return nil
+}
+
+func main() {
+	os.Exit(presentError(run()))
+}
+
+func presentError(err error) int {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return 1
 	}
 
 	return 0
-}
-
-func main() {
-	os.Exit(run())
 }
