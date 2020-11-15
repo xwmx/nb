@@ -35,6 +35,11 @@ func (config *configuration) load() error {
 	return nil
 }
 
+type subcommand struct {
+	Name  string
+	Usage string
+}
+
 // run loads the configuration and environment, then runs the command.
 func run() error {
 	var config configuration
