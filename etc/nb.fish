@@ -131,7 +131,7 @@ function _nb_subcommands
     end
   end
 
-  set _nb_dir (nb env | grep "NB_DIR" | cut -d = -f 2)
+  set _nb_dir (nb env | string replace -fr "^NB_DIR=" "")
 
   if test -z $_nb_dir
     or not test -e $_nb_dir
@@ -151,7 +151,7 @@ function _nb_subcommands
   end
 
   # list all notes to complete
-  nb run ls | sed -e 's/$/'\t'file/'
+  nb run ls | string replace -r '$' \tfile
 
   if test -e $_cache_path
     tail -n+3 $_cache_path
