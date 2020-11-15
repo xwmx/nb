@@ -10,7 +10,8 @@ import (
 )
 
 type configuration struct {
-	NBDir string
+	NBDir  string
+	NBPath string
 }
 
 func (config *configuration) load() error {
@@ -32,6 +33,13 @@ func (config *configuration) load() error {
 
 	config.NBDir = dir
 
+	var lookErr error
+
+	config.NBPath, lookErr = exec.LookPath("nb")
+	if lookErr != nil {
+		return lookErr
+	}
+
 	return nil
 }
 
@@ -49,15 +57,10 @@ func run() error {
 		return err
 	}
 
-	binary, lookErr := exec.LookPath("nb")
-	if lookErr != nil {
-		return lookErr
-	}
-
 	args := os.Args
 	env := os.Environ()
 
-	execErr := syscall.Exec(binary, args, env)
+	execErr := syscall.Exec(config.NBPath, args, env)
 	if execErr != nil {
 		return execErr
 	}
