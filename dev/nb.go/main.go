@@ -1,11 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	// "strings"
 	"syscall"
 )
 
@@ -48,6 +50,32 @@ type subcommand struct {
 	Usage string
 }
 
+func cmdRun(config configuration, args []string, env []string) error {
+	var arguments []string
+
+	if len(args) < 2 {
+		return errors.New("command required")
+	} else if 2 <= len(args) {
+		arguments = args[2:]
+	} else {
+		arguments = []string{}
+	}
+
+	cmd := exec.Command(args[1], arguments...)
+	cmd.Dir = config.NBDir
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	fmt.Println("ok")
+
+	return nil
+}
+
 // run loads the configuration and environment, then runs the command.
 func run() error {
 	var config configuration
@@ -60,9 +88,16 @@ func run() error {
 	args := os.Args
 	env := os.Environ()
 
-	execErr := syscall.Exec(config.NBPath, args, env)
-	if execErr != nil {
-		return execErr
+	if len(args) > 1 && args[1] == "run" {
+		runErr := cmdRun(config, args[1:], env)
+		if runErr != nil {
+			return runErr
+		}
+	} else {
+		execErr := syscall.Exec(config.NBPath, args, env)
+		if execErr != nil {
+			return execErr
+		}
 	}
 
 	return nil
