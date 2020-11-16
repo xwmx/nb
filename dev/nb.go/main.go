@@ -76,7 +76,7 @@ func cmdRun(config configuration, args []string, env []string) error {
 	return nil
 }
 
-// run loads the configuration and environment, then runs the command.
+// run loads the configuration and environment, then runs the subcommand.
 func run() error {
 	var config configuration
 
