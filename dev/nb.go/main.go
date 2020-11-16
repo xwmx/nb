@@ -1,5 +1,7 @@
 package main
 
+// revive:disable:error-strings Errors should match existing `nb` formatting.
+
 import (
 	"errors"
 	"fmt"
@@ -53,7 +55,7 @@ func cmdRun(config configuration, args []string, env []string) error {
 	var arguments []string
 
 	if len(args) < 2 {
-		return errors.New("command required")
+		return errors.New("Command required.")
 	} else if 2 <= len(args) {
 		arguments = args[2:]
 	} else {
