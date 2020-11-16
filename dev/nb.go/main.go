@@ -35,11 +35,10 @@ func (config *configuration) load() error {
 
 	config.NBDir = dir
 
-	var lookErr error
+	var err error
 
-	config.NBPath, lookErr = exec.LookPath("nb")
-	if lookErr != nil {
-		return lookErr
+	if config.NBPath, err = exec.LookPath("nb"); err != nil {
+		return err
 	}
 
 	return nil
@@ -71,8 +70,6 @@ func cmdRun(config configuration, args []string, env []string) error {
 		return err
 	}
 
-	fmt.Println("ok")
-
 	return nil
 }
 
@@ -80,8 +77,7 @@ func cmdRun(config configuration, args []string, env []string) error {
 func run() error {
 	var config configuration
 
-	err := config.load()
-	if err != nil {
+	if err := config.load(); err != nil {
 		return err
 	}
 
@@ -89,13 +85,11 @@ func run() error {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		runErr := cmdRun(config, args[1:], env)
-		if runErr != nil {
-			return runErr
+		if err := cmdRun(config, args[1:], env); err != nil {
+			return err
 		}
 	} else {
-		execErr := syscall.Exec(config.NBPath, args, env)
-		if execErr != nil {
+		if execErr := syscall.Exec(config.NBPath, args, env); execErr != nil {
 			return execErr
 		}
 	}
