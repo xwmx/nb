@@ -46,8 +46,8 @@ func (config *configuration) load() error {
 }
 
 type subcommand struct {
-	Name  string
-	Usage string
+	name  string
+	usage string
 }
 
 func cmdRun(config configuration, args []string, env []string) error {
