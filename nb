@@ -9501,7 +9501,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
       fi
 
       git -C "${_notebook_path}" remote "${_subcommand}" origin "${_url}" &&
-        printf "Remote set to: %s\\n" "$(_color_primary "${_url}")"        &&
+        printf "Remote set to: %s\\n" "$(_color_primary "${_url}")"       &&
           return 0
       ;;
     *)
