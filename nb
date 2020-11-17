@@ -5863,8 +5863,14 @@ _import() {
 
         if [[ -n "${_selector_path:-}" ]]
         then
-          if [[ "${_selector_path}" =~ /$   ]]
+          if [[ "${_selector_path}" =~ /$                 ]] ||
+             [[ -d "${_notebook_path}/${_selector_path}"  ]]
           then
+            if [[ ! "${_selector_path}" =~ /$ ]]
+            then
+              _selector_path="${_selector_path}/"
+            fi
+
             _target_folder_relative_path="$(
               _resolve_selector_folders "${_selector_path}" --build
             )"
