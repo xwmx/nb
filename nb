@@ -1118,6 +1118,9 @@ _download_from() {
       "${_url}"
     )
 
+    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+      _curl_options+=(--user-agent "${NB_USER_AGENT}")
+
     if [[ -n "${_target_path}" ]]
     then
       curl                            \
@@ -1137,6 +1140,9 @@ _download_from() {
       --dns-timeout="${_timeout}"     \
       "${_url}"
     )
+
+    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+      _wget_options+=(--user-agent="${NB_USER_AGENT}")
 
     if [[ -n "${_target_path}" ]]
     then
@@ -1857,10 +1863,28 @@ _get_http_status() {
 
   if _command_exists "curl"
   then
-    curl -I -s -o /dev/null -w "%{http_code}\\n" "${_url}" || return 0
+    local _curl_options=(
+      --head
+      --silent
+      --output /dev/null
+      -w "%{http_code}\\n"
+    )
+
+    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+      _curl_options+=(--user-agent "${NB_USER_AGENT}")
+
+    curl "${_curl_options[@]}" "${_url}" || return 0
   elif _command_exists "wget"
   then
-    wget -S "${_url}" 2>&1 | grep "HTTP/" | awk '{print $2}' || return 0
+    local _wget_options=(
+      --server-response
+    )
+
+    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+      _wget_options+=(--user-agent="${NB_USER_AGENT}")
+
+    wget "${_wget_options}" "${_url}" 2>&1 \
+      | grep "HTTP/" | awk '{print $2}' || return 0
   fi
 }
 
