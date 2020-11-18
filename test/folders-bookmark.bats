@@ -6,9 +6,9 @@ load test_helper
 
 @test "'bookmark <folder>/' with no argument exits with 0, prints message, and lists." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
 
     [[   -d "${NB_DIR}/home/Example Folder"         ]]
     [[   -f "${NB_DIR}/home/Example Folder/.index"  ]]
@@ -47,9 +47,9 @@ load test_helper
 
 @test "'bookmark url <folder>/<id>' with invalid <id> prints error." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder" --type folder
-    run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
+    "${_NB}" init
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
 
     _files=($(ls "${NB_DIR}/home/Example Folder")) && _filename="${_files[0]}"
 
@@ -71,9 +71,9 @@ load test_helper
 
 @test "'bookmark url' prints note url." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder" --type folder
-    run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
+    "${_NB}" init
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
 
     _files=($(ls "${NB_DIR}/home/Example Folder")) && _filename="${_files[0]}"
 
@@ -95,8 +95,8 @@ load test_helper
 
 @test "'bookmark url' with multiple URLs prints first url in <>." {
   {
-    run "${_NB}" init
-    run "${_NB}" add Example\ Folder/example.bookmark.md \
+    "${_NB}" init
+    "${_NB}" add Example\ Folder/example.bookmark.md \
       --content "\
 https://example.com
 <${_BOOKMARK_URL}>
@@ -124,7 +124,7 @@ https://example.com
 
 @test "'bookmark <folder>/<folder> <url>' (no slash) with valid <url> argument creates new bookmark and folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -d "${NB_DIR}/home/Example Folder"                       ]]
     [[ ! -f "${NB_DIR}/home/Example Folder/.index"                ]]
@@ -208,7 +208,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark <folder> <url>' (no slash) with valid <url> argument creates new bookmark at root level without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -d "${NB_DIR}/home/Example Folder"        ]]
     [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
@@ -287,7 +287,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark <folder>/ <url>' with valid <url> argument creates new bookmark and folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -d "${NB_DIR}/home/Example Folder"        ]]
     [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
@@ -367,7 +367,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark <folder>/<folder>/ <url>' with valid <url> argument creates new bookmark and folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -d "${NB_DIR}/home/Example Folder"                       ]]
     [[ ! -f "${NB_DIR}/home/Example Folder/.index"                ]]

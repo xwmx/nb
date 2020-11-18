@@ -6,8 +6,8 @@ load test_helper
 
 @test "'git checkpoint' with no message and clean repo does not create new commit." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -34,8 +34,8 @@ load test_helper
 
 @test "'git checkpoint' with no message and dirty repo creates a new commit with the default message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -62,8 +62,8 @@ load test_helper
 
 @test "'git checkpoint <message>' with dirty repo creates a new commit with <message>." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -93,7 +93,7 @@ load test_helper
 
 @test "'git dirty' with dirty repo returns 0 and does not create commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     touch "${NB_DIR:?}/home/example.md"
 
     [[ -n "$(git -C "${NB_DIR:?}/home" status --porcelain)" ]]
@@ -114,8 +114,8 @@ load test_helper
 
 @test "'<notebook>:git dirty' with dirty repo returns 0 and does not create commit." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
     touch "${NB_DIR:?}/one/example.md"
 
     [[ -n "$(git -C "${NB_DIR:?}/one" status --porcelain)" ]]
@@ -136,7 +136,7 @@ load test_helper
 
 @test "'git dirty' with clean repo returns 1 and does not create commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ -z "$(git -C "${NB_DIR:?}/home" status --porcelain)" ]]
   }
@@ -156,8 +156,8 @@ load test_helper
 
 @test "'<notebook>:git dirty' with clean repo returns 1 and does not create commit." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
 
     [[ -z "$(git -C "${NB_DIR:?}/one" status --porcelain)" ]]
   }

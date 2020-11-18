@@ -6,11 +6,11 @@ load test_helper
 
 @test "'delete folder/<filename>' with invalid filename returns with error and message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md"  ]]
@@ -50,11 +50,11 @@ load test_helper
 
 @test "'delete folder/<filename>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md"  ]]
@@ -94,11 +94,11 @@ load test_helper
 
 @test "'delete folder/folder/<filename>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
@@ -137,15 +137,15 @@ load test_helper
 
 @test "'delete notebook:folder/<filename>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -184,15 +184,15 @@ load test_helper
 
 @test "'delete notebook:folder/folder/<filename>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -233,11 +233,11 @@ load test_helper
 
 @test "'delete folder/<id>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md" ]]
@@ -275,11 +275,11 @@ load test_helper
 
 @test "'delete folder/folder/<id>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md" ]]
@@ -317,15 +317,15 @@ load test_helper
 
 @test "'delete notebook:folder/<id>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -362,15 +362,15 @@ load test_helper
 
 @test "'delete notebook:folder/folder/<id>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -409,13 +409,13 @@ load test_helper
 
 @test "'delete folder/<title>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md" ]]
@@ -453,13 +453,13 @@ load test_helper
 
 @test "'delete folder/folder/<title>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://example.test>"
 
     [[   -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md" ]]
@@ -497,17 +497,17 @@ load test_helper
 
 @test "'delete notebook:folder/<title>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -546,17 +546,17 @@ load test_helper
 
 @test "'delete notebook:folder/folder/<title>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 

@@ -124,7 +124,7 @@ _setup_notebook() {
 @test "'notebooks unarchive' exits with 0 and unarchives." {
   {
     _setup_notebook
-    run "${_NB}" notebooks archive
+    "${_NB}" notebooks archive
   }
 
   run "${_NB}" notebooks unarchive
@@ -147,7 +147,7 @@ _setup_notebook() {
 @test "'notebooks unarchive <name>' exits with 0 and unarchives." {
   {
     _setup_notebook
-    run "${_NB}" notebooks archive one
+    "${_NB}" notebooks archive one
   }
 
   run "${_NB}" notebooks unarchive one

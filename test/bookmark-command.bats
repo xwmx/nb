@@ -6,7 +6,7 @@ load test_helper
 
 @test "'bookmark' command with no argument exits with 0, prints message, and lists." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_BOOKMARK}"
@@ -114,7 +114,7 @@ HEREDOC
 
 @test "'bookmark' command with valid <url> argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_BOOKMARK}" "${_BOOKMARK_URL}"
@@ -169,7 +169,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with invalid <url> argument creates new bookmark without downloading." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark 'http://invalid-url'

@@ -168,7 +168,7 @@ one"
 @test "'notebooks --names --no-color --archived' exits with 0 and prints archived." {
   {
     _setup_notebooks
-    run "${_NB}" one:notebook archive
+    "${_NB}" one:notebook archive
   }
 
   run "${_NB}" notebooks --names --no-color --archived
@@ -185,7 +185,7 @@ one"
 @test "'notebooks --names --no-color --unarchived' exits with 0 and prints unarchived." {
   {
     _setup_notebooks
-    run "${_NB}" one:notebook archive
+    "${_NB}" one:notebook archive
   }
 
   run "${_NB}" notebooks --names --no-color --unarchived
@@ -203,7 +203,7 @@ one"
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
@@ -227,7 +227,7 @@ one"
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
@@ -250,7 +250,7 @@ one"
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}"
 
@@ -269,7 +269,7 @@ one"
 @test "'notebooks --names --no-color --global' exits with 0 and prints global." {
   {
     _setup_notebooks
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
   }
 
   run "${_NB}" notebooks --names --no-color --global
@@ -290,7 +290,7 @@ one"
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
@@ -314,7 +314,7 @@ ${NB_DIR}/one"
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
@@ -337,7 +337,7 @@ ${NB_DIR}/one"
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}"
 
@@ -356,7 +356,7 @@ ${NB_DIR}/one"
 @test "'notebooks --paths --global' exits with 0 and prints global." {
   {
     _setup_notebooks
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
   }
 
   run "${_NB}" notebooks --paths --global

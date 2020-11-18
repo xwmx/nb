@@ -54,7 +54,7 @@ _setup_notebooks() {
 
 @test "'notebooks import' with no arguments exits with status 1 and prints help." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" notebooks import
@@ -68,7 +68,7 @@ _setup_notebooks() {
 
 @test "'notebooks import' with valid directory <path> imports." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
@@ -86,7 +86,7 @@ _setup_notebooks() {
 
 @test "'notebooks import' with relative <path> imports." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_TMP_DIR}/example"
 
@@ -110,8 +110,8 @@ _setup_notebooks() {
 
 @test "'notebooks import' with existing notebook imports with unique name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "Example Folder"
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Folder"
 
     [[ -d "${NB_DIR}/Example Folder" ]]
   }
@@ -131,7 +131,7 @@ _setup_notebooks() {
 
 @test "'notebooks import' with invalid file <path> argument exits with 1." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/example.md"
@@ -148,7 +148,7 @@ _setup_notebooks() {
 
 @test "'notebooks import' with valid <name> argument imports." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" notebooks import                     \
@@ -170,8 +170,8 @@ _setup_notebooks() {
 
 @test "'notebooks import' with existing notebook <name> imports with unique name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
 
     [[ -d "${NB_DIR}/example" ]]
   }

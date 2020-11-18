@@ -195,7 +195,7 @@ _setup_notebooks() {
 @test "'notebooks delete local' in local exits with 1." {
   {
     "${_NB}" init
-    run "${_NB}" notebooks add local
+    "${_NB}" notebooks add local
     mkdir -p "${_TMP_DIR}/example"
     cd "${_TMP_DIR}/example"
     [[ "$(pwd)" == "${_TMP_DIR}/example"  ]]
@@ -218,7 +218,7 @@ _setup_notebooks() {
   {
     _pwd="${PWD}"
     "${_NB}" init
-    run "${_NB}" notebooks add local
+    "${_NB}" notebooks add local
     mkdir -p "${_TMP_DIR}/example"
     cd "${_TMP_DIR}/example"
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]

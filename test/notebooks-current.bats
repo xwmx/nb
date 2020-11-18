@@ -3,8 +3,8 @@
 load test_helper
 
 _setup_notebooks() {
-  run "${_NB}" init
-  run "${_NB}" notebooks add one
+  "${_NB}" init
+  "${_NB}" notebooks add one
 
   cd "${NB_DIR}" || return 1
 }

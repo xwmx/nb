@@ -3,16 +3,16 @@
 load test_helper
 
 _setup_rename() {
-  run "${_NB}" init
-  run "${_NB}" add "initial example name.md"
+  "${_NB}" init
+  "${_NB}" add "initial example name.md"
 }
 
 # no argument #################################################################
 
 @test "'move' with no arguments exits with 1, does nothing, and prints help." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -51,8 +51,8 @@ _setup_rename() {
 
 @test "'move' with <filename> argument moves without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -94,8 +94,8 @@ _setup_rename() {
 
 @test "'move' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -136,8 +136,8 @@ _setup_rename() {
 
 @test "'move' bookmark with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.bookmark.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.bookmark.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.bookmark.md" ]]
   }
@@ -177,8 +177,8 @@ _setup_rename() {
 
 @test "'move' bookmark with extension <filename> argument uses target extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.bookmark.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.bookmark.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.bookmark.md" ]]
   }
@@ -218,8 +218,8 @@ _setup_rename() {
 
 @test "'move' note with bookmark extension <filename> argument uses target extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -259,12 +259,12 @@ _setup_rename() {
 
 @test "'move' with existing <filename> exits with status 1." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
 
-    run "${_NB}" add "EXAMPLE NEW NAME.org"
+    "${_NB}" add "EXAMPLE NEW NAME.org"
 
     [[ -e "${_NOTEBOOK_PATH}/EXAMPLE NEW NAME.org" ]]
   }
@@ -283,8 +283,8 @@ _setup_rename() {
 
 @test "'move <id>' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -324,8 +324,8 @@ _setup_rename() {
 
 @test "'<id> move' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -367,8 +367,8 @@ _setup_rename() {
 
 @test "'move --reset' with <filename> argument renames without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -418,8 +418,8 @@ _setup_rename() {
 
 @test "'move --to-bookmark' with note renames without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -463,8 +463,8 @@ _setup_rename() {
 
 @test "'move 1 <name> --to-bookmark' with note renames without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -508,8 +508,8 @@ _setup_rename() {
 
 @test "'move 1 New\ Name.demo --to-bookmark' discards extension and renames." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.md" ]]
   }
@@ -553,8 +553,8 @@ _setup_rename() {
 
 @test "'rename --to-note' with bookmark renames without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example File.bookmark.md"
+    "${_NB}" init
+    "${_NB}" add "Example File.bookmark.md"
 
     [[ -e "${_NOTEBOOK_PATH}/Example File.bookmark.md" ]]
   }
@@ -600,9 +600,9 @@ _setup_rename() {
 
 @test "'move <scope>:<id>' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "Example File.md"
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "Example File.md"
 
     [[ -e "${NB_DIR}/one/Example File.md" ]]
   }
@@ -643,9 +643,9 @@ _setup_rename() {
 
 @test "'<scope>:move <id>' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "Example File.md"
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "Example File.md"
 
     [[ -e "${NB_DIR}/one/Example File.md" ]]
   }
@@ -685,9 +685,9 @@ _setup_rename() {
 
 @test "'<scope>:<id> move' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "Example File.md"
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "Example File.md"
 
     [[ -e "${NB_DIR}/one/Example File.md" ]]
   }
@@ -727,9 +727,9 @@ _setup_rename() {
 
 @test "'<id> <scope>:move' with extension-less <filename> argument uses source extension." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "Example File.md"
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "Example File.md"
 
     [[ -e "${NB_DIR}/one/Example File.md" ]]
   }

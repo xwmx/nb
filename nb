@@ -9055,6 +9055,8 @@ HEREDOC
   _notebooks_add_new() {
     local _notebook_list=("${@:-}")
 
+    [[ ! -d "${NB_DIR}" ]] && return 0
+
     if [[ -z "${1:-}" ]]
     then
       _notebook_list=($(ls -1 "${NB_DIR}"))

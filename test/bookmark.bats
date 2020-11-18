@@ -6,7 +6,7 @@ load test_helper
 
 @test "'bookmark' with no argument exits with 0, prints message, and lists." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark
@@ -152,7 +152,7 @@ HEREDOC
 
 @test "'bookmark' with valid <url> argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -210,7 +210,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with pdf <url> argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "file://${BATS_TEST_DIRNAME}/fixtures/example.pdf"
@@ -255,7 +255,9 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 }
 
 @test "'bookmark' with invalid <url> argument creates new bookmark without downloading." {
-  run "${_NB}" init
+  {
+    "${_NB}" init
+  }
 
   run "${_NB}" bookmark 'http://invalid-url'
 
@@ -308,7 +310,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with --comment option creates new note with comment." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --comment "New comment."
@@ -368,7 +370,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with --quote option creates new note with quote." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --quote "Quote line 1.
@@ -435,7 +437,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark --save-source' creates new note with HTML content." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --save-source
@@ -503,7 +505,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
 
 @test "'bookmark' with --skip-content option creates new note with no page content." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --skip-content
@@ -555,7 +557,7 @@ Example description."
 
 @test "'bookmark' with --tags option creates new note with tags." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags tag1,tag2
@@ -613,7 +615,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with --tags option and hashtags creates new note with tags." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --tags '#tag1','#tag2' -c 'Example comment.'
@@ -677,7 +679,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with --title option creates new note with title." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --title "New Title"
@@ -733,7 +735,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with invalid --related <url> argument exits with 1." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark --related
@@ -762,7 +764,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with one --related URL creates new note." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --related https://example.net
@@ -820,7 +822,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' with three --related URLs creates new note." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" \
@@ -885,7 +887,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark --encrypt' with content argument creates a new .enc bookmark." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
@@ -901,7 +903,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark --encrypt --password' without argument exits with 1." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password
@@ -917,7 +919,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'add' with --filename option exits with 0, creates new note, creates commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.bookmark.md
@@ -946,7 +948,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'add' with --filename option uses specified extension." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example.org
@@ -975,7 +977,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'add' with extension-less --filename option uses default extension." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename example
@@ -1006,8 +1008,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark delete' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -1050,8 +1052,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark edit' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}"
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   }
@@ -1089,8 +1091,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark url' with invalid note prints error." {
   {
-    run "${_NB}" init
-    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}"
   }
 
   run "${_NB}" bookmark url 99
@@ -1107,8 +1109,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark url' prints note url." {
   {
-    run "${_NB}" init
-    run "${_NB}" bookmark "${_BOOKMARK_URL}"
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}"
   }
 
   run "${_NB}" bookmark url 1
@@ -1125,8 +1127,8 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark url' with multiple URLs prints first url in <>." {
   {
-    run "${_NB}" init
-    run "${_NB}" add example.bookmark.md \
+    "${_NB}" init
+    "${_NB}" add example.bookmark.md \
       --content "\
 https://example.com
 <${_BOOKMARK_URL}>
@@ -1149,8 +1151,8 @@ https://example.com
 
 @test "'bookmark url' with encrypted bookmark should print without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 

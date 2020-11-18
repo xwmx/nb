@@ -48,7 +48,7 @@ _setup_notebooks() {
 
 @test "'notebooks export' with no arguments exits with status 1 and prints help." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" notebooks export
@@ -62,7 +62,7 @@ _setup_notebooks() {
 
 @test "'notebooks export' with valid <name> exports to current directory." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" notebooks add "example"
@@ -86,9 +86,9 @@ _setup_notebooks() {
 
 @test "'notebooks export' with valid <name> exports to current directory uniquely." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" notebooks add "example"
+    "${_NB}" notebooks add "example"
     [[ -d "${NB_DIR}/example"     ]]
 
     mkdir -p "${_TMP_DIR}/example"
@@ -111,8 +111,8 @@ _setup_notebooks() {
 
 @test "'notebooks export' with invalid <name> exits with 1." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
     [[ -d "${NB_DIR}/example" ]]
     cd "${_TMP_DIR}"
   }
@@ -131,8 +131,8 @@ _setup_notebooks() {
 
 @test "'notebooks export' with valid <name> and <path> exports." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
     [[ -d "${NB_DIR}/example"     ]]
     [[ ! -d "${_TMP_DIR}/example" ]]
   }
@@ -151,8 +151,8 @@ _setup_notebooks() {
 
 @test "'notebooks export' with valid <name> and <path> exports uniquely." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
     [[ -d "${NB_DIR}/example"     ]]
     mkdir -p "${_TMP_DIR}/example"
     [[ -d "${_TMP_DIR}/example"   ]]
@@ -172,8 +172,8 @@ _setup_notebooks() {
 
 @test "'notebooks export' with valid <name> and <path> ending in existing name exports." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
     [[ -d "${NB_DIR}/example"     ]]
     mkdir -p "${_TMP_DIR}/example"
     [[ -d "${_TMP_DIR}/example"   ]]
@@ -193,8 +193,8 @@ _setup_notebooks() {
 
 @test "'notebooks export' with valid <name> and relative <path> exports." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
     [[ -d "${NB_DIR}/example"       ]]
     mkdir -p "${_TMP_DIR}/subfolder"
     [[ -d "${_TMP_DIR}/subfolder"   ]]

@@ -6,12 +6,12 @@ load test_helper
 
 @test "'move notebook:folder/<id>' moves across notebooks and creates intermediate folders." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Test Folder/Sample File.bookmark.md"  \
-      --title   "Sample Title"                              \
+    "${_NB}" init
+    "${_NB}" add "Test Folder/Sample File.bookmark.md"  \
+      --title   "Sample Title"                          \
       --content "<https://1.example.test>"
 
-    run "${_NB}" notebooks add "one"
+    "${_NB}" notebooks add "one"
 
     [[   -d "${NB_DIR}/home/Test Folder"                                              ]]
     [[   -f "${NB_DIR}/home/Test Folder/Sample File.bookmark.md"                      ]]
@@ -69,9 +69,9 @@ load test_helper
 
 @test "'move folder/<id>' moves and creates intermediate folders." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample File.bookmark.md"   \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Example Folder/Sample File.bookmark.md"   \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
 
@@ -122,13 +122,13 @@ load test_helper
 
 @test "'move folder/<filename>' with invalid filename returns with error and message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                  ]]
@@ -175,12 +175,12 @@ load test_helper
 
 @test "'move <notebook>:<selector> <notebook>:folder/' with existing folder moves item into folder." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"  \
-      --title   "Sample Title"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"  \
+      --title   "Sample Title"              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
     [[   -d "${NB_DIR}/home/Example Folder"                         ]]
@@ -223,9 +223,9 @@ load test_helper
 
 @test "'move <selector> folder/' creates folder and moves item into folder." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"  \
-      --title   "Sample Title"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"  \
+      --title   "Sample Title"              \
       --content "<https://1.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
@@ -269,17 +269,17 @@ load test_helper
 
 @test "'move <notebook>:<selector> <notebook>:folder/' moves item into folder." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"  \
-      --title   "Sample Title"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"  \
+      --title   "Sample Title"              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
-    run "${_NB}" notebooks add "two"
+    "${_NB}" notebooks add "two"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                ]]
     [[ ! -d "${NB_DIR}/home/Example Folder"                         ]]
@@ -333,13 +333,13 @@ load test_helper
 
 @test "'move notebook:folder/folder/<filename>' moves across notebooks and levels without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -352,10 +352,10 @@ load test_helper
     [[ ! -e "${NB_DIR}/two/Example Folder"                                          ]]
     [[ ! -e "${NB_DIR}/two/Example Folder/example.md"                               ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks add "two"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks add "two"
 
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -409,13 +409,13 @@ load test_helper
 
 @test "'move folder/<filename>' moves properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                  ]]
@@ -461,13 +461,13 @@ load test_helper
 
 @test "'move folder/folder/<filename>' moves properly on same level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -513,13 +513,13 @@ load test_helper
 
 @test "'move folder/folder/<filename>' moves properly up one level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -565,17 +565,17 @@ load test_helper
 
 @test "'move notebook:folder/<filename>' moves properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -622,17 +622,17 @@ load test_helper
 
 @test "'move notebook:folder/folder/<filename>' moves properly on same level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -681,13 +681,13 @@ load test_helper
 
 @test "'move notebook:folder/folder/<filename>' moves properly up one level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -695,8 +695,8 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/example.md"                                             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"                              ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -740,13 +740,13 @@ load test_helper
 
 @test "'move notebook:folder/folder/<id>' moves across notebooks and levels without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -758,10 +758,10 @@ load test_helper
     [[ ! -e "${NB_DIR}/two/example.md"                                              ]]
     [[ ! -e "${NB_DIR}/two/Example Folder/example.md"                               ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks add "two"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks add "two"
 
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -814,13 +814,13 @@ load test_helper
 
 @test "'move folder/<id>' moves properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                  ]]
@@ -866,13 +866,13 @@ load test_helper
 
 @test "'move folder/folder/<id>' moves properly on same level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -918,13 +918,13 @@ load test_helper
 
 @test "'move folder/folder/<id>' moves properly up one level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -970,17 +970,17 @@ load test_helper
 
 @test "'move notebook:folder/<id>' moves properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -1027,17 +1027,17 @@ load test_helper
 
 @test "'move notebook:folder/folder/<id>' moves properly on same level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -1086,13 +1086,13 @@ load test_helper
 
 @test "'move notebook:folder/folder/<id>' moves properly up one level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -1100,8 +1100,8 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/example.md"                                             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"                              ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -1145,13 +1145,13 @@ load test_helper
 
 @test "'move notebook:folder/folder/<title>' moves across notebooks and levels without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -1163,10 +1163,10 @@ load test_helper
     [[ ! -e "${NB_DIR}/two/example.md"                                              ]]
     [[ ! -e "${NB_DIR}/two/Example Folder/example.md"                               ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks add "two"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks add "two"
 
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -1219,13 +1219,13 @@ load test_helper
 
 @test "'move folder/<title>' moves properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                  ]]
@@ -1271,13 +1271,13 @@ load test_helper
 
 @test "'move folder/folder/<title>' moves properly on same level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -1323,13 +1323,13 @@ load test_helper
 
 @test "'move folder/folder/<title>' moves properly up one level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -1375,17 +1375,17 @@ load test_helper
 
 @test "'move notebook:folder/<title>' moves properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -1432,17 +1432,17 @@ load test_helper
 
 @test "'move notebook:folder/folder/<title>' moves properly on same level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -1491,13 +1491,13 @@ load test_helper
 
 @test "'move notebook:folder/folder/<title>' moves properly up one level without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[   -e "${NB_DIR}/home/Sample File.bookmark.md"                                ]]
@@ -1505,8 +1505,8 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/example.md"                                             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"                              ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }

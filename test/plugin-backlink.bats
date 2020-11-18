@@ -11,7 +11,7 @@ load test_helper
   fi
 
   {
-    run "${_NB}" init
+    "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/backlink.nb-plugin"
 
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -87,7 +87,7 @@ Demo content [[one]] apricot plum.
   fi
 
   {
-    run "${_NB}" init
+    "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/backlink.nb-plugin"
 
     cat <<HEREDOC | "${_NB}" add 'first.md'
@@ -155,7 +155,7 @@ Demo content one apricot plum."
   fi
 
   {
-    run "${_NB}" init
+    "${_NB}" init
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/backlink.nb-plugin"
 
     [[ "${status}" == 0 ]]

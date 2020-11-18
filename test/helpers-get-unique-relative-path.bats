@@ -6,7 +6,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' with no arguments prints generated filename without extension." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" helpers get_unique_relative_path
@@ -21,7 +21,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints generated filename without extension with one-level relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -39,7 +39,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints generated filename without extension with two-level relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -62,7 +62,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints generated filename for extension." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" helpers get_unique_relative_path ".rst"
@@ -77,7 +77,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints generated filename for extension with nested notebook path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir -p "${_NOTEBOOK_PATH}/${_NOTEBOOK_PATH}"
     touch "${_NOTEBOOK_PATH}/${_NOTEBOOK_PATH}/.index"
@@ -95,7 +95,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints generated filename for extension with one-level relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -113,7 +113,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints generated filename for extension with two-level relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -136,7 +136,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints one-level file path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/example.txt"
@@ -169,7 +169,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints one-level folder path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -201,7 +201,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints two-level file path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -239,7 +239,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints two-level folder path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -278,7 +278,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints three-level file path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"
@@ -320,7 +320,7 @@ load test_helper
 
 @test "'_get_unique_relative_path()' prints three-level folder path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     mkdir "${_NOTEBOOK_PATH}/Example Folder"
     touch "${_NOTEBOOK_PATH}/Example Folder/.index"

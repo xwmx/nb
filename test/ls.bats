@@ -207,8 +207,8 @@ Help information:
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
 
-    run "${_NB}" notebooks add "example"
-    run "${_NB}" use example
+    "${_NB}" notebooks add "example"
+    "${_NB}" use example
 
     [[ "$("${_NB}" notebooks current)" == "example" ]]
   }
@@ -231,9 +231,9 @@ Help information:
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
 
-    run "${_NB}" notebooks add "example"
-    run "${_NB}" use example
-    run "${_NB}" notebooks rename home "multi word"
+    "${_NB}" notebooks add "example"
+    "${_NB}" use example
+    "${_NB}" notebooks rename home "multi word"
 
     _notebooks=(
       "example"
@@ -299,9 +299,9 @@ Help information:
     _setup_ls
     _files=($(ls "${_NOTEBOOK_PATH}/"))
 
-    run "${_NB}" notebooks add "example"
-    run "${_NB}" use example
-    run "${_NB}" notebooks rename home "multi word"
+    "${_NB}" notebooks add "example"
+    "${_NB}" use example
+    "${_NB}" notebooks rename home "multi word"
 
     _notebooks=(
       "example"

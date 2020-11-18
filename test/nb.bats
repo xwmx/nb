@@ -47,7 +47,7 @@ load test_helper
 
 @test "'nb' with empty repo exits with status 0 and 'ls' output." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}"
@@ -73,7 +73,7 @@ load test_helper
 
 @test "'nb' with a non-empty repo exits with 0 and prints list." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     "${_NB}" add "first.md" --title "one"
     "${_NB}" add "second.md" --title "two"
     "${_NB}" add "third.md" --title "three"
@@ -96,7 +96,7 @@ load test_helper
 
 @test "'nb' with <url> creates bookmark." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" "${_BOOKMARK_URL}"
@@ -153,7 +153,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'nb' with invalid NB_DIR exits with 1." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   NB_DIR='/' run "${_NB}"

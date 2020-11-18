@@ -31,13 +31,13 @@ load test_helper
 
 @test "'index rebuild' creates git commit." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
-    run "${_NB}" delete "${_filename}" --force
-    run "${_NB}" add
+    "${_NB}" delete "${_filename}" --force
+    "${_NB}" add
   }
 
   run "${_NB}" index rebuild
@@ -53,17 +53,17 @@ load test_helper
 
 @test "'index rebuild' with no index creates git commit with operation-specific message." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
-    run "${_NB}" use one
-    run "${_NB}" add --filename "example.md"
+    "${_NB}" init
+    "${_NB}" notebooks add one
+    "${_NB}" use one
+    "${_NB}" add --filename "example.md"
 
     [[   -e "${NB_DIR:?}/one/.index"      ]]
     [[   -e "${NB_DIR:?}/one/example.md"  ]]
 
     rm "${NB_DIR:?}/one/.index"
 
-    run "${_NB}" git checkpoint
+    "${_NB}" git checkpoint
 
     [[ ! -e "${NB_DIR:?}/one/.index"      ]]
     [[   -e "${NB_DIR:?}/one/example.md"  ]]

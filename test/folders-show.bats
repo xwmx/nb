@@ -6,10 +6,10 @@ load test_helper
 
 @test "'show folder/folder/<title> --relative-path' displays relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
-      --content "<https://example.test>"                                \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
       --title   "Example Title"
 
     [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
@@ -29,10 +29,10 @@ load test_helper
 
 @test "'show folder/folder/<filename> --relative-path' displays relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
-      --content "<https://example.test>"                                \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
       --title   "Example Title"
 
     [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
@@ -52,10 +52,10 @@ load test_helper
 
 @test "'show folder/folder/<id> --relative-path' displays relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
-      --content "<https://example.test>"                                \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
       --title   "Example Title"
 
     [[ -d "${_NOTEBOOK_PATH}/Example Folder"                                    ]]
@@ -80,12 +80,12 @@ load test_helper
 
 @test "'show notebook:folder/folder/<id> --relative-path' displays relative path." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" notebooks add "one"
+    "${_NB}" notebooks add "one"
 
-    run "${_NB}" one:add "Example Folder/Sample Folder/example.bookmark.md" \
-      --content "<https://example.test>"                                    \
+    "${_NB}" one:add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
       --title   "Example Title"
 
     [[ -d "${NB_DIR}/one/Example Folder"                                    ]]
@@ -106,9 +106,9 @@ load test_helper
 
 @test "'show folder/folder/<filename> --info-line' displays info line." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
       --content "<https://example.test>"                                \
       --title   "Example Title"
 
@@ -134,9 +134,9 @@ load test_helper
 
 @test "'show notebook:folder/folder/<filename> --info-line' displays info line." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
       --content "<https://example.test>"                                \
       --title   "Example Title"
 
@@ -144,8 +144,8 @@ load test_helper
     [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                      ]]
     [[ -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/example.bookmark.md"  ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -168,9 +168,9 @@ load test_helper
 
 @test "'show folder/folder/<filename> --selector-id' displays selector id." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
       --content "<https://example.test>"                                \
       --title   "Example Title"
 
@@ -190,9 +190,9 @@ load test_helper
 
 @test "'show demo:folder/folder/<filename> --selector-id' displays selector id." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
       --content "<https://example.test>"                                \
       --title   "Example Title"
 

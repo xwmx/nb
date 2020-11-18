@@ -339,7 +339,7 @@ skip "Determine how to test interactive prompt."
 @test "'settings set' with 'unset' value unsets and exits." {
   {
     "${_NB}" init
-    run "${_NB}" settings set color_secondary 42
+    "${_NB}" settings set color_secondary 42
     [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
     [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
   }
@@ -360,7 +360,7 @@ skip "Determine how to test interactive prompt."
 @test "'settings set' with 'default' value unsets and exits." {
   {
     "${_NB}" init
-    run "${_NB}" settings set color_secondary 42
+    "${_NB}" settings set color_secondary 42
     [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
     [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
   }
@@ -381,7 +381,7 @@ skip "Determine how to test interactive prompt."
 @test "'settings set' with 'reset' value unsets and exits." {
   {
     "${_NB}" init
-    run "${_NB}" settings set color_secondary 42
+    "${_NB}" settings set color_secondary 42
     [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
     [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
   }

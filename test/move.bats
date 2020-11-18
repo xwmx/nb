@@ -6,9 +6,9 @@ load test_helper
 
 @test "'move' with no arguments exits with status 1." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move --force
@@ -43,7 +43,7 @@ load test_helper
 
 @test "'move <selector> <notebook>:' with empty repo exits with 1 and prints help." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" move 1 destination:
@@ -59,9 +59,9 @@ load test_helper
 
 @test "'move <invalid> <notebook>:' exits with 1 and prints help." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move "invalid" destination: --force
@@ -77,9 +77,9 @@ load test_helper
 
 @test "'move <selector> <invalid>:' exits with 1 and prints help." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move 1 invalid: --force
@@ -95,9 +95,9 @@ load test_helper
 @test "'move <selector> <notebook>: (no force)' returns 0 and moves note." {
   skip "Determine how to test interactive prompt."
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -117,9 +117,9 @@ load test_helper
 
 @test "'move <scope>:<selector> <notebook>:' with <filename> argument moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "example.md" --content "Example content."
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "example.md" --content "Example content."
 
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
@@ -137,16 +137,16 @@ load test_helper
 
 @test "'<scope>:move <selector> <notebook>:' with <filename> argument moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
     echo "\${_filename:-}: ${_filename:-}"
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -165,16 +165,16 @@ load test_helper
 
 @test "'<scope>:<selector> move <notebook>:' with <filename> argument moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
     echo "\${_filename:-}: ${_filename:-}"
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -193,16 +193,16 @@ load test_helper
 
 @test "'<selector> <scope>:move <notebook>:' with <filename> argument moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
     echo "\${_filename:-}: ${_filename:-}"
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -223,9 +223,9 @@ load test_helper
 
 @test "'move' with <filename> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move "example.md" destination: --force
@@ -262,9 +262,9 @@ load test_helper
 
 @test "'move' with <id> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
@@ -301,9 +301,9 @@ load test_helper
 
 @test "'<id> move' successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" 1 move destination: --force
@@ -338,9 +338,9 @@ load test_helper
 
 @test "'move' with <id> argument and trailing colon on destination successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move 1 destination: --force
@@ -377,9 +377,9 @@ load test_helper
 
 @test "'move' with <path> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move "${_NOTEBOOK_PATH}/example.md" destination: --force
@@ -416,9 +416,9 @@ load test_helper
 
 @test "'move' with <title> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add --title "Example Title" --filename "example.md"
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add --title "Example Title" --filename "example.md"
+    "${_NB}" notebooks add "destination"
   }
 
   run "${_NB}" move "Example Title" destination: --force
@@ -455,9 +455,9 @@ load test_helper
 
 @test "'move' with <folder> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "destination"
-    run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    "${_NB}" init
+    "${_NB}" notebooks add "destination"
+    "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
     [[ -d "${NB_DIR}/home/Example Folder" ]]
   }
@@ -496,12 +496,12 @@ load test_helper
 
 @test "'move' to local with <filename> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
 
     [[ -e "${NB_DIR}/home/example.md" ]]
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
@@ -540,17 +540,17 @@ load test_helper
 
 @test "'move' from local with <filename> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" add "local-example.md" --content "local example content"
+    "${_NB}" add "local-example.md" --content "local example content"
   }
 
   run "${_NB}" move "local-example.md" home: --force
@@ -585,17 +585,17 @@ load test_helper
 
 @test "'move' from local with local:<filename> argument successfully moves note." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --content "Example content."
-    run "${_NB}" notebooks add "destination"
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" add "local-example.md" --content "local example content"
+    "${_NB}" add "local-example.md" --content "local example content"
   }
 
   run "${_NB}" move "local:local-example.md" home: --force

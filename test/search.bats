@@ -20,13 +20,13 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
-  run "${_NB}" notebooks add one
-  run "${_NB}" use one
-  run "${_NB}" add example.md --title "sweetish"
-  run "${_NB}" notebooks add two
-  run "${_NB}" use two
-  run "${_NB}" add example.md --title "sweetish"
-  run "${_NB}" notebooks archive two
+  "${_NB}" notebooks add one
+  "${_NB}" use one
+  "${_NB}" add example.md --title "sweetish"
+  "${_NB}" notebooks add two
+  "${_NB}" use two
+  "${_NB}" add example.md --title "sweetish"
+  "${_NB}" notebooks archive two
   [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
@@ -95,7 +95,7 @@ _search_all_setup() {
   {
     _setup_search
 
-    run "${_NB}" add                        \
+    "${_NB}" add                            \
       --filename  "example.bookmark.md"     \
       --content   "<http://example.test/>"  \
       --title     "Example Title"
@@ -191,19 +191,19 @@ HEREDOC
   {
     _setup_search
 
-    run "${_NB}" add                            \
-      --filename  "example-1.bookmark.md"       \
-      --content   "<http://example.test/>"      \
+    "${_NB}" add                            \
+      --filename  "example-1.bookmark.md"   \
+      --content   "<http://example.test/>"  \
       --title     "Example Title One"
 
     for ((_i=0; _i < 11; _i++))
     do
-      run "${_NB}" add "note ${_i}"
+      "${_NB}" add "note ${_i}"
     done
 
-    run "${_NB}" add                            \
-      --filename  "example-2.bookmark.md"       \
-      --content   "<http://example.test/>"      \
+    "${_NB}" add                            \
+      --filename  "example-2.bookmark.md"   \
+      --content   "<http://example.test/>"  \
       --title     "Example Title Two"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
@@ -229,19 +229,19 @@ HEREDOC
   {
     _setup_search
 
-    run "${_NB}" add                            \
-      --filename  "example-1.bookmark.md"       \
-      --content   "<http://example.test/>"      \
+    "${_NB}" add                            \
+      --filename  "example-1.bookmark.md"   \
+      --content   "<http://example.test/>"  \
       --title     "Example Title One"
 
     for ((_i=0; _i < 11; _i++))
     do
-      run "${_NB}" add "note ${_i}"
+      "${_NB}" add "note ${_i}"
     done
 
-    run "${_NB}" add                            \
-      --filename  "example-2.bookmark.md"       \
-      --content   "<http://example.test/>"      \
+    "${_NB}" add                            \
+      --filename  "example-2.bookmark.md"   \
+      --content   "<http://example.test/>"  \
       --title     "Example Title Two"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"

@@ -6,9 +6,10 @@ load test_helper
 
 @test "'copy <name>' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0                   ]]
     [[ "$("${_NB}" subcommands)" =~ copy  ]]
@@ -29,13 +30,14 @@ load test_helper
 
 @test "'copy <name>' with binary file copies file." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md"   \
+    "${_NB}" init
+    "${_NB}" add "example.md"       \
       --title "Example"             \
       --content "Example content."  \
       --encrypt                     \
       --password password
+
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }
@@ -64,9 +66,10 @@ load test_helper
 
 @test "'copy <id>' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -86,13 +89,14 @@ load test_helper
 
 @test "'copy <id>' with binary file copies file." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md"   \
+    "${_NB}" init
+    "${_NB}" add "example.md"       \
       --title "Example"             \
       --content "Example content."  \
       --encrypt                     \
       --password password
+
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }
@@ -121,9 +125,10 @@ load test_helper
 
 @test "'copy <title>' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -145,9 +150,10 @@ load test_helper
 
 @test "'copy <invalid>' exits with error message." {
   {
-    run "${_NB}" init
+     "${_NB}" init
+     "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -168,10 +174,11 @@ load test_helper
 
 @test "'copy <directory>' exits with error message." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
+    "${_NB}" init
 
     cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
+
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }
@@ -193,9 +200,10 @@ load test_helper
 
 @test "'copy <name>' with text file copies the note with sequential names." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -257,13 +265,14 @@ load test_helper
 
 @test "'copy <name>' with binary file copies the file with sequential names." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md"   \
+    "${_NB}" init
+    "${_NB}" add "example.md"       \
       --title "Example"             \
       --content "Example content."  \
       --encrypt                     \
       --password password
+
+    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }
@@ -327,9 +336,10 @@ load test_helper
 
 @test "'<id> copy' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -351,10 +361,11 @@ load test_helper
 
 @test "'copy <scope>:<id>' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -375,10 +386,11 @@ load test_helper
 
 @test "'<scope>:<id> copy' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -401,10 +413,11 @@ load test_helper
 
 @test "'<scope>:copy <id>' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -425,10 +438,11 @@ load test_helper
 
 @test "'<id> <scope>:copy' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -451,9 +465,10 @@ load test_helper
 
 @test "'duplicate <id>' with text file copies file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -475,9 +490,10 @@ load test_helper
 
 @test "'copy' with no argument exits with status 1 and prints usage." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }
@@ -495,9 +511,10 @@ load test_helper
 
 @test "'help copy' exits with status 0 and prints usage." {
   {
-    run "${_NB}" init
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example" --content "Example content."
+
     run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/fixtures/copy-deprecated.nb-plugin"
-    run "${_NB}" add "example.md" --title "Example" --content "Example content."
 
     [[ "${status}" == 0 ]]
   }

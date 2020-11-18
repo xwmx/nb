@@ -7,7 +7,7 @@ load test_helper
 
 @test "'add' with no arguments creates new note file created with \$EDITOR." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add
@@ -39,7 +39,7 @@ load test_helper
 
 @test "'add' with filename argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "example-filename.md" --content "# Example Title"
@@ -77,7 +77,7 @@ load test_helper
 
 @test "'add' with .org filename argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "example-filename.org" --content "Example content."
@@ -117,7 +117,7 @@ load test_helper
 
 @test "'add' with content argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "# Content"
@@ -155,8 +155,8 @@ load test_helper
 
 @test "'add' with scope and content argument creates new note without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add Example
+    "${_NB}" init
+    "${_NB}" notebooks add Example
 
     _NOTEBOOK_PATH="${NB_DIR}/Example"
   }
@@ -196,7 +196,7 @@ load test_helper
 
 @test "'add' with URL content argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "${_BOOKMARK_URL}"
@@ -236,8 +236,8 @@ load test_helper
 
 @test "'add' with scope and URL content argument creates new note without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add Example
+    "${_NB}" init
+    "${_NB}" notebooks add Example
 
     _NOTEBOOK_PATH="${NB_DIR}/Example"
   }
@@ -277,7 +277,7 @@ load test_helper
 
 @test "'add' with email address content argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "example@example.com"
@@ -317,7 +317,7 @@ load test_helper
 
 @test "'add' with 'http:' non-URL content argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "http: this is not a URL"
@@ -357,7 +357,7 @@ load test_helper
 
 @test "'add' with 'example.com' common TLD domain content argument creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "example.com"
@@ -399,7 +399,7 @@ load test_helper
 
 @test "'add' with --content option exits with 0, creates new note, creates commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --content "# Content"
@@ -425,7 +425,7 @@ load test_helper
 
 @test "'add' with URL --content option exits with 0, creates new note, creates commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --content "${_BOOKMARK_URL}"
@@ -454,7 +454,7 @@ load test_helper
 
 @test "'add' with empty --content option exits with 1" {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --content
@@ -473,7 +473,7 @@ load test_helper
 
 @test "'add' with --filename option exits with 0, creates new note, creates commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --filename example.org
@@ -504,7 +504,7 @@ load test_helper
 
 @test "'add' with --filename option overrides content or filename argument." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add "sample.md" --filename example.org
@@ -535,7 +535,7 @@ load test_helper
 
 @test "'add' with extensionless --filename option creates file without extension." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --filename example
@@ -568,7 +568,7 @@ load test_helper
 
 @test "'add' with empty --filename option exits with 1" {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --filename
@@ -591,7 +591,7 @@ load test_helper
 
 @test "'add' with --title option exits with 0, creates new note, creates commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add \
@@ -626,7 +626,7 @@ load test_helper
 
 @test "'add' with empty --title option exits with 1" {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add --title
@@ -649,7 +649,7 @@ load test_helper
 
 @test "'add --type org' with content argument creates a new .org note file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add  "* Content" --type org
@@ -666,7 +666,10 @@ load test_helper
 }
 
 @test "'add --type ''' without argument exits with 1." {
-  run "${_NB}" init
+  {
+    "${_NB}" init
+  }
+
   run "${_NB}" add  "* Content" --type
 
   [[ ${status} -eq 1        ]]
@@ -680,7 +683,7 @@ load test_helper
 
 @test "'add --encrypt' with content argument creates a new .enc note file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add  "* Content" --encrypt --password=example
@@ -698,7 +701,7 @@ load test_helper
 
 @test "'add --encrypt' with invalid encryption tool displays error message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   NB_ENCRYPTION_TOOL="not-valid" run "${_NB}" add  "* Content" --encrypt --password=example
@@ -718,7 +721,7 @@ load test_helper
 
 @test "'add --password' without argument exits with 1." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" add  "* Content" --encrypt --password
@@ -734,7 +737,7 @@ load test_helper
 
 @test "'add' with piped content creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run bash -c "echo '# Piped' | \"${_NB}\" add"
@@ -772,7 +775,7 @@ load test_helper
 
 @test "'add --type org' with piped content creates a new .org note file." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run bash -c "echo '# Piped' | \"${_NB}\" add --type org"
@@ -790,7 +793,7 @@ load test_helper
 
 @test "'add --type ''' with piped content exits with 1." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run bash -c "echo '# Piped' | \"${_NB}\" add --type"

@@ -6,7 +6,7 @@ load test_helper
 
 @test "'remote' with no arguments and no remote prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" remote
@@ -20,7 +20,7 @@ load test_helper
 
 @test "'remote' with no arguments and existing remote prints url." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
@@ -36,7 +36,7 @@ load test_helper
 
 @test "'remote' with no arguments does not trigger git commit." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
       git remote add origin "${_GIT_REMOTE_URL}"
 
@@ -73,7 +73,7 @@ load test_helper
 
 @test "'remote remove' with no existing remote returns 1 and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" remote remove
@@ -87,7 +87,7 @@ load test_helper
 
 @test "'remote remove' with existing remote removes remote and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
@@ -107,7 +107,7 @@ load test_helper
 
 @test "'remote unset' with existing remote removes remote and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
@@ -129,7 +129,7 @@ load test_helper
 
 @test "'remote set' with no URL exits with 1 and prints help." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" remote set --force
@@ -143,7 +143,7 @@ load test_helper
 
 @test "'remote set' with no existing remote sets remote and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
@@ -160,7 +160,7 @@ load test_helper
 
 @test "'remote set' with existing remote sets remote and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
       git remote add origin "https://example.test/example.git"
   }
@@ -178,7 +178,7 @@ load test_helper
 
 @test "'remote set' to same URL as existing remote exits and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
     cd "${_NOTEBOOK_PATH}" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }

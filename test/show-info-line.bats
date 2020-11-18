@@ -6,8 +6,8 @@ load test_helper
 
 @test "'show <not-valid> --info-line' exits with status 1 and prints message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/example.md" --title "Example Title"
   }
 
   run "${_NB}" show "99" --info-line
@@ -22,8 +22,8 @@ load test_helper
 
 @test "'show <folder>/<not-valid> --info-line' exits with status 1 and prints message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/example.md" --title "Example Title"
   }
 
   run "${_NB}" show "Example Folder/99" --info-line
@@ -40,8 +40,8 @@ load test_helper
 
 @test "'show <relative-path> --info-line' exits with status 0 and prints nested file info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/example.md" --title "Example Title"
   }
 
   run "${_NB}" show "Example Folder/example.md" --info-line
@@ -59,8 +59,8 @@ load test_helper
 
 @test "'show <relative-path> --info-line' exits with status 0 and prints nested folder info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/Sample Folder/"
   }
 
   run "${_NB}" show "Example Folder/Sample Folder" --info-line
@@ -77,8 +77,8 @@ load test_helper
 
 @test "'show <folder>/<id> --info-line' exits with status 0 and prints nested file info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/example.md" --title "Example Title"
   }
 
   run "${_NB}" show "Example Folder/1" --info-line
@@ -96,8 +96,8 @@ load test_helper
 
 @test "'show <folder>/<id> --info-line' exits with status 0 and prints nested folder info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/Sample Folder/"
   }
 
   run "${_NB}" show "Example Folder/1" --info-line
@@ -114,8 +114,8 @@ load test_helper
 
 @test "'show <folder>/<folder-id>/<id> --info-line' exits with status 0 and prints nested file info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/Sample Folder/example.md" --title "Example Title"
   }
 
   run "${_NB}" show "Example Folder/1/1" --info-line
@@ -133,8 +133,8 @@ load test_helper
 
 @test "'show <folder>/<folder-id>/<id> --info-line' exits with status 0 and prints nested folder info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
+    "${_NB}" init
+    "${_NB}" add "Example Folder/Sample Folder/Demo Folder/"
   }
 
   run "${_NB}" show "Example Folder/1/1" --info-line
@@ -153,8 +153,8 @@ load test_helper
 
 @test "'show <id> --info-line' with path in title prints title." {
   {
-    run "${_NB}" init
-    cat <<HEREDOC | run "${_NB}" add "example.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
 # Example /path/in/title/Example File.md
 HEREDOC
   }
@@ -173,8 +173,8 @@ HEREDOC
 
 @test "'show <id> --info-line' exits with status 0 and does not print first line." {
   {
-    run "${_NB}" init
-    cat <<HEREDOC | run "${_NB}" add "example.md"
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "example.md"
 Example line one.
 
 Example line three (line two is blank).
@@ -197,8 +197,8 @@ HEREDOC
 
 @test "'show <id> --info-line' exits with status 0 and prints unscoped note info." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example Title"
   }
 
   run "${_NB}" show 1 --info-line
@@ -215,9 +215,9 @@ HEREDOC
 
 @test "'show <id> --info-line' exits with status 0 and prints scoped note info." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
-    run "${_NB}" one:add "example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" notebooks add one
+    "${_NB}" one:add "example.md" --title "Example Title"
   }
 
   run "${_NB}" show one:1 --info-line
@@ -233,9 +233,9 @@ HEREDOC
 
 @test "'show <id> --info-line' prints escaped multi-word notebook name when scoped." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "multi word"
-    run "${_NB}" multi\ word:add "example.md" --title "Example Title"
+    "${_NB}" init
+    "${_NB}" notebooks add "multi word"
+    "${_NB}" multi\ word:add "example.md" --title "Example Title"
   }
 
   run "${_NB}" show multi\ word:1 --info-line
@@ -251,9 +251,9 @@ HEREDOC
 
 @test "'show <id> --info-line' includes indicators." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.bookmark.md"  \
-      --title   "Example Title"             \
+    "${_NB}" init
+    "${_NB}" add "example.bookmark.md"    \
+      --title   "Example Title"           \
       --content "<https://example.test>"
   }
 
@@ -273,10 +273,10 @@ HEREDOC
 
 @test "'show <id> --info-line' includes encrypted indicators." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "example.bookmark.md"  \
-      --title   "Example Title"             \
-      --content "<https://example.test>"    \
+    "${_NB}" init
+    "${_NB}" add "example.bookmark.md"    \
+      --title   "Example Title"           \
+      --content "<https://example.test>"  \
       --encrypt --password=password
   }
 

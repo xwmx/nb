@@ -6,7 +6,7 @@ load test_helper
 
 @test "'list' (empty) exits with 0 and lists files." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" list
@@ -84,8 +84,8 @@ Help information:
     "${_NB}" add "four.md" --title "four"
     "${_NB}" add "five.md" --title "five"
 
-    run "${_NB}" delete "one.md" --force
-    run "${_NB}" delete "four.md" --force
+    "${_NB}" delete "one.md" --force
+    "${_NB}" delete "four.md" --force
 
     _files=($(ls "${NB_NOTEBOOK_PATH}/"))
   }

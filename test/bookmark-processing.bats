@@ -7,7 +7,7 @@ export _OG_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.htm
 
 @test "'bookmark' extracts title and meta description tag content." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -65,7 +65,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
 
 @test "'bookmark' extracts open graph title and description tag content." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" bookmark "${_OG_BOOKMARK_URL}"

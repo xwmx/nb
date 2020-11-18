@@ -6,8 +6,8 @@ load test_helper
 
 @test "'notebooks show <full-path>' exits with 0 and prints the notebook name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show "${NB_DIR}/one"
@@ -21,10 +21,10 @@ load test_helper
 
 @test "'notebooks show <local-full-path> --path' exits with 0 and prints the local notebook path." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
@@ -42,10 +42,10 @@ load test_helper
 
 @test "'notebooks show <local-full-path> --path' exits with 0 and prints the local notebook path when not local." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
   }
 
   run "${_NB}" notebooks show "${_TMP_DIR}/example-local" --path
@@ -59,16 +59,16 @@ load test_helper
 
 @test "'notebooks show <local-full-path> --path' exits with 0 and prints the local notebook item path when not local." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" add "Example Folder/Sample Folder/example-local.md" --content "Example local content."
+    "${_NB}" add "Example Folder/Sample Folder/example-local.md" --content "Example local content."
 
     cd "${_TMP_DIR}"
 
@@ -87,8 +87,8 @@ load test_helper
 
 @test "'notebooks show' with no id exits with 1 and prints help." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show
@@ -102,8 +102,8 @@ load test_helper
 
 @test "'notebooks show example' with exits with 1 and prints message." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show example
@@ -118,8 +118,8 @@ load test_helper
 
 @test "'notebooks show <name>' exits with 0 and prints the notebook name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show one
@@ -133,8 +133,8 @@ load test_helper
 
 @test "'notebooks show <path>' exits with 0 and prints the notebook name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show "${NB_DIR}/one"
@@ -148,8 +148,8 @@ load test_helper
 
 @test "'notebooks show <selector>' exits with 0 and prints the notebook name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show one:
@@ -173,8 +173,8 @@ load test_helper
 
 @test "'notebooks show --path' with exits with 0 and prints path." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add one
+    "${_NB}" init
+    "${_NB}" notebooks add one
   }
 
   run "${_NB}" notebooks show one --path
@@ -190,8 +190,8 @@ load test_helper
 
 @test "'notebooks show --escaped' with exits with 0 and prints display name." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "long example"
+    "${_NB}" init
+    "${_NB}" notebooks add "long example"
   }
 
   run "${_NB}" notebooks show "long example" --escaped

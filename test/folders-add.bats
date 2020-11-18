@@ -6,9 +6,9 @@ load test_helper
 
 @test "'add folder <id>/' (trailing slash) creates new nested folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
 
     [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -83,10 +83,10 @@ load test_helper
 
 @test "'add folder <id>/' (trailing slash) creates new nested folder with incremented name." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder" --type folder
-    run "${_NB}" add "Example Folder/folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder/folder" --type folder
 
     [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -165,9 +165,9 @@ load test_helper
 
 @test "'add folder <id>/<folder>' creates new nested folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
 
     [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -239,9 +239,9 @@ load test_helper
 
 @test "'add <id>/ --filename' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
 
     [[   -d "${NB_DIR:-}/home/Example Folder"         ]]
     [[   -f "${NB_DIR:-}/home/Example Folder/.index"     ]]
@@ -312,9 +312,9 @@ load test_helper
 
 @test "'add <id>/' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Example Folder" --type folder
 
     [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"         ]]
     [[   -f "${NB_DIR:-}/home/Example Folder/.index"     ]]
@@ -381,7 +381,7 @@ load test_helper
 
 @test "'add folder <folder>/' (trailing slash) creates new nested folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -452,7 +452,7 @@ load test_helper
 
 @test "'add <folder>/ --filename' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
@@ -518,7 +518,7 @@ load test_helper
 
 @test "'add <folder>/' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
@@ -585,18 +585,18 @@ load test_helper
 
 @test "'add <folder>/<folder>/example.md' with existing file at target creates file with unique filename." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     _folder_path="${_NOTEBOOK_PATH:?}/Example Folder/Sample Folder"
     _existing_file_path="${_folder_path}/example-filename.md"
     _new_file_path="${_folder_path}/example-filename-1.md"
 
-    run mkdir -p "${_folder_path}"
+    mkdir -p "${_folder_path}"
 
     printf "# Example Title" > "${_existing_file_path}"
     cat "${_existing_file_path}"
 
-    run "${_NB}" index reconcile "${_folder_path}" --ancestors
+    "${_NB}" index reconcile "${_folder_path}" --ancestors
 
     [[ "${status}" -eq 0            ]]
     [[ -e "${_existing_file_path}"  ]]
@@ -652,7 +652,7 @@ load test_helper
 
 @test "'add folder <folder>/<folder>/<folder>' with existing folder at target creates folder with unique filename." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     _folder_path="${_NOTEBOOK_PATH:?}/Example Folder/Sample Folder"
     _existing_folder_path="${_folder_path}/Demo Folder"
@@ -663,7 +663,7 @@ load test_helper
     [[ -d "${_existing_folder_path}"        ]]
     [[ -f "${_existing_folder_path}/.index" ]]
 
-    run "${_NB}" index reconcile "${_existing_folder_path}" --ancestors
+    "${_NB}" index reconcile "${_existing_folder_path}" --ancestors
 
     [[ "${status}" -eq 0              ]]
     [[ -e "${_existing_folder_path}"  ]]
@@ -712,7 +712,7 @@ load test_helper
 
 @test "'add <folder>/<folder>/example.md' with existing file in path exits with error and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     touch "${_NOTEBOOK_PATH:-}/Example Folder"
 
@@ -768,7 +768,7 @@ load test_helper
 
 @test "'add <folder>/<folder> --type folder' with existing file in path exits with error and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     touch "${_NOTEBOOK_PATH:-}/Example Folder"
 
@@ -826,7 +826,7 @@ load test_helper
 
 @test "'add folder <folder>' creates new folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -893,7 +893,7 @@ load test_helper
 
 @test "'add folder <folder>/<folder>' creates new folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -970,7 +970,7 @@ load test_helper
 
 @test "'add folder <folder>/<folder>/<folder>' creates new folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                  ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                           ]]
@@ -1065,7 +1065,7 @@ load test_helper
 
 @test "'add <folder> --type folder' creates new folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -1129,7 +1129,7 @@ load test_helper
 
 @test "'add <folder>/<folder> --type folder' creates new folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -1199,7 +1199,7 @@ load test_helper
 
 @test "'add <folder>/<folder>/<folder> --type folder' creates new folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                  ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                           ]]
@@ -1294,7 +1294,7 @@ load test_helper
 
 @test "'add <folder>/example.md' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -1358,7 +1358,7 @@ load test_helper
 
 @test "'add <folder>/<folder>/example.md' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
@@ -1435,7 +1435,7 @@ load test_helper
 
 @test "'add <folder>/<folder>/example.md' with no created note deletes empty ancestor folders." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
@@ -1492,7 +1492,7 @@ load test_helper
 
 @test "'add <folder>/<folder>/example.md --encrypt' creates new encrypted note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
@@ -1568,9 +1568,9 @@ load test_helper
 
 @test "'add <folder>/<folder>/example.md' with no created note deletes only empty ancestor folders." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
-    run "${_NB}" add "Example Folder/one.md" --content "# Example Title One"
+    "${_NB}" add "Example Folder/one.md" --content "# Example Title One"
 
     [[   -e "${_NOTEBOOK_PATH:-}/Example Folder/one.md"                                         ]]
     [[   -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                                         ]]
@@ -1633,7 +1633,7 @@ load test_helper
 
 @test "'add <folder>/<folder>/<folder>/example.md' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                                ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                                         ]]

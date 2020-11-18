@@ -6,13 +6,13 @@ load test_helper
 
 @test "'export folder/<filename>' with invalid filename returns with error and message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/"
+    "${_NB}" add "Example Folder/"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -41,11 +41,11 @@ load test_helper
 
 @test "'export folder/<filename>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -76,11 +76,11 @@ load test_helper
 
 @test "'export folder/folder/<filename>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -112,15 +112,15 @@ load test_helper
 
 @test "'export notebook:folder/<filename>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -152,15 +152,15 @@ load test_helper
 
 @test "'export notebook:folder/folder/<filename>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -196,11 +196,11 @@ load test_helper
 
 @test "'export folder/<id>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -232,11 +232,11 @@ load test_helper
 
 @test "'export folder/folder/<id>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -268,15 +268,15 @@ load test_helper
 
 @test "'export notebook:folder/<id>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -308,15 +308,15 @@ load test_helper
 
 @test "'export notebook:folder/folder/<id>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -350,13 +350,13 @@ load test_helper
 
 @test "'export folder/<title>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -388,13 +388,13 @@ load test_helper
 
 @test "'export folder/folder/<title>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
     [[ ! -e "${_TMP_DIR}/example.md"  ]]
@@ -427,17 +427,17 @@ load test_helper
 
 @test "'export notebook:folder/<title>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 
@@ -470,17 +470,17 @@ load test_helper
 
 @test "'export notebook:folder/folder/<title>' exports properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://1.example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://2.example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
 

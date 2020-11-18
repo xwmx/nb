@@ -6,10 +6,9 @@ load test_helper
 
 @test "'ebook init <name>' creates new ebook notebook." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" init
 
-    [[ "${status}" == 0 ]]
+    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook init "example-ebook"
@@ -43,13 +42,11 @@ load test_helper
 
 @test "'ebook init' sets up current notebook as ebook." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add example
-    run "${_NB}" use example
+    "${_NB}" init
+    "${_NB}" notebooks add example
+    "${_NB}" use example
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
-
-    [[ "${status}" == 0 ]]
+    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook init --force
@@ -90,13 +87,10 @@ load test_helper
 
 @test "'ebook init <existing>' sets up <existing> notebook as ebook." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add example
-    run "${_NE}" example
+    "${_NB}" init
+    "${_NB}" notebooks add example
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
-
-    [[ "${status}" == 0 ]]
+    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook init example --force
@@ -134,23 +128,21 @@ load test_helper
 
 @test "'ebook publish' generates epub file." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
-    run "${_NB}" ebook new "example-ebook"
-    run "${_NB}" use "example-ebook"
+    "${_NB}" init
+    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" ebook new "example-ebook"
+    "${_NB}" use "example-ebook"
 
     # Add chapters out of order to validate final ordering.
-    run "${_NB}" add              \
+    "${_NB}" add                  \
       --filename "03-chapter3.md" \
       --title "Chapter Three"     \
       --content "Content three."
 
-    run "${_NB}" add              \
+     "${_NB}" add                 \
       --filename "02-chapter2.md" \
       --title "Chapter Two"       \
       --content "Content two."
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" ebook publish
@@ -189,10 +181,8 @@ Content three."
 
 @test "'ebook' with no argument exits with status 1 and prints usage." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
-
-    [[ "${status}" == 0 ]]
+    "${_NB}" init
+    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook
@@ -207,10 +197,8 @@ Content three."
 
 @test "'help ebook' exits with status 0 and prints usage." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
-
-    [[ "${status}" == 0 ]]
+    "${_NB}" init
+    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" help ebook

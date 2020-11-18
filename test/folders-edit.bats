@@ -4,11 +4,11 @@ load test_helper
 
 @test "'edit folder/<filename>' with invalid filename returns with error and message." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
   }
 
@@ -44,11 +44,11 @@ load test_helper
 
 @test "'edit folder/<filename>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
   }
 
@@ -84,11 +84,11 @@ load test_helper
 
 @test "'edit folder/folder/<filename>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
   }
 
@@ -124,15 +124,15 @@ load test_helper
 
 @test "'edit notebook:folder/<filename>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -169,15 +169,15 @@ load test_helper
 
 @test "'edit notebook:folder/folder/<filename>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -216,11 +216,11 @@ load test_helper
 
 @test "'edit folder/<id>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
   }
 
@@ -256,11 +256,11 @@ load test_helper
 
 @test "'edit folder/folder/<id>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
   }
 
@@ -296,15 +296,15 @@ load test_helper
 
 @test "'edit notebook:folder/<id>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -341,15 +341,15 @@ load test_helper
 
 @test "'edit notebook:folder/folder/<id>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -388,13 +388,13 @@ load test_helper
 
 @test "'edit folder/<title>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://example.test>"
   }
 
@@ -430,13 +430,13 @@ load test_helper
 
 @test "'edit folder/folder/<title>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://example.test>"
   }
 
@@ -472,17 +472,17 @@ load test_helper
 
 @test "'edit notebook:folder/<title>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                  \
-      --title   "Sample Title"                                  \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --title   "Sample Title"                              \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                 \
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                             \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -519,17 +519,17 @@ load test_helper
 
 @test "'edit notebook:folder/folder/<title>' edits properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "Sample File.bookmark.md"                                \
-      --title   "Sample Title"                                                \
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                                \
+      --title   "Sample Title"                                            \
       --content "<https://example.test>"
 
-    run "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
-      --title   "Example Title"                                               \
+    "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
+      --title   "Example Title"                                           \
       --content "<https://example.test>"
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }

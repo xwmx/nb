@@ -6,8 +6,8 @@ load test_helper
 
 @test "'delete' with no argument exits with 1, prints help, and does not delete." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -42,7 +42,7 @@ load test_helper
 
 @test "'delete <selector>' with empty repo exits with 1 and prints message." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" delete 1 --force
@@ -58,8 +58,8 @@ load test_helper
 @test "'delete <selector> (no force)' returns 0 and deletes note." {
   skip "Determine how to test interactive prompt."
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
 
@@ -79,10 +79,10 @@ load test_helper
 
 @test "'delete <scope>:<selector>' with <filename> argument prints scoped output." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
@@ -91,7 +91,7 @@ load test_helper
     printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
     printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -109,10 +109,10 @@ load test_helper
 
 @test "'<scope>:delete <selector>' with <filename> argument prints scoped output." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
@@ -121,7 +121,7 @@ load test_helper
     printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
     printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -139,10 +139,10 @@ load test_helper
 
 @test "'<scope>:<selector> delete' with <filename> argument prints scoped output." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
@@ -151,7 +151,7 @@ load test_helper
     printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
     printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -169,10 +169,10 @@ load test_helper
 
 @test "'<selector> <scope>:delete' with <filename> argument prints scoped output." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" use "one"
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+    "${_NB}" add
 
     _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
 
@@ -181,7 +181,7 @@ load test_helper
     printf "home:list\\n" && "${_NB}" home:list --no-id --filenames
     printf "one:list\\n"  && "${_NB}" one:list --no-id --filenames
 
-    run "${_NB}" use "home"
+    "${_NB}" use "home"
 
     [[ -n "${_filename}"                ]]
     [[ -e "${NB_DIR}/one/${_filename}"  ]]
@@ -201,8 +201,8 @@ load test_helper
 
 @test "'delete' with <filename> argument deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -244,8 +244,8 @@ load test_helper
 
 @test "'delete <id>' deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -285,8 +285,8 @@ load test_helper
 
 @test "'<id> delete' with deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -328,8 +328,8 @@ load test_helper
 
 @test "'delete' with <path> argument deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -371,8 +371,8 @@ load test_helper
 
 @test "'delete' with <title> argument deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" add --title "Example Title"
+    "${_NB}" init
+    "${_NB}" add --title "Example Title"
 
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"
@@ -414,8 +414,8 @@ load test_helper
 
 @test "'delete' with <folder> argument deletes properly without errors." {
   {
-    run "${_NB}" init
-    run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    "${_NB}" init
+    "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
 
     IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"

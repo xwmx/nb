@@ -6,7 +6,7 @@ load test_helper
 
 @test "'add notebook:folder/example.md' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
     [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
@@ -77,15 +77,15 @@ load test_helper
 
 @test "'add folder notebook:<folder>/' (trailing slash) creates new nested folder without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${NB_DIR:-}/home/Example Folder"                      ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"               ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/Sample Folder"        ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/Sample Folder/.index" ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -157,13 +157,13 @@ load test_helper
 
 @test "'add notebook:<folder>/ --filename' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
@@ -229,13 +229,13 @@ load test_helper
 
 @test "'add notebook:<folder>/' creates new note without errors." {
   {
-    run "${_NB}" init
+    "${_NB}" init
 
     [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
     [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
 
-    run "${_NB}" notebooks add "one"
-    run "${_NB}" notebooks use "one"
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
 
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }

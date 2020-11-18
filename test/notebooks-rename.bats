@@ -173,7 +173,7 @@ _setup_notebooks() {
   {
     "${_NB}" init
 
-    run "${_NB}" notebooks add local
+    "${_NB}" notebooks add local
 
     mkdir -p "${_TMP_DIR}/example"
 
@@ -202,7 +202,7 @@ _setup_notebooks() {
 
     "${_NB}" init
 
-    run "${_NB}" notebooks add local
+    "${_NB}" notebooks add local
 
     mkdir -p "${_TMP_DIR}/example"
 

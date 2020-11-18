@@ -6,16 +6,16 @@ load test_helper
 _setup_notebooks() {
   _setup_remote_repo
 
-  export NB_DIR_1="${_TMP_DIR}/notebook-1"
-  export NB_DIR_2="${_TMP_DIR}/notebook-2"
+  export NB_DIR_1="${_TMP_DIR}/nbdir-1"
+  export NB_DIR_2="${_TMP_DIR}/nbdir-2"
 
   export NB_DIR="${NB_DIR_1}"
 
-  run "${_NB}" init "${_GIT_REMOTE_URL}"
+  "${_NB}" init "${_GIT_REMOTE_URL}"
 
   export NB_DIR="${NB_DIR_2}"
 
-  run "${_NB}" init "${_GIT_REMOTE_URL}"
+  "${_NB}" init "${_GIT_REMOTE_URL}"
 
   export NB_DIR="${NB_DIR_1}"
 }
@@ -30,7 +30,8 @@ _setup_notebooks() {
 
     # global-remote
 
-    run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+
     run "${_NB}" global-remote:add "global-remote.md" \
       --content "Example content from global-remote."
 
@@ -62,7 +63,8 @@ _setup_notebooks() {
 
     # global-no-remote
 
-    run "${_NB}" notebooks add global-no-remote
+    "${_NB}" notebooks add global-no-remote
+
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
       --content "Example content from global-no-remote."
 
@@ -94,8 +96,8 @@ _setup_notebooks() {
 
     # example-archived
 
-    run "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
-    run "${_NB}" notebooks archive example-archived
+    "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks archive example-archived
     run "${_NB}" example-archived:add "archived.md" \
       --content "Example content from example-archived."
 
@@ -189,7 +191,8 @@ _setup_notebooks() {
 
     # global-remote
 
-    run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+
     run "${_NB}" global-remote:add "global-remote.md" \
       --content "Example content from global-remote."
 
@@ -233,7 +236,8 @@ _setup_notebooks() {
 
     # global-no-remote
 
-    run "${_NB}" notebooks add global-no-remote
+    "${_NB}" notebooks add global-no-remote
+
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
       --content "Example content from global-no-remote."
 
@@ -277,8 +281,9 @@ _setup_notebooks() {
 
     # example-archived
 
-    run "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
-    run "${_NB}" notebooks archive example-archived
+    "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks archive example-archived
+
     run "${_NB}" example-archived:add "archived.md" \
       --content "Example content from example-archived."
 
@@ -499,7 +504,7 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    run "${_NB}" remote remove --force
+    "${_NB}" remote remove --force
 
     "${_NB}" remote && return 1
   }
@@ -519,10 +524,9 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks add example
-    run "${_NB}" notebooks archive notebook-1
-    run "${_NB}" notebooks archive notebook-2
-    run "${_NB}" remote remove --force
+    "${_NB}" notebooks add example
+    "${_NB}" notebooks archive home
+    "${_NB}" remote remove --force
 
     "${_NB}" remote && return 1
   }
@@ -540,14 +544,25 @@ _setup_notebooks() {
 
 @test "'sync' returns error with missing remote branch." {
   {
-    _setup_notebooks
+    _setup_remote_repo
 
-    git -C "${_TMP_DIR}/notebook-1/home" checkout -b example-branch
-    git -C "${_TMP_DIR}/notebook-1/home" branch -d master
+    export NB_DIR_1="${_TMP_DIR}/nbdir-1"
+    export NB_DIR_2="${_TMP_DIR}/nbdir-2"
 
-    run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+    export NB_DIR="${NB_DIR_1}"
 
-     NB_AUTO_SYNC=0 run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    export NB_DIR="${NB_DIR_2}"
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    export NB_DIR="${NB_DIR_1}"
+
+    git -C "${NB_DIR_1}/home" checkout -b example-branch
+    git -C "${NB_DIR_1}/home" branch -D master
+
+    NB_AUTO_SYNC=0 "${_NB}" add "one.md" --content "Example content from 1."
 
     [[ -f "${NB_DIR_1}/home/one.md"   ]]
     [[ ! -f "${NB_DIR_2}/home/one.md" ]]
@@ -568,11 +583,11 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    run "${_NB}" remote remove --force
+    "${_NB}" remote remove --force
 
     [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
-    run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" add "one.md" --content "Example content from 1."
 
     [[ -f "${NB_DIR_1}/home/one.md"   ]]
     [[ ! -f "${NB_DIR_2}/home/one.md" ]]
@@ -604,11 +619,11 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    run "${_NB}" remote remove --force
+    "${_NB}" remote remove --force
 
     [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
-    run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" add "one.md" --content "Example content from 1."
 
     [[ -f "${NB_DIR_1}/home/one.md"   ]]
     [[ ! -f "${NB_DIR_2}/home/one.md" ]]
@@ -874,10 +889,10 @@ _setup_notebooks() {
   # skip
   {
     _setup_notebooks
-    run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" add "one.md" --content "Example content from 1."
 
     export NB_DIR="${NB_DIR_2}"
-    run "${_NB}" add "two.md" --content "Example content from 2."
+    "${_NB}" add "two.md" --content "Example content from 2."
 
     export NB_DIR="${NB_DIR_1}"
   }
