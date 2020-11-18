@@ -1118,44 +1118,44 @@ _download_from() {
       "${_url}"
     )
 
-    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+    [[ -n "${NB_USER_AGENT:-}" ]]   &&
       _curl_options+=(--user-agent "${NB_USER_AGENT}")
 
     if [[ -n "${_target_path}" ]]
     then
-      curl                            \
-        "${_curl_options[@]}"         \
-        --output "${_target_path}"    \
+      curl                          \
+        "${_curl_options[@]}"       \
+        --output "${_target_path}"  \
         && _downloaded=1
     else
-      curl                            \
-        "${_curl_options[@]}"         \
+      curl                          \
+        "${_curl_options[@]}"       \
         && _downloaded=1
     fi
   elif _command_exists "wget"
   then
     local _wget_options=(
-      --quiet                         \
-      --connect-timeout="${_timeout}" \
-      --dns-timeout="${_timeout}"     \
+      --quiet
+      --connect-timeout="${_timeout}"
+      --dns-timeout="${_timeout}"
       "${_url}"
     )
 
-    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+    [[ -n "${NB_USER_AGENT:-}" ]]   &&
       _wget_options+=(--user-agent="${NB_USER_AGENT}")
 
     if [[ -n "${_target_path}" ]]
     then
-      wget                            \
-        "${_wget_options[@]}"         \
-        -O "${_target_path}"          \
-        2>/dev/null                   \
+      wget                          \
+        "${_wget_options[@]}"       \
+        -O "${_target_path}"        \
+        2>/dev/null                 \
         && _downloaded=1
     else
-      wget                            \
-        "${_wget_options[@]}"         \
-        -O -                          \
-        2>/dev/null                   \
+      wget                          \
+        "${_wget_options[@]}"       \
+        -O -                        \
+        2>/dev/null                 \
         && _downloaded=1
     fi
   fi
