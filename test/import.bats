@@ -40,9 +40,13 @@ load test_helper
 @test "'import' with piped path imports files." {
   {
     run "${_NB}" init
+
+    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
   }
 
-  run bash -c "echo \"${BATS_TEST_DIRNAME}/fixtures/example.md\" | ${_NB} import"
+  run bash -c "echo \"${_TMP_DIR}/fixtures/example.md\" | ${_NB} import"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -51,8 +55,8 @@ load test_helper
 
   [[ -f "${NB_DIR}/home/example.md" ]]
 
-  diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
     <(cat "${NB_DIR}/home/example.md")
 
   # Adds to index:
@@ -72,9 +76,13 @@ load test_helper
 @test "'import' with multiple piped paths imports files." {
   {
     run "${_NB}" init
+
+    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
   }
 
-  run bash -c "echo \"${BATS_TEST_DIRNAME}/fixtures/example.com\"* | ${_NB} import"
+  run bash -c "echo \"${_TMP_DIR}/fixtures/example.com\"* | ${_NB} import"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -85,16 +93,71 @@ load test_helper
   [[ -f "${NB_DIR}/home/example.com.html"     ]]
   [[ -f "${NB_DIR}/home/example.com.md"       ]]
 
-  diff                                                          \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.com-og.html")  \
+  diff                                                \
+    <(cat "${_TMP_DIR}/fixtures/example.com-og.html") \
     <(cat "${NB_DIR}/home/example.com-og.html")
 
-  diff                                                      \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html") \
+  diff                                                \
+    <(cat "${_TMP_DIR}/fixtures/example.com.html")    \
     <(cat "${NB_DIR}/home/example.com.html")
 
-  diff                                                    \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md") \
+  diff                                                \
+    <(cat "${_TMP_DIR}/fixtures/example.com.md")      \
+    <(cat "${NB_DIR}/home/example.com.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Imported            ]]
+  [[ "${lines[0]}" =~ example.com-og.html ]]
+  [[ "${lines[1]}" =~ Imported            ]]
+  [[ "${lines[1]}" =~ example.com.html    ]]
+  [[ "${lines[2]}" =~ Imported            ]]
+  [[ "${lines[2]}" =~ example.com.md      ]]
+}
+
+@test "'import' with piped \`ls\` imports files." {
+  {
+    run "${_NB}" init
+
+    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+
+    cd "${_TMP_DIR}/fixtures"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/fixtures" ]]
+    [[ -d "${NB_DIR}/home"                ]]
+  }
+
+  run bash -c "ls example.com* | ${_NB} import"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds files:
+
+  [[ -f "${NB_DIR}/home/example.com-og.html"  ]]
+  [[ -f "${NB_DIR}/home/example.com.html"     ]]
+  [[ -f "${NB_DIR}/home/example.com.md"       ]]
+
+  diff                                                \
+    <(cat "${_TMP_DIR}/fixtures/example.com-og.html") \
+    <(cat "${NB_DIR}/home/example.com-og.html")
+
+  diff                                                \
+    <(cat "${_TMP_DIR}/fixtures/example.com.html")    \
+    <(cat "${NB_DIR}/home/example.com.html")
+
+  diff                                                \
+    <(cat "${_TMP_DIR}/fixtures/example.com.md")      \
     <(cat "${NB_DIR}/home/example.com.md")
 
   # Adds to index:
