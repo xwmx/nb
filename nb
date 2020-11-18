@@ -1883,7 +1883,7 @@ _get_http_status() {
     [[ -n "${NB_USER_AGENT:-}" ]]     &&
       _wget_options+=(--user-agent="${NB_USER_AGENT}")
 
-    wget "${_wget_options}" "${_url}" 2>&1 \
+    wget "${_wget_options[@]}" "${_url}" 2>&1 \
       | grep "HTTP/" | awk '{print $2}' || return 0
   fi
 }
