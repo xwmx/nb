@@ -1109,9 +1109,9 @@ _download_from() {
 
   local _target_path="${2:-}"
 
-  if [[ -n "${_target_path}" ]]
+  if _command_exists "curl"
   then
-    if _command_exists "curl"
+    if [[ -n "${_target_path}" ]]
     then
       curl                              \
         --silent                        \
@@ -1120,7 +1120,17 @@ _download_from() {
         "${_url}"                       \
         --output "${_target_path}"      \
         && _downloaded=1
-    elif _command_exists "wget"
+    else
+      curl                              \
+        --silent                        \
+        --location                      \
+        --connect-timeout "${_timeout}" \
+        "${_url}"                       \
+        && _downloaded=1
+    fi
+  elif _command_exists "wget"
+  then
+    if [[ -n "${_target_path}" ]]
     then
       wget                              \
         --quiet                         \
@@ -1130,18 +1140,7 @@ _download_from() {
         "${_url}"                       \
         2>/dev/null                     \
         && _downloaded=1
-    fi
-  else
-    if _command_exists "curl"
-    then
-      curl                              \
-        --silent                        \
-        --location                      \
-        --connect-timeout "${_timeout}" \
-        "${_url}"                       \
-        && _downloaded=1
-    elif _command_exists "wget"
-    then
+    else
       wget                              \
         --quiet                         \
         --connect-timeout="${_timeout}" \
