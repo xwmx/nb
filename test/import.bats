@@ -35,6 +35,62 @@ load test_helper
   ! git log | grep -q '\[nb\] Import'
 }
 
+# piped input #################################################################
+
+@test "'import' with piped path imports files." {
+  {
+    run "${_NB}" init
+  }
+
+  run bash -c "echo \"${BATS_TEST_DIRNAME}/fixtures/example.md\" | ${_NB} import"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ -f "${NB_DIR}/home/example.md" ]]
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Imported    ]]
+  [[ "${output}" =~ example.md  ]]
+}
+
+@test "'import' with multiple piped paths imports files." {
+  {
+    run "${_NB}" init
+  }
+
+  run bash -c "echo \"${BATS_TEST_DIRNAME}/fixtures/example.com\"* | ${_NB} import"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Imported            ]]
+  [[ "${lines[0]}" =~ example.com-og.html ]]
+  [[ "${lines[1]}" =~ Imported            ]]
+  [[ "${lines[1]}" =~ example.com.html    ]]
+  [[ "${lines[2]}" =~ Imported            ]]
+  [[ "${lines[2]}" =~ example.com.md      ]]
+}
+
 # <path> ######################################################################
 
 @test "'import' with valid <path> argument creates a new note file." {

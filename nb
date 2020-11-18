@@ -5794,6 +5794,11 @@ _import() {
   local _selector_path=
   local _url=
 
+  if ! _interactive_input
+  then
+    IFS=$' \n' _paths+=($(cat))
+  fi
+
   for __arg in "${@:-}"
   do
     case "${__arg}" in
