@@ -1111,43 +1111,45 @@ _download_from() {
 
   if _command_exists "curl"
   then
+    local _curl_options=(
+      --silent
+      --location
+      --connect-timeout "${_timeout}"
+      "${_url}"
+    )
+
     if [[ -n "${_target_path}" ]]
     then
-      curl                              \
-        --silent                        \
-        --location                      \
-        --connect-timeout "${_timeout}" \
-        "${_url}"                       \
-        --output "${_target_path}"      \
+      curl                            \
+        "${_curl_options[@]}"         \
+        --output "${_target_path}"    \
         && _downloaded=1
     else
-      curl                              \
-        --silent                        \
-        --location                      \
-        --connect-timeout "${_timeout}" \
-        "${_url}"                       \
+      curl                            \
+        "${_curl_options[@]}"         \
         && _downloaded=1
     fi
   elif _command_exists "wget"
   then
+    local _wget_options=(
+      --quiet                         \
+      --connect-timeout="${_timeout}" \
+      --dns-timeout="${_timeout}"     \
+      "${_url}"
+    )
+
     if [[ -n "${_target_path}" ]]
     then
-      wget                              \
-        --quiet                         \
-        --connect-timeout="${_timeout}" \
-        --dns-timeout="${_timeout}"     \
-        -O "${_target_path}"            \
-        "${_url}"                       \
-        2>/dev/null                     \
+      wget                            \
+        "${_wget_options[@]}"         \
+        -O "${_target_path}"          \
+        2>/dev/null                   \
         && _downloaded=1
     else
-      wget                              \
-        --quiet                         \
-        --connect-timeout="${_timeout}" \
-        --dns-timeout="${_timeout}"     \
-        -O -                            \
-        "${_url}"                       \
-        2>/dev/null                     \
+      wget                            \
+        "${_wget_options[@]}"         \
+        -O -                          \
+        2>/dev/null                   \
         && _downloaded=1
     fi
   fi
