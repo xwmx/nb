@@ -47,7 +47,13 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  # Adds file:
+
   [[ -f "${NB_DIR}/home/example.md" ]]
+
+  diff                                                \
+    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_DIR}/home/example.md")
 
   # Adds to index:
 
@@ -72,6 +78,24 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds files:
+
+  [[ -f "${NB_DIR}/home/example.com-og.html"  ]]
+  [[ -f "${NB_DIR}/home/example.com.html"     ]]
+  [[ -f "${NB_DIR}/home/example.com.md"       ]]
+
+  diff                                                          \
+    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.com-og.html")  \
+    <(cat "${NB_DIR}/home/example.com-og.html")
+
+  diff                                                      \
+    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html") \
+    <(cat "${NB_DIR}/home/example.com.html")
+
+  diff                                                    \
+    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md") \
+    <(cat "${NB_DIR}/home/example.com.md")
 
   # Adds to index:
 
