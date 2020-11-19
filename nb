@@ -919,11 +919,6 @@ _COLUMNS="$(tput cols)"
 # Assign newline with ANSI-C quoting for string building.
 _NEWLINE=$'\n'
 
-# $_TAB
-#
-# Assign tab with ANSI-C quoting for string building.
-_TAB=$'\t'
-
 # _alias_subcommand()
 #
 # Usage:
