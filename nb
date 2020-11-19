@@ -5800,49 +5800,49 @@ _import() {
     fi
   }
 
-  # _import_get_selector_relative_paths()
+  # _import_get_target_relative_path()
   #
   # Usage:
-  #   _import_get_selector_relative_paths <selector-path> <notebook-path>
-  #
-  # Returns:
-  #   Two paths, separated by a tab character:
-  #   - selector folder relative path (the folder portion of the relative path)
-  #   - selector relative path (the full relative path)
-  _import_get_selector_relative_paths() {
-    local _selector_path="${1:?}"
-    local _notebook_path="${2:?}"
-    local _selector_folder_relative_path=
-    local _selector_relative_path=
+  #   _import_get_target_relative_path <notebook-path> <source-basename> <selector-path>
+  _import_get_target_relative_path() {
+    local _notebook_path="${1:?}"
+    local _source_basename="${2:?}"
+    local _selector_path="${3:-}"
+    local _target_folder_relative_path=
+    local _target_relative_path=
 
-    if [[ "${_selector_path}" =~ /$                 ]] ||
-       [[ -d "${_notebook_path}/${_selector_path}"  ]]
+    if [[ -n "${_selector_path:-}" ]]
     then
-      if [[ ! "${_selector_path}" =~ /$ ]]
+      if [[ "${_selector_path}" =~ /$                 ]] ||
+         [[ -d "${_notebook_path}/${_selector_path}"  ]]
       then
-        _selector_path="${_selector_path}/"
+        if [[ ! "${_selector_path}" =~ /$ ]]
+        then
+          _selector_path="${_selector_path}/"
+        fi
+
+        _target_folder_relative_path="$(
+          _resolve_selector_folders "${_selector_path}" --build
+        )"
+
+        _target_relative_path="${_target_folder_relative_path}/${_source_basename}"
+      elif [[ "${_selector_path}" =~ /  ]]
+      then
+        _target_folder_relative_path="$(
+          _resolve_selector_folders "${_selector_path}" --build
+        )"
+
+        _target_relative_path="${_target_folder_relative_path}/${_selector_path##*\/}"
+      else
+        _target_relative_path="${_selector_path}"
       fi
-
-      _selector_folder_relative_path="$(
-        _resolve_selector_folders "${_selector_path}" --build
-      )"
-
-      _selector_relative_path="${_selector_folder_relative_path}/${_source_basename}"
-    elif [[ "${_selector_path}" =~ /  ]]
-    then
-      _selector_folder_relative_path="$(
-        _resolve_selector_folders "${_selector_path}" --build
-      )"
-
-      _selector_relative_path="${_selector_folder_relative_path}/${_selector_path##*\/}"
     else
-      _selector_relative_path="${_selector_path}"
+      _target_relative_path="${_source_basename}"
     fi
 
-    printf "%s%s%s\\n"                    \
-      "${_selector_folder_relative_path}" \
-      "${_TAB}"                           \
-      "${_selector_relative_path}"
+    printf "%s\\n" "$(
+      _notebooks show "${_notebook_path}" --filename "${_target_relative_path}"
+    )"
   }
 
   # _import_get_valid_relative_path()
@@ -5940,28 +5940,22 @@ _import() {
 
         _source_basename="$(basename -- "${__path}")"
 
-        if [[ -n "${_selector_path:-}" ]]
-        then
-          local _selector_relative_paths
-          _selector_relative_paths="$(
-            _import_get_selector_relative_paths \
-              "${_selector_path}"               \
-              "${_notebook_path}"
-          )"
-          _target_folder_relative_path="${_selector_relative_paths%%${_TAB}*}"
-          _target_relative_path="${_selector_relative_paths##*${_TAB}}"
-        else
-          _target_relative_path="${_source_basename}"
-        fi
-
-        if [[ ! -e "${_notebook_path}/${_target_folder_relative_path}" ]]
-        then
-          mkdir -p "${_notebook_path}/${_target_folder_relative_path}"
-        fi
-
         _target_relative_path="$(
-          _notebooks current --filename "${_target_relative_path}"
+          _import_get_target_relative_path  \
+            "${_notebook_path}"             \
+            "${_source_basename}"           \
+            "${_selector_path}"
         )"
+
+        if [[ "${_target_relative_path:-}" =~ / ]]
+        then
+          _target_folder_relative_path="${_target_relative_path%\/*}"
+
+          if [[ ! -e "${_notebook_path}/${_target_folder_relative_path}" ]]
+          then
+            mkdir -p "${_notebook_path}/${_target_folder_relative_path}"
+          fi
+        fi
 
         local _target_basename="${_target_relative_path##*\/}"
 

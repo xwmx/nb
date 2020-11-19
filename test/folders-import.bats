@@ -58,7 +58,6 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Prints output:
-
   [[ "${output}" =~ Imported                      ]]
   [[ "${output}" =~ Example\\\ Folder/example.md  ]]
 }
