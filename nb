@@ -5987,10 +5987,10 @@ _import() {
 
       if ((_convert))
       then
-        if ! _download_from "${_url}"             \
-            | pandoc                              \
-              --from html                         \
-              --to markdown                       \
+        if ! _download_from "${_url}" \
+            | pandoc                  \
+              --from html             \
+              --to markdown           \
               -o "${_notebook_path}/${_target_basename}"
         then
           _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
