@@ -26,6 +26,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/sample.md"                  ]]
   [[   -e "${NB_DIR}/home/Example Folder"             ]]
   [[   -e "${NB_DIR}/home/Example Folder/example.md"  ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
     <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
@@ -88,6 +89,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"                ]]
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder"             ]]
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/example.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.pdf" ]]
 
   diff                                                \
     <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
@@ -151,6 +153,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/sample.md"                  ]]
   [[   -e "${NB_DIR}/home/Example Folder"             ]]
   [[   -e "${NB_DIR}/home/Example Folder/example.md"  ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
     <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
@@ -212,6 +215,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"                ]]
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder"             ]]
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/example.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.pdf" ]]
 
   diff                                                \
     <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
@@ -270,7 +274,8 @@ load test_helper
 
   # Creates file:
 
-  [[   -e "${NB_DIR}/home/sample.md" ]]
+  [[   -e "${NB_DIR}/home/sample.md"  ]]
+  [[ ! -e "${NB_DIR}/home/sample.pdf" ]]
 
   diff                                                \
     <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
@@ -319,9 +324,11 @@ load test_helper
 
   # Creates file and folder:
 
-  [[ ! -e "${NB_DIR}/home/sample.md"                ]]
-  [[   -e "${NB_DIR}/home/Example Folder"           ]]
-  [[   -e "${NB_DIR}/home/Example Folder/sample.md" ]]
+  [[ ! -e "${NB_DIR}/home/sample.md"                  ]]
+  [[   -e "${NB_DIR}/home/Example Folder"             ]]
+  [[   -e "${NB_DIR}/home/Example Folder/sample.md"   ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/example.md"  ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
     <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
