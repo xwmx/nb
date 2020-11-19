@@ -5850,23 +5850,6 @@ _import() {
     )"
   }
 
-  # _import_get_valid_relative_path()
-  #
-  # Usage:
-  #   _import_get_valid_relative_path [<relative-path> | <basename>]
-  _import_get_valid_relative_path() {
-    local _target_relative_path="${1:-}"
-
-    local _current_notebook_path
-    _current_notebook_path="$(_notebooks current --path)"
-
-    if [[ -e "${_current_notebook_path}/${_target_relative_path}" ]]
-    then
-      _target_relative_path="$(_notebooks current --filename "${_target_relative_path}")"
-    fi
-    printf "%s\\n" "${_target_relative_path}"
-  }
-
   local _convert=0
   local _target_notebook_name=
   local _paths=()
