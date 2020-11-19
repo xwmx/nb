@@ -6014,8 +6014,10 @@ _import() {
           _exit_1 printf "Unable to download: %s\\n" "${_url}"
         fi
       fi &&
-        _index add "${_target_basename}" &&
-          _git checkpoint "${_notebook_path}" "\
+        _index add              \
+          "${_target_basename}" \
+          "${_notebook_path}/${_target_folder_relative_path:-}" &&
+            _git checkpoint "${_notebook_path}" "\
 [nb] Import: ${_target_relative_path}
 
 Source:
