@@ -5989,7 +5989,19 @@ _import() {
         _source_basename="${_source_basename}.html"
       fi
 
-      _target_basename="$(_import_get_valid_relative_path "${_source_basename}")"
+      _target_relative_path="$(
+        _import_init_target_relative_path \
+          "${_notebook_path}"             \
+          "${_source_basename}"           \
+          "${_selector_path}"
+      )"
+
+      if [[ "${_target_relative_path}" =~ / ]]
+      then
+        _target_folder_relative_path="${_target_relative_path%\/*}"
+      fi
+
+      _target_basename="${_target_relative_path##*\/}"
 
       if ((_convert))
       then
@@ -5997,25 +6009,25 @@ _import() {
             | pandoc                  \
               --from html             \
               --to markdown           \
-              -o "${_notebook_path}/${_target_basename}"
+              -o "${_notebook_path}/${_target_relative_path}"
         then
           _exit_1 printf "Unable to download and convert: %s\\n" "${_url}"
         fi
       else
-        if ! _download_from "${_url}" "${_notebook_path}/${_target_basename}"
+        if ! _download_from "${_url}" "${_notebook_path}/${_target_relative_path}"
         then
           _exit_1 printf "Unable to download: %s\\n" "${_url}"
         fi
       fi &&
         _index add "${_target_basename}" &&
           _git checkpoint "${_notebook_path}" "\
-[nb] Import: ${_target_basename}
+[nb] Import: ${_target_relative_path}
 
 Source:
 ${_url}
 "
-      printf "Imported %s from %s\\n"                 \
-        "$(_show "${_target_basename}" --info-line)"  \
+      printf "Imported %s from %s\\n"                     \
+        "$(_show "${_target_relative_path}" --info-line)" \
         "$(_color_primary "${_url}")"
       ;;
     move)
