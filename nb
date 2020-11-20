@@ -7230,7 +7230,7 @@ _ls() {
   # _ls_print_footer()
   #
   # Usage:
-  #   _ls_print_footer <notebook>...
+  #   _ls_print_footer <notebook-names-count> [<selector>]
   _ls_print_footer() {
     local _footer_line_hi=
     local _footer_line_raw=
@@ -7241,7 +7241,8 @@ _ls() {
     local _maybe_scope=
     local _maybe_scope_padded_left=
     local _maybe_scope_padded_right=
-    local _notebook_names=("${@:-}")
+    local _notebook_names_count="${1:-1}"
+    # local _selector_path="${2:-}"
 
     if _notebooks current --selected
     then
@@ -7254,7 +7255,8 @@ _ls() {
     fi
 
     local _notebook_command="${_ME} notebooks add <name>"
-    if [[ "${#_notebook_names[@]}" -gt 1 ]]
+
+    if [[ "${_notebook_names_count}" -gt 1 ]]
     then
       if [[ -n "${_maybe_scope:-}" ]]
       then
@@ -7680,7 +7682,7 @@ _ls() {
       [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
     }
     then
-      _ls_print_footer "${_notebook_names[@]:-}"
+      _ls_print_footer "${#_notebook_names[@]}" "${_selector_path:-}"
     fi
   } | if ((_use_pager))
       then
