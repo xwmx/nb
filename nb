@@ -3877,7 +3877,7 @@ _completions() {
       fi
     fi
 
-    local _fish_completion_path="${XDG_CONFIG_HOME:-$HOME}/.config/fish/completions"
+    local _fish_completion_path="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions"
 
     if [[ -d "${_fish_completion_path}" ]]
     then
@@ -4007,7 +4007,7 @@ HEREDOC
           _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
         elif [[ "${__shell}" == "fish" ]]
         then
-          _completion_path="${XDG_CONFIG_HOME:-$HOME}/.config/fish/completions"
+          _completion_path="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions"
           _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
         fi
 
@@ -4052,7 +4052,7 @@ HEREDOC
         _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
       elif [[ "${__shell}" == "fish" ]]
       then
-        _completion_path="${XDG_CONFIG_HOME:-$HOME}/.config/fish/completions"
+        _completion_path="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions"
         _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
       fi
 
