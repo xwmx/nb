@@ -3188,7 +3188,7 @@ _add() {
         fi
       fi
 
-      if ! [[ "${_selector_content:-}" ]]
+      if [[ -z "${_selector_content:-}" ]]
       then
         if [[ "${_selector_target}" =~ / ]]
         then
@@ -3202,7 +3202,8 @@ _add() {
           }
         then
           _target_filename="${_selector_target##*\/}"
-        elif [[ ! "${_selector_target}" =~ / ]]
+        elif [[ ! "${_selector_target}" =~ /      ]] &&
+             [[ -z "${_selector_notebook_path:-}" ]]
         then
           _selector_content="${_content_or_filename_or_path}"
         fi
@@ -3416,7 +3417,9 @@ _add() {
         "[nb] Add: ${_target_unique_relative_path}"
 
     local _info
-    _info="$(_show "${_target_unique_relative_path}" --info-line)"
+    _info="$(
+      _show "${_notebook_path:?}/${_target_unique_relative_path:?}" --info-line
+    )"
 
     printf "Added: %s\\n" "${_info}"
   fi

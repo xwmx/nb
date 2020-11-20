@@ -35,6 +35,104 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
+# notebook: scoped ############################################################
+
+@test "'add notebook:' creates new note without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+
+  }
+
+  run "${_NB}" add example:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Creates new note file with EDITOR:
+
+  _files=($(ls "${NB_DIR}/example"))
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  [[ "$(cat "${NB_DIR}/example/${_files[0]}")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/example" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/example/.index"          ]]
+
+  diff                        \
+    <(ls "${NB_DIR}/example") \
+    <(cat "${NB_DIR}/example/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                  ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+.md ]]
+}
+
+@test "'notebook:add' creates new note without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+
+  }
+
+  run "${_NB}" example:add
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Creates new note file with EDITOR:
+
+  _files=($(ls "${NB_DIR}/example"))
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  [[ "$(cat "${NB_DIR}/example/${_files[0]}")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/example" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/example/.index"          ]]
+
+  diff                        \
+    <(ls "${NB_DIR}/example") \
+    <(cat "${NB_DIR}/example/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                  ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+.md ]]
+}
+
 # <filename> argument #########################################################
 
 @test "'add' with filename argument creates new note without errors." {
