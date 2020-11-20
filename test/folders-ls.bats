@@ -122,7 +122,7 @@ load test_helper
   [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                ]]
   [[   "${lines[4]}"  =~  0\ items\.                          ]]
   [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
-  [[   "${lines[10]}" =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[10]}" =~  Example\\\ Folder/                  ]]
 }
 
 # notebook:<id> ###############################################################
