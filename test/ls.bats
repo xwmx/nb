@@ -221,7 +221,7 @@ Help information:
 
   [[ ${status}      -eq 0                     ]]
   [[ "${lines[6]}"  =~  ❯                     ]]
-  [[ "${lines[6]}"  =~  nb\ home:add          ]]
+  [[ "${lines[6]}"  =~  nb\ add\ home:        ]]
   [[ "${lines[6]}"  =~  nb\ home:\ \<url\>    ]]
   [[ "${lines[6]}"  =~  nb\ edit\ home:\<id\> ]]
 }
@@ -254,7 +254,7 @@ Help information:
 
   [[ ${status}      -eq 0                               ]]
   [[ "${lines[6]}"  =~  ❯                               ]]
-  [[ "${lines[6]}"  =~  nb\ multi\\\ word:add           ]]
+  [[ "${lines[6]}"  =~  nb\ add\ multi\\\ word:         ]]
   [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
   [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]] ||
     [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
@@ -1010,7 +1010,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 8           ]]
+  [[ "${#lines[@]}" -ge 7           ]]
   [[ "${lines[3]}" =~ one\ example  ]]
   [[ "${lines[3]}" =~ [*1*]         ]]
 }
@@ -1052,7 +1052,7 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 8           ]]
+  [[ "${#lines[@]}" -ge 7           ]]
   [[ "${lines[3]}" =~ one\ example  ]]
   [[ "${lines[3]}" =~ [*1*]         ]]
 }
