@@ -791,6 +791,41 @@ load test_helper
   [[ "${output}" =~ example.com.html  ]]
 }
 
+@test "'import download' with valid <url> argument creates a new note file." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" import download "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  grep -q 'Example' "${_NOTEBOOK_PATH}"/*
+
+  [[ "${output}" =~ "Imported" ]]
+
+  cd "${_NOTEBOOK_PATH}" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+  git log | grep -q 'Source'
+
+  # Adds to index
+  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
+  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Imported          ]]
+  [[ "${output}" =~ example.com.html  ]]
+}
+
 # `notebook` ##################################################################
 
 @test "'import notebook' with valid <path> and <name> imports." {
