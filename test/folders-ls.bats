@@ -2,6 +2,129 @@
 
 load test_helper
 
+# empty #######################################################################
+
+@test "'ls <folder>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls Example\ Folder/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
+  [[   "${lines[4]}"  =~  0\ audio\ files\.                 ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
+}
+
+@test "'ls <id>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls 1/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
+  [[   "${lines[4]}"  =~  0\ audio\ files\.                 ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
+}
+
+@test "'ls <folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
+  [[   "${lines[4]}"  =~  0\ items\.                        ]]
+  [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[10]}" =~  Example\\\ Folder/                ]]
+}
+
+@test "'ls <id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
+  [[   "${lines[4]}"  =~  0\ items\.                        ]]
+  [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[10]}" =~  Example\\\ Folder/                ]]
+}
+
+@test "'ls <folder>/<folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder" --type folder
+  }
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                   ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder                    ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                ]]
+  [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[4]}"  =~  0\ items\.                          ]]
+  [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
+  [[   "${lines[10]}" =~  Example\\\ Folder/Sample\\\ Folder  ]]
+}
+
+@test "'ls <id>/<id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                   ]]
+  [[   "${lines[2]}"  =~  ^Example\ Folder                    ]]
+  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                ]]
+  [[   "${lines[4]}"  =~  0\ items\.                          ]]
+  [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
+  [[   "${lines[10]}" =~  Example\\\ Folder/Sample\\\ Folder  ]]
+}
+
 # notebook:<id> ###############################################################
 
 @test "'notebook:<id>/<folder>' exits with 0 and prints the folder/folder list item." {
@@ -882,117 +1005,6 @@ load test_helper
   [[ ! "${lines[6]}"  =~ 🔒                   ]]
   [[   "${lines[7]}"  =~ ----                 ]]
   [[   "${lines[8]}"  =~ add                  ]]
-}
-
-# empty #######################################################################
-
-@test "'ls <folder>/ --type' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls Example\ Folder/ --type audio
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
-  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
-  [[   "${lines[4]}"  =~  0\ audio\ files\.     ]]
-}
-
-@test "'ls <id>/ --type' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls 1/ --type audio
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
-  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
-  [[   "${lines[4]}"  =~  0\ audio\ files\.     ]]
-}
-
-@test "'ls <folder>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls Example\ Folder/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
-  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
-  [[   "${lines[4]}"  =~  0\ items\.            ]]
-}
-
-@test "'ls <id>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls 1/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
-  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
-  [[   "${lines[4]}"  =~  0\ items\.            ]]
-}
-
-@test "'ls <folder>/<folder>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder" --type folder
-  }
-
-  run "${_NB}" ls Example\ Folder/Sample\ Folder/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
-  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
-  [[   "${lines[2]}"  =~  Sample\ Folder        ]]
-  [[   "${lines[4]}"  =~  0\ items\.            ]]
-}
-
-@test "'ls <id>/<id>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls 1/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[   "${status}"    -eq 0                     ]]
-  [[   "${lines[2]}"  =~  ^Example\ Folder      ]]
-  [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder  ]]
-  [[   "${lines[4]}"  =~  0\ items\.            ]]
 }
 
 # ls <id>/ ####################################################################

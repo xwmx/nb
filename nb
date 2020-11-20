@@ -7128,7 +7128,7 @@ HEREDOC
 0 ${_type} files.
 
 Import a file:
-  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)")
+  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)${_maybe_id_path_padded_left}")
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
@@ -7141,7 +7141,7 @@ Add a note:
 Add a bookmark:
   $(_color_primary "${_ME} ${_maybe_scope_padded_right}${_maybe_id_path_padded_right}<url>")
 Import a file:
-  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)")
+  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)${_maybe_id_path_padded_left}")
 Help information:
   $(_color_primary "${_ME} help")
 HEREDOC

@@ -16,8 +16,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                 ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[0]}"  =~  0\ audio\ files\.                 ]]
+  [[   "${lines[2]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/                ]]
 }
 
 @test "'list <id>/ --type' with empty folder displays message." {
@@ -32,8 +34,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                 ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\. ]]
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[0]}"  =~  0\ audio\ files\.                 ]]
+  [[   "${lines[2]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/                ]]
 }
 
 @test "'list <folder>/' with empty folder displays message." {
@@ -48,12 +52,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                           ]]
-  [[   "${lines[0]}"  =~  0\ items\.                  ]]
-  [[   "${lines[2]}"  =~  add                         ]]
-  [[   "${lines[2]}"  =~  Example\\\ Folder/          ]]
-  [[   "${lines[3]}"  =~  bookmark                    ]]
-  [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\> ]]
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[0]}"  =~  0\ items\.                        ]]
+  [[   "${lines[2]}"  =~  add                               ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/                ]]
+  [[   "${lines[3]}"  =~  bookmark                          ]]
+  [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\>       ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
 }
 
 @test "'list <id>/' with empty folder displays message." {
@@ -68,12 +74,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                           ]]
-  [[   "${lines[0]}"  =~  0\ items\.                  ]]
-  [[   "${lines[2]}"  =~  add                         ]]
-  [[   "${lines[2]}"  =~  Example\\\ Folder/          ]]
-  [[   "${lines[3]}"  =~  bookmark                    ]]
-  [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\> ]]
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[0]}"  =~  0\ items\.                        ]]
+  [[   "${lines[2]}"  =~  add                               ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/                ]]
+  [[   "${lines[3]}"  =~  bookmark                          ]]
+  [[   "${lines[4]}"  =~  Example\\\ Folder/\ \<url\>       ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
 }
 
 @test "'list <folder>/<folder>/' with empty folder displays message." {
@@ -94,6 +102,8 @@ load test_helper
   [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/           ]]
   [[   "${lines[3]}"  =~  bookmark                                      ]]
   [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/\ \<url\>  ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)             ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/Sample\\\ Folder            ]]
 }
 
 @test "'list <id>/<id>/' with empty folder displays message." {
@@ -114,6 +124,8 @@ load test_helper
   [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/           ]]
   [[   "${lines[3]}"  =~  bookmark                                      ]]
   [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/\ \<url\>  ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)             ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/Sample\\\ Folder            ]]
 }
 
 # error handling ##############################################################
