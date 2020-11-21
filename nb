@@ -7636,18 +7636,21 @@ _ls() {
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
 
-    if [[ "${_selector}" =~ / ]]
+    if [[ "${_selector:-}" =~ / ]]
     then
-      # printf "📂 " # TODO: Review
-
       local _selector_path
       _selector_path="$(_resolve_selector_folders "${_selector}")/"
 
-      printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
+      if ((${NB_FOLDER_HEADER:-0}))
+      then
+        # printf "📂 " # TODO: Review
 
-      _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
+        printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
 
-      printf "\\n"
+        _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
+
+        printf "\\n"
+      fi
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
