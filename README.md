@@ -2421,9 +2421,9 @@ nb set color_theme
 |:--:|:--:|
 |    |    |
 
-##### `monochrome`
+##### `smoke`
 
-| ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-bookmarks.png) |
+| ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-bookmarks.png) |
 |:--:|:--:|
 |    |    |
 
@@ -4127,10 +4127,10 @@ Alias: `set`
          desert
          electro
          forest
-         monochrome
          nb
          ocean
          raspberry
+         smoke
          unicorn
          utility
 

@@ -36,12 +36,6 @@
 |:--:|:--:|
 | 	|    |
 
-### `monochrome`
-
-| ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![monochrome](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-bookmarks.png) |
-|:--:|:--:|
-| 	|    |
-
 ### `nb` (default)
 
 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-bookmarks.png) |
@@ -57,6 +51,12 @@
 ### `raspberry`
 
 | ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png)  |  ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png) |
+|:--:|:--:|
+| 	|    |
+
+### `smoke`
+
+| ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-bookmarks.png) |
 |:--:|:--:|
 | 	|    |
 

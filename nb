@@ -536,10 +536,6 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-29}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-94}"
     ;;
-  monochrome)
-    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-248}"
-    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-241}"
-    ;;
   ocean)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
@@ -547,6 +543,10 @@ case "${NB_COLOR_THEME}" in
   raspberry)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-162}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-90}"
+    ;;
+  smoke|monochrome)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-248}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-241}"
     ;;
   unicorn)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-183}"
@@ -564,10 +564,10 @@ export _NB_COLOR_THEMES=(
   desert
   electro
   forest
-  monochrome
   nb
   ocean
   raspberry
+  smoke
   unicorn
   utility
 )
