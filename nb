@@ -2517,30 +2517,9 @@ _resolve_selector_folders() {
       _parent_folder_path="${_notebook_path}/${_folder_relative_path}"
     fi
 
-    if [[ -d "${_parent_folder_path:?}/${_folder_name:?}" ]]
+    if [[ -n "${_folder_name:-}" ]]
     then
-      if [[ -z "${_folder_relative_path:-}" ]]
-      then
-        _folder_relative_path="${_folder_name}"
-      else
-        _folder_relative_path+="/${_folder_name}"
-      fi
-
-      _selector_path="${_selector_path#*/}"
-
-      continue
-    else
-      if [[ ! -e "${_parent_folder_path:?}/${_folder_name:?}" ]] &&
-         [[ "${_folder_name}" =~ ^[0-9]+$                     ]]
-      then # path segment might be an id
-        _folder_name="$(
-          _index get_basename "${_folder_name}" "${_parent_folder_path}" ||
-            printf "%s\\n" "${_folder_name}"
-        )"
-      fi
-
-      if [[ -d "${_parent_folder_path:?}/${_folder_name:-}" ]] ||
-         ((_build_path))
+      if [[ -d "${_parent_folder_path:?}/${_folder_name:?}" ]]
       then
         if [[ -z "${_folder_relative_path:-}" ]]
         then
@@ -2552,6 +2531,30 @@ _resolve_selector_folders() {
         _selector_path="${_selector_path#*/}"
 
         continue
+      else
+        if [[ ! -e "${_parent_folder_path:?}/${_folder_name:?}" ]] &&
+           [[ "${_folder_name}" =~ ^[0-9]+$                     ]]
+        then # path segment might be an id
+          _folder_name="$(
+            _index get_basename "${_folder_name}" "${_parent_folder_path}" ||
+              printf "%s\\n" "${_folder_name}"
+          )"
+        fi
+
+        if [[ -d "${_parent_folder_path:?}/${_folder_name:-}" ]] ||
+           ((_build_path))
+        then
+          if [[ -z "${_folder_relative_path:-}" ]]
+          then
+            _folder_relative_path="${_folder_name}"
+          else
+            _folder_relative_path+="/${_folder_name}"
+          fi
+
+          _selector_path="${_selector_path#*/}"
+
+          continue
+        fi
       fi
     fi
 
@@ -2860,8 +2863,9 @@ $(_color_primary "Usage:")
   ${_ME}
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
-  ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
-         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
+  ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
+         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
+         [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
@@ -3026,8 +3030,9 @@ _alias_subcommand "help" "h"
 
 describe "add" <<HEREDOC
 Usage:
-  ${_ME} add [<filename> | <content>] [-c <content> | --content <content>]
-         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
+  ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
+         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
+         [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
 
@@ -3037,6 +3042,7 @@ Options:
                               content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
+  --folder <folder-path>      Add within the folder located at <folder-path>.
   -t, --title <title>         The title for a new note. If \`--title\` is
                               present, the filename will be derived from the
                               title, unless \`--filename\` is specified.
@@ -3092,6 +3098,7 @@ _add() {
   _notebook_path="$(_notebooks current --path)"
   local _password=
   local _target_filename=
+  local _target_folder_relative_path=
   local _title=
 
   while ((${#}))
@@ -3120,6 +3127,12 @@ _add() {
         ;;
       -f|--filename)
         _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
+        shift
+        ;;
+      --folder)
+        _target_folder_relative_path="$(
+          _option_get_value "${__arg}" "${__val:-}" | sed -e 's/\/$//'
+        )"
         shift
         ;;
       --password)
@@ -3159,7 +3172,6 @@ _add() {
 
   local _content_or_filename_extension="${_content_or_filename_or_path##*\.}"
   local _selector_content=
-  local _target_folder_relative_path=
 
   if [[ -n "${_content_or_filename_or_path:-}" ]]
   then

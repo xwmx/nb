@@ -2875,8 +2875,9 @@ Usage:
   nb
   nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
-  nb add [<filename> | <content>] [-c <content> | --content <content>]
-         [-e | --encrypt] [-f <filename> | --filename <filename>]
+  nb add [<notebook>:][<filename> | <folder-path> | <content>]
+         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
+         [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [-t <title> | --title <title>] [--type <type>]
   nb add folder [<name>]
   nb bookmark [<ls options>...]
@@ -3156,8 +3157,9 @@ For more information, see: `nb help`.
 
 ```text
 Usage:
-  nb add [<filename> | <content>] [-c <content> | --content <content>]
-         [--edit] [-e | --encrypt] [-f <filename> | --filename <filename>]
+  nb add [<notebook>:][<filename> | <folder-path> | <content>]
+         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
+         [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [-t <title> | --title <title>] [--type <type>]
   nb add folder [<name>]
 
@@ -3167,6 +3169,7 @@ Options:
                               content is piped or passed as an argument.
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
+  --folder <folder-path>      Add within the folder located at <folder-path>.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename will be derived from the
                               title, unless `--filename` is specified.
@@ -3177,7 +3180,7 @@ Description:
   Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, currently set to "example". If a non-option argument is
+  `$EDITOR`, currently set to "vim". If a non-option argument is
   passed, `nb` will treat it as a <filename≥ if a file extension is found.
   If no file extension is found, `nb` will treat the string as
   <content> and will create a new note without opening the editor.
