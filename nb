@@ -2481,7 +2481,6 @@ _resolve_selector_folders() {
 
   local _selector_path="${_selector#*:}"
 
-
   if [[ "${_selector}" =~ : ]]
   then
     _selector_notebook_path="$(
