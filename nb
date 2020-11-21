@@ -2899,9 +2899,9 @@ $(_color_primary "Usage:")
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
-        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
@@ -7165,9 +7165,9 @@ HEREDOC
 describe "ls" <<HEREDOC
 Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
-        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -7178,6 +7178,8 @@ Options:
   --filenames                     Print the filename for each note.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
+  --no-header                     Print without header.
+  --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
@@ -7554,6 +7556,12 @@ _ls() {
         ;;
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
+        ;;
+      --no*footer)
+        NB_FOOTER=0
+        ;;
+      --no*header)
+        NB_HEADER=0
         ;;
       -t|--type)
         _type="$(_option_get_value "${__arg}" "${__val:-}")"

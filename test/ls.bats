@@ -24,6 +24,44 @@ line four
 HEREDOC
 }
 
+# --no-header / --no-footer ###################################################
+
+@test "'ls --no-header' does not include header." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "example-notebook"
+  }
+
+  run "${_NB}" ls --no-header
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq   0                 ]]
+  [[    "${output}"   =~    two               ]]
+  [[ !  "${output}"   =~    example-notebook  ]]
+  [[    "${output}"   =~    ❯                 ]]
+}
+
+@test "'ls --no-footer' does not include footer." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "example-notebook"
+  }
+
+  run "${_NB}" ls --no-footer
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq   0                 ]]
+  [[    "${output}"   =~    two               ]]
+  [[    "${output}"   =~    example-notebook  ]]
+  [[ !  "${output}"   =~    ❯                 ]]
+}
+
 # `scoped:ls` #################################################################
 
 @test "'scoped:ls' exits with 0 and lists files in reverse order." {

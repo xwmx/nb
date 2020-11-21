@@ -2914,9 +2914,9 @@ Usage:
           [-r | --reverse] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-id] [--no-indicator]
-        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
@@ -3635,9 +3635,9 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [--no-id] [--no-indicator] [-n <limit> | --limit <limit> | --<limit>]
-        [-p | --pager] [--paths] [-s | --sort] [-r | --reverse]
-        [-t <type> | --type <type> | --<type>]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -3648,6 +3648,8 @@ Options:
   --filenames                     Print the filename for each note.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
+  --no-header                     Print without header.
+  --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --pager                     Display output in the pager.
