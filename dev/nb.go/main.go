@@ -99,16 +99,18 @@ func configure() (config, error) {
 	cfg := config{}
 
 	if cfg.nbDir = os.Getenv("NB_DIR"); cfg.nbDir == "" {
-		if runtime.GOOS == "windows" {
-			cfg.nbDir = os.Getenv("APPDATA")
+		var parentDir string
 
-			if cfg.nbDir == "" {
-				cfg.nbDir = filepath.Join(
-					os.Getenv("USERPROFILE"), "Application Data", "nb",
+		if runtime.GOOS == "windows" {
+			parentDir = os.Getenv("APPDATA")
+
+			if parentDir == "" {
+				parentDir = filepath.Join(
+					os.Getenv("USERPROFILE"), "Application Data",
 				)
 			}
 
-			cfg.nbDir = filepath.Join(cfg.nbDir, "nb")
+			cfg.nbDir = filepath.Join(parentDir, "nb")
 		} else {
 			cfg.nbDir = filepath.Join(os.Getenv("HOME"), ".nb")
 		}
