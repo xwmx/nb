@@ -35,6 +35,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"golang.org/x/sys/unix"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -63,6 +64,7 @@ type config struct {
 	nbLimit            int
 	nbNotebookPath     string
 	nbPath             string
+	nbrcPath           string
 	nbSyntaxTheme      string
 }
 
@@ -104,12 +106,31 @@ func configure() (config, error) {
 		return config{}, err
 	}
 
+	// $NBRC_PATH
+
+	if cfg.nbrcPath = os.Getenv("NBRC_PATH"); cfg.nbrcPath == "" {
+		if runtime.GOOS == "windows" {
+			// TODO
+		} else {
+			cfg.nbrcPath = filepath.Join(os.Getenv("HOME"), ".nbrc")
+
+			// TODO: Sourcing rc file.
+		}
+	}
+
 	// $NB_DIR
 
 	if cfg.nbDir = os.Getenv("NB_DIR"); cfg.nbDir == "" {
 		var parentDir string
 
 		if runtime.GOOS == "windows" {
+			// TODO:
+			// - Validate directory.
+			// - Confirm directory locations.
+			//
+			// See also:
+			// https://stackoverflow.com/a/49148866
+
 			parentDir = os.Getenv("APPDATA")
 
 			if parentDir == "" {
@@ -121,6 +142,22 @@ func configure() (config, error) {
 			cfg.nbDir = filepath.Join(parentDir, "nb")
 		} else {
 			cfg.nbDir = filepath.Join(os.Getenv("HOME"), ".nb")
+
+			// https://godoc.org/golang.org/x/sys/unix#Access
+			// https://stackoverflow.com/a/20026945
+			if cfg.nbDir == "" || cfg.nbDir == "/" || unix.Access(cfg.nbDir, unix.W_OK) != nil {
+				errorString := fmt.Sprintf(`\
+NB_DIR is not valid:
+  %s
+
+Remove any NB_DIR settings in .nbrc to reset to default:
+  %s
+
+NB_DIR settings prompt:
+  %s settings nb_dir`, cfg.nbDir, cfg.nbrcPath, "nb")
+
+				return cfg, errors.New(errorString)
+			}
 		}
 	}
 
