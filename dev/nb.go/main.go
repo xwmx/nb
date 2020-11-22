@@ -13,37 +13,9 @@ import (
 	"syscall"
 )
 
-type configuration struct {
-	NBDir  string
-	NBPath string
-}
-
-func (config *configuration) load() error {
-	dir := os.Getenv("NB_DIR")
-
-	if dir == "" {
-		if runtime.GOOS == "windows" {
-			dir = os.Getenv("APPDATA")
-
-			if dir == "" {
-				dir = filepath.Join(os.Getenv("USERPROFILE"), "Application Data", "nb")
-			}
-
-			dir = filepath.Join(dir, "nb")
-		} else {
-			dir = filepath.Join(os.Getenv("HOME"), ".nb")
-		}
-	}
-
-	config.NBDir = dir
-
-	var err error
-
-	if config.NBPath, err = exec.LookPath("nb"); err != nil {
-		return err
-	}
-
-	return nil
+type config struct {
+	nbDir  string
+	nbPath string
 }
 
 type subcommand struct {
@@ -51,7 +23,7 @@ type subcommand struct {
 	usage string
 }
 
-func cmdRun(config configuration, args []string, env []string) error {
+func cmdRun(cfg config, args []string, env []string) error {
 	var arguments []string
 
 	if len(args) < 2 {
@@ -63,7 +35,7 @@ func cmdRun(config configuration, args []string, env []string) error {
 	}
 
 	cmd := exec.Command(args[1], arguments...)
-	cmd.Dir = config.NBDir
+	cmd.Dir = cfg.nbDir
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -71,11 +43,40 @@ func cmdRun(config configuration, args []string, env []string) error {
 	return cmd.Run()
 }
 
+func configure() (config, error) {
+	cfg := config{}
+
+	cfg.nbDir = os.Getenv("NB_DIR")
+
+	if cfg.nbDir == "" {
+		if runtime.GOOS == "windows" {
+			cfg.nbDir = os.Getenv("APPDATA")
+
+			if cfg.nbDir == "" {
+				cfg.nbDir = filepath.Join(os.Getenv("USERPROFILE"), "Application Data", "nb")
+			}
+
+			cfg.nbDir = filepath.Join(cfg.nbDir, "nb")
+		} else {
+			cfg.nbDir = filepath.Join(os.Getenv("HOME"), ".nb")
+		}
+	}
+
+	var err error
+
+	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
+		return config{}, err
+	}
+
+	return cfg, nil
+}
+
 // run loads the configuration and environment, then runs the subcommand.
 func run() error {
-	var config configuration
+	var cfg config
+	var err error
 
-	if err := config.load(); err != nil {
+	if cfg, err = configure(); err != nil {
 		return err
 	}
 
@@ -83,12 +84,12 @@ func run() error {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if err := cmdRun(config, args[1:], env); err != nil {
+		if err := cmdRun(cfg, args[1:], env); err != nil {
 			return err
 		}
 	} else {
-		if execErr := syscall.Exec(config.NBPath, args, env); execErr != nil {
-			return execErr
+		if err := syscall.Exec(cfg.nbPath, args, env); err != nil {
+			return err
 		}
 	}
 
