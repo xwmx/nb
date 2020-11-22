@@ -23,6 +23,7 @@ type subcommand struct {
 	usage string
 }
 
+// cmdRun runs the `run` subcommand.
 func cmdRun(cfg config, args []string, env []string) error {
 	var arguments []string
 
@@ -43,6 +44,7 @@ func cmdRun(cfg config, args []string, env []string) error {
 	return cmd.Run()
 }
 
+// configure loads the configuration from the environment.
 func configure() (config, error) {
 	cfg := config{}
 
