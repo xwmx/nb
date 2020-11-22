@@ -7353,6 +7353,21 @@ _ls() {
     done
   }
 
+  # _ls_print_folder_header()
+  #
+  # Usage: _ls_print_folder_header <folder-path>
+  _ls_print_folder_header() {
+    [[ -z "${1:-}" ]] && return 0
+
+    # printf "📂 " # TODO: Review
+
+    printf "%s\\n" "${1//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
+
+    _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
+
+    printf "\\n"
+  }
+
   # _ls_print_header()
   #
   # Usage:
@@ -7643,13 +7658,7 @@ _ls() {
 
       if ((${NB_FOLDER_HEADER:-0}))
       then
-        # printf "📂 " # TODO: Review
-
-        printf "%s\\n" "${_selector_path//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
-
-        _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
-
-        printf "\\n"
+        _ls_print_folder_header "${_selector_path:-}"
       fi
     fi
 
@@ -7682,6 +7691,11 @@ _ls() {
            [[ -z "${_selector:-}"   ]]  ||
            [[ "${_selector}" =~ /$  ]]
         then
+          if ((${NB_FOLDER_HEADER:-1}))
+          then
+            _ls_print_folder_header "${_selector_path:-}"
+          fi
+
           _list "${_list_options[@]:-}"
         else
           local _filter_message=

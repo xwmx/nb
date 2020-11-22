@@ -7,6 +7,11 @@ load test_helper
 # See also: $NB_FOLDER_HEADER in _ls().
 _FOLDER_HEADER_ENABLED=0
 
+# _FOLDER_HEADER_ON_EMPTY_ENABLED
+#
+# See also: $NB_FOLDER_HEADER in _ls().
+_FOLDER_HEADER_ON_EMPTY_ENABLED=1
+
 # footer ######################################################################
 
 @test "'<id>/' prints footer with commands scoped to folder." {
@@ -167,7 +172,7 @@ _FOLDER_HEADER_ENABLED=0
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
     [[   "${status}"    -eq 0                                 ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
@@ -195,7 +200,7 @@ _FOLDER_HEADER_ENABLED=0
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
     [[   "${status}"    -eq 0                                 ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
@@ -223,7 +228,7 @@ _FOLDER_HEADER_ENABLED=0
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
     [[   "${status}"    -eq 0                                 ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
@@ -251,7 +256,7 @@ _FOLDER_HEADER_ENABLED=0
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
     [[   "${status}"    -eq 0                                 ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
@@ -279,7 +284,7 @@ _FOLDER_HEADER_ENABLED=0
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
     [[   "${status}"    -eq 0                                   ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                    ]]
@@ -308,7 +313,7 @@ _FOLDER_HEADER_ENABLED=0
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
     [[   "${status}"    -eq 0                                   ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                    ]]
