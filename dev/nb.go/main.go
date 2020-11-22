@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	// "strings"
 	"syscall"
 )
@@ -87,6 +88,56 @@ func configure() (config, error) {
 
 	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
 		return config{}, err
+	}
+
+	if os.Getenv("_GIT_ENABLED") == "0" {
+		cfg.gitEnabled = false
+	} else {
+		cfg.gitEnabled = true
+	}
+
+	if os.Getenv("NB_AUTO_SYNC") == "0" {
+		cfg.nbAutoSync = false
+	} else {
+		cfg.nbAutoSync = true
+	}
+
+	nbDefaultExtensionVar := os.Getenv("NB_DEFAULT_EXTENSION")
+
+	if nbDefaultExtensionVar != "" {
+		cfg.nbDefaultExtension = nbDefaultExtensionVar
+	} else {
+		cfg.nbDefaultExtension = "md"
+	}
+
+	nbEncrytionToolEnv := os.Getenv("NB_ENCRYPTION_TOOL")
+
+	if nbEncrytionToolEnv != "" {
+		cfg.nbEncryptionTool = nbEncrytionToolEnv
+	} else {
+		cfg.nbEncryptionTool = "openssl"
+	}
+
+	if os.Getenv("NB_FOOTER") == "0" {
+		cfg.nbFooter = false
+	} else {
+		cfg.nbFooter = true
+	}
+
+	if cfg.nbHeader, err = strconv.Atoi(os.Getenv("NB_HEADER")); err != nil {
+		cfg.nbHeader = 2
+	}
+
+	if cfg.nbLimit, err = strconv.Atoi(os.Getenv("NB_LIMIT")); err != nil {
+		cfg.nbLimit = 20
+	}
+
+	nbSyntaxThemeEnv := os.Getenv("NB_SYNTAX_THEME")
+
+	if nbSyntaxThemeEnv != "" {
+		cfg.nbSyntaxTheme = nbSyntaxThemeEnv
+	} else {
+		cfg.nbSyntaxTheme = "base16"
 	}
 
 	return cfg, nil
