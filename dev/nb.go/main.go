@@ -98,6 +98,14 @@ func configure() (config, error) {
 
 	cfg := config{}
 
+	// `nb` (.sh) path
+
+	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
+		return config{}, err
+	}
+
+	// $NB_DIR
+
 	if cfg.nbDir = os.Getenv("NB_DIR"); cfg.nbDir == "" {
 		var parentDir string
 
@@ -116,9 +124,7 @@ func configure() (config, error) {
 		}
 	}
 
-	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
-		return config{}, err
-	}
+	// $_GIT_ENABLED
 
 	if os.Getenv("_GIT_ENABLED") == "0" {
 		cfg.gitEnabled = false
@@ -126,19 +132,27 @@ func configure() (config, error) {
 		cfg.gitEnabled = true
 	}
 
+	// $NB_AUTO_SYNC
+
 	if os.Getenv("NB_AUTO_SYNC") == "0" {
 		cfg.nbAutoSync = false
 	} else {
 		cfg.nbAutoSync = true
 	}
 
+	// $NB_DEFAULT_EXTENSION
+
 	if cfg.nbDefaultExtension = os.Getenv("NB_DEFAULT_EXTENSION"); cfg.nbDefaultExtension == "" {
 		cfg.nbDefaultExtension = "md"
 	}
 
+	// $NB_ENCRYPTION_TOOL
+
 	if cfg.nbEncryptionTool = os.Getenv("NB_ENCRYPTION_TOOL"); cfg.nbEncryptionTool == "" {
 		cfg.nbEncryptionTool = "openssl"
 	}
+
+	// $NB_FOOTER
 
 	if os.Getenv("NB_FOOTER") == "0" {
 		cfg.nbFooter = false
@@ -146,13 +160,19 @@ func configure() (config, error) {
 		cfg.nbFooter = true
 	}
 
+	// $NB_HEADER
+
 	if cfg.nbHeader, err = strconv.Atoi(os.Getenv("NB_HEADER")); err != nil {
 		cfg.nbHeader = 2
 	}
 
+	// $NB_LIMIT
+
 	if cfg.nbLimit, err = strconv.Atoi(os.Getenv("NB_LIMIT")); err != nil {
 		cfg.nbLimit = 20
 	}
+
+	// $NB_SYNTAX_THEME
 
 	if cfg.nbSyntaxTheme = os.Getenv("NB_SYNTAX_THEME"); cfg.nbSyntaxTheme == "" {
 		cfg.nbSyntaxTheme = "base16"
