@@ -14,11 +14,25 @@ import (
 )
 
 type config struct {
+	colorEnabled       bool
+	editor             string
+	gitEnabled         bool
 	globalNotebookPath string
 	localNotebookPath  string
+	nbAutoSync         bool
+	nbColorPrimary     int
+	nbColorSecondary   int
+	nbColorTheme       string
+	nbColorThemes      []string
+	nbDefaultExtension string
 	nbDir              string
+	nbEncryptionTool   string
+	nbFooter           bool
+	nbHeader           int
+	nbLimit            int
 	nbNotebookPath     string
 	nbPath             string
+	nbSyntaxTheme      string
 }
 
 type subcommand struct {
