@@ -58,7 +58,9 @@ func configure() (config, error) {
 			cfg.nbDir = os.Getenv("APPDATA")
 
 			if cfg.nbDir == "" {
-				cfg.nbDir = filepath.Join(os.Getenv("USERPROFILE"), "Application Data", "nb")
+				cfg.nbDir = filepath.Join(
+					os.Getenv("USERPROFILE"), "Application Data", "nb",
+				)
 			}
 
 			cfg.nbDir = filepath.Join(cfg.nbDir, "nb")
