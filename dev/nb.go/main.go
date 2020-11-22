@@ -94,11 +94,11 @@ func cmdRun(cfg config, args []string, env []string) error {
 
 // configure loads the configuration from the environment.
 func configure() (config, error) {
+	var err error
+
 	cfg := config{}
 
-	cfg.nbDir = os.Getenv("NB_DIR")
-
-	if cfg.nbDir == "" {
+	if cfg.nbDir = os.Getenv("NB_DIR"); cfg.nbDir == "" {
 		if runtime.GOOS == "windows" {
 			cfg.nbDir = os.Getenv("APPDATA")
 
@@ -113,8 +113,6 @@ func configure() (config, error) {
 			cfg.nbDir = filepath.Join(os.Getenv("HOME"), ".nb")
 		}
 	}
-
-	var err error
 
 	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
 		return config{}, err
@@ -132,19 +130,11 @@ func configure() (config, error) {
 		cfg.nbAutoSync = true
 	}
 
-	nbDefaultExtensionVar := os.Getenv("NB_DEFAULT_EXTENSION")
-
-	if nbDefaultExtensionVar != "" {
-		cfg.nbDefaultExtension = nbDefaultExtensionVar
-	} else {
+	if cfg.nbDefaultExtension = os.Getenv("NB_DEFAULT_EXTENSION"); cfg.nbDefaultExtension == "" {
 		cfg.nbDefaultExtension = "md"
 	}
 
-	nbEncrytionToolEnv := os.Getenv("NB_ENCRYPTION_TOOL")
-
-	if nbEncrytionToolEnv != "" {
-		cfg.nbEncryptionTool = nbEncrytionToolEnv
-	} else {
+	if cfg.nbEncryptionTool = os.Getenv("NB_ENCRYPTION_TOOL"); cfg.nbEncryptionTool == "" {
 		cfg.nbEncryptionTool = "openssl"
 	}
 
@@ -162,11 +152,7 @@ func configure() (config, error) {
 		cfg.nbLimit = 20
 	}
 
-	nbSyntaxThemeEnv := os.Getenv("NB_SYNTAX_THEME")
-
-	if nbSyntaxThemeEnv != "" {
-		cfg.nbSyntaxTheme = nbSyntaxThemeEnv
-	} else {
+	if cfg.nbSyntaxTheme = os.Getenv("NB_SYNTAX_THEME"); cfg.nbSyntaxTheme == "" {
 		cfg.nbSyntaxTheme = "base16"
 	}
 
