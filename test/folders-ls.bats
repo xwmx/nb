@@ -42,10 +42,10 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   if ((_FOLDER_HEADER_ENABLED))
   then
     [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[8]}"  =~ add\ Example\\\ Folder/  ]] # \\\"  vim highlighting bug
+    [[   "${lines[8]}"  =~ add\ Example\\\ Folder/  ]]
   else
     [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[6]}"  =~ add\ Example\\\ Folder/  ]] # \\"  vim highlighting bug
+    [[   "${lines[6]}"  =~ add\ Example\\\ Folder/  ]]
   fi
 }
 
@@ -77,10 +77,10 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   if ((_FOLDER_HEADER_ENABLED))
   then
     [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[8]}"  =~ add\ Example\\\ Folder/  ]] # \\\"  vim highlighting bug
+    [[   "${lines[8]}"  =~ add\ Example\\\ Folder/  ]]
   else
     [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[6]}"  =~ add\ Example\\\ Folder/  ]] # \\"  vim highlighting bug
+    [[   "${lines[6]}"  =~ add\ Example\\\ Folder/  ]]
   fi
 }
 
@@ -114,10 +114,10 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   if ((_FOLDER_HEADER_ENABLED))
   then
     [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]] # \\\"  vim highlighting bug
+    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
   else
     [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]] # \\"  vim highlighting bug
+    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
   fi
 }
 
@@ -151,10 +151,10 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   if ((_FOLDER_HEADER_ENABLED))
   then
     [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]] # \\\"  vim highlighting bug
+    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
   else
     [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]] # \\"  vim highlighting bug
+    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
   fi
 }
 
