@@ -124,20 +124,32 @@ func configure() (config, error) {
 		}
 	}
 
+	if cfg.nbDir != "" {
+		os.Setenv("NB_DIR", cfg.nbDir)
+	}
+
 	// $_GIT_ENABLED
 
 	if os.Getenv("_GIT_ENABLED") == "0" {
 		cfg.gitEnabled = false
+		os.Setenv("_GIT_ENABLED", "0")
 	} else {
 		cfg.gitEnabled = true
+		os.Setenv("_GIT_ENABLED", "1")
+	}
+
+	if cfg.gitEnabled {
+		os.Setenv("NB_DIR", cfg.nbDir)
 	}
 
 	// $NB_AUTO_SYNC
 
 	if os.Getenv("NB_AUTO_SYNC") == "0" {
 		cfg.nbAutoSync = false
+		os.Setenv("NB_AUTO_SYNC", "0")
 	} else {
 		cfg.nbAutoSync = true
+		os.Setenv("NB_AUTO_SYNC", "1")
 	}
 
 	// $NB_DEFAULT_EXTENSION
@@ -146,18 +158,24 @@ func configure() (config, error) {
 		cfg.nbDefaultExtension = "md"
 	}
 
+	os.Setenv("NB_DEFAULT_EXTENSION", cfg.nbDefaultExtension)
+
 	// $NB_ENCRYPTION_TOOL
 
 	if cfg.nbEncryptionTool = os.Getenv("NB_ENCRYPTION_TOOL"); cfg.nbEncryptionTool == "" {
 		cfg.nbEncryptionTool = "openssl"
 	}
 
+	os.Setenv("NB_ENCRYPTION_TOOL", cfg.nbEncryptionTool)
+
 	// $NB_FOOTER
 
 	if os.Getenv("NB_FOOTER") == "0" {
 		cfg.nbFooter = false
+		os.Setenv("NB_FOOTER", "0")
 	} else {
 		cfg.nbFooter = true
+		os.Setenv("NB_FOOTER", "1")
 	}
 
 	// $NB_HEADER
@@ -166,17 +184,25 @@ func configure() (config, error) {
 		cfg.nbHeader = 2
 	}
 
+	os.Setenv("NB_HEADER", strconv.Itoa(cfg.nbHeader))
+
 	// $NB_LIMIT
 
 	if cfg.nbLimit, err = strconv.Atoi(os.Getenv("NB_LIMIT")); err != nil {
 		cfg.nbLimit = 20
 	}
 
+	os.Setenv("NB_HEADER", strconv.Itoa(cfg.nbLimit))
+
 	// $NB_SYNTAX_THEME
 
 	if cfg.nbSyntaxTheme = os.Getenv("NB_SYNTAX_THEME"); cfg.nbSyntaxTheme == "" {
 		cfg.nbSyntaxTheme = "base16"
 	}
+
+	os.Setenv("NB_SYNTAX_THEME", cfg.nbSyntaxTheme)
+
+	// return
 
 	return cfg, nil
 }
