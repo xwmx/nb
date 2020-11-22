@@ -14,8 +14,11 @@ import (
 )
 
 type config struct {
-	nbDir  string
-	nbPath string
+	globalNotebookPath string
+	localNotebookPath  string
+	nbDir              string
+	nbNotebookPath     string
+	nbPath             string
 }
 
 type subcommand struct {
