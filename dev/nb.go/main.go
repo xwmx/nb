@@ -69,8 +69,11 @@ type config struct {
 }
 
 type subcommand struct {
-	name  string
-	usage string
+	aliasedSubcommand string
+	documented        bool
+	name              string
+	triggersGit       bool
+	usage             string
 }
 
 // cmdRun runs the `run` subcommand.
