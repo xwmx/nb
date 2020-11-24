@@ -11,7 +11,7 @@
 _setup() {
   export NB_TEST_BASE_PATH="${1:-"${BATS_TEST_DIRNAME}"}"
 
-  # $IFS
+# $IFS
   IFS=$'\n\t'
 
   # Allow clobber. More info:
