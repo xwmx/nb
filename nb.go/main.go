@@ -277,6 +277,22 @@ func main() {
 	os.Exit(presentError(run()))
 }
 
+func pipedInputIsPresent() bool {
+	// Resources:
+	// https://flaviocopes.com/go-shell-pipes/
+	// https://coderwall.com/p/zyxyeg/golang-having-fun-with-os-stdin-and-shell-pipes
+	info, err := os.Stdin.Stat()
+	if err != nil {
+		panic(err)
+	}
+
+	if info.Mode()&os.ModeCharDevice != 0 || info.Size() <= 0 {
+		return false
+	}
+
+	return true
+}
+
 // presentError translates an error into a message presnted to the user and
 // returns the appropriate exit code.
 func presentError(err error) int {
