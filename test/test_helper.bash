@@ -7,7 +7,8 @@
 # https://github.com/sstephenson/bats
 ###############################################################################
 
-setup() {
+# Usage: _setup
+_setup() {
   # $IFS
   IFS=$'\n\t'
 
@@ -30,11 +31,6 @@ setup() {
   #
   # The location of the `nb` script being tested.
   export _NB="${BATS_TEST_DIRNAME}/../nb"
-
-  # `$_NB_PATH`
-  #
-  # Used by `bookmark` and `nb` for testing.
-  export _NB_PATH="${_NB}"
 
   # `$_BOOKMARK`
   #
@@ -90,6 +86,10 @@ setup() {
   then
     exit 1
   fi
+}
+
+setup() {
+  _setup
 }
 
 teardown() {
