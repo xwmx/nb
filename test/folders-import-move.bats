@@ -13,7 +13,7 @@ load test_helper
     [[   -e "${NB_DIR}/home/Example Folder"             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"  ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md"           ]]
   }
@@ -33,7 +33,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/example.md")
 
   # Moves from original location:
@@ -81,7 +81,7 @@ load test_helper
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder"             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.md"  ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md" ]]
 }
@@ -103,7 +103,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/example.md")
 
   # Moves from original location:
@@ -155,7 +155,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder"             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/example.md"  ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md"           ]]
   }
@@ -175,7 +175,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/example.md")
 
   # Moves from original location:
@@ -223,7 +223,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"             ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.md"  ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md" ]]
   }
@@ -245,7 +245,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/example.md")
 
   # Moves from original location:
@@ -297,7 +297,7 @@ load test_helper
 
     [[ ! -e "${NB_DIR}/home/sample.md"        ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md" ]]
   }
@@ -315,7 +315,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/sample.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/sample.md")
 
   # Moves from original location:
@@ -355,7 +355,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder"           ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/sample.md" ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md"         ]]
   }
@@ -376,7 +376,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/sample.md")
 
   # Moves from original location:
@@ -424,7 +424,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"           ]]
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/sample.md" ]]
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}/fixtures"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}/fixtures"
 
     [[   -f "${_TMP_DIR}/fixtures/example.md" ]]
   }
@@ -445,7 +445,7 @@ load test_helper
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/sample.md" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/sample.md")
 
   # Moves from original location:

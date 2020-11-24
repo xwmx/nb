@@ -224,7 +224,7 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
+  export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor_no_op" &&
     run "${_NB}" edit "${_filename}"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -243,7 +243,7 @@ load test_helper
     _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
   }
 
-  export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor_no_op" &&
+  export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor_no_op" &&
     run "${_NB}" edit "${_filename}" --password example
 
   printf "\${status}: '%s'\\n" "${status}"

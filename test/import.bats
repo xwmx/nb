@@ -41,7 +41,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
   }
@@ -77,7 +77,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
   }
@@ -127,7 +127,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -185,7 +185,7 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+  run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -210,7 +210,7 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+  run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md"
 
   cd "${_NOTEBOOK_PATH}" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
@@ -228,7 +228,7 @@ load test_helper
     "${_NB}" add "example.md" --content "Example"
   }
 
-  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+  run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -248,7 +248,7 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+  run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/Example Folder"
 
   IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
 
@@ -284,7 +284,7 @@ load test_helper
 @test "'import move' with valid <directory path> argument moves a directory." {
   {
     "${_NB}" init
-    cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures/Example Folder" "${_TMP_DIR}"
     [[ -e "${_TMP_DIR}/Example Folder" ]]
   }
 
@@ -328,7 +328,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -393,7 +393,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -458,7 +458,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -523,7 +523,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -588,7 +588,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -653,7 +653,7 @@ load test_helper
   {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures" "${_TMP_DIR}"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
 
     [[ -e "${_TMP_DIR}/fixtures" ]]
 
@@ -721,7 +721,7 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" import "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  run "${_NB}" import "file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -758,7 +758,7 @@ load test_helper
 
   run "${_NB}" import \
     --convert         \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -796,7 +796,7 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" import download "file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  run "${_NB}" import download "file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -832,7 +832,7 @@ load test_helper
   "${_NB}" init
 
   run "${_NB}" import notebook                      \
-    "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
+    "${NB_TEST_BASE_PATH}/fixtures/Example Folder"  \
     "example"
 
   printf "\${status}: '%s'\\n" "${status}"

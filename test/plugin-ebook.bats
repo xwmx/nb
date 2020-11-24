@@ -8,7 +8,7 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook init "example-ebook"
@@ -46,7 +46,7 @@ load test_helper
     "${_NB}" notebooks add example
     "${_NB}" use example
 
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook init --force
@@ -90,7 +90,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" notebooks add example
 
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook init example --force
@@ -129,7 +129,7 @@ load test_helper
 @test "'ebook publish' generates epub file." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/ebook.nb-plugin"
     "${_NB}" ebook new "example-ebook"
     "${_NB}" use "example-ebook"
 
@@ -182,7 +182,7 @@ Content three."
 @test "'ebook' with no argument exits with status 1 and prints usage." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" ebook
@@ -198,7 +198,7 @@ Content three."
 @test "'help ebook' exits with status 0 and prints usage." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/ebook.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/ebook.nb-plugin"
   }
 
   run "${_NB}" help ebook

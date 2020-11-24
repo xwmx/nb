@@ -15,7 +15,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "Example Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -29,7 +29,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/example.md")
 
   # Adds to indexes:
@@ -75,7 +75,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "Example Folder/Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -91,7 +91,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/example.md")
 
   # Adds to indexes:
@@ -141,7 +141,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "Example Folder/"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -155,7 +155,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/example.md")
 
   # Adds to indexes:
@@ -201,7 +201,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "Example Folder/Sample Folder/"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -217,7 +217,7 @@ load test_helper
     [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/example.md")
 
   # Adds to indexes:
@@ -267,7 +267,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "sample.md"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -279,7 +279,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/sample.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/sample.md")
 
   # Adds to index:
@@ -317,7 +317,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "Example Folder/sample.md"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -332,7 +332,7 @@ load test_helper
   [[ ! -e "${NB_DIR}/home/Example Folder/example.pdf" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/sample.md")
 
   # Adds to indexes:
@@ -378,7 +378,7 @@ load test_helper
   }
 
   run "${_NB}" import                                 \
-    "file://${BATS_TEST_DIRNAME}/fixtures/example.md" \
+    "file://${NB_TEST_BASE_PATH}/fixtures/example.md" \
     "Example Folder/Sample Folder/sample.md"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -393,7 +393,7 @@ load test_helper
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/sample.md" ]]
 
   diff                                                \
-    <(cat "${BATS_TEST_DIRNAME}/fixtures/example.md") \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md") \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/sample.md")
 
   # Adds to indexes:

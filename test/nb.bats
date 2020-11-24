@@ -117,7 +117,7 @@ load test_helper
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -125,7 +125,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   printf "cat file: '%s'\\n" "$(cat "${NB_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
   [[ "$(cat "${NB_NOTEBOOK_PATH}/${_filename}")" == "${_bookmark_content}" ]]

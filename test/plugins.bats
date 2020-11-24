@@ -7,8 +7,8 @@ load test_helper
 @test "'plugins' lists plugins." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
   }; _setup
 
   run "${_NB}" plugins
@@ -24,8 +24,8 @@ load test_helper
 @test "'plugins <name>' lists plugins." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
   }; _setup
 
   run "${_NB}" plugins example.nb-plugin
@@ -41,8 +41,8 @@ load test_helper
 @test "'plugins <name>' with no matching exits with error." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
   }; _setup
 
   run "${_NB}" plugins example
@@ -77,7 +77,7 @@ load test_helper
     "${_NB}" init
   }; _setup
 
-  run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+  run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -98,7 +98,7 @@ load test_helper
     "${_NB}" init
   }; _setup
 
-  run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
+  run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -119,7 +119,7 @@ load test_helper
     "${_NB}" init
   }; _setup
 
-  run "${_NB}" plugins install file://"${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+  run "${_NB}" plugins install file://"${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -140,7 +140,7 @@ load test_helper
     "${_NB}" init
   }; _setup
 
-  run "${_NB}" plugins install file://"${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
+  run "${_NB}" plugins install file://"${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -173,10 +173,10 @@ load test_helper
 @test "'plugins install' with existing plugin reinstalls." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }; _setup
 
-  run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin" --force
+  run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin" --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -193,7 +193,7 @@ load test_helper
 @test "'plugins uninstall' with valid <name> argument uninstalls a plugin." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }; _setup
 
   run "${_NB}" plugins uninstall "example.nb-plugin" --force
@@ -210,7 +210,7 @@ load test_helper
 @test "'plugins uninstall' with valid <name> argument uninstalls a theme." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/turquoise.nb-theme"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
   }; _setup
 
   run "${_NB}" plugins uninstall "turquoise.nb-theme" --force
@@ -227,7 +227,7 @@ load test_helper
 @test "'plugins uninstall' with invalid <name> argument exits with error." {
   _setup() {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }; _setup
 
   run "${_NB}" plugins uninstall "example" --force

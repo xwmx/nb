@@ -7,7 +7,7 @@ load test_helper
 @test "'nb example' prints output." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }
 
   run "${_NB}" example
@@ -24,7 +24,7 @@ load test_helper
 @test "'help example' exits with status 0 and prints usage." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }
 
   run "${_NB}" help example

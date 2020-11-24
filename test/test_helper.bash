@@ -7,8 +7,10 @@
 # https://github.com/sstephenson/bats
 ###############################################################################
 
-# Usage: _setup
+# Usage: _setup [<bats-base-path>]
 _setup() {
+  export NB_TEST_BASE_PATH="${1:-"${BATS_TEST_DIRNAME}"}"
+
   # $IFS
   IFS=$'\n\t'
 
@@ -30,17 +32,17 @@ _setup() {
   # `$_NB`
   #
   # The location of the `nb` script being tested.
-  export _NB="${BATS_TEST_DIRNAME}/../nb"
+  export _NB="${NB_TEST_BASE_PATH}/../nb"
 
   # `$_BOOKMARK`
   #
   # The location of the `bookmark` script being tested.
-  export _BOOKMARK="${BATS_TEST_DIRNAME}/../bin/bookmark"
+  export _BOOKMARK="${NB_TEST_BASE_PATH}/../bin/bookmark"
 
   # `$_NOTES`
   #
   # The location of the `notes` script being tested.
-  export _NOTES="${BATS_TEST_DIRNAME}/../bin/notes"
+  export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
 
   export _TMP_DIR
   _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
@@ -58,7 +60,7 @@ _setup() {
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
-  export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
 
   # `$_ERROR_PREFIX`
   #
@@ -68,12 +70,12 @@ _setup() {
 
   if [[ -z "${EDITOR:-}" ]] || [[ ! "${EDITOR:-}" =~ mock_editor ]]
   then
-    export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor"
+    export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor"
   fi
 
   # Use empty `nb` script in environment to avoid depending on `nb`
   # being available in `$PATH`.
-  export PATH="${BATS_TEST_DIRNAME}/fixtures/bin:${PATH}"
+  export PATH="${NB_TEST_BASE_PATH}/fixtures/bin:${PATH}"
 
   # $_NEWLINE
   #

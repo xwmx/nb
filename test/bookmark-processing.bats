@@ -2,8 +2,8 @@
 
 load test_helper
 
-export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
-export _OG_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.html"
+export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
+export _OG_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
 
 @test "'bookmark' extracts title and meta description tag content." {
   {
@@ -29,7 +29,7 @@ export _OG_BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.htm
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -37,7 +37,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -86,7 +86,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # Example OG Title
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com-og.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html>
 
 ## Description
 
@@ -94,7 +94,7 @@ Example OG description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"

@@ -457,7 +457,7 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" notebooks add "destination"
-    "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/Example Folder"
 
     [[ -d "${NB_DIR}/home/Example Folder" ]]
   }

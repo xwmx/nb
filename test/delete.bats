@@ -415,7 +415,7 @@ load test_helper
 @test "'delete' with <folder> argument deletes properly without errors." {
   {
     "${_NB}" init
-    "${_NB}" import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/Example Folder"
 
     IFS= _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
     _original_index="$(cat "${_NOTEBOOK_PATH}/.index")"

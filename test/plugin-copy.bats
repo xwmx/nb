@@ -9,7 +9,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -36,7 +36,7 @@ load test_helper
       --encrypt                     \
       --password password
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -68,7 +68,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -95,7 +95,7 @@ load test_helper
       --encrypt                     \
       --password password
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -127,7 +127,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -152,7 +152,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -175,9 +175,9 @@ load test_helper
   _setup() {
     "${_NB}" init
 
-    cp -R "${BATS_TEST_DIRNAME}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -202,7 +202,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -271,7 +271,7 @@ load test_helper
       --encrypt                     \
       --password password
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -338,7 +338,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -364,7 +364,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -389,7 +389,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -417,7 +417,7 @@ load test_helper
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -442,7 +442,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
@@ -468,7 +468,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
     [[ "${status}" == 0 ]]
   }; _setup
@@ -493,7 +493,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
   }; _setup
 
   run "${_NB}" copy
@@ -512,7 +512,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
 
-    "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/copy.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
   }; _setup
 
   run "${_NB}" help copy

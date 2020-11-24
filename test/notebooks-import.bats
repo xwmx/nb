@@ -33,7 +33,7 @@ _setup_notebooks() {
   for __name in "${_names[@]}"
   do
     run "${_NB}" notebooks import                     \
-      "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
+      "${NB_TEST_BASE_PATH}/fixtures/Example Folder"  \
       "${__name}"
 
     printf "\${status}: '%s'\\n" "${status}"
@@ -71,7 +71,7 @@ _setup_notebooks() {
     "${_NB}" init
   }
 
-  run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+  run "${_NB}" notebooks import "${NB_TEST_BASE_PATH}/fixtures/Example Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -116,7 +116,7 @@ _setup_notebooks() {
     [[ -d "${NB_DIR}/Example Folder" ]]
   }
 
-  run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/Example Folder"
+  run "${_NB}" notebooks import "${NB_TEST_BASE_PATH}/fixtures/Example Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -134,7 +134,7 @@ _setup_notebooks() {
     "${_NB}" init
   }
 
-  run "${_NB}" notebooks import "${BATS_TEST_DIRNAME}/fixtures/example.md"
+  run "${_NB}" notebooks import "${NB_TEST_BASE_PATH}/fixtures/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}
@@ -152,7 +152,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks import                     \
-    "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
+    "${NB_TEST_BASE_PATH}/fixtures/Example Folder"  \
     "example-notebook"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -177,7 +177,7 @@ _setup_notebooks() {
   }
 
   run "${_NB}" notebooks import                     \
-    "${BATS_TEST_DIRNAME}/fixtures/Example Folder"  \
+    "${NB_TEST_BASE_PATH}/fixtures/Example Folder"  \
     "example"
 
   printf "\${status}: '%s'\\n" "${status}"

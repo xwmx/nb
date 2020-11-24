@@ -174,7 +174,7 @@ HEREDOC
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -182,7 +182,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -213,7 +213,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
     "${_NB}" init
   }
 
-  run "${_NB}" bookmark "file://${BATS_TEST_DIRNAME}/fixtures/example.pdf"
+  run "${_NB}" bookmark "file://${NB_TEST_BASE_PATH}/fixtures/example.pdf"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -229,7 +229,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
 
-  _bookmark_content="<file://${BATS_TEST_DIRNAME}/fixtures/example.pdf>"
+  _bookmark_content="<file://${NB_TEST_BASE_PATH}/fixtures/example.pdf>"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -328,7 +328,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -340,7 +340,7 @@ New comment.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -389,7 +389,7 @@ Quote line 2."
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -403,7 +403,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   _file_content="$(cat "${_NOTEBOOK_PATH}/${_filename}")"
 
@@ -459,7 +459,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -467,12 +467,12 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")
 
 ## Source
 
 \`\`\`html
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.html")
 \`\`\`"
 
   # TODO: vim highlighting bug \`"
@@ -523,7 +523,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.html")
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -575,7 +575,7 @@ Example description."
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -587,7 +587,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -633,7 +633,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -649,7 +649,7 @@ Example comment.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -697,7 +697,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # New Title
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -705,7 +705,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -782,7 +782,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -794,7 +794,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
@@ -843,7 +843,7 @@ $(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
   _bookmark_content="\
 # Example Domain
 
-<file://${BATS_TEST_DIRNAME}/fixtures/example.com.html>
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
 
 ## Description
 
@@ -857,7 +857,7 @@ Example description.
 
 ## Content
 
-$(cat "${BATS_TEST_DIRNAME}/fixtures/example.com.md")"
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   printf "cat file: '%s'\\n" "$(cat "${_NOTEBOOK_PATH}/${_filename}")"
   printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
