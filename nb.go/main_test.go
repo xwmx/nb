@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// presentErrort
+// presentError
 
 func TestPresentErrorWithErrorReturns1(t *testing.T) {
 	exitCode := presentError(errors.New("Test error."))
