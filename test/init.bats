@@ -27,10 +27,10 @@ load test_helper
   [[ ${status} -eq 1 ]]
 }
 
-@test "'init' exits with status 0 when '\$NB_NOTEBOOK_PATH' exists." {
+@test "'init' exits with status 0 when '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' exists." {
   {
-    mkdir -p "${NB_NOTEBOOK_PATH}"
-    [[ -e "${NB_NOTEBOOK_PATH}" ]]
+    mkdir -p "${NB_DIR}/home"
+    [[ -e "${NB_DIR}/home" ]]
   }
 
   run "${_NB}" init
@@ -42,32 +42,32 @@ load test_helper
   [[ ${status} -eq 0          ]]
 }
 
-@test "'init' creates '\$NB_DIR' and '\$NB_NOTEBOOK_PATH' directories." {
+@test "'init' creates '\$NB_DIR' and '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' directories." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -d "${NB_DIR}"         ]]
-  [[ -d "${NB_NOTEBOOK_PATH}" ]]
+  [[ -d "${NB_DIR}"       ]]
+  [[ -d "${NB_DIR}/home"  ]]
 }
 
-@test "'init' creates a git directory in '\$NB_NOTEBOOK_PATH'." {
+@test "'init' creates a git directory in '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home'." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -d "${NB_NOTEBOOK_PATH}/.git" ]]
+  [[ -d "${NB_DIR}/home/.git" ]]
 }
 
-@test "'init' creates an .index '\$NB_NOTEBOOK_PATH'." {
+@test "'init' creates an .index '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home'." {
   run "${_NB}" init
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -e "${NB_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${NB_DIR}/home/.index" ]]
 }
 
 @test "'init' exits with status 0 when '\$NBRC_PATH' exists." {
@@ -103,7 +103,7 @@ load test_helper
 @test "'init' creates git commit." {
   run "${_NB}" init
 
-  cd "${NB_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
 
   printf "\$(git log): '%s'\n" "$(git log)"
 
@@ -116,7 +116,7 @@ load test_helper
 
 # `init <remote-url>` #########################################################
 
-@test "'init <remote-url>' creates a clone in '\$NB_NOTEBOOK_PATH'." {
+@test "'init <remote-url>' creates a clone in '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home'." {
   {
     _setup_remote_repo
   }
@@ -125,10 +125,10 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _origin="$(cd "${NB_NOTEBOOK_PATH}" && git config --get remote.origin.url)"
+  _origin="$(cd "${NB_DIR}/home" && git config --get remote.origin.url)"
   _compare "${_GIT_REMOTE_URL}" "${_origin}"
 
-  [[ -d "${NB_NOTEBOOK_PATH}/.git"          ]]
+  [[ -d "${NB_DIR}/home/.git"             ]]
   [[ "${_origin}" =~  ${_GIT_REMOTE_URL}  ]]
 }
 

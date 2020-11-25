@@ -1097,8 +1097,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "${NB_NOTEBOOK_PATH}/example.md"  ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${output}" == "${NB_DIR}/home/example.md" ]]
 }
 
 @test "'show <selector> --path' with <selector> only matching notebook name prints message." {

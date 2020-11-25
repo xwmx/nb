@@ -54,8 +54,6 @@ _setup() {
 
   export NB_DIR="${_TMP_DIR}/notebooks"
 
-  export NB_NOTEBOOK_PATH="${NB_DIR}/home"
-
   export NBRC_PATH="${_TMP_DIR}/.nbrc"
   export NB_COLOR_PRIMARY=3
   export NB_AUTO_SYNC=0
