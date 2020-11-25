@@ -74,10 +74,6 @@ _setup() {
     export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor"
   fi
 
-  # Use empty `nb` script in environment to avoid depending on `nb`
-  # being available in `$PATH`.
-  export PATH="${NB_TEST_BASE_PATH}/fixtures/bin:${PATH}"
-
   # $_NEWLINE
   #
   # Assign newline with ANSI-C quoting for string building.
@@ -92,6 +88,10 @@ _setup() {
 
 setup() {
   _setup
+
+  # Use empty `nb` script in environment to avoid depending on `nb`
+  # being available in `$PATH`.
+  export PATH="${NB_TEST_BASE_PATH}/fixtures/bin:${PATH}"
 }
 
 teardown() {
