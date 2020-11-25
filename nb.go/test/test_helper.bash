@@ -17,6 +17,7 @@ setup() {
   # The location of the `nb.go` executable being tested.
   export _NBGO
   _NBGO="$(which nb.go)"
+  _NB="${_NBGO}"
 
   if [[ -z "${_NBGO:-}" ]] || [[ ! -e "${_NBGO}" ]]
   then
