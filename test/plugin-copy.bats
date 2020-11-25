@@ -165,7 +165,7 @@ load test_helper
   [[ "${status}" == 1             ]]
   [[ "${lines[0]}" =~ Not\ found  ]]
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
   [[ "${#_files[@]}" == 1 ]]
 }
 
@@ -175,7 +175,7 @@ load test_helper
   _setup() {
     "${_NB}" init
 
-    cp -R "${NB_TEST_BASE_PATH}/fixtures/Example Folder" "${_NOTEBOOK_PATH}/example"
+    cp -R "${NB_TEST_BASE_PATH}/fixtures/Example Folder" "${NB_DIR}/home/example"
 
     run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
 
@@ -190,7 +190,7 @@ load test_helper
   [[ "${status}" == 1               ]]
   [[ "${lines[0]}" =~ Not\ a\ file  ]]
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
 
   [[ "${#_files[@]}" == 1 ]]
 }

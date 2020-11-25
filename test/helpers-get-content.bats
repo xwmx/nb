@@ -15,7 +15,7 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/one.org" --title
+  run "${_NB}" helpers get_content "${NB_DIR}/home/one.org" --title
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -200,7 +200,7 @@ Write your conclusion here.
 
 \end{document}
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --no-color --reverse
@@ -239,10 +239,10 @@ line three
 line four
 HEREDOC
 
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_DIR}/home/"))
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/one.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/one.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -262,7 +262,7 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/two.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/two.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -286,11 +286,11 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/three.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/three.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  cat "${_NOTEBOOK_PATH}/three.md"
+  cat "${NB_DIR}/home/three.md"
 
   [[ ${status}    -eq 0                       ]]
   [[ "${output}"  ==  "__first_line:line one" ]]
@@ -315,7 +315,7 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/four.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/four.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -339,7 +339,7 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/five.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/five.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -363,7 +363,7 @@ example=code
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/four.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/four.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -383,7 +383,7 @@ line four
 HEREDOC
   }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/example.org"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/example.org"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -436,7 +436,7 @@ Write your conclusion here.
 HEREDOC
 }
 
-  run "${_NB}" helpers get_content "${_NOTEBOOK_PATH}/example.latex"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/example.latex"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

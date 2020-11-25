@@ -55,8 +55,6 @@ _setup() {
   export NB_DIR="${_TMP_DIR}/notebooks"
 
   export NB_NOTEBOOK_PATH="${NB_DIR}/home"
-# Assign legacy $_NOTEBOOK_PATH. TODO: global search and replace.
-  export _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
 
   export NBRC_PATH="${_TMP_DIR}/.nbrc"
   export NB_COLOR_PRIMARY=3
@@ -88,7 +86,6 @@ _setup() {
   export _NEWLINE=$'\n'
 
   if [[ ! "${NB_DIR}"         =~ ^/tmp/nb_test ]] ||
-     [[ ! "${_NOTEBOOK_PATH}" =~ ^/tmp/nb_test ]] ||
      [[ ! "${NBRC_PATH}"      =~ ^/tmp/nb_test ]]
   then
     exit 1

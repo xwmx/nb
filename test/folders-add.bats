@@ -428,10 +428,10 @@ load test_helper
 
     "${_NB}" add "Example Folder" --type folder
 
-    [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[   -d "${NB_DIR}/home/Example Folder"                      ]]
+    [[   -f "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add folder "1/"
@@ -446,32 +446,32 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  [[ -d "${NB_DIR}/home/Example Folder/folder"        ]]
-  [[ -f "${NB_DIR}/home/Example Folder/folder/.index" ]]
+  [[ -d "${NB_DIR}/home/Example Folder/folder"          ]]
+  [[ -f "${NB_DIR}/home/Example Folder/folder/.index"   ]]
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "_files: ${_files[*]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
-  [[ "${#_files[@]}"  == 5                                    ]]
-  [[ "${_files[3]}"   == ".index"                             ]]
-  [[ "${_files[4]}"   == "Example Folder"                     ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                 ]]
+  [[ "${#_files[@]}"  == 5                              ]]
+  [[ "${_files[3]}"   == ".index"                       ]]
+  [[ "${_files[4]}"   == "Example Folder"               ]]
 
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
   echo "_folder_files: ${_folder_files[*]}"
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
-  [[ "${#_folder_files[@]}" == 4                                ]]
-  [[ "${_folder_files[2]}"  == ".index"                         ]]
-  [[ "${_folder_files[3]}"  == "folder"                         ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
+  [[ "${#_folder_files[@]}" == 4                        ]]
+  [[ "${_folder_files[2]}"  == ".index"                 ]]
+  [[ "${_folder_files[3]}"  == "folder"                 ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -479,17 +479,17 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"            ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"    ]]
 
   # Prints output:
 
@@ -506,13 +506,13 @@ load test_helper
     "${_NB}" add "Example Folder" --type folder
     "${_NB}" add "Example Folder/folder" --type folder
 
-    [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[   -d "${_NOTEBOOK_PATH:-}/Example Folder/folder"               ]]
-    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/folder/.index"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/folder-1"             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[   -d "${NB_DIR}/home/Example Folder"                      ]]
+    [[   -f "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[   -d "${NB_DIR}/home/Example Folder/folder"               ]]
+    [[   -f "${NB_DIR}/home/Example Folder/folder/.index"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/folder-1"             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add folder "1/"
@@ -530,30 +530,30 @@ load test_helper
   [[ -d "${NB_DIR}/home/Example Folder/folder-1"        ]]
   [[ -f "${NB_DIR}/home/Example Folder/folder-1/.index" ]]
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "_files:  ${_files[*]}"
   echo "#_files: ${#_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"  ]]
+  [[ -d "${NB_DIR}/home/Example Folder"     ]]
   [[ "${#_files[@]}"  == 5                  ]]
   [[ "${_files[3]}"   == ".index"           ]]
   [[ "${_files[4]}"   == "Example Folder"   ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
   echo "_folder_files: ${_folder_files[*]}"
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
-  [[ "${#_folder_files[@]}" == 5                                ]]
-  [[ "${_folder_files[2]}"  == ".index"                         ]]
-  [[ "${_folder_files[3]}"  == "folder"                         ]]
-  [[ "${_folder_files[4]}"  == "folder-1"                       ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
+  [[ "${#_folder_files[@]}" == 5                        ]]
+  [[ "${_folder_files[2]}"  == ".index"                 ]]
+  [[ "${_folder_files[3]}"  == "folder"                 ]]
+  [[ "${_folder_files[4]}"  == "folder-1"               ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -561,17 +561,17 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"            ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"    ]]
 
   # Prints output:
 
@@ -587,10 +587,10 @@ load test_helper
 
     "${_NB}" add "Example Folder" --type folder
 
-    [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[   -d "${NB_DIR}/home/Example Folder"                      ]]
+    [[   -f "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add folder "1/Sample Folder"
@@ -605,28 +605,28 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "_files: ${_files[*]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
-  [[ "${#_files[@]}"  == 5                                    ]]
-  [[ "${_files[3]}"   == ".index"                             ]]
-  [[ "${_files[4]}"   == "Example Folder"                     ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                 ]]
+  [[ "${#_files[@]}"  == 5                              ]]
+  [[ "${_files[3]}"   == ".index"                       ]]
+  [[ "${_files[4]}"   == "Example Folder"               ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
   echo "_folder_files: ${_folder_files[*]}"
 
-  [[   -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
-  [[ "${#_folder_files[@]}" == 4                                ]]
-  [[ "${_folder_files[2]}"  == ".index"                         ]]
-  [[ "${_folder_files[3]}"  == "Sample Folder"                  ]]
+  [[   -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
+  [[ "${#_folder_files[@]}" == 4                        ]]
+  [[ "${_folder_files[2]}"  == ".index"                 ]]
+  [[ "${_folder_files[3]}"  == "Sample Folder"          ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -634,17 +634,17 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"            ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
 
-  [[   -f "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+  [[   -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"    ]]
 
   # Prints output:
 
@@ -662,7 +662,7 @@ load test_helper
     "${_NB}" add "Example Folder" --type folder
 
     [[   -d "${NB_DIR:-}/home/Example Folder"         ]]
-    [[   -f "${NB_DIR:-}/home/Example Folder/.index"     ]]
+    [[   -f "${NB_DIR:-}/home/Example Folder/.index"  ]]
   }
 
   run "${_NB}" add 1/ --content "# Example Title" \
@@ -734,8 +734,8 @@ load test_helper
 
     "${_NB}" add "Example Folder" --type folder
 
-    [[   -d "${_NOTEBOOK_PATH:-}/Example Folder"         ]]
-    [[   -f "${NB_DIR:-}/home/Example Folder/.index"     ]]
+    [[   -d "${NB_DIR}/home/Example Folder"             ]]
+    [[   -f "${NB_DIR:-}/home/Example Folder/.index"    ]]
   }
 
   run "${_NB}" add 1/ --content "# Example Title"
@@ -801,10 +801,10 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add folder "Example Folder/"
@@ -819,28 +819,28 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "_files: ${_files[*]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
-  [[ "${#_files[@]}"  == 5                                    ]]
-  [[ "${_files[3]}"   == ".index"                             ]]
-  [[ "${_files[4]}"   == "Example Folder"                     ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                 ]]
+  [[ "${#_files[@]}"  == 5                              ]]
+  [[ "${_files[3]}"   == ".index"                       ]]
+  [[ "${_files[4]}"   == "Example Folder"               ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
   echo "_folder_files: ${_folder_files[*]}"
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
-  [[ "${#_folder_files[@]}" == 4                                ]]
-  [[ "${_folder_files[2]}"  == ".index"                         ]]
-  [[ "${_folder_files[3]}"  != "Sample Folder"                  ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder" ]]
+  [[ "${#_folder_files[@]}" == 4                        ]]
+  [[ "${_folder_files[2]}"  == ".index"                 ]]
+  [[ "${_folder_files[3]}"  != "Sample Folder"          ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -848,17 +848,17 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"            ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"    ]]
 
   # Prints output:
 
@@ -1005,7 +1005,7 @@ load test_helper
   {
     "${_NB}" init
 
-    _folder_path="${_NOTEBOOK_PATH:?}/Example Folder/Sample Folder"
+    _folder_path="${NB_DIR}/home/Example Folder/Sample Folder"
     _existing_file_path="${_folder_path}/example-filename.md"
     _new_file_path="${_folder_path}/example-filename-1.md"
 
@@ -1047,8 +1047,8 @@ load test_helper
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1056,11 +1056,11 @@ load test_helper
 
   # Adds to index:
 
-  ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+  ls "${NB_DIR}/home/Example Folder/Sample Folder"
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"                                 ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")" =~  example-filename.md   ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")" =~  example-filename-1.md ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"                                 ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")" =~  example-filename.md   ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")" =~  example-filename-1.md ]]
 
   # Prints output:
 
@@ -1072,7 +1072,7 @@ load test_helper
   {
     "${_NB}" init
 
-    _folder_path="${_NOTEBOOK_PATH:?}/Example Folder/Sample Folder"
+    _folder_path="${NB_DIR}/home/Example Folder/Sample Folder"
     _existing_folder_path="${_folder_path}/Demo Folder"
 
     mkdir -p "${_existing_folder_path}"
@@ -1103,8 +1103,8 @@ load test_helper
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1112,18 +1112,18 @@ load test_helper
 
   # Adds to index:
 
-  ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+  ls "${NB_DIR}/home/Example Folder/Sample Folder"
   echo ---
-  cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
+  cat "${NB_DIR}/home/Example Folder/Sample Folder/.index"
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"               ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")" =~  \
-        Demo\ Folder${_NEWLINE}Demo\ Folder-1$                                ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"              ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")" =~  \
+        Demo\ Folder${_NEWLINE}Demo\ Folder-1$                            ]]
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder-1 ]]
+  [[ "${output}" =~ Added:                                                ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder-1   ]]
 }
 
 # error handling ##############################################################
@@ -1132,13 +1132,13 @@ load test_helper
   {
     "${_NB}" init
 
-    touch "${_NOTEBOOK_PATH:-}/Example Folder"
+    touch "${NB_DIR}/home/Example Folder"
 
-    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
+    [[   -f "${NB_DIR}/home/Example Folder"                                    ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" --content "# Example Title"
@@ -1153,21 +1153,21 @@ load test_helper
 
   # Does not create path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -f "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -f "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md" ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md" ]]
 
   # Does not create git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1175,8 +1175,8 @@ load test_helper
 
   # Does not change index::
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output:
 
@@ -1188,12 +1188,12 @@ load test_helper
   {
     "${_NB}" init
 
-    touch "${_NOTEBOOK_PATH:-}/Example Folder"
+    touch "${NB_DIR}/home/Example Folder"
 
-    [[   -f "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[   -f "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder" --type "folder"
@@ -1208,22 +1208,22 @@ load test_helper
 
   # Does not create path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -f "${_NOTEBOOK_PATH}/Example Folder"                    ]]
-  [[ "${#_files[@]}"  == 5                                    ]]
-  [[ "${_files[3]}"   == ".index"                             ]]
-  [[ "${_files[4]}"   == "Example Folder"                     ]]
+  [[ -f "${NB_DIR}/home/Example Folder"                           ]]
+  [[ "${#_files[@]}"  == 5                                        ]]
+  [[ "${_files[3]}"   == ".index"                                 ]]
+  [[ "${_files[4]}"   == "Example Folder"                         ]]
 
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"    ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"           ]]
 
   # Does not commit to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"     ]]
   do
     sleep 1
   done
@@ -1231,8 +1231,8 @@ load test_helper
 
   # Does not change:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output:
 
@@ -1246,10 +1246,10 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add folder "Example Folder"
@@ -1264,26 +1264,26 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 3                                ]]
   [[ "${_folder_files[2]}"  == ".index"                         ]]
   [[ "${_folder_files[3]}"  != "Sample Folder"                  ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1291,17 +1291,17 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")" ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"        ]]
 
   # Prints output:
 
@@ -1313,10 +1313,10 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add folder "Example Folder/Sample Folder"
@@ -1331,23 +1331,23 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
   printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
 
@@ -1356,8 +1356,8 @@ load test_helper
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1365,20 +1365,20 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")" ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
-  ls -la "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
+  cat "${NB_DIR}/home/Example Folder/Sample Folder/.index"
+  ls -la "${NB_DIR}/home/Example Folder/Sample Folder"
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
-  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"  ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"           ]]
+  [[ -z "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"  ]]
 
   # Prints output:
 
@@ -1390,12 +1390,12 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                  ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                           ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                    ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                                  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                           ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                    ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index" ]]
   }
 
   run "${_NB}" add folder "Example Folder/Sample Folder/Demo Folder"
@@ -1410,23 +1410,23 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
   printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
 
@@ -1435,7 +1435,7 @@ load test_helper
   [[ "${_folder_folder_files[3]}"   == "Demo Folder"          ]]
 
   _folder_folder_folder_files=($(
-    LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+    LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"
   ))
 
   printf "_folder_folder_folder_files: '%s'" "${_folder_folder_folder_files[@]}"
@@ -1445,8 +1445,8 @@ load test_helper
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1454,24 +1454,24 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"                ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
-  ls -la "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
+  cat "${NB_DIR}/home/Example Folder/Sample Folder/.index"
+  ls -la "${NB_DIR}/home/Example Folder/Sample Folder"
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"          ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder/Sample Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"  ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index"           ]]
-  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index")"  ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index"           ]]
+  [[ -z "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index")"  ]]
 
   # Prints output:
 
@@ -1485,10 +1485,10 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add "Example Folder" --type folder
@@ -1503,18 +1503,18 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"    ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"       ]]
   [[ "${#_folder_files[@]}" == 3                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  != "Sample Folder"                ]]
@@ -1522,8 +1522,8 @@ load test_helper
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1531,13 +1531,13 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ -z "$(cat "${NB_DIR}/home/Example Folder/.index")"               ]]
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"        ]]
 
   # Prints output:
 
@@ -1549,10 +1549,10 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder" --type folder
@@ -1567,31 +1567,31 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
   [[ "${#_folder_folder_files[@]}"  == 3                      ]]
   [[ "${_folder_folder_files[2]}"   == ".index"               ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1599,15 +1599,15 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"                ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
-  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"  ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"          ]]
+  [[ -z "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")" ]]
 
   # Prints output:
 
@@ -1619,12 +1619,12 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                  ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                           ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                    ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder"        ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/.index" ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                                  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                           ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                    ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"        ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index" ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/Demo Folder" --type "folder"
@@ -1639,23 +1639,23 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
   printf "_folder_folder_files: '%s'" "${_folder_folder_files[@]}"
 
@@ -1664,7 +1664,7 @@ load test_helper
   [[ "${_folder_folder_files[3]}"   == "Demo Folder"          ]]
 
   _folder_folder_folder_files=($(
-    LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+    LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"
   ))
 
   printf "_folder_folder_folder_files: '%s'" "${_folder_folder_folder_files[@]}"
@@ -1674,8 +1674,8 @@ load test_helper
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1683,24 +1683,24 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                        ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"   ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"                ]]
 
-  cat "${_NOTEBOOK_PATH}/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/.index"
-  cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"
-  ls -la "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"
+  cat "${NB_DIR}/home/.index"
+  cat "${NB_DIR}/home/Example Folder/.index"
+  cat "${NB_DIR}/home/Example Folder/Sample Folder/.index"
+  ls -la "${NB_DIR}/home/Example Folder/Sample Folder"
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"           ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"   ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"          ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder/Sample Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"  ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index"           ]]
-  [[ -z "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index")"  ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index"           ]]
+  [[ -z "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index")"  ]]
 
   # Prints output:
 
@@ -1714,9 +1714,9 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/example-filename.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/example-filename.md" --content "# Example Title"
@@ -1731,29 +1731,29 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                      ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                         ]]
   [[ "${#_files[@]}"  == 5                                      ]]
   [[ "${_files[3]}"   == ".index"                               ]]
   [[ "${_files[4]}"   == "Example Folder"                       ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/example-filename.md"  ]]
+  [[ -e "${NB_DIR}/home/Example Folder/example-filename.md"     ]]
   [[ "${#_folder_files[@]}" == 4                                ]]
   [[ "${_folder_files[2]}"  == ".index"                         ]]
   [[ "${_folder_files[3]}"   == "example-filename.md"           ]]
 
 
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -1761,12 +1761,12 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                     ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"   ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                       ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"               ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                      ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"              ]]
 
   # Prints output:
 
@@ -1778,11 +1778,11 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                                    ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" --content "# Example Title"
@@ -1797,36 +1797,36 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
   [[ "${#_folder_folder_files[@]}"  == 4                      ]]
   [[ "${_folder_folder_files[2]}"   == ".index"               ]]
   [[ "${_folder_folder_files[3]}"   == "example-filename.md"  ]]
 
-  [[ -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md" ]]
 
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"/*
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder/Sample Folder"/*
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1834,16 +1834,16 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                       ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"               ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"                ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"          ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder/Sample Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"  ]]
 
   # Prints output:
 
@@ -1855,11 +1855,11 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                                    ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   EDITOR=mock_editor_no_op \
@@ -1875,7 +1875,7 @@ load test_helper
 
   # Does not create path:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
@@ -1883,14 +1883,14 @@ load test_helper
   [[   "${_files[3]}"   == ".index"                             ]]
   [[ ! "${_files[*]}"   =~ "Example Folder"                     ]]
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder"                                      ]]
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                        ]]
-  [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder"                                   ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"                     ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md" ]]
 
   # Does not commit to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1898,10 +1898,10 @@ load test_helper
 
   # Does not add to .indexes:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                ]]
-  [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ Example             ]]
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/.index"               ]]
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index" ]]
+  [[ -e "${NB_DIR}/home/.index"                                ]]
+  [[ ! "$(cat "${NB_DIR}/home/.index")" =~ Example             ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
 
   # Does not print output:
 
@@ -1912,11 +1912,11 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                    ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                             ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                                    ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                             ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/example-filename.md" \
@@ -1933,34 +1933,34 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
   [[ "${#_folder_folder_files[@]}"  == 4                          ]]
   [[ "${_folder_folder_files[2]}"   == ".index"                   ]]
   [[ "${_folder_folder_files[3]}"   == "example-filename.md.enc"  ]]
 
-  [[ -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/example-filename.md.enc" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/example-filename.md.enc" ]]
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -1968,16 +1968,16 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"     ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                       ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                        ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")" ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"          ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder/Sample Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"  ]]
   # Prints output:
 
   [[ "${output}" =~ Added:                                                  ]]
@@ -1990,9 +1990,9 @@ load test_helper
 
     "${_NB}" add "Example Folder/one.md" --content "# Example Title One"
 
-    [[   -e "${_NOTEBOOK_PATH:-}/Example Folder/one.md"                                         ]]
-    [[   -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                                         ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/example-filename.md"  ]]
+    [[   -e "${NB_DIR}/home/Example Folder/one.md"                                         ]]
+    [[   -e "${NB_DIR}/home/Example Folder/.index"                                         ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/example-filename.md"  ]]
   }
 
   EDITOR=mock_editor_no_op \
@@ -2008,7 +2008,7 @@ load test_helper
 
   # Removes only empty directories:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
@@ -2016,19 +2016,19 @@ load test_helper
   [[   "${_files[3]}"   == ".index"                 ]]
   [[   "${_files[*]}"   =~ "Example Folder"         ]]
 
-  [[   -d "${_NOTEBOOK_PATH}/Example Folder"        ]]
-  [[   -e "${_NOTEBOOK_PATH}/Example Folder/.index" ]]
-  [[   -e "${_NOTEBOOK_PATH}/Example Folder/one.md" ]]
+  [[   -d "${NB_DIR}/home/Example Folder"           ]]
+  [[   -e "${NB_DIR}/home/Example Folder/.index"    ]]
+  [[   -e "${NB_DIR}/home/Example Folder/one.md"    ]]
 
 
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"                                    ]]
-  [[ ! -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"                        ]]
-  [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/example-filename.md"  ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"                                 ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"                     ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/example-filename.md" ]]
 
   # Does not commit to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -2036,13 +2036,13 @@ load test_helper
 
   # Retains .index in populated directories:
 
-  [[   -e "${_NOTEBOOK_PATH}/.index"                                          ]]
-  [[   "$(cat "${_NOTEBOOK_PATH}/.index")" =~ Example                         ]]
-  [[   -e "${_NOTEBOOK_PATH}/Example Folder/.index"                           ]]
-  [[   "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" =~ one.md           ]]
-  [[ ! "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")" =~ Sample           ]]
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"             ]]
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index" ]]
+  [[   -e "${NB_DIR}/home/.index"                                          ]]
+  [[   "$(cat "${NB_DIR}/home/.index")" =~ Example                         ]]
+  [[   -e "${NB_DIR}/home/Example Folder/.index"                           ]]
+  [[   "$(cat "${NB_DIR}/home/Example Folder/.index")" =~ one.md           ]]
+  [[ ! "$(cat "${NB_DIR}/home/Example Folder/.index")" =~ Sample           ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"             ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index" ]]
 
   # Does not print output:
 
@@ -2053,13 +2053,13 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                                                ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"                                         ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder"                                  ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/.index"                           ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/example-filename.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                                                ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"                                         ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder"                                  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"                           ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/example-filename.md"  ]]
   }
 
   run "${_NB}" add "Example Folder/Sample Folder/Demo Folder/example-filename.md" \
@@ -2075,45 +2075,45 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder"                    ]]
+  [[ -d "${NB_DIR}/home/Example Folder"                       ]]
   [[ "${#_files[@]}"  == 5                                    ]]
   [[ "${_files[3]}"   == ".index"                             ]]
   [[ "${_files[4]}"   == "Example Folder"                     ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_files[2]}"  == ".index"                       ]]
   [[ "${_folder_files[3]}"  == "Sample Folder"                ]]
 
-  _folder_folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"))
+  _folder_folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder"))
 
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder/Sample Folder"      ]]
+  [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
   [[ "${#_folder_files[@]}" == 4                              ]]
   [[ "${_folder_folder_files[2]}"  == ".index"                ]]
   [[ "${_folder_folder_files[3]}"  == "Demo Folder"           ]]
 
   _folder_folder_folder_files=($(
-    LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"
+    LC_ALL=C ls -a "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"
   ))
 
   [[ "${#_folder_folder_folder_files[@]}"  == 4                      ]]
   [[ "${_folder_folder_folder_files[2]}"   == ".index"               ]]
   [[ "${_folder_folder_folder_files[3]}"   == "example-filename.md"  ]]
 
-  [[ -e "${_NOTEBOOK_PATH:-}/Example Folder/Sample Folder/Demo Folder/example-filename.md" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/example-filename.md" ]]
 
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder"/*
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder"/*
 
   # Commits to git:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
-  while [[ -n "$(git -C "${_NOTEBOOK_PATH}" status --porcelain)" ]]
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
     sleep 1
   done
@@ -2121,23 +2121,23 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                                  ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")"             ]]
+  [[ -e "${NB_DIR}/home/.index"                                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")"                 ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/.index"                                   ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/.index")"                           ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"                                    ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/.index")"                            ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index"                     ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/.index")"             ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"                      ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder/Sample Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"              ]]
 
-  [[ -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index"         ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder")" == \
-       "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Demo Folder/.index")" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index"          ]]
+  [[ "$(ls "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder")" == \
+       "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/.index")"  ]]
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                                                  ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/example-filename.md  ]]
+  [[ "${output}" =~ Added:                                                                ]]
+  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/example-filename.md ]]
 }

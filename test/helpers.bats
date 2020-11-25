@@ -359,7 +359,7 @@ _skip_encrypted_file_detection_tests() {
     "${_NB}" add "example.md" --content "# Example"
   }
 
-  run "${_NB}" helpers highlight "${_NOTEBOOK_PATH}/example.md"
+  run "${_NB}" helpers highlight "${NB_DIR}/home/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -376,7 +376,7 @@ _skip_encrypted_file_detection_tests() {
     "${_NB}" add "example.md" --content "# Example _Title_"
   }
 
-  run "${_NB}" helpers highlight "${_NOTEBOOK_PATH}/example.md" --no-color
+  run "${_NB}" helpers highlight "${NB_DIR}/home/example.md" --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

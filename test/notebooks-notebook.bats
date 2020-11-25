@@ -61,7 +61,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") archived."  ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -97,7 +97,7 @@ _setup_notebook() {
 @test "'notebooks archive' does not create git commit if already archived." {
   {
     _setup_notebook
-    touch "${_NOTEBOOK_PATH}/.archived"
+    touch "${NB_DIR}/home/.archived"
   }
 
   run "${_NB}" notebooks archive
@@ -111,7 +111,7 @@ _setup_notebook() {
   [[ "${output}" =~ archived\.$ ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -136,7 +136,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -181,7 +181,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1

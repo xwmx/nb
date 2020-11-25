@@ -21,7 +21,7 @@ load test_helper
 @test "'remote' with no arguments and existing remote prints url." {
   {
     "${_NB}" init
-    cd "${_NOTEBOOK_PATH}" &&
+    cd "${NB_DIR}/home" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
 
@@ -37,12 +37,12 @@ load test_helper
 @test "'remote' with no arguments does not trigger git commit." {
   {
     "${_NB}" init
-    cd "${_NOTEBOOK_PATH}" &&
+    cd "${NB_DIR}/home" &&
       git remote add origin "${_GIT_REMOTE_URL}"
 
-    touch "${_NOTEBOOK_PATH}/example.md"
+    touch "${NB_DIR}/home/example.md"
 
-    [[ -f "${_NOTEBOOK_PATH}/example.md" ]]
+    [[ -f "${NB_DIR}/home/example.md" ]]
 
     "${_NB}" git dirty
   }
@@ -55,12 +55,12 @@ load test_helper
   [[ "${lines[0]}" == "${_GIT_REMOTE_URL}"  ]]
   [[ ${status} -eq 0                        ]]
 
-  [[ -f "${_NOTEBOOK_PATH}/example.md"      ]]
+  [[ -f "${NB_DIR}/home/example.md"         ]]
 
   "${_NB}" git dirty
 
   # Does not create git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   if [[ -n "$(git status --porcelain)"      ]]
   then
     sleep 1
@@ -88,7 +88,7 @@ load test_helper
 @test "'remote remove' with existing remote removes remote and prints message." {
   {
     "${_NB}" init
-    cd "${_NOTEBOOK_PATH}" &&
+    cd "${NB_DIR}/home" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
 
@@ -108,7 +108,7 @@ load test_helper
 @test "'remote unset' with existing remote removes remote and prints message." {
   {
     "${_NB}" init
-    cd "${_NOTEBOOK_PATH}" &&
+    cd "${NB_DIR}/home" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
 
@@ -161,7 +161,7 @@ load test_helper
 @test "'remote set' with existing remote sets remote and prints message." {
   {
     "${_NB}" init
-    cd "${_NOTEBOOK_PATH}" &&
+    cd "${NB_DIR}/home" &&
       git remote add origin "https://example.test/example.git"
   }
 
@@ -179,7 +179,7 @@ load test_helper
 @test "'remote set' to same URL as existing remote exits and prints message." {
   {
     "${_NB}" init
-    cd "${_NOTEBOOK_PATH}" &&
+    cd "${NB_DIR}/home" &&
       git remote add origin "${_GIT_REMOTE_URL}"
   }
 

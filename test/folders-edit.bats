@@ -23,11 +23,11 @@ load test_helper
 
   # Does not update file:
 
-  [[ ! "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ ! "$(cat "${NB_DIR}/home/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Does not create git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
@@ -63,11 +63,11 @@ load test_helper
 
   # Updates file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -103,11 +103,11 @@ load test_helper
 
   # Updates file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -235,11 +235,11 @@ load test_helper
 
   # Updates file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -275,11 +275,11 @@ load test_helper
 
   # Updates file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -409,11 +409,11 @@ load test_helper
 
   # Updates file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -451,11 +451,11 @@ load test_helper
 
   # Updates file:
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md")" =~ mock_editor ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1

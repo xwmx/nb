@@ -22,11 +22,11 @@ load test_helper
 
   # Does not delete file:
 
-  [[ -e "${_NOTEBOOK_PATH}/example.md" ]]
+  [[ -e "${NB_DIR}/home/example.md" ]]
 
   # Does not create git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -99,9 +99,9 @@ load test_helper
     "${_NB}" add "example.md" --content "Example content."
     "${_NB}" notebooks add "destination"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
-    [[ -e "${_NOTEBOOK_PATH}/example.md" ]]
+    [[ -e "${NB_DIR}/home/example.md" ]]
   }
 
   run "${_NB}" move "example.md" destination:
@@ -109,8 +109,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"  ]]
+  [[ ${status} -eq 0                  ]]
+  [[ ! -e "${NB_DIR}/home/example.md" ]]
 }
 
 # <scope>:<selector> ##########################################################
@@ -239,12 +239,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md"       ]]
   [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -266,7 +266,7 @@ load test_helper
     "${_NB}" add "example.md" --content "Example content."
     "${_NB}" notebooks add "destination"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" move 1 destination: --force
@@ -280,12 +280,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md"       ]]
   [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -317,12 +317,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md"       ]]
   [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -354,12 +354,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md"       ]]
   [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -382,7 +382,7 @@ load test_helper
     "${_NB}" notebooks add "destination"
   }
 
-  run "${_NB}" move "${_NOTEBOOK_PATH}/example.md" destination: --force
+  run "${_NB}" move "${NB_DIR}/home/example.md" destination: --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -393,12 +393,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md"       ]]
   [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -432,12 +432,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md"       ]]
   [[ -e "${NB_DIR}/destination/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -473,12 +473,12 @@ load test_helper
 
   # Moves folder:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder"    ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder"       ]]
   [[ -e "${NB_DIR}/destination/Example Folder"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -519,12 +519,12 @@ load test_helper
 
   # Moves file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/example.md"        ]]
+  [[ ! -e "${NB_DIR}/home/example.md"           ]]
   [[ -e "${_TMP_DIR}/example-local/example.md"  ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -564,7 +564,7 @@ load test_helper
 
   # Moves file:
 
-  [[ -e "${_NOTEBOOK_PATH}/local-example.md"            ]]
+  [[ -e "${NB_DIR}/home/local-example.md"               ]]
   [[ ! -e "${_TMP_DIR}/example-local/local-example.md"  ]]
 
   # Creates git commit:
@@ -609,7 +609,7 @@ load test_helper
 
   # Moves file:
 
-  [[ -e "${_NOTEBOOK_PATH}/local-example.md"            ]]
+  [[ -e "${NB_DIR}/home/local-example.md"               ]]
   [[ ! -e "${_TMP_DIR}/example-local/local-example.md"  ]]
 
   # Creates git commit:

@@ -8,9 +8,9 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder"                      ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/.index"               ]]
-    [[ ! -e "${_NOTEBOOK_PATH:-}/Example Folder/example-filename.md"  ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder"                      ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ ! -e "${NB_DIR}/home/Example Folder/example-filename.md"  ]]
 
     "${_NB}" notebooks add "one"
     "${_NB}" use "one"
@@ -30,7 +30,7 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  _files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/"))
+  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
 
   echo "${_files[@]}"
 
@@ -39,7 +39,7 @@ load test_helper
   [[    "${_files[3]}"   == ".index"                            ]]
   [[    "${_files[4]}"   == "Example Folder"                    ]]
 
-  _folder_files=($(LC_ALL=C ls -a "${_NOTEBOOK_PATH}/Example Folder"))
+  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
 
   [[ -e "${NB_DIR}/home/Example Folder/example-filename.md"     ]]
   [[    "${#_folder_files[@]}" == 4                             ]]

@@ -25,7 +25,7 @@ load test_helper
 
   run "${_NB}" import
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
 
   while [[ -n "$(git status --porcelain)" ]]
@@ -190,15 +190,15 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
 
   [[ "${#_files[@]}" -eq 1        ]]
   [[ "${lines[0]}" =~ "Imported"  ]]
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
+  grep -q '# Example Title' "${NB_DIR}/home"/*
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Imported    ]]
@@ -212,7 +212,7 @@ load test_helper
 
   run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md"
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
 
   while [[ -n "$(git status --porcelain)" ]]
@@ -233,12 +233,12 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
 
   [[ "${#_files[@]}" -eq 2      ]]
   [[ "${lines[0]}" =~ Imported  ]]
   [[ "${lines[0]}" =~ example-1 ]]
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}"/*
+  grep -q '# Example Title' "${NB_DIR}/home"/*
 }
 
 # <directory path> ############################################################
@@ -250,21 +250,21 @@ load test_helper
 
   run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/Example Folder"
 
-  IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS= _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
   [[ "${#_files[@]}" -eq 1 ]]
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder" ]]
-  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.md"       ]]
-  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html" ]]
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
+  [[ -d "${NB_DIR}/home/Example Folder" ]]
+  [[ -f "${NB_DIR}/home/Example Folder/example.md"       ]]
+  [[ -f "${NB_DIR}/home/Example Folder/example.com.html" ]]
   [[ "${lines[0]}" =~ "Imported" ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -273,8 +273,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Imported        ]]
@@ -290,7 +290,7 @@ load test_helper
 
   run "${_NB}" import move "${_TMP_DIR}/Example Folder"
 
-  IFS= _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS= _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -298,14 +298,14 @@ load test_helper
 
   [[ ! -e "${_TMP_DIR}/Example Folder" ]]
   [[ "${#_files[@]}" -eq 1 ]]
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
-  [[ -d "${_NOTEBOOK_PATH}/Example Folder" ]]
-  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.md"       ]]
-  [[ -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html" ]]
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
+  [[ -d "${NB_DIR}/home/Example Folder" ]]
+  [[ -f "${NB_DIR}/home/Example Folder/example.md"       ]]
+  [[ -f "${NB_DIR}/home/Example Folder/example.com.html" ]]
   [[ "${lines[0]}" =~ "Imported" ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -314,8 +314,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Imported        ]]
@@ -343,40 +343,40 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  IFS=$'\n' _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 8                                      ]]
+  [[ "${#_files[@]}" -eq 8                                    ]]
 
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
-  [[    -e "${_TMP_DIR}/fixtures/Example Folder"                ]]
-  [[    -d "${_NOTEBOOK_PATH}/Example Folder"                   ]]
-  [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.md"        ]]
-  [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html"  ]]
-  [[    "${output}" =~ Example\ Folder                          ]]
+  [[    -e "${_TMP_DIR}/fixtures/Example Folder"              ]]
+  [[    -d "${NB_DIR}/home/Example Folder"                    ]]
+  [[    -f "${NB_DIR}/home/Example Folder/example.md"         ]]
+  [[    -f "${NB_DIR}/home/Example Folder/example.com.html"   ]]
+  [[    "${output}" =~ Example\ Folder                        ]]
 
-  [[    -e "${_TMP_DIR}/fixtures/bin"                           ]]
-  [[    -d "${_NOTEBOOK_PATH}/bin"                              ]]
-  [[    -f "${_NOTEBOOK_PATH}/bin/bookmark"                     ]]
-  [[    -f "${_NOTEBOOK_PATH}/bin/mock_editor"                  ]]
-  [[    "${lines[1]}" =~ Imported                               ]]
-  [[    "${output}" =~ bin                                      ]]
+  [[    -e "${_TMP_DIR}/fixtures/bin"                         ]]
+  [[    -d "${NB_DIR}/home/bin"                               ]]
+  [[    -f "${NB_DIR}/home/bin/bookmark"                      ]]
+  [[    -f "${NB_DIR}/home/bin/mock_editor"                   ]]
+  [[    "${lines[1]}" =~ Imported                             ]]
+  [[    "${output}" =~ bin                                    ]]
 
-  [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"     ]]
-  [[    -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"        ]]
-  [[    "${lines[2]}" =~ Imported                               ]]
-  [[    "${output}" =~ copy-deprecated.nb-plugin                ]]
+  [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"   ]]
+  [[    -f "${NB_DIR}/home/copy-deprecated.nb-plugin"         ]]
+  [[    "${lines[2]}" =~ Imported                             ]]
+  [[    "${output}" =~ copy-deprecated.nb-plugin              ]]
 
-  [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"           ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.com-og.html"              ]]
-  [[    "${lines[3]}" =~ Imported                               ]]
-  [[    "${output}" =~ example.com-og.html                      ]]
+  [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"         ]]
+  [[    -f "${NB_DIR}/home/example.com-og.html"               ]]
+  [[    "${lines[3]}" =~ Imported                             ]]
+  [[    "${output}" =~ example.com-og.html                    ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -385,8 +385,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 }
 
 @test "'import' with valid *.md (glob) argument copies multiple markdown files." {
@@ -408,7 +408,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  IFS=$'\n' _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
@@ -416,32 +416,32 @@ load test_helper
   [[ "${#_files[@]}" -eq 2                                  ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com.md"            ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.com.md"               ]]
+  [[    -f "${NB_DIR}/home/example.com.md"                  ]]
   [[    "${output}" =~ example.com.md                       ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.md"                ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.md"                   ]]
+  [[    -f "${NB_DIR}/home/example.md"                      ]]
   [[    "${output}" =~ example.md                           ]]
 
   [[    -e "${_TMP_DIR}/fixtures/Example Folder"            ]]
-  [[ !  -d "${_NOTEBOOK_PATH}/Example Folder"               ]]
+  [[ !  -d "${NB_DIR}/home/Example Folder"                  ]]
   [[ !  "${output}" =~ Example\ Folder                      ]]
 
   [[    -e "${_TMP_DIR}/fixtures/bin"                       ]]
-  [[ !  -d "${_NOTEBOOK_PATH}/bin"                          ]]
+  [[ !  -d "${NB_DIR}/home/bin"                             ]]
   [[ !  "${output}" =~ bin                                  ]]
 
 
   [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin" ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"    ]]
+  [[ !  -f "${NB_DIR}/home/copy-deprecated.nb-plugin"       ]]
   [[ !  "${output}" =~ copy-deprecated.nb-plugin            ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"       ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/example.com-og.html"          ]]
+  [[ !  -f "${NB_DIR}/home/example.com-og.html"             ]]
   [[ !  "${output}" =~ example.com-og.html                  ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -450,8 +450,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                      ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 }
 
 @test "'import' with multiple arguments copies multiple files or directories." {
@@ -473,7 +473,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  IFS=$'\n' _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
@@ -481,32 +481,32 @@ load test_helper
   [[ "${#_files[@]}" -eq 2                                  ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com.md"            ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/example.com.md"               ]]
+  [[ !  -f "${NB_DIR}/home/example.com.md"                  ]]
   [[ !  "${output}" =~ example.com.md                       ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.md"                ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.md"                   ]]
+  [[    -f "${NB_DIR}/home/example.md"                      ]]
   [[    "${output}" =~ example.md                           ]]
 
   [[    -e "${_TMP_DIR}/fixtures/Example Folder"            ]]
-  [[    -d "${_NOTEBOOK_PATH}/Example Folder"               ]]
+  [[    -d "${NB_DIR}/home/Example Folder"                  ]]
   [[    "${output}" =~ Example\ Folder                      ]]
 
   [[    -e "${_TMP_DIR}/fixtures/bin"                       ]]
-  [[ !  -d "${_NOTEBOOK_PATH}/bin"                          ]]
+  [[ !  -d "${NB_DIR}/home/bin"                             ]]
   [[ !  "${output}" =~ bin                                  ]]
 
 
   [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin" ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"    ]]
+  [[ !  -f "${NB_DIR}/home/copy-deprecated.nb-plugin"       ]]
   [[ !  "${output}" =~ copy-deprecated.nb-plugin            ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"       ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/example.com-og.html"          ]]
+  [[ !  -f "${NB_DIR}/home/example.com-og.html"             ]]
   [[ !  "${output}" =~ example.com-og.html                  ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -515,8 +515,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 }
 
 @test "'import move' with valid * (glob) argument moves multiple files and directories." {
@@ -538,40 +538,40 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  IFS=$'\n' _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
   [[ "${#_files[@]}" -eq 8                                      ]]
 
-  grep -q '# Example Title' "${_NOTEBOOK_PATH}/Example Folder"/*
+  grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
-  [[ !  -e "${_TMP_DIR}/fixtures/Example Folder"                ]]
-  [[    -d "${_NOTEBOOK_PATH}/Example Folder"                   ]]
-  [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.md"        ]]
-  [[    -f "${_NOTEBOOK_PATH}/Example Folder/example.com.html"  ]]
-  [[    "${output}" =~ Example\ Folder                          ]]
+  [[ !  -e "${_TMP_DIR}/fixtures/Example Folder"            ]]
+  [[    -d "${NB_DIR}/home/Example Folder"                  ]]
+  [[    -f "${NB_DIR}/home/Example Folder/example.md"       ]]
+  [[    -f "${NB_DIR}/home/Example Folder/example.com.html" ]]
+  [[    "${output}" =~ Example\ Folder                      ]]
 
-  [[ !  -e "${_TMP_DIR}/fixtures/bin"                           ]]
-  [[    -d "${_NOTEBOOK_PATH}/bin"                              ]]
-  [[    -f "${_NOTEBOOK_PATH}/bin/bookmark"                     ]]
-  [[    -f "${_NOTEBOOK_PATH}/bin/mock_editor"                  ]]
-  [[    "${lines[1]}" =~ Imported                               ]]
-  [[    "${output}" =~ bin                                      ]]
+  [[ !  -e "${_TMP_DIR}/fixtures/bin"                       ]]
+  [[    -d "${NB_DIR}/home/bin"                             ]]
+  [[    -f "${NB_DIR}/home/bin/bookmark"                    ]]
+  [[    -f "${NB_DIR}/home/bin/mock_editor"                 ]]
+  [[    "${lines[1]}" =~ Imported                           ]]
+  [[    "${output}" =~ bin                                  ]]
 
-  [[ !  -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"     ]]
-  [[    -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"        ]]
-  [[    "${lines[2]}" =~ Imported                               ]]
-  [[    "${output}" =~ copy-deprecated.nb-plugin                ]]
+  [[ !  -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin" ]]
+  [[    -f "${NB_DIR}/home/copy-deprecated.nb-plugin"       ]]
+  [[    "${lines[2]}" =~ Imported                           ]]
+  [[    "${output}" =~ copy-deprecated.nb-plugin            ]]
 
-  [[ !  -e "${_TMP_DIR}/fixtures/example.com-og.html"           ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.com-og.html"              ]]
-  [[    "${lines[3]}" =~ Imported                               ]]
-  [[    "${output}" =~ example.com-og.html                      ]]
+  [[ !  -e "${_TMP_DIR}/fixtures/example.com-og.html"       ]]
+  [[    -f "${NB_DIR}/home/example.com-og.html"             ]]
+  [[    "${lines[3]}" =~ Imported                           ]]
+  [[    "${output}" =~ example.com-og.html                  ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -580,8 +580,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 }
 
 @test "'import move' with valid *.md (glob) argument moves multiple markdown files." {
@@ -603,7 +603,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  IFS=$'\n' _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
@@ -611,32 +611,32 @@ load test_helper
   [[ "${#_files[@]}" -eq 2                                  ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/example.com.md"            ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.com.md"               ]]
+  [[    -f "${NB_DIR}/home/example.com.md"                  ]]
   [[    "${output}" =~ example.com.md                       ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/example.md"                ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.md"                   ]]
+  [[    -f "${NB_DIR}/home/example.md"                      ]]
   [[    "${output}" =~ example.md                           ]]
 
   [[    -e "${_TMP_DIR}/fixtures/Example Folder"            ]]
-  [[ !  -d "${_NOTEBOOK_PATH}/Example Folder"               ]]
+  [[ !  -d "${NB_DIR}/home/Example Folder"                  ]]
   [[ !  "${output}" =~ Example\ Folder                      ]]
 
   [[    -e "${_TMP_DIR}/fixtures/bin"                       ]]
-  [[ !  -d "${_NOTEBOOK_PATH}/bin"                          ]]
+  [[ !  -d "${NB_DIR}/home/bin"                             ]]
   [[ !  "${output}" =~ bin                                  ]]
 
 
   [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin" ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"    ]]
+  [[ !  -f "${NB_DIR}/home/copy-deprecated.nb-plugin"       ]]
   [[ !  "${output}" =~ copy-deprecated.nb-plugin            ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"       ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/example.com-og.html"          ]]
+  [[ !  -f "${NB_DIR}/home/example.com-og.html"             ]]
   [[ !  "${output}" =~ example.com-og.html                  ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -645,8 +645,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 }
 
 @test "'import move' with multiple arguments moves multiple files or directories." {
@@ -668,7 +668,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  IFS=$'\n' _files=($(ls -1 "${_NOTEBOOK_PATH}/"))
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/"))
 
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
@@ -676,32 +676,32 @@ load test_helper
   [[ "${#_files[@]}" -eq 2                                  ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com.md"            ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/example.com.md"               ]]
+  [[ !  -f "${NB_DIR}/home/example.com.md"                  ]]
   [[ !  "${output}" =~ example.com.md                       ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/example.md"                ]]
-  [[    -f "${_NOTEBOOK_PATH}/example.md"                   ]]
+  [[    -f "${NB_DIR}/home/example.md"                      ]]
   [[    "${output}" =~ example.md                           ]]
 
   [[ !  -e "${_TMP_DIR}/fixtures/Example Folder"            ]]
-  [[    -d "${_NOTEBOOK_PATH}/Example Folder"               ]]
+  [[    -d "${NB_DIR}/home/Example Folder"                  ]]
   [[    "${output}" =~ Example\ Folder                      ]]
 
   [[    -e "${_TMP_DIR}/fixtures/bin"                       ]]
-  [[ !  -d "${_NOTEBOOK_PATH}/bin"                          ]]
+  [[ !  -d "${NB_DIR}/home/bin"                             ]]
   [[ !  "${output}" =~ bin                                  ]]
 
 
   [[    -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin" ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/copy-deprecated.nb-plugin"    ]]
+  [[ !  -f "${NB_DIR}/home/copy-deprecated.nb-plugin"       ]]
   [[ !  "${output}" =~ copy-deprecated.nb-plugin            ]]
 
   [[    -e "${_TMP_DIR}/fixtures/example.com-og.html"       ]]
-  [[ !  -f "${_NOTEBOOK_PATH}/example.com-og.html"          ]]
+  [[ !  -f "${NB_DIR}/home/example.com-og.html"             ]]
   [[ !  "${output}" =~ example.com-og.html                  ]]
 
   # creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -710,8 +710,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 }
 
 # <url> ######################################################################
@@ -726,14 +726,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
   [[ "${#_files[@]}" -eq 1 ]]
 
-  grep -q 'Example' "${_NOTEBOOK_PATH}"/*
+  grep -q 'Example' "${NB_DIR}/home"/*
 
   [[ "${output}" =~ "Imported" ]]
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -743,8 +743,8 @@ load test_helper
   git log | grep -q 'Source'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Imported          ]]
@@ -763,17 +763,17 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
   [[ "${#_files[@]}" -eq 1 ]]
 
-  cat "${_NOTEBOOK_PATH}/${_files[0]}"
+  cat "${NB_DIR}/home/${_files[0]}"
 
-  grep -q 'Example Domain' "${_NOTEBOOK_PATH}/${_files[0]}"
-  grep -q '==============' "${_NOTEBOOK_PATH}/${_files[0]}"
+  grep -q 'Example Domain' "${NB_DIR}/home/${_files[0]}"
+  grep -q '==============' "${NB_DIR}/home/${_files[0]}"
 
   [[ "${output}" =~ "Imported" ]]
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -783,8 +783,8 @@ load test_helper
   git log | grep -q 'Source'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Imported          ]]
@@ -801,14 +801,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _files=($(ls "${_NOTEBOOK_PATH}/"))
+  _files=($(ls "${NB_DIR}/home/"))
   [[ "${#_files[@]}" -eq 1 ]]
 
-  grep -q 'Example' "${_NOTEBOOK_PATH}"/*
+  grep -q 'Example' "${NB_DIR}/home"/*
 
   [[ "${output}" =~ "Imported" ]]
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -818,8 +818,8 @@ load test_helper
   git log | grep -q 'Source'
 
   # Adds to index
-  [[ -e "${_NOTEBOOK_PATH}/.index"                                      ]]
-  [[ "$(ls "${_NOTEBOOK_PATH}")" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
 
   # Prints output
   [[ "${output}" =~ Imported          ]]

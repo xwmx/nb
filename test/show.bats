@@ -9,7 +9,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show
@@ -28,7 +28,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show
@@ -44,7 +44,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "# Example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --dump
@@ -62,7 +62,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "# Example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --dump --no-color
@@ -79,7 +79,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "# Example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show --dump
@@ -116,7 +116,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show "${_filename}" --dump
@@ -135,7 +135,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --dump
@@ -155,10 +155,10 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --dump
+  run "${_NB}" show "${NB_DIR}/home/${_filename}" --dump
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -174,9 +174,9 @@ load test_helper
     "${_NB}" init
     "${_NB}" add --title "Example Title"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
-  _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+  _title="$(head -1 "${NB_DIR}/home/${_filename}" | sed 's/^\# //')"
 
   run "${_NB}" show "${_title}" --dump
 
@@ -194,7 +194,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show "${_filename}" --path
@@ -202,8 +202,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ ${status} -eq 0                              ]]
+  [[ "${output}" == "${NB_DIR}/home/${_filename}" ]]
 }
 
 # `show <id> --path` ##########################################################
@@ -213,7 +213,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --path
@@ -221,8 +221,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ ${status} -eq 0                              ]]
+  [[ "${output}" == "${NB_DIR}/home/${_filename}" ]]
 }
 
 # `show <path> --path` #######################################################
@@ -232,16 +232,16 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --path
+  run "${_NB}" show "${NB_DIR}/home/${_filename}" --path
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ ${status} -eq 0                              ]]
+  [[ "${output}" == "${NB_DIR}/home/${_filename}" ]]
 }
 
 # `show <title> --path` #######################################################
@@ -251,8 +251,8 @@ load test_helper
     "${_NB}" init
     "${_NB}" add --title "Example Title"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${NB_DIR}/home/${_filename}" | sed 's/^\# //')"
   }
 
   run "${_NB}" show "${_title}" --path
@@ -261,7 +261,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "${_NOTEBOOK_PATH}/${_filename}"  ]]
+  [[ "${output}" == "${NB_DIR}/home/${_filename}"  ]]
 }
 
 # `show <filename> --id` ######################################################
@@ -271,7 +271,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show "${_filename}" --id
@@ -290,7 +290,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --id
@@ -309,10 +309,10 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+  run "${_NB}" show "${NB_DIR}/home/${_filename}" --id
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -328,11 +328,11 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
-    _title="$(head -1 "${_NOTEBOOK_PATH}/${_filename}" | sed 's/^\# //')"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    _title="$(head -1 "${NB_DIR}/home/${_filename}" | sed 's/^\# //')"
   }
 
-  run "${_NB}" show "${_NOTEBOOK_PATH}/${_filename}" --id
+  run "${_NB}" show "${NB_DIR}/home/${_filename}" --id
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -348,7 +348,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "# Content" --encrypt --password=example
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --password=example --dump
@@ -370,7 +370,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --filename
@@ -387,7 +387,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --basename
@@ -406,7 +406,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example Title"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --title
@@ -425,7 +425,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --indicators
@@ -443,7 +443,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --encrypt --password=password
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --indicators
@@ -459,11 +459,11 @@ load test_helper
 @test "'show <id> --indicators' exits with status 0 and prints encrypted bookmark indicators." {
   {
     "${_NB}" init
-    "${_NB}" add "example.bookmark.md" \
-      --content "<https://example.test>"   \
+    "${_NB}" add "example.bookmark.md"    \
+      --content "<https://example.test>"  \
       --encrypt --password=password
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --indicators
@@ -483,7 +483,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example Title"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --added
@@ -500,7 +500,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example Title"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 -a
@@ -529,7 +529,7 @@ load test_helper
 
     "${_NB}" edit 1 --content "More content."
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --updated
@@ -558,7 +558,7 @@ load test_helper
 
     "${_NB}" edit 1 --content "More content."
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 -u
@@ -707,7 +707,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type
@@ -724,7 +724,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type
@@ -741,7 +741,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type md
@@ -758,7 +758,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type bookmark.md
@@ -775,7 +775,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type md
@@ -792,7 +792,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type text
@@ -809,7 +809,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type bookmark
@@ -826,7 +826,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type not-valid
@@ -913,7 +913,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" s 1 --filename
@@ -932,7 +932,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" view 1 --filename
@@ -951,7 +951,7 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" 1 show --filename
@@ -971,7 +971,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
@@ -991,7 +991,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
@@ -1011,7 +1011,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
@@ -1031,7 +1031,7 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
@@ -1053,7 +1053,7 @@ load test_helper
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --filename
@@ -1071,7 +1071,7 @@ load test_helper
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --filename
@@ -1089,7 +1089,7 @@ load test_helper
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --path
@@ -1107,7 +1107,7 @@ load test_helper
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --path
@@ -1125,7 +1125,7 @@ load test_helper
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example.md --id
@@ -1143,7 +1143,7 @@ load test_helper
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --id
@@ -1161,7 +1161,7 @@ load test_helper
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --title
@@ -1179,7 +1179,7 @@ load test_helper
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --title
@@ -1197,7 +1197,7 @@ load test_helper
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --selector-id
@@ -1215,7 +1215,7 @@ load test_helper
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --selector-id

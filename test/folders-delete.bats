@@ -13,7 +13,7 @@ load test_helper
     "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md"  ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md"  ]]
 
   }
 
@@ -28,12 +28,12 @@ load test_helper
 
   # Does not delete file:
 
-  [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md"  ]]
+  [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md"  ]]
 
 
   # Does not create git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
@@ -57,7 +57,7 @@ load test_helper
     "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md"  ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md"  ]]
 
   }
 
@@ -72,12 +72,12 @@ load test_helper
 
   # Deletes file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md"  ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md"  ]]
 
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
@@ -101,7 +101,7 @@ load test_helper
     "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
   }
 
   run "${_NB}" delete "Example Folder/Sample Folder/Example File.bookmark.md" --force
@@ -115,12 +115,12 @@ load test_helper
 
   # Deletes file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
 
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
@@ -240,7 +240,7 @@ load test_helper
     "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md" ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md" ]]
   }
 
   run "${_NB}" delete "Example Folder/1" --force
@@ -254,11 +254,11 @@ load test_helper
 
   # Deletes file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md" ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md" ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -282,7 +282,7 @@ load test_helper
     "${_NB}" add "Example Folder/Sample Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md" ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md" ]]
   }
 
   run "${_NB}" delete "Example Folder/Sample Folder/1" --force
@@ -296,11 +296,11 @@ load test_helper
 
   # Deletes file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md" ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md" ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -418,7 +418,7 @@ load test_helper
       --title   "Example Title"                             \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md" ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md" ]]
   }
 
   run "${_NB}" delete "Example Folder/Example Title" --force
@@ -432,11 +432,11 @@ load test_helper
 
   # Deletes  file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Example File.bookmark.md" ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md" ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -462,7 +462,7 @@ load test_helper
       --title   "Example Title"                                           \
       --content "<https://example.test>"
 
-    [[   -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md" ]]
+    [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md" ]]
   }
 
   run "${_NB}" delete "Example Folder/Sample Folder/Example Title" --force
@@ -476,11 +476,11 @@ load test_helper
 
   # Deletes file:
 
-  [[ ! -e "${_NOTEBOOK_PATH}/Example Folder/Sample Folder/Example File.bookmark.md" ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md" ]]
 
   # Creates git commit:
 
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1

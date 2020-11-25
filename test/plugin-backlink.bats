@@ -38,9 +38,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  cat "${_NOTEBOOK_PATH}/first.md"
-  cat "${_NOTEBOOK_PATH}/second.md"
-  cat "${_NOTEBOOK_PATH}/third.md"
+  cat "${NB_DIR}/home/first.md"
+  cat "${NB_DIR}/home/second.md"
+  cat "${NB_DIR}/home/third.md"
 
   _first_content="# one
 
@@ -67,12 +67,12 @@ Demo content [[one]] apricot plum.
   [[ "${status}" == 0               ]]
   [[ "${output:-}" == "Backlinked!" ]]
 
-  diff <(cat "${_NOTEBOOK_PATH}/first.md")  <(echo "${_first_content}")
-  diff <(cat "${_NOTEBOOK_PATH}/second.md") <(echo "${_second_content}")
-  diff <(cat "${_NOTEBOOK_PATH}/third.md")  <(echo "${_third_content}")
+  diff <(cat "${NB_DIR}/home/first.md")  <(echo "${_first_content}")
+  diff <(cat "${NB_DIR}/home/second.md") <(echo "${_second_content}")
+  diff <(cat "${NB_DIR}/home/third.md")  <(echo "${_third_content}")
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -114,9 +114,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  cat "${_NOTEBOOK_PATH}/first.md"
-  cat "${_NOTEBOOK_PATH}/second.md"
-  cat "${_NOTEBOOK_PATH}/third.md"
+  cat "${NB_DIR}/home/first.md"
+  cat "${NB_DIR}/home/second.md"
+  cat "${NB_DIR}/home/third.md"
 
   _first_content="# one
 
@@ -133,12 +133,12 @@ Demo content one apricot plum."
   [[ "${status}" == 0                       ]]
   [[ "${output:-}" == "No new links found." ]]
 
-  diff <(cat "${_NOTEBOOK_PATH}/first.md")  <(echo "${_first_content}")
-  diff <(cat "${_NOTEBOOK_PATH}/second.md") <(echo "${_second_content}")
-  diff <(cat "${_NOTEBOOK_PATH}/third.md")  <(echo "${_third_content}")
+  diff <(cat "${NB_DIR}/home/first.md")  <(echo "${_first_content}")
+  diff <(cat "${NB_DIR}/home/second.md") <(echo "${_second_content}")
+  diff <(cat "${NB_DIR}/home/third.md")  <(echo "${_third_content}")
 
   # Does not create git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   if [[ -n "$(git status --porcelain)" ]]
   then
     sleep 1

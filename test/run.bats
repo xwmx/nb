@@ -9,7 +9,7 @@ load test_helper
     "${_NB}" add "two.md" --title "two"
     "${_NB}" add "three.md" --title "three"
 
-    _files="$(ls "${_NOTEBOOK_PATH}/")"
+    _files="$(ls "${NB_DIR}/home/")"
   }
 
   run "${_NB}" run ls

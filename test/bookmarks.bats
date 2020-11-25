@@ -28,7 +28,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" bookmarks
@@ -70,7 +70,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" bookmarks --sort

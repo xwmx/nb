@@ -50,11 +50,11 @@ _copy() {
   _set_selection_notebook "${_selection}"
 
   # Validate that the selection is a file.
-  if [[ -z "${_source_basename:-}"                    ]] ||
-     [[ ! -e "${_NOTEBOOK_PATH}/${_source_basename}"  ]]
+  if [[ -z "${_source_basename:-}"                  ]] ||
+     [[ ! -e "${NB_DIR}/home/${_source_basename}"   ]]
   then
     _exit_1 printf "Not found: %s\\n" "${_selection}"
-  elif [[ ! -f "${_NOTEBOOK_PATH}/${_source_basename}" ]]
+  elif [[ ! -f "${NB_DIR}/home/${_source_basename}" ]]
   then
     _exit_1 printf "Not a file: %s\\n" "${_selection}"
   fi
@@ -68,9 +68,9 @@ _copy() {
     _show "${_source_basename}" --no-color --print | _add "${_target_basename}"
   else # Binary files must be copied manually.
     # Copy the binary file to the new basename.
-    cp                                        \
-      "${_NOTEBOOK_PATH}/${_source_basename}" \
-      "${_NOTEBOOK_PATH}/${_target_basename}"
+    cp                                      \
+      "${NB_DIR}/home/${_source_basename}"  \
+      "${NB_DIR}/home/${_target_basename}"
 
     # Add the new basename to the index.
     _index add "${_target_basename}"

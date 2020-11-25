@@ -8,9 +8,9 @@ load test_helper
   {
     "${_NB}" init
 
-    rm "${_NOTEBOOK_PATH}/.index"
+    rm "${NB_DIR}/home/.index"
 
-    [[ ! -e "${_NOTEBOOK_PATH}/.index" ]]
+    [[ ! -e "${NB_DIR}/home/.index" ]]
   }
 
   run "${_NB}" index
@@ -18,7 +18,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -e "${_NOTEBOOK_PATH}/.index" ]]
+  [[ -e "${NB_DIR}/home/.index" ]]
 }
 
 # add #########################################################################
@@ -28,20 +28,20 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
 
-    echo "" > "${_NOTEBOOK_PATH}/.index"
+    echo "" > "${NB_DIR}/home/.index"
 
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
+    [[ ! "$(cat "${NB_DIR}/home/.index")" =~ ^first.md$ ]]
   }
 
-  run "${_NB}" index add "$(ls "${_NOTEBOOK_PATH}")"
+  run "${_NB}" index add "$(ls "${NB_DIR}/home")"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf "\$(cat \${_NOTEBOOK_PATH}/.index): '%s'\\n" \
-    "$(cat "${_NOTEBOOK_PATH}/.index")"
-  printf "\$(ls ${_NOTEBOOK_PATH}): '%s'\\n" "$(ls "${_NOTEBOOK_PATH}")"
+  printf "\$(cat \${NB_DIR}/home/.index): '%s'\\n" \
+    "$(cat "${NB_DIR}/home/.index")"
+  printf "\$(ls ${NB_DIR}/home): '%s'\\n" "$(ls "${NB_DIR}/home")"
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ first.md$ ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" =~ first.md$ ]]
 }
 
 @test "'index add' with no argument returns 1 and prints help." {
@@ -49,9 +49,9 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
 
-    echo "" > "${_NOTEBOOK_PATH}/.index"
+    echo "" > "${NB_DIR}/home/.index"
 
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
+    [[ ! "$(cat "${NB_DIR}/home/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NB}" index add
@@ -69,9 +69,9 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
 
-    echo "" > "${_NOTEBOOK_PATH}/.index"
+    echo "" > "${NB_DIR}/home/.index"
 
-    [[ ! "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
+    [[ ! "$(cat "${NB_DIR}/home/.index")" =~ ^first.md$ ]]
   }
 
   run "${_NB}" index add 'not-a-file'
@@ -88,16 +88,16 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
 
-    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$ ]]
+    [[ "$(cat "${NB_DIR}/home/.index")" =~ ^first.md$ ]]
   }
 
-  run "${_NB}" index add "$(ls "${_NOTEBOOK_PATH}")"
+  run "${_NB}" index add "$(ls "${NB_DIR}/home")"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" =~ ^first.md$  ]]
-  [[ -z "${lines[1]}"                                   ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" =~ ^first.md$   ]]
+  [[ -z "${lines[1]}"                                 ]]
 }
 
 # get_basename ################################################################
@@ -154,7 +154,7 @@ load test_helper
     "${_NB}" add "first.md"  --title "one"
   }
 
-  run "${_NB}" index get_id "$(ls "${_NOTEBOOK_PATH}")"
+  run "${_NB}" index get_id "$(ls "${NB_DIR}/home")"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -234,13 +234,13 @@ load test_helper
     "${_NB}" add "first.md"  --title "one"
   }
 
-  run "${_NB}" index delete "$(ls "${_NOTEBOOK_PATH}")"
+  run "${_NB}" index delete "$(ls "${NB_DIR}/home")"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                            ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == ""  ]]
+  [[ ${status} -eq 0                        ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" == "" ]]
 }
 
 @test "'index delete' with no argument returns 1 and prints help." {
@@ -285,8 +285,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${output}" == "$(cat "${_NOTEBOOK_PATH}/.index")" ]]
+  [[ ${status} -eq 0                                  ]]
+  [[ "${output}" == "$(cat "${NB_DIR}/home/.index")"  ]]
 }
 
 # update ######################################################################
@@ -297,16 +297,16 @@ load test_helper
     "${_NB}" add "# one"
   }
 
-  run "${_NB}" index update "$(ls "${_NOTEBOOK_PATH}")" "example.md"
+  run "${_NB}" index update "$(ls "${NB_DIR}/home")" "example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
   printf \
-    "$(cat \"\$\{_NOTEBOOK_PATH\}/.index\"): '%s'\\n" \
-    "$(cat "${_NOTEBOOK_PATH}/.index")"
+    "$(cat \"\$\{NB_DIR\}/home/.index\"): '%s'\\n" \
+    "$(cat "${NB_DIR}/home/.index")"
 
-  [[ ${status} -eq 0                                      ]]
-  [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "example.md"  ]]
+  [[ ${status} -eq 0                                  ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" == "example.md" ]]
 }
 
 @test "'index update' with no arguments returns 1 and prints help." {
@@ -330,7 +330,7 @@ load test_helper
     "${_NB}" add "# one"
   }
 
-  run "${_NB}" index update "$(ls "${_NOTEBOOK_PATH}")"
+  run "${_NB}" index update "$(ls "${NB_DIR}/home")"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -348,11 +348,11 @@ load test_helper
     "${_NB}" add "second.md" --title "two"
 
     printf \
-      "\"\$(cat \"\${_NOTEBOOK_PATH}/.index\")\": '%s'\\n" \
-      "$(cat "${_NOTEBOOK_PATH}/.index")"
-    printf "\$(ls \${_NOTEBOOK_PATH}): '%s'\\n" "$(ls "${_NOTEBOOK_PATH}")"
+      "\"\$(cat \"\${NB_DIR}/home/.index\")\": '%s'\\n" \
+      "$(cat "${NB_DIR}/home/.index")"
+    printf "\$(ls \${NB_DIR}/home): '%s'\\n" "$(ls "${NB_DIR}/home")"
 
-    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" == "$(ls "${_NOTEBOOK_PATH}")" ]]
+    [[ "$(cat "${NB_DIR}/home/.index")" == "$(ls "${NB_DIR}/home")" ]]
   }
 
   run "${_NB}" index verify
@@ -369,9 +369,9 @@ load test_helper
     "${_NB}" add "first.md"  --title "one"
     "${_NB}" add "second.md" --title "two"
 
-    printf "not-a-file\\n" >> "${_NOTEBOOK_PATH}/.index"
+    printf "not-a-file\\n" >> "${NB_DIR}/home/.index"
 
-    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
+    [[ "$(cat "${NB_DIR}/home/.index")" != "$(ls "${NB_DIR}/home")" ]]
   }
 
   run "${_NB}" index verify
@@ -388,9 +388,9 @@ load test_helper
     "${_NB}" add "first.md"  --title "one"
     "${_NB}" add "second.md" --title "two"
 
-    printf "second.md\\n" >> "${_NOTEBOOK_PATH}/.index"
+    printf "second.md\\n" >> "${NB_DIR}/home/.index"
 
-    [[ "$(cat "${_NOTEBOOK_PATH}/.index")" != "$(ls "${_NOTEBOOK_PATH}")" ]]
+    [[ "$(cat "${NB_DIR}/home/.index")" != "$(ls "${NB_DIR}/home")" ]]
   }
 
   run "${_NB}" index verify

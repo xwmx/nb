@@ -36,7 +36,7 @@ _search_all_setup() {
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search
@@ -55,7 +55,7 @@ _search_all_setup() {
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'no match'
@@ -75,7 +75,7 @@ _search_all_setup() {
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'idyl'
@@ -100,7 +100,7 @@ _search_all_setup() {
       --content   "<http://example.test/>"  \
       --title     "Example Title"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.test' --no-color
@@ -121,7 +121,7 @@ _search_all_setup() {
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'idyl' --path
@@ -129,16 +129,16 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}      -eq 0                           ]]
-  [[ "${lines[0]}"  =~ ${_NOTEBOOK_PATH}/first\.md  ]]
-  [[ "${#lines[@]}" -eq 1                           ]]
+  [[ ${status}      -eq 0                       ]]
+  [[ "${lines[0]}"  =~ ${NB_DIR}/home/first\.md ]]
+  [[ "${#lines[@]}" -eq 1                       ]]
 }
 
 @test "'search <one match> --list' exits with status 0 and prints listing." {
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'idyl' --list
@@ -168,7 +168,7 @@ HEREDOC
 sweetish
 HEREDOC
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search '1-example.md'
@@ -206,7 +206,7 @@ HEREDOC
       --content   "<http://example.test/>"  \
       --title     "Example Title Two"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.test' --no-color --use-grep --list
@@ -244,7 +244,7 @@ HEREDOC
       --content   "<http://example.test/>"  \
       --title     "Example Title Two"
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.test' --no-color --use-grep
@@ -274,7 +274,7 @@ HEREDOC
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --use-grep
@@ -299,7 +299,7 @@ HEREDOC
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --path --use-grep
@@ -308,17 +308,17 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status} -eq 0                                ]]
-  [[ "${lines[0]}" =~ ${_NOTEBOOK_PATH}/second\.md  ]]
-  [[ "${lines[1]}" =~ ${_NOTEBOOK_PATH}/third\.md   ]]
-  [[ "${#lines[@]}" -eq 2                           ]]
+  [[ ${status} -eq 0                            ]]
+  [[ "${lines[0]}" =~ ${NB_DIR}/home/second\.md ]]
+  [[ "${lines[1]}" =~ ${NB_DIR}/home/third\.md  ]]
+  [[ "${#lines[@]}" -eq 2                       ]]
 }
 
 @test "'search <multiple matches> --list' exits with 0 and prints listings." {
   {
     _setup_search
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --list --use-grep
@@ -351,7 +351,7 @@ HEREDOC
 sweetish
 HEREDOC
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.md'
@@ -388,7 +388,7 @@ HEREDOC
 
 sweetish
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --use-grep
@@ -433,7 +433,7 @@ HEREDOC
 
 sweetish
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --bookmarks --use-grep

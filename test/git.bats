@@ -9,10 +9,10 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
-    printf "New content.\\n" >> "${_NOTEBOOK_PATH}/${_filename}"
-    [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ New\ content ]]
+    printf "New content.\\n" >> "${NB_DIR}/home/${_filename}"
+    [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ New\ content ]]
   }
 
   run "${_NB}" git checkpoint
@@ -24,7 +24,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -37,10 +37,10 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
-    printf "New content.\\n" >> "${_NOTEBOOK_PATH}/${_filename}"
-    [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ New\ content ]]
+    printf "New content.\\n" >> "${NB_DIR}/home/${_filename}"
+    [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ New\ content ]]
   }
 
   run "${_NB}" git checkpoint
@@ -52,7 +52,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -65,10 +65,10 @@ load test_helper
     "${_NB}" init
     "${_NB}" add
 
-    _files=($(ls "${_NOTEBOOK_PATH}/")) && _filename="${_files[0]}"
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
-    printf "New content.\\n" >> "${_NOTEBOOK_PATH}/${_filename}"
-    [[ "$(cat "${_NOTEBOOK_PATH}/${_filename}")" =~ New\ content ]]
+    printf "New content.\\n" >> "${NB_DIR}/home/${_filename}"
+    [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ New\ content ]]
   }
 
   run "${_NB}" git checkpoint "Unique message."
@@ -80,7 +80,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   git log
   while [[ -n "$(git status --porcelain)" ]]
   do

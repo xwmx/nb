@@ -280,8 +280,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" notebooks add Example
-
-    _NOTEBOOK_PATH="${NB_DIR}/Example"
   }
 
   run "${_NB}" Example:add "# Content"
@@ -377,8 +375,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" notebooks add Example
-
-    _NOTEBOOK_PATH="${NB_DIR}/Example"
   }
 
   run "${_NB}" Example:add "${_BOOKMARK_URL}"
@@ -724,9 +720,9 @@ load test_helper
 
   cd "${NB_DIR}/home" || return 1
 
-  [[   -n "$(ls example)"                   ]]
-  [[   -e "${_NOTEBOOK_PATH:?}/example"     ]]
-  [[ ! -e "${_NOTEBOOK_PATH:?}/example.md"  ]]
+  [[   -n "$(ls example)"             ]]
+  [[   -e "${NB_DIR}/home/example"    ]]
+  [[ ! -e "${NB_DIR}/home/example.md" ]]
 
   grep -q '# mock_editor' "${NB_DIR}/home"/*
 
