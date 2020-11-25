@@ -44,6 +44,11 @@ _setup() {
   # The location of the `notes` script being tested.
   export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
 
+  # `$_NB_PATH`
+  #
+  # Used by `bookmark` and `notes` for testing.
+  export _NB_PATH="${_NB}"
+
   export _TMP_DIR
   _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
 
