@@ -62,6 +62,7 @@ _setup() {
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
   export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
+  export _OG_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
 
   # `$_ERROR_PREFIX`
   #

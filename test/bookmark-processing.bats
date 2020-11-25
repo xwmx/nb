@@ -2,9 +2,6 @@
 
 load test_helper
 
-export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
-export _OG_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
-
 @test "'bookmark' extracts title and meta description tag content." {
   {
     "${_NB}" init
