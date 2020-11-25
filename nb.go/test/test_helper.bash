@@ -7,11 +7,10 @@
 # https://github.com/sstephenson/bats
 ###############################################################################
 
+source "${BATS_TEST_DIRNAME}/../../test/test_helper.bash"
+
 setup() {
-  # $_NB
-  #
-  # The location of the `nb` script being tested.
-  export _NB="${BATS_TEST_DIRNAME}/../../nb"
+  _setup "${BATS_TEST_DIRNAME}/../../test"
 
   # $_NBGO
   #
@@ -24,13 +23,4 @@ setup() {
     printf "nb.go executable not found\\n." 1>&2
     return 1
   fi
-
-  # $_TMP_DIR
-  #
-  # Temp directory path.
-  export _TMP_DIR
-  _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
-
-  # $NB_DIR
-  export NB_DIR="${_TMP_DIR}/nbdir"
 }
