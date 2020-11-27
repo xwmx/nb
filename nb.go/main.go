@@ -35,12 +35,15 @@ package main
 import (
 	"errors"
 	"fmt"
-	"golang.org/x/sys/unix"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
+
+	"golang.org/x/sys/unix"
+
 	// "strings"
 	"syscall"
 )
@@ -77,24 +80,33 @@ type subcommand struct {
 }
 
 // cmdRun runs the `run` subcommand.
-func cmdRun(cfg config, args []string, env []string) error {
+func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader, error) {
 	var arguments []string
 
 	if len(args) < 2 {
-		return errors.New("Command required.")
+		return nil, errors.New("Command required.")
 	} else if 2 <= len(args) {
 		arguments = args[2:]
 	} else {
 		arguments = []string{}
 	}
 
-	cmd := exec.Command(args[1], arguments...)
-	cmd.Dir = cfg.nbDir
+	pipeReader, pipeWriter := io.Pipe()
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	go func() {
+		cmd := exec.Command(args[1], arguments...)
 
-	return cmd.Run()
+		cmd.Dir = cfg.nbDir
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = pipeWriter
+
+		cmd.Start()
+		cmd.Wait()
+
+		pipeWriter.Close()
+	}()
+
+	return pipeReader, nil
 }
 
 // configure loads the configuration from the environment.
@@ -248,33 +260,34 @@ NB_DIR settings prompt:
 }
 
 // run loads the configuration and environment, then runs the subcommand.
-func run() error {
+func run() (io.Reader, error) {
 	var cfg config
 	var err error
+	var output io.Reader
 
 	if cfg, err = configure(); err != nil {
-		return err
+		return output, err
 	}
 
 	args := os.Args
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if err := cmdRun(cfg, args[1:], env); err != nil {
-			return err
+		if output, err = cmdRun(cfg, os.Stdin, args[1:], env); err != nil {
+			return output, err
 		}
 	} else {
 		if err := syscall.Exec(cfg.nbPath, args, env); err != nil {
-			return err
+			return output, err
 		}
 	}
 
-	return nil
+	return output, nil
 }
 
 // main is the primary entry point for the program.
 func main() {
-	os.Exit(presentError(run()))
+	os.Exit(present(run()))
 }
 
 func pipedInputIsPresent() bool {
@@ -293,12 +306,17 @@ func pipedInputIsPresent() bool {
 	return true
 }
 
-// presentError translates an error into a message presnted to the user and
-// returns the appropriate exit code.
-func presentError(err error) int {
+// present prints output to standard out or translates an error into a message
+// presnted to the user and returns the appropriate exit code.
+func present(output io.Reader, err error) int {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
+
 		return 1
+	}
+
+	if output != nil {
+		io.Copy(os.Stdout, output)
 	}
 
 	return 0

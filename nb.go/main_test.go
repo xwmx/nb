@@ -7,18 +7,18 @@ import (
 	"testing"
 )
 
-// presentError
+// present
 
-func TestPresentErrorWithErrorReturns1(t *testing.T) {
-	exitCode := presentError(errors.New("Test error."))
+func TestPresentWithErrorReturns1(t *testing.T) {
+	exitCode := present(nil, errors.New("Test error."))
 	if exitCode != 1 {
-		t.Errorf("presentError exitCode incorrect. got: %d, want: %d.", exitCode, 1)
+		t.Errorf("present exitCode incorrect. got: %d, want: %d.", exitCode, 1)
 	}
 }
 
-func TestPresentErrorWithNoErrorReturns0(t *testing.T) {
-	exitCode := presentError(nil)
+func TestPresentWithNoErrorReturns0(t *testing.T) {
+	exitCode := present(nil, nil)
 	if exitCode != 0 {
-		t.Errorf("presentError exitCode incorrect. got: %d, want: %d.", exitCode, 1)
+		t.Errorf("present exitCode incorrect. got: %d, want: %d.", exitCode, 1)
 	}
 }
