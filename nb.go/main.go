@@ -306,8 +306,8 @@ func pipedInputIsPresent() bool {
 	return true
 }
 
-// present prints output to standard out or translates an error into a message
-// presnted to the user and returns the appropriate exit code.
+// present prints the output to standard out or standard error and returns the
+// appropriate exit code.
 func present(output io.Reader, err error) int {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
