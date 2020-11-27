@@ -81,22 +81,16 @@ type subcommand struct {
 
 // cmdRun runs the `run` subcommand.
 func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader, error) {
-	var arguments []string
-
-	if len(args) < 2 {
+	if len(args) == 0 {
 		return nil, errors.New("Command required.")
-	} else if 2 <= len(args) {
-		arguments = args[2:]
-	} else {
-		arguments = []string{}
 	}
 
 	pipeReader, pipeWriter := io.Pipe()
 
 	go func() {
-		cmd := exec.Command(args[1], arguments...)
+		cmd := exec.Command(args[0], args[1:]...)
 
-		cmd.Dir = cfg.nbDir
+		cmd.Dir = cfg.nbNotebookPath
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = pipeWriter
 
@@ -331,7 +325,7 @@ func run() (io.Reader, error) {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if output, err = cmdRun(cfg, os.Stdin, args[1:], env); err != nil {
+		if output, err = cmdRun(cfg, os.Stdin, args[2:], env); err != nil {
 			return output, err
 		}
 	} else {
