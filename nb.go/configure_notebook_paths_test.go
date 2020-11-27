@@ -9,7 +9,7 @@ import (
 
 func TestConfigureNotebookPathsSetsNotebookPathFields(t *testing.T) {
 	originalCfg := config{
-		nbDir: "/tmp/example-nb-dir",
+		nbDir: filepath.Join("tmp", "example-nb-dir"),
 	}
 
 	expectedPath := filepath.Join(originalCfg.nbDir, "home")
