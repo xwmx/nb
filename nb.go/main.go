@@ -298,9 +298,23 @@ NB_DIR settings prompt:
 
 	os.Setenv("NB_SYNTAX_THEME", cfg.nbSyntaxTheme)
 
+	// Notebook Paths
+
+	cfg = configureNotebookPaths(cfg)
+
 	// return
 
 	return cfg, nil
+}
+
+// configureNotebookPaths takes a configuration and returns a copy with
+// notebook path fields set to values derived from the environment.
+func configureNotebookPaths(cfg config) config {
+	// TODO
+
+	cfg.nbNotebookPath = filepath.Join(cfg.nbDir, "home")
+
+	return cfg
 }
 
 // run loads the configuration and environment, then runs the subcommand.
