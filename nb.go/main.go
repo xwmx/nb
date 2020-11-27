@@ -116,12 +116,18 @@ func configure() (config, error) {
 	cfg := config{}
 
 	// `nb` (.sh) path
+	//
+	// The path to the `nb` executable.
 
 	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
 		return config{}, err
 	}
 
 	// $NBRC_PATH
+	//
+	// Default: `$HOME/.nbrc`
+	//
+	// The location of the .nbrc configuration file.
 
 	if cfg.nbrcPath = os.Getenv("NBRC_PATH"); cfg.nbrcPath == "" {
 		if runtime.GOOS == "windows" {
@@ -129,11 +135,16 @@ func configure() (config, error) {
 		} else {
 			cfg.nbrcPath = filepath.Join(os.Getenv("HOME"), ".nbrc")
 
-			// TODO: Sourcing rc file.
+			// TODO: Handle symlinks.
+			// TODO: Source rc file.
 		}
 	}
 
 	// $NB_DIR
+	//
+	// Default: `$HOME/.nb`
+	//
+	// The location of the directory that contains the notebooks.
 
 	if cfg.nbDir = os.Getenv("NB_DIR"); cfg.nbDir == "" {
 		var parentDir string
@@ -181,6 +192,10 @@ NB_DIR settings prompt:
 	}
 
 	// $_GIT_ENABLED
+	//
+	// Default: '1'
+	//
+	// Supported Values: '0' '1'
 
 	if os.Getenv("_GIT_ENABLED") == "0" {
 		cfg.gitEnabled = false
@@ -195,6 +210,11 @@ NB_DIR settings prompt:
 	}
 
 	// $NB_AUTO_SYNC
+	//
+	// Default: '1'
+	//
+	// When set to '1', each `_git checkpoint()` call will automativally run
+	// `$_ME sync`. To disable this behavior, set the value to '0'.
 
 	if os.Getenv("NB_AUTO_SYNC") == "0" {
 		cfg.nbAutoSync = false
@@ -205,6 +225,10 @@ NB_DIR settings prompt:
 	}
 
 	// $NB_DEFAULT_EXTENSION
+	//
+	// Default: 'md'
+	//
+	// Example Values: 'md' 'org'
 
 	if cfg.nbDefaultExtension = os.Getenv("NB_DEFAULT_EXTENSION"); cfg.nbDefaultExtension == "" {
 		cfg.nbDefaultExtension = "md"
@@ -213,6 +237,10 @@ NB_DIR settings prompt:
 	os.Setenv("NB_DEFAULT_EXTENSION", cfg.nbDefaultExtension)
 
 	// $NB_ENCRYPTION_TOOL
+	//
+	// Default: 'openssl'
+	//
+	// Supported Values: 'gpg' 'openssl'
 
 	if cfg.nbEncryptionTool = os.Getenv("NB_ENCRYPTION_TOOL"); cfg.nbEncryptionTool == "" {
 		cfg.nbEncryptionTool = "openssl"
@@ -221,6 +249,10 @@ NB_DIR settings prompt:
 	os.Setenv("NB_ENCRYPTION_TOOL", cfg.nbEncryptionTool)
 
 	// $NB_FOOTER
+	//
+	// Default: '1'
+	//
+	// Supported Values: '0' '1'
 
 	if os.Getenv("NB_FOOTER") == "0" {
 		cfg.nbFooter = false
@@ -231,6 +263,10 @@ NB_DIR settings prompt:
 	}
 
 	// $NB_HEADER
+	//
+	// Default: '2'
+	//
+	// Supported Values: '0' '1' '2' '3'
 
 	if cfg.nbHeader, err = strconv.Atoi(os.Getenv("NB_HEADER")); err != nil {
 		cfg.nbHeader = 2
@@ -239,6 +275,10 @@ NB_DIR settings prompt:
 	os.Setenv("NB_HEADER", strconv.Itoa(cfg.nbHeader))
 
 	// $NB_LIMIT
+	//
+	// Default: '20'
+	//
+	// Supported Values: any positive number
 
 	if cfg.nbLimit, err = strconv.Atoi(os.Getenv("NB_LIMIT")); err != nil {
 		cfg.nbLimit = 20
@@ -247,6 +287,10 @@ NB_DIR settings prompt:
 	os.Setenv("NB_HEADER", strconv.Itoa(cfg.nbLimit))
 
 	// $NB_SYNTAX_THEME
+	//
+	// Default: 'base16'
+	//
+	// Supported Values: Theme names listed with `bat --list-themes`
 
 	if cfg.nbSyntaxTheme = os.Getenv("NB_SYNTAX_THEME"); cfg.nbSyntaxTheme == "" {
 		cfg.nbSyntaxTheme = "base16"
