@@ -80,13 +80,13 @@ type subcommand struct {
 }
 
 // cmdRun runs the `run` subcommand.
-func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader, chan int, error) {
+func cmdRun(cfg config, inputReader io.Reader, args []string, env []string) (io.Reader, chan int, error) {
 	if len(args) == 0 {
 		return nil, nil, errors.New("Command required.")
 	}
 
 	exitStatusChannel := make(chan int)
-	pipeReader, pipeWriter := io.Pipe()
+	outputReader, outputWriter := io.Pipe()
 
 	go func() {
 		exitStatus := 0
@@ -95,7 +95,7 @@ func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader
 
 		cmd.Dir = cfg.nbNotebookPath
 		cmd.Stderr = os.Stderr
-		cmd.Stdout = pipeWriter
+		cmd.Stdout = outputWriter
 
 		cmd.Start()
 
@@ -116,12 +116,12 @@ func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader
 			}
 		}
 
-		pipeWriter.Close()
+		outputWriter.Close()
 
 		exitStatusChannel <- exitStatus
 	}()
 
-	return pipeReader, exitStatusChannel, nil
+	return outputReader, exitStatusChannel, nil
 }
 
 // configure loads the configuration from the environment.
