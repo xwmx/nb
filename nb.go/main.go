@@ -80,14 +80,17 @@ type subcommand struct {
 }
 
 // cmdRun runs the `run` subcommand.
-func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader, error) {
+func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader, chan int, error) {
 	if len(args) == 0 {
-		return nil, errors.New("Command required.")
+		return nil, nil, errors.New("Command required.")
 	}
 
+	exitStatusChannel := make(chan int)
 	pipeReader, pipeWriter := io.Pipe()
 
 	go func() {
+		exitStatus := 0
+
 		cmd := exec.Command(args[0], args[1:]...)
 
 		cmd.Dir = cfg.nbNotebookPath
@@ -95,12 +98,30 @@ func cmdRun(cfg config, input io.Reader, args []string, env []string) (io.Reader
 		cmd.Stdout = pipeWriter
 
 		cmd.Start()
-		cmd.Wait()
+
+		// https://stackoverflow.com/a/10385867
+		if err := cmd.Wait(); err != nil {
+			exitStatus = 1
+
+			if exiterr, ok := err.(*exec.ExitError); ok {
+				// The program has exited with an exit code != 0
+
+				// This works on both Unix and Windows. Although package
+				// syscall is generally platform dependent, WaitStatus is
+				// defined for both Unix and Windows and in both cases has
+				// an ExitStatus() method with the same signature.
+				if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
+					exitStatus = status.ExitStatus()
+				}
+			}
+		}
 
 		pipeWriter.Close()
+
+		exitStatusChannel <- exitStatus
 	}()
 
-	return pipeReader, nil
+	return pipeReader, exitStatusChannel, nil
 }
 
 // configure loads the configuration from the environment.
@@ -312,29 +333,30 @@ func configureNotebookPaths(cfg config) config {
 }
 
 // run loads the configuration and environment, then runs the subcommand.
-func run() (io.Reader, error) {
+func run() (io.Reader, chan int, error) {
 	var cfg config
 	var err error
+	var exitStatusChannel chan int
 	var output io.Reader
 
 	if cfg, err = configure(); err != nil {
-		return output, err
+		return output, nil, err
 	}
 
 	args := os.Args
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if output, err = cmdRun(cfg, os.Stdin, args[2:], env); err != nil {
-			return output, err
+		if output, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env); err != nil {
+			return output, exitStatusChannel, err
 		}
 	} else {
 		if err := syscall.Exec(cfg.nbPath, args, env); err != nil {
-			return output, err
+			return output, nil, err
 		}
 	}
 
-	return output, nil
+	return output, exitStatusChannel, nil
 }
 
 // main is the primary entry point for the program.
@@ -360,7 +382,9 @@ func pipedInputIsPresent() bool {
 
 // present prints the output to standard out or standard error and returns the
 // appropriate exit code.
-func present(output io.Reader, err error) int {
+func present(output io.Reader, exitStatusChannel chan int, err error) int {
+	exitStatus := 0
+
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 
@@ -371,5 +395,9 @@ func present(output io.Reader, err error) int {
 		io.Copy(os.Stdout, output)
 	}
 
-	return 0
+	if exitStatusChannel != nil {
+		exitStatus = <-exitStatusChannel
+	}
+
+	return exitStatus
 }

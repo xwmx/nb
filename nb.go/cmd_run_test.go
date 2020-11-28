@@ -17,7 +17,7 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 
 	cfg, _ := configure()
 
-	runCmdResponse, err := cmdRun(
+	runCmdResponse, exitStatusChannel, err := cmdRun(
 		cfg,
 		nil,
 		[]string{"echo", "example output"},
@@ -62,6 +62,21 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 			len(bytes),
 		)
 	}
+
+	if exitStatusChannel == nil {
+		t.Errorf(
+			"cmdRun() 'echo example output' exitStatusChannel = nil; want: not nil",
+		)
+	} else {
+		exitStatus := <-exitStatusChannel
+
+		if exitStatus != 0 {
+			t.Errorf(
+				"cmdRun() 'echo example output' exitStatus = %v; want: 0",
+				exitStatus,
+			)
+		}
+	}
 }
 
 func TestCmdRunRequiresCommand(t *testing.T) {
@@ -70,7 +85,7 @@ func TestCmdRunRequiresCommand(t *testing.T) {
 		nbNotebookPath: filepath.Join("tmp", "example-nb-dir", "home"),
 	}
 
-	runCmdResponse, err := cmdRun(
+	runCmdResponse, exitStatusChannel, err := cmdRun(
 		cfg,
 		nil,
 		[]string{},
@@ -81,15 +96,22 @@ func TestCmdRunRequiresCommand(t *testing.T) {
 
 	if errMessage != "Command required." {
 		t.Errorf(
-			"cmdRun() errMessage = %s; want: %s.",
+			"cmdRun() (no command) errMessage = %s; want: %s.",
 			errMessage,
 			"Command required.",
 		)
 	}
 
+	if exitStatusChannel != nil {
+		t.Errorf(
+			"cmdRun() (no command) exitStatusChannel = %v; want: nil",
+			exitStatusChannel,
+		)
+	}
+
 	if runCmdResponse != nil {
 		t.Errorf(
-			"cmdRun() with no command standard output should be nil.",
+			"cmdRun() (no command) standard output should be nil.",
 		)
 	}
 }
@@ -104,7 +126,7 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	cfg, _ := configure()
 
-	runCmdResponse, err := cmdRun(
+	runCmdResponse, exitStatusChannel, err := cmdRun(
 		cfg,
 		nil,
 		[]string{"pwd"},
@@ -150,4 +172,19 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 	//     len(bytes),
 	//   )
 	// }
+
+	if exitStatusChannel == nil {
+		t.Errorf(
+			"cmdRun() 'pwd' exitStatusChannel = nil; want: not nil",
+		)
+	} else {
+		exitStatus := <-exitStatusChannel
+
+		if exitStatus != 0 {
+			t.Errorf(
+				"cmdRun() 'pwd' exitStatus = %v; want: 0",
+				exitStatus,
+			)
+		}
+	}
 }

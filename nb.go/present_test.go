@@ -10,14 +10,14 @@ import (
 // present
 
 func TestPresentWithErrorReturns1(t *testing.T) {
-	exitCode := present(nil, errors.New("Test error."))
+	exitCode := present(nil, nil, errors.New("Test error."))
 	if exitCode != 1 {
 		t.Errorf("present() exitCode = %d; want: %d.", exitCode, 1)
 	}
 }
 
 func TestPresentWithNoErrorReturns0(t *testing.T) {
-	exitCode := present(nil, nil)
+	exitCode := present(nil, nil, nil)
 	if exitCode != 0 {
 		t.Errorf("present() exitCode = %d; want: %d.", exitCode, 1)
 	}
