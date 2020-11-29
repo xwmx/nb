@@ -4,12 +4,14 @@ package main
 
 import (
 	"errors"
+	"os"
 	"testing"
 )
 
 // present
 
 func TestPresentWithErrorReturns1(t *testing.T) {
+	os.Stderr = nil
 	exitCode := present(nil, nil, errors.New("Test error."))
 	if exitCode != 1 {
 		t.Errorf("present() exitCode = %d; want: %d.", exitCode, 1)
