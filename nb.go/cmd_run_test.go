@@ -22,6 +22,7 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 		nil,
 		[]string{"echo", "example output"},
 		os.Environ(),
+		"goroutine",
 	)
 
 	if err != nil {
@@ -90,6 +91,7 @@ func TestCmdRunRequiresCommand(t *testing.T) {
 		nil,
 		[]string{},
 		os.Environ(),
+		"goroutine",
 	)
 
 	errMessage := fmt.Sprintf("%s", err)
@@ -131,6 +133,7 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 		nil,
 		[]string{"pwd"},
 		os.Environ(),
+		"goroutine",
 	)
 
 	if err != nil {

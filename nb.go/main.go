@@ -80,48 +80,50 @@ type subcommand struct {
 }
 
 // cmdRun runs the `run` subcommand.
-func cmdRun(cfg config, inputReader io.Reader, args []string, env []string) (io.Reader, chan int, error) {
+func cmdRun(cfg config, inputReader io.Reader, args []string, env []string, execType string) (io.Reader, chan int, error) {
 	if len(args) == 0 {
 		return nil, nil, errors.New("Command required.")
 	}
 
 	exitStatusChannel := make(chan int)
 	outputReader, outputWriter := io.Pipe()
+	exitStatus := 0
 
-	go func() {
-		exitStatus := 0
+	if execType == "" || execType == "goroutine" {
+		go func() {
+			cmd := exec.Command(args[0], args[1:]...)
 
-		cmd := exec.Command(args[0], args[1:]...)
+			cmd.Dir = cfg.nbNotebookPath
+			cmd.Stderr = os.Stderr
+			cmd.Stdout = outputWriter
 
-		cmd.Dir = cfg.nbNotebookPath
-		cmd.Stderr = os.Stderr
-		cmd.Stdout = outputWriter
+			cmd.Start()
 
-		cmd.Start()
+			// https://stackoverflow.com/a/10385867
+			if err := cmd.Wait(); err != nil {
+				exitStatus = 1
 
-		// https://stackoverflow.com/a/10385867
-		if err := cmd.Wait(); err != nil {
-			exitStatus = 1
+				if exiterr, ok := err.(*exec.ExitError); ok {
+					// The program has exited with an exit code != 0
 
-			if exiterr, ok := err.(*exec.ExitError); ok {
-				// The program has exited with an exit code != 0
-
-				// This works on both Unix and Windows. Although package
-				// syscall is generally platform dependent, WaitStatus is
-				// defined for both Unix and Windows and in both cases has
-				// an ExitStatus() method with the same signature.
-				if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
-					exitStatus = status.ExitStatus()
+					// This works on both Unix and Windows. Although package
+					// syscall is generally platform dependent, WaitStatus is
+					// defined for both Unix and Windows and in both cases has
+					// an ExitStatus() method with the same signature.
+					if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
+						exitStatus = status.ExitStatus()
+					}
 				}
 			}
-		}
 
-		outputWriter.Close()
+			outputWriter.Close()
 
-		exitStatusChannel <- exitStatus
-	}()
+			exitStatusChannel <- exitStatus
+		}()
+	}
 
 	return outputReader, exitStatusChannel, nil
+
 }
 
 // configure loads the configuration from the environment.
@@ -347,7 +349,7 @@ func run() (io.Reader, chan int, error) {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if output, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env); err != nil {
+		if output, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env, "goroutine"); err != nil {
 			return output, exitStatusChannel, err
 		}
 	} else {
