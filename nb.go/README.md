@@ -10,7 +10,7 @@
 - 1 to 1 feature parity with `nb`, passing the same test suite.
 - Continuously usable during development, falling back to `nb` for
   functionality not yet implemented in go.
-- Transparent performance improvements for `nb` when `nb.go` is installed.
+- Automatic, zero-configuration performance improvements for `nb` when `nb.go` is installed.
 - Minimal dependencies.
 - Single file.
 
