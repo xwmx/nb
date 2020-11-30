@@ -386,6 +386,17 @@ func configureNotebookPaths(cfg config) config {
 	return cfg
 }
 
+// contains takes a slice of strings and a string and returns a boolean
+// indicating whether the slice contains the string.
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
 // run loads the configuration and environment, then runs the subcommand.
 func run() (io.Reader, chan int, error) {
 	var cfg config
