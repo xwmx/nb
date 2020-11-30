@@ -86,6 +86,16 @@ type subCmdCall struct {
 	options     map[string]string
 }
 
+// subCmdList runs the `list` subcommand.
+func subCmdList(call subCmdCall) (io.Reader, chan int, error) {
+	return nil, nil, nil
+}
+
+// subCmdLs runs the `ls` subcommand.
+func subCmdLs(call subCmdCall) (io.Reader, chan int, error) {
+	return nil, nil, nil
+}
+
 // subCmdRun runs the `run` subcommand.
 func subCmdRun(call subCmdCall) (io.Reader, chan int, error) {
 	if len(call.args) == 0 {
