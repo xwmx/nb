@@ -16,11 +16,11 @@
 
 ## Tests
 
-The nb.go test suite consists of go unit tests for internal functionality and
-bats tests to verify external behavior. Tests from the primary test
-suite are symlinked into
+The `nb.go` test suite consists of go tests for internal functionality and
+bats tests to verify external behavior of the executable. Tests from the
+primary bats test suite are symlinked into
 [nb.go/test](https://github.com/xwmx/nb/tree/master/nb.go/test)
-in order to run against nb.go. 
+in order to run against `nb.go`. 
 
 ---
 
