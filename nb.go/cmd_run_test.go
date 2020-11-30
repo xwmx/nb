@@ -18,11 +18,13 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 	cfg, _ := configure()
 
 	runCmdResponse, exitStatusChannel, err := cmdRun(
-		cfg,
-		nil,
-		[]string{"echo", "example output"},
-		os.Environ(),
-		"goroutine",
+		subcommandCall{
+			cfg:         cfg,
+			inputReader: nil,
+			args:        []string{"echo", "example output"},
+			env:         os.Environ(),
+			options:     map[string]string{"execType": "goroutine"},
+		},
 	)
 
 	if err != nil {
@@ -87,11 +89,13 @@ func TestCmdRunRequiresCommand(t *testing.T) {
 	}
 
 	runCmdResponse, exitStatusChannel, err := cmdRun(
-		cfg,
-		nil,
-		[]string{},
-		os.Environ(),
-		"goroutine",
+		subcommandCall{
+			cfg:         cfg,
+			inputReader: nil,
+			args:        []string{},
+			env:         os.Environ(),
+			options:     map[string]string{"execType": "goroutine"},
+		},
 	)
 
 	errMessage := fmt.Sprintf("%s", err)
@@ -129,11 +133,13 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 	cfg, _ := configure()
 
 	runCmdResponse, exitStatusChannel, err := cmdRun(
-		cfg,
-		nil,
-		[]string{"pwd"},
-		os.Environ(),
-		"goroutine",
+		subcommandCall{
+			cfg:         cfg,
+			inputReader: nil,
+			args:        []string{"pwd"},
+			env:         os.Environ(),
+			options:     map[string]string{"execType": "goroutine"},
+		},
 	)
 
 	if err != nil {

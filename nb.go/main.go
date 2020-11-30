@@ -78,9 +78,17 @@ type subcommand struct {
 	usage             string
 }
 
+type subcommandCall struct {
+	cfg         config
+	inputReader io.Reader
+	args        []string
+	env         []string
+	options     map[string]string
+}
+
 // cmdRun runs the `run` subcommand.
-func cmdRun(cfg config, inputReader io.Reader, args []string, env []string, execType string) (io.Reader, chan int, error) {
-	if len(args) == 0 {
+func cmdRun(call subcommandCall) (io.Reader, chan int, error) {
+	if len(call.args) == 0 {
 		return nil, nil, errors.New("Command required.")
 	}
 
@@ -90,13 +98,13 @@ func cmdRun(cfg config, inputReader io.Reader, args []string, env []string, exec
 	var outputReader io.ReadCloser
 	var outputWriter io.WriteCloser
 
-	if execType == "" || execType == "goroutine" {
+	if call.options["execType"] == "" || call.options["execType"] == "goroutine" {
 		outputReader, outputWriter = io.Pipe()
 
 		go func() {
-			cmd := exec.Command(args[0], args[1:]...)
+			cmd := exec.Command(call.args[0], call.args[1:]...)
 
-			cmd.Dir = cfg.nbNotebookPath
+			cmd.Dir = call.cfg.nbNotebookPath
 			cmd.Stderr = os.Stderr
 			cmd.Stdout = outputWriter
 
@@ -123,13 +131,13 @@ func cmdRun(cfg config, inputReader io.Reader, args []string, env []string, exec
 
 			exitStatusChannel <- exitStatus
 		}()
-	} else if execType == "forkexec" {
+	} else if call.options["execType"] == "forkexec" {
 		pid, err := syscall.ForkExec(
 			"/usr/bin/env",
-			[]string{"/usr/bin/env", "bash", "-c", strings.Join(args, " ")},
+			[]string{"/usr/bin/env", "bash", "-c", strings.Join(call.args, " ")},
 			&syscall.ProcAttr{
-				Dir:   cfg.nbNotebookPath,
-				Env:   env,
+				Dir:   call.cfg.nbNotebookPath,
+				Env:   call.env,
 				Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
 			},
 		)
@@ -383,7 +391,15 @@ func run() (io.Reader, chan int, error) {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		outputReader, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env, "forkexec")
+		outputReader, exitStatusChannel, err = cmdRun(
+			subcommandCall{
+				cfg:         cfg,
+				inputReader: os.Stdin,
+				args:        args[2:],
+				env:         env,
+				options:     map[string]string{"execType": "forkexec"},
+			},
+		)
 		if err != nil {
 			return outputReader, exitStatusChannel, err
 		}
