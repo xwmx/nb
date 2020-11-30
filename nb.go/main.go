@@ -373,18 +373,19 @@ func run() (io.Reader, chan int, error) {
 	var cfg config
 	var err error
 	var exitStatusChannel chan int
-	var output io.Reader
+	var outputReader io.Reader
 
 	if cfg, err = configure(); err != nil {
-		return output, nil, err
+		return nil, nil, err
 	}
 
 	args := os.Args
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if output, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env, "forkexec"); err != nil {
-			return output, exitStatusChannel, err
+		outputReader, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env, "forkexec")
+		if err != nil {
+			return outputReader, exitStatusChannel, err
 		}
 	} else {
 		if err := syscall.Exec(cfg.nbPath, args, env); err != nil {
@@ -392,7 +393,7 @@ func run() (io.Reader, chan int, error) {
 		}
 	}
 
-	return output, exitStatusChannel, nil
+	return outputReader, exitStatusChannel, nil
 }
 
 // main is the primary entry point for the program.
