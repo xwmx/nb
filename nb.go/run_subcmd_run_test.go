@@ -4,54 +4,63 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
+	// "path/filepath"
 	"testing"
 )
 
-func TestSubCmdRunPrintsOutput(t *testing.T) {
+func TestRunSubCmdRunPrintsOutput(t *testing.T) {
 	// TODO: Create temp directories.
 	// cfg := config{
 	//   nbDir:          filepath.Join("tmp", "example-nb-dir"),
 	//   nbNotebookPath: filepath.Join("tmp", "example-nb-dir", "home"),
 	// }
 
-	cfg, _ := configure()
+	cfg, err := configure()
+	if err != nil {
+		t.Errorf(
+			"runSubCmdRun() configure() err = %s",
+			err,
+		)
+	}
 
-	runCmdResponse, exitStatusChannel, err := subCmdRun(
+	runCmdResponse, exitStatusChannel, err := runSubCmdRun(
 		subCmdCall{
-			cfg:         cfg,
-			inputReader: nil,
 			args:        []string{"echo", "example output"},
+			cfg:         cfg,
 			env:         os.Environ(),
+			inputReader: nil,
 			options:     map[string]string{"execType": "goroutine"},
 		},
 	)
 
 	if err != nil {
 		t.Errorf(
-			"subCmdRun() err = %s",
+			"runSubCmdRun() err = %s; %v",
 			err,
+			cfg.nbNotebookPath,
 		)
 	}
+
+	var bytes []byte
 
 	if runCmdResponse == nil {
 		t.Errorf(
-			"subCmdRun() 'echo example output' response = nil; want: example output",
+			"runSubCmdRun() 'echo example output' response = nil; want: example output",
 		)
+	} else {
+		bytes, err = ioutil.ReadAll(runCmdResponse)
 	}
-
-	bytes, err := ioutil.ReadAll(runCmdResponse)
 
 	if err != nil {
 		t.Errorf(
-			"subCmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
+			"runSubCmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
 			err,
 		)
 	}
 
 	if len(bytes) == 0 {
 		t.Errorf(
-			"subCmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
+			"runSubCmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
 		)
 	}
 
@@ -59,7 +68,7 @@ func TestSubCmdRunPrintsOutput(t *testing.T) {
 
 	if got != "example output\n" {
 		t.Errorf(
-			"subCmdRun() output = %s; want: %s; len(bytes): %d",
+			"runSubCmdRun() output = %s; want: %s; len(bytes): %d",
 			got,
 			"example output\n",
 			len(bytes),
@@ -68,33 +77,41 @@ func TestSubCmdRunPrintsOutput(t *testing.T) {
 
 	if exitStatusChannel == nil {
 		t.Errorf(
-			"subCmdRun() 'echo example output' exitStatusChannel = nil; want: not nil",
+			"runSubCmdRun() 'echo example output' exitStatusChannel = nil; want: not nil",
 		)
 	} else {
 		exitStatus := <-exitStatusChannel
 
 		if exitStatus != 0 {
 			t.Errorf(
-				"subCmdRun() 'echo example output' exitStatus = %v; want: 0",
+				"runSubCmdRun() 'echo example output' exitStatus = %v; want: 0",
 				exitStatus,
 			)
 		}
 	}
 }
 
-func TestSubCmdRunRequiresCommand(t *testing.T) {
-	cfg := config{
-		nbDir:          filepath.Join("tmp", "example-nb-dir"),
-		nbNotebookPath: filepath.Join("tmp", "example-nb-dir", "home"),
+func TestRunSubCmdRunRequiresCommand(t *testing.T) {
+	// cfg := config{
+	//   nbDir:          filepath.Join("tmp", "example-nb-dir"),
+	//   nbNotebookPath: filepath.Join("tmp", "example-nb-dir", "home"),
+	// }
+
+	cfg, err := configure()
+	if err != nil {
+		t.Errorf(
+			"runSubCmdRun() configure() err = %s",
+			err,
+		)
 	}
 
-	runCmdResponse, exitStatusChannel, err := subCmdRun(
+	runCmdResponse, exitStatusChannel, err := runSubCmdRun(
 		subCmdCall{
 			cfg:         cfg,
 			inputReader: nil,
 			args:        []string{},
 			env:         os.Environ(),
-			options:     map[string]string{"execType": "goroutine"},
+			// options:     map[string]string{"execType": "goroutine"},
 		},
 	)
 
@@ -102,7 +119,7 @@ func TestSubCmdRunRequiresCommand(t *testing.T) {
 
 	if errMessage != "Command required." {
 		t.Errorf(
-			"subCmdRun() (no command) errMessage = %s; want: %s.",
+			"runSubCmdRun() (no command) errMessage = %s; want: %s.",
 			errMessage,
 			"Command required.",
 		)
@@ -110,48 +127,54 @@ func TestSubCmdRunRequiresCommand(t *testing.T) {
 
 	if exitStatusChannel != nil {
 		t.Errorf(
-			"subCmdRun() (no command) exitStatusChannel = %v; want: nil",
+			"runSubCmdRun() (no command) exitStatusChannel = %v; want: nil",
 			exitStatusChannel,
 		)
 	}
 
 	if runCmdResponse != nil {
 		t.Errorf(
-			"subCmdRun() (no command) standard output should be nil.",
+			"runSubCmdRun() (no command) standard output should be nil.",
 		)
 	}
 }
 
 // TODO: Test for current notebook directory.
-func TestSubCmdRunRunsInNbNotebookPath(t *testing.T) {
+func TestRunSubCmdRunRunsInNbNotebookPath(t *testing.T) {
 	// TODO: Create temp directories.
 	// cfg := config{
 	//   nbDir:          filepath.Join("tmp", "example-nb-dir"),
 	//   nbNotebookPath: filepath.Join("tmp", "example-nb-dir", "home"),
 	// }
 
-	cfg, _ := configure()
+	cfg, err := configure()
+	if err != nil {
+		t.Errorf(
+			"runSubCmdRun() configure() err = %s",
+			err,
+		)
+	}
 
-	runCmdResponse, exitStatusChannel, err := subCmdRun(
+	runCmdResponse, exitStatusChannel, err := runSubCmdRun(
 		subCmdCall{
 			cfg:         cfg,
 			inputReader: nil,
 			args:        []string{"pwd"},
 			env:         os.Environ(),
-			options:     map[string]string{"execType": "goroutine"},
+			// options:     map[string]string{"execType": "goroutine"},
 		},
 	)
 
 	if err != nil {
 		t.Errorf(
-			"subCmdRun() err = %s",
+			"runSubCmdRun() err = %s",
 			err,
 		)
 	}
 
 	if runCmdResponse == nil {
 		t.Errorf(
-			"subCmdRun() 'pwd' response = nil; want: `pwd`",
+			"runSubCmdRun() 'pwd' response = nil; want: `pwd`",
 		)
 	}
 
@@ -159,14 +182,14 @@ func TestSubCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	if err != nil {
 		t.Errorf(
-			"subCmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
+			"runSubCmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
 			err,
 		)
 	}
 
 	if len(bytes) == 0 {
 		t.Errorf(
-			"subCmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
+			"runSubCmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
 		)
 	}
 
@@ -175,7 +198,7 @@ func TestSubCmdRunRunsInNbNotebookPath(t *testing.T) {
 	//
 	// if got != cfg.nbNotebookPath {
 	//   t.Errorf(
-	//     "subCmdRun() output = %s; want: %s; len(bytes): %d",
+	//     "runSubCmdRun() output = %s; want: %s; len(bytes): %d",
 	//     got,
 	//     cfg.nbNotebookPath,
 	//     len(bytes),
@@ -184,14 +207,14 @@ func TestSubCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	if exitStatusChannel == nil {
 		t.Errorf(
-			"subCmdRun() 'pwd' exitStatusChannel = nil; want: not nil",
+			"runSubCmdRun() 'pwd' exitStatusChannel = nil; want: not nil",
 		)
 	} else {
 		exitStatus := <-exitStatusChannel
 
 		if exitStatus != 0 {
 			t.Errorf(
-				"subCmdRun() 'pwd' exitStatus = %v; want: 0",
+				"runSubCmdRun() 'pwd' exitStatus = %v; want: 0",
 				exitStatus,
 			)
 		}

@@ -70,114 +70,6 @@ type config struct {
 	nbSyntaxTheme      string
 }
 
-type subCmd struct {
-	aliasFor    string
-	documented  bool
-	name        string
-	triggersGit bool
-	usage       string
-}
-
-type subCmdCall struct {
-	args        []string
-	cfg         config
-	env         []string
-	inputReader io.Reader
-	options     map[string]string
-}
-
-// subCmdList runs the `list` subcommand.
-func subCmdList(call subCmdCall) (io.Reader, chan int, error) {
-	return nil, nil, nil
-}
-
-// subCmdLs runs the `ls` subcommand.
-func subCmdLs(call subCmdCall) (io.Reader, chan int, error) {
-	return nil, nil, nil
-}
-
-// subCmdRun runs the `run` subcommand.
-func subCmdRun(call subCmdCall) (io.Reader, chan int, error) {
-	if len(call.args) == 0 {
-		return nil, nil, errors.New("Command required.")
-	}
-
-	exitStatusChannel := make(chan int)
-	exitStatus := 0
-
-	var outputReader io.ReadCloser
-	var outputWriter io.WriteCloser
-
-	if call.options["execType"] == "" || call.options["execType"] == "goroutine" {
-		outputReader, outputWriter = io.Pipe()
-
-		go func() {
-			cmd := exec.Command(call.args[0], call.args[1:]...)
-
-			cmd.Dir = call.cfg.nbNotebookPath
-			cmd.Stderr = os.Stderr
-			cmd.Stdout = outputWriter
-
-			cmd.Start()
-
-			// https://stackoverflow.com/a/10385867
-			if err := cmd.Wait(); err != nil {
-				exitStatus = 1
-
-				if exiterr, ok := err.(*exec.ExitError); ok {
-					// The program has exited with an exit code != 0
-
-					// This works on both Unix and Windows. Although package
-					// syscall is generally platform dependent, WaitStatus is
-					// defined for both Unix and Windows and in both cases has
-					// an ExitStatus() method with the same signature.
-					if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
-						exitStatus = status.ExitStatus()
-					}
-				}
-			}
-
-			outputWriter.Close()
-
-			exitStatusChannel <- exitStatus
-		}()
-	} else if call.options["execType"] == "forkexec" {
-		pid, err := syscall.ForkExec(
-			"/usr/bin/env",
-			[]string{"/usr/bin/env", "bash", "-c", strings.Join(call.args, " ")},
-			&syscall.ProcAttr{
-				Dir:   call.cfg.nbNotebookPath,
-				Env:   call.env,
-				Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
-			},
-		)
-
-		if err != nil {
-			return nil, nil, err
-		}
-
-		proc, err := os.FindProcess(pid)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		state, err := proc.Wait()
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if status, ok := state.Sys().(syscall.WaitStatus); ok {
-			exitStatus = status.ExitStatus()
-		}
-
-		go func() {
-			exitStatusChannel <- exitStatus
-		}()
-	}
-
-	return outputReader, exitStatusChannel, nil
-}
-
 // configure loads the configuration from the environment.
 func configure() (config, error) {
 	var err error
@@ -412,13 +304,14 @@ func run() (io.Reader, chan int, error) {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		outputReader, exitStatusChannel, err = subCmdRun(
+		outputReader, exitStatusChannel, err = runSubCmdRun(
 			subCmdCall{
 				args:        args[2:],
 				cfg:         cfg,
 				env:         env,
 				inputReader: os.Stdin,
 				options:     map[string]string{"execType": "forkexec"},
+				// options: map[string]string{"execType": "goroutine"},
 			},
 		)
 		if err != nil {
@@ -474,4 +367,136 @@ func present(output io.Reader, exitStatusChannel chan int, err error) int {
 	}
 
 	return exitStatus
+}
+
+type subCmd struct {
+	aliasFor    string
+	documented  bool
+	function    subCmdFunc
+	name        string
+	triggersGit bool
+	usage       string
+}
+
+type subCmdCall struct {
+	args        []string
+	cfg         config
+	env         []string
+	inputReader io.Reader
+	options     map[string]string
+}
+
+type subCmdFunc func(subCmdCall) (io.Reader, chan int, error)
+
+var subCmdList = subCmd{
+	documented:  true,
+	function:    runSubCmdList,
+	name:        "list",
+	triggersGit: true,
+}
+
+// runSubCmdList runs the `list` subcommand.
+func runSubCmdList(call subCmdCall) (io.Reader, chan int, error) {
+	return nil, nil, nil
+}
+
+var subCmdLs = subCmd{
+	documented:  true,
+	function:    runSubCmdLs,
+	name:        "ls",
+	triggersGit: true,
+}
+
+// runSubCmdLs runs the `ls` subcommand.
+func runSubCmdLs(call subCmdCall) (io.Reader, chan int, error) {
+	return nil, nil, nil
+}
+
+var subCmdRun = subCmd{
+	documented:  true,
+	function:    runSubCmdRun,
+	name:        "run",
+	triggersGit: true,
+}
+
+// runSubCmdRun runs the `run` subcommand.
+func runSubCmdRun(call subCmdCall) (io.Reader, chan int, error) {
+	if len(call.args) == 0 {
+		return nil, nil, errors.New("Command required.")
+	}
+
+	exitStatusChannel := make(chan int)
+	exitStatus := 0
+
+	var outputReader io.ReadCloser
+	var outputWriter io.WriteCloser
+
+	if call.options["execType"] == "forkexec" {
+		pid, err := syscall.ForkExec(
+			"/usr/bin/env",
+			[]string{"/usr/bin/env", "bash", "-c", strings.Join(call.args, " ")},
+			&syscall.ProcAttr{
+				Dir:   call.cfg.nbNotebookPath,
+				Env:   call.env,
+				Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
+			},
+		)
+
+		if err != nil {
+			return nil, nil, err
+		}
+
+		proc, err := os.FindProcess(pid)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		state, err := proc.Wait()
+		if err != nil {
+			return nil, nil, err
+		}
+
+		if status, ok := state.Sys().(syscall.WaitStatus); ok {
+			exitStatus = status.ExitStatus()
+		}
+
+		go func() {
+			exitStatusChannel <- exitStatus
+		}()
+	} else {
+		outputReader, outputWriter = io.Pipe()
+
+		go func() {
+			cmd := exec.Command(call.args[0], call.args[1:]...)
+
+			cmd.Dir = call.cfg.nbNotebookPath
+			cmd.Stderr = os.Stderr
+			cmd.Stdout = outputWriter
+
+			cmd.Start()
+
+			// https://stackoverflow.com/a/10385867
+			if err := cmd.Wait(); err != nil {
+				exitStatus = 1
+
+				if exiterr, ok := err.(*exec.ExitError); ok {
+					// The program has exited with an exit code != 0
+
+					// This works on both Unix and Windows. Although package
+					// syscall is generally platform dependent, WaitStatus is
+					// defined for both Unix and Windows and in both cases has
+					// an ExitStatus() method with the same signature.
+					if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
+						exitStatus = status.ExitStatus()
+					}
+				}
+			}
+
+			outputWriter.Close()
+
+			exitStatusChannel <- exitStatus
+		}()
+	}
+
+	return outputReader, exitStatusChannel, nil
 }

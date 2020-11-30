@@ -31,4 +31,6 @@ func TestConfigureSetsNbDir(t *testing.T) {
 			expectedCfg.nbDir,
 		)
 	}
+
+	os.Setenv("NB_DIR", "")
 }
