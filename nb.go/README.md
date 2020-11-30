@@ -1,9 +1,9 @@
 # `nb.go`
 
-`nb.go` is an under-development implementation of `nb` written in
+`nb.go` is an implementation of `nb` written in
 [Go](https://golang.org/).
 
-Goals:
+## Objectives
 
 - Improved Windows support. Runnable with no dependencies in a default windows
   install, or as close to default as possible.
