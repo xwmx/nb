@@ -5,7 +5,7 @@
 
 ## Objectives
 
-- Improved Windows support. Runnable with no dependencies in a default windows
+- Improved Windows support. Runnable with no dependencies in a default Windows
   install, or as close to default as possible.
 - 1 to 1 feature parity with `nb`, passing the same test suite.
 - Continuously usable during development, falling back to `nb` for
@@ -18,8 +18,9 @@
 
 The nb.go test suite consists of go unit tests for internal functionality and
 bats tests to verify external behavior. Tests from the primary test
-suite are symlinked into nb.go/test in order to run against the nb.go
-binary.
+suite are symlinked into
+[nb.go/test](https://github.com/xwmx/nb/tree/master/nb.go/test)
+in order to run against nb.go. 
 
 ---
 
