@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestCmdRunPrintsOutput(t *testing.T) {
+func TestSubCmdRunPrintsOutput(t *testing.T) {
 	// TODO: Create temp directories.
 	// cfg := config{
 	//   nbDir:          filepath.Join("tmp", "example-nb-dir"),
@@ -17,8 +17,8 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 
 	cfg, _ := configure()
 
-	runCmdResponse, exitStatusChannel, err := cmdRun(
-		subcommandCall{
+	runCmdResponse, exitStatusChannel, err := subCmdRun(
+		subCmdCall{
 			cfg:         cfg,
 			inputReader: nil,
 			args:        []string{"echo", "example output"},
@@ -29,14 +29,14 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 
 	if err != nil {
 		t.Errorf(
-			"cmdRun() err = %s",
+			"subCmdRun() err = %s",
 			err,
 		)
 	}
 
 	if runCmdResponse == nil {
 		t.Errorf(
-			"cmdRun() 'echo example output' response = nil; want: example output",
+			"subCmdRun() 'echo example output' response = nil; want: example output",
 		)
 	}
 
@@ -44,14 +44,14 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 
 	if err != nil {
 		t.Errorf(
-			"cmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
+			"subCmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
 			err,
 		)
 	}
 
 	if len(bytes) == 0 {
 		t.Errorf(
-			"cmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
+			"subCmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
 		)
 	}
 
@@ -59,7 +59,7 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 
 	if got != "example output\n" {
 		t.Errorf(
-			"cmdRun() output = %s; want: %s; len(bytes): %d",
+			"subCmdRun() output = %s; want: %s; len(bytes): %d",
 			got,
 			"example output\n",
 			len(bytes),
@@ -68,28 +68,28 @@ func TestCmdRunPrintsOutput(t *testing.T) {
 
 	if exitStatusChannel == nil {
 		t.Errorf(
-			"cmdRun() 'echo example output' exitStatusChannel = nil; want: not nil",
+			"subCmdRun() 'echo example output' exitStatusChannel = nil; want: not nil",
 		)
 	} else {
 		exitStatus := <-exitStatusChannel
 
 		if exitStatus != 0 {
 			t.Errorf(
-				"cmdRun() 'echo example output' exitStatus = %v; want: 0",
+				"subCmdRun() 'echo example output' exitStatus = %v; want: 0",
 				exitStatus,
 			)
 		}
 	}
 }
 
-func TestCmdRunRequiresCommand(t *testing.T) {
+func TestSubCmdRunRequiresCommand(t *testing.T) {
 	cfg := config{
 		nbDir:          filepath.Join("tmp", "example-nb-dir"),
 		nbNotebookPath: filepath.Join("tmp", "example-nb-dir", "home"),
 	}
 
-	runCmdResponse, exitStatusChannel, err := cmdRun(
-		subcommandCall{
+	runCmdResponse, exitStatusChannel, err := subCmdRun(
+		subCmdCall{
 			cfg:         cfg,
 			inputReader: nil,
 			args:        []string{},
@@ -102,7 +102,7 @@ func TestCmdRunRequiresCommand(t *testing.T) {
 
 	if errMessage != "Command required." {
 		t.Errorf(
-			"cmdRun() (no command) errMessage = %s; want: %s.",
+			"subCmdRun() (no command) errMessage = %s; want: %s.",
 			errMessage,
 			"Command required.",
 		)
@@ -110,20 +110,20 @@ func TestCmdRunRequiresCommand(t *testing.T) {
 
 	if exitStatusChannel != nil {
 		t.Errorf(
-			"cmdRun() (no command) exitStatusChannel = %v; want: nil",
+			"subCmdRun() (no command) exitStatusChannel = %v; want: nil",
 			exitStatusChannel,
 		)
 	}
 
 	if runCmdResponse != nil {
 		t.Errorf(
-			"cmdRun() (no command) standard output should be nil.",
+			"subCmdRun() (no command) standard output should be nil.",
 		)
 	}
 }
 
 // TODO: Test for current notebook directory.
-func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
+func TestSubCmdRunRunsInNbNotebookPath(t *testing.T) {
 	// TODO: Create temp directories.
 	// cfg := config{
 	//   nbDir:          filepath.Join("tmp", "example-nb-dir"),
@@ -132,8 +132,8 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	cfg, _ := configure()
 
-	runCmdResponse, exitStatusChannel, err := cmdRun(
-		subcommandCall{
+	runCmdResponse, exitStatusChannel, err := subCmdRun(
+		subCmdCall{
 			cfg:         cfg,
 			inputReader: nil,
 			args:        []string{"pwd"},
@@ -144,14 +144,14 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	if err != nil {
 		t.Errorf(
-			"cmdRun() err = %s",
+			"subCmdRun() err = %s",
 			err,
 		)
 	}
 
 	if runCmdResponse == nil {
 		t.Errorf(
-			"cmdRun() 'pwd' response = nil; want: `pwd`",
+			"subCmdRun() 'pwd' response = nil; want: `pwd`",
 		)
 	}
 
@@ -159,14 +159,14 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	if err != nil {
 		t.Errorf(
-			"cmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
+			"subCmdRun() ioutil.ReadAll(runCmdResponse) err = %s",
 			err,
 		)
 	}
 
 	if len(bytes) == 0 {
 		t.Errorf(
-			"cmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
+			"subCmdRun() ioutil.ReadAll(runCmdResponse) was empty / blank.",
 		)
 	}
 
@@ -175,7 +175,7 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 	//
 	// if got != cfg.nbNotebookPath {
 	//   t.Errorf(
-	//     "cmdRun() output = %s; want: %s; len(bytes): %d",
+	//     "subCmdRun() output = %s; want: %s; len(bytes): %d",
 	//     got,
 	//     cfg.nbNotebookPath,
 	//     len(bytes),
@@ -184,14 +184,14 @@ func TestCmdRunRunsInNbNotebookPath(t *testing.T) {
 
 	if exitStatusChannel == nil {
 		t.Errorf(
-			"cmdRun() 'pwd' exitStatusChannel = nil; want: not nil",
+			"subCmdRun() 'pwd' exitStatusChannel = nil; want: not nil",
 		)
 	} else {
 		exitStatus := <-exitStatusChannel
 
 		if exitStatus != 0 {
 			t.Errorf(
-				"cmdRun() 'pwd' exitStatus = %v; want: 0",
+				"subCmdRun() 'pwd' exitStatus = %v; want: 0",
 				exitStatus,
 			)
 		}

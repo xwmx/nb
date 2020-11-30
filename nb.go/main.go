@@ -70,24 +70,24 @@ type config struct {
 	nbSyntaxTheme      string
 }
 
-type subcommand struct {
-	aliasedSubcommand string
-	documented        bool
-	name              string
-	triggersGit       bool
-	usage             string
+type subCmd struct {
+	aliasFor    string
+	documented  bool
+	name        string
+	triggersGit bool
+	usage       string
 }
 
-type subcommandCall struct {
-	cfg         config
-	inputReader io.Reader
+type subCmdCall struct {
 	args        []string
+	cfg         config
 	env         []string
+	inputReader io.Reader
 	options     map[string]string
 }
 
-// cmdRun runs the `run` subcommand.
-func cmdRun(call subcommandCall) (io.Reader, chan int, error) {
+// subCmdRun runs the `run` subcommand.
+func subCmdRun(call subCmdCall) (io.Reader, chan int, error) {
 	if len(call.args) == 0 {
 		return nil, nil, errors.New("Command required.")
 	}
@@ -391,12 +391,12 @@ func run() (io.Reader, chan int, error) {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		outputReader, exitStatusChannel, err = cmdRun(
-			subcommandCall{
-				cfg:         cfg,
-				inputReader: os.Stdin,
+		outputReader, exitStatusChannel, err = subCmdRun(
+			subCmdCall{
 				args:        args[2:],
+				cfg:         cfg,
 				env:         env,
+				inputReader: os.Stdin,
 				options:     map[string]string{"execType": "forkexec"},
 			},
 		)
