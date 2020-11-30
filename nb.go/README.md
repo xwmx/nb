@@ -5,7 +5,7 @@
 
 ## Objectives
 
-- Improved Windows support. Runnable with no dependencies in a default Windows
+- Improved Windows support. Runnable with no dependencies on a default Windows
   install, or as close to default as possible.
 - 1 to 1 feature parity with `nb`, passing the same test suite.
 - Continuously usable during development, falling back to `nb` for
