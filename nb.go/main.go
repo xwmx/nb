@@ -41,11 +41,10 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
+	"strings"
+	"syscall"
 
 	"golang.org/x/sys/unix"
-
-	// "strings"
-	"syscall"
 )
 
 type config struct {
@@ -86,10 +85,14 @@ func cmdRun(cfg config, inputReader io.Reader, args []string, env []string, exec
 	}
 
 	exitStatusChannel := make(chan int)
-	outputReader, outputWriter := io.Pipe()
 	exitStatus := 0
 
+	var outputReader io.ReadCloser
+	var outputWriter io.WriteCloser
+
 	if execType == "" || execType == "goroutine" {
+		outputReader, outputWriter = io.Pipe()
+
 		go func() {
 			cmd := exec.Command(args[0], args[1:]...)
 
@@ -120,10 +123,41 @@ func cmdRun(cfg config, inputReader io.Reader, args []string, env []string, exec
 
 			exitStatusChannel <- exitStatus
 		}()
+	} else if execType == "forkexec" {
+		pid, err := syscall.ForkExec(
+			"/usr/bin/env",
+			[]string{"/usr/bin/env", "bash", "-c", strings.Join(args, " ")},
+			&syscall.ProcAttr{
+				Dir:   cfg.nbNotebookPath,
+				Env:   env,
+				Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
+			},
+		)
+
+		if err != nil {
+			return nil, nil, err
+		}
+
+		proc, err := os.FindProcess(pid)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		state, err := proc.Wait()
+		if err != nil {
+			return nil, nil, err
+		}
+
+		if status, ok := state.Sys().(syscall.WaitStatus); ok {
+			exitStatus = status.ExitStatus()
+		}
+
+		go func() {
+			exitStatusChannel <- exitStatus
+		}()
 	}
 
 	return outputReader, exitStatusChannel, nil
-
 }
 
 // configure loads the configuration from the environment.
@@ -349,12 +383,12 @@ func run() (io.Reader, chan int, error) {
 	env := os.Environ()
 
 	if len(args) > 1 && args[1] == "run" {
-		if output, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env, "goroutine"); err != nil {
+		if output, exitStatusChannel, err = cmdRun(cfg, os.Stdin, args[2:], env, "forkexec"); err != nil {
 			return output, exitStatusChannel, err
 		}
 	} else {
 		if err := syscall.Exec(cfg.nbPath, args, env); err != nil {
-			return output, nil, err
+			return nil, nil, err
 		}
 	}
 
