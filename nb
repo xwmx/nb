@@ -5677,6 +5677,9 @@ _helpers() {
     *line)
       _print_line                     "${_options[@]:-}"
       ;;
+    *norm*|*options*)
+      _print_normalized_options       "${_options[@]:-}"
+      ;;
     *padding)
       _print_padding                  "${_options[@]:-}"
       ;;
@@ -12296,53 +12299,68 @@ __load_plugins() {
 # Program Option Parsing
 ###############################################################################
 
-# Normalize Options ###########################################################
-
+# _normalize_options()
+#
+# Usage:
+#   _normalize_options <option>...
+#
+# Description:
+#   Iterate over options, breaking -ab into -a -b and --foo=bar into --foo bar
+#   also turns -- into --endopts to avoid issues with things like '-o-', the
+#   '-' should not indicate the end of options, but be an invalid option (or
+#   the argument to the option, such as wget -qO-)
+#
 # Source:
 #   https://github.com/e36freak/templates/blob/master/options
+export _NORMALIZED_OPTIONS=()
+_normalize_options() {
+  local _character=
+  local _options=()
 
-# Iterate over options, breaking -ab into -a -b and --foo=bar into --foo bar
-# also turns -- into --endopts to avoid issues with things like '-o-', the '-'
-# should not indicate the end of options, but be an invalid option (or the
-# argument to the option, such as wget -qO-)
-unset options
-# while the number of arguments is greater than 0
-while ((${#}))
-do
-  case "${1}" in
-    # if option is of type -ab
-    -[!-]?*)
-      # loop over each character starting with the second
-      for ((i=1; i < ${#1}; i++))
-      do
-        # extract 1 character from position 'i'
-        c="${1:i:1}"
-        # add current char to options
-        options+=("-${c}")
-      done
-      ;;
-    # if option is of type --foo=bar, split on first '='
-    --?*=*)
-      options+=("${1%%=*}" "${1#*=}")
-      ;;
-    # end of options, stop breaking them up
-    --)
-      options+=(--endopts)
-      shift
-      options+=("${@}")
-      break
-      ;;
-    # otherwise, nothing special
-    *)
-      options+=("${1}")
-      ;;
-  esac
+  while ((${#}))
+  do
+    case "${1}" in
+      # if option is of type -ab
+      -[!-]?*)
+        # loop over each character starting with the second
+        for ((_i=1; _i < ${#1}; _i++))
+        do
+          # extract 1 character from position 'i'
+          _character="${1:_i:1}"
+          # add current char to options
+          _options+=("-${_character}")
+        done
+        ;;
+      # if option is of type --foo=bar, split on first '='
+      --?*=*)
+        _options+=("${1%%=*}" "${1#*=}")
+        ;;
+      # end of options, stop breaking them up
+      --)
+        _options+=(--endopts)
+        shift
+        _options+=("${@}")
+        break
+        ;;
+      # otherwise, nothing special
+      *)
+        _options+=("${1}")
+        ;;
+    esac
 
-  shift
-done
+    shift
+  done
+
+  _NORMALIZED_OPTIONS=(${_options[@]})
+}; _normalize_options "${@:-}"
+
 # set new positional parameters to altered options. Set default to blank.
-set -- "${options[@]:-}"
-unset options
+set -- "${_NORMALIZED_OPTIONS[@]:-}"
+
+# Usage: _print_normalized_options
+_print_normalized_options() {
+  printf "%s\\n" "${_NORMALIZED_OPTIONS[@]}"
+}
 
 # Parse Options ###############################################################
 
