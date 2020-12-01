@@ -488,6 +488,127 @@ HEREDOC
   [[ "${lines[2]}" =~ ${NB_DIR}/home                        ]]
 }
 
+# `ls -s` / `ls --sort` / `ls -r` / `ls --reverse` ############################
+
+@test "'list --sort' sorts items." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# title one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# title two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third-example.md"
+# title three
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" list --sort
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 3           ]]
+  [[ "${lines[0]}" =~ title\ one    ]]
+  [[ "${lines[0]}" =~ [*1*]         ]]
+  [[ "${lines[1]}" =~ title\ two    ]]
+  [[ "${lines[1]}" =~ [*2*]         ]]
+  [[ "${lines[2]}" =~ title\ three  ]]
+  [[ "${lines[2]}" =~ [*3*]         ]]
+}
+
+@test "'list --sort --reverse' reverse sorts items." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# title one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# title two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third-example.md"
+# title three
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" list --sort --reverse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                ]]
+  [[ "${#lines[@]}" -eq 3           ]]
+  [[ "${lines[0]}" =~ title\ three  ]]
+  [[ "${lines[0]}" =~ [*3*]         ]]
+  [[ "${lines[1]}" =~ title\ two    ]]
+  [[ "${lines[1]}" =~ [*2*]         ]]
+  [[ "${lines[2]}" =~ title\ one    ]]
+  [[ "${lines[2]}" =~ [*1*]         ]]
+}
+
+@test "'list --sort' is not affected by NB_LIMIT." {
+  {
+    "${_NB}" init
+    cat <<HEREDOC | "${_NB}" add "first-home.md"
+# title one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second-home.md"
+# title two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third-example.md"
+# title three
+line two
+line three
+line four
+HEREDOC
+
+  "${_NB}" set limit 2
+  }
+
+  run "${_NB}" list --sort
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+
+  [[ ${status} -eq 0                        ]]
+  [[ "${#lines[@]}" -eq 3                   ]]
+  [[ "${lines[0]}" =~ title\ one            ]]
+  [[ "${lines[0]}" =~ [*1*]                 ]]
+  [[ "${lines[1]}" =~ title\ two            ]]
+  [[ "${lines[1]}" =~ [*2*]                 ]]
+  [[ "${lines[2]}" =~ title\ three          ]]
+  [[ "${lines[2]}" =~ [*3*]                 ]]
+}
+
 # `list --bookmarks` ##########################################################
 
 @test "'list --bookmarks' exits with 0 and displays a list of bookmarks." {
