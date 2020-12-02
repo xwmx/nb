@@ -12351,7 +12351,7 @@ _normalize_options() {
     shift
   done
 
-  _NORMALIZED_OPTIONS=(${_options[@]})
+  _NORMALIZED_OPTIONS=("${_options[@]}")
 }; _normalize_options "${@:-}"
 
 # set new positional parameters to altered options. Set default to blank.
