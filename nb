@@ -11099,7 +11099,7 @@ Options:
   --title          Print the title of the note.
   --type [<type>]  Print the file extension or, when <type> is specified,
                    return true if the item matches <type>. <type> can be a
-                   file extension or one of the followinh types:
+                   file extension or one of the following types:
                    archive, audio, bookmark, document, folder, image,
                    text, video
   -u, --updated    Print the date and time of the last recorded change.
