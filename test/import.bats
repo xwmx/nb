@@ -768,8 +768,7 @@ load test_helper
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  grep -q 'Example Domain' "${NB_DIR}/home/${_files[0]}"
-  grep -q '==============' "${NB_DIR}/home/${_files[0]}"
+  grep -q '# Example Domain' "${NB_DIR}/home/${_files[0]}"
 
   [[ "${output}" =~ "Imported" ]]
 

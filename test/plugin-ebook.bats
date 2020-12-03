@@ -161,16 +161,13 @@ load test_helper
   )"
 
   printf "\${_markdown}: '%s'\\n" "${_markdown}"
-  _expected="Chapter One
-===========
+  _expected="# Chapter One
 
-Chapter Two
-===========
+# Chapter Two
 
 Content two.
 
-Chapter Three
-=============
+# Chapter Three
 
 Content three."
 
