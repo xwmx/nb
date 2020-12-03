@@ -39,7 +39,7 @@
 # ```
 ###############################################################################
 
-name: nb · Test Suite
+name: "nb · Test Suite"
 
 on:
   push:
@@ -53,7 +53,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Setup
+      - name: "Setup"
         run: |
           brew update
           brew install bat
@@ -63,16 +63,20 @@ jobs:
           brew install w3m
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
-      - name: Set $TERM=xterm
+      - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
-      - name: Run tests
-        run:  unbuffer bats test
+      # - name: "Run bats tests"
+      #   run:  unbuffer bats test
+      - name: "Install Go"
+        uses: actions/setup-go@v2
+      - name: "Run go test"
+        run: cd nb.go && go test
   test-ubuntu-latest:
     name: "Test: Ubuntu Latest"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Setup
+      - name: "Setup"
         run: |
           sudo apt-get update
           sudo apt-get install bats -y
@@ -84,12 +88,16 @@ jobs:
           sudo dpkg -i bat_0.16.0_amd64.deb
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
-      - name: Install bats-core
+      - name: "Install bats-core"
         run: |
           git clone https://github.com/bats-core/bats-core.git "${HOME}/bats-core" &&
             cd "${HOME}/bats-core"
           sudo ./install.sh /usr/local
-      - name: Set $TERM=xterm
+      - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
-      - name: Run tests
-        run:  script -q -e -c "bats test"
+      # - name: "Run bats tests"
+      #   run:  script -q -e -c "bats test"
+      - name: "Install Go"
+        uses: actions/setup-go@v2
+      - name: "Run go test"
+        run: cd nb.go && go test
