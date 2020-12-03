@@ -71,7 +71,7 @@ jobs:
       # - name: "Install Go"
       #   uses: actions/setup-go@v2
       # - name: "Run go test"
-        run: cd nb.go && go test
+      #   run: cd nb.go && go test
   test-ubuntu-latest:
     name: "Test: Ubuntu Latest"
     runs-on: ubuntu-latest
