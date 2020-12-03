@@ -2954,9 +2954,10 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [--added | --filename |
-          --id | --info-line | --path | [-p | --print] [-r | --render] |
-          --selector-id | --title | --type [<type>] | --updated]
+  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]] [--no-color]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -4313,7 +4314,7 @@ Usage:
   nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
           [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]]
+          [-u | --updated]] [--no-color]
   nb show <notebook>
 
 Options:
@@ -4321,6 +4322,7 @@ Options:
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
+  --no-color       Show without syntax highlighting.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
   -r, --render     Use `pandoc` [1] to render the file to HTML and display
