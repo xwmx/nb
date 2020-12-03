@@ -57,6 +57,7 @@ jobs:
         run: |
           brew update
           brew install bat
+          brew unlink  bats
           brew install bats-core
           brew install expect
           brew install pandoc
@@ -65,11 +66,11 @@ jobs:
           git config --global user.email  "example@example.com"
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
-      # - name: "Run bats tests"
-      #   run:  unbuffer bats test
-      - name: "Install Go"
-        uses: actions/setup-go@v2
-      - name: "Run go test"
+      - name: "Run bats tests"
+        run:  unbuffer bats test
+      # - name: "Install Go"
+      #   uses: actions/setup-go@v2
+      # - name: "Run go test"
         run: cd nb.go && go test
   test-ubuntu-latest:
     name: "Test: Ubuntu Latest"
@@ -95,9 +96,9 @@ jobs:
           sudo ./install.sh /usr/local
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
-      # - name: "Run bats tests"
-      #   run:  script -q -e -c "bats test"
-      - name: "Install Go"
-        uses: actions/setup-go@v2
-      - name: "Run go test"
-        run: cd nb.go && go test
+      - name: "Run bats tests"
+        run:  script -q -e -c "bats test"
+      # - name: "Install Go"
+      #   uses: actions/setup-go@v2
+      # - name: "Run go test"
+      #   run: cd nb.go && go test
