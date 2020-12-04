@@ -90,7 +90,13 @@ func configure() (config, error) {
 	// The path to the `nb` executable.
 
 	if cfg.nbPath, err = exec.LookPath("nb"); err != nil {
-		return config{}, err
+		adjacentNbPath := filepath.Join(cfg.currentWorkingDir, "..", "nb")
+
+		if _, err := os.Stat(adjacentNbPath); err == nil {
+			cfg.nbPath = adjacentNbPath
+		} else {
+			return cfg, err
+		}
 	}
 
 	// $NBRC_PATH
