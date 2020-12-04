@@ -49,6 +49,7 @@ import (
 
 type config struct {
 	colorEnabled       bool
+	currentWorkingDir  string
 	editor             string
 	gitEnabled         bool
 	globalNotebookPath string
@@ -75,6 +76,14 @@ func configure() (config, error) {
 	var err error
 
 	cfg := config{}
+
+	// currentWorkingDir / PWD
+	//
+	// The current working directory in which the program was invoked.
+
+	if cfg.currentWorkingDir, err = os.Getwd(); err != nil {
+		return cfg, err
+	}
 
 	// `nb` (.sh) path
 	//

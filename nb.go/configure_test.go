@@ -4,9 +4,49 @@ package main
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 )
+
+func TestConfigureSetsCurrentWorkingDir(t *testing.T) {
+
+	pwdOutput, err := exec.Command("pwd").Output()
+
+	if err != nil {
+		t.Errorf(
+			"exec.Command(\"pwd\") error = %s",
+			err,
+		)
+	}
+
+	pwd := string(pwdOutput)
+	pwd = strings.TrimSuffix(pwd, "\n")
+
+	expectedCfg := config{
+		currentWorkingDir: pwd,
+	}
+
+	returnedCfg, err := configure()
+
+	if err != nil {
+		t.Errorf(
+			"configure() error = %s",
+			err,
+		)
+	}
+
+	if returnedCfg.currentWorkingDir != expectedCfg.currentWorkingDir {
+		t.Errorf(
+			"configure() cfg.currentWorkingDir\ngot:  '%s'\nwant: '%s'",
+			returnedCfg.currentWorkingDir,
+			expectedCfg.currentWorkingDir,
+		)
+	}
+
+	os.Setenv("NB_DIR", "")
+}
 
 func TestConfigureSetsNbDir(t *testing.T) {
 	os.Setenv("NB_DIR", filepath.Join("tmp", "example-nb-dir"))
