@@ -45,7 +45,7 @@ func TestRunSubCmdRunPrintsOutput(t *testing.T) {
 
 	if runCmdResponse == nil {
 		t.Errorf(
-			"runSubCmdRun() 'echo example output' response = nil; want: example output",
+			"runSubCmdRun() 'echo example output' response\ngot:  nil\nwant: 'example output'",
 		)
 	} else {
 		bytes, err = ioutil.ReadAll(runCmdResponse)

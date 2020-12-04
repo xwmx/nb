@@ -66,7 +66,7 @@ func TestConfigureSetsNbDir(t *testing.T) {
 
 	if returnedCfg.nbDir != expectedCfg.nbDir {
 		t.Errorf(
-			"configure() cfg.nbDir = %s; want: %s.",
+			"configure() cfg.nbDir\ngot:  '%s'\nwant: '%s'",
 			returnedCfg.nbDir,
 			expectedCfg.nbDir,
 		)
