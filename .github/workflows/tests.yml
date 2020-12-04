@@ -68,10 +68,10 @@ jobs:
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: "Run bats tests"
         run:  unbuffer bats test
-      # - name: "Install Go"
-      #   uses: actions/setup-go@v2
-      # - name: "Run go test"
-      #   run: cd nb.go && go test
+      - name: "Install Go"
+        uses: actions/setup-go@v2
+      - name: "Run go test"
+        run: cd nb.go && go test
   test-ubuntu-latest:
     name: "Test: Ubuntu Latest"
     runs-on: ubuntu-latest
@@ -98,7 +98,7 @@ jobs:
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: "Run bats tests"
         run:  script -q -e -c "bats test"
-      # - name: "Install Go"
-      #   uses: actions/setup-go@v2
-      # - name: "Run go test"
-      #   run: cd nb.go && go test
+      - name: "Install Go"
+        uses: actions/setup-go@v2
+      - name: "Run go test"
+        run: cd nb.go && go test
