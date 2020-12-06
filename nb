@@ -9817,19 +9817,19 @@ _search() {
   then
     _exit_1 _help "search"
   else
-    local _target_notebook_paths=()
+    local _target_paths=()
 
     if ((_all))
     then
-      _target_notebook_paths=($(_notebooks --paths --unarchived))
+      _target_paths=($(_notebooks --paths --unarchived))
     else
-      _target_notebook_paths=($(_notebooks current --path))
+      _target_paths=($(_notebooks current --path))
     fi
 
-    for __notebook_path in "${_target_notebook_paths[@]:-}"
+    for __target_path in "${_target_paths[@]:-}"
     do
       local _max_id
-      _max_id="$(NB_NOTEBOOK_PATH="${__notebook_path}" _index get_max_id)"
+      _max_id="$(NB_NOTEBOOK_PATH="${__target_path}" _index get_max_id)"
 
       if _command_exists "rg" && ! ((_use_grep))
       then
@@ -9856,7 +9856,7 @@ _search() {
           --max-depth 1                   \
           "${_search_args[@]}"            \
           "${_query}"                     \
-          "${__notebook_path}"            \
+          "${__target_path}"              \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ag" && ! ((_use_grep))
       then
@@ -9881,7 +9881,7 @@ _search() {
           --noheading                       \
           --norecurse                       \
           "${_search_args[@]}"              \
-          "${_query}" "${__notebook_path}"  \
+          "${_query}" "${__target_path}"    \
             || return 0 # Don't fail out within a single scope.
       elif _command_exists "ack" && ! ((_use_grep))
       then # ack is available.
@@ -9899,7 +9899,7 @@ _search() {
           _search_args+=("--sort-files")
         fi
 
-        ack "${_query}" "${__notebook_path}"  \
+        ack "${_query}" "${__target_path}"    \
           --ignore-case                       \
           --noheading                         \
           --no-recurse                        \
@@ -9919,8 +9919,8 @@ _search() {
         {
           # Print .index with null byte delimeter so it's included in
           # the list of files to search.
-          printf "%s/.index\0" "${__notebook_path}"
-          find "${__notebook_path}"/* \
+          printf "%s/.index\0" "${__target_path}"
+          find "${__target_path}"/*   \
             \( -name . -o -prune \)   \
             -type f                   \
             -print0
@@ -9971,7 +9971,7 @@ _search() {
                 _file_is_text "${_path}"
               } || {
                 [[ "${_type}" =~ ^folder$|^folders$                     ]] &&
-                [[ "$(dirname "${_path}")" != "${__notebook_path}"      ]]
+                [[ "$(dirname "${_path}")" != "${__target_path}"        ]]
               } || {
                 [[ "${_type}" =~ ^archive$                              ]] &&
                 _file_is_archive "${_path}"
@@ -10032,7 +10032,7 @@ _search() {
 
           local _filename_for_id="${_filename}"
 
-          if [[ "${__notebook_path}/${_filename}" != "${_path}" ]] &&
+          if [[ "${__target_path}/${_filename}" != "${_path}" ]] &&
              [[ ! "${_path:-}" =~ \.index$                      ]]
           then
             local _parent_dirname=
@@ -10041,21 +10041,21 @@ _search() {
             _filename_for_id="$(basename "${_parent_dirname}")"
 
             local _relative_parent_dirname=
-            _relative_parent_dirname="${_parent_dirname#${__notebook_path}/}"
+            _relative_parent_dirname="${_parent_dirname#${__target_path}/}"
 
             _filename="${_relative_parent_dirname}/${_filename}"
             _filename_color="${_relative_parent_dirname}/${_filename_color}"
           fi
 
           _id="$(
-            NB_NOTEBOOK_PATH="${__notebook_path}" \
+            NB_NOTEBOOK_PATH="${__target_path}" \
               _index get_id "${_filename_for_id}"
           )"
 
           if ((_filename_hit))
           then
             _content="$(
-              _get_content "${__notebook_path}/${_filename_for_id}"
+              _get_content "${__target_path}/${_filename_for_id}"
             )"
 
             if [[ -n "${_content}"                  ]] &&
@@ -10086,7 +10086,7 @@ _search() {
 
           local _indicators=
           _indicators="$(
-            NB_NOTEBOOK_PATH="${__notebook_path}" \
+            NB_NOTEBOOK_PATH="${__target_path}" \
               _show "${_filename_for_id}" --indicators
           )"
 
@@ -10095,11 +10095,11 @@ _search() {
           local _max_identifier=
 
           if ((_all)) ||
-             [[ "$(_notebooks current --global --path)" != "${__notebook_path}" ]]
+             [[ "$(_notebooks current --global --path)" != "${__target_path}" ]]
           then
             local _notebook_escaped_name=
             _notebook_escaped_name="$(
-              _notebooks show "${__notebook_path}" --escaped --no-color
+              _notebooks show "${__target_path}" --escaped --no-color
             )"
 
             _info_line="[${_notebook_escaped_name}:${_id}] "
