@@ -4,7 +4,7 @@ load test_helper
 
 # `search` ####################################################################
 
-@test "'search <folder>/' (slash) searches within <folder> and subfolders." {
+@test "'search <folder>/' (slash) searches within <folder> with depth 1." {
   {
     "${_NB}" init
 
