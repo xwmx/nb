@@ -2,49 +2,99 @@
 
 load test_helper
 
-_setup_search() {
-  "${_NB}" init &>/dev/null
-  cat <<HEREDOC | "${_NB}" add "first.md"
-# one
-idyl
-HEREDOC
-  cat <<HEREDOC | "${_NB}" add "second.md"
-# two
-sweetish
-HEREDOC
-  cat <<HEREDOC | "${_NB}" add "third.md"
-# three
-sweetish
-HEREDOC
-}
-
-_search_all_setup() {
-  _setup_search
-  "${_NB}" notebooks add one
-  "${_NB}" use one
-  "${_NB}" add example.md --title "sweetish"
-  "${_NB}" notebooks add two
-  "${_NB}" use two
-  "${_NB}" add example.md --title "sweetish"
-  "${_NB}" notebooks archive two
-  [[ -e "${NB_DIR}/two/.archived" ]]
-}
-
 # `search` ####################################################################
 
-@test "'search' exits with status 1 and prints help information." {
+@test "'search <folder>/' (slash) searches within <folder> and subfolders." {
   {
-    _setup_search
+    "${_NB}" init
 
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    cat <<HEREDOC | "${_NB}" add "one.md"
+# One
+
+example phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "two.md"
+# Two
+
+sample phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "three.md"
+# Three
+
+demo phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "four.md"
+# Four
+
+example phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/one.md"
+# Example Folder / One
+
+example phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/two.md"
+# Example Folder / Two
+
+example phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/three.md"
+# Example Folder / Three
+
+sample phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/four.md"
+# Example Folder / Four
+
+demo phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/one.md"
+# Example Folder / Sample Folder / One
+
+sample phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/two.md"
+# Example Folder / Sample Folder / Two
+
+demo phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/three.md"
+# Example Folder / Sample Folder / Three
+
+example phrase
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/four.md"
+# Example Folder / Sample Folder / Four
+
+sample phrase
+HEREDOC
   }
 
-  run "${_NB}" search
+  run "${_NB}" search "example phrase" Example\ Folder/ --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                        ]]
-  [[ "${lines[0]}" =~ Usage\:               ]]
-  [[ "${lines[1]}" =~ nb\ search\ \<query\> ]]
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${lines[0]}"  =~  Example\ Folder\ \/\            ]]
+  [[ "${lines[0]}"  =~  Two|One                         ]]
+  [[ "${lines[1]}"  =~  -----------------------------   ]]
+  [[ "${lines[2]}"  =~ 3                                ]]
+  [[ "${lines[2]}"  =~  example\ phrase                 ]]
+  [[ "${lines[3]}"  =~  Example\ Folder\ \/\            ]]
+  [[ "${lines[3]}"  =~  Two|One                         ]]
+  [[ "${lines[4]}"  =~  -----------------------------   ]]
+  [[ "${lines[5]}"  =~ 3                                ]]
+  [[ "${lines[5]}"  =~  example\ phrase                 ]]
 }
