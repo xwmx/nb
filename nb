@@ -9764,6 +9764,7 @@ _search() {
   local _only_list=0
   local _max_columns="2000"
   local _print_paths=0
+  local _queries=()
   local _query=
   local _search_args=()
   local _search_color_enabled="${_COLOR_ENABLED}"
@@ -9788,6 +9789,10 @@ _search() {
         ;;
       --path*)
         _print_paths=1
+        ;;
+      -q|--query|-e)
+        _queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
+        shift
         ;;
       -s|--sort)
         _sort=1
@@ -9830,7 +9835,6 @@ _search() {
       _target_paths=("${_current_notebook_path}")
     fi
 
-    local _queries=()
     local _selector_relative_path=
 
     for ((i=((${#_arguments[@]} - 1)); i >= 0; i--))
