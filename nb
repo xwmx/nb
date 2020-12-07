@@ -9724,10 +9724,11 @@ Options:
                                 video, audio, folder, text
 Description:
   Search notes. Uses the first available tool in the following list:
-    1. \`rg\`    https://github.com/BurntSushi/ripgrep
-    2. \`ag\`    https://github.com/ggreer/the_silver_searcher
-    3. \`ack\`   https://beyondgrep.com/
-    4. \`grep\`  https://en.wikipedia.org/wiki/Grep
+    1. \`rga\`   https://github.com/phiresky/ripgrep-all
+    2. \`rg\`    https://github.com/BurntSushi/ripgrep
+    3. \`ag\`    https://github.com/ggreer/the_silver_searcher
+    4. \`ack\`   https://beyondgrep.com/
+    5. \`grep\`  https://en.wikipedia.org/wiki/Grep
 
 Examples:
   # search current notebook for "example query"
@@ -9871,6 +9872,13 @@ _search() {
 
       if _command_exists "rg" && ! ((_use_grep))
       then
+        local _rg_command="rg"
+
+        if _command_exists "rga"
+        then
+          _rg_command="rga"
+        fi
+
         if ((_search_color_enabled))
         then
           _search_args+=("--color" "always")
@@ -9883,7 +9891,7 @@ _search() {
           _search_args+=("--sort-files")
         fi
 
-        rg                                \
+        "${_rg_command}"                  \
           --hidden                        \
           --iglob '!.git'                 \
           --ignore-case                   \

@@ -174,6 +174,7 @@ Also supported for various enhancements:
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
+[`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [vifm](https://vifm.info/)
 
@@ -1592,7 +1593,8 @@ the `-l` or `--list` option:
 [2718] example.md "Example Note"
 ```
 
-`nb search` looks for [`rg`](https://github.com/BurntSushi/ripgrep),
+`nb search` looks for [`rga`](https://github.com/phiresky/ripgrep-all),
+[`rg`](https://github.com/BurntSushi/ripgrep),
 [`ag`](https://github.com/ggreer/the_silver_searcher),
 [`ack`](https://beyondgrep.com/), and
 [`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
@@ -3984,10 +3986,11 @@ Options:
                                 video, audio, folder, text
 Description:
   Search notes. Uses the first available tool in the following list:
-    1. `rg`    https://github.com/BurntSushi/ripgrep
-    2. `ag`    https://github.com/ggreer/the_silver_searcher
-    3. `ack`   https://beyondgrep.com/
-    4. `grep`  https://en.wikipedia.org/wiki/Grep
+    1. `rga`   https://github.com/phiresky/ripgrep-all
+    2. `rg`    https://github.com/BurntSushi/ripgrep
+    3. `ag`    https://github.com/ggreer/the_silver_searcher
+    4. `ack`   https://beyondgrep.com/
+    5. `grep`  https://en.wikipedia.org/wiki/Grep
 
 Examples:
   # search current notebook for "example query"
