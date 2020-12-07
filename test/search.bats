@@ -185,6 +185,48 @@ HEREDOC
   [[ "${lines[2]}"  =~ 1-example.md     ]]
 }
 
+# -q / --query option #########################################################
+
+@test "'search -q <query>' exits with status 0 and prints output." {
+  {
+    _setup_search
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search -q 'idyl'
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}        -eq 0         ]]
+  [[ ! "${lines[0]}"  =~ first\.md  ]]
+  [[ "${lines[0]}"    =~ one        ]]
+  [[ "${lines[1]}"    =~ -*-        ]]
+  [[ "${lines[2]}"    =~ idyl       ]]
+}
+
+@test "'search --query <query>' exits with status 0 and prints output." {
+  {
+    _setup_search
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" search --query 'idyl'
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[ ${status}        -eq 0         ]]
+  [[ ! "${lines[0]}"  =~ first\.md  ]]
+  [[ "${lines[0]}"    =~ one        ]]
+  [[ "${lines[1]}"    =~ -*-        ]]
+  [[ "${lines[2]}"    =~ idyl       ]]
+}
+
 # `search` spacing and alignment ##############################################
 
 @test "'search --list' / 'search -l' includes extra spacing to align with max notebook id length." {

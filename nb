@@ -9819,456 +9819,446 @@ _search() {
     shift
   done
 
-  if [[ -z "${_arguments[*]:-}" ]]
+  local _target_paths=()
+
+  if ((_all))
+  then
+    _target_paths=($(_notebooks --paths --unarchived))
+  fi
+
+  local _selector_relative_path=
+
+  for ((i=((${#_arguments[@]} - 1)); i >= 0; i--))
+  do
+    local _maybe_relative_path=
+
+    if [[   "${_arguments[i]}"  =~ /  ]] &&
+       [[ ! "${_arguments[i]}"  =~ ^/ ]]
+    then
+      _maybe_relative_path="$(
+        _show "${_arguments[i]}" --relative-path 2>/dev/null || :
+      )"
+    fi
+
+    if [[ -n "${_maybe_relative_path:-}" ]]
+    then
+      _target_paths+=("${_current_notebook_path}/${_maybe_relative_path}")
+    else
+      _queries+=("${_arguments[i]}")
+    fi
+  done
+
+  if [[ -z "${_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
-  else
-    local _current_notebook_path=
-    _current_notebook_path="$(_notebooks current --path)"
-
-    local _target_paths=()
-
-    if ((_all))
-    then
-      _target_paths=($(_notebooks --paths --unarchived))
-    else
-      _target_paths=("${_current_notebook_path}")
-    fi
-
-    local _selector_relative_path=
-
-    for ((i=((${#_arguments[@]} - 1)); i >= 0; i--))
-    do
-      local _maybe_relative_path=
-
-      if [[   "${_arguments[i]}"  =~ /  ]] &&
-         [[ ! "${_arguments[i]}"  =~ ^/ ]]
-      then
-        _maybe_relative_path="$(
-          _show "${_arguments[i]}" --relative-path 2>/dev/null || :
-        )"
-      fi
-
-      if [[ -n "${_maybe_relative_path:-}" ]]
-      then
-        _selector_relative_path="${_maybe_relative_path}"
-      else
-        _queries+=("${_arguments[i]}")
-      fi
-    done
-
-    if [[ -z "${_queries[*]:-}" ]]
-    then
-      _exit_1 _help "search"
-    fi
-
-    if [[ -n "${_selector_relative_path:-}" ]]
-    then
-      _target_paths=("${_current_notebook_path}/${_selector_relative_path}")
-    fi
-
-    _query="${_queries[0]:-}"
-
-    for __target_path in "${_target_paths[@]:-}"
-    do
-      local _max_id
-      _max_id="$(_index get_max_id "${__target_path}")"
-
-      if _command_exists "rg" && ! ((_use_grep))
-      then
-        local _rg_command="rg"
-
-        if _command_exists "rga"
-        then
-          _rg_command="rga"
-        fi
-
-        if ((_search_color_enabled))
-        then
-          _search_args+=("--color" "always")
-        else
-          _search_args+=("--color" "never")
-        fi
-
-        if ((_sort))
-        then
-          _search_args+=("--sort-files")
-        fi
-
-        "${_rg_command}"                  \
-          --hidden                        \
-          --iglob '!.git'                 \
-          --ignore-case                   \
-          --no-heading                    \
-          --line-number                   \
-          --max-columns "${_max_columns}" \
-          --max-columns-preview           \
-          --max-depth 1                   \
-          "${_search_args[@]}"            \
-          "${_query}"                     \
-          "${__target_path}"              \
-            || return 0 # Don't fail out within a single scope.
-      elif _command_exists "ag" && ! ((_use_grep))
-      then
-        if ((_search_color_enabled))
-        then
-          _search_args+=("--color")
-          _search_args+=("--color-line-number"  "32")
-          _search_args+=("--color-match"        "1;35")
-        else
-          _search_args+=("--nocolor")
-        fi
-
-        # TODO: ag doesn't support sorting directly.
-        # if ((_sort))
-        # then
-        #   _search_args+=("--workers" "1")
-        # fi
-
-        ag                                  \
-          --hidden                          \
-          --ignore-case                     \
-          --noheading                       \
-          --norecurse                       \
-          "${_search_args[@]}"              \
-          "${_query}" "${__target_path}"    \
-            || return 0 # Don't fail out within a single scope.
-      elif _command_exists "ack" && ! ((_use_grep))
-      then # ack is available.
-        if ((_search_color_enabled))
-        then
-          _search_args+=("--color")
-          _search_args+=("--color-lineno=bold green")
-          _search_args+=("--color-match=blue on_black")
-        else
-          _search_args+=("--nocolor")
-        fi
-
-        if ((_sort))
-        then
-          _search_args+=("--sort-files")
-        fi
-
-        ack "${_query}" "${__target_path}"    \
-          --ignore-case                       \
-          --noheading                         \
-          --no-recurse                        \
-          "${_search_args[@]}"                \
-            || return 0 # Don't fail out within a single scope.
-      else # fall back to POSIX grep.
-        if ((_search_color_enabled))
-        then
-          _search_args+=("--color=always")
-        else
-          _search_args+=("--color=never")
-        fi
-
-        # Add /dev/null so file path is printed even if there is only one
-        # matching file. Reference: https://stackoverflow.com/a/15432718
-        set +f
-        {
-          # Print .index with null byte delimeter so it's included in
-          # the list of files to search.
-          printf "%s/.index\0" "${__target_path}"
-          find "${__target_path}"/*   \
-            \( -name . -o -prune \)   \
-            -type f                   \
-            -print0
-        } | xargs -0 grep           \
-              -E                    \
-              --ignore-case         \
-              "${_search_args[@]}"  \
-              --text                \
-              -n                    \
-              "${_query}"           \
-               /dev/null            \
-                || return 0 # Don't fail out within a single scope.
-        set -f
-      fi | while read -r _line
-      do
-        local _content_line_with_hit=
-        local _file_info=
-        local _file_info_color=
-        local _filename=
-        local _filename_color=
-        local _filename_hit=0
-        local _id=
-        local _path=
-        local _skip=0
-        local _content=
-
-        # Use `sed` to remove color and 'matches' suffix from output.
-        # https://unix.stackexchange.com/a/140255
-        _path="$(
-          printf "%s\\n" "${_line}"                         \
-            | cut -d: -f 1                                  \
-            | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
-            | sed -e 's/ matches//g'
-        )"
-
-        if [[ "${_last_path}" != "${_path}" ]]
-        then
-          if [[ -n "${_type:-}" ]]
-          then
-            if [[ "${_path}" =~ ${_type}$ ]]
-            then
-              _skip=0
-            elif {
-                [[ "${_type}" =~ ^bookmark$|^bookmarks$                 ]] &&
-                _file_is_bookmark "${_path}"
-              } || {
-                [[ "${_type}" =~ ^note$|^notes$|^text$                  ]] &&
-                _file_is_text "${_path}"
-              } || {
-                [[ "${_type}" =~ ^folder$|^folders$                     ]] &&
-                [[ "$(dirname "${_path}")" != "${__target_path}"        ]]
-              } || {
-                [[ "${_type}" =~ ^archive$                              ]] &&
-                _file_is_archive "${_path}"
-              } || {
-                [[ "${_type}" =~ ^audio$|^music$                        ]] &&
-                _file_is_audio "${_path}"
-              } || {
-                [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$    ]] &&
-                _file_is_document "${_path}"
-              } || {
-                [[ "${_type}" =~ ^encrypted$                            ]] &&
-                _file_is_encrypted "${_path}"
-              } || {
-                [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$  ]] &&
-                _file_is_image "${_path}"
-              } || {
-                [[ "${_type}" =~ ^video$|^videos$                       ]] &&
-                _file_is_video "${_path}"
-              }
-            then
-              _skip=0
-            else
-              _skip=1
-            fi
-          fi
-        fi
-
-        if [[ -z "${_line}" ]]
-        then
-          # Print nothing, skipping the blank line in `ag` output with
-          # multiple matches.
-          :
-        elif ((_print_paths))
-        then
-          if [[ "${_last_path}" != "${_path}" ]]
-          then # match is in a different file than the last match
-            printf "%s\\n" "${_path}"
-          fi
-        else
-          if ((_skip))
-          then
-            continue
-          fi
-
-          _filename="$(basename "${_path}")"
-          _filename_color="${_filename}"
-
-          # Use ".index" to match filenames.
-          if [[ -n "${_filename:-}" ]] && [[ "${_filename:-}" == ".index" ]]
-          then
-            _filename_hit=1
-            _filename_color="$(printf "%s\\n" "${_line}" | cut -d: -f 3-)"
-            _filename="$(
-              printf "%s\\n" "${_filename_color}" \
-                | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
-            )"
-          fi
-
-          local _filename_for_id="${_filename}"
-
-          if [[ "${__target_path}/${_filename}" != "${_path}" ]] &&
-             [[ ! "${_path:-}" =~ \.index$                      ]]
-          then
-            local _parent_dirname=
-            _parent_dirname="$(dirname "${_path}")"
-
-            _filename_for_id="$(basename "${_parent_dirname}")"
-
-            local _relative_parent_dirname=
-            _relative_parent_dirname="${_parent_dirname#${__target_path}/}"
-
-            _filename="${_relative_parent_dirname}/${_filename}"
-            _filename_color="${_relative_parent_dirname}/${_filename_color}"
-          fi
-
-          _id="$(
-            _index get_id "${_filename_for_id}" "${__target_path}"
-          )"
-
-          if ((_filename_hit))
-          then
-            _content="$(
-              _get_content "${__target_path}/${_filename_for_id}"
-            )"
-
-            if [[ -n "${_content}"                  ]] &&
-               [[ ! "${_content}" =~ ^__first_line: ]]
-            then
-              _file_info="${_filename} · ${_content}"
-              _file_info_color="${_filename_color} · ${_content}"
-            else
-              _file_info="${_filename}"
-              _file_info_color="${_filename_color}"
-            fi
-          else
-            _content="$(_get_content "${_path}")"
-
-            if [[ "${_content:-}" =~ ^__first_line: ]]
-            then
-              _file_info="${_filename} · \"${_content#__first_line:}\""
-              _file_info_color="${_filename_color} · \"${_content#__first_line:}\""
-            elif [[ -n "${_content:-}" ]]
-            then
-              _file_info="${_content}"
-              _file_info_color="${_content}"
-            else
-              _file_info="${_filename}"
-              _file_info_color="${_filename_color}"
-            fi
-          fi
-
-          local _indicators=
-          _indicators="$(
-            NB_NOTEBOOK_PATH="${__target_path}" \
-              _show "${_filename_for_id}" --indicators
-          )"
-
-          local _info_line=
-          local _info_line_color=
-          local _max_identifier=
-
-          if ((_all)) ||
-             [[ "$(_notebooks current --global --path)" != "${__target_path}" ]]
-          then
-            local _notebook_escaped_name=
-            _notebook_escaped_name="$(
-              _notebooks show "${__target_path}" --escaped --no-color
-            )"
-
-            _info_line="[${_notebook_escaped_name}:${_id}] "
-            _info_line_color+="$(_color_brackets "${_notebook_escaped_name}:${_id}") "
-            _max_identifier="[${_notebook_escaped_name}:${_max_id}] "
-          else
-            _info_line="[${_id}] "
-            _info_line_color+="$(_color_brackets "${_id}") "
-            _max_identifier="[${_max_id}] "
-          fi
-
-          # Use calculated number of spaces for nicer formatting.
-          local _spaces=''
-          local _spaces_length=0
-
-          if ((_only_list))
-          then
-            _spaces_length=$(( ${#_max_identifier} - ${#_info_line} ))
-          fi
-
-          if ((_spaces_length))
-          then
-            printf -v _spaces '%*s' "${_spaces_length}" ""
-
-            _info_line+="${_spaces}"
-            _info_line_color+="${_spaces}"
-          fi
-
-          if [[ -n "${_indicators:-}" ]]
-          then
-            _info_line+="${_indicators}"
-            _info_line_color+="${_indicators}"
-          fi
-
-          _info_line+="${_file_info}"
-          _info_line_color+="${_file_info_color}"
-
-          if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
-          then # match is in a different file than the last match
-            _wrap off
-            printf "%s" "${_info_line_color}"
-            _wrap on
-            printf "\\n"
-          fi
-
-          if ((_only_list))
-          then
-            [[ -n "${_path}" ]] && _last_path="${_path}"
-            continue
-          fi
-
-          if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
-          then # match is in a different file than the last match
-            _wrap off
-
-            local _visible_line_length
-            _visible_line_length="$(
-              _get_visible_length "${_info_line:-}"
-            )"
-
-            _print_line "$(printf "%-${_visible_line_length}s" '.')"
-
-            _wrap on
-          fi
-
-          if ((_filename_hit))
-          then
-            _content_line_with_hit="Filename Match: $(
-              printf "%s\\n" "${_line}" | cut -d: -f 3-
-            )"
-          else
-            _content_line_with_hit="$(
-              printf "%s\\n" "${_line}" | cut -d: -f 2-
-            )"
-          fi
-
-          # Truncate long lines.
-          local _line_length=
-          _line_length="$(
-            printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
-          )"
-          local _line_length_diff
-          _line_length_diff=$((_line_length-_max_columns-100))
-
-          if [[ "${_line_length_diff}" -gt 0 ]]
-          then
-            _content_line_with_hit="$(\
-              printf "%s\\n" "${_content_line_with_hit}" \
-                | awk '{ print substr($0, 1, 2000) }'
-            )"
-            _content_line_with_hit+="$(
-              _color_primary "... [${_line_length_diff} characters omitted]"
-            )"
-          fi
-
-          printf "%s\\n\\n" "${_content_line_with_hit}"
-        fi
-
-        [[ -n "${_path}" ]] && _last_path="${_path}"
-      done
-    done | if read -r _line
-    then # output is present
-      # Print the test line then `cat` the rest.
-      printf "%s\\n" "${_line}"
-      cat
-      return 0
-    else
-      if ((_all))
-      then
-        printf "Not found in any notebook: %s\\n" \
-          "$(_color_primary "${_query:-}")"
-      else
-        printf "Not found in %s: %s\\n"                       \
-          "$(_color_primary "$(_notebooks current --name)")"  \
-          "$(_color_primary "${_query:-}")"
-      fi
-
-      return 1
-    fi
   fi
+
+  if [[ -z "${_target_paths[*]:-}" ]]
+  then
+    _target_paths=("$(_notebooks current --path)")
+  fi
+
+  _query="${_queries[0]:-}"
+
+  for __target_path in "${_target_paths[@]:-}"
+  do
+    local _max_id
+    _max_id="$(_index get_max_id "${__target_path}")"
+
+    if _command_exists "rg" && ! ((_use_grep))
+    then
+      local _rg_command="rg"
+
+      if _command_exists "rga"
+      then
+        _rg_command="rga"
+      fi
+
+      if ((_search_color_enabled))
+      then
+        _search_args+=("--color" "always")
+      else
+        _search_args+=("--color" "never")
+      fi
+
+      if ((_sort))
+      then
+        _search_args+=("--sort-files")
+      fi
+
+      "${_rg_command}"                  \
+        --hidden                        \
+        --iglob '!.git'                 \
+        --ignore-case                   \
+        --no-heading                    \
+        --line-number                   \
+        --max-columns "${_max_columns}" \
+        --max-columns-preview           \
+        --max-depth 1                   \
+        "${_search_args[@]}"            \
+        "${_query}"                     \
+        "${__target_path}"              \
+          || return 0 # Don't fail out within a single scope.
+    elif _command_exists "ag" && ! ((_use_grep))
+    then
+      if ((_search_color_enabled))
+      then
+        _search_args+=("--color")
+        _search_args+=("--color-line-number"  "32")
+        _search_args+=("--color-match"        "1;35")
+      else
+        _search_args+=("--nocolor")
+      fi
+
+      # TODO: ag doesn't support sorting directly.
+      # if ((_sort))
+      # then
+      #   _search_args+=("--workers" "1")
+      # fi
+
+      ag                                  \
+        --hidden                          \
+        --ignore-case                     \
+        --noheading                       \
+        --norecurse                       \
+        "${_search_args[@]}"              \
+        "${_query}" "${__target_path}"    \
+          || return 0 # Don't fail out within a single scope.
+    elif _command_exists "ack" && ! ((_use_grep))
+    then # ack is available.
+      if ((_search_color_enabled))
+      then
+        _search_args+=("--color")
+        _search_args+=("--color-lineno=bold green")
+        _search_args+=("--color-match=blue on_black")
+      else
+        _search_args+=("--nocolor")
+      fi
+
+      if ((_sort))
+      then
+        _search_args+=("--sort-files")
+      fi
+
+      ack "${_query}" "${__target_path}"    \
+        --ignore-case                       \
+        --noheading                         \
+        --no-recurse                        \
+        "${_search_args[@]}"                \
+          || return 0 # Don't fail out within a single scope.
+    else # fall back to POSIX grep.
+      if ((_search_color_enabled))
+      then
+        _search_args+=("--color=always")
+      else
+        _search_args+=("--color=never")
+      fi
+
+      # Add /dev/null so file path is printed even if there is only one
+      # matching file. Reference: https://stackoverflow.com/a/15432718
+      set +f
+      {
+        # Print .index with null byte delimeter so it's included in
+        # the list of files to search.
+        printf "%s/.index\0" "${__target_path}"
+        find "${__target_path}"/*   \
+          \( -name . -o -prune \)   \
+          -type f                   \
+          -print0
+      } | xargs -0 grep           \
+            -E                    \
+            --ignore-case         \
+            "${_search_args[@]}"  \
+            --text                \
+            -n                    \
+            "${_query}"           \
+             /dev/null            \
+              || return 0 # Don't fail out within a single scope.
+      set -f
+    fi | while read -r _line
+    do
+      local _content_line_with_hit=
+      local _file_info=
+      local _file_info_color=
+      local _filename=
+      local _filename_color=
+      local _filename_hit=0
+      local _id=
+      local _path=
+      local _skip=0
+      local _content=
+
+      # Use `sed` to remove color and 'matches' suffix from output.
+      # https://unix.stackexchange.com/a/140255
+      _path="$(
+        printf "%s\\n" "${_line}"                         \
+          | cut -d: -f 1                                  \
+          | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
+          | sed -e 's/ matches//g'
+      )"
+
+      if [[ "${_last_path}" != "${_path}" ]]
+      then
+        if [[ -n "${_type:-}" ]]
+        then
+          if [[ "${_path}" =~ ${_type}$ ]]
+          then
+            _skip=0
+          elif {
+              [[ "${_type}" =~ ^bookmark$|^bookmarks$                 ]] &&
+              _file_is_bookmark "${_path}"
+            } || {
+              [[ "${_type}" =~ ^note$|^notes$|^text$                  ]] &&
+              _file_is_text "${_path}"
+            } || {
+              [[ "${_type}" =~ ^folder$|^folders$                     ]] &&
+              [[ "$(dirname "${_path}")" != "${__target_path}"        ]]
+            } || {
+              [[ "${_type}" =~ ^archive$                              ]] &&
+              _file_is_archive "${_path}"
+            } || {
+              [[ "${_type}" =~ ^audio$|^music$                        ]] &&
+              _file_is_audio "${_path}"
+            } || {
+              [[ "${_type}" =~ ^document$|^documents$|^doc$|^docs$    ]] &&
+              _file_is_document "${_path}"
+            } || {
+              [[ "${_type}" =~ ^encrypted$                            ]] &&
+              _file_is_encrypted "${_path}"
+            } || {
+              [[ "${_type}" =~ ^image$|^images$|^picture$|^pictures$  ]] &&
+              _file_is_image "${_path}"
+            } || {
+              [[ "${_type}" =~ ^video$|^videos$                       ]] &&
+              _file_is_video "${_path}"
+            }
+          then
+            _skip=0
+          else
+            _skip=1
+          fi
+        fi
+      fi
+
+      if [[ -z "${_line}" ]]
+      then
+        # Print nothing, skipping the blank line in `ag` output with
+        # multiple matches.
+        :
+      elif ((_print_paths))
+      then
+        if [[ "${_last_path}" != "${_path}" ]]
+        then # match is in a different file than the last match
+          printf "%s\\n" "${_path}"
+        fi
+      else
+        if ((_skip))
+        then
+          continue
+        fi
+
+        _filename="$(basename "${_path}")"
+        _filename_color="${_filename}"
+
+        # Use ".index" to match filenames.
+        if [[ -n "${_filename:-}" ]] && [[ "${_filename:-}" == ".index" ]]
+        then
+          _filename_hit=1
+          _filename_color="$(printf "%s\\n" "${_line}" | cut -d: -f 3-)"
+          _filename="$(
+            printf "%s\\n" "${_filename_color}" \
+              | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
+          )"
+        fi
+
+        local _filename_for_id="${_filename}"
+
+        if [[ "${__target_path}/${_filename}" != "${_path}" ]] &&
+           [[ ! "${_path:-}" =~ \.index$                      ]]
+        then
+          local _parent_dirname=
+          _parent_dirname="$(dirname "${_path}")"
+
+          _filename_for_id="$(basename "${_parent_dirname}")"
+
+          local _relative_parent_dirname=
+          _relative_parent_dirname="${_parent_dirname#${__target_path}/}"
+
+          _filename="${_relative_parent_dirname}/${_filename}"
+          _filename_color="${_relative_parent_dirname}/${_filename_color}"
+        fi
+
+        _id="$(
+          _index get_id "${_filename_for_id}" "${__target_path}"
+        )"
+
+        if ((_filename_hit))
+        then
+          _content="$(
+            _get_content "${__target_path}/${_filename_for_id}"
+          )"
+
+          if [[ -n "${_content}"                  ]] &&
+             [[ ! "${_content}" =~ ^__first_line: ]]
+          then
+            _file_info="${_filename} · ${_content}"
+            _file_info_color="${_filename_color} · ${_content}"
+          else
+            _file_info="${_filename}"
+            _file_info_color="${_filename_color}"
+          fi
+        else
+          _content="$(_get_content "${_path}")"
+
+          if [[ "${_content:-}" =~ ^__first_line: ]]
+          then
+            _file_info="${_filename} · \"${_content#__first_line:}\""
+            _file_info_color="${_filename_color} · \"${_content#__first_line:}\""
+          elif [[ -n "${_content:-}" ]]
+          then
+            _file_info="${_content}"
+            _file_info_color="${_content}"
+          else
+            _file_info="${_filename}"
+            _file_info_color="${_filename_color}"
+          fi
+        fi
+
+        local _indicators=
+        _indicators="$(
+          NB_NOTEBOOK_PATH="${__target_path}" \
+            _show "${_filename_for_id}" --indicators
+        )"
+
+        local _info_line=
+        local _info_line_color=
+        local _max_identifier=
+
+        if ((_all)) ||
+           [[ "$(_notebooks current --global --path)" != "${__target_path}" ]]
+        then
+          local _notebook_escaped_name=
+          _notebook_escaped_name="$(
+            _notebooks show "${__target_path}" --escaped --no-color
+          )"
+
+          _info_line="[${_notebook_escaped_name}:${_id}] "
+          _info_line_color+="$(_color_brackets "${_notebook_escaped_name}:${_id}") "
+          _max_identifier="[${_notebook_escaped_name}:${_max_id}] "
+        else
+          _info_line="[${_id}] "
+          _info_line_color+="$(_color_brackets "${_id}") "
+          _max_identifier="[${_max_id}] "
+        fi
+
+        # Use calculated number of spaces for nicer formatting.
+        local _spaces=''
+        local _spaces_length=0
+
+        if ((_only_list))
+        then
+          _spaces_length=$(( ${#_max_identifier} - ${#_info_line} ))
+        fi
+
+        if ((_spaces_length))
+        then
+          printf -v _spaces '%*s' "${_spaces_length}" ""
+
+          _info_line+="${_spaces}"
+          _info_line_color+="${_spaces}"
+        fi
+
+        if [[ -n "${_indicators:-}" ]]
+        then
+          _info_line+="${_indicators}"
+          _info_line_color+="${_indicators}"
+        fi
+
+        _info_line+="${_file_info}"
+        _info_line_color+="${_file_info_color}"
+
+        if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
+        then # match is in a different file than the last match
+          _wrap off
+          printf "%s" "${_info_line_color}"
+          _wrap on
+          printf "\\n"
+        fi
+
+        if ((_only_list))
+        then
+          [[ -n "${_path}" ]] && _last_path="${_path}"
+          continue
+        fi
+
+        if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
+        then # match is in a different file than the last match
+          _wrap off
+
+          local _visible_line_length
+          _visible_line_length="$(
+            _get_visible_length "${_info_line:-}"
+          )"
+
+          _print_line "$(printf "%-${_visible_line_length}s" '.')"
+
+          _wrap on
+        fi
+
+        if ((_filename_hit))
+        then
+          _content_line_with_hit="Filename Match: $(
+            printf "%s\\n" "${_line}" | cut -d: -f 3-
+          )"
+        else
+          _content_line_with_hit="$(
+            printf "%s\\n" "${_line}" | cut -d: -f 2-
+          )"
+        fi
+
+        # Truncate long lines.
+        local _line_length=
+        _line_length="$(
+          printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
+        )"
+        local _line_length_diff
+        _line_length_diff=$((_line_length-_max_columns-100))
+
+        if [[ "${_line_length_diff}" -gt 0 ]]
+        then
+          _content_line_with_hit="$(\
+            printf "%s\\n" "${_content_line_with_hit}" \
+              | awk '{ print substr($0, 1, 2000) }'
+          )"
+          _content_line_with_hit+="$(
+            _color_primary "... [${_line_length_diff} characters omitted]"
+          )"
+        fi
+
+        printf "%s\\n\\n" "${_content_line_with_hit}"
+      fi
+
+      [[ -n "${_path}" ]] && _last_path="${_path}"
+    done
+  done |  if read -r _line
+          then # output is present
+            # Print the test line then `cat` the rest.
+            printf "%s\\n" "${_line}"
+            cat
+            return 0
+          else
+            if ((_all))
+            then
+              printf "Not found in any notebook: %s\\n" \
+                "$(_color_primary "${_query:-}")"
+            else
+              printf "Not found in %s: %s\\n"                       \
+                "$(_color_primary "$(_notebooks current --name)")"  \
+                "$(_color_primary "${_query:-}")"
+            fi
+
+            return 1
+          fi
 }
 _alias_subcommand "search" "q"
 
