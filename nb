@@ -9763,6 +9763,7 @@ _search() {
   local _last_path=
   local _only_list=0
   local _max_columns="2000"
+  local _max_depth=999999999999999
   local _print_paths=0
   local _queries=()
   local _query=
@@ -9780,6 +9781,10 @@ _search() {
     case "${__arg}" in
       -a|--all)
         _all=1
+        ;;
+      --*depth)
+        _max_depth="$(_option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       -l|--list)
         _only_list=1
