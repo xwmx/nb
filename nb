@@ -9824,6 +9824,9 @@ _search() {
     shift
   done
 
+  local _current_notebook_path
+  _current_notebook_path="$(_notebooks current --path)"
+
   local _target_paths=()
 
   if ((_all))
@@ -9860,7 +9863,7 @@ _search() {
 
   if [[ -z "${_target_paths[*]:-}" ]]
   then
-    _target_paths=("$(_notebooks current --path)")
+    _target_paths=("${_current_notebook_path}")
   fi
 
   _query="${_queries[0]:-}"
