@@ -1541,7 +1541,6 @@ _file_is_text() {
               --exclude=compress            \
               --exclude=elf                 \
               --exclude=tar                 \
-              --exclude=soft                \
               -b --mime-type)" =~ ^text ]]
     }
 }
