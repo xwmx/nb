@@ -1052,7 +1052,7 @@ _decrypt_file() {
   local _file_command_response
   _file_command_response="$(file "${_encrypted_path}")"
 
-  if [[ "${_file_command_response}" =~ GPG ]]
+  if [[ "${_file_command_response}" =~ GPG|PGP ]]
   then
     if _command_exists "gpg"
     then
@@ -1065,7 +1065,7 @@ _decrypt_file() {
           --decrypt "${_encrypted_path}"
     else
       _exit_1 printf "\
-This note was encrypted with GPG, but the GPG command was not found.\\n"
+This item was encrypted with GPG, but the GPG command was not found.\\n"
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
   then
