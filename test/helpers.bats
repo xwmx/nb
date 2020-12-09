@@ -2,18 +2,6 @@
 
 load test_helper
 
-# _skip_encrypted_file_detection_tests()
-#
-# Usage:
-#   _skip_encrypted_file_detection_tests [<message>]
-#
-# Description:
-#   Encrypted file detection tests error intermittently, so skip in some cases
-#   until resolved.
-_skip_encrypted_file_detection_tests() {
-  return 0 # skip "${1:-"TODO: intermittent encrypted file detection errors"}"
-}
-
 # `_clear_cache()` ############################################################
 
 @test "'_clear_cache()' clears the cache." {
@@ -167,8 +155,6 @@ _skip_encrypted_file_detection_tests() {
 }
 
 @test "'_file_is_encrypted()' is true for encrypted .not-valid file." {
-  _skip_encrypted_file_detection_tests
-
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -226,8 +212,6 @@ _skip_encrypted_file_detection_tests() {
 }
 
 @test "'_file_is_encrypted()' is true for encrypted extensionless file." {
-  _skip_encrypted_file_detection_tests
-
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -252,8 +236,6 @@ _skip_encrypted_file_detection_tests() {
 # `_file_is_text()` ###########################################################
 
 @test "'_file_is_text()' is false for encrypted .enc file." {
-  _skip_encrypted_file_detection_tests
-
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example"  --encrypt --password=password
@@ -308,8 +290,6 @@ _skip_encrypted_file_detection_tests() {
 }
 
 @test "'_file_is_text()' is false for encrypted .not-valid file." {
-  _skip_encrypted_file_detection_tests
-
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
@@ -328,8 +308,6 @@ _skip_encrypted_file_detection_tests() {
 }
 
 @test "'_file_is_text()' is false for encrypted extensionless file." {
-  _skip_encrypted_file_detection_tests
-
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example" --encrypt --password=password
