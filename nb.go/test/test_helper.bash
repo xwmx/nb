@@ -4,6 +4,7 @@
 #
 # Test helper for Bats: Bash Automated Testing System.
 #
+# https://github.com/bats-core/bats-core
 # https://github.com/sstephenson/bats
 ###############################################################################
 
