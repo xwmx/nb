@@ -295,9 +295,9 @@ func configureNotebookPaths(cfg config) config {
 
 // contains takes a slice of strings and a string and returns a boolean
 // indicating whether the slice contains the string.
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
+func contains(slice []string, query string) bool {
+	for _, e := range slice {
+		if e == query {
 			return true
 		}
 	}
