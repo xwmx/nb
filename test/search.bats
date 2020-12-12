@@ -4,6 +4,7 @@ load test_helper
 
 _setup_search() {
   "${_NB}" init &>/dev/null
+
   cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 idyl
@@ -20,13 +21,19 @@ HEREDOC
 
 _search_all_setup() {
   _setup_search
+
   "${_NB}" notebooks add one
   "${_NB}" use one
+
   "${_NB}" add example.md --title "sweetish"
+
   "${_NB}" notebooks add two
   "${_NB}" use two
+
   "${_NB}" add example.md --title "sweetish"
+
   "${_NB}" notebooks archive two
+
   [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
@@ -35,8 +42,6 @@ _search_all_setup() {
 @test "'search' exits with status 1 and prints help information." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search
@@ -44,9 +49,10 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                        ]]
-  [[ "${lines[0]}" =~ Usage\:               ]]
-  [[ "${lines[1]}" =~ nb\ search\ \<query\> ]]
+  [[ "${status}"    -eq 1                     ]]
+
+  [[ "${lines[0]}"  =~  Usage\:               ]]
+  [[ "${lines[1]}"  =~  nb\ search\ \<query\> ]]
 }
 
 # `search <no match>` #########################################################
@@ -54,8 +60,6 @@ _search_all_setup() {
 @test "'search <no match>' exits with status 1 and prints output." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'no match'
@@ -63,10 +67,11 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 1         ]]
-  [[ "${output}"  =~ Not\ found ]]
-  [[ "${output}"  =~ home       ]]
-  [[ "${output}"  =~ no\ match  ]]
+  [[ "${status}"  -eq 1           ]]
+
+  [[ "${output}"  =~  Not\ found  ]]
+  [[ "${output}"  =~  home        ]]
+  [[ "${output}"  =~  no\ match   ]]
 }
 
 # `search <one match> [--path] [--list]` ######################################
@@ -74,21 +79,20 @@ _search_all_setup() {
 @test "'search <one match>' exits with status 0 and prints output." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'idyl'
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0         ]]
-  [[ ! "${lines[0]}"  =~ first\.md  ]]
-  [[ "${lines[0]}"    =~ one        ]]
-  [[ "${lines[1]}"    =~ -*-        ]]
-  [[ "${lines[2]}"    =~ idyl       ]]
+  [[    "${status}"   -eq 0         ]]
+
+  [[ !  "${lines[0]}" =~  first\.md ]]
+  [[    "${lines[0]}" =~  one       ]]
+  [[    "${lines[1]}" =~  -*-       ]]
+  [[    "${lines[2]}" =~  idyl      ]]
 }
 
 @test "'search <one match>' includes emoji indicator." {
@@ -99,29 +103,26 @@ _search_all_setup() {
       --filename  "example.bookmark.md"     \
       --content   "<http://example.test/>"  \
       --title     "Example Title"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.test' --no-color
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0                   ]]
-  [[ ! "${lines[0]}"  =~ example.bookmark.md  ]]
-  [[ "${lines[0]}"    =~ Example\ Title       ]]
-  [[ "${lines[0]}"    =~ \]\ 🔖               ]]
-  [[ "${lines[1]}"    =~ -*-                  ]]
-  [[ "${lines[2]}"    =~ example.test         ]]
+  [[    "${status}"   -eq 0                   ]]
+
+  [[ !  "${lines[0]}" =~  example.bookmark.md ]]
+  [[    "${lines[0]}" =~  Example\ Title      ]]
+  [[    "${lines[0]}" =~  \]\ 🔖              ]]
+  [[    "${lines[1]}" =~  -*-                 ]]
+  [[    "${lines[2]}" =~  example.test        ]]
 }
 
 @test "'search <one match> --path' exits with status 0 and prints path." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'idyl' --path
@@ -129,9 +130,9 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}      -eq 0                       ]]
-  [[ "${lines[0]}"  =~ ${NB_DIR}/home/first\.md ]]
-  [[ "${#lines[@]}" -eq 1                       ]]
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${lines[0]}"  =~  ${NB_DIR}/home/first\.md  ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
 }
 
 @test "'search <one match> --list' exits with status 0 and prints listing." {
@@ -146,15 +147,18 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}        -eq 0         ]]
-  [[ ! "${lines[0]}"  =~ first\.md  ]]
-  [[ "${lines[0]}"    =~ one        ]]
-  [[ "${#lines[@]}"   -eq 1         ]]
+  [[    "${status}"     -eq 0         ]]
+
+  [[ !  "${lines[0]}"   =~ first\.md  ]]
+  [[    "${lines[0]}"   =~ one        ]]
+
+  [[    "${#lines[@]}"  -eq 1         ]]
 }
 
 @test "'search <one filename match>' exits with status 0 and prints output." {
   {
     "${_NB}" init &>/dev/null
+
     cat <<HEREDOC | "${_NB}" add "1-example.md"
 # one
 idyl
@@ -167,22 +171,21 @@ HEREDOC
 # three
 sweetish
 HEREDOC
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search '1-example.md'
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}      -eq 0               ]]
-  [[ "${lines[0]}"  =~ 1-example.md     ]]
-  [[ "${lines[0]}"  =~ one              ]]
-  [[ "${lines[1]}"  =~ -*-              ]]
-  [[ "${lines[2]}"  =~ Filename\ Match  ]]
-  [[ "${lines[2]}"  =~ 1-example.md     ]]
+  [[ "${status}"    -eq 0               ]]
+
+  [[ "${lines[0]}"  =~  1-example.md    ]]
+  [[ "${lines[0]}"  =~  one             ]]
+  [[ "${lines[1]}"  =~  -*-             ]]
+  [[ "${lines[2]}"  =~  Filename\ Match ]]
+  [[ "${lines[2]}"  =~  1-example.md    ]]
 }
 
 # -q / --query option #########################################################
@@ -190,8 +193,6 @@ HEREDOC
 @test "'search -q <query>' exits with status 0 and prints output." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search -q 'idyl'
@@ -200,31 +201,31 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0         ]]
-  [[ ! "${lines[0]}"  =~ first\.md  ]]
-  [[ "${lines[0]}"    =~ one        ]]
-  [[ "${lines[1]}"    =~ -*-        ]]
-  [[ "${lines[2]}"    =~ idyl       ]]
+  [[    "${status}"   -eq 0         ]]
+
+  [[ !  "${lines[0]}" =~ first\.md  ]]
+  [[    "${lines[0]}" =~ one        ]]
+  [[    "${lines[1]}" =~ -*-        ]]
+  [[    "${lines[2]}" =~ idyl       ]]
 }
 
 @test "'search --query <query>' exits with status 0 and prints output." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search --query 'idyl'
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0         ]]
-  [[ ! "${lines[0]}"  =~ first\.md  ]]
-  [[ "${lines[0]}"    =~ one        ]]
-  [[ "${lines[1]}"    =~ -*-        ]]
-  [[ "${lines[2]}"    =~ idyl       ]]
+  [[    "${status}"   -eq 0         ]]
+
+  [[ !  "${lines[0]}" =~ first\.md  ]]
+  [[    "${lines[0]}" =~ one        ]]
+  [[    "${lines[1]}" =~ -*-        ]]
+  [[    "${lines[2]}" =~ idyl       ]]
 }
 
 # `search` spacing and alignment ##############################################
@@ -247,24 +248,23 @@ HEREDOC
       --filename  "example-2.bookmark.md"   \
       --content   "<http://example.test/>"  \
       --title     "Example Title Two"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.test' --no-color --use-grep --list
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0                     ]]
-  [[ ! "${lines[0]}"  =~ example-1.bookmark.md  ]]
-  [[ "${lines[0]}"    =~ Example\ Title\ One    ]]
-  [[ "${lines[0]}"    =~ \]\ \ 🔖               ]]
+  [[    "${status}"   -eq 0                     ]]
 
-  [[ ! "${lines[1]}"  =~ example-2.bookmark.md  ]]
-  [[ "${lines[1]}"    =~ Example\ Title\ Two    ]]
-  [[ "${lines[1]}"    =~ \]\ 🔖                 ]]
+  [[ !  "${lines[0]}" =~  example-2.bookmark.md ]]
+  [[    "${lines[0]}" =~  Example\ Title\ Two   ]]
+  [[    "${lines[0]}" =~  \]\ 🔖                ]]
+
+  [[ !  "${lines[1]}" =~  example-1.bookmark.md ]]
+  [[    "${lines[1]}" =~  Example\ Title\ One   ]]
+  [[    "${lines[1]}" =~  \]\ \ 🔖              ]]
 }
 
 @test "'search' (no '--list' / '-l') does not include extra spacing." {
@@ -285,29 +285,28 @@ HEREDOC
       --filename  "example-2.bookmark.md"   \
       --content   "<http://example.test/>"  \
       --title     "Example Title Two"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'example.test' --no-color --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0                     ]]
-  [[ ! "${lines[0]}"  =~ example-1.bookmark.md  ]]
-  [[ "${lines[0]}"    =~ Example\ Title\ One    ]]
-  [[ "${lines[0]}"    =~ \]\ 🔖                 ]]
-  [[ ! "${lines[0]}"  =~ \]\ \ 🔖               ]]
-  [[ "${lines[1]}"    =~ -*-                    ]]
-  [[ "${lines[2]}"    =~ example.test           ]]
+  [[    "${status}"   -eq 0                     ]]
 
-  [[ ! "${lines[3]}"  =~ example-2.bookmark.md  ]]
-  [[ "${lines[3]}"    =~ Example\ Title\ Two    ]]
-  [[ "${lines[3]}"    =~ \]\ 🔖                 ]]
-  [[ "${lines[4]}"    =~ -*-                    ]]
-  [[ "${lines[5]}"    =~ example.test           ]]
+  [[ !  "${lines[0]}" =~  example-2.bookmark.md ]]
+  [[    "${lines[0]}" =~  Example\ Title\ Two   ]]
+  [[    "${lines[0]}" =~  \]\ 🔖                ]]
+  [[    "${lines[1]}" =~  -*-                   ]]
+  [[    "${lines[2]}" =~  example.test          ]]
+
+  [[ !  "${lines[3]}" =~  example-1.bookmark.md ]]
+  [[    "${lines[3]}" =~  Example\ Title\ One   ]]
+  [[    "${lines[3]}" =~  \]\ 🔖                ]]
+  [[ !  "${lines[3]}" =~  \]\ \ 🔖              ]]
+  [[    "${lines[4]}" =~  -*-                   ]]
+  [[    "${lines[5]}" =~  example.test          ]]
 }
 
 # `search <multiple matches> [--path] [--list]` ###############################
@@ -315,71 +314,74 @@ HEREDOC
 @test "'search <multiple matches>' exits with status 0 and prints output." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
-  [[ ${status}        -eq 0             ]]
-  [[ ! "${lines[0]}"  =~ second\.md     ]]
-  [[ "${lines[0]}"    =~ two            ]]
-  [[ "${lines[1]}"    =~ -*-            ]]
-  [[ "${lines[2]}"    =~ sweetish       ]]
-  [[ ! "${lines[3]}"  =~ third\.md      ]]
-  [[ "${lines[3]}"    =~ three          ]]
-  [[ "${lines[4]}"    =~ -*-            ]]
-  [[ "${lines[5]}"    =~ sweetish       ]]
-  [[ "${lines[0]}"    != "${lines[3]}"  ]]
+  [[    "${status}"   -eq 0             ]]
+
+  [[ !  "${lines[0]}" =~  third\.md     ]]
+  [[    "${lines[0]}" =~  three         ]]
+  [[    "${lines[1]}" =~  -*-           ]]
+  [[    "${lines[2]}" =~  sweetish      ]]
+
+  [[ !  "${lines[3]}" =~  second\.md    ]]
+  [[    "${lines[3]}" =~  two           ]]
+  [[    "${lines[4]}" =~  -*-           ]]
+  [[    "${lines[5]}" =~  sweetish      ]]
+
+  [[    "${lines[0]}" !=  "${lines[3]}" ]]
 }
 
 @test "'search <multiple matches> --path' exits with 0 and prints paths." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --path --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status} -eq 0                            ]]
-  [[ "${lines[0]}" =~ ${NB_DIR}/home/second\.md ]]
-  [[ "${lines[1]}" =~ ${NB_DIR}/home/third\.md  ]]
-  [[ "${#lines[@]}" -eq 2                       ]]
+  [[ "${status}"    -eq 0                         ]]
+
+  [[ "${lines[0]}"  =~  ${NB_DIR}/home/third\.md  ]]
+  [[ "${lines[1]}"  =~  ${NB_DIR}/home/second\.md ]]
+
+  [[ "${#lines[@]}" -eq 2                         ]]
 }
 
 @test "'search <multiple matches> --list' exits with 0 and prints listings." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" search 'sweetish' --list --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}        -eq 0         ]]
-  [[ ! "${lines[0]}"  =~ second\.md ]]
-  [[ "${lines[0]}"    =~ two        ]]
-  [[ ! "${lines[1]}"  =~ third\.md  ]]
-  [[ "${lines[1]}"    =~ three      ]]
-  [[ "${#lines[@]}"   -eq 2         ]]
+  [[    "${status}"     -eq 0           ]]
+
+  [[ !  "${lines[0]}"   =~  third\.md   ]]
+  [[    "${lines[0]}"   =~  three       ]]
+
+  [[ !  "${lines[1]}"   =~  second\.md  ]]
+  [[    "${lines[1]}"   =~  two         ]]
+
+  [[    "${#lines[@]}"  -eq 2           ]]
 }
 
 @test "'search <multiple filename match>' exits with status 0 and prints output." {
   {
     "${_NB}" init &>/dev/null
+
     cat <<HEREDOC | "${_NB}" add "1-example.md"
 # one
 idyl
@@ -392,31 +394,31 @@ HEREDOC
 # three
 sweetish
 HEREDOC
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" search 'example.md'
+  run "${_NB}" search 'example.md' --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}      -eq 0               ]]
-  [[ "${lines[0]}"  =~ example.md       ]]
-  [[ "${lines[0]}"  =~ 1                ]]
-  [[ "${lines[0]}"  =~ one              ]]
-  [[ "${lines[1]}"  =~ -*-              ]]
-  [[ "${lines[2]}"  =~ Filename\ Match  ]]
-  [[ "${lines[2]}"  =~ example.md       ]]
-  [[ "${lines[2]}"  =~ 1                ]]
-  [[ "${lines[3]}"  =~ example.md       ]]
-  [[ "${lines[3]}"  =~ 2                ]]
-  [[ "${lines[3]}"  =~ three            ]]
-  [[ "${lines[4]}"  =~ -*-              ]]
-  [[ "${lines[5]}"  =~ Filename\ Match  ]]
-  [[ "${lines[5]}"  =~ example.md       ]]
-  [[ "${lines[5]}"  =~ 2                ]]
+  [[ "${status}"    -eq 0               ]]
+
+  [[ "${lines[0]}"  =~  example.md      ]]
+  [[ "${lines[0]}"  =~  1               ]]
+  [[ "${lines[0]}"  =~  one             ]]
+  [[ "${lines[1]}"  =~  -*-             ]]
+  [[ "${lines[2]}"  =~  Filename\ Match ]]
+  [[ "${lines[2]}"  =~  example.md      ]]
+  [[ "${lines[2]}"  =~  1               ]]
+
+  [[ "${lines[3]}"  =~  example.md      ]]
+  [[ "${lines[3]}"  =~  2               ]]
+  [[ "${lines[3]}"  =~  three           ]]
+  [[ "${lines[4]}"  =~  -*-             ]]
+  [[ "${lines[5]}"  =~  Filename\ Match ]]
+  [[ "${lines[5]}"  =~  example.md      ]]
+  [[ "${lines[5]}"  =~  2               ]]
 }
 
 @test "'search' output includes indicators." {
@@ -435,17 +437,18 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${_filename}: '%s'\\n" "${_filename}"
-  printf "\${lines[3]}: '%s'\\n"  "${lines[3]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${_filename}:  '%s'\\n" "${_filename}"
+  printf "\${lines[3]}:   '%s'\\n"  "${lines[3]}"
 
-  [[ ${status}        -eq 0                   ]]
-  [[ "${output}"      =~ 🔖                   ]]
-  [[ ! "${lines[0]}"  =~ fourth\.bookmark\.md ]]
-  [[ "${lines[0]}"    =~ four                 ]]
-  [[ "${lines[1]}"    =~ -*-                  ]]
-  [[ "${lines[2]}"    =~ sweetish             ]]
+  [[    "${status}"   -eq 0                     ]]
+
+  [[    "${output}"   =~  🔖                    ]]
+  [[ !  "${lines[3]}" =~  fourth\.bookmark\.md  ]]
+  [[    "${lines[3]}" =~  four                  ]]
+  [[    "${lines[4]}" =~  -*-                   ]]
+  [[    "${lines[5]}" =~  sweetish              ]]
 }
 
 # `search --bookmarks` #################################################
@@ -480,21 +483,24 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --bookmarks --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${_filename}: '%s'\\n" "${_filename}"
-  printf "\${lines[3]}: '%s'\\n"  "${lines[3]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${_filename}:  '%s'\\n" "${_filename}"
+  printf "\${lines[3]}:   '%s'\\n"  "${lines[3]}"
 
-  [[ ${status}        -eq 0                   ]]
-  [[ ! "${lines[0]}"  =~ fourth\.bookmark\.md ]]
-  [[ "${lines[0]}"    =~ four                 ]]
-  [[ "${lines[1]}"    =~ -*-                  ]]
-  [[ "${lines[2]}"    =~ sweetish             ]]
-  [[ ! "${lines[3]}"  =~ sixth\.bookmark\.md  ]]
-  [[ "${lines[3]}"    =~ six                  ]]
-  [[ "${lines[4]}"    =~ -*-                  ]]
-  [[ "${lines[5]}"    =~ sweetish             ]]
-  [[ "${lines[0]}"    != "${lines[3]}"        ]]
+  [[    "${status}"   -eq 0                     ]]
+
+  [[ !  "${lines[3]}" =~  fourth\.bookmark\.md  ]]
+  [[    "${lines[3]}" =~  four                  ]]
+  [[    "${lines[4]}" =~  -*-                   ]]
+  [[    "${lines[5]}" =~  sweetish              ]]
+
+  [[ !  "${lines[0]}" =~  sixth\.bookmark\.md   ]]
+  [[    "${lines[0]}" =~  six                   ]]
+  [[    "${lines[1]}" =~  -*-                   ]]
+  [[    "${lines[2]}" =~  sweetish              ]]
+
+  [[    "${lines[0]}" != "${lines[3]}"          ]]
 }
 
 # `search <query> --all [--path]` #############################################
@@ -506,28 +512,34 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --all --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   "${_NB}" notebooks --paths --unarchived
   "${_NB}" notebooks --paths --unarchived
   "${_NB}" two:notebooks status
 
-  [[ ${status}        -eq 0           ]]
-  [[ "${lines[0]}"    =~ home:2       ]]
-  [[ ! "${lines[0]}"  =~ second\.md   ]]
-  [[ "${lines[0]}"    =~ two          ]]
-  [[ "${lines[1]}"    =~ -*-          ]]
-  [[ "${lines[2]}"    =~ sweetish     ]]
-  [[ "${lines[3]}"    =~ home:3       ]]
-  [[ "${lines[4]}"    =~ -*-          ]]
-  [[ ! "${lines[3]}"  =~ third\.md    ]]
-  [[ "${lines[3]}"    =~ three        ]]
-  [[ "${lines[5]}"    =~ sweetish     ]]
-  [[ "${lines[6]}"    =~ one:1        ]]
-  [[ ! "${lines[6]}"  =~ example\.md  ]]
-  [[ "${lines[6]}"    =~ sweetish     ]]
-  [[ "${#lines[@]}"   -eq 9           ]]
+  [[    "${status}"     -eq 0           ]]
+
+  [[    "${lines[0]}"   =~ home:3       ]]
+  [[ !  "${lines[0]}"   =~ third\.md    ]]
+  [[    "${lines[0]}"   =~ three        ]]
+  [[    "${lines[1]}"   =~ -*-          ]]
+  [[    "${lines[2]}"   =~ sweetish     ]]
+
+  [[    "${lines[3]}"   =~ home:2       ]]
+  [[ !  "${lines[3]}"   =~ second\.md   ]]
+  [[    "${lines[3]}"   =~ two          ]]
+  [[    "${lines[4]}"   =~ -*-          ]]
+  [[    "${lines[5]}"   =~ sweetish     ]]
+
+  [[    "${lines[6]}"   =~ one:1        ]]
+  [[ !  "${lines[6]}"   =~ example\.md  ]]
+  [[    "${lines[6]}"   =~ sweetish     ]]
+  [[    "${lines[7]}"   =~ -*-          ]]
+  [[    "${lines[8]}"   =~ sweetish     ]]
+
+  [[    "${#lines[@]}"  -eq 9           ]]
 }
 
 @test "'search <query> -a' exits with status 0 and prints output." {
@@ -537,25 +549,31 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' -a --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status}        -eq 0           ]]
-  [[ "${lines[0]}"    =~ home:2       ]]
-  [[ ! "${lines[0]}"  =~ second\.md   ]]
-  [[ "${lines[0]}"    =~ two          ]]
-  [[ "${lines[1]}"    =~ -*-          ]]
-  [[ "${lines[2]}"    =~ sweetish     ]]
-  [[ "${lines[3]}"    =~ home:3       ]]
-  [[ ! "${lines[3]}"  =~ third\.md    ]]
-  [[ "${lines[3]}"    =~ three        ]]
-  [[ "${lines[4]}"    =~ -*-          ]]
-  [[ "${lines[5]}"    =~ sweetish     ]]
-  [[ "${lines[6]}"    =~ one:1        ]]
-  [[ ! "${lines[6]}"  =~ example\.md  ]]
-  [[ "${lines[6]}"    =~ sweetish     ]]
-  [[ "${#lines[@]}"   -eq 9           ]]
+  [[    "${status}"     -eq 0           ]]
+
+  [[    "${lines[0]}"   =~ home:3       ]]
+  [[ !  "${lines[0]}"   =~ third\.md    ]]
+  [[    "${lines[0]}"   =~ three        ]]
+  [[    "${lines[1]}"   =~ -*-          ]]
+  [[    "${lines[2]}"   =~ sweetish     ]]
+
+  [[    "${lines[3]}"   =~ home:2       ]]
+  [[ !  "${lines[3]}"   =~ second\.md   ]]
+  [[    "${lines[3]}"   =~ two          ]]
+  [[    "${lines[4]}"   =~ -*-          ]]
+  [[    "${lines[5]}"   =~ sweetish     ]]
+
+  [[    "${lines[6]}"   =~ one:1        ]]
+  [[ !  "${lines[6]}"   =~ example\.md  ]]
+  [[    "${lines[6]}"   =~ sweetish     ]]
+  [[    "${lines[7]}"   =~ -*-          ]]
+  [[    "${lines[8]}"   =~ sweetish     ]]
+
+  [[    "${#lines[@]}"  -eq 9           ]]
 }
 
 @test "'search <no matching query> --all' exits with status 1 and prints output." {
@@ -565,14 +583,15 @@ HEREDOC
 
   run "${_NB}" search 'no match' --all
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
-  [[ ${status}    -eq 1                 ]]
-  [[ "${output}"  =~ Not\ found         ]]
-  [[ "${output}"  =~ in\ any\ notebook  ]]
-  [[ "${output}"  =~ no\ match          ]]
+  [[ "${status}"  -eq 1                 ]]
+
+  [[ "${output}"  =~  Not\ found        ]]
+  [[ "${output}"  =~  in\ any\ notebook ]]
+  [[ "${output}"  =~  no\ match         ]]
 }
 
 @test "'search <multiple matches> --all --path' exits with 0 and prints paths." {
@@ -582,14 +601,16 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --all --path
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}"    -eq 0 ]]
+
   echo "${output}" | grep -q '/home/third\.md'
   echo "${output}" | grep -q '/home/second\.md'
   echo "${output}" | grep -q '/one/example\.md'
+
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
@@ -600,14 +621,15 @@ HEREDOC
 
   run "${_NB}" search 'no match' --all --path
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ ${status}    -eq 1                 ]]
-  [[ "${output}"  =~ Not\ found         ]]
-  [[ "${output}"  =~ in\ any\ notebook  ]]
-  [[ "${output}"  =~ no\ match          ]]
+  [[ "${status}"  -eq 1                 ]]
+
+  [[ "${output}"  =~  Not\ found        ]]
+  [[ "${output}"  =~  in\ any\ notebook ]]
+  [[ "${output}"  =~  no\ match         ]]
 }
 
 # `search <query> [--all]` local ##############################################
@@ -630,17 +652,19 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status}        -eq 0           ]]
-  [[ "${lines[0]}"    =~ 1            ]]
-  [[ ! "${lines[0]}"  =~ example-1.md ]]
-  [[ "${lines[0]}"    =~ one          ]]
-  [[ "${lines[1]}"    =~ -*-          ]]
-  [[ "${lines[2]}"    =~ sweetish     ]]
-  [[ "${#lines[@]}"   -eq 3           ]]
+  [[    "${status}"     -eq 0             ]]
+
+  [[    "${lines[0]}"   =~  1             ]]
+  [[ !  "${lines[0]}"   =~  example-1.md  ]]
+  [[    "${lines[0]}"   =~  one           ]]
+  [[    "${lines[1]}"   =~  -*-           ]]
+  [[    "${lines[2]}"   =~  sweetish      ]]
+
+  [[    "${#lines[@]}"  -eq 3             ]]
 }
 
 @test "'search <query> --all' in local notebook exits with status 0 and prints output." {
@@ -658,39 +682,44 @@ HEREDOC
 
   run "${_NB}" search 'sweetish' --all --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
-  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
-  printf "\${lines[1]}: '%s'\\n" "${lines[1]}"
-  printf "\${lines[2]}: '%s'\\n" "${lines[2]}"
-  printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
-  printf "\${lines[4]}: '%s'\\n" "${lines[4]}"
-  printf "\${lines[5]}: '%s'\\n" "${lines[5]}"
-  printf "\${lines[6]}: '%s'\\n" "${lines[6]}"
-  printf "\${lines[7]}: '%s'\\n" "${lines[7]}"
-  printf "\${lines[8]}: '%s'\\n" "${lines[8]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+  printf "\${lines[0]}:   '%s'\\n" "${lines[0]}"
+  printf "\${lines[1]}:   '%s'\\n" "${lines[1]}"
+  printf "\${lines[2]}:   '%s'\\n" "${lines[2]}"
+  printf "\${lines[3]}:   '%s'\\n" "${lines[3]}"
+  printf "\${lines[4]}:   '%s'\\n" "${lines[4]}"
+  printf "\${lines[5]}:   '%s'\\n" "${lines[5]}"
+  printf "\${lines[6]}:   '%s'\\n" "${lines[6]}"
+  printf "\${lines[7]}:   '%s'\\n" "${lines[7]}"
+  printf "\${lines[8]}:   '%s'\\n" "${lines[8]}"
 
-  [[ ${status}        -eq 0           ]]
-  [[ "${lines[0]}"    =~ local:1      ]]
-  [[ ! "${lines[0]}"  =~ example-1.md ]]
-  [[ "${lines[0]}"    =~ one          ]]
-  [[ "${lines[1]}"    =~ -*-          ]]
-  [[ "${lines[2]}"    =~ sweetish     ]]
-  [[ "${lines[3]}"    =~ home:2       ]]
-  [[ ! "${lines[3]}"  =~ second\.md   ]]
-  [[ "${lines[3]}"    =~ two          ]]
-  [[ "${lines[4]}"    =~ -*-          ]]
-  [[ "${lines[5]}"    =~ sweetish     ]]
-  [[ "${lines[6]}"    =~ home:3       ]]
-  [[ ! "${lines[6]}"  =~ third\.md    ]]
-  [[ "${lines[6]}"    =~ three        ]]
-  [[ "${lines[7]}"    =~ -*-          ]]
-  [[ "${lines[8]}"    =~ sweetish     ]]
-  [[ "${lines[9]}"    =~ one:1        ]]
-  [[ ! "${lines[9]}"  =~ example\.md  ]]
-  [[ "${lines[9]}"    =~ sweetish     ]]
-  [[ "${#lines[@]}"   -eq 12          ]]
+  [[    "${status}"     -eq 0             ]]
+
+  [[    "${lines[0]}"   =~  local:1       ]]
+  [[ !  "${lines[0]}"   =~  example-1.md  ]]
+  [[    "${lines[0]}"   =~  one           ]]
+  [[    "${lines[1]}"   =~  -*-           ]]
+  [[    "${lines[2]}"   =~  sweetish      ]]
+
+  [[    "${lines[3]}"   =~  home:3        ]]
+  [[ !  "${lines[3]}"   =~  third\.md     ]]
+  [[    "${lines[3]}"   =~  three         ]]
+  [[    "${lines[4]}"   =~  -*-           ]]
+  [[    "${lines[5]}"   =~  sweetish      ]]
+
+  [[    "${lines[6]}"   =~  home:2        ]]
+  [[ !  "${lines[6]}"   =~  second\.md    ]]
+  [[    "${lines[6]}"   =~  two           ]]
+  [[    "${lines[7]}"   =~  -*-           ]]
+  [[    "${lines[8]}"   =~  sweetish      ]]
+
+  [[    "${lines[9]}"   =~  one:1         ]]
+  [[ !  "${lines[9]}"   =~  example\.md   ]]
+  [[    "${lines[9]}"   =~  sweetish      ]]
+
+  [[    "${#lines[@]}"  -eq 12            ]]
 }
 
 # help ########################################################################
@@ -698,7 +727,7 @@ HEREDOC
 @test "'help search' exits with status 0." {
   run "${_NB}" help search
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "'help search' prints help information." {

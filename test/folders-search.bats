@@ -80,7 +80,7 @@ HEREDOC
 
 # `search` ####################################################################
 
-@test "'search <folder>/' (slash) searches within <folder> with depth 1." {
+@test "'search <folder>/' (slash) searches within <folder> and subfolders." {
   {
     _setup_folder_search
   }
@@ -90,15 +90,19 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                               ]]
-  [[ "${lines[0]}"  =~  Example\ Folder\ \/\            ]]
-  [[ "${lines[0]}"  =~  Two|One                         ]]
-  [[ "${lines[1]}"  =~  -----------------------------   ]]
-  [[ "${lines[2]}"  =~  3                               ]]
-  [[ "${lines[2]}"  =~  example\ phrase                 ]]
-  [[ "${lines[3]}"  =~  Example\ Folder\ \/\            ]]
-  [[ "${lines[3]}"  =~  Two|One                         ]]
-  [[ "${lines[4]}"  =~  -----------------------------   ]]
-  [[ "${lines[5]}"  =~  3                               ]]
-  [[ "${lines[5]}"  =~  example\ phrase                 ]]
+  [[ "${status}"    -eq 0                                               ]]
+  [[ "${lines[0]}"  =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ Three  ]]
+  [[ "${lines[1]}"  =~  -----------------------------                   ]]
+  [[ "${lines[2]}"  =~  3                                               ]]
+  [[ "${lines[2]}"  =~  example\ phrase                                 ]]
+  [[ "${lines[3]}"  =~  Example\ Folder\ \/\                            ]]
+  [[ "${lines[3]}"  =~  Two|One                                         ]]
+  [[ "${lines[4]}"  =~  -----------------------------                   ]]
+  [[ "${lines[5]}"  =~  3                                               ]]
+  [[ "${lines[5]}"  =~  example\ phrase                                 ]]
+  [[ "${lines[6]}"  =~  Example\ Folder\ \/\                            ]]
+  [[ "${lines[6]}"  =~  Two|One                                         ]]
+  [[ "${lines[7]}"  =~  -----------------------------                   ]]
+  [[ "${lines[8]}"  =~  3                                               ]]
+  [[ "${lines[8]}"  =~  example\ phrase                                 ]]
 }

@@ -9762,7 +9762,7 @@ _search() {
   local _last_path=
   local _only_list=0
   local _max_columns="2000"
-  local _max_depth=999999999999999
+  local _max_depth=0
   local _print_paths=0
   local _queries=()
   local _query=
@@ -9881,6 +9881,11 @@ _search() {
         _rg_command="rga"
       fi
 
+      if ((_max_depth))
+      then
+        _search_args+=("--max-depth" "${_max_depth}")
+      fi
+
       if ((_search_color_enabled))
       then
         _search_args+=("--color" "always")
@@ -9901,7 +9906,6 @@ _search() {
         --line-number                   \
         --max-columns "${_max_columns}" \
         --max-columns-preview           \
-        --max-depth 1                   \
         "${_search_args[@]}"            \
         "${_query}"                     \
         "${__target_path}"              \
@@ -9965,13 +9969,23 @@ _search() {
       # matching file. Reference: https://stackoverflow.com/a/15432718
       set +f
       {
-        # Print .index with null byte delimeter so it's included in
-        # the list of files to search.
-        printf "%s/.index\0" "${__target_path}"
-        find "${__target_path}"/*   \
-          \( -name . -o -prune \)   \
-          -type f                   \
-          -print0
+        if [[ "${_max_depth}" == 1 ]]
+        then
+          # TODO
+          # Print .index with null byte delimeter so it's included in
+          # the list of files to search.
+          printf "%s/.index\0" "${__target_path}"
+          find "${__target_path}"/*   \
+            \( -name . -o -prune \)   \
+            -type f                   \
+            -print0
+        else
+          find "${__target_path}"                     \
+            ! -path '*/.git*'                         \
+            \( -path '*/.index' -o -path '*/[^.]*' \) \
+            -type f                                   \
+            -print0
+        fi
       } | xargs -0 grep           \
             -E                    \
             --ignore-case         \
