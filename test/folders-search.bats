@@ -5,6 +5,8 @@ load test_helper
 _setup_folder_search() {
   "${_NB}" init
 
+  # notebook root
+
   cat <<HEREDOC | "${_NB}" add "one.md"
 # One
 
@@ -20,19 +22,21 @@ HEREDOC
   cat <<HEREDOC | "${_NB}" add "three.md"
 # Three
 
-demo phrase
+example phrase
 HEREDOC
 
   cat <<HEREDOC | "${_NB}" add "four.md"
 # Four
 
-example phrase
+demo phrase
 HEREDOC
+
+  # Example Folder /
 
   cat <<HEREDOC | "${_NB}" add "Example Folder/one.md"
 # Example Folder / One
 
-example phrase
+demo phrase
 HEREDOC
 
   cat <<HEREDOC | "${_NB}" add "Example Folder/two.md"
@@ -50,13 +54,15 @@ HEREDOC
   cat <<HEREDOC | "${_NB}" add "Example Folder/four.md"
 # Example Folder / Four
 
-demo phrase
+example phrase
 HEREDOC
+
+# Example Folder / Sample Folder /
 
   cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/one.md"
 # Example Folder / Sample Folder / One
 
-sample phrase
+example phrase
 HEREDOC
 
   cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/two.md"
@@ -97,17 +103,22 @@ HEREDOC
   [[ "${lines[2]}"  =~  3                                               ]]
   [[ "${lines[2]}"  =~  example\ phrase                                 ]]
 
-  [[ "${lines[3]}"  =~  Example\ Folder\ \/\                            ]]
-  [[ "${lines[3]}"  =~  Two|One                                         ]]
+  [[ "${lines[3]}"  =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ One    ]]
   [[ "${lines[4]}"  =~  -----------------------------                   ]]
   [[ "${lines[5]}"  =~  3                                               ]]
   [[ "${lines[5]}"  =~  example\ phrase                                 ]]
 
   [[ "${lines[6]}"  =~  Example\ Folder\ \/\                            ]]
-  [[ "${lines[6]}"  =~  Two|One                                         ]]
+  [[ "${lines[6]}"  =~  Two|Four                                        ]]
   [[ "${lines[7]}"  =~  -----------------------------                   ]]
   [[ "${lines[8]}"  =~  3                                               ]]
   [[ "${lines[8]}"  =~  example\ phrase                                 ]]
+
+  [[ "${lines[9]}"  =~  Example\ Folder\ \/\                            ]]
+  [[ "${lines[9]}"  =~  Two|Four                                        ]]
+  [[ "${lines[10]}" =~  -----------------------------                   ]]
+  [[ "${lines[11]}" =~  3                                               ]]
+  [[ "${lines[11]}" =~  example\ phrase                                 ]]
 }
 
 # `search --no-recurse` #######################################################
@@ -125,13 +136,13 @@ HEREDOC
   [[    "${status}"    -eq 0                                            ]]
 
   [[    "${lines[0]}"  =~  Example\ Folder\ \/\                         ]]
-  [[    "${lines[0]}"  =~  Two|One                                      ]]
+  [[    "${lines[0]}"  =~  Two|Four                                     ]]
   [[    "${lines[1]}"  =~  -----------------------------                ]]
   [[    "${lines[2]}"  =~  3                                            ]]
   [[    "${lines[2]}"  =~  example\ phrase                              ]]
 
   [[    "${lines[3]}"  =~  Example\ Folder\ \/\                         ]]
-  [[    "${lines[3]}"  =~  Two|One                                      ]]
+  [[    "${lines[3]}"  =~  Two|Four                                     ]]
   [[    "${lines[4]}"  =~  -----------------------------                ]]
   [[    "${lines[5]}"  =~  3                                            ]]
   [[    "${lines[5]}"  =~  example\ phrase                              ]]
