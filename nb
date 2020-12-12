@@ -9781,15 +9781,14 @@ _search() {
       -a|--all)
         _all=1
         ;;
-      --*depth)
-        _max_depth="$(_option_get_value "${__arg}" "${__val:-}")"
-        shift
-        ;;
       -l|--list)
         _only_list=1
         ;;
       --no*color)
         _search_color_enabled=0
+        ;;
+      --no*recur*)
+        _max_depth=1
         ;;
       --path*)
         _print_paths=1
@@ -9912,6 +9911,11 @@ _search() {
           || return 0 # Don't fail out within a single scope.
     elif _command_exists "ag" && ! ((_use_grep))
     then
+      if ((_max_depth))
+      then
+        _search_args+=("--norecurse")
+      fi
+
       if ((_search_color_enabled))
       then
         _search_args+=("--color")
@@ -9931,12 +9935,16 @@ _search() {
         --hidden                          \
         --ignore-case                     \
         --noheading                       \
-        --norecurse                       \
         "${_search_args[@]}"              \
         "${_query}" "${__target_path}"    \
           || return 0 # Don't fail out within a single scope.
     elif _command_exists "ack" && ! ((_use_grep))
     then # ack is available.
+      if ((_max_depth))
+      then
+        _search_args+=("--no-recurse")
+      fi
+
       if ((_search_color_enabled))
       then
         _search_args+=("--color")
@@ -9954,7 +9962,6 @@ _search() {
       ack "${_query}" "${__target_path}"    \
         --ignore-case                       \
         --noheading                         \
-        --no-recurse                        \
         "${_search_args[@]}"                \
           || return 0 # Don't fail out within a single scope.
     else # fall back to POSIX grep.
