@@ -9822,8 +9822,11 @@ _search() {
     shift
   done
 
-  local _current_notebook_path
+  local _current_notebook_path=
   _current_notebook_path="$(_notebooks current --path)"
+
+  local _local_notebook_path=
+  _local_notebook_path="$(_notebooks --local || :)"
 
   local _target_paths=()
 
@@ -10099,32 +10102,37 @@ _search() {
           )"
         fi
 
-        local _filename_for_id="${_filename}"
+        local _folder_path="${_path%\/*}"
 
-        if [[ "${__target_path}/${_filename}" != "${_path}" ]] &&
-           [[ ! "${_path:-}" =~ \.index$                      ]]
+        if [[ -n "${_local_notebook_path:-}" ]]
         then
-          local _parent_dirname=
-          _parent_dirname="$(dirname "${_path}")"
-
-          _filename_for_id="$(basename "${_parent_dirname}")"
-
-          local _relative_parent_dirname=
-          _relative_parent_dirname="${_parent_dirname#${__target_path}/}"
-
-          _filename="${_relative_parent_dirname}/${_filename}"
-          _filename_color="${_relative_parent_dirname}/${_filename_color}"
+          local _notebook_path="${_local_notebook_path}"
+        else
+          local _notebook_and_folder_path="${_folder_path#${NB_DIR}/}"
+          local _notebook_path="${NB_DIR}/${_notebook_and_folder_path%%/*}"
         fi
 
-        _id="$(
-          _index get_id "${_filename_for_id}" "${__target_path}"
-        )"
+        local _relative_folder_path="${_folder_path#${_notebook_path}/}"
+        _relative_folder_path="${_relative_folder_path#${_notebook_path}}"
+
+        local _maybe_id_path=
+        local _relative_path="${_filename}"
+
+        if [[ -n "${_relative_folder_path:-}" ]]
+        then
+          _relative_path="${_relative_folder_path}/${_filename}"
+
+          if [[ -z "${_local_notebook_path:-}" ]]
+          then
+            _maybe_id_path="${_relative_folder_path}/"
+          fi
+        fi
+
+        _id="$(_index get_id "${_filename}" "${_folder_path}")"
 
         if ((_filename_hit))
         then
-          _content="$(
-            _get_content "${__target_path}/${_filename_for_id}"
-          )"
+          _content="$(_get_content "${_folder_path}/${_filename}")"
 
           if [[ -n "${_content}"                  ]] &&
              [[ ! "${_content}" =~ ^__first_line: ]]
@@ -10154,8 +10162,8 @@ _search() {
 
         local _indicators=
         _indicators="$(
-          NB_NOTEBOOK_PATH="${__target_path}" \
-            _show "${_filename_for_id}" --indicators
+          NB_NOTEBOOK_PATH="${_notebook_path}" \
+            _show "${_relative_path}" --indicators
         )"
 
         local _info_line=
@@ -10170,13 +10178,13 @@ _search() {
             _notebooks show "${__target_path}" --escaped --no-color
           )"
 
-          _info_line="[${_notebook_escaped_name}:${_id}] "
-          _info_line_color+="$(_color_brackets "${_notebook_escaped_name}:${_id}") "
-          _max_identifier="[${_notebook_escaped_name}:${_max_id}] "
+          _info_line="[${_notebook_escaped_name}:${_maybe_id_path}${_id}] "
+          _info_line_color+="$(_color_brackets "${_notebook_escaped_name}:${_maybe_id_path}${_id}") "
+          _max_identifier="[${_notebook_escaped_name}:${_maybe_id_path}${_max_id}] "
         else
-          _info_line="[${_id}] "
-          _info_line_color+="$(_color_brackets "${_id}") "
-          _max_identifier="[${_max_id}] "
+          _info_line="[${_maybe_id_path}${_id}] "
+          _info_line_color+="$(_color_brackets "${_maybe_id_path}${_id}") "
+          _max_identifier="[${_maybe_id_path}${_max_id}] "
         fi
 
         # Use calculated number of spaces for nicer formatting.
