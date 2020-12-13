@@ -310,7 +310,9 @@ load test_helper
 @test "'_file_is_text()' is false for encrypted extensionless file." {
   {
     "${_NB}" init
-    "${_NB}" add "example.md" --content "Example" --encrypt --password=password
+    "${_NB}" add "example.md"                                         \
+      --content "Lorem ipsum dolor sit amet, consectetur adipiscing." \
+      --encrypt --password=password
     "${_NB}" run mv example.md.enc example
     "${_NB}" index reconcile
     "${_NB}" git checkpoint "Rename example."
