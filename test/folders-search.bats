@@ -98,28 +98,28 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                               ]]
 
-  [[ "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/3                ]]
-  [[ "${lines[0]}"  =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ Three  ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3                ]]
+  [[ "${output}"    =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ Three  ]]
+
   [[ "${lines[1]}"  =~  -----------------------------                   ]]
   [[ "${lines[2]}"  =~  3                                               ]]
   [[ "${lines[2]}"  =~  example\ phrase                                 ]]
 
-  [[ "${lines[3]}"  =~  Example\ Folder/Sample\ Folder/1                ]]
-  [[ "${lines[3]}"  =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ One    ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1                ]]
+  [[ "${output}"    =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ One    ]]
+
   [[ "${lines[4]}"  =~  -----------------------------                   ]]
   [[ "${lines[5]}"  =~  3                                               ]]
   [[ "${lines[5]}"  =~  example\ phrase                                 ]]
 
-  [[ "${lines[6]}"  =~  Example\ Folder/2                               ]]
-  [[ "${lines[6]}"  =~  Example\ Folder\ \/\                            ]]
-  [[ "${lines[6]}"  =~  Two|Four                                        ]]
+  [[ "${output}"    =~  Example\ Folder/2.*Example\ Folder\ \/\ Two     ]]
+
   [[ "${lines[7]}"  =~  -----------------------------                   ]]
   [[ "${lines[8]}"  =~  3                                               ]]
   [[ "${lines[8]}"  =~  example\ phrase                                 ]]
 
-  [[ "${lines[9]}"  =~  Example\ Folder/4                               ]]
-  [[ "${lines[9]}"  =~  Example\ Folder\ \/\                            ]]
-  [[ "${lines[9]}"  =~  Two|Four                                        ]]
+  [[ "${output}"    =~  Example\ Folder/4.*Example\ Folder\ \/\ Four    ]]
+
   [[ "${lines[10]}" =~  -----------------------------                   ]]
   [[ "${lines[11]}" =~  3                                               ]]
   [[ "${lines[11]}" =~  example\ phrase                                 ]]
