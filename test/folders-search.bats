@@ -223,33 +223,33 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                               ]]
+  [[ "${status}"    -eq 0                                             ]]
 
-  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3                ]]
-  [[ "${output}"    =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ Three  ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3              ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
-  [[ "${lines[1]}"  =~  -----------------------------                   ]]
-  [[ "${lines[2]}"  =~  3                                               ]]
-  [[ "${lines[2]}"  =~  example\ phrase                                 ]]
+  [[ "${lines[1]}"  =~  -----------------------------                 ]]
+  [[ "${lines[2]}"  =~  3                                             ]]
+  [[ "${lines[2]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1                ]]
-  [[ "${output}"    =~  Example\ Folder\ \/\ Sample\ Folder\ \/\ One    ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1              ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
-  [[ "${lines[4]}"  =~  -----------------------------                   ]]
-  [[ "${lines[5]}"  =~  3                                               ]]
-  [[ "${lines[5]}"  =~  example\ phrase                                 ]]
+  [[ "${lines[4]}"  =~  -----------------------------                 ]]
+  [[ "${lines[5]}"  =~  3                                             ]]
+  [[ "${lines[5]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\ Folder/2.*Example\ Folder\ \/\ Two     ]]
+  [[ "${output}"    =~  Example\ Folder/2.*Example\ Folder\ /\ Two    ]]
 
-  [[ "${lines[7]}"  =~  -----------------------------                   ]]
-  [[ "${lines[8]}"  =~  3                                               ]]
-  [[ "${lines[8]}"  =~  example\ phrase                                 ]]
+  [[ "${lines[7]}"  =~  -----------------------------                 ]]
+  [[ "${lines[8]}"  =~  3                                             ]]
+  [[ "${lines[8]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\ Folder/4.*Example\ Folder\ \/\ Four    ]]
+  [[ "${output}"    =~  Example\ Folder/4.*Example\ Folder\ /\ Four   ]]
 
-  [[ "${lines[10]}" =~  -----------------------------                   ]]
-  [[ "${lines[11]}" =~  3                                               ]]
-  [[ "${lines[11]}" =~  example\ phrase                                 ]]
+  [[ "${lines[10]}" =~  -----------------------------                 ]]
+  [[ "${lines[11]}" =~  3                                             ]]
+  [[ "${lines[11]}" =~  example\ phrase                               ]]
 }
 
 # `search --no-recurse` #######################################################
@@ -264,21 +264,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                            ]]
+  [[    "${status}"    -eq 0                              ]]
 
-  [[    "${lines[0]}"  =~  Example\ Folder/4                            ]]
-  [[    "${lines[0]}"  =~  Example\ Folder\ \/\                         ]]
-  [[    "${lines[0]}"  =~  Two|Four                                     ]]
-  [[    "${lines[1]}"  =~  -----------------------------                ]]
-  [[    "${lines[2]}"  =~  3                                            ]]
-  [[    "${lines[2]}"  =~  example\ phrase                              ]]
+  [[    "${lines[0]}"  =~  Example\ Folder/4              ]]
+  [[    "${lines[0]}"  =~  Example\ Folder\ /\            ]]
+  [[    "${lines[0]}"  =~  Two|Four                       ]]
+  [[    "${lines[1]}"  =~  -----------------------------  ]]
+  [[    "${lines[2]}"  =~  3                              ]]
+  [[    "${lines[2]}"  =~  example\ phrase                ]]
 
-  [[    "${lines[3]}"  =~  Example\ Folder/2                            ]]
-  [[    "${lines[3]}"  =~  Example\ Folder\ \/\                         ]]
-  [[    "${lines[3]}"  =~  Two|Four                                     ]]
-  [[    "${lines[4]}"  =~  -----------------------------                ]]
-  [[    "${lines[5]}"  =~  3                                            ]]
-  [[    "${lines[5]}"  =~  example\ phrase                              ]]
+  [[    "${lines[3]}"  =~  Example\ Folder/2              ]]
+  [[    "${lines[3]}"  =~  Example\ Folder\ /\            ]]
+  [[    "${lines[3]}"  =~  Two|Four                       ]]
+  [[    "${lines[4]}"  =~  -----------------------------  ]]
+  [[    "${lines[5]}"  =~  3                              ]]
+  [[    "${lines[5]}"  =~  example\ phrase                ]]
 
-  [[ -z "${lines[6]}"                                                   ]]
+  [[ -z "${lines[6]}"                                     ]]
 }
