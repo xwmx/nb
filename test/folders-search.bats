@@ -111,7 +111,7 @@ HEREDOC
   [[    "${output}" =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 }
 
-# `search` ####################################################################
+# `search <folder>/` ##########################################################
 
 @test "'search <folder>/' (slash) searches within <folder> and subfolders." {
   {
