@@ -86,7 +86,7 @@ HEREDOC
 
 # `search` ####################################################################
 
-@test "'search' skip unindexed subfolders." {
+@test "'search' skips unindexed subfolders." {
   {
     _setup_folder_search
 
@@ -105,7 +105,7 @@ HEREDOC
 
   [[    "${status}" -eq 0                                             ]]
 
-  [[ !  "${output}" =~ Unindexed                                      ]]
+  [[ !  "${output}" =~  Unindexed                                     ]]
 
   [[    "${output}" =~  Example\ Folder/Sample\ Folder/3              ]]
   [[    "${output}" =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
