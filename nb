@@ -10088,6 +10088,25 @@ _search() {
           continue
         fi
 
+        local _folder_path="${_path%\/*}"
+
+        if [[ ! -e "${_folder_path}/.index" ]]
+        then # skip unindexed folders
+          continue
+        fi
+
+        if [[ -n "${_local_notebook_path:-}"                ]] &&
+           [[ "${_folder_path}" =~ ${_local_notebook_path}  ]]
+        then
+          local _notebook_path="${_local_notebook_path}"
+        else
+          local _notebook_and_folder_path="${_folder_path#${NB_DIR}/}"
+          local _notebook_path="${NB_DIR}/${_notebook_and_folder_path%%/*}"
+        fi
+
+        local _relative_folder_path="${_folder_path#${_notebook_path}/}"
+        _relative_folder_path="${_relative_folder_path#${_notebook_path}}"
+
         _filename="$(basename "${_path}")"
         _filename_color="${_filename}"
 
@@ -10101,20 +10120,6 @@ _search() {
               | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
           )"
         fi
-
-        local _folder_path="${_path%\/*}"
-
-        if [[ -n "${_local_notebook_path:-}"                ]] &&
-           [[ "${_folder_path}" =~ ${_local_notebook_path}  ]]
-        then
-          local _notebook_path="${_local_notebook_path}"
-        else
-          local _notebook_and_folder_path="${_folder_path#${NB_DIR}/}"
-          local _notebook_path="${NB_DIR}/${_notebook_and_folder_path%%/*}"
-        fi
-
-        local _relative_folder_path="${_folder_path#${_notebook_path}/}"
-        _relative_folder_path="${_relative_folder_path#${_notebook_path}}"
 
         local _maybe_id_path=
         local _relative_path="${_filename}"
@@ -10172,7 +10177,7 @@ _search() {
         then
           local _notebook_escaped_name=
           _notebook_escaped_name="$(
-            _notebooks show "${__target_path}" --escaped --no-color
+            _notebooks show "${_notebook_path}" --escaped --no-color
           )"
 
           _info_line="[${_notebook_escaped_name}:${_maybe_id_path}${_id}] "
