@@ -9826,7 +9826,7 @@ _search() {
   _current_notebook_path="$(_notebooks current --path)"
 
   local _local_notebook_path=
-  _local_notebook_path="$(_notebooks --local || :)"
+  _local_notebook_path="$(_notebooks --local --path || :)"
 
   local _target_paths=()
 
@@ -10104,7 +10104,8 @@ _search() {
 
         local _folder_path="${_path%\/*}"
 
-        if [[ -n "${_local_notebook_path:-}" ]]
+        if [[ -n "${_local_notebook_path:-}"                ]] &&
+           [[ "${_folder_path}" =~ ${_local_notebook_path}  ]]
         then
           local _notebook_path="${_local_notebook_path}"
         else
@@ -10120,12 +10121,8 @@ _search() {
 
         if [[ -n "${_relative_folder_path:-}" ]]
         then
+          _maybe_id_path="${_relative_folder_path}/"
           _relative_path="${_relative_folder_path}/${_filename}"
-
-          if [[ -z "${_local_notebook_path:-}" ]]
-          then
-            _maybe_id_path="${_relative_folder_path}/"
-          fi
         fi
 
         _id="$(_index get_id "${_filename}" "${_folder_path}")"
@@ -10171,7 +10168,7 @@ _search() {
         local _max_identifier=
 
         if ((_all)) ||
-           [[ "$(_notebooks current --global --path)" != "${__target_path}" ]]
+           [[ "$(_notebooks current --global --path)" != "${_notebook_path}" ]]
         then
           local _notebook_escaped_name=
           _notebook_escaped_name="$(
