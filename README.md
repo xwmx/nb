@@ -1590,7 +1590,7 @@ a trailing slash:
 ```
 
 Items in folders can be idenitified using the folder's relative
-path built using either folder ids or names, followed by the id,
+path using either folder ids or names, followed by the id,
 title, or filename of the item:
 
 ```bash
