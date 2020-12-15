@@ -581,7 +581,7 @@ Pass an id, filename, or title to view the listing for that note:
 [3] Example Title
 ```
 
-If there is no immediate match, `nb` will list items with titles and
+If there is no exact match, `nb` will list items with titles and
 filenames that fuzzy match the query:
 
 ```bash
@@ -1555,6 +1555,9 @@ Folders can be created using `add --type folder`:
 ```bash
 # create a new folder named "sample"
 nb add sample --type folder
+
+# create a folder named "example" containing a folder named "demo"
+nb add example/demo --type folder
 ```
 
 To list the items in a folder, pass the folder relative path to
@@ -1577,8 +1580,8 @@ slash:
 [1] 📂 example
 
 > nb list 1/
-[example/1] document.md
 [example/2] 📂 demo
+[example/1] document.md
 
 > nb list 1/2/
 [example/demo/3] Example Title Three
