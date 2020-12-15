@@ -1593,13 +1593,13 @@ path followed by the id, title, or filename of the item:
 # list item 1 ("Document One", document.md) in the example/demo/ folder
 nb list example/demo/1
 
-# list item 1 ("Document One", document.md) in the example/demo/ folder
+# edit item 1 ("Document One", document.md) in the example/demo/ folder
 nb edit example/2/document.md
 
-# list item 1 ("Document One", document.md) in the example/demo/ folder
+# show item 1 ("Document One", document.md) in the example/demo/ folder
 nb show 1/2/Document\ One
 
-# list item 1 ("Document One", document.md) in the example/demo/ folder
+# delete item 1 ("Document One", document.md) in the example/demo/ folder
 nb delete 1/demo/1
 ```
 
