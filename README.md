@@ -1538,7 +1538,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 ### 📂 Folders
 
 Items can be organized in folders. To add a note to a folder, call
-`nb add` with the folders relative path within the notebook:
+`nb add` with the folder's relative path within the notebook:
 
 ```bash
 # add a new note in the folder named "example"
@@ -1548,8 +1548,7 @@ nb add example/
 nb add example/demo/
 ```
 
-`nb` automatically creates any intermediate folders that don't
-already exist.
+`nb` automatically creates any intermediate folders as needed.
 
 Folders can be created using `add --type folder`:
 
