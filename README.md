@@ -1538,7 +1538,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 ### 📂 Folders
 
 Items can be organized in folders. Call `nb add` with a folder's
-relative path in order to add a note in that folder:
+relative path to add a note in that folder:
 
 ```bash
 # add a new note in the folder named "example"
