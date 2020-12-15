@@ -1558,10 +1558,10 @@ nb add sample --type folder
 ```
 
 To list the items in a folder, pass the folder relative path to
-`ls` or `list` followed by a slash:
+`nb`, `nb ls`, or `nb list` followed by a slash:
 
 ```bash
-> nb ls example/demo/
+> nb example/demo/
 home
 ----
 [example/demo/3] Example Title Three
