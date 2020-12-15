@@ -1537,8 +1537,8 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 📂 Folders
 
-Items can be organized in folders. Call `nb add` with a folder's
-relative path to add a note in that folder:
+Items can be organized in folders. To add a note to a folder, call
+`nb add` with the folders relative path within the notebook:
 
 ```bash
 # add a new note in the folder named "example"
@@ -1548,17 +1548,18 @@ nb add example/
 nb add example/demo/
 ```
 
-`nb` automatically creates any intermediate folders if they don't
-already exist. Folders can also be created using the `add --type`
-option:
+`nb` automatically creates any intermediate folders that don't
+already exist.
+
+Folders can be created using `add --type folder`:
 
 ```bash
 # create a new folder named "sample"
 nb add sample --type folder
 ```
 
-To list the items in a folder, pass the folder path to `ls` or `list`
-followed by a slash:
+To list the items in a folder, pass the folder relative path to
+`ls` or `list` followed by a slash:
 
 ```bash
 > nb ls example/demo/
@@ -1569,7 +1570,7 @@ home
 [example/demo/1] Example Title One
 ```
 
-Folders can also be specified using the folder id with a trailing
+Folders can also be specified using the folder id followed by a
 slash:
 
 ```bash
@@ -1586,20 +1587,20 @@ slash:
 [example/demo/1] Example Title One
 ```
 
-Items in folders can be identified by relative path, with each folder
-indicated by either name or id:
+Items in folders can be idenitified by the folder name and id relative
+path followed by the id, title, or filename of the item:
 
 ```bash
-# list item 1 in the example/demo/ folder
+# list item 1 ("Document One", document.md) in the example/demo/ folder
 nb list example/demo/1
 
-# edit item 1 in the example/demo/ folder
-nb edit example/2/1
+# list item 1 ("Document One", document.md) in the example/demo/ folder
+nb edit example/2/document.md
 
-# show item 1 in the example/demo/ folder
-nb show 1/2/1
+# list item 1 ("Document One", document.md) in the example/demo/ folder
+nb show 1/2/Document\ One
 
-# delete item 1 in the example/demo/ folder
+# list item 1 ("Document One", document.md) in the example/demo/ folder
 nb delete 1/demo/1
 ```
 
