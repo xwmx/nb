@@ -317,9 +317,7 @@ the latest version using the [`nb update`](#update) subcommand.
 
 *Some new features described below, including many related to folders,
 are currently available in the git repository and will be included in
-version 6.0.0.*
-
-*[Version 5.7.8 Documentation](https://github.com/xwmx/nb/tree/5.7.8#nb)*
+version 6.0.0. [Version 5.7.8 Documentation](https://github.com/xwmx/nb/tree/5.7.8#nb)*
 
 To get started, simply run:
 
@@ -1545,11 +1543,14 @@ relative path to add a note in that folder:
 ```bash
 # add a new note in the folder named "example"
 nb add example/
+
+# add a new note in the folder named "demo" in "example"
+nb add example/demo/
 ```
 
-If the folder doesn't exist yet, `nb` automatically creates it when
-creating the new note. A folder can also be created using the `add
---type` option:
+`nb` automatically creates any intermediate folders if they don't
+already exist. A folder can also be created using the `add --type`
+option:
 
 ```bash
 # create a new folder named "sample"
@@ -1557,7 +1558,7 @@ nb add sample --type folder
 ```
 
 To list the items in a folder, pass the folder path to `ls` or `list`
-followed by a trailing slash:
+followed by a slash:
 
 ```bash
 > nb ls example/demo/
@@ -1585,9 +1586,9 @@ slash:
 [example/demo/1] Example Title One
 ```
 
-To edit, view, delete, or otherwise work with an item within a folder,
-specify the relative path using with each folder specified by either
-name or id:
+Items in folders can be identified in subcommands like `edit` and `show`
+by specifiying the relative path to the item, with each folder indicated
+by either name or id:
 
 ```bash
 # edit item 3 in the example/demo/ folder
@@ -1595,6 +1596,17 @@ nb edit example/demo/3
 
 # show item 1 in the example/demo/ folder
 nb show example/2/1
+```
+
+For folders and items in other notebooks, combine the relative path with
+the notebook name, separated by a colon:
+
+```bash
+# add an item to the "sample/demo/" folder in the "example" notebook
+nb example:sample/demo/
+
+# edit item 3 in the "sample/" folder in the "example" notebook
+nb example:sample/3
 ```
 
 ### 🔍 Search
