@@ -299,6 +299,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#viewing-notes">Viewing</a> •
   <a href="#deleting-notes">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
+  <a href="#-folders">Folders</a> •
   <a href="#-search">Search</a> •
   <a href="#-revision-history">History</a> •
   <a href="#-notebooks">Notebooks</a> •
@@ -313,6 +314,12 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#specifications">Specifications</a> •
   <a href="#tests">Tests</a>
 </p>
+
+*Some new features described below, including many related to folders,
+are currently available in the git repository and will be included in
+version 6.0.0.*
+
+*[Version 5.7.8 Documentation](https://github.com/xwmx/nb/tree/5.7.8#nb)*
 
 To get started, simply run:
 
@@ -350,6 +357,9 @@ nb add --title "Secret Document" --encrypt
 
 # create a new note in the notebook named "example"
 nb example:add "This is a note."
+
+# create a new note in the folder named "sample"
+nb add sample/
 ```
 
 `nb add` with no arguments or input will open the new, blank note in your
@@ -1527,6 +1537,66 @@ Perform a full text search of bookmarks and archived page content:
 
 See [`bookmark help`](#bookmark-help) for more information.
 
+### 📂 Folders
+
+Items can be organized with folders. Call `nb add` with a folder's
+relative path to add a note in that folder:
+
+```bash
+# add a new note in the folder named "example"
+nb add example/
+```
+
+If the folder doesn't exist yet, `nb` automatically creates it when
+creating the new note. A folder can also be created using the `add
+--type` option:
+
+```bash
+# create a new folder named "sample"
+nb add sample --type folder
+```
+
+To list the items in a folder, pass the folder path to `ls` or `list`
+followed by a trailing slash:
+
+```bash
+> nb ls example/demo/
+home
+----
+[example/demo/3] Example Title Three
+[example/demo/2] Example Title Two
+[example/demo/1] Example Title One
+```
+
+Folders can alternatively be specified by the folder id with a trailing
+slash:
+
+```bash
+> nb list
+[1] 📂 example
+
+> nb list 1/
+[example/1] document.md
+[example/2] 📂 demo
+
+> nb list 1/2/
+[example/demo/3] Example Title Three
+[example/demo/2] Example Title Two
+[example/demo/1] Example Title One
+```
+
+To edit, view, delete, or otherwise work with an item within a folder,
+specify the relative path using with each folder specified by either
+name or id:
+
+```bash
+# edit item 3 in the example/demo/ folder
+nb edit example/demo/3
+
+# show item 1 in the example/demo/ folder
+nb show example/2/1
+```
+
 ### 🔍 Search
 
 Use [`nb search`](#search) to search your notes, with support for
@@ -1538,6 +1608,9 @@ nb search "example query"
 
 # search the notebook "example" for "example query"
 nb example:search "example query"
+
+# search the folder named "demo" for "example query"
+nb search demo/ "example query"
 
 # search all unarchived notebooks for "example query" and list matching items
 nb search "example query" --all --list
