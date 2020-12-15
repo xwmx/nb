@@ -1537,8 +1537,8 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 📂 Folders
 
-Items can be organized with folders. Call `nb add` with a folder's
-relative path to add a note in that folder:
+Items can be organized in folders. Call `nb add` with a folder's
+relative path in order to add a note in that folder:
 
 ```bash
 # add a new note in the folder named "example"
@@ -1549,7 +1549,7 @@ nb add example/demo/
 ```
 
 `nb` automatically creates any intermediate folders if they don't
-already exist. A folder can also be created using the `add --type`
+already exist. Folders can also be created using the `add --type`
 option:
 
 ```bash
@@ -1569,7 +1569,7 @@ home
 [example/demo/1] Example Title One
 ```
 
-Folders can alternatively be specified by the folder id with a trailing
+Folders can also be specified using the folder id with a trailing
 slash:
 
 ```bash
