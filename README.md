@@ -1572,8 +1572,8 @@ home
 [example/demo/1] Title One
 ```
 
-Folders can also be specified using the folder id followed by a
-slash:
+Folders can also be identified by the folder's id and listed with
+a trailing slash:
 
 ```bash
 > nb list
@@ -1589,8 +1589,9 @@ slash:
 [example/demo/1] Title One
 ```
 
-Items in folders can be idenitified by the folder name and id relative
-path followed by the id, title, or filename of the item:
+Items in folders can be idenitified using the folder's relative
+path built using either folder ids or names, followed by the id,
+title, or filename of the item:
 
 ```bash
 # list item 1 ("Title One", one.md) in the example/demo/ folder
