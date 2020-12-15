@@ -1550,7 +1550,7 @@ nb add example/demo/
 
 `nb` automatically creates any intermediate folders as needed.
 
-Folders can be created using `add --type folder`:
+Folders can be created directly using `nb add --type folder`:
 
 ```bash
 # create a new folder named "sample"
@@ -1567,9 +1567,9 @@ To list the items in a folder, pass the folder relative path to
 > nb example/demo/
 home
 ----
-[example/demo/3] Example Title Three
-[example/demo/2] Example Title Two
-[example/demo/1] Example Title One
+[example/demo/3] Title Three
+[example/demo/2] Title Two
+[example/demo/1] Title One
 ```
 
 Folders can also be specified using the folder id followed by a
@@ -1584,25 +1584,25 @@ slash:
 [example/1] document.md
 
 > nb list 1/2/
-[example/demo/3] Example Title Three
-[example/demo/2] Example Title Two
-[example/demo/1] Example Title One
+[example/demo/3] Title Three
+[example/demo/2] Title Two
+[example/demo/1] Title One
 ```
 
 Items in folders can be idenitified by the folder name and id relative
 path followed by the id, title, or filename of the item:
 
 ```bash
-# list item 1 ("Document One", document.md) in the example/demo/ folder
+# list item 1 ("Title One", one.md) in the example/demo/ folder
 nb list example/demo/1
 
-# edit item 1 ("Document One", document.md) in the example/demo/ folder
-nb edit example/2/document.md
+# edit item 1 ("Title One", one.md) in the example/demo/ folder
+nb edit example/2/one.md
 
-# show item 1 ("Document One", document.md) in the example/demo/ folder
-nb show 1/2/Document\ One
+# show item 1 ("Title One", one.md) in the example/demo/ folder
+nb show 1/2/Title\ One
 
-# delete item 1 ("Document One", document.md) in the example/demo/ folder
+# delete item 1 ("Title One", one.md) in the example/demo/ folder
 nb delete 1/demo/1
 ```
 
