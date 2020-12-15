@@ -1602,13 +1602,13 @@ For folders and items in other notebooks, combine the relative path with
 the notebook name, separated by a colon:
 
 ```bash
-# list the contents of the "sample/" folder in the "example" notebook
+# list the contents of the "sample" folder in the "example" notebook
 nb example:sample/
 
-# add an item to the "sample/demo/" folder in the "example" notebook
+# add an item to the "sample/demo" folder in the "example" notebook
 nb add example:sample/demo/
 
-# edit item 3 in the "sample/" folder in the "example" notebook
+# edit item 3 in the "sample" folder in the "example" notebook
 nb edit example:sample/3
 ```
 
