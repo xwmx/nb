@@ -1586,16 +1586,21 @@ slash:
 [example/demo/1] Example Title One
 ```
 
-Items in folders can be identified in subcommands like `edit` and `show`
-by specifiying the relative path to the item, with each folder indicated
-by either name or id:
+Items in folders can be identified by relative path, with each folder
+indicated by either name or id:
 
 ```bash
-# edit item 3 in the example/demo/ folder
-nb edit example/demo/3
+# list item 1 in the example/demo/ folder
+nb list example/demo/1
+
+# edit item 1 in the example/demo/ folder
+nb edit example/2/1
 
 # show item 1 in the example/demo/ folder
-nb show example/2/1
+nb show 1/2/1
+
+# delete item 1 in the example/demo/ folder
+nb delete 1/demo/1
 ```
 
 For folders and items in other notebooks, combine the relative path with
