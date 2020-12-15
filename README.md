@@ -1589,7 +1589,7 @@ a trailing slash:
 [example/demo/1] Title One
 ```
 
-Items in folders can be idenitified using the folder's relative
+Items in folders can be idenitified with the folder's relative
 path using either folder ids or names, followed by the id,
 title, or filename of the item:
 
@@ -1617,8 +1617,8 @@ nb example:sample/
 # add an item to the "sample/demo" folder in the "example" notebook
 nb add example:sample/demo/
 
-# edit item 3 in the "sample" folder in the "example" notebook
-nb edit example:sample/3
+# edit item 3 in the "sample/demo" folder in the "example" notebook
+nb edit example:sample/demo/3
 ```
 
 ### 🔍 Search
