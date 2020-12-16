@@ -7573,6 +7573,7 @@ _ls() {
     _notebooks --names --no-color --unarchived --global || :
   ))
   local _selector=
+  local _selector_folder_path=
   local _type=
   local _use_pager=0
 
@@ -7663,6 +7664,13 @@ _ls() {
   fi
 
   {
+    # NOTE: Resolve selector path before printing header to minimize pause
+    # before printing list. TODO: Improve.
+    if [[ "${_selector:-}" =~ / ]]
+    then
+      _selector_folder_path="$(_resolve_selector_folders "${_selector}")/"
+    fi
+
     if ((NB_HEADER)) && {
       [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
     }
@@ -7670,15 +7678,9 @@ _ls() {
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
 
-    if [[ "${_selector:-}" =~ / ]]
+    if [[ "${_selector:-}" =~ / ]] && ((${NB_FOLDER_HEADER:-0}))
     then
-      local _selector_path
-      _selector_path="$(_resolve_selector_folders "${_selector}")/"
-
-      if ((${NB_FOLDER_HEADER:-0}))
-      then
-        _ls_print_folder_header "${_selector_path:-}"
-      fi
+      _ls_print_folder_header "${_selector_folder_path:-}"
     fi
 
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
@@ -7712,7 +7714,7 @@ _ls() {
         then
           if ((${NB_FOLDER_HEADER:-1}))
           then
-            _ls_print_folder_header "${_selector_path:-}"
+            _ls_print_folder_header "${_selector_folder_path:-}"
           fi
 
           _list "${_list_options[@]:-}"
@@ -7742,7 +7744,7 @@ _ls() {
       [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
     }
     then
-      _ls_print_footer "${#_notebook_names[@]}" "${_selector_path:-}"
+      _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
     fi
   } | if ((_use_pager))
       then
