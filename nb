@@ -7274,7 +7274,8 @@ _ls() {
         printf "%s\\n" "${_selector_path}" | tr "/" "\n"
       ))
 
-      local _parent_folder_path="$(_notebooks current --path)"
+      local _parent_folder_path
+      _parent_folder_path="$(_notebooks current --path)"
 
       for __folder in "${_selector_folders[@]}"
       do
