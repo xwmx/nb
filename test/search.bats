@@ -324,15 +324,15 @@ HEREDOC
 
   [[    "${status}"   -eq 0             ]]
 
-  [[ !  "${lines[0]}" =~  third\.md     ]]
-  [[    "${lines[0]}" =~  three         ]]
-  [[    "${lines[1]}" =~  -*-           ]]
-  [[    "${lines[2]}" =~  sweetish      ]]
+  [[ !  "${lines[0]}" =~  third\.md     ]] || [[ !  "${lines[3]}" =~  third\.md     ]]
+  [[    "${lines[0]}" =~  three         ]] || [[    "${lines[3]}" =~  three         ]]
+  [[    "${lines[1]}" =~  -*-           ]] || [[    "${lines[4]}" =~  -*-           ]]
+  [[    "${lines[2]}" =~  sweetish      ]] || [[    "${lines[5]}" =~  sweetish      ]]
 
-  [[ !  "${lines[3]}" =~  second\.md    ]]
-  [[    "${lines[3]}" =~  two           ]]
-  [[    "${lines[4]}" =~  -*-           ]]
-  [[    "${lines[5]}" =~  sweetish      ]]
+  [[ !  "${lines[3]}" =~  second\.md    ]] || [[ !  "${lines[0]}" =~  second\.md    ]]
+  [[    "${lines[3]}" =~  two           ]] || [[    "${lines[0]}" =~  two           ]]
+  [[    "${lines[4]}" =~  -*-           ]] || [[    "${lines[1]}" =~  -*-           ]]
+  [[    "${lines[5]}" =~  sweetish      ]] || [[    "${lines[2]}" =~  sweetish      ]]
 
   [[    "${lines[0]}" !=  "${lines[3]}" ]]
 }
@@ -350,8 +350,8 @@ HEREDOC
 
   [[ "${status}"    -eq 0                         ]]
 
-  [[ "${lines[0]}"  =~  ${NB_DIR}/home/third\.md  ]]
-  [[ "${lines[1]}"  =~  ${NB_DIR}/home/second\.md ]]
+  [[ "${output}"    =~  ${NB_DIR}/home/third\.md  ]]
+  [[ "${output}"    =~  ${NB_DIR}/home/second\.md ]]
 
   [[ "${#lines[@]}" -eq 2                         ]]
 }
@@ -369,11 +369,11 @@ HEREDOC
 
   [[    "${status}"     -eq 0           ]]
 
-  [[ !  "${lines[0]}"   =~  third\.md   ]]
-  [[    "${lines[0]}"   =~  three       ]]
+  [[ !  "${output}"     =~  third\.md   ]]
+  [[    "${output}"     =~  three       ]]
 
-  [[ !  "${lines[1]}"   =~  second\.md  ]]
-  [[    "${lines[1]}"   =~  two         ]]
+  [[ !  "${output}"     =~  second\.md  ]]
+  [[    "${output}"     =~  two         ]]
 
   [[    "${#lines[@]}"  -eq 2           ]]
 }
@@ -517,21 +517,21 @@ HEREDOC
 
   [[    "${status}"     -eq 0           ]]
 
-  [[    "${lines[0]}"   =~ home:3       ]]
-  [[ !  "${lines[0]}"   =~ third\.md    ]]
-  [[    "${lines[0]}"   =~ three        ]]
+  [[    "${output}"     =~ home:3       ]]
+  [[ !  "${output}"     =~ third\.md    ]]
+  [[    "${output}"     =~ three        ]]
   [[    "${lines[1]}"   =~ -*-          ]]
   [[    "${lines[2]}"   =~ sweetish     ]]
 
-  [[    "${lines[3]}"   =~ home:2       ]]
-  [[ !  "${lines[3]}"   =~ second\.md   ]]
-  [[    "${lines[3]}"   =~ two          ]]
+  [[    "${output}"     =~ home:2       ]]
+  [[ !  "${output}"     =~ second\.md   ]]
+  [[    "${output}"     =~ two          ]]
   [[    "${lines[4]}"   =~ -*-          ]]
   [[    "${lines[5]}"   =~ sweetish     ]]
 
-  [[    "${lines[6]}"   =~ one:1        ]]
-  [[ !  "${lines[6]}"   =~ example\.md  ]]
-  [[    "${lines[6]}"   =~ sweetish     ]]
+  [[    "${output}"     =~ one:1        ]]
+  [[ !  "${output}"     =~ example\.md  ]]
+  [[    "${output}"     =~ sweetish     ]]
   [[    "${lines[7]}"   =~ -*-          ]]
   [[    "${lines[8]}"   =~ sweetish     ]]
 
@@ -551,21 +551,21 @@ HEREDOC
 
   [[    "${status}"     -eq 0           ]]
 
-  [[    "${lines[0]}"   =~ home:3       ]]
-  [[ !  "${lines[0]}"   =~ third\.md    ]]
-  [[    "${lines[0]}"   =~ three        ]]
+  [[    "${output}"     =~ home:3       ]]
+  [[ !  "${output}"     =~ third\.md    ]]
+  [[    "${output}"     =~ three        ]]
   [[    "${lines[1]}"   =~ -*-          ]]
   [[    "${lines[2]}"   =~ sweetish     ]]
 
-  [[    "${lines[3]}"   =~ home:2       ]]
-  [[ !  "${lines[3]}"   =~ second\.md   ]]
-  [[    "${lines[3]}"   =~ two          ]]
+  [[    "${output}"     =~ home:2       ]]
+  [[ !  "${output}"     =~ second\.md   ]]
+  [[    "${output}"     =~ two          ]]
   [[    "${lines[4]}"   =~ -*-          ]]
   [[    "${lines[5]}"   =~ sweetish     ]]
 
-  [[    "${lines[6]}"   =~ one:1        ]]
-  [[ !  "${lines[6]}"   =~ example\.md  ]]
-  [[    "${lines[6]}"   =~ sweetish     ]]
+  [[    "${output}"     =~ one:1        ]]
+  [[ !  "${output}"     =~ example\.md  ]]
+  [[    "${output}"     =~ sweetish     ]]
   [[    "${lines[7]}"   =~ -*-          ]]
   [[    "${lines[8]}"   =~ sweetish     ]]
 
@@ -699,20 +699,20 @@ HEREDOC
   [[    "${lines[1]}"   =~  -*-           ]]
   [[    "${lines[2]}"   =~  sweetish      ]]
 
-  [[    "${lines[3]}"   =~  home:3        ]]
-  [[ !  "${lines[3]}"   =~  third\.md     ]]
-  [[    "${lines[3]}"   =~  three         ]]
+  [[    "${output}"     =~  home:3        ]]
+  [[ !  "${output}"     =~  third\.md     ]]
+  [[    "${output}"     =~  three         ]]
   [[    "${lines[4]}"   =~  -*-           ]]
   [[    "${lines[5]}"   =~  sweetish      ]]
 
-  [[    "${lines[6]}"   =~  home:2        ]]
-  [[ !  "${lines[6]}"   =~  second\.md    ]]
-  [[    "${lines[6]}"   =~  two           ]]
+  [[    "${output}"     =~  home:2        ]]
+  [[ !  "${output}"     =~  second\.md    ]]
+  [[    "${output}"     =~  two           ]]
   [[    "${lines[7]}"   =~  -*-           ]]
   [[    "${lines[8]}"   =~  sweetish      ]]
 
-  [[    "${lines[9]}"   =~  one:1         ]]
-  [[ !  "${lines[9]}"   =~  example\.md   ]]
+  [[    "${output}"     =~  one:1         ]]
+  [[ !  "${output}"     =~  example\.md   ]]
   [[    "${lines[9]}"   =~  sweetish      ]]
 
   [[    "${#lines[@]}"  -eq 12            ]]
