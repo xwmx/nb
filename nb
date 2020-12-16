@@ -7247,6 +7247,7 @@ _ls() {
   # Usage:
   #   _ls_print_footer <notebook-names-count> [<selector>]
   _ls_print_footer() {
+    local _folder_id_path=
     local _footer_line_hi=
     local _footer_line_raw=
     local _footer_separator_raw=" ·"
@@ -7258,7 +7259,7 @@ _ls() {
     local _maybe_selector_scope_padded_left=
     local _maybe_selector_scope_padded_right=
     local _notebook_names_count="${1:-1}"
-    local _selector_path="${2// /\\ }"
+    local _selector_path="${2:-}"
 
     if _notebooks current --selected
     then
@@ -7267,9 +7268,24 @@ _ls() {
       ):"
     fi
 
-    if [[ -n "${_maybe_notebook:-}" ]] || [[ -n "${_selector_path:-}" ]]
+    if [[ -n "${_selector_path:-}" ]]
     then
-      _maybe_selector_scope="${_maybe_notebook}${_selector_path}"
+      _selector_folders=($(
+        printf "%s\\n" "${_selector_path}" | tr "/" "\n"
+      ))
+
+      local _parent_folder_path="$(_notebooks current --path)"
+
+      for __folder in "${_selector_folders[@]}"
+      do
+        _folder_id_path+="$(_index get_id "${__folder}" "${_parent_folder_path}")/"
+        _parent_folder_path+="/${__folder}"
+      done
+    fi
+
+    if [[ -n "${_maybe_notebook:-}" ]] || [[ -n "${_folder_id_path:-}" ]]
+    then
+      _maybe_selector_scope="${_maybe_notebook}${_folder_id_path}"
       _maybe_selector_scope_padded_left=" ${_maybe_selector_scope}"
       _maybe_selector_scope_padded_right="${_maybe_selector_scope} "
     fi

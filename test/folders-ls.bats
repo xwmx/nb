@@ -14,7 +14,7 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
 # footer ######################################################################
 
-@test "'<id>/' prints footer with commands scoped to folder." {
+@test "'<id>/' prints footer with commands scoped to folder id." {
   {
     "${_NB}" init
 
@@ -41,15 +41,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
   if ((_FOLDER_HEADER_ENABLED))
   then
-    [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[8]}"  =~ add\ Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0       ]]
+    [[   "${lines[8]}"  =~ add\ 1/  ]]
   else
-    [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[6]}"  =~ add\ Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0       ]]
+    [[   "${lines[6]}"  =~ add\ 1/  ]]
   fi
 }
 
-@test "'<folder>/' prints footer with commands scoped to folder." {
+@test "'<folder>/' prints footer with commands scoped to folder id." {
   {
     "${_NB}" init
 
@@ -76,15 +76,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
   if ((_FOLDER_HEADER_ENABLED))
   then
-    [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[8]}"  =~ add\ Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0       ]]
+    [[   "${lines[8]}"  =~ add\ 1/  ]]
   else
-    [[   "${status}"    -eq 0                       ]]
-    [[   "${lines[6]}"  =~ add\ Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0       ]]
+    [[   "${lines[6]}"  =~ add\ 1/  ]]
   fi
 }
 
-@test "'notebook:<id>/' prints footer with commands scoped to notebook and folder." {
+@test "'notebook:<id>/' prints footer with commands scoped to notebook and folder id." {
   {
     "${_NB}" init
 
@@ -113,15 +113,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
   if ((_FOLDER_HEADER_ENABLED))
   then
-    [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0                       ]]
+    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:1/  ]]
   else
-    [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0                       ]]
+    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:1/  ]]
   fi
 }
 
-@test "'notebook:<folder>/' prints footer with commands scoped to notebook and folder." {
+@test "'notebook:<folder>/' prints footer with commands scoped to notebook and folder id." {
   {
     "${_NB}" init
 
@@ -150,11 +150,11 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
   if ((_FOLDER_HEADER_ENABLED))
   then
-    [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0                       ]]
+    [[   "${lines[8]}"  =~ add\ Notebook\\\ One:1/  ]]
   else
-    [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:Example\\\ Folder/  ]]
+    [[   "${status}"    -eq 0                       ]]
+    [[   "${lines[6]}"  =~ add\ Notebook\\\ One:1/  ]]
   fi
 }
 
