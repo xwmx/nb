@@ -356,38 +356,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
-    [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[4]}"  =~  📂                                  ]]
-    [[ ! "${lines[4]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[4]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[5]}"  =~ ----                                 ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${#lines[@]}" -eq 1                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-
-    [[   "${lines[2]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[2]}"  =~  📂                                  ]]
-    [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  fi
+  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/3        ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
 }
 
 @test "'notebook:folder/folder/<id>' exits with 0 and prints the folder/folder/folder list item." {
@@ -420,38 +397,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                                   ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                               ]]
-    [[   "${lines[2]}"  =~ Sample\ Folder                                     ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                                       ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~  [^/]home:Example\\\ Folder/Sample\\\ Folder/3     ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[4]}"  =~  📂                                                ]]
-    [[ ! "${lines[4]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[4]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[5]}"  =~ ----                                               ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add               ]]
-  else
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-
-    [[   "${lines[2]}"  =~  [^/]home:Example\\\ Folder/Sample\\\ Folder/3     ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[2]}"  =~  📂                                                ]]
-    [[ ! "${lines[2]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[2]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[5]}"  =~ add               ]]
-  fi
+  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/Sample\\\ Folder/3     ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                                ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
 }
 
 @test "'notebook:folder/<id>' exits with 0 and prints the folder/folder list item." {
@@ -479,38 +433,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
-    [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[4]}"  =~  📂                                  ]]
-    [[ ! "${lines[4]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[4]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[5]}"  =~ ----                                 ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${#lines[@]}" -eq 1                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-
-    [[   "${lines[2]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[2]}"  =~  📂                                  ]]
-    [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  fi
+  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/3        ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
 }
 
 @test "'notebook:<id>' exits with 0 and prints the folder list item." {
@@ -580,39 +511,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
+  [[   "${#lines[@]}" -eq 1                                   ]]
 
-    [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
-    [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~  home:Example\\\ Folder/3            ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[4]}"  =~  📂                                  ]]
-    [[ ! "${lines[4]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[4]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[5]}"  =~ ----                                 ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
-
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-
-    [[   "${lines[2]}"  =~  home:Example\\\ Folder/3            ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[2]}"  =~  📂                                  ]]
-    [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  fi
+  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
 }
 
 @test "'ls notebook:folder/folder/<id>' exits with 0 and prints the folder/folder/folder list item." {
@@ -645,38 +552,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                                   ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                               ]]
-    [[   "${lines[2]}"  =~ Sample\ Folder                                     ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                                       ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[4]}"  =~  📂                                                ]]
-    [[ ! "${lines[4]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[4]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[5]}"  =~ ----                                               ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add               ]]
-  else
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-
-    [[   "${lines[2]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[2]}"  =~  📂                                                ]]
-    [[ ! "${lines[2]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[2]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[5]}"  =~ add               ]]
-  fi
+  [[   "${lines[0]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                                ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
 }
 
 @test "'ls notebook:folder/<id>' exits with 0 and prints the folder/folder list item." {
@@ -704,38 +588,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
-    [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~  home:Example\\\ Folder/3            ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[4]}"  =~  📂                                  ]]
-    [[ ! "${lines[4]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[4]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[5]}"  =~ ----                                 ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${#lines[@]}" -eq 1                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-
-    [[   "${lines[2]}"  =~  home:Example\\\ Folder/3            ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[2]}"  =~  📂                                  ]]
-    [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  fi
+  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
 }
 
 @test "'ls notebook:<id>' exits with 0 and prints the folder list item." {
@@ -810,38 +671,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                                   ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                               ]]
-    [[   "${lines[2]}"  =~ Sample\ Folder                                     ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                                       ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[4]}"  =~  📂                                                ]]
-    [[ ! "${lines[4]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[4]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[5]}"  =~ ----                                               ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add               ]]
-  else
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-
-    [[   "${lines[2]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[2]}"  =~  📂                                                ]]
-    [[ ! "${lines[2]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[2]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[5]}"  =~ add               ]]
-  fi
+  [[   "${lines[0]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                                ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
 }
 
 @test "'ls notebook:folder/folder' exits with 0 and prints the folder/folder list item." {
@@ -869,38 +707,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
-    [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~  home:Example\\\ Folder/3            ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[4]}"  =~  📂                                  ]]
-    [[ ! "${lines[4]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[4]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[5]}"  =~ ----                                 ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${#lines[@]}" -eq 1                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-
-    [[   "${lines[2]}"  =~  home:Example\\\ Folder/3            ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[2]}"  =~  📂                                  ]]
-    [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  fi
+  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
 }
 
 @test "'ls notebook:folder' exits with 0 and prints the folder list item." {
@@ -1714,38 +1529,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                                   ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                               ]]
-    [[   "${lines[2]}"  =~ Sample\ Folder                                     ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                                       ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[4]}"  =~  📂                                                ]]
-    [[ ! "${lines[4]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[4]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[5]}"  =~ ----                                               ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add               ]]
-  else
-    [[   "${status}"    -eq 0                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                                 ]]
 
-    [[   "${lines[0]}"  =~ home                                               ]]
-    [[   "${lines[1]}"  =~ -----                                              ]]
-
-    [[   "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-    [[   "${lines[2]}"  =~  📂                                                ]]
-    [[ ! "${lines[2]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-    [[   "${lines[2]}"  =~  Demo\ Folder                                      ]]
-    [[   "${lines[3]}"  =~ ----                                               ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[5]}"  =~ add               ]]
-  fi
+  [[   "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                                ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
 }
 
 @test "'ls folder/folder' exits with 0 and prints the folder/folder list item." {
@@ -1768,38 +1560,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  if ((_FOLDER_HEADER_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-    [[   "${lines[2]}"  =~ ^Example\ Folder                     ]]
-    [[ ! "${lines[2]}"  =~ ^📂\ Example\ Folder                 ]]
-    [[ ! "${lines[2]}"  =~ Sample\ Folder                       ]]
-    [[ ! "${lines[2]}"  =~ Demo\ Folder                         ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~  Example\\\ Folder/3                 ]]
-    [[ ! "${lines[4]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[4]}"  =~  📂                                  ]]
-    [[ ! "${lines[4]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[4]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[5]}"  =~ ----                                 ]]
-    [[   "${lines[6]}"  =~ add ]] || [[   "${lines[7]}"  =~ add ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
+  [[   "${#lines[@]}" -eq 1                                   ]]
 
-    [[   "${lines[0]}"  =~ home                                 ]]
-    [[   "${lines[1]}"  =~ -----                                ]]
-
-    [[   "${lines[2]}"  =~  Example\\\ Folder/3                 ]]
-    [[ ! "${lines[2]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-    [[   "${lines[2]}"  =~  📂                                  ]]
-    [[ ! "${lines[2]}"  =~  Example\ Folder/Sample\ Folder      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[3]}"  =~ ----                                 ]]
-    [[   "${lines[4]}"  =~ add ]] || [[   "${lines[5]}"  =~ add ]]
-  fi
+  [[   "${lines[0]}"  =~  Example\\\ Folder/3                 ]]
+  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
 }
 
 @test "'ls folder' exits with 0 and prints the folder list item." {

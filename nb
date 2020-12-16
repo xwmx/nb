@@ -7672,7 +7672,7 @@ _ls() {
     fi
 
     if ((NB_HEADER)) && {
-      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
+      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ /$ ]]
     }
     then
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
@@ -7741,7 +7741,7 @@ _ls() {
     }
 
     if ((NB_FOOTER)) && {
-      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ / ]]
+      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ /$ ]]
     }
     then
       _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
