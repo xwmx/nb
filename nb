@@ -3095,8 +3095,8 @@ _add() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
   local _password=
+  local _selector_folder_relative_path=
   local _target_filename=
-  local _target_folder_relative_path=
   local _title=
 
   while ((${#}))
@@ -3128,7 +3128,7 @@ _add() {
         shift
         ;;
       --folder)
-        _target_folder_relative_path="$(
+        _selector_folder_relative_path="$(
           _option_get_value "${__arg}" "${__val:-}" | sed -e 's/\/$//'
         )"
         shift
@@ -3202,7 +3202,7 @@ _add() {
       then
         if [[ "${_selector_target}" =~ / ]]
         then
-          _target_folder_relative_path="${_selector_target%\/*}"
+          _selector_folder_relative_path="${_selector_target%\/*}"
         fi
 
         if  _contains "${_file_type:-}" "folder" "directory"      || {
@@ -3250,18 +3250,19 @@ _add() {
     fi
   fi
 
+  local _target_folder_relative_path=
   local _target_relative_path=
 
-  if [[ -n "${_target_folder_relative_path:-}" ]]
+  if [[ -n "${_selector_folder_relative_path:-}" ]]
   then
-    if [[ "${_target_folder_relative_path}" =~ /$ ]]
+    if [[ "${_selector_folder_relative_path}" =~ /$ ]]
     then
       _target_folder_relative_path="$(
-        _resolve_selector_folders "${_target_folder_relative_path}/" --build
+        _resolve_selector_folders "${_selector_folder_relative_path}/" --build
       )"
     else
       _target_folder_relative_path="$(
-        _resolve_selector_folders "${_target_folder_relative_path}/${_target_filename:-}" --build
+        _resolve_selector_folders "${_selector_folder_relative_path}/${_target_filename:-}" --build
       )"
     fi
 
