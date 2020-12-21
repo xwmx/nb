@@ -6656,6 +6656,7 @@ HEREDOC
 _list() {
   local _excerpt_length=3
   local _error_on_empty=0
+  local _filter_patterns=()
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
@@ -6670,7 +6671,6 @@ _list() {
   local _list_paths=0
   local _reverse=0
   local _selector=
-  local _filter_selectors=()
   local _sort=0
   local _type=
   local _use_pager=0
@@ -6746,7 +6746,7 @@ _list() {
             _selector="${__arg:-}"
           fi
 
-          _filter_selectors+=("${__arg:-}")
+          _filter_patterns+=("${__arg:-}")
         fi
         ;;
     esac
@@ -6755,7 +6755,7 @@ _list() {
   done
 
   local _filter_pattern=
-  _filter_pattern="$(_join "|" "${_filter_selectors[@]:-}")"
+  _filter_pattern="$(_join "|" "${_filter_patterns[@]:-}")"
 
   local _selector_identifier=
   local _selector_relative_path=
