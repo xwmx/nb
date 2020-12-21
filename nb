@@ -5729,8 +5729,24 @@ Examples:
 HEREDOC
 _history() {
   local _basename=
+  local _force_git_log=0
   local _notebook_path=
-  local _selector="${1:-}"
+  local _selector=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --*log*|--*git*)
+        _force_git_log=1
+        ;;
+      *)
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${__arg}"
+        fi
+        ;;
+    esac
+  done
 
   if [[ -n "${_selector:-}" ]]
   then
@@ -5753,7 +5769,7 @@ _history() {
 
   local _log_command="git log"
 
-  if _command_exists "tig"
+  if _command_exists "tig" && ! ((_force_git_log))
   then
     _log_command="tig --all"
   fi
