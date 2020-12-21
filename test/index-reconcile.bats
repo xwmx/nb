@@ -89,7 +89,7 @@ load test_helper
 
     printf "not-a-file\\n"    >> "${NB_DIR}/home/.index"
     printf "also-no-file\\n"  >> "${NB_DIR}/home/.index"
-    echo "# Example"            > "${NB_DIR}/home/example.md"
+    echo "# Example"          > "${NB_DIR}/home/example.md"
     echo "# Sample"           > "${NB_DIR}/home/sample.md"
 
     # NOTE: `index get_id` calls `reconcile` when filename is not found.
