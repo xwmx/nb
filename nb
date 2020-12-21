@@ -2556,8 +2556,9 @@ _resolve_selector_folders() {
       fi
     fi
 
-    _exit_1 printf "Not a folder: %s\\n" \
-      "$(_color_primary "${_parent_folder_path:?}/${_folder_name:-}")"
+    # _warn printf "Not a folder: %s\\n" \
+    #   "$(_color_primary "${_parent_folder_path:?}/${_folder_name:-}")"
+    return 1
   done
 
   printf "%s\\n" "${_folder_relative_path:-}"
@@ -6775,7 +6776,8 @@ _list() {
 
   local _selector_basename="${_selector_relative_path##*\/}"
 
-  if [[ "${_selector}" =~ /$ ]]
+  if [[ "${_selector}" =~ /$                              ]] &&
+     [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
   then
     _path="${_selector_relative_path}"
     _selector_basename=
@@ -7669,7 +7671,12 @@ _ls() {
     # before printing list. TODO: Improve.
     if [[ "${_selector:-}" =~ / ]]
     then
-      _selector_folder_path="$(_resolve_selector_folders "${_selector}")/"
+      _selector_folder_path="$(_resolve_selector_folders "${_selector}" || :)"
+
+      if [[ -n "${_selector_folder_path:-}" ]]
+      then
+        _selector_folder_path="${_selector_folder_path}/"
+      fi
     fi
 
     if ((NB_HEADER)) && {
@@ -7679,7 +7686,7 @@ _ls() {
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
 
-    if [[ "${_selector:-}" =~ / ]] && ((${NB_FOLDER_HEADER:-0}))
+    if [[ -n "${_selector_folder_path:-}" ]] && ((${NB_FOLDER_HEADER:-0}))
     then
       _ls_print_folder_header "${_selector_folder_path:-}"
     fi
