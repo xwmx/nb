@@ -6664,7 +6664,7 @@ _list() {
   local _no_id=0
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
-  local _path=
+  local _folder_path=
   local _print_excerpt=0
   local _print_indicators=1
   local _list_paths=0
@@ -6779,12 +6779,12 @@ _list() {
   if [[ "${_selector}" =~ /$                              ]] &&
      [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
   then
-    _path="${_selector_relative_path}"
+    _folder_path="${_selector_relative_path}"
     _selector_basename=
     _selector_identifier=
   elif [[ "${_selector_relative_path:-}" =~ / ]]
   then
-    _path="${_selector_relative_path%\/*}"
+    _folder_path="${_selector_relative_path%\/*}"
   fi
 
   local _notebook_escaped_name=
@@ -6797,20 +6797,20 @@ _list() {
   local _maybe_id_path_padded_left=
   local _maybe_id_path_padded_right=
 
-  if [[ -n "${_path:-}" ]]
+  if [[ -n "${_folder_path:-}" ]]
   then
-    _maybe_id_path="${_path// /\\ }/"
+    _maybe_id_path="${_folder_path// /\\ }/"
     _maybe_id_path_padded_left=" ${_maybe_id_path}"
     _maybe_id_path_padded_right="${_maybe_id_path} "
 
-    _list_path="${_notebook_path}/${_path}"
+    _list_path="${_notebook_path}/${_folder_path}"
 
     if [[ -d "${_list_path}" ]]
     then
       _index reconcile "${_list_path}" --ancestors
     elif [[ ! -e "${_list_path}" ]]
     then
-      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_path:-}")"
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_folder_path:-}")"
     fi
   fi
 
