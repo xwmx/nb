@@ -2793,16 +2793,20 @@ notebook:q
 *Idenitifer Selectors*
 
 ```text
-1
+123
 example.md
 title
 /full/path/to/demo.md
+relative/path/to/123
 relative/path/to/sample.md
-notebook:1
+relative/path/to/title
+notebook:123
 notebook:example.md
 notebook:title
 notebook:/full/path/to/demo.md
+notebook:relative/path/to/123
 notebook:relative/path/to/sample.md
+notebook:relative/path/to/title
 ```
 
 `nb` automatically scans arguments for selectors with notebook names and
