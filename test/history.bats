@@ -44,6 +44,27 @@ load test_helper
   [[ !  "${output}"  =~  \[nb\]\ Delete:\ one.md  ]]
 }
 
+@test "'history <id>' with existing file exits with status 0 and prints file history." {
+  {
+    "${_NB}" init
+    "${_NB}" add    "one.md" --title "one"
+    "${_NB}" add    "two.md" --title "two"
+    "${_NB}" edit   "two.md" --content "Edited content."
+    "${_NB}" delete "one.md" --force
+  }
+
+  run "${_NB}" history 2 --git-log
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                        ]]
+  [[ !  "${output}"  =~  \[nb\]\ Add:\ one.md     ]]
+  [[    "${output}"  =~  \[nb\]\ Add:\ two.md     ]]
+  [[    "${output}"  =~  \[nb\]\ Edit:\ two.md    ]]
+  [[ !  "${output}"  =~  \[nb\]\ Delete:\ one.md  ]]
+}
+
 @test "'history <filename>' with deleted filename exits with status 0 and prints file history." {
   skip "TODO"
   {
