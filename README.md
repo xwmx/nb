@@ -2796,17 +2796,17 @@ notebook:q
 123
 example.md
 title
-/full/path/to/demo.md
 relative/path/to/123
-relative/path/to/sample.md
+relative/path/to/demo.md
 relative/path/to/title
+/full/path/to/sample.md
 notebook:123
 notebook:example.md
 notebook:title
-notebook:/full/path/to/demo.md
 notebook:relative/path/to/123
-notebook:relative/path/to/sample.md
+notebook:relative/path/to/demo.md
 notebook:relative/path/to/title
+notebook:/full/path/to/sample.md
 ```
 
 `nb` automatically scans arguments for selectors with notebook names and
