@@ -5751,7 +5751,7 @@ _history() {
   if [[ -n "${_selector:-}" ]]
   then
     if [[ "${_selector}" =~ :$ ]] ||
-       ! _basename="$(_show "${_selector}" --filename 2>/dev/null)"
+       ! _relative_path="$(_show "${_selector}" --relative-path 2>/dev/null)"
     then
       if ! _notebook_path="$(_notebooks show "${_selector}" --path 2>/dev/null)"
       then
@@ -5774,9 +5774,9 @@ _history() {
     _log_command="tig --all"
   fi
 
-  if [[ -n "${_basename:-}" ]] && [[ -e "${_notebook_path}/${_basename}" ]]
+  if [[ -n "${_relative_path:-}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
   then
-    eval "${_log_command} -- \"${_basename}\""
+    eval "${_log_command} -- \"${_relative_path}\""
   else
     eval "${_log_command}"
   fi
