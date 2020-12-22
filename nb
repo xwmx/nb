@@ -6864,15 +6864,9 @@ _list() {
 
       if [[ -n "${_selector_identifier:-}" ]]
       then
-        # If a valid <selector> has been specified, skip the rest of the
-        # loop unless the <selector> basename matches the current one.
-        if [[ -n "${_selector_basename}" ]]
+        if [[ -z "${_selector_basename:-}"    ]] ||
+           [[ "${#_filter_patterns[@]}" -gt 1 ]]
         then
-          if [[ "${__basename}" != "${_selector_basename}" ]]
-          then
-            continue
-          fi
-        else
           # turn on a case-insensitive matching (-s set nocasematch)
           shopt -s nocasematch
 
@@ -6900,6 +6894,11 @@ _list() {
 
           # turn off a case-insensitive matching (-u unset nocasematch)
           shopt -u nocasematch
+        else
+          if [[ "${__basename}" != "${_selector_basename}" ]]
+          then
+            continue
+          fi
         fi
       fi
 
