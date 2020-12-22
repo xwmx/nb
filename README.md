@@ -2806,7 +2806,6 @@ notebook:title
 notebook:relative/path/to/123
 notebook:relative/path/to/demo.md
 notebook:relative/path/to/title
-notebook:/full/path/to/sample.md
 ```
 
 `nb` automatically scans arguments for selectors with notebook names and
