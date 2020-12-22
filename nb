@@ -11577,6 +11577,12 @@ _show() {
     _show_selector_relative_path "${_selector}" "${_notebook_path}"
   )"
 
+  if ((_print_relative_path))
+  then
+    printf "%s\\n" "${_relative_path}"
+    return 0
+  fi
+
   local _folder_path="${_notebook_path:?}"
   local _relative_folder_path=
 
@@ -11622,12 +11628,6 @@ _show() {
   if ((_print_filename))
   then
     printf "%s\\n" "${_basename}"
-    return 0
-  fi
-
-  if ((_print_relative_path))
-  then
-    printf "%s\\n" "${_relative_path}"
     return 0
   fi
 
