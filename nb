@@ -4536,7 +4536,7 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
     then
       _index delete "${_basename}" "${_folder_path}"
 
-      _git checkpoint "${_notebook_path}" "[nb] Delete: ${_basename}"
+      _git checkpoint "${_notebook_path}" "[nb] Delete: ${_relative_path}"
 
       printf "Deleted:  %s\\n" "${_info}"
     fi

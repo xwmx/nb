@@ -38,7 +38,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -v -q '\[nb\] Delete'
+  git log
+  git log | grep -q -v '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -82,7 +83,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -117,7 +119,6 @@ load test_helper
 
   [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
 
-
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
@@ -125,7 +126,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -172,7 +174,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -219,7 +222,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -263,7 +267,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -305,7 +310,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -350,7 +356,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -395,7 +402,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -441,7 +449,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -485,7 +494,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -534,7 +544,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
 
   # Prints output:
 
@@ -583,7 +594,8 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Delete'
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.bookmark.md'
 
   # Prints output:
 

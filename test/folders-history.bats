@@ -34,8 +34,7 @@ load test_helper
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/one.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/two.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Edit:\ Example\ Folder/one.md                ]]
-  # TODO: Include folder path in delete commit message.
-  # [[    "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
+  [[    "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
 }
 
 @test "'history <folder>' (no slash) exits with status 0 and prints folder history." {
@@ -70,8 +69,7 @@ load test_helper
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/one.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/two.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Edit:\ Example\ Folder/one.md                ]]
-  # TODO: Include folder path in delete commit message.
-  # [[    "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
+  [[    "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
 }
 
 @test "'history <folder>/<filename>' exits with status 0 and prints file history." {
@@ -106,8 +104,7 @@ load test_helper
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/one.md                 ]]
   [[ !  "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/two.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Edit:\ Example\ Folder/one.md                ]]
-  # TODO: Include folder path in delete commit message.
-  # [[ !  "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
+  [[ !  "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
 }
 
 @test "'history <folder>/<id>' exits with status 0 and prints file history." {
@@ -142,8 +139,7 @@ load test_helper
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/one.md                 ]]
   [[ !  "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/two.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Edit:\ Example\ Folder/one.md                ]]
-  # TODO: Include folder path in delete commit message.
-  # [[ !  "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
+  [[ !  "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
 }
 
 @test "'history <folder>/<title>' exits with status 0 and prints file history." {
@@ -178,8 +174,7 @@ load test_helper
   [[    "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/one.md                 ]]
   [[ !  "${output}"  =~  \[nb\]\ Add:\ Example\ Folder/two.md                 ]]
   [[    "${output}"  =~  \[nb\]\ Edit:\ Example\ Folder/one.md                ]]
-  # TODO: Include folder path in delete commit message.
-  # [[ !  "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
+  [[ !  "${output}"  =~  \[nb\]\ Delete:\ Example\ Folder/two.md              ]]
 }
 
 @test "'history <folder>/<not-valid>' exits with status 1 and prints message." {
