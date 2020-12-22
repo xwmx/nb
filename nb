@@ -11496,6 +11496,7 @@ _show() {
         ;;
       --relative-path)
         _print_relative_path=1
+        _skip_notebook_fallback=1
         ;;
       -r|--render)
         _render=1
@@ -11576,12 +11577,6 @@ _show() {
     _show_selector_relative_path "${_selector}" "${_notebook_path}"
   )"
 
-  if ((_print_relative_path))
-  then
-    printf "%s\\n" "${_relative_path}"
-    return 0
-  fi
-
   local _folder_path="${_notebook_path:?}"
   local _relative_folder_path=
 
@@ -11616,6 +11611,12 @@ _show() {
   then
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1
+  fi
+
+  if ((_print_relative_path))
+  then
+    printf "%s\\n" "${_relative_path}"
+    return 0
   fi
 
   if ((_print_path))
