@@ -2,6 +2,28 @@
 
 load test_helper
 
+# show error handling #########################################################
+
+@test "'show filename/<id>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "one.md"     --title "one"     --content "Content one."
+    "${_NB}" add "example.md" --title "example" --content "Content example."
+  }
+
+  run "${_NB}" list one.md/example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1             ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:    ]]
+  [[   "${lines[0]}"  =~ one.md/example ]]
+  [[   "${#lines[@]}" == 1              ]]
+}
+
 # show <path-with-folder> --relative-path #####################################
 
 @test "'show folder/folder/<title> --relative-path' displays relative path." {

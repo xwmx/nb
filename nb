@@ -11380,7 +11380,8 @@ _show() {
         local _folder_relative_path=
         _folder_relative_path="$(
           _resolve_selector_folders "${_selector}" "${_notebook_path}"
-        )"
+        )" || return 0
+
 
         if [[ -n "${_folder_relative_path:-}" ]]
         then
