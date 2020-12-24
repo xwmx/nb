@@ -7697,33 +7697,19 @@ _ls() {
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
 
+  # NOTE: Resolve selector path before printing header to minimize pause
+  # before printing list. TODO: Improve.
+  if [[ "${_selector:-}" =~ / ]]
+  then
+    _selector_folder_path="$(_resolve_selector_folders "${_selector}" || :)"
+
+    if [[ -n "${_selector_folder_path:-}" ]]
+    then
+      _selector_folder_path="${_selector_folder_path}/"
+    fi
+  fi
+
   {
-    # NOTE: Resolve selector path before printing header to minimize pause
-    # before printing list. TODO: Improve.
-    if [[ "${_selector:-}" =~ / ]]
-    then
-      _selector_folder_path="$(_resolve_selector_folders "${_selector}" || :)"
-
-      if [[ -n "${_selector_folder_path:-}" ]]
-      then
-        _selector_folder_path="${_selector_folder_path}/"
-      fi
-    fi
-
-    if ((NB_HEADER)) && {
-      [[ -z "${_arguments[*]:-}"  ]] || {
-        [[ "${_selector:-}" =~ /$ ]] && [[ -z "${_filter_patterns[1]:-}" ]]
-      }
-    }
-    then
-      _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
-    fi
-
-    if [[ -n "${_selector_folder_path:-}" ]] && ((${NB_FOLDER_HEADER:-0}))
-    then
-      _ls_print_folder_header "${_selector_folder_path:-}"
-    fi
-
     _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
       if [[ -n "${_arguments[*]:-}" ]]
       then
@@ -7780,6 +7766,22 @@ _ls() {
         fi
       fi
     }
+  } | {
+    if ((NB_HEADER)) && {
+      [[ -z "${_arguments[*]:-}"  ]] || {
+        [[ "${_selector:-}" =~ /$ ]] && [[ -z "${_filter_patterns[1]:-}" ]]
+      }
+    }
+    then
+      _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
+    fi
+
+    cat
+
+    if [[ -n "${_selector_folder_path:-}" ]] && ((${NB_FOLDER_HEADER:-0}))
+    then
+      _ls_print_folder_header "${_selector_folder_path:-}"
+    fi
 
     if ((NB_FOOTER)) && {
       [[ -z "${_arguments[*]:-}"  ]] || {
