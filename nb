@@ -6774,8 +6774,8 @@ _list() {
 
   for __selector in "${_selectors[@]:-}"
   do
-    local _relative_identifier="${__selector#*:}"
-    local _identifier="${_relative_identifier##*\/}"
+    local _path_and_identifier="${__selector#*:}"
+    local _identifier="${_path_and_identifier##*\/}"
 
     if [[ -n "${_identifier:-}" ]]
     then
