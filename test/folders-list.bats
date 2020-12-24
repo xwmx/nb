@@ -2,6 +2,148 @@
 
 load test_helper
 
+# filtering ###################################################################
+
+@test "'list <folder>/ <pattern>...' (slash) exits with 0 and prints filtered list." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"    \
+      --title     "root one"  \
+      --content   "Content one."
+    "${_NB}" add  "two.md"    \
+      --title     "root two"  \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/one.md" \
+      --title     "nested one"            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/two.md" \
+      --title     "nested two"            \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md" \
+      --title     "deep one"                            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/Sample Folder/two.md" \
+      --title     "deep two"                            \
+      --content   "Content two."
+  }
+
+  run "${_NB}" list one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 1                                 ]]
+
+  [[    "${lines[0]}"   =~  1.*root\ one                      ]]
+
+  run "${_NB}" list Example\ Folder/ one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 1                                 ]]
+
+  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+
+  run "${_NB}" list Example\ Folder/ nested
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 2                                 ]]
+
+  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
+  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+
+  run "${_NB}" list Example\ Folder/ one two
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 2                                 ]]
+
+  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
+  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+}
+
+@test "'list <folder> <pattern>...' (no slash) exits with 0 treats folder as selector and filter pattern." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"    \
+      --title     "root one"  \
+      --content   "Content one."
+    "${_NB}" add  "two.md"    \
+      --title     "root two"  \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/one.md" \
+      --title     "nested one"            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/two.md" \
+      --title     "nested two"            \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md" \
+      --title     "deep one"                            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/Sample Folder/two.md" \
+      --title     "deep two"                            \
+      --content   "Content two."
+  }
+
+  run "${_NB}" list one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                       ]]
+  [[    "${#lines[@]}"  -eq 1                       ]]
+
+  [[    "${lines[0]}"   =~  1.*root\ one            ]]
+  [[    "${output}"     =~  1.*root\ one            ]]
+
+  run "${_NB}" list Example\ Folder one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                       ]]
+  [[    "${#lines[@]}"  -eq 2                       ]]
+
+  [[    "${lines[0]}"   =~  3.*📂\ Example\ Folder  ]]
+  [[    "${lines[1]}"   =~  1.*root\ one            ]]
+
+  run "${_NB}" list Example\ Folder nested
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                       ]]
+  [[    "${#lines[@]}"  -eq 1                       ]]
+
+  [[    "${lines[0]}"   =~  3.*📂\ Example\ Folder  ]]
+
+  run "${_NB}" list Example\ Folder one two
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                       ]]
+  [[    "${#lines[@]}"  -eq 3                       ]]
+
+  [[    "${lines[2]}"   =~  1.*root\ one            ]]
+  [[    "${lines[1]}"   =~  2.*root\ two            ]]
+  [[    "${lines[0]}"   =~  3.*📂\ Example\ Folder  ]]
+}
+
 # error handling ##############################################################
 
 @test "'list filename/<id>' exits with 1 and prints message." {

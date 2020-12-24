@@ -6672,7 +6672,6 @@ HEREDOC
 _list() {
   local _excerpt_length=3
   local _error_on_empty=0
-  local _filter_patterns=()
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
@@ -6687,6 +6686,7 @@ _list() {
   local _list_paths=0
   local _reverse=0
   local _selector=
+  local _selectors=()
   local _sort=0
   local _type=
   local _use_pager=0
@@ -6762,12 +6762,25 @@ _list() {
             _selector="${__arg:-}"
           fi
 
-          _filter_patterns+=("${__arg:-}")
+          _selectors+=("${__arg:-}")
         fi
         ;;
     esac
 
     shift
+  done
+
+  local _filter_patterns=()
+
+  for __selector in "${_selectors[@]}"
+  do
+    local _relative_identifier="${__selector#*:}"
+    local _identifier="${_relative_identifier##*\/}"
+
+    if [[ -n "${_identifier:-}" ]]
+    then
+      _filter_patterns+=("${_identifier##*\/}")
+    fi
   done
 
   local _filter_pattern=
@@ -6778,7 +6791,7 @@ _list() {
 
   if [[ -n "${_selector:-}" ]]
   then
-    _selector_identifier="$(_show "${_selector}" --selector-id)"
+    _selector_identifier="${_filter_pattern[0]}"
     _selector_relative_path="$(
       _show "${_selector}" --relative-path 2>/dev/null || :
     )"
@@ -6862,49 +6875,50 @@ _list() {
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
-      if [[ -n "${_selector_identifier:-}" ]]
+      if [[ "${#_filter_patterns[@]}" -le 1             ]] &&
+         [[ -n "${_selector_basename:-}"                ]] &&
+         [[ "${__basename}" != "${_selector_basename}"  ]]
       then
-        if [[ -z "${_selector_basename:-}"    ]] ||
-           [[ "${#_filter_patterns[@]}" -gt 1 ]]
-        then
-          # turn on a case-insensitive matching (-s set nocasematch)
-          shopt -s nocasematch
+        continue # exclude from list
+      fi
 
-          if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
+      if [[ "${#_filter_patterns[@]}" -ge 2   ]] ||
+         {
+           [[ -z "${_selector_basename:-}"    ]] &&
+           [[ -n "${_filter_patterns[*]:-}"   ]]
+         }
+      then
+        shopt -s nocasematch
+
+        if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
+        then
+          # include in list
+          _matches=$((_matches+1))
+        else
+          _maybe_title="$(_get_content "${_list_path}/${__basename}")"
+
+          if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
           then
-            # include the note in the list
+            _first_line="${_maybe_title#__first_line:}"
+            _maybe_title=
+          fi
+
+          if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
+          then
+            # include in list
             _matches=$((_matches+1))
           else
-            _maybe_title="$(_get_content "${_list_path}/${__basename}")"
-
-            if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
-            then
-              _first_line="${_maybe_title#__first_line:}"
-              _maybe_title=
-            fi
-
-            if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
-            then
-              # include the note in the list
-              _matches=$((_matches+1))
-            else
-              continue # don't include note in list
-            fi
-          fi
-
-          # turn off a case-insensitive matching (-u unset nocasematch)
-          shopt -u nocasematch
-        else
-          if [[ "${__basename}" != "${_selector_basename}" ]]
-          then
-            continue
+            continue # exclude from list
           fi
         fi
+
+        # turn off a case-insensitive matching (-u unset nocasematch)
+        shopt -u nocasematch
       fi
 
       if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
       then # the limit has been reached
-        if [[ -n "${_selector_identifier:-}" ]]
+        if [[ -n "${_filter_patterns[*]:-}" ]]
         then
           # keep looking for matches to count total
           continue
@@ -7583,6 +7597,7 @@ _ls() {
 
   local _all=0
   local _arguments=()
+  local _filter_patterns=()
   local _header_flags=()
   local _limit=
   local _list_options=()
@@ -7665,6 +7680,7 @@ _ls() {
         fi
 
         _arguments+=("${__arg}")
+        _filter_patterns+=("${__arg}")
         ;;
     esac
 
@@ -7695,7 +7711,9 @@ _ls() {
     fi
 
     if ((NB_HEADER)) && {
-      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ /$ ]]
+      [[ -z "${_arguments[*]:-}"  ]] || {
+        [[ "${_selector:-}" =~ /$ ]] && [[ -z "${_filter_patterns[1]:-}" ]]
+      }
     }
     then
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
@@ -7764,7 +7782,9 @@ _ls() {
     }
 
     if ((NB_FOOTER)) && {
-      [[ -z "${_arguments[*]:-}" ]] || [[ "${_selector:-}" =~ /$ ]]
+      [[ -z "${_arguments[*]:-}"  ]] || {
+        [[ "${_selector:-}" =~ /$ ]] && [[ -z "${_filter_patterns[1]:-}" ]]
+      }
     }
     then
       _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
