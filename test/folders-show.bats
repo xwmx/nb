@@ -12,7 +12,7 @@ load test_helper
     "${_NB}" add "example.md" --title "example" --content "Content example."
   }
 
-  run "${_NB}" list one.md/example
+  run "${_NB}" show one.md/example
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
