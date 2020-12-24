@@ -150,7 +150,8 @@ load test_helper
   {
     "${_NB}" init
 
-    "${_NB}" add "one.md" --title "one" --content "Content one."
+    "${_NB}" add "one.md"     --title "one"     --content "Content one."
+    "${_NB}" add "example.md" --title "example" --content "Content example."
   }
 
   run "${_NB}" list one.md/example
