@@ -6772,7 +6772,7 @@ _list() {
 
   local _filter_patterns=()
 
-  for __selector in "${_selectors[@]}"
+  for __selector in "${_selectors[@]:-}"
   do
     local _relative_identifier="${__selector#*:}"
     local _identifier="${_relative_identifier##*\/}"
