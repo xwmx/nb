@@ -12,6 +12,25 @@ _FOLDER_HEADER_ENABLED=0
 # See also: $NB_FOLDER_HEADER in _ls().
 _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
+# error handling ##############################################################
+
+@test "'ls <not-valid>/' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" ls not-valid/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1             ]]
+
+  [[   "${lines[0]}"  =~ Not\ found:    ]]
+  [[   "${lines[0]}"  =~ not-valid/     ]]
+  [[   "${#lines[@]}" == 1              ]]
+}
+
 # filtering ###################################################################
 
 @test "'ls <folder>/ <pattern>...' (slash) exits with 0 and prints filtered list." {

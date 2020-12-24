@@ -7767,11 +7767,18 @@ _ls() {
       fi
     }
   } | {
-    if ((NB_HEADER)) && {
-      [[ -z "${_arguments[*]:-}"  ]] || {
-        [[ "${_selector:-}" =~ /$ ]] && [[ -z "${_filter_patterns[1]:-}" ]]
-      }
+    local _display_header_and_footer=0
+
+    if [[ -z "${_arguments[*]:-}"            ]] || {
+         [[ "${_selector:-}" =~ /$           ]] &&
+         [[ -n "${_selector_folder_path:-}"  ]] &&
+         [[ -z "${_filter_patterns[1]:-}"    ]]
     }
+    then
+      _display_header_and_footer=1
+    fi
+
+    if ((NB_HEADER)) && ((_display_header_and_footer))
     then
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
@@ -7783,11 +7790,7 @@ _ls() {
       _ls_print_folder_header "${_selector_folder_path:-}"
     fi
 
-    if ((NB_FOOTER)) && {
-      [[ -z "${_arguments[*]:-}"  ]] || {
-        [[ "${_selector:-}" =~ /$ ]] && [[ -z "${_filter_patterns[1]:-}" ]]
-      }
-    }
+    if ((NB_FOOTER)) && ((_display_header_and_footer))
     then
       _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
     fi
