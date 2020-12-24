@@ -2,6 +2,32 @@
 
 load test_helper
 
+# excerpt #####################################################################
+
+@test "'list <folder>/<folder>/<id> -e' includes excerpt line." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md" \
+      --title     "one"                                 \
+      --content   "Content one."
+  }
+
+  run "${_NB}" list Example\ Folder/Sample\ Folder/one --excerpt
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  echo "${#lines[1]}"
+
+
+  [[    "${status}"     -eq 0                                               ]]
+  [[    "${#lines[@]}"  -eq 4                                               ]]
+
+  [[    "${lines[0]}"   =~  Example\\\ Folder/Sample\\\ Folder/1.*one       ]]
+  [[    "${lines[1]}"   =~  [^-]--------------------------------------[^-]  ]]
+  [[    "${#lines[1]}"  =~  49                                              ]]
+}
+
 # filtering ###################################################################
 
 @test "'list <folder>/ <pattern>...' (slash) exits with 0 and prints filtered list." {

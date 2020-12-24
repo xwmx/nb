@@ -7033,7 +7033,7 @@ _list() {
           local _max_identifier="${_maybe_id_path:-}${_max_id:-}"
         fi
 
-        local _brackets_identifier="[${_maybe_id_path:-}${_item_identifier:-}]"
+        local _brackets_identifier="[${_item_identifier:-}]"
 
         # avoid calling `_color_brackets` for performance
         local _brackets_identifier_color="\
