@@ -83,7 +83,7 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
 }
 
-@test "'ls <folder> <pattern>...' (no slash) exits with 0 treats folder as selector and filter pattern." {
+@test "'ls <folder> <pattern>...' (no slash) exits with 0 and treats folder as selector and filter pattern." {
   {
     "${_NB}" init
 

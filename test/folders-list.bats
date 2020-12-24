@@ -73,7 +73,7 @@ load test_helper
   [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
 }
 
-@test "'list <folder> <pattern>...' (no slash) exits with 0 treats folder as selector and filter pattern." {
+@test "'list <folder> <pattern>...' (no slash) exits with 0 and treats folder as selector and filter pattern." {
   {
     "${_NB}" init
 
