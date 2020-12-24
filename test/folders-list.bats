@@ -19,7 +19,6 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   echo "${#lines[1]}"
 
-
   [[    "${status}"     -eq 0                                               ]]
   [[    "${#lines[@]}"  -eq 4                                               ]]
 
