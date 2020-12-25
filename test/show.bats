@@ -514,7 +514,7 @@ load test_helper
 
 # `show <id> --updated` #######################################################
 
-@test "'show <id> --updated' exits with status 0 and prints the added timestamp." {
+@test "'show <id> --updated' exits with status 0 and prints the updated timestamp." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example Title"
@@ -543,7 +543,7 @@ load test_helper
   [[ "${output}" != "${_added}"       ]]
 }
 
-@test "'show <id> -u' exits with status 0 and prints the added timestamp." {
+@test "'show <id> -u' exits with status 0 and prints the updated timestamp." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example Title"
