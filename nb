@@ -3153,6 +3153,9 @@ _add() {
         if [[ -z "${_content_or_filename_or_path:-}" ]]
         then
           _content_or_filename_or_path="${__arg:-}"
+        elif [[ -z "${_target_filename:-}" ]]
+        then
+          _target_filename="${__arg:-}"
         else
           _arguments+=("${__arg:-}")
         fi
@@ -3206,11 +3209,13 @@ _add() {
           _selector_folder_relative_path="${_selector_target%\/*}"
         fi
 
-        if  _contains "${_file_type:-}" "folder" "directory"      || {
-            [[ "${_selector_target:-}" =~ \.[A-Za-z0-9]+$     ]]  &&
-            [[ -n "${_content_or_filename_extension:-}"       ]]  &&
-            [[ -z "${_target_filename}"                       ]]
-          }
+        if  [[ -z "${_target_filename}"                         ]]  && {
+              _contains "${_file_type:-}" "folder" "directory"      || {
+              [[ "${_selector_target:-}" =~ \.[A-Za-z0-9]+$     ]]  &&
+              [[ -n "${_content_or_filename_extension:-}"       ]]  &&
+              [[ -z "${_target_filename}"                       ]]
+            }
+        }
         then
           _target_filename="${_selector_target##*\/}"
         elif [[ ! "${_selector_target}" =~ /      ]] &&
