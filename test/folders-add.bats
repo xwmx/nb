@@ -4,7 +4,119 @@ load test_helper
 
 # <folder>/ <filename> ########################################################
 
-@test "'add <folder>/ <filename>' creates new file with <filename> in new <folder>." {
+@test "'add <folder> <filename>' (no slash) creates new file with <filename> and the string in <folder> as content." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+
+    [[   -e "${NB_DIR:-}/home/Example Folder"                     ]]
+    [[   -e "${NB_DIR:-}/home/Example Folder/.index"              ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
+  }
+
+  run "${_NB}" add Example\ Folder "example-filename.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates folder and files:
+
+  [[   -e "${NB_DIR:-}/home/Example Folder"                     ]]
+  [[   -e "${NB_DIR:-}/home/Example Folder/.index"              ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
+  [[   -e "${NB_DIR:-}/home/example-filename.md"                ]]
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: example-filename.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index"                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"  ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  diff                                    \
+    <(ls "${NB_DIR}/home/Example Folder") \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:              ]]
+  [[ "${output}" =~ example-filename.md ]]
+
+  # File contains content:
+
+  diff                            \
+    <(printf "Example Folder\\n") \
+    <(cat "${NB_DIR}/home/example-filename.md")
+}
+
+@test "'add <not-a-folder-name> <filename>' (no slash) creates new file with <filename> containing content <not-a-folder-name>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Not A Folder"                     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/.index"              ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/example-filename.md" ]]
+  }
+
+  run "${_NB}" add Example\ Not\ A\ Folder "example-filename.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates folder and files:
+
+  [[ ! -e "${NB_DIR:-}/home/Example Not A Folder"                     ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/.index"              ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/example-filename.md" ]]
+  [[   -e "${NB_DIR:-}/home/example-filename.md"                      ]]
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: example-filename.md'
+
+  # Adds to index:
+
+  [[    -e "${NB_DIR}/home/.index"                      ]]
+  [[ !  -e "${NB_DIR}/home/Example Not A Folder/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:              ]]
+  [[ "${output}" =~ example-filename.md ]]
+
+  # File contains content:
+
+  diff                                  \
+    <(printf "Example Not A Folder\\n") \
+    <(cat "${NB_DIR}/home/example-filename.md")
+}
+
+@test "'add <folder>/ <filename>' (slash) creates new file with <filename> in new <folder>." {
   {
     "${_NB}" init
 
@@ -13,7 +125,7 @@ load test_helper
     [[ ! -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
   }
 
-  run "${_NB}" add "Example Folder/" "example-filename.md"
+  run "${_NB}" add Example\ Folder/ "example-filename.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -37,8 +149,8 @@ load test_helper
 
   # Adds to index:
 
-  [[ -e "${NB_DIR}/home/.index"                           ]]
-  [[ -e "${NB_DIR}/home/Example Folder/.index"            ]]
+  [[ -e "${NB_DIR}/home/.index"                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"  ]]
 
   diff                      \
     <(ls "${NB_DIR}/home")  \
@@ -54,12 +166,74 @@ load test_helper
   [[ "${output}" =~ Example\\\ Folder/example-filename.md ]]
 }
 
-@test "'add <folder>/ <folder-name> --type folder' creates new folder with <folder-name> in new <folder>." {
+# TODO: Review. Options:
+# - Accept <name-1> and ignore <name-2>
+# - Ignore <name-1> and accept <name-2> (current)
+# - Return error when more than one name is specified
+@test "'add <name-1> <name-2> --type folder' (no slash) creates new folder with <name-2>." {
   {
     "${_NB}" init
 
-    [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
-    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"         ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"  ]]
+    [[ ! -e "${NB_DIR:-}/home/Sample Folder"          ]]
+    [[ ! -e "${NB_DIR:-}/home/Sample Folder/.index"   ]]
+  }
+
+  run "${_NB}" add  \
+    Example\ Folder \
+    Sample\ Folder  \
+    --type folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" git log --stat
+  "${_NB}" git status
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates path, target file, and indexes:
+
+  [[ !  -e "${NB_DIR}/home/Example Folder"        ]]
+  [[    -d "${NB_DIR}/home/Sample Folder"         ]]
+  [[    -e "${NB_DIR}/home/Sample Folder/.index"  ]]
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Sample Folder'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  [[ -e "${NB_DIR}/home/Sample Folder/.index" ]]
+
+  diff                                    \
+    <(ls "${NB_DIR}/home/Sample Folder")  \
+    <(cat "${NB_DIR}/home/Sample Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:            ]]
+  [[ "${output}" =~ Sample\\\ Folder  ]]
+}
+
+@test "'add <folder>/ <folder-name> --type folder' (slash) creates new folder with <folder-name> in new <folder>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"         ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"  ]]
   }
 
   run "${_NB}" add            \
