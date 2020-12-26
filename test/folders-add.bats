@@ -232,8 +232,8 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${NB_DIR:-}/home/Example Folder"         ]]
-    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"  ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"                     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/example-folder-name" ]]
   }
 
   run "${_NB}" add            \
@@ -249,23 +249,12 @@ load test_helper
 
   [[ "${status}" -eq 0 ]]
 
-  # Creates path, target file, and indexes:
+  # Creates path indexes:
 
-  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
-
-  echo "${_files[@]}"
-
-  [[ -d "${NB_DIR}/home/Example Folder"                         ]]
-  [[    "${#_files[@]}"  == 5                                   ]]
-  [[    "${_files[3]}"   == ".index"                            ]]
-  [[    "${_files[4]}"   == "Example Folder"                    ]]
-
-  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
-
-  [[    "${#_folder_files[@]}"  == 4                            ]]
-  [[    "${_folder_files[2]}"   == ".index"                     ]]
-  [[    "${_folder_files[3]}"   =~ example-folder-name          ]]
-  [[ -e "${NB_DIR}/home/Example Folder/${_folder_files[3]}"     ]]
+  [[ !  -e "${NB_DIR}/home/example-folder-name"                       ]]
+  [[    -d "${NB_DIR}/home/Example Folder/example-folder-name"        ]]
+  [[    -f "${NB_DIR}/home/Example Folder/.index"                     ]]
+  [[    -f "${NB_DIR}/home/Example Folder/example-folder-name/.index" ]]
 
   # Commits to git:
 
@@ -302,8 +291,8 @@ load test_helper
   {
     "${_NB}" init
 
-    [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
-    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"                     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/example-folder-name" ]]
   }
 
   run "${_NB}" add            \
@@ -319,23 +308,12 @@ load test_helper
 
   [[ "${status}" -eq 0 ]]
 
-  # Creates path, target file, and indexes:
+  # Creates path indexes:
 
-  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
-
-  echo "${_files[@]}"
-
-  [[ -d "${NB_DIR}/home/Example Folder"                         ]]
-  [[    "${#_files[@]}"  == 5                                   ]]
-  [[    "${_files[3]}"   == ".index"                            ]]
-  [[    "${_files[4]}"   == "Example Folder"                    ]]
-
-  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
-
-  [[    "${#_folder_files[@]}"  == 4                            ]]
-  [[    "${_folder_files[2]}"   == ".index"                     ]]
-  [[    "${_folder_files[3]}"   =~ example-folder-name          ]]
-  [[ -e "${NB_DIR}/home/Example Folder/${_folder_files[3]}"     ]]
+  [[ !  -e "${NB_DIR}/home/example-folder-name"                       ]]
+  [[    -d "${NB_DIR}/home/Example Folder/example-folder-name"        ]]
+  [[    -f "${NB_DIR}/home/Example Folder/.index"                     ]]
+  [[    -f "${NB_DIR}/home/Example Folder/example-folder-name/.index" ]]
 
   # Commits to git:
 
@@ -371,7 +349,7 @@ load test_helper
     "${_NB}" init
 
     [[ ! -e "${NB_DIR:-}/home/Example Folder"            ]]
-    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/folder"     ]]
   }
 
   run "${_NB}" add            \
@@ -386,23 +364,12 @@ load test_helper
 
   [[ "${status}" -eq 0 ]]
 
-  # Creates path, target file, and indexes:
+  # Creates path and indexes:
 
-  _files=($(LC_ALL=C ls -a "${NB_DIR}/home/"))
-
-  echo "${_files[@]}"
-
-  [[ -d "${NB_DIR}/home/Example Folder"                         ]]
-  [[    "${#_files[@]}"  == 5                                   ]]
-  [[    "${_files[3]}"   == ".index"                            ]]
-  [[    "${_files[4]}"   == "Example Folder"                    ]]
-
-  _folder_files=($(LC_ALL=C ls -a "${NB_DIR}/home/Example Folder"))
-
-  [[    "${#_folder_files[@]}"  == 4                            ]]
-  [[    "${_folder_files[2]}"   == ".index"                     ]]
-  [[    "${_folder_files[3]}"   =~ folder                       ]]
-  [[ -e "${NB_DIR}/home/Example Folder/${_folder_files[3]}"     ]]
+  [[ !  -e "${NB_DIR}/home/folder"                        ]]
+  [[    -d "${NB_DIR}/home/Example Folder/folder"         ]]
+  [[    -f "${NB_DIR}/home/Example Folder/.index"         ]]
+  [[    -f "${NB_DIR}/home/Example Folder/folder/.index"  ]]
 
   # Commits to git:
 
