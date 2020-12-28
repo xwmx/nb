@@ -1052,8 +1052,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --filename
@@ -1070,8 +1068,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --filename
@@ -1088,8 +1084,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --path
@@ -1101,13 +1095,11 @@ load test_helper
   [[ "${output}" == "${NB_DIR}/home/example.md" ]]
 }
 
-@test "'show <selector> --path' with <selector> only matching notebook name prints message." {
+@test "'show <selector> --path' with <selector> only matching notebook name without colon prints message." {
   {
     "${_NB}" init
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --path
@@ -1119,13 +1111,27 @@ load test_helper
   [[ "${output:-}" =~ Not\ found\:  ]]
 }
 
+@test "'show <selector> --path' with <selector> only matching notebook name with colon prints path." {
+  {
+    "${_NB}" init
+    "${_NB}" add "sample.md" --title "sample"
+    "${_NB}" notebooks add "example"
+  }
+
+  run "${_NB}" show example: --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                    ]]
+  [[ "${output}" == "${NB_DIR}/example" ]]
+}
+
 @test "'show <selector> --id' with <selector> matching notebook name and note prints id." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example.md --id
@@ -1142,8 +1148,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --id
@@ -1160,8 +1164,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --title
@@ -1178,8 +1180,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --title
@@ -1196,8 +1196,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "example.md" --title "example"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --selector-id
@@ -1214,8 +1212,6 @@ load test_helper
     "${_NB}" init
     "${_NB}" add "sample.md" --title "sample"
     "${_NB}" notebooks add "example"
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show example --selector-id

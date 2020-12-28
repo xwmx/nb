@@ -11619,6 +11619,12 @@ _show() {
   if [[ "${_selector:-}" =~ : ]]
   then
     _notebook_path="$(_notebooks show "${_selector}" --path)"
+
+    if ((_print_path)) && [[ "${_selector:-}" =~ :$ ]]
+    then
+      printf "%s\\n" "${_notebook_path}"
+      return 0
+    fi
   elif [[ "${_selector:-}" =~ ^${NB_DIR} ]]
   then
     local _selector_relative_path="${_selector#${NB_DIR}/}"
