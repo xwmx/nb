@@ -4454,10 +4454,7 @@ _count() {
     shift
   done
 
-  if [[ "${_selector:-}" =~ :$  ]]
-  then
-    _list_files_options+=("$(_notebooks show "${_selector}" --path)")
-  elif [[ -n "${_selector:-}"   ]]
+  if [[ -n "${_selector:-}" ]]
   then
     _list_files_options+=("$(_show "${_selector}" --path)")
   fi
