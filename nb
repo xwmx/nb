@@ -4429,7 +4429,38 @@ Description:
   Print the number of items in the current notebook.
 HEREDOC
 _count() {
-  local _list_files_options=(${@:-})
+  local _list_files_options=()
+  local _selector=
+
+  while ((${#}))
+  do
+    local __arg="${1:-}"
+    local __val="${2:-}"
+
+    case "${__arg}" in
+      --type)
+        _list_files_options+=("${__arg}")
+        _list_files_options+=(_option_get_value "${__arg}" "${__val:-}")
+        shift
+        ;;
+      -*)
+        _list_files_options+=("${__arg}")
+        ;;
+      *)
+        _selector="${__arg}"
+        ;;
+    esac
+
+    shift
+  done
+
+  if [[ "${_selector:-}" =~ :$  ]]
+  then
+    _list_files_options+=("$(_notebooks show "${_selector}" --path)")
+  elif [[ -n "${_selector:-}"   ]]
+  then
+    _list_files_options+=("$(_show "${_selector}" --path)")
+  fi
 
   _list_files "${_list_files_options[@]:-}" | wc -l | tr -d ' '
 }
