@@ -11842,8 +11842,8 @@ _show() {
     _target_path="${_decrypted_path}"
   fi
 
-  if _file_is_archive "${_target_path}" &&
-     [[ ! "${_target_path}" =~ docx$ ]]
+  if _file_is_archive "${_target_path}"   &&
+     [[ ! "${_target_path}" =~ docx$  ]]
   then
     _exit_1 printf "\
 Can't show archives. Export archive and expand to edit.\\n"
@@ -11851,39 +11851,39 @@ Can't show archives. Export archive and expand to edit.\\n"
 
   if ! _file_is_text "${_target_path}"
   then
-    if [[ -d "${_target_path}"      ]] &&
-       _command_exists "ranger"        &&
+    if [[ -d "${_target_path}"        ]]  &&
+       _command_exists "ranger"           &&
        {
-         [[ -z "${_tool}"           ]] ||
-         [[ "${_tool}" == "ranger"  ]]
+         [[ -z "${_tool}"             ]]  ||
+         [[ "${_tool}" == "ranger"    ]]
        }
     then
       ranger "${_target_path}"
-    elif [[ -d "${_target_path}" ]] &&
-         _command_exists "mc"       &&
+    elif [[ -d "${_target_path}"      ]]  &&
+         _command_exists "mc"             &&
          {
-           [[ -z "${_tool}"      ]] ||
-           [[ "${_tool}" == "mc" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "mc"      ]]
          }
     then
       mc "${_target_path}"
-    elif [[ -d "${_target_path}"    ]] &&
-         _command_exists "vifm"        &&
+    elif [[ -d "${_target_path}"      ]]  &&
+         _command_exists "vifm"           &&
          {
-           [[ -z "${_tool}"         ]] ||
-           [[ "${_tool}" == "vifm"  ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "vifm"    ]]
          }
     then
       vifm "${_target_path}"
-    elif [[ -d "${_target_path}"  ]] &&
-         _command_exists "exa"       &&
+    elif [[ -d "${_target_path}"      ]]  &&
+         _command_exists "exa"            &&
          {
-           [[ -z "${_tool}"       ]] ||
-           [[ "${_tool}" == "exa" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "exa"     ]]
          }
     then
       exa -lah --git "${_target_path}"
-    elif [[ -d "${_target_path}" ]]
+    elif [[ -d "${_target_path}"      ]]
     then
       # gnu || bsd
       ls -lah --color=always "${_target_path}" 2>/dev/null ||
@@ -11895,31 +11895,33 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[ -n "${TERM_PROGRAM:-}"            ]]  &&
          [[ "${TERM_PROGRAM}" == "iTerm.app"  ]]  &&
          {
-           [[ -z "${_tool}"          ]] ||
-           [[ "${_tool}" == "imgcat" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "imgcat"  ]]
          }
     then
       imgcat "${_target_path}" \
-        | if _command_exists "less" && ! ((_print_output))
+        | if _command_exists "less"   &&  ! ((_print_output))
           then
             less -r --prompt="$(_less_prompt)"
           else
             cat
           fi
-    elif _command_exists "magick"               &&
-         _file_is_image "${_target_path}"       &&
-         [[ ! "${_target_path}" =~ afphoto$  ]] &&
+    elif _command_exists "magick"                 &&
+         _file_is_image "${_target_path}"         &&
+         [[ ! "${_target_path}" =~ afphoto$   ]]  &&
          {
            # Detect sixel support. Via: https://git.io/JfCel
            IFS=";" read -ra __reply -s -t 1 -d "c" -p $'\e[c' >&2
-           [[ "${__reply[*]}" =~ 4 ]] || [[ "$TERM" == yaft* ]]
+
+           [[ "${__reply[*]}" =~ 4    ]]  ||
+           [[ "$TERM" == yaft*        ]]
          } && {
-           [[ -z "${_tool}"          ]] ||
-           [[ "${_tool}" == "magick" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "magick"  ]]
          }
     then
       magick "${_target_path}" sixel:- \
-        | if _command_exists "less" && ! ((_print_output))
+        | if _command_exists "less"   &&  ! ((_print_output))
           then
             less -r --prompt="$(_less_prompt)"
           else
@@ -11942,7 +11944,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "mplayer"        &&
          _file_is_audio "${_target_path}" &&
          {
-           [[ -z "${_tool}"           ]] ||
+           [[ -z "${_tool}"           ]]  ||
            [[ "${_tool}" == "mplayer" ]]
          }
     then
@@ -11951,8 +11953,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "afplay"         &&
          _file_is_audio "${_target_path}" &&
          {
-           [[ -z "${_tool}"          ]] ||
-           [[ "${_tool}" == "afplay" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "afplay"  ]]
          }
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
@@ -11961,8 +11963,8 @@ Can't show archives. Export archive and expand to edit.\\n"
          _file_is_audio "${_target_path}"           &&
          [[ "${_target_path}" =~ mp1$|mp2$|mp3$ ]]  &&
          {
-           [[ -z "${_tool}"          ]] ||
-           [[ "${_tool}" == "mpg123" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "mpg123"  ]]
          }
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
@@ -11970,8 +11972,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "ffplay"         &&
          _file_is_audio "${_target_path}" &&
          {
-           [[ -z "${_tool}"          ]] ||
-           [[ "${_tool}" == "ffplay" ]]
+           [[ -z "${_tool}"           ]]  ||
+           [[ "${_tool}" == "ffplay"  ]]
          }
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
@@ -11981,7 +11983,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[ -n "${KITTY_WINDOW_ID:-}" ]]
     then
       termpdf.py "${_target_path}"
-    elif _command_exists "pdftotext" && [[ "${_target_path}" =~ pdf$ ]]
+    elif _command_exists "pdftotext"  &&  [[ "${_target_path}" =~ pdf$ ]]
     then
       pdftotext "${_target_path}" - \
         | tr -d '\014'              \
