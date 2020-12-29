@@ -5683,7 +5683,7 @@ _helpers() {
       _get_http_status                "${_options[@]:-}"
       ;;
     *unique*basename*|*unique*relative*)
-      _get_unique_relative_path            "${_options[@]:-}"
+      _get_unique_relative_path       "${_options[@]:-}"
       ;;
     *unique*path*)
       _get_unique_path                "${_options[@]:-}"
@@ -6176,11 +6176,11 @@ _index() {
       _folder_path="${2:-}"
       ;;
     rebuild|reconcile)
-      if [[ "${3:-}" == "--ancestors" ]]
+      if [[ "${3:-}"    == "--ancestors" ]]
       then
         _ancestors=1
         _folder_path="${2:-}"
-      elif [[ "${2:-}" == "--ancestors" ]]
+      elif [[ "${2:-}"  == "--ancestors" ]]
       then
         _ancestors=1
         _folder_path="${3:-}"
@@ -6259,7 +6259,7 @@ _index() {
       }
 
       local _id_number="${2:-}"
-      if [[ -z "${_id_number}" ]]
+      if [[ -z "${_id_number}"  ]]
       then
         _exit_1 _help index
       fi
@@ -6267,13 +6267,13 @@ _index() {
       local _basename
       _basename="$(_index_get_basename "${_id_number}" "${_index_path}")"
 
-      if [[ -z "${_basename}" ]]
+      if [[ -z "${_basename}"   ]]
       then
         _index reconcile &&
           _basename="$(_index_get_basename "${_id_number}" "${_index_path}")"
       fi
 
-      if [[ -z "${_basename}" ]]
+      if [[ -z "${_basename}"   ]]
       then
         return 1
       else
@@ -8247,7 +8247,7 @@ _notebooks() {
 
     if [[ -n "${_repo_url}" ]]
     then
-      git clone "${_repo_url}" "${NB_DIR}/${_name}" &&
+      git clone "${_repo_url}" "${NB_DIR}/${_name}"   &&
         printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
       mkdir -p "${NB_DIR}/${_name}"
@@ -10508,51 +10508,51 @@ _settings() {
 
     case "${_id_or_name}" in
       1|*auto*|*AUTO*|*sync*|*SYNC*)
-        ((_get_id)) && printf "1" || printf "NB_AUTO_SYNC"
+        ((_get_id)) && printf "1"   || printf "NB_AUTO_SYNC"
         return 0
         ;;
       2|*primary*|*PRIMARY*)
-        ((_get_id)) && printf "2" || printf "NB_COLOR_PRIMARY"
+        ((_get_id)) && printf "2"   || printf "NB_COLOR_PRIMARY"
         return 0
         ;;
       3|*secondary*|*SECONDARY*)
-        ((_get_id)) && printf "3" || printf "NB_COLOR_SECONDARY"
+        ((_get_id)) && printf "3"   || printf "NB_COLOR_SECONDARY"
         return 0
         ;;
       4|*color*theme*|*COLOR*THEME*|*scheme*|theme*)
-        ((_get_id)) && printf "4" || printf "NB_COLOR_THEME"
+        ((_get_id)) && printf "4"   || printf "NB_COLOR_THEME"
         return 0
         ;;
       5|*ext*|*EXT*)
-        ((_get_id)) && printf "5" || printf "NB_DEFAULT_EXTENSION"
+        ((_get_id)) && printf "5"   || printf "NB_DEFAULT_EXTENSION"
         return 0
         ;;
       6|*editor*|*EDITOR*)
-        ((_get_id)) && printf "6" || printf "EDITOR"
+        ((_get_id)) && printf "6"   || printf "EDITOR"
         return 0
         ;;
       7|*encrypt*|*ENCRYPT*)
-        ((_get_id)) && printf "7" || printf "NB_ENCRYPTION_TOOL"
+        ((_get_id)) && printf "7"   || printf "NB_ENCRYPTION_TOOL"
         return 0
         ;;
       8|*footer*|*FOOTER*)
-        ((_get_id)) && printf "8" || printf "NB_FOOTER"
+        ((_get_id)) && printf "8"   || printf "NB_FOOTER"
         return 0
         ;;
       9|*header*|*HEADER*)
-        ((_get_id)) && printf "9" || printf "NB_HEADER"
+        ((_get_id)) && printf "9"   || printf "NB_HEADER"
         return 0
         ;;
       10|*limit*|*LIMIT*)
-        ((_get_id)) && printf "10" || printf "NB_LIMIT"
+        ((_get_id)) && printf "10"  || printf "NB_LIMIT"
         return 0
         ;;
       11|*dir*|*DIR*)
-        ((_get_id)) && printf "11" || printf "NB_DIR"
+        ((_get_id)) && printf "11"  || printf "NB_DIR"
         return 0
         ;;
       12|*syntax*|*SYNTAX*)
-        ((_get_id)) && printf "12" || printf "NB_SYNTAX_THEME"
+        ((_get_id)) && printf "12"  || printf "NB_SYNTAX_THEME"
         return 0
         ;;
       *)
