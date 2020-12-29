@@ -7117,8 +7117,8 @@ ${_TPUT_SGR0}"
       # end of line
       printf "\\n"
 
-      if ((_print_excerpt))                               &&
-         [[ "${_excerpt_length}" =~ ^[1-9] ]]             &&
+      if ((_print_excerpt))                   &&
+         [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
          _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
         local _visible_info_line_length=
@@ -8062,7 +8062,7 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving:   %s\\n"  "$(_show "${_source_relative_path}" --info-line)"
+    printf "Moving:   %s\\n" "$(_show "${_source_relative_path}" --info-line)"
     printf "To:       %s\\n" "$(_color_primary "${_target_info}")"
 
     while true
