@@ -10082,7 +10082,6 @@ _search() {
       {
         if [[ "${_max_depth}" == 1 ]]
         then
-          # TODO
           # Print .index with null byte delimeter so it's included in
           # the list of files to search.
           printf "%s/.index\0" "${__target_path}"
