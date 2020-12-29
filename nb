@@ -9473,7 +9473,7 @@ _plugins() {
 
   case "${_subcommand}" in
     install)
-      [[ ! -e "${NB_DIR}/.plugins" ]] && mkdir "${NB_DIR}/.plugins"
+      [[ ! -e "${NB_DIR}/.plugins"  ]] && mkdir "${NB_DIR}/.plugins"
 
       if [[ -n "${_path:-}" ]]
       then
