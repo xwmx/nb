@@ -102,6 +102,80 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
 }
 
+@test "'ls <notebook>:<folder>/ <pattern>...' (slash) exits with 0 and prints filtered list." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"    \
+      --title     "root one"  \
+      --content   "Content one."
+    "${_NB}" add  "two.md"    \
+      --title     "root two"  \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/one.md" \
+      --title     "nested one"            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/two.md" \
+      --title     "nested two"            \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md" \
+      --title     "deep one"                            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/Sample Folder/two.md" \
+      --title     "deep two"                            \
+      --content   "Content two."
+
+    "${_NB}" notebooks add "example-notebook"
+    "${_NB}" use "example-notebook"
+
+    [[ "$("${_NB}" notebooks current)" == "example-notebook"      ]]
+  }
+
+  run "${_NB}" ls home: one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 1                                     ]]
+
+  [[    "${lines[0]}"   =~  home:1.*root\ one                     ]]
+
+  run "${_NB}" ls home:Example\ Folder/ one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 1                                     ]]
+
+  [[    "${lines[0]}"   =~  home:Example\\\ Folder/1.*nested\ one ]]
+
+  run "${_NB}" ls home:Example\ Folder/ nested
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 2                                     ]]
+
+  [[    "${lines[0]}"   =~  home:Example\\\ Folder/2.*nested\ two ]]
+  [[    "${lines[1]}"   =~  home:Example\\\ Folder/1.*nested\ one ]]
+
+  run "${_NB}" list home:Example\ Folder/ one two
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 2                                     ]]
+
+  [[    "${lines[0]}"   =~  home:Example\\\ Folder/2.*nested\ two ]]
+  [[    "${lines[1]}"   =~  home:Example\\\ Folder/1.*nested\ one ]]
+}
+
 @test "'ls <folder> <pattern>...' (no slash) exits with 0 and treats folder as selector and filter pattern." {
   {
     "${_NB}" init
@@ -171,6 +245,82 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   [[    "${lines[2]}"   =~  1.*root\ one            ]]
   [[    "${lines[1]}"   =~  2.*root\ two            ]]
   [[    "${lines[0]}"   =~  3.*📂\ Example\ Folder  ]]
+}
+
+@test "'ls <notebook>:<folder> <pattern>...' (no slash) exits with 0 and treats folder as selector and filter pattern." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"    \
+      --title     "root one"  \
+      --content   "Content one."
+    "${_NB}" add  "two.md"    \
+      --title     "root two"  \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/one.md" \
+      --title     "nested one"            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/two.md" \
+      --title     "nested two"            \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md" \
+      --title     "deep one"                            \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/Sample Folder/two.md" \
+      --title     "deep two"                            \
+      --content   "Content two."
+
+    "${_NB}" notebooks add "example-notebook"
+    "${_NB}" use "example-notebook"
+
+    [[ "$("${_NB}" notebooks current)" == "example-notebook" ]]
+  }
+
+  run "${_NB}" list home: one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  -eq 1                           ]]
+
+  [[    "${lines[0]}"   =~  home:1.*root\ one           ]]
+  [[    "${output}"     =~  home:1.*root\ one           ]]
+
+  run "${_NB}" list home:Example\ Folder one
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  -eq 2                           ]]
+
+  [[    "${lines[0]}"   =~  home:3.*📂\ Example\ Folder ]]
+  [[    "${lines[1]}"   =~  home:1.*root\ one           ]]
+
+  run "${_NB}" list home:Example\ Folder nested
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  -eq 1                           ]]
+
+  [[    "${lines[0]}"   =~  home:3.*📂\ Example\ Folder ]]
+
+  run "${_NB}" list home:Example\ Folder one two
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  -eq 3                           ]]
+
+  [[    "${lines[2]}"   =~  home:1.*root\ one           ]]
+  [[    "${lines[1]}"   =~  home:2.*root\ two           ]]
+  [[    "${lines[0]}"   =~  home:3.*📂\ Example\ Folder ]]
 }
 
 # footer ######################################################################
