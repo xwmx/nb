@@ -10919,7 +10919,7 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
   _settings_list_items+=("$(_color_brackets '6')  editor")
   _settings_help_items+=("\
     $(_color_secondary " ------")
-     The command line text editor to use with \`${_ME}\`.
+     The command line text editor used by \`${_ME}\`.
 
      • Example Values:
 

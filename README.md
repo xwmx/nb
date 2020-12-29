@@ -2404,7 +2404,7 @@ name or number to [`nb set`](#settings):
 > nb set editor
 [6]  editor
      ------
-     The command line text editor to use with `nb`.
+     The command line text editor used by `nb`.
 
      • Example Values:
 
@@ -4261,7 +4261,7 @@ Alias: `set`
 ```text
 [6]  editor
      ------
-     The command line text editor to use with `nb`.
+     The command line text editor used by `nb`.
 
      • Example Values:
 
