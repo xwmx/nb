@@ -11494,6 +11494,7 @@ _show() {
     printf "%s\\n" "${_relative_path:-}"
   }
 
+  local _check_type=0
   local _ls_arguments=()
   local _print_output=0
   local _password=
@@ -11513,7 +11514,6 @@ _show() {
   local _print_title=0
   local _tool=
   local _type=
-  local _type_check=0
 
   while ((${#}))
   do
@@ -11575,7 +11575,7 @@ _show() {
         shift
         ;;
       --type)
-        _type_check=1
+        _check_type=1
         _skip_notebook_fallback=1
 
         if _option_value_is_present "${__val:-}"
@@ -11717,7 +11717,7 @@ _show() {
     return 0
   fi
 
-  if ((_type_check))
+  if ((_check_type))
   then
     if [[ -z "${_type}" ]]
     then
