@@ -863,7 +863,7 @@ _NB_TEMP_DIRECTORY="$(mktemp -d)"
 # Description:
 #   Manage temp and cache files and directories.
 _temp() {
-  # _temp_validate_directory <path>
+  # Usage: _temp_validate_directory <path>
   _temp_validate_directory() {
     [[ -n "${1:?}"          ]] &&
     [[ -d "${1}"            ]] &&
