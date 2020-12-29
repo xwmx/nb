@@ -17,7 +17,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates a new note file with $EDITOR:
 
@@ -53,7 +53,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with $EDITOR:
 
@@ -91,7 +91,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" notebooks add example
-
   }
 
   run "${_NB}" example:add
@@ -149,7 +148,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 
   # Creates new note file with content:
 
@@ -193,15 +192,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0                          ]]
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
 
   # Creates new note file with content:
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" == 1                     ]]
-  [[ "${_files[0]}" == "example-filename.org" ]]
+  [[ "${#_files[@]}"  == 1                      ]]
+  [[ "${_files[0]}"   == "example-filename.org" ]]
 
   grep -q 'Example content.' "${NB_DIR}/home"/*
 
@@ -242,7 +242,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -289,7 +289,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -335,7 +335,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -384,7 +384,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -430,7 +430,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -478,7 +478,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -526,7 +526,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file with content:
 
@@ -574,7 +574,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -600,7 +600,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -629,7 +629,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1        ]]
+  [[ "${status}" -eq 1      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -648,7 +648,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -679,7 +679,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -710,7 +710,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0     ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -743,7 +743,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1        ]]
+  [[ "${status}" -eq 1      ]]
 
   cd "${NB_DIR}/home" || return 1
 
@@ -767,7 +767,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -803,7 +803,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1        ]]
+  [[ "${status}" -eq 1      ]]
 
   cd "${NB_DIR}/home" || return 1
 
@@ -823,7 +823,7 @@ load test_helper
 
   run "${_NB}" add  "* Content" --type org
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -841,7 +841,7 @@ load test_helper
 
   run "${_NB}" add  "* Content" --type
 
-  [[ ${status} -eq 1        ]]
+  [[ "${status}" -eq 1      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -862,9 +862,9 @@ load test_helper
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ ${status} -eq 0                                                            ]]
-  [[ "${#_files[@]}" -eq 1                                                      ]]
-  [[ "${_files[0]}" =~ enc$                                                     ]]
+  [[ "${status}"      -eq 0                                                     ]]
+  [[ "${#_files[@]}"  -eq 1                                                     ]]
+  [[ "${_files[0]}"   =~  enc$                                                  ]]
   [[ "$(file "${NB_DIR}/home/${_files[0]}" | cut -d: -f2)" =~ encrypted|openssl ]]
 }
 
@@ -880,10 +880,10 @@ load test_helper
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ ${status} -eq 1                              ]]
-  [[ "${#_files[@]}" -eq 0                        ]]
-  [[ "${output}" =~ Encryption\ tool\ not\ found: ]]
-  [[ "${output}" =~ not-valid                     ]]
+  [[ "${status}"      -eq 1                             ]]
+  [[ "${#_files[@]}"  -eq 0                             ]]
+  [[ "${output}"      =~  Encryption\ tool\ not\ found: ]]
+  [[ "${output}"      =~  not-valid                     ]]
 }
 
 # --password option ###########################################################
@@ -895,7 +895,7 @@ load test_helper
 
   run "${_NB}" add  "* Content" --encrypt --password
 
-  [[ ${status} -eq 1        ]]
+  [[ "${status}"    -eq 1   ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -916,7 +916,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates new note file:
 
@@ -957,7 +957,7 @@ load test_helper
 
   run bash -c "echo '# Piped' | \"${_NB}\" add --type org"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -996,7 +996,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates a new note file with $EDITOR:
 
@@ -1030,7 +1030,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates a new note file with $EDITOR:
 
@@ -1064,7 +1064,7 @@ load test_helper
 
   # Returns status 0:
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}" -eq 0      ]]
 
   # Creates a new note file with $EDITOR:
 
@@ -1090,7 +1090,7 @@ load test_helper
 @test "'help add' exits with status 0." {
   run "${_NB}" help add
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "'help add' returns usage information." {
