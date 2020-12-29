@@ -6745,7 +6745,7 @@ _list() {
       --filename*)
         _list_filenames=1
         ;;
-      --error*on*empty|--hard*empty)
+      --*empty)
         _error_on_empty=1
         ;;
       --no*color)
