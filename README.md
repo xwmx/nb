@@ -2995,7 +2995,7 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb completions (check | install [-d | --download] | uninstall)
-  nb count
+  nb count [<notebook>:][<relative-path>]
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
   nb edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
@@ -3079,7 +3079,7 @@ Subcommands:
   add          Add a note, folder, or a file of a specified type.
   bookmark     Add, open, list, and search bookmarks.
   completions  Install and uninstall completion scripts.
-  count        Print the number of notes.
+  count        Print the number of items in a notebook or folder.
   delete       Delete a note.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
@@ -3426,10 +3426,11 @@ Description:
 
 ```text
 Usage:
-  nb count
+  nb count [<notebook>:][<relative-path>]
 
 Description:
-  Print the number of items in the current notebook.
+  Print the number of items in the first level of the current notebook,
+  <notebook>, or the folder at <relative-path>.
 ```
 
 #### `delete`
