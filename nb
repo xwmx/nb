@@ -5507,24 +5507,24 @@ HEREDOC
           then
             _conflicted_text_files+=("${__file}")
 
-            git -C "${_notebook_path}" add            \
+            git -C "${_notebook_path}" add                \
               "${__file}"
           else
-            git -C "${_notebook_path}" checkout       \
+            git -C "${_notebook_path}" checkout           \
               "origin/${_git_branch}" -- "${__file}"
 
             local _conflicted_file=
             _conflicted_file="$(
-              _notebooks show "${_notebook_path}"     \
+              _notebooks show "${_notebook_path}"         \
                 --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
             )"
 
             _conflicted_binary_files+=("${_conflicted_file}")
 
-            git -C "${_notebook_path}" mv       \
+            git -C "${_notebook_path}" mv                 \
               "${__file}" "${_conflicted_file}"
 
-            git -C "${_notebook_path}" checkout \
+            git -C "${_notebook_path}" checkout           \
               "${_git_branch}" -- "${__file}"
 
             git -C "${_notebook_path}" add "${_conflicted_file}"
