@@ -6448,7 +6448,7 @@ _index() {
           if [[ -n "${__item}" ]]
           then
             _contains "${__item}" "${_file_list[@]:-}" ||
-              _index delete "${__item}" "${PWD:?}"
+              _index delete "${__item}" "${_current_folder_path:?}"
           fi
         done
 
