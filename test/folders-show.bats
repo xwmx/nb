@@ -45,8 +45,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}/home/Example Folder/Sample Folder/"
 
-  [[ ${status}    -eq 0                                                   ]]
-  [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
+  [[ "${status}"  -eq 0                                                   ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder/example.bookmark.md ]]
 }
 
 @test "'show folder/folder/<filename> --relative-path' displays relative path." {
@@ -68,8 +68,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}/home/Example Folder/Sample Folder/"
 
-  [[ ${status}    -eq 0                                                   ]]
-  [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
+  [[ "${status}"  -eq 0                                                   ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder/example.bookmark.md ]]
 }
 
 @test "'show folder/folder/<id> --relative-path' displays relative path." {
@@ -96,8 +96,8 @@ load test_helper
     "${_example_selector##*\/}" \
     "${NB_DIR}/home/${_example_selector%\/*}"
 
-  [[ ${status}    -eq 0                                                   ]]
-  [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
+  [[ "${status}"  -eq 0                                                   ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder/example.bookmark.md ]]
 }
 
 @test "'show notebook:folder/folder/<id> --relative-path' displays relative path." {
@@ -120,8 +120,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0                                                   ]]
-  [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
+  [[ "${status}"  -eq 0                                                   ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder/example.bookmark.md ]]
 }
 
 @test "'show notebook: --relative-path' prints empty string." {
@@ -169,7 +169,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}/home/Example Folder/Sample Folder/"
 
-  [[   ${status}      -eq 0                                                       ]]
+  [[   "${status}"    -eq 0                                                       ]]
   [[   "${output}"    =~  1                                                       ]]
   [[   "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/example.bookmark.md  ]]
   [[   "${output}"    =~  Example\ Title                                          ]]
@@ -202,7 +202,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}/home/Example Folder/Sample Folder/"
 
-  [[ ${status}      -eq 0                                                       ]]
+  [[ "${status}"    -eq 0                                                       ]]
   [[ "${output}"    =~  1                                                       ]]
   [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/example.bookmark.md  ]]
   [[ "${output}"    =~  Example\ Title                                          ]]
@@ -230,8 +230,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0                                         ]]
-  [[ "${output}"  =~ Example\ Folder/Sample\ Folder/example.md  ]]
+  [[ "${status}"  -eq 0                                         ]]
+  [[ "${output}"  =~  Example\ Folder/Sample\ Folder/example.md ]]
 }
 
 @test "'show demo:folder/folder/<filename> --selector-id' displays selector id." {
@@ -252,6 +252,6 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}    -eq 0                                         ]]
-  [[ "${output}"  =~ Example\ Folder/Sample\ Folder/example.md  ]]
+  [[ "${status}"  -eq 0                                         ]]
+  [[ "${output}"  =~  Example\ Folder/Sample\ Folder/example.md ]]
 }
