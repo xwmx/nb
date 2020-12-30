@@ -4,7 +4,7 @@ load test_helper
 
 # index #######################################################################
 
-@test "'list <folder>/<folder>/' reconciles ancestors." {
+@test "'list <folder>/<folder>/' reconciles ancestor indexes." {
   {
     "${_NB}" init
 
@@ -20,22 +20,22 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   -eq 0                                     ]]
-  [[    "${lines[0]}" =~  0\ items\.                            ]]
+  [[    "${status}"   -eq 0                                       ]]
+  [[    "${lines[0]}" =~  0\ items\.                              ]]
 
-  [[    -e "${NB_DIR}/home/Example Folder/.index"               ]]
-  [[    -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
+  [[    -e "${NB_DIR}/home/Example Folder/.index"                 ]]
+  [[    -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"   ]]
 
-  diff                                                          \
-    <(cat "${NB_DIR}/home/Example Folder/.index")               \
-    <(printf "%s\\n" "Sample Folder")
+  diff                                                            \
+    <(cat "${NB_DIR}/home/Example Folder/.index")                 \
+    <(printf "Sample Folder\\n")
 
-  diff                                                          \
-    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index") \
+  diff                                                            \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")   \
     <(printf "")
 }
 
-@test "'list <folder>/<folder>/<filename>' reconciles ancestors." {
+@test "'list <folder>/<folder>/<filename>' reconciles ancestor indexes." {
   {
     "${_NB}" init
 
@@ -62,7 +62,7 @@ load test_helper
 
   diff                                                                \
     <(cat "${NB_DIR}/home/Example Folder/.index")                     \
-    <(printf "%s\\n" "Sample Folder")
+    <(printf "Sample Folder\\n")
 
   diff                                                                \
     <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")       \
