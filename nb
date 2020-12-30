@@ -6365,13 +6365,13 @@ _index() {
         _rebuild_type="Initialize"
       fi
 
-      cd "${_folder_path:?}"
+      local _current_folder_path="${_folder_path:?}"
 
-      while [[ "${PWD:?}" =~ ${_top_path:?} ]]
+      while [[ "${_current_folder_path:?}" =~ ${_top_path:?} ]]
       do
-        ls -t -r "${PWD:?}" > "${PWD:?}/.index"
+        ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
 
-        cd ..
+        _current_folder_path="${_current_folder_path%/*}"
       done  &&
         _git checkpoint "${_notebook_path}" "[nb] ${_rebuild_type:-Rebuild} Index"
 
@@ -6407,22 +6407,22 @@ _index() {
         _top_path="${_notebook_path:?}"
       fi
 
-      cd "${_folder_path:?}"
+      local _current_folder_path="${_folder_path:?}"
 
-      while [[ "${PWD:?}" =~ ^${_top_path} ]]
+      while [[ "${_current_folder_path:?}" =~ ^${_top_path} ]]
       do
-        if [[ ! -e "${PWD:?}/.index" ]]
+        if [[ ! -e "${_current_folder_path:?}/.index" ]]
         then
-          ls -t -r "${PWD:?}" > "${PWD:?}/.index"
+          ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
         fi
 
         local -a _index_list=()
-        _index_list=($(<"${PWD:?}/.index"))
+        _index_list=($(<"${_current_folder_path:?}/.index"))
 
         local -a _file_list=()
-        _file_list=($(ls "${PWD:?}"))
+        _file_list=($(ls "${_current_folder_path:?}"))
 
-        _index_reconcile_remove_duplicates "${PWD:?}/.index"
+        _index_reconcile_remove_duplicates "${_current_folder_path:?}/.index"
 
         local -a _index_file_list_diff=()
         _index_file_list_diff=($(
@@ -6467,11 +6467,11 @@ _index() {
           if [[ -n "${__item}" ]]
           then
             _contains "${__item}" "${_index_list[@]:-}" ||
-              _index add "${__item}" "${PWD:?}"
+              _index add "${__item}" "${_current_folder_path:?}"
           fi
         done
 
-        cd ..
+        _current_folder_path="${_current_folder_path%/*}"
       done
       ;;
     show)
