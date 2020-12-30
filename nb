@@ -6709,7 +6709,9 @@ _list() {
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
+  local _maybe_folder_selector_padded_left=
   local _maybe_folder_selector_padded_right=
+  local _maybe_id_path=
   local _maybe_scope=
   local _no_id=0
   local _notebook_path
@@ -6856,13 +6858,12 @@ _list() {
   )"
 
   local _list_path="${_notebook_path}"
-  local _maybe_id_path=
-  local _maybe_id_path_padded_left=
 
   if [[ -n "${_folder_path:-}" ]]
   then
     _maybe_id_path="${_folder_path// /\\ }/"
-    _maybe_id_path_padded_left=" ${_maybe_id_path}"
+
+    _maybe_folder_selector_padded_left=" ${_maybe_id_path}"
     _maybe_folder_selector_padded_right="${_maybe_id_path} "
 
     _list_path="${_notebook_path}/${_folder_path}"
@@ -6882,6 +6883,8 @@ _list() {
   if _notebooks current --selected
   then
     _maybe_scope="$(_notebooks show "${_notebook_path}" --escaped --no-color):"
+
+    _maybe_folder_selector_padded_left=" ${_maybe_scope}${_maybe_id_path}"
     _maybe_folder_selector_padded_right="${_maybe_scope}${_maybe_id_path} "
   fi
 
@@ -7206,7 +7209,7 @@ HEREDOC
 0 ${_type} files.
 
 Import a file:
-  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)${_maybe_id_path_padded_left}")
+  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_folder_selector_padded_left}")
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
@@ -7215,11 +7218,11 @@ HEREDOC
 0 items.
 
 Add a note:
-  $(_color_primary "${_ME} ${_maybe_scope}add${_maybe_id_path_padded_left}")
+  $(_color_primary "${_ME} add${_maybe_folder_selector_padded_left}")
 Add a bookmark:
   $(_color_primary "${_ME} ${_maybe_folder_selector_padded_right}<url>")
 Import a file:
-  $(_color_primary "${_ME} ${_maybe_scope}import (<path> | <url>)${_maybe_id_path_padded_left}")
+  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_folder_selector_padded_left}")
 Help information:
   $(_color_primary "${_ME} help")
 HEREDOC

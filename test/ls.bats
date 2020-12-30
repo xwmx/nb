@@ -104,11 +104,11 @@ HEREDOC
   _expected="0 items.
 
 Add a note:
-  $(_color_primary 'nb one:add')
+  $(_color_primary 'nb add one:')
 Add a bookmark:
   $(_color_primary 'nb one: <url>')
 Import a file:
-  $(_color_primary 'nb one:import (<path> | <url>)')
+  $(_color_primary 'nb import (<path> | <url>) one:')
 Help information:
   $(_color_primary 'nb help')"
 
@@ -131,11 +131,11 @@ Help information:
   _expected="0 items.
 
 Add a note:
-  $(_color_primary 'nb multi\ word:add')
+  $(_color_primary 'nb add multi\ word:')
 Add a bookmark:
   $(_color_primary 'nb multi\ word: <url>')
 Import a file:
-  $(_color_primary 'nb multi\ word:import (<path> | <url>)')
+  $(_color_primary 'nb import (<path> | <url>) multi\ word:')
 Help information:
   $(_color_primary 'nb help')"
 
@@ -179,7 +179,7 @@ Help information:
   _expected="0 document files.
 
 Import a file:
-  $(_color_primary 'nb one:import (<path> | <url>)')
+  $(_color_primary 'nb import (<path> | <url>) one:')
 Help information:
   $(_color_primary 'nb help import')"
 
