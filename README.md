@@ -82,6 +82,7 @@ user-centric text interface.
 The entire program is a single [well-tested](#tests)
 shell script that can be
 installed, copied, or `curl`ed almost anywhere and just work, using
+a strategy similar to
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments. `nb` works great
 whether you have one notebook with just a few notes or dozens of
