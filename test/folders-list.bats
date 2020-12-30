@@ -2,6 +2,73 @@
 
 load test_helper
 
+# index #######################################################################
+
+@test "'list <folder>/<folder>/' reconciles ancestors." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${NB_DIR}/home/Example Folder/Sample Folder"
+
+    [[    -d "${NB_DIR}/home/Example Folder/Sample Folder"        ]]
+    [[ !  -e "${NB_DIR}/home/Example Folder/.index"               ]]
+    [[ !  -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
+  }
+
+  run "${_NB}" list Example\ Folder/Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                     ]]
+  [[    "${lines[0]}" =~  0\ items\.                            ]]
+
+  [[    -e "${NB_DIR}/home/Example Folder/.index"               ]]
+  [[    -e "${NB_DIR}/home/Example Folder/Sample Folder/.index" ]]
+
+  diff                                                          \
+    <(cat "${NB_DIR}/home/Example Folder/.index")               \
+    <(printf "%s\\n" "Sample Folder")
+
+  diff                                                          \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index") \
+    <(printf "")
+}
+
+@test "'list <folder>/<folder>/<filename>' reconciles ancestors." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${NB_DIR}/home/Example Folder/Sample Folder"
+    touch "${NB_DIR}/home/Example Folder/Sample Folder/example.md"
+
+    [[    -d "${NB_DIR}/home/Example Folder/Sample Folder"            ]]
+    [[ !  -e "${NB_DIR}/home/Example Folder/.index"                   ]]
+    [[ !  -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"     ]]
+    [[    -e "${NB_DIR}/home/Example Folder/Sample Folder/example.md" ]]
+  }
+
+  run "${_NB}" list Example\ Folder/Sample\ Folder/example.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                           ]]
+  [[    "${lines[0]}" =~  example.md                                  ]]
+
+  [[    -e "${NB_DIR}/home/Example Folder/.index"                     ]]
+  [[    -e "${NB_DIR}/home/Example Folder/Sample Folder/.index"       ]]
+  [[    -e "${NB_DIR}/home/Example Folder/Sample Folder/example.md"   ]]
+
+  diff                                                                \
+    <(cat "${NB_DIR}/home/Example Folder/.index")                     \
+    <(printf "%s\\n" "Sample Folder")
+
+  diff                                                                \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")       \
+    <(printf "example.md\\n")
+}
+
 # excerpt #####################################################################
 
 @test "'list <folder>/<folder>/<id> -e' includes excerpt line." {
