@@ -6868,10 +6868,7 @@ _list() {
 
     _list_path="${_notebook_path}/${_folder_path}"
 
-    if [[ -d "${_list_path}" ]]
-    then
-      _index reconcile "${_list_path}" --ancestors
-    elif [[ ! -e "${_list_path}" ]]
+    if [[ ! -e "${_list_path}" ]]
     then
       _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_folder_path:-}")"
     fi
