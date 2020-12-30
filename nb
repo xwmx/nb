@@ -11672,7 +11672,10 @@ _show() {
     fi
   fi
 
-  if [[ -z "${_relative_path:-}" ]] || [[ ! -e "${_target_path}" ]]
+  if [[ ! "${_selector}" =~ :$      ]] && {
+       [[ -z "${_relative_path:-}"  ]] ||
+       [[ ! -e "${_target_path}"    ]]
+     }
   then
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1

@@ -124,6 +124,30 @@ load test_helper
   [[ "${output}"  =~ ^Example\ Folder/Sample\ Folder/example.bookmark.md  ]]
 }
 
+@test "'show notebook: --relative-path' prints empty string." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "one"
+
+    "${_NB}" one:add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/one/Example Folder"                                    ]]
+    [[ -d "${NB_DIR}/one/Example Folder/Sample Folder"                      ]]
+    [[ -f "${NB_DIR}/one/Example Folder/Sample Folder/example.bookmark.md"  ]]
+  }
+
+  run "${_NB}" show "one:" --relative-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
+}
+
 # show <path-with-folder> --info-line #########################################
 
 @test "'show folder/folder/<filename> --info-line' displays info line." {
