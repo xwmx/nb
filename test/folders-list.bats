@@ -634,6 +634,33 @@ load test_helper
   [[   "${lines[6]}"  =~  Example\\\ Folder/Sample\\\ Folder            ]]
 }
 
+@test "'list <notebook>:<id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" list home:1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[0]}"  =~  0\ items\.                        ]]
+  [[   "${lines[2]}"  =~  add                               ]]
+  [[   "${lines[2]}"  =~  Example\\\ Folder/                ]]
+  [[   "${lines[3]}"  =~  bookmark                          ]]
+  [[   "${lines[4]}"  =~  home:Example\\\ Folder/\ \<url\>  ]]
+  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
+  [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
+}
+
 # list notebook:<id> ##########################################################
 
 @test "'list notebook:<id>/<folder>' exits with 0 and prints the folder/folder list item." {
