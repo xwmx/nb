@@ -4,6 +4,51 @@ load test_helper
 
 # error handling ##############################################################
 
+@test "'delete <id>' with filename matching notebook name deletes properly." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add --filename "one:" --content "Example content one."
+    "${_NB}" add --filename "two:" --content "Example content two."
+
+    "${_NB}" notebooks add "one"
+
+    [[    -d "${NB_DIR}/one"       ]]
+    [[    -f "${NB_DIR}/home/one:" ]]
+    [[    -f "${NB_DIR}/home/two:" ]]
+  }
+
+  run "${_NB}" delete 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Deletes file:
+
+  [[    -d "${NB_DIR}/one"       ]]
+  [[ !  -f "${NB_DIR}/home/one:" ]]
+  [[    -f "${NB_DIR}/home/two:" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete: one:'
+
+  # Prints output:
+
+  [[ "${output}"    =~  Deleted:.*one:  ]]
+  [[ "${#lines[@]}" -eq 1               ]]
+}
+
 @test "'delete folder/<filename>' with invalid filename returns with error and message." {
   {
     "${_NB}" init
@@ -45,6 +90,7 @@ load test_helper
 
   [[ "${output}" =~ Not\ found:               ]]
   [[ "${output}" =~ Example\ Folder/not-valid ]]
+  [[ "${#lines[@]}" -eq 1                     ]]
 }
 
 # <filename> ##################################################################

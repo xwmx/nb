@@ -4534,7 +4534,7 @@ _delete() {
   fi
 
   local _info
-  _info="$(_show "${_relative_path}" --info-line)"
+  _info="$(_show "${_selector}" --info-line)"
 
   if ! ((_force))
   then
@@ -11538,6 +11538,7 @@ _show() {
         ;;
       --indicators)
         _print_indicators=1
+        _skip_notebook_fallback=1
         ;;
       --info*line)
         _print_info=1
@@ -11613,7 +11614,7 @@ _show() {
 
   local _notebook_path=
 
-  if [[ "${_selector:-}" =~ : ]]
+  if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ /.*: ]]
   then
     _notebook_path="$(_notebooks show "${_selector}" --path)"
 
@@ -11761,7 +11762,6 @@ _show() {
       _notebook_escaped_name="$(
         _notebooks show "${_notebook_path}" --escaped --no-color
       )"
-
       _maybe_scoped_id="${_notebook_escaped_name}:${_maybe_scoped_id}"
       _maybe_scoped_relative_path="${_notebook_escaped_name}:${_maybe_scoped_relative_path}"
     fi
