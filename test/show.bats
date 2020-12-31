@@ -673,8 +673,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
   run "${_NB}" show 1 --type md
