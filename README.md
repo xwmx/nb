@@ -870,6 +870,10 @@ append the content without opening the editor:
 nb edit 1 --content "Content to append."
 ```
 
+Use the `--overwrite` option to overwrite existing file content and
+the `--prepend` option to prepend the new content before existing
+content.
+
 When content is piped or specified with `--content`, use the `--edit`
 flag to open the file in the editor before the change is committed.
 
@@ -3475,9 +3479,10 @@ Options:
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the \`\$EDITOR\` environment variable.
-  --overwrite              Overwrite existing file content with <content> and
-                           piped input.
-  --prepend                Prepend <content> and piped input.
+  --overwrite              Overwrite existing content with <content> and
+                           stanard input.
+  --prepend                Prepend <content> and standard input before
+                           existing content.
 
 Description:
   Open the specified note in `$EDITOR` or <editor> if specified. Content

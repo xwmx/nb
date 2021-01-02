@@ -4605,9 +4605,10 @@ Options:
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the \`\$EDITOR\` environment variable.
-  --overwrite              Overwrite existing file content with <content> and
-                           piped input.
-  --prepend                Prepend <content> and piped input.
+  --overwrite              Overwrite existing content with <content> and
+                           stanard input.
+  --prepend                Prepend <content> and standard input before
+                           existing content.
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
