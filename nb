@@ -11621,7 +11621,12 @@ _show() {
 
   if ((_print_selector_id))
   then
-    printf "%s\\n" "${_selector#*:}" # strip notebook name
+    if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ /.*: ]]
+    then
+      printf "%s\\n" "${_selector#*:}" # strip notebook name
+    else
+      printf "%s\\n" "${_selector:-}"
+    fi
     return 0
   fi
 

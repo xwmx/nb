@@ -36,6 +36,29 @@ load test_helper
   [[    "${output}" =~  99          ]]
 }
 
+# edge cases ##################################################################
+
+@test "'show <id> --info-line' exits with status 0 and prints note info when filename contains colon and spaces." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --content   "Example content."    \
+      --filename  "http: not a url.md"  \
+      --title     "Example Title"
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                           ]]
+  [[    "${output}" =~  1                           ]]
+  [[    "${output}" =~  http:\\\ not\\\ a\\\ url.md ]]
+  [[    "${output}" =~  Example\ Title              ]]
+  [[ !  "${output}" =~  home                        ]]
+}
+
 # folders #####################################################################
 
 @test "'show <relative-path> --info-line' exits with status 0 and prints nested file info." {
