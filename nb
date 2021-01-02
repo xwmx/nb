@@ -10479,14 +10479,16 @@ _settings() {
         printf "\\n"
       fi
     else
-      for ((_i=0; _i < 256; _i++))
+      local i
+
+      for ((i=0; i < 256; i++))
       do
-        if ((_i)) && ! ((_i % 16))
+        if ((i)) && ! ((i % 16))
         then
           printf "\\n"
         fi
 
-        _settings_colors_print "${_i}"
+        _settings_colors_print "${i}"
       done
 
       printf "\\n"
@@ -12524,11 +12526,13 @@ _normalize_options() {
     case "${1}" in
       # if option is of type -ab
       -[!-]?*)
+        local i
+
         # loop over each character starting with the second
-        for ((_i=1; _i < ${#1}; _i++))
+        for ((i=1; i < ${#1}; i++))
         do
           # extract 1 character from position 'i'
-          _character="${1:_i:1}"
+          _character="${1:i:1}"
           # add current char to options
           _options+=("-${_character}")
         done
