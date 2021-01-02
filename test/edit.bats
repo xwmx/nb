@@ -52,6 +52,99 @@ load test_helper
   [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }
 
+# --overwite & --prepend  #####################################################
+
+@test "'edit --prepends' prepends content to file." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  run "${_NB}" edit 1 --prepend --content "Example new content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  diff \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example new content.
+Example initial content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                ]]
+  [[ "${output}" =~ [0-9]+                  ]]
+  [[ "${output}" =~ Example\\\ Filename.md  ]]
+}
+
+@test "'edit --overwrite' overwrites existing file content." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  run "${_NB}" edit 1 --overwrite --content "Example new content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  diff \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example new content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                ]]
+  [[ "${output}" =~ [0-9]+                  ]]
+  [[ "${output}" =~ Example\\\ Filename.md  ]]
+}
+
 # <selector> ##################################################################
 
 @test "'edit <selector>' with empty repo exits with 1 and prints message." {

@@ -4597,14 +4597,17 @@ describe "edit" <<HEREDOC
 Usage:
   ${_ME} edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
 Options:
-  -c, --content <content>  The content for the new note.
+  -c, --content <content>  Content to add to the item.
   --edit                   Open the note in the editor before saving when
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the \`\$EDITOR\` environment variable.
+  --overwrite              Overwrite existing file content with <content> and
+                           piped input.
+  --prepend                Prepend <content> and piped input.
 
 Description:
   Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
@@ -4635,7 +4638,9 @@ _edit() {
   local _content=
   local _edit_before_commit=0
   local _local_editor=
+  local _overwrite=0
   local _password=
+  local _prepend=0
 
   while ((${#}))
   do
@@ -4654,9 +4659,15 @@ _edit() {
         _local_editor="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      --overwrite)
+        _overwrite=1
+        ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
+        ;;
+      --prepend)
+        _prepend=1
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
@@ -4715,14 +4726,34 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if [[ -n "${_content}" ]]
+    if [[ -n "${_content:-}" ]] ||
+       ! _interactive_input
     then
-      printf "%s\\n" "${_content}" >> "${_target_file}"
-    fi
+      {
+        if [[ -n "${_content}" ]]
+        then
+          printf "%s\\n" "${_content}"
+        fi
 
-    if ! _interactive_input
-    then # piped input
-      cat >> "${_target_file}"
+        if ! _interactive_input
+        then # piped input
+          cat
+        fi
+      } | {
+        if ((_overwrite))
+        then
+          cat > "${_target_file}"
+        elif ((_prepend))
+        then
+          local _prepend_temp="$(mktemp)"
+
+          cat > "${_prepend_temp}"
+          cat "${_target_file}" >> "${_prepend_temp}"
+          cat "${_prepend_temp}" > "${_target_file}"
+        else
+          cat >> "${_target_file}"
+        fi
+      }
     fi
 
     if ((_edit_before_commit)) || {

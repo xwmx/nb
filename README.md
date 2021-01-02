@@ -3466,16 +3466,18 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
-  nb edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
 Options:
-  -c, --content <content>  The content for the new note.
+  -c, --content <content>  Content to add to the item.
   --edit                   Open the note in the editor before saving when
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
-                           specified in the `$EDITOR` environment variable.
+                           specified in the \`\$EDITOR\` environment variable.
+  --overwrite              Overwrite existing file content with <content> and
+                           piped input.
+  --prepend                Prepend <content> and piped input.
 
 Description:
   Open the specified note in `$EDITOR` or <editor> if specified. Content
