@@ -225,10 +225,6 @@ load test_helper
   [[ "${output}" =~ Example\\\ Folder/example-filename.md ]]
 }
 
-# TODO: Review. Options:
-# - Accept <name-1> and ignore <name-2>
-# - Ignore <name-1> and accept <name-2> (current)
-# - Return error when more than one name is specified
 @test "'add <name-1> <name-2> --type folder' (no slash) creates new folder with <name-1>." {
   {
     "${_NB}" init
