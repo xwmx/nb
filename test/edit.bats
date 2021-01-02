@@ -54,7 +54,7 @@ load test_helper
 
 # --overwite & --prepend  #####################################################
 
-@test "'edit --prepends' prepends content to file." {
+@test "'edit --prepend --content <content>' prepends <content> to file." {
   {
     "${_NB}" init
     "${_NB}" add                        \
@@ -100,7 +100,53 @@ HEREDOC
   [[ "${output}" =~ Example\\\ Filename.md  ]]
 }
 
-@test "'edit --overwrite' overwrites existing file content." {
+@test "'edit --prepend' prepends standard input to file." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  run bash -c "echo '## Piped Content' | ${_NB} edit 1 --prepend"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  diff \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+## Piped Content
+Example initial content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                ]]
+  [[ "${output}" =~ [0-9]+                  ]]
+  [[ "${output}" =~ Example\\\ Filename.md  ]]
+}
+
+@test "'edit --overwrite --content <content>' overwrites existing file content with content." {
   {
     "${_NB}" init
     "${_NB}" add                        \
@@ -123,6 +169,51 @@ HEREDOC
     <(cat "${NB_DIR}/home/Example Filename.md") \
     <(cat <<HEREDOC
 Example new content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                ]]
+  [[ "${output}" =~ [0-9]+                  ]]
+  [[ "${output}" =~ Example\\\ Filename.md  ]]
+}
+
+@test "'edit --overwrite' overwrited existing content with standard input." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  run bash -c "echo '## Piped Content' | ${_NB} edit 1 --overwrite"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  diff \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+## Piped Content
 HEREDOC
 )
 
