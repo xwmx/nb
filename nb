@@ -4699,7 +4699,7 @@ _edit() {
     _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
 
-  if [[ -n "${_relative_path}"                    ]] ||
+  if [[ -n "${_relative_path}"                    ]] &&
      [[ -e "${_notebook_path}/${_relative_path}"  ]]
   then # _basename is assigned and a note exists with that name.
     local _before
