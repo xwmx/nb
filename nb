@@ -4699,10 +4699,12 @@ _edit() {
     _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
 
-  if [[ -n "${_relative_path}" ]] || [[ -e "${_notebook_path}/${_relative_path}" ]]
+  if [[ -n "${_relative_path}"                    ]] ||
+     [[ -e "${_notebook_path}/${_relative_path}"  ]]
   then # _basename is assigned and a note exists with that name.
     local _before
     _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
+
     local _decrypted_path=
     local _encrypted_path=
     local _target_file="${_notebook_path}/${_relative_path}"
@@ -4784,6 +4786,7 @@ _edit() {
         _temp_encrypted_path="$(_temp file "${_basename}").tmp"
 
         mv "${_encrypted_path}" "${_temp_encrypted_path}"
+
         _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
 
         if [[ -e "${_encrypted_path}" ]]
