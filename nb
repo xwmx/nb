@@ -3087,8 +3087,6 @@ Shortcut Alias: \`a\`
 HEREDOC
 _add() {
   local _arguments=()
-  local _content=
-  local _content_or_filename_or_path=
   local _content_or_filename_extension=
   local _edit_before_commit=0
   local _encrypt=0
@@ -3150,15 +3148,7 @@ _add() {
         _file_type="folder"
         ;;
       *)
-        if [[ -z "${_content_or_filename_or_path:-}" ]]
-        then
-          _content_or_filename_or_path="${__arg:-}"
-        elif [[ -z "${_target_filename:-}" ]]
-        then
-          _target_filename="${__arg:-}"
-        else
-          _arguments+=("${__arg:-}")
-        fi
+        _arguments+=("${__arg:-}")
         ;;
     esac
 
@@ -3172,67 +3162,88 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _content_or_filename_extension="${_content_or_filename_or_path##*\.}"
+  local i
   local _selector_content=
 
-  if [[ -n "${_content_or_filename_or_path:-}" ]]
-  then
-    if  _string_is_url "${_content_or_filename_or_path:-}"      ||
-        _string_is_email "${_content_or_filename_or_path:-}"    ||
-        _contains "${_content_or_filename_extension:-}"         \
-                  "${_common_non_text_file_extension_tlds[@]}"
+  for i in 0 1
+  do
+    local _argument_content=
+
+    if [[ -n "${_arguments[i]:-}" ]]
     then
-      _selector_content="${_content_or_filename_or_path}"
-    else
-      local _selector_target="${_content_or_filename_or_path}"
-
-      if [[ "${_selector_target}" =~ : ]]
+      if ((i))                              &&
+         [[ -z "${_selector_content:-}" ]]  &&
+         [[ -n "${_target_filename:-}"  ]]
       then
-        local _selector_notebook_path
-        _selector_notebook_path="$(
-          _notebook show "${_selector_target%%:*}" --path 2>/dev/null || :
-        )"
+        _argument_content+="${_arguments[i]:-}"
+      else
+        local _content_or_filename_extension=
+        local _selector_notebook_path=
 
-        if [[ -n "${_selector_notebook_path}" ]]
+        if [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$ ]]
         then
-          _notebook_path="${_selector_notebook_path}"
-          _selector_target="${_selector_target#*:}"
+          _content_or_filename_extension="${_arguments[i]##*\.}"
+        fi
+
+        if  _string_is_url    "${_arguments[i]:-}"                  ||
+            _string_is_email  "${_arguments[i]:-}"                  ||
+            _contains "${_content_or_filename_extension:-}"         \
+                      "${_common_non_text_file_extension_tlds[@]}"
+        then
+          _argument_content="${_arguments[i]}${_NEWLINE}"
         else
-          _selector_content="${_selector_target}"
-        fi
-      fi
+          local _selector_target="${_arguments[i]}"
 
-      if [[ -z "${_selector_content:-}" ]]
-      then
-        if [[ "${_selector_target}" =~ / ]]
-        then
-          _selector_folder_relative_path="${_selector_target%\/*}"
-        fi
+          if [[ "${_arguments[i]}" =~ : ]]
+          then
+            _selector_notebook_path="$(
+              _notebook show "${_arguments[i]%%:*}" --path 2>/dev/null || :
+            )"
 
-        if  [[ -z "${_target_filename}"                         ]]  && {
-              _contains "${_file_type:-}" "folder" "directory"      || {
-              [[ "${_selector_target:-}" =~ \.[A-Za-z0-9]+$     ]]  &&
-              [[ -n "${_content_or_filename_extension:-}"       ]]  &&
-              [[ -z "${_target_filename}"                       ]]
+            if [[ -n "${_selector_notebook_path}" ]]
+            then
+              _notebook_path="${_selector_notebook_path}"
+              _selector_target="${_arguments[i]#*:}"
+            else
+              _argument_content+="${_arguments[i]:-}${_NEWLINE}"
+            fi
+          fi
+
+          if [[ -z "${_argument_content:-}"     ]]
+          then
+            if [[ "${_selector_target:-}" =~ /  ]]
+            then
+              _selector_folder_relative_path="${_selector_target%\/*}"
+            fi
+
+            if  [[ -z "${_target_filename}"                         ]]  && {
+                  _contains "${_file_type:-}" "folder" "directory"      ||
+                  [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|:    ]]
             }
-        }
-        then
-          _target_filename="${_selector_target##*\/}"
-        elif [[ ! "${_selector_target}" =~ /      ]] &&
-             [[ -z "${_selector_notebook_path:-}" ]]
-        then
-          _selector_content="${_content_or_filename_or_path}"
+            then
+              _target_filename="${_selector_target##*\/}"
+            elif [[ !   "${_selector_target}" =~ /        ]] &&
+                 [[ -z  "${_selector_notebook_path:-}"    ]]
+            then
+              _argument_content+="${_arguments[i]:-}${_NEWLINE}"
+            fi
+          fi
         fi
       fi
     fi
-  fi
 
-  if [[ -n "${_selector_content:-}" ]]
+    if [[ -n "${_argument_content:-}" ]]
+    then
+      _selector_content+="${_argument_content}"
+    fi
+  done
+
+  if [[ -n "${_selector_content:-}"   ]]
   then
-    _content="${_selector_content}"
+    _content="${_selector_content%${_NEWLINE}}"
   fi
 
-  if [[ -z "${_target_filename:-}" ]]
+  if [[ -z "${_target_filename:-}"    ]]
   then
     if [[ -n "${_title:-}" ]] &&
        ! _contains "${_file_type:-}" "folder" "directory"
@@ -3259,7 +3270,7 @@ _add() {
   local _target_folder_relative_path=
   local _target_relative_path=
 
-  if [[ -n "${_selector_folder_relative_path:-}" ]]
+  if [[ -n "${_selector_folder_relative_path:-}"    ]]
   then
     if [[ "${_selector_folder_relative_path}" =~ /$ ]]
     then
@@ -3365,7 +3376,7 @@ _add() {
       printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
     fi
 
-    if [[ -n "${_content}" ]]
+    if [[ -n "${_content:-}" ]]
     then
       printf "%s\\n" "${_content}" >> "${_target_path}"
     fi

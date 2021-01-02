@@ -134,6 +134,188 @@ load test_helper
   [[ "${output}" =~ example:[A-Za-z0-9]+.md ]]
 }
 
+@test "'add notebook: <filename>' (space) creates new note with <filename>." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" add example: "Example Filename.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file with $EDITOR:
+
+  cat "${NB_DIR}/example/Example Filename.md"
+
+  [[ -f "${NB_DIR}/example/Example Filename.md"                         ]]
+  [[    "$(cat "${NB_DIR}/example/Example Filename.md")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/example" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Example Filename.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/example/.index"          ]]
+
+  diff                        \
+    <(ls "${NB_DIR}/example") \
+    <(cat "${NB_DIR}/example/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                          ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+            ]]
+  [[ "${output}" =~ example:Example\\\ Filename.md  ]]
+}
+
+@test "'add notebook:<filename>' (no space) creates new note with <filename>." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" add example:Example\ Filename.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file with $EDITOR:
+
+  [[ -f "${NB_DIR}/example/Example Filename.md"                         ]]
+  [[    "$(cat "${NB_DIR}/example/Example Filename.md")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/example" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Example Filename.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/example/.index"          ]]
+
+  diff                        \
+    <(ls "${NB_DIR}/example") \
+    <(cat "${NB_DIR}/example/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                          ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+            ]]
+  [[ "${output}" =~ example:Example\\\ Filename.md  ]]
+}
+
+@test "'add notebook:<string>' (no space) creates new note with <string> as filename." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" add example:Example\ String
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file with $EDITOR:
+
+  [[ -f "${NB_DIR}/example/Example String"                          ]]
+  [[    "$(cat "${NB_DIR}/example/Example String")" =~ mock_editor  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/example" || return 1
+  while [[ -n "$(git status --porcelain)"     ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/example/.index"            ]]
+
+  diff                        \
+    <(ls "${NB_DIR}/example") \
+    <(cat "${NB_DIR}/example/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                    ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+      ]]
+  [[ "${output}" =~ example:Example\\\ String ]]
+}
+
+
+@test "'add notebook: <string>' (space) creates new note with <string> as content." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" add example: Example\ String
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file with $EDITOR:
+
+  _files=($(ls "${NB_DIR}/example"))
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  [[ "$(cat "${NB_DIR}/example/${_files[0]}")" =~ Example\ String ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/example" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/example/.index"          ]]
+
+  diff                        \
+    <(ls "${NB_DIR}/example") \
+    <(cat "${NB_DIR}/example/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                  ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+.md ]]
+}
+
 # <filename> argument #########################################################
 
 @test "'add' with filename argument creates new note without errors." {

@@ -4,6 +4,65 @@ load test_helper
 
 # <folder>/ <filename> ########################################################
 
+@test "'add <not-a-folder-name> <string>' (no slash) creates new file containing content <not-a-folder-name> and <string> separated by a newline." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Not A Folder"                     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/.index"              ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/example-filename.md" ]]
+  }
+
+  run "${_NB}" add Example\ Not\ A\ Folder Sample\ String
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates file:
+
+  _files=($(LC_ALL=C ls "${NB_DIR}/home/"))
+
+  [[   -n "${_files[0]:-}"                                            ]]
+
+  [[ ! -e "${NB_DIR:-}/home/Example Not A Folder"                     ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/.index"              ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Not A Folder/example-filename.md" ]]
+  [[   -e "${NB_DIR:-}/home/${_files[0]}"                             ]]
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[    -e "${NB_DIR}/home/.index"                      ]]
+  [[ !  -e "${NB_DIR}/home/Example Not A Folder/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:          ]]
+  [[ "${output}" =~ ${_files[0]:-}  ]]
+
+  # File contains content:
+
+  printf "cat: '%s'\\n" "$(cat "${NB_DIR}/home/${_files[0]:-}")"
+
+  diff                                                  \
+    <(printf "Example Not A Folder\\nSample String\\n") \
+    <(cat "${NB_DIR}/home/${_files[0]:-}")
+}
+
 @test "'add <folder> <filename>' (no slash) creates new file with <filename> and the string in <folder> as content." {
   {
     "${_NB}" init
@@ -170,7 +229,7 @@ load test_helper
 # - Accept <name-1> and ignore <name-2>
 # - Ignore <name-1> and accept <name-2> (current)
 # - Return error when more than one name is specified
-@test "'add <name-1> <name-2> --type folder' (no slash) creates new folder with <name-2>." {
+@test "'add <name-1> <name-2> --type folder' (no slash) creates new folder with <name-1>." {
   {
     "${_NB}" init
 
@@ -195,9 +254,9 @@ load test_helper
 
   # Creates path, target file, and indexes:
 
-  [[ !  -e "${NB_DIR}/home/Example Folder"        ]]
-  [[    -d "${NB_DIR}/home/Sample Folder"         ]]
-  [[    -e "${NB_DIR}/home/Sample Folder/.index"  ]]
+  [[    -d "${NB_DIR}/home/Example Folder"        ]]
+  [[    -e "${NB_DIR}/home/Example Folder/.index" ]]
+  [[ !  -e "${NB_DIR}/home/Sample Folder"         ]]
 
   # Commits to git:
 
@@ -206,7 +265,7 @@ load test_helper
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Add: Sample Folder'
+  git log | grep -q '\[nb\] Add: Example Folder'
 
   # Adds to index:
 
@@ -216,16 +275,16 @@ load test_helper
     <(ls "${NB_DIR}/home")  \
     <(cat "${NB_DIR}/home/.index")
 
-  [[ -e "${NB_DIR}/home/Sample Folder/.index" ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index" ]]
 
   diff                                    \
-    <(ls "${NB_DIR}/home/Sample Folder")  \
-    <(cat "${NB_DIR}/home/Sample Folder/.index")
+    <(ls "${NB_DIR}/home/Example Folder") \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
 
   # Prints output:
 
   [[ "${output}" =~ Added:            ]]
-  [[ "${output}" =~ Sample\\\ Folder  ]]
+  [[ "${output}" =~ Example\\\ Folder ]]
 }
 
 @test "'add <folder>/ <folder-name> --type folder' (slash) creates new folder with <folder-name> in new <folder>." {
@@ -236,9 +295,9 @@ load test_helper
     [[ ! -e "${NB_DIR:-}/home/Example Folder/example-folder-name" ]]
   }
 
-  run "${_NB}" add            \
-    Example\ Folder/          \
-    "example-folder-name"     \
+  run "${_NB}" add        \
+    Example\ Folder/      \
+    "example-folder-name" \
     --type folder
 
   printf "\${status}: '%s'\\n" "${status}"
