@@ -4638,10 +4638,9 @@ HEREDOC
 _edit() {
   local _content=
   local _edit_before_commit=0
+  local _edit_type="append"
   local _local_editor=
-  local _overwrite=0
   local _password=
-  local _prepend=0
 
   while ((${#}))
   do
@@ -4661,14 +4660,14 @@ _edit() {
         shift
         ;;
       --overwrite)
-        _overwrite=1
+        _edit_type="overwrite"
         ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --prepend)
-        _prepend=1
+        _edit_type="prepend"
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
@@ -4743,10 +4742,10 @@ _edit() {
           cat
         fi
       } | {
-        if ((_overwrite))
+        if [[ "${_edit_type:-}" == "overwrite" ]]
         then
           cat > "${_target_file}"
-        elif ((_prepend))
+        elif [[ "${_edit_type:-}" == "prepend" ]]
         then
           local _prepend_temp
           _prepend_temp="$(mktemp)"
