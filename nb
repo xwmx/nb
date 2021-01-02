@@ -4745,11 +4745,15 @@ _edit() {
           cat > "${_target_file}"
         elif ((_prepend))
         then
-          local _prepend_temp="$(mktemp)"
+          local _prepend_temp
+          _prepend_temp="$(mktemp)"
 
-          cat > "${_prepend_temp}"
-          cat "${_target_file}" >> "${_prepend_temp}"
-          cat "${_prepend_temp}" > "${_target_file}"
+          cat                       >   "${_prepend_temp:?}"
+          cat "${_target_file}"     >>  "${_prepend_temp:?}"
+
+          cat "${_prepend_temp:?}"  >   "${_target_file}"
+
+          rm "${_prepend_temp:?}"
         else
           cat >> "${_target_file}"
         fi
