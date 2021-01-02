@@ -2882,7 +2882,7 @@ $(_color_primary "Usage:")
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
@@ -4606,7 +4606,7 @@ Options:
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the \`\$EDITOR\` environment variable.
   --overwrite              Overwrite existing content with <content> and
-                           stanard input.
+                           standard input.
   --prepend                Prepend <content> and standard input before
                            existing content.
 

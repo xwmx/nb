@@ -3004,7 +3004,7 @@ Usage:
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
   nb edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>]
+          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
             [<pandoc options>...]
   nb export notebook <name> [<path>]
@@ -3470,6 +3470,7 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
+  nb edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
@@ -3478,9 +3479,9 @@ Options:
   --edit                   Open the note in the editor before saving when
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
-                           specified in the \`\$EDITOR\` environment variable.
+                           specified in the `$EDITOR` environment variable.
   --overwrite              Overwrite existing content with <content> and
-                           stanard input.
+                           standard input.
   --prepend                Prepend <content> and standard input before
                            existing content.
 
