@@ -24,7 +24,7 @@ _nb_subcommands() {
   # Description:
   #   Cache completions for `nb`. Generating completions can be slow and
   #   native shell caching doesn't appear to help.
-  _cache_completions() {
+  _nb_cache_completions() {
     local _cache_path="${1:-}"
 
     local _commands
