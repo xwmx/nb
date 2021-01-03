@@ -28,6 +28,21 @@ _nb_subcommands() {
 
     [[ -z "${_cache_path:-}" ]] && return 0
 
+    # Remove outdated cache files.
+
+    local _base_cache_path="${_cache_path%-*}"
+    local __suffix
+
+    for __suffix in "zsh" "v1"
+    do
+      if [[ -e "${_base_cache_path:?}-${__suffix:?}" ]]
+      then
+        rm -f  "${_base_cache_path:?}-${__suffix:?}"
+      fi
+    done
+
+    # Rebuild completion cache.
+
     local _commands
     IFS=$'\n' _commands=($(nb subcommands))
 
@@ -39,11 +54,6 @@ _nb_subcommands() {
 
     local _commands_cached=
     local _notebooks_cached=
-
-    if [[ -e "${_cache_path:?}-zsh" ]]
-    then
-      rm -f "${_cache_path:?}-zsh"
-    fi
 
     if [[ -e "${_cache_path}" ]]
     then
