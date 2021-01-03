@@ -78,12 +78,12 @@ _nb_subcommands() {
 
       mkdir -p "${_directory_path}"
 
-      if [[ -f "${_cache_path}" ]]
+      if [[ -f "${_cache_path:?}" ]]
       then
-        rm -f "${_cache_path}"
+        rm -f "${_cache_path:?}"
       fi
 
-      touch "${_cache_path}"
+      touch "${_cache_path:?}"
 
       {
         (IFS=$' '; printf "%s\\n" "${_commands[*]}")
