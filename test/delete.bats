@@ -40,14 +40,15 @@ load test_helper
   [[ "${lines[1]}" =~ \ \ nb\ delete      ]]
 }
 
-# <selector> ##################################################################
+# .gitignored #################################################################
 
 @test "'delete <selector>' with gitignored file returns 0 and deletes file." {
   {
     "${_NB}" init
 
-    printf "Sample content.\\n"   > "${NB_DIR}/home/sample.md"
-    printf "example.md\\n"        > "${NB_DIR}/home/.gitignore"
+    "${_NB}" add "sample.md" --content "Sample content."
+
+    printf "example.md\\n" > "${NB_DIR}/home/.gitignore"
 
     "${_NB}" git add --all
     "${_NB}" git checkpoint
@@ -64,8 +65,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[      "${status}" -eq 0           ]]
-  [[ ! -e "${NB_DIR}/home/example.md" ]]
+  [[      "${status}" -eq 0                       ]]
+  [[ ! -e "${NB_DIR}/home/example.md"             ]]
+  [[      "${output}" =~ Deleted\:.*2.*example.md ]]
 }
 
 # <selector> ##################################################################
