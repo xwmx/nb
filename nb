@@ -1075,7 +1075,10 @@ This item was encrypted with GPG, but the GPG command was not found.\\n"
       -in "${_encrypted_path}"            \
       -out "${_unencrypted_path}"         \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
-        rm "${_unencrypted_path:?}"
+        if [[ -f "${_unencrypted_path:?}" ]]
+        then
+          rm "${_unencrypted_path:?}"
+        fi
   else
     _exit_1 printf "Unable to decrypt file.\\n"
   fi
@@ -4755,7 +4758,10 @@ _edit() {
 
           cat "${_prepend_temp:?}"  >   "${_target_file}"
 
-          rm "${_prepend_temp:?}"
+          if [[ -f "${_prepend_temp:?}" ]]
+          then
+            rm  "${_prepend_temp:?}"
+          fi
         else
           cat >> "${_target_file}"
         fi
@@ -8502,7 +8508,10 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     then
       trash "${NB_DIR:?}/${_name:?}"
     else
-      rm -r -f "${NB_DIR:?}/${_name:?}"
+      if [[ -e "${NB_DIR:?}/${_name:?}" ]]
+      then
+        rm -r -f "${NB_DIR:?}/${_name:?}"
+      fi
     fi &&
       _temp cache clear &&
       printf "Notebook deleted: %s\\n" "$(_color_primary "${_name}")"
@@ -12469,7 +12478,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
       printf "Already at the latest version.\\n"
     fi
 
-    if [[ -n "${_temp_file}" ]]
+    if [[ -n "${_temp_file:-}" ]] && [[ -f "${_temp_file}" ]]
     then
       rm "${_temp_file:?}"
     fi
