@@ -75,9 +75,15 @@ _nb_subcommands() {
 
       local _directory_path
       _directory_path="$(dirname "${_cache_path}")"
+
       mkdir -p "${_directory_path}"
 
-      echo >! "${_cache_path}"
+      if [[ -f "${_cache_path}" ]]
+      then
+        rm -f "${_cache_path}"
+      fi
+
+      touch "${_cache_path}"
 
       {
         (IFS=$' '; printf "%s\\n" "${_commands[*]}")
