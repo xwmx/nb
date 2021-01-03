@@ -111,7 +111,6 @@ _nb_subcommands() {
     fi
   }
 
-
   local _nb_dir=
   _nb_dir="$(nb env | grep 'NB_DIR' | cut -d = -f 2)"
 
