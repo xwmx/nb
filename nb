@@ -2039,6 +2039,11 @@ _get_visible_length() {
 #   https://github.com/sharkdp/bat
 #   https://pygments.org/
 _highlight_syntax_if_available() {
+  # Usage: _highlight_syntax_with_extension <extension>
+  _highlight_syntax_with_extension() {
+    ! _contains "${_extension}" "db" # TODO
+  }
+
   local _extension=
   local _path=
 
@@ -2071,7 +2076,8 @@ _highlight_syntax_if_available() {
     if [[ -n "${_path:-}" ]]
     then
       _arguments+=("${_path}")
-    else
+    elif _highlight_syntax_with_extension "${_extension}"
+    then
       _arguments+=("--language" "${_extension}")
     fi
 
@@ -2087,7 +2093,8 @@ _highlight_syntax_if_available() {
     if [[ -n "${_path:-}" ]]
     then
       _arguments+=("${_path}")
-    else
+    elif _highlight_syntax_with_extension "${_extension}"
+    then
       _arguments+=("--syntax" "${_extension}")
     fi
 
@@ -2099,7 +2106,8 @@ _highlight_syntax_if_available() {
     if [[ -n "${_path:-}" ]]
     then
       _arguments+=("${_path}")
-    else
+    elif _highlight_syntax_with_extension "${_extension}"
+    then
       _arguments+=("-l" "${_extension}")
     fi
 
