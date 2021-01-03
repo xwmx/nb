@@ -16,10 +16,10 @@
 ###############################################################################
 
 _nb_subcommands() {
-  # _cache_completions()
+  # _nb_cache_completions()
   #
   # Usage:
-  #   _cache_completions <path>
+  #   _nb_cache_completions <path>
   #
   # Description:
   #   Cache completions for `nb`. Generating completions can be slow and
@@ -122,7 +122,7 @@ _nb_subcommands() {
 
   if [[ ! -e "${_cache_path}" ]]
   then
-    _cache_completions "${_cache_path}"
+    _nb_cache_completions "${_cache_path}"
   fi
 
   if [[ -e "${_cache_path}" ]]
@@ -139,7 +139,7 @@ _nb_subcommands() {
       fi
     done < "${_cache_path}"
 
-    (_cache_completions "${_cache_path}" &)
+    (_nb_cache_completions "${_cache_path}" &)
   fi
 
   local _current="${COMP_WORDS[COMP_CWORD]}"
