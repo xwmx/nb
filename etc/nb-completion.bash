@@ -27,6 +27,8 @@ _nb_subcommands() {
   _nb_cache_completions() {
     local _cache_path="${1:-}"
 
+    [[ -z "${_cache_path:-}" ]] && return 0
+
     local _commands
     IFS=$'\n' _commands=($(nb subcommands))
 
@@ -38,6 +40,11 @@ _nb_subcommands() {
 
     local _commands_cached=
     local _notebooks_cached=
+
+    if [[ -e "${_cache_path:?}-zsh" ]]
+    then
+      rm -f "${_cache_path:?}-zsh"
+    fi
 
     if [[ -e "${_cache_path}" ]]
     then
@@ -117,7 +124,7 @@ _nb_subcommands() {
     return 0
   fi
 
-  local _cache_path="${_nb_dir}/.cache/nb-completion-cache-zsh"
+  local _cache_path="${_nb_dir:?}/.cache/nb-completion-cache-v2"
   local _completions_cached=()
 
   if [[ ! -e "${_cache_path}" ]]
