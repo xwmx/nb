@@ -4585,7 +4585,14 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
     then
       rm -r "${_notebook_path:?}/${_relative_path:?}"
     else
-      git -C "${_notebook_path:?}" rm -r "${_relative_path:?}" 1>/dev/null
+      if git -C "${_notebook_path:?}" check-ignore    \
+           "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+      then
+        rm -r "${_notebook_path:?}/${_relative_path:?}"
+      else
+        git -C "${_notebook_path:?}" rm -r            \
+          "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+      fi
     fi
 
     if [[ ! -e "${_notebook_path}/${_relative_path}" ]]

@@ -42,6 +42,34 @@ load test_helper
 
 # <selector> ##################################################################
 
+@test "'delete <selector>' with gitignored file returns 0 and deletes file." {
+  {
+    "${_NB}" init
+
+    printf "Sample content.\\n"   > "${NB_DIR}/home/sample.md"
+    printf "example.md\\n"        > "${NB_DIR}/home/.gitignore"
+
+    "${_NB}" git add --all
+    "${_NB}" git checkpoint
+
+    printf "Example content.\\n" > "${NB_DIR}/home/example.md"
+
+    [[ -e "${NB_DIR}/home/example.md"  ]]
+
+    "${_NB}" git check-ignore "example.md" > /dev/null
+  }
+
+  run "${_NB}" delete "example.md" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0           ]]
+  [[ ! -e "${NB_DIR}/home/example.md" ]]
+}
+
+# <selector> ##################################################################
+
 @test "'delete <selector>' with empty repo exits with 1 and prints message." {
   {
     "${_NB}" init
@@ -66,7 +94,7 @@ load test_helper
     [[ -e "${NB_DIR}/home/example.md"  ]]
   }
 
-  run "${_NB}" delete "example.md" --force
+  run "${_NB}" delete "example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
