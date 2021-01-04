@@ -10023,14 +10023,14 @@ _search() {
       _maybe_path="$(
         _notebooks show "${_arguments[i]}" --path 2>/dev/null || :
       )"
-    elif [[ "${_arguments[i]}" =~ /   ]]
-    then
+    else
       _maybe_path="$(
         _show "${_arguments[i]}" --path 2>/dev/null || :
       )"
     fi
 
-    if [[ -n "${_maybe_path:-}" ]]
+    if [[ -n "${_maybe_path:-}" ]] &&
+       [[ -d "${_maybe_path:-}" ]]
     then
       _target_paths+=("${_maybe_path}")
     else
