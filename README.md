@@ -2830,11 +2830,12 @@ using either names or ids:
 # list items in the "sample/demo" folder
 nb sample/demo/
 
-# edit item with id "123" in the folder with id "3"
-nb edit 3/123
+# add a new note to the folder named "demo" in the folder with id "3
+nb add 3/demo/
 
-# show item with id "123" in the folder "sample" in the notebook "example"
-nb show example:sample/123
+# show the history of the folder with id "4" in the folder named
+# "sample" in the notebook named "example"
+nb history example:sample/4/
 ```
 
 For more information about folders, see [Folders](#-folders).
