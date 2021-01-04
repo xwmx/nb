@@ -2827,15 +2827,29 @@ Folders are identified by relative path from the notebook root,
 using either names or ids:
 
 ```bash
-# list items in the "sample/demo" folder
+# list items in the folder named "sample" in the folder named demo"
 nb sample/demo/
 
-# add a new note to the folder named "demo" in the folder with id "3"
+# add a new item to the folder named "demo" in the folder with id "3"
 nb add 3/demo/
 
 # show the history of the folder with id "4" in the folder named
 # "sample" in the notebook named "example"
 nb history example:sample/4/
+```
+
+A trailing slash indicates that the command is expected to operate on
+the contents of the folder. When a trailing slash is omitted, the
+selector refers to the folder itself:
+
+```bash
+> nb list sample
+[1] 📂 sample
+
+> nb list sample/
+[sample/3] Title Three
+[sample/2] Title Two
+[sample/1] Title One
 ```
 
 For more information about folders, see [Folders](#-folders).
