@@ -2780,20 +2780,84 @@ _notebooks current --path
 
 ##### Selectors
 
-[`nb` notebooks](#-notebooks) can be selected by the user on a per-command
-basis by prefixing the subcommand name or the note identifier (id, filename,
-path, or title) with the notebook name followed by a colon. A colon-prefixed
-argument is referred to as a "selector" and comes in two types: subcommand
-selectors and identifier selectors.
+Items in `nb` are primarily identified using specially-designed arguments
+referred to internally as "selectors". Selectors are like addresses for
+notebooks, folders, and items. A selector can be as simple as an id
+like `123` or folder path like `example/`, or it can identify an item in a
+nested folder in a particular notebook, such as
+`cli:tools/shellcheck/home-page.bookmark.md`.
 
-*Subcommand Selectors*
+A selector is constructed by specifying the notebook name, folder path,
+and item identifier in the following pattern:
 
 ```text
-notebook:
-notebook:show
-notebook:history
-notebook:a
-notebook:q
+notebook:folder/path/item-idenitifer
+```
+
+Notebooks are identified by the notebook name followed by a colon. When
+no folder path or item identifer is specified, the command runs in the
+root folder of the notebook:
+
+```bash
+# list items in the "example" notebook
+nb example:
+
+# add a new note named "Example Title" to the "example" notebook
+nb add example: --title "Example Title"
+
+# edit item with id "123" in the notebook "example"
+nb edit example:123
+```
+
+A notebook selector can also be combined with a subcommand name to
+run the command within the notebook:
+
+```bash
+# list all items in the "example" notebook and display excerpts
+nb example:list -e
+
+# edit item with id "123" in the "example" notebook
+nb example:edit 123
+
+# show the git history for the notebook named "example"
+nb example:history
+```
+
+Folders are identified by relative path from the notebook root,
+using either names or ids:
+
+```bash
+# list items in the "sample/demo" folder
+nb sample/demo/
+
+# edit item with id "123" in the folder with id "3"
+nb edit 3/123
+
+# show item with id "123" in the folder "sample" in the notebook "example"
+nb show example:sample/123
+```
+
+For more information about folders, see [Folders](#-folders).
+
+An item is identified by id, filename, or title, optionally preceeded by
+notebook name or folder path:
+
+```bash
+# edit item with id "123"
+nb edit 123
+
+# open the item titled "demo title" in the folder with id "3"
+nb open 3/demo\ title
+
+# show "file.md" in the "sample" folder in the "example" notebook
+nb show example:sample/file.md
+```
+
+Items can also be specified using the full path:
+
+```bash
+# edit "demo.md" in the "sample" folder in the "home" notebook
+nb edit /home/example/.nb/home/sample/demo.md
 ```
 
 *Idenitifer Selectors*
@@ -2812,6 +2876,16 @@ notebook:title
 notebook:relative/path/to/123
 notebook:relative/path/to/demo.md
 notebook:relative/path/to/title
+```
+
+*Subcommand Selectors*
+
+```text
+notebook:
+notebook:show
+notebook:history
+notebook:a
+notebook:q
 ```
 
 `nb` automatically scans arguments for selectors with notebook names and
