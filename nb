@@ -10034,7 +10034,21 @@ _search() {
     then
       _target_paths+=("${_maybe_path}")
     else
-      _queries+=("${_arguments[i]}")
+      local _query_argument="${_arguments[i]:-}"
+
+      if [[ -n "${_maybe_path:-}"           ]] &&
+         [[ -f "${_maybe_path:-}"           ]] &&
+         [[ "${_query_argument:-}"  =~ /$   ]]
+      then
+        _query_argument="${_query_argument%\/}"
+      fi
+
+      if _notebooks current --selected
+      then
+        _queries+=("${_query_argument#*:}")
+      else
+        _queries+=("${_query_argument}")
+      fi
     fi
   done
 
