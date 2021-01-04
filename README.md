@@ -2830,7 +2830,7 @@ using either names or ids:
 # list items in the "sample/demo" folder
 nb sample/demo/
 
-# add a new note to the folder named "demo" in the folder with id "3
+# add a new note to the folder named "demo" in the folder with id "3"
 nb add 3/demo/
 
 # show the history of the folder with id "4" in the folder named
