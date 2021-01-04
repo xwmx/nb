@@ -10036,9 +10036,9 @@ _search() {
     else
       local _query_argument="${__arg:-}"
 
-      if [[ -n "${_maybe_path:-}"           ]] &&
-         [[ -f "${_maybe_path:-}"           ]] &&
-         [[ "${_query_argument:-}"  =~ /$   ]]
+      if [[ -n "${_maybe_path:-}"         ]] &&
+         [[ -f "${_maybe_path:-}"         ]] &&
+         [[ "${_query_argument:-}"  =~ /$ ]]
       then
         _query_argument="${_query_argument%\/}"
       fi
