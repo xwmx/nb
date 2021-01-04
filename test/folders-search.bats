@@ -84,6 +84,110 @@ sample phrase
 HEREDOC
 }
 
+# `search notebook:<folder>/` ##########################################################
+
+@test "'search notebook:' searches within notebook subfolders." {
+  {
+    _setup_folder_search
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" search "example phrase" home: --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                                   ]]
+
+  [[ "${output}"    =~  home:3.*Three                                       ]]
+
+  [[ "${lines[1]}"  =~  [^-]--------------[^-]                              ]]
+  [[ "${lines[2]}"  =~  3                                                   ]]
+  [[ "${lines[2]}"  =~  example\ phrase                                     ]]
+
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3           ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three        ]]
+
+  [[ "${lines[4]}"  =~  -----------------------------                       ]]
+  [[ "${lines[5]}"  =~  3                                                   ]]
+  [[ "${lines[5]}"  =~  example\ phrase                                     ]]
+
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1           ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One          ]]
+
+  [[ "${lines[7]}"  =~  -----------------------------                       ]]
+  [[ "${lines[8]}"  =~  3                                                   ]]
+  [[ "${lines[8]}"  =~  example\ phrase                                     ]]
+
+  [[ "${output}"    =~ home:Example\\\ Folder/2.*Example\ Folder\ /\ Two    ]]
+
+  [[ "${lines[10]}" =~  -----------------------------                       ]]
+  [[ "${lines[11]}" =~  3                                                   ]]
+  [[ "${lines[11]}" =~  example\ phrase                                     ]]
+
+  [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
+
+  [[ "${lines[13]}" =~  -----------------------------                       ]]
+  [[ "${lines[14]}" =~  3                                                   ]]
+  [[ "${lines[14]}" =~  example\ phrase                                     ]]
+
+  [[ "${output}"    =~  home:1.*One                                         ]]
+
+  [[ "${lines[16]}"  =~  [^-]------------[^-]                               ]]
+  [[ "${lines[17]}"  =~  3                                                  ]]
+  [[ "${lines[17]}"  =~  example\ phrase                                    ]]
+}
+
+@test "'search notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
+  {
+    _setup_folder_search
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" search "example phrase" home:Example\ Folder/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
+
+  [[ "${lines[1]}"  =~  -----------------------------                 ]]
+  [[ "${lines[2]}"  =~  3                                             ]]
+  [[ "${lines[2]}"  =~  example\ phrase                               ]]
+
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
+
+  [[ "${lines[4]}"  =~  -----------------------------                 ]]
+  [[ "${lines[5]}"  =~  3                                             ]]
+  [[ "${lines[5]}"  =~  example\ phrase                               ]]
+
+  [[ "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+
+  [[ "${lines[7]}"  =~  -----------------------------                 ]]
+  [[ "${lines[8]}"  =~  3                                             ]]
+  [[ "${lines[8]}"  =~  example\ phrase                               ]]
+
+  [[ "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four ]]
+
+  [[ "${lines[10]}" =~  -----------------------------                 ]]
+  [[ "${lines[11]}" =~  3                                             ]]
+  [[ "${lines[11]}" =~  example\ phrase                               ]]
+}
+
+
+
 # `search` spacing and alignment ##############################################
 
 @test "'search --list' / 'search -l' includes extra spacing to align with max id length in folder." {

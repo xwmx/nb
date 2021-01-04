@@ -39,7 +39,7 @@ _search_all_setup() {
 
 # `search` ####################################################################
 
-@test "'search' exits with status 1 and prints help information." {
+@test "'search' with no arguments exits with status 1 and prints help information." {
   {
     _setup_search
   }

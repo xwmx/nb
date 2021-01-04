@@ -10009,23 +10009,30 @@ _search() {
     _target_paths=($(_notebooks --paths --unarchived))
   fi
 
-  local _selector_relative_path=
+  local i
 
   for ((i=((${#_arguments[@]} - 1)); i >= 0; i--))
   do
-    local _maybe_relative_path=
+    local _maybe_path=
 
-    if [[   "${_arguments[i]}"  =~ /  ]] &&
-       [[ ! "${_arguments[i]}"  =~ ^/ ]]
+    if [[ -z "${_arguments[i]:-}"     ]]
     then
-      _maybe_relative_path="$(
-        _show "${_arguments[i]}" --relative-path 2>/dev/null || :
+      continue
+    elif [[ "${_arguments[i]}" =~ :$  ]]
+    then
+      _maybe_path="$(
+        _notebooks show "${_arguments[i]}" --path 2>/dev/null || :
+      )"
+    elif [[ "${_arguments[i]}" =~ /   ]]
+    then
+      _maybe_path="$(
+        _show "${_arguments[i]}" --path 2>/dev/null || :
       )"
     fi
 
-    if [[ -n "${_maybe_relative_path:-}" ]]
+    if [[ -n "${_maybe_path:-}" ]]
     then
-      _target_paths+=("${_current_notebook_path}/${_maybe_relative_path}")
+      _target_paths+=("${_maybe_path}")
     else
       _queries+=("${_arguments[i]}")
     fi
