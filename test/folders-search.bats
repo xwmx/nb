@@ -112,7 +112,7 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 1                     ]]
 
   [[ !  "${lines[0]}"   =~  example-1.bookmark.md ]]
-  [[    "${lines[0]}"   =~  Example\ Folder/6     ]]
+  [[    "${lines[0]}"   =~  Example\\\ Folder/6   ]]
   [[    "${lines[0]}"   =~  Example\ Title\ One   ]]
   [[    "${lines[0]}"   =~  \]\ 🔖                ]]
 
@@ -131,7 +131,7 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 1                     ]]
 
   [[ !  "${lines[0]}"   =~  example-1.bookmark.md ]]
-  [[    "${lines[0]}"   =~  Example\ Folder/6     ]]
+  [[    "${lines[0]}"   =~  Example\\\ Folder/6   ]]
   [[    "${lines[0]}"   =~  Example\ Title\ One   ]]
   [[    "${lines[0]}"   =~  \]\ \ 🔖              ]]
 }
@@ -159,7 +159,7 @@ HEREDOC
 
   [[ !  "${output}" =~  Unindexed                                     ]]
 
-  [[    "${output}" =~  Example\ Folder/Sample\ Folder/3              ]]
+  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
   [[    "${output}" =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 }
 
@@ -177,27 +177,27 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                             ]]
 
-  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3              ]]
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                 ]]
   [[ "${lines[2]}"  =~  3                                             ]]
   [[ "${lines[2]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1              ]]
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                 ]]
   [[ "${lines[5]}"  =~  3                                             ]]
   [[ "${lines[5]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\ Folder/2.*Example\ Folder\ /\ Two    ]]
+  [[ "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                 ]]
   [[ "${lines[8]}"  =~  3                                             ]]
   [[ "${lines[8]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\ Folder/4.*Example\ Folder\ /\ Four   ]]
+  [[ "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four ]]
 
   [[ "${lines[10]}" =~  -----------------------------                 ]]
   [[ "${lines[11]}" =~  3                                             ]]
@@ -218,14 +218,14 @@ HEREDOC
 
   [[    "${status}"    -eq 0                              ]]
 
-  [[    "${lines[0]}"  =~  Example\ Folder/4              ]]
+  [[    "${lines[0]}"  =~  Example\\\ Folder/4            ]]
   [[    "${lines[0]}"  =~  Example\ Folder\ /\            ]]
   [[    "${lines[0]}"  =~  Two|Four                       ]]
   [[    "${lines[1]}"  =~  -----------------------------  ]]
   [[    "${lines[2]}"  =~  3                              ]]
   [[    "${lines[2]}"  =~  example\ phrase                ]]
 
-  [[    "${lines[3]}"  =~  Example\ Folder/2              ]]
+  [[    "${lines[3]}"  =~  Example\\\ Folder/2            ]]
   [[    "${lines[3]}"  =~  Example\ Folder\ /\            ]]
   [[    "${lines[3]}"  =~  Two|Four                       ]]
   [[    "${lines[4]}"  =~  -----------------------------  ]]
@@ -335,27 +335,27 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                                       ]]
 
-  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3                        ]]
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3                    ]]
   [[ "${output}"    =~  Local\ /\ Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                           ]]
   [[ "${lines[2]}"  =~  3                                                       ]]
   [[ "${lines[2]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1                        ]]
+  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1                    ]]
   [[ "${output}"    =~  Local\ /\ Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                           ]]
   [[ "${lines[5]}"  =~  3                                                       ]]
   [[ "${lines[5]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\ Folder/2.*Local\ /\ Example\ Folder\ /\ Two    ]]
+  [[ "${output}"    =~  Example\\\ Folder/2.*Local\ /\ Example\ Folder\ /\ Two  ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                           ]]
   [[ "${lines[8]}"  =~  3                                                       ]]
   [[ "${lines[8]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\ Folder/4.*Local\ /\ Example\ Folder\ /\ Four   ]]
+  [[ "${output}"    =~  Example\\\ Folder/4.*Local\ /\ Example\ Folder\ /\ Four ]]
 
   [[ "${lines[10]}" =~  -----------------------------                           ]]
   [[ "${lines[11]}" =~  3                                                       ]]

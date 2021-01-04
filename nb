@@ -10300,7 +10300,7 @@ _search() {
         if [[ -n "${_relative_folder_path:-}" ]]
         then
           _max_id="$(_index get_max_id "${_folder_path}")"
-          _maybe_id_path="${_relative_folder_path}/"
+          _maybe_id_path="${_relative_folder_path// /\\ }/"
           _relative_path="${_relative_folder_path}/${_filename}"
         fi
 
