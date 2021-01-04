@@ -2,93 +2,76 @@
 
 load test_helper
 
-_setup_folder_search() {
-  "${_NB}" init
+_setup_folders_and_files() {
+  local _title_prefix=
+
+  if [[ "${1:-}" == "--local" ]]
+  then
+    _title_prefix="Local / "
+  fi
 
   # notebook root
 
-  cat <<HEREDOC | "${_NB}" add "one.md"
-# One
+  "${_NB}" add  "one.md"                \
+    --title     "${_title_prefix}One"   \
+    --content   "example phrase"
 
-example phrase
-HEREDOC
+  "${_NB}" add  "two.md"                \
+    --title     "${_title_prefix}Two"   \
+    --content   "sample phrase"
 
-  cat <<HEREDOC | "${_NB}" add "two.md"
-# Two
+  "${_NB}" add  "three.md"              \
+    --title     "${_title_prefix}Three" \
+    --content   "example phrase"
 
-sample phrase
-HEREDOC
-
-  cat <<HEREDOC | "${_NB}" add "three.md"
-# Three
-
-example phrase
-HEREDOC
-
-  cat <<HEREDOC | "${_NB}" add "four.md"
-# Four
-
-demo phrase
-HEREDOC
+  "${_NB}" add  "four.md"               \
+    --title     "${_title_prefix}Four"  \
+    --content   "demo phrase"
 
   # Example Folder /
 
-  cat <<HEREDOC | "${_NB}" add "Example Folder/one.md"
-# Example Folder / One
+  "${_NB}" add  "Example Folder/one.md"                   \
+    --title     "${_title_prefix}Example Folder / One"    \
+    --content   "demo phrase"
 
-demo phrase
-HEREDOC
+  "${_NB}" add  "Example Folder/two.md"                   \
+    --title     "${_title_prefix}Example Folder / Two"    \
+    --content   "example phrase"
 
-  cat <<HEREDOC | "${_NB}" add "Example Folder/two.md"
-# Example Folder / Two
+  "${_NB}" add  "Example Folder/three.md"                 \
+    --title     "${_title_prefix}Example Folder / Three"  \
+    --content   "sample phrase"
 
-example phrase
-HEREDOC
+  "${_NB}" add  "Example Folder/four.md"                  \
+    --title     "${_title_prefix}Example Folder / Four"   \
+    --content   "example phrase"
 
-  cat <<HEREDOC | "${_NB}" add "Example Folder/three.md"
-# Example Folder / Three
+  # Example Folder / Sample Folder /
 
-sample phrase
-HEREDOC
+  "${_NB}" add  "Example Folder/Sample Folder/one.md"                     \
+    --title     "${_title_prefix}Example Folder / Sample Folder / One"    \
+    --content   "example phrase"
 
-  cat <<HEREDOC | "${_NB}" add "Example Folder/four.md"
-# Example Folder / Four
+  "${_NB}" add  "Example Folder/Sample Folder/two.md"                     \
+    --title     "${_title_prefix}Example Folder / Sample Folder / Two"    \
+    --content   "demo phrase"
 
-example phrase
-HEREDOC
+  "${_NB}" add  "Example Folder/Sample Folder/three.md"                   \
+    --title     "${_title_prefix}Example Folder / Sample Folder / Three"  \
+    --content   "example phrase"
 
-# Example Folder / Sample Folder /
-
-  cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/one.md"
-# Example Folder / Sample Folder / One
-
-example phrase
-HEREDOC
-
-  cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/two.md"
-# Example Folder / Sample Folder / Two
-
-demo phrase
-HEREDOC
-
-  cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/three.md"
-# Example Folder / Sample Folder / Three
-
-example phrase
-HEREDOC
-
-  cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/four.md"
-# Example Folder / Sample Folder / Four
-
-sample phrase
-HEREDOC
+  "${_NB}" add  "Example Folder/Sample Folder/four.md"                    \
+    --title     "${_title_prefix}Example Folder / Sample Folder / Four"   \
+    --content   "sample phrase"
 }
 
 # `search notebook:<folder>/` ##########################################################
 
 @test "'search notebook:' searches within notebook subfolders." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     "${_NB}" notebooks add "one"
     "${_NB}" use "one"
@@ -105,7 +88,7 @@ HEREDOC
 
   [[ "${output}"    =~  home:3.*Three                                       ]]
 
-  [[ "${lines[1]}"  =~  [^-]--------------[^-]                              ]]
+  [[ "${lines[1]}"  =~  [^-]------------[^-]|[^-]--------------[^-]         ]]
   [[ "${lines[2]}"  =~  3                                                   ]]
   [[ "${lines[2]}"  =~  example\ phrase                                     ]]
 
@@ -137,14 +120,16 @@ HEREDOC
 
   [[ "${output}"    =~  home:1.*One                                         ]]
 
-  [[ "${lines[16]}"  =~  [^-]------------[^-]                               ]]
-  [[ "${lines[17]}"  =~  3                                                  ]]
-  [[ "${lines[17]}"  =~  example\ phrase                                    ]]
+  [[ "${lines[16]}" =~  [^-]------------[^-]|[^-]--------------[^-]         ]]
+  [[ "${lines[17]}" =~  3                                                   ]]
+  [[ "${lines[17]}" =~  example\ phrase                                     ]]
 }
 
 @test "'search notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     "${_NB}" notebooks add "one"
     "${_NB}" use "one"
@@ -157,38 +142,40 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                             ]]
+  [[ "${status}"    -eq 0                                                   ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3           ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three        ]]
 
-  [[ "${lines[1]}"  =~  -----------------------------                 ]]
-  [[ "${lines[2]}"  =~  3                                             ]]
-  [[ "${lines[2]}"  =~  example\ phrase                               ]]
+  [[ "${lines[1]}"  =~  -----------------------------                       ]]
+  [[ "${lines[2]}"  =~  3                                                   ]]
+  [[ "${lines[2]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1           ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One          ]]
 
-  [[ "${lines[4]}"  =~  -----------------------------                 ]]
-  [[ "${lines[5]}"  =~  3                                             ]]
-  [[ "${lines[5]}"  =~  example\ phrase                               ]]
+  [[ "${lines[4]}"  =~  -----------------------------                       ]]
+  [[ "${lines[5]}"  =~  3                                                   ]]
+  [[ "${lines[5]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/2.*Example\ Folder\ /\ Two   ]]
 
-  [[ "${lines[7]}"  =~  -----------------------------                 ]]
-  [[ "${lines[8]}"  =~  3                                             ]]
-  [[ "${lines[8]}"  =~  example\ phrase                               ]]
+  [[ "${lines[7]}"  =~  -----------------------------                       ]]
+  [[ "${lines[8]}"  =~  3                                                   ]]
+  [[ "${lines[8]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
-  [[ "${lines[10]}" =~  -----------------------------                 ]]
-  [[ "${lines[11]}" =~  3                                             ]]
-  [[ "${lines[11]}" =~  example\ phrase                               ]]
+  [[ "${lines[10]}" =~  -----------------------------                       ]]
+  [[ "${lines[11]}" =~  3                                                   ]]
+  [[ "${lines[11]}" =~  example\ phrase                                     ]]
 }
 
 @test "'search notebook:<folder>' (no slash) searches within <folder> and subfolders in notebook." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     "${_NB}" notebooks add "one"
     "${_NB}" use "one"
@@ -201,40 +188,42 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                             ]]
+  [[ "${status}"    -eq 0                                                   ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3           ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three        ]]
 
-  [[ "${lines[1]}"  =~  -----------------------------                 ]]
-  [[ "${lines[2]}"  =~  3                                             ]]
-  [[ "${lines[2]}"  =~  example\ phrase                               ]]
+  [[ "${lines[1]}"  =~  -----------------------------                       ]]
+  [[ "${lines[2]}"  =~  3                                                   ]]
+  [[ "${lines[2]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1           ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One          ]]
 
-  [[ "${lines[4]}"  =~  -----------------------------                 ]]
-  [[ "${lines[5]}"  =~  3                                             ]]
-  [[ "${lines[5]}"  =~  example\ phrase                               ]]
+  [[ "${lines[4]}"  =~  -----------------------------                       ]]
+  [[ "${lines[5]}"  =~  3                                                   ]]
+  [[ "${lines[5]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/2.*Example\ Folder\ /\ Two   ]]
 
-  [[ "${lines[7]}"  =~  -----------------------------                 ]]
-  [[ "${lines[8]}"  =~  3                                             ]]
-  [[ "${lines[8]}"  =~  example\ phrase                               ]]
+  [[ "${lines[7]}"  =~  -----------------------------                       ]]
+  [[ "${lines[8]}"  =~  3                                                   ]]
+  [[ "${lines[8]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
-  [[ "${lines[10]}" =~  -----------------------------                 ]]
-  [[ "${lines[11]}" =~  3                                             ]]
-  [[ "${lines[11]}" =~  example\ phrase                               ]]
+  [[ "${lines[10]}" =~  -----------------------------                       ]]
+  [[ "${lines[11]}" =~  3                                                   ]]
+  [[ "${lines[11]}" =~  example\ phrase                                     ]]
 }
 
 # `search` spacing and alignment ##############################################
 
 @test "'search --list' / 'search -l' includes extra spacing to align with max id length in folder." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     for ((_i=0; _i < 12; _i++))
     do
@@ -286,7 +275,9 @@ HEREDOC
 
 @test "'search' skips unindexed subfolders." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     mkdir -p "${NB_DIR}/home/Example Unindexed/Sample Unindexed"
     cat <<HEREDOC > "${NB_DIR}/home/Example Unindexed/Sample Unindexed/document.md"
@@ -313,7 +304,9 @@ HEREDOC
 
 @test "'search <folder>/' (slash) searches within <folder> and subfolders." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
   }
 
   run "${_NB}" search "example phrase" Example\ Folder/ --use-grep
@@ -352,7 +345,9 @@ HEREDOC
 
 @test "'search <folder>' (no slash) searches within <folder> and subfolders." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
   }
 
   run "${_NB}" search "example phrase" Example\ Folder --use-grep
@@ -393,7 +388,9 @@ HEREDOC
 
 @test "'search <folder>/ --no-recurse' (slash) searches within <folder> only." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
   }
 
   run "${_NB}" search "example phrase" Example\ Folder/ --use-grep --no-recurse
@@ -422,7 +419,9 @@ HEREDOC
 
 @test "'search <folder> --no-recurse' (no slash) searches within <folder> only." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
   }
 
   run "${_NB}" search "example phrase" Example\ Folder --use-grep --no-recurse
@@ -453,7 +452,9 @@ HEREDOC
 
 @test "'search folder/' (slash) in local notebook exits with status 0 and prints output." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     mkdir -p "${_TMP_DIR}/example"
 
@@ -463,83 +464,7 @@ HEREDOC
 
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
 
-    # notebook root
-
-    cat <<HEREDOC | "${_NB}" add "one.md"
-# Local / One
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "two.md"
-# Local / Two
-
-sample phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "three.md"
-# Local / Three
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "four.md"
-# Local / Four
-
-demo phrase
-HEREDOC
-
-    # Example Folder /
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/one.md"
-# Local / Example Folder / One
-
-demo phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/two.md"
-# Local / Example Folder / Two
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/three.md"
-# Local / Example Folder / Three
-
-sample phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/four.md"
-# Local / Example Folder / Four
-
-example phrase
-HEREDOC
-
-    # Example Folder / Sample Folder /
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/one.md"
-# Local / Example Folder / Sample Folder / One
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/two.md"
-# Local / Example Folder / Sample Folder / Two
-
-demo phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/three.md"
-# Local / Example Folder / Sample Folder / Three
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/four.md"
-# Local / Example Folder / Sample Folder / Four
-
-sample phrase
-HEREDOC
+    _setup_folders_and_files --local
   }
 
   run "${_NB}" search "example phrase" Example\ Folder/ --use-grep
@@ -578,7 +503,9 @@ HEREDOC
 
 @test "'search folder' (no slash) in local notebook exits with status 0 and prints output." {
   {
-    _setup_folder_search
+    "${_NB}" init
+
+    _setup_folders_and_files
 
     mkdir -p "${_TMP_DIR}/example"
 
@@ -588,83 +515,7 @@ HEREDOC
 
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
 
-    # notebook root
-
-    cat <<HEREDOC | "${_NB}" add "one.md"
-# Local / One
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "two.md"
-# Local / Two
-
-sample phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "three.md"
-# Local / Three
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "four.md"
-# Local / Four
-
-demo phrase
-HEREDOC
-
-    # Example Folder /
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/one.md"
-# Local / Example Folder / One
-
-demo phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/two.md"
-# Local / Example Folder / Two
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/three.md"
-# Local / Example Folder / Three
-
-sample phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/four.md"
-# Local / Example Folder / Four
-
-example phrase
-HEREDOC
-
-    # Example Folder / Sample Folder /
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/one.md"
-# Local / Example Folder / Sample Folder / One
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/two.md"
-# Local / Example Folder / Sample Folder / Two
-
-demo phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/three.md"
-# Local / Example Folder / Sample Folder / Three
-
-example phrase
-HEREDOC
-
-    cat <<HEREDOC | "${_NB}" add "Example Folder/Sample Folder/four.md"
-# Local / Example Folder / Sample Folder / Four
-
-sample phrase
-HEREDOC
+    _setup_folders_and_files --local
   }
 
   run "${_NB}" search "example phrase" Example\ Folder --use-grep
