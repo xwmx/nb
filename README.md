@@ -2780,12 +2780,12 @@ _notebooks current --path
 
 ##### Selectors
 
-Items in `nb` are primarily identified using specially-designed arguments
-referred to internally as "selectors". Selectors are like addresses for
-notebooks, folders, and items. A selector can be as simple as an id
-like `123` or folder path like `example/`, or it can identify an item in a
-nested folder in a particular notebook, such as
-`cli:tools/shellcheck/home-page.bookmark.md`.
+Items in `nb` are primarily identified using structured arguments
+that are referred to internally as "selectors". Selectors are like
+addresses for notebooks, folders, and items. A selector can be as simple
+as an id like `123` or folder path like `example/`, or it combine
+multiple elements to identify an item in a nested folder within a
+particular notebook, such as `cli:tools/shellcheck/home-page.bookmark.md`.
 
 A selector is constructed by specifying the notebook name, folder path,
 and item identifier in the following pattern:
