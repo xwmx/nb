@@ -2876,6 +2876,8 @@ Items can also be specified using the full path:
 nb edit /home/example/.nb/home/sample/demo.md
 ```
 
+##### Examples
+
 *Idenitifer Selectors*
 
 ```text
