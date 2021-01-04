@@ -84,6 +84,58 @@ sample phrase
 HEREDOC
 }
 
+# `search` spacing and alignment ##############################################
+
+@test "'search --list' / 'search -l' includes extra spacing to align with max id length in folder." {
+  {
+    _setup_folder_search
+
+    for ((_i=0; _i < 12; _i++))
+    do
+      "${_NB}" add "note ${_i}"
+    done
+
+    "${_NB}" add                            \
+      --filename  "example.bookmark.md"     \
+      --folder    "Example Folder"          \
+      --content   "<http://example.test/>"  \
+      --title     "Example Title One"
+  }
+
+  run "${_NB}" search 'example.test' --no-color --use-grep --list
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                     ]]
+  [[    "${#lines[@]}"  -eq 1                     ]]
+
+  [[ !  "${lines[0]}"   =~  example-1.bookmark.md ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/6     ]]
+  [[    "${lines[0]}"   =~  Example\ Title\ One   ]]
+  [[    "${lines[0]}"   =~  \]\ 🔖                ]]
+
+  for ((_i=0; _i < 12; _i++))
+  do
+    "${_NB}" add "Example Folder/note ${_i}"
+  done
+
+  run "${_NB}" search 'example.test' --no-color --use-grep --list
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                     ]]
+  [[    "${#lines[@]}"  -eq 1                     ]]
+
+  [[ !  "${lines[0]}"   =~  example-1.bookmark.md ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/6     ]]
+  [[    "${lines[0]}"   =~  Example\ Title\ One   ]]
+  [[    "${lines[0]}"   =~  \]\ \ 🔖              ]]
+}
+
 # `search` ####################################################################
 
 @test "'search' skips unindexed subfolders." {
