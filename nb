@@ -10009,23 +10009,23 @@ _search() {
     _target_paths=($(_notebooks --paths --unarchived))
   fi
 
-  local i
+  local __arg
 
-  for ((i=((${#_arguments[@]} - 1)); i >= 0; i--))
+  for __arg in "${_arguments[@]:-}"
   do
     local _maybe_path=
 
-    if [[ -z "${_arguments[i]:-}"     ]]
+    if [[ -z "${__arg:-}"     ]]
     then
       continue
-    elif [[ "${_arguments[i]}" =~ :$  ]]
+    elif [[ "${__arg}" =~ :$  ]]
     then
       _maybe_path="$(
-        _notebooks show "${_arguments[i]}" --path 2>/dev/null || :
+        _notebooks show "${__arg}" --path 2>/dev/null || :
       )"
     else
       _maybe_path="$(
-        _show "${_arguments[i]}" --path 2>/dev/null || :
+        _show "${__arg}" --path 2>/dev/null || :
       )"
     fi
 
@@ -10034,7 +10034,7 @@ _search() {
     then
       _target_paths+=("${_maybe_path}")
     else
-      local _query_argument="${_arguments[i]:-}"
+      local _query_argument="${__arg:-}"
 
       if [[ -n "${_maybe_path:-}"           ]] &&
          [[ -f "${_maybe_path:-}"           ]] &&
