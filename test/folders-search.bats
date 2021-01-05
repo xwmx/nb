@@ -65,9 +65,53 @@ _setup_folders_and_files() {
     --content   "sample phrase"
 }
 
-# `search notebook:` ##########################################################
+# no match ####################################################################
 
-@test "'search notebook:<no-match>' (no slash) exits with 1 and returns message." {
+@test "'search notebook: <no-match>' (space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" search home: no-match --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${#lines[@]}" -eq 1                                     ]]
+  [[ "${output}"    =~  Not\ found\ in\ .*home.*:\ .*no-match ]]
+}
+
+@test "'search <query> notebook:<no-match>' (no slash) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" search "not-valid" home:no-match.md --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${#lines[@]}" -eq 1                     ]]
+  [[ "${output}"    =~  home.*:\ .*not-valid  ]]
+}
+
+@test "'search notebook:<no-match>' (no slash) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -89,7 +133,7 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  home.*:\ .*no-match.md  ]]
 }
 
-@test "'search notebook:<no-match>/' (slash) exits with 1 and returns message." {
+@test "'search notebook:<no-match>/' (slash) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -110,6 +154,30 @@ _setup_folders_and_files() {
   [[ "${#lines[@]}" -eq 1                       ]]
   [[ "${output}"    =~  home.*:\ .*no-match.md/ ]]
 }
+
+@test "'search <query> notebook:<no-match>/' (slash) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" search "not-valid" home:no-match.md/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${#lines[@]}" -eq 1                     ]]
+  [[ "${output}"    =~  home.*:\ .*not-valid  ]]
+}
+
+# `search notebook:` ##########################################################
 
 @test "'search notebook:<filename>' (no slash) searches for <filename> in notebook." {
   {
@@ -144,6 +212,40 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  ---------------------       ]]
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*one.md  ]]
 }
+
+# @test "'search <query> notebook:<filename>' (no slash) searches <filename> in notebook for <query>." {
+#   {
+#     "${_NB}" init
+
+#     _setup_folders_and_files
+
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
+
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
+
+#   run "${_NB}" search home:one.md --use-grep
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}"    -eq 0                           ]]
+
+#   [[ "${output}"    =~  home:1.*one.md.*\ ·\ One    ]]
+#   [[ "${output}"    =~  ---------------------       ]]
+#   [[ "${lines[2]}"  =~  Filename\ Match:\ .*one.md  ]]
+
+#   [[ "${output}"    =~  \
+#       home:Example\\\ Folder/1.*one.md.*\ ·\ Example\ Folder\ /\ One ]]
+#   [[ "${output}"    =~  ---------------------       ]]
+#   [[ "${lines[5]}"  =~  Filename\ Match:\ .*one.md  ]]
+
+#   [[ "${output}"    =~  \
+#       home:Example\\\ Folder/1.*one.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+#   [[ "${output}"    =~  ---------------------       ]]
+#   [[ "${lines[8]}"  =~  Filename\ Match:\ .*one.md  ]]
+# }
 
 @test "'search notebook:<filename>/' (slash) searches for <filename> in notebook." {
   {

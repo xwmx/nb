@@ -10023,6 +10023,11 @@ _search() {
       _maybe_path="$(
         _notebooks show "${__argument}" --path 2>/dev/null || :
       )"
+
+      if [[ -n "${_maybe_path:-}" ]]
+      then
+        _notebooks select "${__argument}"
+      fi
     else
       _maybe_path="$(
         _show "${__argument}" --path 2>/dev/null || :
