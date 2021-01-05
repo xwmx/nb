@@ -10068,8 +10068,15 @@ _search() {
 
   for __target_path in "${_target_paths[@]:-}"
   do
+    if [[ -d "${__target_path}" ]]
+    then
+      local _target_folder_path="${__target_path}"
+    else
+      local _target_folder_path="${__target_path%\/*}"
+    fi
+
     local _max_id
-    _max_id="$(_index get_max_id "${__target_path}")"
+    _max_id="$(_index get_max_id "${_target_folder_path}")"
 
     if _command_exists "rg" && ! ((_use_grep))
     then
