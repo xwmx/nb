@@ -10015,10 +10015,7 @@ _search() {
   do
     local _maybe_path=
 
-    if [[ -z "${__argument:-}"    ]]
-    then
-      continue
-    elif [[ "${__argument}" =~ :$ ]]
+    if [[ "${__argument}" =~ :$ ]]
     then
       _maybe_path="$(
         _notebooks show "${__argument}" --path 2>/dev/null || :
