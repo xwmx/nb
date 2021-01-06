@@ -9942,6 +9942,7 @@ _search() {
   local _query=
   local _search_args=()
   local _search_color_enabled="${_COLOR_ENABLED}"
+  local _selectors=()
   local _sort=0
   local _type=
   local _use_grep=0
@@ -10039,6 +10040,7 @@ _search() {
        [[ -z "${_target_paths[*]:-}"  ]]
     then
       _target_paths+=("${_maybe_path}")
+      _selectors+=("${_arguments[i]}")
     fi
 
     if [[ -z "${_maybe_path:-}"                     ]] || {
@@ -10549,8 +10551,17 @@ _search() {
               printf "Not found in any notebook: %s\\n" \
                 "$(_color_primary "${_query:-}")"
             else
-              printf "Not found in %s: %s\\n"                       \
-                "$(_color_primary "$(_notebooks current --name)")"  \
+              local _search_selector=
+
+              if [[ -n "${_selectors[0]:-}" ]]
+              then
+                _search_selector="${_selectors[0]//\ /\\ }"
+              else
+                _search_selector="$(_notebooks current --name)"
+              fi
+
+              printf "Not found in %s: %s\\n"               \
+                "$(_color_primary "${_search_selector:-}")" \
                 "$(_color_primary "${_query:-}")"
             fi
 
