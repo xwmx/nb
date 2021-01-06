@@ -68,6 +68,42 @@ _setup_folders_and_files() {
 
 # no match ####################################################################
 
+@test "'search <no-match-query> <filename>/' (slash, no space, query) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "no-match-query" File\ One.md/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+  [[ "${output}"    =~  Not\ found\ in                          ]]
+  [[ "${output}"    =~  File\\\ One.md[^/].*:\ .*no-match-query ]]
+}
+
+@test "'search <no-match-query> <filename>' (no slash, no space, query) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "no-match-query" File\ One.md --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+  [[ "${output}"    =~  Not\ found\ in                          ]]
+  [[ "${output}"    =~  File\\\ One.md[^/].*:\ .*no-match-query ]]
+}
+
 @test "'search <no-match-query> <folder>/' (slash, no space, query) exits with 1 and prints message." {
   {
     "${_NB}" init
@@ -98,10 +134,10 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                           ]]
-  [[ "${#lines[@]}" -eq 1                                           ]]
-  [[ "${output}"    =~  Not\ found\ in                              ]]
-  [[ "${output}"    =~  Example\\\ Folder[^/].*:\ .*no-match-query  ]]
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+  [[ "${output}"    =~  Not\ found\ in                          ]]
+  [[ "${output}"    =~  Example\\\ Folder/.*:\ .*no-match-query ]]
 }
 
 @test "'search <no-match-query> <notebook>:<folder>/' (slash, no space, query) exits with 1 and prints message." {
@@ -144,10 +180,10 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                               ]]
-  [[ "${#lines[@]}" -eq 1                                               ]]
-  [[ "${output}"    =~  Not\ found\ in                                  ]]
-  [[ "${output}"    =~  home:Example\\\ Folder[^/].*:\ .*no-match-query ]]
+  [[ "${status}"    -eq 1                                             ]]
+  [[ "${#lines[@]}" -eq 1                                             ]]
+  [[ "${output}"    =~  Not\ found\ in                                ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/.*:\ .*no-match-query  ]]
 }
 
 @test "'search <no-match-query> <notebook>:<folder-id>/' (slash, no space, query) exits with 1 and prints message." {
@@ -162,7 +198,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:1/ --use-grep
+  run "${_NB}" search "no-match-query" home:5/ --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -170,7 +206,7 @@ _setup_folders_and_files() {
   [[ "${status}"    -eq 1                             ]]
   [[ "${#lines[@]}" -eq 1                             ]]
   [[ "${output}"    =~  Not\ found\ in                ]]
-  [[ "${output}"    =~  home:1/.*:\ .*no-match-query  ]]
+  [[ "${output}"    =~  home:5/.*:\ .*no-match-query  ]]
 }
 
 @test "'search <no-match-query> <notebook>:<folder-id>' (no slash, no space, query) exits with 1 and prints message." {
@@ -185,15 +221,15 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:1 --use-grep
+  run "${_NB}" search "no-match-query" home:5 --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                               ]]
-  [[ "${#lines[@]}" -eq 1                               ]]
-  [[ "${output}"    =~  Not\ found\ in                  ]]
-  [[ "${output}"    =~  home:1[^/].*:\ .*no-match-query ]]
+  [[ "${status}"    -eq 1                             ]]
+  [[ "${#lines[@]}" -eq 1                             ]]
+  [[ "${output}"    =~  Not\ found\ in                ]]
+  [[ "${output}"    =~  home:5/.*:\ .*no-match-query  ]]
 }
 
 @test "'search <notebook>: <no-match>' (no slash, space / query) exits with 1 and prints message." {

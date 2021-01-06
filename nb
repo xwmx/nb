@@ -10556,6 +10556,19 @@ _search() {
               if [[ -n "${_selectors[0]:-}" ]]
               then
                 _search_selector="${_selectors[0]//\ /\\ }"
+
+                if [[ -f "${_target_paths[0]:-}"          ]] &&
+                   [[ "${_search_selector:-}" =~ /$       ]]
+                then # strip trailing slash from files
+                  _search_selector="${_search_selector%/}"
+                elif [[ "${_search_selector:-}" =~ :$     ]]
+                then
+                  _search_selector="${_search_selector%:}"
+                elif [[ -d "${_target_paths[0]:-}"        ]] &&
+                     [[ !  "${_search_selector:-}" =~ /$  ]]
+                then # add trailing slash to folders
+                  _search_selector="${_search_selector}/"
+                fi
               else
                 _search_selector="$(_notebooks current --name)"
               fi
