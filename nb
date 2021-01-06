@@ -223,10 +223,10 @@ _debug() {
 
     if [[ -n "${__DEBUG_START_TIME:-}" ]]
     then
-      printf "⏱   %s\\n" "$(($(__debug_get_timestamp)-__DEBUG_START_TIME))"
+      printf "⏱  %s\\n" "$(($(__debug_get_timestamp)-__DEBUG_START_TIME))"
     elif __DEBUG_START_TIME="$(__debug_get_timestamp)"
     then
-      printf "⏱   0\\n"
+      printf "⏱  0\\n"
     fi
 
     printf "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\\n"
