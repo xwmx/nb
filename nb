@@ -10043,7 +10043,6 @@ _search() {
       local _query_argument="${_arguments[i]:-}"
 
       if [[ -n "${_maybe_path:-}"         ]] &&
-         [[ -f "${_maybe_path:-}"         ]] &&
          [[ "${_query_argument:-}"  =~ /$ ]]
       then # strip trailing slash from file selector
         _query_argument="${_query_argument%\/}"

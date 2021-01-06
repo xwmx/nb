@@ -96,6 +96,35 @@ _setup_folders_and_files() {
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 }
 
+@test "'search <filename>/' (slash, no query) searches for <filename> in current notebook recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search File\ One.md/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${output}"    =~  1.*File\ One.md.*\ ·\ One         ]]
+  [[ "${output}"    =~  ----------------                  ]]
+  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+
+  [[ "${output}"    =~  \
+      Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+  [[ "${output}"    =~  ----------------                  ]]
+  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+
+  [[ "${output}"    =~  \
+      Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+  [[ "${output}"    =~  ----------------                  ]]
+  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+}
+
 @test "'search <folder>' (no slash, no query) searches for <folder> in current notebook recursively with matching content." {
   {
     "${_NB}" init
@@ -159,7 +188,7 @@ _setup_folders_and_files() {
   [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder ]]
 }
 
-@test "'search <folder>' (no slash, no query) searches for <folder> in current notebook recursively with only matching folder names." {
+@test "'search <folder>/' (slash, no query) searches for <folder> in current notebook recursively with only matching folder names." {
   {
     "${_NB}" init
 
@@ -170,7 +199,7 @@ _setup_folders_and_files() {
     [[ -d "${NB_DIR}/home/Demo Folder" ]]
   }
 
-  run "${_NB}" search "Demo Folder" --use-grep
+  run "${_NB}" search Demo\ Folder/ --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
