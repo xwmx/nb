@@ -252,54 +252,56 @@ _setup_folders_and_files() {
 
   run "${_NB}" search "example phrase" home: --use-grep
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[6]}:  '%s'\\n" "${#lines[6]}"
+  printf "\${#lines[7]}:  '%s'\\n" "${#lines[7]}"
 
-  [[ "${status}"      -eq 0               ]]
+  [[ "${status}"      -eq 0                         ]]
 
-  [[ "${output}"      =~  home:1.*One     ]]
+  [[ "${output}"      =~  home:1.*One               ]]
 
-  [[ "${lines[1]}"    =~  ------------    ]]
-  [[ "${#_lines[1]}"  == "${#_lines[0]}"  ]]
-  [[ "${lines[2]}"    =~  3               ]]
-  [[ "${lines[2]}"    =~  example\ phrase ]]
+  [[ "${lines[1]}"    =~  ------------              ]]
+  [[ "${#lines[1]}"   == "$((${#lines[0]} - 21))"   ]]
+  [[ "${lines[2]}"    =~  3                         ]]
+  [[ "${lines[2]}"    =~  example\ phrase           ]]
 
-  [[ "${output}"      =~  home:3.*Three   ]]
+  [[ "${output}"      =~  home:3.*Three             ]]
 
-  [[ "${lines[4]}"    =~  ------------    ]]
-  [[ "${#_lines[4]}"  == "${#_lines[3]}"  ]]
-  [[ "${lines[5]}"    =~  3               ]]
-  [[ "${lines[5]}"    =~  example\ phrase ]]
+  [[ "${lines[4]}"    =~  ------------              ]]
+  [[ "${#lines[4]}"   == "$((${#lines[3]} - 21))"   ]]
+  [[ "${lines[5]}"    =~  3                         ]]
+  [[ "${lines[5]}"    =~  example\ phrase           ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3     ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
+  [[ "${output}"      =~  home:Example\\\ Folder/Sample\\\ Folder/3     ]]
+  [[ "${output}"      =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
-  [[ "${lines[7]}"    =~  ------------    ]]
-  [[ "${#_lines[7]}"  == "${#_lines[6]}"  ]]
-  [[ "${lines[8]}"    =~  3               ]]
-  [[ "${lines[8]}"    =~  example\ phrase ]]
+  [[ "${lines[7]}"    =~  ------------              ]]
+  [[ "${#lines[7]}"   == "$((${#lines[6]} - 21))"   ]]
+  [[ "${lines[8]}"    =~  3                         ]]
+  [[ "${lines[8]}"    =~  example\ phrase           ]]
 
-  [[ "${output}"      =~  home:Example\\\ Folder/Sample\\\ Folder/1   ]]
-  [[ "${output}"      =~  Example\ Folder\ /\ Sample\ Folder\ /\ One  ]]
+  [[ "${output}"      =~  home:Example\\\ Folder/Sample\\\ Folder/1     ]]
+  [[ "${output}"      =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
-  [[ "${lines[10]}"   =~  ------------    ]]
-  [[ "${#_lines[10]}" == "${#_lines[9]}"  ]]
-  [[ "${lines[11]}"   =~  3               ]]
-  [[ "${lines[11]}"   =~  example\ phrase ]]
+  [[ "${lines[10]}"   =~  ------------              ]]
+  [[ "${#lines[10]}"  == "$((${#lines[9]} - 21))"   ]]
+  [[ "${lines[11]}"   =~  3                         ]]
+  [[ "${lines[11]}"   =~  example\ phrase           ]]
 
-  [[ "${output}"      =~ home:Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+  [[ "${output}"      =~ home:Example\\\ Folder/2.*Example\ Folder\ /\ Two    ]]
 
-  [[ "${lines[13]}"   =~  ------------    ]]
-  [[ "${#_lines[13]}" == "${#_lines[12]}" ]]
-  [[ "${lines[14]}"   =~  3               ]]
-  [[ "${lines[14]}"   =~  example\ phrase ]]
+  [[ "${lines[13]}"   =~  ------------              ]]
+  [[ "${#lines[13]}"  == "$((${#lines[12]} - 21))"  ]]
+  [[ "${lines[14]}"   =~  3                         ]]
+  [[ "${lines[14]}"   =~  example\ phrase           ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
+  [[ "${output}"      =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
-  [[ "${lines[16]}"   =~  ------------    ]]
-  [[ "${#_lines[16]}" == "${#_lines[15]}" ]]
-  [[ "${lines[17]}"   =~  3               ]]
-  [[ "${lines[17]}"   =~  example\ phrase ]]
+  [[ "${lines[16]}"   =~  ------------              ]]
+  [[ "${#lines[16]}"  == "$((${#lines[15]} - 21))"  ]]
+  [[ "${lines[17]}"   =~  3                         ]]
+  [[ "${lines[17]}"   =~  example\ phrase           ]]
 }
 
 @test "'search <query> notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
