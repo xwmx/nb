@@ -10009,34 +10009,45 @@ _search() {
     _target_paths=($(_notebooks --paths --unarchived))
   fi
 
-  local __argument
+  local i
 
-  for __argument in "${_arguments[@]:-}"
+  for ((i=0; i < "${#_arguments[@]}"; i++))
   do
     local _maybe_path=
 
-    if [[ "${__argument}" =~ :$ ]]
+    if [[ -z "${_arguments[i]:-}" ]]
+    then
+      continue
+    elif [[ "${_arguments[i]}" =~ :$ ]]
     then
       _maybe_path="$(
-        _notebooks show "${__argument}" --path 2>/dev/null || :
+        _notebooks show "${_arguments[i]}" --path 2>/dev/null || :
       )"
 
       if [[ -n "${_maybe_path:-}" ]]
       then
-        _notebooks select "${__argument}"
+        _notebooks select "${_arguments[i]}"
       fi
     else
       _maybe_path="$(
-        _show "${__argument}" --path 2>/dev/null || :
+        _show "${_arguments[i]}" --path 2>/dev/null || :
       )"
     fi
 
-    if [[ -n "${_maybe_path:-}" ]] &&
-       [[ -d "${_maybe_path:-}" ]]
+
+    if [[ -n "${_maybe_path:-}"       ]] &&
+       [[ -z "${_target_paths[*]:-}"  ]]
     then
       _target_paths+=("${_maybe_path}")
-    else
-      local _query_argument="${__argument:-}"
+    fi
+
+    if [[ -z "${_maybe_path:-}"                     ]] || {
+         [[ "${i}" -eq "$((${#_arguments[@]} - 1))" ]] &&
+         [[ -z "${_queries[*]:-}"                   ]] &&
+         [[ -f "${_maybe_path}"                     ]]
+    }
+    then
+      local _query_argument="${_arguments[i]:-}"
 
       if [[ -n "${_maybe_path:-}"         ]] &&
          [[ -f "${_maybe_path:-}"         ]] &&
@@ -10053,6 +10064,10 @@ _search() {
       fi
     fi
   done
+
+  _debug printf "arguments: '%s'\\n" "${_arguments[@]}"
+  _debug printf "paths:     '%s'\\n" "${_target_paths[@]}"
+  _debug printf "queries:   '%s'\\n" "${_queries[@]}"
 
   if [[ -z "${_queries[*]:-}" ]]
   then
@@ -10104,17 +10119,26 @@ _search() {
         _search_args+=("--sort-files")
       fi
 
+      local _search_paths=("${__target_path}")
+
+      if [[ -f "${__target_path}"     ]] &&
+         [[ "${#_arguments[@]}" -lt 2 ]]
+      then
+        _search_paths+=("${__target_path%\/*}/.index")
+      fi
+
       "${_rg_command}"                  \
         --hidden                        \
         --iglob '!.git'                 \
         --ignore-case                   \
-        --no-heading                    \
         --line-number                   \
         --max-columns "${_max_columns}" \
         --max-columns-preview           \
+        --no-heading                    \
+        --with-filename                 \
         "${_search_args[@]}"            \
         "${_query}"                     \
-        "${__target_path}"              \
+        "${_search_paths[@]:-}"         \
           || return 0 # Don't fail out within a single scope.
     elif _command_exists "ag" && ! ((_use_grep))
     then
@@ -10138,12 +10162,22 @@ _search() {
       #   _search_args+=("--workers" "1")
       # fi
 
-      ag                                  \
-        --hidden                          \
-        --ignore-case                     \
-        --noheading                       \
-        "${_search_args[@]}"              \
-        "${_query}" "${__target_path}"    \
+      local _search_paths=("${__target_path}")
+
+      if [[ -f "${__target_path}"     ]] &&
+         [[ "${#_arguments[@]}" -lt 2 ]]
+      then
+        _search_paths+=("${__target_path%\/*}/.index")
+      fi
+
+      ag                      \
+        --filename            \
+        --hidden              \
+        --ignore-case         \
+        --noheading           \
+        "${_search_args[@]}"  \
+        "${_query}"           \
+        "${_search_paths[@]}" \
           || return 0 # Don't fail out within a single scope.
     elif _command_exists "ack" && ! ((_use_grep))
     then # ack is available.
@@ -10166,10 +10200,21 @@ _search() {
         _search_args+=("--sort-files")
       fi
 
-      ack "${_query}" "${__target_path}"    \
-        --ignore-case                       \
-        --noheading                         \
-        "${_search_args[@]}"                \
+      local _search_paths=("${__target_path}")
+
+      if [[ -f "${__target_path}"     ]] &&
+         [[ "${#_arguments[@]}" -lt 2 ]]
+      then
+        _search_paths+=("${__target_path%\/*}/.index")
+      fi
+
+      ack                     \
+        --ignore-case         \
+        --noheading           \
+        --with-filename       \
+        "${_search_args[@]}"  \
+        "${_query}"           \
+        "${_search_paths[@]}" \
           || return 0 # Don't fail out within a single scope.
     else # fall back to POSIX grep.
       if ((_search_color_enabled))
@@ -10183,7 +10228,17 @@ _search() {
       # matching file. Reference: https://stackoverflow.com/a/15432718
       set +f
       {
-        if [[ "${_max_depth}" == 1 ]]
+        if [[ -f "${__target_path:-}" ]]
+        then
+          if [[ "${#_arguments[@]}" -lt 2 ]]
+          then
+            # Print .index with null byte delimeter so it's included in
+            # the list of files to search.
+            printf "%s/.index\0%s" "${__target_path%\/*}" "${__target_path}"
+          else
+            printf "%s" "${__target_path}"
+          fi
+        elif [[ "${_max_depth}" == 1 ]]
         then
           # Print .index with null byte delimeter so it's included in
           # the list of files to search.
