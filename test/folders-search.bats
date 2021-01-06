@@ -12,55 +12,55 @@ _setup_folders_and_files() {
 
   # notebook root
 
-  "${_NB}" add  "one.md"                \
+  "${_NB}" add  "File One.md"           \
     --title     "${_title_prefix}One"   \
     --content   "example phrase"
 
-  "${_NB}" add  "two.md"                \
+  "${_NB}" add  "File Two.md"           \
     --title     "${_title_prefix}Two"   \
     --content   "sample phrase"
 
-  "${_NB}" add  "three.md"              \
+  "${_NB}" add  "File Three.md"         \
     --title     "${_title_prefix}Three" \
     --content   "example phrase"
 
-  "${_NB}" add  "four.md"               \
+  "${_NB}" add  "File Four.md"          \
     --title     "${_title_prefix}Four"  \
     --content   "demo phrase"
 
   # Example Folder /
 
-  "${_NB}" add  "Example Folder/one.md"                   \
+  "${_NB}" add  "Example Folder/File One.md"              \
     --title     "${_title_prefix}Example Folder / One"    \
     --content   "demo phrase"
 
-  "${_NB}" add  "Example Folder/two.md"                   \
+  "${_NB}" add  "Example Folder/File Two.md"              \
     --title     "${_title_prefix}Example Folder / Two"    \
     --content   "example phrase"
 
-  "${_NB}" add  "Example Folder/three.md"                 \
+  "${_NB}" add  "Example Folder/File Three.md"            \
     --title     "${_title_prefix}Example Folder / Three"  \
     --content   "sample phrase"
 
-  "${_NB}" add  "Example Folder/four.md"                  \
+  "${_NB}" add  "Example Folder/File Four.md"             \
     --title     "${_title_prefix}Example Folder / Four"   \
     --content   "example phrase"
 
   # Example Folder / Sample Folder /
 
-  "${_NB}" add  "Example Folder/Sample Folder/one.md"                     \
+  "${_NB}" add  "Example Folder/Sample Folder/File One.md"                \
     --title     "${_title_prefix}Example Folder / Sample Folder / One"    \
     --content   "example phrase"
 
-  "${_NB}" add  "Example Folder/Sample Folder/two.md"                     \
+  "${_NB}" add  "Example Folder/Sample Folder/File Two.md"                \
     --title     "${_title_prefix}Example Folder / Sample Folder / Two"    \
     --content   "demo phrase"
 
-  "${_NB}" add  "Example Folder/Sample Folder/three.md"                   \
+  "${_NB}" add  "Example Folder/Sample Folder/File Three.md"              \
     --title     "${_title_prefix}Example Folder / Sample Folder / Three"  \
     --content   "example phrase"
 
-  "${_NB}" add  "Example Folder/Sample Folder/four.md"                    \
+  "${_NB}" add  "Example Folder/Sample Folder/File Four.md"               \
     --title     "${_title_prefix}Example Folder / Sample Folder / Four"   \
     --content   "sample phrase"
 }
@@ -79,20 +79,20 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home:one.md --use-grep
+  run "${_NB}" search home:File\ One.md --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   -eq 0                           ]]
+  [[    "${status}"   -eq 0                                 ]]
 
-  [[    "${output}"   =~  home:1.*one.md.*\ ·\ One    ]]
-  [[    "${output}"   =~  ---------------------       ]]
-  [[    "${lines[2]}" =~  Filename\ Match:\ .*one.md  ]]
-  [[ -z "${lines[3]}"                                 ]]
+  [[    "${output}"   =~  home:1.*File\ One.md.*\ ·\ One    ]]
+  [[    "${output}"   =~  ---------------------             ]]
+  [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ -z "${lines[3]}"                                       ]]
 
-  [[ !  "${output}"   =~  Example\\\ Folder           ]]
-  [[ !  "${output}"   =~  Sample\\\ Folder            ]]
+  [[ !  "${output}"   =~  Example\\\ Folder                 ]]
+  [[ !  "${output}"   =~  Sample\\\ Folder                  ]]
 }
 
 @test "'search notebook: <filename>' (no slash, space) searches for <filename> in notebook recursively." {
@@ -107,26 +107,26 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home: one.md --use-grep
+  run "${_NB}" search home: "File One.md" --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                           ]]
+  [[ "${status}"    -eq 0                                 ]]
 
-  [[ "${output}"    =~  home:1.*one.md.*\ ·\ One    ]]
-  [[ "${output}"    =~  ---------------------       ]]
-  [[ "${lines[2]}"  =~  Filename\ Match:\ .*one.md  ]]
-
-  [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*one.md.*\ ·\ Example\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------       ]]
-  [[ "${lines[5]}"  =~  Filename\ Match:\ .*one.md  ]]
+  [[ "${output}"    =~  home:1.*File\ One.md.*\ ·\ One    ]]
+  [[ "${output}"    =~  ---------------------             ]]
+  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
   [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*one.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------       ]]
-  [[ "${lines[8]}"  =~  Filename\ Match:\ .*one.md  ]]
+      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+  [[ "${output}"    =~  ---------------------             ]]
+  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+
+  [[ "${output}"    =~  \
+      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+  [[ "${output}"    =~  ---------------------             ]]
+  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 }
 
 @test "'search notebook:<filename>/' (slash, no space) searches for <filename> in notebook root." {
@@ -141,20 +141,20 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home:one.md/ --use-grep
+  run "${_NB}" search home:File\ One.md/ --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   -eq 0                           ]]
+  [[    "${status}"   -eq 0                                 ]]
 
-  [[    "${output}"   =~  home:1.*one.md.*\ ·\ One    ]]
-  [[    "${output}"   =~  ---------------------       ]]
-  [[    "${lines[2]}" =~  Filename\ Match:\ .*one.md  ]]
-  [[ -z "${lines[3]}"                                 ]]
+  [[    "${output}"   =~  home:1.*File\ One.md.*\ ·\ One    ]]
+  [[    "${output}"   =~  ---------------------             ]]
+  [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ -z "${lines[3]}"                                       ]]
 
-  [[ !  "${output}"   =~  Example\\\ Folder           ]]
-  [[ !  "${output}"   =~  Sample\\\ Folder            ]]
+  [[ !  "${output}"   =~  Example\\\ Folder                 ]]
+  [[ !  "${output}"   =~  Sample\\\ Folder                  ]]
 }
 
 
@@ -170,26 +170,26 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home: one.md/ --use-grep
+  run "${_NB}" search home: File\ One.md/ --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                           ]]
+  [[ "${status}"    -eq 0                                 ]]
 
-  [[ "${output}"    =~  home:1.*one.md.*\ ·\ One    ]]
-  [[ "${output}"    =~  ---------------------       ]]
-  [[ "${lines[2]}"  =~  Filename\ Match:\ .*one.md  ]]
-
-  [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*one.md.*\ ·\ Example\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------       ]]
-  [[ "${lines[5]}"  =~  Filename\ Match:\ .*one.md  ]]
+  [[ "${output}"    =~  home:1.*File\ One.md.*\ ·\ One    ]]
+  [[ "${output}"    =~  ---------------------             ]]
+  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
   [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*one.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------       ]]
-  [[ "${lines[8]}"  =~  Filename\ Match:\ .*one.md  ]]
+      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+  [[ "${output}"    =~  ---------------------             ]]
+  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+
+  [[ "${output}"    =~  \
+      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+  [[ "${output}"    =~  ---------------------             ]]
+  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 }
 
 # <query> selectors ###########################################################
@@ -201,7 +201,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "example" one.md --use-grep
+  run "${_NB}" search "example" File\ One.md --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -226,7 +226,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "example" home:one.md --use-grep
+  run "${_NB}" search "example" home:File\ One.md --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -255,45 +255,51 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                   ]]
+  [[ "${status}"      -eq 0               ]]
 
-  [[ "${output}"    =~  home:3.*Three                                       ]]
+  [[ "${output}"      =~  home:1.*One     ]]
 
-  [[ "${lines[1]}"  =~  [^-]------------[^-]|[^-]--------------[^-]         ]]
-  [[ "${lines[2]}"  =~  3                                                   ]]
-  [[ "${lines[2]}"  =~  example\ phrase                                     ]]
+  [[ "${lines[1]}"    =~  ------------    ]]
+  [[ "${#_lines[1]}"  == "${#_lines[0]}"  ]]
+  [[ "${lines[2]}"    =~  3               ]]
+  [[ "${lines[2]}"    =~  example\ phrase ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3           ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three        ]]
+  [[ "${output}"      =~  home:3.*Three   ]]
 
-  [[ "${lines[4]}"  =~  -----------------------------                       ]]
-  [[ "${lines[5]}"  =~  3                                                   ]]
-  [[ "${lines[5]}"  =~  example\ phrase                                     ]]
+  [[ "${lines[4]}"    =~  ------------    ]]
+  [[ "${#_lines[4]}"  == "${#_lines[3]}"  ]]
+  [[ "${lines[5]}"    =~  3               ]]
+  [[ "${lines[5]}"    =~  example\ phrase ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1           ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One          ]]
+  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3     ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
-  [[ "${lines[7]}"  =~  -----------------------------                       ]]
-  [[ "${lines[8]}"  =~  3                                                   ]]
-  [[ "${lines[8]}"  =~  example\ phrase                                     ]]
+  [[ "${lines[7]}"    =~  ------------    ]]
+  [[ "${#_lines[7]}"  == "${#_lines[6]}"  ]]
+  [[ "${lines[8]}"    =~  3               ]]
+  [[ "${lines[8]}"    =~  example\ phrase ]]
 
-  [[ "${output}"    =~ home:Example\\\ Folder/2.*Example\ Folder\ /\ Two    ]]
+  [[ "${output}"      =~  home:Example\\\ Folder/Sample\\\ Folder/1   ]]
+  [[ "${output}"      =~  Example\ Folder\ /\ Sample\ Folder\ /\ One  ]]
 
-  [[ "${lines[10]}" =~  -----------------------------                       ]]
-  [[ "${lines[11]}" =~  3                                                   ]]
-  [[ "${lines[11]}" =~  example\ phrase                                     ]]
+  [[ "${lines[10]}"   =~  ------------    ]]
+  [[ "${#_lines[10]}" == "${#_lines[9]}"  ]]
+  [[ "${lines[11]}"   =~  3               ]]
+  [[ "${lines[11]}"   =~  example\ phrase ]]
+
+  [[ "${output}"      =~ home:Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+
+  [[ "${lines[13]}"   =~  ------------    ]]
+  [[ "${#_lines[13]}" == "${#_lines[12]}" ]]
+  [[ "${lines[14]}"   =~  3               ]]
+  [[ "${lines[14]}"   =~  example\ phrase ]]
 
   [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
-  [[ "${lines[13]}" =~  -----------------------------                       ]]
-  [[ "${lines[14]}" =~  3                                                   ]]
-  [[ "${lines[14]}" =~  example\ phrase                                     ]]
-
-  [[ "${output}"    =~  home:1.*One                                         ]]
-
-  [[ "${lines[16]}" =~  [^-]------------[^-]|[^-]--------------[^-]         ]]
-  [[ "${lines[17]}" =~  3                                                   ]]
-  [[ "${lines[17]}" =~  example\ phrase                                     ]]
+  [[ "${lines[16]}"   =~  ------------    ]]
+  [[ "${#_lines[16]}" == "${#_lines[15]}" ]]
+  [[ "${lines[17]}"   =~  3               ]]
+  [[ "${lines[17]}"   =~  example\ phrase ]]
 }
 
 @test "'search <query> notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
