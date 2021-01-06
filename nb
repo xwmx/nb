@@ -10035,18 +10035,9 @@ _search() {
       )"
     fi
 
-
-    if [[ -n "${_maybe_path:-}"       ]] &&
-       [[ -z "${_target_paths[*]:-}"  ]]
-    then
-      _target_paths+=("${_maybe_path}")
-      _selectors+=("${_arguments[i]}")
-    fi
-
     if [[ -z "${_maybe_path:-}"                     ]] || {
          [[ "${i}" -eq "$((${#_arguments[@]} - 1))" ]] &&
-         [[ -z "${_queries[*]:-}"                   ]] &&
-         [[ -f "${_maybe_path}"                     ]]
+         [[ -z "${_queries[*]:-}"                   ]]
     }
     then
       local _query_argument="${_arguments[i]:-}"
@@ -10054,7 +10045,7 @@ _search() {
       if [[ -n "${_maybe_path:-}"         ]] &&
          [[ -f "${_maybe_path:-}"         ]] &&
          [[ "${_query_argument:-}"  =~ /$ ]]
-      then
+      then # strip trailing slash from file selector
         _query_argument="${_query_argument%\/}"
       fi
 
@@ -10064,6 +10055,16 @@ _search() {
       else
         _queries+=("${_query_argument}")
       fi
+    fi
+
+    if [[ -n "${_maybe_path:-}"         ]] &&
+       [[ -z "${_target_paths[*]:-}"    ]] && {
+         _notebooks current --selected     ||
+         [[ "${#_arguments[@]}" -gt 1   ]]
+    }
+    then
+      _target_paths+=("${_maybe_path}")
+      _selectors+=("${_arguments[i]}")
     fi
   done
 
