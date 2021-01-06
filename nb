@@ -10066,10 +10066,6 @@ _search() {
     fi
   done
 
-  _debug printf "arguments: '%s'\\n" "${_arguments[@]}"
-  _debug printf "paths:     '%s'\\n" "${_target_paths[@]}"
-  _debug printf "queries:   '%s'\\n" "${_queries[@]}"
-
   if [[ -z "${_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
