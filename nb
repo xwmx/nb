@@ -10042,8 +10042,7 @@ _search() {
     then
       local _query_argument="${_arguments[i]:-}"
 
-      if [[ -n "${_maybe_path:-}"         ]] &&
-         [[ "${_query_argument:-}"  =~ /$ ]]
+      if [[ "${_query_argument:-}"  =~ /$ ]]
       then
         _query_argument="${_query_argument%\/}"
       fi

@@ -132,26 +132,18 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "Example Folder" --use-grep
+  run "${_NB}" search "Sample Folder" --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                              ]]
+  [[    "${status}"    -eq 0                                            ]]
 
-  [[ !  "${output}"    =~  [^/]1[^/]*One                                  ]]
+  [[ !  "${output}"    =~  [^/]1[^/]*One                                ]]
 
-  [[    "${output}"    =~  5.*\ 📂\ .*Example\ Folder                     ]]
-  [[    "${output}"    =~  ---------------------                          ]]
-  [[    "${output}"    =~  Filename\ Match:\ .*Example\ Folder            ]]
-
-
-  [[    "${output}"    =~  -----------------------------                  ]]
-
-  [[    "${output}"    =~  Example\\\ Folder/1.*Example\ Folder\ /\ One   ]]
-  [[    "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two   ]]
-  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three ]]
-  [[    "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
+  [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Sample\ Folder  ]]
+  [[    "${output}"    =~  ------------------------------------         ]]
+  [[    "${output}"    =~  Filename\ Match:\ .*Sample\ Folder           ]]
 
   [[    "${output}"    =~ \
           Example\\\ Folder/Sample\\\ Folder/1.*Example\ Folder\ /\ Sample\ Folder\ /\ One   ]]
@@ -169,9 +161,12 @@ _setup_folders_and_files() {
 
     _setup_folders_and_files
 
-    "${_NB}" rename "Example Folder" "Demo Folder" --force
+    "${_NB}" rename                   \
+      "Example Folder/Sample Folder"  \
+      "Example Folder/Demo Folder"    \
+      --force
 
-    [[ -d "${NB_DIR}/home/Demo Folder" ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Demo Folder" ]]
   }
 
   run "${_NB}" search "Demo Folder" --use-grep
@@ -179,22 +174,25 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                ]]
+  [[    "${status}"    -eq 0                                          ]]
 
-  [[    "${#lines[@]}" -eq 3                                ]]
+  [[    "${#lines[@]}" -eq 3                                          ]]
 
-  [[    "${output}"    =~  5.*\ 📂\ .*Demo\ Folder          ]]
-  [[    "${output}"    =~  [^-]------------------[^-]       ]]
-  [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder ]]
+  [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
+  [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
+  [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder           ]]
 }
 
-@test "'search <folder>/' (slash, no query) searches for <folder> in current notebook recursively with only matching folder names." {
+@test "'search <folder>/' (slash, no query) searches for root-level <folder> in current notebook recursively with only matching folder names." {
   {
     "${_NB}" init
 
     _setup_folders_and_files
 
-    "${_NB}" rename "Example Folder" "Demo Folder" --force
+    "${_NB}" rename     \
+      "Example Folder"  \
+      "Demo Folder"     \
+      --force
 
     [[ -d "${NB_DIR}/home/Demo Folder" ]]
   }
@@ -211,6 +209,34 @@ _setup_folders_and_files() {
   [[    "${output}"    =~  5.*\ 📂\ .*Demo\ Folder          ]]
   [[    "${output}"    =~  [^-]------------------[^-]       ]]
   [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder ]]
+}
+
+@test "'search <folder>/' (slash, no query) searches for nested <folder> in current notebook recursively with only matching folder names." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" rename                   \
+      "Example Folder/Sample Folder"  \
+      "Example Folder/Demo Folder"    \
+      --force
+
+    [[ -d "${NB_DIR}/home/Example Folder/Demo Folder" ]]
+  }
+
+  run "${_NB}" search Demo\ Folder/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                          ]]
+
+  [[    "${#lines[@]}" -eq 3                                          ]]
+
+  [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
+  [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
+  [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder           ]]
 }
 
 # <notebook> selectors ########################################################
@@ -1127,9 +1153,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                       ]]
-  [[ "${#lines[@]}" -eq 1                       ]]
-  [[ "${output}"    =~  home.*:\ .*no-match.md/ ]]
+  [[ "${status}"    -eq 1                           ]]
+  [[ "${#lines[@]}" -eq 1                           ]]
+  [[ "${output}"    =~  home.*:\ .*no-match.md[^/]  ]]
 }
 
 @test "'search <no-match-query> <notebook>:<no-match>/' (slash, no space, query) exits with 1 and prints message." {
