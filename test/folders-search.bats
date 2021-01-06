@@ -67,26 +67,6 @@ _setup_folders_and_files() {
 
 # selectors ###################################################################
 
-@test "'search <query> <filename>' searches <filename> in notebook for <query>." {
-  {
-    "${_NB}" init
-
-    _setup_folders_and_files
-  }
-
-  run "${_NB}" search "example" one.md --use-grep
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                 ]]
-  [[ "${#lines[@]}" -eq 3                 ]]
-
-  [[ "${output}"    =~  [^:]1.*One        ]]
-  [[ "${output}"    =~  -------           ]]
-  [[ "${lines[2]}"  =~  example.*\ phrase ]]
-}
-
 @test "'search notebook:<filename>' (no slash, no space) searches for <filename> in notebook root." {
   {
     "${_NB}" init
@@ -212,31 +192,53 @@ _setup_folders_and_files() {
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*one.md  ]]
 }
 
-# @test "'search <query> notebook:<filename>' (no slash) searches <filename> in notebook for <query>." {
-#   {
-#     "${_NB}" init
+# <query> selectors ###########################################################
 
-#     _setup_folders_and_files
+@test "'search <query> <filename>' searches <filename> in notebook for <query>." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" notebooks add "one"
-#     "${_NB}" use "one"
+    _setup_folders_and_files
+  }
 
-#     [[ "$("${_NB}" notebooks current)" == "one" ]]
-#   }
+  run "${_NB}" search "example" one.md --use-grep
 
-#   run "${_NB}" search "example" home:one.md --use-grep
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  [[ "${status}"    -eq 0                 ]]
+  [[ "${#lines[@]}" -eq 3                 ]]
 
-#   [[ "${status}"    -eq 0                           ]]
+  [[ "${output}"    =~  [^:]1.*One        ]]
+  [[ "${output}"    =~  -------           ]]
+  [[ "${lines[2]}"  =~  example.*\ phrase ]]
+}
 
-#   [[ "${output}"    =~  home:1.*one.md.*\ ·\ One    ]]
-#   [[ "${output}"    =~  ---------------------       ]]
-#   [[ "${lines[2]}"  =~  example.*\ phrase          ]]
-# }
+@test "'search <query> notebook:<filename>' (no slash) searches <filename> in notebook for <query>." {
+  {
+    "${_NB}" init
 
-@test "'search notebook:' searches within notebook subfolders." {
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" search "example" home:one.md --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                       ]]
+
+  [[ "${output}"    =~  home:1.*One             ]]
+  [[ "${output}"    =~  [^-]------------[^-]    ]]
+  [[ "${lines[2]}"  =~  example.*\ phrase       ]]
+}
+
+@test "'search <query> notebook:' searches within notebook subfolders." {
   {
     "${_NB}" init
 
@@ -294,7 +296,7 @@ _setup_folders_and_files() {
   [[ "${lines[17]}" =~  example\ phrase                                     ]]
 }
 
-@test "'search notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
+@test "'search <query> notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
   {
     "${_NB}" init
 
@@ -340,7 +342,7 @@ _setup_folders_and_files() {
   [[ "${lines[11]}" =~  example\ phrase                                     ]]
 }
 
-@test "'search notebook:<folder>' (no slash) searches within <folder> and subfolders in notebook." {
+@test "'search <query> notebook:<folder>' (no slash) searches within <folder> and subfolders in notebook." {
   {
     "${_NB}" init
 
