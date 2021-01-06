@@ -67,7 +67,7 @@ _setup_folders_and_files() {
 
 # selectors ###################################################################
 
-@test "'search notebook:<filename>' (no slash, no space) searches for <filename> in notebook root." {
+@test "'search <notebook>:<filename>' (no slash, no space) searches for <filename> in <notebook> root." {
   {
     "${_NB}" init
 
@@ -95,7 +95,7 @@ _setup_folders_and_files() {
   [[ !  "${output}"   =~  Sample\\\ Folder                  ]]
 }
 
-@test "'search notebook: <filename>' (no slash, space) searches for <filename> in notebook recursively." {
+@test "'search <notebook>: <filename>' (no slash, space) searches for <filename> in <notebook> recursively." {
   {
     "${_NB}" init
 
@@ -129,7 +129,7 @@ _setup_folders_and_files() {
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 }
 
-@test "'search notebook:<filename>/' (slash, no space) searches for <filename> in notebook root." {
+@test "'search <notebook>:<filename>/' (slash, no space) searches for <filename> in <notebook> root." {
   {
     "${_NB}" init
 
@@ -157,8 +157,7 @@ _setup_folders_and_files() {
   [[ !  "${output}"   =~  Sample\\\ Folder                  ]]
 }
 
-
-@test "'search notebook: <filename>/' (slash, space) searches for <filename> in notebook recursively." {
+@test "'search <notebook>: <filename>/' (slash, space) searches for <filename> in <notebook> recursively." {
   {
     "${_NB}" init
 
@@ -194,7 +193,7 @@ _setup_folders_and_files() {
 
 # <query> selectors ###########################################################
 
-@test "'search <query> <filename>' searches <filename> in notebook for <query>." {
+@test "'search <query> <filename>' searches <filename> in current notebook for <query>." {
   {
     "${_NB}" init
 
@@ -214,7 +213,7 @@ _setup_folders_and_files() {
   [[ "${lines[2]}"  =~  example.*\ phrase ]]
 }
 
-@test "'search <query> notebook:<filename>' (no slash) searches <filename> in notebook for <query>." {
+@test "'search <query> <notebook>:<filename>' (no slash) searches <filename> in <notebook> for <query>." {
   {
     "${_NB}" init
 
@@ -238,7 +237,7 @@ _setup_folders_and_files() {
   [[ "${lines[2]}"  =~  example.*\ phrase       ]]
 }
 
-@test "'search <query> notebook:' searches within notebook subfolders." {
+@test "'search <query> <notebook>:' searches within <notebook> subfolders." {
   {
     "${_NB}" init
 
@@ -304,7 +303,7 @@ _setup_folders_and_files() {
   [[ "${lines[17]}"   =~  example\ phrase           ]]
 }
 
-@test "'search <query> notebook:<folder>/' (slash) searches within <folder> and subfolders in notebook." {
+@test "'search <query> <notebook>:<folder>/' (slash) searches within <folder> and subfolders in <notebook>." {
   {
     "${_NB}" init
 
@@ -350,7 +349,7 @@ _setup_folders_and_files() {
   [[ "${lines[11]}" =~  example\ phrase                                     ]]
 }
 
-@test "'search <query> notebook:<folder>' (no slash) searches within <folder> and subfolders in notebook." {
+@test "'search <query> <notebook>:<folder>' (no slash) searches within <folder> and subfolders in <notebook>." {
   {
     "${_NB}" init
 
@@ -398,7 +397,7 @@ _setup_folders_and_files() {
 
 # no match ####################################################################
 
-@test "'search notebook: <no-match>' (space) exits with 1 and prints message." {
+@test "'search <notebook>: <no-match>' (no slash, space / query) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -420,7 +419,7 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  Not\ found\ in\ .*home.*:\ .*no-match ]]
 }
 
-@test "'search <query> notebook:<no-match>' (no slash) exits with 1 and prints message." {
+@test "'search <query> <notebook>:<no-match>' (no slash, no space, query) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -442,7 +441,7 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  home.*:\ .*not-valid  ]]
 }
 
-@test "'search notebook:<no-match>' (no slash) exits with 1 and prints message." {
+@test "'search <notebook>:<no-match>' (no slash, no space, no query) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -464,7 +463,7 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  home.*:\ .*no-match.md  ]]
 }
 
-@test "'search notebook:<no-match>/' (slash) exits with 1 and prints message." {
+@test "'search <notebook>:<no-match>/' (slash, no space, no query) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -486,7 +485,7 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  home.*:\ .*no-match.md/ ]]
 }
 
-@test "'search <query> notebook:<no-match>/' (slash) exits with 1 and prints message." {
+@test "'search <query> <notebook>:<no-match>/' (slash, no space, query) exits with 1 and prints message." {
   {
     "${_NB}" init
 
@@ -510,7 +509,7 @@ _setup_folders_and_files() {
 
 # `search` spacing and alignment ##############################################
 
-@test "'search --list' / 'search -l' includes extra spacing to align with max id length in folder." {
+@test "'search <query> --list / -l' includes extra spacing to align with max id length in folder." {
   {
     "${_NB}" init
 
@@ -564,7 +563,7 @@ _setup_folders_and_files() {
 
 # `search` ####################################################################
 
-@test "'search' skips unindexed subfolders." {
+@test "'search <query>' skips unindexed subfolders." {
   {
     "${_NB}" init
 
@@ -593,7 +592,7 @@ HEREDOC
 
 # `search <folder>/` ##########################################################
 
-@test "'search <folder>/' (slash) searches within <folder> and subfolders." {
+@test "'search <query> <folder>/' (slash) searches for <query> within <folder> and subfolders." {
   {
     "${_NB}" init
 
@@ -634,7 +633,7 @@ HEREDOC
   [[ "${lines[11]}" =~  example\ phrase                               ]]
 }
 
-@test "'search <folder>' (no slash) searches within <folder> and subfolders." {
+@test "'search <query> <folder>' (no slash) searches for <query> within <folder> and subfolders." {
   {
     "${_NB}" init
 
@@ -677,7 +676,7 @@ HEREDOC
 
 # `search --no-recurse` #######################################################
 
-@test "'search <folder>/ --no-recurse' (slash) searches within <folder> only." {
+@test "'search <query> <folder>/ --no-recurse' (slash) searches within <folder> only." {
   {
     "${_NB}" init
 
@@ -708,7 +707,7 @@ HEREDOC
   [[ -z "${lines[6]}"                                     ]]
 }
 
-@test "'search <folder> --no-recurse' (no slash) searches within <folder> only." {
+@test "'search <query> <folder> --no-recurse' (no slash) searches within <folder> only." {
   {
     "${_NB}" init
 
@@ -741,7 +740,7 @@ HEREDOC
 
 # `search` local notebook #####################################################
 
-@test "'search folder/' (slash) in local notebook exits with status 0 and prints output." {
+@test "'search <query> <folder>/' (slash) in local notebook exits with status 0 and prints output." {
   {
     "${_NB}" init
 
@@ -792,7 +791,7 @@ HEREDOC
   [[ "${lines[11]}" =~  example\ phrase                                         ]]
 }
 
-@test "'search folder' (no slash) in local notebook exits with status 0 and prints output." {
+@test "'search <query> <folder>' (no slash) in local notebook exits with status 0 and prints output." {
   {
     "${_NB}" init
 
