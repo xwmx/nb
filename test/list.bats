@@ -2,6 +2,82 @@
 
 load test_helper
 
+# `list` not found message ####################################################
+
+@test "'list <no-match>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${#lines[@]}" -eq 1                       ]]
+  [[ "${lines[0]}"  =~  Not\ found:\ .*no-match ]]
+}
+
+@test "'list <not-valid> <no-match>' exits with 1 and prints message with both." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list not-valid no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                 ]]
+  [[ "${#lines[@]}" -eq 1                                 ]]
+  [[ "${lines[0]}"  =~  Not\ found:\ .*not-valid|no-match ]]
+}
+
+@test "'list <not-valid-selector> <no-match>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list home:Example\ Folder/not-valid.md no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                                ]]
+  [[    "${#lines[@]}" -eq 1                                                ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:Example\ Folder/not-valid.md ]]
+  [[ !  "${lines[0]}"  =~  no-match                                         ]]
+}
+
+# TODO
+# @test "'list <folder> <no-match>' exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#   }
+
+#   run "${_NB}" list Example\ Folder/ no-match
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[    "${status}"    -eq 0                                          ]]
+#   [[    "${#lines[@]}" -eq 1                                          ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/\ no-match  ]]
+# }
+
 # `list` edge cases ###########################################################
 
 @test "'list <id> <no-match>' exits with 0 and lists matching file." {

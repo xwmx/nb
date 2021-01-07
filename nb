@@ -4608,7 +4608,7 @@ ${_TPUT_SGR0}"
     if ! ((_printed_count)) && [[ -n "${_selector_identifier:-}" ]]
     then
       local _filter_message=
-      _filter_message="$(_color_primary "${_selector}")"
+      _filter_message="$(_color_primary "${_filter_pattern:-}")"
 
       if [[ -n "${_type:-}" ]]
       then
