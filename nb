@@ -4692,22 +4692,23 @@ ${_TPUT_SGR0}"
     if ! ((_printed_count)) && [[ -n "${_filter_pattern:-}" ]]
     then
       local _filter_message=
-      _filter_message="$(_color_primary "${_filter_pattern:-}")"
-
-      if [[ -n "${_folder_path:-}" ]]
-      then
-        _filter_message="$(_color_primary "${_folder_path}/") ${_filter_message}"
-      fi
 
       if _notebooks current --selected
       then
-        if [[ -n "${_folder_path:-}" ]]
-        then
-          _filter_message="$(_color_primary "$(_notebooks current):")${_filter_message}"
-        else
-          _filter_message="$(_color_primary "$(_notebooks current):") ${_filter_message}"
-        fi
+        _filter_message="$(_color_primary "$(_notebooks current):")"
       fi
+
+      if [[ -n "${_folder_path:-}" ]]
+      then
+        _filter_message="${_filter_message}$(_color_primary "${_folder_path}/")"
+      fi
+
+      if [[ -n "${_filter_message:-}" ]]
+      then
+        _filter_message="${_filter_message} "
+      fi
+
+      _filter_message="${_filter_message}$(_color_primary "${_filter_pattern:-}")"
 
       if [[ -n "${_type:-}" ]]
       then
