@@ -13230,19 +13230,18 @@ __load_plugins() {
 }; __load_plugins
 
 ###############################################################################
-# Load Deferred Subcommands                           Load Deferred Subcommands
+# Run Deferred Subcommand                               Run Deferred Subcommand
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
-
-_load_deferred_subcommand() {
+_run_deferred_subcommand() {
   if [[ -n "${_DEFERRED_SUBCOMMAND:-}" ]]
   then
     local _deferred_subcommand="${_DEFERRED_SUBCOMMAND:-}"
-    local _deferred_arguments=("${_DEFERRED_ARGUMENTS[@]:-}")
+    export _DEFERRED_SUBCOMMAND=
 
-    "_${_deferred_subcommand}" "${_deferred_arguments[@]}"
+    "_${_deferred_subcommand}" "${_DEFERRED_ARGUMENTS[@]:-}"
 
     return 0
   fi
-}; _load_deferred_subcommand
+}; _run_deferred_subcommand
