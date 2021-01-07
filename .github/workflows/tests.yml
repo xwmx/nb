@@ -43,7 +43,7 @@ name: "nb · Test Suite"
 
 on:
   push:
-    branches: [ master, github-actions, subcommand-priority ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
