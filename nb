@@ -4359,7 +4359,8 @@ _list() {
       then
         shopt -s nocasematch
 
-        if [[ "${__basename:-}" =~ ${_filter_pattern} ]]
+        if [[ "${__basename:-}" == "${_selector_basename}"  ]] ||
+           [[ "${__basename:-}" =~ ${_filter_pattern}       ]]
         then
           # include in list
           _matches=$((_matches+1))

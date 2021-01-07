@@ -2,6 +2,41 @@
 
 load test_helper
 
+# `list` edge cases ###########################################################
+
+@test "'list <id> <no-match>' exits with 0 and lists matching file." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list not-valid 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ One    ]]
+
+  run "${_NB}" list 2 -x
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ Two    ]]
+
+  run "${_NB}" list 3 non-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ Three  ]]
+}
+
 # `list` (empty) ##############################################################
 
 @test "'list' (empty) exits with 0 and lists files." {
