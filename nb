@@ -2717,328 +2717,6 @@ desc() { describe "${@}"; }
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
-###############################################################################
-# help
-###############################################################################
-
-describe "help" <<HEREDOC
-Usage:
-  ${_ME} help [<subcommand>] [-p | --print]
-  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
-
-Options:
-  -c, --colors  View information about color themes and color settings.
-  -p, --print   Print to standard output / terminal.
-  -r, --readme  View the \`${_ME}\` README file.
-  -s, --short   Print shorter help without subcommand descriptions.
-
-Description:
-  Print the program help information. When a subcommand name is passed, print
-  the help information for the subcommand.
-
-Examples:
-  ${_ME} help
-  ${_ME} help add
-  ${_ME} help import
-  ${_ME} h notebooks
-  ${_ME} h e
-
-Shortcut Alias: \`h\`
-HEREDOC
-_help() {
-  local _arguments=()
-  local _color_help=0
-  local _readme=0
-  local _shell=0
-  local _short=0
-  local _use_pager=1
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --pager)
-        _use_pager=1
-        ;;
-      -p|--print|--dump|--skip*pager|--no*pager)
-        _use_pager=0
-        ;;
-      -r|*readme*|*README*)
-        _readme=1
-        ;;
-      --shell)
-        _shell=1
-        ;;
-      -s|--short)
-        _short=1
-        ;;
-      -c|*color*|*colour*|*theme*)
-        _color_help=1
-        ;;
-      *)
-        _arguments+=("${__arg}")
-        ;;
-    esac
-  done
-
-  if ((_readme))
-  then
-    _download_from \
-      "${_REPO_RAW_URL}/README.md" \
-      | if _command_exists "pandoc" && _browser
-        then
-          pandoc --from markdown --to html | _browser
-          return 0
-        else
-          _highlight_syntax_if_available
-        fi
-  elif ((_color_help))
-  then
-    # NOTE: this screen mirrors the content from README.md#-color-themes:
-    # https://github.com/xwmx/nb#-color-themes
-    _color_primary "__          _                     _"
-    _color_primary "\ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
-    _color_primary " \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
-    _color_primary " / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
-    _color_primary "/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
-    _color_secondary "\
----------------------------------------------------"
-  cat <<HEREDOC
-\`${_ME}\` uses color to highlight various interface elements, including ids,
-the current notebook name, the shell prompt, and divider lines.
-
-\`${_ME}\` includes several built-in color themes and also supports user-defined
-themes. The current color theme can be set using \`${_ME} set color_theme\`:
-
-    $(_color_primary "${_ME} set color_theme")
-
-Custom color themes are \`nb\` plugins with a \`.nb-theme\` file extension.
-A theme is defined with a single \`if\` statement indicating the name and
-assigning the color environment variables to \`tput\` ANSI color numbers:
-
-    $(_color_secondary "# turquoise.nb-theme")
-    $(_color_primary "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
-    $(_color_primary "then")
-    $(_color_primary "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
-    $(_color_primary "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
-    $(_color_primary "fi")
-
-View this theme as a complete file:
-
-    $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
-
-Themes can be installed using the \`${_ME} plugins\` subcommand:
-
-    $(_color_dim ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
-    $(_color_secondary "Plugin installed:")
-    $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
-
-Once a theme is installed, use it with \`${_ME} set color_theme\`:
-
-    $(_color_dim ">") $(_color_primary "set color_theme turquoise")
-    $(_color_secondary "NB_COLOR_THEME set to turquoise")
-
-The primary and secondary colors can also be overridden individually,
-making color themes easily customizable:
-
-    $(_color_secondary "# open the settings prompt for the primary color")
-    $(_color_primary "${_ME} set color_primary")
-
-    $(_color_secondary "# open the settings prompt for the secondary color")
-    $(_color_primary "${_ME} set color_secondary")
-
-To view a table of available colors and numbers, run:
-
-    $(_color_primary "${_ME} settings colors")
-
-To set the syntax highlighting color theme, use:
-
-    $(_color_primary "${_ME} set syntax_theme")
-
-HEREDOC
-  elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
-  then
-    _color_primary    "__          _"
-    _color_primary    "\ \   _ __ | |__"
-    _color_primary    " \ \ | '_ \| '_ \\"
-    _color_primary    " / / | | | | |_) |"
-    _color_primary    "/_/  |_| |_|_.__/"
-    _color_secondary  "------------------"
-   cat <<HEREDOC
-
-$(_color_brackets "nb") Command line note-taking, bookmarking, archiving with plain-text data
-storage, encryption, filtering and search, Git-backed versioning and syncing,
-Pandoc-backed conversion, global and local notebooks, customizable color
-themes, plugins, and more in a single portable, user-friendly script.
-
-$(_color_primary "Help:")
-  ${_ME} help               Display this help information.
-  ${_ME} help <subcommand>  View help information for <subcommand>.
-  ${_ME} help --colors      View information about color settings.
-  ${_ME} help --readme      View the \`${_ME}\` README file.
-
-$(_color_primary "Usage:")
-  ${_ME}
-  ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
-  ${_ME} [<url>] [<bookmark options>...]
-  ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
-         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
-         [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [-t <title> | --title <title>] [--type <type>]
-  ${_ME} add folder [<name>]
-  ${_ME} bookmark [<ls options>...]
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
-  ${_ME} bookmark [list [<list-options>...]]
-  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
-  ${_ME} bookmark search <query>
-  ${_ME} completions (check | install [-d | --download] | uninstall)
-  ${_ME} count [<notebook>:][<relative-path>]
-  ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
-  ${_ME} edit (<id> | <filename> | <path> | <title>)
-          [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
-  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-            [<pandoc options>...]
-  ${_ME} export notebook <name> [<path>]
-  ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
-            [<pandoc options>...]
-  ${_ME} git [checkpoint [<message>] | dirty]
-  ${_ME} git <git-options>...
-  ${_ME} help [<subcommand>] [-p | --print]
-  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
-  ${_ME} history [<id> | <filename> | <path> | <title>]
-  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-  ${_ME} import notebook <path> [<name>]
-  ${_ME} init [<remote-url>]
-  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-          [-r | --reverse] [-t <type> | --type <type> | --<type>]
-          [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
-        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
-        [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url>]
-  ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
-                       [--global | --local]
-  ${_ME} notebooks delete <name> [-f | --force]
-  ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url>]]
-  ${_ME} notebooks rename <old-name> <new-name>
-  ${_ME} notebooks select <selector>
-  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
-                    [--escaped | --name | --path | --filename [<filename>]]
-  ${_ME} notebooks use <name>
-  ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
-  ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
-  ${_ME} plugins [<name>] [--paths]
-  ${_ME} plugins install [<path> | <url>] [--force]
-  ${_ME} plugins uninstall <name> [--force]
-  ${_ME} remote [remove | set <url> [-f | --force]]
-  ${_ME} run <command> [<arguments>...]
-  ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                    [-l | --list] [--path]
-  ${_ME} set [<name> [<value>] | <number> [<value>]]
-  ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
-  ${_ME} settings (get | show | unset) (<name> | <number>)
-  ${_ME} settings set (<name> | <number>) <value>
-  ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
-          --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
-  ${_ME} show <notebook>
-  ${_ME} subcommands [add <name>...] [alias <name> <alias>]
-                 [describe <name> <usage>]
-  ${_ME} sync [-a | --all]
-  ${_ME} update
-  ${_ME} use <notebook>
-  ${_ME} -i | --interactive [<subcommand> [<options>...]]
-  ${_ME} -h | --help | help [<subcommand> | --readme]
-  ${_ME} --no-color
-  ${_ME} --version | version
-HEREDOC
-
-    if ! ((_short))
-    then
-      cat <<HEREDOC
-
-$(_color_primary "Subcommands:")
-  (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
-               When a <url> is provided, create a new bookmark.
-  add          Add a note, folder, or a file of a specified type.
-  bookmark     Add, open, list, and search bookmarks.
-  completions  Install and uninstall completion scripts.
-  count        Print the number of items in a notebook or folder.
-  delete       Delete a note.
-  edit         Edit a note.
-  export       Export a note to a variety of different formats.
-  git          Run \`git\` commands within the current notebook.
-  help         View help information for the program or a subcommand.
-  history      View git history for the current notebook or a note.
-  import       Import a file into the current notebook.
-  init         Initialize the first notebook.
-  list         List notes in the current notebook.
-  ls           List notebooks and notes in the current notebook.
-  move         Move or rename a note.
-  notebooks    Manage notebooks.
-  open         Open a bookmarked web page or notebook folder, or edit a note.
-  peek         View a note, bookmarked web page, or notebook in the terminal.
-  plugins      Install and uninstall plugins and themes.
-  remote       Get, set, and remove the remote URL for the notebook.
-  run          Run shell commands within the current notebook.
-  search       Search notes.
-  settings     Edit configuration settings.
-  shell        Start the \`${_ME}\` interactive shell.
-  show         Show a note or notebook.
-  status       Run \`git status\` in the current notebook.
-  subcommands  List, add, alias, and describe subcommands.
-  sync         Sync local notebook with the remote repository.
-  update       Update \`${_ME}\` to the latest version.
-  use          Switch to a notebook.
-  version      Display version information.
-
-$(_color_primary "Notebook Usage:")
-  ${_ME} <notebook>:[<subcommand>] [<identifier>] [<options>...]
-  ${_ME} <subcommand> <notebook>:<identifier> [<options>...]
-
-$(_color_primary "Program Options:")
-  -i, --interactive   Start the \`${_ME}\` interactive shell.
-  -h, --help          Display this help information.
-  --no-color          Print without color highlighting.
-  --version           Display version information.
-
-$(_color_primary "More Information:")
-  https://github.com/${_REPO}
-HEREDOC
-    fi
-  else
-    printf "%s\\n" "$(describe --get "${_arguments[@]}")"
-  fi |  if ((_shell))
-        then
-          sed -e "s/^  nb /  /" -e "/^  nb$/d"
-        else
-          cat
-        fi |  if ((_use_pager))
-              then
-                _pager
-              else
-                cat
-              fi
-}
-_alias_subcommand "help" "h"
-
 # count · ############################################################# · count
 
 describe "count" <<HEREDOC
@@ -3556,6 +3234,326 @@ HEREDOC
       ;;
   esac
 }
+
+# help · ############################################################### · help
+
+describe "help" <<HEREDOC
+Usage:
+  ${_ME} help [<subcommand>] [-p | --print]
+  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
+
+Options:
+  -c, --colors  View information about color themes and color settings.
+  -p, --print   Print to standard output / terminal.
+  -r, --readme  View the \`${_ME}\` README file.
+  -s, --short   Print shorter help without subcommand descriptions.
+
+Description:
+  Print the program help information. When a subcommand name is passed, print
+  the help information for the subcommand.
+
+Examples:
+  ${_ME} help
+  ${_ME} help add
+  ${_ME} help import
+  ${_ME} h notebooks
+  ${_ME} h e
+
+Shortcut Alias: \`h\`
+HEREDOC
+_help() {
+  local _arguments=()
+  local _color_help=0
+  local _readme=0
+  local _shell=0
+  local _short=0
+  local _use_pager=1
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --pager)
+        _use_pager=1
+        ;;
+      -p|--print|--dump|--skip*pager|--no*pager)
+        _use_pager=0
+        ;;
+      -r|*readme*|*README*)
+        _readme=1
+        ;;
+      --shell)
+        _shell=1
+        ;;
+      -s|--short)
+        _short=1
+        ;;
+      -c|*color*|*colour*|*theme*)
+        _color_help=1
+        ;;
+      *)
+        _arguments+=("${__arg}")
+        ;;
+    esac
+  done
+
+  if ((_readme))
+  then
+    _download_from \
+      "${_REPO_RAW_URL}/README.md" \
+      | if _command_exists "pandoc" && _browser
+        then
+          pandoc --from markdown --to html | _browser
+          return 0
+        else
+          _highlight_syntax_if_available
+        fi
+  elif ((_color_help))
+  then
+    # NOTE: this screen mirrors the content from README.md#-color-themes:
+    # https://github.com/xwmx/nb#-color-themes
+    _color_primary "__          _                     _"
+    _color_primary "\ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
+    _color_primary " \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
+    _color_primary " / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
+    _color_primary "/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
+    _color_secondary "\
+---------------------------------------------------"
+  cat <<HEREDOC
+\`${_ME}\` uses color to highlight various interface elements, including ids,
+the current notebook name, the shell prompt, and divider lines.
+
+\`${_ME}\` includes several built-in color themes and also supports user-defined
+themes. The current color theme can be set using \`${_ME} set color_theme\`:
+
+    $(_color_primary "${_ME} set color_theme")
+
+Custom color themes are \`nb\` plugins with a \`.nb-theme\` file extension.
+A theme is defined with a single \`if\` statement indicating the name and
+assigning the color environment variables to \`tput\` ANSI color numbers:
+
+    $(_color_secondary "# turquoise.nb-theme")
+    $(_color_primary "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
+    $(_color_primary "then")
+    $(_color_primary "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
+    $(_color_primary "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
+    $(_color_primary "fi")
+
+View this theme as a complete file:
+
+    $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+
+Themes can be installed using the \`${_ME} plugins\` subcommand:
+
+    $(_color_dim ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_secondary "Plugin installed:")
+    $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
+
+Once a theme is installed, use it with \`${_ME} set color_theme\`:
+
+    $(_color_dim ">") $(_color_primary "set color_theme turquoise")
+    $(_color_secondary "NB_COLOR_THEME set to turquoise")
+
+The primary and secondary colors can also be overridden individually,
+making color themes easily customizable:
+
+    $(_color_secondary "# open the settings prompt for the primary color")
+    $(_color_primary "${_ME} set color_primary")
+
+    $(_color_secondary "# open the settings prompt for the secondary color")
+    $(_color_primary "${_ME} set color_secondary")
+
+To view a table of available colors and numbers, run:
+
+    $(_color_primary "${_ME} settings colors")
+
+To set the syntax highlighting color theme, use:
+
+    $(_color_primary "${_ME} set syntax_theme")
+
+HEREDOC
+  elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
+  then
+    _color_primary    "__          _"
+    _color_primary    "\ \   _ __ | |__"
+    _color_primary    " \ \ | '_ \| '_ \\"
+    _color_primary    " / / | | | | |_) |"
+    _color_primary    "/_/  |_| |_|_.__/"
+    _color_secondary  "------------------"
+   cat <<HEREDOC
+
+$(_color_brackets "nb") Command line note-taking, bookmarking, archiving with plain-text data
+storage, encryption, filtering and search, Git-backed versioning and syncing,
+Pandoc-backed conversion, global and local notebooks, customizable color
+themes, plugins, and more in a single portable, user-friendly script.
+
+$(_color_primary "Help:")
+  ${_ME} help               Display this help information.
+  ${_ME} help <subcommand>  View help information for <subcommand>.
+  ${_ME} help --colors      View information about color settings.
+  ${_ME} help --readme      View the \`${_ME}\` README file.
+
+$(_color_primary "Usage:")
+  ${_ME}
+  ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
+  ${_ME} [<url>] [<bookmark options>...]
+  ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
+         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
+         [-f <filename> | --filename <filename>] [--folder <folder-path>]
+         [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add folder [<name>]
+  ${_ME} bookmark [<ls options>...]
+  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
+              [-e | --encrypt] [-f <filename> | --filename <filename>]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
+              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
+  ${_ME} bookmark [list [<list-options>...]]
+  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark search <query>
+  ${_ME} completions (check | install [-d | --download] | uninstall)
+  ${_ME} count [<notebook>:][<relative-path>]
+  ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  ${_ME} edit (<id> | <filename> | <path> | <title>)
+          [-c <content> | --content <content>] [--edit]
+          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
+            [<pandoc options>...]
+  ${_ME} export notebook <name> [<path>]
+  ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
+            [<pandoc options>...]
+  ${_ME} git [checkpoint [<message>] | dirty]
+  ${_ME} git <git-options>...
+  ${_ME} help [<subcommand>] [-p | --print]
+  ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
+  ${_ME} history [<id> | <filename> | <path> | <title>]
+  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
+  ${_ME} import notebook <path> [<name>]
+  ${_ME} init [<remote-url>]
+  ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
+          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
+          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+          [-r | --reverse] [-t <type> | --type <type> | --<type>]
+          [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
+        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
+  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
+               [--paths] [--unarchived]
+  ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
+  ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
+                       [--global | --local]
+  ${_ME} notebooks delete <name> [-f | --force]
+  ${_ME} notebooks (export <name> [<path>] | import <path>)
+  ${_ME} notebooks init [<path> [<remote-url>]]
+  ${_ME} notebooks rename <old-name> <new-name>
+  ${_ME} notebooks select <selector>
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+                    [--escaped | --name | --path | --filename [<filename>]]
+  ${_ME} notebooks use <name>
+  ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} plugins [<name>] [--paths]
+  ${_ME} plugins install [<path> | <url>] [--force]
+  ${_ME} plugins uninstall <name> [--force]
+  ${_ME} remote [remove | set <url> [-f | --force]]
+  ${_ME} run <command> [<arguments>...]
+  ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
+                    [-l | --list] [--path]
+  ${_ME} set [<name> [<value>] | <number> [<value>]]
+  ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
+  ${_ME} settings (get | show | unset) (<name> | <number>)
+  ${_ME} settings set (<name> | <number>) <value>
+  ${_ME} shell [<subcommand> [<options>...] | --clear-history]
+  ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
+          --filename | --id | --info-line | --path | [-p | --print]
+          [-r | --render] | --selector-id | --title | --type [<type>] |
+          [-u | --updated]] [--no-color]
+  ${_ME} show <notebook>
+  ${_ME} subcommands [add <name>...] [alias <name> <alias>]
+                 [describe <name> <usage>]
+  ${_ME} sync [-a | --all]
+  ${_ME} update
+  ${_ME} use <notebook>
+  ${_ME} -i | --interactive [<subcommand> [<options>...]]
+  ${_ME} -h | --help | help [<subcommand> | --readme]
+  ${_ME} --no-color
+  ${_ME} --version | version
+HEREDOC
+
+    if ! ((_short))
+    then
+      cat <<HEREDOC
+
+$(_color_primary "Subcommands:")
+  (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
+               When a <url> is provided, create a new bookmark.
+  add          Add a note, folder, or a file of a specified type.
+  bookmark     Add, open, list, and search bookmarks.
+  completions  Install and uninstall completion scripts.
+  count        Print the number of items in a notebook or folder.
+  delete       Delete a note.
+  edit         Edit a note.
+  export       Export a note to a variety of different formats.
+  git          Run \`git\` commands within the current notebook.
+  help         View help information for the program or a subcommand.
+  history      View git history for the current notebook or a note.
+  import       Import a file into the current notebook.
+  init         Initialize the first notebook.
+  list         List notes in the current notebook.
+  ls           List notebooks and notes in the current notebook.
+  move         Move or rename a note.
+  notebooks    Manage notebooks.
+  open         Open a bookmarked web page or notebook folder, or edit a note.
+  peek         View a note, bookmarked web page, or notebook in the terminal.
+  plugins      Install and uninstall plugins and themes.
+  remote       Get, set, and remove the remote URL for the notebook.
+  run          Run shell commands within the current notebook.
+  search       Search notes.
+  settings     Edit configuration settings.
+  shell        Start the \`${_ME}\` interactive shell.
+  show         Show a note or notebook.
+  status       Run \`git status\` in the current notebook.
+  subcommands  List, add, alias, and describe subcommands.
+  sync         Sync local notebook with the remote repository.
+  update       Update \`${_ME}\` to the latest version.
+  use          Switch to a notebook.
+  version      Display version information.
+
+$(_color_primary "Notebook Usage:")
+  ${_ME} <notebook>:[<subcommand>] [<identifier>] [<options>...]
+  ${_ME} <subcommand> <notebook>:<identifier> [<options>...]
+
+$(_color_primary "Program Options:")
+  -i, --interactive   Start the \`${_ME}\` interactive shell.
+  -h, --help          Display this help information.
+  --no-color          Print without color highlighting.
+  --version           Display version information.
+
+$(_color_primary "More Information:")
+  https://github.com/${_REPO}
+HEREDOC
+    fi
+  else
+    printf "%s\\n" "$(describe --get "${_arguments[@]}")"
+  fi |  if ((_shell))
+        then
+          sed -e "s/^  nb /  /" -e "/^  nb$/d"
+        else
+          cat
+        fi |  if ((_use_pager))
+              then
+                _pager
+              else
+                cat
+              fi
+}
+_alias_subcommand "help" "h"
 
 # index · ############################################################# · index
 
