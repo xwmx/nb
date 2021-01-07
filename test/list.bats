@@ -76,9 +76,10 @@ load test_helper
   [[    "${lines[0]}"  =~  Title\ Three ]]
 }
 
-@test "'list <folder> <no-match>' exits with 1 and prints message." {
+@test "'list <folder>/ <no-match>' (slash) exits with 1 and prints message." {
   {
     "${_NB}" init
+
     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
@@ -92,6 +93,25 @@ load test_helper
   [[    "${status}"    -eq 1                                              ]]
   [[    "${#lines[@]}" -eq 1                                              ]]
   [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+}
+
+@test "'list <folder> <no-match>' (no slash) exits with 0 and lists folder match." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                          ]]
+  [[    "${#lines[@]}" -eq 1                          ]]
+  [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
 }
 
 @test "'list <notebook>:<no-match>' (no space) exits with 1 and prints message." {
