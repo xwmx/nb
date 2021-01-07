@@ -4260,21 +4260,13 @@ _list() {
         _filter_patterns+=("${__selector}")
       fi
     else
-      if [[ -n "${_selector_relative_path:-}" ]]
+      if [[ -n "${_selector:-}" ]]
       then
         _filter_patterns+=("${__selector}")
       else
         _selector_relative_path="$(
           _show "${__selector%\/}" --relative-path 2>/dev/null || :
         )"
-
-        if [[ -z "${_selector_relative_path:-}"               ]]  &&
-           [[ -n "${__selector%%:*}"                          ]]  &&
-           _notebooks current --selected                          &&
-           [[ "${__selector%%:*}" == "$(_notebooks current)"  ]]
-        then
-          _notebooks select "$(cat "${NB_DIR}/.current")"
-        fi
 
         if [[ "${__selector:-}" =~ /$ ]]
         then
@@ -4311,7 +4303,7 @@ _list() {
               _show "${__selector%\/*}" --relative-path 2>/dev/null || :
             )"
 
-            if [[ -n "${_selector_relative_path:-}" ]] &&
+            if [[ -n "${_selector_relative_path:-}"                   ]] &&
                [[ -d "${_notebook_path}/${_selector_relative_path:-}" ]]
             then
               _folder_path="${_selector_relative_path}"
@@ -4325,14 +4317,42 @@ _list() {
             fi
           fi
         else
-          if [[ -n "${_selector_relative_path:-}"                   ]] &&
-             [[ ! -d "${_notebook_path}/${_selector_relative_path}" ]]
+          if [[ -n "${_selector_relative_path:-}"                   ]]
           then
-            _folder_path=
-            _selector="${__selector}"
-            _selector_basename="${_selector_relative_path##*\/}"
+            if [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
+            then
+              if [[ "${_selector_relative_path:-}" =~ /             ]]
+              then
+                _folder_path="${_selector_relative_path%\/*}"
+                _selector_basename="${_selector_relative_path##*\/}"
+              else
+                _folder_path=
+                _selector_basename="${_selector_relative_path}"
+              fi
+
+              _selector="${_folder_path:-}"
+            else
+              _folder_path=
+              _selector="${__selector}"
+              _selector_basename="${_selector_relative_path##*\/}"
+            fi
           else
-            _filter_patterns+=("${__selector}")
+            if [[ "${__selector:-}" =~ : ]]
+            then
+              local _selector_notebook_path=
+              _selector_notebook_path="$(_notebooks show "${__selector%%:*}" --path)"
+
+              if [[ -n "${_selector_notebook_path:-}"                   ]] &&
+                 [[ "${_selector_notebook_path}" == "${_notebook_path}" ]]
+              then
+                _selector="${__selector%%:*}"
+                _filter_patterns+=("${__selector#*:}")
+              else
+                _filter_patterns+=("${__selector}")
+              fi
+            else
+              _filter_patterns+=("${__selector}")
+            fi
           fi
         fi
       fi
@@ -4681,7 +4701,12 @@ ${_TPUT_SGR0}"
 
       if _notebooks current --selected
       then
-        _filter_message="$(_color_primary "$(_notebooks current):")${_filter_message}"
+        if [[ -n "${_folder_path:-}" ]]
+        then
+          _filter_message="$(_color_primary "$(_notebooks current):")${_filter_message}"
+        else
+          _filter_message="$(_color_primary "$(_notebooks current):") ${_filter_message}"
+        fi
       fi
 
       if [[ -n "${_type:-}" ]]

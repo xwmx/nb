@@ -76,6 +76,72 @@ load test_helper
   [[    "${lines[0]}"  =~  Title\ Three ]]
 }
 
+@test "'list <folder> <no-match>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder/ no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                              ]]
+  [[    "${#lines[@]}" -eq 1                                              ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+}
+
+@test "'list <notebook>:<no-match>' (no space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" list home:no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                              ]]
+  [[    "${#lines[@]}" -eq 1                                              ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*\ .*no-match  ]]
+}
+
+@test "'list <notebook>: <no-match>' (space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" list home: no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                              ]]
+  [[    "${#lines[@]}" -eq 1                                              ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*\ .*no-match  ]]
+}
+
 @test "'list <notebook>:<not-valid-path> <match>' exits with 0 and lists match." {
   {
     "${_NB}" init
@@ -87,6 +153,11 @@ load test_helper
     "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
     "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
     "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
   run "${_NB}" list home:Not Valid/not-valid.md three
@@ -110,6 +181,11 @@ load test_helper
     "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
     "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
     "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
   run "${_NB}" list home:Example\ Folder/not-valid.md three
@@ -122,22 +198,76 @@ load test_helper
   [[    "${lines[0]}"  =~  Nested\ Title\ Three ]]
 }
 
-@test "'list <folder> <no-match>' exits with 1 and prints message." {
+@test "'list <notebook>:<folder>/<no-match>' (slash, no space) exits with 1 and prints message." {
   {
     "${_NB}" init
+
     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" list Example\ Folder/ no-match
+  run "${_NB}" list home:Example\ Folder/no-match
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                              ]]
-  [[    "${#lines[@]}" -eq 1                                              ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+  [[    "${status}"    -eq 1                                                    ]]
+  [[    "${#lines[@]}" -eq 1                                                    ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
+}
+
+@test "'list <notebook>:<folder>/ <no-match>' (slash, space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" list home:Example\ Folder/ no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                                    ]]
+  [[    "${#lines[@]}" -eq 1                                                    ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
+}
+
+@test "'list <notebook>:<folder> <no-match>' (no slash) exits with 0 and lists folder match." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" list home:Example\ Folder no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                          ]]
+  [[    "${#lines[@]}" -eq 1                          ]]
+  [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
 }
 
 # `list` edge cases ###########################################################
