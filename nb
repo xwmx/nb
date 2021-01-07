@@ -25,7 +25,7 @@
 # - Configuration and Setup
 # - Helper Functions (alphabetical order)
 # - Help
-# - Priority Subcommands (alphabetical order)
+# - Core Subcommands (alphabetical order)
 # - Option Parsing
 # - _main() / Dispatch
 # - Deferred Subcommands (alphabetical order)
@@ -2712,8 +2712,8 @@ HEREDOC
 desc() { describe "${@}"; }
 
 ###############################################################################
-# Priority Subcommands                                     Priority Subcommands
-# --------------------                                     --------------------
+# Core Subcommands                                             Core Subcommands
+# ----------------                                             ----------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
