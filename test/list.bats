@@ -43,40 +43,102 @@ load test_helper
 @test "'list <not-valid-selector> <no-match>' exits with 1 and prints message." {
   {
     "${_NB}" init
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
   }
 
-  run "${_NB}" list home:Example\ Folder/not-valid.md no-match
+  run "${_NB}" list 123:x\ y\ z/not-valid.md no-match
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}"    -eq 1                                                ]]
   [[    "${#lines[@]}" -eq 1                                                ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*home:Example\ Folder/not-valid.md ]]
-  [[ !  "${lines[0]}"  =~  no-match                                         ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*123:x\ y\ z/not-valid.md|no-match ]]
 }
 
-# TODO
-# @test "'list <folder> <no-match>' exits with 1 and prints message." {
-#   {
-#     "${_NB}" init
-#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
-#   }
+@test "'list <not-valid-selector> <match>' exits with 0 and prints match." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
 
-#   run "${_NB}" list Example\ Folder/ no-match
+  run "${_NB}" list 123:x\ y\ z/not-valid.md three
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    -eq 0                                          ]]
-#   [[    "${#lines[@]}" -eq 1                                          ]]
-#   [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/\ no-match  ]]
-# }
+  [[    "${status}"    -eq 0            ]]
+  [[    "${#lines[@]}" -eq 1            ]]
+  [[    "${lines[0]}"  =~  Title\ Three ]]
+}
+
+@test "'list <notebook>:<not-valid-path> <match>' exits with 0 and lists match." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Root File One.md"    --title "Root Title One"
+    "${_NB}" add "Root File Two.md"    --title "Root Title Two"
+    "${_NB}" add "Root File Three.md"  --title "Root Title Three"
+
+    "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
+    "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
+    "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
+  }
+
+  run "${_NB}" list home:Not Valid/not-valid.md three
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                    ]]
+  [[    "${#lines[@]}" -eq 1                    ]]
+  [[    "${lines[0]}"  =~  Root\ Title\ Three   ]]
+}
+
+@test "'list <notebook>:<folder>/<not-valid-item> <match>' exits with 0 and lists nested match." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Root File One.md"    --title "Root Title One"
+    "${_NB}" add "Root File Two.md"    --title "Root Title Two"
+    "${_NB}" add "Root File Three.md"  --title "Root Title Three"
+
+    "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
+    "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
+    "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
+  }
+
+  run "${_NB}" list home:Example\ Folder/not-valid.md three
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                    ]]
+  [[    "${#lines[@]}" -eq 1                    ]]
+  [[    "${lines[0]}"  =~  Nested\ Title\ Three ]]
+}
+
+@test "'list <folder> <no-match>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder/ no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                              ]]
+  [[    "${#lines[@]}" -eq 1                                              ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+}
 
 # `list` edge cases ###########################################################
 
@@ -88,14 +150,13 @@ load test_helper
     "${_NB}" add "File Three.md"  --title "Title Three"
   }
 
-  # TODO
-  # run "${_NB}" list not-valid 1
+  run "${_NB}" list not-valid 1
 
-  # printf "\${status}: '%s'\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # [[ "${status}"    -eq 0             ]]
-  # [[ "${lines[0]}"  =~  Title\ One    ]]
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ One    ]]
 
   run "${_NB}" list 2 -x
 

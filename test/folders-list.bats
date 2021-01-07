@@ -367,16 +367,15 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 1                         ]]
+  [[   "${status}"    -eq 1                                         ]]
 
-  [[   "${lines[0]}"  =~ Not\ found:                ]]
-  [[   "${lines[0]}"  =~ Example\ Folder/not-valid  ]]
+  [[   "${lines[0]}"  =~ Not\ found:.*Example\ Folder/not-valid/    ]]
 
-  [[ ! "${output}"  =~ three                        ]]
-  [[ ! "${output}"  =~ 🔖\ 🔒                       ]]
-  [[ ! "${output}"  =~ two                          ]]
-  [[ ! "${output}"  =~ 🔖                           ]]
-  [[ ! "${output}"  =~ one                          ]]
+  [[ ! "${output}"  =~ three                                        ]]
+  [[ ! "${output}"  =~ 🔖\ 🔒                                       ]]
+  [[ ! "${output}"  =~ two                                          ]]
+  [[ ! "${output}"  =~ 🔖                                           ]]
+  [[ ! "${output}"  =~ one                                          ]]
 }
 
 @test "'list not-valid/not-valid/' exits with 1 and prints message." {
@@ -451,10 +450,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 1                         ]]
+  [[   "${status}"    -eq 1                                           ]]
 
-  [[   "${lines[0]}"  =~ Not\ found:                ]]
-  [[   "${lines[0]}"  =~ Example\ Folder/not-valid  ]]
+  [[   "${lines[0]}"  =~ Not\ found:.*Example\ Folder/.*\ .*not-valid ]]
 }
 
 @test "'list not-valid/not-valid' exits with 1 and prints message." {

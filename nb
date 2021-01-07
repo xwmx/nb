@@ -4150,14 +4150,11 @@ _list() {
   local _maybe_id_path=
   local _maybe_scope=
   local _no_id=0
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
   local _folder_path=
   local _print_excerpt=0
   local _print_indicators=1
   local _list_paths=0
   local _reverse=0
-  local _selector=
   local _selectors=()
   local _sort=0
   local _type=
@@ -4229,11 +4226,6 @@ _list() {
         then
           _type="${__arg:2}"
         else
-          if [[ -z "${_selector:-}" ]]
-          then
-            _selector="${__arg:-}"
-          fi
-
           _selectors+=("${__arg:-}")
         fi
         ;;
@@ -4242,50 +4234,118 @@ _list() {
     shift
   done
 
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+
   local _filter_patterns=()
+
+  local _selector=
+  local _selector_basename=
+  local _selector_relative_path=
 
   for __selector in "${_selectors[@]:-}"
   do
-    local _path_and_identifier="${__selector#*:}"
-    local _identifier="${_path_and_identifier##*\/}"
+    [[ -z "${__selector:-}" ]] && continue
 
-    if [[ -n "${_identifier:-}" ]]
+    if [[ "${__selector}" =~ :$ ]]
     then
-      _filter_patterns+=("${_identifier##*\/}")
+      local _selector_notebook_path=
+      _selector_notebook_path="$(_notebooks show "${__selector}" --path)"
+
+      if [[ -n "${_selector_notebook_path:-}"                   ]] &&
+         [[ "${_selector_notebook_path}" == "${_notebook_path}" ]]
+      then
+        _selector="${__selector}"
+      else
+        _filter_patterns+=("${__selector}")
+      fi
+    else
+      if [[ -n "${_selector_relative_path:-}" ]]
+      then
+        _filter_patterns+=("${__selector}")
+      else
+        _selector_relative_path="$(
+          _show "${__selector%\/}" --relative-path 2>/dev/null || :
+        )"
+
+        if [[ -z "${_selector_relative_path:-}"               ]]  &&
+           [[ -n "${__selector%%:*}"                          ]]  &&
+           _notebooks current --selected                          &&
+           [[ "${__selector%%:*}" == "$(_notebooks current)"  ]]
+        then
+          _notebooks select "$(cat "${NB_DIR}/.current")"
+        fi
+
+        if [[ "${__selector:-}" =~ /$ ]]
+        then
+          if [[ -n "${_selector_relative_path:-}" ]]
+          then
+            if [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
+            then
+              _folder_path="${_selector_relative_path}"
+              _selector="${__selector}"
+              _selector_basename=
+            else
+              if [[ "${_selector_relative_path:-}" =~ / ]]
+              then
+                _folder_path="${_selector_relative_path%\/*}"
+              else
+                _folder_path=
+              fi
+
+              _selector="${__selector%\/}"
+              _selector_basename="${_selector_relative_path##*\/}"
+            fi
+          else
+            _filter_patterns+=("${__selector}")
+          fi
+        elif [[ "${__selector:-}" =~ / ]]
+        then
+          if [[ -n "${_selector_relative_path:-}" ]]
+          then
+            _folder_path="${_selector_relative_path%\/*}"
+            _selector="${__selector}"
+            _selector_basename="${_selector_relative_path##*\/}"
+          else
+            _selector_relative_path="$(
+              _show "${__selector%\/*}" --relative-path 2>/dev/null || :
+            )"
+
+            if [[ -n "${_selector_relative_path:-}" ]] &&
+               [[ -d "${_notebook_path}/${_selector_relative_path:-}" ]]
+            then
+              _folder_path="${_selector_relative_path}"
+              _selector="${__selector%\/*}"
+              _selector_basename=
+              _selector_relative_path="${_folder_path:-}"
+
+              _filter_patterns+=("${__selector##*\/}")
+            else
+              _filter_patterns+=("${__selector}")
+            fi
+          fi
+        else
+          if [[ -n "${_selector_relative_path:-}"                   ]] &&
+             [[ ! -d "${_notebook_path}/${_selector_relative_path}" ]]
+          then
+            _folder_path=
+            _selector="${__selector}"
+            _selector_basename="${_selector_relative_path##*\/}"
+          else
+            _filter_patterns+=("${__selector}")
+          fi
+        fi
+      fi
     fi
   done
 
   local _filter_pattern=
   _filter_pattern="$(_join "|" "${_filter_patterns[@]:-}")"
 
-  local _selector_identifier=
-  local _selector_relative_path=
-
-  if [[ -n "${_selector:-}" ]]
+  if [[ "${_selector:-}" =~ / ]] && [[ -z "${_selector_relative_path:-}" ]]
   then
-    _selector_identifier="${_filter_pattern[0]}"
-    _selector_relative_path="$(
-      _show "${_selector}" --relative-path 2>/dev/null || :
-    )"
-
-    if [[ "${_selector}" =~ / ]] && [[ -z "${_selector_relative_path:-}" ]]
-    then
-      _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
-      return 1
-    fi
-  fi
-
-  local _selector_basename="${_selector_relative_path##*\/}"
-
-  if [[ "${_selector}" =~ /$                              ]] &&
-     [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
-  then
-    _folder_path="${_selector_relative_path}"
-    _selector_basename=
-    _selector_identifier=
-  elif [[ "${_selector_relative_path:-}" =~ / ]]
-  then
-    _folder_path="${_selector_relative_path%\/*}"
+    _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
+    return 1
   fi
 
   local _notebook_escaped_name=
@@ -4344,23 +4404,27 @@ _list() {
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
-      if [[ "${#_filter_patterns[@]}" -le 1             ]] &&
+      if [[ -z "${_filter_pattern:-}"                   ]] &&
          [[ -n "${_selector_basename:-}"                ]] &&
          [[ "${__basename}" != "${_selector_basename}"  ]]
       then
         continue # exclude from list
-      fi
-
-      if [[ "${#_filter_patterns[@]}" -ge 2   ]] ||
-         {
-           [[ -z "${_selector_basename:-}"    ]] &&
-           [[ -n "${_filter_patterns[*]:-}"   ]]
-         }
+      elif [[ -n "${_selector_basename}"                    ]] &&
+           [[ "${__basename:-}" == "${_selector_basename}"  ]]
+      then
+        # include in list
+        _matches=$((_matches+1))
+      elif [[ -n "${_filter_pattern:-}" ]]
       then
         shopt -s nocasematch
 
-        if [[ "${__basename:-}" == "${_selector_basename}"  ]] ||
-           [[ "${__basename:-}" =~ ${_filter_pattern}       ]]
+        if [[ -n "${_selector_basename}"                    ]] &&
+           [[ "${__basename:-}" == "${_selector_basename}"  ]]
+        then
+          # include in list
+          _matches=$((_matches+1))
+        elif [[ ! "${_filter_pattern}" =~ ^[0-9][0-9]$      ]] &&
+             [[ "${__basename:-}" =~ ${_filter_pattern}     ]]
         then
           # include in list
           _matches=$((_matches+1))
@@ -4388,7 +4452,7 @@ _list() {
 
       if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
       then # the limit has been reached
-        if [[ -n "${_filter_patterns[*]:-}" ]]
+        if [[ -n "${_filter_pattern:-}" ]]
         then
           # keep looking for matches to count total
           continue
@@ -4579,7 +4643,7 @@ ${_TPUT_SGR0}"
 
     if [[ -n "${_limit:-}" ]]
     then
-      if [[ -n "${_selector_identifier:-}" ]]
+      if [[ -n "${_filter_pattern:-}" ]]
       then
         if [[ "${_matches:-0}" -gt "${_limit}" ]]
         then
@@ -4605,10 +4669,20 @@ ${_TPUT_SGR0}"
       fi
     fi
 
-    if ! ((_printed_count)) && [[ -n "${_selector_identifier:-}" ]]
+    if ! ((_printed_count)) && [[ -n "${_filter_pattern:-}" ]]
     then
       local _filter_message=
       _filter_message="$(_color_primary "${_filter_pattern:-}")"
+
+      if [[ -n "${_folder_path:-}" ]]
+      then
+        _filter_message="$(_color_primary "${_folder_path}/") ${_filter_message}"
+      fi
+
+      if _notebooks current --selected
+      then
+        _filter_message="$(_color_primary "$(_notebooks current):")${_filter_message}"
+      fi
 
       if [[ -n "${_type:-}" ]]
       then
@@ -4620,7 +4694,7 @@ ${_TPUT_SGR0}"
         return 1
     fi
 
-    if ! ((_filenames_count)) && [[ -z "${_selector_identifier:-}" ]]
+    if ! ((_filenames_count)) && [[ -z "${_filter_pattern:-}" ]]
     then
       if ((_error_on_empty))
       then
