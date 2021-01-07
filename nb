@@ -2713,6 +2713,7 @@ desc() { describe "${@}"; }
 
 ###############################################################################
 # Priority Subcommands                                     Priority Subcommands
+# --------------------                                     --------------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
@@ -3038,7 +3039,7 @@ HEREDOC
 }
 _alias_subcommand "help" "h"
 
-# count ################################################################# count
+# count · ############################################################# · count
 
 describe "count" <<HEREDOC
 Usage:
@@ -3082,7 +3083,7 @@ _count() {
   _list_files "${_list_files_options[@]:-}" | wc -l | tr -d ' '
 }
 
-# git ##################################################################### git
+# git · ################################################################# · git
 
 describe "git" <<HEREDOC
 Usage:
@@ -3556,7 +3557,7 @@ HEREDOC
   esac
 }
 
-# index ################################################################# index
+# index · ############################################################# · index
 
 describe "index" <<HEREDOC
 Usage:
@@ -3977,7 +3978,7 @@ _index() {
   esac
 }
 
-# init ################################################################### init
+# init · ############################################################### · init
 
 describe "init" <<HEREDOC
 Usage:
@@ -4085,7 +4086,7 @@ HEREDOC
     _init_create_home_notebook "${1:-}" 1>/dev/null
 }
 
-# list ################################################################### list
+# list · ############################################################### · list
 
 describe "list" <<HEREDOC
 Usage:
@@ -4674,7 +4675,7 @@ HEREDOC
     fi
 }
 
-# ls ####################################################################### ls
+# ls · ################################################################### · ls
 
 describe "ls" <<HEREDOC
 Usage:
@@ -5283,7 +5284,7 @@ _ls() {
   fi
 }
 
-# notebooks ######################################################### notebooks
+# notebooks · ##################################################### · notebooks
 
 # TODO: Vim highlighting bug. "
 
@@ -6482,7 +6483,7 @@ _alias_subcommand "notebooks" "nbs"
 _alias_subcommand "notebooks" "notebook"
 _alias_subcommand "notebooks" "ns"
 
-# show ################################################################### show
+# show · ############################################################### · show
 
 # TODO: Vim highlighting bug. "\`
 
@@ -7296,6 +7297,83 @@ Can't show archives. Export archive and expand to edit.\\n"
 }
 _alias_subcommand "show" "s"
 _alias_subcommand "show" "view"
+
+# subcommands · ################################################# · subcommands
+
+describe "subcommands" <<HEREDOC
+Usage:
+  ${_ME} subcommands [add <name>...] [alias <name> <alias>]
+                 [describe <name> <usage>]
+
+Subcommands:
+  add       Add a new subcommand.
+  alias     Create an <alias> of a given subcommand <name>, with linked help.
+            Note that aliases must also be added with \`subcommands add\`.
+  describe  Set the usage text displayed with \`${_ME} help <subcommand>\`.
+            This can be assigned as a heredoc, which is recommended, or
+            as a string argument.
+
+Description:
+  List, add, alias, and describe subcommands. New subcommands, aliases, and
+  descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
+  primarily for plugins.
+HEREDOC
+_subcommands() {
+  case "${1:-}" in
+    add)
+      if [[ -n "${2:-}" ]]
+      then
+        shift
+
+        NB_PLUGIN_SUBCOMMANDS+=("${@:-}")
+      fi
+      ;;
+    alias)
+      if [[ -n "${2:-}" ]] &&
+         [[ -n "${3:-}" ]]
+      then
+        _alias_subcommand "${2:-}" "${3:-}"
+      fi
+      ;;
+    describe)
+      shift
+
+      describe "${@:-}"
+      ;;
+    *)
+      printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
+      ;;
+  esac
+}
+_alias_subcommand "subcommands" "commands"
+
+###############################################################################
+# Plugins
+###############################################################################
+
+# $NB_PLUGIN_SUBCOMMANDS
+#
+# The list of subcommands exposed by plugins.
+export NB_PLUGIN_SUBCOMMANDS=()
+
+# User defined plugins can be installed in the $NB_DIR/.plugins directory.
+# Plugins have a .nb-plugin or .nb-theme extension and are written in a
+# Bash-compatible shell scripting language.
+#
+# NOTE: Themes are loaded separately.
+__load_plugins() {
+  if [[ -d "${NB_DIR}/.plugins" ]]
+  then
+    set +f
+    for __file in "${NB_DIR}/.plugins"/*.nb-plugin*
+    do
+      [[ -f "${__file}" ]] || continue
+
+      source "${__file}"
+    done
+    set -f
+  fi
+}; __load_plugins
 
 ###############################################################################
 # Program Option Parsing
@@ -12817,55 +12895,6 @@ _status() {
   git -C "${_notebook_path}" status
 }
 
-# subcommands ##################################################### subcommands
-
-describe "subcommands" <<HEREDOC
-Usage:
-  ${_ME} subcommands [add <name>...] [alias <name> <alias>]
-                 [describe <name> <usage>]
-
-Subcommands:
-  add       Add a new subcommand.
-  alias     Create an <alias> of a given subcommand <name>, with linked help.
-            Note that aliases must also be added with \`subcommands add\`.
-  describe  Set the usage text displayed with \`${_ME} help <subcommand>\`.
-            This can be assigned as a heredoc, which is recommended, or
-            as a string argument.
-
-Description:
-  List, add, alias, and describe subcommands. New subcommands, aliases, and
-  descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
-  primarily for plugins.
-HEREDOC
-_subcommands() {
-  case "${1:-}" in
-    add)
-      if [[ -n "${2:-}" ]]
-      then
-        shift
-
-        NB_PLUGIN_SUBCOMMANDS+=("${@:-}")
-      fi
-      ;;
-    alias)
-      if [[ -n "${2:-}" ]] &&
-         [[ -n "${3:-}" ]]
-      then
-        _alias_subcommand "${2:-}" "${3:-}"
-      fi
-      ;;
-    describe)
-      shift
-
-      describe "${@:-}"
-      ;;
-    *)
-      printf "%s\\n" "${_DOCUMENTED_SUBCOMMANDS[*]}"
-      ;;
-  esac
-}
-_alias_subcommand "subcommands" "commands"
-
 # sync ################################################################### sync
 
 describe "sync" <<HEREDOC
@@ -13200,34 +13229,6 @@ HEREDOC
 _version() {
   printf "%s\\n" "${_VERSION}"
 }
-
-###############################################################################
-# Plugins
-###############################################################################
-
-# $NB_PLUGIN_SUBCOMMANDS
-#
-# The list of subcommands exposed by plugins.
-export NB_PLUGIN_SUBCOMMANDS=()
-
-# User defined plugins can be installed in the $NB_DIR/.plugins directory.
-# Plugins have a .nb-plugin or .nb-theme extension and are written in a
-# Bash-compatible shell scripting language.
-#
-# NOTE: Themes are loaded separately.
-__load_plugins() {
-  if [[ -d "${NB_DIR}/.plugins" ]]
-  then
-    set +f
-    for __file in "${NB_DIR}/.plugins"/*.nb-plugin*
-    do
-      [[ -f "${__file}" ]] || continue
-
-      source "${__file}"
-    done
-    set -f
-  fi
-}; __load_plugins
 
 ###############################################################################
 # Run Deferred Subcommand                               Run Deferred Subcommand
