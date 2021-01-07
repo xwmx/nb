@@ -24,12 +24,11 @@
 #
 # - Configuration and Setup
 # - Helper Functions (alphabetical order)
-# - Help
-# - Core Subcommands (alphabetical order)
+# - `ls` Subcommands (alphabetical order)
+# - Plugins
 # - Option Parsing
 # - _main() / Dispatch
-# - Deferred Subcommands (alphabetical order)
-# - Plugins
+# - Subcommands (alphabetical order)
 #
 # Target Bash Versions: >= 3.2.57
 #
@@ -2712,8 +2711,10 @@ HEREDOC
 desc() { describe "${@}"; }
 
 ###############################################################################
-# Core Subcommands                                             Core Subcommands
+# `ls` Subcommands                                             `ls` Subcommands
 # ----------------                                             ----------------
+#
+# Define and call `ls` and its dependencies first to only load / run used code.
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
@@ -7840,8 +7841,16 @@ _id_brackets_color() { _color_brackets "${@:-}"; }
 # _main()
 ###############################################################################
 
+# $_DEFERRED_SUBCOMMAND
+#
+# The name of the subcommand to run after the script has loaded, as assigned
+# by _main().
 export _DEFERRED_SUBCOMMAND=
-export _DEFERRED_ARGUMENTS=
+
+# $_DEFERRED_ARGUMENTS
+#
+# Arguments for $_DEFERRED_SUBCOMMAND as assigned by _main().
+export _DEFERRED_ARGUMENTS=()
 
 # _main()
 #
@@ -7896,8 +7905,11 @@ _main() {
 
       if [[ "${_SUBCOMMAND}" == "ls" ]]
       then
+        # Run `ls` on its own, exiting at the end in order to avoid running /
+        # loading the rest of the script.
         "_${_SUBCOMMAND}" "${@}" --exit
       else
+        # Defer subcommand call until the rest of the script has been loaded.
         _DEFERRED_SUBCOMMAND="${_SUBCOMMAND}"
         _DEFERRED_ARGUMENTS=("${@}")
 
@@ -7910,7 +7922,8 @@ _main() {
 _main "${_ARGUMENTS[@]:-}"
 
 ###############################################################################
-# Deferred Subcommands                                     Deferred Subcommands
+# Subcommands                                                       Subcommands
+# -----------                                                       -----------
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
