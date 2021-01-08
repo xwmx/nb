@@ -736,13 +736,13 @@ HEREDOC
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0                         ]]
+  [[    "${status}"     -eq 0                 ]]
 
-  [[    "${#lines[@]}"  -eq 3                         ]]
-  [[    "${lines[0]}"   =~  3.*Example\ Three         ]]
-  [[    "${lines[1]}"   =~  2.*Example\ Two           ]]
-  [[    "${lines[2]}"   =~  1.*Example\ One           ]]
-  [[ !  "${output}"     =~  1\ omitted\.\ 3\ total\.  ]]
+  [[    "${#lines[@]}"  -eq 3                 ]]
+  [[    "${lines[0]}"   =~  3.*Example\ Three ]]
+  [[    "${lines[1]}"   =~  2.*Example\ Two   ]]
+  [[    "${lines[2]}"   =~  1.*Example\ One   ]]
+  [[ !  "${output}"     =~  omitted           ]]
 }
 
 @test "'list <query> --limit <limit>' exits with 0 and does not include message when matching one." {
@@ -763,14 +763,14 @@ HEREDOC
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0                         ]]
+  [[    "${status}"     -eq 0                 ]]
 
-  [[    "${#lines[@]}"  -eq 1                         ]]
-  [[    "${lines[0]}"   =~  2.*Example\ Two           ]]
+  [[    "${#lines[@]}"  -eq 1                 ]]
+  [[    "${lines[0]}"   =~  2.*Example\ Two   ]]
 
-  [[ !  "${output}"     =~  3.*Example\ Three         ]]
-  [[ !  "${output}"     =~  1.*Example\ One           ]]
-  [[ !  "${output}"     =~  1\ omitted\.\ 3\ total\.  ]]
+  [[ !  "${output}"     =~  3.*Example\ Three ]]
+  [[ !  "${output}"     =~  1.*Example\ One   ]]
+  [[ !  "${output}"     =~  omitted           ]]
 }
 
 @test "'list <id> --limit <limit>' exits with 0 and does not include message when matching one." {
@@ -791,14 +791,14 @@ HEREDOC
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0                         ]]
+  [[    "${status}"     -eq 0                 ]]
 
-  [[    "${#lines[@]}"  -eq 1                         ]]
-  [[    "${lines[0]}"   =~  2.*Example\ Two           ]]
+  [[    "${#lines[@]}"  -eq 1                 ]]
+  [[    "${lines[0]}"   =~  2.*Example\ Two   ]]
 
-  [[ !  "${output}"     =~  3.*Example\ Three         ]]
-  [[ !  "${output}"     =~  1.*Example\ One           ]]
-  [[ !  "${output}"     =~  1\ omitted\.\ 3\ total\.  ]]
+  [[ !  "${output}"     =~  3.*Example\ Three ]]
+  [[ !  "${output}"     =~  1.*Example\ One   ]]
+  [[ !  "${output}"     =~  omitted           ]]
 }
 
 # `list --titles` #############################################################
