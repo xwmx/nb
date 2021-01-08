@@ -31,6 +31,135 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   [[   "${#lines[@]}" == 1              ]]
 }
 
+@test "'ls <folder>/ <no-match>' (slash, space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" ls Example\ Folder/ no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                              ]]
+  [[    "${#lines[@]}" -eq 1                                              ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+}
+
+@test "'ls <folder>/<no-match>' (slash, no space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" ls Example\ Folder/no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                              ]]
+  [[    "${#lines[@]}" -eq 1                                              ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+}
+
+@test "'ls <folder> <no-match>' (no slash, space) exits with 0 and lists folder match." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" ls Example\ Folder no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                          ]]
+  [[    "${#lines[@]}" -eq 1                          ]]
+  [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
+}
+
+@test "'ls <notebook>:<folder>/ <no-match>' (slash, space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" ls home:Example\ Folder/ no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                                    ]]
+  [[    "${#lines[@]}" -eq 1                                                    ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
+}
+
+@test "'ls <notebook>:<folder>/<no-match>' (slash, no space) exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" ls home:Example\ Folder/no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                                                    ]]
+  [[    "${#lines[@]}" -eq 1                                                    ]]
+  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
+}
+
+@test "'ls <notebook>:<folder> <no-match>' (no slash, space) exits with 0 and lists folder match." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+  }
+
+  run "${_NB}" ls home:Example\ Folder no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                ]]
+  [[    "${#lines[@]}" -eq 1                                ]]
+  [[    "${lines[0]}"  =~  home:1.*\ 📂\ .*Example\ Folder  ]]
+}
+
 # filtering ###################################################################
 
 @test "'ls <folder>/ <pattern>...' (slash) exits with 0 and prints filtered list." {

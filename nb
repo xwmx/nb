@@ -919,6 +919,11 @@ _COLUMNS="$(tput cols)"
 # Assign newline with ANSI-C quoting for string building.
 _NEWLINE=$'\n'
 
+# $_FILE_TYPES
+#
+# An array of supported aggregate file types.
+_FILE_TYPES=(archive audio bookmark document folder image text video)
+
 # _alias_subcommand()
 #
 # Usage:
@@ -5230,7 +5235,11 @@ _ls() {
         fi
         ;;
       --[A-Za-z]*)
-        _type="${__arg:2}"
+        if _contains "${__arg:-}" "${_FILE_TYPES[@]:-}"
+        then
+          _type="${__arg:2}"
+        fi
+
         _arguments+=("${__arg}")
         ;;
       -*)
@@ -5284,8 +5293,16 @@ _ls() {
     fi
   fi
 
+  local _list_error=
+
   {
-    _list --error-on-empty "${_list_options[@]:-}" 2>/dev/null || {
+    {
+      # Capture error to variable while preserving standard output. More info:
+      # https://unix.stackexchange.com/a/474195
+      _list_error="$(
+        _list --error-on-empty "${_list_options[@]:-}" 2>&1 >&3 3>&-
+      )"
+    } 3>&1 || {
       if [[ -n "${_arguments[*]:-}" ]]
       then
         local _maybe_notebook_name="${_arguments[0]:-}"
@@ -5307,12 +5324,25 @@ _ls() {
           _ls "${_arguments[@]:1}"
         return 0
       else
-        local _local_count
-        _local_count="$(_count)"
+        local _count_arguments=()
 
-        if ! ((_local_count))           ||
-           [[ -z "${_selector:-}"   ]]  ||
-           [[ "${_selector}" =~ /$  ]]
+        if [[ -n "${_selector_folder_path:-}" ]]
+        then
+          _count_arguments+=("${_selector_folder_path}")
+        fi
+
+        if [[ -n "${_type:-}" ]]
+        then
+          _count_arguments+=("--type" "${_type}")
+        fi
+
+        local _local_count
+        _local_count="$(_count "${_count_arguments[@]:-}" || :)"
+
+        if ! ((_local_count))                        && {
+             [[ -n "${_selector_folder_path:-}"   ]] ||
+             [[ ! "${_filter_patterns[*]:-}" =~ / ]]
+        }
         then
           if ((${NB_FOLDER_HEADER:-1}))
           then
@@ -5321,34 +5351,20 @@ _ls() {
 
           _list "${_list_options[@]:-}"
         else
-          local _filter_message=
-          _filter_message="${_selector}"
-
-          if _notebooks current --selected
-          then
-            _filter_message="$(_notebooks current --name):${_filter_message}"
-          fi
-
-          _filter_message="$(_color_primary "${_filter_message}")"
-
-          if [[ -n "${_type:-}" ]]
-          then
-             _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
-          fi
-
-          _warn printf "Not found: %s\\n" "${_filter_message}" &&
-            return 1
+          printf "%s\\n" "${_list_error}"
+          return 1
         fi
       fi
     }
   } | {
     local _display_header_and_footer=0
 
-    if [[ -z "${_arguments[*]:-}"            ]] || {
-         [[ "${_selector:-}" =~ /$           ]] &&
-         [[ -n "${_selector_folder_path:-}"  ]] &&
-         [[ -z "${_filter_patterns[1]:-}"    ]]
-    }
+    if [[ -z "${_arguments[*]:-}"           ]] ||
+       [[ -n "${_type:-}"                   ]] ||  {
+         [[ "${_selector:-}" =~ /$          ]] &&
+         [[ -n "${_selector_folder_path:-}" ]] &&
+         [[ -z "${_filter_patterns[1]:-}"   ]]
+       }
     then
       _display_header_and_footer=1
     fi
@@ -7067,7 +7083,7 @@ _show() {
       printf "%s\\n" "${_relative_path#*.}"
       return 0
     else
-      if _contains "${_type}" archive audio bookmark document folder image text video
+      if _contains "${_type}" "${_FILE_TYPES[@]:-}"
       then
         "_file_is_${_type}" "${_notebook_path}/${_relative_path}"
         return $?
