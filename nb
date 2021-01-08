@@ -5362,7 +5362,7 @@ _ls() {
             _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
           fi
 
-          if ((${NB_FOLDER_HEADER:-1}))
+          if ! ((${NB_FOLDER_HEADER:-0}))
           then
             _ls_print_folder_header "${_selector_folder_path:-}"
           fi
@@ -5401,12 +5401,14 @@ _ls() {
       _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
     fi
 
-    cat
-
-    if [[ -n "${_selector_folder_path:-}" ]] && ((${NB_FOLDER_HEADER:-0}))
+    if [[ -n "${_selector_folder_path:-}" ]] &&
+       ((${NB_FOLDER_HEADER:-0}))            &&
+       ((_display_header_and_footer))
     then
       _ls_print_folder_header "${_selector_folder_path:-}"
     fi
+
+    cat
 
     if ((NB_FOOTER)) && ((_display_header_and_footer))
     then
