@@ -5284,6 +5284,7 @@ _ls() {
         if [[ -z "${_selector:-}" ]]
         then
           _selector="${__arg}"
+          _selector_relative_path="${_selector#*:}"
         fi
 
         _arguments+=("${__arg}")
@@ -5299,7 +5300,13 @@ _ls() {
   if [[ -n "${_limit:-}" ]]
   then
     _list_options+=("--limit" "${_limit}")
-  elif [[ -z "${_selector#*:}" ]] && ! ((_all))
+  elif ! ((_all))                                       && {
+         [[ -z "${_selector_relative_path:-}"       ]]  || {
+           [[ "${_selector_relative_path:-}" =~ /   ]]  &&
+           [[ -z "${_selector_relative_path##*\/}"  ]]  &&
+           [[ "${#_filter_patterns[@]}" -le 1       ]]
+         }
+  }
   then
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
