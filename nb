@@ -2739,6 +2739,7 @@ HEREDOC
 _count() {
   local _list_files_options=()
   local _selector=
+  local _skip_unmatched_selector=0
 
   while ((${#}))
   do
@@ -2750,6 +2751,9 @@ _count() {
         _list_files_options+=("${__arg}")
         _list_files_options+=(_option_get_value "${__arg}" "${__val:-}")
         shift
+        ;;
+      --skip-unmatched-selector)
+        _skip_unmatched_selector=1
         ;;
       -*|/*)
         _list_files_options+=("${__arg}")
@@ -2764,9 +2768,14 @@ _count() {
 
   if [[ -n "${_selector:-}" ]]
   then
-    _list_files_options+=("$(
-      _show "${_selector}" --path 2>/dev/null || printf ""
-    )")
+    if ((_skip_unmatched_selector))
+    then
+      _list_files_options+=("$(
+        _show "${_selector}" --path 2>/dev/null || printf ""
+      )")
+    else
+      _list_files_options+=("$(_show "${_selector}" --path)")
+    fi
   fi
 
   _list_files "${_list_files_options[@]:-}" | wc -l | tr -d ' '
@@ -5348,7 +5357,9 @@ _ls() {
         fi
 
         local _local_count
-        _local_count="$(_count "${_count_arguments[@]:-}" || :)"
+        _local_count="$(
+          _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
+        )"
 
         if ! ((_local_count))                        && {
              [[ -n "${_selector_folder_path:-}"   ]] ||

@@ -133,6 +133,28 @@ load test_helper
   [[ "${lines[0]}"  =~  Not\ found:.*not-valid  ]]
 }
 
+@test "'count <not-valid> --skip-unmatched-selector' exits with 1 and prints nothing." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "one.md"
+    "${_NB}" add "Example Folder/one.md"
+    "${_NB}" add "Example Folder/two.md"
+    "${_NB}" add "Example Folder/Sample Folder/one.md"
+    "${_NB}" add "Example Folder/Sample Folder/two.md"
+    "${_NB}" add "Example Folder/Sample Folder/three.md"
+    "${_NB}" add "Example Folder/Sample Folder/Demo Folder"
+  }
+
+  run "${_NB}" count not-valid --skip-unmatched-selector
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${lines[0]}"  =~  2 ]]
+}
+
 # file paths ##################################################################
 
 @test "'count <file>' exits with 0 and prints count of <file> (1)." {
