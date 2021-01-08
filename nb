@@ -4688,7 +4688,8 @@ ${_TPUT_SGR0}"
     then
       if [[ -n "${_filter_pattern:-}" ]]
       then
-        if [[ "${_matches:-0}" -gt "${_limit}" ]]
+        if [[ "${_matches:-0}"    -gt "${_limit}" ]] &&
+           [[ "${_printed_count}" -ge "${_limit}" ]]
         then
           local _label="matches"
           local _omitted_count
@@ -4703,7 +4704,8 @@ ${_TPUT_SGR0}"
           return 0
         fi
 
-      elif [[ "${_filenames_count}" -gt "${_limit}" ]]
+      elif [[ "${_filenames_count}" -gt "${_limit}" ]] &&
+           [[ "${_printed_count}"   -ge "${_limit}" ]]
       then
         printf "%s omitted. %s total.\\n"         \
           "$((_filenames_count-_printed_count))"  \

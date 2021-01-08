@@ -622,70 +622,192 @@ HEREDOC
 @test "'list -n' exits with 0 and displays full list." {
   {
     _setup_list_limit
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list -n
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0      ]]
+  [[ "${status}"    -eq 0 ]]
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
 @test "'list -n 2' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list -n 2
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                            ]]
-  [[ "${#lines[@]}" -eq 3                       ]]
-  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+  [[ "${lines[2]}"  =~  1\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "'list --limit 2' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --limit 2
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                            ]]
-  [[ "${#lines[@]}" -eq 3                       ]]
-  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
-
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+  [[ "${lines[2]}"  =~  1\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "'list --2' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --2
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                            ]]
-  [[ "${#lines[@]}" -eq 3                       ]]
-  [[ "${lines[2]}" =~ 1\ omitted\.\ 3\ total\.  ]]
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+  [[ "${lines[2]}"  =~  1\ omitted\.\ 3\ total\.  ]]
+}
 
+@test "'list <query> --limit <limit>' exits with 0 and includes message when matches are greater than limit." {
+  {
+    "${_NB}" init
+      cat <<HEREDOC | "${_NB}" add "one.md"
+# Example One
+line two
+line three
+line four
+HEREDOC
+      cat <<HEREDOC | "${_NB}" add "two.md"
+# Example Two
+line two
+line three
+line four
+HEREDOC
+      cat <<HEREDOC | "${_NB}" add "three.md"
+# Example Three
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" list example --limit 2
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 3                               ]]
+  [[    "${lines[0]}"   =~  3.*Example\ Three               ]]
+  [[    "${lines[1]}"   =~  2.*Example\ Two                 ]]
+  [[    "${lines[2]}"   =~  1\ match\ omitted\.\ 3\ total\. ]]
+  [[ !  "${output}"     =~  1.*Example\ Two                 ]]
+}
+
+@test "'list <query> --limit <limit>' exits with 0 and does not include message when matches are below limit." {
+  {
+    "${_NB}" init
+      cat <<HEREDOC | "${_NB}" add "one.md"
+# Example One
+line two
+line three
+line four
+HEREDOC
+      cat <<HEREDOC | "${_NB}" add "two.md"
+# Example Two
+line two
+line three
+line four
+HEREDOC
+      cat <<HEREDOC | "${_NB}" add "three.md"
+# Example Three
+line two
+line three
+line four
+HEREDOC
+  }
+
+  run "${_NB}" list example --limit 10
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                         ]]
+  [[    "${#lines[@]}"  -eq 3                         ]]
+  [[    "${lines[0]}"   =~  3.*Example\ Three         ]]
+  [[    "${lines[1]}"   =~  2.*Example\ Two           ]]
+  [[    "${lines[2]}"   =~  1.*Example\ One           ]]
+  [[ !  "${output}"     =~  1\ omitted\.\ 3\ total\.  ]]
+}
+
+@test "'list <query> --limit <limit>' exits with 0 and does not include message when matching one." {
+  {
+    "${_NB}" init
+      for __number in One Two Three Four Five Six Seven Eight Nine Ten Eleven
+      do
+        "${_NB}" add                        \
+          --filename  "File ${__number}.md" \
+          --title     "Example ${__number}" \
+          --content   "Content ${_number}."
+      done
+  }
+
+  run "${_NB}" list two --limit 10
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+  [[    "${lines[0]}"   =~  2.*Example\ Two           ]]
+
+  [[ !  "${output}"     =~  3.*Example\ Three         ]]
+  [[ !  "${output}"     =~  1.*Example\ One           ]]
+  [[ !  "${output}"     =~  1\ omitted\.\ 3\ total\.  ]]
+}
+
+@test "'list <id> --limit <limit>' exits with 0 and does not include message when matching one." {
+  {
+    "${_NB}" init
+      for __number in One Two Three Four Five Six Seven Eight Nine Ten Eleven
+      do
+        "${_NB}" add                        \
+          --filename  "File ${__number}.md" \
+          --title     "Example ${__number}" \
+          --content   "Content ${_number}."
+      done
+  }
+
+  run "${_NB}" list 2 --limit 10
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+  [[    "${lines[0]}"   =~  2.*Example\ Two           ]]
+
+  [[ !  "${output}"     =~  3.*Example\ Three         ]]
+  [[ !  "${output}"     =~  1.*Example\ One           ]]
+  [[ !  "${output}"     =~  1\ omitted\.\ 3\ total\.  ]]
 }
 
 # `list --titles` #############################################################
