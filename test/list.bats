@@ -348,8 +348,8 @@ Import a file:
 Help information:
   $(_color_primary 'nb help')"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${_expected}" == "${output}"  ]]
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
 }
 
 # `list` ######################################################################
@@ -357,22 +357,21 @@ Help information:
 @test "'list' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
-    "${_NB}" add "one.md" --title "one"
-    "${_NB}" add "two.md" --title "two"
+    "${_NB}" add "one.md"   --title "one"
+    "${_NB}" add "two.md"   --title "two"
     "${_NB}" add "three.md" --title "three"
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[@]}" "${lines[@]}"
 
-  [[ ${status} -eq 0        ]]
-  [[ "${lines[0]}" =~ three ]]
-  [[ "${lines[1]}" =~ two   ]]
-  [[ "${lines[2]}" =~ one   ]]
+  [[ "${status}"    -eq 0     ]]
+
+  [[ "${lines[0]}"  =~  three ]]
+  [[ "${lines[1]}"  =~  two   ]]
+  [[ "${lines[2]}"  =~  one   ]]
 }
 
 @test "'list' includes indicators." {
@@ -381,52 +380,49 @@ Help information:
     "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
     "${_NB}" add "two.md" --content "Example Content."
     "${_NB}" add "three.md" --title "Three" --encrypt --password=example
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[@]}" "${lines[@]}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" =~ three.md.enc  ]]
-  [[ "${lines[0]}" =~ 🔒            ]]
-  [[ "${lines[1]}" =~ two.md        ]]
-  [[ "${lines[2]}" =~ bookmark      ]]
-  [[ "${lines[2]}" =~ 🔖            ]]
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${lines[0]}"  =~  three.md.enc  ]]
+  [[ "${lines[0]}"  =~  🔒            ]]
+  [[ "${lines[1]}"  =~  two.md        ]]
+  [[ "${lines[2]}"  =~  bookmark      ]]
+  [[ "${lines[2]}"  =~  🔖            ]]
 }
 
 @test "'list' includes ids." {
   {
     "${_NB}" init
-    "${_NB}" add "one.md" --title "one"
-    "${_NB}" add "two.md" --title "two"
+    "${_NB}" add "one.md"   --title "one"
+    "${_NB}" add "two.md"   --title "two"
     "${_NB}" add "three.md" --title "three"
-    "${_NB}" add "four.md" --title "four"
-    "${_NB}" add "five.md" --title "five"
+    "${_NB}" add "four.md"  --title "four"
+    "${_NB}" add "five.md"  --title "five"
 
-    "${_NB}" delete "one.md" --force
+    "${_NB}" delete "one.md"  --force
     "${_NB}" delete "four.md" --force
-
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[@]}" "${lines[@]}"
 
-  [[ ${status} -eq 0        ]]
-  [[ "${lines[0]}" =~ five  ]]
-  [[ "${lines[0]}" =~ 5     ]]
-  [[ "${lines[1]}" =~ three ]]
-  [[ "${lines[1]}" =~ 3     ]]
-  [[ "${lines[2]}" =~ two   ]]
-  [[ "${lines[2]}" =~ 2     ]]
-  [[ -z "${lines[3]:-}"     ]]
+  [[    "${status}"     -eq 0     ]]
+
+  [[    "${lines[0]}"   =~ five   ]]
+  [[    "${lines[0]}"   =~ 5      ]]
+  [[    "${lines[1]}"   =~ three  ]]
+  [[    "${lines[1]}"   =~ 3      ]]
+  [[    "${lines[2]}"   =~ two    ]]
+  [[    "${lines[2]}"   =~ 2      ]]
+  [[ -z "${lines[3]:-}"           ]]
 }
 
 # `list --no-id` ##############################################################
@@ -434,22 +430,21 @@ Help information:
 @test "'list --no-id' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
-    "${_NB}" add "one.md" --title "one"
-    "${_NB}" add "two.md" --title "two"
+    "${_NB}" add "one.md"   --title "one"
+    "${_NB}" add "two.md"   --title "two"
     "${_NB}" add "three.md" --title "three"
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --no-id
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'${_files[2]}'" "'${lines[0]}'"
 
-  [[ ${status} -eq 0          ]]
-  [[ "${lines[0]}" =~ three   ]]
-  [[ "${lines[1]}" =~ two     ]]
-  [[ "${lines[2]}" =~ one     ]]
+  [[ "${status}"    -eq 0     ]]
+
+  [[ "${lines[0]}"  =~  three ]]
+  [[ "${lines[1]}"  =~  two   ]]
+  [[ "${lines[2]}"  =~  one   ]]
 }
 
 # `list --no-color` ###########################################################
@@ -457,22 +452,20 @@ Help information:
 @test "'list --no-color' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
-    "${_NB}" add "one.md" --title "one"
-    "${_NB}" add "two.md" --title "two"
+    "${_NB}" add "one.md"   --title "one"
+    "${_NB}" add "two.md"   --title "two"
     "${_NB}" add "three.md" --title "three"
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'[3] ${_files[2]}'" "'${lines[0]}'"
 
-  [[ ${status} -eq 0          ]]
-  [[ "${lines[0]}" =~ three   ]]
-  [[ "${lines[1]}" =~ two     ]]
-  [[ "${lines[2]}" =~ one     ]]
+  [[ "${status}"    -eq 0     ]]
+  [[ "${lines[0]}"  =~  three ]]
+  [[ "${lines[1]}"  =~  two   ]]
+  [[ "${lines[2]}"  =~  one   ]]
 }
 
 # `list (-e | --excerpt)` #####################################################
@@ -502,96 +495,90 @@ HEREDOC
 @test "'list -e' exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list -e
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}"    -eq 0   ]]
   [[ "${#lines[@]}" -eq 15  ]]
 }
 
 @test "'list -e 2' exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list -e 2
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}"    -eq 0   ]]
   [[ "${#lines[@]}" -eq 12  ]]
 }
 
 @test "'list -e 0' exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list -e 0
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0      ]]
+  [[ "${status}"    -eq 0 ]]
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
 @test "'list --excerpt' exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --excerpt
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}"    -eq 0   ]]
   [[ "${#lines[@]}" -eq 15  ]]
 }
 
 @test "'list --excerpt 2' exits with 0 and displays 4 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --excerpt 2
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0        ]]
+  [[ "${status}"    -eq 0   ]]
   [[ "${#lines[@]}" -eq 12  ]]
 }
 
 @test "'list --excerpt 0' exits with 0 and displays 1 line list items." {
   {
     _setup_list_excerpt
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --excerpt 0
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0      ]]
+  [[ "${status}"    -eq 0 ]]
   [[ "${#lines[@]}" -eq 3 ]]
 }
 
@@ -712,6 +699,7 @@ HEREDOC
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[    "${status}"     -eq 0                               ]]
+
   [[    "${#lines[@]}"  -eq 3                               ]]
   [[    "${lines[0]}"   =~  3.*Example\ Three               ]]
   [[    "${lines[1]}"   =~  2.*Example\ Two                 ]]
@@ -749,6 +737,7 @@ HEREDOC
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[    "${status}"     -eq 0                         ]]
+
   [[    "${#lines[@]}"  -eq 3                         ]]
   [[    "${lines[0]}"   =~  3.*Example\ Three         ]]
   [[    "${lines[1]}"   =~  2.*Example\ Two           ]]
@@ -761,10 +750,10 @@ HEREDOC
     "${_NB}" init
       for __number in One Two Three Four Five Six Seven Eight Nine Ten Eleven
       do
-        "${_NB}" add                        \
-          --filename  "File ${__number}.md" \
-          --title     "Example ${__number}" \
-          --content   "Content ${_number}."
+        "${_NB}" add                          \
+          --filename  "File ${__number}.md"   \
+          --title     "Example ${__number}"   \
+          --content   "Content ${__number}."
       done
   }
 
@@ -775,6 +764,7 @@ HEREDOC
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[    "${status}"     -eq 0                         ]]
+
   [[    "${#lines[@]}"  -eq 1                         ]]
   [[    "${lines[0]}"   =~  2.*Example\ Two           ]]
 
@@ -788,10 +778,10 @@ HEREDOC
     "${_NB}" init
       for __number in One Two Three Four Five Six Seven Eight Nine Ten Eleven
       do
-        "${_NB}" add                        \
-          --filename  "File ${__number}.md" \
-          --title     "Example ${__number}" \
-          --content   "Content ${_number}."
+        "${_NB}" add                          \
+          --filename  "File ${__number}.md"   \
+          --title     "Example ${__number}"   \
+          --content   "Content ${__number}."
       done
   }
 
@@ -802,6 +792,7 @@ HEREDOC
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[    "${status}"     -eq 0                         ]]
+
   [[    "${#lines[@]}"  -eq 1                         ]]
   [[    "${lines[0]}"   =~  2.*Example\ Two           ]]
 
@@ -838,17 +829,18 @@ HEREDOC
 
   run "${_NB}" list --titles
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
-  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
-  printf "\${lines[1]}: '%s'\\n" "${lines[1]}"
-  printf "\${lines[2]}: '%s'\\n" "${lines[2]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+  printf "\${lines[0]}:   '%s'\\n" "${lines[0]}"
+  printf "\${lines[1]}:   '%s'\\n" "${lines[1]}"
+  printf "\${lines[2]}:   '%s'\\n" "${lines[2]}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${lines[0]}" =~ three     ]] && [[ "${lines[0]}" =~ 3 ]]
-  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
-  [[ "${lines[2]}" =~ one       ]] && [[ "${lines[2]}" =~ 1 ]]
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${lines[0]}"  =~  3.*three      ]]
+  [[ "${lines[1]}"  =~  3.*second.md  ]]
+  [[ "${lines[2]}"  =~  3.*one        ]]
 }
 
 # `list --filenames` ##########################################################
@@ -874,19 +866,19 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --filenames
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${lines[0]}" =~ third.md  ]] && [[ "${lines[0]}" =~ 3 ]]
-  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
-  [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${lines[0]}"  =~  3*third.md  ]]
+  [[ "${lines[1]}"  =~  2*second.md ]]
+  [[ "${lines[2]}"  =~  1*first.md  ]]
 }
 
 # `list --paths` ##############################################################
@@ -912,25 +904,20 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --paths
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
-  printf "\${NB_DIR}/home: '%s'\\n" "${NB_DIR}/home"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+  printf "\${NB_DIR}:     '%s'\\n" "${NB_DIR}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${lines[0]}" =~ third.md  ]] && [[ "${lines[0]}" =~ 3 ]]
-  [[ "${lines[0]}" =~ ${NB_DIR}/home                        ]]
+  [[ "${status}"    -eq 0                           ]]
 
-  [[ "${lines[1]}" =~ second.md ]] && [[ "${lines[1]}" =~ 2 ]]
-  [[ "${lines[1]}" =~ ${NB_DIR}/home                        ]]
-
-  [[ "${lines[2]}" =~ first.md  ]] && [[ "${lines[2]}" =~ 1 ]]
-  [[ "${lines[2]}" =~ ${NB_DIR}/home                        ]]
+  [[ "${lines[0]}"  =~  3*${NB_DIR}/home/third.md   ]]
+  [[ "${lines[1]}"  =~  2*${NB_DIR}/home/second.md  ]]
+  [[ "${lines[2]}"  =~  1*${NB_DIR}/home/first.md   ]]
 }
 
 # `ls -s` / `ls --sort` / `ls -r` / `ls --reverse` ############################
@@ -960,18 +947,19 @@ HEREDOC
 
   run "${_NB}" list --sort
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 3           ]]
-  [[ "${lines[0]}" =~ title\ one    ]]
-  [[ "${lines[0]}" =~ [*1*]         ]]
-  [[ "${lines[1]}" =~ title\ two    ]]
-  [[ "${lines[1]}" =~ [*2*]         ]]
-  [[ "${lines[2]}" =~ title\ three  ]]
-  [[ "${lines[2]}" =~ [*3*]         ]]
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  title\ one    ]]
+  [[ "${lines[0]}"  =~  [*1*]         ]]
+  [[ "${lines[1]}"  =~  title\ two    ]]
+  [[ "${lines[1]}"  =~  [*2*]         ]]
+  [[ "${lines[2]}"  =~  title\ three  ]]
+  [[ "${lines[2]}"  =~  [*3*]         ]]
 }
 
 @test "'list --sort --reverse' reverse sorts items." {
@@ -999,18 +987,20 @@ HEREDOC
 
   run "${_NB}" list --sort --reverse
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 3           ]]
-  [[ "${lines[0]}" =~ title\ three  ]]
-  [[ "${lines[0]}" =~ [*3*]         ]]
-  [[ "${lines[1]}" =~ title\ two    ]]
-  [[ "${lines[1]}" =~ [*2*]         ]]
-  [[ "${lines[2]}" =~ title\ one    ]]
-  [[ "${lines[2]}" =~ [*1*]         ]]
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  title\ three  ]]
+  [[ "${lines[0]}"  =~  [*3*]         ]]
+  [[ "${lines[1]}"  =~  title\ two    ]]
+  [[ "${lines[1]}"  =~  [*2*]         ]]
+  [[ "${lines[2]}"  =~  title\ one    ]]
+  [[ "${lines[2]}"  =~  [*1*]         ]]
+
 }
 
 @test "'list --sort' is not affected by NB_LIMIT." {
@@ -1035,7 +1025,7 @@ line three
 line four
 HEREDOC
 
-  "${_NB}" set limit 2
+    "${_NB}" set limit 2
   }
 
   run "${_NB}" list --sort
@@ -1044,14 +1034,15 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" -eq 3                   ]]
-  [[ "${lines[0]}" =~ title\ one            ]]
-  [[ "${lines[0]}" =~ [*1*]                 ]]
-  [[ "${lines[1]}" =~ title\ two            ]]
-  [[ "${lines[1]}" =~ [*2*]                 ]]
-  [[ "${lines[2]}" =~ title\ three          ]]
-  [[ "${lines[2]}" =~ [*3*]                 ]]
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  title\ one    ]]
+  [[ "${lines[0]}"  =~  [*1*]         ]]
+  [[ "${lines[1]}"  =~  title\ two    ]]
+  [[ "${lines[1]}"  =~  [*2*]         ]]
+  [[ "${lines[2]}"  =~  title\ three  ]]
+  [[ "${lines[2]}"  =~  [*3*]         ]]
 }
 
 # `list --bookmarks` ##########################################################
@@ -1079,18 +1070,17 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --bookmarks
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ "${lines[0]}" =~ fourth.bookmark.md  ]] && [[ "${lines[0]}" =~ 4 ]]
-  [[ "${lines[1]}" =~ second.bookmark.md  ]] && [[ "${lines[1]}" =~ 2 ]]
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${lines[0]}"  =~  [*4*]*fourth.bookmark.md  ]]
+  [[ "${lines[1]}"  =~  [*2*]*second.bookmark.md  ]]
 }
 
 # `list --type` ###############################################################
@@ -1116,19 +1106,19 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --document
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0              ]]
-  [[ "${#lines[@]}" == 1          ]]
-  [[ "${lines[0]}" =~ second.doc  ]]
-  [[ "${lines[0]}" =~ 2           ]]
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${#lines[@]}" ==  1           ]]
+  [[ "${lines[0]}"  =~  second.doc  ]]
+  [[ "${lines[0]}"  =~  2           ]]
 }
 
 @test "'list --documents' exits with 0 and displays a list of documents." {
@@ -1152,19 +1142,18 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --documents
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0              ]]
-  [[ "${#lines[@]}" == 1          ]]
-  [[ "${lines[0]}" =~ second.doc  ]]
-  [[ "${lines[0]}" =~ 2           ]]
+  [[ "${status}"    -eq 0           ]]
+  [[ "${#lines[@]}" ==  1           ]]
+  [[ "${lines[0]}"  =~  second.doc  ]]
+  [[ "${lines[0]}"  =~  2           ]]
 }
 
 @test "'list --document' exits with 0 and displays empty list." {
@@ -1182,18 +1171,17 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --document
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" == 5                    ]]
-  [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
+  [[ "${status}"    -eq 0                     ]]
+  [[ "${#lines[@]}" ==  5                     ]]
+  [[ "${lines[0]}"  =~  0\ document\ files\.  ]]
 }
 
 
@@ -1212,18 +1200,17 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --documents
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" == 5                    ]]
-  [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
+  [[ "${status}"    -eq 0                     ]]
+  [[ "${#lines[@]}" ==  5                     ]]
+  [[ "${lines[0]}"  =~  0\ document\ files\.  ]]
 }
 
 @test "'list --js' exits with 0, displays empty list, and retains trailing 's'." {
@@ -1241,18 +1228,17 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list --js
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                  ]]
-  [[ "${#lines[@]}" == 5              ]]
-  [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" ==  5               ]]
+  [[ "${lines[0]}"  =~  0\ js\ files\.  ]]
 }
 
 @test "'list <selector> --type' filters by type." {
@@ -1282,19 +1268,19 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list example --document
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0              ]]
-  [[ "${#lines[@]}" == 1          ]]
-  [[ "${lines[0]}" =~ example.doc ]]
-  [[ "${lines[0]}" =~ 3           ]]
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${#lines[@]}" ==  1           ]]
+  [[ "${lines[0]}"  =~  example.doc ]]
+  [[ "${lines[0]}"  =~  3           ]]
 }
 
 @test "'list <selector> --<invalid>' prints message." {
@@ -1324,21 +1310,21 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list example --not-valid
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 1              ]]
-  [[ "${#lines[@]}" == 1          ]]
-  [[ "${lines[0]}" =~ Not\ found  ]]
-  [[ "${lines[0]}" =~ example     ]]
-  [[ "${lines[0]}" =~ Type        ]]
-  [[ "${lines[0]}" =~ not-valid   ]]
+  [[ "${status}"    -eq 1           ]]
+
+  [[ "${#lines[@]}" ==  1           ]]
+  [[ "${lines[0]}"  =~  Not\ found  ]]
+  [[ "${lines[0]}"  =~  example     ]]
+  [[ "${lines[0]}"  =~  Type        ]]
+  [[ "${lines[0]}"  =~  not-valid   ]]
 }
 
 @test "'list <selector> --documents' with no matches prints message." {
@@ -1373,16 +1359,17 @@ HEREDOC
 
   run "${_NB}" list matchless-query --document
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 1                  ]]
-  [[ "${#lines[@]}" == 1              ]]
-  [[ "${lines[0]}" =~ Not\ found      ]]
-  [[ "${lines[0]}" =~ matchless-query ]]
-  [[ "${lines[0]}" =~ Type            ]]
-  [[ "${lines[0]}" =~ document        ]]
+  [[ "${status}"    -eq 1               ]]
+
+  [[ "${#lines[@]}" ==  1               ]]
+  [[ "${lines[0]}"  =~  Not\ found      ]]
+  [[ "${lines[0]}"  =~  matchless-query ]]
+  [[ "${lines[0]}"  =~  Type            ]]
+  [[ "${lines[0]}"  =~  document        ]]
 }
 
 # `list <selector>` ###########################################################
@@ -1408,20 +1395,19 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list 1 --filenames
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 1           ]]
-  [[ "${lines[0]}" =~ first.md      ]]
-  [[ "${lines[0]}" =~ [*1*]         ]]
-  [[ "${lines[0]}" =~ ${_files[0]}  ]]
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${#lines[@]}" -eq 1             ]]
+  [[ "${lines[0]}"  =~  first.md      ]]
+  [[ "${lines[0]}"  =~  [*1*]         ]]
 }
 
 @test "'list <query selector>' exits with 0 and displays the selectors." {
@@ -1445,23 +1431,21 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list 'r' --filenames
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${#lines[@]}" -eq 2           ]]
-  [[ "${lines[0]}" =~ third.md      ]]
-  [[ "${lines[0]}" =~ [*3*]         ]]
-  [[ "${lines[0]}" =~ ${_files[2]}  ]]
-  [[ "${lines[1]}" =~ first.md      ]]
-  [[ "${lines[1]}" =~ [*1*]         ]]
-  [[ "${lines[1]}" =~ ${_files[0]}  ]]
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${#lines[@]}" -eq 2        ]]
+  [[ "${lines[0]}"  =~  third.md ]]
+  [[ "${lines[0]}"  =~  [*3*]    ]]
+  [[ "${lines[1]}"  =~  first.md ]]
+  [[ "${lines[1]}"  =~  [*1*]    ]]
 }
 
 @test "'list <query selector> --limit' exits with 0 and displays results and singular omitted message." {
@@ -1485,21 +1469,20 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list 'r' --filenames --limit 1
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${#lines[@]}" -eq 2                             ]]
-  [[ "${lines[0]}" =~ third.md                        ]]
-  [[ "${lines[0]}" =~ [*3*]                           ]]
-  [[ "${lines[0]}" =~ ${_files[2]}                    ]]
-  [[ "${lines[1]}" =~ 1\ match\ omitted\.\ 2\ total\. ]]
+  [[ "${status}"    -eq 0                               ]]
+
+  [[ "${#lines[@]}" -eq 2                               ]]
+  [[ "${lines[0]}"  =~  third.md                        ]]
+  [[ "${lines[0]}"  =~  [*3*]                           ]]
+  [[ "${lines[1]}"  =~  1\ match\ omitted\.\ 2\ total\. ]]
 }
 
 @test "'list <query selector> --limit' exits with 0 and displays results and plural omitted message." {
@@ -1529,20 +1512,20 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list 'r' --filenames --limit 1
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${#lines[@]}" -eq 2                               ]]
-  [[ "${lines[0]}" =~ fourth.md                         ]]
-  [[ "${lines[0]}" =~ [*4*]                             ]]
-  [[ "${lines[1]}" =~ 2\ matches\ omitted\.\ 3\ total\. ]]
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${#lines[@]}" -eq 2                                 ]]
+  [[ "${lines[0]}"  =~  fourth.md                         ]]
+  [[ "${lines[0]}"  =~  [*4*]                             ]]
+  [[ "${lines[1]}"  =~  2\ matches\ omitted\.\ 3\ total\. ]]
 }
 
 @test "'list <multi-word selector>' successfully filters list." {
@@ -1572,19 +1555,19 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list 'example plum' --filenames
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${#lines[@]}" -eq 1       ]]
-  [[ "${lines[0]}" =~ first.md  ]]
-  [[ "${lines[0]}" =~ [*1*]     ]]
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${#lines[@]}" -eq 1         ]]
+  [[ "${lines[0]}"  =~  first.md  ]]
+  [[ "${lines[0]}"  =~  [*1*]     ]]
 }
 
 @test "'list <multiple> <selectors>' successfully filters list." {
@@ -1619,18 +1602,19 @@ HEREDOC
 
   run "${_NB}" list example plum --filenames
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${#lines[@]}" -eq 3       ]]
-  [[ "${lines[0]}" =~ fourth.md ]]
-  [[ "${lines[0]}" =~ [*4*]     ]]
-  [[ "${lines[1]}" =~ second.md ]]
-  [[ "${lines[1]}" =~ [*2*]     ]]
-  [[ "${lines[2]}" =~ first.md  ]]
-  [[ "${lines[2]}" =~ [*1*]     ]]
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${#lines[@]}" -eq 3         ]]
+  [[ "${lines[0]}"  =~  fourth.md ]]
+  [[ "${lines[0]}"  =~  [*4*]     ]]
+  [[ "${lines[1]}"  =~  second.md ]]
+  [[ "${lines[1]}"  =~  [*2*]     ]]
+  [[ "${lines[2]}"  =~  first.md  ]]
+  [[ "${lines[2]}"  =~  [*1*]     ]]
 }
 
 @test "'list <multiple> <selectors>' with exact match also includes filtered results." {
@@ -1660,23 +1644,23 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list plum example --filenames
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0            ]]
-  [[ "${#lines[@]}" -eq 3       ]]
-  [[ "${lines[0]}" =~ fourth.md ]]
-  [[ "${lines[0]}" =~ [*4*]     ]]
-  [[ "${lines[1]}" =~ second.md ]]
-  [[ "${lines[1]}" =~ [*2*]     ]]
-  [[ "${lines[2]}" =~ first.md  ]]
-  [[ "${lines[2]}" =~ [*1*]     ]]
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${#lines[@]}" -eq 3         ]]
+  [[ "${lines[0]}"  =~  fourth.md ]]
+  [[ "${lines[0]}"  =~  [*4*]     ]]
+  [[ "${lines[1]}"  =~  second.md ]]
+  [[ "${lines[1]}"  =~  [*2*]     ]]
+  [[ "${lines[2]}"  =~  first.md  ]]
+  [[ "${lines[2]}"  =~  [*1*]     ]]
 }
 
 @test "'list <invalid-selector>' exits with 1 and displays a message." {
@@ -1689,19 +1673,19 @@ line three
 line four
 HEREDOC
     sleep 1
-    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" list invalid
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 1                      ]]
-  [[ "${#lines[@]}" -eq 1                 ]]
-  [[ "${lines[0]}" =~ Not\ found\:  ]]
-  [[ "${lines[0]}" =~ invalid             ]]
+  [[ "${status}"    -eq 1             ]]
+
+  [[ "${#lines[@]}" -eq 1             ]]
+  [[ "${lines[0]}"  =~  Not\ found\:  ]]
+  [[ "${lines[0]}"  =~  invalid       ]]
 }
 
 # `scoped:list` ###############################################################
@@ -1709,26 +1693,28 @@ HEREDOC
 @test "'scoped:list' exits with 0 and lists files in reverse order." {
   {
     "${_NB}" init
+
     "${_NB}" notebooks add "one"
-    "${_NB}" one:add "one.md" --title "one"
-    "${_NB}" one:add "two.md" --title "two"
+
+    "${_NB}" one:add "one.md"   --title "one"
+    "${_NB}" one:add "two.md"   --title "two"
     "${_NB}" one:add "three.md" --title "three"
-    _files=($(ls "${NB_DIR}/one/"))
   }
 
   run "${_NB}" one:list
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[@]}" "${lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0          ]]
-  [[ "${lines[0]}" =~ one:3   ]]
-  [[ "${lines[0]}" =~ three   ]]
-  [[ "${lines[1]}" =~ one:2   ]]
-  [[ "${lines[1]}" =~ two     ]]
-  [[ "${lines[2]}" =~ one:1   ]]
-  [[ "${lines[2]}" =~ one     ]]
+  [[ "${status}"    -eq 0       ]]
+
+  [[ "${lines[0]}"  =~  one:3   ]]
+  [[ "${lines[0]}"  =~  three   ]]
+  [[ "${lines[1]}"  =~  one:2   ]]
+  [[ "${lines[1]}"  =~  two     ]]
+  [[ "${lines[2]}"  =~  one:1   ]]
+  [[ "${lines[2]}"  =~  one     ]]
 }
 
 @test "'scoped:list' with empty notebook prints help info." {
@@ -1738,10 +1724,10 @@ HEREDOC
   }
 
   run "${_NB}" one:list
-  [[ ${status} -eq 0 ]]
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   _expected="0 items.
 
@@ -1754,8 +1740,8 @@ Import a file:
 Help information:
   $(_color_primary 'nb help')"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${_expected}" == "${output}"  ]]
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
 }
 
 @test "'scoped:list' escapes multi-word notebook name." {
@@ -1765,10 +1751,10 @@ Help information:
   }
 
   run "${_NB}" multi\ word:list
-  [[ ${status} -eq 0 ]]
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   _expected="0 items.
 
@@ -1781,8 +1767,8 @@ Import a file:
 Help information:
   $(_color_primary 'nb help')"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${_expected}" == "${output}"  ]]
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
 }
 
 @test "'scoped:list --bookmarks' with empty notebook prints help info." {
@@ -1793,8 +1779,9 @@ Help information:
 
   run "${_NB}" one:list --bookmarks
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   _expected="0 bookmarks.
 
@@ -1803,8 +1790,8 @@ Add a bookmark:
 Help information:
   $(_color_primary 'nb help bookmark')"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${_expected}" == "${output}"  ]]
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
 }
 
 @test "'scoped:list --documents' with empty notebook prints help info." {
@@ -1815,8 +1802,9 @@ Help information:
 
   run "${_NB}" one:list --documents
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   _expected="0 document files.
 
@@ -1825,8 +1813,8 @@ Import a file:
 Help information:
   $(_color_primary 'nb help import')"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${_expected}" == "${output}"  ]]
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
 }
 
 # `list --error-on-empty` #####################################################
@@ -1838,65 +1826,74 @@ Help information:
   }
 
   run "${_NB}" one:list
-  [[ ${status} -eq 0 ]]
+
+  [[ "${status}" -eq 0 ]]
 
   run "${_NB}" one:list --error-on-empty
-  [[ ${status} -eq 1 ]]
+
+  [[ "${status}" -eq 1 ]]
 
   "${_NB}" one:add "one.md" --title "one"
 
   run "${_NB}" one:list --error-on-empty
-  [[ ${status} -eq 0 ]]
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}" -eq 0 ]]
 }
 
 # `list <notebook>` ###########################################################
 
-@test "'list <notebook>' exits with 1 and prints not found." {
+@test "'list <notebook>' (no colon) exits with 1 and prints not found." {
   {
     "${_NB}" init
+
     "${_NB}" notebooks add "example"
-    "${_NB}" example:add "one.md" --title "one"
-    "${_NB}" example:add "two.md" --title "two"
+
+    "${_NB}" example:add "one.md"   --title "one"
+    "${_NB}" example:add "two.md"   --title "two"
     "${_NB}" example:add "three.md" --title "three"
-    _files=($(ls "${NB_DIR}/example/"))
 
     [[ "$("${_NB}" notebooks current)" == "home" ]]
   }
 
   run "${_NB}" list example
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[@]}" "${lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 1              ]]
-  [[ "${lines[0]}" =~ Not\ found  ]]
-  [[ "${lines[0]}" =~ example     ]]
+  [[ "${status}"    -eq 1           ]]
+  [[ "${lines[0]}"  =~  Not\ found  ]]
+  [[ "${lines[0]}"  =~  example     ]]
 }
 
-@test "'list <notebook>:' exits with 0 and lists files in reverse order." {
+@test "'list <notebook>:' (colon) exits with 0 and lists files in <notebook> in reverse order." {
   {
     "${_NB}" init
+
     "${_NB}" notebooks add "example"
-    "${_NB}" example:add "one.md" --title "one"
-    "${_NB}" example:add "two.md" --title "two"
+
+    "${_NB}" example:add "one.md"   --title "one"
+    "${_NB}" example:add "two.md"   --title "two"
     "${_NB}" example:add "three.md" --title "three"
-    _files=($(ls "${NB_DIR}/example/"))
   }
 
   run "${_NB}" list example:
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  _compare "${_files[@]}" "${lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0              ]]
-  [[ "${lines[0]}" =~ example:3   ]]
-  [[ "${lines[0]}" =~ three       ]]
-  [[ "${lines[1]}" =~ example:2   ]]
-  [[ "${lines[1]}" =~ two         ]]
-  [[ "${lines[2]}" =~ example:1   ]]
-  [[ "${lines[2]}" =~ one         ]]
+  [[ "${status}"    -eq 0         ]]
+  [[ "${lines[0]}"  =~  example:3 ]]
+  [[ "${lines[0]}"  =~  three     ]]
+  [[ "${lines[1]}"  =~  example:2 ]]
+  [[ "${lines[1]}"  =~  two       ]]
+  [[ "${lines[2]}"  =~  example:1 ]]
+  [[ "${lines[2]}"  =~  one       ]]
 }
 
 # help ########################################################################
@@ -1904,14 +1901,15 @@ Help information:
 @test "'help list' exits with status 0." {
   run "${_NB}" help list
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "'help list' prints help information." {
   run "${_NB}" help list
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[ "${lines[0]}" == "Usage:" ]]
   [[ "${lines[1]}" =~ nb\ list ]]
