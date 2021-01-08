@@ -4174,7 +4174,7 @@ _list() {
   local _print_indicators=1
   local _list_paths=0
   local _reverse=0
-  local _selectors=()
+  local _selector_arguments=()
   local _sort=0
   local _type=
   local _use_pager=0
@@ -4245,7 +4245,7 @@ _list() {
         then
           _type="${__arg:2}"
         else
-          _selectors+=("${__arg:-}")
+          _selector_arguments+=("${__arg:-}")
         fi
         ;;
     esac
@@ -4262,39 +4262,39 @@ _list() {
   local _selector_basename=
   local _selector_relative_path=
 
-  for __selector in "${_selectors[@]:-}"
+  for __argument in "${_selector_arguments[@]:-}"
   do
-    [[ -z "${__selector:-}" ]] && continue
+    [[ -z "${__argument:-}" ]] && continue
 
-    if [[ "${__selector}" =~ :$ ]]
+    if [[ "${__argument}" =~ :$ ]]
     then
       local _selector_notebook_path=
-      _selector_notebook_path="$(_notebooks show "${__selector}" --path)"
+      _selector_notebook_path="$(_notebooks show "${__argument}" --path)"
 
       if [[ -n "${_selector_notebook_path:-}"                   ]] &&
          [[ "${_selector_notebook_path}" == "${_notebook_path}" ]]
       then
-        _selector="${__selector}"
+        _selector="${__argument}"
       else
-        _filter_patterns+=("${__selector}")
+        _filter_patterns+=("${__argument}")
       fi
     else
       if [[ -n "${_selector:-}" ]]
       then
-        _filter_patterns+=("${__selector}")
+        _filter_patterns+=("${__argument}")
       else
         _selector_relative_path="$(
-          _show "${__selector%\/}" --relative-path 2>/dev/null || :
+          _show "${__argument%\/}" --relative-path 2>/dev/null || :
         )"
 
-        if [[ "${__selector:-}" =~ /$ ]]
+        if [[ "${__argument:-}" =~ /$ ]]
         then
           if [[ -n "${_selector_relative_path:-}" ]]
           then
             if [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
             then
               _folder_path="${_selector_relative_path}"
-              _selector="${__selector}"
+              _selector="${__argument}"
               _selector_basename=
             else
               if [[ "${_selector_relative_path:-}" =~ / ]]
@@ -4304,35 +4304,35 @@ _list() {
                 _folder_path=
               fi
 
-              _selector="${__selector%\/}"
+              _selector="${__argument%\/}"
               _selector_basename="${_selector_relative_path##*\/}"
             fi
           else
-            _filter_patterns+=("${__selector}")
+            _filter_patterns+=("${__argument}")
           fi
-        elif [[ "${__selector:-}" =~ / ]]
+        elif [[ "${__argument:-}" =~ / ]]
         then
           if [[ -n "${_selector_relative_path:-}" ]]
           then
             _folder_path="${_selector_relative_path%\/*}"
-            _selector="${__selector}"
+            _selector="${__argument}"
             _selector_basename="${_selector_relative_path##*\/}"
           else
             _selector_relative_path="$(
-              _show "${__selector%\/*}" --relative-path 2>/dev/null || :
+              _show "${__argument%\/*}" --relative-path 2>/dev/null || :
             )"
 
             if [[ -n "${_selector_relative_path:-}"                   ]] &&
                [[ -d "${_notebook_path}/${_selector_relative_path:-}" ]]
             then
               _folder_path="${_selector_relative_path}"
-              _selector="${__selector%\/*}"
+              _selector="${__argument%\/*}"
               _selector_basename=
               _selector_relative_path="${_folder_path:-}"
 
-              _filter_patterns+=("${__selector##*\/}")
+              _filter_patterns+=("${__argument##*\/}")
             else
-              _filter_patterns+=("${__selector}")
+              _filter_patterns+=("${__argument}")
             fi
           fi
         else
@@ -4352,25 +4352,25 @@ _list() {
               _selector="${_folder_path:-}"
             else
               _folder_path=
-              _selector="${__selector}"
+              _selector="${__argument}"
               _selector_basename="${_selector_relative_path##*\/}"
             fi
           else
-            if [[ "${__selector:-}" =~ : ]]
+            if [[ "${__argument:-}" =~ : ]]
             then
               local _selector_notebook_path=
-              _selector_notebook_path="$(_notebooks show "${__selector%%:*}" --path)"
+              _selector_notebook_path="$(_notebooks show "${__argument%%:*}" --path)"
 
               if [[ -n "${_selector_notebook_path:-}"                   ]] &&
                  [[ "${_selector_notebook_path}" == "${_notebook_path}" ]]
               then
-                _selector="${__selector%%:*}"
-                _filter_patterns+=("${__selector#*:}")
+                _selector="${__argument%%:*}"
+                _filter_patterns+=("${__argument#*:}")
               else
-                _filter_patterns+=("${__selector}")
+                _filter_patterns+=("${__argument}")
               fi
             else
-              _filter_patterns+=("${__selector}")
+              _filter_patterns+=("${__argument}")
             fi
           fi
         fi
