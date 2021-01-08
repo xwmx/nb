@@ -857,10 +857,28 @@ HEREDOC
 
 # `ls <selector>` #############################################################
 
-@test "'ls <selector>' exits with 0 and displays the selector." {
+@test "'ls <selector>' exits with 0 and displays the selected item." {
   {
-    _setup_ls
-    _files=($(ls "${NB_DIR}/home/"))
+    "${_NB}" init
+
+    cat <<HEREDOC | "${_NB}" add "first.md"
+# one
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "second.md"
+# two
+line two
+line three
+line four
+HEREDOC
+    cat <<HEREDOC | "${_NB}" add "third.md"
+# three
+line two
+line three
+line four
+HEREDOC
   }
 
   run "${_NB}" ls 1 --filenames
@@ -873,10 +891,9 @@ HEREDOC
   [[ "${#lines[@]}" -eq 1           ]]
   [[ "${lines[0]}" =~ first.md      ]]
   [[ "${lines[0]}" =~ [*1*]         ]]
-  [[ "${lines[0]}" =~ ${_files[0]}  ]]
 }
 
-@test "'ls <query selector>' exits with 0 and displays the selectors." {
+@test "'ls <query selector>' exits with 0 and displays selected items." {
   {
     _setup_ls
     _files=($(ls "${NB_DIR}/home/"))
@@ -1236,8 +1253,8 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" == 5                    ]]
-  [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
+  [[ "${#lines[@]}" == 10                   ]]
+  [[ "${lines[2]}" =~ 0\ document\ files\.  ]]
 }
 
 
@@ -1266,8 +1283,8 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                        ]]
-  [[ "${#lines[@]}" == 5                    ]]
-  [[ "${lines[0]}" =~ 0\ document\ files\.  ]]
+  [[ "${#lines[@]}" == 10                   ]]
+  [[ "${lines[2]}" =~ 0\ document\ files\.  ]]
 }
 
 @test "'ls --js' exits with 0, displays empty list, and retains trailing 's'." {
@@ -1295,8 +1312,8 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                  ]]
-  [[ "${#lines[@]}" == 5              ]]
-  [[ "${lines[0]}" =~ 0\ js\ files\.  ]]
+  [[ "${#lines[@]}" == 10             ]]
+  [[ "${lines[2]}" =~ 0\ js\ files\.  ]]
 }
 
 @test "'ls <selection> --type' filters by type." {
@@ -1466,10 +1483,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 1                          ]]
-  [[ "${#lines[@]}" == 1                      ]]
-  [[ "${lines[0]}" =~ Not\ found              ]]
-  [[ "${lines[0]}" =~ example:matchless-query ]]
-  [[ "${lines[0]}" =~ Type                    ]]
-  [[ "${lines[0]}" =~ document                ]]
+  [[ ${status} -eq 1                                                                    ]]
+  [[ "${#lines[@]}" == 1                                                                ]]
+  [[ "${lines[0]}" =~ Not\ found:\ .*example:.*\ .*matchless-query.*\ Type:\ .*document ]]
 }

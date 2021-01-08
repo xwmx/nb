@@ -2237,8 +2237,11 @@ _list_files() {
           shift
         fi
         ;;
-      *)
-        if [[ -z "${_path:-}" ]]
+      --[A-Za-z]*)
+        _type="${__arg:2}"
+        ;;
+      [^-]*)
+        if [[ -z "${_path:-}" ]] && [[ "${__arg:-}" =~ ^/ ]]
         then
           _path="${__arg}"
         fi
@@ -2761,7 +2764,9 @@ _count() {
 
   if [[ -n "${_selector:-}" ]]
   then
-    _list_files_options+=("$(_show "${_selector}" --path)")
+    _list_files_options+=("$(
+      _show "${_selector}" --path 2>/dev/null || printf ""
+    )")
   fi
 
   _list_files "${_list_files_options[@]:-}" | wc -l | tr -d ' '
@@ -4429,9 +4434,12 @@ _list() {
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
-      if [[ -z "${_filter_pattern:-}"                   ]] &&
-         [[ -n "${_selector_basename:-}"                ]] &&
-         [[ "${__basename}" != "${_selector_basename}"  ]]
+      if [[ -z "${__basename:-}" ]]
+      then
+        continue # exclude from list
+      elif [[ -z "${_filter_pattern:-}"                     ]] &&
+           [[ -n "${_selector_basename:-}"                  ]] &&
+           [[ "${__basename}" != "${_selector_basename}"    ]]
       then
         continue # exclude from list
       elif [[ -n "${_selector_basename}"                    ]] &&
@@ -4727,12 +4735,10 @@ ${_TPUT_SGR0}"
 
     if ! ((_filenames_count)) && [[ -z "${_filter_pattern:-}" ]]
     then
-      if ((_error_on_empty))
-      then
-        return 1
-      elif [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
-      then
-        cat <<HEREDOC
+      {
+        if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
+        then
+          cat <<HEREDOC
 0 bookmarks.
 
 Add a bookmark:
@@ -4740,14 +4746,14 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-    elif [[ -n "${_type:-}" ]]
-    then
-      if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
-      then
-        _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
-      fi
+        elif [[ -n "${_type:-}" ]]
+        then
+          if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
+          then
+            _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
+          fi
 
-      cat <<HEREDOC
+          cat <<HEREDOC
 0 ${_type} files.
 
 Import a file:
@@ -4755,8 +4761,8 @@ Import a file:
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
-    else
-      cat <<HEREDOC
+        else
+          cat <<HEREDOC
 0 items.
 
 Add a note:
@@ -4768,16 +4774,24 @@ Import a file:
 Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
+        fi
+      } | {
+        if ((_error_on_empty))
+        then
+          cat 1>&2
+          return 1
+        else
+          cat
+          return 0
+        fi
+      }
     fi
-
-    return 0
-  fi
-} | if ((_use_pager))
-    then
-      _pager
-    else
-      cat
-    fi
+  } | if ((_use_pager))
+      then
+        _pager
+      else
+        cat
+      fi
 }
 
 # ls · ################################################################### · ls
@@ -5183,7 +5197,7 @@ _ls() {
   ))
   local _selector=
   local _selector_folder_path=
-  local _type=
+  local _maybe_type=
   local _use_pager=0
 
   while ((${#}))
@@ -5222,7 +5236,7 @@ _ls() {
         NB_HEADER=0
         ;;
       -t|--type)
-        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _maybe_type="$(_option_get_value "${__arg}" "${__val:-}")"
         _arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
@@ -5235,10 +5249,7 @@ _ls() {
         fi
         ;;
       --[A-Za-z]*)
-        if _contains "${__arg:-}" "${_FILE_TYPES[@]:-}"
-        then
-          _type="${__arg:2}"
-        fi
+        _maybe_type="${__arg:2}"
 
         _arguments+=("${__arg}")
         ;;
@@ -5254,7 +5265,7 @@ _ls() {
         ;;
       *:*)
         _arguments+=("$(_show "${__arg}" --selector-id)")
-        _selector="${__arg#*:}"
+        _selector="${__arg:-}"
         _filter_patterns+=("${__arg}")
         ;;
       *)
@@ -5276,7 +5287,7 @@ _ls() {
   if [[ -n "${_limit:-}" ]]
   then
     _list_options+=("--limit" "${_limit}")
-  elif [[ -z "${_selector:-}" ]] && ! ((_all))
+  elif [[ -z "${_selector#*:}" ]] && ! ((_all))
   then
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
@@ -5326,14 +5337,14 @@ _ls() {
       else
         local _count_arguments=()
 
-        if [[ -n "${_selector_folder_path:-}" ]]
+        if [[ -n "${_selector:-}" ]]
         then
-          _count_arguments+=("${_selector_folder_path}")
+          _count_arguments+=("${_selector}")
         fi
 
-        if [[ -n "${_type:-}" ]]
+        if [[ -n "${_maybe_type:-}" ]]
         then
-          _count_arguments+=("--type" "${_type}")
+          _count_arguments+=("--${_maybe_type}")
         fi
 
         local _local_count
@@ -5344,27 +5355,43 @@ _ls() {
              [[ ! "${_filter_patterns[*]:-}" =~ / ]]
         }
         then
+          if ((NB_HEADER))                &&
+             [[ -n "${_maybe_type:-}" ]]  &&
+             [[ -z "${_selector:-}"   ]]
+          then
+            _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
+          fi
+
           if ((${NB_FOLDER_HEADER:-1}))
           then
             _ls_print_folder_header "${_selector_folder_path:-}"
           fi
 
           _list "${_list_options[@]:-}"
+
+          if ((NB_FOOTER))                &&
+             [[ -n "${_maybe_type:-}" ]]  &&
+             [[ -z "${_selector:-}"   ]]
+          then
+            _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
+          fi
         else
-          printf "%s\\n" "${_list_error}"
-          return 1
+          if [[ -n "${_list_error:-}" ]]
+          then
+            printf "%s\\n" "${_list_error}"
+            return 1
+          fi
         fi
       fi
     }
   } | {
     local _display_header_and_footer=0
 
-    if [[ -z "${_arguments[*]:-}"           ]] ||
-       [[ -n "${_type:-}"                   ]] ||  {
-         [[ "${_selector:-}" =~ /$          ]] &&
+    if [[ -z "${_arguments[*]:-}"           ]] || {
+         [[ "${_selector:-}" =~ /$|:$       ]] &&
          [[ -n "${_selector_folder_path:-}" ]] &&
          [[ -z "${_filter_patterns[1]:-}"   ]]
-       }
+    }
     then
       _display_header_and_footer=1
     fi
