@@ -4458,6 +4458,7 @@ _list() {
         _matches=$((_matches+1))
       elif [[ -n "${_filter_pattern:-}" ]]
       then
+        # turn on case-insensitive matching
         shopt -s nocasematch
 
         if [[ -n "${_selector_basename}"                    ]] &&
@@ -4488,7 +4489,7 @@ _list() {
           fi
         fi
 
-        # turn off a case-insensitive matching (-u unset nocasematch)
+        # turn off case-insensitive matching
         shopt -u nocasematch
       fi
 
@@ -6830,7 +6831,6 @@ _show() {
         _folder_relative_path="$(
           _resolve_selector_folders "${_selector}" "${_notebook_path}"
         )" || return 0
-
 
         if [[ -n "${_folder_relative_path:-}" ]]
         then
@@ -10042,7 +10042,6 @@ Please install %s manually. No .deb package available for %s."  \
   fi
 }
 
-
 # export ############################################################### export
 
 describe "export" <<HEREDOC
@@ -10721,7 +10720,6 @@ ${_url}
   esac
 }
 
-
 # move ################################################################### move
 
 describe "move" <<HEREDOC
@@ -11011,7 +11009,6 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 }
 _alias_subcommand "move" "mv"
 _alias_subcommand "move" "rename"
-
 
 # open ################################################################### open
 
@@ -13045,7 +13042,6 @@ HEREDOC
     fi
   done
 }
-
 
 # status ############################################################### status
 
