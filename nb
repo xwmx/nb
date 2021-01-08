@@ -5209,6 +5209,7 @@ _ls() {
   ))
   local _selector=
   local _selector_folder_path=
+  local _selector_relative_path=
   local _maybe_type=
   local _use_pager=0
 
