@@ -51,9 +51,8 @@ _setup_scope() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                ]]
-  [[ "${lines[0]}" =~ Not\ found    ]]
-  [[ "${lines[0]}" =~ one\:invalid  ]]
+  [[ ${status} -eq 1                                    ]]
+  [[ "${lines[0]}" =~ Not\ found:\ .*one:.*\ .*invalid  ]]
 }
 
 @test "'nb one:1' exits with 0 and scoped 'ls' output." {
