@@ -3945,11 +3945,11 @@ Examples:
   # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
 
-  # Move note 12 to "Sample Folder" in the "demo" notebook
-  nb example:move 12 demo:Sample\ Folder/
+  # Move note 12 into "Sample Folder" in the "demo" notebook
+  nb move example:12 demo:Sample\ Folder/
 
   # Rename note 12 in the "example" notebook to "sample.md"
-  nb example:move 12 "sample.md"
+  nb rename example:12 "sample.md"
 
 Alias: `rename`
 Shortcut Alias: `mv`
