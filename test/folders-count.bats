@@ -133,7 +133,7 @@ load test_helper
   [[ "${lines[0]}"  =~  Not\ found:.*not-valid  ]]
 }
 
-@test "'count <not-valid> --skip-unmatched-selector' exits with 1 and prints nothing." {
+@test "'count <not-valid> --skip-unmatched-selector' exits with 0 and prints root-level count." {
   {
     "${_NB}" init
 
