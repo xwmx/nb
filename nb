@@ -4159,20 +4159,20 @@ Examples:
   ${_ME} example:list
 HEREDOC
 _list() {
-  local _excerpt_length=3
   local _error_on_empty=0
+  local _excerpt_length=3
+  local _folder_path=
   local _limit=
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
+  local _list_paths=0
   local _maybe_folder_selector_padded_left=
   local _maybe_folder_selector_padded_right=
   local _maybe_id_path=
   local _maybe_scope=
   local _no_id=0
-  local _folder_path=
   local _print_excerpt=0
   local _print_indicators=1
-  local _list_paths=0
   local _reverse=0
   local _selector_arguments=()
   local _sort=0
