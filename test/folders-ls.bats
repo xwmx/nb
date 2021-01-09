@@ -84,6 +84,68 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   [[    "${lines[6]}"   =~  nb\ add\ 4/                             ]]
 }
 
+@test "'ls <folder>/ -s' exits with 0, respects limit, and hides header and footer." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"      \
+      --title     "root one"    \
+      --content   "Content one."
+    "${_NB}" add  "two.md"      \
+      --title     "root two"    \
+      --content   "Content two."
+    "${_NB}" add  "three.md"    \
+      --title     "root three"  \
+      --content   "Content Three."
+
+    "${_NB}" add  "Example Folder/one.md"   \
+      --title     "nested one"              \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/two.md"   \
+      --title     "nested two"              \
+      --content   "Content two."
+    "${_NB}" add  "Example Folder/thee.md"  \
+      --title     "nested three"            \
+      --content   "Content three."
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md"   \
+      --title     "deep one"                              \
+      --content   "Content one."
+    "${_NB}" add  "Example Folder/Sample Folder/two.md"   \
+      --title     "deep two"                              \
+      --content   "Content two."
+    "${_NB}" add  "Example Folder/Sample Folder/three.md" \
+      --title     "deep three"                            \
+      --content   "Content three."
+
+    "${_NB}" set limit 2
+  }
+
+  run "${_NB}" ls -s
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                         ]]
+  [[    "${#lines[@]}"  -ge 3                         ]]
+
+  [[    "${lines[0]}"   =~  1.*root\ one              ]]
+  [[    "${lines[1]}"   =~  2.*root\ two              ]]
+  [[    "${lines[2]}"   =~  2\ omitted\.\ 4\ total\.  ]]
+
+  run "${_NB}" ls Example\ Folder/ -s
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -ge 3                                 ]]
+
+  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[1]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
+  [[    "${lines[2]}"   =~  2\ omitted\.\ 4\ total\.          ]]
+}
+
 @test "'ls <folder>/ <pattern>...' (space) exits with 0 and ignores limit." {
   {
     "${_NB}" init
