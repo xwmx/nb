@@ -6884,11 +6884,11 @@ _show() {
 
                   if [[ -n "${_title}"                    ]] &&
                      [[ "${_title}" == "${_maybe_title}"  ]]
-                   then
-                     local _full_path="${_folder_path}/${__filename}"
-                     printf "%s\\n" "${_full_path/"${_notebook_path}"\//}"
-                     break
-                   fi
+                  then
+                    local _full_path="${_folder_path}/${__filename}"
+                    printf "%s\\n" "${_full_path/"${_notebook_path}"\//}"
+                    break
+                  fi
                 done
           )"
         fi
