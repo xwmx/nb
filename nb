@@ -11563,9 +11563,9 @@ _search() {
   local _all=0
   local _arguments=()
   local _last_path=
-  local _only_list=0
   local _max_columns="2000"
   local _max_depth=0
+  local _only_list=0
   local _print_paths=0
   local _queries=()
   local _query=
