@@ -183,7 +183,7 @@ _setup_folders_and_files() {
   [[    "${output}"    =~  Folder\ Name\ Match:\ .*Demo\ Folder       ]]
 }
 
-@test "'search <folder>/' (slash, no query) with matching folder name prints help." {
+@test "'search <folder>/' (slash, no query) with matching folder name returns 1 and prints help." {
   {
     "${_NB}" init
 
@@ -229,7 +229,7 @@ _setup_folders_and_files() {
   [[    "${output}"    =~  Folder\ Name\ Match:\ .*Demo\ Folder       ]]
 }
 
-@test "'search <folder-id>/' (slash, no query) with matching folder prints help." {
+@test "'search <folder-id>/' (slash, no query) with matching folder returns 1 and prints help." {
   {
     "${_NB}" init
 
@@ -257,8 +257,6 @@ _setup_folders_and_files() {
       --content   "12345"
     "${_NB}" edit "Example Folder/Sample Folder/File Two.md"  \
       --content   "12345"
-
-    _setup_folders_and_files
   }
 
   run "${_NB}" search 12345/ --use-grep
@@ -280,6 +278,107 @@ _setup_folders_and_files() {
 }
 
 # <notebook> selectors ########################################################
+
+@test "'search <notebook>:' (no slash, no space, no query, colon) with matching notebook returns 1 and prints help." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    [[ "$("${_NB}" notebooks current)" == "home" ]]
+  }
+
+  run "${_NB}" search Example\ Notebook: --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1          ]]
+
+  [[    "${lines[0]}" =~  Usage:     ]]
+  [[    "${lines[1]}" =~  nb\ search ]]
+}
+
+@test "'search <notebook>:' (no slash, no space, no query, colon) without matching notebook searches for the string in <notebook> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    [[ "$("${_NB}" notebooks current)" == "home" ]]
+
+    "${_NB}" edit "Example Folder/File Two.md"                \
+      --content   "Not a Notebook"
+    "${_NB}" edit "Example Folder/File Three.md"              \
+      --content   "Not a Notebook:"
+    "${_NB}" edit "Example Folder/Sample Folder/File Two.md"  \
+      --content   "Not a Notebook:"
+  }
+
+  run "${_NB}" search Not\ a\ Notebook: --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                                                ]]
+
+  [[    "${#lines[@]}" -eq 6                                                                ]]
+
+  [[ !  "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two                     ]]
+
+  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three                   ]]
+  [[    "${lines[1]}"  =~  ---------------                                                  ]]
+  [[    "${lines[2]}"  =~  Not\ a\ Notebook                                                 ]]
+  [[    "${output}"    =~  \
+          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
+  [[    "${lines[4]}"  =~  ---------------                                                  ]]
+  [[    "${lines[5]}"  =~  Not\ a\ Notebook                                                 ]]
+}
+
+@test "'search <notebook>' (no slash, no space, no query, no colon) with matching notebook searches for the string in <notebook> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    [[ "$("${_NB}" notebooks current)" == "home" ]]
+
+    "${_NB}" edit "Example Folder/File Two.md"                \
+      --content   "Example Notebook"
+    "${_NB}" edit "Example Folder/File Three.md"              \
+      --content   "Example Notebook:"
+    "${_NB}" edit "Example Folder/Sample Folder/File Two.md"  \
+      --content   "Example Notebook:"
+  }
+
+  run "${_NB}" search Example\ Notebook --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                                                ]]
+
+  [[    "${#lines[@]}" -eq 9                                                                ]]
+
+  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three                   ]]
+  [[    "${lines[1]}"  =~  ---------------                                                  ]]
+  [[    "${lines[2]}"  =~  Example\ Notebook                                                ]]
+
+  [[    "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two                     ]]
+  [[    "${lines[4]}"  =~  ---------------                                                  ]]
+  [[    "${lines[5]}"  =~  Example\ Notebook                                                ]]
+
+  [[    "${output}"    =~  \
+          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
+  [[    "${lines[7]}"  =~  ---------------                                                  ]]
+  [[    "${lines[8]}"  =~  Example\ Notebook                                                ]]
+}
 
 @test "'search <notebook>:<filename>' (no slash, no space) searches for <filename> in <notebook> root." {
   {
