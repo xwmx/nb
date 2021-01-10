@@ -12135,7 +12135,14 @@ _search() {
 
         if ((_filename_hit))
         then
-          _content_line_with_hit="Filename Match: $(
+          local _filename_type_label="Filename"
+
+          if [[ -d "${_folder_path}/${_filename}" ]]
+          then
+            _filename_type_label="Folder Name"
+          fi
+
+          _content_line_with_hit="${_filename_type_label} Match: $(
             printf "%s\\n" "${_line}" | cut -d: -f 3-
           )"
         else

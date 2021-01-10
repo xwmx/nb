@@ -143,7 +143,7 @@ _setup_folders_and_files() {
 
   [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Sample\ Folder  ]]
   [[    "${output}"    =~  ------------------------------------         ]]
-  [[    "${output}"    =~  Filename\ Match:\ .*Sample\ Folder           ]]
+  [[    "${output}"    =~  Folder\ Name\ Match:\ .*Sample\ Folder       ]]
 
   [[    "${output}"    =~ \
           Example\\\ Folder/Sample\\\ Folder/1.*Example\ Folder\ /\ Sample\ Folder\ /\ One   ]]
@@ -180,7 +180,7 @@ _setup_folders_and_files() {
 
   [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
   [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
-  [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder           ]]
+  [[    "${output}"    =~  Folder\ Name\ Match:\ .*Demo\ Folder       ]]
 }
 
 @test "'search <folder>/' (slash, no query) with matching folder name prints help." {
@@ -226,7 +226,7 @@ _setup_folders_and_files() {
 
   [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
   [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
-  [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder           ]]
+  [[    "${output}"    =~  Folder\ Name\ Match:\ .*Demo\ Folder       ]]
 }
 
 @test "'search <folder-id>/' (slash, no query) with matching folder prints help." {
