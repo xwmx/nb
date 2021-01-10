@@ -195,18 +195,10 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # [[    "${status}"    -eq 0                                ]]
+  [[    "${status}"    -eq  1           ]]
 
-  # [[    "${#lines[@]}" -eq 3                                ]]
-
-  # [[    "${output}"    =~  5.*\ 📂\ .*Demo\ Folder          ]]
-  # [[    "${output}"    =~  [^-]------------------[^-]       ]]
-  # [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder ]]
-
-  [[    "${status}"    -eq 1            ]]
-
-  [[    "${lines[0]}"    =~  Usage:     ]]
-  [[    "${lines[1]}"    =~  nb\ search ]]
+  [[    "${lines[0]}"  =~   Usage:      ]]
+  [[    "${lines[1]}"  =~   nb\ search  ]]
 }
 
 @test "'search <folder>/' (slash, no query) with no match searches for nested <folder> in current notebook recursively with only matching folder names." {
