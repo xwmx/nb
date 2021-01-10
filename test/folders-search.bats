@@ -183,35 +183,33 @@ _setup_folders_and_files() {
   [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder           ]]
 }
 
-@test "'search <folder>/' (slash, no query) searches for root-level <folder> in current notebook recursively with only matching folder names." {
+@test "'search <folder>/' (slash, no query) with matching folder name prints help." {
   {
     "${_NB}" init
 
     _setup_folders_and_files
-
-    "${_NB}" rename     \
-      "Example Folder"  \
-      "Demo Folder"     \
-      --force
-
-    [[ -d "${NB_DIR}/home/Demo Folder" ]]
   }
 
-  run "${_NB}" search Demo\ Folder/ --use-grep
+  run "${_NB}" search Example\ Folder/ --use-grep
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                ]]
+  # [[    "${status}"    -eq 0                                ]]
 
-  [[    "${#lines[@]}" -eq 3                                ]]
+  # [[    "${#lines[@]}" -eq 3                                ]]
 
-  [[    "${output}"    =~  5.*\ 📂\ .*Demo\ Folder          ]]
-  [[    "${output}"    =~  [^-]------------------[^-]       ]]
-  [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder ]]
+  # [[    "${output}"    =~  5.*\ 📂\ .*Demo\ Folder          ]]
+  # [[    "${output}"    =~  [^-]------------------[^-]       ]]
+  # [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder ]]
+
+  [[    "${status}"    -eq 1            ]]
+
+  [[    "${lines[0]}"    =~  Usage:     ]]
+  [[    "${lines[1]}"    =~  nb\ search ]]
 }
 
-@test "'search <folder>/' (slash, no query) searches for nested <folder> in current notebook recursively with only matching folder names." {
+@test "'search <folder>/' (slash, no query) with no match searches for nested <folder> in current notebook recursively with only matching folder names." {
   {
     "${_NB}" init
 
@@ -237,6 +235,56 @@ _setup_folders_and_files() {
   [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
   [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
   [[    "${output}"    =~  Filename\ Match:\ .*Demo\ Folder           ]]
+}
+
+@test "'search <folder-id>/' (slash, no query) with matching folder prints help." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search 5/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1            ]]
+
+  [[    "${lines[0]}"    =~  Usage:     ]]
+  [[    "${lines[1]}"    =~  nb\ search ]]
+}
+
+@test "'search <folder-id>/' (slash, no query) with no matching folder searches for <folder-id> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+
+    "${_NB}" edit "Example Folder/File Three.md"              \
+      --content   "12345"
+    "${_NB}" edit "Example Folder/Sample Folder/File Two.md"  \
+      --content   "12345"
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search 12345/ --use-grep
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                                                ]]
+
+  [[    "${#lines[@]}" -eq 6                                                                ]]
+
+  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three                   ]]
+  [[    "${lines[1]}"  =~  ---------------                                                  ]]
+  [[    "${lines[2]}"  =~  12345                                                            ]]
+  [[    "${output}"    =~  \
+          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
+  [[    "${lines[4]}"  =~  ---------------                                                  ]]
+  [[    "${lines[5]}"  =~  12345                                                            ]]
 }
 
 # <notebook> selectors ########################################################

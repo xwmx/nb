@@ -11673,7 +11673,12 @@ _search() {
 
       if [[ "${_query_argument:-}"  =~ ^[^/]*/$ ]]
       then
-        _query_argument="${_query_argument%\/}"
+        if [[ -d "${_maybe_path:-}" ]]
+        then
+          _query_argument=
+        else
+          _query_argument="${_query_argument%\/}"
+        fi
       fi
 
       if _notebooks current --selected
