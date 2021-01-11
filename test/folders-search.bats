@@ -279,7 +279,7 @@ _setup_folders_and_files() {
 
 # <notebook> selectors ########################################################
 
-@test "'search <notebook>:' (no slash, no space, no query, colon) with matching notebook returns 1 and prints help." {
+@test "'search <notebook>:' (no query, colon) with matching notebook returns 1 and prints help." {
   {
     "${_NB}" init
 
@@ -301,7 +301,7 @@ _setup_folders_and_files() {
   [[    "${lines[1]}" =~  nb\ search ]]
 }
 
-@test "'search <notebook>:' (no slash, no space, no query, colon) without matching notebook searches for the string in <notebook> recursively." {
+@test "'search <notebook>:' (no query, colon) without matching notebook searches for the string in <notebook> recursively." {
   {
     "${_NB}" init
 
@@ -339,7 +339,7 @@ _setup_folders_and_files() {
   [[    "${lines[5]}"  =~  Not\ a\ Notebook                                                 ]]
 }
 
-@test "'search <notebook>' (no slash, no space, no query, no colon) with matching notebook searches for the string in <notebook> recursively." {
+@test "'search <notebook>' (no query, no colon) with matching notebook searches for the string in <notebook> recursively." {
   {
     "${_NB}" init
 
