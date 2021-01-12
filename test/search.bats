@@ -3,20 +3,19 @@
 load test_helper
 
 _setup_search() {
-  "${_NB}" init &>/dev/null
+  "${_NB}" init
 
-  cat <<HEREDOC | "${_NB}" add "first.md"
-# one
-idyl
-HEREDOC
-  cat <<HEREDOC | "${_NB}" add "second.md"
-# two
-sweetish
-HEREDOC
-  cat <<HEREDOC | "${_NB}" add "third.md"
-# three
-sweetish
-HEREDOC
+  "${_NB}" add  "File One.md"   \
+    --title     "Title One"     \
+    --content   "Sample Content One Sample Phrase."
+
+  "${_NB}" add  "File Two.md"   \
+    --title     "Title Two"     \
+    --content   "Example Content Two Example Phrase."
+
+  "${_NB}" add  "File Three.md" \
+    --title     "Title Three"   \
+    --content   "Example Content Three Example Phrase."
 }
 
 _search_all_setup() {
@@ -25,12 +24,16 @@ _search_all_setup() {
   "${_NB}" notebooks add one
   "${_NB}" use one
 
-  "${_NB}" add example.md --title "sweetish"
+  "${_NB}" add  "example.md"    \
+    --title     "Example Title" \
+    --content   "Example Phrase"
 
   "${_NB}" notebooks add two
   "${_NB}" use two
 
-  "${_NB}" add example.md --title "sweetish"
+  "${_NB}" add  "example.md"    \
+    --title     "Example Title" \
+    --content   "Example Phrase"
 
   "${_NB}" notebooks archive two
 
@@ -62,16 +65,15 @@ _search_all_setup() {
     _setup_search
   }
 
-  run "${_NB}" search 'no match'
+  run "${_NB}" search "no match"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1           ]]
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
 
-  [[ "${output}"  =~  Not\ found  ]]
-  [[ "${output}"  =~  home        ]]
-  [[ "${output}"  =~  no\ match   ]]
+  [[ "${lines[0]}"  =~  Not\ found\ in.*home.*:\ .*no\ match.*  ]]
 }
 
 # `search <one match> [--path] [--list]` ######################################
@@ -81,18 +83,18 @@ _search_all_setup() {
     _setup_search
   }
 
-  run "${_NB}" search 'idyl'
+  run "${_NB}" search "sample phrase"
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[    "${status}"   -eq 0         ]]
+  [[    "${status}"   -eq 0                                       ]]
 
-  [[ !  "${lines[0]}" =~  first\.md ]]
-  [[    "${lines[0]}" =~  one       ]]
-  [[    "${lines[1]}" =~  -*-       ]]
-  [[    "${lines[2]}" =~  idyl      ]]
+  [[ !  "${lines[0]}" =~  \.md                                    ]]
+  [[    "${lines[0]}" =~  Title\ One                              ]]
+  [[    "${lines[1]}" =~  -*-                                     ]]
+  [[    "${lines[2]}" =~  Sample\ Content\ One\ .*Sample\ Phrase  ]]
 }
 
 @test "'search <one match>' includes emoji indicator." {
@@ -105,7 +107,7 @@ _search_all_setup() {
       --title     "Example Title"
   }
 
-  run "${_NB}" search 'example.test' --no-color
+  run "${_NB}" search "example.test" --no-color
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -125,52 +127,49 @@ _search_all_setup() {
     _setup_search
   }
 
-  run "${_NB}" search 'idyl' --path
+  run "${_NB}" search "sample phrase" --path
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                         ]]
-  [[ "${lines[0]}"  =~  ${NB_DIR}/home/first\.md  ]]
-  [[ "${#lines[@]}" -eq 1                         ]]
+  [[ "${status}"    -eq 0                             ]]
+  [[ "${lines[0]}"  =~  ${NB_DIR}/home/File\ One\.md  ]]
+  [[ "${#lines[@]}" -eq 1                             ]]
 }
 
 @test "'search <one match> --list' exits with status 0 and prints listing." {
   {
     _setup_search
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" search 'idyl' --list
+  run "${_NB}" search "sample phrase" --list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0         ]]
+  [[    "${status}"     -eq 0                           ]]
 
-  [[ !  "${lines[0]}"   =~ first\.md  ]]
-  [[    "${lines[0]}"   =~ one        ]]
+  [[ !  "${lines[0]}"   =~  \.md                        ]]
+  [[    "${lines[0]}"   =~  [.*1.*].*\ Title\ One       ]]
 
-  [[    "${#lines[@]}"  -eq 1         ]]
+  [[    "${#lines[@]}"  -eq 1                           ]]
 }
 
 @test "'search <one filename match>' exits with status 0 and prints output." {
   {
-    "${_NB}" init &>/dev/null
+    "${_NB}" init
 
-    cat <<HEREDOC | "${_NB}" add "1-example.md"
-# one
-idyl
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add "sample.md"
-# two
-sweetish
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add "third.md"
-# three
-sweetish
-HEREDOC
+    "${_NB}" add  "1-example.md"  \
+      --title     "One"           \
+      --content   "Sample Content One Sample Phrase."
+
+    "${_NB}" add  "sample.md"     \
+      --title     "Two"           \
+      --content   "Example Content Two Example Phrase."
+
+    "${_NB}" add  "third.md"      \
+      --title     "Three"         \
+      --content   "Example Content Three Example Phrase."
   }
 
   run "${_NB}" search '1-example.md'
@@ -179,13 +178,11 @@ HEREDOC
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ "${status}"    -eq 0               ]]
+  [[ "${status}"    -eq 0                                   ]]
 
-  [[ "${lines[0]}"  =~  1-example.md    ]]
-  [[ "${lines[0]}"  =~  one             ]]
-  [[ "${lines[1]}"  =~  -*-             ]]
-  [[ "${lines[2]}"  =~  Filename\ Match ]]
-  [[ "${lines[2]}"  =~  1-example.md    ]]
+  [[ "${lines[0]}"  =~  [.*1.*].*\ .*1-example.md.*\ ·\ One ]]
+  [[ "${lines[1]}"  =~  -*-                                 ]]
+  [[ "${lines[2]}"  =~  Filename\ Match:\ .*1-example.md    ]]
 }
 
 # -q / --query option #########################################################
@@ -195,18 +192,18 @@ HEREDOC
     _setup_search
   }
 
-  run "${_NB}" search -q 'idyl'
+  run "${_NB}" search -q "sample phrase"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[    "${status}"   -eq 0         ]]
+  [[    "${status}"   -eq 0                                       ]]
 
-  [[ !  "${lines[0]}" =~ first\.md  ]]
-  [[    "${lines[0]}" =~ one        ]]
-  [[    "${lines[1]}" =~ -*-        ]]
-  [[    "${lines[2]}" =~ idyl       ]]
+  [[ !  "${lines[0]}" =~  \.md                                    ]]
+  [[    "${lines[0]}" =~  Title\ One                              ]]
+  [[    "${lines[1]}" =~  -*-                                     ]]
+  [[    "${lines[2]}" =~  Sample\ Content\ One\ .*Sample\ Phrase  ]]
 }
 
 @test "'search --query <query>' exits with status 0 and prints output." {
@@ -214,18 +211,18 @@ HEREDOC
     _setup_search
   }
 
-  run "${_NB}" search --query 'idyl'
+  run "${_NB}" search --query "sample phrase"
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[    "${status}"   -eq 0         ]]
+  [[    "${status}"   -eq 0                                       ]]
 
-  [[ !  "${lines[0]}" =~ first\.md  ]]
-  [[    "${lines[0]}" =~ one        ]]
-  [[    "${lines[1]}" =~ -*-        ]]
-  [[    "${lines[2]}" =~ idyl       ]]
+  [[ !  "${lines[0]}" =~  \.md                                    ]]
+  [[    "${lines[0]}" =~  Title\ One                              ]]
+  [[    "${lines[1]}" =~  -*-                                     ]]
+  [[    "${lines[2]}" =~  Sample\ Content\ One\ .*Sample\ Phrase  ]]
 }
 
 # `search` spacing and alignment ##############################################
@@ -250,7 +247,7 @@ HEREDOC
       --title     "Example Title Two"
   }
 
-  run "${_NB}" search 'example.test' --no-color --use-grep --list
+  run "${_NB}" search "example.test" --no-color --use-grep --list
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -287,7 +284,7 @@ HEREDOC
       --title     "Example Title Two"
   }
 
-  run "${_NB}" search 'example.test' --no-color --use-grep
+  run "${_NB}" search "example.test" --no-color --use-grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -316,25 +313,25 @@ HEREDOC
     _setup_search
   }
 
-  run "${_NB}" search 'sweetish' --use-grep
+  run "${_NB}" search "example phrase" --use-grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[3]}: '%s'\\n" "${lines[3]}"
 
-  [[    "${status}"   -eq 0             ]]
+  [[    "${status}"   -eq 0                       ]]
 
-  [[ !  "${lines[0]}" =~  third\.md     ]] || [[ !  "${lines[3]}" =~  third\.md     ]]
-  [[    "${lines[0]}" =~  three         ]] || [[    "${lines[3]}" =~  three         ]]
-  [[    "${lines[1]}" =~  -*-           ]] || [[    "${lines[4]}" =~  -*-           ]]
-  [[    "${lines[2]}" =~  sweetish      ]] || [[    "${lines[5]}" =~  sweetish      ]]
+  [[ !  "${lines[0]}" =~  \.md                    ]]
+  [[    "${lines[0]}" =~  Title\ Two|Title\ Three ]]
+  [[    "${lines[1]}" =~  -*-                     ]]
+  [[    "${lines[2]}" =~  Example\ Phrase         ]]
 
-  [[ !  "${lines[3]}" =~  second\.md    ]] || [[ !  "${lines[0]}" =~  second\.md    ]]
-  [[    "${lines[3]}" =~  two           ]] || [[    "${lines[0]}" =~  two           ]]
-  [[    "${lines[4]}" =~  -*-           ]] || [[    "${lines[1]}" =~  -*-           ]]
-  [[    "${lines[5]}" =~  sweetish      ]] || [[    "${lines[2]}" =~  sweetish      ]]
+  [[ !  "${lines[3]}" =~  \.md                    ]]
+  [[    "${lines[3]}" =~  Title\ Two|Title\ Three ]]
+  [[    "${lines[4]}" =~  -*-                     ]]
+  [[    "${lines[5]}" =~  Example\ Phrase         ]]
 
-  [[    "${lines[0]}" !=  "${lines[3]}" ]]
+  [[    "${lines[0]}" !=  "${lines[3]}"           ]]
 }
 
 @test "'search <multiple matches> --path' exits with 0 and prints paths." {
@@ -342,18 +339,18 @@ HEREDOC
     _setup_search
   }
 
-  run "${_NB}" search 'sweetish' --path --use-grep
+  run "${_NB}" search "example phrase" --path --use-grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ "${status}"    -eq 0                         ]]
+  [[ "${status}"    -eq 0                               ]]
 
-  [[ "${output}"    =~  ${NB_DIR}/home/third\.md  ]]
-  [[ "${output}"    =~  ${NB_DIR}/home/second\.md ]]
+  [[ "${output}"    =~  ${NB_DIR}/home/File\ Two\.md    ]]
+  [[ "${output}"    =~  ${NB_DIR}/home/File\ Three\.md  ]]
 
-  [[ "${#lines[@]}" -eq 2                         ]]
+  [[ "${#lines[@]}" -eq 2                               ]]
 }
 
 @test "'search <multiple matches> --list' exits with 0 and prints listings." {
@@ -361,42 +358,39 @@ HEREDOC
     _setup_search
   }
 
-  run "${_NB}" search 'sweetish' --list --use-grep
+  run "${_NB}" search "example phrase" --list --use-grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[    "${status}"     -eq 0           ]]
+  [[    "${status}"     -eq 0             ]]
 
-  [[ !  "${output}"     =~  third\.md   ]]
-  [[    "${output}"     =~  three       ]]
+  [[ !  "${output}"     =~  \.md          ]]
+  [[    "${output}"     =~  Title\ Two    ]]
+  [[    "${output}"     =~  Title\ Three  ]]
 
-  [[ !  "${output}"     =~  second\.md  ]]
-  [[    "${output}"     =~  two         ]]
-
-  [[    "${#lines[@]}"  -eq 2           ]]
+  [[    "${#lines[@]}"  -eq 2             ]]
 }
 
 @test "'search <multiple filename match>' exits with status 0 and prints output." {
   {
-    "${_NB}" init &>/dev/null
+    "${_NB}" init
 
-    cat <<HEREDOC | "${_NB}" add "1-example.md"
-# one
-idyl
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add "sample.md"
-# two
-sweetish
-HEREDOC
-    cat <<HEREDOC | "${_NB}" add "2-example.md"
-# three
-sweetish
-HEREDOC
+    "${_NB}" add  "1-example.md"  \
+      --title     "Title One"     \
+      --content   "Sample Content One Sample Phrase."
+
+    "${_NB}" add  "sample.md"     \
+      --title     "Title Two"     \
+      --content   "Example Content Two Example Phrase."
+
+    "${_NB}" add  "2-example.md"  \
+      --title     "Title Three"   \
+      --content   "Example Content Three Example Phrase."
   }
 
-  run "${_NB}" search 'example.md' --use-grep
+  run "${_NB}" search "example.md" --use-grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -406,7 +400,7 @@ HEREDOC
 
   [[ "${lines[0]}"  =~  example.md      ]]
   [[ "${lines[0]}"  =~  1               ]]
-  [[ "${lines[0]}"  =~  one             ]]
+  [[ "${lines[0]}"  =~  Title\ One      ]]
   [[ "${lines[1]}"  =~  -*-             ]]
   [[ "${lines[2]}"  =~  Filename\ Match ]]
   [[ "${lines[2]}"  =~  example.md      ]]
@@ -414,7 +408,7 @@ HEREDOC
 
   [[ "${lines[3]}"  =~  example.md      ]]
   [[ "${lines[3]}"  =~  2               ]]
-  [[ "${lines[3]}"  =~  three           ]]
+  [[ "${lines[3]}"  =~  Title\ Three    ]]
   [[ "${lines[4]}"  =~  -*-             ]]
   [[ "${lines[5]}"  =~  Filename\ Match ]]
   [[ "${lines[5]}"  =~  example.md      ]]
@@ -426,25 +420,23 @@ HEREDOC
     _setup_search
 
   cat <<HEREDOC | "${_NB}" add "fourth.bookmark.md"
-# four
+# Boomark Title
 
 <https://example.com/>
 
-sweetish
+demo phrase
 HEREDOC
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" search 'sweetish' --use-grep
+  run "${_NB}" search "demo phrase" --use-grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
-  printf "\${_filename}:  '%s'\\n" "${_filename}"
   printf "\${lines[3]}:   '%s'\\n"  "${lines[3]}"
 
-  [[    "${status}"   -eq 0                     ]]
+  [[    "${status}"   -eq 0                   ]]
 
-  [[    "${output}"   =~  🔖\ four              ]]
+  [[    "${output}"   =~  🔖\ Boomark\ Title  ]]
 }
 
 # `search --bookmarks` #################################################
@@ -458,26 +450,26 @@ HEREDOC
 
 <https://example.com/>
 
-sweetish
+Example Phrase
 HEREDOC
   cat <<HEREDOC | "${_NB}" add "fifth.bookmark.md"
 # five
 
 <https://example.com/>
 
-idyl
+Sample Phrase
 HEREDOC
   cat <<HEREDOC | "${_NB}" add "sixth.bookmark.md"
 # six
 
 <https://example.com/>
 
-sweetish
+Example Phrase
 HEREDOC
     _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" search 'sweetish' --bookmarks --use-grep
+  run "${_NB}" search "example phrase" --bookmarks --use-grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -486,15 +478,15 @@ HEREDOC
 
   [[    "${status}"   -eq 0                     ]]
 
-  [[ !  "${lines[0]}" =~  fourth\.bookmark\.md  ]] || [[ !  "${lines[3]}" =~  fourth\.bookmark\.md  ]]
-  [[    "${lines[0]}" =~  four                  ]] || [[    "${lines[3]}" =~  four                  ]]
-  [[    "${lines[1]}" =~  -*-                   ]] || [[    "${lines[4]}" =~  -*-                   ]]
-  [[    "${lines[2]}" =~  sweetish              ]] || [[    "${lines[5]}" =~  sweetish              ]]
+  [[ !  "${lines[0]}" =~  \.md                  ]]
+  [[    "${lines[0]}" =~  four|six              ]]
+  [[    "${lines[1]}" =~  -*-                   ]]
+  [[    "${lines[2]}" =~  Example\ Phrase       ]]
 
-  [[ !  "${lines[0]}" =~  sixth\.bookmark\.md   ]] || [[ !  "${lines[3]}" =~  sixth\.bookmark\.md   ]]
-  [[    "${lines[0]}" =~  six                   ]] || [[    "${lines[3]}" =~  six                   ]]
-  [[    "${lines[1]}" =~  -*-                   ]] || [[    "${lines[4]}" =~  -*-                   ]]
-  [[    "${lines[2]}" =~  sweetish              ]] || [[    "${lines[5]}" =~  sweetish              ]]
+  [[ !  "${lines[3]}" =~  \.md                  ]]
+  [[    "${lines[3]}" =~  four|six              ]]
+  [[    "${lines[4]}" =~  -*-                   ]]
+  [[    "${lines[5]}" =~  Example\ Phrase       ]]
 
   [[    "${lines[0]}" != "${lines[3]}"          ]]
 }
@@ -506,7 +498,7 @@ HEREDOC
     _search_all_setup
   }
 
-  run "${_NB}" search 'sweetish' --all --use-grep
+  run "${_NB}" search "example phrase" --all --use-grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -515,61 +507,53 @@ HEREDOC
   "${_NB}" notebooks --paths --unarchived
   "${_NB}" two:notebooks status
 
-  [[    "${status}"     -eq 0           ]]
+  [[    "${status}"     -eq 0                             ]]
 
-  [[    "${output}"     =~ home:3       ]]
-  [[ !  "${output}"     =~ third\.md    ]]
-  [[    "${output}"     =~ three        ]]
-  [[    "${lines[1]}"   =~ -*-          ]]
-  [[    "${lines[2]}"   =~ sweetish     ]]
+  [[ !  "${output}"     =~ \.md                           ]]
 
-  [[    "${output}"     =~ home:2       ]]
-  [[ !  "${output}"     =~ second\.md   ]]
-  [[    "${output}"     =~ two          ]]
-  [[    "${lines[4]}"   =~ -*-          ]]
-  [[    "${lines[5]}"   =~ sweetish     ]]
+  [[    "${output}"     =~  [.*home:3.*].*\ Title\ Three  ]]
+  [[    "${lines[1]}"   =~  -*-                           ]]
+  [[    "${lines[2]}"   =~  Example\ Phrase               ]]
 
-  [[    "${output}"     =~ one:1        ]]
-  [[ !  "${output}"     =~ example\.md  ]]
-  [[    "${output}"     =~ sweetish     ]]
-  [[    "${lines[7]}"   =~ -*-          ]]
-  [[    "${lines[8]}"   =~ sweetish     ]]
+  [[    "${output}"     =~  [.*home:2.*].*\ Title\ Two    ]]
+  [[    "${lines[4]}"   =~  -*-                           ]]
+  [[    "${lines[5]}"   =~  Example\ Phrase               ]]
 
-  [[    "${#lines[@]}"  -eq 9           ]]
+  [[    "${output}"     =~  [.*one:1.*].*\ Example\ Title ]]
+  [[    "${lines[7]}"   =~  -*-                           ]]
+  [[    "${lines[8]}"   =~  Example\ Phrase               ]]
+
+  [[    "${#lines[@]}"  -eq 9                             ]]
 }
 
 @test "'search <query> -a' exits with status 0 and prints output." {
   {
-    _search_all_setup &>/dev/null
+    _search_all_setup
   }
 
-  run "${_NB}" search 'sweetish' -a --use-grep
+  run "${_NB}" search "example phrase" -a --use-grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0           ]]
+  [[    "${status}"     -eq 0                             ]]
 
-  [[    "${output}"     =~ home:3       ]]
-  [[ !  "${output}"     =~ third\.md    ]]
-  [[    "${output}"     =~ three        ]]
-  [[    "${lines[1]}"   =~ -*-          ]]
-  [[    "${lines[2]}"   =~ sweetish     ]]
+  [[ !  "${output}"     =~ \.md                           ]]
 
-  [[    "${output}"     =~ home:2       ]]
-  [[ !  "${output}"     =~ second\.md   ]]
-  [[    "${output}"     =~ two          ]]
-  [[    "${lines[4]}"   =~ -*-          ]]
-  [[    "${lines[5]}"   =~ sweetish     ]]
+  [[    "${output}"     =~  [.*home:3.*].*\ Title\ Three  ]]
+  [[    "${lines[1]}"   =~  -*-                           ]]
+  [[    "${lines[2]}"   =~  Example\ Phrase               ]]
 
-  [[    "${output}"     =~ one:1        ]]
-  [[ !  "${output}"     =~ example\.md  ]]
-  [[    "${output}"     =~ sweetish     ]]
-  [[    "${lines[7]}"   =~ -*-          ]]
-  [[    "${lines[8]}"   =~ sweetish     ]]
+  [[    "${output}"     =~  [.*home:2.*].*\ Title\ Two    ]]
+  [[    "${lines[4]}"   =~  -*-                           ]]
+  [[    "${lines[5]}"   =~  Example\ Phrase               ]]
 
-  [[    "${#lines[@]}"  -eq 9           ]]
+  [[    "${output}"     =~  [.*one:1.*].*\ Example\ Title ]]
+  [[    "${lines[7]}"   =~  -*-                           ]]
+  [[    "${lines[8]}"   =~  Example\ Phrase               ]]
+
+  [[    "${#lines[@]}"  -eq 9                             ]]
 }
 
 @test "'search <no matching query> --all' exits with status 1 and prints output." {
@@ -592,30 +576,30 @@ HEREDOC
 
 @test "'search <multiple matches> --all --path' exits with 0 and prints paths." {
   {
-    _search_all_setup  &>/dev/null
+    _search_all_setup
   }
 
-  run "${_NB}" search 'sweetish' --all --path
+  run "${_NB}" search "example phrase" --all --path
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                             ]]
 
-  echo "${output}" | grep -q '/home/third\.md'
-  echo "${output}" | grep -q '/home/second\.md'
-  echo "${output}" | grep -q '/one/example\.md'
+  [[ "${#lines[@]}" -eq 3                             ]]
 
-  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${output}"    =~  ${NB_DIR}/home/File\ Three.md ]]
+  [[ "${output}"    =~  ${NB_DIR}/home/File\ Two.md   ]]
+  [[ "${output}"    =~  ${NB_DIR}/one/example.md      ]]
 }
 
 @test "'search <no matching query> --all --path' exits with 1 and and prints output." {
   {
-    _search_all_setup  &>/dev/null
+    _search_all_setup
   }
 
-  run "${_NB}" search 'no match' --all --path
+  run "${_NB}" search "no match" --all --path
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -632,7 +616,7 @@ HEREDOC
 
 @test "'search <query>' in local notebook exits with status 0 and prints output." {
   {
-    _search_all_setup &>/dev/null
+    _search_all_setup
 
     mkdir -p "${_TMP_DIR}/example"
 
@@ -642,25 +626,29 @@ HEREDOC
 
     git init 1>/dev/null && touch "${_TMP_DIR}/example/.index"
 
-    "${_NB}" add example-1.md --title "one" --content "sweetish"
-    "${_NB}" add example-2.md --title "two"
+    "${_NB}" add  "example-1.md"      \
+      --title     "Example Title One" \
+      --content   "Example Phrase"
+
+    "${_NB}" add  "example-2.md"      \
+      --title     "Example Title Two"
   }
 
-  run "${_NB}" search 'sweetish' --use-grep
+  run "${_NB}" search "example phrase" --use-grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0             ]]
+  [[    "${status}"     -eq 0                   ]]
 
-  [[    "${lines[0]}"   =~  1             ]]
-  [[ !  "${lines[0]}"   =~  example-1.md  ]]
-  [[    "${lines[0]}"   =~  one           ]]
-  [[    "${lines[1]}"   =~  -*-           ]]
-  [[    "${lines[2]}"   =~  sweetish      ]]
+  [[    "${lines[0]}"   =~  1                   ]]
+  [[ !  "${lines[0]}"   =~  example-1.md        ]]
+  [[    "${lines[0]}"   =~  Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  -*-                 ]]
+  [[    "${lines[2]}"   =~  Example\ Phrase     ]]
 
-  [[    "${#lines[@]}"  -eq 3             ]]
+  [[    "${#lines[@]}"  -eq 3                   ]]
 }
 
 @test "'search <query> --all' in local notebook exits with status 0 and prints output." {
@@ -672,11 +660,15 @@ HEREDOC
 
     [[ "$(pwd)" == "${_TMP_DIR}/example" ]]
 
-    "${_NB}" add example-1.md --title "one" --content "sweetish"
-    "${_NB}" add example-2.md --title "two"
+    "${_NB}" add  "example-1.md"    \
+      --title     "Local Title One" \
+      --content   "Example Phrase"
+
+    "${_NB}" add  "example-2.md"    \
+      --title     "Local Title Two"
   }
 
-  run "${_NB}" search 'sweetish' --all --use-grep
+  run "${_NB}" search "example phrase" --all --use-grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -691,31 +683,26 @@ HEREDOC
   printf "\${lines[7]}:   '%s'\\n" "${lines[7]}"
   printf "\${lines[8]}:   '%s'\\n" "${lines[8]}"
 
-  [[    "${status}"     -eq 0             ]]
+  [[    "${status}"     -eq 0                                   ]]
+  [[ !  "${lines[0]}"   =~  \.md                                ]]
 
-  [[    "${lines[0]}"   =~  local:1       ]]
-  [[ !  "${lines[0]}"   =~  example-1.md  ]]
-  [[    "${lines[0]}"   =~  one           ]]
-  [[    "${lines[1]}"   =~  -*-           ]]
-  [[    "${lines[2]}"   =~  sweetish      ]]
+  [[    "${lines[0]}"   =~  [.*local:1.*].*\ Local\ Title\ One  ]]
+  [[    "${lines[1]}"   =~  -*-                                 ]]
+  [[    "${lines[2]}"   =~  Example\ Phrase                     ]]
 
-  [[    "${output}"     =~  home:3        ]]
-  [[ !  "${output}"     =~  third\.md     ]]
-  [[    "${output}"     =~  three         ]]
-  [[    "${lines[4]}"   =~  -*-           ]]
-  [[    "${lines[5]}"   =~  sweetish      ]]
+  [[    "${output}"     =~  [.*home:3.*].*\ Title\ Three        ]]
+  [[    "${lines[4]}"   =~  -*-                                 ]]
+  [[    "${lines[5]}"   =~  Example\ Phrase                     ]]
 
-  [[    "${output}"     =~  home:2        ]]
-  [[ !  "${output}"     =~  second\.md    ]]
-  [[    "${output}"     =~  two           ]]
-  [[    "${lines[7]}"   =~  -*-           ]]
-  [[    "${lines[8]}"   =~  sweetish      ]]
+  [[    "${output}"     =~  [.*home:2.*].*\ Title\ Two          ]]
+  [[    "${lines[7]}"   =~  -*-                                 ]]
+  [[    "${lines[8]}"   =~  Example\ Phrase                     ]]
 
-  [[    "${output}"     =~  one:1         ]]
-  [[ !  "${output}"     =~  example\.md   ]]
-  [[    "${lines[9]}"   =~  sweetish      ]]
+  [[    "${output}"     =~  [.*one:1.*].*\ Example\ Title       ]]
+  [[    "${lines[10]}"  =~  -*-                                 ]]
+  [[    "${lines[11]}"  =~  Example\ Phrase                     ]]
 
-  [[    "${#lines[@]}"  -eq 12            ]]
+  [[    "${#lines[@]}"  -eq 12                                  ]]
 }
 
 # help ########################################################################
