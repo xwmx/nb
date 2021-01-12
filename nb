@@ -11738,7 +11738,8 @@ _search() {
     _target_paths=("${_current_notebook_path}")
   fi
 
-  _query="${_queries[0]:-}"
+  local _query=
+  _query="$(_join "|" "${_queries[@]:-}")"
 
   for __target_path in "${_target_paths[@]:-}"
   do
