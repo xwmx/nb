@@ -6828,7 +6828,8 @@ _show() {
       if [[ -e "${_identifier}"                     ]] &&
          [[ "${_identifier}" =~ ^${_notebook_path}  ]]
       then # <selector> is a full path
-        _relative_path="${_identifier/"${_notebook_path}"\//}"
+        _relative_path="${_identifier/${_notebook_path}}"
+        _relative_path="${_relative_path#\/}"
       elif [[ "${_identifier}" =~ ^/ ]]
       then
         _notebook_path="$(
@@ -6952,6 +6953,9 @@ _show() {
       --no*color|--raw)
         _show_color_enabled=0
         ;;
+      --notebook*|--include*notebook*|--with*notebook*)
+        _skip_notebook_fallback=0
+        ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
@@ -7070,12 +7074,27 @@ _show() {
   if [[ -z "${_relative_path:-}" ]] && ! ((_skip_notebook_fallback))
   then
     local _maybe_notebook="${_selector:-}"
-    _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
+
+    if [[ "${_maybe_notebook:-}" =~ ^${NB_DIR} ]]
+    then
+      _maybe_notebook="${_maybe_notebook##*\/}"
+    fi
+
+    _maybe_notebook="${_maybe_notebook%:}"
 
     if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
     then
-      NB_NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
-        _ls "${_ls_arguments[@]:1}"
+      if ((_print_path))
+      then
+        printf "%s\\n" "${NB_DIR}/${_maybe_notebook}"
+      elif ((_print_relative_path))
+      then
+        printf ""
+      else
+        NB_NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
+          _ls "${_ls_arguments[@]:1}"
+      fi
+
       return 0
     else
       _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"

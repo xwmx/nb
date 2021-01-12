@@ -2,6 +2,151 @@
 
 load test_helper
 
+# `show <notebook>` ###########################################################
+
+@test "'show <notebook>' exits with status 0 and runs ls in the notebook." {
+  {
+    "${_NB}" init
+    "${_NB}" add "home-one.md"
+    "${_NB}" add "home-two.md"
+    "${_NB}" notebooks add example
+    "${_NB}" example:add "example-one.md"
+    "${_NB}" example:add "example-two.md"
+  }
+
+  run "${_NB}" show example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+  [[ "${lines[0]}"  =~  example     ]]
+  [[ "${lines[0]}"  =~  home        ]]
+  [[ "${lines[1]}"  =~  ----        ]]
+  [[ "${lines[2]}"  =~  example-two ]]
+  [[ "${lines[3]}"  =~  example-one ]]
+}
+
+@test "'show <notebook>:' (with colon) exits with status 0 and runs ls in the notebook." {
+  {
+    "${_NB}" init
+    "${_NB}" add "home-one.md"
+    "${_NB}" add "home-two.md"
+    "${_NB}" notebooks add example
+    "${_NB}" example:add "example-one.md"
+    "${_NB}" example:add "example-two.md"
+  }
+
+  run "${_NB}" show example:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+  [[ "${lines[0]}"  =~ example      ]]
+  [[ "${lines[0]}"  =~ home         ]]
+  [[ "${lines[1]}"  =~ ----         ]]
+  [[ "${lines[2]}"  =~ example-two  ]]
+  [[ "${lines[3]}"  =~ example-one  ]]
+}
+
+@test "'show <notebook> --sort' exits with status 0 and runs ls in the notebook." {
+  {
+    "${_NB}" init
+    "${_NB}" add "home-one.md"
+    "${_NB}" add "home-two.md"
+    "${_NB}" notebooks add example
+    "${_NB}" example:add "example-one.md"
+    "${_NB}" example:add "example-two.md"
+  }
+
+  run "${_NB}" show example --sort
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+  [[ "${lines[0]}"  =~  example-one ]]
+  [[ "${lines[1]}"  =~  example-two ]]
+}
+
+@test "'show <notebook> --path' exits with status 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" show example --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${#lines[@]}" -eq 1                     ]]
+  [[ "${lines[0]}"  =~  Not\ found:.*example  ]]
+}
+
+@test "'show <notebook-path> --path --notebook' exits with status 0 and prints nothing." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" show "${NB_DIR}/example" --path --notebook
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "${NB_DIR}/example" ]]
+}
+
+@test "'show <notebook> --relative-path' exits with status 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" show example --relative-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${#lines[@]}" -eq 1                     ]]
+  [[ "${lines[0]}"  =~  Not\ found:.*example  ]]
+}
+
+@test "'show <notebook> --relative-path --notebook' exits with status 0 and prints nothing." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" show example --relative-path --notebook
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0  ]]
+  [[ -z "${output}"         ]]
+}
+
+@test "'show <notebook-path> --relative-path --notebook' exits with status 0 and prints nothing." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add example
+  }
+
+  run "${_NB}" show  "${NB_DIR}/example" --relative-path --notebook
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0  ]]
+  [[ -z "${output}"         ]]
+}
+
 # `show` ######################################################################
 
 @test "'show' with no argument exits with status 1 and prints help." {
@@ -291,10 +436,10 @@ load test_helper
 @test "'show <title> --id' exits with status 0 and prints note id." {
   {
     "${_NB}" init
-    "${_NB}" add "example.md"
+    "${_NB}" add "example.md" --title "Example Title"
   }
 
-  run "${_NB}" show "${NB_DIR}/home/example.md" --id
+  run "${_NB}" show "Example Title" --id
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -757,74 +902,6 @@ load test_helper
 
   [[    "${status}"   -eq 1 ]]
   [[ -z "${output:-}"       ]]
-}
-
-# `show <notebook>` ###########################################################
-
-@test "'show <notebook>' exits with status 0 and runs ls in the notebook." {
-  {
-    "${_NB}" init
-    "${_NB}" add "home-one.md"
-    "${_NB}" add "home-two.md"
-    "${_NB}" notebooks add example
-    "${_NB}" example:add "example-one.md"
-    "${_NB}" example:add "example-two.md"
-  }
-
-  run "${_NB}" show example
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0           ]]
-  [[ "${lines[0]}"  =~  example     ]]
-  [[ "${lines[0]}"  =~  home        ]]
-  [[ "${lines[1]}"  =~  ----        ]]
-  [[ "${lines[2]}"  =~  example-two ]]
-  [[ "${lines[3]}"  =~  example-one ]]
-}
-
-@test "'show <notebook>:' (with colon) exits with status 0 and runs ls in the notebook." {
-  {
-    "${_NB}" init
-    "${_NB}" add "home-one.md"
-    "${_NB}" add "home-two.md"
-    "${_NB}" notebooks add example
-    "${_NB}" example:add "example-one.md"
-    "${_NB}" example:add "example-two.md"
-  }
-
-  run "${_NB}" show example:
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0           ]]
-  [[ "${lines[0]}"  =~ example      ]]
-  [[ "${lines[0]}"  =~ home         ]]
-  [[ "${lines[1]}"  =~ ----         ]]
-  [[ "${lines[2]}"  =~ example-two  ]]
-  [[ "${lines[3]}"  =~ example-one  ]]
-}
-
-@test "'show <notebook> --sort' exits with status 0 and runs ls in the notebook." {
-  {
-    "${_NB}" init
-    "${_NB}" add "home-one.md"
-    "${_NB}" add "home-two.md"
-    "${_NB}" notebooks add example
-    "${_NB}" example:add "example-one.md"
-    "${_NB}" example:add "example-two.md"
-  }
-
-  run "${_NB}" show example --sort
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0           ]]
-  [[ "${lines[0]}"  =~  example-one ]]
-  [[ "${lines[1]}"  =~  example-two ]]
 }
 
 # `s <id>` #################################################################
