@@ -2158,7 +2158,7 @@ _join() {
   shift
   printf "%s" "${1:-}"
   shift
-  printf "%s" "${@/#/${_delimiter}}" | tr -d '[:space:]'
+  printf "%s" "${@/#/${_delimiter}}"
 }
 
 # _less_prompt()

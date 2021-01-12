@@ -60,7 +60,7 @@ _search_all_setup() {
 
 # `search <no match>` #########################################################
 
-@test "'search <no match>' exits with status 1 and prints output." {
+@test "'search <query>' with no matches exits with status 1 and prints output." {
   {
     _setup_search
   }
@@ -74,6 +74,23 @@ _search_all_setup() {
   [[ "${#lines[@]}" -eq 1                                       ]]
 
   [[ "${lines[0]}"  =~  Not\ found\ in.*home.*:\ .*no\ match.*  ]]
+}
+
+@test "'search <query>...' with no matches exits with status 1 and prints output." {
+  {
+    _setup_search
+  }
+
+  run "${_NB}" search "no match" "matchless" "wont be found"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                               ]]
+  [[ "${#lines[@]}" -eq 1                                               ]]
+
+  [[ "${lines[0]}"  =~  \
+        Not\ found\ in.*home.*:\ .*no\ match|matchless|wont\ be\ found  ]]
 }
 
 # `search <one match> [--path] [--list]` ######################################
