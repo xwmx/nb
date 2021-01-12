@@ -24,6 +24,205 @@ load test_helper
   [[   "${#lines[@]}" == 1              ]]
 }
 
+# show --folder-path ########################################################
+
+@test "'show <id> --folder-path' with filename matching notebook name prints nothing." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add --filename "one:" --content "Example content one."
+    "${_NB}" add --filename "two:" --content "Example content two."
+
+    "${_NB}" notebooks add "one"
+
+    [[ -d "${NB_DIR}/one"       ]]
+    [[ -f "${NB_DIR}/home/one:" ]]
+    [[ -f "${NB_DIR}/home/two:" ]]
+  }
+
+  run "${_NB}" show 1 --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output:-}"     ]]
+
+  run "${_NB}" show 2 --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output:-}"     ]]
+}
+
+@test "'show folder/folder --folder-path' (no slash) displays folder path." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/home/Example Folder"                                   ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                     ]]
+    [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/example.bookmark.md" ]]
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder" --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
+@test "'show folder/folder/ --folder-path' (slash) displays folder path." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/home/Example Folder"                                   ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                     ]]
+    [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/example.bookmark.md" ]]
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder/" --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder ]]
+}
+
+@test "'show folder/folder/<title> --folder-path' displays folder path." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/home/Example Folder"                                   ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                     ]]
+    [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/example.bookmark.md" ]]
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder/Example Title" --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${NB_DIR}/home/Example Folder/Sample Folder/"
+
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder ]]
+}
+
+@test "'show folder/folder/<filename> --folder-path' displays folder path." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/home/Example Folder"                                   ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                     ]]
+    [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/example.bookmark.md" ]]
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder/example.bookmark.md" --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls "${NB_DIR}/home/Example Folder/Sample Folder/"
+
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder ]]
+}
+
+@test "'show folder/folder/<id> --folder-path' displays folder path." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                            \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/home/Example Folder"                                   ]]
+    [[ -d "${NB_DIR}/home/Example Folder/Sample Folder"                     ]]
+    [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/example.bookmark.md" ]]
+  }
+
+  run "${_NB}" show "Example Folder/Sample Folder/1" --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  _example_selector="Example Folder/Sample Folder/1"
+  printf "'%s'\\n" "${_example_selector%\/*}"
+  printf "'%s'\\n" "${_example_selector##*\/}"
+  "${_NB}" index get_basename   \
+    "${_example_selector##*\/}" \
+    "${NB_DIR}/home/${_example_selector%\/*}"
+
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder ]]
+}
+
+@test "'show notebook:folder/folder/<id> --folder-path' displays folder path." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "one"
+
+    "${_NB}" one:add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/one/Example Folder"                                    ]]
+    [[ -d "${NB_DIR}/one/Example Folder/Sample Folder"                      ]]
+    [[ -f "${NB_DIR}/one/Example Folder/Sample Folder/example.bookmark.md"  ]]
+  }
+
+  run "${_NB}" show "one:Example Folder/Sample Folder/1" --folder-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                               ]]
+  [[ "${output}"  =~  ^Example\ Folder/Sample\ Folder ]]
+}
+
+@test "'show notebook: --folder-path' prints empty string." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "one"
+
+    "${_NB}" one:add "Example Folder/Sample Folder/example.bookmark.md" \
+      --content "<https://example.test>"                                \
+      --title   "Example Title"
+
+    [[ -d "${NB_DIR}/one/Example Folder"                                    ]]
+    [[ -d "${NB_DIR}/one/Example Folder/Sample Folder"                      ]]
+    [[ -f "${NB_DIR}/one/Example Folder/Sample Folder/example.bookmark.md"  ]]
+  }
+
+  run "${_NB}" show "one:" --relative-path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
+}
+
 # show --relative-path ########################################################
 
 @test "'show <id> --relative-path' with filename matching notebook name prints filename." {

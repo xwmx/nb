@@ -6905,6 +6905,7 @@ _show() {
   local _password=
   local _print_added=0
   local _print_filename=0
+  local _print_folder_path=0
   local _print_id=0
   local _print_info=0
   local _print_path=0
@@ -6937,6 +6938,9 @@ _show() {
       --filename|--basename)
         _print_filename=1
         _skip_notebook_fallback=1
+        ;;
+      --folder-path)
+        _print_folder_path=1
         ;;
       --id|--index)
         _print_id=1
@@ -7087,7 +7091,7 @@ _show() {
       if ((_print_path))
       then
         printf "%s\\n" "${NB_DIR}/${_maybe_notebook}"
-      elif ((_print_relative_path))
+      elif ((_print_relative_path)) || ((_print_folder_path))
       then
         printf ""
       else
@@ -7110,6 +7114,23 @@ _show() {
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
     return 1
   fi
+
+  if ((_print_folder_path))
+  then
+    if [[ "${_selector:-}" =~ /$                      ]] &&
+       [[ -d "${_notebook_path}/${_relative_path:-}"  ]]
+    then
+      printf "%s\\n" "${_relative_path}"
+    elif [[ "${_relative_path:-}" =~ / ]]
+    then
+      printf "%s\\n" "${_relative_path%\/*}"
+    else
+      printf ""
+    fi
+
+    return 0
+  fi
+
 
   if ((_print_relative_path))
   then
