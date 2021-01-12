@@ -11895,8 +11895,6 @@ _search() {
         _search_args+=("--color=never")
       fi
 
-      # Add /dev/null so file path is printed even if there is only one
-      # matching file. Reference: https://stackoverflow.com/a/15432718
       set +f
       {
         if [[ -f "${__target_path:-}" ]]
@@ -11925,15 +11923,19 @@ _search() {
             -type f                                   \
             -print0
         fi
-      } | xargs -0 grep           \
-            -E                    \
-            --ignore-case         \
-            "${_search_args[@]}"  \
-            --text                \
-            -n                    \
-            "${_query}"           \
-             /dev/null            \
-              || return 0 # Don't fail out within a single scope.
+      } | {
+        # Add /dev/null so file path is printed even if there is only one
+        # matching file. Reference: https://stackoverflow.com/a/15432718
+        xargs -0 grep           \
+          -E                    \
+          --ignore-case         \
+          "${_search_args[@]}"  \
+          --text                \
+          -n                    \
+          "${_query}"           \
+           /dev/null            \
+            || return 0 # Don't fail out within a single scope.
+      }
       set -f
     fi | while read -r _line
     do
