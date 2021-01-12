@@ -566,7 +566,7 @@ HEREDOC
 
   [[    "${status}"     -eq 0                             ]]
 
-  [[ !  "${output}"     =~ \.md                           ]]
+  [[ !  "${output}"     =~  \.md                          ]]
 
   [[    "${output}"     =~  [.*home:3.*].*\ Title\ Three  ]]
   [[    "${lines[1]}"   =~  -*-                           ]]
@@ -596,7 +596,7 @@ HEREDOC
 
   [[    "${status}"     -eq 0                             ]]
 
-  [[ !  "${output}"     =~ \.md                           ]]
+  [[ !  "${output}"     =~  \.md                          ]]
 
   [[    "${output}"     =~  [.*home:3.*].*\ Title\ Three  ]]
   [[    "${lines[1]}"   =~  -*-                           ]]
@@ -741,6 +741,7 @@ HEREDOC
   printf "\${lines[8]}:   '%s'\\n" "${lines[8]}"
 
   [[    "${status}"     -eq 0                                   ]]
+
   [[ !  "${lines[0]}"   =~  \.md                                ]]
 
   [[    "${lines[0]}"   =~  [.*local:1.*].*\ Local\ Title\ One  ]]
