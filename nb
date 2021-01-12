@@ -11793,7 +11793,7 @@ _search() {
       local _search_paths=("${__target_path}")
 
       if [[ -f "${__target_path}"     ]] &&
-         [[ "${#_arguments[@]}" -lt 2 ]]
+         [[ "${#_arguments[@]}" -le 1 ]]
       then
         _search_paths+=("${__target_path%\/*}/.index")
       fi
@@ -11836,7 +11836,7 @@ _search() {
       local _search_paths=("${__target_path}")
 
       if [[ -f "${__target_path}"     ]] &&
-         [[ "${#_arguments[@]}" -lt 2 ]]
+         [[ "${#_arguments[@]}" -le 1 ]]
       then
         _search_paths+=("${__target_path%\/*}/.index")
       fi
@@ -11874,7 +11874,7 @@ _search() {
       local _search_paths=("${__target_path}")
 
       if [[ -f "${__target_path}"     ]] &&
-         [[ "${#_arguments[@]}" -lt 2 ]]
+         [[ "${#_arguments[@]}" -le 1 ]]
       then
         _search_paths+=("${__target_path%\/*}/.index")
       fi
@@ -11901,7 +11901,7 @@ _search() {
       {
         if [[ -f "${__target_path:-}" ]]
         then
-          if [[ "${#_arguments[@]}" -lt 2 ]]
+          if [[ "${#_arguments[@]}" -le 1 ]]
           then
             # Print .index with null byte delimeter so it's included in
             # the list of files to search.
