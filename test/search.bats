@@ -58,6 +58,46 @@ _search_all_setup() {
   [[ "${lines[1]}"  =~  nb\ search\ \<query\> ]]
 }
 
+# aliases #####################################################################
+
+@test "'q <query>' exits with status 0 and prints output." {
+  {
+    _setup_search
+  }
+
+  run "${_NB}" q "sample phrase"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0                                       ]]
+
+  [[ !  "${lines[0]}" =~  \.md                                    ]]
+  [[    "${lines[0]}" =~  Title\ One                              ]]
+  [[    "${lines[1]}" =~  -*-                                     ]]
+  [[    "${lines[2]}" =~  Sample\ Content\ One\ .*Sample\ Phrase  ]]
+}
+
+@test "'grep <query>' exits with status 0 and prints output." {
+  {
+    _setup_search
+  }
+
+  run "${_NB}" grep "sample phrase"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0                                       ]]
+
+  [[ !  "${lines[0]}" =~  \.md                                    ]]
+  [[    "${lines[0]}" =~  Title\ One                              ]]
+  [[    "${lines[1]}" =~  -*-                                     ]]
+  [[    "${lines[2]}" =~  Sample\ Content\ One\ .*Sample\ Phrase  ]]
+}
+
 # `search <no match>` #########################################################
 
 @test "'search <query>' with no matches exits with status 1 and prints output." {

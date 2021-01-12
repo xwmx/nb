@@ -7670,6 +7670,7 @@ _SUBCOMMANDS=(
   export
   env
   git
+  grep
   h
   help
   helpers
@@ -7791,6 +7792,7 @@ _GIT_SUBCOMMANDS=(
   e
   edit
   export
+  grep
   import
   list
   ls
@@ -12248,6 +12250,7 @@ _search() {
           fi
 }
 _alias_subcommand "search" "q"
+_alias_subcommand "search" "grep"
 
 # settings ########################################################### settings
 
