@@ -4339,7 +4339,7 @@ _list() {
           fi
         fi
       else
-        if [[ -n "${_selector_relative_path:-}"                   ]]
+        if [[ -n "${_selector_relative_path:-}" ]]
         then # argument is a root-level file or folder identifier
           _folder_path=
           _selector="${__argument}"
