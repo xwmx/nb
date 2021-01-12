@@ -7119,7 +7119,6 @@ _show() {
     return 0
   fi
 
-
   if ((_print_relative_path))
   then
     printf "%s\\n" "${_relative_path}"
