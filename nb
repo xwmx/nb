@@ -11589,6 +11589,14 @@ Examples:
 Shortcut Alias: \`q\`
 HEREDOC
 _search() {
+  # Usage: _should_search_with <command-name> <search-utility>
+  _should_search_with() {
+    _command_exists "${1:?}"      && {
+      [[ -z "${2:-}"          ]]  ||
+      [[ "${2:-}" == "${1:?}" ]]
+    }
+  }
+
   local _all=0
   local _arguments=()
   local _last_path=
@@ -11600,10 +11608,10 @@ _search() {
   local _query=
   local _search_args=()
   local _search_color_enabled="${_COLOR_ENABLED}"
+  local _search_utility=
   local _selectors=()
   local _sort=0
   local _type=
-  local _use_grep=0
 
   while ((${#}))
   do
@@ -11633,6 +11641,10 @@ _search() {
       -s|--sort)
         _sort=1
         ;;
+      --*tool|--*utility)
+        _search_utility="$(_option_get_value "${__arg}" "${__val:-}")"
+        shift
+        ;;
       --type)
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
@@ -11640,7 +11652,7 @@ _search() {
       --use*grep)
         # The `--use-grep` option bypasses other search tools. Intended to be
         # used primarily for testing.
-        _use_grep=1
+        _search_tool="grep"
         ;;
       *)
         if [[ "${__arg:-}" =~ ^-- ]]
@@ -11754,7 +11766,7 @@ _search() {
     local _max_id
     _max_id="$(_index get_max_id "${_target_folder_path}")"
 
-    if _command_exists "rg" && ! ((_use_grep))
+    if _should_search_with "rg" "${_search_utility:-}"
     then
       local _rg_command="rg"
 
@@ -11801,7 +11813,7 @@ _search() {
         "${_query}"                     \
         "${_search_paths[@]:-}"         \
           || return 0 # Don't fail out within a single scope.
-    elif _command_exists "ag" && ! ((_use_grep))
+    elif _should_search_with "ag" "${_search_utility:-}"
     then
       if ((_max_depth))
       then
@@ -11840,7 +11852,7 @@ _search() {
         "${_query}"           \
         "${_search_paths[@]}" \
           || return 0 # Don't fail out within a single scope.
-    elif _command_exists "ack" && ! ((_use_grep))
+    elif _should_search_with "ack" "${_search_utility:-}"
     then # ack is available.
       if ((_max_depth))
       then

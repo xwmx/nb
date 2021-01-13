@@ -304,7 +304,7 @@ _search_all_setup() {
       --title     "Example Title Two"
   }
 
-  run "${_NB}" search "example.test" --no-color --use-grep --list
+  run "${_NB}" search "example.test" --no-color --tool grep --list
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -341,7 +341,7 @@ _search_all_setup() {
       --title     "Example Title Two"
   }
 
-  run "${_NB}" search "example.test" --no-color --use-grep
+  run "${_NB}" search "example.test" --no-color --tool grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -370,7 +370,7 @@ _search_all_setup() {
     _setup_search
   }
 
-  run "${_NB}" search "example phrase" --use-grep
+  run "${_NB}" search "example phrase" --tool grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -396,7 +396,7 @@ _search_all_setup() {
     _setup_search
   }
 
-  run "${_NB}" search "example phrase" --path --use-grep
+  run "${_NB}" search "example phrase" --path --tool grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -415,7 +415,7 @@ _search_all_setup() {
     _setup_search
   }
 
-  run "${_NB}" search "example phrase" --list --use-grep
+  run "${_NB}" search "example phrase" --list --tool grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -447,7 +447,7 @@ _search_all_setup() {
       --content   "Example Content Three Example Phrase."
   }
 
-  run "${_NB}" search "example.md" --use-grep
+  run "${_NB}" search "example.md" --tool grep
 
   printf "\${status}:   '%s'\\n" "${status}"
   printf "\${output}:   '%s'\\n" "${output}"
@@ -485,7 +485,7 @@ demo phrase
 HEREDOC
   }
 
-  run "${_NB}" search "demo phrase" --use-grep
+  run "${_NB}" search "demo phrase" --tool grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -526,7 +526,7 @@ HEREDOC
     _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
   }
 
-  run "${_NB}" search "example phrase" --bookmarks --use-grep
+  run "${_NB}" search "example phrase" --bookmarks --tool grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -555,7 +555,7 @@ HEREDOC
     _search_all_setup
   }
 
-  run "${_NB}" search "example phrase" --all --use-grep
+  run "${_NB}" search "example phrase" --all --tool grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -588,7 +588,7 @@ HEREDOC
     _search_all_setup
   }
 
-  run "${_NB}" search "example phrase" -a --use-grep
+  run "${_NB}" search "example phrase" -a --tool grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -691,7 +691,7 @@ HEREDOC
       --title     "Example Title Two"
   }
 
-  run "${_NB}" search "example phrase" --use-grep
+  run "${_NB}" search "example phrase" --tool grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -725,7 +725,7 @@ HEREDOC
       --title     "Local Title Two"
   }
 
-  run "${_NB}" search "example phrase" --all --use-grep
+  run "${_NB}" search "example phrase" --all --tool grep
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
