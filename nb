@@ -11953,6 +11953,11 @@ _search() {
       local _notebook_path
       _notebook_path="$(_notebooks show "${__target_path:-}" --path)"
 
+      local _escaped_notebook_path
+      _escaped_notebook_path="$(
+        printf "%s\\n" "${_notebook_path:-}" | sed 's/\//\\\//g'
+      )"
+
       if ((_max_depth))
       then
         _search_args+=("--no-recursive")
@@ -11984,7 +11989,7 @@ _search() {
           "${_search_args[@]:-}"                      \
           -e "${_query:-}"                            \
           "${_search_paths[@]:-}"                     \
-        | sed -e "s/^/${_notebook_path//\//\\\/}\//"  \
+        | sed -e "s/^/${_escaped_notebook_path}\//"   \
           || return 0  # Don't fail out within a single scope.
       else
         local __search_group
@@ -12067,7 +12072,7 @@ _search() {
                 --line-number                                   \
                 --text                                          \
                 "${_search_args[@]:-}"                          \
-              | sed -e "s/^/${_notebook_path//\//\\\/}\//"      \
+              | sed -e "s/^/${_escaped_notebook_path}\//"       \
                 || return 0  # Don't fail out within a single scope.
             else
               GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
@@ -12078,7 +12083,7 @@ _search() {
                 --text                                          \
                 "${_search_args[@]:-}"                          \
                 -e "${_query:-}"                                \
-              | sed -e "s/^/${_notebook_path//\//\\\/}\//"      \
+              | sed -e "s/^/${_escaped_notebook_path}\//"       \
                 || return 0  # Don't fail out within a single scope.
             fi
           }
