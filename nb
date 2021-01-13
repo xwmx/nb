@@ -11650,8 +11650,7 @@ _search() {
         shift
         ;;
       --use*grep)
-        # The `--use-grep` option bypasses other search tools. Intended to be
-        # used primarily for testing.
+        # TODO: Remove. Replaced with the --tool / --utility option.
         _search_utility="grep"
         ;;
       *)
