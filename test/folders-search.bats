@@ -74,7 +74,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search File\ One.md --tool grep
+  run "${_NB}" search File\ One.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -103,7 +103,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search File\ One.md/ --tool grep
+  run "${_NB}" search File\ One.md/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -132,7 +132,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "Sample Folder" --tool grep
+  run "${_NB}" search "Sample Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -169,7 +169,7 @@ _setup_folders_and_files() {
     [[ -d "${NB_DIR}/home/Example Folder/Demo Folder" ]]
   }
 
-  run "${_NB}" search "Demo Folder" --tool grep
+  run "${_NB}" search "Demo Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -190,7 +190,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search Example\ Folder/ --tool grep
+  run "${_NB}" search Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -215,7 +215,7 @@ _setup_folders_and_files() {
     [[ -d "${NB_DIR}/home/Example Folder/Demo Folder" ]]
   }
 
-  run "${_NB}" search Demo\ Folder/ --tool grep
+  run "${_NB}" search Demo\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -236,7 +236,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search 5/ --tool grep
+  run "${_NB}" search 5/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -259,7 +259,7 @@ _setup_folders_and_files() {
       --content   "12345"
   }
 
-  run "${_NB}" search 12345/ --tool grep
+  run "${_NB}" search 12345/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -290,7 +290,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "home" ]]
   }
 
-  run "${_NB}" search Example\ Notebook: --tool grep
+  run "${_NB}" search Example\ Notebook:
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -319,7 +319,7 @@ _setup_folders_and_files() {
       --content   "Not a Notebook:"
   }
 
-  run "${_NB}" search Not\ a\ Notebook: --tool grep
+  run "${_NB}" search Not\ a\ Notebook:
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -357,7 +357,7 @@ _setup_folders_and_files() {
       --content   "Example Notebook:"
   }
 
-  run "${_NB}" search Example\ Notebook --tool grep
+  run "${_NB}" search Example\ Notebook
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -392,7 +392,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home:File\ One.md --tool grep
+  run "${_NB}" search home:File\ One.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -420,7 +420,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home: "File One.md" --tool grep
+  run "${_NB}" search home: "File One.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -454,7 +454,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home:File\ One.md/ --tool grep
+  run "${_NB}" search home:File\ One.md/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -482,7 +482,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home: File\ One.md/ --tool grep
+  run "${_NB}" search home: File\ One.md/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -513,7 +513,7 @@ _setup_folders_and_files() {
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "example" File\ One.md --tool grep
+  run "${_NB}" search "example" File\ One.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -538,7 +538,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "example" home:File\ One.md --tool grep
+  run "${_NB}" search "example" home:File\ One.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -562,7 +562,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "example phrase" home: --tool grep
+  run "${_NB}" search "example phrase" home:
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -628,7 +628,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "example phrase" home:Example\ Folder/ --tool grep
+  run "${_NB}" search "example phrase" home:Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -674,7 +674,7 @@ _setup_folders_and_files() {
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "example phrase" home:Example\ Folder --tool grep
+  run "${_NB}" search "example phrase" home:Example\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -728,7 +728,7 @@ _setup_folders_and_files() {
       --title     "Example Title One"
   }
 
-  run "${_NB}" search 'example.test' --no-color --tool grep --list
+  run "${_NB}" search 'example.test' --no-color --list
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -747,7 +747,7 @@ _setup_folders_and_files() {
     "${_NB}" add "Example Folder/note ${_i}"
   done
 
-  run "${_NB}" search 'example.test' --no-color --tool grep --list
+  run "${_NB}" search 'example.test' --no-color --list
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
@@ -778,7 +778,7 @@ example phrase
 HEREDOC
   }
 
-  run "${_NB}" search "example phrase" --tool grep
+  run "${_NB}" search "example phrase"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -800,7 +800,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "example phrase" Example\ Folder/ --tool grep
+  run "${_NB}" search "example phrase" Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -841,7 +841,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "example phrase" Example\ Folder --tool grep
+  run "${_NB}" search "example phrase" Example\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -884,7 +884,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "example phrase" Example\ Folder/ --tool grep --no-recurse
+  run "${_NB}" search "example phrase" Example\ Folder/ --no-recurse
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -915,7 +915,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "example phrase" Example\ Folder --tool grep --no-recurse
+  run "${_NB}" search "example phrase" Example\ Folder --no-recurse
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -958,7 +958,7 @@ HEREDOC
     _setup_folders_and_files --local
   }
 
-  run "${_NB}" search "example phrase" Example\ Folder/ --tool grep
+  run "${_NB}" search "example phrase" Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1009,7 +1009,7 @@ HEREDOC
     _setup_folders_and_files --local
   }
 
-  run "${_NB}" search "example phrase" Example\ Folder --tool grep
+  run "${_NB}" search "example phrase" Example\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1052,7 +1052,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "no-match-query" File\ One.md/ --tool grep
+  run "${_NB}" search "no-match-query" File\ One.md/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1070,7 +1070,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "no-match-query" File\ One.md --tool grep
+  run "${_NB}" search "no-match-query" File\ One.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1088,7 +1088,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "no-match-query" Example\ Folder/ --tool grep
+  run "${_NB}" search "no-match-query" Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1106,7 +1106,7 @@ HEREDOC
     _setup_folders_and_files
   }
 
-  run "${_NB}" search "no-match-query" Example\ Folder --tool grep
+  run "${_NB}" search "no-match-query" Example\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1129,7 +1129,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:Example\ Folder/ --tool grep
+  run "${_NB}" search "no-match-query" home:Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1152,7 +1152,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:Example\ Folder --tool grep
+  run "${_NB}" search "no-match-query" home:Example\ Folder
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1175,7 +1175,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:5/ --tool grep
+  run "${_NB}" search "no-match-query" home:5/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1198,7 +1198,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:5 --tool grep
+  run "${_NB}" search "no-match-query" home:5
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1221,7 +1221,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home: no-match --tool grep
+  run "${_NB}" search home: no-match
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1243,7 +1243,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:no-match.md --tool grep
+  run "${_NB}" search "no-match-query" home:no-match.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1265,7 +1265,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home:no-match.md --tool grep
+  run "${_NB}" search home:no-match.md
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1287,7 +1287,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search home:no-match.md/ --tool grep
+  run "${_NB}" search home:no-match.md/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1309,7 +1309,7 @@ HEREDOC
     [[ "$("${_NB}" notebooks current)" == "one" ]]
   }
 
-  run "${_NB}" search "no-match-query" home:no-match.md/ --tool grep
+  run "${_NB}" search "no-match-query" home:no-match.md/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

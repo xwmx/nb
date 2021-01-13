@@ -11604,10 +11604,7 @@ HEREDOC
 _search() {
   # Usage: _should_search_with <command-name> <search-utility>
   _should_search_with() {
-    _command_exists "${1:?}"      && {
-      [[ -z "${2:-}"          ]]  ||
-      [[ "${2:-}" == "${1:?}" ]]
-    }
+    _command_exists "${1:?}" && [[ "${2:-}" == "${1:?}" ]]
   }
 
   local _all=0
@@ -11901,7 +11898,8 @@ _search() {
         "${_query}"           \
         "${_search_paths[@]}" \
           || return 0 # Don't fail out within a single scope.
-    else # fall back to POSIX grep.
+    elif _should_search_with "grep" "${_search_utility:-}"
+    then
       if ((_search_color_enabled))
       then
         _search_args+=("--color=always")
@@ -11947,10 +11945,44 @@ _search() {
           --text                \
           -n                    \
           "${_query}"           \
-           /dev/null            \
+          /dev/null             \
             || return 0 # Don't fail out within a single scope.
       }
       set -f
+    else
+      local _notebook_path
+      _notebook_path="$(_notebooks show "${__target_path:-}" --path)"
+
+      if ((_max_depth))
+      then
+        _search_args+=("--no-recursive")
+      fi
+
+      if ((_search_color_enabled))
+      then
+        _search_args+=("--color=always")
+      else
+        _search_args+=("--color=never")
+      fi
+
+      local _search_paths=("${__target_path}")
+
+      if [[ -f "${__target_path}"     ]] &&
+         [[ "${#_arguments[@]}" -le 1 ]]
+      then
+        _search_paths+=("${__target_path%\/*}/.index")
+      fi
+
+      GIT_PAGER='' git -C "${_notebook_path}"       \
+        grep                                        \
+        --ignore-case                               \
+        --text                                      \
+        -n                                          \
+        "${_search_args[@]:-}"                      \
+        "${_query:-}"                               \
+        "${_search_paths[@]:-}"                     \
+      | sed -e "s/^/${_notebook_path//\//\\\/}\//"  \
+        || return 0  # Don't fail out within a single scope.
     fi | while read -r _line
     do
       local _content_line_with_hit=
