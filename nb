@@ -12003,17 +12003,17 @@ _search() {
                 ls-files -z -- . ':!:*.index'
             fi
           } | {
-            local __add_query=
+            local __and_query=
             local _last_pipe=
             local _this_pipe=
 
-            for __add_query in "${_queries[@]:-}"
+            for __and_query in "${_queries[@]:-}"
             do
-              [[ -n "${__add_query:-}" ]] || continue
+              [[ -n "${__and_query:-}" ]] || continue
 
               _this_pipe=$(mktemp -t pipe.XXX) && {
-                  rm -f   "${_this_pipe}"
-                  mkfifo  "${_this_pipe}"
+                rm -f   "${_this_pipe}"
+                mkfifo  "${_this_pipe}"
               }
 
               if [[ -p "${_last_pipe:-}" ]]
@@ -12030,7 +12030,7 @@ _search() {
                   --null                                          \
                   --text                                          \
                   "${_search_args[@]:-}"                          \
-                  -e "${__add_query:-}"                           \
+                  -e "${__and_query:-}"                           \
                     || return 0  # Don't fail out within a single scope.
               } > "${_this_pipe:-}" &
 
