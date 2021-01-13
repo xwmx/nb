@@ -11973,16 +11973,117 @@ _search() {
         _search_paths+=("${__target_path%\/*}/.index")
       fi
 
-      GIT_PAGER='' git -C "${_notebook_path}"       \
-        grep                                        \
-        --ignore-case                               \
-        --text                                      \
-        -n                                          \
-        "${_search_args[@]:-}"                      \
-        "${_query:-}"                               \
-        "${_search_paths[@]:-}"                     \
-      | sed -e "s/^/${_notebook_path//\//\\\/}\//"  \
-        || return 0  # Don't fail out within a single scope.
+      if [[ "${#_queries[@]}" -le 1 ]]
+      then
+        GIT_PAGER='' git -C "${_notebook_path}"       \
+          grep                                        \
+          --extended-regexp                           \
+          --ignore-case                               \
+          --line-number                               \
+          --text                                      \
+          "${_search_args[@]:-}"                      \
+          -e "${_query:-}"                            \
+          "${_search_paths[@]:-}"                     \
+        | sed -e "s/^/${_notebook_path//\//\\\/}\//"  \
+          || return 0  # Don't fail out within a single scope.
+      else
+        local __search_group
+
+        for __search_group in "index" "files"
+        do
+          {
+            if [[ "${__search_group}" == "index" ]]
+            then
+              # list all .index files
+              GIT_PAGER='' git -C "${_notebook_path}" \
+                ls-files -z '*.index'
+            else
+              # list all non-.index files
+              GIT_PAGER='' git -C "${_notebook_path}" \
+                ls-files -z -- . ':!:*.index'
+            fi
+          } | {
+            local __add_query=
+            local _last_pipe=
+            local _this_pipe=
+
+            for __add_query in "${_queries[@]:-}"
+            do
+              [[ -n "${__add_query:-}" ]] || continue
+
+              _this_pipe=$(mktemp -t pipe.XXX) && {
+                  rm -f   "${_this_pipe}"
+                  mkfifo  "${_this_pipe}"
+              }
+
+              if [[ -p "${_last_pipe:-}" ]]
+              then
+                <"${_last_pipe:-}" cat
+              else
+                cat
+              fi | {
+                GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
+                  grep                                            \
+                  --extended-regexp                               \
+                  --files-with-matches                            \
+                  --ignore-case                                   \
+                  --null                                          \
+                  --text                                          \
+                  "${_search_args[@]:-}"                          \
+                  -e "${__add_query:-}"                           \
+                    || return 0  # Don't fail out within a single scope.
+              } > "${_this_pipe:-}" &
+
+              _last_pipe="${_this_pipe:-}"
+            done
+
+            if [[ -p "${_last_pipe:-}" ]]
+            then
+              <"${_last_pipe:-}" cat
+            else
+              cat
+            fi
+          } | {
+            if [[ "${__search_group}" == "index" ]]
+            then
+              local i
+
+              for ((i=0; i < "${#_queries[@]}"; i++))
+              do
+                [[ -n "${_queries[i]:-}" ]] || continue
+
+                if ! ((i))
+                then
+                  _search_args+=("-e" "${_queries[i]:-}")
+                else
+                  _search_args+=("--and" "-e" "${_queries[i]:-}")
+                fi
+              done
+
+              GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
+                grep                                            \
+                --extended-regexp                               \
+                --ignore-case                                   \
+                --line-number                                   \
+                --text                                          \
+                "${_search_args[@]:-}"                          \
+              | sed -e "s/^/${_notebook_path//\//\\\/}\//"      \
+                || return 0  # Don't fail out within a single scope.
+            else
+              GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
+                grep                                            \
+                --extended-regexp                               \
+                --ignore-case                                   \
+                --line-number                                   \
+                --text                                          \
+                "${_search_args[@]:-}"                          \
+                -e "${_query:-}"                                \
+              | sed -e "s/^/${_notebook_path//\//\\\/}\//"      \
+                || return 0  # Don't fail out within a single scope.
+            fi
+          }
+        done
+      fi
     fi | while read -r _line
     do
       local _content_line_with_hit=
@@ -12297,9 +12398,28 @@ _search() {
                 _search_selector="$(_notebooks current --name)"
               fi
 
+              local _query_message=
+
+              if [[ "${#_queries[@]}" -le 1 ]]
+              then
+                _query_message="${_query}"
+              else
+                local i
+
+                for ((i=0; i < "${#_queries[@]}"; i++))
+                do
+                  if ((i))
+                  then
+                    _query_message+=" + ${_queries[i]:-}"
+                  else
+                    _query_message="${_queries[i]:-}"
+                  fi
+                done
+              fi
+
               printf "Not found in %s: %s\\n"               \
                 "$(_color_primary "${_search_selector:-}")" \
-                "$(_color_primary "${_query:-}")"
+                "$(_color_primary "${_query_message:-}")"
             fi
 
             return 1
