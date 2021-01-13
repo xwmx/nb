@@ -11652,7 +11652,7 @@ _search() {
       --use*grep)
         # The `--use-grep` option bypasses other search tools. Intended to be
         # used primarily for testing.
-        _search_tool="grep"
+        _search_utility="grep"
         ;;
       *)
         if [[ "${__arg:-}" =~ ^-- ]]
