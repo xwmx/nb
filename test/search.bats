@@ -46,11 +46,11 @@ _search_all_setup() {
   {
     "${_NB}" init
 
-    "${_NB}" add  "File Example One.md" \
-      --title     "Title One"           \
+    "${_NB}" add  "File Example One.md"   \
+      --title     "Title One"             \
       --content   "Sample Content One Sample Phrase."
 
-    "${_NB}" add  "File Example Two.md"  \
+    "${_NB}" add  "File Example Two.md"   \
       --title     "Title Two"             \
       --content   "Example Content Two Example Phrase."
 
@@ -78,11 +78,11 @@ _search_all_setup() {
   {
     "${_NB}" init
 
-    "${_NB}" add  "File Example One.md" \
-      --title     "Title One"           \
+    "${_NB}" add  "File Example One.md"   \
+      --title     "Title One"             \
       --content   "Sample Content One Sample Phrase."
 
-    "${_NB}" add  "File Example Two.md"  \
+    "${_NB}" add  "File Example Two.md"   \
       --title     "Title Two"             \
       --content   "Example Content Two Example Phrase."
 
