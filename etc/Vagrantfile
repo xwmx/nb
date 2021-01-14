@@ -22,10 +22,10 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
 
   $centos_setup = <<-HEREDOC
-# Install nvm (https://github.com/nvm-sh/nvm):
+# install nvm (https://github.com/nvm-sh/nvm)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 
-# Add project root to $PATH
+# add project root to $PATH
 if grep -q -v vagrant "${HOME}/.bashrc"
 then
   printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
@@ -46,29 +46,39 @@ HEREDOC
   # end
 
   $ubuntu_setup = <<-HEREDOC
-# Install node and npm:
+# install node and npm
 # sudo apt update -y
 # sudo apt install nodejs -y
 # sudo apt install npm -y
 
-# Install nvm (https://github.com/nvm-sh/nvm):
+# install nvm (https://github.com/nvm-sh/nvm)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 
-# Add project root to $PATH
+# add project root to $PATH
 if grep -q -v vagrant "${HOME}/.bashrc"
 then
   printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
 fi
 
-# Install dependencies.
+# install dependencies
 sudo apt-get update
 sudo apt-get install bats -y
 sudo apt-get install python-pygments -y
 sudo apt-get install w3m
+
+# install latest pandoc
 curl -LO https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb
 sudo dpkg -i pandoc-2.11.2-1-amd64.deb
+
+# install latest bat
 curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
 sudo dpkg -i bat_0.16.0_amd64.deb
+
+# install latest git
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update
+sudo apt install git
+
 git config --global user.name   "Example Name"
 git config --global user.email  "example@example.test"
 HEREDOC
