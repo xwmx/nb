@@ -11643,6 +11643,7 @@ _search() {
         ;;
       --path*)
         _print_paths=1
+        _search_color_enabled=0
         ;;
       -q|--query|-e)
         _queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
@@ -12119,13 +12120,18 @@ _search() {
 
           local _line_path_segment="${__line%%:*}"
 
-          # Use `sed` to remove color and 'matches' suffix from output.
-          # https://unix.stackexchange.com/a/140255
-          _path="$(
-            printf "%s\\n" "${_line_path_segment}"            \
-              | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
-              | sed -e 's/ matches//g'
-          )"
+          if ((_print_paths))
+          then
+            _path="${_line_path_segment:-}"
+          else
+            # Use `sed` to remove color and 'matches' suffix from output.
+            # https://unix.stackexchange.com/a/140255
+            _path="$(
+              printf "%s\\n" "${_line_path_segment}"            \
+                | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
+                | sed -e 's/ matches//g'
+            )"
+          fi
 
           if [[ "${_last_path}" != "${_path}" ]]
           then
