@@ -11980,7 +11980,7 @@ _search() {
 
       local _xargs=("-0")
 
-      if xargs --help 2 &> /dev/null
+      if xargs --help &> /dev/null
       then # GNU (BSD does this by default)
         _xargs+=("--no-run-if-empty")
       fi
