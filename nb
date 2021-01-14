@@ -5581,7 +5581,7 @@ _notebooks() {
         printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
       mkdir -p "${NB_DIR}/${_name}"
-        git -C "${NB_DIR}/${_name}" init 1>/dev/null  &&
+        git -C "${NB_DIR}/${_name}" init &>/dev/null  &&
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
         _git checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
@@ -6588,7 +6588,7 @@ HEREDOC
       if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
          [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
       then
-          git -C "${NB_DIR}/${__notebook_name}" init 1>/dev/null  &&
+          git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null  &&
           touch "${NB_DIR}/${__notebook_name}/.index"             &&
           _temp cache clear                                       &&
           _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
