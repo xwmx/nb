@@ -12117,11 +12117,12 @@ _search() {
           local _skip=0
           local _content=
 
+          local _line_path_segment="${__line%%:*}"
+
           # Use `sed` to remove color and 'matches' suffix from output.
           # https://unix.stackexchange.com/a/140255
           _path="$(
-            printf "%s\\n" "${__line}"                        \
-              | cut -d: -f 1                                  \
+            printf "%s\\n" "${_line_path_segment}"            \
               | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
               | sed -e 's/ matches//g'
           )"
@@ -12354,6 +12355,9 @@ _search() {
               _content_line_with_hit="${_filename_type_label} Match: $(
                 printf "%s\\n" "${__line}" | cut -d: -f 3-
               )"
+            elif ! _file_is_text "${_folder_path}/${_filename}"
+            then
+              _content_line_with_hit="Binary file matches."
             else
               _content_line_with_hit="$(
                 printf "%s\\n" "${__line}" | cut -d: -f 2-
