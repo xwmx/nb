@@ -80,10 +80,10 @@ HEREDOC
   # end
 
   # Ubuntu 20.04 LTS
-  # config.vm.define "ubuntu2004" do |ubuntu2004|
-  #   ubuntu2004.vm.box = "ubuntu/focal64"
-  #   ubuntu2004.vm.provision :shell, inline: $ubuntu_setup, privileged: false
-  # end
+  config.vm.define "ubuntu2004" do |ubuntu2004|
+    ubuntu2004.vm.box = "ubuntu/focal64"
+    ubuntu2004.vm.provision :shell, inline: $ubuntu_setup, privileged: false
+  end
 
   # Ubuntu 18.04 LTS
   # config.vm.define "ubuntu1804" do |ubuntu1804|

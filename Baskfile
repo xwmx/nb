@@ -113,3 +113,46 @@ npm:publish() {
 
   _sed_i -e "s/^# \`nb\`$/${_h1}/g" "./README.md"
 }
+
+# v ######################################################################### v
+
+desc "v" <<HEREDOC
+Usage:
+  bask v
+  bask v down
+  bask v halt
+  bask v ssh
+  bask v up
+
+Description:
+  Shortcuts for Vagrant that can be called from any subdirectory.
+HEREDOC
+v() {
+  local _baskfile_path="${BASH_SOURCE[0]}"
+  local _root_dir="${_baskfile_path%/Baskfile}"
+  local _vagrant_dir="${_root_dir}/etc"
+
+  case "${1:-}" in
+    d*) # destroy / down
+      (cd "${_vagrant_dir}" && vagrant destroy)
+      ;;
+    h*) # halt
+      (cd "${_vagrant_dir}" && vagrant halt)
+      ;;
+    s*) # ssh
+      (cd "${_vagrant_dir}" && vagrant ssh)
+      ;;
+    u*) # up
+      (cd "${_vagrant_dir}" && vagrant up)
+      ;;
+    *)
+      (
+        cd "${_vagrant_dir}" && {
+          vagrant ssh        || {
+            vagrant up && vagrant ssh
+          }
+        }
+      )
+      ;;
+  esac
+}
