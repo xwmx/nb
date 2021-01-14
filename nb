@@ -8397,11 +8397,15 @@ _add() {
     if [[ "${_selector_folder_relative_path}" =~ /$ ]]
     then
       _target_folder_relative_path="$(
-        _resolve_selector_folders "${_selector_folder_relative_path}/" --build
+        _resolve_selector_folders               \
+          "${_selector_folder_relative_path}/"  \
+          --build
       )"
     else
       _target_folder_relative_path="$(
-        _resolve_selector_folders "${_selector_folder_relative_path}/${_target_filename:-}" --build
+        _resolve_selector_folders                                   \
+          "${_selector_folder_relative_path}/${_target_filename:-}" \
+          --build
       )"
     fi
 
