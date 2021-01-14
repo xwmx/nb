@@ -4042,7 +4042,7 @@ _init() {
       git clone "${_repo_url}" "${NB_DIR}/home"
     else
       mkdir -p "${NB_DIR}/home"                   &&
-        git -C "${NB_DIR}/home" init 1>/dev/null  &&
+        git -C "${NB_DIR}/home" init &>/dev/null  &&
         touch "${NB_DIR}/home/.index"             &&
         _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
     fi
@@ -5977,7 +5977,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     then
       git clone "${_remote_url}" "${_path}"
     else
-        git -C "${_path}" init 1>/dev/null  &&
+        git -C "${_path}" init &>/dev/null  &&
         touch "${_path}/.index"             &&
         _git checkpoint "${_path}" "[nb] Initialize"
     fi
