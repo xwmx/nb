@@ -3028,13 +3028,13 @@ HEREDOC
     fi
 
     local _git_name=
-    _git_name="$(git config user.name || printf '')"
+    _git_name="$(git config --global user.name || printf '')"
 
     local _git_email=
-    _git_email="$(git config user.email || printf '')"
+    _git_email="$(git config --global user.email || printf '')"
 
-    if [[ -z "${_git_name}"   ]] ||
-       [[ -z "${_git_email}"  ]]
+    if [[ -z "${_git_name:-}"   ]] ||
+       [[ -z "${_git_email:-}"  ]]
     then
       cat <<HEREDOC
 Welcome to $(_color_primary "${_ME}")!
