@@ -11978,6 +11978,13 @@ _search() {
         _search_paths+=("${__target_path%\/*}/.index")
       fi
 
+      local _xargs=("-0")
+
+      if xargs --help 2 &> /dev/null
+      then # GNU (BSD does this by default)
+        _xargs+=("--no-run-if-empty")
+      fi
+
       if [[ "${#_queries[@]}" -le 1 ]]
       then
         GIT_PAGER='' git -C "${_notebook_path}"       \
@@ -12027,15 +12034,16 @@ _search() {
               else
                 cat
               fi | {
-                GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
-                  grep                                            \
-                  --extended-regexp                               \
-                  --files-with-matches                            \
-                  --ignore-case                                   \
-                  --null                                          \
-                  --text                                          \
-                  "${_search_args[@]:-}"                          \
-                  -e "${__and_query:-}"                           \
+                GIT_PAGER='' xargs "${_xargs[@]}" \
+                  git -C "${_notebook_path}"      \
+                  grep                            \
+                  --extended-regexp               \
+                  --files-with-matches            \
+                  --ignore-case                   \
+                  --null                          \
+                  --text                          \
+                  "${_search_args[@]:-}"          \
+                  -e "${__and_query:-}"           \
                     || return 0  # Don't fail out within a single scope.
               } > "${_this_pipe:-}" &
 
@@ -12065,25 +12073,27 @@ _search() {
                 fi
               done
 
-              GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
-                grep                                            \
-                --extended-regexp                               \
-                --ignore-case                                   \
-                --line-number                                   \
-                --text                                          \
-                "${_search_args[@]:-}"                          \
-              | sed -e "s/^/${_escaped_notebook_path}\//"       \
+              GIT_PAGER='' xargs "${_xargs[@]}"           \
+                git -C "${_notebook_path}"                \
+                grep                                      \
+                --extended-regexp                         \
+                --ignore-case                             \
+                --line-number                             \
+                --text                                    \
+                "${_search_args[@]:-}"                    \
+              | sed -e "s/^/${_escaped_notebook_path}\//" \
                 || return 0  # Don't fail out within a single scope.
             else
-              GIT_PAGER='' xargs -0 git -C "${_notebook_path}"  \
-                grep                                            \
-                --extended-regexp                               \
-                --ignore-case                                   \
-                --line-number                                   \
-                --text                                          \
-                "${_search_args[@]:-}"                          \
-                -e "${_query:-}"                                \
-              | sed -e "s/^/${_escaped_notebook_path}\//"       \
+              GIT_PAGER='' xargs "${_xargs[@]}"           \
+                git -C "${_notebook_path}"                \
+                grep                                      \
+                --extended-regexp                         \
+                --ignore-case                             \
+                --line-number                             \
+                --text                                    \
+                "${_search_args[@]:-}"                    \
+                -e "${_query:-}"                          \
+              | sed -e "s/^/${_escaped_notebook_path}\//" \
                 || return 0  # Don't fail out within a single scope.
             fi
           }
