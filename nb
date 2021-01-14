@@ -5588,6 +5588,30 @@ _notebooks() {
     fi && printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
   }
 
+  # Usage: _notebooks_add_new [<notebook>...]
+  _notebooks_add_new() {
+    local _notebook_list=("${@:-}")
+
+    [[ ! -d "${NB_DIR}" ]] && return 0
+
+    if [[ -z "${1:-}" ]]
+    then
+      _notebook_list=($(ls -1 "${NB_DIR}"))
+    fi
+
+    for __notebook_name in "${_notebook_list[@]:-}"
+    do
+      if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
+         [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
+      then
+          git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null  &&
+          touch "${NB_DIR}/${__notebook_name}/.index"             &&
+          _temp cache clear                                       &&
+          _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
+      fi
+    done
+  }
+
   # _notebooks_current()
   #
   # Usage:
@@ -6570,30 +6594,6 @@ HEREDOC
     else
       return 0
     fi
-  }
-
-  # Usage: _notebooks_add_new [<notebook>...]
-  _notebooks_add_new() {
-    local _notebook_list=("${@:-}")
-
-    [[ ! -d "${NB_DIR}" ]] && return 0
-
-    if [[ -z "${1:-}" ]]
-    then
-      _notebook_list=($(ls -1 "${NB_DIR}"))
-    fi
-
-    for __notebook_name in "${_notebook_list[@]:-}"
-    do
-      if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
-         [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
-      then
-          git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null  &&
-          touch "${NB_DIR}/${__notebook_name}/.index"             &&
-          _temp cache clear                                       &&
-          _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
-      fi
-    done
   }
 
   local _subcommand="${1:-}"
