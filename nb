@@ -12089,7 +12089,7 @@ _search() {
           }
         done
       fi
-    fi | while read -r _line
+    fi | while read -r __line
     do
       local _content_line_with_hit=
       local _file_info=
@@ -12105,7 +12105,7 @@ _search() {
       # Use `sed` to remove color and 'matches' suffix from output.
       # https://unix.stackexchange.com/a/140255
       _path="$(
-        printf "%s\\n" "${_line}"                         \
+        printf "%s\\n" "${__line}"                        \
           | cut -d: -f 1                                  \
           | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
           | sed -e 's/ matches//g'
@@ -12154,7 +12154,7 @@ _search() {
         fi
       fi
 
-      if [[ -z "${_line}" ]]
+      if [[ -z "${__line}" ]]
       then
         # Print nothing, skipping the blank line in `ag` output with
         # multiple matches.
@@ -12197,7 +12197,7 @@ _search() {
         if [[ -n "${_filename:-}" ]] && [[ "${_filename:-}" == ".index" ]]
         then
           _filename_hit=1
-          _filename_color="$(printf "%s\\n" "${_line}" | cut -d: -f 3-)"
+          _filename_color="$(printf "%s\\n" "${__line}" | cut -d: -f 3-)"
           _filename="$(
             printf "%s\\n" "${_filename_color}" \
               | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"
@@ -12337,11 +12337,11 @@ _search() {
           fi
 
           _content_line_with_hit="${_filename_type_label} Match: $(
-            printf "%s\\n" "${_line}" | cut -d: -f 3-
+            printf "%s\\n" "${__line}" | cut -d: -f 3-
           )"
         else
           _content_line_with_hit="$(
-            printf "%s\\n" "${_line}" | cut -d: -f 2-
+            printf "%s\\n" "${__line}" | cut -d: -f 2-
           )"
         fi
 
@@ -12369,10 +12369,10 @@ _search() {
 
       [[ -n "${_path}" ]] && _last_path="${_path}"
     done
-  done |  if read -r _line
+  done |  if read -r __search_output_line
           then # output is present
             # Print the test line then `cat` the rest.
-            printf "%s\\n" "${_line}"
+            printf "%s\\n" "${__search_output_line:-}"
             cat
             return 0
           else
