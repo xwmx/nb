@@ -3134,49 +3134,56 @@ HEREDOC
 
       if [[ -n "${_conflicted_files[*]:-}" ]]
       then
-        if _contains ".index" "${_conflicted_files[@]}"
-        then
-          # Remove git conflict markers to keep both.
-          # More info: https://stackoverflow.com/a/55187779
-          _sed_i              \
-            -e '/^<<<<<<</d'  \
-            -e '/^>>>>>>>/d'  \
-            -e '/=======/d'   \
-            "${_notebook_path}/.index"
+        local __maybe_index_relative_path
 
-          git -C "${_notebook_path}" add ".index"
-        fi
-
-        for __file in "${_conflicted_files[@]}"
+        for __maybe_index_relative_path in "${_conflicted_files[@]}"
         do
-          [[ "${__file}" == ".index" ]] && continue
-
-          if _file_is_text "${__file}"
+          if [[ "${__maybe_index_relative_path}" =~ ^.index$|/.index$ ]]
           then
-            _conflicted_text_files+=("${__file}")
+            # Remove git conflict markers to keep both.
+            # More info: https://stackoverflow.com/a/55187779
+            _sed_i              \
+              -e '/^<<<<<<</d'  \
+              -e '/^>>>>>>>/d'  \
+              -e '/=======/d'   \
+              "${_notebook_path}/${__maybe_index_relative_path}"
+
+            git -C "${_notebook_path}" add "${__maybe_index_relative_path}"
+          fi
+        done
+
+        local __relative_path
+
+        for __relative_path in "${_conflicted_files[@]}"
+        do
+          [[ "${__relative_path}" =~ ^.index$|/.index$ ]] && continue
+
+          if _file_is_text "${__relative_path}"
+          then
+            _conflicted_text_files+=("${__relative_path}")
 
             git -C "${_notebook_path}" add                \
-              "${__file}"
+              "${__relative_path}"
           else
             git -C "${_notebook_path}" checkout           \
-              "origin/${_git_branch}" -- "${__file}"
+              "origin/${_git_branch}" -- "${__relative_path}"
 
             local _conflicted_file=
             _conflicted_file="$(
               _notebooks show "${_notebook_path}"         \
-                --filename  "${__file%%.*}--conflicted-copy.${__file#*.}"
+                --filename  "${__relative_path%%.*}--conflicted-copy.${__relative_path#*.}"
             )"
 
             _conflicted_binary_files+=("${_conflicted_file}")
 
             git -C "${_notebook_path}" mv                 \
-              "${__file}" "${_conflicted_file}"
+              "${__relative_path}" "${_conflicted_file}"
 
             git -C "${_notebook_path}" checkout           \
-              "${_git_branch}" -- "${__file}"
+              "${_git_branch}" -- "${__relative_path}"
 
             git -C "${_notebook_path}" add "${_conflicted_file}"
-            git -C "${_notebook_path}" add "${__file}"
+            git -C "${_notebook_path}" add "${__relative_path}"
           fi
         done
 
