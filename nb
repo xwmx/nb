@@ -11857,6 +11857,7 @@ _search() {
           ag                      \
             --filename            \
             --hidden              \
+            --ignore ".git"       \
             --ignore-case         \
             --noheading           \
             "${_search_args[@]}"  \
