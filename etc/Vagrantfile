@@ -24,6 +24,12 @@ Vagrant.configure("2") do |config|
   $centos_setup = <<-HEREDOC
 # Install nvm (https://github.com/nvm-sh/nvm):
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# Add project root to $PATH
+if grep -q -v vagrant "${HOME}/.bashrc"
+then
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
 HEREDOC
 
   # CentOS 8
@@ -47,6 +53,12 @@ HEREDOC
 
 # Install nvm (https://github.com/nvm-sh/nvm):
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# Add project root to $PATH
+if grep -q -v vagrant "${HOME}/.bashrc"
+then
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
 HEREDOC
 
   # Ubuntu 20.10
@@ -66,6 +78,13 @@ HEREDOC
   #   ubuntu1804.vm.box = "hashicorp/bionic64"
   #   ubuntu1804.vm.provision :shell, inline: $ubuntu_setup, privileged: false
   # end
+
+  #############################################################################
+  # Configuration
+  # -------------
+
+  # Link project root to /vagrant in guest.
+  config.vm.synced_folder "../", "/vagrant"
 
   #############################################################################
 
