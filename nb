@@ -3759,6 +3759,11 @@ _index() {
       # Usage: _index_get_id <basename> <index path>
       _index_get_id() {
         # Alternatives:
+        # git -C "${3:?}" grep  \
+        #   --line-number       \
+        #   --no-color          \
+        #   -e "^${1:?}$"       \
+        #   "${2:?}" | cut -f2 -d:
         # grep -n "^${1:-}$" "${2:-}" | cut -f1 -d:
         # awk 'match($0,v){print NR; exit}' v="^${1:-}$" "${2:-}"
         # rg --color=never --line-number "^${1:-}$" "${2:-}" | cut -d: -f1
