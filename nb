@@ -11987,16 +11987,16 @@ _search() {
 
       if [[ "${#_queries[@]}" -le 1 ]]
       then
-        GIT_PAGER='' git -C "${_notebook_path}"       \
-          grep                                        \
-          --extended-regexp                           \
-          --ignore-case                               \
-          --line-number                               \
-          --text                                      \
-          "${_search_args[@]:-}"                      \
-          -e "${_query:-}"                            \
-          "${_search_paths[@]:-}"                     \
-        | sed -e "s/^/${_escaped_notebook_path}\//"   \
+        GIT_PAGER='' git -C "${_notebook_path}"     \
+          grep                                      \
+          --extended-regexp                         \
+          --ignore-case                             \
+          --line-number                             \
+          --text                                    \
+          "${_search_args[@]:-}"                    \
+          -e "${_query:-}"                          \
+          "${_search_paths[@]:-}"                   \
+        | sed -e "s/^/${_escaped_notebook_path}\//" \
           || return 0  # Don't fail out within a single scope.
       else
         local __search_group
