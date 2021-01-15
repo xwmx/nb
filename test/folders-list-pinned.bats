@@ -18,7 +18,7 @@ export NB_PINNED_PATTERN="#pinned"
       --content   "Content two."
     "${_NB}" add  "two.md"      \
       --title     "root three"  \
-      --content   "Content three #pinned"
+      --content   "Content three. #pinned"
 
     "${_NB}" add  "Example Folder/one.md" \
       --title     "nested one"            \
