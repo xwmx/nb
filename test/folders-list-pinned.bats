@@ -33,7 +33,6 @@ export NB_PINNED_PATTERN="#pinned"
     "${_NB}" add  "Example Folder/Sample Folder/two.md" \
       --title     "deep two"                            \
       --content   "Content two."
-
   }
 
   run bash -c "${_NB} list"
