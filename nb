@@ -4454,11 +4454,6 @@ _list() {
   # display pinned items using a pattern like "#pinned"
   if [[ -n "${NB_PINNED_PATTERN:-}" ]] && ! ((_list_as_pinned))
   then
-    local _escaped_notebook_path
-    _escaped_notebook_path="$(
-      printf "%s\\n" "${_notebook_path:-}" | sed 's/\//\\\//g'
-    )"
-
     local _pinned_relative_paths=()
 
     _pinned_relative_paths=($(
