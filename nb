@@ -4423,12 +4423,6 @@ _list() {
   local _folder_relative_path="${_list_path/"${_notebook_path}"/}"
   _folder_relative_path="${_folder_relative_path#/}"
 
-  local _list_files_options=("${_list_path}")
-
-  [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
-  ((_reverse))          && _list_files_options+=("--reverse")
-  ((_sort))             && _list_files_options+=("--sort")
-
   local _selected_notebook_escaped_name=
 
   if _notebooks current --selected
@@ -4448,6 +4442,12 @@ _list() {
 
   local _max_id
   _max_id="$(_index get_max_id "${_list_path}")"
+
+  local _list_files_options=("${_list_path}")
+
+  [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
+  ((_reverse))          && _list_files_options+=("--reverse")
+  ((_sort))             && _list_files_options+=("--sort")
 
   # display pinned items using a pattern like "#pinned"
   if [[ -n "${NB_PINNED_PATTERN:-}" ]] && ! ((_list_as_pinned))
