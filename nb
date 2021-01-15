@@ -4187,6 +4187,7 @@ _list() {
   local _error_on_empty=0
   local _excerpt_length=3
   local _limit=
+  local _list_as_pinned=0
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
   local _list_paths=0
@@ -4234,6 +4235,9 @@ _list() {
         ;;
       --no*indicator*|--no*emoji*|--no*unicode*)
         _print_indicators=0
+        ;;
+      --*pinned)
+        _list_as_pinned=1
         ;;
       -n|--limit|--num|--number)
         if _option_value_is_present "${__val:-}"
@@ -4422,6 +4426,9 @@ _list() {
     fi
   fi
 
+  local _folder_relative_path="${_list_path/"${_notebook_path}"/}"
+  _folder_relative_path="${_folder_relative_path#/}"
+
   local _list_files_options=("${_list_path}")
 
   [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
@@ -4444,9 +4451,55 @@ _list() {
   local _max_id
   _max_id="$(_index get_max_id "${_list_path}")"
 
+  # display pinned items using a pattern like "#pinned"
+  if [[ -n "${NB_PINNED_PATTERN:-}" ]] && ! ((_list_as_pinned))
+  then
+    local _escaped_notebook_path
+    _escaped_notebook_path="$(
+      printf "%s\\n" "${_notebook_path:-}" | sed 's/\//\\\//g'
+    )"
+
+    local _pinned_relative_paths=()
+
+    _pinned_relative_paths=($(
+      GIT_PAGER='' git -C "${_notebook_path}" \
+        grep                                  \
+        --color=never                         \
+        --extended-regexp                     \
+        --files-with-matches                  \
+        --ignore-case                         \
+        --text                                \
+        -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
+        "${_list_path}"
+    ))
+
+    {
+      printf "%s\\n" "${_pinned_relative_paths[@]:-}"
+    } | {
+      local __pinned_path
+
+      _wrap off
+
+      while read -r __pinned_path
+      do
+        [[ -z "${__pinned_path:-}" ]] && continue
+
+        _list "${__pinned_path}" --pinned
+      done
+
+      _wrap on
+    }
+  fi
+
   # Use code blocks to capture all output for piping to pager.
   {
-    _list_files "${_list_files_options[@]}" || :
+    if [[ -n "${_selector_basename:-}"        ]] &&
+       [[ "${#_selector_arguments[@]}" -le 1  ]]
+    then
+      printf "%s\\n" "${_selector_basename}"
+    else
+      _list_files "${_list_files_options[@]}" || :
+    fi
   } | {
     while read -r __basename
     do
@@ -4456,12 +4509,24 @@ _list() {
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
+      local _relative_path="${__basename}"
+
+      if [[ -n "${_folder_relative_path:-}" ]]
+      then
+        _relative_path="${_folder_relative_path}/${__basename}"
+      fi
+
       if [[ -z "${__basename:-}" ]]
       then
         continue # exclude from list
       elif [[ -z "${_filter_pattern:-}"                     ]] &&
            [[ -n "${_selector_basename:-}"                  ]] &&
            [[ "${__basename}" != "${_selector_basename}"    ]]
+      then
+        continue # exclude from list
+      elif ! ((_list_as_pinned)) && {
+             _contains "${_relative_path}" "${_pinned_relative_paths[@]}"
+      }
       then
         continue # exclude from list
       elif [[ -n "${_selector_basename}"                    ]] &&
@@ -4548,6 +4613,10 @@ _list() {
 
       if ((_print_indicators))
       then
+        if ((_list_as_pinned))
+        then
+          _indicators+="📌 "
+        fi
         # TODO: `show --indicators` duplicated for performance
         if _file_is_bookmark "${_list_path}/${__basename}"
         then
