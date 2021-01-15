@@ -4525,7 +4525,7 @@ _list() {
       then
         continue # exclude from list
       elif ! ((_list_as_pinned)) &&
-           _contains "${_relative_path}" "${_pinned_relative_paths[@]}"
+           _contains "${_relative_path}" "${_pinned_relative_paths[@]:-}"
       then
         continue # exclude from list
       elif [[ -n "${_selector_basename}"                    ]] &&
