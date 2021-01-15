@@ -4191,7 +4191,7 @@ _list() {
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
-  local _only_pinned=0
+  local _as_pinned=0
   local _print_excerpt=0
   local _print_indicators=1
   local _reverse=0
@@ -4246,8 +4246,8 @@ _list() {
       --path*)
         _list_paths=1
         ;;
-      --pinned)
-        _only_pinned=1
+      --as*pinned)
+        _as_pinned=1
         ;;
       -s|--sort)
         _sort=1
@@ -4477,7 +4477,7 @@ _list() {
       do
         [[ -z "${__pinned_path:-}" ]] && continue
 
-        _list "${__pinned_path}" --pinned
+        _list "${__pinned_path}" --as-pinned
       done
 
       _wrap on
@@ -4500,6 +4500,7 @@ _list() {
   #
   # Affected by list path (Display):
   #
+  # ${_as_pinned}
   # ${_max_id}
   # ${_maybe_selector_context}
   #
@@ -4507,12 +4508,12 @@ _list() {
   #
   # ${_filter_pattern}
   # ${_folder_relative_path}
-  # ${_list_as_pinned}
   # ${_list_files_options[@]}
   # ${_list_path}
   # ${_pinned_relative_paths[@]}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
+  # ${_with_pinned}
 
   # Use code blocks to capture all output for piping to pager.
   {
@@ -4635,7 +4636,7 @@ _list() {
 
       if ((_print_indicators))
       then
-        if ((_only_pinned))
+        if ((_as_pinned))
         then
           _indicators+="📌 "
         fi
