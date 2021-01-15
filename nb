@@ -4466,18 +4466,14 @@ _list() {
         "${_list_path}"
     ))
 
-    {
-      printf "%s\\n" "${_pinned_relative_paths[@]:-}"
-    } | {
-      local __pinned_path
+    local __pinned_path
 
-      while read -r __pinned_path
-      do
-        [[ -z "${__pinned_path:-}" ]] && continue
+    for __pinned_path in "${_pinned_relative_paths[@]:-}"
+    do
+      [[ -z "${__pinned_path:-}" ]] && continue
 
-        _list "${__pinned_path}" --as-pinned
-      done
-    }
+      _list "${__pinned_path}" --as-pinned
+    done
   fi
 
   # TODO: External local variables used in pipeline.
