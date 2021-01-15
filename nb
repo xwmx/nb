@@ -4487,16 +4487,16 @@ _list() {
   #
   # Not affected by list path:
   #
+  # ${_as_pinned}
   # ${_excerpt_length}
   # ${_limit}
   #
-  # Affected by list path (Display):
+  # Affected by list path / selector (Display):
   #
-  # ${_as_pinned}
   # ${_max_id}
   # ${_maybe_selector_context}
   #
-  # Affected by list path (Logic):
+  # Affected by list path / selector (Logic):
   #
   # ${_filter_pattern}
   # ${_folder_relative_path}
