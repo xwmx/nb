@@ -4471,16 +4471,12 @@ _list() {
     } | {
       local __pinned_path
 
-      _wrap off
-
       while read -r __pinned_path
       do
         [[ -z "${__pinned_path:-}" ]] && continue
 
         _list "${__pinned_path}" --as-pinned
       done
-
-      _wrap on
     }
   fi
 
