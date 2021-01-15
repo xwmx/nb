@@ -4611,6 +4611,7 @@ _list() {
         then
           _indicators+="📌 "
         fi
+
         # TODO: `show --indicators` duplicated for performance
         if _file_is_bookmark "${_list_path}/${__basename}"
         then
