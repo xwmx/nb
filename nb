@@ -4187,11 +4187,11 @@ _list() {
   local _error_on_empty=0
   local _excerpt_length=3
   local _limit=
-  local _list_as_pinned=0
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
+  local _only_pinned=0
   local _print_excerpt=0
   local _print_indicators=1
   local _reverse=0
@@ -4199,6 +4199,7 @@ _list() {
   local _sort=0
   local _type=
   local _use_pager=0
+  local _with_pinned=0
 
   while ((${#}))
   do
@@ -4232,9 +4233,6 @@ _list() {
       --no*indicator*|--no*emoji*|--no*unicode*)
         _print_indicators=0
         ;;
-      --*pinned)
-        _list_as_pinned=1
-        ;;
       -n|--limit|--num|--number)
         if _option_value_is_present "${__val:-}"
         then
@@ -4248,6 +4246,9 @@ _list() {
       --path*)
         _list_paths=1
         ;;
+      --pinned)
+        _only_pinned=1
+        ;;
       -s|--sort)
         _sort=1
         ;;
@@ -4260,6 +4261,9 @@ _list() {
       -t|--type)
         _type="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
+        ;;
+      --with*pinned)
+        _with_pinned=1
         ;;
       *)
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
@@ -4446,7 +4450,7 @@ _list() {
   ((_sort))             && _list_files_options+=("--sort")
 
   # display pinned items using a pattern like "#pinned"
-  if [[ -n "${NB_PINNED_PATTERN:-}" ]] && ! ((_list_as_pinned))
+  if [[ "${NB_PINNED_PATTERN:-}" ]] && ((_with_pinned))
   then
     local _pinned_relative_paths=()
 
@@ -4543,7 +4547,7 @@ _list() {
            [[ "${__basename}" != "${_selector_basename}"    ]]
       then
         continue # exclude from list
-      elif ! ((_list_as_pinned)) &&
+      elif ((_with_pinned)) &&
            _contains "${_relative_path}" "${_pinned_relative_paths[@]:-}"
       then
         continue # exclude from list
@@ -4631,7 +4635,7 @@ _list() {
 
       if ((_print_indicators))
       then
-        if ((_list_as_pinned))
+        if ((_only_pinned))
         then
           _indicators+="📌 "
         fi
@@ -5391,6 +5395,7 @@ _ls() {
   done
 
   _list_options=(${_arguments[@]:-})
+  _list_options+=("--with--pinned")
 
   if [[ -n "${_limit:-}" ]]
   then
