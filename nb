@@ -4194,7 +4194,6 @@ _list() {
   local _maybe_folder_selector_padded_left=
   local _maybe_folder_selector_padded_right=
   local _maybe_id_path=
-  local _maybe_scope=
   local _no_id=0
   local _print_excerpt=0
   local _print_indicators=1
@@ -4404,11 +4403,6 @@ _list() {
     return 1
   fi
 
-  local _notebook_escaped_name=
-  _notebook_escaped_name="$(
-    _notebooks show "${_notebook_path}" --escaped --no-color
-  )"
-
   local _list_path="${_notebook_path}"
 
   if [[ -n "${_folder_path:-}" ]]
@@ -4435,12 +4429,16 @@ _list() {
   ((_reverse))          && _list_files_options+=("--reverse")
   ((_sort))             && _list_files_options+=("--sort")
 
+  local _selected_notebook_escaped_name=
+
   if _notebooks current --selected
   then
-    _maybe_scope="$(_notebooks show "${_notebook_path}" --escaped --no-color):"
+    _selected_notebook_escaped_name="$(
+      _notebooks show "${_notebook_path}" --escaped --no-color
+    )"
 
-    _maybe_folder_selector_padded_left=" ${_maybe_scope}${_maybe_id_path}"
-    _maybe_folder_selector_padded_right="${_maybe_scope}${_maybe_id_path} "
+    _maybe_folder_selector_padded_left=" ${_selected_notebook_escaped_name}:${_maybe_id_path}"
+    _maybe_folder_selector_padded_right="${_selected_notebook_escaped_name}:${_maybe_id_path} "
   fi
 
   local _counter=0
@@ -4500,17 +4498,19 @@ _list() {
   # ${_excerpt_length}
   # ${_limit}
   #
-  # Affected by list path:
+  # Affected by list path (Display):
+  #
+  # ${_maybe_id_path}
+  # ${_max_id}
+  # ${_selected_notebook_escaped_name}
+  #
+  # Affected by list path (Logic):
   #
   # ${_filter_pattern}
   # ${_folder_relative_path}
   # ${_list_as_pinned}
   # ${_list_files_options}
   # ${_list_path}
-  # ${_maybe_id_path}
-  # ${_max_id}
-  # ${_maybe_scope}
-  # ${_notebook_escaped_name}
   # ${_pinned_relative_paths}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
@@ -4707,13 +4707,13 @@ _list() {
           sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
         )"
 
-        if [[ -n "${_maybe_scope:-}" ]]
+        local _item_identifier="${_maybe_id_path:-}${_item_id:-}"
+        local _max_identifier="${_maybe_id_path:-}${_max_id:-}"
+
+        if [[ -n "${_selected_notebook_escaped_name:-}" ]]
         then
-          local _item_identifier="${_notebook_escaped_name:-}:${_maybe_id_path:-}${_item_id:-}"
-          local _max_identifier="${_notebook_escaped_name:-}:${_maybe_id_path:-}${_max_id:-}"
-        else
-          local _item_identifier="${_maybe_id_path:-}${_item_id:-}"
-          local _max_identifier="${_maybe_id_path:-}${_max_id:-}"
+          _item_identifier="${_selected_notebook_escaped_name:-}:${_item_identifier:-}"
+          _max_identifier="${_selected_notebook_escaped_name:-}:${_max_identifier:-}"
         fi
 
         local _brackets_identifier="[${_item_identifier:-}]"
