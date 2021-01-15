@@ -4444,8 +4444,8 @@ _list() {
   fi
 
   local _counter=0
-  local _matches=0
   local _filenames_count=0
+  local _matches=0
   local _printed_count=0
 
   local _max_id
@@ -4485,6 +4485,35 @@ _list() {
       _wrap on
     }
   fi
+
+  # TODO: External local variables used in pipeline.
+  #
+  # Counters:
+  #
+  # ${_counter}
+  # ${_filenames_count}
+  # ${_matches}
+  # ${_printed_count}
+  #
+  # Not affected by list path:
+  #
+  # ${_excerpt_length}
+  # ${_limit}
+  #
+  # Affected by list path:
+  #
+  # ${_filter_pattern}
+  # ${_folder_relative_path}
+  # ${_list_as_pinned}
+  # ${_list_files_options}
+  # ${_list_path}
+  # ${_maybe_id_path}
+  # ${_max_id}
+  # ${_maybe_scope}
+  # ${_notebook_escaped_name}
+  # ${_pinned_relative_paths}
+  # ${_selector_arguments[@]}
+  # ${_selector_basename}
 
   # Use code blocks to capture all output for piping to pager.
   {
