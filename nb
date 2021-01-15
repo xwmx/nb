@@ -4284,7 +4284,6 @@ _list() {
   local _folder_relative_path=
   local _selector=
   local _selector_basename=
-  local _selector_relative_path=
 
   local __argument
 
@@ -4309,8 +4308,9 @@ _list() {
         _filter_patterns+=("${__argument}")
       fi
     else
-      # resolve selector relative path without a trailing /
+      local _selector_relative_path
       _selector_relative_path="$(
+        # resolve selector relative path without a trailing /
         _show "${__argument%\/}" --relative-path 2>/dev/null || :
       )"
 
@@ -4394,7 +4394,7 @@ _list() {
   local _filter_pattern=
   _filter_pattern="$(_join "|" "${_filter_patterns[@]:-}")"
 
-  if [[ "${_selector:-}" =~ / ]] && [[ -z "${_selector_relative_path:-}" ]]
+  if [[ "${_selector:-}" =~ / ]] && [[ -z "${_folder_relative_path:-}" ]]
   then
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
     return 1
