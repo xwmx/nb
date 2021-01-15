@@ -4191,9 +4191,6 @@ _list() {
   local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
   local _list_paths=0
-  local _maybe_folder_selector_padded_left=
-  local _maybe_folder_selector_padded_right=
-  local _maybe_id_path=
   local _no_id=0
   local _print_excerpt=0
   local _print_indicators=1
@@ -4284,7 +4281,7 @@ _list() {
   _notebook_path="$(_notebooks current --path)"
 
   local _filter_patterns=()
-  local _folder_path=
+  local _folder_relative_path=
   local _selector=
   local _selector_basename=
   local _selector_relative_path=
@@ -4323,15 +4320,15 @@ _list() {
         then
           if [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
           then # argument is a folder selector with trailing /
-            _folder_path="${_selector_relative_path}"
+            _folder_relative_path="${_selector_relative_path}"
             _selector="${__argument}"
             _selector_basename=
           else # argument is a file selector
             if [[ "${_selector_relative_path:-}" =~ / ]]
             then # argument is a nested file selector
-              _folder_path="${_selector_relative_path%\/*}"
+              _folder_relative_path="${_selector_relative_path%\/*}"
             else # argument does not include a folder
-              _folder_path=
+              _folder_relative_path=
             fi
 
             _selector="${__argument%\/}"
@@ -4344,7 +4341,7 @@ _list() {
       then
         if [[ -n "${_selector_relative_path:-}" ]]
         then # argument is a nested file or folder path
-          _folder_path="${_selector_relative_path%\/*}"
+          _folder_relative_path="${_selector_relative_path%\/*}"
           _selector="${__argument}"
           _selector_basename="${_selector_relative_path##*\/}"
         else
@@ -4356,10 +4353,10 @@ _list() {
           if [[ -n "${_selector_relative_path:-}"                   ]] &&
              [[ -d "${_notebook_path}/${_selector_relative_path:-}" ]]
           then # folder path is selector, final path segment is filter pattern
-            _folder_path="${_selector_relative_path}"
+            _folder_relative_path="${_selector_relative_path}"
             _selector="${__argument%\/*}"
             _selector_basename=
-            _selector_relative_path="${_folder_path:-}"
+            _selector_relative_path="${_folder_relative_path:-}"
 
             _filter_patterns+=("${__argument##*\/}")
           else # argument does not resolve, treat as filter pattern
@@ -4369,7 +4366,7 @@ _list() {
       else
         if [[ -n "${_selector_relative_path:-}" ]]
         then # argument is a root-level file or folder identifier
-          _folder_path=
+          _folder_relative_path=
           _selector="${__argument}"
           _selector_basename="${_selector_relative_path##*\/}"
         else
@@ -4404,35 +4401,34 @@ _list() {
   fi
 
   local _list_path="${_notebook_path}"
+  local _maybe_selector_context=
+  local _maybe_selector_context_padded_left=
+  local _maybe_selector_context_padded_right=
 
-  if [[ -n "${_folder_path:-}" ]]
+  if [[ -n "${_folder_relative_path:-}" ]]
   then
-    _maybe_id_path="${_folder_path// /\\ }/"
-
-    _maybe_folder_selector_padded_left=" ${_maybe_id_path}"
-    _maybe_folder_selector_padded_right="${_maybe_id_path} "
-
-    _list_path="${_notebook_path}/${_folder_path}"
+    _list_path="${_notebook_path}/${_folder_relative_path}"
 
     if [[ ! -e "${_list_path}" ]]
     then
-      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_folder_path:-}")"
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_folder_relative_path:-}")"
     fi
+
+    _maybe_selector_context="${_folder_relative_path// /\\ }/"
+    _maybe_selector_context_padded_left=" ${_maybe_selector_context}"
+    _maybe_selector_context_padded_right="${_maybe_selector_context} "
   fi
-
-  local _folder_relative_path="${_list_path/"${_notebook_path}"/}"
-  _folder_relative_path="${_folder_relative_path#/}"
-
-  local _selected_notebook_escaped_name=
 
   if _notebooks current --selected
   then
+    local _selected_notebook_escaped_name=
     _selected_notebook_escaped_name="$(
       _notebooks show "${_notebook_path}" --escaped --no-color
     )"
 
-    _maybe_folder_selector_padded_left=" ${_selected_notebook_escaped_name}:${_maybe_id_path}"
-    _maybe_folder_selector_padded_right="${_selected_notebook_escaped_name}:${_maybe_id_path} "
+    _maybe_selector_context="${_selected_notebook_escaped_name}:${_maybe_selector_context}"
+    _maybe_selector_context_padded_left=" ${_maybe_selector_context}"
+    _maybe_selector_context_padded_right="${_maybe_selector_context} "
   fi
 
   local _counter=0
@@ -4500,18 +4496,17 @@ _list() {
   #
   # Affected by list path (Display):
   #
-  # ${_maybe_id_path}
   # ${_max_id}
-  # ${_selected_notebook_escaped_name}
+  # ${_maybe_selector_context}
   #
   # Affected by list path (Logic):
   #
   # ${_filter_pattern}
   # ${_folder_relative_path}
   # ${_list_as_pinned}
-  # ${_list_files_options}
+  # ${_list_files_options[@]}
   # ${_list_path}
-  # ${_pinned_relative_paths}
+  # ${_pinned_relative_paths[@]}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
 
@@ -4707,17 +4702,10 @@ _list() {
           sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
         )"
 
-        local _item_identifier="${_maybe_id_path:-}${_item_id:-}"
-        local _max_identifier="${_maybe_id_path:-}${_max_id:-}"
-
-        if [[ -n "${_selected_notebook_escaped_name:-}" ]]
-        then
-          _item_identifier="${_selected_notebook_escaped_name:-}:${_item_identifier:-}"
-          _max_identifier="${_selected_notebook_escaped_name:-}:${_max_identifier:-}"
-        fi
+        local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
+        local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
 
         local _brackets_identifier="[${_item_identifier:-}]"
-
         # avoid calling `_color_brackets` for performance
         local _brackets_identifier_color="\
 ${_TPUT_SGR0}\
@@ -4829,9 +4817,9 @@ ${_TPUT_SGR0}"
         _filter_message="$(_color_primary "$(_notebooks current):")"
       fi
 
-      if [[ -n "${_folder_path:-}" ]]
+      if [[ -n "${_folder_relative_path:-}" ]]
       then
-        _filter_message="${_filter_message}$(_color_primary "${_folder_path}/")"
+        _filter_message="${_filter_message}$(_color_primary "${_folder_relative_path}/")"
       fi
 
       if [[ -n "${_filter_message:-}" ]]
@@ -4860,7 +4848,7 @@ ${_TPUT_SGR0}"
 0 bookmarks.
 
 Add a bookmark:
-  $(_color_primary "${_ME} ${_maybe_folder_selector_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_selector_context_padded_right}<url>")
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
@@ -4875,7 +4863,7 @@ HEREDOC
 0 ${_type} files.
 
 Import a file:
-  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_folder_selector_padded_left}")
+  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_selector_context_padded_left}")
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
@@ -4884,11 +4872,11 @@ HEREDOC
 0 items.
 
 Add a note:
-  $(_color_primary "${_ME} add${_maybe_folder_selector_padded_left}")
+  $(_color_primary "${_ME} add${_maybe_selector_context_padded_left}")
 Add a bookmark:
-  $(_color_primary "${_ME} ${_maybe_folder_selector_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_selector_context_padded_right}<url>")
 Import a file:
-  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_folder_selector_padded_left}")
+  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_selector_context_padded_left}")
 Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
