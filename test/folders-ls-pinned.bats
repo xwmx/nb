@@ -35,54 +35,64 @@ export NB_PINNED_PATTERN="#pinned"
       --content   "Content two."
   }
 
-  run bash -c "${_NB} list"
+  run "${_NB}" ls
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 6                                     ]]
 
-  [[    "${lines[0]}"   =~  \
-          [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
-  [[    "${lines[1]}"   =~  \
-          [.*Example\ Folder/2.*].*\ 📌\ nested\ two              ]]
+  [[    "${lines[0]}"   =~  home                                  ]]
+  [[    "${lines[1]}"   =~  ----                                  ]]
   [[    "${lines[2]}"   =~  \
-          [.*3*].*\ 📌\ root\ three                               ]]
+          [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
   [[    "${lines[3]}"   =~  \
-          [.*4*].*\ 📂\ Example\ Folder                           ]]
+          [.*Example\ Folder/2.*].*\ 📌\ nested\ two              ]]
   [[    "${lines[4]}"   =~  \
-          [.*2*].*\ root\ two                                     ]]
+          [.*3*].*\ 📌\ root\ three                               ]]
   [[    "${lines[5]}"   =~  \
+          [.*4*].*\ 📂\ Example\ Folder                           ]]
+  [[    "${lines[6]}"   =~  \
+          [.*2*].*\ root\ two                                     ]]
+  [[    "${lines[7]}"   =~  \
           [.*1*].*\ root\ one                                     ]]
+  [[    "${lines[8]}"   =~  ----                                  ]]
+  [[    "${lines[9]}"   =~  nb\ add                               ]]
 
-  run bash -c "${_NB} list Example\ Folder/"
+  run "${_NB}" ls Example\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 4                                     ]]
 
-  [[    "${lines[0]}"   =~  \
-          [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
-  [[    "${lines[1]}"   =~  \
-          [.*Example\ Folder/2.*].*\ 📌\ nested\ two              ]]
+  [[    "${lines[0]}"   =~  home                                  ]]
+  [[    "${lines[1]}"   =~  ----                                  ]]
   [[    "${lines[2]}"   =~  \
-          [.*Example\ Folder/3*].*\ 📂\ Sample\ Folder            ]]
+          [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
   [[    "${lines[3]}"   =~  \
+          [.*Example\ Folder/2.*].*\ 📌\ nested\ two              ]]
+  [[    "${lines[4]}"   =~  \
+          [.*Example\ Folder/3*].*\ 📂\ Sample\ Folder            ]]
+  [[    "${lines[5]}"   =~  \
           [.*Example\ Folder/1*].*\ nested\ one                   ]]
+  [[    "${lines[6]}"   =~  ----                                  ]]
+  [[    "${lines[7]}"   =~  nb\ add\ 4/                           ]]
 
-  run bash -c "${_NB} list Example\ Folder/Sample\ Folder/"
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 2                                     ]]
 
-  [[    "${lines[0]}"   =~  \
+  [[    "${lines[0]}"   =~  home                                  ]]
+  [[    "${lines[1]}"   =~  ----                                  ]]
+  [[    "${lines[2]}"   =~  \
           [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
-  [[    "${lines[1]}"   =~  \
+  [[    "${lines[3]}"   =~  \
           [.*Example\ Folder/Sample\ Folder/2.*].*\ deep\ two     ]]
+  [[    "${lines[4]}"   =~  ----                                  ]]
+  [[    "${lines[5]}"   =~  nb\ add\ 4/3/                         ]]
 }
