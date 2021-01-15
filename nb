@@ -4046,9 +4046,9 @@ _init() {
     then
       git clone "${_repo_url}" "${NB_DIR}/home"
     else
-      mkdir -p "${NB_DIR}/home"                   &&
-        git -C "${NB_DIR}/home" init &>/dev/null  &&
-        touch "${NB_DIR}/home/.index"             &&
+      mkdir -p  "${NB_DIR}/home"                    &&
+        git -C  "${NB_DIR}/home" init   &>/dev/null &&
+        touch   "${NB_DIR}/home/.index"             &&
         _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
     fi
 
