@@ -4184,6 +4184,7 @@ Examples:
   ${_ME} example:list
 HEREDOC
 _list() {
+  local _as_pinned=0
   local _error_on_empty=0
   local _excerpt_length=3
   local _limit=
@@ -4191,7 +4192,6 @@ _list() {
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
-  local _as_pinned=0
   local _print_excerpt=0
   local _print_indicators=1
   local _reverse=0
