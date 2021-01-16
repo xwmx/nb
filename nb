@@ -496,6 +496,19 @@ HEREDOC
   fi
 }; __set_editor
 
+# Indicators ####################################################### Indicators
+
+export NB_ICON_AUDIO="${NB_ICON_AUDIO:-🔉}"
+export NB_ICON_BOOKMARK="${NB_ICON_BOOKMARK:-🔖}"
+export NB_ICON_DOCUMENT="${NB_ICON_DOCUMENT:-📄}"
+export NB_ICON_EBOOK="${NB_ICON_EBOOK:-📖}"
+export NB_ICON_ENCRYPTED="${NB_ICON_ENCRYPTED:-🔒}"
+export NB_ICON_FOLDER="${NB_ICON_FOLDER:-📂}"
+export NB_ICON_IMAGE="${NB_ICON_IMAGE:-🌄}"
+export NB_ICON_PINNED="${NB_ICON_PINNED:-📌}"
+export NB_ICON_TODO="${NB_ICON_TODO:-✅}"
+export NB_ICON_VIDEO="${NB_ICON_VIDEO:-📹}"
+
 # Color ################################################################# Color
 
 # $_COLOR_ENABLED
@@ -4164,14 +4177,14 @@ Description:
   regular expression.
 
 Indicators:
-  🔉  Audio
-  📖  Book
-  🔖  Bookmark
-  🔒  Encrypted
-  📂  Folder
-  🌄  Image
-  📄  PDF, Word, or Open Office document
-  📹  Video
+  ${NB_ICON_AUDIO}  Audio
+  ${NB_ICON_EBOOK}  Book
+  ${NB_ICON_BOOKMARK}  Bookmark
+  ${NB_ICON_ENCRYPTED}  Encrypted
+  ${NB_ICON_FOLDER}  Folder
+  ${NB_ICON_IMAGE}  Image
+  ${NB_ICON_DOCUMENT}  PDF, Word, or Open Office document
+  ${NB_ICON_VIDEO}  Video
 
 Examples:
   ${_ME} list
@@ -4630,44 +4643,44 @@ _list() {
       then
         if ((_as_pinned))
         then
-          _indicators+="📌 "
+          _indicators+="${NB_ICON_PINNED} "
         fi
 
         # TODO: `show --indicators` duplicated for performance
         if _file_is_bookmark "${_list_path}/${__basename}"
         then
-          _indicators+="🔖 "
+          _indicators+="${NB_ICON_BOOKMARK} "
         elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
         then
           if _file_is_image "${_list_path}/${__basename}"
           then
-            _indicators+="🌄 "
+            _indicators+="${NB_ICON_IMAGE} "
           elif _file_is_document "${_list_path}/${__basename}"
           then
-            _indicators+="📄 "
+            _indicators+="${NB_ICON_DOCUMENT} "
           elif [[ -d "${_list_path}/${__basename}" ]]
           then
-            _indicators+="📂 "
+            _indicators+="${NB_ICON_FOLDER} "
           elif _file_is_video "${_list_path}/${__basename}"
           then
-            _indicators+="📹 "
+            _indicators+="${NB_ICON_VIDEO} "
           elif _file_is_audio "${_list_path}/${__basename}"
           then
-            _indicators+="🔉 "
+            _indicators+="${NB_ICON_AUDIO} "
           elif [[ "${__basename}" =~ \.epub$ ]]
           then
-            _indicators+="📖 "
+            _indicators+="${NB_ICON_EBOOK} "
           fi
         fi
 
         if _file_is_encrypted "${_list_path}/${__basename}"
         then
-          _indicators+="🔒 "
+          _indicators+="${NB_ICON_ENCRYPTED} "
         fi
 
         if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
         then
-          _indicators+="✅ "
+          _indicators+="${NB_ICON_TODO} "
           _extra_length=1
         fi
       fi
@@ -4942,14 +4955,14 @@ Description:
   \`${_ME} help list\`.
 
 Indicators:
-  🔉  Audio
-  📖  Book
-  🔖  Bookmark
-  🔒  Encrypted
-  📂  Folder
-  🌄  Image
-  📄  PDF, Word, or Open Office document
-  📹  Video
+  ${NB_ICON_AUDIO}  Audio
+  ${NB_ICON_EBOOK}  Book
+  ${NB_ICON_BOOKMARK}  Bookmark
+  ${NB_ICON_ENCRYPTED}  Encrypted
+  ${NB_ICON_FOLDER}  Folder
+  ${NB_ICON_IMAGE}  Image
+  ${NB_ICON_DOCUMENT}  PDF, Word, or Open Office document
+  ${NB_ICON_VIDEO}  Video
 
 Examples:
   ${_ME}
@@ -5102,7 +5115,7 @@ _ls() {
   _ls_print_folder_header() {
     [[ -z "${1:-}" ]] && return 0
 
-    # printf "📂 " # TODO: Review
+    # printf "${NB_ICON_FOLDER} " # TODO: Review
 
     printf "%s\\n" "${1//\// ${_TPUT_SETAF_8}/${_TPUT_SGR0} }"
 
@@ -6849,30 +6862,30 @@ _show() {
 
     if _file_is_bookmark "${_path}"
     then
-      _indicators+="🔖 "
+      _indicators+="${NB_ICON_BOOKMARK} "
     elif _file_is_image "${_path}"
     then
-      _indicators+="🌄 "
+      _indicators+="${NB_ICON_IMAGE} "
     elif _file_is_document "${_path}"
     then
-      _indicators+="📄 "
+      _indicators+="${NB_ICON_DOCUMENT} "
     elif [[ -d "${_path}" ]]
     then
-      _indicators+="📂 "
+      _indicators+="${NB_ICON_FOLDER} "
     elif _file_is_video "${_path}"
     then
-      _indicators+="📹 "
+      _indicators+="${NB_ICON_VIDEO} "
     elif _file_is_audio "${_path}"
     then
-      _indicators+="🔉 "
+      _indicators+="${NB_ICON_AUDIO} "
     elif [[ "${_path}" =~ \.epub$ ]]
     then
-      _indicators+="📖 "
+      _indicators+="${NB_ICON_EBOOK} "
     fi
 
     if _file_is_encrypted "${_path}"
     then
-      _indicators+="🔒 "
+      _indicators+="${NB_ICON_ENCRYPTED} "
     fi
 
     printf "%s\\n" "${_indicators:-}"

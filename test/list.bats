@@ -396,6 +396,28 @@ Help information:
   [[ "${lines[2]}"  =~  🔖            ]]
 }
 
+@test "'list' indicators are configurable with environment variables." {
+  {
+    "${_NB}" init
+    "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
+    "${_NB}" add "two.md" --content "Example Content."
+    "${_NB}" add "three.md" --title "Three" --encrypt --password=example
+  }
+
+  NB_ICON_ENCRYPTED=🔐 NB_ICON_BOOKMARK=🏷 run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${lines[0]}"  =~  three.md.enc  ]]
+  [[ "${lines[0]}"  =~  🔐            ]]
+  [[ "${lines[1]}"  =~  two.md        ]]
+  [[ "${lines[2]}"  =~  bookmark      ]]
+  [[ "${lines[2]}"  =~  🏷            ]]
+}
+
 @test "'list' includes ids." {
   {
     "${_NB}" init
