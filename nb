@@ -4243,7 +4243,7 @@ _list() {
       --no-id*|--noid*|--no*index)
         _no_id=1
         ;;
-      --no*indicator*|--no*emoji*|--no*unicode*)
+      --no*indicator*|--no*icon*|--no*emoji*|--no*unicode*)
         _print_indicators=0
         ;;
       -n|--limit|--num|--number)
