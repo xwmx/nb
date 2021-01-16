@@ -8314,7 +8314,7 @@ _add() {
   _notebook_path="$(_notebooks current --path)"
   local _password=
   local _selector_folder_relative_path=
-  local _target_filename=
+  local _target_selector=
   local _title=
 
   while ((${#}))
@@ -8341,8 +8341,8 @@ _add() {
           _encrypt=1
         fi
         ;;
-      -f|--filename)
-        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
+      -f|--file*|--*path|--selector|--target*)
+        _target_selector="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --folder)
@@ -8383,6 +8383,7 @@ _add() {
 
   local i
   local _selector_content=
+  local _target_filename="${_target_selector:-}"
 
   for i in 0 1
   do
