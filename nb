@@ -514,7 +514,7 @@ HEREDOC
 #   |    | set / not blank | set / blank |    unset    |
 #   ----------------------------------------------------
 #   | -  |    parameter    |    blank    | replacement |
-#   | :+ |   replacement   |    blank    |    bLank    |
+#   | :+ |   replacement   |    blank    |    blank    |
 
 # $NB_ICON_AUDIO
 NB_ICON_AUDIO="${NB_ICON_AUDIO-🔉}"
