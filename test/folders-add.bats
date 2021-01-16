@@ -2,6 +2,77 @@
 
 load test_helper
 
+# --filename ##################################################################
+
+# @test "'add --filename <selector>' option with complex selector creates file." {
+#   {
+#     "${_NB}" init
+
+#     "${_NB}" notebooks add Sample\ Notebook
+#   }
+
+#   run "${_NB}" add "Sample content." \
+#     --filename "Sample Notebook:Sample Folder/Sample File.md"
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}" -eq 0 ]]
+
+#   [[    -f "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"     ]]
+
+#   cd "${NB_DIR}/Sample Notebook" || return 1
+
+#   grep -q "Sample content." \
+#     "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"
+
+#   while [[ -n "$(git status --porcelain)" ]]
+#   do
+#     sleep 1
+#   done
+#   git log | grep -q '\[nb\] Add'
+
+#   [[ "${output}" =~ Added:                          ]]
+#   [[ "${output}" =~ Sample\ Folder/Sample\ File.md  ]]
+# }
+
+# @test "'add <selector> --filename <selector>' option overrides complex selector with complex selector." {
+#   {
+#     "${_NB}" init
+
+#     "${_NB}" notebooks add Example\ Notebook
+#     "${_NB}" notebooks add Sample\ Notebook
+
+#   }
+
+#   run "${_NB}" add                                            \
+#     "Example Notebook:Example Folder/Example File.md"         \
+#     --filename "Sample Notebook:Sample Folder/Sample File.md"
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}" -eq 0 ]]
+
+#   [[ !  -e "${NB_DIR}/Example Notebook/Example Folder/Example File.md"  ]]
+#   [[    -f "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"     ]]
+
+#   cd "${NB_DIR}/Sample Notebook" || return 1
+
+#   grep -q                                                     \
+#     "Example Notebook:Example Folder/Example File.md"         \
+#     "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"
+
+#   while [[ -n "$(git status --porcelain)" ]]
+#   do
+#     sleep 1
+#   done
+#   git log | grep -q '\[nb\] Add'
+
+#   [[ "${output}" =~ Added:                          ]]
+#   [[ "${output}" =~ Sample\ Folder/Sample\ File.md  ]]
+# }
+
 # <folder>/ <filename> ########################################################
 
 @test "'add <not-a-folder-name> <string>' (no slash) creates new file containing content <not-a-folder-name> and <string> separated by a newline." {
