@@ -4,375 +4,375 @@ load test_helper
 
 # `list` not found message ####################################################
 
-@test "'list <no-match>' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two"
-    "${_NB}" add "File Three.md"  --title "Title Three"
-  }
-
-  run "${_NB}" list no-match
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 1                       ]]
-  [[ "${#lines[@]}" -eq 1                       ]]
-  [[ "${lines[0]}"  =~  Not\ found:\ .*no-match ]]
-}
-
-@test "'list <not-valid> <no-match>' exits with 1 and prints message with both." {
-  {
-    "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two"
-    "${_NB}" add "File Three.md"  --title "Title Three"
-  }
-
-  run "${_NB}" list not-valid no-match
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 1                                 ]]
-  [[ "${#lines[@]}" -eq 1                                 ]]
-  [[ "${lines[0]}"  =~  Not\ found:\ .*not-valid|no-match ]]
-}
-
-@test "'list <not-valid-selector> <no-match>' exits with 1 and prints message." {
-  {
-    "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two"
-    "${_NB}" add "File Three.md"  --title "Title Three"
-  }
-
-  run "${_NB}" list 123:x\ y\ z/not-valid.md no-match
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+# @test "'list <no-match>' exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "File One.md"    --title "Title One"
+#     "${_NB}" add "File Two.md"    --title "Title Two"
+#     "${_NB}" add "File Three.md"  --title "Title Three"
+#   }
+
+#   run "${_NB}" list no-match
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}"    -eq 1                       ]]
+#   [[ "${#lines[@]}" -eq 1                       ]]
+#   [[ "${lines[0]}"  =~  Not\ found:\ .*no-match ]]
+# }
+
+# @test "'list <not-valid> <no-match>' exits with 1 and prints message with both." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "File One.md"    --title "Title One"
+#     "${_NB}" add "File Two.md"    --title "Title Two"
+#     "${_NB}" add "File Three.md"  --title "Title Three"
+#   }
+
+#   run "${_NB}" list not-valid no-match
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}"    -eq 1                                 ]]
+#   [[ "${#lines[@]}" -eq 1                                 ]]
+#   [[ "${lines[0]}"  =~  Not\ found:\ .*not-valid|no-match ]]
+# }
+
+# @test "'list <not-valid-selector> <no-match>' exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "File One.md"    --title "Title One"
+#     "${_NB}" add "File Two.md"    --title "Title Two"
+#     "${_NB}" add "File Three.md"  --title "Title Three"
+#   }
+
+#   run "${_NB}" list 123:x\ y\ z/not-valid.md no-match
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                                ]]
-  [[    "${#lines[@]}" -eq 1                                                ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*123:x\ y\ z/not-valid.md|no-match ]]
-}
+#   [[    "${status}"    -eq 1                                                ]]
+#   [[    "${#lines[@]}" -eq 1                                                ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*123:x\ y\ z/not-valid.md|no-match ]]
+# }
 
-@test "'list <not-valid-selector> <match>' exits with 0 and prints match." {
-  {
-    "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two"
-    "${_NB}" add "File Three.md"  --title "Title Three"
-  }
-
-  run "${_NB}" list 123:x\ y\ z/not-valid.md three
+# @test "'list <not-valid-selector> <match>' exits with 0 and prints match." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "File One.md"    --title "Title One"
+#     "${_NB}" add "File Two.md"    --title "Title Two"
+#     "${_NB}" add "File Three.md"  --title "Title Three"
+#   }
+
+#   run "${_NB}" list 123:x\ y\ z/not-valid.md three
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0            ]]
-  [[    "${#lines[@]}" -eq 1            ]]
-  [[    "${lines[0]}"  =~  Title\ Three ]]
-}
+#   [[    "${status}"    -eq 0            ]]
+#   [[    "${#lines[@]}" -eq 1            ]]
+#   [[    "${lines[0]}"  =~  Title\ Three ]]
+# }
 
-@test "'list <folder>/ <no-match>' (slash) exits with 1 and prints message." {
-  {
-    "${_NB}" init
+# @test "'list <folder>/ <no-match>' (slash) exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
-  }
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#   }
 
-  run "${_NB}" list Example\ Folder/ no-match
+#   run "${_NB}" list Example\ Folder/ no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                              ]]
-  [[    "${#lines[@]}" -eq 1                                              ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
-}
+#   [[    "${status}"    -eq 1                                              ]]
+#   [[    "${#lines[@]}" -eq 1                                              ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*Example\ Folder/.*\ .*no-match  ]]
+# }
 
-@test "'list <folder> <no-match>' (no slash) exits with 0 and lists folder match." {
-  {
-    "${_NB}" init
+# @test "'list <folder> <no-match>' (no slash) exits with 0 and lists folder match." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
-  }
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#   }
 
-  run "${_NB}" list Example\ Folder no-match
+#   run "${_NB}" list Example\ Folder no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                          ]]
-  [[    "${#lines[@]}" -eq 1                          ]]
-  [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
-}
+#   [[    "${status}"    -eq 0                          ]]
+#   [[    "${#lines[@]}" -eq 1                          ]]
+#   [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
+# }
 
-@test "'list <notebook>:<no-match>' (no space) exits with 1 and prints message." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>:<no-match>' (no space) exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home:no-match
+#   run "${_NB}" list home:no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                              ]]
-  [[    "${#lines[@]}" -eq 1                                              ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*\ .*no-match  ]]
-}
+#   [[    "${status}"    -eq 1                                              ]]
+#   [[    "${#lines[@]}" -eq 1                                              ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*\ .*no-match  ]]
+# }
 
-@test "'list <notebook>: <no-match>' (space) exits with 1 and prints message." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>: <no-match>' (space) exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home: no-match
+#   run "${_NB}" list home: no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                              ]]
-  [[    "${#lines[@]}" -eq 1                                              ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*\ .*no-match  ]]
-}
+#   [[    "${status}"    -eq 1                                              ]]
+#   [[    "${#lines[@]}" -eq 1                                              ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*\ .*no-match  ]]
+# }
 
-@test "'list <notebook>:<not-valid-path> <match>' exits with 0 and lists match." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>:<not-valid-path> <match>' exits with 0 and lists match." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Root File One.md"    --title "Root Title One"
-    "${_NB}" add "Root File Two.md"    --title "Root Title Two"
-    "${_NB}" add "Root File Three.md"  --title "Root Title Three"
+#     "${_NB}" add "Root File One.md"    --title "Root Title One"
+#     "${_NB}" add "Root File Two.md"    --title "Root Title Two"
+#     "${_NB}" add "Root File Three.md"  --title "Root Title Three"
 
-    "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
-    "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
-    "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
+#     "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
+#     "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
+#     "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home:Not Valid/not-valid.md three
+#   run "${_NB}" list home:Not Valid/not-valid.md three
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                    ]]
-  [[    "${#lines[@]}" -eq 1                    ]]
-  [[    "${lines[0]}"  =~  Root\ Title\ Three   ]]
-}
+#   [[    "${status}"    -eq 0                    ]]
+#   [[    "${#lines[@]}" -eq 1                    ]]
+#   [[    "${lines[0]}"  =~  Root\ Title\ Three   ]]
+# }
 
-@test "'list <notebook>:<folder>/<not-valid-item> <match>' exits with 0 and lists nested match." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>:<folder>/<not-valid-item> <match>' exits with 0 and lists nested match." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Root File One.md"    --title "Root Title One"
-    "${_NB}" add "Root File Two.md"    --title "Root Title Two"
-    "${_NB}" add "Root File Three.md"  --title "Root Title Three"
+#     "${_NB}" add "Root File One.md"    --title "Root Title One"
+#     "${_NB}" add "Root File Two.md"    --title "Root Title Two"
+#     "${_NB}" add "Root File Three.md"  --title "Root Title Three"
 
-    "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
-    "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
-    "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
+#     "${_NB}" add "Example Folder/Nested File One.md"    --title "Nested Title One"
+#     "${_NB}" add "Example Folder/Nested File Two.md"    --title "Nested Title Two"
+#     "${_NB}" add "Example Folder/Nested File Three.md"  --title "Nested Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home:Example\ Folder/not-valid.md three
+#   run "${_NB}" list home:Example\ Folder/not-valid.md three
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                    ]]
-  [[    "${#lines[@]}" -eq 1                    ]]
-  [[    "${lines[0]}"  =~  Nested\ Title\ Three ]]
-}
+#   [[    "${status}"    -eq 0                    ]]
+#   [[    "${#lines[@]}" -eq 1                    ]]
+#   [[    "${lines[0]}"  =~  Nested\ Title\ Three ]]
+# }
 
-@test "'list <notebook>:<folder>/<no-match>' (slash, no space) exits with 1 and prints message." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>:<folder>/<no-match>' (slash, no space) exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home:Example\ Folder/no-match
+#   run "${_NB}" list home:Example\ Folder/no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                                    ]]
-  [[    "${#lines[@]}" -eq 1                                                    ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
-}
+#   [[    "${status}"    -eq 1                                                    ]]
+#   [[    "${#lines[@]}" -eq 1                                                    ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
+# }
 
-@test "'list <notebook>:<folder>/ <no-match>' (slash, space) exits with 1 and prints message." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>:<folder>/ <no-match>' (slash, space) exits with 1 and prints message." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home:Example\ Folder/ no-match
+#   run "${_NB}" list home:Example\ Folder/ no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 1                                                    ]]
-  [[    "${#lines[@]}" -eq 1                                                    ]]
-  [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
-}
+#   [[    "${status}"    -eq 1                                                    ]]
+#   [[    "${#lines[@]}" -eq 1                                                    ]]
+#   [[    "${lines[0]}"  =~  Not\ found:\ .*home:.*Example\ Folder/.*\ .*no-match ]]
+# }
 
-@test "'list <notebook>:<folder> <no-match>' (no slash) exits with 0 and lists folder match." {
-  {
-    "${_NB}" init
+# @test "'list <notebook>:<folder> <no-match>' (no slash) exits with 0 and lists folder match." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
-    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
-    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+#     "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+#     "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+#     "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+#     "${_NB}" notebooks add "one"
+#     "${_NB}" use "one"
 
-    [[ "$("${_NB}" notebooks current)" == "one" ]]
-  }
+#     [[ "$("${_NB}" notebooks current)" == "one" ]]
+#   }
 
-  run "${_NB}" list home:Example\ Folder no-match
+#   run "${_NB}" list home:Example\ Folder no-match
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                          ]]
-  [[    "${#lines[@]}" -eq 1                          ]]
-  [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
-}
+#   [[    "${status}"    -eq 0                          ]]
+#   [[    "${#lines[@]}" -eq 1                          ]]
+#   [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
+# }
 
-# `list` edge cases ###########################################################
+# # `list` edge cases ###########################################################
 
-@test "'list <id> <no-match>' exits with 0 and lists matching file." {
-  {
-    "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two"
-    "${_NB}" add "File Three.md"  --title "Title Three"
-  }
+# @test "'list <id> <no-match>' exits with 0 and lists matching file." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "File One.md"    --title "Title One"
+#     "${_NB}" add "File Two.md"    --title "Title Two"
+#     "${_NB}" add "File Three.md"  --title "Title Three"
+#   }
 
-  run "${_NB}" list not-valid 1
+#   run "${_NB}" list not-valid 1
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${lines[0]}"  =~  Title\ One    ]]
+#   [[ "${status}"    -eq 0             ]]
+#   [[ "${lines[0]}"  =~  Title\ One    ]]
 
-  run "${_NB}" list 2 -x
+#   run "${_NB}" list 2 -x
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${lines[0]}"  =~  Title\ Two    ]]
+#   [[ "${status}"    -eq 0             ]]
+#   [[ "${lines[0]}"  =~  Title\ Two    ]]
 
-  run "${_NB}" list 3 non-valid
+#   run "${_NB}" list 3 non-valid
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${lines[0]}"  =~  Title\ Three  ]]
-}
+#   [[ "${status}"    -eq 0             ]]
+#   [[ "${lines[0]}"  =~  Title\ Three  ]]
+# }
 
-# `list` (empty) ##############################################################
+# # `list` (empty) ##############################################################
 
-@test "'list' (empty) exits with 0 and lists files." {
-  {
-    "${_NB}" init
-  }
+# @test "'list' (empty) exits with 0 and lists files." {
+#   {
+#     "${_NB}" init
+#   }
 
-  run "${_NB}" list
+#   run "${_NB}" list
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="0 items.
+#   _expected="0 items.
 
-Add a note:
-  $(_color_primary 'nb add')
-Add a bookmark:
-  $(_color_primary "nb <url>")
-Import a file:
-  $(_color_primary "nb import (<path> | <url>)")
-Help information:
-  $(_color_primary 'nb help')"
+# Add a note:
+#   $(_color_primary 'nb add')
+# Add a bookmark:
+#   $(_color_primary "nb <url>")
+# Import a file:
+#   $(_color_primary "nb import (<path> | <url>)")
+# Help information:
+#   $(_color_primary 'nb help')"
 
-  [[ "${status}"    -eq 0           ]]
-  [[ "${_expected}" ==  "${output}" ]]
-}
+#   [[ "${status}"    -eq 0           ]]
+#   [[ "${_expected}" ==  "${output}" ]]
+# }
 
-# `list` ######################################################################
+# # `list` ######################################################################
 
-@test "'list' exits with 0 and lists files in reverse order." {
-  {
-    "${_NB}" init
-    "${_NB}" add "one.md"   --title "one"
-    "${_NB}" add "two.md"   --title "two"
-    "${_NB}" add "three.md" --title "three"
-  }
+# @test "'list' exits with 0 and lists files in reverse order." {
+#   {
+#     "${_NB}" init
+#     "${_NB}" add "one.md"   --title "one"
+#     "${_NB}" add "two.md"   --title "two"
+#     "${_NB}" add "three.md" --title "three"
+#   }
 
-  run "${_NB}" list
+#   run "${_NB}" list
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+#   [[ "${status}"    -eq 0     ]]
 
-  [[ "${lines[0]}"  =~  three ]]
-  [[ "${lines[1]}"  =~  two   ]]
-  [[ "${lines[2]}"  =~  one   ]]
-}
+#   [[ "${lines[0]}"  =~  three ]]
+#   [[ "${lines[1]}"  =~  two   ]]
+#   [[ "${lines[2]}"  =~  one   ]]
+# }
 
 @test "'list' includes indicators." {
   {
@@ -387,13 +387,22 @@ Help information:
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
+  [[ "${status}"    -eq 0                                 ]]
 
-  [[ "${lines[0]}"  =~  three.md.enc  ]]
-  [[ "${lines[0]}"  =~  🔒            ]]
-  [[ "${lines[1]}"  =~  two.md        ]]
-  [[ "${lines[2]}"  =~  bookmark      ]]
-  [[ "${lines[2]}"  =~  🔖            ]]
+  [[ "${lines[0]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc     ]]
+  [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
+  [[ "${lines[2]}"  =~  \[.*1.*\].*\ 🔖\ one.bookmark.md  ]]
+
+  run "${_NB}" list --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${lines[0]}"  =~  \[3\]\ 🔒\ three.md.enc           ]]
+  [[ "${lines[1]}"  =~  \[2\]\ two.md                     ]]
+  [[ "${lines[2]}"  =~  \[1\]\ 🔖\ one.bookmark.md        ]]
 }
 
 @test "'list' indicators are configurable with environment variables." {
@@ -409,13 +418,53 @@ Help information:
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
+  [[ "${status}"    -eq 0                                 ]]
 
-  [[ "${lines[0]}"  =~  three.md.enc  ]]
-  [[ "${lines[0]}"  =~  🔐            ]]
-  [[ "${lines[1]}"  =~  two.md        ]]
-  [[ "${lines[2]}"  =~  bookmark      ]]
-  [[ "${lines[2]}"  =~  🏷            ]]
+  [[ "${lines[0]}"  =~  \[.*3.*\].*\ 🔐\ three.md.enc     ]]
+  [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
+  [[ "${lines[2]}"  =~  \[.*1.*\].*\ 🏷\ one.bookmark.md  ]]
+
+  NB_ICON_ENCRYPTED=🔐 NB_ICON_BOOKMARK=🏷 run "${_NB}" list --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${lines[0]}"  =~  \[3\]\ 🔐\ three.md.enc           ]]
+  [[ "${lines[1]}"  =~  \[2\]\ two.md                     ]]
+  [[ "${lines[2]}"  =~  \[1\]\ 🏷\ one.bookmark.md        ]]
+}
+
+@test "'list' indicator padding is hidden when indicator icons are set to blank." {
+  {
+    "${_NB}" init
+    "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
+    "${_NB}" add "two.md" --content "Example Content."
+    "${_NB}" add "three.md" --title "Three" --encrypt --password=example
+  }
+
+  NB_ICON_ENCRYPTED="" NB_ICON_BOOKMARK="" run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${lines[0]}"  =~  \[.*3.*\].*\ three.md.enc         ]]
+  [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
+  [[ "${lines[2]}"  =~  \[.*1.*\].*\ one.bookmark.md      ]]
+
+  NB_ICON_ENCRYPTED="" NB_ICON_BOOKMARK="" run "${_NB}" list --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                     ]]
+
+  [[ "${lines[0]}"  =~  \[3\]\ three.md.enc               ]]
+  [[ "${lines[1]}"  =~  \[2\]\ two.md                         ]]
+  [[ "${lines[2]}"  =~  \[1\]\ one.bookmark.md            ]]
 }
 
 @test "'list' includes ids." {
