@@ -732,7 +732,7 @@ export _TPUT_COLOR_PRIMARY=
 _color_brackets() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s[%s]\\n" "${_TPUT_SGR0}" "${1:-}"
+    printf "[%s]\\n" "${1:-}"
     return 0
   fi
 
@@ -754,7 +754,7 @@ _color_brackets() {
 _color_dim() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    printf "%s\\n" "${1:-}"
     return 0
   fi
 
@@ -775,7 +775,7 @@ _color_dim() {
 _color_primary() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    printf "%s\\n" "${1:-}"
     return 0
   fi
 
@@ -808,7 +808,7 @@ _TPUT_COLOR_SECONDARY="$(tput setaf "${NB_COLOR_SECONDARY}")"
 _color_secondary() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s%s\\n" "${_TPUT_SGR0}" "${1:-}"
+    printf "%s\\n" "${1:-}"
     return 0
   fi
 
