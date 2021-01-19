@@ -8432,7 +8432,7 @@ _add() {
   local _selector_content=
   local _selector_folder_relative_path=
 
-  for i in 0 1
+  for ((i=0; i < "${#_arguments[@]}"; i++))
   do
     local _argument_content=
 
@@ -8458,26 +8458,33 @@ _add() {
            _contains "${_content_or_filename_extension:-}"          \
                      "${_common_tlds_excluding_text_file_extensions[@]}"
         then # argument contains content
-          _argument_content="${_arguments[i]}${_NEWLINE}"
+          _argument_content+="${_arguments[i]:-} "
         else
-          if [[ "${_arguments[i]}" =~ : ]]
+          if [[ "${_arguments[i]}" =~ :                     ]]
           then
-            _selector_notebook_path="$(
-              _notebook show "${_arguments[i]%%:*}" --path 2>/dev/null || :
-            )"
+            if [[ -n "${_selector_filename:-}"              ]] ||
+               [[ -n "${_selector_folder_relative_path:-}"  ]]
+            then
+              _argument_content+="${_arguments[i]:-} "
+            else
+              _selector_notebook_path="$(
+                _notebook show "${_arguments[i]%%:*}" --path 2>/dev/null || :
+              )"
 
-            if [[ -n "${_selector_notebook_path}" ]]
-            then # argument is a selector with a valid notebook
-              _notebook_path="${_selector_notebook_path}"
-              _selector_relative_path="${_arguments[i]#*:}"
-            else # argument is not a selector
-              _argument_content+="${_arguments[i]:-}${_NEWLINE}"
+              if [[ -n "${_selector_notebook_path}" ]]
+              then # argument is a selector with a valid notebook
+                _notebook_path="${_selector_notebook_path}"
+                _selector_relative_path="${_arguments[i]#*:}"
+              else # argument is not a selector
+                _argument_content+="${_arguments[i]:-} "
+              fi
             fi
           fi
 
-          if [[ -z "${_argument_content:-}"           ]]
+          if [[ -z "${_argument_content:-}"                 ]]
           then # still a candidate selector
-            if [[ "${_selector_relative_path:-}" =~ / ]]
+            if [[ "${_selector_relative_path:-}" =~ /       ]] &&
+               [[ -z "${_selector_folder_relative_path:-}"  ]]
             then # argument appears to contain a relative path
               _selector_folder_relative_path="${_selector_relative_path%\/*}"
             fi
@@ -8490,11 +8497,14 @@ _add() {
                }
             then
               _selector_filename="${_selector_relative_path##*\/}"
-            elif [[ !   "${_selector_relative_path}" =~ /$ ]] &&
-                 [[ -z  "${_selector_notebook_path:-}"    ]]
+            elif [[ -n "${_selector_content:-}"             ]]
+            then
+              _argument_content+="${_arguments[i]:-} "
+            elif [[ !   "${_selector_relative_path}" =~ /$  ]] &&
+                 [[ -z  "${_selector_notebook_path:-}"      ]]
             then
               _selector_folder_relative_path=""
-              _argument_content+="${_arguments[i]:-}${_NEWLINE}"
+              _argument_content+="${_arguments[i]:-} "
             fi
           fi
         fi
@@ -8509,7 +8519,7 @@ _add() {
 
   if [[ -n "${_selector_content:-}"   ]]
   then
-    _content="${_selector_content%${_NEWLINE}}"
+    _content="${_selector_content%\ }"
   fi
 
   # Filename

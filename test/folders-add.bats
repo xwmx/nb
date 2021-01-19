@@ -2,6 +2,50 @@
 
 load test_helper
 
+# arguments ##################################################################
+
+@test "'add <selector-with-folder>/ --filename <relative-path> --folder <folder> <notebook> <folder>' (slash) creates file at <selector-with-folder>/<folder>/<relative-path> containing <notebook> and <folder> as content." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Test Folder" --type "folder"
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" add          \
+    "Example Folder/"       \
+    "Example Notebook:"     \
+    "Content Folder/"       \
+    "Example content."      \
+    --folder "Demo Folder"  \
+    --filename "Sample Folder/Sample File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[    -f "${NB_DIR}/home/Example Folder/Demo Folder/Sample Folder/Sample File.md" ]]
+
+  cat "${NB_DIR}/home/Example Folder/Demo Folder/Sample Folder/Sample File.md"
+
+  diff                                                                              \
+    <(cat "${NB_DIR}/home/Example Folder/Demo Folder/Sample Folder/Sample File.md") \
+    <(printf "Example Notebook: Content Folder/ Example content.\\n")
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ \
+       \ .*Example\\\ Folder/Demo\\\ Folder/Sample\\\ Folder/Sample\\\ File.md ]]
+  [[ "${output}" =~ \
+       Added:\ .*[.*Example\\\ Folder/Demo\\\ Folder/Sample\\\ Folder/1.*]     ]]
+}
+
 # --filename ##################################################################
 
 @test "'add --filename <relative-path>' option creates file at <relative-path>." {
@@ -166,7 +210,7 @@ load test_helper
 
 # <folder>/ <filename> ########################################################
 
-@test "'add <not-a-folder-name> <string>' (no slash) creates new file containing content <not-a-folder-name> and <string> separated by a newline." {
+@test "'add <not-a-folder-name> <string>' (no slash) creates new file containing content <not-a-folder-name> and <string> separated by a space." {
   {
     "${_NB}" init
 
@@ -220,8 +264,8 @@ load test_helper
 
   printf "cat: '%s'\\n" "$(cat "${NB_DIR}/home/${_files[0]:-}")"
 
-  diff                                                  \
-    <(printf "Example Not A Folder\\nSample String\\n") \
+  diff                                                \
+    <(printf "Example Not A Folder Sample String\\n") \
     <(cat "${NB_DIR}/home/${_files[0]:-}")
 }
 
