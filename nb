@@ -5476,9 +5476,22 @@ _ls() {
     fi
   fi
 
+  local _display_header_and_footer=0
+
+  if [[ -z "${_arguments[*]:-}"           ]] || {
+       [[ "${_selector:-}" =~ /$|:$       ]] &&
+       [[ -n "${_selector_folder_path:-}" ]] &&
+       [[ "${#_arguments[@]}" -le 1       ]]
+  }
+  then
+    _display_header_and_footer=1
+  fi
+
   local _list_error=
 
   {
+    # List
+    # ----
     {
       # Capture error to variable while preserving standard output. More info:
       # https://unix.stackexchange.com/a/474195
@@ -5563,16 +5576,8 @@ _ls() {
       fi
     }
   } | {
-    local _display_header_and_footer=0
-
-    if [[ -z "${_arguments[*]:-}"           ]] || {
-         [[ "${_selector:-}" =~ /$|:$       ]] &&
-         [[ -n "${_selector_folder_path:-}" ]] &&
-         [[ "${#_arguments[@]}" -le 1       ]]
-    }
-    then
-      _display_header_and_footer=1
-    fi
+    # Header
+    # ------
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
@@ -5588,6 +5593,12 @@ _ls() {
 
     cat
 
+  } | {
+    # Footer
+    # ------
+
+    cat
+
     if ((NB_FOOTER)) && ((_display_header_and_footer))
     then
       _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
@@ -5598,7 +5609,6 @@ _ls() {
       else
         cat
       fi
-
   if ((_fast_exit))
   then
     exit 0
