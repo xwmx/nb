@@ -4,74 +4,165 @@ load test_helper
 
 # --filename ##################################################################
 
-# @test "'add --filename <selector>' option with complex selector creates file." {
-#   {
-#     "${_NB}" init
+@test "'add --filename <relative-path>' option creates file at <relative-path>." {
+  {
+    "${_NB}" init
+  }
 
-#     "${_NB}" notebooks add Sample\ Notebook
-#   }
+  run "${_NB}" add    \
+    "Sample content." \
+    --filename "Sample Folder/Sample File.md"
 
-#   run "${_NB}" add "Sample content." \
-#     --filename "Sample Notebook:Sample Folder/Sample File.md"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  [[ "${status}" -eq 0 ]]
 
-#   [[ "${status}" -eq 0 ]]
+  [[    -f "${NB_DIR}/home/Sample Folder/Sample File.md" ]]
 
-#   [[    -f "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"     ]]
+  cd "${NB_DIR}/home" || return 1
 
-#   cd "${NB_DIR}/Sample Notebook" || return 1
+  grep -q "Sample content." "${NB_DIR}/home/Sample Folder/Sample File.md"
 
-#   grep -q "Sample content." \
-#     "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
 
-#   while [[ -n "$(git status --porcelain)" ]]
-#   do
-#     sleep 1
-#   done
-#   git log | grep -q '\[nb\] Add'
+  [[ "${output}" =~ \
+       Added:\ .*[.*Sample\\\ Folder/1.*].*\ .*Sample\\\ Folder/Sample\\\ File.md ]]
+}
 
-#   [[ "${output}" =~ Added:                          ]]
-#   [[ "${output}" =~ Sample\ Folder/Sample\ File.md  ]]
-# }
+@test "'add <selector-with-filename> --filename <relative-path>' option overrides selector with <relative-path>." {
+  {
+    "${_NB}" init
+  }
 
-# @test "'add <selector> --filename <selector>' option overrides complex selector with complex selector." {
-#   {
-#     "${_NB}" init
+  run "${_NB}" add                    \
+    "Example Folder/Example File.md"  \
+    --filename "Sample Folder/Sample File.md"
 
-#     "${_NB}" notebooks add Example\ Notebook
-#     "${_NB}" notebooks add Sample\ Notebook
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   }
+  [[ "${status}" -eq 0 ]]
 
-#   run "${_NB}" add                                            \
-#     "Example Notebook:Example Folder/Example File.md"         \
-#     --filename "Sample Notebook:Sample Folder/Sample File.md"
+  [[ !  -e "${NB_DIR}/home/Example Folder/Example File.md"  ]]
+  [[    -f "${NB_DIR}/home/Sample Folder/Sample File.md"    ]]
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  cd "${NB_DIR}/home" || return 1
 
-#   [[ "${status}" -eq 0 ]]
+  grep -q "Example Folder/Example File.md" "${NB_DIR}/home/Sample Folder/Sample File.md"
 
-#   [[ !  -e "${NB_DIR}/Example Notebook/Example Folder/Example File.md"  ]]
-#   [[    -f "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"     ]]
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
 
-#   cd "${NB_DIR}/Sample Notebook" || return 1
+  [[ "${output}" =~ \
+       Added:\ .*[.*Sample\\\ Folder/1.*].*\ .*Sample\\\ Folder/Sample\\\ File.md ]]
+}
 
-#   grep -q                                                     \
-#     "Example Notebook:Example Folder/Example File.md"         \
-#     "${NB_DIR}/Sample Notebook/Sample Folder/Sample File.md"
+@test "'add <selector-with-folder>/ --filename <relative-path>' (slash) creates file at <selector-with-folder>/<relative-path>." {
+  {
+    "${_NB}" init
+  }
 
-#   while [[ -n "$(git status --porcelain)" ]]
-#   do
-#     sleep 1
-#   done
-#   git log | grep -q '\[nb\] Add'
+  run "${_NB}" add    \
+    "Example Folder/" \
+    --filename "Sample Folder/Sample File.md"
 
-#   [[ "${output}" =~ Added:                          ]]
-#   [[ "${output}" =~ Sample\ Folder/Sample\ File.md  ]]
-# }
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[ !  -e "${NB_DIR}/home/Example Folder/Sample File.md"               ]]
+  [[    -f "${NB_DIR}/home/Example Folder/Sample Folder/Sample File.md" ]]
+
+  cd "${NB_DIR}/home" || return 1
+
+  grep -q  "mock_editor"  "${NB_DIR}/home/Example Folder/Sample Folder/Sample File.md"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ \
+       \ .*Example\\\ Folder/Sample\\\ Folder/Sample\\\ File.md ]]
+  [[ "${output}" =~ \
+       Added:\ .*[.*Example\\\ Folder/Sample\\\ Folder/1.*]     ]]
+}
+
+@test "'add <selector-with-folder>/ --filename <relative-path> --folder <folder>' (slash) creates file at <selector-with-folder>/<folder>/<relative-path>." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add          \
+    "Example Folder/"       \
+    --folder "Demo Folder"  \
+    --filename "Sample Folder/Sample File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[    -f "${NB_DIR}/home/Example Folder/Demo Folder/Sample Folder/Sample File.md" ]]
+
+  cd "${NB_DIR}/home" || return 1
+
+  grep -q  "mock_editor"  "${NB_DIR}/home/Example Folder/Demo Folder/Sample Folder/Sample File.md"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ \
+       \ .*Example\\\ Folder/Demo\\\ Folder/Sample\\\ Folder/Sample\\\ File.md ]]
+  [[ "${output}" =~ \
+       Added:\ .*[.*Example\\\ Folder/Demo\\\ Folder/Sample\\\ Folder/1.*]     ]]
+}
+
+@test "'add <selector-with-folder> --filename <relative-path>' (no slash) creates file at relative-path> and <selector-with-folder>  as content." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add    \
+    "Example Folder"  \
+    --filename "Sample Folder/Sample File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[ !  -e "${NB_DIR}/home/Example Folder/Example File.md"  ]]
+  [[    -f "${NB_DIR}/home/Sample Folder/Sample File.md"    ]]
+
+  cd "${NB_DIR}/home" || return 1
+
+  grep -q             \
+    "Example Folder"  \
+    "${NB_DIR}/home/Sample Folder/Sample File.md"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ \
+       Added:\ .*[.*Sample\\\ Folder/1.*].*\ .*Sample\\\ Folder/Sample\\\ File.md ]]
+}
 
 # <folder>/ <filename> ########################################################
 

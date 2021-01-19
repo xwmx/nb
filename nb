@@ -8353,15 +8353,14 @@ Shortcut Alias: \`a\`
 HEREDOC
 _add() {
   local _arguments=()
-  local _content_or_filename_extension=
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
+  local _option_folder_relative_path=
+  local _option_relative_path=
   local _password=
-  local _selector_folder_relative_path=
-  local _target_selector=
   local _title=
 
   while ((${#}))
@@ -8388,12 +8387,12 @@ _add() {
           _encrypt=1
         fi
         ;;
-      -f|--file*|--*path|--selector|--target*)
-        _target_selector="$(_option_get_value "${__arg}" "${__val:-}")"
+      -f|--file*|--*path|--target*)
+        _option_relative_path="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --folder)
-        _selector_folder_relative_path="$(
+        _option_folder_relative_path="$(
           _option_get_value "${__arg}" "${__val:-}" | sed -e 's/\/$//'
         )"
         shift
@@ -8421,7 +8420,7 @@ _add() {
     shift
   done
 
-  local _common_non_text_file_extension_tlds=(
+  local _common_tlds_excluding_text_file_extensions=(
     app agency au com company biz blog buzz ca cloud club de design dev cf ch
     cn edu email es fr fun ga gov guru icu info it jp link life live ly media
     mil net new nl no online nyc page rocks ru se shop site solutions space
@@ -8429,38 +8428,38 @@ _add() {
   )
 
   local i
+  local _selector_filename=
   local _selector_content=
-  local _target_filename="${_target_selector:-}"
+  local _selector_folder_relative_path=
 
   for i in 0 1
   do
     local _argument_content=
 
     if [[ -n "${_arguments[i]:-}" ]]
-    then
-      if ((i))                              &&
-         [[ -z "${_selector_content:-}" ]]  &&
-         [[ -n "${_target_filename:-}"  ]]
-      then
+    then # argument is not blank
+      if ((i))                                &&
+         [[ -z "${_selector_content:-}"   ]]  &&
+         [[ -n "${_selector_filename:-}"  ]]
+      then # argument #2 and the first argument was a selector with filename
         _argument_content+="${_arguments[i]:-}"
       else
         local _content_or_filename_extension=
         local _selector_notebook_path=
+        local _selector_relative_path="${_arguments[i]}"
 
         if [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$ ]]
-        then
+        then # argument appears to be a file extension
           _content_or_filename_extension="${_arguments[i]##*\.}"
         fi
 
-        if  _string_is_url    "${_arguments[i]:-}"                  ||
-            _string_is_email  "${_arguments[i]:-}"                  ||
-            _contains "${_content_or_filename_extension:-}"         \
-                      "${_common_non_text_file_extension_tlds[@]}"
-        then
+        if _string_is_url    "${_arguments[i]:-}"                   ||
+           _string_is_email  "${_arguments[i]:-}"                   ||
+           _contains "${_content_or_filename_extension:-}"          \
+                     "${_common_tlds_excluding_text_file_extensions[@]}"
+        then # argument contains content
           _argument_content="${_arguments[i]}${_NEWLINE}"
         else
-          local _selector_target="${_arguments[i]}"
-
           if [[ "${_arguments[i]}" =~ : ]]
           then
             _selector_notebook_path="$(
@@ -8468,30 +8467,33 @@ _add() {
             )"
 
             if [[ -n "${_selector_notebook_path}" ]]
-            then
+            then # argument is a selector with a valid notebook
               _notebook_path="${_selector_notebook_path}"
-              _selector_target="${_arguments[i]#*:}"
-            else
+              _selector_relative_path="${_arguments[i]#*:}"
+            else # argument is not a selector
               _argument_content+="${_arguments[i]:-}${_NEWLINE}"
             fi
           fi
 
-          if [[ -z "${_argument_content:-}"     ]]
-          then
-            if [[ "${_selector_target:-}" =~ /  ]]
-            then
-              _selector_folder_relative_path="${_selector_target%\/*}"
+          if [[ -z "${_argument_content:-}"           ]]
+          then # still a candidate selector
+            if [[ "${_selector_relative_path:-}" =~ / ]]
+            then # argument appears to contain a relative path
+              _selector_folder_relative_path="${_selector_relative_path%\/*}"
             fi
 
-            if  [[ -z "${_target_filename}"                         ]]  && {
-                  _contains "${_file_type:-}" "folder" "directory"      ||
-                  [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|:    ]]
-            }
+            if [[ -z "${_option_relative_path}"                     ]]  &&
+               [[ -z "${_selector_filename}"                        ]]  &&
+               {
+                 _contains "${_file_type:-}" "folder" "directory"       ||
+                 [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|:     ]]
+               }
             then
-              _target_filename="${_selector_target##*\/}"
-            elif [[ !   "${_selector_target}" =~ /        ]] &&
+              _selector_filename="${_selector_relative_path##*\/}"
+            elif [[ !   "${_selector_relative_path}" =~ /$ ]] &&
                  [[ -z  "${_selector_notebook_path:-}"    ]]
             then
+              _selector_folder_relative_path=""
               _argument_content+="${_arguments[i]:-}${_NEWLINE}"
             fi
           fi
@@ -8508,6 +8510,19 @@ _add() {
   if [[ -n "${_selector_content:-}"   ]]
   then
     _content="${_selector_content%${_NEWLINE}}"
+  fi
+
+  # Filename
+  # --------
+
+  local _target_filename=
+
+  if [[ -n "${_option_relative_path:-}" ]]
+  then
+    _target_filename="${_option_relative_path##*\/}"
+  elif [[ -n "${_selector_filename:-}"  ]]
+  then
+    _target_filename="${_selector_filename:-}"
   fi
 
   if [[ -z "${_target_filename:-}"    ]]
@@ -8534,31 +8549,39 @@ _add() {
     fi
   fi
 
+  # Folder
+  # ------
+
   local _target_folder_relative_path=
-  local _target_relative_path=
+
+  if [[ "${_option_relative_path}" =~ / ]]
+  then
+    _target_folder_relative_path="${_option_relative_path%%\/*}"
+  fi
+
+  if [[ -n "${_option_folder_relative_path:-}" ]]
+  then
+    _target_folder_relative_path="${_option_folder_relative_path}/${_target_folder_relative_path:-}"
+  fi
 
   if [[ -n "${_selector_folder_relative_path:-}"    ]]
   then
-    if [[ "${_selector_folder_relative_path}" =~ /$ ]]
-    then
-      _target_folder_relative_path="$(
-        _resolve_selector_folders               \
-          "${_selector_folder_relative_path}/"  \
-          --build
-      )"
-    else
-      _target_folder_relative_path="$(
-        _resolve_selector_folders                                   \
-          "${_selector_folder_relative_path}/${_target_filename:-}" \
-          --build
-      )"
-    fi
+    _resolved_selector_folder_relative_path="$(
+      _resolve_selector_folders               \
+        "${_selector_folder_relative_path}/"  \
+        --build
+    )"
 
-    _target_relative_path="${_target_folder_relative_path}/${_target_filename:-}"
-  else
-    _target_relative_path="${_target_filename:-}"
+    if [[ -n "${_resolved_selector_folder_relative_path:-}" ]]
+    then
+      _target_folder_relative_path="${_resolved_selector_folder_relative_path:-}/${_target_folder_relative_path}"
+    fi
   fi
 
+  # Target
+  # ------
+
+  local _target_relative_path="${_target_folder_relative_path:-}/${_target_filename:-}"
   local _target_unique_relative_path=
 
   _target_unique_relative_path="$(
