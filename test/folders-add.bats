@@ -4,7 +4,7 @@ load test_helper
 
 # arguments ##################################################################
 
-@test "'add <selector-with-folder>/ --filename <relative-path> --folder <folder> <notebook> <folder>' (slash) creates file at <selector-with-folder>/<folder>/<relative-path> containing <notebook> and <folder> as content." {
+@test "'add <selector-with-folder>/ --filename <relative-path> --folder <notebook> <folder> <content>' (slash) creates file at <selector-with-folder>/<relative-path> containing <notebook>, <folder>, and <content> as content." {
   {
     "${_NB}" init
 
@@ -15,7 +15,7 @@ load test_helper
   run "${_NB}" add          \
     "Example Folder/"       \
     "Example Notebook:"     \
-    "Content Folder/"       \
+    "Test Folder/"          \
     "Example content."      \
     --folder "Demo Folder"  \
     --filename "Sample Folder/Sample File.md"
@@ -31,7 +31,7 @@ load test_helper
 
   diff                                                                              \
     <(cat "${NB_DIR}/home/Example Folder/Demo Folder/Sample Folder/Sample File.md") \
-    <(printf "Example Notebook: Content Folder/ Example content.\\n")
+    <(printf "Example Notebook: Test Folder/ Example content.\\n")
 
   cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
