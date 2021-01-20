@@ -183,6 +183,17 @@ _sed_i() {
   fi
 }
 
+# _tput()
+#
+# Usage:
+#   _tput <tput option>..
+#
+# Description:
+#   Run `tput` commands.
+_tput() {
+  tput "${@:-}" 2>/dev/null || printf ""
+}
+
 ###############################################################################
 # Debug
 ###############################################################################
@@ -248,7 +259,7 @@ _debug() {
 #   and should typically be either `echo`, `printf`, or `cat`.
 _exit_1() {
   {
-    [[ "${1:-}" == "_help" ]] || printf "%s " "$(tput setaf 1 || :)!$(tput me || :)"
+    [[ "${1:-}" == "_help" ]] || printf "%s " "$(_tput setaf 1)!$(_tput sgr0)"
     "${@}"
   } 1>&2
   exit 1
@@ -265,7 +276,7 @@ _exit_1() {
 #   `echo`, `printf`, or `cat`.
 _warn() {
   {
-    printf "%s " "$(tput setaf 1 || :)!$(tput me || :)"
+    printf "%s " "$(_tput setaf 1)!$(_tput sgr0)"
     "${@}"
   } 1>&2
 }
@@ -684,7 +695,7 @@ __load_themes() {
 # Supported Values: [0..255+]
 __set_color_primary() {
   local _colors=
-  _colors="$(tput colors || :)"
+  _colors="$(_tput colors)"
 
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
@@ -715,12 +726,12 @@ then
   # Avoid `tmux` and `less` quirks: https://unix.stackexchange.com/a/446541
   _TPUT_SGR0="$(printf '\033[m')"
 else
-  _TPUT_SGR0="$(tput me || :)"
+  _TPUT_SGR0="$(_tput sgr0)"
 fi
-export _TPUT_SMUL=          ; _TPUT_SMUL="$(tput us || :)"
-export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(tput setaf 8 || :)"
+export _TPUT_SMUL=          ; _TPUT_SMUL="$(_tput smul)"
+export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(_tput setaf 8)"
 export _TPUT_COLOR_PRIMARY=
-       _TPUT_COLOR_PRIMARY="$(tput setaf "${NB_COLOR_PRIMARY}" || :)"
+       _TPUT_COLOR_PRIMARY="$(_tput setaf "${NB_COLOR_PRIMARY}")"
 
 # _color_brackets()
 #
@@ -804,7 +815,7 @@ _color_primary() {
 # Description:
 #   Highlight the given string using the accent color.
 export _TPUT_COLOR_SECONDARY=
-_TPUT_COLOR_SECONDARY="$(tput setaf "${NB_COLOR_SECONDARY}" || :)"
+_TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
 _color_secondary() {
   if ! ((_COLOR_ENABLED))
   then
@@ -972,7 +983,7 @@ trap "_temp cleanup" EXIT
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
-_COLUMNS="$(tput cols || printf "0\\n")"
+_COLUMNS="$(_tput cols)"
 
 # $_NEWLINE
 #
@@ -12946,8 +12957,8 @@ HEREDOC
       if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]]  ||
          [[ "${_setting_name}" == "NB_COLOR_SECONDARY"    ]]
       then
-        _setting_name="$(tput setaf "${_value}" || :)${_setting_name}${_TPUT_SGR0}"
-        _value="$(tput setaf "${_value}" || :)${_value}${_TPUT_SGR0}"
+        _setting_name="$(_tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
+        _value="$(_tput setaf "${_value}")${_value}${_TPUT_SGR0}"
       elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
       then
         local _new_color=
@@ -12956,8 +12967,8 @@ HEREDOC
           NB_COLOR_PRIMARY=''         \
             "${_MY_PATH}" settings get NB_COLOR_PRIMARY
         )"
-        _setting_name="$(tput setaf "${_new_color}" || :)${_setting_name}${_TPUT_SGR0}"
-        _value="$(tput setaf "${_new_color}" || :)${_value}${_TPUT_SGR0}"
+        _setting_name="$(_tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
+        _value="$(_tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
       else
         _setting_name="$(_color_primary "${_setting_name}")"  \
         _value="$(_color_primary "${_value}")"
@@ -12988,11 +12999,11 @@ HEREDOC
           if [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
           then
             _setting_name="$(_color_primary "${_setting_name}")"
-            _default_value="$(tput setaf "${_default_value}"  || :)${_default_value}${_TPUT_SGR0}"
+            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
           elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY"  ]]
           then
-            _setting_name="$(tput setaf "${_default_value}"   || :)${_setting_name}${_TPUT_SGR0}"
-            _default_value="$(tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+            _setting_name="$(_tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
+            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
           elif [[ "${_setting_name}" == "NB_COLOR_THEME"    ]]
           then
             _new_hi_color="$(
@@ -13000,8 +13011,8 @@ HEREDOC
                 "${_MY_PATH}" settings get NB_COLOR_PRIMARY
             )"
 
-            _setting_name="$(tput setaf "${_new_hi_color}"  || :)${_setting_name}${_TPUT_SGR0}"
-            _default_value="$(tput setaf "${_new_hi_color}" || :)${_default_value}${_TPUT_SGR0}"
+            _setting_name="$(_tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
+            _default_value="$(_tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
           else
             _setting_name="$(_color_primary "${_setting_name}")"
             _default_value="$(_color_primary "${_default_value}")"
