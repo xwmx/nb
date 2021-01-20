@@ -189,7 +189,7 @@ _sed_i() {
 #   _tput <tput options>...
 #
 # Description:
-#   Run `tput` commands.
+#   Run `tput` commands. TODO: Currently does not work with `tput cols`.
 _tput() {
   tput "${@:-}" 2>/dev/null || printf ""
 }
@@ -695,7 +695,7 @@ __load_themes() {
 # Supported Values: [0..255+]
 __set_color_primary() {
   local _colors=
-  _colors="$(_tput colors)"
+  _colors="$(tput colors)"
 
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
@@ -983,7 +983,7 @@ trap "_temp cleanup" EXIT
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
-_COLUMNS="$(_tput cols)"
+_COLUMNS="$(tput cols)"
 
 # $_NEWLINE
 #
