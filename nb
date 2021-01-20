@@ -186,7 +186,7 @@ _sed_i() {
 # _tput()
 #
 # Usage:
-#   _tput <tput option>..
+#   _tput <tput options>...
 #
 # Description:
 #   Run `tput` commands.
