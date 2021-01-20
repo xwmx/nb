@@ -5489,6 +5489,7 @@ _ls() {
 
   local _list_error=
 
+  # NOTE: Pipeline structured to start List, Header, and Footer concurrently.
   {
     # List
     # ----
