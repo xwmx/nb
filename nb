@@ -7661,43 +7661,45 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       open "${_target_path}"
     fi
-  elif ((_render))                &&
-       ((_print_output))          &&
-       _command_exists "pandoc"   &&
-       _browser                   &&
-       ! ((_show_color_enabled))
-  then # `show --render --print --raw` with `pandoc` and browser available
-    pandoc "${_target_path}"
-  elif ((_render))                &&
-       ((_print_output))          &&
-       _command_exists "pandoc"   &&
-       _browser
-  then # `show --render --print` with `pandoc` and browser available
-    pandoc "${_target_path}" | _browser --dump
-  elif ((_render))                &&
-       _command_exists "pandoc"   &&
-       _browser
-  then # `show --render` with `pandoc` and browser available
-    pandoc "${_target_path}" | _browser
-  else # default
-    if ((_print_output))
-    then # `show --print [--no-color]`
-      if ((_show_color_enabled))
-      then # `show --print`
-        _highlight_syntax_if_available "${_target_path}"
-      else # `show --print --no-color`
-        cat "${_target_path}"
+  else # file is text
+    if ((_render))                  &&
+         ((_print_output))          &&
+         _command_exists "pandoc"   &&
+         _browser                   &&
+         ! ((_show_color_enabled))
+    then # `show --render --print --raw` with `pandoc` and browser available
+      pandoc "${_target_path}"
+    elif ((_render))                &&
+         ((_print_output))          &&
+         _command_exists "pandoc"   &&
+         _browser
+    then # `show --render --print` with `pandoc` and browser available
+      pandoc "${_target_path}" | _browser --dump
+    elif ((_render))                &&
+         _command_exists "pandoc"   &&
+         _browser
+    then # `show --render` with `pandoc` and browser available
+      pandoc "${_target_path}" | _browser
+    else # default
+      if ((_print_output))
+      then # `show --print [--no-color]`
+        if ((_show_color_enabled))
+        then # `show --print`
+          _highlight_syntax_if_available "${_target_path}"
+        else # `show --print --no-color`
+          cat "${_target_path}"
+        fi
+      else # `show`
+        # NOTE: Temp character is U+241F (unit separator)
+        # https://graphemica.com/%E2%90%9F
+        < "${_target_path}" sed 's/^- /-␟/g'                        \
+          | sed 's/^\* /\*␟/g'                                      \
+          | fold -s -w "${_COLUMNS}"                                \
+          | sed 's/^-␟/- /g'                                        \
+          | sed 's/^\*␟/\* /g'                                      \
+          | _highlight_syntax_if_available "${_target_path##*.}"    \
+          | _pager
       fi
-    else # `show`
-      # NOTE: Temp character is U+241F (unit separator)
-      # https://graphemica.com/%E2%90%9F
-      < "${_target_path}" sed 's/^- /-␟/g'                        \
-        | sed 's/^\* /\*␟/g'                                      \
-        | fold -s -w "${_COLUMNS}"                                \
-        | sed 's/^-␟/- /g'                                        \
-        | sed 's/^\*␟/\* /g'                                      \
-        | _highlight_syntax_if_available "${_target_path##*.}"    \
-        | _pager
     fi
   fi
 
