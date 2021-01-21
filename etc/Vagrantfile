@@ -45,6 +45,16 @@ HEREDOC
   #   centos7.vm.provision :shell, inline: $centos_setup, privileged: false
   # end
 
+  $freebsd_setup = <<-HEREDOC
+# TODO
+HEREDOC
+
+  # FreeBSD 12.2
+  # config.vm.define "freebsd122" do |freebsd122|
+  #   freebsd122.vm.box = "freebsd/FreeBSD-12.2-STABLE"
+  #   freebsd122.vm.provision :shell, inline: $freebsd_setup, privileged: false
+  # end
+
   $ubuntu_setup = <<-HEREDOC
 # install node and npm
 # sudo apt update -y
@@ -99,16 +109,6 @@ HEREDOC
   # config.vm.define "ubuntu1804" do |ubuntu1804|
   #   ubuntu1804.vm.box = "hashicorp/bionic64"
   #   ubuntu1804.vm.provision :shell, inline: $ubuntu_setup, privileged: false
-  # end
-
-  $freebsd_setup = <<-HEREDOC
-# TODO
-HEREDOC
-
-  # FreeBSD 12.2
-  # config.vm.define "freebsd122" do |freebsd122|
-  #   freebsd122.vm.box = "freebsd/FreeBSD-12.2-STABLE"
-  #   freebsd122.vm.provision :shell, inline: $freebsd_setup, privileged: false
   # end
 
   #############################################################################
