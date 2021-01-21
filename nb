@@ -4533,13 +4533,14 @@ _list() {
   ((_reverse))          && _list_files_options+=("--reverse")
   ((_sort))             && _list_files_options+=("--sort")
 
+  local _pinned_basenames=()
+  local _pinned_basenames_seen=()
+
   # display pinned items using a pattern like "#pinned"
   if [[ "${NB_PINNED_PATTERN:-}" ]] && ((_with_pinned))
   then
-    local _pinned_relative_paths=()
-
-    _pinned_relative_paths=($(
-      GIT_PAGER='' git -C "${_notebook_path}" \
+    _pinned_basenames=($(
+      GIT_PAGER='' git -C "${_list_path}"     \
         grep                                  \
         --color=never                         \
         --extended-regexp                     \
@@ -4550,15 +4551,6 @@ _list() {
         -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
         "${_list_path}"
     ))
-
-    local __pinned_path
-
-    for __pinned_path in "${_pinned_relative_paths[@]:-}"
-    do
-      [[ -z "${__pinned_path:-}" ]] && continue
-
-      _list "${__pinned_path}" --as-pinned
-    done
   fi
 
   # TODO: External local variables used in pipeline.
@@ -4587,13 +4579,16 @@ _list() {
   # ${_folder_relative_path}
   # ${_list_files_options[@]}
   # ${_list_path}
-  # ${_pinned_relative_paths[@]}
+  # ${_pinned_basenames[@]}
+  # ${_pinned_basenames_seen[@]}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
   # ${_with_pinned}
 
   # Use code blocks to capture all output for piping to pager.
   {
+    printf "%s\\n" "${_pinned_basenames[@]:-}"
+
     if [[ -n "${_selector_basename:-}"        ]] &&
        [[ "${#_selector_arguments[@]}" -le 1  ]]
     then
@@ -4610,13 +4605,6 @@ _list() {
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
-      local _relative_path="${__basename}"
-
-      if [[ -n "${_folder_relative_path:-}" ]]
-      then
-        _relative_path="${_folder_relative_path}/${__basename}"
-      fi
-
       if [[ -z "${__basename:-}" ]]
       then
         continue # exclude from list
@@ -4626,7 +4614,7 @@ _list() {
       then
         continue # exclude from list
       elif ((_with_pinned)) &&
-           _contains "${_relative_path}" "${_pinned_relative_paths[@]:-}"
+           _contains "${__basename}" "${_pinned_basenames_seen[@]:-}"
       then
         continue # exclude from list
       elif [[ -n "${_selector_basename}"                    ]] &&
@@ -4713,9 +4701,11 @@ _list() {
 
       if ((_print_indicators))
       then
-        if ((_as_pinned))
+        if ((_with_pinned)) &&
+           _contains "${__basename}" "${_pinned_basenames[@]}"
         then
           _indicators+="${_NB_ICON_PINNED:-}"
+          _pinned_basenames_seen+=("${__basename}")
         fi
 
         # TODO: `show --indicators` duplicated for performance
