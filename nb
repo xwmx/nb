@@ -7692,12 +7692,13 @@ Can't show archives. Export archive and expand to edit.\\n"
       else # `show`
         # NOTE: Temp character is U+241F (unit separator)
         # https://graphemica.com/%E2%90%9F
-        < "${_target_path}" sed 's/^- /-␟/g'                        \
-          | sed 's/^\* /\*␟/g'                                      \
-          | fold -s -w "${_COLUMNS}"                                \
-          | sed 's/^-␟/- /g'                                        \
-          | sed 's/^\*␟/\* /g'                                      \
-          | _highlight_syntax_if_available "${_target_path##*.}"    \
+        cat "${_target_path}"                                     \
+          | sed 's/^- /-␟/g'                                      \
+          | sed 's/^\* /\*␟/g'                                    \
+          | fold -s -w "${_COLUMNS}"                              \
+          | sed 's/^-␟/- /g'                                      \
+          | sed 's/^\*␟/\* /g'                                    \
+          | _highlight_syntax_if_available "${_target_path##*.}"  \
           | _pager
       fi
     fi
