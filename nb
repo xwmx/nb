@@ -4268,7 +4268,6 @@ Examples:
   ${_ME} example:list
 HEREDOC
 _list() {
-  local _as_pinned=0
   local _error_on_empty=0
   local _excerpt_length=3
   local _limit=
@@ -4329,9 +4328,6 @@ _list() {
         ;;
       --path*)
         _list_paths=1
-        ;;
-      --as*pinned)
-        _as_pinned=1
         ;;
       -s|--sort)
         _sort=1
@@ -4564,7 +4560,6 @@ _list() {
   #
   # Not affected by list path:
   #
-  # ${_as_pinned}
   # ${_excerpt_length}
   # ${_limit}
   #
