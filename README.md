@@ -369,9 +369,9 @@ environment's preferred text editor. You can change your editor using the
 files by default. The default file type can be changed to whatever you
 like using [`nb set default_extension`](#default_extension).
 
-`nb add` behaves differently depending on the type of argument it
-receives. When a filename with extension is specified, a new note
-with that filename is opened in the editor:
+`nb add` has smart argument parsing and behaves differently depending on
+the types of arguments it receives. When a filename with extension is
+specified, a new note with that filename is opened in the editor:
 
 ```bash
 nb add example.md
@@ -382,11 +382,11 @@ string as the content and the editor is not opened:
 
 ```bash
 > nb add "This is a note."
-Added: [5] 20200101000000.md
+Added: [1] 20200101000000.md
 ```
 
 `nb add <string>` is useful for quickly jotting down notes directly
-via the command line.
+via the command line. Quoting content is optional, but recommended.
 
 When no filename is specified, `nb add` uses the current datetime as
 the filename.
@@ -437,7 +437,8 @@ Added: [10] example_title.md "Example Title"
 ```
 
 Files can be created with any file type either by specifying the
-extension in the filename or via the `--type <type>` option:
+extension in the filename, the extension by itself, or via
+the `--type <type>` option:
 
 ```bash
 # open a new org mode file in the editor
@@ -445,7 +446,29 @@ nb add example.org
 
 # open a new reStructuredText file in the editor
 nb add --type rst
+
+# open a new JavaScript file in the editor
+nb add .js
 ```
+
+Combining a type argument with piped clipboard content provides a very
+convient way to save code snippets using `pbpaste`, `xclip`, or
+[`pb`](https://github.com/xwmx/pb):
+
+```bash
+# save the clipboard contents as a JavaScript file in the current notebook
+pb | nb add .js
+
+# save the clipboard contents as a Rust file in the "rust" notebook
+pb | nb a rust: .rs
+
+# save the clipboard contents as a Haskell file named "example.hs" in the
+# "snippets" notebook
+pb | nb a snippets: example.hs
+```
+
+Use [`nb show`](#show) to view code snippets with automatic syntax
+highlighting and [`nb edit`](#edit) to open in your editor.
 
 Notes can be tagged simply by adding hashtags anywhere in the document:
 
