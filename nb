@@ -4545,6 +4545,7 @@ _list() {
         --extended-regexp                     \
         --files-with-matches                  \
         --ignore-case                         \
+        --max-depth 0                         \
         --text                                \
         -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
         "${_list_path}"

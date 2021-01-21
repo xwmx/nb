@@ -6,7 +6,7 @@ export NB_PINNED_PATTERN="#pinned"
 
 # search-based pinning ########################################################
 
-@test "'NB_PINNED_PATTERN list [<folder>/]' (slash) prints items tagged with #pinned, recursively." {
+@test "'NB_PINNED_PATTERN list [<folder>/]' (slash) prints items tagged with #pinned in the current folder." {
   {
     "${_NB}" init
 
@@ -45,19 +45,15 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${lines[0]}"   =~  home                                  ]]
   [[    "${lines[1]}"   =~  ----                                  ]]
   [[    "${lines[2]}"   =~  \
-          [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
-  [[    "${lines[3]}"   =~  \
-          [.*Example\ Folder/2.*].*\ 📌\ nested\ two              ]]
-  [[    "${lines[4]}"   =~  \
           [.*3*].*\ 📌\ root\ three                               ]]
-  [[    "${lines[5]}"   =~  \
+  [[    "${lines[3]}"   =~  \
           [.*4*].*\ 📂\ Example\ Folder                           ]]
-  [[    "${lines[6]}"   =~  \
+  [[    "${lines[4]}"   =~  \
           [.*2*].*\ root\ two                                     ]]
-  [[    "${lines[7]}"   =~  \
+  [[    "${lines[5]}"   =~  \
           [.*1*].*\ root\ one                                     ]]
-  [[    "${lines[8]}"   =~  ----                                  ]]
-  [[    "${lines[9]}"   =~  nb\ add                               ]]
+  [[    "${lines[6]}"   =~  ----                                  ]]
+  [[    "${lines[7]}"   =~  nb\ add                               ]]
 
   run "${_NB}" ls Example\ Folder/
 
@@ -69,15 +65,13 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${lines[0]}"   =~  home                                  ]]
   [[    "${lines[1]}"   =~  ----                                  ]]
   [[    "${lines[2]}"   =~  \
-          [.*Example\ Folder/Sample\ Folder/1.*].*\ 📌\ deep\ one ]]
-  [[    "${lines[3]}"   =~  \
           [.*Example\ Folder/2.*].*\ 📌\ nested\ two              ]]
-  [[    "${lines[4]}"   =~  \
+  [[    "${lines[3]}"   =~  \
           [.*Example\ Folder/3*].*\ 📂\ Sample\ Folder            ]]
-  [[    "${lines[5]}"   =~  \
+  [[    "${lines[4]}"   =~  \
           [.*Example\ Folder/1*].*\ nested\ one                   ]]
-  [[    "${lines[6]}"   =~  ----                                  ]]
-  [[    "${lines[7]}"   =~  nb\ add\ 4/                           ]]
+  [[    "${lines[5]}"   =~  ----                                  ]]
+  [[    "${lines[6]}"   =~  nb\ add\ 4/                           ]]
 
 
   run "${_NB}" ls Example\ Folder/Sample\ Folder/
