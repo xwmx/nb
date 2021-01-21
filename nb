@@ -7495,6 +7495,9 @@ _show() {
 Can't show archives. Export archive and expand to edit.\\n"
   fi
 
+  # change directory to folder path to enable relative paths
+  cd "${_folder_path}"
+
   if ! _file_is_text "${_target_path}"
   then
     if [[ -d "${_target_path}"        ]]  &&
