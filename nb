@@ -4582,7 +4582,10 @@ _list() {
 
   # Use code blocks to capture all output for piping to pager.
   {
-    printf "%s\\n" "${_pinned_basenames[@]:-}"
+    if ((${#_pinned_basenames[@]}))
+    then
+      printf "%s\\n" "${_pinned_basenames[@]:-}"
+    fi
 
     if [[ -n "${_selector_basename:-}"        ]] &&
        [[ "${#_selector_arguments[@]}" -le 1  ]]
@@ -4594,16 +4597,15 @@ _list() {
   } | {
     while read -r __basename
     do
+      [[ -z "${__basename:-}" ]] && continue
+
       _filenames_count=$((_filenames_count+1))
 
       local _first_line=
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
-      if [[ -z "${__basename:-}" ]]
-      then
-        continue # exclude from list
-      elif [[ -z "${_filter_pattern:-}"                     ]] &&
+      if [[   -z "${_filter_pattern:-}"                     ]] &&
            [[ -n "${_selector_basename:-}"                  ]] &&
            [[ "${__basename}" != "${_selector_basename}"    ]]
       then
