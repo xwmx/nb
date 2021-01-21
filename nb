@@ -4541,7 +4541,9 @@ _list() {
   local _pinned_basenames_seen=()
 
   # display pinned items using a pattern like "#pinned"
-  if [[ "${NB_PINNED_PATTERN:-}" ]] && ((_with_pinned))
+  if [[ "${NB_PINNED_PATTERN:-}"  ]]  &&
+     ((_with_pinned))                 &&
+     [[ -z "${_filter_pattern:-}" ]]
   then
     _pinned_basenames=($(
       GIT_PAGER='' git -C "${_list_path}"     \
