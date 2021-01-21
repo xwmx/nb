@@ -222,19 +222,21 @@ _sed_i() {
 # _setup_remote_repo()
 #
 # Usage:
-#   _setup_remote_repo
+#   _setup_remote_repo [<branch-name>]
 #
 # Description:
 #   Initialize and add initial commit to a git repository at
 #   `$_GIT_REMOTE_URL`.
 _setup_remote_repo() {
+  local _branch_name="${1:-"master"}"
   local _pwd="${PWD}"
+
   if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
      [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/nb_test ]]
   then
     mkdir "${_GIT_REMOTE_PATH}.setup"     &&
       cd "${_GIT_REMOTE_PATH}.setup"      &&
-      git init                            &&
+      git init -b "${_branch_name}"       &&
       touch '.index'                      &&
       git add --all                       &&
       git commit -a -m "Initial commit."  &&
