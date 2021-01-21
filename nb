@@ -4707,7 +4707,7 @@ _list() {
       if ((_print_indicators))
       then
         if ((_with_pinned)) &&
-           _contains "${__basename}" "${_pinned_basenames[@]}"
+           _contains "${__basename}" "${_pinned_basenames[@]:-}"
         then
           _indicators+="${_NB_ICON_PINNED:-}"
           _pinned_basenames_seen+=("${__basename}")
