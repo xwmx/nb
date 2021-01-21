@@ -7089,6 +7089,7 @@ _show() {
   local _print_output=0
   local _password=
   local _print_added=0
+  local _print_bookmark_url=0
   local _print_filename=0
   local _print_folder_path=0
   local _print_id=0
@@ -7186,6 +7187,9 @@ _show() {
         _print_updated=1
         _skip_notebook_fallback=1
         ;;
+      --url)
+        _print_bookmark_url=1
+        ;;
       *)
         if [[ -z "${_selector:-}" ]]
         then
@@ -7202,6 +7206,12 @@ _show() {
   if [[ -z "${_selector:-}" ]]
   then
     _exit_1 _help "show"
+  fi
+
+  if ((_print_bookmark_url))
+  then
+    _bookmark url "${_selector}"
+    return 0
   fi
 
   if ((_print_selector_id))

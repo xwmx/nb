@@ -2,6 +2,72 @@
 
 load test_helper
 
+# --url #######################################################################
+
+@test "'show --url' with invalid note prints error." {
+  {
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}"
+  }
+
+  run "${_NB}" show 99 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # returns status 1
+
+  [[ "${status}" -eq 1          ]]
+
+  # prints output
+
+  [[ "${output}" =~ Not\ found  ]]
+}
+
+@test "'show --url' prints bookmark url." {
+  {
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}"
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # returns status 0
+
+  [[ "${status}" -eq  0                   ]]
+
+  # prints output
+
+  [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
+}
+
+@test "'show --url' with multiple URLs prints first url in <>." {
+  {
+    "${_NB}" init
+    "${_NB}" add example.bookmark.md \
+      --content "\
+https://example.com
+<${_BOOKMARK_URL}>
+<https://example.com>"
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # returns status 0
+
+  [[ "${status}" -eq  0                   ]]
+
+  # prints output
+
+  [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
+}
+
 # `show <notebook>` ###########################################################
 
 @test "'show <notebook>' exits with status 0 and runs ls in the notebook." {
