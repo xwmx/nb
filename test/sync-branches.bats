@@ -7,13 +7,19 @@ load test_helper
     export NB_DIR_1="${_TMP_DIR}/nbdir-1"
     export NB_DIR_2="${_TMP_DIR}/nbdir-2"
 
+    # create $NB_DIR_1
+
     export NB_DIR="${NB_DIR_1}"
 
     "${_NB}" init "${_GIT_REMOTE_URL}"
 
+    # create $NB_DIR_2
+
     export NB_DIR="${NB_DIR_2}"
 
     "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    # delete master branch in $NB_DIR_1
 
     export NB_DIR="${NB_DIR_1}"
 
@@ -22,8 +28,8 @@ load test_helper
 
     NB_AUTO_SYNC=0 "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"   ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+    [[    -f "${NB_DIR_1}/home/one.md"  ]]
+    [[ !  -f "${NB_DIR_2}/home/one.md"  ]]
   }
 
   run "${_NB}" sync
@@ -31,8 +37,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}      -eq 1                           ]]
-  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
-  [[ "${lines[0]}"  =~  example-branch              ]]
-  [[ ! "${output}"  =~  Done                        ]]
+  [[    "${status}"   -eq 1                           ]]
+  [[    "${lines[0]}" =~  Remote\ branch\ not\ found: ]]
+  [[    "${lines[0]}" =~  example-branch              ]]
+  [[ !  "${output}"   =~  Done                        ]]
 }
