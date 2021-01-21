@@ -7661,14 +7661,21 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       open "${_target_path}"
     fi
-  elif ((_render))              &&
-       ((_print_output))        &&
-       _command_exists "pandoc" &&
+  elif ((_render))                &&
+       ((_print_output))          &&
+       _command_exists "pandoc"   &&
+       _browser                   &&
+       ! ((_show_color_enabled))
+  then # `show --render --print --raw` with `pandoc` and browser available
+    pandoc "${_target_path}"
+  elif ((_render))                &&
+       ((_print_output))          &&
+       _command_exists "pandoc"   &&
        _browser
   then # `show --render --print` with `pandoc` and browser available
     pandoc "${_target_path}" | _browser --dump
-  elif ((_render))              &&
-       _command_exists "pandoc" &&
+  elif ((_render))                &&
+       _command_exists "pandoc"   &&
        _browser
   then # `show --render` with `pandoc` and browser available
     pandoc "${_target_path}" | _browser
