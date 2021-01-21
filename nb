@@ -3178,9 +3178,6 @@ HEREDOC
       return 0
     fi
 
-    local _git_branch=
-    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
-
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
     then
       if ((_prompt))
@@ -3195,6 +3192,9 @@ HEREDOC
         return 1
       fi
     fi
+
+    local _git_branch=
+    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
     if ! git -C "${_notebook_path}" show-branch \
            "remotes/origin/${_git_branch}" > /dev/null 2>&1
