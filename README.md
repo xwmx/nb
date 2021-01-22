@@ -461,10 +461,11 @@ convenient way to save code snippets using a clipboard utility such as
 pb | nb add .js
 
 # save the clipboard contents as a Rust file in the "rust" notebook
+# using the shortcut alias `a`
 pb | nb a rust: .rs
 
 # save the clipboard contents as a Haskell file named "example.hs" in the
-# "snippets" notebook
+# "snippets" notebook using the shortcut alias `a`
 pb | nb a snippets: example.hs
 ```
 
