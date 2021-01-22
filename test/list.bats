@@ -2,6 +2,68 @@
 
 load test_helper
 
+# `list` edge cases ###########################################################
+
+@test "'list --archived / --unarchived' ignores options." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list --archived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  Title\ Three  ]]
+
+  run "${_NB}" list --unarchived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  Title\ Three  ]]
+}
+
+@test "'list <id> <no-match>' exits with 0 and lists matching file." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list not-valid 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ One    ]]
+
+  run "${_NB}" list 2 -x
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ Two    ]]
+
+  run "${_NB}" list 3 non-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  Title\ Three  ]]
+}
+
 # `list` not found message ####################################################
 
 @test "'list <no-match>' exits with 1 and prints message." {
@@ -288,41 +350,6 @@ load test_helper
   [[    "${status}"    -eq 0                          ]]
   [[    "${#lines[@]}" -eq 1                          ]]
   [[    "${lines[0]}"  =~  1.*\ 📂\ .*Example\ Folder ]]
-}
-
-# `list` edge cases ###########################################################
-
-@test "'list <id> <no-match>' exits with 0 and lists matching file." {
-  {
-    "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two"
-    "${_NB}" add "File Three.md"  --title "Title Three"
-  }
-
-  run "${_NB}" list not-valid 1
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0             ]]
-  [[ "${lines[0]}"  =~  Title\ One    ]]
-
-  run "${_NB}" list 2 -x
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0             ]]
-  [[ "${lines[0]}"  =~  Title\ Two    ]]
-
-  run "${_NB}" list 3 non-valid
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0             ]]
-  [[ "${lines[0]}"  =~  Title\ Three  ]]
 }
 
 # `list` (empty) ##############################################################

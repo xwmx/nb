@@ -4361,9 +4361,12 @@ _list() {
         if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
         then
           _limit="${__arg:2}"
-        elif [[ "${__arg:-}" =~ ^-- ]]
+        elif [[   "${__arg:-}" =~ ^--       ]]
         then
-          _type="${__arg:2}"
+          if [[ ! "${__arg:-}" =~ archived  ]]
+          then
+            _type="${__arg:2}"
+          fi
         else
           _selector_arguments+=("${__arg:-}")
         fi
