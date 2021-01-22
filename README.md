@@ -452,7 +452,8 @@ nb add .js
 ```
 
 Combining a type argument with piped clipboard content provides a very
-convient way to save code snippets using `pbpaste`, `xclip`, or
+convenient way to save code snippets using a clipboard utility such as
+`pbpaste`, `xclip`, or
 [`pb`](https://github.com/xwmx/pb):
 
 ```bash
