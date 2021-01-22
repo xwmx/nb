@@ -3199,17 +3199,21 @@ HEREDOC
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
-    local _remote_branch=
-    _remote_branch="$(
-      git ls-remote --symref "${_remote_url:-}" HEAD \
-        | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
-    )"
-
-    if [[ "${_git_branch:-}" != "${_remote_branch:-}" ]]
+    if ! git -C "${_notebook_path}" show-branch \
+           "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      git -C "${_notebook_path}" \
-        branch -m "${_git_branch:-}" "${_remote_branch:-}" &&
-          _git_branch="${_remote_branch:-}"
+      local _remote_branch=
+      _remote_branch="$(
+        git ls-remote --symref "${_remote_url:-}" HEAD \
+          | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
+      )"
+
+      if [[ "${_git_branch:-}" != "${_remote_branch:-}" ]]
+      then
+        git -C "${_notebook_path}" \
+          branch -m "${_git_branch:-}" "${_remote_branch:-}" &&
+            _git_branch="${_remote_branch:-}"
+      fi
     fi
 
     if ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
