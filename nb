@@ -5638,11 +5638,11 @@ _ls() {
              }
           then
             _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
-          fi
 
-          if ! ((${NB_FOLDER_HEADER:-0}))
-          then
-            _ls_print_folder_header "${_selector_folder_path:-}"
+            if ! ((${NB_FOLDER_HEADER:-0}))
+            then
+              _ls_print_folder_header "${_selector_folder_path:-}"
+            fi
           fi
 
           _list "${_list_options[@]:-}"

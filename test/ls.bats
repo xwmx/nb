@@ -145,7 +145,6 @@ HEREDOC
 
   _filename="example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md"
 
-
   [[ -f "${NB_DIR}/home/${_filename}" ]]
 
 
@@ -208,6 +207,31 @@ HEREDOC
   [[    "${lines[0]}"   =~  Not\ found:\ .*not-valid.*\ Type:\ .*example  ]]
 }
 
+@test "'ls <folder>/ <query> --type' hides header and footer when no results are found." {
+  {
+    _setup_ls
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Folder" --type folder
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+  }
+
+  run "${_NB}" ls Example\ Folder/ not-valid --type example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                                                 ]]
+  [[    "${#lines[@]}"  -eq 1                                                 ]]
+
+  [[ !  "${lines[0]}"   =~  home                                              ]]
+  [[ !  "${lines[1]}"   =~  ---                                               ]]
+
+  [[    "${lines[0]}"   =~  \
+          Not\ found:\ .*Example\ Folder/.*\ .*not-valid.*\ Type:\ .*example  ]]
+}
+
 @test "'ls <notebook>: <query> --type' hides header and footer when no results are found." {
   {
     _setup_ls
@@ -227,6 +251,31 @@ HEREDOC
 
   [[    "${lines[0]}"   =~  \
           Not\ found:\ .*Example\ Notebook:.*\ .*not-valid.*\ Type:\ .*example  ]]
+}
+
+@test "'ls <notebook>:<folder>/ <query> --type' hides header and footer when no results are found." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" add "Example Notebook:Example Folder" --type folder
+
+    [[ -d "${NB_DIR}/Example Notebook/Example Folder" ]]
+  }
+
+  run "${_NB}" ls Example\ Notebook:Example\ Folder/ not-valid --type example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                                                   ]]
+  [[    "${#lines[@]}"  -eq 1                                                   ]]
+
+  [[ !  "${lines[0]}"   =~  home                                                ]]
+  [[ !  "${lines[1]}"   =~  ---                                                 ]]
+
+  [[    "${lines[0]}"   =~  \
+          Not\ found:\ .*Example\ Notebook:.*Example\ Folder\/.*\ .*not-valid.*\ Type:\ .*example  ]]
 }
 
 @test "'ls --type' shows header and footer when empty." {
