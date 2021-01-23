@@ -4530,7 +4530,7 @@ _list() {
     _maybe_selector_context_padded_right="${_maybe_selector_context} "
   fi
 
-  local _list_files_options=("${_list_path}")
+  local _list_files_options=()
 
   [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
   ((_reverse))          && _list_files_options+=("--reverse")
@@ -4571,6 +4571,7 @@ _list() {
   #
   # ${_excerpt_length}
   # ${_limit}
+  # ${_list_files_options[@]}
   #
   # Affected by list path / selector (Display):
   #
@@ -4580,7 +4581,6 @@ _list() {
   #
   # ${_filter_pattern}
   # ${_folder_relative_path}
-  # ${_list_files_options[@]}
   # ${_list_path}
   # ${_pinned_basenames[@]}
   # ${_selector_arguments[@]}
@@ -4599,7 +4599,7 @@ _list() {
     then
       printf "%s\\n" "${_selector_basename}"
     else
-      _list_files "${_list_files_options[@]}" || :
+      _list_files "${_list_path}" "${_list_files_options[@]}" || :
     fi
   } | {
     local _filenames_count=0
@@ -4681,7 +4681,7 @@ _list() {
           continue
         else
           _filenames_count="$(
-            _count "${_list_files_options[@]}"
+            _count "${_list_path}" "${_list_files_options[@]}"
           )"
 
           break
