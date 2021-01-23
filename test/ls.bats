@@ -4,6 +4,7 @@ load test_helper
 
 _setup_ls() {
   "${_NB}" init
+
   cat <<HEREDOC | "${_NB}" add "first.md"
 # one
 line two
@@ -22,6 +23,145 @@ line two
 line three
 line four
 HEREDOC
+}
+
+# subcommand delegation #######################################################
+
+@test "'ls <selector> --added' exits with status 0 and prints the added timestamp using _show()." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example Title"
+  }
+
+  run "${_NB}" ls 1 --added
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                 ]]
+  [[ "${output}" =~   [0-9]{4}-[0-9]{2} ]]
+}
+
+@test "'ls <selector> --updated' exits with status 0 and prints the updated timestamp using _show()." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --title "Example Title"
+  }
+
+  run "${_NB}" ls 1 --updated
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                 ]]
+  [[ "${output}" =~   [0-9]{4}-[0-9]{2} ]]
+}
+
+@test "'ls --title' with no argument exits with 0 and lists files." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls --title
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0     ]]
+  [[ "${lines[0]}"  =~  home  ]]
+  [[ "${lines[1]}"  =~  ----  ]]
+  [[ "${lines[2]}"  =~  three ]]
+  [[ "${lines[3]}"  =~  two   ]]
+  [[ "${lines[4]}"  =~  one   ]]
+}
+
+@test "'ls --content <content>' creates new note with <content> using _add()." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls --content "Example content:more/example/content.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  ls "${NB_DIR}/home/"
+
+  [[    "${status}" -eq 0      ]]
+
+  _files=($(ls "${NB_DIR}/home/"))
+  _filename="${_files[0]:-}"
+
+  [[ -f "${NB_DIR}/home/${_filename}" ]]
+
+  cat "${NB_DIR}/home/${_filename}"
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/${_filename}")  \
+    <(printf "Example content:more/example/content.md\\n")
+
+  cd "${NB_DIR}/home" || return 1
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'ls --content' with no argument exits with 0 and lists files." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls --title
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0     ]]
+  [[ "${lines[0]}"  =~  home  ]]
+  [[ "${lines[1]}"  =~  ----  ]]
+  [[ "${lines[2]}"  =~  three ]]
+  [[ "${lines[3]}"  =~  two   ]]
+  [[ "${lines[4]}"  =~  one   ]]
+}
+
+@test "'ls --title <title>' creates new note with <title> using _add()." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls --title \
+    "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  ls "${NB_DIR}/home/"
+
+  [[    "${status}" -eq 0      ]]
+
+  _filename="example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md"
+
+
+  [[ -f "${NB_DIR}/home/${_filename}" ]]
+
+
+  cat "${NB_DIR}/home/${_filename}"
+
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ \
+        \#\ Example\ Title\:\ A\*string•with\/a\\bunch\|of\?invalid\<filename\"characters\> ]]
+
+  cd "${NB_DIR}/home" || return 1
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Add'
 }
 
 # --no-header / --no-footer ###################################################

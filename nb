@@ -5378,11 +5378,13 @@ _ls() {
 
   local _all=0
   local _arguments=()
+  local _delegate_arguments=()
   local _fast_exit=0
   local _filter_patterns=()
   local _header_flags=()
   local _limit=
   local _list_options=()
+  local _maybe_type=
   local _notebook_names
   _notebook_names=($(
     _notebooks --names --no-color --unarchived --global || :
@@ -5390,7 +5392,6 @@ _ls() {
   local _selector=
   local _selector_folder_path=
   local _selector_relative_path=
-  local _maybe_type=
   local _use_pager=0
 
   while ((${#}))
@@ -5399,11 +5400,21 @@ _ls() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      --added|--updated)
+        _delegate_arguments+=("${__arg}")
+        ;;
       -a|--all)
         _all=1
         ;;
       --auto*align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
+        ;;
+      --content|--title)
+        if _option_value_is_present "${__val:-}"
+        then
+          _delegate_arguments+=("${__arg}" "${__val:-}")
+          shift
+        fi
         ;;
       --*exit*)
         _fast_exit=1
@@ -5475,6 +5486,39 @@ _ls() {
 
     shift
   done
+
+  if ((${#_delegate_arguments[@]}))
+  then
+    local i=0
+
+    for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
+    do
+      case "${_delegate_arguments[i]:-}" in
+        --added|--updated)
+          if [[ -n "${_selector:-}" ]]
+          then
+            _show "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+            return 0
+          fi
+          ;;
+        --content|--title)
+          if _option_value_is_present "${_delegate_arguments[$((i+1))]:-}"
+          then
+            _DEFERRED_SUBCOMMAND="add"
+            _DEFERRED_ARGUMENTS=(
+              "${_arguments[@]:-}"
+              "${_delegate_arguments[@]:-}"
+            )
+
+            return 0
+          fi
+          ;;
+        *)
+          _arguments+=("${_arguments[i]:-}")
+          ;;
+      esac
+    done
+  fi
 
   _list_options=(${_arguments[@]:-})
   _list_options+=("--with--pinned")
@@ -8154,7 +8198,7 @@ do
         else
           if ! _notebooks select "${__opt}"
           then
-            if [[ -n "${_SUBCOMMAND:-}" ]]
+            if [[ -n "${_SUBCOMMAND:-}" ]] || ((__PREVIOUS_OPTION_WAS_FLAG))
             then
               _ARGUMENTS+=("${__opt}")
 
