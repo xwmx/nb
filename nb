@@ -4610,6 +4610,8 @@ _list() {
     local _max_id
     _max_id="$(_index get_max_id "${_list_path}")"
 
+    local __basename
+
     while read -r __basename
     do
       [[ -z "${__basename:-}" ]] && continue
