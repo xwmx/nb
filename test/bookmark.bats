@@ -7,6 +7,8 @@ load test_helper
 @test "'bookmark' with no argument exits with 0, prints message, and lists." {
   {
     "${_NB}" init
+    "${_NB}" add "Bookmark One.bookmark.md" -c "<${_BOOKMARK_URL}>"
+    "${_NB}" add "Bookmark Two.bookmark.md" -c "<${_BOOKMARK_URL}>"
   }
 
   run "${_NB}" bookmark
@@ -14,23 +16,78 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Exits with status 0
-  [[ ${status} -eq 0          ]]
+  # exits with status 0
 
-  # Does not create note file
+  [[ "${status}" -eq 0          ]]
+
+  # does not create new file
+
   _files=($(ls "${NB_DIR}/home/"))
-  [[ "${#_files[@]}" -eq 0    ]]
 
-  # Does not create git commit
+  [[ "${#_files[@]}" -eq 2    ]]
+
+  # does not create git commit
+
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   ! git log | grep -q '\[nb\] Add'
 
-  # Prints help information
-  [[ "${lines[0]}" =~ ^Add\:  ]]
+  # prints output
+
+  [[ "${lines[0]}" =~ ^Add:\ .*nb\ \<url\>.*\ Help:\ .*nb\ help\ bookmark ]]
+  [[ "${lines[1]}" =~ [^-]------------------------------------[^-]        ]]
+}
+
+@test "'<notebook>:bookmark' with no argument exits with 0, prints message, and lists with selector in header." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add                                  \
+      "Example Notebook:Bookmark One.bookmark.md" \
+      -c "<${_BOOKMARK_URL}>"
+
+    "${_NB}" add                                  \
+      "Example Notebook:Bookmark Two.bookmark.md" \
+      -c "<${_BOOKMARK_URL}>"
+  }
+
+  run "${_NB}" Example\ Notebook:bookmark
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 0
+
+  [[ "${status}" -eq 0      ]]
+
+  # does not create new file
+
+  [[ -z "$(ls "${NB_DIR}/home/")" ]]
+
+  # does not create git commit
+
+  cd "${NB_DIR}/home" || return 1
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  ! git log | grep -q '\[nb\] Add'
+
+  # prints output
+
+  [[ "${lines[0]}" =~ \
+        ^Add:\ .*nb\ Example\\\ Notebook:\ \<url\>.*\ Help:\ .*nb\ help\ bookmark ]]
+  [[ "${lines[1]}" =~ \
+        [^-]-------------------------------------------------------[^-]           ]]
 }
 
 # <url> or <list option...> argument ##########################################

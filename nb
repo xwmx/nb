@@ -9265,14 +9265,26 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
   then
     if [[ -z "${_arguments[*]:-}" ]]
     then
+      local _line_length=36
+      local _maybe_header_selector=
+
+      if _notebooks current --selected
+      then
+        _maybe_header_selector="$(
+          _notebooks show "$(_notebooks current)" --no-color --escaped
+        ): "
+
+        _line_length="$((_line_length + "$(
+          _get_visible_length "${_maybe_header_selector}"
+        )"))"
+      fi
+
       local _header=
-      _header="Add: $(_color_primary "${_ME} <url>")"
+      _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
       _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
 
-      cat <<HEREDOC
-${_header}
-$(_color_secondary "------------------------------------")
-HEREDOC
+      printf "%s\\n" "${_header}"
+      _print_line "$(printf "%-${_line_length}s" '.')"
     fi
 
     _bookmark list "${_arguments[@]:-}"
