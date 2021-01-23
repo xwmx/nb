@@ -9287,12 +9287,12 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
             _notebooks show "$(_notebooks current)" --no-color --escaped
           ): "
 
-          local _visible_header_selector_length
-          _visible_header_selector_length="$(
+          local _padded_header_selector_length
+          _padded_header_selector_length="$(
             _get_visible_length "${_maybe_header_selector}"
           )"
 
-          _line_length="$((_line_length + _visible_header_selector_length))"
+          _line_length="$((_line_length + _padded_header_selector_length))"
         fi
 
         local _header=
