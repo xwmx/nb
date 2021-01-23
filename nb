@@ -5420,11 +5420,7 @@ _ls() {
         _fast_exit=1
         ;;
       -n|--limit|--num|--number)
-        if _option_value_is_present "${__val:-}"
-        then
-          _limit="${__val:-}"
-        fi
-
+        _limit="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       -p|--pager|--less)

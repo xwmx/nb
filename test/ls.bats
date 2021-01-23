@@ -821,6 +821,23 @@ Help information:
 
 # `ls -n <number>`, ls --limit <number>, ls --<number> ########################
 
+@test "'ls --limit' with no argument exits with 1 and prints message." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls --limit
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 1                                                 ]]
+  [[ "${#lines[@]}" -eq 1                                                 ]]
+
+  [[ "${lines[0]}"  =~  \!.*\ .*--limit.*\ requires\ a\ valid\ argument\. ]]
+}
+
 @test "'ls -n 0' exits with 0 and lists 0 files." {
   {
     _setup_ls
