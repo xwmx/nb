@@ -4530,13 +4530,6 @@ _list() {
     _maybe_selector_context_padded_right="${_maybe_selector_context} "
   fi
 
-  local _filenames_count=0
-  local _matches=0
-  local _printed_count=0
-
-  local _max_id
-  _max_id="$(_index get_max_id "${_list_path}")"
-
   local _list_files_options=("${_list_path}")
 
   [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
@@ -4544,7 +4537,6 @@ _list() {
   ((_sort))             && _list_files_options+=("--sort")
 
   local _pinned_basenames=()
-  local _pinned_basenames_seen=()
 
   # display pinned items using a pattern like "#pinned"
   if [[ "${NB_PINNED_PATTERN:-}"  ]]  &&
@@ -4567,12 +4559,6 @@ _list() {
 
   # TODO: External local variables used in pipeline.
   #
-  # Counters:
-  #
-  # ${_filenames_count}
-  # ${_matches}
-  # ${_printed_count}
-  #
   # Not affected by list path:
   #
   # ${_excerpt_length}
@@ -4580,7 +4566,6 @@ _list() {
   #
   # Affected by list path / selector (Display):
   #
-  # ${_max_id}
   # ${_maybe_selector_context}
   #
   # Affected by list path / selector (Logic):
@@ -4590,7 +4575,6 @@ _list() {
   # ${_list_files_options[@]}
   # ${_list_path}
   # ${_pinned_basenames[@]}
-  # ${_pinned_basenames_seen[@]}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
   # ${_with_pinned}
@@ -4610,6 +4594,14 @@ _list() {
       _list_files "${_list_files_options[@]}" || :
     fi
   } | {
+    local _filenames_count=0
+    local _matches=0
+    local _pinned_basenames_seen=()
+    local _printed_count=0
+
+    local _max_id
+    _max_id="$(_index get_max_id "${_list_path}")"
+
     while read -r __basename
     do
       [[ -z "${__basename:-}" ]] && continue
