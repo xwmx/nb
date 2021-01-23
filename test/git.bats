@@ -7,12 +7,11 @@ load test_helper
 @test "'git checkpoint' with no message and clean repo does not create new commit." {
   {
     "${_NB}" init
-    "${_NB}" add
+    "${_NB}" add "Example File.md" --content "Example content."
 
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    printf "New content.\\n" >> "${NB_DIR}/home/Example File.md"
 
-    printf "New content.\\n" >> "${NB_DIR}/home/${_filename}"
-    [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ New\ content ]]
+    grep -q "New content" "${NB_DIR}/home/Example File.md"
   }
 
   run "${_NB}" git checkpoint
@@ -20,27 +19,30 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
+  # returns status 0
 
-  # Creates git commit
+  [[ "${status}" -eq 0 ]]
+
+  # creates git commit
+
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   git log | grep -q -v '\[nb\] Commit'
 }
 
 @test "'git checkpoint' with no message and dirty repo creates a new commit with the default message." {
   {
     "${_NB}" init
-    "${_NB}" add
+    "${_NB}" add "Example File.md" --content "Example content."
 
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    printf "New content.\\n" >> "${NB_DIR}/home/Example File.md"
 
-    printf "New content.\\n" >> "${NB_DIR}/home/${_filename}"
-    [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ New\ content ]]
+    grep -q "New content" "${NB_DIR}/home/Example File.md"
   }
 
   run "${_NB}" git checkpoint
@@ -48,27 +50,30 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
+  # returns status 0
 
-  # Creates git commit
+  [[ "${status}" -eq 0 ]]
+
+  # creates git commit
+
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   git log | grep -q '\[nb\] Commit'
 }
 
 @test "'git checkpoint <message>' with dirty repo creates a new commit with <message>." {
   {
     "${_NB}" init
-    "${_NB}" add
+    "${_NB}" add "Example File.md" --content "Example content."
 
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    printf "New content.\\n" >> "${NB_DIR}/home/Example File.md"
 
-    printf "New content.\\n" >> "${NB_DIR}/home/${_filename}"
-    [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ New\ content ]]
+    grep -q "New content" "${NB_DIR}/home/Example File.md"
   }
 
   run "${_NB}" git checkpoint "Unique message."
@@ -76,16 +81,19 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
+  # returns status 0
 
-  # Creates git commit
+  [[ "${status}" -eq 0 ]]
+
+  # creates git commit
+
   cd "${NB_DIR}/home" || return 1
-  git log
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   git log | grep -q 'Unique message.'
 }
 
@@ -94,6 +102,7 @@ load test_helper
 @test "'git dirty' with dirty repo returns 0 and does not create commit." {
   {
     "${_NB}" init
+
     touch "${NB_DIR:?}/home/example.md"
 
     [[ -n "$(git -C "${NB_DIR:?}/home" status --porcelain)" ]]
@@ -104,11 +113,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
+  # returns status 0
 
-  # Does not create git commit
+  [[ "${status}" -eq 0 ]]
+
+  # does not create git commit
+
   sleep 1
+
   git log | grep -v -q 'Commit'
 }
 
@@ -116,6 +128,7 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
+
     touch "${NB_DIR:?}/one/example.md"
 
     [[ -n "$(git -C "${NB_DIR:?}/one" status --porcelain)" ]]
@@ -126,11 +139,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
+  # returns status 0
 
-  # Does not create git commit
+  [[ "${status}" -eq 0 ]]
+
+  # does not create git commit
+
   sleep 1
+
   git log | grep -v -q 'Commit'
 }
 
@@ -146,11 +162,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 1
-  [[ ${status} -eq 1 ]]
+  # returns status 1
 
-  # Does not create git commit
+  [[ "${status}" -eq 1 ]]
+
+  # does not create git commit
+
   sleep 1
+
   git log | grep -v -q 'Commit'
 }
 
@@ -167,10 +186,13 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 1
-  [[ ${status} -eq 1 ]]
+  # returns status 1
 
-  # Does not create git commit
+  [[ "${status}" -eq 1 ]]
+
+  # does not create git commit
+
   sleep 1
+
   git log | grep -v -q 'Commit'
 }
