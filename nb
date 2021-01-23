@@ -4572,6 +4572,7 @@ _list() {
   # ${_excerpt_length}
   # ${_limit}
   # ${_list_files_options[@]}
+  # ${_with_pinned}
   #
   # Affected by list path / selector (Display):
   #
@@ -4582,10 +4583,12 @@ _list() {
   # ${_filter_pattern}
   # ${_folder_relative_path}
   # ${_list_path}
+  # ${_maybe_selector_context}
+  # ${_maybe_selector_context_padded_left}
+  # ${_maybe_selector_context_padded_right}
   # ${_pinned_basenames[@]}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
-  # ${_with_pinned}
 
   # Use code blocks to capture all output for piping to pager.
   {
