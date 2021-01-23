@@ -9058,242 +9058,255 @@ _bookmark() {
   done
 
   # `bookmark list`
-  if [[ "${_subcommand}" == "list" ]]
-  then
-    if [[ -n "${_arguments[*]:-}" ]]
+
+  {
+    if [[ "${_subcommand}" == "list" ]]
     then
-      _list --bookmarks "${_arguments[@]}"
-      return 0
-    else
-      _list --bookmarks
-      return 0
-    fi
-  fi
-
-  # `bookmark search`
-  if [[ "${_subcommand}" == "search" ]]
-  then
-    _search --bookmarks "${_arguments[@]}"
-    return 0
-  fi
-
-  # `bookmark open`, `bookmark peek`, `bookmark url`
-  if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
-  then
-    local _relative_path
-    _relative_path="$(_show "${_selector}" --relative-path)"
-
-    local _notebook_path
-    _notebook_path="$(_notebooks current --path)"
-
-    if [[ -z "${_relative_path}" ]]
-    then
-      if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+      if [[ -n "${_arguments[*]:-}" ]]
       then
-        local _maybe_notebook="${_selector:-}"
-        _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
-
-        if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
-        then
-          _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
-        fi
-      fi
-      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
-    fi
-
-    local _target_path="${_notebook_path}/${_relative_path}"
-
-    # handle non-bookmarks
-    if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
-    then
-      if [[ "${_relative_path}" =~ \.html$ ]]
-      then
-        if [[ "${_subcommand}" == "open"  ]]
-        then
-          if _command_exists "xdg-open"
-          then
-            xdg-open "${_target_path}" && return 0
-          elif [[ "${OSTYPE}" =~ ^darwin ]]
-          then
-            open "${_target_path}" && return 0
-          fi
-        elif [[ "${_subcommand}" == "peek" ]]
-        then
-          _bookmark_view_in_terminal_browser "file://${_target_path}"
-          return 0
-        fi
-      elif [[ ! "${_relative_path}" =~ .bookmark\.md$       ]] &&
-           [[ ! "${_relative_path}" =~ .bookmark\.md\.enc$  ]]
-      then
-        if [[ "${_subcommand}" == "open" ]]
-        then
-          if [[ -d "${_target_path}" ]] &&
-             _command_exists "xdg-open"
-          then
-            xdg-open "${_target_path}" && return 0
-          elif [[ -d "${_target_path}"    ]] &&
-               [[ "${OSTYPE}" =~ ^darwin  ]]
-          then
-            open "${_target_path}" && return 0
-          elif [[ -n "${_password}" ]]
-          then
-            _edit "${_selector}" --password "${_password}"
-          else
-            _edit "${_selector}"
-          fi
-        elif [[ "${_subcommand}" == "peek" ]]
-        then
-          if [[ -n "${_password}" ]]
-          then
-            _show "${_selector}" --password "${_password}"
-          else
-            _show "${_selector}"
-          fi
-        fi
-
-        return 0
-      fi
-    fi
-
-    if _file_is_encrypted "${_target_path}"
-    then
-      local _encrypted_path=
-      _encrypted_path="${_target_path}"
-
-      if [[ -z "${_password}" ]]
-      then
-        # request password without displaying it
-        printf "%s: " "$(_color_primary "Password")"
-        read -r -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`
-      fi
-
-      if [[ -z "${_password}" ]]
-      then
-        _exit_1 printf "Password required.\\n"
-      fi
-
-      _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
-    fi
-
-    local _target_url=
-    _target_url="$(
-      awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
-        print substr($0, RSTART+1, RLENGTH-2); exit
-      }' "${_target_path}"
-    )"
-
-    if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
-    then
-      local _check_wayback=0
-      local _http_error_codes=(
-        404 408 410 451 500 502 503 504 509 520 521 523 524 525 526
-      )
-      local _http_status=
-      _http_status="$(_get_http_status "${_target_url}")"
-
-      if _contains "${_http_status}" "${_http_error_codes[@]}"
-      then
-        printf "Page no longer available: %s\\n" \
-          "$(_color_primary "${_target_url}")"
-        while true
-        do
-          IFS='' read -r -e -d $'\n' -p "\
-Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
-
-          case ${__yn} in
-            [Yy]*)
-              _check_wayback=1
-              break
-              ;;
-            *)
-              break
-              ;;
-          esac
-        done
-      fi
-
-      if ((_check_wayback))
-      then
-        local _wayback_response
-        _wayback_response="$(
-          _download_from \
-            "https://archive.org/wayback/available?url=${_target_url}"  \
-            | grep --color=never 'closest'                              \
-            | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
-            | sed -E 's/.*"url": "([^"]+)".*/\1/g' || printf ""
-        )"
-        if [[ -n "${_wayback_response:-}" ]]
-        then
-          _target_url="${_wayback_response}"
-        else
-          _exit_1 \
-            printf "No archived version available from the Wayback Machine.\\n"
-        fi
-      fi
-    fi
-
-    # `bookmark peek`
-    if [[ "${_subcommand}" == "peek" ]]
-    then
-      _bookmark_view_in_terminal_browser "${_target_url}"
-      return 0
-    # `bookmark open`
-    elif [[ "${_subcommand}" == "open" ]]
-    then
-      if _command_exists "xdg-open"
-      then
-        xdg-open "${_target_url}"
-        return 0
-      elif _command_exists "open"
-      then
-        open "${_target_url}"
+        _list --bookmarks "${_arguments[@]}"
         return 0
       else
-        _exit_1 printf \
-          "%s doesn't know how to open URLs on your system.\\n" \
-          "$(_color_primary "${_ME}")"
+        _list --bookmarks
+        return 0
       fi
-    # `bookmark url`
-    elif [[ "${_subcommand}" == "url" ]]
+    fi
+  }
+
+  # `bookmark search`
+
+  {
+    if [[ "${_subcommand}" == "search" ]]
     then
-      printf "%s\\n" "${_target_url}"
+      _search --bookmarks "${_arguments[@]}"
       return 0
     fi
-  fi
+  }
 
-  # `bookmark`
-  if [[ -z "${_url:-}" ]]
-  then
-    if [[ -z "${_arguments[*]:-}" ]]
+  # `bookmark open`, `bookmark peek`, `bookmark url`
+
+  {
+    if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
     then
-      local _line_length=36
-      local _maybe_header_selector=
+      local _relative_path
+      _relative_path="$(_show "${_selector}" --relative-path)"
 
-      if _notebooks current --selected
+      local _notebook_path
+      _notebook_path="$(_notebooks current --path)"
+
+      if [[ -z "${_relative_path}" ]]
       then
-        _maybe_header_selector="$(
-          _notebooks show "$(_notebooks current)" --no-color --escaped
-        ): "
+        if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+        then
+          local _maybe_notebook="${_selector:-}"
+          _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
 
-        _line_length="$((_line_length + "$(
-          _get_visible_length "${_maybe_header_selector}"
-        )"))"
+          if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
+          then
+            _notebooks "${_subcommand}" "${_maybe_notebook}" && return 0
+          fi
+        fi
+        _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
       fi
 
-      local _header=
-      _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
-      _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
+      local _target_path="${_notebook_path}/${_relative_path}"
 
-      printf "%s\\n" "${_header}"
-      _print_line "$(printf "%-${_line_length}s" '.')"
+      # handle non-bookmarks
+      if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+      then
+        if [[ "${_relative_path}" =~ \.html$ ]]
+        then
+          if [[ "${_subcommand}" == "open"  ]]
+          then
+            if _command_exists "xdg-open"
+            then
+              xdg-open "${_target_path}" && return 0
+            elif [[ "${OSTYPE}" =~ ^darwin ]]
+            then
+              open "${_target_path}" && return 0
+            fi
+          elif [[ "${_subcommand}" == "peek" ]]
+          then
+            _bookmark_view_in_terminal_browser "file://${_target_path}"
+            return 0
+          fi
+        elif [[ ! "${_relative_path}" =~ .bookmark\.md$       ]] &&
+             [[ ! "${_relative_path}" =~ .bookmark\.md\.enc$  ]]
+        then
+          if [[ "${_subcommand}" == "open" ]]
+          then
+            if [[ -d "${_target_path}" ]] &&
+               _command_exists "xdg-open"
+            then
+              xdg-open "${_target_path}" && return 0
+            elif [[ -d "${_target_path}"    ]] &&
+                 [[ "${OSTYPE}" =~ ^darwin  ]]
+            then
+              open "${_target_path}" && return 0
+            elif [[ -n "${_password}" ]]
+            then
+              _edit "${_selector}" --password "${_password}"
+            else
+              _edit "${_selector}"
+            fi
+          elif [[ "${_subcommand}" == "peek" ]]
+          then
+            if [[ -n "${_password}" ]]
+            then
+              _show "${_selector}" --password "${_password}"
+            else
+              _show "${_selector}"
+            fi
+          fi
+
+          return 0
+        fi
+      fi
+
+      if _file_is_encrypted "${_target_path}"
+      then
+        local _encrypted_path=
+        _encrypted_path="${_target_path}"
+
+        if [[ -z "${_password}" ]]
+        then
+          # request password without displaying it
+          printf "%s: " "$(_color_primary "Password")"
+          read -r -s _password </dev/tty
+          printf "\\n" # print newline to stop `read`
+        fi
+
+        if [[ -z "${_password}" ]]
+        then
+          _exit_1 printf "Password required.\\n"
+        fi
+
+        _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
+      fi
+
+      local _target_url=
+      _target_url="$(
+        awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
+          print substr($0, RSTART+1, RLENGTH-2); exit
+        }' "${_target_path}"
+      )"
+
+      if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+      then
+        local _check_wayback=0
+        local _http_error_codes=(
+          404 408 410 451 500 502 503 504 509 520 521 523 524 525 526
+        )
+        local _http_status=
+        _http_status="$(_get_http_status "${_target_url}")"
+
+        if _contains "${_http_status}" "${_http_error_codes[@]}"
+        then
+          printf "Page no longer available: %s\\n" \
+            "$(_color_primary "${_target_url}")"
+          while true
+          do
+            IFS='' read -r -e -d $'\n' -p "\
+Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
+
+            case ${__yn} in
+              [Yy]*)
+                _check_wayback=1
+                break
+                ;;
+              *)
+                break
+                ;;
+            esac
+          done
+        fi
+
+        if ((_check_wayback))
+        then
+          local _wayback_response
+          _wayback_response="$(
+            _download_from \
+              "https://archive.org/wayback/available?url=${_target_url}"  \
+              | grep --color=never 'closest'                              \
+              | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
+              | sed -E 's/.*"url": "([^"]+)".*/\1/g' || printf ""
+          )"
+          if [[ -n "${_wayback_response:-}" ]]
+          then
+            _target_url="${_wayback_response}"
+          else
+            _exit_1 \
+              printf "No archived version available from the Wayback Machine.\\n"
+          fi
+        fi
+      fi
+
+      # `bookmark peek`
+      if [[ "${_subcommand}" == "peek" ]]
+      then
+        _bookmark_view_in_terminal_browser "${_target_url}"
+        return 0
+      # `bookmark open`
+      elif [[ "${_subcommand}" == "open" ]]
+      then
+        if _command_exists "xdg-open"
+        then
+          xdg-open "${_target_url}"
+          return 0
+        elif _command_exists "open"
+        then
+          open "${_target_url}"
+          return 0
+        else
+          _exit_1 printf \
+            "%s doesn't know how to open URLs on your system.\\n" \
+            "$(_color_primary "${_ME}")"
+        fi
+      # `bookmark url`
+      elif [[ "${_subcommand}" == "url" ]]
+      then
+        printf "%s\\n" "${_target_url}"
+        return 0
+      fi
     fi
+  }
 
-    _bookmark list "${_arguments[@]:-}"
-    return 0
-  fi
+  # `bookmark`
+
+  {
+    if [[ -z "${_url:-}" ]]
+    then
+      if [[ -z "${_arguments[*]:-}" ]]
+      then
+        local _line_length=36
+        local _maybe_header_selector=
+
+        if _notebooks current --selected
+        then
+          _maybe_header_selector="$(
+            _notebooks show "$(_notebooks current)" --no-color --escaped
+          ): "
+
+          _line_length="$((_line_length + "$(
+            _get_visible_length "${_maybe_header_selector}"
+          )"))"
+        fi
+
+        local _header=
+        _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
+        _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
+
+        printf "%s\\n" "${_header}"
+        _print_line "$(printf "%-${_line_length}s" '.')"
+      fi
+
+      _bookmark list "${_arguments[@]:-}"
+      return 0
+    fi
+  }
 
   # `bookmark <url>`
+
   local _temp_file=
   _temp_file="$(mktemp -t nb-bookmark-tempfile.XXXXXX)"
 
