@@ -4539,8 +4539,8 @@ _list() {
   local _pinned_basenames=()
 
   # display pinned items using a pattern like "#pinned"
-  if [[ "${NB_PINNED_PATTERN:-}"  ]]  &&
-     ((_with_pinned))                 &&
+  if ((_with_pinned))                 &&
+     [[ "${NB_PINNED_PATTERN:-}"  ]]  &&
      [[ -z "${_filter_pattern:-}" ]]
   then
     _pinned_basenames=($(
