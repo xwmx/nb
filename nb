@@ -9287,9 +9287,12 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
             _notebooks show "$(_notebooks current)" --no-color --escaped
           ): "
 
-          _line_length="$((_line_length + "$(
+          local _visible_line_length
+          _visible_line_length="$(
             _get_visible_length "${_maybe_header_selector}"
-          )"))"
+          )"
+
+          _line_length="$((_line_length + _visible_line_length))"
         fi
 
         local _header=
