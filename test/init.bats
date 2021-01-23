@@ -10,12 +10,13 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "'init' exits with status 1 when '\$NB_DIR' exists as a file." {
   {
     touch "${NB_DIR}"
+
     [[ -e "${NB_DIR}" ]]
   }
 
@@ -24,12 +25,13 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ "${status}" -eq 1 ]]
 }
 
 @test "'init' exits with status 0 when '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' exists." {
   {
     mkdir -p "${NB_DIR}/home"
+
     [[ -e "${NB_DIR}/home" ]]
   }
 
@@ -38,8 +40,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ! "${output}" =~ exists  ]]
-  [[ ${status} -eq 0          ]]
+  [[ !  "${output}" =~  exists  ]]
+  [[    "${status}" -eq 0       ]]
 }
 
 @test "'init' creates '\$NB_DIR' and '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' directories." {
@@ -73,6 +75,7 @@ load test_helper
 @test "'init' exits with status 0 when '\$NBRC_PATH' exists." {
   {
     touch "${NBRC_PATH}"
+
     [[ -e "${NBRC_PATH}" ]]
   }
 
@@ -81,7 +84,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "'init' creates a .nbrc file at '\$NBRC_PATH'." {
@@ -93,11 +96,13 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   printf "%s\\n" "$(cat "${NBRC_PATH}")"
 
   [[ -e "${NBRC_PATH}" ]]
-  cat "${NBRC_PATH}" | grep -q "Configuration file for \`nb\`"
-  cat "${NBRC_PATH}" | grep -q "NB_ENCRYPTION_TOOL"
+
+  grep -q "Configuration file for \`nb\`"  "${NBRC_PATH}"
+  grep -q "NB_ENCRYPTION_TOOL"             "${NBRC_PATH}"
 }
 
 @test "'init' creates git commit." {
@@ -111,6 +116,7 @@ load test_helper
   do
     sleep 1
   done
+
   git log | grep -q '\[nb\] Initialize'
 }
 
@@ -125,11 +131,12 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _origin="$(cd "${NB_DIR}/home" && git config --get remote.origin.url)"
-  _compare "${_GIT_REMOTE_URL}" "${_origin}"
 
-  [[ -d "${NB_DIR}/home/.git"             ]]
-  [[ "${_origin}" =~  ${_GIT_REMOTE_URL}  ]]
+  diff                                      \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")  \
+    <(git -C "${NB_DIR}/home" config --get remote.origin.url)
+
+  [[ -d "${NB_DIR}/home/.git" ]]
 }
 
 # help ########################################################################
@@ -137,7 +144,7 @@ load test_helper
 @test "'help init' exits with status 0." {
   run "${_NB}" help init
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}" -eq 0 ]]
 }
 
 @test "'help init' prints help information." {
