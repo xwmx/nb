@@ -164,6 +164,299 @@ HEREDOC
   git log | grep -q '\[nb\] Add'
 }
 
+# header and footer ###########################################################
+
+@test "'ls --type' hides header and footer when results are displayed." {
+  {
+    _setup_ls
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" ls --type md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0               ]]
+  [[    "${#lines[@]}"  -eq 3               ]]
+
+  [[ !  "${lines[0]}"   =~  home            ]]
+  [[ !  "${lines[1]}"   =~  ---             ]]
+
+  [[    "${lines[0]}"   =~ [.*3.*].*\ three ]]
+  [[    "${lines[1]}"   =~ [.*2.*].*\ two   ]]
+  [[    "${lines[2]}"   =~ [.*1.*].*\ one   ]]
+}
+
+@test "'ls --type' shows header and footer when empty." {
+  {
+    _setup_ls
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" ls --type not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -ge 10                                  ]]
+
+  [[    "${lines[0]}"   =~  Example\ Notebook.*\ .*·.*\ .*home  ]]
+  [[    "${lines[1]}"   =~  ---                                 ]]
+
+  [[    "${lines[2]}"   =~  0\ not-valid\ files.                ]]
+
+  [[    "${lines[7]}"   =~  ---                                 ]]
+  [[    "${lines[8]}"   =~  nb\ add                             ]]
+}
+
+# header ######################################################################
+
+@test "'ls' includes header." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0     ]]
+  [[ "${lines[0]}"  =~  home  ]]
+}
+
+@test "'NB_HEADER=0 ls' does not include header." {
+  {
+    _setup_ls
+  }
+
+  NB_HEADER=0 run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0     ]]
+  [[ !  "${lines[0]}" =~  home  ]]
+}
+
+@test "'ls' header does not escape multi-word notebook names." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "example"
+    "${_NB}" use example
+    "${_NB}" notebooks rename home "multi word"
+
+    _notebooks=(
+      "example"
+      "multi word"
+    )
+
+    diff                                      \
+      <("${_NB}" notebooks --no-color)        \
+      <(printf "%s\\n" "${_notebooks[@]:-}")
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${lines[0]}"  =~  example     ]]
+  [[ "${lines[0]}"  =~  multi\ word ]]
+}
+
+@test "'ls' header shows added and deleted notebook." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+  [[ !  "${lines[0]}" =~  example ]]
+  [[    "${lines[0]}" =~  home    ]]
+
+  run "${_NB}" notebooks add example
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+
+  [[ "${lines[0]}"  =~  example ]]
+  [[ "${lines[0]}"  =~  home    ]]
+
+  run "${_NB}" notebooks delete home --force
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+  [[    "${lines[0]}" =~  example ]]
+  [[ !  "${lines[0]}" =~  home    ]]
+}
+
+@test "'ls' header shows externally added and deleted notebook." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+  [[ !  "${lines[0]}" =~  example ]]
+  [[    "${lines[0]}" =~  home    ]]
+
+  mkdir "${NB_DIR}/example"
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+
+  [[ "${lines[0]}"  =~  example ]]
+  [[ "${lines[0]}"  =~  home    ]]
+
+  mv "${NB_DIR}/example" "${_TMP_DIR}/"
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+  [[ !  "${lines[0]}" =~  example ]]
+  [[    "${lines[0]}" =~  home    ]]
+}
+
+# footer ######################################################################
+
+@test "'ls' includes footer." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${lines[6]}"  =~  ❯ ]]
+}
+
+@test "'NB_FOOTER=0 ls' does not include footer." {
+  {
+    _setup_ls
+  }
+
+  NB_FOOTER=0 run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+  [[ !  "${lines[6]}" =~  ❯ ]]
+}
+
+@test "'ls' footer includes command names." {
+  {
+    _setup_ls
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                 ]]
+
+  [[ "${lines[6]}"  =~  ❯                 ]]
+  [[ "${lines[6]}"  =~  nb\ add           ]]
+  [[ "${lines[6]}"  =~  nb\ \<url\>       ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ \<id\>  ]]
+}
+
+@test "'ls' footer scopes command names to a selected notebook." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "example"
+    "${_NB}" use example
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" home:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                     ]]
+
+  [[ "${lines[6]}"  =~  ❯                     ]]
+  [[ "${lines[6]}"  =~  nb\ add\ home:        ]]
+  [[ "${lines[6]}"  =~  nb\ home:\ \<url\>    ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ home:\<id\> ]]
+}
+
+@test "'ls' footer escapes multi-word selected notebook names." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "example"
+    "${_NB}" use example
+    "${_NB}" notebooks rename home "multi word"
+
+    _notebooks=(
+      "example"
+      "multi word"
+    )
+
+    diff                                      \
+      <("${_NB}" notebooks --no-color)        \
+      <(printf "%s\\n" "${_notebooks[@]:-}")
+
+    [[ "$("${_NB}" notebooks current)" == "example" ]]
+  }
+
+  run "${_NB}" multi\ word:ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+
+  [[ "${lines[6]}"  =~  ❯                               ]]
+  [[ "${lines[6]}"  =~  nb\ add\ multi\\\ word:         ]]
+  [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]] ||
+    [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
+}
+
 # --no-header / --no-footer ###################################################
 
 @test "'ls --no-header' does not include header." {
@@ -328,252 +621,6 @@ Help information:
 
   [[ "${status}"    -eq 0           ]]
   [[ "${_expected}" ==  "${output}" ]]
-}
-
-# footer ######################################################################
-
-@test "'ls' includes footer." {
-  {
-    _setup_ls
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0 ]]
-  [[ "${lines[6]}"  =~  ❯ ]]
-}
-
-@test "'NB_FOOTER=0 ls' does not include footer." {
-  {
-    _setup_ls
-  }
-
-  NB_FOOTER=0 run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"   -eq 0 ]]
-  [[ !  "${lines[6]}" =~  ❯ ]]
-}
-
-@test "'ls' footer includes command names." {
-  {
-    _setup_ls
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                 ]]
-
-  [[ "${lines[6]}"  =~  ❯                 ]]
-  [[ "${lines[6]}"  =~  nb\ add           ]]
-  [[ "${lines[6]}"  =~  nb\ \<url\>       ]]
-  [[ "${lines[6]}"  =~  nb\ edit\ \<id\>  ]]
-}
-
-@test "'ls' footer scopes command names to a selected notebook." {
-  {
-    _setup_ls
-
-    "${_NB}" notebooks add "example"
-    "${_NB}" use example
-
-    [[ "$("${_NB}" notebooks current)" == "example" ]]
-  }
-
-  run "${_NB}" home:ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                     ]]
-
-  [[ "${lines[6]}"  =~  ❯                     ]]
-  [[ "${lines[6]}"  =~  nb\ add\ home:        ]]
-  [[ "${lines[6]}"  =~  nb\ home:\ \<url\>    ]]
-  [[ "${lines[6]}"  =~  nb\ edit\ home:\<id\> ]]
-}
-
-@test "'ls' footer escapes multi-word selected notebook names." {
-  {
-    _setup_ls
-
-    "${_NB}" notebooks add "example"
-    "${_NB}" use example
-    "${_NB}" notebooks rename home "multi word"
-
-    _notebooks=(
-      "example"
-      "multi word"
-    )
-
-    diff                                      \
-      <("${_NB}" notebooks --no-color)        \
-      <(printf "%s\\n" "${_notebooks[@]:-}")
-
-    [[ "$("${_NB}" notebooks current)" == "example" ]]
-  }
-
-  run "${_NB}" multi\ word:ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                               ]]
-
-  [[ "${lines[6]}"  =~  ❯                               ]]
-  [[ "${lines[6]}"  =~  nb\ add\ multi\\\ word:         ]]
-  [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
-  [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]] ||
-    [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
-}
-
-# header ######################################################################
-
-@test "'ls' includes header." {
-  {
-    _setup_ls
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0     ]]
-  [[ "${lines[0]}"  =~  home  ]]
-}
-
-@test "'NB_HEADER=0 ls' does not include header." {
-  {
-    _setup_ls
-  }
-
-  NB_HEADER=0 run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"   -eq 0     ]]
-  [[ !  "${lines[0]}" =~  home  ]]
-}
-
-@test "'ls' header does not escape multi-word notebook names." {
-  {
-    _setup_ls
-
-    "${_NB}" notebooks add "example"
-    "${_NB}" use example
-    "${_NB}" notebooks rename home "multi word"
-
-    _notebooks=(
-      "example"
-      "multi word"
-    )
-
-    diff                                      \
-      <("${_NB}" notebooks --no-color)        \
-      <(printf "%s\\n" "${_notebooks[@]:-}")
-
-    [[ "$("${_NB}" notebooks current)" == "example" ]]
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0           ]]
-
-  [[ "${lines[0]}"  =~  example     ]]
-  [[ "${lines[0]}"  =~  multi\ word ]]
-}
-
-@test "'ls' header shows added and deleted notebook." {
-  {
-    _setup_ls
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"   -eq 0       ]]
-
-  [[ !  "${lines[0]}" =~  example ]]
-  [[    "${lines[0]}" =~  home    ]]
-
-  run "${_NB}" notebooks add example
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0       ]]
-
-  [[ "${lines[0]}"  =~  example ]]
-  [[ "${lines[0]}"  =~  home    ]]
-
-  run "${_NB}" notebooks delete home --force
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"   -eq 0       ]]
-
-  [[    "${lines[0]}" =~  example ]]
-  [[ !  "${lines[0]}" =~  home    ]]
-}
-
-@test "'ls' header shows externally added and deleted notebook." {
-  {
-    _setup_ls
-  }
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"   -eq 0       ]]
-
-  [[ !  "${lines[0]}" =~  example ]]
-  [[    "${lines[0]}" =~  home    ]]
-
-  mkdir "${NB_DIR}/example"
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0       ]]
-
-  [[ "${lines[0]}"  =~  example ]]
-  [[ "${lines[0]}"  =~  home    ]]
-
-  mv "${NB_DIR}/example" "${_TMP_DIR}/"
-
-  run "${_NB}" ls
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"   -eq 0       ]]
-
-  [[ !  "${lines[0]}" =~  example ]]
-  [[    "${lines[0]}" =~  home    ]]
 }
 
 # `ls` ########################################################################
