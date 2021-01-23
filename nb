@@ -9355,7 +9355,8 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
 
   if [[ -n "${_domain:-}" ]]
   then
-    _title+=" (${_domain})"
+    [[ -n "${_title:-}" ]] && _title+=" "
+    _title+="(${_domain})"
   fi
 
   if [[ -n "${_title:-}" ]]
