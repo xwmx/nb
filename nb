@@ -5536,13 +5536,15 @@ _ls() {
   if [[ -n "${_limit:-}" ]]
   then
     _list_options+=("--limit" "${_limit}")
-  elif ! ((_all))                                       && {
-         [[ -z "${_selector_relative_path:-}"       ]]  || {
+  elif ! ((_all))                                       &&
+       {
+         [[ -z "${_selector_relative_path:-}"       ]]  ||
+         {
            [[ "${_selector_relative_path:-}" =~ /   ]]  &&
            [[ -z "${_selector_relative_path##*\/}"  ]]  &&
            [[ "${#_filter_patterns[@]}" -le 1       ]]
          }
-  }
+       }
   then
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
@@ -5561,11 +5563,12 @@ _ls() {
 
   local _display_header_and_footer=0
 
-  if [[ -z "${_arguments[*]:-}"           ]] || {
+  if [[ -z "${_arguments[*]:-}"           ]] ||
+     {
        [[ "${_selector:-}" =~ /$|:$       ]] &&
        [[ -n "${_selector_folder_path:-}" ]] &&
        [[ "${#_arguments[@]}" -le 1       ]]
-  }
+     }
   then
     _display_header_and_footer=1
   fi
