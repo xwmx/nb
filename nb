@@ -5621,46 +5621,41 @@ _ls() {
           _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
         )"
 
-        if ! ((_local_count))                           &&
+        if ! ((_local_count))                         &&
            {
-             [[ -n "${_selector_folder_path:-}"     ]]  ||
-             [[ ! "${_filter_patterns[*]:-}" =~ /   ]]
+             [[ -n "${_selector_folder_path:-}"   ]]  ||
+             [[ ! "${_filter_patterns[*]:-}" =~ / ]]
            }
         then
-          if ((NB_HEADER))                              &&
-             [[ -n "${_maybe_type:-}"               ]]  &&
+          local _only_container_arguments_present=0
+
+          if [[ -z "${_selector:-}"               ]]  ||
              {
-               [[ -z "${_selector:-}"               ]]  ||
-               {
-                 [[ "${_selector:-}" =~ /$|:$       ]]  &&
-                 [[ "${#_filter_patterns[@]}" -eq 1 ]]
-               }
+               [[ "${_selector:-}" =~ /$|:$       ]]  &&
+               [[ "${#_filter_patterns[@]}" -eq 1 ]]
              }
+          then
+            _only_container_arguments_present=1
+          fi
+
+          if ((NB_HEADER))                            &&
+             [[ -n "${_maybe_type:-}"             ]]  &&
+             ((_only_container_arguments_present))
           then
             _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
           fi
 
-          if ! ((${NB_FOLDER_HEADER:-0}))               &&
-             [[ -z "${_selector:-}"                 ]]  ||
-             {
-               [[ "${_selector:-}" =~ /$|:$         ]]  &&
-               [[ "${#_filter_patterns[@]}" -eq 1   ]]
-             }
+          if ! ((${NB_FOLDER_HEADER:-0}))             &&
+             ((_only_container_arguments_present))
           then
             _ls_print_folder_header "${_selector_folder_path:-}"
           fi
 
           _list "${_list_options[@]:-}"
 
-          if ((NB_FOOTER))                              &&
-             [[ -n "${_maybe_type:-}"               ]]  &&
-             {
-               [[ -z "${_selector:-}"               ]]  ||
-               {
-                 [[ "${_selector:-}" =~ /$|:$       ]]  &&
-                 [[ "${#_filter_patterns[@]}" -eq 1 ]]
-               }
-             }
+          if ((NB_FOOTER))                            &&
+             [[ -n "${_maybe_type:-}"             ]]  &&
+             ((_only_container_arguments_present))
           then
             _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
           fi
