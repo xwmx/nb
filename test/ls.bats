@@ -188,6 +188,47 @@ HEREDOC
   [[    "${lines[2]}"   =~ [.*1.*].*\ one   ]]
 }
 
+@test "'ls <query> --type' hides header and footer when no results are found." {
+  {
+    _setup_ls
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" ls not-valid --type example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                                             ]]
+  [[    "${#lines[@]}"  -eq 1                                             ]]
+
+  [[ !  "${lines[0]}"   =~  home                                          ]]
+  [[ !  "${lines[1]}"   =~  ---                                           ]]
+
+  [[    "${lines[0]}"   =~  Not\ found:\ .*not-valid.*\ Type:\ .*example  ]]
+}
+
+@test "'ls <notebook>: <query> --type' hides header and footer when no results are found." {
+  {
+    _setup_ls
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" ls Example\ Notebook: not-valid --type example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                                                   ]]
+  [[    "${#lines[@]}"  -eq 1                                                   ]]
+
+  [[ !  "${lines[0]}"   =~  home                                                ]]
+  [[ !  "${lines[1]}"   =~  ---                                                 ]]
+
+  [[    "${lines[0]}"   =~  \
+          Not\ found:\ .*Example\ Notebook:.*\ .*not-valid.*\ Type:\ .*example  ]]
+}
+
 @test "'ls --type' shows header and footer when empty." {
   {
     _setup_ls
@@ -209,6 +250,29 @@ HEREDOC
 
   [[    "${lines[7]}"   =~  ---                                 ]]
   [[    "${lines[8]}"   =~  nb\ add                             ]]
+}
+
+@test "'ls <notebook>: --type' shows header and footer when empty." {
+  {
+    _setup_ls
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" ls Example\ Notebook: --type not-valid
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -ge 10                                  ]]
+
+  [[    "${lines[0]}"   =~  Example\ Notebook.*\ .*·.*\ .*home  ]]
+  [[    "${lines[1]}"   =~  ---                                 ]]
+
+  [[    "${lines[2]}"   =~  0\ not-valid\ files.                ]]
+
+  [[    "${lines[7]}"   =~  ---                                 ]]
+  [[    "${lines[8]}"   =~  nb\ add\ Example\\\ Notebook:       ]]
 }
 
 # header ######################################################################

@@ -5468,7 +5468,14 @@ _ls() {
         fi
         ;;
       *:*)
-        _arguments+=("$(_show "${__arg}" --selector-id)")
+        local _selector_id=
+        _selector_id="$(_show "${__arg}" --selector-id || :)"
+
+        if [[ -n "${_selector_id:-}" ]]
+        then
+          _arguments+=("$(_show "${__arg}" --selector-id)")
+        fi
+
         _selector="${__arg:-}"
         _filter_patterns+=("${__arg}")
         ;;
@@ -5514,7 +5521,10 @@ _ls() {
           fi
           ;;
         *)
-          _arguments+=("${_arguments[i]:-}")
+          if [[ -n "${_arguments[i]:-}" ]]
+          then
+            _arguments+=("${_arguments[i]:-}")
+          fi
           ;;
       esac
     done
@@ -5611,16 +5621,21 @@ _ls() {
           _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
         )"
 
-        if ! ((_local_count))                        && {
-             [[ -n "${_selector_folder_path:-}"   ]] ||
-             [[ ! "${_filter_patterns[*]:-}" =~ / ]]
-        }
+        if ! ((_local_count))                           &&
+           {
+             [[ -n "${_selector_folder_path:-}"     ]]  ||
+             [[ ! "${_filter_patterns[*]:-}" =~ /   ]]
+           }
         then
-          if ((NB_HEADER))                      &&
-             [[ -n "${_maybe_type:-}"       ]]  && {
-               [[ -z "${_selector:-}"       ]]  ||
-               [[ "${_selector:-}" =~ /$|:$ ]]
-          }
+          if ((NB_HEADER))                              &&
+             [[ -n "${_maybe_type:-}"               ]]  &&
+             {
+               [[ -z "${_selector:-}"               ]]  ||
+               {
+                 [[ "${_selector:-}" =~ /$|:$       ]]  &&
+                 [[ "${#_filter_patterns[@]}" -eq 1 ]]
+               }
+             }
           then
             _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
           fi
@@ -5632,11 +5647,15 @@ _ls() {
 
           _list "${_list_options[@]:-}"
 
-          if ((NB_FOOTER))                      &&
-             [[ -n "${_maybe_type:-}"       ]]  && {
-               [[ -z "${_selector:-}"       ]]  ||
-               [[ "${_selector:-}" =~ /$|:$ ]]
-          }
+          if ((NB_FOOTER))                              &&
+             [[ -n "${_maybe_type:-}"               ]]  &&
+             {
+               [[ -z "${_selector:-}"               ]]  ||
+               {
+                 [[ "${_selector:-}" =~ /$|:$       ]]  &&
+                 [[ "${#_filter_patterns[@]}" -eq 1 ]]
+               }
+             }
           then
             _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
           fi
