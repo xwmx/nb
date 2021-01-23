@@ -14,8 +14,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ No\ remote\ configured  ]]
-  [[ ${status} -eq 1                          ]]
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
 }
 
 @test "'remote' with no arguments and existing remote prints url." {
@@ -30,8 +30,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "${_GIT_REMOTE_URL}"  ]]
-  [[ ${status} -eq 0                        ]]
+  [[ "${status}"    -eq 0                     ]]
+  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL}"  ]]
 }
 
 @test "'remote' with no arguments does not trigger git commit." {
@@ -52,19 +52,22 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "${_GIT_REMOTE_URL}"  ]]
-  [[ ${status} -eq 0                        ]]
+  [[ "${status}"    -eq 0                     ]]
 
-  [[ -f "${NB_DIR}/home/example.md"         ]]
+  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL}"  ]]
+
+  [[ -f "${NB_DIR}/home/example.md"           ]]
 
   "${_NB}" git dirty
 
-  # Does not create git commit
+  # does not create git commit
+
   cd "${NB_DIR}/home" || return 1
-  if [[ -n "$(git status --porcelain)"      ]]
+  if [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   then
     sleep 1
   fi
+
   ! git log | grep -q '\[nb\] Commit'
   ! git log | grep -q '\[nb\] Sync'
 }
@@ -81,8 +84,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ No\ remote\ configured  ]]
-  [[ ${status} -eq 1                          ]]
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
 }
 
 @test "'remote remove' with existing remote removes remote and prints message." {
@@ -99,10 +102,11 @@ load test_helper
 
   "${_NB}" remote && return 1
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote  ]]
-  [[ "${lines[0]}" =~ Removed\ remote         ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}      ]]
-  [[ ${status} -eq 0                          ]]
+  [[ "${status}"                -eq 0                   ]]
+
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote          ]]
+  [[ "${lines[0]}"              =~  Removed\ remote     ]]
+  [[ "${lines[0]}"              =~  ${_GIT_REMOTE_URL}  ]]
 }
 
 @test "'remote unset' with existing remote removes remote and prints message." {
@@ -119,10 +123,11 @@ load test_helper
 
   "${_NB}" remote && return 1
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote  ]]
-  [[ "${lines[0]}" =~ Removed\ remote         ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}      ]]
-  [[ ${status} -eq 0                          ]]
+  [[ "${status}"                -eq 0                   ]]
+
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote          ]]
+  [[ "${lines[0]}"              =~  Removed\ remote     ]]
+  [[ "${lines[0]}"              =~  ${_GIT_REMOTE_URL}  ]]
 }
 
 # remote set ##################################################################
@@ -137,8 +142,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage\: ]]
-  [[ ${status} -eq 1          ]]
+  [[ "${status}"    -eq 1       ]]
+  [[ "${lines[0]}"  =~  Usage\: ]]
 }
 
 @test "'remote set' with no existing remote sets remote and prints message." {
@@ -150,12 +155,14 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+
   "${_NB}" remote
 
-  [[ "${lines[0]}" =~ Remote\ set\ to             ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
-  [[ ${status} -eq 0                              ]]
-  [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
+  [[ "${status}"          -eq 0                   ]]
+
+  [[ "${lines[0]}"        =~  Remote\ set\ to     ]]
+  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}  ]]
+  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}  ]]
 }
 
 @test "'remote set' with existing remote sets remote and prints message." {
@@ -170,10 +177,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ set\ to             ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
-  [[ ${status} -eq 0                              ]]
-  [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
+  [[ "${status}"          -eq 0                   ]]
+
+  [[ "${lines[0]}"        =~  Remote\ set\ to     ]]
+  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}  ]]
+  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}  ]]
 }
 
 @test "'remote set' to same URL as existing remote exits and prints message." {
@@ -188,10 +196,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ already\ set\ to    ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
-  [[ ${status} -eq 1                              ]]
-  [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}   ]]
+  [[ "${status}"          -eq 1                         ]]
+
+  [[ "${lines[0]}"        =~  Remote\ already\ set\ to  ]]
+  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}        ]]
+  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}        ]]
 }
 
 # help ########################################################################
@@ -202,7 +211,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                  ]]
-  [[ "${lines[0]}" =~ Usage\:         ]]
-  [[ "${lines[1]}" =~ \ \ nb\ remote  ]]
+  [[ "${status}"    -eq 0               ]]
+
+  [[ "${lines[0]}"  =~  Usage\:         ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ remote  ]]
 }
