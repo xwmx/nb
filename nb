@@ -4530,7 +4530,6 @@ _list() {
     _maybe_selector_context_padded_right="${_maybe_selector_context} "
   fi
 
-  local _counter=0
   local _filenames_count=0
   local _matches=0
   local _printed_count=0
@@ -4570,7 +4569,6 @@ _list() {
   #
   # Counters:
   #
-  # ${_counter}
   # ${_filenames_count}
   # ${_matches}
   # ${_printed_count}
