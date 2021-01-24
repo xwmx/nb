@@ -2643,17 +2643,17 @@ _resolve_selector_folders() {
     fi
   fi
 
-  if [[ -z "${_notebook_path:-}" ]]
+  if [[ -z "${_notebook_path:-}"    ]]
   then
     _notebook_path="$(_notebooks current --path)"
   fi
 
-  if [[ "${_selector_path}" =~ ^/ ]]
+  if [[ "${_selector_path}" =~ ^/   ]]
   then
     _selector="${_selector_path#${_notebook_path}/}"
   fi
 
-  [[ ! "${_selector_path}" =~ / ]] && return 0
+  [[ ! "${_selector_path}"  =~ /    ]] && return 0
 
   while [[ "${_selector_path}" =~ / ]]
   do
@@ -2668,7 +2668,7 @@ _resolve_selector_folders() {
       _parent_folder_path="${_notebook_path}/${_folder_relative_path}"
     fi
 
-    if [[ -n "${_selector_segment:-}" ]]
+    if [[ -n "${_selector_segment:-}"     ]]
     then
       if [[ "${_selector_segment}" =~ ^[0-9]+$ ]]
       then # folder name might be an id
@@ -2678,7 +2678,7 @@ _resolve_selector_folders() {
         )"
       fi
 
-      if [[ -z "${_folder_name:-}" ]]
+      if [[ -z "${_folder_name:-}"  ]]
       then
         _folder_name="${_selector_segment}"
       fi
