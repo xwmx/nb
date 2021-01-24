@@ -4644,7 +4644,7 @@ _list() {
     then
       printf "%s\\n" "${_selector_basename}"
     else
-      _list_files "${_list_path}" "${_list_files_options[@]}" || :
+      _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
     fi
   } | {
     local _filenames_count=0
