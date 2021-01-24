@@ -1920,7 +1920,7 @@ _get_folder_id_path() {
       printf "%s\\n" "${_relative_path%\/*}" | tr "/" "\n"
     ))
 
-    local __folder=0
+    local __folder=
     for   __folder in "${_selector_folders[@]}"
     do
       _folder_id_path+="$(
@@ -2283,9 +2283,8 @@ _join() {
 
   shift
 
-  local __element
-
-  for __element in "${@:-}"
+  local __element=
+  for   __element in "${@:-}"
   do
     [[ -n "${__element:-}" ]] || continue
 
@@ -3267,9 +3266,8 @@ HEREDOC
 
       if [[ -n "${_conflicted_files[*]:-}" ]]
       then
-        local __maybe_index_relative_path
-
-        for __maybe_index_relative_path in "${_conflicted_files[@]}"
+        local __maybe_index_relative_path=
+        for   __maybe_index_relative_path in "${_conflicted_files[@]}"
         do
           if [[ "${__maybe_index_relative_path}" =~ ^.index$|/.index$ ]]
           then
@@ -3285,9 +3283,8 @@ HEREDOC
           fi
         done
 
-        local __relative_path
-
-        for __relative_path in "${_conflicted_files[@]}"
+        local __relative_path=
+        for   __relative_path in "${_conflicted_files[@]}"
         do
           [[ "${__relative_path}" =~ ^.index$|/.index$ ]] && continue
 
@@ -4421,9 +4418,8 @@ _list() {
   local _selector=
   local _selector_basename=
 
-  local __argument
-
-  for __argument in "${_selector_arguments[@]:-}"
+  local __argument=
+  for   __argument in "${_selector_arguments[@]:-}"
   do
     if [[ -z "${__argument:-}"    ]]
     then
@@ -4659,7 +4655,7 @@ _list() {
     local _max_id
     _max_id="$(_index get_max_id "${_list_path}")"
 
-    local __basename
+    local __basename=
 
     while read -r __basename
     do
@@ -12382,9 +12378,8 @@ _search() {
             | sed -e "s/^/${_escaped_notebook_path}\//" \
               || return 0  # Don't fail out within a single scope.
           else
-            local __search_group
-
-            for __search_group in "index" "files"
+            local __search_group=
+            for   __search_group in "index" "files"
             do
               {
                 if [[ "${__search_group}" == "index" ]]
@@ -12398,11 +12393,11 @@ _search() {
                     ls-files -z -- . ':!:*.index'
                 fi
               } | {
-                local __and_query=
                 local _last_pipe=
                 local _this_pipe=
 
-                for __and_query in "${_queries[@]:-}"
+                local __and_query=
+                for   __and_query in "${_queries[@]:-}"
                 do
                   [[ -n "${__and_query:-}" ]] || continue
 
