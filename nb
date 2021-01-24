@@ -5407,10 +5407,6 @@ _ls() {
   local _limit=
   local _list_options=()
   local _maybe_type=
-  local _notebook_names
-  _notebook_names=($(
-    _notebooks --names --no-color --unarchived --global || :
-  ))
   local _selector=
   local _selector_folder_path=
   local _selector_relative_path=
@@ -5512,6 +5508,8 @@ _ls() {
     shift
   done
 
+  # Delegate to `add` or `show` when detected.
+
   if ((${#_delegate_arguments[@]}))
   then
     local i=0
@@ -5548,6 +5546,24 @@ _ls() {
     done
   fi
 
+  # Load unarchived notebooks name for header and footer.
+
+  local _notebook_names=()
+  _notebook_names=($(ls -1 "${NB_DIR}"))
+
+  local _unarchived_notebook_names=()
+
+  local __name=
+  for   __name in "${_notebook_names[@]:-}"
+  do
+    if [[ ! -f "${NB_DIR:?}/${__name:?}/.archived" ]]
+    then
+      _unarchived_notebook_names+=("${__name}")
+    fi
+  done
+
+  # Build list options.
+
   _list_options=(${_arguments[@]:-})
   _list_options+=("--with--pinned")
 
@@ -5567,8 +5583,9 @@ _ls() {
     _list_options+=("--limit" "${NB_LIMIT}")
   fi
 
-  # NOTE: Resolve selector path before printing header to minimize pause
-  # before printing list. TODO: Improve.
+  # Resolve selector folders before printing header to minimize pause
+  # before printing list.
+
   if [[ "${_selector:-}" =~ / ]]
   then
     _selector_folder_path="$(_resolve_selector_folders "${_selector}" || :)"
@@ -5578,6 +5595,8 @@ _ls() {
       _selector_folder_path="${_selector_folder_path}/"
     fi
   fi
+
+  # Determine whether to display header and footer.
 
   local _display_header_and_footer=0
 
@@ -5661,7 +5680,7 @@ _ls() {
              [[ -n "${_maybe_type:-}"             ]]  &&
              _ls_only_container_arguments_present
           then
-            _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
+            _ls_print_header "${_header_flags[@]:-}" "${_unarchived_notebook_names[@]:-}"
           fi
 
           if ! ((${NB_FOLDER_HEADER:-0}))             &&
@@ -5676,7 +5695,7 @@ _ls() {
              [[ -n "${_maybe_type:-}"             ]]  &&
              _ls_only_container_arguments_present
           then
-            _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
+            _ls_print_footer "${#_unarchived_notebook_names[@]}" "${_selector_folder_path:-}"
           fi
         else
           if [[ -n "${_list_error:-}" ]]
@@ -5693,7 +5712,7 @@ _ls() {
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
-      _ls_print_header "${_header_flags[@]:-}" "${_notebook_names[@]:-}"
+      _ls_print_header "${_header_flags[@]:-}" "${_unarchived_notebook_names[@]:-}"
     fi
 
     if [[ -n "${_selector_folder_path:-}" ]] &&
@@ -5713,7 +5732,7 @@ _ls() {
 
     if ((NB_FOOTER)) && ((_display_header_and_footer))
     then
-      _ls_print_footer "${#_notebook_names[@]}" "${_selector_folder_path:-}"
+      _ls_print_footer "${#_unarchived_notebook_names[@]}" "${_selector_folder_path:-}"
     fi
   } | if ((_use_pager))
       then
