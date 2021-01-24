@@ -7100,9 +7100,7 @@ _show() {
     then
       if [[ -z "${_notebook_path:-}" ]]
       then
-        _notebook_path="$(
-          _notebooks show "${_selector}" --path
-        )"
+        _notebook_path="$(_notebooks show "${_selector}" --path)"
       fi
 
       _identifier="$(_show "${_selector}" --selector-id)"
@@ -7110,18 +7108,19 @@ _show() {
 
       if [[ -e "${_identifier}"                     ]] &&
          [[ "${_identifier}" =~ ^${_notebook_path}  ]]
-      then # <selector> is a full path
+      then # <selector> is a full path in the current notebook
         _relative_path="${_identifier/${_notebook_path}}"
         _relative_path="${_relative_path#\/}"
       elif [[ "${_identifier}" =~ ^/ ]]
-      then
+      then # <selector> is a full path in a different notebook
         _notebook_path="$(
           _notebooks show "${_identifier}" --path
         )"
 
         _relative_path="${_identifier/"${_notebook_path}"\//}"
-      elif [[ -e "${_notebook_path}/${_identifier}" ]]
-      then # <selector> is a relative path
+      elif [[ -e  "${_notebook_path}/${_identifier}"  ]] &&
+           [[ !   "${_identifier}" =~ ^[0-9]+$        ]]
+      then # <selector> is a relative path with a non-numeric filename
         _relative_path="${_identifier}"
       else
         local _folder_path="${_notebook_path}"
@@ -7137,12 +7136,13 @@ _show() {
 
         _identifier="${_identifier##*/}"
 
-        if [[ -e "${_folder_path}/${_identifier}" ]]
-        then
+        if [[ -e "${_folder_path}/${_identifier}" ]] &&
+           [[ !  "${_identifier}" =~ ^[0-9]+$     ]]
+        then # <selector> is relative path with a non-numeric filename
           _relative_path="${_folder_relative_path}/${_identifier}"
         elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
         then # <selector> is an id
-          local _basename
+          local _basename=
           _basename="$(_index get_basename "${_identifier}" "${_folder_path}")"
 
           if [[ -n "${_basename:-}" ]]
@@ -7153,6 +7153,9 @@ _show() {
             else
               _relative_path="${_basename}"
             fi
+          elif [[ -e "${_notebook_path}/${_identifier}" ]]
+          then # <selector> is a relative path with numeric filename
+            _relative_path="${_identifier}"
           fi
         else # <selector> might be a title
           local _maybe_title="${_identifier##*\/}"
@@ -7161,7 +7164,7 @@ _show() {
             _list_files "${_folder_path}" \
               | while read -r __filename || [[ -n "${__filename:-}" ]]
                 do
-                  local _title
+                  local _title=
                   _title="$(
                     _get_content "${_folder_path}/${__filename}" --title
                   )"
@@ -7466,7 +7469,13 @@ _show() {
   then
     if [[ -z "${_type}" ]]
     then
-      printf "%s\\n" "${_relative_path#*.}"
+      if [[ -d "${_notebook_path}/${_relative_path}" ]]
+      then
+        printf "%s\\n" "folder"
+      else
+        printf "%s\\n" "${_relative_path#*.}"
+      fi
+
       return 0
     else
       if _contains "${_type}" "${_FILE_TYPES[@]:-}"

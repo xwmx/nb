@@ -2,6 +2,40 @@
 
 load test_helper
 
+# --type ######################################################################
+
+@test "'show <selector> --type' with a folder exits with status 0 and prints type." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" show 1 --type
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0         ]]
+  [[ "${output}" ==   "folder"  ]]
+}
+
+@test "'show <selector> --type' with a markdown file exits with status 0 and prints file extension." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --type
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0     ]]
+  [[ "${output}" ==   "md"  ]]
+}
+
 # --url #######################################################################
 
 @test "'show --url' with invalid note prints error." {
