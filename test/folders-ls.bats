@@ -12,6 +12,166 @@ _FOLDER_HEADER_ENABLED=0
 # See also: $NB_FOLDER_HEADER in _ls().
 _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
+# empty #######################################################################
+
+@test "'ls <folder>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls Example\ Folder/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
+    [[   "${lines[4]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  else
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[4]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  fi
+}
+
+@test "'ls <id>/ --type' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls 1/ --type audio
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
+    [[   "${lines[4]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  else
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[4]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+
+  fi
+}
+
+@test "'ls <folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
+    [[   "${lines[4]}"  =~  0\ items\.                            ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  else
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  0\ items\.                            ]]
+    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  fi
+}
+
+@test "'ls <id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
+    [[   "${lines[4]}"  =~  0\ items\.                            ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  else
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  0\ items\.                            ]]
+    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  fi
+}
+
+@test "'ls <folder>/<folder>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder" --type folder
+  }
+
+  run "${_NB}" ls Example\ Folder/Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                         ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                          ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                      ]]
+    [[   "${lines[2]}"  =~  Sample\ Folder                            ]]
+    [[   "${lines[4]}"  =~  0\ items\.                                ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/   ]]
+  else
+    [[   "${status}"    -eq 0                                         ]]
+    [[   "${lines[2]}"  =~  0\ items\.                                ]]
+    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/   ]]
+  fi
+}
+
+@test "'ls <id>/<id>/' with empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                       ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                        ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                    ]]
+    [[   "${lines[4]}"  =~  0\ items\.                              ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/   ]]
+  else
+    [[   "${status}"    -eq 0                                       ]]
+    [[   "${lines[2]}"  =~  0\ items\.                              ]]
+    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/   ]]
+  fi
+}
+
 # limit ###################################################################
 
 @test "'ls <folder>/' exits with 0 and respects limit." {
@@ -898,177 +1058,6 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   else
     [[   "${status}"    -eq 0                       ]]
     [[   "${lines[6]}"  =~ add\ Notebook\\\ One:1/  ]]
-  fi
-}
-
-# empty #######################################################################
-
-@test "'ls <folder>/ --type' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls Example\ Folder/ --type audio
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
-    [[   "${lines[4]}"  =~  0\ audio\ files\.                 ]]
-    [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
-  else
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  0\ audio\ files\.                 ]]
-    [[   "${lines[4]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[4]}"  =~  Example\\\ Folder/                ]]
-  fi
-}
-
-@test "'ls <id>/ --type' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls 1/ --type audio
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
-    [[   "${lines[4]}"  =~  0\ audio\ files\.                 ]]
-    [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[6]}"  =~  Example\\\ Folder/                ]]
-  else
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  0\ audio\ files\.                 ]]
-    [[   "${lines[4]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[4]}"  =~  Example\\\ Folder/                ]]
-  fi
-}
-
-@test "'ls <folder>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls Example\ Folder/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
-    [[   "${lines[4]}"  =~  0\ items\.                        ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[10]}" =~  Example\\\ Folder/                ]]
-  else
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  0\ items\.                        ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[8]}"  =~  Example\\\ Folder/                ]]
-  fi
-}
-
-@test "'ls <id>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls 1/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                  ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder              ]]
-    [[   "${lines[4]}"  =~  0\ items\.                        ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[10]}" =~  Example\\\ Folder/                ]]
-  else
-    [[   "${status}"    -eq 0                                 ]]
-    [[   "${lines[2]}"  =~  0\ items\.                        ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\) ]]
-    [[   "${lines[8]}"  =~  Example\\\ Folder/                ]]
-  fi
-}
-
-@test "'ls <folder>/<folder>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder/Sample Folder" --type folder
-  }
-
-  run "${_NB}" ls Example\ Folder/Sample\ Folder/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                    ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                      ]]
-    [[   "${lines[4]}"  =~  0\ items\.                          ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
-    [[   "${lines[10]}" =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
-    [[   "${lines[2]}"  =~  0\ items\.                          ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
-    [[   "${lines[8]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  fi
-}
-
-@test "'ls <id>/<id>/' with empty folder displays message." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-  }
-
-  run "${_NB}" ls 1/
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
-  then
-    [[   "${status}"    -eq 0                                   ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                    ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                ]]
-    [[   "${lines[4]}"  =~  0\ items\.                          ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
-    [[   "${lines[10]}" =~  Example\\\ Folder/                  ]]
-  else
-    [[   "${status}"    -eq 0                                   ]]
-    [[   "${lines[2]}"  =~  0\ items\.                          ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)   ]]
-    [[   "${lines[8]}"  =~  Example\\\ Folder/                  ]]
   fi
 }
 
