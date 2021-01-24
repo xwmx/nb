@@ -12739,7 +12739,7 @@ _search() {
           [[ -n "${_path}" ]] && _last_path="${_path}"
         done
       }
-    done 
+    done
   } | {
     if read -r __search_output_line
     then # output is present
