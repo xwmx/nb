@@ -5094,7 +5094,7 @@ _ls() {
   # _ls_print_footer()
   #
   # Usage:
-  #   _ls_print_footer <notebook-names-count> [<selector>]
+  #   _ls_print_footer [<selector>]
   _ls_print_footer() {
     local _footer_line_hi=
     local _footer_line_raw=
@@ -5106,8 +5106,7 @@ _ls() {
     local _maybe_selector_scope=
     local _maybe_selector_scope_padded_left=
     local _maybe_selector_scope_padded_right=
-    local _notebook_names_count="${1:-1}"
-    local _selector_path="${2:-}"
+    local _selector_path="${1:-}"
 
     if _notebooks current --selected
     then
@@ -5128,15 +5127,30 @@ _ls() {
 
     local _notebook_command="${_ME} notebooks add <name>"
 
-    if [[ "${_notebook_names_count}" -gt 1 ]]
-    then
-      if [[ -n "${_maybe_notebook:-}" ]]
+    local _unarchived_notebook_count=0
+
+    set +f
+    local __path=
+    for   __path in "${NB_DIR}"/*
+    do
+      if [[ ! -f "${__path:?}/.archived" ]]
       then
-        _notebook_command="${_ME} use ${_maybe_notebook%%:*}"
-      else
-        _notebook_command="${_ME} use <notebook>"
+        _unarchived_notebook_count=$((_unarchived_notebook_count + 1))
       fi
-    fi
+
+      if [[ "${_unarchived_notebook_count}" -gt 1 ]]
+      then
+        if [[ -n "${_maybe_notebook:-}" ]]
+        then
+          _notebook_command="${_ME} use ${_maybe_notebook%%:*}"
+        else
+          _notebook_command="${_ME} use <notebook>"
+        fi
+
+        break
+      fi
+    done
+    set -f
 
     local _commands_raw=(
       "❯ ${_ME}${_maybe_selector_scope_padded_left}"
@@ -5228,7 +5242,7 @@ _ls() {
   # _ls_print_header()
   #
   # Usage:
-  #   _ls_print_header <alignment> <notebook>...
+  #   _ls_print_header <alignment>
   #
   # Description:
   #   Build word-wrapping notebook line. `fold` doesn't account for
@@ -5241,20 +5255,10 @@ _ls() {
   #       && printf "\\n"
   _ls_print_header() {
     local _alignment="${1:-}"
-    shift
-
     local _auto_align=1 # auto-align by default.
     local _centered=0
     local _justified=0
-    local _line_number=0
-    local _line_hi=
-    local _line_raw=
-    local _notebook_names=("${@:-}")
-    local _output_hi=
-    local _output_raw=
-    local _padding=
     local _plain=0
-    local _test_line=
 
     [[ "${NB_HEADER}" == 2 ]] && _centered=1
     [[ "${NB_HEADER}" == 3 ]] && _justified=1
@@ -5292,113 +5296,126 @@ _ls() {
     local _current_notebook_name=
     _current_notebook_name="$(_notebooks current)"
 
-    local _notebook_names_archived=
-    _notebook_names_archived=($(
-      _notebooks --names --no-color --archived || :
-    ))
-    local _archived_count="${#_notebook_names_archived[@]}"
+    {
+      local _archived_count=0
+      local _unarchived_notebook_names=()
 
-    if ((_archived_count))
-    then
-      _notebook_names=(
-        "${_notebook_names[@]}"
-        "[${_archived_count} archived]"
-      )
-    fi
-
-    if _notebooks current --local
-    then
-      _notebook_names=(
-        "local"
-        "${_notebook_names[@]}"
-      )
-    fi
-
-    for ((i=0; i < "${#_notebook_names[@]}"; i++))
-    do
-      local _maybe_highlighted_notebook_name=
-
-      if [[ "${_current_notebook_name}" == "${_notebook_names[i]}" ]]
-      then
-        _maybe_highlighted_notebook_name="$(
-          _color_primary "${_notebook_names[i]:-}" --underline
-        )"
-      else
-        _maybe_highlighted_notebook_name="${_notebook_names[i]:-}"
-      fi
-
-      if [[ -z "${_test_line}" ]]
-      then # first item in line
-        _test_line="${_notebook_names[i]}"
-      else
-        _test_line="${_test_line}${_separator} ${_notebook_names[i]}"
-      fi
-
-      if [[ "${#_test_line}" -gt "${_COLUMNS}" ]]
-      then # wrap to next line
-        # Use the existing value of $_line_[highlighted|raw] without the
-        # current name.
-        if ((_auto_align)) || ((_centered)) && ! ((_justified))
+      set +f
+      local __path=
+      for   __path in "${NB_DIR}"/*
+      do
+        if [[ -f "${__path:?}/.archived" ]]
         then
-          _centered=1
-          _padding="$(
-            _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
-          )"
-        fi
-
-        _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
-        _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
-        _line_number=$((_line_number + 1))
-
-        # Start the line for the next iteration using the current name.
-        _test_line="${_notebook_names[i]}"
-        _line_hi="${_maybe_highlighted_notebook_name:-}"
-        _line_raw="${_notebook_names[i]}"
-      else # add to line
-        if [[ -z "${_line_hi}" ]]
-        then # first item in highlighted line
-          _line_hi="${_maybe_highlighted_notebook_name:-}"
-          _line_raw="${_notebook_names[i]}"
+          _archived_count=$((_archived_count+1))
         else
-          _line_hi="${_line_hi}${_separator_hi} ${_maybe_highlighted_notebook_name:-}"
-          _line_raw="${_line_raw}${_separator} ${_notebook_names[i]}"
+          _unarchived_notebook_names+=("${__path##*\/}")
         fi
+      done
+      set -f
+
+      if _notebooks current --local
+      then
+        printf "local\\n"
       fi
 
-      if [[ "${#_notebook_names[@]}" == $((i+1)) ]]
-      then # end of list
-        if ((_line_number))  && ! ((_justified)) &&
-           ((_auto_align))   ||   ((_centered))
+      printf "%s\\n" "${_unarchived_notebook_names[@]}"
+
+      if ((_archived_count))
+      then
+        printf "[%s archived]\\n" "${_archived_count}"
+      fi
+    } | {
+      local _line_hi=
+      local _line_number=0
+      local _line_raw=
+      local _output_raw=
+      local _padding=
+      local _test_line=
+
+      local __header_name=
+      while read -r __header_name
+      do
+        local _maybe_highlighted_notebook_name=
+
+        if [[ "${_current_notebook_name}" == "${__header_name}" ]]
         then
-          _centered=1
+          _maybe_highlighted_notebook_name="$(
+            _color_primary "${__header_name:-}" --underline
+          )"
+        else
+          _maybe_highlighted_notebook_name="${__header_name:-}"
         fi
-        _padding="$(
-          _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
-        )"
 
-        _output_hi="${_output_hi}${_padding}${_line_hi}\\n"
-        _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
-        _line_number=$((_line_number + 1))
+        if [[ -z "${_test_line}" ]]
+        then # first item in line
+          _test_line="${__header_name}"
+        else
+          _test_line="${_test_line}${_separator} ${__header_name}"
+        fi
+
+        if [[ "${#_test_line}" -gt "${_COLUMNS}" ]]
+        then # wrap to next line
+          # Use the existing value of $_line_[highlighted|raw] without the
+          # current name.
+          if ((_auto_align)) || ((_centered)) && ! ((_justified))
+          then
+            _centered=1
+            _padding="$(
+              _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
+            )"
+          fi
+
+          printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
+
+          _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
+          _line_number=$((_line_number + 1))
+
+          # Start the line for the next iteration using the current name.
+          _test_line="${__header_name}"
+          _line_hi="${_maybe_highlighted_notebook_name:-}"
+          _line_raw="${__header_name}"
+        else # add to line
+          if [[ -z "${_line_hi}" ]]
+          then # first item in highlighted line
+            _line_hi="${_maybe_highlighted_notebook_name:-}"
+            _line_raw="${__header_name}"
+          else
+            _line_hi="${_line_hi}${_separator_hi} ${_maybe_highlighted_notebook_name:-}"
+            _line_raw="${_line_raw}${_separator} ${__header_name}"
+          fi
+        fi
+      done
+
+      if ((_line_number))  && ! ((_justified)) &&
+         ((_auto_align))   ||   ((_centered))
+      then
+        _centered=1
       fi
-    done
 
-    printf "%b" "${_output_hi}"
+      _padding="$(
+        _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
+      )"
 
-    _wrap off
+      printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
 
-    if ((_centered))
-    then # print full-width line.
-      _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
-    else # print line the length of the first line.
-      _print_line "$(
-        # $_output_raw generates a line 2 characters too long. TODO: Review
-        printf "%s" "${_output_raw}" | sed 's/..$//'
-      )" | tr -d '\n'
-    fi
+      _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
 
-    printf "%s" "${_TPUT_SGR0}"
-    _wrap on
-    printf "\\n"
+      _wrap off
+
+      if ((_centered))
+      then # print full-width line.
+        _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
+      else # print line the length of the first line.
+        _print_line "$(
+          # $_output_raw generates a line 2 characters too long. TODO: Review
+          printf "%s" "${_output_raw}" | sed 's/..$//'
+        )" | tr -d '\n'
+      fi
+
+      printf "%s" "${_TPUT_SGR0}"
+      _wrap on
+      printf "\\n"
+    }
   }
 
   local _all=0
@@ -5549,22 +5566,6 @@ _ls() {
     done
   fi
 
-  # Load unarchived notebook names for header and footer.
-
-  local _notebook_names=()
-  _notebook_names=($(ls -1 "${NB_DIR}"))
-
-  local _unarchived_notebook_names=()
-
-  local __name=
-  for   __name in "${_notebook_names[@]:-}"
-  do
-    if [[ ! -f "${NB_DIR:?}/${__name:?}/.archived" ]]
-    then
-      _unarchived_notebook_names+=("${__name}")
-    fi
-  done
-
   # Build list options.
 
   _list_options=(${_arguments[@]:-})
@@ -5683,7 +5684,7 @@ _ls() {
              [[ -n "${_maybe_type:-}"             ]]  &&
              _ls_only_container_arguments_present
           then
-            _ls_print_header "${_header_flags[@]:-}" "${_unarchived_notebook_names[@]:-}"
+            _ls_print_header "${_header_flags[@]:-}"
           fi
 
           if ! ((${NB_FOLDER_HEADER:-0}))             &&
@@ -5698,7 +5699,7 @@ _ls() {
              [[ -n "${_maybe_type:-}"             ]]  &&
              _ls_only_container_arguments_present
           then
-            _ls_print_footer "${#_unarchived_notebook_names[@]}" "${_selector_folder_path:-}"
+            _ls_print_footer "${_selector_folder_path:-}"
           fi
         else
           if [[ -n "${_list_error:-}" ]]
@@ -5715,7 +5716,7 @@ _ls() {
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
-      _ls_print_header "${_header_flags[@]:-}" "${_unarchived_notebook_names[@]:-}"
+      _ls_print_header "${_header_flags[@]:-}"
     fi
 
     if [[ -n "${_selector_folder_path:-}" ]] &&
@@ -5731,12 +5732,17 @@ _ls() {
     # Footer
     # ------
 
-    cat
+    local _footer=
 
     if ((NB_FOOTER)) && ((_display_header_and_footer))
     then
-      _ls_print_footer "${#_unarchived_notebook_names[@]}" "${_selector_folder_path:-}"
+      _footer="$(_ls_print_footer "${_selector_folder_path:-}")"
     fi
+
+    cat
+
+    # print preloaded footer
+    printf "%s\\n" "${_footer}"
   } | if ((_use_pager))
       then
         _pager
