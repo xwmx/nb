@@ -2,6 +2,29 @@
 
 load test_helper
 
+# conflicting id / name #######################################################
+
+@test "'_resolve_selector_folders()' favors id with conflicting id and folder name." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Sample Folder"  --type folder
+
+    "${_NB}" move "Sample Folder" "1" --force
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+    [[ -d "${NB_DIR}/home/1"              ]]
+  }
+
+  run "${_NB}" helpers resolve_selector_folders 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
 # _resolve_selector_folders() (error handling) ################################
 
 @test "'_resolve_selector_folders()' returns error with not-valid path." {

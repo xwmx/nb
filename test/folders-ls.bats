@@ -93,6 +93,39 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   fi
 }
 
+@test "'ls <id>/' with conflicting id / folder name and empty folder displays message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Sample Folder/File One.md" --content "Example content."
+
+    "${_NB}" move "Sample Folder" "1" --force
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+    [[ -f "${NB_DIR}/home/1/File One.md"  ]]
+  }
+
+  run "${_NB}" ls 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
+  then
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
+    [[ ! "${lines[2]}"  =~  ^1                                    ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
+    [[   "${lines[4]}"  =~  0\ items\.                            ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  else
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  0\ items\.                            ]]
+    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  fi
+}
+
 @test "'ls <id>/' with empty folder displays message." {
   {
     "${_NB}" init
