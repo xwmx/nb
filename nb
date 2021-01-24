@@ -5549,7 +5549,7 @@ _ls() {
     done
   fi
 
-  # Load unarchived notebooks name for header and footer.
+  # Load unarchived notebook names for header and footer.
 
   local _notebook_names=()
   _notebook_names=($(ls -1 "${NB_DIR}"))
