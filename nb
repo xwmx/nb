@@ -4726,7 +4726,7 @@ _list() {
           continue
         else
           _filenames_count="$(
-            _count "${_list_path}" "${_list_files_options[@]}"
+            _count "${_list_path}" "${_list_files_options[@]:-}"
           )"
 
           break
