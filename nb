@@ -7674,15 +7674,10 @@ _id_brackets_color() { _color_brackets "${@:-}"; }
 # _defer()
 ###############################################################################
 
-# $_DEFERRED_FUNCTION
+# $_DEFERRED_COMMAND
 #
-# The name of the subcommand to run after the script has loaded.
-export _DEFERRED_FUNCTION=
-
-# $_DEFERRED_ARGUMENTS
-#
-# Arguments for $_DEFERRED_FUNCTION.
-export _DEFERRED_ARGUMENTS=()
+# The function and arguments to run after the script has loaded.
+export _DEFERRED_COMMAND=()
 
 # _defer()
 #
@@ -7690,32 +7685,29 @@ export _DEFERRED_ARGUMENTS=()
 #   _defer <name> [<argument>...]
 #
 # Description:
-#   Assign a function to run after the script has loaded.
+#   Assign a command to run after the script has loaded.
 _defer() {
-  _DEFERRED_FUNCTION="${1:-}"
-  shift
-  _DEFERRED_ARGUMENTS=("${@:-}")
+  _DEFERRED_COMMAND=("${@:-}")
 }
 
-# _call_deferred_function()
+# _call_deferred_command()
 #
 # Usage:
-#   _call_deferred_function [<name>...]
+#   _call_deferred_command [<name>...]
 #
 # Description:
-#   Call the deferred function.
-_call_deferred_function() {
-  [[ -z "${_DEFERRED_FUNCTION:-}" ]] && return 0
+#   Call the deferred command.
+_call_deferred_command() {
+  [[ -z "${_DEFERRED_COMMAND[0]:-}" ]] && return 0
 
-  if [[ -n "${1:-}" ]] && ! _contains "${_DEFERRED_FUNCTION}" "${@:-}"
+  if [[ -n "${1:-}" ]] && ! _contains "${_DEFERRED_COMMAND[0]}" "${@:-}"
   then
     return 0
   fi
 
-  "${_DEFERRED_FUNCTION:-}" "${_DEFERRED_ARGUMENTS[@]:-}"
+  "${_DEFERRED_COMMAND[@]:-}"
 
-  export _DEFERRED_FUNCTION=
-  export _DEFERRED_ARGUMENTS=()
+  export _DEFERRED_COMMAND=()
 
   return 0
 }
@@ -14152,8 +14144,8 @@ _version() {
 }
 
 ###############################################################################
-# Call Deferred Function                                 Call Deferred Function
+# Call Deferred Command                                   Call Deferred Command
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
-_call_deferred_function
+_call_deferred_command
