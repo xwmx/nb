@@ -5328,7 +5328,7 @@ _ls() {
       local _line_hi=
       local _line_number=0
       local _line_raw=
-      local _output_raw=
+      local _output_line_raw=
       local _padding=
       local _test_line=
 
@@ -5366,8 +5366,7 @@ _ls() {
           fi
 
           printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
-
-          _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
+          _output_line_raw="${_padding}${_line_raw}\\n"
           _line_number=$((_line_number + 1))
 
           # Start the line for the next iteration using the current name.
@@ -5397,8 +5396,7 @@ _ls() {
       )"
 
       printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
-
-      _output_raw="${_output_raw}${_padding}${_line_raw}\\n"
+      _output_line_raw="${_padding}${_line_raw}\\n"
 
       _wrap off
 
@@ -5407,8 +5405,8 @@ _ls() {
         _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
       else # print line the length of the first line.
         _print_line "$(
-          # $_output_raw generates a line 2 characters too long. TODO: Review
-          printf "%s" "${_output_raw}" | sed 's/..$//'
+          # $_output_line_raw content is 2 characters too long. TODO: Review
+          printf "%s" "${_output_line_raw}" | sed 's/..$//'
         )" | tr -d '\n'
       fi
 
