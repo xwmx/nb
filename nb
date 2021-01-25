@@ -2016,25 +2016,6 @@ _get_http_status() {
   fi
 }
 
-# _get_selector_id()
-#
-# Usage:
-#   _get_selector_id <selector>
-#
-# Description:
-#   Print the identifier (non-notebook) portion of a selector.
-_get_selector_id() {
-  local _selector="${1:-}"
-
-  if [[   "${_selector:-}" =~ :     ]] &&
-     [[ ! "${_selector:-}" =~ /.*:  ]]
-  then
-    printf "%s\\n" "${_selector#*:}" # strip notebook name
-  else
-    printf "%s\\n" "${_selector:-}"
-  fi
-}
-
 # _get_unique_relative_path()
 #
 # Usage:
@@ -2614,17 +2595,36 @@ HEREDOC
   _print_line "$(printf "%-${_COLUMNS}s" '.')"
 }
 
-# _resolve_selector_folders()
+# _selector_get_identifier()
 #
 # Usage:
-#   _resolve_selector_folders <selector> [<notebook-path>] [--build]
+#   _selector_get_identifier <selector>
+#
+# Description:
+#   Print the identifier (non-notebook) portion of a selector.
+_selector_get_identifier() {
+  local _selector="${1:-}"
+
+  if [[   "${_selector:-}" =~ :     ]] &&
+     [[ ! "${_selector:-}" =~ /.*:  ]]
+  then
+    printf "%s\\n" "${_selector#*:}" # strip notebook name
+  else
+    printf "%s\\n" "${_selector:-}"
+  fi
+}
+
+# _selector_resolve_folders()
+#
+# Usage:
+#   _selector_resolve_folders <selector> [<notebook-path>] [--build]
 #
 # Options:
 #   --build  Build a new path that includes segments that don't exist yet.
 #
 # Description:
 #   Resolve a selector path, which can be a mix of folder names and ids.
-_resolve_selector_folders() {
+_selector_resolve_folders() {
   local _build_path=0
   local _folder_relative_path=
   local _selector=
@@ -2726,11 +2726,13 @@ _resolve_selector_folders() {
   printf "%s\\n" "${_folder_relative_path:-}"
 }
 
-
-# _resolve_selector_relative_path()
+# _selector_resolve_path()
 #
 # Usage:
-#   _resolve_selector_relative_path <selector> [<notebook-path>]
+#   _selector_resolve_path <selector> [<notebook-path>] [--full | --relative]
+#
+# Options:
+#   --full  Print the full path.
 #
 # Description:
 #   Determine the basename of the file that is identified by the given <id>,
@@ -2748,11 +2750,29 @@ _resolve_selector_folders() {
 #     notebook:title
 #     notebook:relative/path/to/example.md
 #     notebook:/path/to/example.md
-_resolve_selector_relative_path() {
+_selector_resolve_path() {
   local _identifier=
+  local _notebook_path=
+  local _print_full_path=0
   local _relative_path=
   local _selector="${1%/}" # strip trailing /
-  local _notebook_path="${2:-}"
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg:-}" in
+      --full)
+        _print_full_path=1
+        ;;
+      *)
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${__arg}"
+        else
+          _notebook_path="${2:-}"
+        fi
+        ;;
+    esac
+  done
 
   if [[ -n "${_selector}" ]]
   then
@@ -2770,7 +2790,7 @@ _resolve_selector_relative_path() {
       )"
     fi
 
-    _identifier="$(_get_selector_id "${_selector}")"
+    _identifier="$(_selector_get_identifier "${_selector}")"
     _identifier="${_identifier%/}" # strip trailing /
 
     if [[ -e "${_identifier}"                     ]] &&
@@ -2793,7 +2813,7 @@ _resolve_selector_relative_path() {
       local _folder_path="${_notebook_path}"
       local _folder_relative_path=
       _folder_relative_path="$(
-        _resolve_selector_folders "${_selector}" "${_notebook_path}"
+        _selector_resolve_folders "${_selector}" "${_notebook_path}"
       )" || return 0
 
       if [[ -n "${_folder_relative_path:-}" ]]
@@ -2849,7 +2869,12 @@ _resolve_selector_relative_path() {
     fi
   fi
 
-  printf "%s\\n" "${_relative_path:-}"
+  if ((_print_full_path))
+  then
+    printf "%s\\n" "$(_join "/" "${_notebook_path}" "${_relative_path:-}")"
+  else
+    printf "%s\\n" "${_relative_path:-}"
+  fi
 }
 
 # _spinner()
@@ -4579,7 +4604,7 @@ _list() {
       local _selector_relative_path
       _selector_relative_path="$(
         # resolve selector relative path without a trailing /
-        _resolve_selector_relative_path "${__argument%\/}"
+        _selector_resolve_path "${__argument%\/}" --relative
       )"
 
       if [[ "${__argument:-}" =~ /$ ]]
@@ -4615,7 +4640,7 @@ _list() {
         else
           # resolve selector relative path without final path segment
           _selector_relative_path="$(
-            _resolve_selector_relative_path "${__argument%\/*}"
+            _selector_resolve_path "${__argument%\/*}" --relative
           )"
 
           if [[ -n "${_selector_relative_path:-}"                   ]] &&
@@ -5646,7 +5671,7 @@ _ls() {
         ;;
       *:*)
         local _selector_id=
-        _selector_id="$(_get_selector_id "${__arg}")"
+        _selector_id="$(_selector_get_identifier "${__arg}")"
 
         if [[ -n "${_selector_id:-}" ]]
         then
@@ -5730,7 +5755,7 @@ _ls() {
 
   if [[ "${_selector:-}" =~ / ]]
   then
-    _selector_folder_path="$(_resolve_selector_folders "${_selector}" || :)"
+    _selector_folder_path="$(_selector_resolve_folders "${_selector}" || :)"
 
     if [[ -n "${_selector_folder_path:-}" ]]
     then
@@ -8048,7 +8073,7 @@ _add() {
   if [[ -n "${_selector_folder_relative_path:-}"    ]]
   then
     _resolved_selector_folder_relative_path="$(
-      _resolve_selector_folders               \
+      _selector_resolve_folders               \
         "${_selector_folder_relative_path}/"  \
         --build
     )"
@@ -8932,7 +8957,7 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
     if [[ "${_arguments[0]:-}" =~ / ]]
     then
       _relative_folder_path="$(
-        _resolve_selector_folders "${_arguments[0]}" --build
+        _selector_resolve_folders "${_arguments[0]}" --build
       )"
 
       if [[ -n "${_relative_folder_path:-}" ]]
@@ -10066,14 +10091,14 @@ _helpers() {
     *padding)
       _print_padding                  "${_options[@]:-}"
       ;;
-    print*welcome|welcome)
+    *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
       ;;
-    resolve*folder*)
-      _resolve_selector_folders       "${_options[@]:-}"
+    *resolve*folder*)
+      _selector_resolve_folders       "${_options[@]:-}"
       ;;
-    resolve*rel*)
-      _resolve_selector_relative_path "${_options[@]:-}"
+    *resolve*rel*|resolve*path*)
+      _selector_resolve_path          "${_options[@]:-}"
       ;;
     spinner)
       _spinner                        "${_options[@]:-}"
@@ -10236,14 +10261,14 @@ _import() {
         fi
 
         _target_folder_relative_path="$(
-          _resolve_selector_folders "${_selector_path}" --build
+          _selector_resolve_folders "${_selector_path}" --build
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_source_basename}"
       elif [[ "${_selector_path}" =~ /  ]]
       then
         _target_folder_relative_path="$(
-          _resolve_selector_folders "${_selector_path}" --build
+          _selector_resolve_folders "${_selector_path}" --build
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_selector_path##*\/}"
@@ -13268,7 +13293,7 @@ _show() {
 
   if ((_print_selector_id))
   then
-    _get_selector_id "${_selector:-}"
+    _selector_get_identifier "${_selector:-}"
     return 0
   fi
 
@@ -13300,7 +13325,7 @@ _show() {
 
   local _relative_path
   _relative_path="$(
-    _resolve_selector_relative_path "${_selector}" "${_notebook_path}"
+    _selector_resolve_path "${_selector}" "${_notebook_path}" --relative
   )"
 
   local _folder_path="${_notebook_path:?}"
