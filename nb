@@ -6646,16 +6646,11 @@ Please type $(_color_primary "${_name}") to confirm: " __response
   #   _notebooks_notebook [archive | open | peek | status | unarchive] <name>
   _notebooks_notebook() {
     local _subcommand="${1:-}"
-    local _notebook_name="${2:-}"
+    local _notebook_name="${2%:}"
     local _notebook_path=
 
     if [[ -n "${_notebook_name:-}" ]]
     then
-      if [[ "${_notebook_name}" =~ :$ ]]
-      then
-        _notebook_name=$(printf "%s\\n" "${_notebook_name}" | cut -f 1 -d ":")
-      fi
-
       _notebooks_validate_name "${_notebook_name}"
 
       _notebook_path="$(_notebooks "${_notebook_name}" --path)"
@@ -7014,7 +7009,7 @@ HEREDOC
   # Usage:
   #   _notebooks_use <name>
   _notebooks_use() {
-    local _name="${1:-}"
+    local _name="${1%:}"
 
     if [[ -z "${_name}" ]]
     then
@@ -7035,13 +7030,6 @@ Examples:
   ${_ME} example:add --title "Example Title"
   ${_ME} example:search "sample query"
 HEREDOC
-    fi
-
-    # Autocomplete can result in a trailing colon on the notebook name, so
-    # remove it if present.
-    if [[ "${_name}" =~ :$ ]]
-    then
-      _name=$(printf "%s\\n" "${_name}" | cut -f 1 -d ":")
     fi
 
     if [[ -d "${NB_DIR}/${_name}/.git" ]]
