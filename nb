@@ -7713,9 +7713,11 @@ _call_deferred_function() {
   fi
 
   local _deferred_function="${_DEFERRED_FUNCTION:-}"
-  export _DEFERRED_FUNCTION=
 
   "${_deferred_function}" "${_DEFERRED_ARGUMENTS[@]:-}"
+
+  export _DEFERRED_FUNCTION=
+  export _DEFERRED_ARGUMENTS=()
 
   return 0
 }
