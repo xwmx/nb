@@ -2755,7 +2755,7 @@ _selector_resolve_path() {
   local _notebook_path=
   local _print_full_path=0
   local _relative_path=
-  local _selector="${1%/}" # strip trailing /
+  local _selector=
 
   for __arg in "${@:-}"
   do
@@ -2763,12 +2763,12 @@ _selector_resolve_path() {
       --full)
         _print_full_path=1
         ;;
-      *)
+      [^-]*)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg}"
+          _selector="${__arg%/}" # strip trailing /
         else
-          _notebook_path="${2:-}"
+          _notebook_path="${__arg:-}"
         fi
         ;;
     esac
@@ -2869,7 +2869,10 @@ _selector_resolve_path() {
     fi
   fi
 
-  if ((_print_full_path))
+  if [[ -n "${_identifier:-}" ]] && [[ -z "${_relative_path:-}" ]]
+  then
+    return 0
+  elif ((_print_full_path))
   then
     printf "%s\\n" "$(_join "/" "${_notebook_path}" "${_relative_path:-}")"
   else
@@ -3062,13 +3065,18 @@ _count() {
 
   if [[ -n "${_selector:-}" ]]
   then
-    if ((_skip_unmatched_selector))
+    local _selector_path=
+    _selector_path="$(_selector_resolve_path "${_selector}" --full)"
+
+    if [[ -z "${_selector_path:-}" ]]
     then
-      _list_files_options+=("$(
-        _show "${_selector}" --path 2>/dev/null || printf ""
-      )")
+      if ! ((_skip_unmatched_selector))
+      then
+        _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
+        return 1
+      fi
     else
-      _list_files_options+=("$(_show "${_selector}" --path)")
+      _list_files_options+=("${_selector_path:-}")
     fi
   fi
 
@@ -5593,11 +5601,9 @@ _ls() {
   local _filter_patterns=()
   local _header_flags=()
   local _limit=
-  local _list_options=()
   local _maybe_type=
   local _selector=
   local _selector_folder_path=
-  local _selector_relative_path=
   local _use_pager=0
 
   while ((${#}))
@@ -5685,7 +5691,6 @@ _ls() {
         if [[ -z "${_selector:-}" ]]
         then
           _selector="${__arg}"
-          _selector_relative_path="${_selector#*:}"
         fi
 
         _arguments+=("${__arg}")
@@ -5731,8 +5736,10 @@ _ls() {
 
   # Build list options.
 
-  _list_options=(${_arguments[@]:-})
+  local _list_options=(${_arguments[@]:-})
   _list_options+=("--with--pinned")
+
+  local _selector_relative_path="${_selector#*:}"
 
   if [[ -n "${_limit:-}" ]]
   then
@@ -10094,10 +10101,10 @@ _helpers() {
     *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
       ;;
-    *resolve*folder*)
+    *selector*folder*)
       _selector_resolve_folders       "${_options[@]:-}"
       ;;
-    *resolve*rel*|resolve*path*)
+    *selector*path*)
       _selector_resolve_path          "${_options[@]:-}"
       ;;
     spinner)
