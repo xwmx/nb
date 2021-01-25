@@ -5739,8 +5739,10 @@ _ls() {
 
     cat
 
-    # print preloaded footer
-    printf "%s\\n" "${_footer}"
+    if [[ -n "${_footer:-}" ]]
+    then # print preloaded footer
+      printf "%s\\n" "${_footer}"
+    fi
   } | if ((_use_pager))
       then
         _pager
