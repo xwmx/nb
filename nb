@@ -4625,16 +4625,16 @@ _list() {
 
   # Use code blocks to capture all output for piping to pager.
   {
-    if ((${#_pinned_basenames[@]}))
-    then
-      printf "%s\\n" "${_pinned_basenames[@]:-}"
-    fi
-
     if [[ -n "${_selector_basename:-}"        ]] &&
        [[ "${#_selector_arguments[@]}" -le 1  ]]
     then
       printf "%s\\n" "${_selector_basename}"
     else
+      if ((${#_pinned_basenames[@]}))
+      then
+        printf "%s\\n" "${_pinned_basenames[@]:-}"
+      fi
+
       _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
     fi
   } | {
