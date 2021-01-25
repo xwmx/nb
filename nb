@@ -5683,24 +5683,14 @@ _ls() {
         --added|--updated)
           if [[ -n "${_selector:-}" ]]
           then
-            _DEFERRED_SUBCOMMAND="show"
-            _DEFERRED_ARGUMENTS=(
-              "${_arguments[@]:-}"
-              "${_delegate_arguments[@]:-}"
-            )
-
+            _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
             return 0
           fi
           ;;
         --content|--title)
           if _option_value_is_present "${_delegate_arguments[$((i+1))]:-}"
           then
-            _DEFERRED_SUBCOMMAND="add"
-            _DEFERRED_ARGUMENTS=(
-              "${_arguments[@]:-}"
-              "${_delegate_arguments[@]:-}"
-            )
-
+            _defer "_add" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
             return 0
           fi
           ;;
@@ -7649,19 +7639,58 @@ _highlight() { _color_primary "${@:-}"; }
 _id_brackets_color() { _color_brackets "${@:-}"; }
 
 ###############################################################################
-# _main()
+# _defer()
 ###############################################################################
 
-# $_DEFERRED_SUBCOMMAND
+# $_DEFERRED_FUNCTION
 #
-# The name of the subcommand to run after the script has loaded, as assigned
-# by _main().
-export _DEFERRED_SUBCOMMAND=
+# The name of the subcommand to run after the script has loaded.
+export _DEFERRED_FUNCTION=
 
 # $_DEFERRED_ARGUMENTS
 #
-# Arguments for $_DEFERRED_SUBCOMMAND as assigned by _main().
+# Arguments for $_DEFERRED_FUNCTION.
 export _DEFERRED_ARGUMENTS=()
+
+# _defer()
+#
+# Usage:
+#   _defer <name> [<argument>...]
+#
+# Description:
+#   Assign a function to run after the script has loaded.
+_defer() {
+  _DEFERRED_FUNCTION="${1:-}"
+  shift
+  _DEFERRED_ARGUMENTS=("${@:-}")
+}
+
+# _call_deferred_function()
+#
+# Usage:
+#   _call_deferred_function [<name>...]
+#
+# Description:
+#   Call the function deferred with _defer().
+_call_deferred_function() {
+  [[ -z "${_DEFERRED_FUNCTION:-}" ]] && return 0
+
+  if [[ -n "${1:-}" ]] && ! _contains "${_DEFERRED_FUNCTION}" "${@:-}"
+  then
+    return 0
+  fi
+
+  local _deferred_function="${_DEFERRED_FUNCTION:-}"
+  export _DEFERRED_FUNCTION=
+
+  "${_deferred_function}" "${_DEFERRED_ARGUMENTS[@]:-}"
+
+  return 0
+}
+
+###############################################################################
+# _main()
+###############################################################################
 
 # _main()
 #
@@ -7680,14 +7709,10 @@ _main() {
   case "${_SUBCOMMAND}" in
     init|sync)
       _git required
-      # "_${_SUBCOMMAND}" "${@}"
-      _DEFERRED_SUBCOMMAND="${_SUBCOMMAND}"
-      _DEFERRED_ARGUMENTS=("${@}")
+      _defer "_${_SUBCOMMAND}" "${@:-}"
       ;;
     commands|completions|env|git|h|help*|r|run|set|settings|subcommands|update|version)
-      # "_${_SUBCOMMAND}" "${@}"
-      _DEFERRED_SUBCOMMAND="${_SUBCOMMAND}"
-      _DEFERRED_ARGUMENTS=("${@}")
+      _defer "_${_SUBCOMMAND}" "${@:-}"
       ;;
     *)
       _git required
@@ -7721,8 +7746,7 @@ _main() {
         "_${_SUBCOMMAND}" "${@}" --exit
       else
         # Defer subcommand call until the rest of the script has been loaded.
-        _DEFERRED_SUBCOMMAND="${_SUBCOMMAND}"
-        _DEFERRED_ARGUMENTS=("${@}")
+        _defer "_${_SUBCOMMAND}" "${@:-}"
 
         return 0
       fi
@@ -14096,18 +14120,8 @@ _version() {
 }
 
 ###############################################################################
-# Run Deferred Subcommand                               Run Deferred Subcommand
+# Call Deferred Function                                 Call Deferred Function
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
-_run_deferred_subcommand() {
-  if [[ -n "${_DEFERRED_SUBCOMMAND:-}" ]]
-  then
-    local _deferred_subcommand="${_DEFERRED_SUBCOMMAND:-}"
-    export _DEFERRED_SUBCOMMAND=
-
-    "_${_deferred_subcommand}" "${_DEFERRED_ARGUMENTS[@]:-}"
-
-    return 0
-  fi
-}; _run_deferred_subcommand
+_call_deferred_function
