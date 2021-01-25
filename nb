@@ -7703,7 +7703,7 @@ _defer() {
 #   _call_deferred_function [<name>...]
 #
 # Description:
-#   Call the function deferred with _defer().
+#   Call the deferred function.
 _call_deferred_function() {
   [[ -z "${_DEFERRED_FUNCTION:-}" ]] && return 0
 
