@@ -3162,11 +3162,6 @@ Usage:
   nb notebooks show (<name> | <path> | <selector>) [--archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
-  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
-          --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]]
-  nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
   nb plugins [<name>] [--paths]
@@ -3183,8 +3178,8 @@ Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
+          [-r | --render] | --title | --type [<type>] | [-u | --updated]]
+          [--no-color]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -4546,8 +4541,8 @@ Example:
 Usage:
   nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
+          [-r | --render] | --title | --type [<type>] | [-u | --updated]]
+          [--no-color]
   nb show <notebook>
 
 Options:
@@ -4561,8 +4556,6 @@ Options:
   -r, --render     Use `pandoc` [1] to render the file to HTML and display
                    in the terminal web browser. If either `pandoc` or a
                    browser are unavailable, `-r` / `--render` is ignored.
-  --selector-id    Given a selector (e.g., notebook:example.md), print the
-                   identifier portion (example.md).
   --title          Print the title of the note.
   --type [<type>]  Print the file extension or, when <type> is specified,
                    return true if the item matches <type>. <type> can be a

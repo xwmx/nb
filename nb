@@ -3778,8 +3778,8 @@ $(_color_primary "Usage:")
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
+          [-r | --render] | --title | --type [<type>] | [-u | --updated]]
+          [--no-color]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -12990,8 +12990,8 @@ describe "show" <<HEREDOC
 Usage:
   ${_ME} show (<id> | <filename> | <path> | <title>) [[-a | --added] |
           --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --selector-id | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
+          [-r | --render] | --title | --type [<type>] | [-u | --updated]]
+          [--no-color]
   ${_ME} show <notebook>
 
 Options:
@@ -13005,8 +13005,6 @@ Options:
   -r, --render     Use \`pandoc\` [1] to render the file to HTML and display
                    in the terminal web browser. If either \`pandoc\` or a
                    browser are unavailable, \`-r\` / \`--render\` is ignored.
-  --selector-id    Given a selector (e.g., notebook:example.md), print the
-                   identifier portion (example.md).
   --title          Print the title of the note.
   --type [<type>]  Print the file extension or, when <type> is specified,
                    return true if the item matches <type>. <type> can be a
