@@ -2634,7 +2634,7 @@ _resolve_selector_folders() {
   then
     local _selector_notebook_path=
     _selector_notebook_path="$(
-      _notebooks show "${_selector%%:*}" --path
+      _notebooks show "${_selector%%:*}" --path 2>/dev/null || :
     )"
 
     if [[ -n "${_selector_notebook_path:-}" ]]
@@ -2739,7 +2739,16 @@ _resolve_selector_relative_path() {
   then
     if [[ -z "${_notebook_path:-}" ]]
     then
-      _notebook_path="$(_notebooks show "${_selector}" --path)"
+      _notebook_path="$(
+        _notebooks show "${_selector}" --path 2>/dev/null || :
+      )"
+    fi
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _notebook_path="$(
+        _notebooks current --path 2>/dev/null || :
+      )"
     fi
 
     _identifier="$(_show "${_selector}" --selector-id)"
@@ -4551,7 +4560,7 @@ _list() {
       local _selector_relative_path
       _selector_relative_path="$(
         # resolve selector relative path without a trailing /
-        _show "${__argument%\/}" --relative-path 2>/dev/null || :
+        _resolve_selector_relative_path "${__argument%\/}"
       )"
 
       if [[ "${__argument:-}" =~ /$ ]]
@@ -4587,7 +4596,7 @@ _list() {
         else
           # resolve selector relative path without final path segment
           _selector_relative_path="$(
-            _show "${__argument%\/*}" --relative-path 2>/dev/null || :
+            _resolve_selector_relative_path "${__argument%\/*}"
           )"
 
           if [[ -n "${_selector_relative_path:-}"                   ]] &&
@@ -10781,8 +10790,11 @@ _helpers() {
     print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
       ;;
-    resolve*)
+    resolve*folder*)
       _resolve_selector_folders       "${_options[@]:-}"
+      ;;
+    resolve*rel*)
+      _resolve_selector_relative_path "${_options[@]:-}"
       ;;
     spinner)
       _spinner                        "${_options[@]:-}"
