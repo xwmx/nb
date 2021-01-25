@@ -2016,6 +2016,25 @@ _get_http_status() {
   fi
 }
 
+# _get_selector_id()
+#
+# Usage:
+#   _get_selector_id <selector>
+#
+# Description:
+#   Print the identifier (non-notebook) portion of a selector.
+_get_selector_id() {
+  local _selector="${1:-}"
+
+  if [[   "${_selector:-}" =~ :     ]] &&
+     [[ ! "${_selector:-}" =~ /.*:  ]]
+  then
+    printf "%s\\n" "${_selector#*:}" # strip notebook name
+  else
+    printf "%s\\n" "${_selector:-}"
+  fi
+}
+
 # _get_unique_relative_path()
 #
 # Usage:
@@ -2751,7 +2770,7 @@ _resolve_selector_relative_path() {
       )"
     fi
 
-    _identifier="$(_show "${_selector}" --selector-id)"
+    _identifier="$(_get_selector_id "${_selector}")"
     _identifier="${_identifier%/}" # strip trailing /
 
     if [[ -e "${_identifier}"                     ]] &&
@@ -5627,11 +5646,11 @@ _ls() {
         ;;
       *:*)
         local _selector_id=
-        _selector_id="$(_show "${__arg}" --selector-id || :)"
+        _selector_id="$(_get_selector_id "${__arg}")"
 
         if [[ -n "${_selector_id:-}" ]]
         then
-          _arguments+=("$(_show "${__arg}" --selector-id)")
+          _arguments+=("${_selector_id}")
         fi
 
         _selector="${__arg:-}"
@@ -7346,12 +7365,7 @@ _show() {
 
   if ((_print_selector_id))
   then
-    if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ /.*: ]]
-    then
-      printf "%s\\n" "${_selector#*:}" # strip notebook name
-    else
-      printf "%s\\n" "${_selector:-}"
-    fi
+    _get_selector_id "${_selector:-}"
     return 0
   fi
 
