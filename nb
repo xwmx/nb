@@ -8433,7 +8433,11 @@ _browse() {
 
   if ! hash "ncat" &>/dev/null
   then
-    _exit_1 "Install nmap for the ncat utility: https://nmap.org/"
+    _show "${_selector}" --render
+    _warn cat <<HEREDOC
+Install the \`ncat\` utility for improved browsing and linking: https://nmap.org/
+HEREDOC
+    exit 0
   fi
 
   # start server in the background
@@ -8444,7 +8448,7 @@ _browse() {
     trap "exit" INT
     while true
     do
-      ncat -lp "${_server_port}" -e "nb browse --respond" 2>/dev/null
+      ncat -lp "${_server_port}" -e "${_MY_PATH} browse --respond" 2>/dev/null
     done
   ) &
 
@@ -14079,15 +14083,22 @@ Can't show archives. Export archive and expand to edit.\\n"
          _command_exists "pandoc"   &&
          _browser
     then # `show --render` with `pandoc` and browser available
-      cat "${_target_path}"   \
-        | _show_resolve_links \
-            "${_target_path}" \
-        | pandoc              \
-          --from markdown     \
-          --to html           \
-          --standalone        \
-          2>/dev/null         \
-        | _browser
+      if hash "ncat" &>/dev/null
+      then
+        _browse "${_target_path}"
+        # _browse 167
+        exit 0
+      else
+        cat "${_target_path}"   \
+          | _show_resolve_links \
+              "${_target_path}" \
+          | pandoc              \
+            --from markdown     \
+            --to html           \
+            --standalone        \
+            2>/dev/null         \
+          | _browser
+      fi
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
