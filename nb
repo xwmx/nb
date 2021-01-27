@@ -7278,6 +7278,7 @@ _SUBCOMMANDS=(
   b
   bookmark
   bookmarks
+  browse
   bs
   commands
   completions
@@ -7349,6 +7350,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   add
   b
   bookmark
+  browse
   commands
   completions
   count
@@ -7405,6 +7407,7 @@ _GIT_SUBCOMMANDS=(
   b
   bookmark
   bookmarks
+  browse
   bs
   count
   create
@@ -8242,6 +8245,228 @@ _add() {
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
 _alias_subcommand "add" "new"
+
+# browse ############################################################### browse
+
+describe "browse" <<HEREDOC
+Usage:
+  ${_ME} browse <selector>
+
+Description:
+  Start the web server and open the item represented by <selector> in the
+  terminal web browser.
+HEREDOC
+_browse() {
+  # _browse_http_response()
+  #
+  # Usage:
+  #   _browse_http_response <status-code>
+  #
+  # Description:
+  #   Print the response message for a given status code.
+  _browse_http_response() {
+    local _status_code="${1:-}"
+
+    case "${_status_code}" in
+      200) printf "OK\\n"                     ;;
+      400) printf "Bad Request\\n"            ;;
+      403) printf "Forbidden\\n"              ;;
+      404) printf "Not Found\\n"              ;;
+      405) printf "Method Not Allowed\\n"     ;;
+      500) printf "Internal Server Error\\n"  ;;
+    esac
+  }
+
+  # _browse_respond_with()
+  #
+  # Usage:
+  #   _browse_respond_with <status-code> [<path> | <string>]
+  #
+  # Description:
+  #   Send a response with <status-code> as status and an optional <file>
+  #   or <string>, then exit with 0 for status 200 and 1 for all others.
+  _browse_respond_with() {
+    local _path=
+    local _status_code="${1:-}"
+    local _string=
+
+    local _date=
+    _date=$(date +"%a, %d %b %Y %H:%M:%S %Z")
+
+    local _response_headers=(
+         "Date: ${_date}"
+      "Expires: ${_date}"
+       "Server: nb"
+    )
+
+    if [[ "${2:-}" =~ ^/ ]] && [[ -f "${2:-}" ]]
+    then
+      _path="${2:-}"
+
+      _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+
+      local _content_length=
+
+      if _content_length="$(stat -c '%s'  "${_path}" 2>/dev/null)" || # GNU
+         _content_length="$(stat -f '%z'  "${_path}")"                # BSD
+      then
+        _response_headers+=("Content-Type: ${_content_length}")
+      fi
+    else
+      _string="${2:-}"
+
+      _response_headers+=("Content-Type: text/plain")
+    fi
+
+    printf "%s\\r\\n" \
+      "HTTP/1.0 ${_status_code} $(_browse_http_response "${_status_code}")"
+
+    printf "%s\\r\\n" "${_response_headers[@]:-}"
+
+   printf "\\r\\n"
+
+    if [[ -n "${_string:-}" ]]
+    then
+      printf "%s\\r\\n" "${_string}"
+    elif [[ -n "${_path:-}" ]]
+    then
+      local __line=
+
+      while read -r __line
+      do
+        printf "%s\\r\\n" "${__line}"
+      done < "${_path}"
+    else
+      printf "%s\\r\\n" \
+        "${_status_code} $(_browse_http_response "${_status_code}")"
+    fi
+
+    if [[ "${1:-}" -eq 200 ]]
+    then
+      exit 0
+    else
+      exit 1
+    fi
+  }
+
+  # _browse_respond()
+  #
+  # Usage:
+  #   _browse_respond
+  #
+  # Description:
+  #   Build a response using standard input and print to standard output..
+  _browse_respond() {
+    # ---
+    # Request parsing
+
+    # Request-Line HTTP RFC 2616 §5
+    # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
+    local _line=
+    read -r _line || _browse_respond_with 400
+
+    # strip trailing CR if it exists
+    _line="${_line%%$'\r'}"
+
+    local _request_http_version=
+    local _request_method=
+    local _request_uri=
+
+    IFS=' ' read -r   \
+      _request_method \
+      _request_uri    \
+      _request_http_version <<<"${_line}"
+
+    if [[ -z "${_request_method:-}"       ]] ||
+       [[ -z "${_request_uri:-}"          ]] ||
+       [[ -z "${_request_http_version:-}" ]]
+    then
+      _browse_respond_with 400
+    fi
+
+    if [[ "${_request_method}" != "GET" ]]
+    then # only GET is supported
+      _browse_respond_with 405
+    fi
+
+    _temp_file="$(mktemp).html"
+
+    _relative_path="${_request_uri#\/}"
+    _relative_path="${_relative_path//%20/\ }"
+
+    if ! _show "${_relative_path}" --relative-path &>/dev/null
+    then
+      _browse_respond_with 404
+    fi
+
+    _show "${_relative_path}" --browse > "${_temp_file}"
+
+    _browse_respond_with 200 "${_temp_file}"
+
+    # fall back to 500 response
+
+    _browse_respond_with 500
+  }
+
+  local _print_output=0
+  local _selector=
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      -p|--print)
+        _print_output=1
+        ;;
+      --respond|--serve)
+        _browse_respond
+        exit 0
+        ;;
+      *)
+        _selector="${1:-}"
+        ;;
+    esac
+
+    shift
+  done
+
+  [[ -z "${_selector:-}" ]] && _exit_1 _help "browse"
+
+  if ! hash "ncat" &>/dev/null
+  then
+    _exit_1 "Install nmap for the ncat utility: https://nmap.org/"
+  fi
+
+  # start server in the background
+
+  local _server_port="6789"
+
+  (
+    trap "exit" INT
+    while true
+    do
+      ncat -lp "${_server_port}" -e "nb browse --respond" 2>/dev/null
+    done
+  ) &
+
+  local _pid="${!}"
+  # shellcheck disable=SC2064
+  trap "kill ${_pid} 2> /dev/null" EXIT
+
+  sleep 0.5
+
+  # request URL
+
+  if ((_print_output)) && hash "curl" &>/dev/null
+  then
+    curl --silent "http://localhost:${_server_port}/${_selector//\ /\%20}"
+  else
+    w3m "http://localhost:${_server_port}/${_selector}"
+  fi
+
+  # call again to clear any waiting process
+
+  (sleep 1 && curl "http://localhost:${_server_port}" &>/dev/null) &
+}
 
 # bookmark ########################################################### bookmark
 
@@ -13163,6 +13388,7 @@ _show() {
   local _print_selector_id=0
   local _print_updated=0
   local _render=0
+  local _render_for_browsing=0
   local _selector=
   local _show_color_enabled="${_COLOR_ENABLED}"
   local _skip_notebook_fallback=0
@@ -13184,6 +13410,9 @@ _show() {
       -a|--added*)
         _print_added=1
         _skip_notebook_fallback=1
+        ;;
+      --browse*)
+        _render_for_browsing=1
         ;;
       --filename|--basename)
         _print_filename=1
@@ -13730,24 +13959,135 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   else # file is text
-    if ((_render))                  &&
+    # Usage: _show_resolve_links <path> [--browse]
+    _show_resolve_links() {
+      local _matches=()
+      local _path="${1:?}"
+
+      local _for_browse=0
+      [[ -n "${2:-}" ]] && _for_browse=1
+
+      _matches=($(
+        GIT_PAGER='' git -C "${_notebook_path}" \
+          grep                                  \
+          --color=never                         \
+          --extended-regexp                     \
+          -h                                    \
+          --only-matching                       \
+          --text                                \
+          -e "\[\[[^\[]+\]\]"                   \
+          "${_path}"                            \
+          || return 0
+      ))
+
+      local __match=
+      for   __match in "${_matches[@]:-}"
+      do
+        local _selector="${__match#[[}"
+        _selector="${_selector%]]}"
+
+        if ((_for_browse))
+        then
+          if [[ -n "${_selector:-}" ]]
+          then
+            _links+=("[[[${_selector}]]](http://localhost:6789/${_selector})")
+          else
+            _links+=("${__match}")
+          fi
+        else
+          local _path=
+          _path="$(_show "${_selector}" --path 2>/dev/null || :)"
+
+          if [[ -z "${_path:-}" ]]
+          then
+            _links+=("[[${_selector}]]")
+          else
+            local _title=
+            _title="$(_show "${_selector}" --title 2>/dev/null || :)"
+
+            local _label="${_title:-}"
+
+            if [[ -z "${_label:-}" ]]
+            then
+              _label="${_selector:-}"
+            fi
+
+            _links+=("[[[${_label:-}]]](file:${_path:-})")
+          fi
+        fi
+      done
+
+      # Usage: _show_escape_link_component
+      _show_escape_link_component() {
+        cat | sed \
+          -e 's/\//\\\//g' \
+          -e 's/\[/\\\[/g' \
+          -e 's/\]/\\\]/g' \
+          -e 's/(/\\(/g'    \
+          -e 's/)/\\)/g'
+      }
+
+      local _sed_arguments=()
+
+      local i=0
+      for ((i=0; i < "${#_links[@]}"; i++))
+      do
+        local _escaped_match=
+        _escaped_match="$(
+          printf "%s\\n" "${_matches[i]:-}" | _show_escape_link_component
+        )"
+
+        local _escaped_link=
+        _escaped_link="$(
+          printf "%s\\n" "${_links[i]:-}"   | _show_escape_link_component
+        )"
+
+        if [[ -n "${_escaped_match:-}" ]] && [[ -n "${_escaped_link:-}" ]]
+        then
+          _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
+        fi
+      done
+
+      cat | sed "${_sed_arguments[@]:-}"
+    }
+
+    if ((_render_for_browsing))
+    then
+      cat "${_target_path}"   \
+        | _show_resolve_links \
+            "${_target_path}" \
+            --browse          \
+        | pandoc              \
+          --from markdown     \
+          --to html           \
+          --standalone        \
+          2>/dev/null
+    elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
          _browser                   &&
          ! ((_show_color_enabled))
     then # `show --render --print --raw` with `pandoc` and browser available
-      pandoc "${_target_path}"
+      pandoc "${_target_path}" 2>/dev/null
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
          _browser
     then # `show --render --print` with `pandoc` and browser available
-      pandoc "${_target_path}" | _browser --dump
+      pandoc "${_target_path}" 2>/dev/null | _browser --dump
     elif ((_render))                &&
          _command_exists "pandoc"   &&
          _browser
     then # `show --render` with `pandoc` and browser available
-      pandoc "${_target_path}" | _browser
+      cat "${_target_path}"   \
+        | _show_resolve_links \
+            "${_target_path}" \
+        | pandoc              \
+          --from markdown     \
+          --to html           \
+          --standalone        \
+          2>/dev/null         \
+        | _browser
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
