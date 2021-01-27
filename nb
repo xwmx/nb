@@ -8325,7 +8325,7 @@ _browse() {
 
     printf "%s\\r\\n" "${_response_headers[@]:-}"
 
-   printf "\\r\\n"
+    printf "\\r\\n"
 
     if [[ -n "${_string:-}" ]]
     then
