@@ -13968,8 +13968,8 @@ Can't show archives. Export archive and expand to edit.\\n"
       local _matches=()
       local _path="${1:?}"
 
-      local _for_browse=0
-      [[ -n "${2:-}" ]] && _for_browse=1
+      local _for_browsing=0
+      [[ -n "${2:-}" ]] && _for_browsing=1
 
       _matches=($(
         GIT_PAGER='' git -C "${_notebook_path}" \
@@ -13990,7 +13990,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         local _selector="${__match#[[}"
         _selector="${_selector%]]}"
 
-        if ((_for_browse))
+        if ((_for_browsing))
         then
           if [[ -n "${_selector:-}" ]]
           then
