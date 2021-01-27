@@ -8257,6 +8257,8 @@ Description:
   terminal web browser.
 HEREDOC
 _browse() {
+  # Inspired by bashttpd: https://github.com/avleen/bashttpd
+
   # _browse_http_response()
   #
   # Usage:
