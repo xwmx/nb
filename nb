@@ -14086,7 +14086,6 @@ Can't show archives. Export archive and expand to edit.\\n"
       if hash "ncat" &>/dev/null
       then
         _browse "${_target_path}"
-        # _browse 167
         exit 0
       else
         cat "${_target_path}"   \
