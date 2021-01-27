@@ -8469,7 +8469,7 @@ HEREDOC
     w3m "http://localhost:${_server_port}/${_selector}"
   fi
 
-  # call again to clear any waiting process
+  # call again to clear any listening process
 
   (sleep 1 && curl "http://localhost:${_server_port}" &>/dev/null) &
 }
