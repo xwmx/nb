@@ -61,6 +61,7 @@ jobs:
   #         brew install bat
   #         brew install bats-core
   #         brew install expect
+  #         brew install nmap
   #         brew install pandoc
   #         brew install w3m
   #         git config --global user.name   "Example Name"
@@ -87,6 +88,7 @@ jobs:
           brew unlink  bats
           brew install bats-core
           brew install expect
+          brew install nmap
           brew install pandoc
           brew install w3m
           git config --global user.name   "Example Name"
@@ -110,6 +112,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install bats -y
+          sudo apt-get install nmap
           sudo apt-get install python-pygments -y
           sudo apt-get install w3m
           curl -LO https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb
