@@ -8479,11 +8479,11 @@ HEREDOC
 
   # request URL
 
-  if ((_print_output)) && hash "curl" &>/dev/null
+  if ((_print_output))
   then
-    curl --silent "http://localhost:${_server_port}/${_selector//\ /\%20}"
+    _download_from "http://localhost:${_server_port}/${_selector//\ /\%20}"
   else
-    w3m "http://localhost:${_server_port}/${_selector}"
+    _browser "http://localhost:${_server_port}/${_selector}"
   fi
 
   # call again to clear any listening process
