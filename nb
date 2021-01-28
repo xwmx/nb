@@ -13960,10 +13960,19 @@ Can't show archives. Export archive and expand to edit.\\n"
   # change directory to folder path to enable relative paths
   cd "${_folder_path}"
 
+  # turn on case-insensitive matching
+  shopt -s nocasematch
+
   if ! _file_is_text "${_target_path}"
   then
-    if [[ -d "${_target_path}"        ]]  &&
-       ((_render_for_browsing))
+    if ! ((_render_for_browsing))   &&
+       [[ -d "${_target_path}" ]]   &&
+       hash "ncat" &>/dev/null
+    then
+      _browse "${_target_path}/"
+      exit 0
+    elif ((_render_for_browsing))   &&
+         [[ -d "${_target_path}" ]]
     then
       {
         _list "${_target_path}/" --no-color
@@ -14258,7 +14267,8 @@ Can't show archives. Export archive and expand to edit.\\n"
       cat | sed "${_sed_arguments[@]:-}"
     }
 
-    if ((_render_for_browsing))
+    if ((_render_for_browsing)) &&
+       [[ "${_target_path}" =~ md$|markdown$ ]]
     then
       cat "${_target_path}"   \
         | _show_resolve_links \
@@ -14273,18 +14283,21 @@ Can't show archives. Export archive and expand to edit.\\n"
          ((_print_output))          &&
          _command_exists "pandoc"   &&
          _browser                   &&
-         ! ((_show_color_enabled))
+         ! ((_show_color_enabled))  &&
+         [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print --raw` with `pandoc` and browser available
       pandoc "${_target_path}" 2>/dev/null
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
-         _browser
+         _browser                   &&
+         [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print` with `pandoc` and browser available
       pandoc "${_target_path}" 2>/dev/null | _browser --dump
     elif ((_render))                &&
          _command_exists "pandoc"   &&
-         _browser
+         _browser                   &&
+         [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render` with `pandoc` and browser available
       if hash "ncat" &>/dev/null
       then
@@ -14324,6 +14337,9 @@ Can't show archives. Export archive and expand to edit.\\n"
       fi
     fi
   fi
+
+  # turn off case-insensitive matching
+  shopt -u nocasematch
 
   if [[ -n "${_decrypted_path:-}" ]] && [[ -e "${_decrypted_path}" ]]
   then
