@@ -2,6 +2,62 @@
 
 load test_helper
 
+# search-based pinning integration ############################################
+
+@test "'pin' integrates with search-based pinning." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two" --content "#pinned"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+
+    "${_NB}" pin 1
+
+    diff                              \
+      <(printf "%s\\n" "File One.md") \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  NB_PINNED_PATTERN="#pinned" run "${_NB}" list --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                             ]]
+  [[ "${#lines[@]}" -eq 3                             ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
+  [[ "${lines[1]}"  =~  \.*[.*2.*].*\ 📌\ Title\ Two  ]]
+  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
+}
+
+@test "'pin' and search-based pinning don't duplicate pinned entries." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One" --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+
+    "${_NB}" pin 1
+
+    diff                              \
+      <(printf "%s\\n" "File One.md") \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  NB_PINNED_PATTERN="#pinned" run "${_NB}" list --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                             ]]
+  [[ "${#lines[@]}" -eq 3                             ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
+  [[ "${lines[1]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
+  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
+}
+
 # error handling ##############################################################
 
 @test "'pin' with not-valid selector prints message." {
