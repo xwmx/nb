@@ -5101,7 +5101,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,200 tests spanning over 30,000 lines, `nb` is really
+With more than 1,300 tests spanning over 30,000 lines, `nb` is really
 mostly a [test suite](https://github.com/xwmx/nb/tree/master/test).
 [Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
 on recent versions of both Ubuntu and macOS to account for differences between
