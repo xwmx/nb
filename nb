@@ -436,6 +436,11 @@ export NB_HEADER="${NB_HEADER:-2}"
 # Supported Values: any positive number
 export NB_LIMIT="${NB_LIMIT:-20}"
 
+# $NB_SERVER_PORT
+#
+# Default: '6789'
+export NB_SERVER_PORT="${NB_SERVER_PORT:-6789}"
+
 # $NB_SYNTAX_THEME
 #
 # Default: 'base16'
@@ -8497,13 +8502,11 @@ HEREDOC
 
   # start server in the background
 
-  local _server_port="6789"
-
   (
     trap "exit" INT
     while true
     do
-      ncat -lp "${_server_port}" -e "${_MY_PATH} browse --respond" 2>/dev/null
+      ncat -lp "${NB_SERVER_PORT}" -e "${_MY_PATH} browse --respond" 2>/dev/null
     done
   ) &
 
@@ -8517,14 +8520,16 @@ HEREDOC
 
   if ((_print_output))
   then
-    _download_from "http://localhost:${_server_port}/${_selector//\ /\%20}"
+    _download_from "http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}"
   else
-    _browser "http://localhost:${_server_port}/${_selector}"
+    _browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
   fi
 
-  # call again to clear any listening process
+  # make a final request to clear any listening process
 
-  (sleep 1 && curl "http://localhost:${_server_port}" &>/dev/null) &
+  (
+    sleep 1 && _download_from "http://localhost:${NB_SERVER_PORT}" &>/dev/null
+  ) &
 }
 
 # bookmark ########################################################### bookmark
@@ -13568,6 +13573,7 @@ _show() {
         ;;
       --browse*)
         _render_for_browsing=1
+        _skip_notebook_fallback=1
         ;;
       --filename|--basename)
         _print_filename=1
@@ -13831,10 +13837,14 @@ _show() {
     fi
   fi
 
-  if ((_print_info))
+  if ((_print_info)) || ((_render_for_browsing))
   then
-    local _id
-    _id="$(_index get_id "${_basename}" "${_folder_path}")"
+    local _id=
+
+    if [[ -n "${_basename:-}" ]]
+    then
+      _id="$(_index get_id "${_basename}" "${_folder_path}")"
+    fi
 
     local _maybe_scoped_relative_path="${_relative_path// /\\ }"
 
@@ -13858,7 +13868,10 @@ _show() {
       _maybe_scoped_id="${_notebook_escaped_name}:${_maybe_scoped_id}"
       _maybe_scoped_relative_path="${_notebook_escaped_name}:${_maybe_scoped_relative_path}"
     fi
+  fi
 
+  if ((_print_info))
+  then
     local _info_line
     _info_line+="$(_color_brackets "${_maybe_scoped_id}") "
 
@@ -13950,6 +13963,45 @@ Can't show archives. Export archive and expand to edit.\\n"
   if ! _file_is_text "${_target_path}"
   then
     if [[ -d "${_target_path}"        ]]  &&
+       ((_render_for_browsing))
+    then
+      {
+        _list "${_target_path}/" --no-color
+      } | {
+        while read -r __list_item
+        do
+          local _item_selector="${__list_item%%]*}"
+          _item_selector="${_item_selector#[}"
+          _item_selector="${_item_selector//\\/}"
+
+          local _item_path=
+          _item_path="$(_show "${_item_selector}" --path 2>/dev/null)"
+
+          if [[ -d "${_item_path}" ]]
+          then
+            _item_selector="${_item_selector}/"
+          fi
+
+          printf "%s\\n\\n" \
+            "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})"
+        done
+      } | {
+        if [[ "${_maybe_scoped_relative_path}" =~ :$ ]]
+        then
+          printf "# %s\\n\\n"   "${_maybe_scoped_relative_path}"
+        else
+          printf "# %s/\\n\\n"  "${_maybe_scoped_relative_path}"
+        fi
+        cat
+      } | {
+        pandoc            \
+          --from markdown \
+          --to html       \
+          --standalone    \
+          2>/dev/null
+      }
+      return 0
+    elif [[ -d "${_target_path}"      ]]  &&
        _command_exists "ranger"           &&
        {
          [[ -z "${_tool}"             ]]  ||
@@ -14145,7 +14197,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         then
           if [[ -n "${_selector:-}" ]]
           then
-            _links+=("[[[${_selector}]]](http://localhost:6789/${_selector})")
+            _links+=("[[[${_selector}]]](http://localhost:${NB_SERVER_PORT}/${_selector})")
           else
             _links+=("${__match}")
           fi
