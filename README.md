@@ -1725,6 +1725,26 @@ your editor with `nb settings edit`:
 export NB_PINNED_PATTERN="#pinned"
 ```
 
+All of the characters `nb` uses as icons can be customized, so to
+use a different character as the pinned icon, simply add a line
+like the following to your `~/.nbrc` file:
+
+```bash
+# reassign pinned indicator
+export NB_ICON_PINNED="💖"
+```
+
+```bash
+> nb
+home
+----
+[1] 💖 Title One
+[5] Title Five
+[4] Title Four
+[3] Title Three
+[2] Title Two
+```
+
 ### 🔍 Search
 
 Use [`nb search`](#search) to search your notes, with support for
