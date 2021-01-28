@@ -14138,10 +14138,10 @@ Can't show archives. Export archive and expand to edit.\\n"
 
       # Usage: _show_escape_link_component
       _show_escape_link_component() {
-        cat | sed \
-          -e 's/\//\\\//g' \
-          -e 's/\[/\\\[/g' \
-          -e 's/\]/\\\]/g' \
+        cat | sed           \
+          -e 's/\//\\\//g'  \
+          -e 's/\[/\\\[/g'  \
+          -e 's/\]/\\\]/g'  \
           -e 's/(/\\(/g'    \
           -e 's/)/\\)/g'
       }
