@@ -1334,11 +1334,11 @@ and filter only bookmarks:
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
 [3] 🔖 🔒 example.bookmark.md.enc
-[2] 🔖 Example Two (example.com)
-[1] 🔖 Example One (example.com)
+[2] 🔖 Bookmark Two (example.com)
+[1] 🔖 Bookmark One (example.com)
 
 > nb bookmark list two
-[2] 🔖 Example Two (example.com)
+[2] 🔖 Bookmark Two (example.com)
 ```
 
 Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
@@ -1347,13 +1347,13 @@ Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
 > nb
 home
 ----
-[7] 🔖 Example Bookmark Three (example.com)
-[6] Example Note Three
-[5] 🔖 Example Bookmark Two (example.net)
-[4] Example Note Two
+[7] 🔖 Bookmark Three (example.com)
+[6] Example Note
+[5] 🔖 Bookmark Two (example.net)
+[4] Sample Note
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
-[2] Example Note One
-[1] 🔖 Example Bookmark One (example.com)
+[2] Demo Note
+[1] 🔖 Bookmark One (example.com)
 ```
 
 Use the [`--type <type>` / `--<type>`](#ls) option as a filter to display
@@ -1361,16 +1361,16 @@ only bookmarks:
 
 ```bash
 > nb --type bookmark
-[7] 🔖 Example Bookmark Three (example.com)
-[5] 🔖 Example Bookmark Two (example.net)
+[7] 🔖 Bookmark Three (example.com)
+[5] 🔖 Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
-[1] 🔖 Example Bookmark One (example.com)
+[1] 🔖 Bookmark One (example.com)
 
 > nb --bookmark
-[7] 🔖 Example Bookmark Three (example.com)
-[5] 🔖 Example Bookmark Two (example.net)
+[7] 🔖 Bookmark Three (example.com)
+[5] 🔖 Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
-[1] 🔖 Example Bookmark One (example.com)
+[1] 🔖 Bookmark One (example.com)
 ```
 
 `nb` saves the domain in the title, making it easy to filter by domain
@@ -1378,8 +1378,8 @@ using any list subcommands:
 
 ```bash
 > nb example.com
-[7] 🔖 Example Bookmark Three (example.com)
-[1] 🔖 Example Bookmark One (example.com)
+[7] 🔖 Bookmark Three (example.com)
+[1] 🔖 Bookmark One (example.com)
 ```
 
 For more listing options, see [`nb help ls`](#ls), [`nb help list`](#list),
@@ -1393,13 +1393,13 @@ and [`nb help bookmark`](#bookmark).
 > nb b
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
-[7] 🔖 Example Bookmark Three (example.com)
-[5] 🔖 Example Bookmark Two (example.net)
+[7] 🔖 Bookmark Three (example.com)
+[5] 🔖 Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
-[1] 🔖 Example Bookmark One (example.com)
+[1] 🔖 Bookmark One (example.com)
 
 > nb b example.net
-[5] 🔖 Example Bookmark Two (example.net)
+[5] 🔖 Bookmark Two (example.net)
 ```
 
 #### Opening and Viewing Bookmarked Pages
