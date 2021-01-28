@@ -4776,6 +4776,16 @@ _list() {
     ))
   fi
 
+  if [[ -f "${_list_path}/.pindex" ]]
+  then
+    _pinned_basenames=($(
+      {
+        cat "${_list_path}/.pindex"
+        printf "%s\\n" "${_pinned_basenames[@]}"
+      } | sed -e '/^[[:space:]]*$/d' | sort | uniq
+    ))
+  fi
+
   # TODO: External local variables used in pipeline.
   #
   # Not affected by list path:
@@ -4808,7 +4818,7 @@ _list() {
     then
       printf "%s\\n" "${_selector_basename}"
     else
-      if ((${#_pinned_basenames[@]}))
+      if ((_with_pinned)) && ((${#_pinned_basenames[@]}))
       then
         printf "%s\\n" "${_pinned_basenames[@]:-}"
       fi
@@ -7315,6 +7325,7 @@ _SUBCOMMANDS=(
   open
   p
   peek
+  pin
   plugin
   plugins
   preview
@@ -7333,6 +7344,7 @@ _SUBCOMMANDS=(
   subcommands
   sync
   u
+  unpin
   update
   upgrade
   use
@@ -7376,6 +7388,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   open
   p
   peek
+  pin
   plugins
   preview
   q
@@ -7392,6 +7405,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   subcommands
   sync
   u
+  unpin
   update
   use
   version
@@ -7433,14 +7447,16 @@ _GIT_SUBCOMMANDS=(
   open
   p
   peek
+  pin
   preview
   q
   rename
   s
   show
   search
-  use
   u
+  unpin
+  use
   view
   ${NB_PLUGIN_SUBCOMMANDS[@]:-}
 )
@@ -11092,6 +11108,102 @@ _peek() {
 _alias_subcommand "peek" "p"
 _alias_subcommand "peek" "preview"
 
+# pin ##################################################################### pin
+
+describe "pin" <<HEREDOC
+Usage:
+  ${_ME} pin <selector>
+
+Description:
+  Pin the item represented by <selector>, making it appear first in lists.
+
+Examples:
+  ${_ME} pin 123
+  ${_ME} pin example:sample/321
+HEREDOC
+_pin() {
+  local _selector=
+  local _subcommand="pin"
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg:-}" in
+      unpin)  _subcommand="unpin"     ;;
+      *)      _selector="${__arg:-}"  ;;
+    esac
+  done
+
+  if [[ -z "${_selector:-}" ]]
+  then
+    _exit_1 _help "${_subcommand}"
+  fi
+
+  local _item_path=
+  _item_path="$(_show "${_selector}" --path)" || return 1
+
+  local _basename="${_item_path##*\/}"
+  local _folder_path="${_item_path%\/*}"
+  local _pindex_path="${_folder_path}/.pindex"
+
+  local _notebook_path
+  _notebook_path="$(
+    _notebooks show "${_selector}" --path 2>/dev/null ||
+      _notebooks current --path
+  )"
+
+  local _relative_path=
+  _relative_path="$(_show "${_selector}" --relative-path)"
+
+  if [[ ! -e "${_item_path:-}"      ]] ||
+     [[ ! -d "${_folder_path:-}"    ]] ||
+     [[   -z "${_basename:-}"       ]] ||
+     [[   -z "${_notebook_path:-}"  ]] ||
+     [[   -z "${_relative_path:-}"  ]]
+  then
+    _exit_1 printf "Not found: %s\\n" "${_selector}"
+  fi
+
+  case "${_subcommand:-}" in
+    unpin)
+      if [[ ! -e "${_pindex_path}" ]] ||
+         ! grep -q "^${_basename}$" "${_pindex_path}"
+      then
+        _exit_1 printf          \
+          "Not pinned: %s\\n"   \
+          "$(_color_primary "${_selector}")"
+      fi
+
+      _sed_i -e "s/^${_basename}$//g"   "${_pindex_path}"
+      _sed_i -e '/^[[:space:]]*$/d'     "${_pindex_path}" # remove blank line
+
+      if [[ ! -s "${_pindex_path:?}" ]]
+      then
+        rm -f "${_pindex_path:?}"
+      fi
+
+      _git checkpoint "${_notebook_path}" "[nb] Unpinned: ${_relative_path}"
+
+      printf "Unpinned: %s\\n" "$(_show "${_selector}" --info-line)"
+      ;;
+    *)
+      if [[ ! -e "${_pindex_path}" ]]
+      then
+        touch "${_pindex_path}"
+      fi
+
+      if ! grep -q "^${_basename}$" "${_pindex_path}"
+      then
+        printf "%s\\n" "${_basename}" >> "${_pindex_path}"
+        _sed_i -e '/^[[:space:]]*$/d'    "${_pindex_path}" # remove blank lines
+      fi
+
+      _git checkpoint "${_notebook_path}" "[nb] Pinned: ${_relative_path}"
+
+      printf "Pinned: %s\\n" "$(_show "${_selector}" --info-line)"
+      ;;
+  esac
+}
+
 # plugins ############################################################# plugins
 
 describe "plugins" <<HEREDOC
@@ -14339,6 +14451,23 @@ _todos() {
   fi | sed -e '/^$/d'
 }
 _alias_subcommand "todos" "todo"
+
+# unpin ################################################################# unpin
+
+describe "unpin" <<HEREDOC
+Usage:
+  ${_ME} unpin <selector>
+
+Description:
+  Pin an item.
+
+Examples:
+  ${_ME} unpin 123
+  ${_ME} unpin example:sample/321
+HEREDOC
+_unpin() {
+  _pin unpin "${@:-}"
+}
 
 # update ############################################################### update
 
