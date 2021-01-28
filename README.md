@@ -3164,6 +3164,7 @@ Usage:
   nb notebooks use <name>
   nb open (<id> | <filename> | <path> | <title> | <notebook>)
   nb peek (<id> | <filename> | <path> | <title> | <notebook>)
+  nb pin [<notebook>:](<id> | <filename> | <path> | <title>)
   nb plugins [<name>] [--paths]
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
@@ -3184,6 +3185,7 @@ Usage:
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   nb sync [-a | --all]
+  nb unpin [<notebook>:](<id> | <filename> | <path> | <title>)
   nb update
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
@@ -3212,6 +3214,7 @@ Subcommands:
   notebooks    Manage notebooks.
   open         Open a bookmarked web page or notebook folder, or edit a note.
   peek         View a note, bookmarked web page, or notebook in the terminal.
+  pin          Pin an item so it appears first in lists.
   plugins      Install and uninstall plugins and themes.
   remote       Get, set, and remove the remote URL for the notebook.
   run          Run shell commands within the current notebook.
@@ -3222,6 +3225,7 @@ Subcommands:
   status       Run `git status` in the current notebook.
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
+  unpin        Unpin a pinned item.
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
   version      Display version information.
@@ -3361,6 +3365,7 @@ For more information, see: `nb help`.
   <a href="#notebooks">notebooks</a> •
   <a href="#open">open</a> •
   <a href="#peek">peek</a> •
+  <a href="#pin">pin</a> •
   <a href="#plugins">plugins</a> •
   <a href="#remote">remote</a> •
   <a href="#run">run</a> •
@@ -3371,6 +3376,7 @@ For more information, see: `nb help`.
   <a href="#status">status</a> •
   <a href="#subcommands-1">subcommands</a> •
   <a href="#sync">sync</a> •
+  <a href="#unpin">unpin</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
   <a href="#version">version</a>
@@ -4130,6 +4136,20 @@ Alias: `preview`
 Shortcut Alias: `p`
 ```
 
+#### `pin`
+
+```text
+Usage:
+  nb pin [<notebook>:](<id> | <filename> | <path> | <title>)
+
+Description:
+  Pin an item so it appears first in lists.
+
+Examples:
+  nb pin 123
+  nb pin example:sample/321
+```
+
 #### `plugins`
 
 ```text
@@ -4685,6 +4705,19 @@ Sync Conflict Resolution:
 
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
+```
+#### `unpin`
+
+```text
+Usage:
+  nb unpin [<notebook>:](<id> | <filename> | <path> | <title>)
+
+Description:
+  Unpin a pinned item.
+
+Examples:
+  nb unpin 123
+  nb unpin example:sample/321
 ```
 
 #### `update`
