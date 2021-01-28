@@ -301,6 +301,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#deleting-notes">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-folders">Folders</a> •
+  <a href="#-pinning">Pinning</a> •
   <a href="#-search">Search</a> •
   <a href="#-revision-history">History</a> •
   <a href="#-notebooks">Notebooks</a> •
@@ -1650,6 +1651,61 @@ nb add example:sample/demo/
 
 # edit item 3 in the "sample/demo" folder in the "example" notebook
 nb edit example:sample/demo/3
+```
+
+### 📌 Pinning
+
+Items can be pinned so they appear first in `nb` and `nb ls`:
+
+```bash
+> nb
+home
+----
+[2] 📌 Title Two
+[5] Title Five
+[4] Title Four
+[3] Title Three
+[1] Title One
+```
+
+Use [`nb pin`](#pin) and [`nb unpin`](#unpin) to pin and unpin items:
+
+```bash
+> nb
+home
+----
+[5] Title Five
+[4] Title Four
+[3] Title Three
+[2] Title Two
+[1] Title One
+
+> nb pin 4
+Pinned: [4] four.md "Title Four"
+
+> nb pin 1
+Pinned: [1] one.md "Title One"
+
+> nb
+home
+----
+[4] 📌 Title Four
+[1] 📌 Title One
+[5] Title Five
+[3] Title Three
+[2] Title Two
+
+> nb unpin 4
+Unpinned: [4] four.md "Title Four"
+
+> nb
+home
+----
+[1] 📌 Title One
+[5] Title Five
+[4] Title Four
+[3] Title Three
+[2] Title Two
 ```
 
 ### 🔍 Search
