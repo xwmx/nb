@@ -1712,6 +1712,19 @@ home
 [2] Title Two
 ```
 
+`nb` can also be configured to pin notes that contain a specified
+hashtag or other search pattern. To enable tag / search-based pinning,
+set the `$NB_PINNED_PATTERN` environment variable to the desired tag
+or pattern.
+
+For example, to treat all items tagged with `#pinned` as pinned items,
+add the following line to your `~/.nbrc` file, which can be opened in
+your editor with `nb settings edit`:
+
+```bash
+export NB_PINNED_PATTERN="#pinned"
+```
+
 ### 🔍 Search
 
 Use [`nb search`](#search) to search your notes, with support for
