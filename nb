@@ -4785,7 +4785,7 @@ _list() {
     _pinned_basenames=($(
       {
         cat "${_list_path}/.pindex"
-        printf "%s\\n" "${_pinned_basenames[@]}"
+        printf "%s\\n" "${_pinned_basenames[@]:-}"
       } | sed -e '/^[[:space:]]*$/d' | sort | uniq
     ))
   fi
