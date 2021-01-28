@@ -4,59 +4,227 @@ load test_helper
 
 # full path ###################################################################
 
-# @test "'list </full/path/to/folder/>' exits with 0 and lists files in folder in reverse order." {
-#   {
-#     "${_NB}" init
+@test "'list /not/valid/full/path/to/folder/' (slash) with existing notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example Folder/one.md"            \
-#       --title "Title One"
-#     "${_NB}" add "Example Folder/two.bookmark.md"   \
-#       --content "<https://example.test>"
-#     "${_NB}" add "Example Folder/three.bookmark.md" \
-#       --content "<https://example.test>"            \
-#       --encrypt --password=password
-#   }
+    "${_NB}" add  "Example Folder/one.md"             \
+      --title     "Title One"
+    "${_NB}" add  "Example Folder/two.bookmark.md"    \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Folder/three.bookmark.md"  \
+      --content   "<https://example.test>"            \
+      --encrypt   --password=password
+  }
 
-#   # relative path
+  # full path (slash)
 
-#   run "${_NB}" list "Example Folder/"
+  run "${_NB}" list "${NB_DIR}/home/not-valid/does-not-match"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[   "${status}"    -eq 0     ]]
-#   [[   "${#lines[@]}" -eq 3     ]]
+  [[   "${status}"    -eq 1     ]]
+  [[   "${#lines[@]}" -eq 1     ]]
 
-#   [[   "${lines[0]}"  =~  [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
-#   [[   "${lines[1]}"  =~  [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
-#   [[   "${lines[2]}"  =~  [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/home/not-valid/does-not-match  ]]
+}
 
-#   # full path (slash)
+@test "'list /not/valid/full/path/to/folder/' (slash) without existing notebook treats exits with 1 and prints message." {
+  {
+    "${_NB}" init
 
-#   run "${_NB}" list "${NB_DIR}/home/Example Folder/"
+    "${_NB}" add  "Example Folder/one.md"             \
+      --title     "Title One"
+    "${_NB}" add  "Example Folder/two.bookmark.md"    \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Folder/three.bookmark.md"  \
+      --content   "<https://example.test>"            \
+      --encrypt   --password=password
+  }
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  # full path (slash)
 
-#   [[   "${status}"    -eq 0     ]]
-#   [[   "${#lines[@]}" -eq 3     ]]
+  run "${_NB}" list "${NB_DIR}/example/not-valid/does-not-match"
 
-#   [[   "${lines[0]}"  =~  [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
-#   [[   "${lines[1]}"  =~  [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
-#   [[   "${lines[2]}"  =~  [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   # full path (no slash)
+  [[   "${status}"    -eq 1     ]]
+  [[   "${#lines[@]}" -eq 1     ]]
 
-#   run "${_NB}" list "${NB_DIR}/home/Example Folder"
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/example/not-valid/does-not-match  ]]
+}
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+@test "'list /full/path/to/folder/' (slash) exits with 0 and lists files in folder in reverse order." {
+  {
+    "${_NB}" init
 
-#   [[   "${status}"    -eq 0     ]]
-#   [[   "${#lines[@]}" -eq 1     ]]
+    "${_NB}" add  "Example Folder/one.md"             \
+      --title     "Title One"
+    "${_NB}" add  "Example Folder/two.bookmark.md"    \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Folder/three.bookmark.md"  \
+      --content   "<https://example.test>"            \
+      --encrypt   --password=password
+  }
 
-#   [[   "${lines[0]}"  =~  [.*1.*].*\ 📂\ Example\ Folder ]]
-# }
+  # relative path
+
+  run "${_NB}" list "Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0     ]]
+  [[   "${#lines[@]}" -eq 3     ]]
+
+  [[   "${lines[0]}"  =~  [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+
+  # full path (slash)
+
+  run "${_NB}" list "${NB_DIR}/home/Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0     ]]
+  [[   "${#lines[@]}" -eq 3     ]]
+
+  [[   "${lines[0]}"  =~  \
+          [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  \
+          [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  \
+          [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+}
+
+@test "'list /full/path/to/folder' (no slash) exits with 0 and lists folder item only." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/one.md"             \
+      --title     "Title One"
+    "${_NB}" add  "Example Folder/two.bookmark.md"    \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Folder/three.bookmark.md"  \
+      --content   "<https://example.test>"            \
+      --encrypt   --password=password
+  }
+
+  # relative path
+
+  run "${_NB}" list "Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                               ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
+
+  [[   "${lines[0]}"  =~  [.*1.*].*\ 📂\ Example\ Folder  ]]
+
+  # full path (no slash)
+
+  run "${_NB}" list "${NB_DIR}/home/Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                               ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
+
+  [[   "${lines[0]}"  =~  [.*1.*].*\ 📂\ Example\ Folder  ]]
+}
+
+@test "'list /full/path/to/folder/' (slash) in different notebook exits with 0 and lists files in folder in reverse order." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example Folder/one.md"            \
+      --title     "Title One"
+    "${_NB}" add  "Example Notebook:Example Folder/two.bookmark.md"   \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Notebook:Example Folder/three.bookmark.md" \
+      --content   "<https://example.test>"                            \
+      --encrypt   --password=password
+  }
+
+  # relative path
+
+  run "${_NB}" list "Example Notebook:Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0     ]]
+  [[   "${#lines[@]}" -eq 3     ]]
+
+  [[   "${lines[0]}"  =~  [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+
+  # full path (slash)
+
+  run "${_NB}" list "${NB_DIR}/Example Notebook/Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0     ]]
+  [[   "${#lines[@]}" -eq 3     ]]
+
+  [[   "${lines[0]}"  =~  \
+          [.*Example\\\ Notebook:Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  \
+          [.*Example\\\ Notebook:Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  \
+          [.*Example\\\ Notebook:Example\\\ Folder/1.*].*\ Title\ One                 ]]
+}
+
+@test "'list /full/path/to/folder' (no slash) in diferrent notebook exits with 0 and lists folder item only." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example Folder/one.md"            \
+      --title     "Title One"
+    "${_NB}" add  "Example Notebook:Example Folder/two.bookmark.md"   \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Notebook:Example Folder/three.bookmark.md" \
+      --content   "<https://example.test>"                            \
+      --encrypt   --password=password
+  }
+
+  # relative path
+
+  run "${_NB}" list "Example Notebook:Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                                   ]]
+  [[   "${#lines[@]}" -eq 1                                                   ]]
+
+  [[   "${lines[0]}"  =~  [.*Example\\\ Notebook:1.*].*\ 📂\ Example\ Folder  ]]
+
+  # full path (no slash)
+
+  run "${_NB}" list "${NB_DIR}/Example Notebook/Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                                   ]]
+  [[   "${#lines[@]}" -eq 1                                                   ]]
+
+  [[   "${lines[0]}"  =~  [.*Example\\\ Notebook:1.*].*\ 📂\ Example\ Folder  ]]
+}
 
 # empty #######################################################################
 
