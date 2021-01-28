@@ -17,8 +17,6 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  "${_NB}" show Example\ Folder/1 --relative-path
-  "${_NB}" show Example\ Folder/1 --browse
 
   [[ "${status}"    == 0                    ]]
   [[ "${output}"    =~ \<\!DOCTYPE\ html\>  ]]

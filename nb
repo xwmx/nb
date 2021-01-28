@@ -8346,7 +8346,7 @@ _browse() {
     if [[ -n "${_string:-}" ]]
     then
       printf "%s\\r\\n" "${_string}"
-    elif [[ -n "${_path:-}" ]]
+    elif [[ "${_path:-}" =~ ^/ ]]
     then
       local __line=
 
@@ -8410,9 +8410,10 @@ _browse() {
     _temp_file="$(mktemp).html"
 
     _relative_path="${_request_uri#\/}"
-    _relative_path="${_relative_path//%20/\ }"
+    _relative_path="${_relative_path//"\%20"/ }"
+    _relative_path="${_relative_path//"%20"/ }"
 
-    if ! _show "${_relative_path}" --relative-path &>/dev/null
+    if ! _show "${_relative_path}" --path &>/dev/null
     then
       _browse_respond_with 404
     fi
