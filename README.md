@@ -1568,6 +1568,8 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 📂 Folders
 
+*Version 6.0.0-alpha*
+
 Items can be organized in folders. To add a note to a folder, call
 `nb add` with the folder's relative path within the notebook
 followed by a slash:
@@ -1654,6 +1656,8 @@ nb edit example:sample/demo/3
 ```
 
 ### 📌 Pinning
+
+*Version 6.0.0-alpha*
 
 Items can be pinned so they appear first in `nb` and `nb ls`:
 
