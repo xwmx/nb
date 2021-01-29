@@ -3292,6 +3292,7 @@ Subcommands:
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or a file of a specified type.
   bookmark     Add, open, list, and search bookmarks.
+  browse       Browse and view linked items in the terminal web browser.
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
