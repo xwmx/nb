@@ -89,7 +89,7 @@ _setup_search() {
       --content   "Example Content Three Example Phrase."
   }
 
-  run "${_NB}" search "no match" "unmatching" "unmatchable"
+  run "${_NB}" search --add "no match" --add "unmatching" --add "unmatchable"
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
