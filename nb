@@ -8524,7 +8524,7 @@ _browse() {
       _browse_respond_with 404
     fi
 
-    _show "${_target_selector}" --browse > "${_temp_file}"
+    _show "${_target_selector}" --browse --no-color > "${_temp_file}"
 
     case "${_request_method}" in
       HEAD)
