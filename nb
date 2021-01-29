@@ -13867,7 +13867,7 @@ _show() {
         _print_title=1
         _skip_notebook_fallback=1
         ;;
-      --tool)
+      --tool|--utility)
         _tool="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
