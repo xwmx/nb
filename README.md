@@ -1829,11 +1829,12 @@ match all queries. `AND` queries can also be specified with the `--and <query>`
 option:
 
 ```bash
-# search for "example" AND "demo" with multiple arguments
-nb q "example" "demo"
+# search for items tagged with "#example" AND "#demo" AND "#sample" using
+# multiple arguments
+nb q "#example" "#demo" "#sample"
 
-# search for "example" AND "demo" with option
-nb q "example" --and "demo"
+# options
+nb q "#example" --and "#demo" --and "#sample"
 ```
 
 `nb` matches `AND` query terms regardless of where they appear in a
