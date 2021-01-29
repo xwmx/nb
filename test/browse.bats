@@ -26,7 +26,7 @@ export _NB_SERVER_PORT=6789
 
 # browse ######################################################################
 
-@test "'browse' with no arguments serves the current notebook contents as a rendered HTML page." {
+@test "'browse' with no arguments serves the current notebook contents as a rendered HTML page with links to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -65,7 +65,7 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \[home:1\]\ Title\ One\</a\>\</p\>                ]]
 }
 
-@test "'browse <selector>' serves the rendered HTML page." {
+@test "'browse <selector>' serves the rendered HTML page with links to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -83,7 +83,7 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"    =~ \<\!DOCTYPE\ html\>  ]]
 }
 
-@test "'browse <folder-selector>/' (slash) serves the list as rendered HTML." {
+@test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -114,7 +114,7 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\</p\>                 ]]
 }
 
-@test "'browse <folder-selector>' (no slash) serves the list as rendered HTML." {
+@test "'browse <folder-selector>' (no slash) serves the list as rendered HTML with links to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -145,7 +145,7 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\</p\>                 ]]
 }
 
-@test "'browse <notebook>:' serves the notebook contents as rendered HTML." {
+@test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
   {
     "${_NB}" init
 
