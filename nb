@@ -8481,7 +8481,7 @@ _browse() {
       _browse_respond_with 200
     elif [[ "${_request_method}"  != "GET"  ]]
     then
-      _browse_respond_with 405 "${_request_method}"
+      _browse_respond_with 405
     fi
 
     _temp_file="$(mktemp).html"
