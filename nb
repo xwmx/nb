@@ -14203,7 +14203,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             _item_selector="${_item_selector}/"
           fi
 
-          printf "%s\\n\\n" \
+          printf "%s\\n" \
             "- [${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})"
         done
       } | {
