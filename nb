@@ -8396,7 +8396,7 @@ _browse() {
       if _content_length="$(stat -c '%s'  "${_path}" 2>/dev/null)" || # GNU
          _content_length="$(stat -f '%z'  "${_path}")"                # BSD
       then
-        _response_headers+=("Content-Type: ${_content_length}")
+        _response_headers+=("Content-Length: ${_content_length}")
       fi
     else
       _string="${2:-}"
