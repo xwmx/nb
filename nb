@@ -13794,7 +13794,6 @@ _show() {
   local _render=0
   local _render_for_browsing=0
   local _selector=
-  local _show_color_enabled="${_COLOR_ENABLED}"
   local _skip_notebook_fallback=0
   local _print_indicators=0
   local _print_title=0
@@ -13839,7 +13838,7 @@ _show() {
         _skip_notebook_fallback=1
         ;;
       --no*color|--raw)
-        _show_color_enabled=0
+        _COLOR_ENABLED=0
         ;;
       --notebook*|--include*notebook*|--with*notebook*)
         _skip_notebook_fallback=0
@@ -14445,7 +14444,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          ((_print_output))          &&
          _command_exists "pandoc"   &&
          _browser --check           &&
-         ! ((_show_color_enabled))  &&
+         ! ((_COLOR_ENABLED))       &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print --raw` with `pandoc` and browser available
       pandoc "${_target_path}" 2>/dev/null
@@ -14479,7 +14478,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
-        if ((_show_color_enabled))
+        if ((_COLOR_ENABLED))
         then # `show --print`
           _highlight_syntax_if_available "${_target_path}"
         else # `show --print --no-color`
