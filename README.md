@@ -1747,15 +1747,15 @@ home
 
 ### 🔍 Search
 
-Use [`nb search`](#search) to search your notes, with support for
-regular expressions and tags:
+Use [`nb search`](#search) to perform full text searches, with support for
+regular expressions, tags, and both `AND` and `OR` queries:
 
 ```bash
 # search current notebook for "example query"
 nb search "example query"
 
 # search the notebook "example" for "example query"
-nb example:search "example query"
+nb search example: "example query"
 
 # search the folder named "demo" for "example query"
 nb search demo/ "example query"
@@ -1763,8 +1763,17 @@ nb search demo/ "example query"
 # search all unarchived notebooks for "example query" and list matching items
 nb search "example query" --all --list
 
-# search for "Example" OR "Sample"
-nb search "Example|Sample"
+# search for "example" AND "demo" with multiple arguments
+nb search "example" "demo"
+
+# search for "example" AND "demo" with option
+nb search "example" --and "demo"
+
+# search for "example" OR "sample" with argument
+nb search "example|sample"
+
+# search for "example" OR "sample" with option
+nb search "example" --or "sample"
 
 # search items containing the hashtag "#example"
 nb search "#example"
@@ -1814,15 +1823,48 @@ the `-l` or `--list` option:
 [2718] example.md "Example Note"
 ```
 
-`nb search` looks for [`rga`](https://github.com/phiresky/ripgrep-all),
-[`rg`](https://github.com/BurntSushi/ripgrep),
-[`ag`](https://github.com/ggreer/the_silver_searcher),
-[`ack`](https://beyondgrep.com/), and
-[`grep`](https://en.wikipedia.org/wiki/Grep), in that order, and
-performs searches using the first tool it finds. `nb search` works
-mostly the same regardless of which tool is found and is perfectly fine using
-the environment's built-in `grep`. `rg`, `ag`, and `ack` are faster and there
-are some subtle differences in color highlighting.
+Multiple query arguments are treated as `AND` queries, returning items that
+match all queries. `AND` queries can also be specified with the `--and <query>`
+option.
+
+```bash
+# search for "example" AND "demo" with multiple arguments
+nb q "example" "demo"
+
+# search for "example" AND "demo" with option
+nb q "example" --and "demo"
+```
+
+`OR` queries return items that match at least one of the queries and can
+be created by separating terms in a single argument with a pipe
+character `|` or with the `--or <query>` option.
+
+```bash
+# search for "example" OR "sample" with argument
+nb q "example|sample"
+
+# search for "example" OR "sample" with option
+nb q "example" --or "sample"
+```
+
+`--or` and `--and` queries can be used together to create complex queries:
+
+```bash
+nb q "example" --or "sample" --and "demo"
+# equivalent: example|sample AND demo|sample
+```
+
+`nb search` is powered by Git's powerful built-in `git grep` tool, which
+uses the git object cache to perform searches faster than any other
+available tool. `nb` also supports performing searches with alternative
+search tools using the --utility <name> option.
+
+Supported alternative search tools:
+- [`rga`](https://github.com/phiresky/ripgrep-all)
+- [`rg`](https://github.com/BurntSushi/ripgrep)
+- [`ag`](https://github.com/ggreer/the_silver_searcher)
+- [`ack`](https://beyondgrep.com/)
+- [`grep`](https://en.wikipedia.org/wiki/Grep)
 
 ##### Shortcut Alias: `q`
 
@@ -2083,7 +2125,7 @@ nb q "#tag"
 nb q "#tag" -a
 
 # search for #tag in the "example" notebook
-nb example:q "#tag"
+nb q example: "#tag"
 ```
 
 #### Global and Local Notebooks
@@ -3264,8 +3306,9 @@ Usage:
   nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
   nb run <command> [<arguments>...]
-  nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                    [-l | --list] [--path]
+  nb search <query>... [-a | --all] [--and <query>] [--or <query>]
+            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
+            [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
@@ -4341,20 +4384,37 @@ Examples:
 
 ```text
 Usage:
-  nb search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                    [-l | --list] [--path]
+  nb search <query>... [-a | --all] [--and <query>] [--or <query>]
+            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
+            [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
+  --and <query>                 Add a AND query.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
+  --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder, text
+  --utility <name>              The name of the search utility to search with.
+
 Description:
-  Search notes. Uses the first available tool in the following list:
+  Perform a full text search.
+
+  Multiple query arguments are treated as AND queries, returning items that
+  match all queries. AND queries can also be specified with the --and <query>
+  option. The --or <query> option can be used to specify an OR query,
+  returning items that match at least one of the queries. --or and --and
+  queries can be used together to create complex queries.
+
+  `nb search` is powered by Git's built-in `git grep` tool. `nb` also
+  supports performing searches with alternative search tools using the
+  --utility <name> option.
+
+  Supported alternative search tools:
     1. `rga`   https://github.com/phiresky/ripgrep-all
     2. `rg`    https://github.com/BurntSushi/ripgrep
     3. `ag`    https://github.com/ggreer/the_silver_searcher
@@ -4366,22 +4426,24 @@ Examples:
   nb search "example query"
 
   # search the notebook "example" for "example query"
-  nb example:search "example query"
+  nb search example: "example query"
 
   # search all notebooks for "example query" and list matching items
   nb search "example query" --all --list
 
-  # search notes for "Example" OR "Sample"
+  # search for items matching "Example" AND "Demo"
+  nb search "Example" "Demo"
+  nb search "Example" --and "Demo"
+
+  # search for items matching "Example" OR "Sample"
   nb search "Example|Sample"
+  nb search "Example" --or "Sample"
 
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
 
   # search the current notebook for "example query"
   nb q "example query"
-
-  # search the notebook named "example" for "example query"
-  nb example:q "example query"
 
   # search all notebooks for "example query" and list matching items
   nb q -la "example query"

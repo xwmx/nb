@@ -3817,8 +3817,9 @@ $(_color_primary "Usage:")
   ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} run <command> [<arguments>...]
-  ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                    [-l | --list] [--path]
+  ${_ME} search <query>... [-a | --all] [--and <query>] [--or <query>]
+            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
+            [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
@@ -11677,20 +11678,37 @@ _alias_subcommand "run" "r"
 
 describe "search" <<HEREDOC
 Usage:
-  ${_ME} search <query> [-a | --all] [-t <type> | --type <type> | --<type>]
-                    [-l | --list] [--path]
+  ${_ME} search <query>... [-a | --all] [--and <query>] [--or <query>]
+            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
+            [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
+  --and <query>                 Add a AND query.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
+  --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder, text
+  --utility <name>              The name of the search utility to search with.
+
 Description:
-  Search notes. Uses the first available tool in the following list:
+  Perform a full text search.
+
+  Multiple query arguments are treated as AND queries, returning items that
+  match all queries. AND queries can also be specified with the --and <query>
+  option. The --or <query> option can be used to specify an OR query,
+  returning items that match at least one of the queries. --or and --and
+  queries can be used together to create complex queries.
+
+  \`${_ME} search\` is powered by Git's built-in \`git grep\` tool. \`${_ME}\` also
+  supports performing searches with alternative search tools using the
+  --utility <name> option.
+
+  Supported alternative search tools:
     1. \`rga\`   https://github.com/phiresky/ripgrep-all
     2. \`rg\`    https://github.com/BurntSushi/ripgrep
     3. \`ag\`    https://github.com/ggreer/the_silver_searcher
@@ -11702,22 +11720,24 @@ Examples:
   ${_ME} search "example query"
 
   # search the notebook "example" for "example query"
-  ${_ME} example:search "example query"
+  ${_ME} search example: "example query"
 
   # search all notebooks for "example query" and list matching items
   ${_ME} search "example query" --all --list
 
-  # search notes for "Example" OR "Sample"
+  # search for items matching "Example" AND "Demo"
+  ${_ME} search "Example" "Demo"
+  ${_ME} search "Example" --and "Demo"
+
+  # search for items matching "Example" OR "Sample"
   ${_ME} search "Example|Sample"
+  ${_ME} search "Example" --or "Sample"
 
   # search with a regular expression
   ${_ME} search "\d\d\d-\d\d\d\d"
 
   # search the current notebook for "example query"
   ${_ME} q "example query"
-
-  # search the notebook named "example" for "example query"
-  ${_ME} example:q "example query"
 
   # search all notebooks for "example query" and list matching items
   ${_ME} q -la "example query"
@@ -11731,13 +11751,14 @@ _search() {
   }
 
   local _all=0
+  local _and_queries=()
   local _arguments=()
   local _last_path=
   local _max_columns="2000"
   local _max_depth=0
   local _only_list=0
+  local _or_queries=()
   local _print_paths=0
-  local _queries=()
   local _query=
   local _search_args=()
   local _search_color_enabled="${_COLOR_ENABLED}"
@@ -11755,6 +11776,11 @@ _search() {
       -a|--all)
         _all=1
         ;;
+      --and)
+        [[ "${2:-}" == "-e" ]] && shift
+        _and_queries+=("$(_option_get_value "--and" "${2:-}")")
+        shift
+        ;;
       -l|--list)
         _only_list=1
         ;;
@@ -11764,12 +11790,17 @@ _search() {
       --no*recur*)
         _max_depth=1
         ;;
+      --or)
+        [[ "${2:-}" == "-e" ]] && shift
+        _or_queries+=("$(_option_get_value "--or" "${2:-}")")
+        shift
+        ;;
       --path*)
         _print_paths=1
         _search_color_enabled=0
         ;;
       -q|--query|-e)
-        _queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
+        _and_queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
         shift
         ;;
       -s|--sort)
@@ -11840,7 +11871,7 @@ _search() {
 
     if [[ -z "${_maybe_path:-}"                     ]] || {
          [[ "${i}" -eq "$((${#_arguments[@]} - 1))" ]] &&
-         [[ -z "${_queries[*]:-}"                   ]]
+         [[ -z "${_and_queries[*]:-}"               ]]
     }
     then
       local _query_argument="${_arguments[i]:-}"
@@ -11857,9 +11888,9 @@ _search() {
 
       if _notebooks current --selected
       then
-        _queries+=("${_query_argument#*:}")
+        _and_queries+=("${_query_argument#*:}")
       else
-        _queries+=("${_query_argument}")
+        _and_queries+=("${_query_argument}")
       fi
     fi
 
@@ -11874,7 +11905,7 @@ _search() {
     fi
   done
 
-  if [[ -z "${_queries[*]:-}" ]]
+  if [[ -z "${_and_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
   fi
@@ -11883,6 +11914,27 @@ _search() {
   then
     _target_paths=("${_current_notebook_path}")
   fi
+
+  local _queries=()
+
+  local __and_query=
+  for   __and_query in "${_and_queries[@]:-}"
+  do
+    [[ -n "${__and_query:-}" ]] || continue
+
+    if ((${#_or_queries[@]}))
+    then
+      local __or_query=
+      for   __or_query in "${_or_queries[@]:-}"
+      do
+        [[ -n "${__or_query:-}" ]] || continue
+
+        _queries+=("${__and_query}|${__or_query}")
+      done
+    else
+      _queries+=("${__and_query}")
+    fi
+  done
 
   local _query=
   _query="$(_join "|" "${_queries[@]:-}")"
