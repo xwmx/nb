@@ -8436,11 +8436,10 @@ _browse() {
       printf "%s\\r\\n" "${__response_header:-}"
     done
 
-
-    printf "\\r\\n"
-
     if ! ((_only_headers))
     then
+      printf "\\r\\n"
+
       if [[ -n "${_string:-}" ]]
       then
         printf "%s\\r\\n" "${_string}"
