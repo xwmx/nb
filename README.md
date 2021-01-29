@@ -1837,8 +1837,9 @@ nb q "example" --and "demo"
 ```
 
 `nb` matches `AND` query terms regardless of where they appear in a
-document, an improvement over most options for `AND` queries on the command
-line which typically only match terms appearing on the same line.
+document, an improvement over most approaches for performing `AND`
+queries with command line tools, which typically only match terms
+appearing on the same line.
 
 `OR` queries return items that match at least one of the queries and can
 be created by separating terms in a single argument with a pipe
