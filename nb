@@ -8410,7 +8410,7 @@ _browse() {
     then
       _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
 
-      # NOTE: Content length appears to be incorrect, since recieved content
+      # NOTE: Content length appears to be incorrect, since received content
       # is truncated. TODO: Get correct content length.
       # local _content_length=
       # _content_length="$(wc -c < "${_path}")"
