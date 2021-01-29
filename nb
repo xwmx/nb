@@ -11915,10 +11915,11 @@ _search() {
       )"
     fi
 
-    if [[ -z "${_maybe_path:-}"                     ]] || {
+    if [[ -z "${_maybe_path:-}"                     ]] ||
+       {
          [[ "${i}" -eq "$((${#_arguments[@]} - 1))" ]] &&
          [[ -z "${_and_queries[*]:-}"               ]]
-    }
+       }
     then
       local _query_argument="${_arguments[i]:-}"
 
@@ -11941,10 +11942,11 @@ _search() {
     fi
 
     if [[ -n "${_maybe_path:-}"         ]] &&
-       [[ -z "${_target_paths[*]:-}"    ]] && {
+       [[ -z "${_target_paths[*]:-}"    ]] &&
+       {
          _notebooks current --selected     ||
          [[ "${#_arguments[@]}" -gt 1   ]]
-    }
+       }
     then
       _target_paths+=("${_maybe_path}")
       _selectors+=("${_arguments[i]}")
