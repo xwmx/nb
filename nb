@@ -8502,22 +8502,17 @@ _browse() {
     _browse_respond_with 500
   }
 
+  local _print_headers=0
   local _print_output=0
   local _selector=
 
   while ((${#}))
   do
     case "${1:-}" in
-      -p|--print)
-        _print_output=1
-        ;;
-      --respond|--serve)
-        _browse_respond
-        exit 0
-        ;;
-      *)
-        _selector="${1:-}"
-        ;;
+      --headers)          _print_headers=1          ;;
+      -p|--print)         _print_output=1           ;;
+      --respond|--serve)  _browse_respond && exit 0 ;;
+      *)                  _selector="${1:-}"        ;;
     esac
 
     shift
@@ -8552,7 +8547,14 @@ HEREDOC
 
   if ((_print_output))
   then
-    _download_from "http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}"
+    local _url="http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}"
+
+    if ((_print_headers))
+    then
+      curl -s -I "${_url}"
+    else
+      _download_from "${_url}"
+    fi
   else
     _browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
   fi

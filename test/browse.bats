@@ -24,6 +24,26 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"    =~ 404\ Not\ Found  ]]
 }
 
+# headers #######################################################################
+
+@test "'browse <selector> --print --headers' prints response headers." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"             \
+      --title     "Example Title"               \
+      --content   "Example content."
+  }
+
+  run "${_NB}" browse 1 --print --headers
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0         ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0  ]]
+}
+
 # items #######################################################################
 
 @test "'browse <selector>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
