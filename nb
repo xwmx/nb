@@ -14193,7 +14193,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
 
           printf "%s\\n\\n" \
-            "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})"
+            "- [${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})"
         done
       } | {
         if [[ "${_maybe_scoped_relative_path}" =~ :$ ]]
@@ -14202,6 +14202,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         else
           printf "# %s/\\n\\n"  "${_maybe_scoped_relative_path}"
         fi
+
         cat
       } | {
         pandoc            \
@@ -14210,6 +14211,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           --standalone    \
           2>/dev/null
       }
+
       return 0
     elif [[ -d "${_target_path}"      ]]  &&
        _command_exists "ranger"           &&
