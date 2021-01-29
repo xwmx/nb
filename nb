@@ -13639,16 +13639,8 @@ _show() {
     for __arg in "${@:-}"
     do
       case "${__arg:-}" in
-        --browse)
-          _for_browsing=1
-          ;;
-        *)
-          if [[ -z "${_path}" ]]
-          then
-            _path="${__arg}"
-          else
-            _notebook_path="${__arg:-}"
-          fi
+        --browse)   _for_browsing=1             ;;
+        *)          _notebook_path="${__arg:-}" ;;
       esac
     done
 
