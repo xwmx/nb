@@ -24,7 +24,37 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"    =~ 404\ Not\ Found  ]]
 }
 
-# browse ######################################################################
+# items #######################################################################
+
+@test "'browse <selector>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"             \
+      --title     "Example Title"               \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Title One"                   \
+      --content   "Example content. [[Example Title]]"
+  }
+
+  run "${_NB}" browse Example\ Folder/1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                                           ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                         ]]
+
+  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                   ]]
+
+  [[ "${output}"    =~  \
+      \<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/Example%20Title\"\> ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                          ]]
+}
+
+# notebooks and folder (containers) ###########################################
 
 @test "'browse' with no arguments serves the current notebook contents as a rendered HTML page with links to internal web server URLs." {
   {
@@ -63,24 +93,6 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:1\"\>   ]]
   [[ "${output}"  =~  \[home:1\]\ Title\ One\</a\>\</p\>                ]]
-}
-
-@test "'browse <selector>' serves the rendered HTML page with links to internal web server URLs." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add  "Example Folder/File One.md"  \
-      --title     "Example Title"               \
-      --content   "Example content."
-  }
-
-  run "${_NB}" browse Example\ Folder/1 --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    == 0                    ]]
-  [[ "${output}"    =~ \<\!DOCTYPE\ html\>  ]]
 }
 
 @test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
