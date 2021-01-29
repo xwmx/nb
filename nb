@@ -8407,7 +8407,13 @@ _browse() {
     printf "%s\\r\\n" \
       "HTTP/1.0 ${_status_code} $(_browse_http_response "${_status_code}")"
 
-    printf "%s\\r\\n" "${_response_headers[@]:-}"
+    local __response_header=
+    for   __response_header in "${_response_headers[@]:-}"
+    do
+      [[ -n "${__response_header:-}" ]] || continue
+
+      printf "%s\\r\\n" "${__response_header:-}"
+    done
 
     printf "\\r\\n"
 
@@ -8470,9 +8476,12 @@ _browse() {
       _browse_respond_with 400
     fi
 
-    if [[ "${_request_method}" != "GET" ]]
-    then # only GET is supported
-      _browse_respond_with 405
+    if [[ "${_request_method}"    == "HEAD" ]]
+    then
+      _browse_respond_with 200
+    elif [[ "${_request_method}"  != "GET"  ]]
+    then
+      _browse_respond_with 405 "${_request_method}"
     fi
 
     _temp_file="$(mktemp).html"
