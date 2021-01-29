@@ -103,16 +103,16 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \<h1\ id=\"section\"\>/\</h1\>                    ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:3/\"\>  ]]
-  [[ "${output}"  =~  \[home:3\]\ 📂\ Example\ Folder\</a\>\</p\>       ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:3/\"\> ]]
+  [[ "${output}"  =~  \[home:3\]\ 📂\ Example\ Folder\</a\>\</li\>      ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:2\"\>   ]]
-  [[ "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\</p\>                ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:2\"\>  ]]
+  [[ "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\</li\>               ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:1\"\>   ]]
-  [[ "${output}"  =~  \[home:1\]\ Title\ One\</a\>\</p\>                ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:1\"\>  ]]
+  [[ "${output}"  =~  \[home:1\]\ Title\ One\</a\>\</li\>               ]]
 }
 
 @test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -138,12 +138,12 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \<h1\ id=\"example-folder\"\>Example\ Folder/\</h1\>          ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\>   ]]
-  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\</p\>                 ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\>  ]]
+  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\</li\>                ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/1\"\>   ]]
-  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\</p\>                 ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/1\"\>  ]]
+  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\</li\>                ]]
 }
 
 @test "'browse <folder-selector>' (no slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -169,12 +169,12 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \<h1\ id=\"example-folder\"\>Example\ Folder/\</h1\>          ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\>   ]]
-  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\</p\>                 ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\>  ]]
+  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\</li\>                ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/1\"\>   ]]
-  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\</p\>                 ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/1\"\>  ]]
+  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\</li\>                ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
@@ -197,15 +197,15 @@ export _NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0                                                             ]]
+  [[ "${status}"  ==  0                                                               ]]
 
-  [[ "${output}"  =~  \<h1\ id=\"example-notebook\"\>Example\ Notebook:\</h1\>      ]]
-
-  [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:2\"\> ]]
-  [[ "${output}"  =~  \[Example\ Notebook:2\]\ Title\ Two\</a\>\</p\>               ]]
+  [[ "${output}"  =~  \<h1\ id=\"example-notebook\"\>Example\ Notebook:\</h1\>        ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:1\"\> ]]
-  [[ "${output}"  =~  \[Example\ Notebook:1\]\ Title\ One\</a\>\</p\>               ]]
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:2\"\>  ]]
+  [[ "${output}"  =~  \[Example\ Notebook:2\]\ Title\ Two\</a\>\</li\>                ]]
+
+  [[ "${output}"  =~  \
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:1\"\>  ]]
+  [[ "${output}"  =~  \[Example\ Notebook:1\]\ Title\ One\</a\>\</li\>                ]]
 }

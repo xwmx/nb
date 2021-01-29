@@ -8366,12 +8366,16 @@ _browse() {
   # _browse_respond_with()
   #
   # Usage:
-  #   _browse_respond_with <status-code> [<path> | <string>]
+  #   _browse_respond_with <status-code> [<path> | <string>] [--headers]
+  #
+  # Options:
+  #   --headers  Only print headers.
   #
   # Description:
   #   Send a response with <status-code> as status and an optional <file>
   #   or <string>, then exit with 0 for status 200 and 1 for all others.
   _browse_respond_with() {
+    local _only_headers=0
     local _path=
     local _status_code="${1:-}"
     local _string=
@@ -8385,19 +8389,34 @@ _browse() {
        "Server: nb"
     )
 
-    if [[ "${2:-}" =~ ^/ ]] && [[ -f "${2:-}" ]]
-    then
-      _path="${2:-}"
+    local __arg=
+    for   __arg in "${@:-}"
+    do
+      case "${__arg:-}" in
+        --*header*)
+          _only_headers=1
+          ;;
+        *)
+          if [[     "${__arg:-}" =~ ^/  ]] &&
+             [[ -f  "${__arg:-}"        ]]
+          then
+            _path="${__arg:-}"
+          fi
+          ;;
+      esac
+    done
 
+    if [[ -n "${_path:-}" ]]
+    then
       _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
 
-      local _content_length=
+      # local _content_length=
+      # _content_length="$(wc -c < "${_path}")"
 
-      if _content_length="$(stat -c '%s'  "${_path}" 2>/dev/null)" || # GNU
-         _content_length="$(stat -f '%z'  "${_path}")"                # BSD
-      then
-        _response_headers+=("Content-Length: ${_content_length}")
-      fi
+      # if [[ -n "${_content_length:-}" ]]
+      # then
+      #   _response_headers+=("Content-Length: ${_content_length}")
+      # fi
     else
       _string="${2:-}"
 
@@ -8415,22 +8434,26 @@ _browse() {
       printf "%s\\r\\n" "${__response_header:-}"
     done
 
+
     printf "\\r\\n"
 
-    if [[ -n "${_string:-}" ]]
+    if ! ((_only_headers))
     then
-      printf "%s\\r\\n" "${_string}"
-    elif [[ "${_path:-}" =~ ^/ ]]
-    then
-      local __line=
+      if [[ -n "${_string:-}" ]]
+      then
+        printf "%s\\r\\n" "${_string}"
+      elif [[ "${_path:-}" =~ ^/ ]]
+      then
+        local __line=
 
-      while read -r __line
-      do
-        printf "%s\\r\\n" "${__line}"
-      done < "${_path}"
-    else
-      printf "%s\\r\\n" \
-        "${_status_code} $(_browse_http_response "${_status_code}")"
+        while read -r __line
+        do
+          printf "%s\\r\\n" "${__line}"
+        done < "${_path}"
+      else
+        printf "%s\\r\\n" \
+          "${_status_code} $(_browse_http_response "${_status_code}")"
+      fi
     fi
 
     if [[ "${1:-}" -eq 200 ]]
@@ -8476,14 +8499,6 @@ _browse() {
       _browse_respond_with 400
     fi
 
-    if [[ "${_request_method}"    == "HEAD" ]]
-    then
-      _browse_respond_with 200
-    elif [[ "${_request_method}"  != "GET"  ]]
-    then
-      _browse_respond_with 405
-    fi
-
     _temp_file="$(mktemp).html"
 
     _relative_path="${_request_uri#\/}"
@@ -8504,7 +8519,17 @@ _browse() {
 
     _show "${_target_selector}" --browse > "${_temp_file}"
 
-    _browse_respond_with 200 "${_temp_file}"
+    case "${_request_method}" in
+      HEAD)
+        _browse_respond_with 200 "${_temp_file}" --headers
+        ;;
+      GET)
+        _browse_respond_with 200 "${_temp_file}"
+        ;;
+      *)
+        _browse_respond_with 405
+        ;;
+    esac
 
     # fall back to 500 response
 
