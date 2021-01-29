@@ -1747,8 +1747,9 @@ home
 
 ### 🔍 Search
 
-Use [`nb search`](#search) to perform full text searches, with support for
-regular expressions, tags, and both `AND` and `OR` queries:
+Use [`nb search`](#search) (shortcut: `nb q`) to perform full
+text searches, with support for regular expressions, tags, and both
+`AND` and `OR` queries:
 
 ```bash
 # search current notebook for "example query"
@@ -1791,7 +1792,7 @@ nb b q "example"
 nb q "example query"
 
 # search the notebook named "example" for "example query"
-nb example:q "example query"
+nb q example: "example query"
 
 # search all unarchived notebooks for "example query" and list matching items
 nb q -la "example query"
@@ -1836,7 +1837,7 @@ nb q "example" --and "demo"
 ```
 
 `nb` matches `AND` query terms regardless of where they appear in a
-file, an improvement over most options for `AND` queries on the command
+document, an improvement over most options for `AND` queries on the command
 line which typically only match terms appearing on the same line.
 
 `OR` queries return items that match at least one of the queries and can
@@ -1858,10 +1859,11 @@ nb q "example" --or "sample" --and "demo"
 # equivalent: example|sample AND demo|sample
 ```
 
-`nb search` is powered by Git's powerful built-in `git grep` tool, which
-uses the git object cache to perform searches faster than any other
-available tool. `nb` also supports performing searches with alternative
-search tools using the --utility <name> option.
+`nb search` leverages Git's powerful built-in
+[`git grep`](https://git-scm.com/docs/git-grep), which uses the git object
+cache to perform searches faster than other available tools. `nb` also
+supports performing searches with alternative search tools using
+the --utility <name> option.
 
 Supported alternative search tools:
 - [`rga`](https://github.com/phiresky/ripgrep-all)
