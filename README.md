@@ -1825,7 +1825,7 @@ the `-l` or `--list` option:
 
 Multiple query arguments are treated as `AND` queries, returning items that
 match all queries. `AND` queries can also be specified with the `--and <query>`
-option.
+option:
 
 ```bash
 # search for "example" AND "demo" with multiple arguments
@@ -1835,9 +1835,13 @@ nb q "example" "demo"
 nb q "example" --and "demo"
 ```
 
+`nb` matches `AND` query terms regardless of where they appear in a
+file, an improvement over most options for `AND` queries on the command
+line which typically only match terms appearing on the same line.
+
 `OR` queries return items that match at least one of the queries and can
 be created by separating terms in a single argument with a pipe
-character `|` or with the `--or <query>` option.
+character `|` or with the `--or <query>` option:
 
 ```bash
 # search for "example" OR "sample" with argument
