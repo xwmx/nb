@@ -1037,27 +1037,33 @@ _alias_subcommand() {
 # _browser()
 #
 # Usage:
-#   _browser [<url>] [--dump]
+#   _browser [[<url>] [--dump] | --check]
 #
 # Options:
+#   --check   Return with status 0 if a browser is available, or 1 if not.
 #   --dump    Print the page to standard output.
 #
 # Description:
 #   Interact with the preferred or available terminal web browser. When called
-#   with no input or arguments, test if a terminal web browser is available.
-#   With <url> or standard input, view in the preferred or available browser.
+#   with no input or arguments, or with only the --check option, test if a
+#   terminal web browser is available. With <url> or standard input, view in
+#   the preferred or available browser.
 #
 # Exit / Error Status:
 #   0 (success, true)  If a terminal browser is available.
 #   1 (error,  false)  if not.
 _browser() {
   local _browser_command=()
+  local _check=0
   local _dump=0
   local _url=
 
   for __arg in "${@:-}"
   do
     case "${__arg}" in
+      --check)
+        _check=1
+        ;;
       --dump)
         _dump=1
         ;;
@@ -1081,6 +1087,7 @@ _browser() {
   fi
 
   [[ -z "${_browser_command[*]:-}" ]] && return 1
+  ((_check)) && return 0
 
   if _interactive_input
   then
@@ -13991,12 +13998,17 @@ Can't show archives. Export archive and expand to edit.\\n"
   then
     if ! ((_render_for_browsing))   &&
        [[ -d "${_target_path}" ]]   &&
-       hash "ncat" &>/dev/null
+       _command_exists "ncat"       &&
+       _command_exists "pandoc"     &&
+       _browser --check
     then
       _browse "${_target_path}/"
       exit 0
     elif ((_render_for_browsing))   &&
-         [[ -d "${_target_path}" ]]
+         [[ -d "${_target_path}" ]] &&
+         _command_exists "ncat"     &&
+         _command_exists "pandoc"   &&
+         _browser --check
     then
       {
         _list "${_target_path}/" --no-color
@@ -14188,7 +14200,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ epub$ ]] &&
          _command_exists "pandoc"         &&
-         _browser
+         _browser --check
     then
       pandoc -f epub -t html "${_target_path}" | _browser
     elif _command_exists "xdg-open"
@@ -14292,6 +14304,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     }
 
     if ((_render_for_browsing)) &&
+       _command_exists "ncat"   &&
+       _command_exists "pandoc" &&
+       _browser --check         &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then
       cat "${_target_path}"   \
@@ -14306,7 +14321,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
-         _browser                   &&
+         _browser --check           &&
          ! ((_show_color_enabled))  &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print --raw` with `pandoc` and browser available
@@ -14314,16 +14329,16 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
-         _browser                   &&
+         _browser --check           &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print` with `pandoc` and browser available
       pandoc "${_target_path}" 2>/dev/null | _browser --dump
     elif ((_render))                &&
          _command_exists "pandoc"   &&
-         _browser                   &&
+         _browser --check           &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render` with `pandoc` and browser available
-      if hash "ncat" &>/dev/null
+      if _command_exists "ncat"
       then
         _browse "${_target_path}"
         exit 0
