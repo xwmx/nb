@@ -169,6 +169,7 @@ Also supported for various enhancements:
 [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
+[ncat](https://nmap.org/ncat/),
 [note-link-janitor](https://github.com/andymatuschak/note-link-janitor)
 (via [plugin](https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin)),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
