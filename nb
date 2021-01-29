@@ -13564,6 +13564,133 @@ _show() {
     printf "%s\\n" "${_indicators:-}"
   }
 
+  # _show_resolve_links()
+  #
+  # Usage:
+  #   _show_resolve_links <path> <notebook-path> [--browse]
+  #
+  # Description:
+  #   Read the file at <path>, resolve all [[wiki-style links]],
+  #   wrap each one in a Markdown link to the target item, then print
+  #   the updated file contents.
+  _show_resolve_links() {
+    local _for_browsing=0
+    local _matches=()
+    local _path="${1:?}"
+
+    shift
+
+    for __arg in "${@:-}"
+    do
+      case "${__arg:-}" in
+        --browse)
+          _for_browsing=1
+          ;;
+        *)
+          if [[ -z "${_path}" ]]
+          then
+            _path="${__arg}"
+          else
+            _notebook_path="${__arg:-}"
+          fi
+      esac
+    done
+
+    _matches=($(
+      GIT_PAGER='' git -C "${_notebook_path}" \
+        grep                                  \
+        --color=never                         \
+        --extended-regexp                     \
+        -h                                    \
+        --only-matching                       \
+        --text                                \
+        -e "\[\[[^\[]+\]\]"                   \
+        "${_path}"                            \
+        || return 0
+    ))
+
+    local __match=
+    for   __match in "${_matches[@]:-}"
+    do
+      local _selector="${__match#[[}"
+      _selector="${_selector%]]}"
+
+      if ((_for_browsing))
+      then
+        if [[ -n "${_selector:-}" ]]
+        then
+          _links+=("[[[${_selector}]]](http://localhost:${NB_SERVER_PORT}/${_selector})")
+        else
+          _links+=("${__match}")
+        fi
+      else
+        local _path=
+        _path="$(_show "${_selector}" --path 2>/dev/null || :)"
+
+        if [[ -z "${_path:-}" ]]
+        then
+          _links+=("[[${_selector}]]")
+        else
+          local _title=
+          _title="$(_show "${_selector}" --title 2>/dev/null || :)"
+
+          local _label="${_title:-}"
+
+          if [[ -z "${_label:-}" ]]
+          then
+            _label="${_selector:-}"
+          fi
+
+          _links+=("[[[${_label:-}]]](file:${_path:-})")
+        fi
+      fi
+    done
+
+    # Usage: _show_escape_link_component
+    # _show_escape_link_component() {
+    #   cat | sed           \
+    #     -e 's/\//\\\//g'  \
+    #     -e 's/\[/\\\[/g'  \
+    #     -e 's/\]/\\\]/g'  \
+    #     -e 's/(/\\(/g'    \
+    #     -e 's/)/\\)/g'
+    # }
+
+    # Usage: _show_escape_link_component
+    _show_escape_link_component() {
+      printf "%s\\n" "${1:-}" \
+        | sed                 \
+          -e 's/\//\\\//g'    \
+          -e 's/\[/\\\[/g'    \
+          -e 's/\]/\\\]/g'    \
+          -e 's/(/\\(/g'      \
+          -e 's/)/\\)/g'
+    }
+
+    local _sed_arguments=()
+
+    local i=0
+    for ((i=0; i < "${#_links[@]}"; i++))
+    do
+      local _escaped_match=
+      _escaped_match="$(
+        _show_escape_link_component "${_matches[i]:-}"
+      )"
+
+      local _escaped_link=
+      _escaped_link="$(
+        _show_escape_link_component "${_links[i]:-}"
+      )"
+
+      if [[ -n "${_escaped_match:-}" ]] && [[ -n "${_escaped_link:-}" ]]
+      then
+        _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
+      fi
+    done
+
+    sed "${_sed_arguments[@]:-}" "${_path}"
+  }
+
   local _check_type=0
   local _ls_arguments=()
   local _print_output=0
@@ -14211,112 +14338,20 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   else # file is text
-    # Usage: _show_resolve_links <path> [--browse]
-    _show_resolve_links() {
-      local _matches=()
-      local _path="${1:?}"
-
-      local _for_browsing=0
-      [[ -n "${2:-}" ]] && _for_browsing=1
-
-      _matches=($(
-        GIT_PAGER='' git -C "${_notebook_path}" \
-          grep                                  \
-          --color=never                         \
-          --extended-regexp                     \
-          -h                                    \
-          --only-matching                       \
-          --text                                \
-          -e "\[\[[^\[]+\]\]"                   \
-          "${_path}"                            \
-          || return 0
-      ))
-
-      local __match=
-      for   __match in "${_matches[@]:-}"
-      do
-        local _selector="${__match#[[}"
-        _selector="${_selector%]]}"
-
-        if ((_for_browsing))
-        then
-          if [[ -n "${_selector:-}" ]]
-          then
-            _links+=("[[[${_selector}]]](http://localhost:${NB_SERVER_PORT}/${_selector})")
-          else
-            _links+=("${__match}")
-          fi
-        else
-          local _path=
-          _path="$(_show "${_selector}" --path 2>/dev/null || :)"
-
-          if [[ -z "${_path:-}" ]]
-          then
-            _links+=("[[${_selector}]]")
-          else
-            local _title=
-            _title="$(_show "${_selector}" --title 2>/dev/null || :)"
-
-            local _label="${_title:-}"
-
-            if [[ -z "${_label:-}" ]]
-            then
-              _label="${_selector:-}"
-            fi
-
-            _links+=("[[[${_label:-}]]](file:${_path:-})")
-          fi
-        fi
-      done
-
-      # Usage: _show_escape_link_component
-      _show_escape_link_component() {
-        cat | sed           \
-          -e 's/\//\\\//g'  \
-          -e 's/\[/\\\[/g'  \
-          -e 's/\]/\\\]/g'  \
-          -e 's/(/\\(/g'    \
-          -e 's/)/\\)/g'
-      }
-
-      local _sed_arguments=()
-
-      local i=0
-      for ((i=0; i < "${#_links[@]}"; i++))
-      do
-        local _escaped_match=
-        _escaped_match="$(
-          printf "%s\\n" "${_matches[i]:-}" | _show_escape_link_component
-        )"
-
-        local _escaped_link=
-        _escaped_link="$(
-          printf "%s\\n" "${_links[i]:-}"   | _show_escape_link_component
-        )"
-
-        if [[ -n "${_escaped_match:-}" ]] && [[ -n "${_escaped_link:-}" ]]
-        then
-          _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
-        fi
-      done
-
-      cat | sed "${_sed_arguments[@]:-}"
-    }
-
     if ((_render_for_browsing)) &&
        _command_exists "ncat"   &&
        _command_exists "pandoc" &&
        _browser --check         &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then
-      cat "${_target_path}"   \
-        | _show_resolve_links \
-            "${_target_path}" \
-            --browse          \
-        | pandoc              \
-          --from markdown     \
-          --to html           \
-          --standalone        \
+      _show_resolve_links   \
+        "${_target_path}"   \
+        "${_notebook_path}" \
+        --browse            \
+        | pandoc            \
+          --from markdown   \
+          --to html         \
+          --standalone      \
           2>/dev/null
     elif ((_render))                &&
          ((_print_output))          &&
@@ -14343,14 +14378,14 @@ Can't show archives. Export archive and expand to edit.\\n"
         _browse "${_target_path}"
         exit 0
       else
-        cat "${_target_path}"   \
-          | _show_resolve_links \
-              "${_target_path}" \
-          | pandoc              \
-            --from markdown     \
-            --to html           \
-            --standalone        \
-            2>/dev/null         \
+        _show_resolve_links   \
+          "${_target_path}"   \
+          "${_notebook_path}" \
+          | pandoc            \
+            --from markdown   \
+            --to html         \
+            --standalone      \
+            2>/dev/null       \
           | _browser
       fi
     else # default
