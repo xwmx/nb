@@ -13573,6 +13573,10 @@ _show() {
   #   Read the file at <path>, resolve all [[wiki-style links]],
   #   wrap each one in a Markdown link to the target item, then print
   #   the updated file contents.
+  #
+  #   By default, links are created with file:// URLs to the item on the
+  #   local filesystem. With --browse, links are created with htt://
+  #   URLs for the internal web server.
   _show_resolve_links() {
     local _for_browsing=0
     local _matches=()
@@ -13645,16 +13649,6 @@ _show() {
         fi
       fi
     done
-
-    # Usage: _show_escape_link_component
-    # _show_escape_link_component() {
-    #   cat | sed           \
-    #     -e 's/\//\\\//g'  \
-    #     -e 's/\[/\\\[/g'  \
-    #     -e 's/\]/\\\]/g'  \
-    #     -e 's/(/\\(/g'    \
-    #     -e 's/)/\\)/g'
-    # }
 
     # Usage: _show_escape_link_component
     _show_escape_link_component() {
