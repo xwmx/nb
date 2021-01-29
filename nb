@@ -3756,6 +3756,7 @@ $(_color_primary "Usage:")
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
+  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<relative-path>]
   ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -8307,11 +8308,28 @@ _alias_subcommand "add" "new"
 
 describe "browse" <<HEREDOC
 Usage:
-  ${_ME} browse <selector>
+  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
 
 Description:
-  Start the web server and open the item represented by <selector> in the
-  terminal web browser.
+  Browse and view linked notes, notebooks, folders, and other items using the
+  terminal web brower.
+
+  \`browse\` includes an internal web server that renders [[wiki-style links]]
+  as internal links. To link to an item, include the selector for that item
+  within double square brackets:
+
+    # link to item 123 in the "sample" folder in the "example" notebook
+    [[example:sample/123]]
+
+    # link to the item titled "Example Title" in the "demo" notebook
+    [[demo:Example Title]]
+
+Examples:
+  ${_ME} browse
+  ${_ME} browse example:
+  ${_ME} browse Example\ Folder/
+  ${_ME} browse 123
+  ${_ME} browse demo:456
 HEREDOC
 _browse() {
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
