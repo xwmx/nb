@@ -2742,6 +2742,7 @@ _selector_resolve_folders() {
 #
 # Usage:
 #   _selector_resolve_path <selector> [<notebook-path>] [--full | --relative]
+#                          [--skip-titles]
 #
 # Options:
 #   --full  Print the full path.
@@ -2768,12 +2769,16 @@ _selector_resolve_path() {
   local _print_full_path=0
   local _relative_path=
   local _selector=
+  local _skip_titles=0
 
   for __arg in "${@:-}"
   do
     case "${__arg:-}" in
       --full)
         _print_full_path=1
+        ;;
+      --skip-titles)
+        _skip_titles=1
         ;;
       [^-]*)
         if [[ -z "${_selector:-}" ]]
@@ -2857,7 +2862,8 @@ _selector_resolve_path() {
         then # <selector> is a relative path with numeric filename
           _relative_path="${_identifier}"
         fi
-      else # <selector> might be a title
+      elif ! ((_skip_titles))
+      then # <selector> might be a title
         local _maybe_title="${_identifier##*\/}"
 
         _relative_path="$(
@@ -11902,7 +11908,10 @@ _search() {
       fi
     else
       _maybe_path="$(
-        _show "${_arguments[i]}" --path 2>/dev/null || :
+        _selector_resolve_path "${_arguments[i]:-}" \
+          --full                                    \
+          --skip-titles                             \
+          2>/dev/null || :
       )"
     fi
 
