@@ -3628,6 +3628,34 @@ Examples:
 Shortcut Alias: `b`
 ```
 
+#### `browse`
+
+```text
+Usage:
+  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
+
+Description:
+  Browse and view linked notes, notebooks, folders, and other items using the
+  terminal web brower.
+
+  `browse` includes an internal web server that renders [[wiki-style links]]
+  as internal links. To link to an item, include the selector for that item
+  within double square brackets:
+
+    # link to item 123 in the "sample" folder in the "example" notebook
+    [[example:sample/123]]
+
+    # link to the item titled "Example Title" in the "demo" notebook
+    [[demo:Example Title]]
+
+Examples:
+  nb browse
+  nb browse example:
+  nb browse Example\ Folder/
+  nb browse 123
+  nb browse demo:456
+```
+
 #### `completions`
 
 ```text
@@ -4885,34 +4913,6 @@ Description:
     https://github.com/andymatuschak/note-link-janitor
 
     Requirement: every note in the notebook must have a title.
-```
-
-#### `browse`
-
-```text
-Usage:
-  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-
-Description:
-  Browse and view linked notes, notebooks, folders, and other items using the
-  terminal web brower.
-
-  `browse` includes an internal web server that renders [[wiki-style links]]
-  as internal links. To link to an item, include the selector for that item
-  within double square brackets:
-
-    # link to item 123 in the "sample" folder in the "example" notebook
-    [[example:sample/123]]
-
-    # link to the item titled "Example Title" in the "demo" notebook
-    [[demo:Example Title]]
-
-Examples:
-  nb browse
-  nb browse example:
-  nb browse Example\ Folder/
-  nb browse 123
-  nb browse demo:456
 ```
 
 #### `copy`
