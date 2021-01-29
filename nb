@@ -8454,12 +8454,19 @@ _browse() {
     _relative_path="${_relative_path//"\%20"/ }"
     _relative_path="${_relative_path//"%20"/ }"
 
-    if ! _show "${_relative_path}" --path &>/dev/null
+    local _target_selector="${_relative_path:-}"
+
+    if [[ -z "${_target_selector:-}" ]]
+    then
+      _target_selector="$(_notebooks current --name --no-color):"
+    fi
+
+    if ! _show "${_target_selector}" --path &>/dev/null
     then
       _browse_respond_with 404
     fi
 
-    _show "${_relative_path}" --browse > "${_temp_file}"
+    _show "${_target_selector}" --browse > "${_temp_file}"
 
     _browse_respond_with 200 "${_temp_file}"
 
@@ -8489,11 +8496,9 @@ _browse() {
     shift
   done
 
-  [[ -z "${_selector:-}" ]] && _exit_1 _help "browse"
-
   if ! hash "ncat" &>/dev/null
   then
-    _show "${_selector}" --render
+    _show "${_selector:-}" --render
     _warn cat <<HEREDOC
 Install the \`ncat\` utility for improved browsing and linking: https://nmap.org/
 HEREDOC

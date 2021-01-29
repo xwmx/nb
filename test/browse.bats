@@ -4,7 +4,6 @@ load test_helper
 
 export _NB_SERVER_PORT=6789
 
-
 # error handling ##############################################################
 
 @test "'browse <not-valid>' returns 404 Not Found." {
@@ -26,6 +25,45 @@ export _NB_SERVER_PORT=6789
 }
 
 # browse ######################################################################
+
+@test "'browse' with no arguments serves the current notebook contents as a rendered HTML page." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"       \
+      --title     "Title One"         \
+      --content   "Example content."
+
+    "${_NB}" add  "File Two.md"       \
+      --title     "Title Two"         \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder"    \
+      --type      "folder"
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                                                ]]
+  [[ "${output}"    =~ \<\!DOCTYPE\ html\>                              ]]
+
+  [[ "${output}"  =~  \<h1\ id=\"section\"\>/\</h1\>                    ]]
+
+  [[ "${output}"  =~  \
+      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:3/\"\>  ]]
+  [[ "${output}"  =~  \[home:3\]\ 📂\ Example\ Folder\</a\>\</p\>       ]]
+
+  [[ "${output}"  =~  \
+      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:2\"\>   ]]
+  [[ "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\</p\>                ]]
+
+  [[ "${output}"  =~  \
+      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:1\"\>   ]]
+  [[ "${output}"  =~  \[home:1\]\ Title\ One\</a\>\</p\>                ]]
+}
 
 @test "'browse <selector>' serves the rendered HTML page." {
   {
