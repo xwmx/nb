@@ -438,6 +438,22 @@ with underscores:
 Added: [10] example_title.md "Example Title"
 ```
 
+Tags can be added with the `--tags <tag1>,<tag2>...` option, which takes
+a comma separated list of tags, converts them to hashtags, and inserts
+them between the title and content:
+
+```bash
+> nb add "Example content." --title "Tagged Example" --tags tag1,tag2
+Added: [11] tagged_example.md "Tagged Example"
+
+> nb show 10 --print
+# Tagged Example
+
+#tag1 #tag2
+
+Example content.
+```
+
 Files can be created with any file type either by specifying the
 extension in the filename, the extension by itself, or via
 the `--type <type>` option:
@@ -475,11 +491,12 @@ Use [`nb show`](#show) to view code snippets with automatic syntax
 highlighting and [`nb edit`](#edit) to open in your editor.
 
 Piping clipboard content works well for quickly saving text content of
-any kind, particularly when used with the `--title <title>` option:
+any kind, particularly when used with the `--title <title>` and / or
+`--tags <tag-list>` options:
 
 ```bash
-> pb | nb a --title "Sample Title"
-Added: [11] sample_title.md "Sample Title"
+> pb | nb a --title "Sample Title" --tags tag1,tag2
+Added: [12] sample_title.md "Sample Title"
 ```
 
 Notes can be tagged simply by adding hashtags anywhere in the document:
