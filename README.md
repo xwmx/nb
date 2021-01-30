@@ -3260,7 +3260,7 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
   nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
@@ -3683,15 +3683,16 @@ Shortcut Alias: `b`
 
 ```text
 Usage:
-  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
 
 Description:
   Browse and view linked notes, notebooks, folders, and other items using the
   terminal web brower.
 
-  `browse` includes an internal web server that renders [[wiki-style links]]
-  as internal links. To link to an item, include the selector for that item
-  within double square brackets:
+  `browse` includes an embedded, terminal-first web application and server
+  that renders [[wiki-style links]] as internal links, enabling you to browse
+  your notes and notebooks in your terminal web browser, as well as
+  seamlessly browse to an from the offsite links in bookmarks and notes.
 
     # link to item 123 in the "sample" folder in the "example" notebook
     [[example:sample/123]]
