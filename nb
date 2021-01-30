@@ -9244,21 +9244,18 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
   if [[ -n "${_tag_list}" ]]
   then
     local _tags=()
-    local _tag_string=
-
     IFS=',' read -ra _tags <<< "${_tag_list}"
-    for __tag in "${_tags[@]:-}"
-    do
-      local _normalized_tag
-      _normalized_tag="$(printf "%s\\n" "${__tag}" | tr -d '#')"
 
-      if [[ -z "${_tag_string}" ]]
-      then
-        _tag_string+="#${_normalized_tag}"
-      else
-        _tag_string+=" #${_normalized_tag}"
-      fi
+    local _normalized_tags=()
+
+    local __tag=
+    for   __tag in "${_tags[@]:-}"
+    do
+      _normalized_tags+=("#$(printf "%s\\n" "${__tag}" | tr -d '#')")
     done
+
+    local _tag_string=
+    _tag_string="$(_join " " "${_normalized_tags[@]:-}")"
 
     _bookmark_content+="${_NEWLINE}## Tags${_NEWLINE}"
     _bookmark_content+="${_NEWLINE}${_tag_string}${_NEWLINE}"
