@@ -8246,6 +8246,11 @@ _add() {
 
     if ! _interactive_input
     then # piped input
+      if [[ -n "${_content:-}" ]]
+      then
+        printf "\\n" >> "${_target_path}"
+      fi
+
       cat >> "${_target_path}"
     fi
 

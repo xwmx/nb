@@ -96,7 +96,7 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${lines[0]}" =~ Updated:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\"       ]]
+  [[ "${lines[0]}" =~ Updated:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\" ]]
 }
 
 @test "'edit' with empty --content option exits with 1" {

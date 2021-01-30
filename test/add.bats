@@ -38,6 +38,243 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
+# piped #######################################################################
+
+@test "'add' with piped content includes content from --title, --content, and standard input separated by newlines." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo 'Piped content.' | \"${_NB}\" add --title Example\ Title --content Example\ content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file:
+
+  [[ -f "${NB_DIR}/home/example_title.md" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+
+Piped content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log --stat
+  git log | grep -q '\[nb\] Add: example_title.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\" ]]
+}
+
+@test "'add' with piped content includes content from --title, and standard input separated by newlines." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo 'Piped content.' | \"${_NB}\" add --title Example\ Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file:
+
+  [[ -f "${NB_DIR}/home/example_title.md" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Piped content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log --stat
+  git log | grep -q '\[nb\] Add: example_title.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\" ]]
+}
+
+@test "'add' with piped content includes content from --content, and standard input separated by newlines." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo 'Piped content.' | \"${_NB}\" add --content \"Example content.\""
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file:
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  [[ -f "${NB_DIR}/home/${_files[0]:-}" ]]
+
+  diff                                      \
+    <(cat "${NB_DIR}/home/${_files[0]:-}")  \
+    <(cat <<HEREDOC
+Example content.
+
+Piped content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log --stat
+  git log | grep -q "\[nb\] Add: ${_files[0]:-}"
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*${_files[0]:-} ]]
+}
+
+@test "'add' with piped content creates new note without errors." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo '# Piped content.' | \"${_NB}\" add --filename example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates new note file:
+
+  [[ -f "${NB_DIR}/home/example.md" ]]
+
+  diff                                  \
+    <(cat "${NB_DIR}/home/example.md")  \
+    <(cat <<HEREDOC
+# Piped content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: example.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example.md.*\ \"Piped\ content.\" ]]
+}
+
+@test "'add --type org' with piped content creates a new .org note file." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo '# Piped' | \"${_NB}\" add --type org"
+
+  [[ "${status}" -eq 0      ]]
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  grep -q '# Piped' "${NB_DIR}/home"/*
+
+  [[ "${_files[0]}" =~ org$ ]]
+}
+
+@test "'add --type ''' with piped content exits with 1." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo '# Piped' | \"${_NB}\" add --type"
+
+  [[ ${status} -eq 1        ]]
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}" -eq 0  ]]
+}
+
 # notebook: scoped ############################################################
 
 @test "'add notebook:' creates new note without errors." {
@@ -1078,86 +1315,6 @@ load test_helper
   run "${_NB}" add  "* Content" --encrypt --password
 
   [[ "${status}"    -eq 1   ]]
-
-  _files=($(ls "${NB_DIR}/home/"))
-
-  [[ "${#_files[@]}" -eq 0  ]]
-}
-
-# piped #######################################################################
-
-@test "'add' with piped content creates new note without errors." {
-  {
-    "${_NB}" init
-  }
-
-  run bash -c "echo '# Piped' | \"${_NB}\" add"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0      ]]
-
-  # Creates new note file:
-
-  _files=($(ls "${NB_DIR}/home/"))
-
-  [[ "${#_files[@]}" -eq 1  ]]
-
-  grep -q '# Piped' "${NB_DIR}/home"/*
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-
-  # Adds to index:
-
-  [[ -e "${NB_DIR}/home/.index" ]]
-
-  diff                      \
-    <(ls "${NB_DIR}/home")  \
-    <(cat "${NB_DIR}/home/.index")
-
-  # Prints output:
-
-  [[ "${output}" =~ Added:          ]]
-  [[ "${output}" =~ [A-Za-z0-9]+    ]]
-  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-}
-
-@test "'add --type org' with piped content creates a new .org note file." {
-  {
-    "${_NB}" init
-  }
-
-  run bash -c "echo '# Piped' | \"${_NB}\" add --type org"
-
-  [[ "${status}" -eq 0      ]]
-
-  _files=($(ls "${NB_DIR}/home/"))
-
-  [[ "${#_files[@]}" -eq 1  ]]
-
-  grep -q '# Piped' "${NB_DIR}/home"/*
-
-  [[ "${_files[0]}" =~ org$ ]]
-}
-
-@test "'add --type ''' with piped content exits with 1." {
-  {
-    "${_NB}" init
-  }
-
-  run bash -c "echo '# Piped' | \"${_NB}\" add --type"
-
-  [[ ${status} -eq 1        ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
