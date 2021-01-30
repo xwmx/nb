@@ -7845,6 +7845,40 @@ _main() {
 _main "${_ARGUMENTS[@]:-}"
 
 ###############################################################################
+# Deferred Helpers                                             Deferred Helpers
+# ----------------                                             ----------------
+###############################################################################
+# --------------------------------------------------------------------------- #
+
+# _option_get_tags()
+#
+# Usage:
+#   _option_get_tags <option> <comma,separated,tags>
+#
+# Description:
+#   Convert a comma-separated list of tags to a string of hashtags.
+_option_get_tags() {
+  local _tag_list=
+  _tag_list="$(_option_get_value "${1:-}" "${2:-}")" || return 1
+
+  local _tags=()
+  IFS=',' read -ra _tags <<< "${_tag_list}"
+
+  local _normalized_tags=()
+
+  local __tag=
+  for   __tag in "${_tags[@]:-}"
+  do
+    _normalized_tags+=("#${__tag#\#}")
+  done
+
+  local _tag_string=
+  _tag_string="$(_join " " "${_normalized_tags[@]-}")"
+
+  printf "%s\\n" "${_tag_string:-}"
+}
+
+###############################################################################
 # Subcommands                                                       Subcommands
 # -----------                                                       -----------
 ###############################################################################
@@ -8785,7 +8819,7 @@ _bookmark() {
         _skip_content=1
         ;;
       -t|--tag*)
-        _tag_list="$(_option_get_value "${__arg}" "${__val:-}")"
+        _tag_list="$(_option_get_tags "${__arg}" "${__val:-}")"
         shift
         ;;
       --title)
@@ -9243,22 +9277,8 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
 
   if [[ -n "${_tag_list}" ]]
   then
-    local _tags=()
-    IFS=',' read -ra _tags <<< "${_tag_list}"
-
-    local _normalized_tags=()
-
-    local __tag=
-    for   __tag in "${_tags[@]:-}"
-    do
-      _normalized_tags+=("#$(printf "%s\\n" "${__tag}" | tr -d '#')")
-    done
-
-    local _tag_string=
-    _tag_string="$(_join " " "${_normalized_tags[@]:-}")"
-
     _bookmark_content+="${_NEWLINE}## Tags${_NEWLINE}"
-    _bookmark_content+="${_NEWLINE}${_tag_string}${_NEWLINE}"
+    _bookmark_content+="${_NEWLINE}${_tag_list}${_NEWLINE}"
   fi
 
   if _file_is_text "${_temp_file}"
