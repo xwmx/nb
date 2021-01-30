@@ -8377,298 +8377,6 @@ _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
 _alias_subcommand "add" "new"
 
-# browse ############################################################### browse
-
-describe "browse" <<HEREDOC
-Usage:
-  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
-
-Description:
-  Browse and view linked notes, notebooks, folders, and other items using the
-  terminal web brower.
-
-  \`browse\` includes an embedded, terminal-first web application and server
-  that renders [[wiki-style links]] as internal links, enabling you to browse
-  your notes and notebooks in your terminal web browser, as well as
-  seamlessly browse to an from the offsite links in bookmarks and notes.
-
-  To link to an item, include the selector for that item within double
-  square brackets:
-
-    # link to item 123 in the "sample" folder in the "example" notebook
-    [[example:sample/123]]
-
-    # link to the item titled "Example Title" in the "demo" notebook
-    [[demo:Example Title]]
-
-Examples:
-  ${_ME} browse
-  ${_ME} browse example:
-  ${_ME} browse Example\ Folder/
-  ${_ME} browse 123
-  ${_ME} browse demo:456
-HEREDOC
-_browse() {
-  # Inspired by bashttpd: https://github.com/avleen/bashttpd
-
-  # _browse_http_response()
-  #
-  # Usage:
-  #   _browse_http_response <status-code>
-  #
-  # Description:
-  #   Print the response message for a given status code.
-  _browse_http_response() {
-    local _status_code="${1:-}"
-
-    case "${_status_code}" in
-      200) printf "OK\\n"                     ;;
-      400) printf "Bad Request\\n"            ;;
-      403) printf "Forbidden\\n"              ;;
-      404) printf "Not Found\\n"              ;;
-      405) printf "Method Not Allowed\\n"     ;;
-      500) printf "Internal Server Error\\n"  ;;
-    esac
-  }
-
-  # _browse_respond_with()
-  #
-  # Usage:
-  #   _browse_respond_with <status-code> [<path> | <string>] [--headers]
-  #
-  # Options:
-  #   --headers  Only print headers.
-  #
-  # Description:
-  #   Send a response with <status-code> as status and an optional <file>
-  #   or <string>, then exit with 0 for status 200 and 1 for all others.
-  _browse_respond_with() {
-    local _only_headers=0
-    local _path=
-    local _status_code="${1:-}"
-    local _string=
-
-    local _date=
-    _date=$(date +"%a, %d %b %Y %H:%M:%S %Z")
-
-    local _response_headers=(
-         "Date: ${_date}"
-      "Expires: ${_date}"
-       "Server: nb"
-    )
-
-    local __arg=
-    for   __arg in "${@:-}"
-    do
-      case "${__arg:-}" in
-        --*header*)
-          _only_headers=1
-          ;;
-        *)
-          if [[     "${__arg:-}" =~ ^/  ]] &&
-             [[ -f  "${__arg:-}"        ]]
-          then
-            _path="${__arg:-}"
-          fi
-          ;;
-      esac
-    done
-
-    if [[ -n "${_path:-}" ]]
-    then
-      _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
-
-      # NOTE: Content length appears to be incorrect, since received content
-      # is truncated. TODO: Get correct content length.
-      # local _content_length=
-      # _content_length="$(wc -c < "${_path}")"
-
-      # if [[ -n "${_content_length:-}" ]]
-      # then
-      #   _response_headers+=("Content-Length: ${_content_length}")
-      # fi
-    else
-      _string="${2:-}"
-
-      _response_headers+=("Content-Type: text/plain")
-    fi
-
-    printf "%s\\r\\n" \
-      "HTTP/1.0 ${_status_code} $(_browse_http_response "${_status_code}")"
-
-    local __response_header=
-    for   __response_header in "${_response_headers[@]:-}"
-    do
-      [[ -n "${__response_header:-}" ]] || continue
-
-      printf "%s\\r\\n" "${__response_header:-}"
-    done
-
-    if ! ((_only_headers))
-    then
-      printf "\\r\\n"
-
-      if [[ -n "${_string:-}" ]]
-      then
-        printf "%s\\r\\n" "${_string}"
-      elif [[ "${_path:-}" =~ ^/ ]]
-      then
-        local __line=
-
-        while read -r __line
-        do
-          printf "%s\\r\\n" "${__line}"
-        done < "${_path}"
-      else
-        printf "%s\\r\\n" \
-          "${_status_code} $(_browse_http_response "${_status_code}")"
-      fi
-    fi
-
-    if [[ "${1:-}" -eq 200 ]]
-    then
-      exit 0
-    else
-      exit 1
-    fi
-  }
-
-  # _browse_respond()
-  #
-  # Usage:
-  #   _browse_respond
-  #
-  # Description:
-  #   Build a response using standard input and print to standard output..
-  _browse_respond() {
-    # ---
-    # Request parsing
-
-    # Request-Line HTTP RFC 2616 §5
-    # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
-    local _line=
-    read -r _line || _browse_respond_with 400
-
-    # strip trailing CR if it exists
-    _line="${_line%%$'\r'}"
-
-    local _request_http_version=
-    local _request_method=
-    local _request_uri=
-
-    IFS=' ' read -r   \
-      _request_method \
-      _request_uri    \
-      _request_http_version <<<"${_line}"
-
-    if [[ -z "${_request_method:-}"       ]] ||
-       [[ -z "${_request_uri:-}"          ]] ||
-       [[ -z "${_request_http_version:-}" ]]
-    then
-      _browse_respond_with 400
-    fi
-
-    _temp_file="$(mktemp).html"
-
-    _relative_path="${_request_uri#\/}"
-    _relative_path="${_relative_path//"\%20"/ }"
-    _relative_path="${_relative_path//"%20"/ }"
-
-    local _target_selector="${_relative_path:-}"
-
-    if [[ -z "${_target_selector:-}" ]]
-    then
-      _target_selector="$(_notebooks current --name --no-color):"
-    fi
-
-    if ! _show "${_target_selector}" --path &>/dev/null
-    then
-      _browse_respond_with 404
-    fi
-
-    _show "${_target_selector}" --browse --no-color > "${_temp_file}"
-
-    case "${_request_method}" in
-      HEAD)
-        _browse_respond_with 200 "${_temp_file}" --headers
-        ;;
-      GET)
-        _browse_respond_with 200 "${_temp_file}"
-        ;;
-      *)
-        _browse_respond_with 405
-        ;;
-    esac
-
-    # fall back to 500 response
-
-    _browse_respond_with 500
-  }
-
-  local _print_headers=0
-  local _print_output=0
-  local _selector=
-
-  while ((${#}))
-  do
-    case "${1:-}" in
-      --headers)          _print_headers=1          ;;
-      -p|--print)         _print_output=1           ;;
-      --respond|--serve)  _browse_respond && exit 0 ;;
-      *)                  _selector="${1:-}"        ;;
-    esac
-
-    shift
-  done
-
-  if ! hash "ncat" &>/dev/null
-  then
-    _show "${_selector:-}" --render
-    _warn cat <<HEREDOC
-Install the \`ncat\` utility for improved browsing and linking: https://nmap.org/
-HEREDOC
-    exit 0
-  fi
-
-  # start server in the background
-
-  (
-    trap "exit" INT
-    while true
-    do
-      ncat -lp "${NB_SERVER_PORT}" -e "${_MY_PATH} browse --respond" 2>/dev/null
-    done
-  ) &
-
-  local _pid="${!}"
-  # shellcheck disable=SC2064
-  trap "kill ${_pid} 2> /dev/null" EXIT
-
-  sleep 0.5
-
-  # request URL
-
-  if ((_print_output))
-  then
-    local _url="http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}"
-
-    if ((_print_headers))
-    then
-      curl -s -I "${_url}"
-    else
-      _download_from "${_url}"
-    fi
-  else
-    _browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
-  fi
-
-  # make a final request to clear any listening process
-
-  (
-    sleep 1 && _download_from "http://localhost:${NB_SERVER_PORT}" &>/dev/null
-  ) &
-}
-
 # bookmark ########################################################### bookmark
 
 describe "bookmark" <<HEREDOC
@@ -9395,6 +9103,298 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
 }
 _alias_subcommand "bookmark" "b"
 _alias_subcommand "bookmark" "bookmarks"
+
+# browse ############################################################### browse
+
+describe "browse" <<HEREDOC
+Usage:
+  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
+
+Description:
+  Browse and view linked notes, notebooks, folders, and other items using the
+  terminal web brower.
+
+  \`browse\` includes an embedded, terminal-first web application and server
+  that renders [[wiki-style links]] as internal links, enabling you to browse
+  your notes and notebooks in your terminal web browser, as well as
+  seamlessly browse to an from the offsite links in bookmarks and notes.
+
+  To link to an item, include the selector for that item within double
+  square brackets:
+
+    # link to item 123 in the "sample" folder in the "example" notebook
+    [[example:sample/123]]
+
+    # link to the item titled "Example Title" in the "demo" notebook
+    [[demo:Example Title]]
+
+Examples:
+  ${_ME} browse
+  ${_ME} browse example:
+  ${_ME} browse Example\ Folder/
+  ${_ME} browse 123
+  ${_ME} browse demo:456
+HEREDOC
+_browse() {
+  # Inspired by bashttpd: https://github.com/avleen/bashttpd
+
+  # _browse_http_response()
+  #
+  # Usage:
+  #   _browse_http_response <status-code>
+  #
+  # Description:
+  #   Print the response message for a given status code.
+  _browse_http_response() {
+    local _status_code="${1:-}"
+
+    case "${_status_code}" in
+      200) printf "OK\\n"                     ;;
+      400) printf "Bad Request\\n"            ;;
+      403) printf "Forbidden\\n"              ;;
+      404) printf "Not Found\\n"              ;;
+      405) printf "Method Not Allowed\\n"     ;;
+      500) printf "Internal Server Error\\n"  ;;
+    esac
+  }
+
+  # _browse_respond_with()
+  #
+  # Usage:
+  #   _browse_respond_with <status-code> [<path> | <string>] [--headers]
+  #
+  # Options:
+  #   --headers  Only print headers.
+  #
+  # Description:
+  #   Send a response with <status-code> as status and an optional <file>
+  #   or <string>, then exit with 0 for status 200 and 1 for all others.
+  _browse_respond_with() {
+    local _only_headers=0
+    local _path=
+    local _status_code="${1:-}"
+    local _string=
+
+    local _date=
+    _date=$(date +"%a, %d %b %Y %H:%M:%S %Z")
+
+    local _response_headers=(
+         "Date: ${_date}"
+      "Expires: ${_date}"
+       "Server: nb"
+    )
+
+    local __arg=
+    for   __arg in "${@:-}"
+    do
+      case "${__arg:-}" in
+        --*header*)
+          _only_headers=1
+          ;;
+        *)
+          if [[     "${__arg:-}" =~ ^/  ]] &&
+             [[ -f  "${__arg:-}"        ]]
+          then
+            _path="${__arg:-}"
+          fi
+          ;;
+      esac
+    done
+
+    if [[ -n "${_path:-}" ]]
+    then
+      _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+
+      # NOTE: Content length appears to be incorrect, since received content
+      # is truncated. TODO: Get correct content length.
+      # local _content_length=
+      # _content_length="$(wc -c < "${_path}")"
+
+      # if [[ -n "${_content_length:-}" ]]
+      # then
+      #   _response_headers+=("Content-Length: ${_content_length}")
+      # fi
+    else
+      _string="${2:-}"
+
+      _response_headers+=("Content-Type: text/plain")
+    fi
+
+    printf "%s\\r\\n" \
+      "HTTP/1.0 ${_status_code} $(_browse_http_response "${_status_code}")"
+
+    local __response_header=
+    for   __response_header in "${_response_headers[@]:-}"
+    do
+      [[ -n "${__response_header:-}" ]] || continue
+
+      printf "%s\\r\\n" "${__response_header:-}"
+    done
+
+    if ! ((_only_headers))
+    then
+      printf "\\r\\n"
+
+      if [[ -n "${_string:-}" ]]
+      then
+        printf "%s\\r\\n" "${_string}"
+      elif [[ "${_path:-}" =~ ^/ ]]
+      then
+        local __line=
+
+        while read -r __line
+        do
+          printf "%s\\r\\n" "${__line}"
+        done < "${_path}"
+      else
+        printf "%s\\r\\n" \
+          "${_status_code} $(_browse_http_response "${_status_code}")"
+      fi
+    fi
+
+    if [[ "${1:-}" -eq 200 ]]
+    then
+      exit 0
+    else
+      exit 1
+    fi
+  }
+
+  # _browse_respond()
+  #
+  # Usage:
+  #   _browse_respond
+  #
+  # Description:
+  #   Build a response using standard input and print to standard output..
+  _browse_respond() {
+    # ---
+    # Request parsing
+
+    # Request-Line HTTP RFC 2616 §5
+    # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
+    local _line=
+    read -r _line || _browse_respond_with 400
+
+    # strip trailing CR if it exists
+    _line="${_line%%$'\r'}"
+
+    local _request_http_version=
+    local _request_method=
+    local _request_uri=
+
+    IFS=' ' read -r   \
+      _request_method \
+      _request_uri    \
+      _request_http_version <<<"${_line}"
+
+    if [[ -z "${_request_method:-}"       ]] ||
+       [[ -z "${_request_uri:-}"          ]] ||
+       [[ -z "${_request_http_version:-}" ]]
+    then
+      _browse_respond_with 400
+    fi
+
+    _temp_file="$(mktemp).html"
+
+    _relative_path="${_request_uri#\/}"
+    _relative_path="${_relative_path//"\%20"/ }"
+    _relative_path="${_relative_path//"%20"/ }"
+
+    local _target_selector="${_relative_path:-}"
+
+    if [[ -z "${_target_selector:-}" ]]
+    then
+      _target_selector="$(_notebooks current --name --no-color):"
+    fi
+
+    if ! _show "${_target_selector}" --path &>/dev/null
+    then
+      _browse_respond_with 404
+    fi
+
+    _show "${_target_selector}" --browse --no-color > "${_temp_file}"
+
+    case "${_request_method}" in
+      HEAD)
+        _browse_respond_with 200 "${_temp_file}" --headers
+        ;;
+      GET)
+        _browse_respond_with 200 "${_temp_file}"
+        ;;
+      *)
+        _browse_respond_with 405
+        ;;
+    esac
+
+    # fall back to 500 response
+
+    _browse_respond_with 500
+  }
+
+  local _print_headers=0
+  local _print_output=0
+  local _selector=
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      --headers)          _print_headers=1          ;;
+      -p|--print)         _print_output=1           ;;
+      --respond|--serve)  _browse_respond && exit 0 ;;
+      *)                  _selector="${1:-}"        ;;
+    esac
+
+    shift
+  done
+
+  if ! hash "ncat" &>/dev/null
+  then
+    _show "${_selector:-}" --render
+    _warn cat <<HEREDOC
+Install the \`ncat\` utility for improved browsing and linking: https://nmap.org/
+HEREDOC
+    exit 0
+  fi
+
+  # start server in the background
+
+  (
+    trap "exit" INT
+    while true
+    do
+      ncat -lp "${NB_SERVER_PORT}" -e "${_MY_PATH} browse --respond" 2>/dev/null
+    done
+  ) &
+
+  local _pid="${!}"
+  # shellcheck disable=SC2064
+  trap "kill ${_pid} 2> /dev/null" EXIT
+
+  sleep 0.5
+
+  # request URL
+
+  if ((_print_output))
+  then
+    local _url="http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}"
+
+    if ((_print_headers))
+    then
+      curl -s -I "${_url}"
+    else
+      _download_from "${_url}"
+    fi
+  else
+    _browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
+  fi
+
+  # make a final request to clear any listening process
+
+  (
+    sleep 1 && _download_from "http://localhost:${NB_SERVER_PORT}" &>/dev/null
+  ) &
+}
 
 # completions ##################################################### completions
 
