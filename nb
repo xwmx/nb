@@ -11390,9 +11390,9 @@ _plugins() {
     install)
       [[ ! -e "${NB_DIR}/.plugins"  ]] && mkdir "${NB_DIR}/.plugins"
 
-      if [[ -n "${_path:-}" ]]
+      if [[ -n "${_path:-}"         ]]
       then
-        if ! [[ -f "${_path:-}"     ]] &&
+        if ! [[ -f "${_path:-}"     ]] ||
            ! [[ "${_path}" =~ nb\-  ]]
         then
           _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
