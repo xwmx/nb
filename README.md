@@ -1865,7 +1865,7 @@ nb q "example" --or "sample" --and "demo"
 [`git grep`](https://git-scm.com/docs/git-grep), which uses the git object
 cache to perform searches faster than other available tools. `nb` also
 supports performing searches with alternative search tools using
-the --utility <name> option.
+the `--utility <name>` option.
 
 Supported alternative search tools:
 - [`rga`](https://github.com/phiresky/ripgrep-all)
