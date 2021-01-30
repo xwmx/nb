@@ -8038,7 +8038,7 @@ _add() {
   do
     local _argument_content=
 
-    if [[ -n "${_arguments[i]:-}" ]]
+    if [[ -n "${_arguments[i]:-}"         ]]
     then # argument is not blank
       if ((i))                                &&
          [[ -z "${_selector_content:-}"   ]]  &&
@@ -8137,7 +8137,7 @@ _add() {
     _target_filename="${_selector_filename:-}"
   fi
 
-  if [[ -z "${_target_filename:-}"    ]]
+  if [[ -z "${_target_filename:-}"      ]]
   then
     if [[ -n "${_title:-}" ]] &&
        ! _contains "${_file_type:-}" "folder" "directory"
@@ -8166,17 +8166,17 @@ _add() {
 
   local _target_folder_relative_path=
 
-  if [[ "${_option_relative_path}" =~ / ]]
+  if [[ "${_option_relative_path}" =~ /           ]]
   then
     _target_folder_relative_path="${_option_relative_path%%\/*}"
   fi
 
-  if [[ -n "${_option_folder_relative_path:-}" ]]
+  if [[ -n "${_option_folder_relative_path:-}"    ]]
   then
     _target_folder_relative_path="${_option_folder_relative_path}/${_target_folder_relative_path:-}"
   fi
 
-  if [[ -n "${_selector_folder_relative_path:-}"    ]]
+  if [[ -n "${_selector_folder_relative_path:-}"  ]]
   then
     _resolved_selector_folder_relative_path="$(
       _selector_resolve_folders               \
@@ -8224,7 +8224,7 @@ _add() {
   else
     if ((_encrypt))
     then
-      if [[ -z "${_password}" ]]
+      if [[ -z "${_password}"     ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
@@ -8298,7 +8298,7 @@ _add() {
       _print_spacing=1
     fi
 
-    if [[ -n "${_option_content:-}"    ]]
+    if [[ -n "${_option_content:-}"     ]]
     then # argument content
       ((_print_spacing)) && printf "\\n" >> "${_target_path}"
 
@@ -8583,13 +8583,13 @@ _bookmark() {
       open|o|peek|p|preview|url)
         if _option_value_is_present "${__val:-}"
         then
-          if [[ "${__arg}" =~ ^open$|^o$ ]]
+          if [[ "${__arg}" =~ ^open$|^o$  ]]
           then
             _subcommand="open"
           elif [[ "${__arg}" =~ ^peek$|^p$|^preview$ ]]
           then
             _subcommand="peek"
-          elif [[ "${__arg}" == "url" ]]
+          elif [[ "${__arg}" == "url"     ]]
           then
             _subcommand="url"
           fi
@@ -8609,8 +8609,8 @@ _bookmark() {
            _string_is_url "${__arg}"
         then
           _url="${__arg}"
-        elif [[ -z "${_subcommand:-}"               ]] ||
-             [[ "${_subcommand}" =~ ^list$|^search$ ]]
+        elif [[ -z "${_subcommand:-}"                 ]] ||
+             [[ "${_subcommand}" =~ ^list$|^search$   ]]
         then
           _arguments+=("${__arg}")
         fi
@@ -8684,11 +8684,11 @@ _bookmark() {
             if _command_exists "xdg-open"
             then
               xdg-open "${_target_path}" && return 0
-            elif [[ "${OSTYPE}" =~ ^darwin ]]
+            elif [[ "${OSTYPE}" =~ ^darwin    ]]
             then
               open "${_target_path}" && return 0
             fi
-          elif [[ "${_subcommand}" == "peek" ]]
+          elif [[ "${_subcommand}" == "peek"  ]]
           then
             _bookmark_view_in_terminal_browser "file://${_target_path}"
             return 0
@@ -8696,25 +8696,25 @@ _bookmark() {
         elif [[ ! "${_relative_path}" =~ .bookmark\.md$       ]] &&
              [[ ! "${_relative_path}" =~ .bookmark\.md\.enc$  ]]
         then
-          if [[ "${_subcommand}" == "open" ]]
+          if [[ "${_subcommand}" == "open"    ]]
           then
-            if [[ -d "${_target_path}" ]] &&
+            if [[ -d "${_target_path}"        ]] &&
                _command_exists "xdg-open"
             then
               xdg-open "${_target_path}" && return 0
-            elif [[ -d "${_target_path}"    ]] &&
-                 [[ "${OSTYPE}" =~ ^darwin  ]]
+            elif [[ -d "${_target_path}"      ]] &&
+                 [[ "${OSTYPE}" =~ ^darwin    ]]
             then
               open "${_target_path}" && return 0
-            elif [[ -n "${_password}" ]]
+            elif [[ -n "${_password}"         ]]
             then
               _edit "${_selector}" --password "${_password}"
             else
               _edit "${_selector}"
             fi
-          elif [[ "${_subcommand}" == "peek" ]]
+          elif [[ "${_subcommand}" == "peek"  ]]
           then
-            if [[ -n "${_password}" ]]
+            if [[ -n "${_password}"           ]]
             then
               _show "${_selector}" --password "${_password}"
             else
@@ -9429,8 +9429,8 @@ _completions() {
 
     local _exists=0
 
-    if [[ -n "${_bash_completion_path:-}" ]] &&
-       [[ -d "${_bash_completion_path}"   ]]
+    if [[ -n "${_bash_completion_path:-}"   ]] &&
+       [[ -d "${_bash_completion_path}"     ]]
     then
       if [[ -w "${_bash_completion_path}"   ]]
       then
