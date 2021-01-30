@@ -446,7 +446,7 @@ them between the title and content:
 > nb add "Example content." --title "Tagged Example" --tags tag1,tag2
 Added: [11] tagged_example.md "Tagged Example"
 
-> nb show 10 --print
+> nb show 11 --print
 # Tagged Example
 
 #tag1 #tag2
