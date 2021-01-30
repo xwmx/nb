@@ -3256,7 +3256,8 @@ Usage:
   nb add [<notebook>:][<filename> | <folder-path> | <content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [-t <title> | --title <title>] [--type <type>]
+         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+         [--type <type>]
   nb add folder [<name>]
   nb bookmark [<ls options>...]
   nb bookmark <url> [-c <comment> | --comment <comment>] [--edit]
@@ -3544,7 +3545,8 @@ Usage:
   nb add [<notebook>:][<filename> | <folder-path> | <content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [-t <title> | --title <title>] [--type <type>]
+         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+         [--type <type>]
   nb add folder [<name>]
 
 Options:
@@ -3554,6 +3556,7 @@ Options:
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
+  --tags <tag1>,<tag2>....    A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename will be derived from the
                               title, unless `--filename` is specified.
@@ -3564,7 +3567,7 @@ Description:
   Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, currently set to "vim". If a non-option argument is
+  `$EDITOR`, currently set to "example". If a non-option argument is
   passed, `nb` will treat it as a <filename≥ if a file extension is found.
   If no file extension is found, `nb` will treat the string as
   <content> and will create a new note without opening the editor.

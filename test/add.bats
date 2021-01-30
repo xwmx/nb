@@ -38,14 +38,147 @@ load test_helper
   git log | grep -q '\[nb\] Add'
 }
 
-# piped #######################################################################
+# --tags option ###############################################################
 
-@test "'add' with piped content includes content from --title, --content, and standard input separated by newlines." {
+@test "'add --tags' with no argument exits with 1 and prints message." {
   {
     "${_NB}" init
   }
 
-  run bash -c "echo 'Piped content.' | \"${_NB}\" add --title Example\ Title --content Example\ content."
+  run "${_NB}" add --tags --filename "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ "${status}" -eq 1 ]]
+
+  # Does not create new note file with content:
+
+  [[ ! -f "${NB_DIR}/home/example.md" ]]
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ !.*\ .*--tags.*\ requires\ a\ valid\ argument. ]]
+}
+
+@test "'add --tags <tag-list>' creates new note with tags." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add            \
+    --tags    tag1,tag2       \
+    --title   "Example Title" \
+    --content "Example content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates new note file with content:
+
+  [[ -f "${NB_DIR}/home/example_title.md" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+#tag1 #tag2
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md ]]
+}
+
+@test "'add --tags <tag-list>' with tags formatted as hashtags creates new note with tags." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add              \
+    --tags    '#tag1','#tag2'   \
+    --title   "Example Title"   \
+    --content "Example content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates new note file with content:
+
+  [[ -f "${NB_DIR}/home/example_title.md" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+#tag1 #tag2
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md ]]
+}
+
+# piped #######################################################################
+
+@test "'add' with piped content includes content from --title, --tags, --content, and standard input separated by newlines." {
+  {
+    "${_NB}" init
+  }
+
+  run bash -c "echo 'Piped content.' | \"${_NB}\" add --tags tag1,tag2 --title Example\ Title --content Example\ content."
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -62,6 +195,8 @@ load test_helper
     <(cat "${NB_DIR}/home/example_title.md")  \
     <(cat <<HEREDOC
 # Example Title
+
+#tag1 #tag2
 
 Example content.
 

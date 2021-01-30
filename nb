@@ -3757,7 +3757,8 @@ $(_color_primary "Usage:")
   ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [-t <title> | --title <title>] [--type <type>]
+         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+         [--type <type>]
   ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
@@ -7891,7 +7892,8 @@ Usage:
   ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [-t <title> | --title <title>] [--type <type>]
+         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+         [--type <type>]
   ${_ME} add folder [<name>]
 
 Options:
@@ -7901,6 +7903,7 @@ Options:
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
+  --tags <tag1>,<tag2>....    A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If \`--title\` is
                               present, the filename will be derived from the
                               title, unless \`--filename\` is specified.
@@ -7954,6 +7957,7 @@ _add() {
   local _option_folder_relative_path=
   local _option_relative_path=
   local _password=
+  local _tag_list=
   local _title=
 
   while ((${#}))
@@ -7992,6 +7996,10 @@ _add() {
         ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        shift
+        ;;
+      --tag*)
+        _tag_list="$(_option_get_tags "${__arg}" "${__val:-}")"
         shift
         ;;
       -t|--title|--name)
@@ -8268,19 +8276,30 @@ _add() {
       fi
     fi
 
-    if [[ -n "${_title}" ]]
+    if [[ -n "${_title}"        ]]
     then
       printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
     fi
 
-    if [[ -n "${_content:-}" ]]
+    if [[ -n "${_tag_list:-}"   ]]
     then
+      printf "%s\\n" "${_tag_list}" >> "${_target_path}"
+    fi
+
+    if [[ -n "${_content:-}"    ]]
+    then
+      if [[ -n "${_tag_list:-}" ]]
+      then
+        printf "\\n" >> "${_target_path}"
+      fi
+
       printf "%s\\n" "${_content}" >> "${_target_path}"
     fi
 
     if ! _interactive_input
     then # piped input
-      if [[ -n "${_content:-}" ]]
+      if [[ -n "${_content:-}"  ]] ||
+         [[ -n "${_tag_list:-}" ]]
       then
         printf "\\n" >> "${_target_path}"
       fi

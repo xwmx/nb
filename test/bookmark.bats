@@ -106,7 +106,7 @@ load test_helper
 
   [[ "${status}" -eq 1 ]]
 
-  # Does no create new note file with content:
+  # Does not create new bookmark file:
 
   [[ ! -f "${NB_DIR}/home/example.bookmark.md" ]]
 
@@ -115,7 +115,7 @@ load test_helper
   [[ "${lines[0]}" =~ !.*\ .*--tags.*\ requires\ a\ valid\ argument. ]]
 }
 
-@test "'bookmark' with --tags option creates new note with tags." {
+@test "'bookmark' with --tags option creates new bookmark with tags." {
   {
     "${_NB}" init
   }
@@ -129,7 +129,7 @@ load test_helper
 
   [[ "${status}" -eq 0 ]]
 
-  # Creates new note file with content:
+  # Creates new bookmark file with content:
 
   [[ -f "${NB_DIR}/home/example.bookmark.md" ]]
 
@@ -176,7 +176,7 @@ HEREDOC
   [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example.bookmark.md ]]
 }
 
-@test "'bookmark' with --tags option and hashtags creates new note with tags." {
+@test "'bookmark' with --tags option and hashtags creates new bookmark with tags." {
   {
     "${_NB}" init
   }
@@ -194,7 +194,7 @@ HEREDOC
 
   [[ "${status}" -eq 0 ]]
 
-  # Creates new note file with content:
+  # Creates new bookmark file with content:
 
   [[ -f "${NB_DIR}/home/example.bookmark.md" ]]
 
