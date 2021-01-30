@@ -496,10 +496,10 @@ pb | nb a snippets: example.hs
 Use [`nb show`](#show) to view code snippets with automatic syntax
 highlighting and [`nb edit`](#edit) to open in your editor.
 
-Piping clipboard content works well for quickly saving text content of
-any kind, and can be used in combinaton with the `--title <title>`,
-`--tags <tag-list>`, `--content <content>`, and content passed in an
-argument:
+Piping, `--title <title>`, `--tags <tag-list>`, `--content <content>`, and
+content passed in an argument can be combined as needed to create notes
+with content from multiple input methods and sources using a single
+command:
 
 ```bash
 > pb | nb a "Argument content." \
