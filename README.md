@@ -1734,12 +1734,12 @@ your editor with `nb settings edit`:
 export NB_PINNED_PATTERN="#pinned"
 ```
 
-All of the characters `nb` uses as icons can be customized, so to
+All indicator icons in `nb` can be customized, so to
 use a different character as the pindicator, simply add a line
 like the following to your `~/.nbrc` file:
 
 ```bash
-export NB_ICON_PINNED="💖"
+export NB_INDICATOR_PINNED="💖"
 ```
 
 ```bash

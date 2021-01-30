@@ -440,7 +440,7 @@ Help information:
     "${_NB}" add "three.md" --title "Three" --encrypt --password=example
   }
 
-  NB_ICON_ENCRYPTED=🔐 NB_ICON_BOOKMARK=🏷 run "${_NB}" list
+  NB_INDICATOR_ENCRYPTED=🔐 NB_INDICATOR_BOOKMARK=🏷 run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -451,7 +451,7 @@ Help information:
   [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
   [[ "${lines[2]}"  =~  \[.*1.*\].*\ 🏷\ one.bookmark.md  ]]
 
-  NB_ICON_ENCRYPTED=🔐 NB_ICON_BOOKMARK=🏷 run "${_NB}" list --no-color
+  NB_INDICATOR_ENCRYPTED=🔐 NB_INDICATOR_BOOKMARK=🏷 run "${_NB}" list --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -471,7 +471,7 @@ Help information:
     "${_NB}" add "three.md" --title "Three" --encrypt --password=example
   }
 
-  NB_ICON_ENCRYPTED="" NB_ICON_BOOKMARK="" run "${_NB}" list
+  NB_INDICATOR_ENCRYPTED="" NB_INDICATOR_BOOKMARK="" run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -482,7 +482,7 @@ Help information:
   [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
   [[ "${lines[2]}"  =~  \[.*1.*\].*\ one.bookmark.md      ]]
 
-  NB_ICON_ENCRYPTED="" NB_ICON_BOOKMARK="" run "${_NB}" list --no-color
+  NB_INDICATOR_ENCRYPTED="" NB_INDICATOR_BOOKMARK="" run "${_NB}" list --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
