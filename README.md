@@ -478,7 +478,7 @@ Piping clipboard content works well for quickly saving text content of
 any kind, particularly when used with the `--title <title>` option:
 
 ```bash
-> pb | nb --title "Sample Title"
+> pb | nb a --title "Sample Title"
 Added: [11] sample_title.md "Sample Title"
 ```
 
