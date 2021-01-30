@@ -8004,6 +8004,7 @@ _add() {
         shift
         ;;
       -t|--title|--name)
+        # TODO: Detect tag list for dynamic -t for --titles and --tags?
         _title="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
