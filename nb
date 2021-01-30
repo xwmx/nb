@@ -9898,6 +9898,7 @@ _edit() {
           _prepend_temp="$(mktemp)"
 
           cat                       >   "${_prepend_temp:?}"
+          printf "\\n"              >>  "${_prepend_temp:?}"
           cat "${_target_file}"     >>  "${_prepend_temp:?}"
 
           cat "${_prepend_temp:?}"  >   "${_target_file}"
@@ -9907,7 +9908,8 @@ _edit() {
             rm  "${_prepend_temp:?}"
           fi
         else
-          cat >> "${_target_file}"
+          printf "\\n"  >>  "${_target_file}"
+          cat           >>  "${_target_file}"
         fi
       }
     fi
