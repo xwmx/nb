@@ -474,6 +474,14 @@ pb | nb a snippets: example.hs
 Use [`nb show`](#show) to view code snippets with automatic syntax
 highlighting and [`nb edit`](#edit) to open in your editor.
 
+Piping clipboard content works well for quickly saving text content of
+any kind, particularly when used with the `--title <title>` option:
+
+```bash
+> pb | nb --title "Sample Title"
+Added: [11] sample_title.md "Sample Title"
+```
+
 Notes can be tagged simply by adding hashtags anywhere in the document:
 
 ```text
