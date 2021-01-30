@@ -178,7 +178,7 @@ HEREDOC
     "${_NB}" init
   }
 
-  run bash -c "echo 'Piped content.' | \"${_NB}\" add --tags tag1,tag2 --title Example\ Title --content Example\ content."
+  run bash -c "echo 'Piped content.' | \"${_NB}\" add Argument\ content. --tags tag1,tag2 --title Example\ Title --content Option\ content."
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -198,7 +198,9 @@ HEREDOC
 
 #tag1 #tag2
 
-Example content.
+Argument content.
+
+Option content.
 
 Piped content.
 HEREDOC

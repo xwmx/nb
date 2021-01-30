@@ -497,14 +497,28 @@ Use [`nb show`](#show) to view code snippets with automatic syntax
 highlighting and [`nb edit`](#edit) to open in your editor.
 
 Piping clipboard content works well for quickly saving text content of
-any kind, particularly when used with the `--title <title>` and / or
-`--tags <tag-list>` options:
+any kind, and can be used in combinaton with the `--title <title>`,
+`--tags <tag-list>`, `--content <content>`, and content passed in an
+argument:
 
 ```bash
-> pb | nb a --title "Sample Title" --tags tag1,tag2
+> pb | nb a "Example content." \
+    --title "Sample Title"     \
+    --tags  tag1,tag2          \
+    --content "Option content."
 Added: [12] sample_title.md "Sample Title"
-```
 
+> nb show 12 --print
+# Sample Title
+
+#tag1 #tag2
+
+Example content.
+
+Option content.
+
+Clipboard content.
+```
 For a full list of options available for `nb add`, run [`nb help add`](#add).
 
 ##### Password-Protected Encrypted Notes and Bookmarks
