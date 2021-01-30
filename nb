@@ -4903,9 +4903,9 @@ _list() {
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
 
-      if [[   -z "${_filter_pattern:-}"                     ]] &&
-           [[ -n "${_selector_basename:-}"                  ]] &&
-           [[ "${__basename}" != "${_selector_basename}"    ]]
+      if [[ -z "${_filter_pattern:-}"                       ]] &&
+         [[ -n "${_selector_basename:-}"                    ]] &&
+         [[ "${__basename}" != "${_selector_basename}"      ]]
       then
         continue # exclude from list
       elif ((_with_pinned)) &&
@@ -4935,13 +4935,13 @@ _list() {
         else
           _maybe_title="$(_get_content "${_list_path}/${__basename}")"
 
-          if [[ "${_maybe_title:-}" =~ ^__first_line: ]]
+          if [[ "${_maybe_title:-}" =~ ^__first_line:       ]]
           then
             _first_line="${_maybe_title#__first_line:}"
             _maybe_title=
           fi
 
-          if [[ "${_maybe_title:-}" =~ ${_filter_pattern} ]]
+          if [[ "${_maybe_title:-}" =~ ${_filter_pattern}   ]]
           then
             # include in list
             _matches=$((_matches+1))
@@ -8012,9 +8012,9 @@ _add() {
           _content_or_filename_extension="${_arguments[i]##*\.}"
         fi
 
-        if _string_is_url    "${_arguments[i]:-}"                   ||
-           _string_is_email  "${_arguments[i]:-}"                   ||
-           _contains "${_content_or_filename_extension:-}"          \
+        if _string_is_url    "${_arguments[i]:-}"           ||
+           _string_is_email  "${_arguments[i]:-}"           ||
+           _contains "${_content_or_filename_extension:-}"  \
                      "${_common_tlds_excluding_text_file_extensions[@]}"
         then # argument contains content
           _argument_content+="${_arguments[i]:-} "
