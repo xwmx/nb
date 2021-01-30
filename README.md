@@ -454,6 +454,12 @@ Added: [11] tagged_example.md "Tagged Example"
 Example content.
 ```
 
+Search for tagged items with [`nb search` / `nb q`](#search):
+
+```bash
+nb search "#tag1" "#tag2"
+```
+
 Files can be created with any file type either by specifying the
 extension in the filename, the extension by itself, or via
 the `--type <type>` option:
@@ -497,20 +503,6 @@ any kind, particularly when used with the `--title <title>` and / or
 ```bash
 > pb | nb a --title "Sample Title" --tags tag1,tag2
 Added: [12] sample_title.md "Sample Title"
-```
-
-Notes can be tagged simply by adding hashtags anywhere in the document:
-
-```text
-#tag1 #tag2
-```
-
-Search for tagged notes and bookmarks with [`nb search` / `nb q`](#search):
-
-```bash
-nb search "#tag1"
-
-nb q "#tag2"
 ```
 
 For a full list of options available for `nb add`, run [`nb help add`](#add).
