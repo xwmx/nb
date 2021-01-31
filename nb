@@ -9337,6 +9337,29 @@ _browse() {
     _browse_respond_with 500
   }
 
+  # _browse_serve()
+  #
+  # Usage:
+  #   _browse_serve
+  #
+  # Description:
+  #   Start the HTTP server in the brackground.
+  _browse_serve() {
+    (
+      trap "exit" INT
+      while true
+      do
+        ncat -lp "${NB_SERVER_PORT}" -e "${_MY_PATH} browse --respond" 2>/dev/null
+      done
+    ) &
+
+    local _pid="${!}"
+    # shellcheck disable=SC2064
+    trap "kill ${_pid} 2> /dev/null" EXIT
+
+    sleep 0.5
+  }
+
   local _print_headers=0
   local _print_output=0
   local _selector=
@@ -9344,10 +9367,23 @@ _browse() {
   while ((${#}))
   do
     case "${1:-}" in
-      --headers)          _print_headers=1          ;;
-      -p|--print)         _print_output=1           ;;
-      --respond|--serve)  _browse_respond && exit 0 ;;
-      *)                  _selector="${1:-}"        ;;
+      --headers)
+        _print_headers=1
+        ;;
+      -p|--print)
+        _print_output=1
+        ;;
+      --respond)
+        _browse_respond
+        exit 0
+        ;;
+      --serve)
+        _browse_serve
+        exit 0
+        ;;
+      *)
+        _selector="${1:-}"
+        ;;
     esac
 
     shift
@@ -9362,21 +9398,9 @@ HEREDOC
     exit 0
   fi
 
-  # start server in the background
+  # start server
 
-  (
-    trap "exit" INT
-    while true
-    do
-      ncat -lp "${NB_SERVER_PORT}" -e "${_MY_PATH} browse --respond" 2>/dev/null
-    done
-  ) &
-
-  local _pid="${!}"
-  # shellcheck disable=SC2064
-  trap "kill ${_pid} 2> /dev/null" EXIT
-
-  sleep 0.5
+  _browse_serve
 
   # request URL
 
