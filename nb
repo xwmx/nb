@@ -9400,7 +9400,7 @@ _browse() {
         for   __name in "${_notebook_names[@]:-}"
         do
           printf --                               \
-            "- [%s](http://localhost:%s/%s:)\\n"  \
+            "[%s](http://localhost:%s/%s:)<br/>"  \
             "${__name}"                           \
             "${NB_SERVER_PORT}"                   \
             "${__name}"
@@ -14435,7 +14435,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
 
           printf "%s\\n" \
-            "- [${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})"
+            "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})<br/>"
         done
       } | {
         printf "%s\\n" "$(_browse --header "${_target_path}/")"
