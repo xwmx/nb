@@ -96,10 +96,11 @@ export _NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                    ]]
-  [[ "${output}"    =~ \<\!DOCTYPE\ html\>  ]]
+  [[ "${status}"  ==  0                   ]]
+  [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
-  # [[ "${output}"  =~  \<h1\ id=\"section\"\>/\</h1\>  ]]
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-notebooks\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>\ ·\ notebooks\</h1\>  ]]
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/One:\"\>One\</a\>\<br/\> ]]
