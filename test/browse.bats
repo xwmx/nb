@@ -253,10 +253,6 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       ·\ \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:\"\>Example\ Notebook:\</a\>\</h1\> ]]
 
-  # [[ "${status}"  ==  0                                                               ]]
-
-  # [[ "${output}"  =~  \<h1\ id=\"example-notebook\"\>Example\ Notebook:\</h1\>        ]]
-
   [[ "${output}"  =~  \
       \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:2\"\>  ]]
   [[ "${output}"  =~  \[Example\ Notebook:2\]\ Title\ Two\</a\>\</li\>                ]]
