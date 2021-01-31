@@ -9204,15 +9204,23 @@ _browse() {
           _selector_resolve_folders "${_selector_relative_path}"
         )
 
+        local _folder_id_path=
+        _folder_id_path="$(_get_folder_id_path "${_selector_relative_path}")"
+
+        local _selector_folder_ids=()
+        IFS='/' read -ra _selector_folder_ids < <(
+          printf "%s\\n" "${_folder_id_path}"
+        )
+
         local _url_path=
 
-        local __folder=
-        for   __folder in "${_selector_folders[@]}"
+        local i=
+        for ((i=0; i < "${#_selector_folders[@]}"; i++))
         do
-          _url_path+="${__folder}/"
+          _url_path+="${_selector_folder_ids[i]}/"
 
           _header_content+="\
- [${__folder}](http://localhost:${NB_SERVER_PORT}/${_url_path}) /"
+ [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}) /"
         done
       fi
     fi
@@ -14433,8 +14441,46 @@ Can't show archives. Export archive and expand to edit.\\n"
           _item_selector="${_item_selector#[}"
           _item_selector="${_item_selector//\\/}"
 
+          # deconstruct and rebuild selector with id folder paths
+
+          local _notebook_name=
+
+          if [[ "${_item_selector}" =~ : ]]
+          then
+            _notebook_name="${_item_selector%%:*}"
+          fi
+
+          local _folder_id_path=
+          _folder_id_path="$(_get_folder_id_path "${_item_selector}")"
+
+          local _selector_identifier=
+
+          if [[ ! "${_item_selector}" =~ :$|/$ ]]
+          then
+            _selector_identifier="${_item_selector#*:}"
+            _selector_identifier="${_selector_identifier##*/}"
+          fi
+
+          local _target_selector=
+
+          if [[ "${_item_selector}" =~ : ]]
+          then
+            _target_selector="${_notebook_name}:"
+          fi
+
+          if [[ -n "${_folder_id_path:-}"       ]] &&
+             [[ !  "${_folder_id_path}" == "/"  ]]
+          then
+            _target_selector+="${_folder_id_path}"
+          fi
+
+          if [[ -n "${_selector_identifier}" ]]
+          then
+            _target_selector+="${_selector_identifier}"
+          fi
+
           local _item_path=
-          _item_path="$(_show "${_item_selector}" --path)"
+          _item_path="$(_show "${_target_selector}" --path)"
 
           if [[ -d "${_item_path}" ]]
           then
@@ -14442,7 +14488,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
 
           printf "%s\\n" \
-            "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})<br/>"
+            "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
         done
       } | {
         printf "%s\\n" "$(_browse --header "${_target_path}/")"

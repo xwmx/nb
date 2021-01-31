@@ -4,6 +4,37 @@ load test_helper
 
 export _NB_SERVER_PORT=6789
 
+# conflicting folder id / name ################################################
+
+@test "'browse <folder>/' with conflicting id / folder name renders links to ids and labels to names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Sample Folder/File One.md" --content "Example content."
+
+    "${_NB}" move "Sample Folder" "1" --force
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+    [[ -f "${NB_DIR}/home/1/File One.md"  ]]
+  }
+
+  run "${_NB}" browse 1/ --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>   ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                             ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>               ]]
+
+  [[ "${output}"  =~  0\ items. ]]
+}
+
+
 # error handling ##############################################################
 
 @test "'browse <not-valid>' returns 404 Not Found." {
@@ -97,11 +128,11 @@ export _NB_SERVER_PORT=6789
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>     ]]
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>   ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                             ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/Example%20Folder/\"\>Example\ Folder\</a\>\ /\</h1\>  ]]
+      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>               ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -191,7 +222,7 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~ ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>\</h1\>       ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:3/\"\>  ]]
+      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:3\"\>   ]]
   [[ "${output}"  =~  \[home:3\]\ 📂\ Example\ Folder\</a\>\<br/\>      ]]
 
   [[ "${output}"  =~  \
@@ -228,15 +259,15 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/Example%20Folder/\"\>Example\ Folder\</a\>\ /\</h1\>  ]]
+      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\> ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\> ]]
-  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\<br/\>              ]]
+      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/1/2\"\>            ]]
+  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\<br/\>          ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/1\"\>      ]]
-  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\<br/\>              ]]
+      \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/1/1\"\>                 ]]
+  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\<br/\>          ]]
 }
 
 @test "'browse <folder-selector>' (no slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -264,15 +295,15 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/Example%20Folder/\"\>Example\ Folder\</a\>\ /\</h1\>  ]]
+      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\> ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\> ]]
-  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\<br/\>              ]]
+      \<p\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/1/2\"\>            ]]
+  [[ "${output}"  =~  \[Example\ Folder/2\]\ Title\ Two\</a\>\<br/\>          ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/1\"\>      ]]
-  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\<br/\>              ]]
+      \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/1/1\"\>                 ]]
+  [[ "${output}"  =~  \[Example\ Folder/1\]\ Title\ One\</a\>\<br/\>          ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
