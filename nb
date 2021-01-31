@@ -14441,50 +14441,45 @@ Can't show archives. Export archive and expand to edit.\\n"
           _item_selector="${_item_selector#[}"
           _item_selector="${_item_selector//\\/}"
 
-          # deconstruct and rebuild selector with id folder paths
-
-          local _notebook_name=
-
-          if [[ "${_item_selector}" =~ : ]]
-          then
-            _notebook_name="${_item_selector%%:*}"
-          fi
-
-          local _folder_id_path=
-          _folder_id_path="$(_get_folder_id_path "${_item_selector}")"
-
-          local _selector_identifier=
-
-          if [[ ! "${_item_selector}" =~ :$|/$ ]]
-          then
-            _selector_identifier="${_item_selector#*:}"
-            _selector_identifier="${_selector_identifier##*/}"
-          fi
-
           local _target_selector=
 
-          if [[ "${_item_selector}" =~ : ]]
+          if [[ ! "${_item_selector}" =~ / ]]
           then
-            _target_selector="${_notebook_name}:"
-          fi
+            _target_selector="${_item_selector}"
+          else # deconstruct and rebuild selector with id folder paths
+            local _notebook_name=
 
-          if [[ -n "${_folder_id_path:-}"       ]] &&
-             [[ !  "${_folder_id_path}" == "/"  ]]
-          then
-            _target_selector+="${_folder_id_path}"
-          fi
+            if [[ "${_item_selector}" =~ : ]]
+            then
+              _notebook_name="${_item_selector%%:*}"
+            fi
 
-          if [[ -n "${_selector_identifier}" ]]
-          then
-            _target_selector+="${_selector_identifier}"
-          fi
+            local _folder_id_path=
+            _folder_id_path="$(_get_folder_id_path "${_item_selector}")"
 
-          local _item_path=
-          _item_path="$(_show "${_target_selector}" --path)"
+            local _selector_identifier=
 
-          if [[ -d "${_item_path}" ]]
-          then
-            _item_selector="${_item_selector}/"
+            if [[ ! "${_item_selector}" =~ :$|/$ ]]
+            then
+              _selector_identifier="${_item_selector#*:}"
+              _selector_identifier="${_selector_identifier##*/}"
+            fi
+
+            if [[ "${_item_selector}" =~ : ]]
+            then
+              _target_selector="${_notebook_name}:"
+            fi
+
+            if [[ -n "${_folder_id_path:-}"       ]] &&
+               [[ !  "${_folder_id_path}" == "/"  ]]
+            then
+              _target_selector+="${_folder_id_path}"
+            fi
+
+            if [[ -n "${_selector_identifier}" ]]
+            then
+              _target_selector+="${_selector_identifier}"
+            fi
           fi
 
           printf "%s\\n" \
