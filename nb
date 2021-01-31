@@ -9132,7 +9132,7 @@ Description:
   \`browse\` includes an embedded, terminal-first web application and server
   that renders [[wiki-style links]] as internal links, enabling you to browse
   your notes and notebooks in your terminal web browser, as well as
-  seamlessly browse to an from the offsite links in bookmarks and notes.
+  seamlessly browse to and from the offsite links in bookmarks and notes.
 
   To link to an item, include the selector for that item within double
   square brackets:
