@@ -9158,7 +9158,7 @@ _browse() {
   #   _browse_header <selector>
   #
   # Description:
-  #   Print a content-relevant, linked HTML header.
+  #   Print a context-aware, linked Markdown header.
   _browse_header() {
     local _header_content="[nb](http://localhost:${NB_SERVER_PORT}/) ·"
 
