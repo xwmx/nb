@@ -8293,7 +8293,7 @@ _add() {
 
     if [[ -n "${_selector_content:-}"   ]]
     then # argument content
-      ((_print_spacing)) && printf "\\n" >> "${_target_path}"
+      ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
 
       printf "%s\\n" "${_selector_content}" >> "${_target_path}"
       _print_spacing=1
@@ -8301,7 +8301,7 @@ _add() {
 
     if [[ -n "${_option_content:-}"     ]]
     then # argument content
-      ((_print_spacing)) && printf "\\n" >> "${_target_path}"
+      ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
 
       printf "%s\\n" "${_option_content}" >> "${_target_path}"
       _print_spacing=1
@@ -8309,9 +8309,10 @@ _add() {
 
     if ! _interactive_input
     then # piped input
-      ((_print_spacing)) && printf "\\n" >> "${_target_path}"
+      ((_print_spacing)) &&
+        printf "\\n"  >> "${_target_path}"
 
-      cat >> "${_target_path}"
+      cat             >> "${_target_path}"
     fi
 
     if ((_edit_before_commit))              ||
@@ -8325,9 +8326,9 @@ _add() {
     fi
 
     # walk up and delete empty directories when file not created
-    if [[ ! -e "${_target_path:?}"                                  ]] &&
-       [[ -n "${_target_folder_relative_path:-}"                    ]] &&
-       [[ -e "${_notebook_path:?}/${_target_folder_relative_path}"  ]]
+    if [[ ! -e "${_target_path:?}"                                    ]] &&
+       [[   -n "${_target_folder_relative_path:-}"                    ]] &&
+       [[   -e "${_notebook_path:?}/${_target_folder_relative_path}"  ]]
     then
       cd "${_notebook_path:?}/${_target_folder_relative_path:?}"
 
