@@ -82,6 +82,38 @@ export _NB_SERVER_PORT=6789
 
 # notebooks and folder (containers) ###########################################
 
+@test "'browse --notebooks'  serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "One"
+    "${_NB}" notebooks add "Two"
+    "${_NB}" notebooks add "Three"
+  }
+
+  run "${_NB}" browse --notebooks --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                    ]]
+  [[ "${output}"    =~ \<\!DOCTYPE\ html\>  ]]
+
+  # [[ "${output}"  =~  \<h1\ id=\"section\"\>/\</h1\>  ]]
+
+  [[ "${output}"  =~  \
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/One:\"\>One\</a\>\</li\>      ]]
+
+  [[ "${output}"  =~  \
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Two:\"\>Two\</a\>\</li\>      ]]
+
+  [[ "${output}"  =~  \
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Three:\"\>Three\</a\>\</li\>  ]]
+
+  [[ "${output}"  =~  \
+      \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:\"\>home\</a\>\</li\>    ]]
+}
+
 @test "'browse' with no arguments serves the current notebook contents as a rendered HTML page with links to internal web server URLs." {
   {
     "${_NB}" init

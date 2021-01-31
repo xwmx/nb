@@ -9119,7 +9119,12 @@ _alias_subcommand "bookmark" "bookmarks"
 
 describe "browse" <<HEREDOC
 Usage:
-  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
+  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
+            [--notebooks] [--print]
+
+Options:
+  --notebooks   Browse notebooks.
+  --print       Print to standard output.
 
 Description:
   Browse and view linked notes, notebooks, folders, and other items using the
@@ -9307,18 +9312,42 @@ _browse() {
     fi
 
     _temp_file="$(mktemp).html"
+    touch "${_temp_file}"
 
     local _target_selector="${_request_uri#\/}"
 
     _target_selector="${_target_selector//"\%20"/ }"
     _target_selector="${_target_selector//"%20"/ }"
 
-    if ! _show "${_target_selector}" --path &>/dev/null
+    if [[ -z "${_target_selector:-}" ]]
+    then
+      local _notebook_names=()
+      _notebook_names=($(_notebooks --names --unarchived --no-color))
+
+      {
+        local __name=
+        for   __name in "${_notebook_names[@]:-}"
+        do
+          printf --                               \
+            "- [%s](http://localhost:%s/%s:)\\n"  \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        done
+      } | {
+        pandoc                      \
+          --from markdown           \
+          --to html                 \
+          --standalone              \
+          --output "${_temp_file}"  \
+          2>/dev/null || :
+      }
+    elif ! _show "${_target_selector}" --path &>/dev/null
     then
       _browse_respond_with 404
+    else
+      _show "${_target_selector}" --browse --no-color >> "${_temp_file}"
     fi
-
-    _show "${_target_selector}" --browse --no-color > "${_temp_file}"
 
     case "${_request_method}" in
       HEAD)
@@ -9360,6 +9389,7 @@ _browse() {
     sleep 0.5
   }
 
+  local _browse_notebooks=0
   local _print_headers=0
   local _print_output=0
   local _selector=
@@ -9369,6 +9399,9 @@ _browse() {
     case "${1:-}" in
       --headers)
         _print_headers=1
+        ;;
+      --notebooks)
+        _browse_notebooks=1
         ;;
       -p|--print)
         _print_output=1
@@ -9404,7 +9437,7 @@ HEREDOC
 
   # request URL
 
-  if [[ -z "${_selector:-}" ]]
+  if [[ -z "${_selector:-}" ]] && ! ((_browse_notebooks))
   then
     _selector="$(_notebooks current --name --no-color):"
   fi
