@@ -9308,16 +9308,10 @@ _browse() {
 
     _temp_file="$(mktemp).html"
 
-    _relative_path="${_request_uri#\/}"
-    _relative_path="${_relative_path//"\%20"/ }"
-    _relative_path="${_relative_path//"%20"/ }"
+    local _target_selector="${_request_uri#\/}"
 
-    local _target_selector="${_relative_path:-}"
-
-    if [[ -z "${_target_selector:-}" ]]
-    then
-      _target_selector="$(_notebooks current --name --no-color):"
-    fi
+    _target_selector="${_target_selector//"\%20"/ }"
+    _target_selector="${_target_selector//"%20"/ }"
 
     if ! _show "${_target_selector}" --path &>/dev/null
     then
@@ -9385,6 +9379,11 @@ HEREDOC
   sleep 0.5
 
   # request URL
+
+  if [[ -z "${_selector:-}" ]]
+  then
+    _selector="$(_notebooks current --name --no-color):"
+  fi
 
   if ((_print_output))
   then
