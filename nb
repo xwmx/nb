@@ -9246,10 +9246,10 @@ _browse() {
     then
       printf "\\r\\n"
 
-      if [[ -n "${_string:-}" ]]
+      if [[ -n "${_string:-}"     ]]
       then
         printf "%s\\r\\n" "${_string}"
-      elif [[ "${_path:-}" =~ ^/ ]]
+      elif [[ "${_path:-}" =~ ^/  ]]
       then
         local __line=
 
