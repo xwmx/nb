@@ -135,10 +135,11 @@ export _NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                                ]]
-  [[ "${output}"    =~ \<\!DOCTYPE\ html\>                              ]]
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
 
-  [[ "${output}"  =~  \<h1\ id=\"section\"\>/\</h1\>                    ]]
+  [[ "${output}"  =~  \<h1\ id=\"nb-home\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>  ]]
+  [[ "${output}"  =~ ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>\</h1\>       ]]
 
   [[ "${output}"  =~  \
       \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/home:3/\"\> ]]
@@ -171,9 +172,14 @@ export _NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0                                                             ]]
+  [[ "${status}"  ==  0 ]]
 
-  [[ "${output}"  =~  \<h1\ id=\"example-folder\"\>Example\ Folder/\</h1\>          ]]
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>     ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/Example%20Folder/\"\>Example\ Folder\</a\>\ /\</h1\>  ]]
 
   [[ "${output}"  =~  \
       \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\>  ]]
@@ -202,9 +208,14 @@ export _NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0                                                             ]]
+  [[ "${status}"  ==  0 ]]
 
-  [[ "${output}"  =~  \<h1\ id=\"example-folder\"\>Example\ Folder/\</h1\>          ]]
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>     ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/Example%20Folder/\"\>Example\ Folder\</a\>\ /\</h1\>  ]]
 
   [[ "${output}"  =~  \
       \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Folder/2\"\>  ]]
@@ -235,9 +246,16 @@ export _NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0                                                               ]]
+  [[ "${status}"  ==  0 ]]
 
-  [[ "${output}"  =~  \<h1\ id=\"example-notebook\"\>Example\ Notebook:\</h1\>        ]]
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-example-notebook\"\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/\"\>nb\</a\>            ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:\"\>Example\ Notebook:\</a\>\</h1\> ]]
+
+  # [[ "${status}"  ==  0                                                               ]]
+
+  # [[ "${output}"  =~  \<h1\ id=\"example-notebook\"\>Example\ Notebook:\</h1\>        ]]
 
   [[ "${output}"  =~  \
       \<li\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:2\"\>  ]]

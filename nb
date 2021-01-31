@@ -9152,6 +9152,75 @@ Examples:
   ${_ME} browse demo:456
 HEREDOC
 _browse() {
+  # _browse_header()
+  #
+  # Usage:
+  #   _browse_header <selector>
+  #
+  # Description:
+  #   Print a content-relevant, linked HTML header.
+  _browse_header() {
+    local _header_content="[nb](http://localhost:${NB_SERVER_PORT}/) ·"
+
+    local _selector="${1:-}"
+
+    if [[ -z "${_selector:-}" ]]
+    then
+      _header_content+=" notebooks"
+    else
+      local _notebook_name=
+
+      if [[ "${_selector}" =~ :|^/ ]]
+      then
+        _notebook_name="$(_notebooks show "${_selector}" --name)"
+      fi
+
+      if [[ -z "${_notebook_name}" ]]
+      then
+        _notebook_name="$(_notebooks current --name)"
+      fi
+
+      local _notebook_path=
+      _notebook_path="$(_notebooks show "${_notebook_name}" --path)"
+
+      if [[ "${_selector}" =~ :$                  ]] ||
+         [[ "${_selector}" == "${_notebook_path}" ]]
+      then
+        _header_content+=" ${_notebook_name}"
+      else
+        _header_content+="\
+ [${_notebook_name}:](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
+
+        local _selector_relative_path="${_selector}"
+
+        if [[ "${_selector}" =~ ^/ ]]
+        then
+          _selector_relative_path="${_selector#${_notebook_path}/}"
+        else
+          _selector_relative_path="${_selector}"
+        fi
+
+        local _selector_folders=()
+        IFS='/' read -ra _selector_folders < <(
+          _selector_resolve_folders "${_selector_relative_path}"
+        )
+
+        local _url_path=
+
+        local __folder=
+        for   __folder in "${_selector_folders[@]}"
+        do
+          _url_path+="${__folder}/"
+
+          _header_content+="\
+ [${__folder}](http://localhost:${NB_SERVER_PORT}/${_url_path}) /"
+        done
+      fi
+    fi
+
+    printf "# %s\\n\\n" "${_header_content:-}"
+  }
+
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
 
   # _browse_http_response()
@@ -9325,6 +9394,8 @@ _browse() {
       _notebook_names=($(_notebooks --names --unarchived --no-color))
 
       {
+        printf "%s\\n" "$(_browse --header)"
+
         local __name=
         for   __name in "${_notebook_names[@]:-}"
         do
@@ -9390,6 +9461,7 @@ _browse() {
   }
 
   local _browse_notebooks=0
+  local _print_browse_header=0
   local _print_headers=0
   local _print_output=0
   local _selector=
@@ -9397,6 +9469,9 @@ _browse() {
   while ((${#}))
   do
     case "${1:-}" in
+      --header)
+        _print_browse_header=1
+        ;;
       --headers)
         _print_headers=1
         ;;
@@ -9421,6 +9496,12 @@ _browse() {
 
     shift
   done
+
+  if ((_print_browse_header))
+  then
+    _browse_header "${_selector:-}"
+    exit 0
+  fi
 
   if ! hash "ncat" &>/dev/null
   then
@@ -14357,12 +14438,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             "- [${__list_item}](http://localhost:${NB_SERVER_PORT}/${_item_selector})"
         done
       } | {
-        if [[ "${_maybe_scoped_relative_path}" =~ :$ ]]
-        then
-          printf "# %s\\n\\n"   "${_maybe_scoped_relative_path}"
-        else
-          printf "# %s/\\n\\n"  "${_maybe_scoped_relative_path}"
-        fi
+        printf "%s\\n" "$(_browse --header "${_target_path}/")"
 
         cat
       } | {
@@ -14545,15 +14621,20 @@ Can't show archives. Export archive and expand to edit.\\n"
        _browser --check         &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then
-      _show_resolve_links   \
-        "${_target_path}"   \
-        "${_notebook_path}" \
-        --browse            \
-        | pandoc            \
-          --from markdown   \
-          --to html         \
-          --standalone      \
+      {
+        printf "%s\\n" "$(_browse --header "${_target_path}")"
+
+        _show_resolve_links   \
+          "${_target_path}"   \
+          "${_notebook_path}" \
+          --browse
+      } | {
+        pandoc                \
+          --from markdown     \
+          --to html           \
+          --standalone        \
           2>/dev/null
+      }
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
