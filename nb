@@ -4513,7 +4513,6 @@ _list() {
   local _error_on_empty=0
   local _excerpt_length=3
   local _limit=
-  local _list_color_enabled="${_COLOR_ENABLED}"
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
@@ -4550,7 +4549,7 @@ _list() {
         _error_on_empty=1
         ;;
       --no*color)
-        _list_color_enabled=0
+        _COLOR_ENABLED=0
         ;;
       --no-id*|--noid*|--no*index)
         _no_id=1
@@ -5096,24 +5095,24 @@ ${_TPUT_SGR0}"
         _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
       fi
 
-      if ((_list_color_enabled))  &&
-         ! ((_list_filenames))    &&
-         ! ((_list_paths))        &&
+      if ((_COLOR_ENABLED))     &&
+         ! ((_list_filenames))  &&
+         ! ((_list_paths))      &&
          ! ((_no_id))
       then
         _wrap off
       fi
 
-      if ((_list_color_enabled))
+      if ((_COLOR_ENABLED))
       then
         printf "%s" "${_info_line_color}"
       else
         printf "%s" "${_info_line}"
       fi
 
-      if ((_list_color_enabled))  &&
-         ! ((_list_filenames))    &&
-         ! ((_list_paths))        &&
+      if ((_COLOR_ENABLED))     &&
+         ! ((_list_filenames))  &&
+         ! ((_list_paths))      &&
          ! ((_no_id))
       then
         _wrap on
@@ -14422,12 +14421,18 @@ Can't show archives. Export archive and expand to edit.\\n"
       } | {
         while read -r __list_item
         do
+          if [[ "${__list_item:-}" =~ ^0\ items. ]]
+          then
+            printf "%s<br/>\\n" "${__list_item}"
+            break
+          fi
+
           local _item_selector="${__list_item%%]*}"
           _item_selector="${_item_selector#[}"
           _item_selector="${_item_selector//\\/}"
 
           local _item_path=
-          _item_path="$(_show "${_item_selector}" --path 2>/dev/null)"
+          _item_path="$(_show "${_item_selector}" --path)"
 
           if [[ -d "${_item_path}" ]]
           then

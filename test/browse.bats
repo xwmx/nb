@@ -80,6 +80,54 @@ export _NB_SERVER_PORT=6789
   [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                          ]]
 }
 
+# empty #######################################################################
+
+@test "'browse <folder-selector>/' (slash) with empty folder prints message and header." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder" --type "folder"
+  }
+
+  run "${_NB}" browse Example\ Folder/ --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  ==  0 ]]
+
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>     ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/Example%20Folder/\"\>Example\ Folder\</a\>\ /\</h1\>  ]]
+
+  [[ "${output}"  =~  0\ items. ]]
+}
+
+@test "'browse <notebook>:' with empty notebook prints message and header." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" browse Example\ Notebook: --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  ==  0 ]]
+
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-example-notebook\"\>\<a\ href=\"http://localhost:${_NB_SERVER_PORT}/\"\>nb\</a\>            ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:${_NB_SERVER_PORT}/Example%20Notebook:\"\>Example\ Notebook:\</a\>\</h1\> ]]
+
+  [[ "${output}"  =~  0\ items. ]]
+}
+
 # notebooks and folder (containers) ###########################################
 
 @test "'browse --notebooks'  serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs." {
