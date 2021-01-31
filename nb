@@ -14416,6 +14416,8 @@ Can't show archives. Export archive and expand to edit.\\n"
          _command_exists "pandoc"   &&
          _browser --check
     then
+      cd "${_CURRENT_WORKING_DIR}"
+
       {
         _list "${_target_path}/" --no-color
       } | {
@@ -14665,6 +14667,8 @@ Can't show archives. Export archive and expand to edit.\\n"
         _browse "${_target_path}"
         exit 0
       else
+        cd "${_CURRENT_WORKING_DIR}"
+
         _show_resolve_links   \
           "${_target_path}"   \
           "${_notebook_path}" \
