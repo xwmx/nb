@@ -207,7 +207,7 @@ load test_helper
           \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>❮\ prev\</a\>\</p\> ]]
   [[ !  "${output}"  =~ next\ ❯                                                         ]]
 
-  # page 3
+  # page with list of items under pagination limit
 
   NB_BROWSE_PER_PAGE=11 run "${_NB}" browse --print
 
