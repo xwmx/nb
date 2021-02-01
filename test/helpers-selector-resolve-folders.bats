@@ -23,6 +23,14 @@ load test_helper
 
   [[ "${status}"  -eq 0                 ]]
   [[ "${output}"  ==  "Example Folder"  ]]
+
+  run "${_NB}" helpers resolve_selector_folders 2/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "1"               ]]
 }
 
 # _resolve_selector_folders() (error handling) ################################
