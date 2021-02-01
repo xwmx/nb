@@ -73,8 +73,8 @@ load test_helper
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>Next\ Page\ ❯\</a\>\</p\> ]]
-  [[ !  "${output}"  =~ ❮\ Prev\ Page                                                         ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>next\ ❯\</a\>\</p\> ]]
+  [[ !  "${output}"  =~ ❮\ prev                                                         ]]
 
   # page 2
 
@@ -138,9 +138,9 @@ load test_helper
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=1\"\>❮\ Prev\ Page\</a\>\ \·\  ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=1\"\>❮\ prev\</a\>\ \·\  ]]
   [[    "${output}"  =~ \
-          \<a\ href=\"http://localhost:6789/home:\?--page=3\"\>Next\ Page\ ❯\</a\>\</p\>      ]]
+          \<a\ href=\"http://localhost:6789/home:\?--page=3\"\>next\ ❯\</a\>\</p\>      ]]
 
   # page 3
 
@@ -204,8 +204,8 @@ load test_helper
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>❮\ Prev\ Page\</a\>\</p\> ]]
-  [[ !  "${output}"  =~ Next\ Page\ ❯                                                         ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>❮\ prev\</a\>\</p\> ]]
+  [[ !  "${output}"  =~ next\ ❯                                                         ]]
 
   # page 3
 
@@ -268,6 +268,6 @@ load test_helper
 
   # pagination links
 
-  [[ !  "${output}"  =~ ❮\ Prev\ Page                           ]]
-  [[ !  "${output}"  =~ Next\ Page\ ❯                           ]]
+  [[ !  "${output}"  =~ ❮\ prev                                 ]]
+  [[ !  "${output}"  =~ next\ ❯                                 ]]
 }

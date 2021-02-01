@@ -14596,10 +14596,10 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         if ((_print_prev))
         then
-          printf                                              \
-            "[❮ Prev Page](http://localhost:%s/%s?--page=%s)" \
-            "${NB_SERVER_PORT}"                               \
-            "${_selector}"                                    \
+          printf                                          \
+            "[❮ prev](http://localhost:%s/%s?--page=%s)"  \
+            "${NB_SERVER_PORT}"                           \
+            "${_selector}"                                \
             "$((_list_page - 1))"
         fi
 
@@ -14610,10 +14610,10 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         if ((_print_next))
         then
-          printf                                              \
-            "[Next Page ❯](http://localhost:%s/%s?--page=%s)" \
-            "${NB_SERVER_PORT}"                               \
-            "${_selector}"                                    \
+          printf                                          \
+            "[next ❯](http://localhost:%s/%s?--page=%s)"  \
+            "${NB_SERVER_PORT}"                           \
+            "${_selector}"                                \
             "$((_list_page + 1))"
         fi
 
