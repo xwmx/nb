@@ -24,6 +24,8 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ "${status}"  ==  0 ]]
+
   [[ "${output}"  =~  \
       \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
   [[ "${output}"  =~  \
@@ -32,8 +34,24 @@ export NB_SERVER_PORT=6789
       \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>             ]]
 
   [[ "${output}"  =~  0\ items. ]]
-}
 
+  run "${_NB}" browse 2/ --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  ==  0 ]]
+
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-1\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>                  ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/2/\"\>1\</a\>\ /\</h1\>                               ]]
+
+  [[ "${output}"  =~  \
+      \<p\>\<a\ href=\"http://localhost:6789/2/1\"\>\[1/1\]\ File\ One.md\</a\>\<br/\>\</p\>  ]]
+}
 
 # error handling ##############################################################
 

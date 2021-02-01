@@ -9195,38 +9195,46 @@ _browse() {
         _header_content+="\
  [${_notebook_name}:](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
 
-        local _selector_relative_path="${_selector}"
+        local _relative_path=
+        local _selector_relative_path=
 
-        if [[ "${_selector_relative_path}" =~ ^/ ]]
+        if [[ "${_selector}" =~ ^/ ]]
         then
-          _selector_relative_path="${_selector_relative_path#${_notebook_path}/}"
+          _relative_path="${_selector#${_notebook_path}/}"
+          _selector_relative_path="${_relative_path}"
         else
-          _selector_relative_path="${_selector_relative_path#*:}"
+          _selector_relative_path="${_selector#*:}"
+          _relative_path="$(
+            _selector_resolve_folders "${_selector_relative_path}"
+          )"
         fi
 
-        local _selector_folders=()
-        IFS='/' read -ra _selector_folders < <(
-          _selector_resolve_folders "${_selector_relative_path}"
-        )
+        if [[ "${_relative_path:-}" =~ / ]]
+        then
+          local _selector_folders=()
+          IFS='/' read -ra _selector_folders < <(
+            printf "%s\\n" "${_relative_path}"
+          )
 
-        local _folder_id_path=
-        _folder_id_path="$(_get_folder_id_path "${_selector_relative_path}")"
+          local _folder_id_path=
+          _folder_id_path="$(_get_folder_id_path "${_selector_relative_path}")"
 
-        local _selector_folder_ids=()
-        IFS='/' read -ra _selector_folder_ids < <(
-          printf "%s\\n" "${_folder_id_path}"
-        )
+          local _selector_folder_ids=()
+          IFS='/' read -ra _selector_folder_ids < <(
+            printf "%s\\n" "${_folder_id_path}"
+          )
 
-        local _url_path=
+          local _url_path=
 
-        local i=
-        for ((i=0; i < "${#_selector_folders[@]}"; i++))
-        do
-          _url_path+="${_selector_folder_ids[i]}/"
+          local i=
+          for ((i=0; i < "${#_selector_folders[@]}"; i++))
+          do
+            _url_path+="${_selector_folder_ids[i]}/"
 
-          _header_content+="\
+            _header_content+="\
  [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}) /"
-        done
+          done
+        fi
       fi
     fi
 
@@ -14435,8 +14443,10 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       cd "${_CURRENT_WORKING_DIR}"
 
+      [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
+
       {
-        _list "${_target_path}/" --no-color
+        _list "${_target_path}" --no-color
       } | {
         while read -r __list_item
         do
@@ -14495,7 +14505,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
         done
       } | {
-        printf "%s\\n" "$(_browse --header "${_target_path}/")"
+        printf "%s\\n" "$(_browse --header "${_target_path}")"
 
         cat
       } | {
