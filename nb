@@ -7345,7 +7345,9 @@ _SUBCOMMANDS=(
   b
   bookmark
   bookmarks
+  br
   browse
+  browser
   bs
   commands
   completions
@@ -7419,6 +7421,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   add
   b
   bookmark
+  br
   browse
   commands
   completions
@@ -7478,7 +7481,9 @@ _GIT_SUBCOMMANDS=(
   b
   bookmark
   bookmarks
+  br
   browse
+  browser
   bs
   count
   create
@@ -9550,6 +9555,8 @@ HEREDOC
     sleep 1 && _download_from "http://localhost:${NB_SERVER_PORT}" &>/dev/null
   ) &
 }
+_alias_subcommand "browse" "br"
+_alias_subcommand "browse" "browser"
 
 # completions ##################################################### completions
 
