@@ -4839,7 +4839,7 @@ _list() {
       {
         cat "${_list_path}/.pindex"
         printf "%s\\n" "${_pinned_basenames[@]:-}"
-      } | sort | uniq
+      } | awk '!NF || !seen[$0]++'
     ))
   fi
 

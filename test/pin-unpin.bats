@@ -4,17 +4,19 @@ load test_helper
 
 # search-based pinning integration ############################################
 
-@test "'pin' integrates with search-based pinning." {
+@test "'pin' integrates with search-based pinning and preserves .pindex order." {
   {
     "${_NB}" init
     "${_NB}" add "File One.md"    --title "Title One"
-    "${_NB}" add "File Two.md"    --title "Title Two" --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"   --content "#pinned"
     "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
 
     "${_NB}" pin 1
+    "${_NB}" pin 4
 
-    diff                              \
-      <(printf "%s\\n" "File One.md") \
+    diff                                        \
+      <(printf "File One.md\\nFile Four.md\\n") \
       <(cat "${NB_DIR}/home/.pindex")
   }
 
@@ -24,24 +26,27 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                             ]]
-  [[ "${#lines[@]}" -eq 3                             ]]
+  [[ "${#lines[@]}" -eq 4                             ]]
 
   [[ "${lines[0]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
-  [[ "${lines[1]}"  =~  \.*[.*2.*].*\ 📌\ Title\ Two  ]]
-  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
+  [[ "${lines[1]}"  =~  \.*[.*4.*].*\ 📌\ Title\ Four ]]
+  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ 📌\ Title\ Two  ]]
+  [[ "${lines[3]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
 }
 
-@test "'pin' and search-based pinning don't duplicate pinned entries." {
+@test "'pin' and search-based pinning don't duplicate pinned entries and preserves .pindex order." {
   {
     "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One" --content "#pinned"
+    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
     "${_NB}" add "File Two.md"    --title "Title Two"
     "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
 
     "${_NB}" pin 1
+    "${_NB}" pin 4
 
-    diff                              \
-      <(printf "%s\\n" "File One.md") \
+    diff                                        \
+      <(printf "File One.md\\nFile Four.md\\n") \
       <(cat "${NB_DIR}/home/.pindex")
   }
 
@@ -51,11 +56,12 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                             ]]
-  [[ "${#lines[@]}" -eq 3                             ]]
+  [[ "${#lines[@]}" -eq 4                             ]]
 
   [[ "${lines[0]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
-  [[ "${lines[1]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
-  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
+  [[ "${lines[1]}"  =~  \.*[.*4.*].*\ 📌\ Title\ Four ]]
+  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
+  [[ "${lines[3]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
 }
 
 # error handling ##############################################################
