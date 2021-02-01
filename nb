@@ -14496,10 +14496,18 @@ Can't show archives. Export archive and expand to edit.\\n"
 
       [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
 
+      local _per_page="${NB_BROWSE_PER_PAGE:-20}"
+
+      # TODO: Set pagination based on terminal height?
+      # if [[ -z "${_per_page:-}" ]]
+      # then
+      #   _per_page="$(($(tput lines) - 6))"
+      # fi
+
       {
-        _list "${_target_path}" --no-color        \
-          --per-page "${NB_BROWSE_PER_PAGE:-20}"  \
-          --page "${_list_page}"                  \
+        _list "${_target_path}" --no-color  \
+          --per-page "${_per_page}"         \
+          --page "${_list_page}"            \
           --with-pinned
       } | {
         while read -r __list_item
@@ -14572,7 +14580,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         local _print_next=0
 
         if ((_list_count)) &&
-           [[ "$((_list_page * ${NB_BROWSE_PER_PAGE:-20}))" -le "${_list_count}" ]]
+           [[ "$((_list_page * _per_page))" -le "${_list_count}" ]]
         then
           _print_next=1
         fi
