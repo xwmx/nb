@@ -1034,10 +1034,10 @@ _alias_subcommand() {
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
-# _browser()
+# _web_browser()
 #
 # Usage:
-#   _browser [[<url>] [--dump] | --check]
+#   _web_browser [[<url>] [--dump] | --check]
 #
 # Options:
 #   --check   Return with status 0 if a browser is available, or 1 if not.
@@ -1052,8 +1052,8 @@ _alias_subcommand() {
 # Exit / Error Status:
 #   0 (success, true)  If a terminal browser is available.
 #   1 (error,  false)  if not.
-_browser() {
-  local _browser_command=()
+_web_browser() {
+  local _web_browser_command=()
   local _check=0
   local _dump=0
   local _url=
@@ -1075,18 +1075,18 @@ _browser() {
 
   if [[ -n "${BROWSER:-}" ]]
   then
-    IFS=' ' read -ra _browser_command <<< "${BROWSER}"
+    IFS=' ' read -ra _web_browser_command <<< "${BROWSER}"
   else
     if _command_exists "w3m"
     then
-      _browser_command+=("w3m")
+      _web_browser_command+=("w3m")
     elif _command_exists "lynx"
     then
-      _browser_command+=("lynx")
+      _web_browser_command+=("lynx")
     fi
   fi
 
-  [[ -z "${_browser_command[*]:-}" ]] && return 1
+  [[ -z "${_web_browser_command[*]:-}" ]] && return 1
   ((_check)) && return 0
 
   if _interactive_input
@@ -1095,29 +1095,29 @@ _browser() {
     then
       return 0
     else
-      "${_browser_command[@]:-}" "${_url:-}"
+      "${_web_browser_command[@]:-}" "${_url:-}"
       return 0
     fi
   else
-    if [[ "${_browser_command[*]:-}" =~ w3m ]]
+    if [[ "${_web_browser_command[*]:-}" =~ w3m ]]
     then
       if ((_dump))
       then
-        "${_browser_command[@]:-}" -T text/html -dump
+        "${_web_browser_command[@]:-}" -T text/html -dump
       else
-        "${_browser_command[@]:-}" -T text/html
+        "${_web_browser_command[@]:-}" -T text/html
       fi
 
       return 0
-    elif [[ "${_browser_command[*]:-}" =~ lynx ]]
+    elif [[ "${_web_browser_command[*]:-}" =~ lynx ]]
     then
       _arguments+=("-stdin")
       ((_dump)) && _arguments+=("--dump")
 
-      "${_browser_command[@]:-}" "${_arguments[@]:-}"
+      "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
     else
-      "${_browser_command[@]}"
+      "${_web_browser_command[@]}"
       return 0
     fi
   fi
@@ -3658,9 +3658,9 @@ _help() {
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
-      | if _command_exists "pandoc" && _browser
+      | if _command_exists "pandoc" && _web_browser
         then
-          pandoc --from markdown --to html | _browser
+          pandoc --from markdown --to html | _web_browser
           return 0
         else
           _highlight_syntax_if_available
@@ -8479,9 +8479,9 @@ _bookmark() {
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
 
-    if _browser
+    if _web_browser
     then
-      _browser "${_target_url}"
+      _web_browser "${_target_url}"
       return 0
     elif _command_exists "curl" || _command_exists "wget"
     then
@@ -8929,7 +8929,7 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
   if [[ -n "${_title:-}" ]]
   then
     if _command_exists "w3m"
-    then # convert html entities TODO: _browser --convert-entities
+    then # convert html entities TODO: _web_browser --convert-entities
       _title="$(
         printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 99999
       )"
@@ -8963,7 +8963,7 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
     if [[ -n "${_description}" ]]
     then
       if _command_exists "w3m"
-      then # convert html entities TODO: _browser --convert-entities
+      then # convert html entities TODO: _web_browser --convert-entities
         _description="$(
           printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 99999
         )"
@@ -9541,7 +9541,7 @@ HEREDOC
       _download_from "${_url}"
     fi
   else
-    _browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
+    _web_browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
   fi
 
   # make a final request to clear any listening process
@@ -10557,8 +10557,8 @@ _helpers() {
   local _options=("${@:2}")
 
   case "${_name:-}" in
-    browser*)
-      _browser                        "${_options[@]:-}"
+    *browser*)
+      _web_browser                    "${_options[@]:-}"
       ;;
     decrypt*)
       _decrypt_file                   "${_options[@]:-}"
@@ -14414,7 +14414,7 @@ Can't show archives. Export archive and expand to edit.\\n"
        [[ -d "${_target_path}" ]]   &&
        _command_exists "ncat"       &&
        _command_exists "pandoc"     &&
-       _browser --check
+       _web_browser --check
     then
       _browse "${_target_path}/"
       exit 0
@@ -14422,7 +14422,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[ -d "${_target_path}" ]] &&
          _command_exists "ncat"     &&
          _command_exists "pandoc"   &&
-         _browser --check
+         _web_browser --check
     then
       cd "${_CURRENT_WORKING_DIR}"
 
@@ -14652,9 +14652,9 @@ Can't show archives. Export archive and expand to edit.\\n"
           fi
     elif [[ "${_target_path}" =~ epub$ ]] &&
          _command_exists "pandoc"         &&
-         _browser --check
+         _web_browser --check
     then
-      pandoc -f epub -t html "${_target_path}" | _browser
+      pandoc -f epub -t html "${_target_path}" | _web_browser
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
@@ -14666,7 +14666,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     if ((_render_for_browsing)) &&
        _command_exists "ncat"   &&
        _command_exists "pandoc" &&
-       _browser --check         &&
+       _web_browser --check     &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then
       {
@@ -14686,7 +14686,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
-         _browser --check           &&
+         _web_browser --check       &&
          ! ((_COLOR_ENABLED))       &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print --raw` with `pandoc` and browser available
@@ -14694,13 +14694,13 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
-         _browser --check           &&
+         _web_browser --check       &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render --print` with `pandoc` and browser available
-      pandoc "${_target_path}" 2>/dev/null | _browser --dump
+      pandoc "${_target_path}" 2>/dev/null | _web_browser --dump
     elif ((_render))                &&
          _command_exists "pandoc"   &&
-         _browser --check           &&
+         _web_browser --check       &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render` with `pandoc` and browser available
       if _command_exists "ncat"
@@ -14718,7 +14718,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             --to html         \
             --standalone      \
             2>/dev/null       \
-          | _browser
+          | _web_browser
       fi
     else # default
       if ((_print_output))
