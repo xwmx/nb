@@ -34,7 +34,7 @@ load test_helper
   [[ "${lines[3]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
 }
 
-@test "'pin' and search-based pinning don't duplicate pinned entries and preserves .pindex order." {
+@test "'pin' and search-based pinning preserve .pindex order and don't duplicate pinned entries." {
   {
     "${_NB}" init
     "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
