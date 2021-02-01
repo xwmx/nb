@@ -9189,19 +9189,19 @@ _browse() {
 
       if [[ "${_selector}" =~ :$                  ]] ||
          [[ "${_selector}" == "${_notebook_path}" ]]
-      then
+      then # in notebook root
         _header_content+=" ${_notebook_name}"
-      else
+      else # in a folder
         _header_content+="\
  [${_notebook_name}:](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
 
         local _selector_relative_path="${_selector}"
 
-        if [[ "${_selector}" =~ ^/ ]]
+        if [[ "${_selector_relative_path}" =~ ^/ ]]
         then
-          _selector_relative_path="${_selector#${_notebook_path}/}"
+          _selector_relative_path="${_selector_relative_path#${_notebook_path}/}"
         else
-          _selector_relative_path="${_selector}"
+          _selector_relative_path="${_selector_relative_path#*:}"
         fi
 
         local _selector_folders=()
