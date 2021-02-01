@@ -4516,6 +4516,8 @@ _list() {
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
+  local _page=1
+  local _per_page=0
   local _print_excerpt=0
   local _print_indicators=1
   local _reverse=0
@@ -4564,11 +4566,20 @@ _list() {
           shift
         fi
         ;;
+      --page)
+        _page="$(_option_get_value "${__arg}" "${__val:-}")"
+        ((_page)) || _page=1
+        shift
+        ;;
       -p|--pager|--less)
         _use_pager=1
         ;;
       --path*)
         _list_paths=1
+        ;;
+      --per*)
+        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       -s|--sort)
         _sort=1
@@ -4885,6 +4896,9 @@ _list() {
   } | {
     local _filenames_count=0
     local _matches=0
+    local _paginated_count=0
+    local _pagination_max="$((_page * _per_page))"
+    local _pagination_min="$(((_page * _per_page) - _per_page))"
     local _pinned_basenames_seen=()
     local _printed_count=0
 
@@ -5039,6 +5053,19 @@ _list() {
         then
           _indicators+="${_NB_INDICATOR_TODO:-}"
           _extra_length=1
+        fi
+      fi
+
+      if ((_per_page))
+      then
+        _paginated_count=$((_paginated_count+1))
+
+        if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
+        then
+          continue
+        elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
+        then
+          break
         fi
       fi
 
