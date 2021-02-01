@@ -140,7 +140,7 @@ export NB_BROWSE_PER_PAGE=4
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=1\"\>❮\ Prev\ Page\</a\>\ \|\  ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=1\"\>❮\ Prev\ Page\</a\>\ \·\  ]]
   [[    "${output}"  =~ \
           \<a\ href=\"http://localhost:6789/home:\?--page=3\"\>Next\ Page\ ❯\</a\>\</p\>      ]]
 

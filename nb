@@ -14605,7 +14605,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         if ((_print_prev)) && ((_print_next))
         then
-          printf " | "
+          printf " · "
         fi
 
         if ((_print_next))
