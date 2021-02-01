@@ -14423,6 +14423,8 @@ Can't show archives. Export archive and expand to edit.\\n"
        _command_exists "pandoc"     &&
        _web_browser --check
     then
+      cd "${_CURRENT_WORKING_DIR}"
+
       _browse "${_target_path}/"
       exit 0
     elif ((_render_for_browsing))   &&
