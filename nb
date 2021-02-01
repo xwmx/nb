@@ -9427,6 +9427,16 @@ _browse() {
       _browse_respond_with 400
     fi
 
+    local _page_number=0
+
+    if [[ "${_request_uri}" =~ \?--page=([0-9]+) ]]
+    then
+      _page_number="${BASH_REMATCH[1]}"
+      _request_uri="${_request_uri%\?--page=*}"
+    fi
+
+    # _browse_respond_with 200 "${_request_uri}"
+
     _temp_file="$(mktemp).html"
     touch "${_temp_file}"
 
@@ -9464,7 +9474,10 @@ _browse() {
     then
       _browse_respond_with 404
     else
-      _show "${_target_selector}" --browse --no-color >> "${_temp_file}"
+      _show "${_target_selector}"   \
+        --browse                    \
+        --page "${_page_number}"    \
+        --no-color >> "${_temp_file}"
     fi
 
     case "${_request_method}" in
@@ -9508,6 +9521,7 @@ _browse() {
   }
 
   local _browse_notebooks=0
+  local _browse_page=1
   local _print_browse_header=0
   local _print_headers=0
   local _print_output=0
@@ -9524,6 +9538,10 @@ _browse() {
         ;;
       --notebooks)
         _browse_notebooks=1
+        ;;
+      --page)
+        _browse_page="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
         ;;
       -p|--print)
         _print_output=1
@@ -9572,7 +9590,7 @@ HEREDOC
 
   if ((_print_output))
   then
-    local _url="http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}"
+    local _url="http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}?--page=${_browse_page}"
 
     if ((_print_headers))
     then
@@ -9581,7 +9599,7 @@ HEREDOC
       _download_from "${_url}"
     fi
   else
-    _web_browser "http://localhost:${NB_SERVER_PORT}/${_selector}"
+    _web_browser "http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}"
   fi
 
   # make a final request to clear any listening process
@@ -14022,6 +14040,7 @@ _show() {
   }
 
   local _check_type=0
+  local _list_page=1
   local _ls_arguments=()
   local _print_output=0
   local _password=
@@ -14086,6 +14105,11 @@ _show() {
         ;;
       --notebook*|--include*notebook*|--with*notebook*)
         _skip_notebook_fallback=0
+        ;;
+      --page)
+        _list_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        ((_list_page)) || _list_page=1
+        shift
         ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -14473,7 +14497,10 @@ Can't show archives. Export archive and expand to edit.\\n"
       [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
 
       {
-        _list "${_target_path}" --no-color
+        _list "${_target_path}" --no-color        \
+          --per-page "${NB_BROWSE_PER_PAGE:-20}"  \
+          --page "${_list_page}"                  \
+          --with-pinned
       } | {
         while read -r __list_item
         do
@@ -14532,9 +14559,60 @@ Can't show archives. Export archive and expand to edit.\\n"
             "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
         done
       } | {
+        local _list_count=
+        _list_count="$(_count "${_target_path}")"
+
+        local _print_prev=0
+
+        if ((_list_count)) && [[ "${_list_page}" -gt 1 ]]
+        then
+          _print_prev=1
+        fi
+
+        local _print_next=0
+
+        if ((_list_count)) &&
+           [[ "$((_list_page * ${NB_BROWSE_PER_PAGE:-20}))" -le "${_list_count}" ]]
+        then
+          _print_next=1
+        fi
+
         printf "%s\\n" "$(_browse --header "${_target_path}")"
 
         cat
+
+        if ((_print_prev)) || ((_print_next))
+        then
+          printf "\\n"
+        fi
+
+        if ((_print_prev))
+        then
+          printf                                              \
+            "[❮ Prev Page](http://localhost:%s/%s?--page=%s)" \
+            "${NB_SERVER_PORT}"                               \
+            "${_selector}"                                    \
+            "$((_list_page - 1))"
+        fi
+
+        if ((_print_prev)) && ((_print_next))
+        then
+          printf " | "
+        fi
+
+        if ((_print_next))
+        then
+          printf                                              \
+            "[Next Page ❯](http://localhost:%s/%s?--page=%s)" \
+            "${NB_SERVER_PORT}"                               \
+            "${_selector}"                                    \
+            "$((_list_page + 1))"
+        fi
+
+        if ((_print_prev)) || ((_print_next))
+        then
+          printf "\\n"
+        fi
       } | {
         pandoc            \
           --from markdown \
