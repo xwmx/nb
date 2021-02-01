@@ -2,8 +2,6 @@
 
 load test_helper
 
-export NB_BROWSE_PER_PAGE=4
-
 @test "'browse' paginates lists." {
   {
     "${_NB}" init
@@ -15,7 +13,7 @@ export NB_BROWSE_PER_PAGE=4
     done
   }
 
-  run "${_NB}" browse --print
+  NB_BROWSE_PER_PAGE=4 run "${_NB}" browse --print
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -80,7 +78,7 @@ export NB_BROWSE_PER_PAGE=4
 
   # page 2
 
-  run "${_NB}" browse --print --page 2
+  NB_BROWSE_PER_PAGE=4 run "${_NB}" browse --print --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -146,7 +144,7 @@ export NB_BROWSE_PER_PAGE=4
 
   # page 3
 
-  run "${_NB}" browse --print --page 3
+  NB_BROWSE_PER_PAGE=4 run "${_NB}" browse --print --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
