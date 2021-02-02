@@ -7709,10 +7709,10 @@ do
   esac
 done
 
-_debug printf "\${_SUBCOMMAND}: '%s'\\n"          "${_SUBCOMMAND}"
-_debug printf "\${NB_NOTEBOOK_PATH}: '%s'\\n"     "${NB_NOTEBOOK_PATH}"
-_debug printf "\${_LOCAL_NOTEBOOK_PATH}: '%s'\\n" "${_LOCAL_NOTEBOOK_PATH}"
-_debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
+_debug printf "\${_SUBCOMMAND}:           '%s'\\n"  "${_SUBCOMMAND}"
+_debug printf "\${NB_NOTEBOOK_PATH}:      '%s'\\n"  "${NB_NOTEBOOK_PATH}"
+_debug printf "\${_LOCAL_NOTEBOOK_PATH}:  '%s'\\n"  "${_LOCAL_NOTEBOOK_PATH}"
+_debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # Deprecated Functions and Variables
@@ -7721,13 +7721,13 @@ _debug printf "\${_ARGUMENTS[*:-]}: '%s'\\n"      "${_ARGUMENTS[*]:-}"
 ###############################################################################
 
 # _get_notebook_identifier()
-_get_notebook_identifier() { _notebooks show "${@}" --escaped; }
+_get_notebook_identifier()  { _notebooks show "${@}" --escaped;   }
 
 # _get_selection_basename()
-_get_selection_basename() { _show "${@}" --filename; }
+_get_selection_basename()   { _show "${@}" --filename;            }
 
 # _get_unique_basename()
-_get_unique_basename() { _get_unique_relative_path "${@:-}"; }
+_get_unique_basename()      { _get_unique_relative_path "${@:-}"; }
 
 # _set_selection_notebook() <selector>
 _set_selection_notebook() {
@@ -7765,8 +7765,8 @@ _SCOPED="$(
 )"
 
 # Color functions.
-_highlight() { _color_primary "${@:-}"; }
-_id_brackets_color() { _color_brackets "${@:-}"; }
+_highlight()          { _color_primary  "${@:-}"; }
+_id_brackets_color()  { _color_brackets "${@:-}"; }
 
 ###############################################################################
 # _defer()
