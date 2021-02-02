@@ -9605,18 +9605,18 @@ HEREDOC
     _selector="$(_notebooks current --name --no-color):"
   fi
 
+  local _rquest_url="http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}"
+
   if ((_print_output))
   then
-    local _url="http://localhost:${NB_SERVER_PORT}/${_selector//\ /\%20}?--page=${_browse_page}"
-
     if ((_print_headers))
     then
-      curl -s -I "${_url}"
+      curl -s -I "${_rquest_url//\ /\%20}"
     else
-      _download_from "${_url}"
+      _download_from "${_rquest_url//\ /\%20}"
     fi
   else
-    _web_browser "http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}"
+    _web_browser "${_rquest_url}"
   fi
 
   # make a final request to clear any listening process
