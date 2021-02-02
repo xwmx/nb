@@ -2,6 +2,9 @@
 
 load test_helper
 
+# non-breaking space
+export _S=" "
+
 @test "'browse' paginates lists." {
   {
     "${_NB}" init
@@ -26,49 +29,39 @@ load test_helper
 
   # 10-7
 
-  [[    "${output}"  =~  \
-          \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>    ]]
-  [[    "${output}"  =~  \[home:10\]\ Title\ Ten\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>   ]]
+  [[    "${output}"  =~  \[home:10\]${_S}Title${_S}Ten\</a\>\<br/\>           ]]
 
-  [[    "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:9\"\>          ]]
-  [[    "${output}"  =~  \[home:9\]\ Title\ Nine\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:9\"\>         ]]
+  [[    "${output}"  =~  \[home:9\]${_S}${_S}Title${_S}Nine\</a\>\<br/\>      ]]
 
-  [[    "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:8\"\>          ]]
-  [[    "${output}"  =~  \[home:8\]\ Title\ Eight\</a\>\<br/\>  ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:8\"\>         ]]
+  [[    "${output}"  =~  \[home:8\]${_S}${_S}Title${_S}Eight\</a\>\<br/\>     ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:7\"\>           ]]
-  [[    "${output}"  =~  \[home:7\]\ Title\ Seven\</a\>\<br/\>  ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:7\"\>         ]]
+  [[    "${output}"  =~  \[home:7\]${_S}${_S}Title${_S}Seven\</a\>\<br/\>     ]]
 
   # 6-3
 
-  [[ !  "${output}"  =~  \
-         \<p\>\<a\ href=\"http://localhost:6789/home:6\"\>      ]]
-  [[ !  "${output}"  =~  \[home:6\]\ Title\ Six\</a\>\<br/\>    ]]
+  [[ !  "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:6\"\>    ]]
+  [[ !  "${output}"  =~  \[home:6\]${_S}${_S}Title${_S}Six\</a\>\<br/\>       ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:5\"\>           ]]
-  [[ !  "${output}"  =~  \[home:5\]\ Title\ Five\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:5\"\>         ]]
+  [[ !  "${output}"  =~  \[home:5\]${_S}${_S}Title${_S}Five\</a\>\<br/\>      ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:4\"\>           ]]
-  [[ !  "${output}"  =~  \[home:4\]\ Title\ Four\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:4\"\>         ]]
+  [[ !  "${output}"  =~  \[home:4\]${_S}${_S}Title${_S}Four\</a\>\<br/\>      ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:3\"\>           ]]
-  [[ !  "${output}"  =~  \[home:3\]\ Title\ Three\</a\>\<br/\>  ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:3\"\>         ]]
+  [[ !  "${output}"  =~  \[home:3\]${_S}${_S}Title${_S}Three\</a\>\<br/\>     ]]
 
   # 2-1
 
-  [[ !  "${output}"  =~  \
-         \<p\>\<a\ href=\"http://localhost:6789/home:2\"\>      ]]
-  [[ !  "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\<br/\>    ]]
+  [[ !  "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:2\"\>    ]]
+  [[ !  "${output}"  =~  \[home:2\]${_S}${_S}Title${_S}Two\</a\>\<br/\>       ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:1\"\>           ]]
-  [[ !  "${output}"  =~  \[home:1\]\ Title\ One\</a\>\<br/\>    ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:1\"\>         ]]
+  [[ !  "${output}"  =~  \[home:1\]${_S}${_S}Title${_S}One\</a\>\<br/\>       ]]
 
   # pagination links
 
@@ -91,49 +84,39 @@ load test_helper
 
   # 10-7
 
-  [[ !  "${output}"  =~  \
-          \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>    ]]
-  [[ !  "${output}"  =~  \[home:10\]\ Title\ Ten\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>   ]]
+  [[ !  "${output}"  =~  \[home:10\]${_S}Title${_S}Ten\</a\>\<br/\>           ]]
 
-  [[ !  "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:9\"\>          ]]
-  [[ !  "${output}"  =~  \[home:9\]\ Title\ Nine\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:9\"\>         ]]
+  [[ !  "${output}"  =~  \[home:9\]${_S}${_S}Title${_S}Nine\</a\>\<br/\>      ]]
 
-  [[ !  "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:8\"\>          ]]
-  [[ !  "${output}"  =~  \[home:8\]\ Title\ Eight\</a\>\<br/\>  ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:8\"\>         ]]
+  [[ !  "${output}"  =~  \[home:8\]${_S}${_S}Title${_S}Eight\</a\>\<br/\>     ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:7\"\>           ]]
-  [[ !  "${output}"  =~  \[home:7\]\ Title\ Seven\</a\>\<br/\>  ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:7\"\>         ]]
+  [[ !  "${output}"  =~  \[home:7\]${_S}${_S}Title${_S}Seven\</a\>\<br/\>     ]]
 
   # 6-3
 
-  [[    "${output}"  =~  \
-         \<p\>\<a\ href=\"http://localhost:6789/home:6\"\>      ]]
-  [[    "${output}"  =~  \[home:6\]\ Title\ Six\</a\>\<br/\>    ]]
+  [[    "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:6\"\>    ]]
+  [[    "${output}"  =~  \[home:6\]${_S}${_S}Title${_S}Six\</a\>\<br/\>       ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:5\"\>           ]]
-  [[    "${output}"  =~  \[home:5\]\ Title\ Five\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:5\"\>         ]]
+  [[    "${output}"  =~  \[home:5\]${_S}${_S}Title${_S}Five\</a\>\<br/\>      ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:4\"\>           ]]
-  [[    "${output}"  =~  \[home:4\]\ Title\ Four\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:4\"\>         ]]
+  [[    "${output}"  =~  \[home:4\]${_S}${_S}Title${_S}Four\</a\>\<br/\>      ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:3\"\>           ]]
-  [[    "${output}"  =~  \[home:3\]\ Title\ Three\</a\>\<br/\>  ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:3\"\>         ]]
+  [[    "${output}"  =~  \[home:3\]${_S}${_S}Title${_S}Three\</a\>\<br/\>     ]]
 
   # 2-1
 
-  [[ !  "${output}"  =~  \
-         \<p\>\<a\ href=\"http://localhost:6789/home:2\"\>      ]]
-  [[ !  "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\<br/\>    ]]
+  [[ !  "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:2\"\>    ]]
+  [[ !  "${output}"  =~  \[home:2\]${_S}${_S}Title${_S}Two\</a\>\<br/\>       ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:1\"\>           ]]
-  [[ !  "${output}"  =~  \[home:1\]\ Title\ One\</a\>\<br/\>    ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:1\"\>         ]]
+  [[ !  "${output}"  =~  \[home:1\]${_S}${_S}Title${_S}One\</a\>\<br/\>       ]]
 
   # pagination links
 
@@ -157,49 +140,39 @@ load test_helper
 
   # 10-7
 
-  [[ !  "${output}"  =~  \
-          \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>    ]]
-  [[ !  "${output}"  =~  \[home:10\]\ Title\ Ten\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>   ]]
+  [[ !  "${output}"  =~  \[home:10\]${_S}Title${_S}Ten\</a\>\<br/\>           ]]
 
-  [[ !  "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:9\"\>          ]]
-  [[ !  "${output}"  =~  \[home:9\]\ Title\ Nine\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:9\"\>         ]]
+  [[ !  "${output}"  =~  \[home:9\]${_S}${_S}Title${_S}Nine\</a\>\<br/\>      ]]
 
-  [[ !  "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:8\"\>          ]]
-  [[ !  "${output}"  =~  \[home:8\]\ Title\ Eight\</a\>\<br/\>  ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:8\"\>         ]]
+  [[ !  "${output}"  =~  \[home:8\]${_S}${_S}Title${_S}Eight\</a\>\<br/\>     ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:7\"\>           ]]
-  [[ !  "${output}"  =~  \[home:7\]\ Title\ Seven\</a\>\<br/\>  ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:7\"\>         ]]
+  [[ !  "${output}"  =~  \[home:7\]${_S}${_S}Title${_S}Seven\</a\>\<br/\>     ]]
 
   # 6-3
 
-  [[ !  "${output}"  =~  \
-         \<p\>\<a\ href=\"http://localhost:6789/home:6\"\>      ]]
-  [[ !  "${output}"  =~  \[home:6\]\ Title\ Six\</a\>\<br/\>    ]]
+  [[ !  "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:6\"\>    ]]
+  [[ !  "${output}"  =~  \[home:6\]${_S}${_S}Title${_S}Six\</a\>\<br/\>       ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:5\"\>           ]]
-  [[ !  "${output}"  =~  \[home:5\]\ Title\ Five\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:5\"\>         ]]
+  [[ !  "${output}"  =~  \[home:5\]${_S}${_S}Title${_S}Five\</a\>\<br/\>      ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:4\"\>           ]]
-  [[ !  "${output}"  =~  \[home:4\]\ Title\ Four\</a\>\<br/\>   ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:4\"\>         ]]
+  [[ !  "${output}"  =~  \[home:4\]${_S}${_S}Title${_S}Four\</a\>\<br/\>      ]]
 
-  [[ !  "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:3\"\>           ]]
-  [[ !  "${output}"  =~  \[home:3\]\ Title\ Three\</a\>\<br/\>  ]]
+  [[ !  "${output}"  =~  \<a\ href=\"http://localhost:6789/home:3\"\>         ]]
+  [[ !  "${output}"  =~  \[home:3\]${_S}${_S}Title${_S}Three\</a\>\<br/\>     ]]
 
   # 2-1
 
-  [[    "${output}"  =~  \
-         \<p\>\<a\ href=\"http://localhost:6789/home:2\"\>      ]]
-  [[    "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\<br/\>    ]]
+  [[    "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:2\"\>    ]]
+  [[    "${output}"  =~  \[home:2\]${_S}${_S}Title${_S}Two\</a\>\<br/\>       ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:1\"\>           ]]
-  [[    "${output}"  =~  \[home:1\]\ Title\ One\</a\>\<br/\>    ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:1\"\>         ]]
+  [[    "${output}"  =~  \[home:1\]${_S}${_S}Title${_S}One\</a\>\<br/\>       ]]
 
   # pagination links
 
@@ -222,52 +195,44 @@ load test_helper
 
   # 10-7
 
-  [[    "${output}"  =~  \
-          \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>    ]]
-  [[    "${output}"  =~  \[home:10\]\ Title\ Ten\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<p\>\<a\ href=\"http://localhost:6789/home:10\"\>   ]]
+  [[    "${output}"  =~  \[home:10\]${_S}Title${_S}Ten\</a\>\<br/\>           ]]
 
-  [[    "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:9\"\>          ]]
-  [[    "${output}"  =~  \[home:9\]\ Title\ Nine\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:9\"\>         ]]
+  [[    "${output}"  =~  \[home:9\]${_S}${_S}Title${_S}Nine\</a\>\<br/\>      ]]
 
-  [[    "${output}"  =~  \
-          \<a\ href=\"http://localhost:6789/home:8\"\>          ]]
-  [[    "${output}"  =~  \[home:8\]\ Title\ Eight\</a\>\<br/\>  ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:8\"\>         ]]
+  [[    "${output}"  =~  \[home:8\]${_S}${_S}Title${_S}Eight\</a\>\<br/\>     ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:7\"\>           ]]
-  [[    "${output}"  =~  \[home:7\]\ Title\ Seven\</a\>\<br/\>  ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:7\"\>         ]]
+  [[    "${output}"  =~  \[home:7\]${_S}${_S}Title${_S}Seven\</a\>\<br/\>     ]]
 
   # 6-3
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:6\"\>           ]]
-  [[    "${output}"  =~  \[home:6\]\ Title\ Six\</a\>\<br/\>    ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:6\"\>         ]]
+  [[    "${output}"  =~  \[home:6\]${_S}${_S}Title${_S}Six\</a\>\<br/\>       ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:5\"\>           ]]
-  [[    "${output}"  =~  \[home:5\]\ Title\ Five\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:5\"\>         ]]
+  [[    "${output}"  =~  \[home:5\]${_S}${_S}Title${_S}Five\</a\>\<br/\>      ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:4\"\>           ]]
-  [[    "${output}"  =~  \[home:4\]\ Title\ Four\</a\>\<br/\>   ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:4\"\>         ]]
+  [[    "${output}"  =~  \[home:4\]${_S}${_S}Title${_S}Four\</a\>\<br/\>      ]]
 
-  [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:3\"\>           ]]
-  [[    "${output}"  =~  \[home:3\]\ Title\ Three\</a\>\<br/\>  ]]
+  [[    "${output}"  =~  \<a\ href=\"http://localhost:6789/home:3\"\>         ]]
+  [[    "${output}"  =~  \[home:3\]${_S}${_S}Title${_S}Three\</a\>\<br/\>     ]]
 
   # 2-1
 
   [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:2\"\>           ]]
-  [[    "${output}"  =~  \[home:2\]\ Title\ Two\</a\>\<br/\>    ]]
+          \<a\ href=\"http://localhost:6789/home:2\"\>                        ]]
+  [[    "${output}"  =~  \[home:2\]${_S}${_S}Title${_S}Two\</a\>\<br/\>       ]]
 
   [[    "${output}"  =~  \
-         \<a\ href=\"http://localhost:6789/home:1\"\>           ]]
-  [[    "${output}"  =~  \[home:1\]\ Title\ One\</a\>\<br/\>    ]]
+          \<a\ href=\"http://localhost:6789/home:1\"\>                        ]]
+  [[    "${output}"  =~  \[home:1\]${_S}${_S}Title${_S}One\</a\>\<br/\>       ]]
 
   # pagination links
 
-  [[ !  "${output}"  =~ ❮\ prev                                 ]]
-  [[ !  "${output}"  =~ next\ ❯                                 ]]
+  [[ !  "${output}"  =~ ❮\ prev ]]
+  [[ !  "${output}"  =~ next\ ❯ ]]
 }
