@@ -12656,12 +12656,11 @@ _show() {
     } | {
       local _truncate_length=
 
-      if [[ "${BROWSER:-}" =~ lynx ]]
-      then
-        _truncate_length="$((_COLUMNS - 10))"
-      else
-        _truncate_length="$((_COLUMNS - 1))"
-      fi
+      case "${BROWSER:-}" in
+        *elinks*) _truncate_length="$((_COLUMNS - 20))" ;;
+        *lynx*)   _truncate_length="$((_COLUMNS - 10))" ;;
+        *)        _truncate_length="$((_COLUMNS - 1))"  ;;
+      esac
 
       while read -r __list_item
       do
