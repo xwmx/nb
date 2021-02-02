@@ -1103,6 +1103,9 @@ _web_browser() {
   else
     if [[ "${_web_browser_command[*]:-}" =~ w3m ]]
     then
+      _web_browser_command+=("-I" "UTF-8")
+      _web_browser_command+=("-O" "UTF-8")
+
       if ((_dump))
       then
         "${_web_browser_command[@]:-}" -T text/html -dump
