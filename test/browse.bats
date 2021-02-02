@@ -4,6 +4,50 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# header crumbs ###############################################################
+
+@test "'browse <notebook-path>/<folder>/file>' displays header crumbs with folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Example Title"               \
+      --content   "Example content."
+  }
+
+  run "${_NB}" browse "${NB_DIR}/home/Example Folder/Folder One.md" --header
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                                                        ]]
+
+  [[ "${output}"    =~ \#\ \[nb\]\(http://localhost:6789/\)\ ·\                 ]]
+  [[ "${output}"    =~ \ ·\ \[home\]\(http://localhost:6789/home:\)\ :\         ]]
+  [[ "${output}"    =~ \ :\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ /  ]]
+}
+
+@test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Example Title"               \
+      --content   "Example content."
+  }
+
+  run "${_NB}" browse "${NB_DIR}/home/Example Folder" --header
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                                                        ]]
+
+  [[ "${output}"    =~ \#\ \[nb\]\(http://localhost:6789/\)\ ·\                 ]]
+  [[ "${output}"    =~ \ ·\ \[home\]\(http://localhost:6789/home:\)\ :\         ]]
+  [[ "${output}"    =~ \ :\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ /  ]]
+}
+
 # conflicting folder id / name ################################################
 
 @test "'browse <folder>/' with conflicting id / folder name renders links to ids and labels to names." {

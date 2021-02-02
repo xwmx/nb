@@ -9243,13 +9243,14 @@ _browse() {
           )"
         fi
 
-        if [[ "${_relative_path:-}" =~ / ]]
+        if [[ -n "${_relative_path:-}"                    ]] &&
+           [[ -d "${_notebook_path}/${_relative_path%/*}" ]]
         then
-          _header_content+=" : "
+          _header_content+=" :"
 
           local _selector_folders=()
           IFS='/' read -ra _selector_folders < <(
-            printf "%s\\n" "${_relative_path}"
+            printf "%s\\n" "${_relative_path%/*}"
           )
 
           local _folder_id_path=
