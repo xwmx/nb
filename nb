@@ -9621,7 +9621,7 @@ HEREDOC
 
   # start server
 
-  _browse_serve
+  _browse_serve || : # TODO: return status
 
   # request URL
 
