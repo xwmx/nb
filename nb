@@ -24,11 +24,13 @@
 #
 # - Configuration and Setup
 # - Helper Functions (alphabetical order)
-# - `ls` Subcommands (alphabetical order)
+# - Subcommands: Group 1 (alphabetical order)
 # - Plugins
 # - Option Parsing
 # - _main() / Dispatch
-# - Subcommands (alphabetical order)
+# - Helper Functions: Group 2 (alphabetical order)
+# - Subcommands: Group 2 (alphabetical order)
+# - Subcommands: Group 3 (alphabetical order)
 #
 # Target Bash Versions: >= 3.2.57
 #
@@ -3035,10 +3037,10 @@ HEREDOC
 desc() { describe "${@}"; }
 
 ###############################################################################
-# `ls` Subcommands                                             `ls` Subcommands
-# ----------------                                             ----------------
+# Subcommands: Group 1                                     Subcommands: Group 1
+# --------------------                                     --------------------
 #
-# Define and call `ls` and its dependencies first to only load / run used code.
+# `ls` and dependencies.
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
@@ -7789,14 +7791,17 @@ _defer() {
 # _call_deferred_command()
 #
 # Usage:
-#   _call_deferred_command [<name>...]
+#   _call_deferred_command --group <num>
 #
 # Description:
 #   Call the deferred command.
 _call_deferred_command() {
   [[ -z "${_DEFERRED_COMMAND[0]:-}" ]] && return 0
 
-  if [[ -n "${1:-}" ]] && ! _contains "${_DEFERRED_COMMAND[0]}" "${@:-}"
+  local _group="${2:-}"
+
+  if [[ "${_group:-}" -eq 2 ]] &&
+     _contains "${_DEFERRED_COMMAND[0]:-}" "_settings"
   then
     return 0
   fi
@@ -7877,8 +7882,8 @@ _main() {
 _main "${_ARGUMENTS[@]:-}"
 
 ###############################################################################
-# Deferred Helpers                                             Deferred Helpers
-# ----------------                                             ----------------
+# Helper Functions: Group 2                           Helper Functions: Group 2
+# -------------------------                           -------------------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
@@ -7911,8 +7916,8 @@ _option_get_tags() {
 }
 
 ###############################################################################
-# Subcommands                                                       Subcommands
-# -----------                                                       -----------
+# Subcommands: Group 2                                     Subcommands: Group 2
+# --------------------                                     --------------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
@@ -12948,722 +12953,6 @@ _search() {
 _alias_subcommand "search" "q"
 _alias_subcommand "search" "grep"
 
-# settings ########################################################### settings
-
-describe "settings" <<HEREDOC
-Usage:
-  ${_ME} set [<name> [<value>] | <number> [<value>]]
-  ${_ME} settings colors [<number> | themes]
-  ${_ME} settings edit
-  ${_ME} settings get   (<name> | <number>)
-  ${_ME} settings list  [--long]
-  ${_ME} settings set   (<name> | <number>) <value>
-  ${_ME} settings show  (<name> | <number>)
-  ${_ME} settings unset (<name> | <number>)
-
-Subcommands:
-  (default)  Open the settings prompt, to <name> or <number>, if present.
-             When <value> is also present, assign <value> to the setting.
-  colors     Print a table of available colors and their xterm color numbers.
-             When <number> is provided, print the number in its color.
-             \`settings colors themes\` prints a list of installed themes.
-  edit       Open the \`${_ME}\` configuration file in \`\$EDITOR\`.
-  get        Print the value of a setting.
-  list       List information about available settings.
-  set        Assign <value> to a setting.
-  show       Print the help information and current value of a setting.
-  unset      Unset a setting, returning it to the default value.
-
-Description:
-  Configure \`${_ME}\`. Use \`${_ME} settings set\` to customize a setting and
-  \`${_ME} settings unset\` to restore the default for a setting.
-
-  Use the \`${_ME} set\` alias to quickly assign values to settings:
-
-    ${_ME} set color_theme blacklight
-    ${_ME} set limit 40
-
-Examples:
-  ${_ME} settings
-  ${_ME} set 5 "org"
-  ${_ME} set color_primary 105
-  ${_ME} set unset color_primary
-  ${_ME} set color_secondary unset
-  ${_ME} settings colors
-  ${_ME} settings colors 105
-  ${_ME} set limit 15
-
-Alias: \`set\`
-HEREDOC
-_settings() {
-  # Usage: _settings_colors [<number>] [themes]
-  _settings_colors() {
-    # Usage: _settings_colors_print <number>
-    _settings_colors_print() {
-      printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
-    }
-
-    if [[ -n "${1:-}" ]]
-    then
-      if [[ "${1}" == "themes" ]]
-      then
-        printf "%s\\n" "${_NB_COLOR_THEMES[@]}"
-      else
-        [[ "${1}" =~ [[:digit:]] ]] || _exit_1 \
-          printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
-
-        _settings_colors_print "${1:-}"
-        printf "\\n"
-      fi
-    else
-      local i
-
-      for ((i=0; i < 256; i++))
-      do
-        if ((i)) && ! ((i % 16))
-        then
-          printf "\\n"
-        fi
-
-        _settings_colors_print "${i}"
-      done
-
-      printf "\\n"
-    fi
-  }
-
-  # Usage: _settings_get_value (<number> | <name>)
-  _settings_get_value() {
-    local _setting_name=
-    _setting_name="$(_settings_identify "${1:-}")" &&
-      _env | grep "${_setting_name}" | cut -d= -f2
-  }
-
-  # Usage: _settings_identify [--id] (<number> | <name>)
-  _settings_identify() {
-    local _get_id=0
-    local _id_or_name=
-
-    if [[ -z "${1:-}" ]]
-    then
-      return 1
-    elif [[ "${1}" == "--id" ]]
-    then
-      _get_id=1
-      [[ -z "${2:-}" ]] && return 1
-      _id_or_name="${2:-}"
-    else
-      _id_or_name="${1}"
-    fi
-
-    case "${_id_or_name}" in
-      1|*auto*|*AUTO*|*sync*|*SYNC*)
-        ((_get_id)) && printf "1"   || printf "NB_AUTO_SYNC"
-        return 0
-        ;;
-      2|*primary*|*PRIMARY*)
-        ((_get_id)) && printf "2"   || printf "NB_COLOR_PRIMARY"
-        return 0
-        ;;
-      3|*secondary*|*SECONDARY*)
-        ((_get_id)) && printf "3"   || printf "NB_COLOR_SECONDARY"
-        return 0
-        ;;
-      4|*color*theme*|*COLOR*THEME*|*scheme*|theme*)
-        ((_get_id)) && printf "4"   || printf "NB_COLOR_THEME"
-        return 0
-        ;;
-      5|*ext*|*EXT*)
-        ((_get_id)) && printf "5"   || printf "NB_DEFAULT_EXTENSION"
-        return 0
-        ;;
-      6|*editor*|*EDITOR*)
-        ((_get_id)) && printf "6"   || printf "EDITOR"
-        return 0
-        ;;
-      7|*encrypt*|*ENCRYPT*)
-        ((_get_id)) && printf "7"   || printf "NB_ENCRYPTION_TOOL"
-        return 0
-        ;;
-      8|*footer*|*FOOTER*)
-        ((_get_id)) && printf "8"   || printf "NB_FOOTER"
-        return 0
-        ;;
-      9|*header*|*HEADER*)
-        ((_get_id)) && printf "9"   || printf "NB_HEADER"
-        return 0
-        ;;
-      10|*limit*|*LIMIT*)
-        ((_get_id)) && printf "10"  || printf "NB_LIMIT"
-        return 0
-        ;;
-      11|*dir*|*DIR*)
-        ((_get_id)) && printf "11"  || printf "NB_DIR"
-        return 0
-        ;;
-      12|*syntax*|*SYNTAX*)
-        ((_get_id)) && printf "12"  || printf "NB_SYNTAX_THEME"
-        return 0
-        ;;
-      *)
-        _warn                                   \
-          printf "Setting not found: %s\\n"     \
-          "$(_color_primary "${_id_or_name}")"  &&
-            return 1
-        ;;
-    esac
-  }
-
-  # Usage: _settings_prompt [<id> | <name>]
-  _settings_prompt() {
-    local _setting_name="${1:-}"
-
-    local _padding
-    _padding="$(_print_padding "-----------" "${_COLUMNS}")"
-
-    printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
-    _print_line "$(printf "%-${_COLUMNS}s" '.')"
-
-    if [[ -n "${_setting_name}" ]]
-    then
-      _setting_name="$(_settings_identify "${_setting_name}")"
-    else
-      cat <<HEREDOC
-$(_settings list)
-
-Enter the number or name of the setting to change, or $(_color_primary 'q') to quit.
-HEREDOC
-
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Number or Name: ")" __setting
-
-        if [[ -n "${__setting}" ]]
-        then
-          case "${__setting}" in
-            q|quit|exit)
-              printf "Exiting...\\n"
-              return 0
-              ;;
-            *)
-              _setting_name="$(
-                _settings_identify "${__setting}"
-              )" && break
-              ;;
-          esac
-        fi
-      done
-    fi
-
-    printf "\\n"
-
-    if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
-       [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
-    then
-      printf "%s\\n\\n" "$(_settings_colors)"
-    fi
-
-    _settings show "${_setting_name}"
-
-    local _hi_unset= && _hi_unset="$(_color_primary 'unset')"
-    local _hi_q=     && _hi_q="$(_color_primary 'q')"
-
-    cat <<HEREDOC
-
-Enter a new value, ${_hi_unset} to set to the default value, or ${_hi_q} to quit.
-HEREDOC
-
-    while true
-    do
-      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
-
-      if [[ -n "${__value}" ]]
-      then
-        case "${__value}" in
-          q|quit|exit)
-            printf "Exiting...\\n"
-            return 0
-            ;;
-          unset|default|reset)
-            _settings_unset "${_setting_name}" || continue
-            break
-            ;;
-          *)
-            _settings_set "${_setting_name}" "${__value}" || continue
-            break
-            ;;
-        esac
-      fi
-    done
-  }
-
-  # Usage: _settings_set (<number> | <name>) <value>
-  _settings_set() {
-    local _attribution=
-    _attribution="# Set by \`${_ME}\` • $(date)"
-    local _entry=
-    local _setting_name=
-    local _stripped=
-    local _value=
-
-    _setting_name="$(_settings_identify "${1:-}")"  &&
-      if _contains "${2:-}" "unset" "default" "reset"
-      then
-        _settings_unset "${_setting_name}" && return 0
-      fi &&
-      _settings_validate_value "${_setting_name}" "${2:-}" &&
-      {
-        _value="${2:-}"
-        if [[ "${_value}" =~ ^~ ]]
-        then
-          # shellcheck disable=SC2016
-          _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
-        fi
-      } &&
-      if [[ "${_setting_name}" == "EDITOR" ]]
-      then
-        _entry="export ${_setting_name}=\"${_value}\" ${_attribution}"
-      else
-        _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}"
-      fi &&
-      _settings_unset "${_setting_name}" > /dev/null 2>&1     &&
-      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"         &&
-      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]]  ||
-         [[ "${_setting_name}" == "NB_COLOR_SECONDARY"    ]]
-      then
-        _setting_name="$(_tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
-        _value="$(_tput setaf "${_value}")${_value}${_TPUT_SGR0}"
-      elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
-      then
-        local _new_color=
-        _new_color="$(
-          NB_COLOR_THEME="${_value}"  \
-          NB_COLOR_PRIMARY=''         \
-            "${_MY_PATH}" settings get NB_COLOR_PRIMARY
-        )"
-        _setting_name="$(_tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
-        _value="$(_tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
-      else
-        _setting_name="$(_color_primary "${_setting_name}")"  \
-        _value="$(_color_primary "${_value}")"
-      fi &&
-      printf "%s set to %s\\n"  \
-        "${_setting_name}"      \
-        "${_value}"
-  }
-
-  # Usage: _settings_unset (<number> | <name>)
-  _settings_unset() {
-    local _setting_name=
-    local _default_value=
-
-    _setting_name="$(_settings_identify "${1:-}")"      &&
-      _sed_i                                            \
-        -e "s/^export ${_setting_name}.*Added by.*$//g" \
-        -e "s/^export ${_setting_name}.*Set by.*$//g"   \
-        "${NBRC_PATH}" &&
-        {
-          _stripped=$(<"${NBRC_PATH}")
-          printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
-        } && {
-          _default_value="$(
-            eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
-          )"
-
-          if [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
-          then
-            _setting_name="$(_color_primary "${_setting_name}")"
-            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY"  ]]
-          then
-            _setting_name="$(_tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
-            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_COLOR_THEME"    ]]
-          then
-            _new_hi_color="$(
-              NB_COLOR_THEME="nb" NB_COLOR_PRIMARY='' \
-                "${_MY_PATH}" settings get NB_COLOR_PRIMARY
-            )"
-
-            _setting_name="$(_tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
-            _default_value="$(_tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
-          else
-            _setting_name="$(_color_primary "${_setting_name}")"
-            _default_value="$(_color_primary "${_default_value}")"
-          fi
-        } &&
-        printf "%s restored to the default: %s\\n"  \
-          "${_setting_name}"                        \
-          "${_default_value}"
-  }
-
-  # Usage: _settings_validate_value (<number> | <name>) <value>
-  _settings_validate_value() {
-    if [[ "${1:-}" == 'EDITOR'                ]] ||
-       [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
-    then
-      if [[ -n "${2:-}" ]]
-      then
-        return 0
-      else
-        _warn printf "%s requires a value.\\n" "${1:-}" &&
-          return 1
-      fi
-    elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
-         [[ "${1:-}" == 'NB_FOOTER'     ]]
-    then
-      if [[ "${2:-}" =~ ^0$|^1$         ]]
-      then
-        return 0
-      else
-        _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}" &&
-          return 1
-      fi
-    elif [[ "${1:-}" == 'NB_HEADER'     ]]
-    then
-      if [[ "${2:-}" =~ ^0$|^1$|^2$|^3$ ]]
-      then
-        return 0
-      else
-        _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}" &&
-          return 1
-      fi
-    elif [[ "${1:-}" == 'NB_LIMIT'      ]]
-    then
-      if [[ "${2:-}" =~ ^[0-9]+$        ]]
-      then
-        return 0
-      else
-        _warn printf "%s must be a number.\\n" "${1}" &&
-          return 1
-      fi
-    elif [[ "${1:-}" == 'NB_DIR'        ]]
-    then
-      if [[ -z "${2:-}"   ]] ||
-         [[ "${2}" == "/" ]] ||
-         {
-          [[ -e "${2}"   ]] &&
-          [[ ! -w "${2}" ]]
-         }
-      then
-        _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}" &&
-          return 1
-      fi
-    elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL'  ]]
-    then
-      if [[ "${2:-}" =~ ^openssl$|^gpg$       ]]
-      then
-        return 0
-      else
-        _warn \
-          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n" &&
-            return 1
-      fi
-    elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
-         [[ "${1:-}" == 'NB_COLOR_SECONDARY'  ]]
-    then
-      if [[ "${2:-}" =~ ^[0-9] ]]
-      then
-        return 0
-      else
-        _warn printf "%s must be a number.\\n" "${1}" && return 1
-      fi
-    elif [[ "${1:-}" == 'NB_COLOR_THEME'      ]]
-    then
-      if _contains "${2:-}" "${_NB_COLOR_THEMES[@]}"
-      then
-        return 0
-      else
-        _warn printf "%s must be one of the available themes.\\n" "${1}" &&
-          return 1
-      fi
-    elif [[ "${1:-}" == 'NB_SYNTAX_THEME' ]]
-    then
-      if ! hash bat 2>/dev/null
-      then
-        printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
-      else
-        local _theme_list
-        _theme_list=($(bat --list-themes --color never))
-
-        if _contains "${2:-}" "${_theme_list[@]}"
-        then
-          return 0
-        else
-          _warn printf "%s must be one of the available themes.\\n" "${1}" &&
-          return 1
-        fi
-      fi
-    else
-      return 0
-    fi
-  }
-
-  local _settings_list_items=()
-  local _settings_help_items=()
-
-  _settings_list_items+=("$(_color_brackets '1')  auto_sync")
-  _settings_help_items+=("\
-    $(_color_secondary " ---------")
-     By default, operations that trigger a git commit like \`add\`, \`edit\`,
-     and \`delete\` will sync notebook changes to the remote repository, if
-     one is set. To disable this behavior, set this to \"0\".
-
-     • Default Value: $(_color_primary "1")")
-
-  _settings_list_items+=("$(_color_brackets '2')  color_primary")
-  _settings_help_items+=("\
-    $(_color_secondary " -------------")
-     The primary color used to highlight identifiers and messages. Often this
-     can be set to an xterm color number between 0 and 255. Some terminals
-     support many more colors.
-
-     • Default Value: $(_color_primary "68") (blue) for 256 color terminals,
-                      $(_color_primary "4")  (blue) for  8  color terminals.")
-
-  _settings_list_items+=("$(_color_brackets '3')  color_secondary")
-  _settings_help_items+=("\
-    $(_color_secondary " ---------------")
-     The color used for lines and footer elements. Often this can be set to an
-     xterm color number between 0 and 255. Some terminals support many more
-     colors.
-
-     • Default Value: $(_color_primary "8")")
-
-  _settings_list_items+=("$(_color_brackets '4')  color_theme")
-  _settings_help_items+=("\
-    $(_color_secondary " -----------")
-     The color theme.
-
-     To view screenshots of the built-in themes, visit:
-
-         $(_color_primary "https://git.io/nb-docs-color-themes")
-
-     \`${_ME}\` supports custom, user-defined themes. To learn more, run:
-
-         $(_color_primary "${_ME} help --colors")
-
-     To change the syntax highlighting theme, use:
-
-         $(_color_primary "${_ME} set syntax_theme")
-
-     • Available themes:
-
-$(for __theme in "${_NB_COLOR_THEMES[@]}"
-  do
-    printf "         %s\\n" "$(_color_primary "${__theme}")"
-  done)
-
-     • Default Value: $(_color_primary "nb")")
-
-  _settings_list_items+=("$(_color_brackets '5')  default_extension")
-  _settings_help_items+=("\
-    $(_color_secondary " -----------------")
-     The default extension to use for note files. Change to \"org\" for Emacs
-     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
-     whatever you prefer.
-
-     • Default Value: $(_color_primary "md")")
-
-  _settings_list_items+=("$(_color_brackets '6')  editor")
-  _settings_help_items+=("\
-    $(_color_secondary " ------")
-     The command line text editor used by \`${_ME}\`.
-
-     • Example Values:
-
-$(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
-  do
-    if _command_exists "${__editor}"
-    then
-      printf "         %s\\n" "$(_color_primary "${__editor}")"
-    fi
-  done)")
-
-  _settings_list_items+=("$(_color_brackets '7')  encryption_tool")
-  _settings_help_items+=("\
-    $(_color_secondary " ---------------")
-     The tool used for encrypting notes.
-
-     • Supported Values: $(_color_primary "openssl"), $(_color_primary "gpg")
-     • Default Value:    $(_color_primary "openssl")")
-
-  _settings_list_items+=("$(_color_brackets '8')  footer")
-  _settings_help_items+=("\
-    $(_color_secondary " ------")
-     By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
-     To hide this footer, set this to \"0\".
-
-     • Default Value: $(_color_primary "1")")
-
-  _settings_list_items+=("$(_color_brackets '9')  header")
-  _settings_help_items+=("\
-    $(_color_secondary " ------")
-     By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
-     Set the alignment, or hide the header with \"0\".
-
-     • Supported Values:
-
-       $(_color_primary "0")  Hide Header
-       $(_color_primary "1")  Dynamic Alignment
-            - Left justified when list is shorter than terminal width.
-            - Center aligned when list is longer than terminal width.
-       $(_color_primary "2")  Center Aligned (default)
-       $(_color_primary "3")  Left Justified
-
-     • Default Value: $(_color_primary "2")")
-
-  _settings_list_items+=("$(_color_brackets '10') limit")
-  _settings_help_items+=("\
-    $(_color_secondary " -----")
-     The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
-
-     • Default Value: $(_color_primary "20")")
-
-  _settings_list_items+=("$(_color_brackets '11') nb_dir")
-  _settings_help_items+=("\
-    $(_color_secondary " ------")
-     The location of the directory that contains the notebooks.
-
-     For example, to sync all notebooks with Dropbox, create a folder at
-     \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
-
-     • Default Value: $(_color_primary '~/.nb')")
-
-  _settings_list_items+=("$(_color_brackets '12') syntax_theme")
-  _settings_help_items+=("\
-    $(_color_secondary " ------------")
-     The syntax highlighting theme. View examples with:
-
-         $(_color_primary 'bat --list-themes')
-
-     $(if ! hash "bat" 2>/dev/null
-       then
-         printf "Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
-       else
-         printf "• Available themes:\\n"
-         printf "\\n"
-
-         for __theme in $(bat --list-themes --color never)
-        do
-          printf "         %s\\n" "$(_color_primary "${__theme}")"
-        done
-      fi)
-
-     • Default Value: $(_color_primary 'base16')")
-
-  while ((${#}))
-  do
-    local __arg="${1:-}"
-
-    case "${__arg}" in
-      color|colors)
-        _settings_colors "${2:-}"
-        return 0
-        ;;
-      edit)
-        _edit_file "${NBRC_PATH}" --no-wait
-        return 0
-        ;;
-      get)
-        if [[ -z "${2:-}" ]]
-        then
-          _exit_1 _help settings
-        fi
-
-        _settings_get_value "${2:-}"
-        return 0
-        ;;
-      list)
-        if [[ "${2:-}" == "--long" ]]
-        then
-          local _counter=0
-
-          for __setting in "${_settings_list_items[@]}"
-          do
-            ((_counter)) && printf "\\n"
-            _counter="$((_counter+1))"
-
-            _settings show "${_counter}"
-          done
-        else
-          printf "%s\\n" "${_settings_list_items[@]}"
-        fi
-
-        return 0
-        ;;
-      set)
-        if [[ -z "${2:-}" ]] || [[ -z "${3:-}" ]]
-        then
-          _exit_1 _help "settings"
-        fi
-
-        _settings_set "${2:-}" "${3:-}"
-        return 0
-        ;;
-      show|help|about|info|more)
-        if [[ -z "${2:-}" ]]
-        then
-          _exit_1 _help "settings"
-        fi
-
-        local _setting_id=
-        _setting_id="$(_settings_identify --id "${2:-}")"
-
-        local _setting_name=
-        _setting_name="$(_settings_identify "${2:-}")"
-
-        local _index=
-        _index="$((_setting_id-1))"
-
-        printf "%s\\n%s\\n"                       \
-          "${_settings_list_items[${_index}]}"    \
-          "${_settings_help_items[${_index}]}"
-
-        printf "\\n%s is currently set to %s\\n"  \
-          "$(_color_primary "${_setting_name}")"  \
-          "$(_color_primary "$(_settings_get_value "${_setting_name}")")"
-        return 0
-        ;;
-      reset|unset)
-        if [[ -z "${2:-}" ]]
-        then
-          _exit_1 _help "settings"
-        fi
-
-        _settings_unset "${2:-}"
-        return 0
-        ;;
-      *)
-        local _setting_name=
-        if [[ -n "${1:-}" ]]
-        then
-          _setting_name="$(_settings_identify "${1}")"
-        fi
-
-        if [[ -n "${_setting_name:-}" ]]
-        then
-          if [[ -n "${2:-}" ]]
-          then
-            _settings_set "${_setting_name}" "${2}"
-          else
-            _settings_prompt "${_setting_name}"
-          fi
-        else
-          _settings_prompt
-        fi
-
-        return 0
-        ;;
-    esac
-
-    shift
-  done
-}
-_alias_subcommand "settings" "config"
-_alias_subcommand "settings" "set"
-
 # shell  ################################################################ shell
 
 describe "shell" <<HEREDOC
@@ -15271,8 +14560,737 @@ _version() {
 }
 
 ###############################################################################
-# Call Deferred Command                                   Call Deferred Command
+# Call Deferred Command: Group 2                 Call Deferred Command: Group 2
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
-_call_deferred_command
+_call_deferred_command --group 2
+
+###############################################################################
+# Subcommands: Group 3                                     Subcommands: Group 3
+# --------------------                                     --------------------
+###############################################################################
+# --------------------------------------------------------------------------- #
+
+# settings ########################################################### settings
+
+describe "settings" <<HEREDOC
+Usage:
+  ${_ME} set [<name> [<value>] | <number> [<value>]]
+  ${_ME} settings colors [<number> | themes]
+  ${_ME} settings edit
+  ${_ME} settings get   (<name> | <number>)
+  ${_ME} settings list  [--long]
+  ${_ME} settings set   (<name> | <number>) <value>
+  ${_ME} settings show  (<name> | <number>)
+  ${_ME} settings unset (<name> | <number>)
+
+Subcommands:
+  (default)  Open the settings prompt, to <name> or <number>, if present.
+             When <value> is also present, assign <value> to the setting.
+  colors     Print a table of available colors and their xterm color numbers.
+             When <number> is provided, print the number in its color.
+             \`settings colors themes\` prints a list of installed themes.
+  edit       Open the \`${_ME}\` configuration file in \`\$EDITOR\`.
+  get        Print the value of a setting.
+  list       List information about available settings.
+  set        Assign <value> to a setting.
+  show       Print the help information and current value of a setting.
+  unset      Unset a setting, returning it to the default value.
+
+Description:
+  Configure \`${_ME}\`. Use \`${_ME} settings set\` to customize a setting and
+  \`${_ME} settings unset\` to restore the default for a setting.
+
+  Use the \`${_ME} set\` alias to quickly assign values to settings:
+
+    ${_ME} set color_theme blacklight
+    ${_ME} set limit 40
+
+Examples:
+  ${_ME} settings
+  ${_ME} set 5 "org"
+  ${_ME} set color_primary 105
+  ${_ME} set unset color_primary
+  ${_ME} set color_secondary unset
+  ${_ME} settings colors
+  ${_ME} settings colors 105
+  ${_ME} set limit 15
+
+Alias: \`set\`
+HEREDOC
+_settings() {
+  # Usage: _settings_colors [<number>] [themes]
+  _settings_colors() {
+    # Usage: _settings_colors_print <number>
+    _settings_colors_print() {
+      printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
+    }
+
+    if [[ -n "${1:-}" ]]
+    then
+      if [[ "${1}" == "themes" ]]
+      then
+        printf "%s\\n" "${_NB_COLOR_THEMES[@]}"
+      else
+        [[ "${1}" =~ [[:digit:]] ]] || _exit_1 \
+          printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
+
+        _settings_colors_print "${1:-}"
+        printf "\\n"
+      fi
+    else
+      local i
+
+      for ((i=0; i < 256; i++))
+      do
+        if ((i)) && ! ((i % 16))
+        then
+          printf "\\n"
+        fi
+
+        _settings_colors_print "${i}"
+      done
+
+      printf "\\n"
+    fi
+  }
+
+  # Usage: _settings_get_value (<number> | <name>)
+  _settings_get_value() {
+    local _setting_name=
+    _setting_name="$(_settings_identify "${1:-}")" &&
+      _env | grep "${_setting_name}" | cut -d= -f2
+  }
+
+  # Usage: _settings_identify [--id] (<number> | <name>)
+  _settings_identify() {
+    local _get_id=0
+    local _id_or_name=
+
+    if [[ -z "${1:-}" ]]
+    then
+      return 1
+    elif [[ "${1}" == "--id" ]]
+    then
+      _get_id=1
+      [[ -z "${2:-}" ]] && return 1
+      _id_or_name="${2:-}"
+    else
+      _id_or_name="${1}"
+    fi
+
+    case "${_id_or_name}" in
+      1|*auto*|*AUTO*|*sync*|*SYNC*)
+        ((_get_id)) && printf "1"   || printf "NB_AUTO_SYNC"
+        return 0
+        ;;
+      2|*primary*|*PRIMARY*)
+        ((_get_id)) && printf "2"   || printf "NB_COLOR_PRIMARY"
+        return 0
+        ;;
+      3|*secondary*|*SECONDARY*)
+        ((_get_id)) && printf "3"   || printf "NB_COLOR_SECONDARY"
+        return 0
+        ;;
+      4|*color*theme*|*COLOR*THEME*|*scheme*|theme*)
+        ((_get_id)) && printf "4"   || printf "NB_COLOR_THEME"
+        return 0
+        ;;
+      5|*ext*|*EXT*)
+        ((_get_id)) && printf "5"   || printf "NB_DEFAULT_EXTENSION"
+        return 0
+        ;;
+      6|*editor*|*EDITOR*)
+        ((_get_id)) && printf "6"   || printf "EDITOR"
+        return 0
+        ;;
+      7|*encrypt*|*ENCRYPT*)
+        ((_get_id)) && printf "7"   || printf "NB_ENCRYPTION_TOOL"
+        return 0
+        ;;
+      8|*footer*|*FOOTER*)
+        ((_get_id)) && printf "8"   || printf "NB_FOOTER"
+        return 0
+        ;;
+      9|*header*|*HEADER*)
+        ((_get_id)) && printf "9"   || printf "NB_HEADER"
+        return 0
+        ;;
+      10|*limit*|*LIMIT*)
+        ((_get_id)) && printf "10"  || printf "NB_LIMIT"
+        return 0
+        ;;
+      11|*dir*|*DIR*)
+        ((_get_id)) && printf "11"  || printf "NB_DIR"
+        return 0
+        ;;
+      12|*syntax*|*SYNTAX*)
+        ((_get_id)) && printf "12"  || printf "NB_SYNTAX_THEME"
+        return 0
+        ;;
+      *)
+        _warn                                   \
+          printf "Setting not found: %s\\n"     \
+          "$(_color_primary "${_id_or_name}")"  &&
+            return 1
+        ;;
+    esac
+  }
+
+  # Usage: _settings_prompt [<id> | <name>]
+  _settings_prompt() {
+    local _setting_name="${1:-}"
+
+    local _padding
+    _padding="$(_print_padding "-----------" "${_COLUMNS}")"
+
+    printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
+    _print_line "$(printf "%-${_COLUMNS}s" '.')"
+
+    if [[ -n "${_setting_name}" ]]
+    then
+      _setting_name="$(_settings_identify "${_setting_name}")"
+    else
+      cat <<HEREDOC
+$(_settings list)
+
+Enter the number or name of the setting to change, or $(_color_primary 'q') to quit.
+HEREDOC
+
+      while true
+      do
+        IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Number or Name: ")" __setting
+
+        if [[ -n "${__setting}" ]]
+        then
+          case "${__setting}" in
+            q|quit|exit)
+              printf "Exiting...\\n"
+              return 0
+              ;;
+            *)
+              _setting_name="$(
+                _settings_identify "${__setting}"
+              )" && break
+              ;;
+          esac
+        fi
+      done
+    fi
+
+    printf "\\n"
+
+    if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]] ||
+       [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
+    then
+      printf "%s\\n\\n" "$(_settings_colors)"
+    fi
+
+    _settings show "${_setting_name}"
+
+    local _hi_unset= && _hi_unset="$(_color_primary 'unset')"
+    local _hi_q=     && _hi_q="$(_color_primary 'q')"
+
+    cat <<HEREDOC
+
+Enter a new value, ${_hi_unset} to set to the default value, or ${_hi_q} to quit.
+HEREDOC
+
+    while true
+    do
+      IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
+
+      if [[ -n "${__value}" ]]
+      then
+        case "${__value}" in
+          q|quit|exit)
+            printf "Exiting...\\n"
+            return 0
+            ;;
+          unset|default|reset)
+            _settings_unset "${_setting_name}" || continue
+            break
+            ;;
+          *)
+            _settings_set "${_setting_name}" "${__value}" || continue
+            break
+            ;;
+        esac
+      fi
+    done
+  }
+
+  # Usage: _settings_set (<number> | <name>) <value>
+  _settings_set() {
+    local _attribution=
+    _attribution="# Set by \`${_ME}\` • $(date)"
+    local _entry=
+    local _setting_name=
+    local _stripped=
+    local _value=
+
+    _setting_name="$(_settings_identify "${1:-}")"  &&
+      if _contains "${2:-}" "unset" "default" "reset"
+      then
+        _settings_unset "${_setting_name}" && return 0
+      fi &&
+      _settings_validate_value "${_setting_name}" "${2:-}" &&
+      {
+        _value="${2:-}"
+        if [[ "${_value}" =~ ^~ ]]
+        then
+          # shellcheck disable=SC2016
+          _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
+        fi
+      } &&
+      if [[ "${_setting_name}" == "EDITOR" ]]
+      then
+        _entry="export ${_setting_name}=\"${_value}\" ${_attribution}"
+      else
+        _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}"
+      fi &&
+      _settings_unset "${_setting_name}" > /dev/null 2>&1     &&
+      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"         &&
+      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]]  ||
+         [[ "${_setting_name}" == "NB_COLOR_SECONDARY"    ]]
+      then
+        _setting_name="$(_tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
+        _value="$(_tput setaf "${_value}")${_value}${_TPUT_SGR0}"
+      elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
+      then
+        local _new_color=
+        _new_color="$(
+          NB_COLOR_THEME="${_value}"  \
+          NB_COLOR_PRIMARY=''         \
+            "${_MY_PATH}" settings get NB_COLOR_PRIMARY
+        )"
+        _setting_name="$(_tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
+        _value="$(_tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
+      else
+        _setting_name="$(_color_primary "${_setting_name}")"  \
+        _value="$(_color_primary "${_value}")"
+      fi &&
+      printf "%s set to %s\\n"  \
+        "${_setting_name}"      \
+        "${_value}"
+  }
+
+  # Usage: _settings_unset (<number> | <name>)
+  _settings_unset() {
+    local _setting_name=
+    local _default_value=
+
+    _setting_name="$(_settings_identify "${1:-}")"      &&
+      _sed_i                                            \
+        -e "s/^export ${_setting_name}.*Added by.*$//g" \
+        -e "s/^export ${_setting_name}.*Set by.*$//g"   \
+        "${NBRC_PATH}" &&
+        {
+          _stripped=$(<"${NBRC_PATH}")
+          printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
+        } && {
+          _default_value="$(
+            eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
+          )"
+
+          if [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
+          then
+            _setting_name="$(_color_primary "${_setting_name}")"
+            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+          elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY"  ]]
+          then
+            _setting_name="$(_tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
+            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+          elif [[ "${_setting_name}" == "NB_COLOR_THEME"    ]]
+          then
+            _new_hi_color="$(
+              NB_COLOR_THEME="nb" NB_COLOR_PRIMARY='' \
+                "${_MY_PATH}" settings get NB_COLOR_PRIMARY
+            )"
+
+            _setting_name="$(_tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
+            _default_value="$(_tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
+          else
+            _setting_name="$(_color_primary "${_setting_name}")"
+            _default_value="$(_color_primary "${_default_value}")"
+          fi
+        } &&
+        printf "%s restored to the default: %s\\n"  \
+          "${_setting_name}"                        \
+          "${_default_value}"
+  }
+
+  # Usage: _settings_validate_value (<number> | <name>) <value>
+  _settings_validate_value() {
+    if [[ "${1:-}" == 'EDITOR'                ]] ||
+       [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
+    then
+      if [[ -n "${2:-}" ]]
+      then
+        return 0
+      else
+        _warn printf "%s requires a value.\\n" "${1:-}" &&
+          return 1
+      fi
+    elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
+         [[ "${1:-}" == 'NB_FOOTER'     ]]
+    then
+      if [[ "${2:-}" =~ ^0$|^1$         ]]
+      then
+        return 0
+      else
+        _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}" &&
+          return 1
+      fi
+    elif [[ "${1:-}" == 'NB_HEADER'     ]]
+    then
+      if [[ "${2:-}" =~ ^0$|^1$|^2$|^3$ ]]
+      then
+        return 0
+      else
+        _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}" &&
+          return 1
+      fi
+    elif [[ "${1:-}" == 'NB_LIMIT'      ]]
+    then
+      if [[ "${2:-}" =~ ^[0-9]+$        ]]
+      then
+        return 0
+      else
+        _warn printf "%s must be a number.\\n" "${1}" &&
+          return 1
+      fi
+    elif [[ "${1:-}" == 'NB_DIR'        ]]
+    then
+      if [[ -z "${2:-}"   ]] ||
+         [[ "${2}" == "/" ]] ||
+         {
+          [[ -e "${2}"   ]] &&
+          [[ ! -w "${2}" ]]
+         }
+      then
+        _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}" &&
+          return 1
+      fi
+    elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL'  ]]
+    then
+      if [[ "${2:-}" =~ ^openssl$|^gpg$       ]]
+      then
+        return 0
+      else
+        _warn \
+          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n" &&
+            return 1
+      fi
+    elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
+         [[ "${1:-}" == 'NB_COLOR_SECONDARY'  ]]
+    then
+      if [[ "${2:-}" =~ ^[0-9] ]]
+      then
+        return 0
+      else
+        _warn printf "%s must be a number.\\n" "${1}" && return 1
+      fi
+    elif [[ "${1:-}" == 'NB_COLOR_THEME'      ]]
+    then
+      if _contains "${2:-}" "${_NB_COLOR_THEMES[@]}"
+      then
+        return 0
+      else
+        _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+          return 1
+      fi
+    elif [[ "${1:-}" == 'NB_SYNTAX_THEME' ]]
+    then
+      if ! hash bat 2>/dev/null
+      then
+        printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+      else
+        local _theme_list
+        _theme_list=($(bat --list-themes --color never))
+
+        if _contains "${2:-}" "${_theme_list[@]}"
+        then
+          return 0
+        else
+          _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+          return 1
+        fi
+      fi
+    else
+      return 0
+    fi
+  }
+
+  local _settings_list_items=()
+  local _settings_help_items=()
+
+  _settings_list_items+=("$(_color_brackets '1')  auto_sync")
+  _settings_help_items+=("\
+    $(_color_secondary " ---------")
+     By default, operations that trigger a git commit like \`add\`, \`edit\`,
+     and \`delete\` will sync notebook changes to the remote repository, if
+     one is set. To disable this behavior, set this to \"0\".
+
+     • Default Value: $(_color_primary "1")")
+
+  _settings_list_items+=("$(_color_brackets '2')  color_primary")
+  _settings_help_items+=("\
+    $(_color_secondary " -------------")
+     The primary color used to highlight identifiers and messages. Often this
+     can be set to an xterm color number between 0 and 255. Some terminals
+     support many more colors.
+
+     • Default Value: $(_color_primary "68") (blue) for 256 color terminals,
+                      $(_color_primary "4")  (blue) for  8  color terminals.")
+
+  _settings_list_items+=("$(_color_brackets '3')  color_secondary")
+  _settings_help_items+=("\
+    $(_color_secondary " ---------------")
+     The color used for lines and footer elements. Often this can be set to an
+     xterm color number between 0 and 255. Some terminals support many more
+     colors.
+
+     • Default Value: $(_color_primary "8")")
+
+  _settings_list_items+=("$(_color_brackets '4')  color_theme")
+  _settings_help_items+=("\
+    $(_color_secondary " -----------")
+     The color theme.
+
+     To view screenshots of the built-in themes, visit:
+
+         $(_color_primary "https://git.io/nb-docs-color-themes")
+
+     \`${_ME}\` supports custom, user-defined themes. To learn more, run:
+
+         $(_color_primary "${_ME} help --colors")
+
+     To change the syntax highlighting theme, use:
+
+         $(_color_primary "${_ME} set syntax_theme")
+
+     • Available themes:
+
+$(for __theme in "${_NB_COLOR_THEMES[@]}"
+  do
+    printf "         %s\\n" "$(_color_primary "${__theme}")"
+  done)
+
+     • Default Value: $(_color_primary "nb")")
+
+  _settings_list_items+=("$(_color_brackets '5')  default_extension")
+  _settings_help_items+=("\
+    $(_color_secondary " -----------------")
+     The default extension to use for note files. Change to \"org\" for Emacs
+     Org mode files, \"rst\" for reStructuredText, \"txt\" for plain text, or
+     whatever you prefer.
+
+     • Default Value: $(_color_primary "md")")
+
+  _settings_list_items+=("$(_color_brackets '6')  editor")
+  _settings_help_items+=("\
+    $(_color_secondary " ------")
+     The command line text editor used by \`${_ME}\`.
+
+     • Example Values:
+
+$(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
+  do
+    if _command_exists "${__editor}"
+    then
+      printf "         %s\\n" "$(_color_primary "${__editor}")"
+    fi
+  done)")
+
+  _settings_list_items+=("$(_color_brackets '7')  encryption_tool")
+  _settings_help_items+=("\
+    $(_color_secondary " ---------------")
+     The tool used for encrypting notes.
+
+     • Supported Values: $(_color_primary "openssl"), $(_color_primary "gpg")
+     • Default Value:    $(_color_primary "openssl")")
+
+  _settings_list_items+=("$(_color_brackets '8')  footer")
+  _settings_help_items+=("\
+    $(_color_secondary " ------")
+     By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
+     To hide this footer, set this to \"0\".
+
+     • Default Value: $(_color_primary "1")")
+
+  _settings_list_items+=("$(_color_brackets '9')  header")
+  _settings_help_items+=("\
+    $(_color_secondary " ------")
+     By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
+     Set the alignment, or hide the header with \"0\".
+
+     • Supported Values:
+
+       $(_color_primary "0")  Hide Header
+       $(_color_primary "1")  Dynamic Alignment
+            - Left justified when list is shorter than terminal width.
+            - Center aligned when list is longer than terminal width.
+       $(_color_primary "2")  Center Aligned (default)
+       $(_color_primary "3")  Left Justified
+
+     • Default Value: $(_color_primary "2")")
+
+  _settings_list_items+=("$(_color_brackets '10') limit")
+  _settings_help_items+=("\
+    $(_color_secondary " -----")
+     The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
+
+     • Default Value: $(_color_primary "20")")
+
+  _settings_list_items+=("$(_color_brackets '11') nb_dir")
+  _settings_help_items+=("\
+    $(_color_secondary " ------")
+     The location of the directory that contains the notebooks.
+
+     For example, to sync all notebooks with Dropbox, create a folder at
+     \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
+
+     • Default Value: $(_color_primary '~/.nb')")
+
+  _settings_list_items+=("$(_color_brackets '12') syntax_theme")
+  _settings_help_items+=("\
+    $(_color_secondary " ------------")
+     The syntax highlighting theme. View examples with:
+
+         $(_color_primary 'bat --list-themes')
+
+     $(if ! hash "bat" 2>/dev/null
+       then
+         printf "Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
+       else
+         printf "• Available themes:\\n"
+         printf "\\n"
+
+         for __theme in $(bat --list-themes --color never)
+        do
+          printf "         %s\\n" "$(_color_primary "${__theme}")"
+        done
+      fi)
+
+     • Default Value: $(_color_primary 'base16')")
+
+  while ((${#}))
+  do
+    local __arg="${1:-}"
+
+    case "${__arg}" in
+      color|colors)
+        _settings_colors "${2:-}"
+        return 0
+        ;;
+      edit)
+        _edit_file "${NBRC_PATH}" --no-wait
+        return 0
+        ;;
+      get)
+        if [[ -z "${2:-}" ]]
+        then
+          _exit_1 _help settings
+        fi
+
+        _settings_get_value "${2:-}"
+        return 0
+        ;;
+      list)
+        if [[ "${2:-}" == "--long" ]]
+        then
+          local _counter=0
+
+          for __setting in "${_settings_list_items[@]}"
+          do
+            ((_counter)) && printf "\\n"
+            _counter="$((_counter+1))"
+
+            _settings show "${_counter}"
+          done
+        else
+          printf "%s\\n" "${_settings_list_items[@]}"
+        fi
+
+        return 0
+        ;;
+      set)
+        if [[ -z "${2:-}" ]] || [[ -z "${3:-}" ]]
+        then
+          _exit_1 _help "settings"
+        fi
+
+        _settings_set "${2:-}" "${3:-}"
+        return 0
+        ;;
+      show|help|about|info|more)
+        if [[ -z "${2:-}" ]]
+        then
+          _exit_1 _help "settings"
+        fi
+
+        local _setting_id=
+        _setting_id="$(_settings_identify --id "${2:-}")"
+
+        local _setting_name=
+        _setting_name="$(_settings_identify "${2:-}")"
+
+        local _index=
+        _index="$((_setting_id-1))"
+
+        printf "%s\\n%s\\n"                       \
+          "${_settings_list_items[${_index}]}"    \
+          "${_settings_help_items[${_index}]}"
+
+        printf "\\n%s is currently set to %s\\n"  \
+          "$(_color_primary "${_setting_name}")"  \
+          "$(_color_primary "$(_settings_get_value "${_setting_name}")")"
+        return 0
+        ;;
+      reset|unset)
+        if [[ -z "${2:-}" ]]
+        then
+          _exit_1 _help "settings"
+        fi
+
+        _settings_unset "${2:-}"
+        return 0
+        ;;
+      *)
+        local _setting_name=
+        if [[ -n "${1:-}" ]]
+        then
+          _setting_name="$(_settings_identify "${1}")"
+        fi
+
+        if [[ -n "${_setting_name:-}" ]]
+        then
+          if [[ -n "${2:-}" ]]
+          then
+            _settings_set "${_setting_name}" "${2}"
+          else
+            _settings_prompt "${_setting_name}"
+          fi
+        else
+          _settings_prompt
+        fi
+
+        return 0
+        ;;
+    esac
+
+    shift
+  done
+}
+_alias_subcommand "settings" "config"
+_alias_subcommand "settings" "set"
+
+###############################################################################
+# Call Deferred Command: Group 3                 Call Deferred Command: Group 3
+###############################################################################
+# --------------------------------------------------------------------------- #
+
+_call_deferred_command --group 3
