@@ -7801,9 +7801,9 @@ _call_deferred_command() {
   local _group="${2:-}"
 
   if [[ "${_group:-}" -eq 2 ]] &&
-     _contains "${_DEFERRED_COMMAND[0]:-}" "_config" "_help" "_helpers"     \
-       "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status" \
-       "_sync" "_todo" "_todos" "_update" "_upgrade"
+     _contains "${_DEFERRED_COMMAND[0]:-}" "_config" "_h" "_help"   \
+       "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" \
+       "_shell" "_status" "_sync" "_todo" "_todos" "_update" "_upgrade"
   then
     return 0
   fi
