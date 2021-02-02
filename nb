@@ -12624,8 +12624,19 @@ _show() {
         --page "${_current_page}"         \
         --with-pinned
     } | {
+      local _truncate_length=
+
+      if [[ "${BROWSER:-}" =~ lynx ]]
+      then
+        _truncate_length="$((_COLUMNS - 9))"
+      else
+        _truncate_length="$((_COLUMNS - 1))"
+      fi
+
       while read -r __list_item
       do
+        __list_item="${__list_item:0:${_truncate_length}}"
+
         if [[ "${__list_item:-}" =~ ^0\ items. ]]
         then
           printf "%s<br/>\\n" "${__list_item}"
