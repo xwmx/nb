@@ -7801,7 +7801,9 @@ _call_deferred_command() {
   local _group="${2:-}"
 
   if [[ "${_group:-}" -eq 2 ]] &&
-     _contains "${_DEFERRED_COMMAND[0]:-}" "_settings"
+     _contains "${_DEFERRED_COMMAND[0]:-}" "_config" "_helpers" "_set"  \
+       "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status"    \
+       "_sync" "_todo" "_todos" "_update" "_upgrade"
   then
     return 0
   fi
@@ -10610,131 +10612,6 @@ $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
   fi
 }
 
-# helpers ############################################################# helpers
-
-describe "helpers" <<HEREDOC
-Usage:
-  ${_ME} helpers <name> [<options≥...]
-
-Description:
-  Call helper functions.
-HEREDOC
-_helpers() {
-  local _name="${1:-}"
-  local _options=("${@:2}")
-
-  case "${_name:-}" in
-    *browser*)
-      _web_browser                    "${_options[@]:-}"
-      ;;
-    decrypt*)
-      _decrypt_file                   "${_options[@]:-}"
-      ;;
-    download*)
-      _download_from                  "${_options[@]:-}"
-      ;;
-    edit*)
-      _edit_file                      "${_options[@]:-}"
-      ;;
-    encrypt*)
-      _encrypt_file                   "${_options[@]:-}"
-      ;;
-    *archive*)
-      _file_is_archive                "${_options[@]:-}"
-      ;;
-    *audio*)
-      _file_is_audio                  "${_options[@]:-}"
-      ;;
-    *bookmark*)
-      _file_is_bookmark               "${_options[@]:-}"
-      ;;
-    *document*)
-      _file_is_document               "${_options[@]:-}"
-      ;;
-    *encrypted*)
-      _file_is_encrypted              "${_options[@]:-}"
-      ;;
-    *image*)
-      _file_is_image                  "${_options[@]:-}"
-      ;;
-    *text*)
-      _file_is_text                   "${_options[@]:-}"
-      ;;
-    *video*)
-      _file_is_video                  "${_options[@]:-}"
-      ;;
-    *content*)
-      _get_content                    "${_options[@]:-}"
-      ;;
-    *folder*id*)
-      _get_folder_id_path             "${_options[@]:-}"
-      ;;
-    *hash*)
-      _get_hash                       "${_options[@]:-}"
-      ;;
-    *http*)
-      _get_http_status                "${_options[@]:-}"
-      ;;
-    *unique*basename*|*unique*relative*)
-      _get_unique_relative_path       "${_options[@]:-}"
-      ;;
-    *unique*path*)
-      _get_unique_path                "${_options[@]:-}"
-      ;;
-    *highlight*|*syntax*)
-      _highlight_syntax_if_available  "${_options[@]:-}"
-      ;;
-    *interactive*|*input*)
-      _interactive_input              "${_options[@]:-}"
-      ;;
-    join)
-      _join                           "${_options[@]:-}"
-      ;;
-    less*|*prompt)
-      _less_prompt                    "${_options[@]:-}"
-      ;;
-    line*wrap*off|unwrap)
-      _wrap off                       "${_options[@]:-}"
-      ;;
-    line*wrap*on|wrap)
-      _wrap on                        "${_options[@]:-}"
-      ;;
-    list*files)
-      _list_files                     "${_options[@]:-}"
-      ;;
-    *line)
-      _print_line                     "${_options[@]:-}"
-      ;;
-    *norm*|*options*)
-      _print_normalized_options       "${_options[@]:-}"
-      ;;
-    *padding)
-      _print_padding                  "${_options[@]:-}"
-      ;;
-    *print*welcome|welcome)
-      _print_welcome                  "${_options[@]:-}"
-      ;;
-    *selector*folder*)
-      _selector_resolve_folders       "${_options[@]:-}"
-      ;;
-    *selector*path*)
-      _selector_resolve_path          "${_options[@]:-}"
-      ;;
-    spinner)
-      _spinner                        "${_options[@]:-}"
-      ;;
-    *email)
-      _string_is_email                "${_options[@]:-}"
-      ;;
-    *url)
-      _string_is_url                  "${_options[@]:-}"
-      ;;
-    *)
-      _exit_1 _help "helpers"
-      ;;
-  esac
-}
-
 # history ############################################################# history
 
 describe "history" <<HEREDOC
@@ -11586,377 +11463,6 @@ _pin() {
       _git checkpoint "${_notebook_path}" "[nb] Pinned: ${_relative_path}"
 
       printf "Pinned: %s\\n" "$(_show "${_selector}" --info-line)"
-      ;;
-  esac
-}
-
-# plugins ############################################################# plugins
-
-describe "plugins" <<HEREDOC
-Usage:
-  ${_ME} plugins [<name>] [--paths]
-  ${_ME} plugins install [<path> | <url>] [--force]
-  ${_ME} plugins uninstall <name> [--force]
-
-Options:
-  --force  Skip the confirmation prompt.
-  --paths  Print the full path to each plugin.
-
-Subcommands:
-  (default)  List plugins.
-  install    Install a plugin from a <path> or <url>.
-  uninstall  Uninstall the specified plugin.
-
-Description:
-  Manage plugins and themes.
-
-Plugin Extensions:
-  .nb-theme   Plugins defining color themes.
-  .nb-plugin  Plugins defining new subcommands and functionality.
-HEREDOC
-_plugins() {
-  local _basename=
-  local _force=0
-  local _name=
-  local _path=
-  local _print_paths=0
-  local _subcommand=
-  local _url=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --force)
-        _force=1
-        ;;
-      --path*)
-        _print_paths=1
-        ;;
-      *)
-        if [[ "${__arg}" =~ ^install$|^uninstall$ ]]
-        then
-          _subcommand="${__arg}"
-        elif [[ "${_subcommand}" == "install" ]]
-        then
-          if [[ "${__arg:-}" =~ ^http|^file\: ]]
-          then
-            _url="${__arg}"
-          else
-            _path="${__arg}"
-          fi
-        else
-          _name="${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  case "${_subcommand}" in
-    install)
-      [[ ! -e "${NB_DIR}/.plugins"  ]] && mkdir "${NB_DIR}/.plugins"
-
-      if [[ -n "${_path:-}"         ]]
-      then
-        if ! [[ -f "${_path:-}"     ]] ||
-           ! [[ "${_path}" =~ nb\-  ]]
-        then
-          _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
-        fi
-
-        _basename="$(basename -- "${_path}")"
-
-        if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
-        then
-          _warn printf "Plugin already installed: %s\\n" "${_basename}"
-
-          if ! ((_force))
-          then
-            while true
-            do
-              IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
-
-              case ${__yn} in
-                [Yy]*)
-                  break
-                  ;;
-                *)
-                  printf "Exiting...\\n"
-                  exit 0
-                  ;;
-              esac
-            done
-          fi
-        fi
-
-        if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
-        then
-          printf "Plugin installed:\\n%s\\n" \
-            "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
-        else
-          _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
-        fi
-      else
-        _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
-
-        if [[ "${_url:-}" =~ https\:\/\/github.com ]]
-        then
-          _url="$(
-            printf "%s\\n" "${_url}"  \
-              | sed                   \
-                -e 's/\/blob//g'      \
-                -e 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
-          )"
-        fi
-
-        if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
-        then
-          printf "Plugin installed:\\n%s\\n" \
-            "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
-        else
-          _exit_1 printf "Unable to download and install: %s\\n"  "${_url}"
-        fi
-      fi
-      ;;
-    uninstall)
-      local _plugin_path
-
-      if ! _plugin_path="$(_plugins "${_name}" --paths 2>/dev/null)"  ||
-         [[ -z "${_plugin_path:-}" ]]                                 ||
-         ! [[ -f "${_plugin_path}" ]]
-      then
-        _exit_1 printf "Plugin not found: %s\\n" "$(_color_primary "${_name}")"
-      fi
-
-      if ! ((_force))
-      then
-        cat <<HEREDOC
-Uninstalling plugin. Warning: This will permanently delete the following file:
-$(_color_primary "${_plugin_path}")
-HEREDOC
-        while true
-        do
-          IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
-
-          case ${__yn} in
-            [Yy]*)
-              break
-              ;;
-            *)
-              printf "Exiting...\\n"
-              exit 0
-              ;;
-          esac
-        done
-      fi
-
-      if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:?}"
-      then
-        printf "Plugin successfully uninstalled:\\n%s\\n" \
-          "$(_color_primary "${_plugin_path}")"
-      else
-        _exit_1 printf "Unable to uninstall plugin:\\n%s\\n" "${_plugin_path}"
-      fi
-      ;;
-    *)
-      local _query="*nb-*"
-
-      if [[ -n "${_name}" ]]
-      then
-        _query="${_name}"
-      fi
-
-      if [[ ! -e "${NB_DIR}/.plugins" ]]
-      then
-        (return 1)
-      elif ((_print_paths))
-      then
-        # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
-        find "${NB_DIR}"/.plugins \
-          -type f                 \
-          -name "${_query}"       \
-          | grep .                \
-          | sort
-      else
-        find "${NB_DIR}"/.plugins \
-          -type f                 \
-          -name "${_query}"       \
-          -exec basename {} \;    \
-          | grep .                \
-          | sort
-      fi || if [[ -n "${_name:-}" ]]
-            then
-              _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
-            else
-              _exit_1 printf "No plugins found.\\n"
-            fi
-      ;;
-  esac
-}
-_alias_subcommand "plugins" "plugin"
-
-# remote ############################################################### remote
-
-describe "remote" <<HEREDOC
-Usage:
-  ${_ME} remote
-  ${_ME} remote remove
-  ${_ME} remote set <url> [-f | --force]
-
-Subcommands:
-  (default)     Print the remote URL for the notebook.
-  remove        Remove the remote URL from the notebook.
-  set           Set the remote URL for the notebook.
-
-Options:
-  -f, --force   Skip the confirmation prompt.
-
-Description:
-  Get, set, and remove the remote repository URL for the current notebook.
-
-Examples:
-  ${_ME} remote set https://github.com/example/example.git
-  ${_ME} remote remove
-HEREDOC
-_remote() {
-  local _existing_url=
-  local _force=0
-  local _remote_exists=0
-  local _subcommand=
-  local _url=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      -f|--force)
-        _force=1
-        ;;
-      *)
-        if [[ -z "${_subcommand}" ]]
-        then
-          _subcommand="${__arg}"
-        elif [[ "${_subcommand}" =~ ^set$|^add$ ]] &&
-             [[ -z "${_url}" ]]
-        then
-          _url="${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
-
-  if [[ "$(git -C "${_notebook_path}" remote get-url origin 2>/dev/null)" ]]
-  then
-    _remote_exists=1
-    _existing_url="$(git -C "${_notebook_path}" remote get-url origin)"
-  fi
-
-  case "${_subcommand}" in
-    remove|rm|unset)
-      if ((_remote_exists))
-      then
-        if ! ((_force))
-        then
-          while true
-          do
-            printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url}")"
-
-            IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
-
-            case ${__yn} in
-              [Yy]*)
-                break
-                ;;
-              *)
-                printf "Exiting...\\n"
-                exit 0
-                ;;
-            esac
-          done
-        fi
-
-        git -C "${_notebook_path}" remote rm origin &&
-          printf "Removed remote: %s\\n"            \
-            "$(_color_primary "${_existing_url}")"  &&
-              return 0
-      else
-        _exit_1 printf "No remote configured.\\n"
-      fi
-      ;;
-    set|add)
-      if [[ -z "${_url}" ]]
-      then
-        _exit_1 _help "remote"
-      fi
-
-      if ((_remote_exists)) && [[ "${_existing_url:-}" == "${_url:-}" ]]
-      then
-        _exit_1 printf "Remote already set to: %s\\n" \
-          "$(_color_primary "${_url}")"
-      fi
-
-      if ! ((_force))
-      then
-        while true
-        do
-          if ((_remote_exists))
-          then
-            printf "Updating remote for: %s\\n" \
-              "$(_color_primary "$(_notebooks current --name)")"
-
-            _print_line "Updating remote for: $(_notebooks current --name)"
-
-            printf "From: %s\\n" "${_existing_url}"
-            printf "To:   %s\\n" "$(_color_primary "${_url}")"
-          else
-            printf "Adding remote to: %s\\n" \
-              "$(_color_primary "$(_notebooks current --name)")"
-
-            _print_line "Adding remote to: $(_notebooks current --name)"
-
-            printf "URL: %s\\n" "$(_color_primary "${_url}")"
-          fi
-
-          _print_line "--------------"
-
-          IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
-
-          case ${__yn} in
-            [Yy]*)
-              break
-              ;;
-            *)
-              printf "Exiting...\\n"
-              exit 0
-              ;;
-          esac
-        done
-      fi
-
-      local _subcommand="add"
-
-      if ((_remote_exists))
-      then
-        _subcommand="set-url"
-      fi
-
-      git -C "${_notebook_path}" remote "${_subcommand}" origin "${_url}" &&
-        printf "Remote set to: %s\\n" "$(_color_primary "${_url}")"       &&
-          return 0
-      ;;
-    *)
-      if ((_remote_exists))
-      then
-        git -C "${_notebook_path}" remote get-url origin && return 0
-      else
-        _warn printf "No remote configured.\\n"
-        return 1
-      fi
       ;;
   esac
 }
@@ -12952,140 +12458,6 @@ _search() {
 }
 _alias_subcommand "search" "q"
 _alias_subcommand "search" "grep"
-
-# shell  ################################################################ shell
-
-describe "shell" <<HEREDOC
-Usage:
-  ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-
-Optons:
-  --clear-history  Clear the \`${_ME}\` shell history.
-
-Description:
-  Start the \`${_ME}\` interactive shell. Type "exit" to exit.
-
-  \`${_ME} shell\` recognizes all \`${_ME}\` subcommands and options, providing
-  a streamlined, distraction-free approach for working with \`${_ME}\`.
-
-  When <subcommand> is present, the command will run as the shell is opened.
-
-Example:
-  $ ${_ME} shell
-  ${_ME}> ls 3
-  [3] Example
-
-  ${_ME}> edit 3 --content "New content."
-  Updated [3] Example
-
-  ${_ME}> notebook
-  home
-
-  ${_ME}> exit
-  $
-HEREDOC
-_shell() {
-  HISTFILE="${NB_HIST:-${HOME}/.${_ME}_history}"
-  set -o history
-
-  local _initial_command=
-  local _prompt=
-  _prompt="$(_color_primary "${_ME}")$(_color_secondary ">") "
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --clear-history)
-        if [[ -e "${HISTFILE}" ]]
-        then
-          rm "${HISTFILE:?}"
-          printf "History cleared.\\n"
-          return 0
-        fi
-        ;;
-      *)
-        if [[ -n "${__arg}" ]]
-        then
-          _initial_command+=" ${__arg}"
-        fi
-        ;;
-    esac
-  done
-
-  printf "%s" "${_TPUT_COLOR_PRIMARY}"
-  cat <<HEREDOC
-__          _
-\ \   _ __ | |__
- \ \ | '_ \| '_ \\
- / / | | | | |_) |
-/_/  |_| |_|_.__/
-$(_color_secondary "------------------")
-$(_color_primary "${_ME} shell") started. Enter $(_color_primary "ls") to list notes and notebooks.
-Enter $(_color_primary "help") for usage information. Enter $(_color_primary "exit") to exit.
-HEREDOC
-
-  if [[ -n "${_initial_command:-}" ]]
-  then
-    eval "\"${_MY_PATH}\" ${_initial_command}"
-  fi
-
-  while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
-  do
-    history -s "${__input}"
-
-    if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
-    then
-      return 0
-    else
-      # Strip leading 'n', 'nb', or 'notes'.
-      local _normalized_input=
-      _normalized_input="$(
-        printf "%s\\n" "${__input}" \
-          | sed -e 's/^n$//'        \
-          | sed -e 's/^n //'        \
-          | sed -e 's/^nb$//'       \
-          | sed -e 's/^nb //'       \
-          | sed -e 's/^notes$//'    \
-          | sed -e 's/^notes //'
-      )"
-
-      if [[ "${_normalized_input}" =~ ^help   ]] ||
-         [[ "${_normalized_input}" =~ ^help\  ]] ||
-         [[ "${_normalized_input}" =~ ^h$     ]] ||
-         [[ "${_normalized_input}" =~ ^h\     ]]
-      then
-        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
-           [[ "${_normalized_input}" =~ ^printf\ .* ]]
-      then
-        eval "${_normalized_input}"
-      elif _command_name="$(
-        printf "%s\\n" "${_normalized_input}" \
-          | grep --only-matching --color=never \
-              -e '^code'    \
-              -e '^emacs'   \
-              -e '^gvim'    \
-              -e '^macdown' \
-              -e '^mate'    \
-              -e '^mvim'    \
-              -e '^nano'    \
-              -e '^nvim'    \
-              -e '^subl'    \
-              -e '^vim'
-      )"
-      then
-        _normalized_input="$(
-          printf "%s\\n" "${_normalized_input}" \
-            | sed -e "s/^${_command_name} //"
-        )"
-
-        eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
-      else
-        eval "\"${_MY_PATH}\" ${_normalized_input}" || :
-      fi
-    fi
-  done
-}
 
 # show · ############################################################### · show
 
@@ -14191,214 +13563,6 @@ Can't show archives. Export archive and expand to edit.\\n"
 _alias_subcommand "show" "s"
 _alias_subcommand "show" "view"
 
-# status ############################################################### status
-
-describe "status" <<HEREDOC
-Usage:
-  ${_ME} status
-
-Description:
-  Run \`git status\` in the current notebook.
-HEREDOC
-_status() {
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
-
-  git -C "${_notebook_path}" status
-}
-
-# sync ################################################################### sync
-
-describe "sync" <<HEREDOC
-Usage:
-  ${_ME} sync [-a | --all]
-
-Options:
-  -a, --all   Sync all unarchived notebooks.
-
-Description:
-  Sync the current local notebook with the remote repository.
-
-Private Repositories and Git Credentials:
-  Syncing with private repositories requires configuring git to not prompt
-  for credentials.
-
-  For repositories cloned over HTTPS, credentials can be cached with git.
-  For repositories cloned over SSH, keys can be added to the ssh-agent.
-
-  More Information:
-    https://github.com/xwmx/nb#private-repositories-and-git-credentials
-
-Sync Conflict Resolution:
-  When \`${_ME} sync\` encounters a conflict in a text file and can't merge
-  overlapping local and remote changes, both versions are saved in the
-  file, separated by git conflict markers. Use \`${_ME} edit\` to remove the
-  conflict markers and delete any unwanted text.
-
-  When \`${_ME} sync\` encounters a conflict in a binary file, such as an
-  encrypted note or bookmark, both versions of the file are saved in the
-  notebook as individual files, one with \`--conflicted-copy\` appended to
-  the filename.
-
-  More Information:
-    https://github.com/xwmx/nb#sync-conflict-resolution
-HEREDOC
-_sync() {
-  local _notebooks=()
-  local _sync_all=0
-
-  if [[ "${1:-}" =~ ^-a$|^--all$ ]]
-  then
-    _sync_all=1
-
-    local _notebook_names
-    _notebooks=($(_notebooks --names --no-color --unarchived))
-  else
-    _notebooks=($(_notebooks current))
-  fi
-
-  local _sync_successful=0
-  local _sync_started=0
-  local _syncable_count=0
-
-  for __notebook in "${_notebooks[@]:-}"
-  do
-    if [[ "${__notebook}" == "local"      ]] &&
-       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
-    then
-      NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-    else
-      NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
-    fi
-
-    if ((_sync_all))
-    then
-      _remote &>/dev/null || continue
-    else
-      _remote 1>/dev/null || {
-        cat <<HEREDOC
-
-Set the remote for the current notebook:
-
-  $(_color_primary "${_ME} remote set <url>")
-
-Set the remote for a notebook named "example":
-
-  $(_color_primary "${_ME} example:remote set <url>")
-
-HEREDOC
-        return 1
-      }
-    fi
-
-    if ! ((_sync_started))
-    then
-      printf "Syncing: "
-      _sync_started=1
-    fi
-
-    printf "%s..." "$(_color_primary "${__notebook}")"
-
-    local _notebook_sync_successful=0
-
-    _syncable_count="$((_syncable_count+1))"
-
-    if ((_sync_all))
-    then # sync without prompt in background
-      GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
-    else # sync with prompt in foreground
-      GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
-
-      _git sync "${NB_NOTEBOOK_PATH}"
-    fi && _notebook_sync_successful=1
-
-    if ! ((_notebook_sync_successful))            ||
-       _git dirty           "${NB_NOTEBOOK_PATH}" ||
-       _git out_of_sync     "${NB_NOTEBOOK_PATH}"
-    then
-      _exit_1 cat <<HEREDOC
-Sync failed.
-
-Reason unknown, but likely one of the following:
-
-- Authentication error or credentials not configured.
-- Network unavailable.
-- Misconfigured remote URL.
-
-Configuring Git Credentials:
-  https://github.com/xwmx/nb#private-repositories-and-git-credentials
-HEREDOC
-    fi
-  done && ((_syncable_count)) && _sync_successful=1
-
-  if ((_sync_successful))
-  then
-    printf "Done!\\n"
-  elif ! ((_syncable_count))
-  then
-    _exit_1 cat <<HEREDOC
-No unarchived notebooks with remotes found.
-
-Set the remote for the current notebook:
-
-  $(_color_primary "${_ME} remote set <url>")
-
-Set the remote for a notebook named "example":
-
-  $(_color_primary "${_ME} example:remote set <url>")
-
-HEREDOC
-  else
-    printf "\\n"
-
-    _exit_1 printf "Sync failed.\\n"
-  fi
-}
-
-# todos ################################################################# todos
-
-describe "todos" <<HEREDOC
-Usage:
-  ${_ME} todos [open | closed] [-a | --all]
-
-Options:
-  -a, --all  Search all unarchived notebooks.
-
-Description:
-  List todos.
-HEREDOC
-_todos() {
-  local _pattern='\- \[ \]|\- \[x\]'
-  local _search_all=0
-
-  while ((${#}))
-  do
-    case "${1:-}" in
-      -a|--all)
-        _search_all=1
-        ;;
-      closed)
-        _pattern='\- \[x\]'
-        ;;
-      open)
-        _pattern='\- \[ \]'
-        ;;
-    esac
-
-    shift
-  done
-
-  if ((_search_all))
-  then
-    _search "${_pattern}" --all
-  else
-    _search "${_pattern}"
-  fi | sed -e '/^$/d'
-}
-_alias_subcommand "todos" "todo"
-
 # unpin ################################################################# unpin
 
 describe "unpin" <<HEREDOC
@@ -14415,112 +13579,6 @@ HEREDOC
 _unpin() {
   _pin unpin "${@:-}"
 }
-
-# update ############################################################### update
-
-describe "update" <<HEREDOC
-Usage:
-  ${_ME} update
-
-Description:
-  Update \`${_ME}\` to the latest version. You will be prompted for
-  your password if administrator privileges are required.
-
-  If \`${_ME}\` was installed using a package manager like npm or
-  Homebrew, use the package manager's upgrade functionality instead
-  of this command.
-HEREDOC
-_update() {
-  local _current_path
-  _current_path="${BASH_SOURCE[0]}"
-
-  if [[ -n "${_current_path}" ]]
-  then
-    if [[ -L "${_current_path}" ]]
-    then
-      if hash "realpath" 2>/dev/null
-      then
-        _current_path="$(realpath "${_current_path}")"
-      else
-        _current_path="$(readlink "${_current_path}")"
-      fi
-    fi
-  fi
-
-  if hash npm 2>/dev/null         &&
-     npm list | grep -q notes.sh  &&
-     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
-  then # installed with npm
-    cat <<HEREDOC
-Installed with npm. To update, run:
-  npm update -g notes.sh
-HEREDOC
-  elif hash npm 2>/dev/null     &&
-       npm list | grep -q nb.sh &&
-       [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
-  then # installed with npm
-    cat <<HEREDOC
-Installed with npm. To update, run:
-  npm update -g nb.sh
-HEREDOC
-  elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
-       [[ "${_current_path}" =~ Cellar  ]]
-  then
-    cat <<HEREDOC
-Installed with Homebrew. To update, run:
-  brew upgrade xwmx/taps/nb
-HEREDOC
-  else
-    local _nb_url="${_REPO_RAW_URL}/nb"
-
-    local _temp_file
-    _temp_file="$(mktemp)"
-
-    if ! _download_from "${_nb_url}" "${_temp_file}"
-    then
-      _exit_1 printf "Unable to download update.\\n"
-    fi
-
-    if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${_current_path}")" ]]
-    then
-      while true
-      do
-        printf "Updating %s in place. " "$(_color_primary "${_ME}")"
-
-        IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
-
-        case ${__yn} in
-          [Yy]*)
-            break
-            ;;
-          *)
-            printf "Exiting...\\n"
-            exit 0
-            ;;
-        esac
-      done
-
-      if [[ -w "${_current_path}" ]]
-      then
-        cat  "${_temp_file}" > "${_current_path}"
-      else
-        cat "${_temp_file}" | sudo tee "${_current_path}" > /dev/null
-      fi
-
-      printf "%s updated to the latest version.\\n" "$(_color_primary "${_ME}")"
-      exit 0
-    else
-      printf "Already at the latest version.\\n"
-    fi
-
-    if [[ -n "${_temp_file:-}" ]] && [[ -f "${_temp_file}" ]]
-    then
-      rm "${_temp_file:?}"
-    fi
-  fi
-}
-_alias_subcommand "update" "upgrade"
 
 # use ##################################################################### use
 
@@ -14571,6 +13629,503 @@ _call_deferred_command --group 2
 # --------------------                                     --------------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
+
+# helpers ############################################################# helpers
+
+describe "helpers" <<HEREDOC
+Usage:
+  ${_ME} helpers <name> [<options≥...]
+
+Description:
+  Call helper functions.
+HEREDOC
+_helpers() {
+  local _name="${1:-}"
+  local _options=("${@:2}")
+
+  case "${_name:-}" in
+    *browser*)
+      _web_browser                    "${_options[@]:-}"
+      ;;
+    decrypt*)
+      _decrypt_file                   "${_options[@]:-}"
+      ;;
+    download*)
+      _download_from                  "${_options[@]:-}"
+      ;;
+    edit*)
+      _edit_file                      "${_options[@]:-}"
+      ;;
+    encrypt*)
+      _encrypt_file                   "${_options[@]:-}"
+      ;;
+    *archive*)
+      _file_is_archive                "${_options[@]:-}"
+      ;;
+    *audio*)
+      _file_is_audio                  "${_options[@]:-}"
+      ;;
+    *bookmark*)
+      _file_is_bookmark               "${_options[@]:-}"
+      ;;
+    *document*)
+      _file_is_document               "${_options[@]:-}"
+      ;;
+    *encrypted*)
+      _file_is_encrypted              "${_options[@]:-}"
+      ;;
+    *image*)
+      _file_is_image                  "${_options[@]:-}"
+      ;;
+    *text*)
+      _file_is_text                   "${_options[@]:-}"
+      ;;
+    *video*)
+      _file_is_video                  "${_options[@]:-}"
+      ;;
+    *content*)
+      _get_content                    "${_options[@]:-}"
+      ;;
+    *folder*id*)
+      _get_folder_id_path             "${_options[@]:-}"
+      ;;
+    *hash*)
+      _get_hash                       "${_options[@]:-}"
+      ;;
+    *http*)
+      _get_http_status                "${_options[@]:-}"
+      ;;
+    *unique*basename*|*unique*relative*)
+      _get_unique_relative_path       "${_options[@]:-}"
+      ;;
+    *unique*path*)
+      _get_unique_path                "${_options[@]:-}"
+      ;;
+    *highlight*|*syntax*)
+      _highlight_syntax_if_available  "${_options[@]:-}"
+      ;;
+    *interactive*|*input*)
+      _interactive_input              "${_options[@]:-}"
+      ;;
+    join)
+      _join                           "${_options[@]:-}"
+      ;;
+    less*|*prompt)
+      _less_prompt                    "${_options[@]:-}"
+      ;;
+    line*wrap*off|unwrap)
+      _wrap off                       "${_options[@]:-}"
+      ;;
+    line*wrap*on|wrap)
+      _wrap on                        "${_options[@]:-}"
+      ;;
+    list*files)
+      _list_files                     "${_options[@]:-}"
+      ;;
+    *line)
+      _print_line                     "${_options[@]:-}"
+      ;;
+    *norm*|*options*)
+      _print_normalized_options       "${_options[@]:-}"
+      ;;
+    *padding)
+      _print_padding                  "${_options[@]:-}"
+      ;;
+    *print*welcome|welcome)
+      _print_welcome                  "${_options[@]:-}"
+      ;;
+    *selector*folder*)
+      _selector_resolve_folders       "${_options[@]:-}"
+      ;;
+    *selector*path*)
+      _selector_resolve_path          "${_options[@]:-}"
+      ;;
+    spinner)
+      _spinner                        "${_options[@]:-}"
+      ;;
+    *email)
+      _string_is_email                "${_options[@]:-}"
+      ;;
+    *url)
+      _string_is_url                  "${_options[@]:-}"
+      ;;
+    *)
+      _exit_1 _help "helpers"
+      ;;
+  esac
+}
+
+
+# plugins ############################################################# plugins
+
+describe "plugins" <<HEREDOC
+Usage:
+  ${_ME} plugins [<name>] [--paths]
+  ${_ME} plugins install [<path> | <url>] [--force]
+  ${_ME} plugins uninstall <name> [--force]
+
+Options:
+  --force  Skip the confirmation prompt.
+  --paths  Print the full path to each plugin.
+
+Subcommands:
+  (default)  List plugins.
+  install    Install a plugin from a <path> or <url>.
+  uninstall  Uninstall the specified plugin.
+
+Description:
+  Manage plugins and themes.
+
+Plugin Extensions:
+  .nb-theme   Plugins defining color themes.
+  .nb-plugin  Plugins defining new subcommands and functionality.
+HEREDOC
+_plugins() {
+  local _basename=
+  local _force=0
+  local _name=
+  local _path=
+  local _print_paths=0
+  local _subcommand=
+  local _url=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --force)
+        _force=1
+        ;;
+      --path*)
+        _print_paths=1
+        ;;
+      *)
+        if [[ "${__arg}" =~ ^install$|^uninstall$ ]]
+        then
+          _subcommand="${__arg}"
+        elif [[ "${_subcommand}" == "install" ]]
+        then
+          if [[ "${__arg:-}" =~ ^http|^file\: ]]
+          then
+            _url="${__arg}"
+          else
+            _path="${__arg}"
+          fi
+        else
+          _name="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  case "${_subcommand}" in
+    install)
+      [[ ! -e "${NB_DIR}/.plugins"  ]] && mkdir "${NB_DIR}/.plugins"
+
+      if [[ -n "${_path:-}"         ]]
+      then
+        if ! [[ -f "${_path:-}"     ]] ||
+           ! [[ "${_path}" =~ nb\-  ]]
+        then
+          _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
+        fi
+
+        _basename="$(basename -- "${_path}")"
+
+        if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
+        then
+          _warn printf "Plugin already installed: %s\\n" "${_basename}"
+
+          if ! ((_force))
+          then
+            while true
+            do
+              IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
+
+              case ${__yn} in
+                [Yy]*)
+                  break
+                  ;;
+                *)
+                  printf "Exiting...\\n"
+                  exit 0
+                  ;;
+              esac
+            done
+          fi
+        fi
+
+        if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
+        then
+          printf "Plugin installed:\\n%s\\n" \
+            "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
+        else
+          _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
+        fi
+      else
+        _basename="$(basename -- "${_url}" | tr -d '[:space:]')"
+
+        if [[ "${_url:-}" =~ https\:\/\/github.com ]]
+        then
+          _url="$(
+            printf "%s\\n" "${_url}"  \
+              | sed                   \
+                -e 's/\/blob//g'      \
+                -e 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
+          )"
+        fi
+
+        if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
+        then
+          printf "Plugin installed:\\n%s\\n" \
+            "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
+        else
+          _exit_1 printf "Unable to download and install: %s\\n"  "${_url}"
+        fi
+      fi
+      ;;
+    uninstall)
+      local _plugin_path
+
+      if ! _plugin_path="$(_plugins "${_name}" --paths 2>/dev/null)"  ||
+         [[ -z "${_plugin_path:-}" ]]                                 ||
+         ! [[ -f "${_plugin_path}" ]]
+      then
+        _exit_1 printf "Plugin not found: %s\\n" "$(_color_primary "${_name}")"
+      fi
+
+      if ! ((_force))
+      then
+        cat <<HEREDOC
+Uninstalling plugin. Warning: This will permanently delete the following file:
+$(_color_primary "${_plugin_path}")
+HEREDOC
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      if [[ -f "${_plugin_path}" ]] && rm "${_plugin_path:?}"
+      then
+        printf "Plugin successfully uninstalled:\\n%s\\n" \
+          "$(_color_primary "${_plugin_path}")"
+      else
+        _exit_1 printf "Unable to uninstall plugin:\\n%s\\n" "${_plugin_path}"
+      fi
+      ;;
+    *)
+      local _query="*nb-*"
+
+      if [[ -n "${_name}" ]]
+      then
+        _query="${_name}"
+      fi
+
+      if [[ ! -e "${NB_DIR}/.plugins" ]]
+      then
+        (return 1)
+      elif ((_print_paths))
+      then
+        # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+        find "${NB_DIR}"/.plugins \
+          -type f                 \
+          -name "${_query}"       \
+          | grep .                \
+          | sort
+      else
+        find "${NB_DIR}"/.plugins \
+          -type f                 \
+          -name "${_query}"       \
+          -exec basename {} \;    \
+          | grep .                \
+          | sort
+      fi || if [[ -n "${_name:-}" ]]
+            then
+              _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
+            else
+              _exit_1 printf "No plugins found.\\n"
+            fi
+      ;;
+  esac
+}
+_alias_subcommand "plugins" "plugin"
+
+# remote ############################################################### remote
+
+describe "remote" <<HEREDOC
+Usage:
+  ${_ME} remote
+  ${_ME} remote remove
+  ${_ME} remote set <url> [-f | --force]
+
+Subcommands:
+  (default)     Print the remote URL for the notebook.
+  remove        Remove the remote URL from the notebook.
+  set           Set the remote URL for the notebook.
+
+Options:
+  -f, --force   Skip the confirmation prompt.
+
+Description:
+  Get, set, and remove the remote repository URL for the current notebook.
+
+Examples:
+  ${_ME} remote set https://github.com/example/example.git
+  ${_ME} remote remove
+HEREDOC
+_remote() {
+  local _existing_url=
+  local _force=0
+  local _remote_exists=0
+  local _subcommand=
+  local _url=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      -f|--force)
+        _force=1
+        ;;
+      *)
+        if [[ -z "${_subcommand}" ]]
+        then
+          _subcommand="${__arg}"
+        elif [[ "${_subcommand}" =~ ^set$|^add$ ]] &&
+             [[ -z "${_url}" ]]
+        then
+          _url="${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+
+  if [[ "$(git -C "${_notebook_path}" remote get-url origin 2>/dev/null)" ]]
+  then
+    _remote_exists=1
+    _existing_url="$(git -C "${_notebook_path}" remote get-url origin)"
+  fi
+
+  case "${_subcommand}" in
+    remove|rm|unset)
+      if ((_remote_exists))
+      then
+        if ! ((_force))
+        then
+          while true
+          do
+            printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url}")"
+
+            IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+            case ${__yn} in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting...\\n"
+                exit 0
+                ;;
+            esac
+          done
+        fi
+
+        git -C "${_notebook_path}" remote rm origin &&
+          printf "Removed remote: %s\\n"            \
+            "$(_color_primary "${_existing_url}")"  &&
+              return 0
+      else
+        _exit_1 printf "No remote configured.\\n"
+      fi
+      ;;
+    set|add)
+      if [[ -z "${_url}" ]]
+      then
+        _exit_1 _help "remote"
+      fi
+
+      if ((_remote_exists)) && [[ "${_existing_url:-}" == "${_url:-}" ]]
+      then
+        _exit_1 printf "Remote already set to: %s\\n" \
+          "$(_color_primary "${_url}")"
+      fi
+
+      if ! ((_force))
+      then
+        while true
+        do
+          if ((_remote_exists))
+          then
+            printf "Updating remote for: %s\\n" \
+              "$(_color_primary "$(_notebooks current --name)")"
+
+            _print_line "Updating remote for: $(_notebooks current --name)"
+
+            printf "From: %s\\n" "${_existing_url}"
+            printf "To:   %s\\n" "$(_color_primary "${_url}")"
+          else
+            printf "Adding remote to: %s\\n" \
+              "$(_color_primary "$(_notebooks current --name)")"
+
+            _print_line "Adding remote to: $(_notebooks current --name)"
+
+            printf "URL: %s\\n" "$(_color_primary "${_url}")"
+          fi
+
+          _print_line "--------------"
+
+          IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+      fi
+
+      local _subcommand="add"
+
+      if ((_remote_exists))
+      then
+        _subcommand="set-url"
+      fi
+
+      git -C "${_notebook_path}" remote "${_subcommand}" origin "${_url}" &&
+        printf "Remote set to: %s\\n" "$(_color_primary "${_url}")"       &&
+          return 0
+      ;;
+    *)
+      if ((_remote_exists))
+      then
+        git -C "${_notebook_path}" remote get-url origin && return 0
+      else
+        _warn printf "No remote configured.\\n"
+        return 1
+      fi
+      ;;
+  esac
+}
 
 # settings ########################################################### settings
 
@@ -15287,6 +14842,454 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
 }
 _alias_subcommand "settings" "config"
 _alias_subcommand "settings" "set"
+
+# shell  ################################################################ shell
+
+describe "shell" <<HEREDOC
+Usage:
+  ${_ME} shell [<subcommand> [<options>...] | --clear-history]
+
+Optons:
+  --clear-history  Clear the \`${_ME}\` shell history.
+
+Description:
+  Start the \`${_ME}\` interactive shell. Type "exit" to exit.
+
+  \`${_ME} shell\` recognizes all \`${_ME}\` subcommands and options, providing
+  a streamlined, distraction-free approach for working with \`${_ME}\`.
+
+  When <subcommand> is present, the command will run as the shell is opened.
+
+Example:
+  $ ${_ME} shell
+  ${_ME}> ls 3
+  [3] Example
+
+  ${_ME}> edit 3 --content "New content."
+  Updated [3] Example
+
+  ${_ME}> notebook
+  home
+
+  ${_ME}> exit
+  $
+HEREDOC
+_shell() {
+  HISTFILE="${NB_HIST:-${HOME}/.${_ME}_history}"
+  set -o history
+
+  local _initial_command=
+  local _prompt=
+  _prompt="$(_color_primary "${_ME}")$(_color_secondary ">") "
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --clear-history)
+        if [[ -e "${HISTFILE}" ]]
+        then
+          rm "${HISTFILE:?}"
+          printf "History cleared.\\n"
+          return 0
+        fi
+        ;;
+      *)
+        if [[ -n "${__arg}" ]]
+        then
+          _initial_command+=" ${__arg}"
+        fi
+        ;;
+    esac
+  done
+
+  printf "%s" "${_TPUT_COLOR_PRIMARY}"
+  cat <<HEREDOC
+__          _
+\ \   _ __ | |__
+ \ \ | '_ \| '_ \\
+ / / | | | | |_) |
+/_/  |_| |_|_.__/
+$(_color_secondary "------------------")
+$(_color_primary "${_ME} shell") started. Enter $(_color_primary "ls") to list notes and notebooks.
+Enter $(_color_primary "help") for usage information. Enter $(_color_primary "exit") to exit.
+HEREDOC
+
+  if [[ -n "${_initial_command:-}" ]]
+  then
+    eval "\"${_MY_PATH}\" ${_initial_command}"
+  fi
+
+  while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
+  do
+    history -s "${__input}"
+
+    if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    then
+      return 0
+    else
+      # Strip leading 'n', 'nb', or 'notes'.
+      local _normalized_input=
+      _normalized_input="$(
+        printf "%s\\n" "${__input}" \
+          | sed -e 's/^n$//'        \
+          | sed -e 's/^n //'        \
+          | sed -e 's/^nb$//'       \
+          | sed -e 's/^nb //'       \
+          | sed -e 's/^notes$//'    \
+          | sed -e 's/^notes //'
+      )"
+
+      if [[ "${_normalized_input}" =~ ^help   ]] ||
+         [[ "${_normalized_input}" =~ ^help\  ]] ||
+         [[ "${_normalized_input}" =~ ^h$     ]] ||
+         [[ "${_normalized_input}" =~ ^h\     ]]
+      then
+        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
+           [[ "${_normalized_input}" =~ ^printf\ .* ]]
+      then
+        eval "${_normalized_input}"
+      elif _command_name="$(
+        printf "%s\\n" "${_normalized_input}" \
+          | grep --only-matching --color=never \
+              -e '^code'    \
+              -e '^emacs'   \
+              -e '^gvim'    \
+              -e '^macdown' \
+              -e '^mate'    \
+              -e '^mvim'    \
+              -e '^nano'    \
+              -e '^nvim'    \
+              -e '^subl'    \
+              -e '^vim'
+      )"
+      then
+        _normalized_input="$(
+          printf "%s\\n" "${_normalized_input}" \
+            | sed -e "s/^${_command_name} //"
+        )"
+
+        eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
+      else
+        eval "\"${_MY_PATH}\" ${_normalized_input}" || :
+      fi
+    fi
+  done
+}
+
+# status ############################################################### status
+
+describe "status" <<HEREDOC
+Usage:
+  ${_ME} status
+
+Description:
+  Run \`git status\` in the current notebook.
+HEREDOC
+_status() {
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+
+  git -C "${_notebook_path}" status
+}
+
+# sync ################################################################### sync
+
+describe "sync" <<HEREDOC
+Usage:
+  ${_ME} sync [-a | --all]
+
+Options:
+  -a, --all   Sync all unarchived notebooks.
+
+Description:
+  Sync the current local notebook with the remote repository.
+
+Private Repositories and Git Credentials:
+  Syncing with private repositories requires configuring git to not prompt
+  for credentials.
+
+  For repositories cloned over HTTPS, credentials can be cached with git.
+  For repositories cloned over SSH, keys can be added to the ssh-agent.
+
+  More Information:
+    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+
+Sync Conflict Resolution:
+  When \`${_ME} sync\` encounters a conflict in a text file and can't merge
+  overlapping local and remote changes, both versions are saved in the
+  file, separated by git conflict markers. Use \`${_ME} edit\` to remove the
+  conflict markers and delete any unwanted text.
+
+  When \`${_ME} sync\` encounters a conflict in a binary file, such as an
+  encrypted note or bookmark, both versions of the file are saved in the
+  notebook as individual files, one with \`--conflicted-copy\` appended to
+  the filename.
+
+  More Information:
+    https://github.com/xwmx/nb#sync-conflict-resolution
+HEREDOC
+_sync() {
+  local _notebooks=()
+  local _sync_all=0
+
+  if [[ "${1:-}" =~ ^-a$|^--all$ ]]
+  then
+    _sync_all=1
+
+    local _notebook_names
+    _notebooks=($(_notebooks --names --no-color --unarchived))
+  else
+    _notebooks=($(_notebooks current))
+  fi
+
+  local _sync_successful=0
+  local _sync_started=0
+  local _syncable_count=0
+
+  for __notebook in "${_notebooks[@]:-}"
+  do
+    if [[ "${__notebook}" == "local"      ]] &&
+       [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
+    then
+      NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+    else
+      NB_NOTEBOOK_PATH="${NB_DIR}/${__notebook}"
+    fi
+
+    if ((_sync_all))
+    then
+      _remote &>/dev/null || continue
+    else
+      _remote 1>/dev/null || {
+        cat <<HEREDOC
+
+Set the remote for the current notebook:
+
+  $(_color_primary "${_ME} remote set <url>")
+
+Set the remote for a notebook named "example":
+
+  $(_color_primary "${_ME} example:remote set <url>")
+
+HEREDOC
+        return 1
+      }
+    fi
+
+    if ! ((_sync_started))
+    then
+      printf "Syncing: "
+      _sync_started=1
+    fi
+
+    printf "%s..." "$(_color_primary "${__notebook}")"
+
+    local _notebook_sync_successful=0
+
+    _syncable_count="$((_syncable_count+1))"
+
+    if ((_sync_all))
+    then # sync without prompt in background
+      GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+    else # sync with prompt in foreground
+      GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+
+      _git sync "${NB_NOTEBOOK_PATH}"
+    fi && _notebook_sync_successful=1
+
+    if ! ((_notebook_sync_successful))            ||
+       _git dirty           "${NB_NOTEBOOK_PATH}" ||
+       _git out_of_sync     "${NB_NOTEBOOK_PATH}"
+    then
+      _exit_1 cat <<HEREDOC
+Sync failed.
+
+Reason unknown, but likely one of the following:
+
+- Authentication error or credentials not configured.
+- Network unavailable.
+- Misconfigured remote URL.
+
+Configuring Git Credentials:
+  https://github.com/xwmx/nb#private-repositories-and-git-credentials
+HEREDOC
+    fi
+  done && ((_syncable_count)) && _sync_successful=1
+
+  if ((_sync_successful))
+  then
+    printf "Done!\\n"
+  elif ! ((_syncable_count))
+  then
+    _exit_1 cat <<HEREDOC
+No unarchived notebooks with remotes found.
+
+Set the remote for the current notebook:
+
+  $(_color_primary "${_ME} remote set <url>")
+
+Set the remote for a notebook named "example":
+
+  $(_color_primary "${_ME} example:remote set <url>")
+
+HEREDOC
+  else
+    printf "\\n"
+
+    _exit_1 printf "Sync failed.\\n"
+  fi
+}
+
+# todos ################################################################# todos
+
+describe "todos" <<HEREDOC
+Usage:
+  ${_ME} todos [open | closed] [-a | --all]
+
+Options:
+  -a, --all  Search all unarchived notebooks.
+
+Description:
+  List todos.
+HEREDOC
+_todos() {
+  local _pattern='\- \[ \]|\- \[x\]'
+  local _search_all=0
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      -a|--all)
+        _search_all=1
+        ;;
+      closed)
+        _pattern='\- \[x\]'
+        ;;
+      open)
+        _pattern='\- \[ \]'
+        ;;
+    esac
+
+    shift
+  done
+
+  if ((_search_all))
+  then
+    _search "${_pattern}" --all
+  else
+    _search "${_pattern}"
+  fi | sed -e '/^$/d'
+}
+_alias_subcommand "todos" "todo"
+
+# update ############################################################### update
+
+describe "update" <<HEREDOC
+Usage:
+  ${_ME} update
+
+Description:
+  Update \`${_ME}\` to the latest version. You will be prompted for
+  your password if administrator privileges are required.
+
+  If \`${_ME}\` was installed using a package manager like npm or
+  Homebrew, use the package manager's upgrade functionality instead
+  of this command.
+HEREDOC
+_update() {
+  local _current_path
+  _current_path="${BASH_SOURCE[0]}"
+
+  if [[ -n "${_current_path}" ]]
+  then
+    if [[ -L "${_current_path}" ]]
+    then
+      if hash "realpath" 2>/dev/null
+      then
+        _current_path="$(realpath "${_current_path}")"
+      else
+        _current_path="$(readlink "${_current_path}")"
+      fi
+    fi
+  fi
+
+  if hash npm 2>/dev/null         &&
+     npm list | grep -q notes.sh  &&
+     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+  then # installed with npm
+    cat <<HEREDOC
+Installed with npm. To update, run:
+  npm update -g notes.sh
+HEREDOC
+  elif hash npm 2>/dev/null     &&
+       npm list | grep -q nb.sh &&
+       [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+  then # installed with npm
+    cat <<HEREDOC
+Installed with npm. To update, run:
+  npm update -g nb.sh
+HEREDOC
+  elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
+       [[ "${_current_path}" =~ Cellar  ]]
+  then
+    cat <<HEREDOC
+Installed with Homebrew. To update, run:
+  brew upgrade xwmx/taps/nb
+HEREDOC
+  else
+    local _nb_url="${_REPO_RAW_URL}/nb"
+
+    local _temp_file
+    _temp_file="$(mktemp)"
+
+    if ! _download_from "${_nb_url}" "${_temp_file}"
+    then
+      _exit_1 printf "Unable to download update.\\n"
+    fi
+
+    if [[ "$(_get_hash "${_temp_file}")" != "$(_get_hash "${_current_path}")" ]]
+    then
+      while true
+      do
+        printf "Updating %s in place. " "$(_color_primary "${_ME}")"
+
+        IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+      if [[ -w "${_current_path}" ]]
+      then
+        cat  "${_temp_file}" > "${_current_path}"
+      else
+        cat "${_temp_file}" | sudo tee "${_current_path}" > /dev/null
+      fi
+
+      printf "%s updated to the latest version.\\n" "$(_color_primary "${_ME}")"
+      exit 0
+    else
+      printf "Already at the latest version.\\n"
+    fi
+
+    if [[ -n "${_temp_file:-}" ]] && [[ -f "${_temp_file}" ]]
+    then
+      rm "${_temp_file:?}"
+    fi
+  fi
+}
+_alias_subcommand "update" "upgrade"
 
 ###############################################################################
 # Call Deferred Command: Group 3                 Call Deferred Command: Group 3
