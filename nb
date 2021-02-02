@@ -7809,21 +7809,26 @@ _call_deferred_command() {
   [[ -z "${_DEFERRED_COMMAND[0]:-}" ]] && exit 0
 
   local _group="${2:-}"
+  local _group_3_names=(
+    "_br" "_browse" "_browser" "_config" "_h" "_help" "_helpers" "_set"   \
+    "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status" "_sync" \
+    "_todo" "_todos" "_update" "_upgrade"
+  )
 
-  if [[ "${_group:-}" -eq 2 ]] &&
-     _contains "${_DEFERRED_COMMAND[0]:-}" "_br" "_browse" "_browser" \
-       "_config" "_h" "_help" "_helpers" "_set" "_plugin" "_plugins"  \
-       "_remote" "_settings" "_shell" "_status" "_sync" "_todo"       \
-       "_todos" "_update" "_upgrade"
+  if {
+       [[ "${_group:-}" -eq 2 ]] &&
+         _contains "${_DEFERRED_COMMAND[0]:-}" "${_group_3_names[@]}"
+     } || {
+       [[ "${_group:-}" -eq 3 ]] &&
+       ! _contains "${_DEFERRED_COMMAND[0]:-}" "${_group_3_names[@]}"
+     }
   then
     return 0
+  else
+    "${_DEFERRED_COMMAND[@]:-}"
+
+    return 0
   fi
-
-  "${_DEFERRED_COMMAND[@]:-}"
-
-  export _DEFERRED_COMMAND=()
-
-  exit 0
 }
 
 ###############################################################################
@@ -12876,7 +12881,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       cd "${_CURRENT_WORKING_DIR}"
 
-      _defer _browse "${_target_path}/"
+      _defer "_browse" "${_target_path}/"
       return 0
     elif ((_render_for_browsing))   &&
          [[ -d "${_target_path}" ]] &&
@@ -13097,7 +13102,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     then # `show --render` with `pandoc` and browser available
       if _command_exists "ncat"
       then
-        _defer _browse "${_target_path}"
+        _defer "_browse" "${_target_path}"
         return 0
       else
         cd "${_CURRENT_WORKING_DIR}"
@@ -15381,3 +15386,5 @@ _alias_subcommand "update" "upgrade"
 # --------------------------------------------------------------------------- #
 
 _call_deferred_command --group 3
+
+exit 0
