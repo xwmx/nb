@@ -7796,7 +7796,7 @@ _defer() {
 # Description:
 #   Call the deferred command.
 _call_deferred_command() {
-  [[ -z "${_DEFERRED_COMMAND[0]:-}" ]] && return 0
+  [[ -z "${_DEFERRED_COMMAND[0]:-}" ]] && exit 0
 
   local _group="${2:-}"
 
