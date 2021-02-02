@@ -16,7 +16,7 @@ export _S=" "
     done
   }
 
-  NB_BROWSE_PER_PAGE=4 run "${_NB}" browse --print
+  run "${_NB}" browse --print --per-page 4
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -66,12 +66,12 @@ export _S=" "
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>next\ ❯\</a\>\</p\> ]]
-  [[ !  "${output}"  =~ ❮\ prev                                                         ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\&amp\;--per-page=4\"\>next\ ❯\</a\>\</p\>  ]]
+  [[ !  "${output}"  =~ ❮\ prev                                                                             ]]
 
   # page 2
 
-  NB_BROWSE_PER_PAGE=4 run "${_NB}" browse --print --page 2
+  run "${_NB}" browse --print --per-page 4 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -121,13 +121,13 @@ export _S=" "
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=1\"\>❮\ prev\</a\>\ \·\  ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=1\&amp\;--per-page=4\"\>❮\ prev\</a\>\ \·\   ]]
   [[    "${output}"  =~ \
-          \<a\ href=\"http://localhost:6789/home:\?--page=3\"\>next\ ❯\</a\>\</p\>      ]]
+          \<a\ href=\"http://localhost:6789/home:\?--page=3\&amp\;--per-page=4\"\>next\ ❯\</a\>\</p\>       ]]
 
   # page 3
 
-  NB_BROWSE_PER_PAGE=4 run "${_NB}" browse --print --page 3
+  run "${_NB}" browse --print --per-page 4 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -177,12 +177,12 @@ export _S=" "
   # pagination links
 
   [[    "${output}"  =~ \
-          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\"\>❮\ prev\</a\>\</p\> ]]
-  [[ !  "${output}"  =~ next\ ❯                                                         ]]
+          \<p\>\<a\ href=\"http://localhost:6789/home:\?--page=2\&amp\;--per-page=4\"\>❮\ prev\</a\>\</p\>  ]]
+  [[ !  "${output}"  =~ next\ ❯                                                                             ]]
 
   # page with list of items under pagination limit
 
-  NB_BROWSE_PER_PAGE=11 run "${_NB}" browse --print
+  run "${_NB}" browse --print --per-page 11
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

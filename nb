@@ -9444,15 +9444,21 @@ _browse() {
       _browse_respond_with 400
     fi
 
-    local _page_number=0
+    local _page_number=1
 
-    if [[ "${_request_uri}" =~ \?--page=([0-9]+) ]]
+    if [[ "${_request_uri}" =~ --page=([0-9]+) ]]
     then
       _page_number="${BASH_REMATCH[1]}"
-      _request_uri="${_request_uri%\?--page=*}"
     fi
 
-    # _browse_respond_with 200 "${_request_uri}"
+    local _per_page="${NB_BROWSE_PER_PAGE:-20}"
+
+    if [[ "${_request_uri}" =~ --per-page=([0-9]+) ]]
+    then
+      _per_page="${BASH_REMATCH[1]}"
+    fi
+
+    _request_uri="${_request_uri%\?--*}" # strip parameters
 
     _temp_file="$(mktemp).html"
     touch "${_temp_file}"
@@ -9491,10 +9497,12 @@ _browse() {
     then
       _browse_respond_with 404
     else
-      _show "${_target_selector}"   \
-        --browse                    \
-        --page "${_page_number}"    \
-        --no-color >> "${_temp_file}"
+      _show "${_target_selector}"     \
+        --browse                      \
+        --page      "${_page_number}" \
+        --per-page  "${_per_page}"    \
+        --no-color                    \
+        >> "${_temp_file}"
     fi
 
     case "${_request_method}" in
@@ -9539,6 +9547,7 @@ _browse() {
 
   local _browse_notebooks=0
   local _browse_page=1
+  local _browse_per_page=
   local _print_browse_header=0
   local _print_headers=0
   local _print_output=0
@@ -9558,6 +9567,10 @@ _browse() {
         ;;
       --page)
         _browse_page="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
+        ;;
+      --per*page)
+        _browse_per_page="$(_option_get_value "${1:-}" "${2:-}")"
         shift
         ;;
       -p|--print)
@@ -9596,6 +9609,18 @@ HEREDOC
 
   # start server
 
+  if [[ -z "${_browse_per_page:-}" ]]
+  then # set per page based on terminal height
+    if [[ "${BROWSER:-}" =~ lynx ]]
+    then
+      _browse_per_page="$(($(tput lines) - 14))"
+    else
+      _browse_per_page="$(($(tput lines) - 6))"
+    fi
+  fi
+
+  # start server
+
   _browse_serve
 
   # request URL
@@ -9605,7 +9630,7 @@ HEREDOC
     _selector="$(_notebooks current --name --no-color):"
   fi
 
-  local _rquest_url="http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}"
+  local _rquest_url="http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}&--per-page=${_browse_per_page}"
 
   if ((_print_output))
   then
@@ -12600,23 +12625,28 @@ _show() {
   # _show_render_container()
   #
   # Usage:
-  #   _show_render_container <target-path> <page-number>
+  #   _show_render_container <target-path> [--page <page-number>]
+  #                          [--per-page <number>]
   #
   # Description:
   #   Render a notebook or folder as an HTML page.
   _show_render_container() {
-    local _current_page="${2:-}"
-    local _target_path="${1:-}"
+    local _current_page=1
+    local _per_page="${NB_BROWSE_PER_PAGE:-20}"
+    local _target_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)   _current_page="${2:?}"  && shift  ;;
+        --per*)   _per_page="${2:?}"      && shift  ;;
+        *)        _target_path="${1:?}"             ;;
+      esac
+
+      shift
+    done
 
     [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
-
-    local _per_page="${NB_BROWSE_PER_PAGE:-20}"
-
-    # TODO: Set pagination based on terminal height?
-    # if [[ -z "${_per_page:-}" ]]
-    # then
-    #   _per_page="$(($(tput lines) - 6))"
-    # fi
 
     {
       _list "${_target_path}" --no-color  \
@@ -12737,11 +12767,12 @@ _show() {
 
       if ((_print_prev))
       then
-        printf                                          \
-          "[❮ prev](http://localhost:%s/%s?--page=%s)"  \
-          "${NB_SERVER_PORT}"                           \
-          "${_selector}"                                \
-          "$((_current_page - 1))"
+        printf                                                        \
+          "[❮ prev](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
+          "${NB_SERVER_PORT}"                                         \
+          "${_selector}"                                              \
+          "$((_current_page - 1))"                                    \
+          "${_per_page}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -12751,11 +12782,12 @@ _show() {
 
       if ((_print_next))
       then
-        printf                                          \
-          "[next ❯](http://localhost:%s/%s?--page=%s)"  \
-          "${NB_SERVER_PORT}"                           \
-          "${_selector}"                                \
-          "$((_current_page + 1))"
+        printf                                                        \
+          "[next ❯](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
+          "${NB_SERVER_PORT}"                                         \
+          "${_selector}"                                              \
+          "$((_current_page + 1))"                                    \
+          "${_per_page}"
       fi
 
       if ((_print_prev)) || ((_print_next))
@@ -12889,6 +12921,7 @@ _show() {
   local _ls_arguments=()
   local _print_output=0
   local _password=
+  local _per_page="${NB_BROWSE_PER_PAGE:-20}"
   local _print_added=0
   local _print_bookmark_url=0
   local _print_filename=0
@@ -12954,6 +12987,10 @@ _show() {
       --page)
         _list_page="$(_option_get_value "${__arg}" "${__val:-}")"
         ((_list_page)) || _list_page=1
+        shift
+        ;;
+      --per*)
+        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
       --password)
@@ -13339,7 +13376,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       cd "${_CURRENT_WORKING_DIR}"
 
-      _show_render_container "${_target_path}" "${_list_page:-}"
+      _show_render_container "${_target_path}"  \
+        --page      "${_list_page:-}"           \
+        --per-page "${_per_page:-}"
       return 0
     elif [[ -d "${_target_path}"      ]]  &&
        _command_exists "ranger"           &&
