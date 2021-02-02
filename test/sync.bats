@@ -20,6 +20,20 @@ _setup_notebooks() {
   export NB_DIR="${NB_DIR_1}"
 }
 
+# help ########################################################################
+
+@test "'help sync' exits with 0 and prints help information." {
+  run "${_NB}" help sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${lines[0]}"  =~  Usage\:       ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ sync  ]]
+}
+
 # sync --all #################################################################
 
 @test "'sync --all' with no local syncs global notebooks." {

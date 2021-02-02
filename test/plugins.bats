@@ -2,6 +2,20 @@
 
 load test_helper
 
+# help ########################################################################
+
+@test "'help plugins' exits with 0 and prints help information." {
+  run "${_NB}" help plugins
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+
+  [[ "${lines[0]}"  =~  Usage\:         ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ plugins ]]
+}
+
 # `plugins` ###################################################################
 
 @test "'plugins' lists plugins." {

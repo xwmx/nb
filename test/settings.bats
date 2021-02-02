@@ -3,9 +3,23 @@
 
 load test_helper
 
+# help ########################################################################
+
+@test "'help settings' exits with 0 and prints help information." {
+  run "${_NB}" help settings
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${lines[0]}"  =~  Usage\:     ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
 # #############################################################################
 
-@test "'settings' with no arguments start prompt." {
+@test "'settings' with no arguments starts prompt." {
 skip "Determine how to test interactive prompt."
   {
     "${_NB}" init
