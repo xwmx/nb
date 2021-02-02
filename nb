@@ -4515,6 +4515,7 @@ _list() {
   local _error_on_empty=0
   local _excerpt_length=3
   local _limit=
+  local _line_wrap=1
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
@@ -4560,6 +4561,9 @@ _list() {
         ;;
       --no*indicator*|--no*icon*|--no*emoji*|--no*unicode*)
         _print_indicators=0
+        ;;
+      --no*wrap|--truncate)
+        _line_wrap=0
         ;;
       -n|--limit|--num|--number)
         if _option_value_is_present "${__val:-}"
@@ -4907,6 +4911,15 @@ _list() {
     local _max_id
     _max_id="$(_index get_max_id "${_list_path}")"
 
+    if ((_line_wrap))         &&
+       ((_COLOR_ENABLED))     &&
+       ! ((_list_filenames))  &&
+       ! ((_list_paths))      &&
+       ! ((_no_id))
+    then
+      _line_wrap=0
+    fi
+
     local __basename=
 
     while read -r __basename
@@ -5124,10 +5137,7 @@ ${_TPUT_SGR0}"
         _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
       fi
 
-      if ((_COLOR_ENABLED))     &&
-         ! ((_list_filenames))  &&
-         ! ((_list_paths))      &&
-         ! ((_no_id))
+      if ! ((_line_wrap))
       then
         _wrap off
       fi
@@ -5139,10 +5149,7 @@ ${_TPUT_SGR0}"
         printf "%s" "${_info_line}"
       fi
 
-      if ((_COLOR_ENABLED))     &&
-         ! ((_list_filenames))  &&
-         ! ((_list_paths))      &&
-         ! ((_no_id))
+      if ! ((_line_wrap))
       then
         _wrap on
       fi
