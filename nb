@@ -7812,7 +7812,7 @@ _call_deferred_command() {
 
   export _DEFERRED_COMMAND=()
 
-  return 0
+  exit 0
 }
 
 ###############################################################################
