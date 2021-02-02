@@ -12635,7 +12635,20 @@ _show() {
 
       while read -r __list_item
       do
-        __list_item="${__list_item:0:${_truncate_length}}"
+        local _list_item_length="${#__list_item}"
+        local _list_item_visible_length=
+        _list_item_visible_length="$(_get_visible_length "${__list_item}")"
+
+        local _difference=
+        _difference="$((_list_item_visible_length - _list_item_length))"
+
+        local _adjusted_truncate_length=
+        _adjusted_truncate_length="$((_truncate_length - _difference))"
+
+        if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
+        then
+          __list_item="${__list_item:0:$((_adjusted_truncate_length - 1))}…"
+        fi
 
         if [[ "${__list_item:-}" =~ ^0\ items. ]]
         then
