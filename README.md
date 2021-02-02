@@ -3726,16 +3726,16 @@ Options:
   --print       Print to standard output.
 
 Description:
-  Browse and view linked notes, notebooks, folders, and other items using the
-  terminal web brower.
+  Browse and view linked notes, notebooks, folders, and other items using
+  the terminal web brower.
 
   `browse` includes an embedded, terminal-first web application and server
-  that renders [[wiki-style links]] as internal links, enabling you to browse
-  your notes and notebooks in your terminal web browser, as well as
+  that renders [[wiki-style links]] as internal links, enabling you to
+  browse your notes and notebooks in your terminal web browser, as well as
   seamlessly browse to and from the offsite links in bookmarks and notes.
 
-  To link to an item, include the selector for that item within double
-  square brackets:
+  To link an note or bookmark from another, include the selector for the
+  target item within double square brackets anywhere in the linking document:
 
     # link to item 123 in the "sample" folder in the "example" notebook
     [[example:sample/123]]
@@ -3743,12 +3743,19 @@ Description:
     # link to the item titled "Example Title" in the "demo" notebook
     [[demo:Example Title]]
 
+  `browse` depends on `ncat` and `pandoc`:
+
+    1. https://nmap.org/ncat/
+    2. https://pandoc.org/
+
 Examples:
   nb browse
   nb browse example:
   nb browse Example\ Folder/
   nb browse 123
   nb browse demo:456
+
+Shortcut Alias: `br
 ```
 
 #### `completions`
