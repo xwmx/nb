@@ -97,3 +97,27 @@ load test_helper
   [[ "${lines[0]}"  =~  Usage:      ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }
+
+@test "'-h settings' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" -h settings
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
+@test "'settings -h' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" settings -h
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
