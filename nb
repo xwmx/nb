@@ -13928,6 +13928,153 @@ _show() {
     printf "%s\\n" "${_indicators:-}"
   }
 
+  # _show_render_container()
+  #
+  # Usage:
+  #   _show_render_container <target-path> <page-number>
+  #
+  # Description:
+  #   Render a notebook or folder as an HTML page.
+  _show_render_container() {
+    local _current_page="${2:-}"
+    local _target_path="${1:-}"
+
+    [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
+
+    local _per_page="${NB_BROWSE_PER_PAGE:-20}"
+
+    # TODO: Set pagination based on terminal height?
+    # if [[ -z "${_per_page:-}" ]]
+    # then
+    #   _per_page="$(($(tput lines) - 6))"
+    # fi
+
+    {
+      _list "${_target_path}" --no-color  \
+        --per-page "${_per_page}"         \
+        --page "${_current_page}"         \
+        --with-pinned
+    } | {
+      while read -r __list_item
+      do
+        if [[ "${__list_item:-}" =~ ^0\ items. ]]
+        then
+          printf "%s<br/>\\n" "${__list_item}"
+          break
+        fi
+
+        local _item_selector="${__list_item%%]*}"
+        _item_selector="${_item_selector#[}"
+        _item_selector="${_item_selector//\\/}"
+
+        local _target_selector=
+
+        if [[ ! "${_item_selector}" =~ / ]]
+        then
+          _target_selector="${_item_selector}"
+        else # deconstruct and rebuild selector with id folder paths
+          local _notebook_name=
+
+          if [[ "${_item_selector}" =~ : ]]
+          then
+            _notebook_name="${_item_selector%%:*}"
+          fi
+
+          local _folder_id_path=
+          _folder_id_path="$(_get_folder_id_path "${_item_selector}")"
+
+          local _selector_identifier=
+
+          if [[ ! "${_item_selector}" =~ :$|/$ ]]
+          then
+            _selector_identifier="${_item_selector#*:}"
+            _selector_identifier="${_selector_identifier##*/}"
+          fi
+
+          if [[ "${_item_selector}" =~ : ]]
+          then
+            _target_selector="${_notebook_name}:"
+          fi
+
+          if [[ -n "${_folder_id_path:-}"       ]] &&
+             [[ !  "${_folder_id_path}" == "/"  ]]
+          then
+            _target_selector+="${_folder_id_path}"
+          fi
+
+          if [[ -n "${_selector_identifier}" ]]
+          then
+            _target_selector+="${_selector_identifier}"
+          fi
+        fi
+
+        printf "%s\\n" \
+          "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
+      done
+    } | {
+      local _list_count=
+      _list_count="$(_count "${_target_path}")"
+
+      local _print_prev=0
+
+      if ((_list_count)) && [[ "${_current_page}" -gt 1 ]]
+      then
+        _print_prev=1
+      fi
+
+      local _print_next=0
+
+      if ((_list_count)) &&
+         [[ "$((_current_page * _per_page))" -le "${_list_count}" ]]
+      then
+        _print_next=1
+      fi
+
+      printf "%s\\n" "$(_browse --header "${_target_path}")"
+
+      cat
+
+      if ((_print_prev)) || ((_print_next))
+      then
+        printf "\\n"
+      fi
+
+      if ((_print_prev))
+      then
+        printf                                          \
+          "[❮ prev](http://localhost:%s/%s?--page=%s)"  \
+          "${NB_SERVER_PORT}"                           \
+          "${_selector}"                                \
+          "$((_current_page - 1))"
+      fi
+
+      if ((_print_prev)) && ((_print_next))
+      then
+        printf " · "
+      fi
+
+      if ((_print_next))
+      then
+        printf                                          \
+          "[next ❯](http://localhost:%s/%s?--page=%s)"  \
+          "${NB_SERVER_PORT}"                           \
+          "${_selector}"                                \
+          "$((_current_page + 1))"
+      fi
+
+      if ((_print_prev)) || ((_print_next))
+      then
+        printf "\\n"
+      fi
+    } | {
+      pandoc            \
+        --from markdown \
+        --to html       \
+        --standalone    \
+        2>/dev/null
+    }
+  }
+
   # _show_resolve_links()
   #
   # Usage:
@@ -14496,141 +14643,7 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       cd "${_CURRENT_WORKING_DIR}"
 
-      [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
-
-      local _per_page="${NB_BROWSE_PER_PAGE:-20}"
-
-      # TODO: Set pagination based on terminal height?
-      # if [[ -z "${_per_page:-}" ]]
-      # then
-      #   _per_page="$(($(tput lines) - 6))"
-      # fi
-
-      {
-        _list "${_target_path}" --no-color  \
-          --per-page "${_per_page}"         \
-          --page "${_list_page}"            \
-          --with-pinned
-      } | {
-        while read -r __list_item
-        do
-          if [[ "${__list_item:-}" =~ ^0\ items. ]]
-          then
-            printf "%s<br/>\\n" "${__list_item}"
-            break
-          fi
-
-          local _item_selector="${__list_item%%]*}"
-          _item_selector="${_item_selector#[}"
-          _item_selector="${_item_selector//\\/}"
-
-          local _target_selector=
-
-          if [[ ! "${_item_selector}" =~ / ]]
-          then
-            _target_selector="${_item_selector}"
-          else # deconstruct and rebuild selector with id folder paths
-            local _notebook_name=
-
-            if [[ "${_item_selector}" =~ : ]]
-            then
-              _notebook_name="${_item_selector%%:*}"
-            fi
-
-            local _folder_id_path=
-            _folder_id_path="$(_get_folder_id_path "${_item_selector}")"
-
-            local _selector_identifier=
-
-            if [[ ! "${_item_selector}" =~ :$|/$ ]]
-            then
-              _selector_identifier="${_item_selector#*:}"
-              _selector_identifier="${_selector_identifier##*/}"
-            fi
-
-            if [[ "${_item_selector}" =~ : ]]
-            then
-              _target_selector="${_notebook_name}:"
-            fi
-
-            if [[ -n "${_folder_id_path:-}"       ]] &&
-               [[ !  "${_folder_id_path}" == "/"  ]]
-            then
-              _target_selector+="${_folder_id_path}"
-            fi
-
-            if [[ -n "${_selector_identifier}" ]]
-            then
-              _target_selector+="${_selector_identifier}"
-            fi
-          fi
-
-          printf "%s\\n" \
-            "[${__list_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
-        done
-      } | {
-        local _list_count=
-        _list_count="$(_count "${_target_path}")"
-
-        local _print_prev=0
-
-        if ((_list_count)) && [[ "${_list_page}" -gt 1 ]]
-        then
-          _print_prev=1
-        fi
-
-        local _print_next=0
-
-        if ((_list_count)) &&
-           [[ "$((_list_page * _per_page))" -le "${_list_count}" ]]
-        then
-          _print_next=1
-        fi
-
-        printf "%s\\n" "$(_browse --header "${_target_path}")"
-
-        cat
-
-        if ((_print_prev)) || ((_print_next))
-        then
-          printf "\\n"
-        fi
-
-        if ((_print_prev))
-        then
-          printf                                          \
-            "[❮ prev](http://localhost:%s/%s?--page=%s)"  \
-            "${NB_SERVER_PORT}"                           \
-            "${_selector}"                                \
-            "$((_list_page - 1))"
-        fi
-
-        if ((_print_prev)) && ((_print_next))
-        then
-          printf " · "
-        fi
-
-        if ((_print_next))
-        then
-          printf                                          \
-            "[next ❯](http://localhost:%s/%s?--page=%s)"  \
-            "${NB_SERVER_PORT}"                           \
-            "${_selector}"                                \
-            "$((_list_page + 1))"
-        fi
-
-        if ((_print_prev)) || ((_print_next))
-        then
-          printf "\\n"
-        fi
-      } | {
-        pandoc            \
-          --from markdown \
-          --to html       \
-          --standalone    \
-          2>/dev/null
-      }
-
+      _show_render_container "${_target_path}" "${_list_page:-}"
       return 0
     elif [[ -d "${_target_path}"      ]]  &&
        _command_exists "ranger"           &&
