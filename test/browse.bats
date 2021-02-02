@@ -29,7 +29,7 @@ export NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                           ]]
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                        ]]
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>             ]]
 
@@ -45,7 +45,7 @@ export NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       \<h1\ id=\"nb-home-1\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>                  ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                            ]]
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/2/\"\>1\</a\>\ /\</h1\>                               ]]
 
@@ -176,7 +176,7 @@ export NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>   ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                             ]]
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                          ]]
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>               ]]
 
@@ -200,7 +200,7 @@ export NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       \<h1\ id=\"nb-example-notebook\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>            ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/Example%20Notebook:\"\>Example\ Notebook:\</a\>\</h1\> ]]
+      ·\ \<a\ href=\"http://localhost:6789/Example%20Notebook:\"\>Example\ Notebook\</a\>\</h1\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -265,7 +265,7 @@ export NB_SERVER_PORT=6789
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                            ]]
 
   [[ "${output}"  =~  \<h1\ id=\"nb-home\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>  ]]
-  [[ "${output}"  =~ ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>\</h1\>       ]]
+  [[ "${output}"  =~ ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\</h1\>        ]]
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/home:3\"\>             ]]
@@ -301,9 +301,9 @@ export NB_SERVER_PORT=6789
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>     ]]
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                        ]]
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\> ]]
 
@@ -337,9 +337,9 @@ export NB_SERVER_PORT=6789
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>     ]]
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>   ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home:\</a\>                               ]]
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                          ]]
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\> ]]
 
@@ -377,7 +377,7 @@ export NB_SERVER_PORT=6789
   [[ "${output}"  =~  \
       \<h1\ id=\"nb-example-notebook\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>            ]]
   [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/Example%20Notebook:\"\>Example\ Notebook:\</a\>\</h1\> ]]
+      ·\ \<a\ href=\"http://localhost:6789/Example%20Notebook:\"\>Example\ Notebook\</a\>\</h1\>  ]]
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/Example%20Notebook:2\"\>   ]]

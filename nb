@@ -9220,7 +9220,7 @@ _browse() {
         _header_content+=" ${_notebook_name}"
       else # in a folder
         _header_content+="\
- [${_notebook_name}:](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
+ [${_notebook_name}](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
 
         local _relative_path=
         local _selector_relative_path=
@@ -9238,6 +9238,8 @@ _browse() {
 
         if [[ "${_relative_path:-}" =~ / ]]
         then
+          _header_content+=" : "
+
           local _selector_folders=()
           IFS='/' read -ra _selector_folders < <(
             printf "%s\\n" "${_relative_path}"
