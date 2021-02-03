@@ -1036,103 +1036,6 @@ _alias_subcommand() {
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
-# _web_browser()
-#
-# Usage:
-#   _web_browser [[<url>] [--dump] | --check]
-#
-# Options:
-#   --check   Return with status 0 if a browser is available, or 1 if not.
-#   --dump    Print the page to standard output.
-#
-# Description:
-#   Interact with the preferred or available terminal web browser. When called
-#   with no input or arguments, or with only the --check option, test if a
-#   terminal web browser is available. With <url> or standard input, view in
-#   the preferred or available browser.
-#
-# Exit / Error Status:
-#   0 (success, true)  If a terminal browser is available.
-#   1 (error,  false)  if not.
-_web_browser() {
-  local _web_browser_command=()
-  local _check=0
-  local _dump=0
-  local _url=
-
-  for __arg in "${@:-}"
-  do
-    case "${__arg}" in
-      --check)
-        _check=1
-        ;;
-      --dump)
-        _dump=1
-        ;;
-      *)
-        [[ -z "${_url:-}" ]] && _url="${__arg}"
-        ;;
-    esac
-  done
-
-  if [[ -n "${BROWSER:-}" ]]
-  then
-    IFS=' ' read -ra _web_browser_command <<< "${BROWSER}"
-  else
-    if _command_exists "w3m"
-    then
-      _web_browser_command+=("w3m")
-    elif _command_exists "lynx"
-    then
-      _web_browser_command+=("lynx")
-    fi
-  fi
-
-  [[ -z "${_web_browser_command[*]:-}" ]] && return 1
-  ((_check)) && return 0
-
-  if _interactive_input
-  then
-    if [[ -z "${_url:-}" ]]
-    then
-      return 0
-    else
-      "${_web_browser_command[@]:-}" "${_url:-}"
-      return 0
-    fi
-  else
-    if [[ "${_web_browser_command[*]:-}" =~ w3m ]]
-    then
-      _web_browser_command+=("-I" "UTF-8")
-      _web_browser_command+=("-O" "UTF-8")
-
-      if ((_dump))
-      then
-        "${_web_browser_command[@]:-}" -T text/html -dump
-      else
-        "${_web_browser_command[@]:-}" -T text/html
-      fi
-
-      return 0
-    elif [[ "${_web_browser_command[*]:-}" =~ lynx ]]
-    then
-      _arguments+=("-stdin")
-      ((_dump)) && _arguments+=("--dump")
-
-      "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
-      return 0
-    elif [[ "${_web_browser_command[*]:-}" =~ elinks ]]
-    then
-      ((_dump)) && _arguments+=("-dump")
-
-      "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
-    else
-      "${_web_browser_command[@]}"
-      return 0
-    fi
-  fi
-}
-
 # _decrypt_file()
 #
 # Usage:
@@ -7944,6 +7847,103 @@ _option_get_tags() {
   _tag_string="$(_join " " "${_normalized_tags[@]-}")"
 
   printf "%s\\n" "${_tag_string:-}"
+}
+
+# _web_browser()
+#
+# Usage:
+#   _web_browser [[<url>] [--dump] | --check]
+#
+# Options:
+#   --check   Return with status 0 if a browser is available, or 1 if not.
+#   --dump    Print the page to standard output.
+#
+# Description:
+#   Interact with the preferred or available terminal web browser. When called
+#   with no input or arguments, or with only the --check option, test if a
+#   terminal web browser is available. With <url> or standard input, view in
+#   the preferred or available browser.
+#
+# Exit / Error Status:
+#   0 (success, true)  If a terminal browser is available.
+#   1 (error,  false)  if not.
+_web_browser() {
+  local _web_browser_command=()
+  local _check=0
+  local _dump=0
+  local _url=
+
+  for __arg in "${@:-}"
+  do
+    case "${__arg}" in
+      --check)
+        _check=1
+        ;;
+      --dump)
+        _dump=1
+        ;;
+      *)
+        [[ -z "${_url:-}" ]] && _url="${__arg}"
+        ;;
+    esac
+  done
+
+  if [[ -n "${BROWSER:-}" ]]
+  then
+    IFS=' ' read -ra _web_browser_command <<< "${BROWSER}"
+  else
+    if _command_exists "w3m"
+    then
+      _web_browser_command+=("w3m")
+    elif _command_exists "lynx"
+    then
+      _web_browser_command+=("lynx")
+    fi
+  fi
+
+  [[ -z "${_web_browser_command[*]:-}" ]] && return 1
+  ((_check)) && return 0
+
+  if _interactive_input
+  then
+    if [[ -z "${_url:-}" ]]
+    then
+      return 0
+    else
+      "${_web_browser_command[@]:-}" "${_url:-}"
+      return 0
+    fi
+  else
+    if [[ "${_web_browser_command[*]:-}" =~ w3m ]]
+    then
+      _web_browser_command+=("-I" "UTF-8")
+      _web_browser_command+=("-O" "UTF-8")
+
+      if ((_dump))
+      then
+        "${_web_browser_command[@]:-}" -T text/html -dump
+      else
+        "${_web_browser_command[@]:-}" -T text/html
+      fi
+
+      return 0
+    elif [[ "${_web_browser_command[*]:-}" =~ lynx ]]
+    then
+      _arguments+=("-stdin")
+      ((_dump)) && _arguments+=("--dump")
+
+      "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
+      return 0
+    elif [[ "${_web_browser_command[*]:-}" =~ elinks ]]
+    then
+      ((_dump)) && _arguments+=("-dump")
+
+      "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
+    else
+      "${_web_browser_command[@]}"
+      return 0
+    fi
+  fi
 }
 
 ###############################################################################
