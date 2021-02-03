@@ -13298,59 +13298,68 @@ _browse() {
       local _notebook_path=
       _notebook_path="$(_notebooks show "${_notebook_name}" --path)"
 
-      if [[ "${_selector}" =~ :$                  ]] ||
-         [[ "${_selector}" == "${_notebook_path}" ]]
-      then # in notebook root
-        _header_content+=" ${_notebook_name}"
-      else # in a folder
-        _header_content+="\
+      _header_content+="\
  [${_notebook_name}](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
 
-        local _relative_path=
-        local _selector_relative_path=
+      local _relative_folder_path=
+      local _selector_relative_folder_path=
 
-        if [[ "${_selector}" =~ ^/ ]]
+      if [[ "${_selector}" =~ ^/ ]]
+      then
+        local _relative_path="${_selector#${_notebook_path}/}"
+
+        if [[ -d "${_selector}" ]]
         then
-          _relative_path="${_selector#${_notebook_path}/}"
-          _selector_relative_path="${_relative_path}"
+          _relative_folder_path="${_relative_path:-}"
         else
-          _selector_relative_path="${_selector#*:}"
-          _relative_path="$(
-            _selector_resolve_folders "${_selector_relative_path}"
-          )"
+          if [[ "${_relative_path:-}" =~ / ]]
+          then
+            _relative_folder_path="${_relative_path%/*}"
+          else
+            _relative_folder_path=
+          fi
         fi
 
-        if [[ -n "${_relative_path:-}"                    ]] &&
-           [[ -d "${_notebook_path}/${_relative_path%/*}" ]]
-        then
-          _header_content+=" :"
+        _selector_relative_folder_path="${_relative_folder_path:-}"
+      else
+        _selector_relative_folder_path="${_selector#*:}"
+        _relative_folder_path="$(
+          _selector_resolve_folders "${_selector_relative_folder_path}"
+        )"
+      fi
 
-          local _selector_folders=()
-          IFS='/' read -ra _selector_folders < <(
-            printf "%s\\n" "${_relative_path%/*}"
-          )
+      if [[ -n "${_relative_folder_path:-}"                    ]] &&
+         [[ -d "${_notebook_path}/${_relative_folder_path}"    ]]
+      then
+        _header_content+=" :"
 
-          local _folder_id_path=
-          _folder_id_path="$(
-            _get_folder_id_path "${_selector_folders}" "${_notebook_path}"
-          )"
+        local _selector_folders=()
+        IFS='/' read -ra _selector_folders < <(
+          printf "%s\\n" "${_relative_folder_path}"
+        )
 
-          local _selector_folder_ids=()
-          IFS='/' read -ra _selector_folder_ids < <(
-            printf "%s\\n" "${_folder_id_path}"
-          )
+        local _folder_id_path=
+        _folder_id_path="$(
+          _get_folder_id_path "$(
+            _join "/" "${_selector_folders[@]:-}"
+          )/" "${_notebook_path}"
+        )"
 
-          local _url_path=
+        local _selector_folder_ids=()
+        IFS='/' read -ra _selector_folder_ids < <(
+          printf "%s\\n" "${_folder_id_path}"
+        )
 
-          local i=
-          for ((i=0; i < "${#_selector_folders[@]}"; i++))
-          do
-            _url_path+="${_selector_folder_ids[i]}/"
+        local _url_path=
 
-            _header_content+="\
+        local i=
+        for ((i=0; i < "${#_selector_folders[@]}"; i++))
+        do
+          _url_path+="${_selector_folder_ids[i]}/"
+
+          _header_content+="\
  [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}) /"
-          done
-        fi
+        done
       fi
     fi
 

@@ -9,6 +9,28 @@ export _S=" "
 
 # header crumbs ###############################################################
 
+@test "'browse <notebook-path>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/File One.md"  \
+      --title     "Example Title"                             \
+      --content   "Example content."
+  }
+
+  run "${_NB}" browse home:1/1/1 --header
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                                                        ]]
+
+  [[ "${output}"    =~ \#\ \[nb\]\(http://localhost:6789/\)\ ·\                 ]]
+  [[ "${output}"    =~ \ ·\ \[home\]\(http://localhost:6789/home:\)\ :\         ]]
+  [[ "${output}"    =~ \ :\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ /  ]]
+  [[ "${output}"    =~ \ /\ \[Sample\ Folder\]\(http://localhost:6789/1/1/\)\ / ]]
+}
+
 @test "'browse <notebook-path>:<folder-id>/<file-id>' displays header crumbs with folder." {
   {
     "${_NB}" init
