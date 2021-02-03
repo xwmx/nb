@@ -13255,7 +13255,7 @@ Description:
   browse your notes and notebooks in your terminal web browser, as well as
   seamlessly browse to and from the offsite links in bookmarks and notes.
 
-  To link an note or bookmark from another, include the selector for the
+  To link to a note or bookmark from another, include the selector for the
   target item within double square brackets anywhere in the linking document:
 
     # link to item 123 in the "sample" folder in the "example" notebook
