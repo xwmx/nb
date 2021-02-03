@@ -1121,6 +1121,11 @@ _web_browser() {
 
       "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
+    elif [[ "${_web_browser_command[*]:-}" =~ elinks ]]
+    then
+      ((_dump)) && _arguments+=("-dump")
+
+      "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
     else
       "${_web_browser_command[@]}"
       return 0
