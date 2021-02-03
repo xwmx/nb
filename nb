@@ -12664,11 +12664,11 @@ _show() {
         printf ""
       else
         NB_NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
-          _ls "${_unresolved_arguments[@]}"
+          _ls "${_unresolved_arguments[@]:-}"
       fi
 
       return 0
-    else
+    els
       _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
