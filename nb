@@ -12437,7 +12437,7 @@ _show() {
 
   local _check_type=0
   local _list_page=1
-  local _ls_arguments=()
+  local _unresolved_arguments=()
   local _print_output=0
   local _password=
   local _per_page="${NB_BROWSE_PER_PAGE:-20}"
@@ -12525,7 +12525,6 @@ _show() {
         ;;
       -r|--render)
         _render=1
-        _ls_arguments+=("${__arg}")
         ;;
       --selector*id)
         _print_selector_id=1
@@ -12560,9 +12559,9 @@ _show() {
         if [[ -z "${_selector:-}" ]]
         then
           _selector="${__arg}"
+        else
+          _unresolved_arguments+=("${__arg}")
         fi
-
-        _ls_arguments+=("${__arg}")
         ;;
     esac
 
@@ -12652,7 +12651,7 @@ _show() {
         printf ""
       else
         NB_NOTEBOOK_PATH="${NB_DIR}/${_maybe_notebook}" \
-          _ls "${_ls_arguments[@]:1}"
+          _ls "${_unresolved_arguments[@]}"
       fi
 
       return 0
