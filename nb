@@ -3668,7 +3668,7 @@ _help() {
   then
     _download_from \
       "${_REPO_RAW_URL}/README.md" \
-      | if _command_exists "pandoc" && _web_browser
+      | if _command_exists "pandoc" && _web_browser --check
         then
           pandoc --from markdown --to html | _web_browser
           return 0
@@ -8539,7 +8539,7 @@ _bookmark() {
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
 
-    if _web_browser
+    if _web_browser --check
     then
       _web_browser "${_target_url}"
       return 0
