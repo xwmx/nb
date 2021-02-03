@@ -157,7 +157,7 @@ function _nb_subcommands
     tail -n+3 $_cache_path
 
     # write the func itself into a temporary file and execute it in background
-    set _tmp_file (mktemp -t nb-completion)
+    set _tmp_file (mktemp -t nb-completion.XXXXXX)
     begin
       functions _cache_completions
       echo "_cache_completions -e $_tmp_file $_cache_path"
