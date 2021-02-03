@@ -13327,7 +13327,9 @@ _browse() {
           )
 
           local _folder_id_path=
-          _folder_id_path="$(_get_folder_id_path "${_selector_relative_path}")"
+          _folder_id_path="$(
+            _get_folder_id_path "${_selector_folders}" "${_notebook_path}"
+          )"
 
           local _selector_folder_ids=()
           IFS='/' read -ra _selector_folder_ids < <(
@@ -13524,12 +13526,12 @@ _browse() {
       _per_page="${BASH_REMATCH[1]}"
     fi
 
-    _request_uri="${_request_uri%\?--*}" # strip parameters
+    local _request_uri_base="${_request_uri%\?--*}" # strip parameters
 
     _temp_file="$(mktemp).html"
     touch "${_temp_file}"
 
-    local _target_selector="${_request_uri#\/}"
+    local _target_selector="${_request_uri_base#\/}"
 
     _target_selector="${_target_selector//"\%20"/ }"
     _target_selector="${_target_selector//"%20"/ }"
