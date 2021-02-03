@@ -869,7 +869,84 @@ load test_helper
 
 # unpin #######################################################################
 
-@test "'unpin <filename>' removes an item from the folder's .pindex." {
+@test "'unpin <filename>' removes an item from the folder's .pindex without unpinning other pinned items." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
+
+    "${_NB}" pin "File One.md"
+    "${_NB}" pin "File Three.md"
+
+    diff                                          \
+      <(printf "File One.md\\nFile Three.md\\n")  \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  # `list` with one pinned item
+
+  run "${_NB}" list --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 4                               ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One    ]]
+  [[ "${lines[1]}"  =~  \.*[.*3.*].*\ 📌\ Title\ Three  ]]
+  [[ "${lines[2]}"  =~  \.*[.*4.*].*\ Title\ Four       ]]
+  [[ "${lines[3]}"  =~  \.*[.*2.*].*\ Title\ Two        ]]
+
+  # `unpin` an item
+
+  run "${_NB}" unpin File\ One.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # returns status 0
+
+  [[ "${status}" -eq 0 ]]
+
+  # removes item from the .pindex file
+
+    diff                            \
+      <(printf "File Three.md\\n")  \
+      <(cat "${NB_DIR}/home/.pindex")
+
+  # prints output
+
+  [[ "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\\\ One.md ]]
+
+  # creates git commit
+
+  cd "${NB_DIR}/home"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Unpinned: File One.md'
+
+  # `list` with no pinned items
+
+  run "${_NB}" list --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 4                               ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*3.*].*\ 📌\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  \.*[.*4.*].*\ Title\ Four       ]]
+  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ Title\ Two        ]]
+  [[ "${lines[3]}"  =~  \.*[.*1.*].*\ Title\ One        ]]
+}
+
+@test "'unpin <filename>' removes an item from the folder's .pindex when it's the last pinned item." {
   {
     "${_NB}" init
     "${_NB}" add "File One.md"    --title "Title One"
