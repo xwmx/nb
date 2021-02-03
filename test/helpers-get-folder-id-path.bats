@@ -2,6 +2,69 @@
 
 load test_helper
 
+@test "'helpers get_folder_id_path()' resolves name to folder id." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File Example.md"
+    "${_NB}" add "Sample Folder/File Sample.md"
+
+    "${_NB}" move "Sample Folder" "1" --force
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+    [[ -d "${NB_DIR}/home/1"              ]]
+  }
+
+  run "${_NB}" helpers get_folder_id_path 1/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "2/"                ]]
+
+  run "${_NB}" helpers get_folder_id_path 1/1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "2/"                ]]
+
+
+  run "${_NB}" helpers get_folder_id_path 1/File\ Sample.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "2/"                ]]
+
+  run "${_NB}" helpers get_folder_id_path Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "1/"                ]]
+
+  run "${_NB}" helpers get_folder_id_path Example\ Folder/1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "1/"                ]]
+
+
+  run "${_NB}" helpers get_folder_id_path Example\ Folder/Example\ File.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "1/"                ]]
+}
+
 @test "'helpers get_folder_id_path <not-valid/path>' exits with 1 and prints nothing." {
   {
     "${_NB}" init
