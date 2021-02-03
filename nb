@@ -13104,13 +13104,13 @@ Can't show archives. Export archive and expand to edit.\\n"
          _web_browser --check       &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
     then # `show --render` with `pandoc` and browser available
+      cd "${_CURRENT_WORKING_DIR}"
+
       if _command_exists "ncat"
       then
         _defer "_browse" "${_target_path}"
         return 0
       else
-        cd "${_CURRENT_WORKING_DIR}"
-
         _show_resolve_links   \
           "${_target_path}"   \
           "${_notebook_path}" \
