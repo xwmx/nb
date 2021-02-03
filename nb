@@ -11003,15 +11003,19 @@ _pin() {
         touch "${_pindex_path}"
       fi
 
-      if ! grep -q "^${_basename}$" "${_pindex_path}"
+      if grep -q "^${_basename}$" "${_pindex_path}"
       then
+        _exit_1 printf            \
+          "Already pinned: %s\\n" \
+          "$(_color_primary "${_selector}")"
+      else
         printf "%s\\n" "${_basename}" >> "${_pindex_path}"
         _sed_i -e '/^[[:space:]]*$/d'    "${_pindex_path}" # remove blank lines
+
+        _git checkpoint "${_notebook_path}" "[nb] Pinned: ${_relative_path}"
+
+        printf "Pinned: %s\\n" "$(_show "${_selector}" --info-line)"
       fi
-
-      _git checkpoint "${_notebook_path}" "[nb] Pinned: ${_relative_path}"
-
-      printf "Pinned: %s\\n" "$(_show "${_selector}" --info-line)"
       ;;
   esac
 }

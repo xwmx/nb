@@ -146,6 +146,48 @@ load test_helper
   git log | grep -q '\[nb\] Unpinned: File One.md' || return 0
 }
 
+@test "'pin' with already-pinned selector exits with 1 and prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title One"
+
+    "${_NB}" pin "File One.md"
+
+    diff                              \
+      <(printf "%s\\n" "File One.md") \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  run "${_NB}" pin File\ One.md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # exits with status 1
+
+  [[ "${status}" -eq 1 ]]
+
+  # does not change pindex
+
+  diff                              \
+    <(printf "%s\\n" "File One.md") \
+    <(cat "${NB_DIR}/home/.pindex")
+
+  # prints message
+
+  [[ "${output}" =~ Already\ pinned:\ .*File\ One.md ]]
+
+  # does not create  git commit
+
+  cd "${NB_DIR}/home"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  [[ "$(git log | grep -c '\[nb\] Pinned: File One.md')" -eq 1 ]]
+}
+
 @test "'unpin' with not-pinned selector prints message." {
   {
     "${_NB}" init
