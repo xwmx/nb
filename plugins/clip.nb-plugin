@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+###############################################################################
+# clip
+#
+# A plugin for `nb` providing clipboard functionality.
+#
+# Author: hyb (https://github.com/ohyhyb)
+###############################################################################
+
+# Add the new subcommand names with `_subcommands add <name>`.
+_subcommands add "clip"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "clip" <<HEREDOC
+Usage:
+  nb clip (<id> | <filename> | <path> | <title>)
+
+Description:
+  Copy contents of a text or markdown item to the clipboard.
+
+Alias: \`clip\`
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_clip() {
+  # The selector argument can be an <id>, <filename>, <path>, or <title>, with
+  # or without a preceeding notebook name. Examples:
+  #   1
+  #   example.md
+  #   title
+  #   /path/to/example.md
+  #   notebook:1
+  #   notebook:example.md
+  #   notebook:title
+  #   notebook:/path/to/example.md
+  local _selector="${1:-}"
+
+  # Check for the presence of a selector, exiting and printing help if not
+  # found:
+  if [[ -z "${_selector:-}" ]]
+  then
+    _help "clip"
+    exit 1
+  fi
+
+  # Get the filename using the selector:
+  local _source_filename
+  _source_filename="$(_show "${_selector}" --filename)"
+
+  # Get the current notebook path:
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+
+  # Validate that the selector represents a valid file:
+  if [[ -z "${_source_filename:-}"                      ]] ||
+     [[ ! -e "${_notebook_path}/${_source_filename}"    ]]
+  then
+    printf "Not found: %s\\n" "${_selector}"
+    exit 1
+  elif [[ ! -f "${_notebook_path}/${_source_filename}"  ]]
+  then
+    printf "Not a file: %s\\n" "${_selector}"
+    exit 1
+  fi
+
+  if _show "${_source_filename}" --type text ||
+     _show "${_source_filename}" --type md
+  then
+    if _command_exists "xclip" && [[ ! "${OSTYPE}" =~ ^darwin ]]
+    then
+      cat "${_notebook_path}/${_source_filename}" | xclip -sel clip
+    else
+      cat "${_notebook_path}/${_source_filename}" | pbcopy
+    fi && printf "Copied $(_color_primary "${_source_filename}") contents to clipboard.%s\\n"
+  else
+    _exit_1 printf "Not a text or markdown file.%s\\n"
+  fi
+}
+
+# Use `_subcommands alias` to define a full alias with linked help / usage.
+# Aliases also have to be added with `_subcommands add <name>`.
+_subcommands alias "clip"
