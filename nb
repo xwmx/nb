@@ -23,12 +23,12 @@
 # ========
 #
 # - Configuration and Setup
-# - Helper Functions (alphabetical order)
+# - Helpers: Group 1 (alphabetical order)
 # - Subcommands: Group 1 (alphabetical order)
 # - Plugins
 # - Option Parsing
 # - _main() / Dispatch
-# - Helper Functions: Group 2 (alphabetical order)
+# - Helpers: Group 2 (alphabetical order)
 # - Subcommands: Group 2 (alphabetical order)
 # - Subcommands: Group 3 (alphabetical order)
 #
@@ -997,8 +997,10 @@ _temp() {
 trap "_temp cleanup" EXIT
 
 ###############################################################################
-# Helpers
+# Helpers: Group 1                                             Helpers: Group 1
+# ----------------                                             ----------------
 ###############################################################################
+# --------------------------------------------------------------------------- #
 
 # $_COLUMNS
 #
@@ -7349,8 +7351,8 @@ _main() {
 _main "${_ARGUMENTS[@]:-}"
 
 ###############################################################################
-# Helper Functions: Group 2                           Helper Functions: Group 2
-# -------------------------                           -------------------------
+# Helpers: Group 2                                             Helpers: Group 2
+# ----------------                                             ----------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
