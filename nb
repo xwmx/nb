@@ -12894,20 +12894,10 @@ Can't show archives. Export archive and expand to edit.\\n"
        _web_browser --check     &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then
-      {
-        printf "%s\\n" "$(_browse --header "${_target_path}")"
-
-        _show_resolve_links   \
-          "${_target_path}"   \
-          "${_notebook_path}" \
-          --browse
-      } | {
-        pandoc                \
-          --from markdown     \
-          --to html           \
-          --standalone        \
-          2>/dev/null
-      }
+      _show_resolve_links       \
+        "${_target_path}"       \
+        "${_notebook_path}"     \
+        --browse
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
@@ -13467,6 +13457,31 @@ _browse() {
     printf "# %s\\n\\n" "${_header_content:-}"
   }
 
+  # _browse_render_item()
+  #
+  # Usage:
+  #   _browse_render_item <path>
+  #
+  # Description:
+  #   Render an item to HTML with links resolved to internal web server.
+  _browse_render_item() {
+    local _path="${1:?}"
+
+    {
+      printf "%s\\n" "$(_browse --header "${_path}")"
+
+      _show "${_path}"  \
+        --browse        \
+        --no-color
+    } | {
+      pandoc            \
+        --from markdown \
+        --to html       \
+        --standalone    \
+        2>/dev/null
+    }
+  }
+
   # _browse_respond_with()
   #
   # Usage:
@@ -13640,18 +13655,12 @@ _browse() {
         _browse_respond_with 404
       elif [[ -d "${_selector_path:-}" ]]
       then
-        _browse_render_container        \
-          "${_selector_path:-}"         \
-          --page      "${_page_number}" \
-          --per-page  "${_per_page}"    \
+        _browse_render_container "${_selector_path:-}"  \
+          --page      "${_page_number}"                 \
+          --per-page  "${_per_page}"                    \
           >> "${_temp_file}"
       else
-        _show "${_target_selector}"     \
-          --browse                      \
-          --page      "${_page_number}" \
-          --per-page  "${_per_page}"    \
-          --no-color                    \
-          >> "${_temp_file}"
+        _browse_render_item "${_selector_path:-}" >> "${_temp_file}"
       fi
     fi
 
@@ -13700,6 +13709,7 @@ _browse() {
   local _browse_per_page=
   local _print_browse_container=0
   local _print_browse_header=0
+  local _print_browse_item=0
   local _print_headers=0
   local _print_output=0
   local _selector=
@@ -13715,6 +13725,9 @@ _browse() {
         ;;
       --headers)
         _print_headers=1
+        ;;
+      --item)
+        _print_browse_item=1
         ;;
       --notebooks)
         _browse_notebooks=1
@@ -13755,6 +13768,15 @@ _browse() {
   if ((_print_browse_container))
   then
     _browse_render_container "$(
+      _show "${_selector:-}" --path 2>/dev/null || :
+    )"
+
+    exit 0
+  fi
+
+  if ((_print_browse_item))
+  then
+    _browse_render_item "$(
       _show "${_selector:-}" --path 2>/dev/null || :
     )"
 
