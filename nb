@@ -1559,11 +1559,14 @@ _get_folder_id_path() {
     ))
 
     local __folder=
-    for   __folder in "${_selector_folders[@]}"
+    for   __folder in "${_selector_folders[@]:-}"
     do
-      _folder_id_path+="$(
-        _index get_id "${__folder}" "${_parent_folder_path}"
-      )/"
+      local _folder_id=
+      _folder_id="$(_index get_id "${__folder}" "${_parent_folder_path}")"
+
+      [[ -z "${_folder_id:-}" ]] && return 1
+
+      _folder_id_path+="${_folder_id}/"
       _parent_folder_path+="/${__folder}"
     done
 
@@ -12157,186 +12160,6 @@ _show() {
     printf "%s\\n" "${_indicators:-}"
   }
 
-  # _show_render_container()
-  #
-  # Usage:
-  #   _show_render_container <target-path> [--page <page-number>]
-  #                          [--per-page <number>]
-  #
-  # Description:
-  #   Render a notebook or folder as an HTML page.
-  _show_render_container() {
-    local _current_page=1
-    local _per_page="${NB_BROWSE_PER_PAGE:-20}"
-    local _target_path=
-
-    while ((${#}))
-    do
-      case "${1:-}" in
-        --page)   _current_page="${2:?}"  && shift  ;;
-        --per*)   _per_page="${2:?}"      && shift  ;;
-        *)        _target_path="${1:?}"             ;;
-      esac
-
-      shift
-    done
-
-    [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
-
-    {
-      _list "${_target_path}" --no-color  \
-        --per-page "${_per_page}"         \
-        --page "${_current_page}"         \
-        --with-pinned
-    } | {
-      local _truncate_length=
-
-      case "${BROWSER:-}" in
-        *elinks*) _truncate_length="$((_COLUMNS - 20))" ;;
-        *lynx*)   _truncate_length="$((_COLUMNS - 10))" ;;
-        *)        _truncate_length="$((_COLUMNS - 1))"  ;;
-      esac
-
-      while read -r __list_item
-      do
-        local _list_item_length="${#__list_item}"
-        local _list_item_visible_length=
-        _list_item_visible_length="$(_get_visible_length "${__list_item}")"
-
-        local _difference=
-        _difference="$((_list_item_visible_length - _list_item_length))"
-
-        local _adjusted_truncate_length=
-        _adjusted_truncate_length="$((_truncate_length - _difference))"
-
-        if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
-        then
-          __list_item="${__list_item:0:$((_adjusted_truncate_length - 1))}…"
-        fi
-
-        if [[ "${__list_item:-}" =~ ^0\ items. ]]
-        then
-          printf "%s<br/>\\n" "${__list_item}"
-          break
-        fi
-
-        local _item_selector="${__list_item%%]*}"
-        _item_selector="${_item_selector#[}"
-        _item_selector="${_item_selector//\\/}"
-
-        local _target_selector=
-
-        if [[ ! "${_item_selector}" =~ / ]]
-        then
-          _target_selector="${_item_selector}"
-        else # deconstruct and rebuild selector with id folder paths
-          local _notebook_name=
-
-          if [[ "${_item_selector}" =~ : ]]
-          then
-            _notebook_name="${_item_selector%%:*}"
-          fi
-
-          local _folder_id_path=
-          _folder_id_path="$(_get_folder_id_path "${_item_selector}")"
-
-          local _selector_identifier=
-
-          if [[ ! "${_item_selector}" =~ :$|/$ ]]
-          then
-            _selector_identifier="${_item_selector#*:}"
-            _selector_identifier="${_selector_identifier##*/}"
-          fi
-
-          if [[ "${_item_selector}" =~ : ]]
-          then
-            _target_selector="${_notebook_name}:"
-          fi
-
-          if [[ -n "${_folder_id_path:-}"       ]] &&
-             [[ !  "${_folder_id_path}" == "/"  ]]
-          then
-            _target_selector+="${_folder_id_path}"
-          fi
-
-          if [[ -n "${_selector_identifier}" ]]
-          then
-            _target_selector+="${_selector_identifier}"
-          fi
-        fi
-
-        local _display_item="${__list_item//\\\ /&nbsp;}"
-        _display_item="${_display_item//\ /&nbsp;}"
-
-        printf "%s\\n" \
-          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
-      done
-    } | {
-      local _list_count=
-      _list_count="$(_count "${_target_path}")"
-
-      local _print_prev=0
-
-      if ((_list_count)) && [[ "${_current_page}" -gt 1 ]]
-      then
-        _print_prev=1
-      fi
-
-      local _print_next=0
-
-      if ((_list_count)) &&
-         [[ "$((_current_page * _per_page))" -le "${_list_count}" ]]
-      then
-        _print_next=1
-      fi
-
-      printf "%s\\n" "$(_browse --header "${_target_path}")"
-
-      cat
-
-      if ((_print_prev)) || ((_print_next))
-      then
-        printf "\\n"
-      fi
-
-      if ((_print_prev))
-      then
-        printf                                                        \
-          "[❮ prev](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
-          "${NB_SERVER_PORT}"                                         \
-          "${_selector}"                                              \
-          "$((_current_page - 1))"                                    \
-          "${_per_page}"
-      fi
-
-      if ((_print_prev)) && ((_print_next))
-      then
-        printf " · "
-      fi
-
-      if ((_print_next))
-      then
-        printf                                                        \
-          "[next ❯](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
-          "${NB_SERVER_PORT}"                                         \
-          "${_selector}"                                              \
-          "$((_current_page + 1))"                                    \
-          "${_per_page}"
-      fi
-
-      if ((_print_prev)) || ((_print_next))
-      then
-        printf "\\n"
-      fi
-    } | {
-      pandoc            \
-        --from markdown \
-        --to html       \
-        --standalone    \
-        2>/dev/null
-    }
-  }
-
   # _show_resolve_links()
   #
   # Usage:
@@ -12891,27 +12714,14 @@ Can't show archives. Export archive and expand to edit.\\n"
 
   if ! _file_is_text "${_target_path}"
   then
-    if ! ((_render_for_browsing))   &&
-       [[ -d "${_target_path}" ]]   &&
-       _command_exists "ncat"       &&
-       _command_exists "pandoc"     &&
+    if [[ -d "${_target_path}"        ]]  &&
+       _command_exists "ncat"             &&
+       _command_exists "pandoc"           &&
        _web_browser --check
     then
       cd "${_CURRENT_WORKING_DIR}"
 
       _defer "_browse" "${_target_path}/"
-      return 0
-    elif ((_render_for_browsing))   &&
-         [[ -d "${_target_path}" ]] &&
-         _command_exists "ncat"     &&
-         _command_exists "pandoc"   &&
-         _web_browser --check
-    then
-      cd "${_CURRENT_WORKING_DIR}"
-
-      _show_render_container "${_target_path}"  \
-        --page      "${_list_page:-}"           \
-        --per-page "${_per_page:-}"
       return 0
     elif [[ -d "${_target_path}"      ]]  &&
        _command_exists "ranger"           &&
@@ -13232,6 +13042,78 @@ _version() {
 _call_deferred_command --group 2
 
 ###############################################################################
+# Helpers: Group 3                                             Helpers: Group 3
+# ----------------                                             ----------------
+###############################################################################
+# --------------------------------------------------------------------------- #
+
+# _get_folder_id_selector()
+#
+# Usage:
+#   _get_folder_id_selector <path> | <selector>
+_get_folder_id_selector() {
+  local _folder_id_selector=
+  local _folder_path=
+  local _notebook_name=
+  local _relative_path=
+  local _selector="${1:?}"
+  local _selector_identifier=
+
+  if [[ "${_selector:-}" =~ ^/ ]]
+  then # selector is full path
+    local _path_with_notebook="${_selector#${NB_DIR}/}"
+    _notebook_name="${_path_with_notebook%%/*}"
+    _relative_path="${_path_with_notebook#*/}"
+  else
+    if [[ "${_selector:-}" =~ : ]]
+    then
+      _notebook_name="${_selector%%:*}"
+      _relative_path="${_selector#*:}"
+    else
+      _relative_path="${_selector:-}"
+    fi
+  fi
+
+  if [[ -n "${_notebook_name:-}" ]]
+  then
+    _folder_id_selector+="${_notebook_name}:"
+  fi
+
+  local _folder_id_path=
+
+  if [[ -n "${_notebook_name}" ]]
+  then
+    _folder_id_path="$(
+      _get_folder_id_path "${_relative_path}" "${NB_DIR}/${_notebook_name}"
+    )"
+  else
+    _folder_id_path="$(_get_folder_id_path "${_relative_path}")"
+  fi
+
+  if [[ -n "${_folder_id_path:-}"       ]] &&
+     [[ !  "${_folder_id_path}" == "/"  ]]
+  then
+    _folder_id_selector+="${_folder_id_path}"
+  fi
+
+  if [[   "${_selector}"      =~ ^/     ]]
+  then
+    _selector_identifier="${_relative_path:-}"
+  elif [[ ! "${_selector:-}"  =~ :$|/$  ]]
+  then
+    _selector_identifier="${_selector#*:}"
+    _selector_identifier="${_selector_identifier##*/}"
+  fi
+
+  if [[ -n "${_selector_identifier}" ]]
+  then
+    _folder_id_selector+="${_selector_identifier}"
+  fi
+
+  printf "%s\\n" "${_folder_id_selector:-}"
+}
+
+###############################################################################
 # Subcommands: Group 3                                     Subcommands: Group 3
 # --------------------                                     --------------------
 ###############################################################################
@@ -13301,6 +13183,172 @@ _browse() {
       405) printf "Method Not Allowed\\n"     ;;
       500) printf "Internal Server Error\\n"  ;;
     esac
+  }
+
+  # _browse_render_container()
+  #
+  # Usage:
+  #   _browse_render_container <target-path> [<temp-file>]
+  #                            [--page <page-number>] [--per-page <number>]
+  #
+  # Description:
+  #   Render a notebook or folder as an HTML page.
+  _browse_render_container() {
+    local _current_page=1
+    local _per_page="${NB_BROWSE_PER_PAGE:-20}"
+    local _target_path=
+    local _temp_file=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)   _current_page="${2:?}"  && shift  ;;
+        --per*)   _per_page="${2:?}"      && shift  ;;
+        *)
+          if [[ -z "${_target_path}" ]]
+          then
+            _target_path="${1:-}"
+          else
+            _temp_file="${1:-}"
+          fi
+          ;;
+      esac
+
+      shift
+    done
+
+    if [[ -z "${_target_path:-}" ]]
+    then
+      _target_path="$(_notebooks current --path)"
+    fi
+
+    [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
+
+    {
+      _list "${_target_path}"           \
+        --no-color                      \
+        --per-page  "${_per_page}"      \
+        --page      "${_current_page}"  \
+        --with-pinned
+    } | {
+      local _truncate_length=
+
+      case "${BROWSER:-}" in
+        *elinks*) _truncate_length="$((_COLUMNS - 20))" ;;
+        *lynx*)   _truncate_length="$((_COLUMNS - 10))" ;;
+        *)        _truncate_length="$((_COLUMNS - 1))"  ;;
+      esac
+
+      while read -r __list_item
+      do
+        local _list_item_length="${#__list_item}"
+        local _list_item_visible_length=
+        _list_item_visible_length="$(_get_visible_length "${__list_item}")"
+
+        local _difference=
+        _difference="$((_list_item_visible_length - _list_item_length))"
+
+        local _adjusted_truncate_length=
+        _adjusted_truncate_length="$((_truncate_length - _difference))"
+
+        if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
+        then
+          __list_item="${__list_item:0:$((_adjusted_truncate_length - 1))}…"
+        fi
+
+        if [[ "${__list_item:-}" =~ ^0\ items. ]]
+        then
+          printf "%s<br/>\\n" "${__list_item}"
+          break
+        fi
+
+        local _item_selector="${__list_item%%]*}"
+        _item_selector="${_item_selector#[}"
+        _item_selector="${_item_selector//\\/}"
+
+        local _target_selector=
+        _target_selector="$(_get_folder_id_selector "${_item_selector}")"
+
+        local _display_item="${__list_item//\\\ /&nbsp;}"
+        _display_item="${_display_item//\ /&nbsp;}"
+
+        printf "%s\\n" \
+          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
+      done
+    } | {
+      local _list_count=
+      _list_count="$(_count "${_target_path}")"
+
+      local _link_selector=
+      _link_selector="$(_get_folder_id_selector "${_target_path:-}")"
+
+      local _print_prev=0
+
+      if ((_list_count)) && [[ "${_current_page}" -gt 1 ]]
+      then
+        _print_prev=1
+      fi
+
+      local _print_next=0
+
+      if ((_list_count)) &&
+         [[ "$((_current_page * _per_page))" -le "${_list_count}" ]]
+      then
+        _print_next=1
+      fi
+
+      printf "%s\\n" "$(_browse --header "${_target_path}")"
+
+      cat
+
+      if ((_print_prev)) || ((_print_next))
+      then
+        printf "\\n"
+      fi
+
+      if ((_print_prev))
+      then
+        printf                                                        \
+          "[❮ prev](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
+          "${NB_SERVER_PORT}"                                         \
+          "${_link_selector}"                                         \
+          "$((_current_page - 1))"                                    \
+          "${_per_page}"
+      fi
+
+      if ((_print_prev)) && ((_print_next))
+      then
+        printf " · "
+      fi
+
+      if ((_print_next))
+      then
+        printf                                                        \
+          "[next ❯](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
+          "${NB_SERVER_PORT}"                                         \
+          "${_link_selector}"                                         \
+          "$((_current_page + 1))"                                    \
+          "${_per_page}"
+      fi
+
+      if ((_print_prev)) || ((_print_next))
+      then
+        printf "\\n"
+      fi
+    } | {
+      pandoc            \
+        --from markdown \
+        --to html       \
+        --standalone    \
+        2>/dev/null
+    } | {
+      if [[ -n "${_temp_file:-}" ]]
+      then
+        cat >> "${_temp_file:-}"
+      else
+        cat
+      fi
+    }
   }
 
   # _browse_render_notebooks()
@@ -13601,17 +13649,44 @@ _browse() {
     if [[ -z "${_target_selector:-}" ]]
     then
       _browse_render_notebooks "${_temp_file}"
-    elif ! _show "${_target_selector}" --path &>/dev/null
-    then
-      _browse_respond_with 404
     else
-      _show "${_target_selector}"     \
-        --browse                      \
-        --page      "${_page_number}" \
-        --per-page  "${_per_page}"    \
-        --no-color                    \
-        >> "${_temp_file}"
+      local _selector_path=
+      _selector_path="$(_show "${_target_selector}" --path 2>/dev/null || :)"
+
+      if [[ -z "${_selector_path:-}" ]]
+      then
+        _browse_respond_with 404
+      elif [[ -d "${_selector_path:-}" ]]
+      then
+        _browse_render_container        \
+          "${_selector_path:-}"         \
+          "${_temp_file}"               \
+          --page      "${_page_number}" \
+          --per-page  "${_per_page}"
+      else
+        _show "${_target_selector}"     \
+          --browse                      \
+          --page      "${_page_number}" \
+          --per-page  "${_per_page}"    \
+          --no-color                    \
+          >> "${_temp_file}"
+      fi
     fi
+
+    # if [[ -z "${_target_selector:-}" ]]
+    # then
+    #   _browse_render_notebooks "${_temp_file}"
+    # elif ! _show "${_target_selector}" --path &>/dev/null
+    # then
+    #   _browse_respond_with 404
+    # else
+    #   _show "${_target_selector}"     \
+    #     --browse                      \
+    #     --page      "${_page_number}" \
+    #     --per-page  "${_per_page}"    \
+    #     --no-color                    \
+    #     >> "${_temp_file}"
+    # fi
 
     case "${_request_method}" in
       HEAD)
@@ -13656,6 +13731,7 @@ _browse() {
   local _browse_notebooks=0
   local _browse_page=1
   local _browse_per_page=
+  local _print_browse_container=0
   local _print_browse_header=0
   local _print_headers=0
   local _print_output=0
@@ -13664,6 +13740,9 @@ _browse() {
   while ((${#}))
   do
     case "${1:-}" in
+      --container)
+        _print_browse_container=1
+        ;;
       --header)
         _print_browse_header=1
         ;;
@@ -13705,6 +13784,16 @@ _browse() {
     _browse_render_header "${_selector:-}"
     exit 0
   fi
+
+  if ((_print_browse_container))
+  then
+    _browse_render_container "$(
+      _show "${_selector:-}" --path 2>/dev/null || :
+    )"
+
+    exit 0
+  fi
+
 
   if ! hash "ncat" &>/dev/null
   then
