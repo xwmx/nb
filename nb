@@ -13689,19 +13689,27 @@ _browse() {
   # Description:
   #   Start the HTTP server in the brackground.
   _browse_serve() {
-    (
+    # Usage: _browse_serve_run
+    _browse_serve_run() {
       trap "exit" INT
       while true
       do
         ncat -lp "${NB_SERVER_PORT}" -e "${_MY_PATH} browse --respond" 2>/dev/null
       done
-    ) &
+    }
 
-    local _pid="${!}"
-    # shellcheck disable=SC2064
-    trap "kill ${_pid} 2> /dev/null" EXIT
+    if [[ "${1:-}" == "--foreground" ]]
+    then
+      _browse_serve_run
+    else
+      (_browse_serve_run) &
 
-    sleep 0.5
+      local _pid="${!}"
+      # shellcheck disable=SC2064
+      trap "kill ${_pid} 2> /dev/null" EXIT
+
+      sleep 0.5
+    fi
   }
 
   local _browse_notebooks=0
@@ -13747,8 +13755,8 @@ _browse() {
         _browse_respond
         exit 0
         ;;
-      --serve)
-        _browse_serve
+      --serve*)
+        _browse_serve --foreground
         exit 0
         ;;
       *)
