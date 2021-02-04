@@ -13281,14 +13281,36 @@ Examples:
 Shortcut Alias: \`br\`
 HEREDOC
 _browse() {
-  # _browse_header()
+  # Inspired by bashttpd: https://github.com/avleen/bashttpd
+
+  # _browse_http_response_message()
   #
   # Usage:
-  #   _browse_header <selector>
+  #   _browse_http_response_message <status-code>
+  #
+  # Description:
+  #   Print the response message for a given status code.
+  _browse_http_response_message() {
+    local _status_code="${1:-}"
+
+    case "${_status_code}" in
+      200) printf "OK\\n"                     ;;
+      400) printf "Bad Request\\n"            ;;
+      403) printf "Forbidden\\n"              ;;
+      404) printf "Not Found\\n"              ;;
+      405) printf "Method Not Allowed\\n"     ;;
+      500) printf "Internal Server Error\\n"  ;;
+    esac
+  }
+
+  # _browse_render_header()
+  #
+  # Usage:
+  #   _browse_render_header <selector>
   #
   # Description:
   #   Print a context-aware, linked Markdown header.
-  _browse_header() {
+  _browse_render_header() {
     local _header_content="[nb](http://localhost:${NB_SERVER_PORT}/) ·"
 
     local _selector="${1:-}"
@@ -13380,28 +13402,6 @@ _browse() {
     printf "# %s\\n\\n" "${_header_content:-}"
   }
 
-  # Inspired by bashttpd: https://github.com/avleen/bashttpd
-
-  # _browse_http_response()
-  #
-  # Usage:
-  #   _browse_http_response <status-code>
-  #
-  # Description:
-  #   Print the response message for a given status code.
-  _browse_http_response() {
-    local _status_code="${1:-}"
-
-    case "${_status_code}" in
-      200) printf "OK\\n"                     ;;
-      400) printf "Bad Request\\n"            ;;
-      403) printf "Forbidden\\n"              ;;
-      404) printf "Not Found\\n"              ;;
-      405) printf "Method Not Allowed\\n"     ;;
-      500) printf "Internal Server Error\\n"  ;;
-    esac
-  }
-
   # _browse_respond_with()
   #
   # Usage:
@@ -13465,7 +13465,7 @@ _browse() {
     fi
 
     printf "%s\\r\\n" \
-      "HTTP/1.0 ${_status_code} $(_browse_http_response "${_status_code}")"
+      "HTTP/1.0 ${_status_code} $(_browse_http_response_message "${_status_code}")"
 
     local __response_header=
     for   __response_header in "${_response_headers[@]:-}"
@@ -13492,7 +13492,7 @@ _browse() {
         done < "${_path}"
       else
         printf "%s\\r\\n" \
-          "${_status_code} $(_browse_http_response "${_status_code}")"
+          "${_status_code} $(_browse_http_response_message "${_status_code}")"
       fi
     fi
 
@@ -13689,7 +13689,7 @@ _browse() {
 
   if ((_print_browse_header))
   then
-    _browse_header "${_selector:-}"
+    _browse_render_header "${_selector:-}"
     exit 0
   fi
 
