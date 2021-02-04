@@ -13188,8 +13188,8 @@ _browse() {
   # _browse_render_container()
   #
   # Usage:
-  #   _browse_render_container <target-path> [<temp-file>]
-  #                            [--page <page-number>] [--per-page <number>]
+  #   _browse_render_container <target-path> [--page <page-number>]
+  #                            [--per-page <number>]
   #
   # Description:
   #   Render a notebook or folder as an HTML page.
@@ -13197,21 +13197,13 @@ _browse() {
     local _current_page=1
     local _per_page="${NB_BROWSE_PER_PAGE:-20}"
     local _target_path=
-    local _temp_file=
 
     while ((${#}))
     do
       case "${1:-}" in
-        --page)   _current_page="${2:?}"  && shift  ;;
-        --per*)   _per_page="${2:?}"      && shift  ;;
-        *)
-          if [[ -z "${_target_path}" ]]
-          then
-            _target_path="${1:-}"
-          else
-            _temp_file="${1:-}"
-          fi
-          ;;
+        --page)   _current_page="${2:?}"        && shift                  ;;
+        --per*)   _per_page="${2:?}"            && shift                  ;;
+        *)        [[ -z "${_target_path:-}" ]]  && _target_path="${1:-}"  ;;
       esac
 
       shift
@@ -13341,26 +13333,17 @@ _browse() {
         --to html       \
         --standalone    \
         2>/dev/null
-    } | {
-      if [[ -n "${_temp_file:-}" ]]
-      then
-        cat >> "${_temp_file:-}"
-      else
-        cat
-      fi
     }
   }
 
   # _browse_render_notebooks()
   #
   # Usage:
-  #   _browse_render_notebooks <temp-file>
+  #   _browse_render_notebooks
   #
   # Description:
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
-    local _temp_file="${1:?}"
-
     local _notebook_names=()
     _notebook_names=($(_notebooks --names --unarchived --no-color))
 
@@ -13381,7 +13364,6 @@ _browse() {
         --from markdown           \
         --to html                 \
         --standalone              \
-        --output "${_temp_file}"  \
         2>/dev/null || :
     }
   }
@@ -13648,7 +13630,7 @@ _browse() {
 
     if [[ -z "${_target_selector:-}" ]]
     then
-      _browse_render_notebooks "${_temp_file}"
+      _browse_render_notebooks >> "${_temp_file}"
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector}" --path 2>/dev/null || :)"
@@ -13660,9 +13642,9 @@ _browse() {
       then
         _browse_render_container        \
           "${_selector_path:-}"         \
-          "${_temp_file}"               \
           --page      "${_page_number}" \
-          --per-page  "${_per_page}"
+          --per-page  "${_per_page}"    \
+          >> "${_temp_file}"
       else
         _show "${_target_selector}"     \
           --browse                      \
@@ -13672,21 +13654,6 @@ _browse() {
           >> "${_temp_file}"
       fi
     fi
-
-    # if [[ -z "${_target_selector:-}" ]]
-    # then
-    #   _browse_render_notebooks "${_temp_file}"
-    # elif ! _show "${_target_selector}" --path &>/dev/null
-    # then
-    #   _browse_respond_with 404
-    # else
-    #   _show "${_target_selector}"     \
-    #     --browse                      \
-    #     --page      "${_page_number}" \
-    #     --per-page  "${_per_page}"    \
-    #     --no-color                    \
-    #     >> "${_temp_file}"
-    # fi
 
     case "${_request_method}" in
       HEAD)
