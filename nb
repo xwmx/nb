@@ -13303,6 +13303,41 @@ _browse() {
     esac
   }
 
+  # _browse_render_notebooks()
+  #
+  # Usage:
+  #   _browse_render_notebooks <temp-file>
+  #
+  # Description:
+  #   Print an HTML page listing notebooks.
+  _browse_render_notebooks() {
+    local _temp_file="${1:?}"
+
+    local _notebook_names=()
+    _notebook_names=($(_notebooks --names --unarchived --no-color))
+
+    {
+      printf "%s\\n" "$(_browse --header)"
+
+      local __name=
+      for   __name in "${_notebook_names[@]:-}"
+      do
+        printf --                               \
+          "[%s](http://localhost:%s/%s:)<br/>"  \
+          "${__name}"                           \
+          "${NB_SERVER_PORT}"                   \
+          "${__name}"
+      done
+    } | {
+      pandoc                      \
+        --from markdown           \
+        --to html                 \
+        --standalone              \
+        --output "${_temp_file}"  \
+        2>/dev/null || :
+    }
+  }
+
   # _browse_render_header()
   #
   # Usage:
@@ -13565,29 +13600,7 @@ _browse() {
 
     if [[ -z "${_target_selector:-}" ]]
     then
-      local _notebook_names=()
-      _notebook_names=($(_notebooks --names --unarchived --no-color))
-
-      {
-        printf "%s\\n" "$(_browse --header)"
-
-        local __name=
-        for   __name in "${_notebook_names[@]:-}"
-        do
-          printf --                               \
-            "[%s](http://localhost:%s/%s:)<br/>"  \
-            "${__name}"                           \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"
-        done
-      } | {
-        pandoc                      \
-          --from markdown           \
-          --to html                 \
-          --standalone              \
-          --output "${_temp_file}"  \
-          2>/dev/null || :
-      }
+      _browse_render_notebooks "${_temp_file}"
     elif ! _show "${_target_selector}" --path &>/dev/null
     then
       _browse_respond_with 404
