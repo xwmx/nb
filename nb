@@ -13590,7 +13590,7 @@ _browse() {
   #   _browse_respond
   #
   # Description:
-  #   Build a response using standard input and print to standard output..
+  #   Build a response using standard input and print to standard output.
   _browse_respond() {
     # ---
     # Request parsing
