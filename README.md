@@ -3755,7 +3755,7 @@ Examples:
   nb browse 123
   nb browse demo:456
 
-Shortcut Alias: `br
+Shortcut Alias: `br`
 ```
 
 #### `completions`
