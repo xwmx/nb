@@ -72,10 +72,12 @@ fi
 
 # install dependencies
 sudo apt-get update
-sudo apt-get install bats -y
-sudo apt-get install ncat -y
+sudo apt-get install bats   -y
+sudo apt-get install elinks -y
+sudo apt-get install lynx   -y
+sudo apt-get install ncat   -y
 sudo apt-get install python-pygments -y
-sudo apt-get install w3m
+sudo apt-get install w3m    -y
 
 # install latest pandoc
 curl -LO https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb
