@@ -9351,7 +9351,7 @@ HEREDOC
       else
         local _completion_path=
         local _completion_target=
-        if [[ "${__shell}" == "bash" ]]
+        if [[ "${__shell}" == "bash"  ]]
         then
           _completion_path="$(_get_bash_completion_path)"
           _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
@@ -9773,7 +9773,7 @@ _edit() {
 
         _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
 
-        if [[ -e "${_encrypted_path}" ]]
+        if [[ -e "${_encrypted_path}"   ]]
         then
           rm "${_temp_encrypted_path:?}"
         else
@@ -9786,7 +9786,7 @@ _edit() {
 
     _git checkpoint "${_notebook_path}" "[nb] Edit: ${_relative_path}"
 
-    if [[ "${_before}" != "${_after}" ]]
+    if [[ "${_before}" != "${_after}"   ]]
     then
       local _info
       _info="$(_show "${_relative_path}" --info-line)"
@@ -10107,7 +10107,7 @@ _export() {
   then
     if _command_exists 'pandoc'
     then
-      if [[ -n "${_args[*]:-}" ]]
+      if [[ -n "${_args[*]:-}"  ]]
       then
         pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
       else
@@ -10117,18 +10117,18 @@ _export() {
       _exit_1 printf "Pandoc required. https://pandoc.org/\\n"
     fi
   else
-    if [[ -z "${_target_path:-}" ]]
+    if [[ -z "${_target_path:-}"  ]]
     then
       _exit_1 _help "export"
     fi
 
-    if [[ -d "${_target_path}" ]]
+    if [[ -d "${_target_path}"    ]]
     then
       _target_path="$(printf "%s\\n" "${_target_path}" | sed -e 's/\/$//g')"
       _target_path="${_target_path}/${_basename}"
     fi
 
-    if [[ -e "${_target_path:-}" ]]
+    if [[ -e "${_target_path:-}"  ]]
     then
       if ! ((_force))
       then
@@ -10630,10 +10630,10 @@ _move() {
         _to_target_type="note"
         ;;
       *)
-        if [[ -z "${_source_selector}" ]]
+        if [[ -z "${_source_selector}"    ]]
         then
           _source_selector="${__arg}"
-        elif [[ -z "${_target_selector}" ]]
+        elif [[ -z "${_target_selector}"  ]]
         then
           _target_selector="${__arg}"
         fi
@@ -10661,7 +10661,7 @@ _move() {
     _notebooks show "${_source_selector}" --path 2>/dev/null || :
   )"
 
-  if [[ -z "${_source_notebook_path:-}" ]]
+  if [[ -z "${_source_notebook_path:-}"   ]]
   then
     _source_notebook_path="$(_notebooks current --path)"
   fi
@@ -12472,14 +12472,14 @@ _show() {
   then
     local _maybe_notebook="${_selector:-}"
 
-    if [[ "${_maybe_notebook:-}" =~ ^${NB_DIR} ]]
+    if [[ "${_maybe_notebook:-}" =~ ^${NB_DIR}    ]]
     then
       _maybe_notebook="${_maybe_notebook##*\/}"
     fi
 
     _maybe_notebook="${_maybe_notebook%:}"
 
-    if [[ -d "${NB_DIR}/${_maybe_notebook}/.git" ]]
+    if [[ -d "${NB_DIR}/${_maybe_notebook}/.git"  ]]
     then
       if ((_print_path))
       then
@@ -13058,7 +13058,7 @@ _get_folder_id_selector() {
   local _selector="${1:?}"
   local _selector_identifier=
 
-  if [[ "${_selector:-}" =~ ^/ ]]
+  if [[ "${_selector:-}" =~ ^/  ]]
   then # selector is full path
     local _path_with_notebook="${_selector#${NB_DIR}/}"
     _notebook_name="${_path_with_notebook%%/*}"
@@ -13073,14 +13073,14 @@ _get_folder_id_selector() {
     fi
   fi
 
-  if [[ -n "${_notebook_name:-}" ]]
+  if [[ -n "${_notebook_name:-}"  ]]
   then
     _folder_id_selector+="${_notebook_name}:"
   fi
 
   local _folder_id_path=
 
-  if [[ -n "${_notebook_name}" ]]
+  if [[ -n "${_notebook_name}"    ]]
   then
     _folder_id_path="$(
       _get_folder_id_path "${_relative_path}" "${NB_DIR}/${_notebook_name}"
@@ -13095,7 +13095,7 @@ _get_folder_id_selector() {
     _folder_id_selector+="${_folder_id_path}"
   fi
 
-  if [[   "${_selector}"      =~ ^/     ]]
+  if [[     "${_selector}"    =~ ^/     ]]
   then
     _selector_identifier="${_relative_path:-}"
   elif [[ ! "${_selector:-}"  =~ :$|/$  ]]
@@ -13104,7 +13104,7 @@ _get_folder_id_selector() {
     _selector_identifier="${_selector_identifier##*/}"
   fi
 
-  if [[ -n "${_selector_identifier}" ]]
+  if [[ -n "${_selector_identifier}"    ]]
   then
     _folder_id_selector+="${_selector_identifier}"
   fi
@@ -13404,11 +13404,11 @@ _browse() {
       local _relative_folder_path=
       local _selector_relative_folder_path=
 
-      if [[ "${_selector}" =~ ^/ ]]
+      if [[ "${_selector}" =~ ^/  ]]
       then
         local _relative_path="${_selector#${_notebook_path}/}"
 
-        if [[ -d "${_selector}" ]]
+        if [[ -d "${_selector}"   ]]
         then
           _relative_folder_path="${_relative_path:-}"
         else
@@ -13652,17 +13652,17 @@ _browse() {
     _target_selector="${_target_selector//"\%20"/ }"
     _target_selector="${_target_selector//"%20"/ }"
 
-    if [[ -z "${_target_selector:-}" ]]
+    if [[ -z "${_target_selector:-}"    ]]
     then
       _browse_render_notebooks >> "${_temp_file}"
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector}" --path 2>/dev/null || :)"
 
-      if [[ -z "${_selector_path:-}" ]]
+      if [[   -z "${_selector_path:-}"  ]]
       then
         _browse_respond_with 404
-      elif [[ -d "${_selector_path:-}" ]]
+      elif [[ -d "${_selector_path:-}"  ]]
       then
         _browse_render_container "${_selector_path:-}"  \
           --page      "${_page_number}"                 \
@@ -14114,8 +14114,8 @@ $(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
       local _plugin_path
 
       if ! _plugin_path="$(_plugins "${_name}" --paths 2>/dev/null)"  ||
-         [[ -z "${_plugin_path:-}" ]]                                 ||
-         ! [[ -f "${_plugin_path}" ]]
+           [[ -z "${_plugin_path:-}"  ]]                              ||
+         ! [[ -f "${_plugin_path}"    ]]
       then
         _exit_1 printf "Plugin not found: %s\\n" "$(_color_primary "${_name}")"
       fi
