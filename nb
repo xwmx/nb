@@ -13792,7 +13792,6 @@ _browse() {
     exit 0
   fi
 
-
   if ! hash "ncat" &>/dev/null
   then
     _show "${_selector:-}" --render
@@ -13802,7 +13801,7 @@ HEREDOC
     exit 0
   fi
 
-  # start server
+  # configure pagination
 
   if [[ -z "${_browse_per_page:-}" ]]
   then # set per page based on terminal height
