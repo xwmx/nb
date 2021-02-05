@@ -73,6 +73,7 @@ fi
 # install dependencies
 sudo apt-get update
 sudo apt-get install bats -y
+sudo apt-get install ncat -y
 sudo apt-get install python-pygments -y
 sudo apt-get install w3m
 
