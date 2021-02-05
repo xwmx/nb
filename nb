@@ -13700,6 +13700,7 @@ _browse() {
 
     if [[ "${1:-}" == "--foreground" ]]
     then
+      printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}"
       _browse_serve_run
     else
       (_browse_serve_run) &
