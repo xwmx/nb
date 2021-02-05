@@ -56,13 +56,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Sample%20Folder/Nested%20Title%20One">\[\[Sample Folder/Nested Title One\]\]</a>'
+    '\[\[\[Sample Folder/Nested Title One\]\]\](http://localhost:6789/Sample Folder/Nested Title One)'
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Example%20Notebook:File%20Two.md">\[\[Example Notebook:File Two.md\]\]</a>'
+    '\[\[\[Example Notebook:File Two.md\]\]\](http://localhost:6789/Example Notebook:File Two.md)'
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Example%20Notebook:Example%20Folder/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:Example Folder/1)'
 }
 
 # --render, --print, and --raw ################################################
