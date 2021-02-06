@@ -13912,8 +13912,11 @@ _helpers() {
     *content*)
       _get_content                    "${_options[@]:-}"
       ;;
-    *folder*id*)
+    *folder*id*path)
       _get_folder_id_path             "${_options[@]:-}"
+      ;;
+    *folder*id*selector)
+      _get_folder_id_selector         "${_options[@]:-}"
       ;;
     *hash*)
       _get_hash                       "${_options[@]:-}"
