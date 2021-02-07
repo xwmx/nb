@@ -2244,7 +2244,8 @@ _selector_resolve_path() {
 
   if [[ -n "${_selector}" ]]
   then
-    if [[ -z "${_notebook_path:-}" ]]
+    if [[ -z "${_notebook_path:-}"  ]] &&
+       [[ "${_selector}" =~ :|^/    ]]
     then
       _notebook_path="$(
         _notebooks show "${_selector}" --path 2>/dev/null || :
