@@ -2,7 +2,7 @@
 
 load test_helper
 
-# @test "'helpers get_folder_id_selector()' resolves name to folder id selectors." {
+# @test "'helpers get_id_selector()' resolves name to folder id selectors." {
 #   {
 #     "${_NB}" init
 #     "${_NB}" add "Example Folder/File Example.md"
@@ -14,7 +14,7 @@ load test_helper
 #     [[ -d "${NB_DIR}/home/1"              ]]
 #   }
 
-#   run "${_NB}" helpers get_folder_id_selector 1
+#   run "${_NB}" helpers get_id_selector 1
 
 #   printf "\${status}: '%s'\\n" "${status}"
 #   printf "\${output}: '%s'\\n" "${output}"

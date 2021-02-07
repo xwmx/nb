@@ -13087,11 +13087,11 @@ _call_deferred_command --group 2
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
-# _get_folder_id_selector()
+# _get_id_selector()
 #
 # Usage:
-#   _get_folder_id_selector <path> | <selector>
-_get_folder_id_selector() {
+#   _get_id_selector <path> | <selector>
+_get_id_selector() {
   local _folder_id_selector=
   local _folder_path=
   local _notebook_name=
@@ -13299,7 +13299,7 @@ _browse() {
         _item_selector="${_item_selector//\\/}"
 
         local _target_selector=
-        _target_selector="$(_get_folder_id_selector "${_item_selector}")"
+        _target_selector="$(_get_id_selector "${_item_selector}")"
 
         local _display_item="${__list_item//\\\ /&nbsp;}"
         _display_item="${_display_item//\ /&nbsp;}"
@@ -13312,7 +13312,7 @@ _browse() {
       _list_count="$(_count "${_target_path}")"
 
       local _link_selector=
-      _link_selector="$(_get_folder_id_selector "${_target_path:-}")"
+      _link_selector="$(_get_id_selector "${_target_path:-}")"
 
       local _print_prev=0
 
@@ -13960,8 +13960,8 @@ _helpers() {
     get*id*path)
       _get_id_path             "${_options[@]:-}"
       ;;
-    *folder*id*selector)
-      _get_folder_id_selector         "${_options[@]:-}"
+    *d*selector)
+      _get_id_selector         "${_options[@]:-}"
       ;;
     *hash*)
       _get_hash                       "${_options[@]:-}"
