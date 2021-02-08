@@ -172,6 +172,27 @@ load test_helper
   [[ !  "${output}" =~  home                                              ]]
 }
 
+@test "'show <notebook>:<folder-id>/<filename> --info-line' exits with status 0 and prints nested folder info." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" add  "Example Notebook:Sample Folder/Example File.md"  \
+      --title     "Example Title"                                   \
+      --content   "Example content."
+  }
+
+  run "${_NB}" show "Example Notebook:1/Example File.md" --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                                                       ]]
+  [[    "${output}" =~  1                                                       ]]
+  [[    "${output}" =~  Example\\\ Notebook:Sample\\\ Folder/1                  ]]
+  [[    "${output}" =~  Example\\\ Notebook:Sample\\\ Folder/Example\\\ File.md ]]
+  [[ !  "${output}" =~  home                                                    ]]
+}
+
 # first line #################################################################
 
 @test "'show <id> --info-line' with path in title prints title." {

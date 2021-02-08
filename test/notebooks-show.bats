@@ -4,6 +4,25 @@ load test_helper
 
 # `notebooks show` ############################################################
 
+@test "'notebooks show <notebook>:<folder-id>/<filename> --path' exits with status 0 and prints path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" add  "Example Notebook:Sample Folder/Example File.md"  \
+      --title     "Example Title"                                   \
+      --content   "Example content."
+  }
+
+  run "${_NB}" notebooks show "Example Notebook:1/Example File.md" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  =~  1                           ]]
+  [[    "${lines[0]}"   =~  ${NB_DIR}/Example\ Notebook ]]
+}
+
 @test "'notebooks show <full-path>' exits with 0 and prints the notebook name." {
   {
     "${_NB}" init
