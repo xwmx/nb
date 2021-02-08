@@ -13494,6 +13494,8 @@ _browse() {
       local _notebook_path=
       _notebook_path="$(_notebooks show "${_notebook_name}" --path)"
 
+      _notebooks select "${_notebook_path}"
+
       _header_content+="\
  [${_notebook_name}](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
 

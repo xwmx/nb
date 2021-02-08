@@ -75,7 +75,7 @@ export _S=" "
 
 # header crumbs ###############################################################
 
-@test "'browse <notebook-path>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with folder." {
+@test "'browse <notebook>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with folder." {
   {
     "${_NB}" init
 
@@ -97,7 +97,7 @@ export _S=" "
   [[ "${output}"    =~ \ /\ \[Sample\ Folder\]\(http://localhost:6789/1/1/\)\ / ]]
 }
 
-@test "'browse <notebook-path>:<folder-id>/<file-id>' displays header crumbs with folder." {
+@test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
   {
     "${_NB}" init
 
@@ -116,6 +116,40 @@ export _S=" "
   [[ "${output}"    =~ \#\ \[nb\]\(http://localhost:6789/\)\ ·\                 ]]
   [[ "${output}"    =~ \ ·\ \[home\]\(http://localhost:6789/home:\)\ :\         ]]
   [[ "${output}"    =~ \ :\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ /  ]]
+}
+
+@test "'browse <notebook>:<folder-id>/<folder-id>' displays header crumbs with folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/File One.md"  \
+      --title     "Example Title"                             \
+      --content   "Example content."
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" use "Example Notebook"
+  }
+
+  run "${_NB}" browse home:1/1/ --header
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                                                        ]]
+
+  [[ "${output}"    =~ \#\ \[nb\]\(http://localhost:6789/\)\ ·\                 ]]
+  [[ "${output}"    =~ \ ·\ \[home\]\(http://localhost:6789/home:\)\ :\         ]]
+  [[ "${output}"    =~ \ :\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ /  ]]
+  [[ "${output}"    =~ \ /\ \[Sample\ Folder\]\(http://localhost:6789/1/1/\)\ / ]]
+
+  run "${_NB}" browse home:1/1/ --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0                                                        ]]
+
+  [[ "${output}"    =~ \<h1\ id=\"nb-home-example-folder-sample-folder\"\>      ]]
 }
 
 @test "'browse <notebook-path>/<folder>/file>' displays header crumbs with folder." {
