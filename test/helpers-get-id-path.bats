@@ -152,4 +152,3 @@ load test_helper
 
   [[   "${lines[0]}"  ==  "1/1/"    ]]
 }
-

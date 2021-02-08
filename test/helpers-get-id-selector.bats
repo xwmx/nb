@@ -22,3 +22,69 @@ load test_helper
 #   [[ "${status}"  -eq 0                   ]]
 #   [[ "${output}"  ==  "2"                 ]]
 # }
+
+@test "'helpers get_id_selector <relative/path/to/file>' exits with 0 and prints id selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "one"                                                       \
+      --content   "Content one."
+  }
+
+  run "${_NB}" helpers  \
+    get_id_selector     \
+    "Example Folder/Sample Folder/Demo Folder/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                       ]]
+  [[   "${#lines[@]}" ==  1                       ]]
+
+  [[   "${lines[0]}"  ==  "1/1/1/Example File.md" ]]
+}
+
+@test "'helpers get_id_selector <relative/path/to/folder>/' (slash) exits with 0 and prints id selector to folder with trailing slash." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "one"                                                       \
+      --content   "Content one."
+  }
+
+  run "${_NB}" helpers  \
+    get_id_selector     \
+    "Example Folder/Sample Folder/Demo Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0         ]]
+  [[   "${#lines[@]}" ==  1         ]]
+
+  [[   "${lines[0]}"  ==  "1/1/1/"  ]]
+}
+
+@test "'helpers get_id_selector <relative/path/to/folder>' (no slash) exits with 0 and prints id selector to folder with no slash." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "one"                                                       \
+      --content   "Content one."
+  }
+
+  run "${_NB}" helpers  \
+    get_id_selector     \
+    "Example Folder/Sample Folder/Demo Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                 ]]
+  [[   "${#lines[@]}" ==  1                 ]]
+
+  [[   "${lines[0]}"  ==  "1/1/Demo Folder" ]]
+}
