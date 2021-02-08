@@ -5,6 +5,36 @@ load test_helper
 
 # --title option ##############################################################
 
+@test "'add --title' with .org file creates file with .org title." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add --title "Example Title" --filename "Example File.org"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0      ]]
+
+  [[ -f "${NB_DIR}/home/Example File.org" ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Example File.org")  \
+    <(printf "\
+#+TITLE: Example Title
+
+# mock_editor %s/home/Example File\\n" "${NB_DIR}")
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 @test "'add' with --title option exits with 0, creates new note with \$EDITOR, creates commit." {
   {
     "${_NB}" init

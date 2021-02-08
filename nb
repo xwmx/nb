@@ -8425,9 +8425,16 @@ _add() {
       fi
     fi
 
-    if [[ -n "${_title}"        ]]
+    if [[ -n "${_title}"                  ]]
     then
-      printf "%s\\n\\n" "# ${_title}" >> "${_target_path}"
+      if [[ "${_target_path:-}" =~ .org$  ]]
+      then
+        local _title_prefix="#+TITLE:"
+      else
+        local _title_prefix="#"
+      fi
+
+      printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
     fi
 
     local _print_spacing=0
