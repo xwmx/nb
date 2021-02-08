@@ -13484,7 +13484,7 @@ _browse() {
 
         local _folder_id_path=
         _folder_id_path="$(
-          _get_folder_id_path "$(
+          _get_id_selector "$(
             _join "/" "${_selector_folders[@]:-}"
           )/" "${_notebook_path}"
         )"
