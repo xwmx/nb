@@ -1534,46 +1534,6 @@ _get_content() {
   fi
 }
 
-# _get_folder_id_path()
-#
-# Usage:
-#   _get_folder_id_path <relative-path> [<notebook-path>]
-#
-# Description:
-#   Print a path of ids for a given relative path.
-_get_folder_id_path() {
-  local _relative_path="${1:-}"
-  local _parent_folder_path="${2:-}"
-
-  if [[ -z "${_parent_folder_path:-}" ]]
-  then
-    _parent_folder_path="$(_notebooks current --path)"
-  fi
-
-  if [[ -n "${_relative_path:-}" ]]
-  then
-    local _selector_folders=()
-
-    _selector_folders=($(
-      printf "%s\\n" "${_relative_path%\/*}" | tr "/" "\n"
-    ))
-
-    local __folder=
-    for   __folder in "${_selector_folders[@]:-}"
-    do
-      local _folder_id=
-      _folder_id="$(_index get_id "${__folder}" "${_parent_folder_path}")"
-
-      [[ -z "${_folder_id:-}" ]] && return 1
-
-      _folder_id_path+="${_folder_id}/"
-      _parent_folder_path+="/${__folder}"
-    done
-
-    printf "%s\\n" "${_folder_id_path:-}"
-  fi
-}
-
 # _get_id_selector()
 #
 # Usage:
@@ -13950,9 +13910,6 @@ _helpers() {
       ;;
     *content*)
       _get_content                    "${_options[@]:-}"
-      ;;
-    *folder*id*path)
-      _get_folder_id_path             "${_options[@]:-}"
       ;;
     *d*selector)
       _get_id_selector                "${_options[@]:-}"
