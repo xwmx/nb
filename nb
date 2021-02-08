@@ -7937,16 +7937,31 @@ _option_get_tags() {
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
 _pandoc() {
-  if [[ "${1:-}" == "--browse" ]]
+  if [[ "${1:-}" != "--browse" ]]
   then
-    pandoc                      \
-      --from markdown           \
-      --to html                 \
-      --standalone              \
-      2>/dev/null
-  else
     pandoc "${@:-}"
+    return 0
   fi
+
+  local _temp_file=
+  _temp_file="$(mktemp)"
+
+  cat <<HEREDOC > "${_temp_file}"
+<style>
+// nb
+a       { text-decoration: none;      }
+a:hover { text-decoration: underline; }
+</style>
+HEREDOC
+
+  pandoc                                \
+    --include-in-header "${_temp_file}" \
+    --from markdown                     \
+    --to html                           \
+    --standalone                        \
+    2>/dev/null
+
+  rm -f "${_temp_file:?}"
 }
 
 # _web_browser()

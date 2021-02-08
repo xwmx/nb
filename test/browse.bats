@@ -7,6 +7,24 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# css / styles ################################################################
+
+@test "'browse' includes application styles." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                             ]]
+
+  [[ "${output}"  =~  //\ nb                                          ]]
+  [[ "${output}"  =~  a:hover\ \{\ text-decoration:\ underline\;\ \}  ]]
+}
+
 # conflicting folder id / name ################################################
 
 @test "'browse <folder>/' with conflicting id / folder name renders links to ids and labels to names." {
