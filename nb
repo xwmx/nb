@@ -13868,7 +13868,8 @@ Description:
 HEREDOC
 _helpers() {
   local _name="${1:-}"
-  local _options=("${@:2}")
+  shift
+  local _options=("${@:-}")
 
   case "${_name:-}" in
     *browser*)
