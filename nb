@@ -3186,7 +3186,7 @@ _help() {
       "${_REPO_RAW_URL}/README.md"          \
         | if _command_exists "pandoc" && _web_browser --check
           then
-            pandoc --from markdown --to html | _web_browser
+            _pandoc --from markdown --to html | _web_browser
             return 0
           else
             _highlight_syntax_if_available  \
@@ -7927,6 +7927,26 @@ _option_get_tags() {
   _tag_string="$(_join " " "${_normalized_tags[@]-}")"
 
   printf "%s\\n" "${_tag_string:-}"
+}
+
+# _pandoc()
+#
+# Usage:
+#   _pandoc [--browse] [<pandoc-option>...]
+#
+# Description:
+#   An internal interface for pandoc. https://pandoc.org/
+_pandoc() {
+  if [[ "${1:-}" == "--browse" ]]
+  then
+    pandoc                      \
+      --from markdown           \
+      --to html                 \
+      --standalone              \
+      2>/dev/null
+  else
+    pandoc "${@:-}"
+  fi
 }
 
 # _web_browser()
@@ -13337,11 +13357,7 @@ _browse() {
         printf "\\n"
       fi
     } | {
-      pandoc            \
-        --from markdown \
-        --to html       \
-        --standalone    \
-        2>/dev/null
+      _pandoc --browse
     }
   }
 
@@ -13369,11 +13385,7 @@ _browse() {
           "${__name}"
       done
     } | {
-      pandoc                      \
-        --from markdown           \
-        --to html                 \
-        --standalone              \
-        2>/dev/null || :
+      _pandoc --browse || :
     }
   }
 
@@ -13493,11 +13505,7 @@ _browse() {
         --browse        \
         --no-color
     } | {
-      pandoc            \
-        --from markdown \
-        --to html       \
-        --standalone    \
-        2>/dev/null
+      _pandoc --browse
     }
   }
 
