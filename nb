@@ -9608,9 +9608,7 @@ Shortcut Alias: \`d\`
 HEREDOC
 _delete() {
   local _force=0
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
-  local _selector=
+  local _selectors=()
   local _title=
 
   for __arg in "${@:-}"
@@ -9620,33 +9618,24 @@ _delete() {
         _force=1
         ;;
       *)
-        if [[ -z "${_selector}" ]]
-        then
-          _selector="${__arg}"
-        fi
+        _selectors+=("${__arg}")
         ;;
     esac
   done
 
-  if [[ -z "${_selector:-}" ]]
+  if ! ((${#_selectors[@]}))
   then
     _exit_1 _help "delete"
   fi
 
+  local _selector="${_selectors[0]:-}"
+
   local _relative_path
   _relative_path="$(_show "${_selector}" --relative-path)"
 
-  local _basename="${_relative_path##*\/}"
-  local _folder_path="${_notebook_path}"
-
-  if [[ "${_relative_path:-}" =~ / ]]
-  then
-    _folder_path="${_notebook_path}/${_relative_path%\/*}"
-  fi
-
   if [[ -z "${_relative_path}" ]]
   then
-    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
+    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
   fi
 
   local _info
@@ -9670,6 +9659,17 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
           ;;
       esac
     done
+  fi
+
+  local _notebook_path
+  _notebook_path="$(_notebooks current --path)"
+
+  local _basename="${_relative_path##*\/}"
+  local _folder_path="${_notebook_path}"
+
+  if [[ "${_relative_path:-}" =~ / ]]
+  then
+    _folder_path="${_notebook_path}/${_relative_path%\/*}"
   fi
 
   if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
