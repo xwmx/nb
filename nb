@@ -7948,9 +7948,14 @@ _pandoc() {
 
   cat <<HEREDOC > "${_temp_file}"
 <style>
-// nb
-a       { text-decoration: none;      }
-a:hover { text-decoration: underline; }
+html        { color: #e6e6e6; background-color: #1a1a1a;                        }
+a           { color: #e6e6e6; text-decoration: none;                            }
+a:hover     { color: #e6e6e6; text-decoration: underline;                       }
+a:visited   { color: #e6e6e6; text-decoration: underline;                       }
+blockquote  { border-left: 2px solid #4d4d4d; color: #606060;                   }
+hr          { background-color: #4d4d4d;                                        }
+tbody       { border-top: 1px solid #4d4d4d; border-bottom: 1px solid #4d4d4d;  }
+th          { border-top: 1px solid #4d4d4d;                                    }
 </style>
 HEREDOC
 

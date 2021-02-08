@@ -19,10 +19,9 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                             ]]
+  [[ "${status}"  -eq 0                               ]]
 
-  [[ "${output}"  =~  //\ nb                                          ]]
-  [[ "${output}"  =~  a:hover\ \{\ text-decoration:\ underline\;\ \}  ]]
+  [[ "${output}"  =~  'html        { color: #e6e6e6'  ]]
 }
 
 # conflicting folder id / name ################################################
