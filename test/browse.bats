@@ -7,6 +7,56 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# conflicting folder id / name ################################################
+
+@test "'browse <folder>/' with conflicting id / folder name renders links to ids and labels to names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type folder
+    "${_NB}" add "Sample Folder/File One.md" --content "Example content."
+
+    "${_NB}" move "Sample Folder" "1" --force
+
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+    [[ -f "${NB_DIR}/home/1/File One.md"  ]]
+  }
+
+  # run "${_NB}" browse 1/ --print
+
+  # printf "\${status}: '%s'\\n" "${status}"
+  # printf "\${output}: '%s'\\n" "${output}"
+
+  # [[ "${status}"  ==  0 ]]
+
+  # [[ "${output}"  =~  \
+  #     \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
+  # [[ "${output}"  =~  \
+  #     ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                        ]]
+  # [[ "${output}"  =~  \
+  #     \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>             ]]
+
+  # [[ "${output}"  =~  0\ items. ]]
+
+  # run "${_NB}" browse 2/ --print
+  run "${_NB}" browse 2/ --container
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  ==  0 ]]
+
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-1\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>  ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\            ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/2/\"\>1\</a\>\ /\</h1\>               ]]
+
+  [[ "${output}"  =~  \
+      \<p\>\<a\ href=\"http://localhost:6789/2/1\"\>\[1/1\]${_S}File${_S}One.md\</a\>\<br/\>\</p\>  ]]
+}
+
 # header crumbs ###############################################################
 
 @test "'browse <notebook-path>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with folder." {
@@ -92,55 +142,6 @@ export _S=" "
   [[ "${output}"    =~ \#\ \[nb\]\(http://localhost:6789/\)\ ·\                 ]]
   [[ "${output}"    =~ \ ·\ \[home\]\(http://localhost:6789/home:\)\ :\         ]]
   [[ "${output}"    =~ \ :\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ /  ]]
-}
-
-# conflicting folder id / name ################################################
-
-@test "'browse <folder>/' with conflicting id / folder name renders links to ids and labels to names." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type folder
-    "${_NB}" add "Sample Folder/File One.md" --content "Example content."
-
-    "${_NB}" move "Sample Folder" "1" --force
-
-    [[ -d "${NB_DIR}/home/Example Folder" ]]
-    [[ -f "${NB_DIR}/home/1/File One.md"  ]]
-  }
-
-  run "${_NB}" browse 1/ --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"  ==  0 ]]
-
-  [[ "${output}"  =~  \
-      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
-  [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                        ]]
-  [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>             ]]
-
-  [[ "${output}"  =~  0\ items. ]]
-
-  run "${_NB}" browse 2/ --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"  ==  0 ]]
-
-  [[ "${output}"  =~  \
-      \<h1\ id=\"nb-home-1\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>  ]]
-  [[ "${output}"  =~  \
-      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\            ]]
-  [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/2/\"\>1\</a\>\ /\</h1\>               ]]
-
-  [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:6789/2/1\"\>\[1/1\]${_S}File${_S}One.md\</a\>\<br/\>\</p\>  ]]
 }
 
 # error handling ##############################################################

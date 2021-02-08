@@ -2,26 +2,26 @@
 
 load test_helper
 
-# @test "'helpers get_id_selector()' resolves name to folder id selectors." {
-#   {
-#     "${_NB}" init
-#     "${_NB}" add "Example Folder/File Example.md"
-#     "${_NB}" add "Sample Folder/File Sample.md"
+@test "'helpers get_id_selector()' resolves name to folder id selectors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File Example.md"
+    "${_NB}" add "Sample Folder/File Sample.md"
 
-#     "${_NB}" move "Sample Folder" "1" --force
+    "${_NB}" move "Sample Folder" "1" --force
 
-#     [[ -d "${NB_DIR}/home/Example Folder" ]]
-#     [[ -d "${NB_DIR}/home/1"              ]]
-#   }
+    [[ -d "${NB_DIR}/home/Example Folder" ]]
+    [[ -d "${NB_DIR}/home/1"              ]]
+  }
 
-#   run "${_NB}" helpers get_id_selector 1
+  run "${_NB}" helpers get_id_selector 1
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[ "${status}"  -eq 0                   ]]
-#   [[ "${output}"  ==  "2"                 ]]
-# }
+  [[ "${status}"  -eq 0                   ]]
+  [[ "${output}"  ==  "2"                 ]]
+}
 
 @test "'helpers get_id_selector <relative/path/to/file>' exits with 0 and prints id selector." {
   {
@@ -39,10 +39,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                       ]]
-  [[   "${#lines[@]}" ==  1                       ]]
+  [[   "${status}"    -eq 0         ]]
+  [[   "${#lines[@]}" ==  1         ]]
 
-  [[   "${lines[0]}"  ==  "1/1/1/Example File.md" ]]
+  [[   "${lines[0]}"  ==  "1/1/1/1" ]]
 }
 
 @test "'helpers get_id_selector <relative/path/to/folder>/' (slash) exits with 0 and prints id selector to folder with trailing slash." {
@@ -83,8 +83,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                 ]]
-  [[   "${#lines[@]}" ==  1                 ]]
+  [[   "${status}"    -eq 0       ]]
+  [[   "${#lines[@]}" ==  1       ]]
 
-  [[   "${lines[0]}"  ==  "1/1/Demo Folder" ]]
+  [[   "${lines[0]}"  ==  "1/1/1" ]]
 }

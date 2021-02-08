@@ -13092,65 +13092,108 @@ _call_deferred_command --group 2
 # Usage:
 #   _get_id_selector <path> | <selector>
 _get_id_selector() {
-  local _folder_id_selector=
+  local _id_selector=
   local _folder_path=
   local _notebook_name=
   local _relative_path=
+  local _selector_relative_path=
   local _selector="${1:?}"
-  local _selector_identifier=
+  local _trailing_slash=0
+
+  if [[ "${_selector:-}" =~ /$ ]]
+  then
+    _trailing_slash=1
+  fi
 
   if [[ "${_selector:-}" =~ ^/  ]]
   then # selector is full path
     local _path_with_notebook="${_selector#${NB_DIR}/}"
     _notebook_name="${_path_with_notebook%%/*}"
-    _relative_path="${_path_with_notebook#*/}"
+
+    if [[ "${_path_with_notebook:-}" =~ / ]]
+    then
+      _selector_relative_path="${_path_with_notebook#*/}"
+      _relative_path="${_selector_relative_path#*/}"
+    fi
   else
     if [[ "${_selector:-}" =~ : ]]
     then
       _notebook_name="${_selector%%:*}"
-      _relative_path="${_selector#*:}"
+      _selector_relative_path="${_selector#*:}"
     else
-      _relative_path="${_selector:-}"
+      _selector_relative_path="${_selector:-}"
     fi
   fi
 
+  local _parent_folder_path=
+
   if [[ -n "${_notebook_name:-}"  ]]
   then
-    _folder_id_selector+="${_notebook_name}:"
-  fi
-
-  local _folder_id_path=
-
-  if [[ -n "${_notebook_name}"    ]]
-  then
-    _folder_id_path="$(
-      _get_folder_id_path "${_relative_path}" "${NB_DIR}/${_notebook_name}"
-    )"
+    _id_selector+="${_notebook_name}:"
+    _parent_folder_path="${NB_DIR}/${_notebook_name}"
   else
-    _folder_id_path="$(_get_folder_id_path "${_relative_path}")"
+    _parent_folder_path="$(_notebooks current --path)"
   fi
 
-  if [[ -n "${_folder_id_path:-}"       ]] &&
-     [[ !  "${_folder_id_path}" == "/"  ]]
+
+  local _id_path=
+
+
+  if [[ -z "${_relative_path:-}"          ]] &&
+     [[ -n "${_selector_relative_path:-}" ]]
   then
-    _folder_id_selector+="${_folder_id_path}"
+    local _selector_segments=()
+
+    _selector_segments=($(
+      printf "%s\\n" "${_selector_relative_path:-}" | tr "/" "\n"
+    ))
+
+    local i=
+    for ((i=0; i < "${#_selector_segments[@]}"; i++))
+    do
+      local _segment_id=
+
+      if [[ "${i}" -eq "$((${#_selector_segments[@]} - 1))" ]]
+      then
+        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$                  ]] &&
+           [[ ! -d "${_parent_folder_path}/${_selector_segments[i]:-}"  ]]
+        then
+          _segment_id="${_selector_segments[i]:-}"
+        fi
+      fi
+
+      if [[ -z "${_segment_id:-}" ]]
+      then
+        _segment_id="$(
+          _index get_id "${_selector_segments[i]:-}" "${_parent_folder_path}"
+        )"
+      fi
+
+      [[ -z "${_segment_id:-}"  ]] && return 1
+
+      if [[ -z "${_id_path:-}"  ]]
+      then
+        _id_path+="${_segment_id}"
+      else
+        _id_path+="/${_segment_id}"
+      fi
+
+      _parent_folder_path+="/${_selector_segments[i]:-}"
+    done
   fi
 
-  if [[     "${_selector}"    =~ ^/     ]]
+  if [[ -n "${_id_path:-}"      ]] &&
+     [[ !  "${_id_path}" == "/" ]]
   then
-    _selector_identifier="${_relative_path:-}"
-  elif [[ ! "${_selector:-}"  =~ :$|/$  ]]
-  then
-    _selector_identifier="${_selector#*:}"
-    _selector_identifier="${_selector_identifier##*/}"
+    _id_selector+="${_id_path}"
   fi
 
-  if [[ -n "${_selector_identifier}"    ]]
+  if ((_trailing_slash))
   then
-    _folder_id_selector+="${_selector_identifier}"
+    _id_selector+="/"
   fi
 
-  printf "%s\\n" "${_folder_id_selector:-}"
+  printf "%s\\n" "${_id_selector:-}"
 }
 
 ###############################################################################
@@ -13312,7 +13355,7 @@ _browse() {
       _list_count="$(_count "${_target_path}")"
 
       local _link_selector=
-      _link_selector="$(_get_id_selector "${_target_path:-}")"
+      _link_selector="$(_get_id_selector "${_target_path%/}")"
 
       local _print_prev=0
 
@@ -13958,10 +14001,10 @@ _helpers() {
       _get_folder_id_path             "${_options[@]:-}"
       ;;
     get*id*path)
-      _get_id_path             "${_options[@]:-}"
+      _get_id_path                    "${_options[@]:-}"
       ;;
     *d*selector)
-      _get_id_selector         "${_options[@]:-}"
+      _get_id_selector                "${_options[@]:-}"
       ;;
     *hash*)
       _get_hash                       "${_options[@]:-}"

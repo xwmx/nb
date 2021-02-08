@@ -8,12 +8,12 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "Example Folder" --type folder
-    "${_NB}" add "Sample Folder"  --type folder
+    "${_NB}" add "Sample Folder/File One.md" --content "Example content."
 
     "${_NB}" move "Sample Folder" "1" --force
 
     [[ -d "${NB_DIR}/home/Example Folder" ]]
-    [[ -d "${NB_DIR}/home/1"              ]]
+    [[ -f "${NB_DIR}/home/1/File One.md"  ]]
   }
 
   run "${_NB}" helpers selector_resolve_path 1/
@@ -23,6 +23,14 @@ load test_helper
 
   [[ "${status}"  -eq 0                 ]]
   [[ "${output}"  ==  "Example Folder"  ]]
+
+  run "${_NB}" helpers selector_resolve_path 1/1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 1              ]]
+  [[ -z "${output}"                     ]]
 
   run "${_NB}" helpers selector_resolve_path 2/
 
