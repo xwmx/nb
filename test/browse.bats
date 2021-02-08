@@ -22,24 +22,23 @@ export _S=" "
     [[ -f "${NB_DIR}/home/1/File One.md"  ]]
   }
 
-  # run "${_NB}" browse 1/ --print
+  run "${_NB}" browse 1/ --print
 
-  # printf "\${status}: '%s'\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-  # [[ "${status}"  ==  0 ]]
+  [[ "${status}"  ==  0 ]]
 
-  # [[ "${output}"  =~  \
-  #     \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
-  # [[ "${output}"  =~  \
-  #     ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                        ]]
-  # [[ "${output}"  =~  \
-  #     \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>             ]]
+  [[ "${output}"  =~  \
+      \<h1\ id=\"nb-home-example-folder\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\> ]]
+  [[ "${output}"  =~  \
+      ·\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ :\                        ]]
+  [[ "${output}"  =~  \
+      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ /\</h1\>             ]]
 
-  # [[ "${output}"  =~  0\ items. ]]
+  [[ "${output}"  =~  0\ items. ]]
 
-  # run "${_NB}" browse 2/ --print
-  run "${_NB}" browse 2/ --container
+  run "${_NB}" browse 2/ --print
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
