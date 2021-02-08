@@ -1574,6 +1574,113 @@ _get_folder_id_path() {
   fi
 }
 
+# _get_id_selector()
+#
+# Usage:
+#   _get_id_selector <path> | <selector>
+_get_id_selector() {
+  local _id_selector=
+  local _folder_path=
+  local _notebook_name=
+  local _relative_path=
+  local _selector_relative_path=
+  local _selector="${1:?}"
+  local _trailing_slash=0
+
+  if [[ "${_selector:-}" =~ /$ ]]
+  then
+    _trailing_slash=1
+  fi
+
+  if [[ "${_selector:-}" =~ ^/  ]]
+  then # selector is full path
+    local _path_with_notebook="${_selector#${NB_DIR}/}"
+    _notebook_name="${_path_with_notebook%%/*}"
+
+    if [[ "${_path_with_notebook:-}" =~ / ]]
+    then
+      _selector_relative_path="${_path_with_notebook#*/}"
+      _relative_path="${_selector_relative_path#*/}"
+    fi
+  else
+    if [[ "${_selector:-}" =~ : ]]
+    then
+      _notebook_name="${_selector%%:*}"
+      _selector_relative_path="${_selector#*:}"
+    else
+      _selector_relative_path="${_selector:-}"
+    fi
+  fi
+
+  local _parent_folder_path=
+
+  if [[ -n "${_notebook_name:-}"  ]]
+  then
+    _id_selector+="${_notebook_name}:"
+    _parent_folder_path="${NB_DIR}/${_notebook_name}"
+  else
+    _parent_folder_path="$(_notebooks current --path)"
+  fi
+
+  local _id_path=
+
+  if [[ -z "${_relative_path:-}"          ]] &&
+     [[ -n "${_selector_relative_path:-}" ]]
+  then
+    local _selector_segments=()
+
+    _selector_segments=($(
+      printf "%s\\n" "${_selector_relative_path:-}" | tr "/" "\n"
+    ))
+
+    local i=
+    for ((i=0; i < "${#_selector_segments[@]}"; i++))
+    do
+      local _segment_id=
+
+      if [[ "${i}" -eq "$((${#_selector_segments[@]} - 1))" ]]
+      then
+        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$                  ]] &&
+           [[ ! -d "${_parent_folder_path}/${_selector_segments[i]:-}"  ]]
+        then
+          _segment_id="${_selector_segments[i]:-}"
+        fi
+      fi
+
+      if [[ -z "${_segment_id:-}" ]]
+      then
+        _segment_id="$(
+          _index get_id "${_selector_segments[i]:-}" "${_parent_folder_path}"
+        )"
+      fi
+
+      [[ -z "${_segment_id:-}"  ]] && return 1
+
+      if [[ -z "${_id_path:-}"  ]]
+      then
+        _id_path+="${_segment_id}"
+      else
+        _id_path+="/${_segment_id}"
+      fi
+
+      _parent_folder_path+="/${_selector_segments[i]:-}"
+    done
+  fi
+
+  if [[ -n "${_id_path:-}"      ]] &&
+     [[ !  "${_id_path}" == "/" ]]
+  then
+    _id_selector+="${_id_path}"
+  fi
+
+  if ((_trailing_slash))
+  then
+    _id_selector+="/"
+  fi
+
+  printf "%s\\n" "${_id_selector:-}"
+}
+
 # _get_visible_length()
 #
 # Usage:
@@ -4251,7 +4358,7 @@ _list() {
     fi
 
     _maybe_id_path_context="$(
-      _get_folder_id_path "${_folder_relative_path:-}/"
+      _get_id_selector "${_folder_relative_path:-}/"
     )"
     _maybe_id_path_context_padded_left=" ${_maybe_id_path_context}"
     _maybe_id_path_context_padded_right="${_maybe_id_path_context} "
@@ -13040,121 +13147,6 @@ _version() {
 # --------------------------------------------------------------------------- #
 
 _call_deferred_command --group 2
-
-###############################################################################
-# Helpers: Group 3                                             Helpers: Group 3
-# ----------------                                             ----------------
-###############################################################################
-# --------------------------------------------------------------------------- #
-
-# _get_id_selector()
-#
-# Usage:
-#   _get_id_selector <path> | <selector>
-_get_id_selector() {
-  local _id_selector=
-  local _folder_path=
-  local _notebook_name=
-  local _relative_path=
-  local _selector_relative_path=
-  local _selector="${1:?}"
-  local _trailing_slash=0
-
-  if [[ "${_selector:-}" =~ /$ ]]
-  then
-    _trailing_slash=1
-  fi
-
-  if [[ "${_selector:-}" =~ ^/  ]]
-  then # selector is full path
-    local _path_with_notebook="${_selector#${NB_DIR}/}"
-    _notebook_name="${_path_with_notebook%%/*}"
-
-    if [[ "${_path_with_notebook:-}" =~ / ]]
-    then
-      _selector_relative_path="${_path_with_notebook#*/}"
-      _relative_path="${_selector_relative_path#*/}"
-    fi
-  else
-    if [[ "${_selector:-}" =~ : ]]
-    then
-      _notebook_name="${_selector%%:*}"
-      _selector_relative_path="${_selector#*:}"
-    else
-      _selector_relative_path="${_selector:-}"
-    fi
-  fi
-
-  local _parent_folder_path=
-
-  if [[ -n "${_notebook_name:-}"  ]]
-  then
-    _id_selector+="${_notebook_name}:"
-    _parent_folder_path="${NB_DIR}/${_notebook_name}"
-  else
-    _parent_folder_path="$(_notebooks current --path)"
-  fi
-
-
-  local _id_path=
-
-
-  if [[ -z "${_relative_path:-}"          ]] &&
-     [[ -n "${_selector_relative_path:-}" ]]
-  then
-    local _selector_segments=()
-
-    _selector_segments=($(
-      printf "%s\\n" "${_selector_relative_path:-}" | tr "/" "\n"
-    ))
-
-    local i=
-    for ((i=0; i < "${#_selector_segments[@]}"; i++))
-    do
-      local _segment_id=
-
-      if [[ "${i}" -eq "$((${#_selector_segments[@]} - 1))" ]]
-      then
-        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$                  ]] &&
-           [[ ! -d "${_parent_folder_path}/${_selector_segments[i]:-}"  ]]
-        then
-          _segment_id="${_selector_segments[i]:-}"
-        fi
-      fi
-
-      if [[ -z "${_segment_id:-}" ]]
-      then
-        _segment_id="$(
-          _index get_id "${_selector_segments[i]:-}" "${_parent_folder_path}"
-        )"
-      fi
-
-      [[ -z "${_segment_id:-}"  ]] && return 1
-
-      if [[ -z "${_id_path:-}"  ]]
-      then
-        _id_path+="${_segment_id}"
-      else
-        _id_path+="/${_segment_id}"
-      fi
-
-      _parent_folder_path+="/${_selector_segments[i]:-}"
-    done
-  fi
-
-  if [[ -n "${_id_path:-}"      ]] &&
-     [[ !  "${_id_path}" == "/" ]]
-  then
-    _id_selector+="${_id_path}"
-  fi
-
-  if ((_trailing_slash))
-  then
-    _id_selector+="/"
-  fi
-
-  printf "%s\\n" "${_id_selector:-}"
-}
 
 ###############################################################################
 # Subcommands: Group 3                                     Subcommands: Group 3
