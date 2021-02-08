@@ -2,6 +2,91 @@
 
 load test_helper
 
+# multiple selectors ##########################################################
+
+@test "'delete <scope>:<selector>...' with multile arguments deletes all." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Notebook One"
+    "${_NB}" notebooks add "Notebook Two"
+    "${_NB}" notebooks add "Notebook Three"
+
+    "${_NB}" add  "Home File.md"                \
+      --title     "Example Title Home"          \
+      --content   "Example content."
+
+    "${_NB}" add  "Notebook One:Example Folder/Example File.md" \
+      --title     "Example Title One"                           \
+      --content   "Example content."
+
+    "${_NB}" add  "Notebook Two:Sample File.md" \
+      --title     "Example Title Two"           \
+      --content   "Example content."
+
+    "${_NB}" add  "Notebook Three:Demo Folder/Demo File.md" \
+      --title     "Example Title Three"                     \
+      --content   "Example content."
+
+
+    [[ -f "${NB_DIR}/home/Home File.md"                             ]]
+    [[ -f "${NB_DIR}/Notebook One/Example Folder/Example File.md"   ]]
+    [[ -f "${NB_DIR}/Notebook Two/Sample File.md"                   ]]
+    [[ -f "${NB_DIR}/Notebook Three/Demo Folder/Demo File.md"       ]]
+  }
+
+  run "${_NB}" delete --force         \
+    1                                 \
+    Notebook\ One:1/Example\ File.md  \
+    Notebook\ Two:Sample\ File.md     \
+    Notebook\ Three:Demo\ Folder/1    \
+    --prompt-list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0         ]]
+  [[ "${#lines[@]}" -eq 9         ]]
+
+  [[ "${lines[0]}"  =~ Deleting:  ]]
+
+  [[ "${lines[1]}"  =~ \
+      .*[.*1.*].*\ .*Home\\\ File.md.*\ \"Example\ Title\ Home\"                      ]]
+
+  [[ "${lines[2]}"  =~ \
+      .*[.*Notebook\\\ One:Example\\\ Folder/1.*].*\ .*Notebook\\\ One                ]]
+  [[ "${lines[2]}"  =~ \
+      Notebook\\\ One:Example\\\ Folder/Example\\\ File.md.*\ \"Example\ Title\ One\" ]]
+
+  [[ "${lines[3]}"  =~ \
+      .*[.*Notebook\\\ Two:1.*].*\ .*Notebook\\\ Two:Sample\\\ File.md                ]]
+  [[ "${lines[3]}"  =~ \
+      Two:Sample\\\ File.md.*\ \"Example\ Title\ Two\"                                ]]
+
+  [[ "${lines[4]}"  =~ \
+      .*[.*Notebook\\\ Three:Demo\\\ Folder/1.*].*\ .*Notebook\\\ Three:Demo          ]]
+  [[ "${lines[4]}"  =~ \
+      Three:Demo\\\ Folder/Demo\\\ File.md.*\ \"Example\ Title\ Three\"               ]]
+
+  [[ "${lines[5]}"  =~ \
+      Deleted:\ .*[.*1.*].*\ .*Home\\\ File.md.*\ \"Example\ Title\ Home\"            ]]
+
+  [[ "${lines[6]}"  =~ \
+      Deleted:\ .*[.*Notebook\\\ One:Example\\\ Folder/1.*].*\ .*Notebook\\\ One      ]]
+  [[ "${lines[6]}"  =~ \
+      Notebook\\\ One:Example\\\ Folder/Example\\\ File.md.*\ \"Example\ Title\ One\" ]]
+  [[ "${lines[7]}"  =~ \
+      Deleted:\ .*[.*Notebook\\\ Two:1.*].*\ .*Notebook\\\ Two:Sample\\\ File.md      ]]
+  [[ "${lines[7]}"  =~ \
+      Two:Sample\\\ File.md.*\ \"Example\ Title\ Two\"                                ]]
+
+  [[ "${lines[8]}"  =~ \
+      Deleted:\ .*[.*Notebook\\\ Three:Demo\\\ Folder/1.*].*\ .*Notebook\\\           ]]
+  [[ "${lines[8]}"  =~ \
+      Folder/1.*].*\ .*Notebook\\\ Three:Demo                                         ]]
+  [[ "${lines[8]}"  =~ \
+      Three:Demo\\\ Folder/Demo\\\ File.md.*\ \"Example\ Title\ Three\"               ]]
+}
+
 # no argument #################################################################
 
 @test "'delete' with no argument exits with 1, prints help, and does not delete." {

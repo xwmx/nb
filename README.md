@@ -3296,7 +3296,8 @@ Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
-  nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
+            [-f | --force]
   nb edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
@@ -3787,13 +3788,14 @@ Description:
 
 ```text
 Usage:
-  nb delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
+            [-f | --force]
 
 Options:
   -f, --force   Skip the confirmation prompt.
 
 Description:
-  Delete a note.
+  Delete one or more items.
 
 Examples:
   nb delete 3

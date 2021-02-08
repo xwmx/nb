@@ -3322,7 +3322,8 @@ $(_color_primary "Usage:")
   ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<relative-path>]
-  ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
+            [-f | --force]
   ${_ME} edit (<id> | <filename> | <path> | <title>)
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
@@ -7202,6 +7203,9 @@ do
            ((${#_ARGUMENTS[@]}))
       then
         _ARGUMENTS+=("${__opt}")
+      elif [[ "${_SUBCOMMAND:-}" == "delete" ]]
+      then
+        _ARGUMENTS+=("${__opt}")
       else
         __identifier_or_subcommand_or_url="${__opt#*:}"
 
@@ -9583,13 +9587,14 @@ HEREDOC
 
 describe "delete" <<HEREDOC
 Usage:
-  ${_ME} delete (<id> | <filename> | <path> | <title>) [-f | --force]
+  ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
+            [-f | --force]
 
 Options:
   -f, --force   Skip the confirmation prompt.
 
 Description:
-  Delete a note.
+  Delete one or more items.
 
 Examples:
   ${_ME} delete 3
@@ -9608,6 +9613,7 @@ Shortcut Alias: \`d\`
 HEREDOC
 _delete() {
   local _force=0
+  local _print_prompt_list=0
   local _selectors=()
   local _title=
 
@@ -9617,8 +9623,11 @@ _delete() {
       -f|--force)
         _force=1
         ;;
+      --prompt-list)
+        _print_prompt_list=1
+        ;;
       *)
-        _selectors+=("${__arg}")
+        [[ -n "${__arg:-}" ]] && _selectors+=("${__arg:-}")
         ;;
     esac
   done
@@ -9628,22 +9637,43 @@ _delete() {
     _exit_1 _help "delete"
   fi
 
-  local _selector="${_selectors[0]:-}"
+  local _target_paths=()
 
-  local _relative_path
-  _relative_path="$(_show "${_selector}" --relative-path)"
+  local __selector=
+  for   __selector in "${_selectors[@]:-}"
+  do
+    [[ -z "${__selector:-}" ]] && continue
 
-  if [[ -z "${_relative_path}" ]]
+    local _selector_path=
+    _selector_path="$(_show "${__selector:-}" --path)"
+
+    if [[ -n "${_selector_path:-}" ]]
+    then
+      _target_paths+=("${_selector_path:-}")
+    else
+      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${__selector}")"
+    fi
+  done
+
+  if ((_print_prompt_list)) || ! ((_force))
   then
-    _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
-  fi
+    if [[ "${#_selectors[@]}" == 1 ]]
+    then
+      printf "Deleting: %s\\n" "$(_show "${_selectors[0]:-}" --info-line)"
+    else
+      printf "Deleting:\\n"
 
-  local _info
-  _info="$(_show "${_selector}" --info-line)"
+      local __prompt_selector=
+      for   __prompt_selector in "${_target_paths[@]:-}"
+      do
+        printf "%s\\n" "$(_show "${__prompt_selector:-}" --info-line)"
+      done
+
+    fi
+  fi
 
   if ! ((_force))
   then
-    printf "Deleting: %s\\n" "${_info}"
     while true
     do
       IFS='' read -r -e -d $'\n' -p "\
@@ -9661,45 +9691,58 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
     done
   fi
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local __delete_selector=
+  for   __delete_selector in "${_target_paths[@]:-}"
+  do
+    local _info_line=
+    _info_line="$(_show "${__delete_selector:-}" --info-line)"
 
-  local _basename="${_relative_path##*\/}"
-  local _folder_path="${_notebook_path}"
+    local _relative_path=
+    _relative_path="$(_show "${__delete_selector}" --relative-path)"
 
-  if [[ "${_relative_path:-}" =~ / ]]
-  then
-    _folder_path="${_notebook_path}/${_relative_path%\/*}"
-  fi
+    local _notebook_path=
+    _notebook_path="$(
+      _notebooks show "${__delete_selector:-}" --path ||
+        _notebooks current --path
+    )"
 
-  if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
-  then
-    if [[ -d "${_notebook_path}/${_relative_path}"            ]] &&
-       [[ -z "$(ls -A "${_notebook_path}/${_relative_path}")" ]]
+    local _basename="${_relative_path##*\/}"
+    local _folder_path="${_notebook_path}"
+
+    if [[ "${_relative_path:-}" =~ / ]]
     then
-      rm -r "${_notebook_path:?}/${_relative_path:?}"
-    else
-      if git -C "${_notebook_path:?}" check-ignore    \
-           "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+      _folder_path="${_notebook_path}/${_relative_path%\/*}"
+    fi
+
+    if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
+    then
+      if [[ -d "${_notebook_path}/${_relative_path}"            ]] &&
+         [[ -z "$(ls -A "${_notebook_path}/${_relative_path}")" ]]
       then
         rm -r "${_notebook_path:?}/${_relative_path:?}"
       else
-        git -C "${_notebook_path:?}" rm -r            \
-          "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+        if git -C "${_notebook_path:?}" check-ignore    \
+             "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+        then
+          rm -r "${_notebook_path:?}/${_relative_path:?}"
+        else
+          git -C "${_notebook_path:?}" rm -r            \
+            "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+        fi
       fi
+
+      if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
+      then
+        _index delete "${_basename}" "${_folder_path}"
+
+        _git checkpoint "${_notebook_path}" "[nb] Delete: ${_relative_path}"
+
+        printf "Deleted:  %s\\n" "${_info_line}"
+      fi
+    else
+      _exit_1 printf "Selection not found.\\n"
     fi
-
-    if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
-    then
-      _index delete "${_basename}" "${_folder_path}"
-
-      _git checkpoint "${_notebook_path}" "[nb] Delete: ${_relative_path}"
-
-      printf "Deleted:  %s\\n" "${_info}"
-    fi
-  else
-    _exit_1 printf "Selection not found.\\n"
-  fi
+  done
 }
 _alias_subcommand "delete" "d"
 
