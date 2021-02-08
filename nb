@@ -1584,8 +1584,10 @@ _get_id_selector() {
   local _notebook_name=
   local _relative_path=
   local _selector_relative_path=
-  local _selector="${1:?}"
+  local _selector="${1:-}"
   local _trailing_slash=0
+
+  [[ -z "${_selector:-}" ]] && return 0
 
   if [[ "${_selector:-}" =~ /$ ]]
   then
@@ -4962,7 +4964,7 @@ _ls() {
     fi
 
     local _folder_id_path=
-    _folder_id_path="$(_get_folder_id_path "${_selector_path:-}")"
+    _folder_id_path="$(_get_id_selector "${_selector_path:-}")"
 
     if [[ -n "${_maybe_notebook:-}" ]] || [[ -n "${_folder_id_path:-}" ]]
     then
