@@ -1538,6 +1538,11 @@ _get_content() {
 #
 # Usage:
 #   _get_id_selector <path> | <selector>
+#
+# Description:
+#   Convert a <path> or <selector> to valid selector constructed with ids,
+#   which are resolved first during selector resolution. This function gives
+#   precedence to folder names in input.
 _get_id_selector() {
   local _id_selector=
   local _folder_path=
