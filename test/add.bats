@@ -34,12 +34,10 @@ load test_helper
 
   diff                                    \
     <(cat "${NB_DIR}/home/${_files[0]}")  \
-    <(cat <<HEREDOC
-# Example Title: A*string•with/a\bunch|of?invalid<filename"characters>
+    <(printf "\
+# Example Title: A*string•with/a\\\\bunch|of?invalid<filename\"characters>
 
-# mock_editor ${NB_DIR}/home/${_files[0]%.md}
-HEREDOC
-)
+# mock_editor %s/home/%s\\n" "${NB_DIR}" "${_files[0]%.md}")
 
   while [[ -n "$(git status --porcelain)" ]]
   do
@@ -99,12 +97,10 @@ HEREDOC
 
   diff                                    \
     <(cat "${NB_DIR}/home/${_files[0]}")  \
-    <(cat <<HEREDOC
-# Example Title: A*string•with/a\bunch|of?invalid<filename"characters>
+    <(printf "\
+# Example Title: A*string•with/a\\\\bunch|of?invalid<filename\"characters>
 
-Example: content.
-HEREDOC
-)
+Example: content.\\n")
 
   while [[ -n "$(git status --porcelain)" ]]
   do
