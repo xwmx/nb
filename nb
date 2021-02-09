@@ -12458,6 +12458,7 @@ _show() {
     }
 
     local _sed_arguments=()
+    local _seen_matches=()
 
     local i=0
     for ((i=0; i < "${#_links[@]}"; i++))
@@ -12472,9 +12473,12 @@ _show() {
         _show_escape_link_component "${_links[i]:-}"
       )"
 
-      if [[ -n "${_escaped_match:-}" ]] && [[ -n "${_escaped_link:-}" ]]
+      if [[ -n "${_escaped_match:-}"  ]] &&
+         [[ -n "${_escaped_link:-}"   ]] &&
+         ! _contains "${_escaped_match}" "${_seen_matches[@]}"
       then
         _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
+        _seen_matches+=("${_escaped_match}")
       fi
     done
 

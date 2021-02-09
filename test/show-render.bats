@@ -4,6 +4,38 @@ load test_helper
 
 # links #######################################################################
 
+@test "'show --browse' properly resolved duplicated wiki-style links." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"       \
+      --title     "Root Title One"    \
+      --content   "$(<<HEREDOC cat
+Example link one: [[Example Notebook:Example Folder/1]]
+
+More example [[Example Notebook:Example Folder/1]] content.
+HEREDOC
+)"
+
+    "${_NB}" add  "Example Notebook:Example Folder/File One.md" \
+      --title     "Nested Title One"                            \
+      --content   "Nested content one."
+  }
+
+  run "${_NB}" show 1 --browse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:Example Folder/1)'
+
+  printf "%s\\n" "${output}" | grep -q -v\
+    '\[\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:Example Folder/1)\]'
+}
+
 @test "'show --browse' resolves wiki-style links." {
   {
     "${_NB}" init
@@ -17,16 +49,16 @@ More example [[Example Notebook:Example Folder/1]] content.
 HEREDOC
 )"
 
-    "${_NB}" add  "File Two.md"       \
-      --title     "Root Title Two"    \
+    "${_NB}" add  "File Two.md"                   \
+      --title     "Root Title Two"                \
       --content   "Root content two."
 
-    "${_NB}" add  "Sample Folder/File One.md"  \
-      --title     "Nested Title One"            \
+    "${_NB}" add  "Sample Folder/File One.md"     \
+      --title     "Nested Title One"              \
       --content   "Nested content one."
 
-    "${_NB}" add  "Sample Folder/File Two.md"  \
-      --title     "Nested Title Two"            \
+    "${_NB}" add  "Sample Folder/File Two.md"     \
+      --title     "Nested Title Two"              \
       --content   "Nested content two."
 
     "${_NB}" notebooks add "Example Notebook"
@@ -39,7 +71,7 @@ HEREDOC
       --title     "Root Title Two"                \
       --content   "Root content two."
 
-    "${_NB}" add  "Example Notebook: Folder/File One.md" \
+    "${_NB}" add  "Example Notebook:Example Folder/File One.md" \
       --title     "Nested Title One"                            \
       --content   "Nested content one."
 
