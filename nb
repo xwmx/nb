@@ -13468,14 +13468,41 @@ _browse() {
     {
       printf "%s\\n" "$(_browse --header)"
 
+      local _separator="·"
+      local _test_line=
+
       local __name=
       for   __name in "${_notebook_names[@]:-}"
       do
-        printf --                               \
-          "[%s](http://localhost:%s/%s:)<br/>"  \
-          "${__name}"                           \
-          "${NB_SERVER_PORT}"                   \
-          "${__name}"
+        if [[ -z "${_test_line:-}" ]]
+        then
+          _test_line="${__name}"
+
+          printf --                               \
+            "[%s](http://localhost:%s/%s:)"       \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        elif [[ "${#_test_line}" -gt "$((_COLUMNS - 8))" ]]
+        then
+          printf "<br/>\\n"
+
+          _test_line="${__name}"
+          printf --                               \
+            "[%s](http://localhost:%s/%s:)"       \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        else
+          _test_line+=" ${_separator} ${__name}"
+
+          printf --                               \
+            " %s [%s](http://localhost:%s/%s:)"   \
+            "${_separator}"                       \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        fi
       done
     } | {
       _pandoc --browse || :

@@ -369,16 +369,16 @@ export _S=" "
       \<h1\ id=\"nb-notebooks\"\>\<a\ href=\"http://localhost:6789/\"\>nb\</a\>\ ·\ notebooks\</h1\>  ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:6789/One:\"\>One\</a\>\<br/\> ]]
+      \<p\>\<a\ href=\"http://localhost:6789/One:\"\>One\</a\>\ ·\  ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/Two:\"\>Two\</a\>\<br/\>      ]]
+      \<a\ href=\"http://localhost:6789/Two:\"\>Two\</a\>\ ·\       ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/Three:\"\>Three\</a\>\<br/\>  ]]
+      \<a\ href=\"http://localhost:6789/Three:\"\>Three\</a\>\ ·\   ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\<br/\>    ]]
+      \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\</p\>   ]]
 }
 
 @test "'browse' with no arguments serves the current notebook contents as a rendered HTML page with links to internal web server URLs." {
