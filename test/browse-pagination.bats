@@ -25,9 +25,9 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                        ]]
 
   [[ "${output}"  =~ \
-        \<h1\ id=\"nb-home\"\>\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+        \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
-        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\</h1\>       ]]
+        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>.*\</h1\>     ]]
 
   # 10-7
 
@@ -102,9 +102,9 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                        ]]
 
   [[ "${output}"  =~ \
-        \<h1\ id=\"nb-home\"\>\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+        \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
-        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\</h1\>       ]]
+        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>.*\</h1\>     ]]
 
   # 10-7
 
@@ -180,9 +180,9 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                        ]]
 
   [[ "${output}"  =~ \
-        \<h1\ id=\"nb-home\"\>\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+        \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
-        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\</h1\>       ]]
+        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>.*\</h1\>     ]]
 
   # 10-7
 
@@ -257,9 +257,9 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                        ]]
 
   [[ "${output}"  =~ \
-        \<h1\ id=\"nb-home\"\>\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+        \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
-        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\</h1\>       ]]
+        .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>.*\</h1\>     ]]
 
   # 10-7
 

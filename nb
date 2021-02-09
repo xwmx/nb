@@ -7979,7 +7979,21 @@ body        { max-width: 45em; hyphens: none;             }
 
 a           { color: #6EB3D7; text-decoration: none;      }
 a:hover     { color: #6EB3D7; text-decoration: underline; }
-a:visited   { color: #6EB3D7; text-decoration: underline; }
+a:visited   { color: #6EB3D7; text-decoration: none;      }
+
+.header-crumbs {
+  border-bottom: 1px solid #4d4d4d;
+  font-size: 1.5rem;
+  font-weight: normal;
+  padding-bottom: 0.8rem;
+}
+
+h1 a,
+h1 a:active,
+h1 a:hover,
+h1 a:visited {
+  text-decoration: none;
+}
 
 h1 a,
 h1 a:hover,
@@ -13529,7 +13543,7 @@ _browse() {
 
     if [[ -z "${_selector:-}" ]]
     then
-      _header_content+=" notebooks"
+      _header_content+=" <span class=\"dim\">notebooks</span>"
     else
       local _notebook_name=
 
@@ -13613,7 +13627,7 @@ _browse() {
       fi
     fi
 
-    printf "# %s\\n\\n" "${_header_content:-}"
+    printf "<h1 class=\"header-crumbs\">%s</h1>\\n\\n" "${_header_content:-}"
   }
 
   # _browse_render_item()
