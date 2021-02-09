@@ -13491,6 +13491,16 @@ _browse() {
 
       printf "%s\\n" "$(_browse --header "${_target_path}")"
 
+      # TODO
+#       cat <<HEREDOC
+# <p>
+#   <form accept-charset="UTF-8" action="/search" id="global-search" method="get">
+#     <label for="search-input">search:</label>
+#     <input autocapitalize="off" autocomplete="off" id="search-input" name="q" placeholder="Search" type="text">
+#   </form>
+# </p><br/>
+# HEREDOC
+
       cat
 
       if ((_print_prev)) || ((_print_next))
