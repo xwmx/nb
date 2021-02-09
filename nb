@@ -7974,6 +7974,7 @@ html {
   font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
   font-size: 16px;
 }
+
 body        { max-width: 45em; hyphens: none;             }
 
 a           { color: #6EB3D7; text-decoration: none;      }
@@ -13522,7 +13523,7 @@ _browse() {
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
-    local _header_content="[nb](http://localhost:${NB_SERVER_PORT}/) <span class=\"dim\">·</span>"
+    local _header_content="[<span class=\"dim\">❯</span>nb](http://localhost:${NB_SERVER_PORT}/) <span class=\"dim\">·</span>"
 
     local _selector="${1:-}"
 
