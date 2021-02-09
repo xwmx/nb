@@ -13311,7 +13311,7 @@ _browse() {
   #
   # Usage:
   #   _browse_render_container <target-path> [--page <page-number>]
-  #                            [--per-page <number>]
+  #                            [--per-page <number>] [--terminal]
   #
   # Description:
   #   Render a notebook or folder as an HTML page.
@@ -13319,13 +13319,15 @@ _browse() {
     local _current_page=1
     local _per_page="${NB_BROWSE_PER_PAGE:-20}"
     local _target_path=
+    local _terminal_browser=0
 
     while ((${#}))
     do
       case "${1:-}" in
-        --page)   _current_page="${2:?}"        && shift                  ;;
-        --per*)   _per_page="${2:?}"            && shift                  ;;
-        *)        [[ -z "${_target_path:-}" ]]  && _target_path="${1:-}"  ;;
+        --page)     _current_page="${2:?}"        && shift                  ;;
+        --per*)     _per_page="${2:?}"            && shift                  ;;
+        --terminal) _terminal_browser=1                                     ;;
+        *)          [[ -z "${_target_path:-}" ]]  && _target_path="${1:-}"  ;;
       esac
 
       shift
@@ -13345,13 +13347,16 @@ _browse() {
         --page      "${_current_page}"  \
         --with-pinned
     } | {
-      local _truncate_length=
+      local _truncate_length=9999
 
-      case "${BROWSER:-}" in
-        *elinks*) _truncate_length="$((_COLUMNS - 20))" ;;
-        *lynx*)   _truncate_length="$((_COLUMNS - 10))" ;;
-        *)        _truncate_length="$((_COLUMNS - 1))"  ;;
-      esac
+      if ((_terminal_browser))
+      then
+        case "${BROWSER:-}" in
+          *elinks*) _truncate_length="$((_COLUMNS - 20))" ;;
+          *lynx*)   _truncate_length="$((_COLUMNS - 10))" ;;
+          *)        _truncate_length="$((_COLUMNS - 1))"  ;;
+        esac
+      fi
 
       while read -r __list_item
       do
@@ -13457,13 +13462,19 @@ _browse() {
   # _browse_render_notebooks()
   #
   # Usage:
-  #   _browse_render_notebooks
+  #   _browse_render_notebooks [--terminal]
   #
   # Description:
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
     local _notebook_names=()
     _notebook_names=($(_notebooks --names --unarchived --no-color))
+    local _terminal_browser=0
+
+    if [[ "${1:-}" == "--terminal" ]]
+    then
+      _terminal_browser=1
+    fi
 
     {
       printf "%s\\n" "$(_browse --header)"
@@ -13483,7 +13494,8 @@ _browse() {
             "${__name}"                           \
             "${NB_SERVER_PORT}"                   \
             "${__name}"
-        elif [[ "${#_test_line}" -gt "$((_COLUMNS - 8))" ]]
+        elif ((_terminal_browser)) &&
+             [[ "${#_test_line}" -gt "$((_COLUMNS - 8))" ]]
         then
           printf "<br/>\\n"
 
@@ -13768,6 +13780,26 @@ _browse() {
       _browse_respond_with 400
     fi
 
+    local _looking_for_user_agent=1
+    local _terminal_browser=1
+
+    while ((_looking_for_user_agent))
+    do
+      local _http_header_line=
+      read -r _http_header_line
+
+      if [[ "${_http_header_line}"      =~ User-Agent       ]]
+      then
+        if [[ ! "${_http_header_line}"  =~ lynx|w3m|elinks  ]]
+        then
+          _terminal_browser=0
+          _looking_for_user_agent=0
+        fi
+
+        break
+      fi
+    done
+
     local _page_number=1
 
     if [[ "${_request_uri}" =~ --page=([0-9]+) ]]
@@ -13792,9 +13824,16 @@ _browse() {
     _target_selector="${_target_selector//"\%20"/ }"
     _target_selector="${_target_selector//"%20"/ }"
 
+    local _arguments=()
+
+    if ((_terminal_browser))
+    then
+      _arguments+=("--terminal")
+    fi
+
     if [[ -z "${_target_selector:-}"    ]]
     then
-      _browse_render_notebooks >> "${_temp_file}"
+      _browse_render_notebooks "${_arguments[@]:-}" >> "${_temp_file}"
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector}" --path 2>/dev/null || :)"
@@ -13804,9 +13843,11 @@ _browse() {
         _browse_respond_with 404
       elif [[ -d "${_selector_path:-}"  ]]
       then
+        _arguments+=("--page"     "${_page_number}")
+        _arguments+=("--per-page" "${_per_page}")
+
         _browse_render_container "${_selector_path:-}"  \
-          --page      "${_page_number}"                 \
-          --per-page  "${_per_page}"                    \
+          "${_arguments[@]:-}"                          \
           >> "${_temp_file}"
       else
         _browse_render_item "${_selector_path:-}" >> "${_temp_file}"
