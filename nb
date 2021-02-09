@@ -7974,7 +7974,7 @@ html {
   font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
   font-size: 16px;
 }
-body        { max-width: 45em;                            }
+body        { max-width: 45em; hyphens: none;             }
 
 a           { color: #6EB3D7; text-decoration: none;      }
 a:hover     { color: #6EB3D7; text-decoration: underline; }
