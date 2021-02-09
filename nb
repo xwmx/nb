@@ -13477,68 +13477,6 @@ _browse() {
     }
   }
 
-  # _browse_render_notebooks()
-  #
-  # Usage:
-  #   _browse_render_notebooks [--terminal]
-  #
-  # Description:
-  #   Print an HTML page listing notebooks.
-  _browse_render_notebooks() {
-    local _notebook_names=()
-    _notebook_names=($(_notebooks --names --unarchived --no-color))
-    local _terminal_browser=0
-
-    if [[ "${1:-}" == "--terminal" ]]
-    then
-      _terminal_browser=1
-    fi
-
-    {
-      printf "%s\\n" "$(_browse --header)"
-
-      local _separator="<span class=\"dim\">·</span>"
-      local _test_line=
-
-      local __name=
-      for   __name in "${_notebook_names[@]:-}"
-      do
-        if [[ -z "${_test_line:-}" ]]
-        then
-          _test_line="${__name}"
-
-          printf --                               \
-            "[%s](http://localhost:%s/%s:)"       \
-            "${__name}"                           \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"
-        elif ((_terminal_browser)) &&
-             [[ "${#_test_line}" -gt "$((_COLUMNS - 8))" ]]
-        then
-          printf "<br/>\\n"
-
-          _test_line="${__name}"
-          printf --                               \
-            "[%s](http://localhost:%s/%s:)"       \
-            "${__name}"                           \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"
-        else
-          _test_line+=" ${_separator} ${__name}"
-
-          printf --                               \
-            " %s [%s](http://localhost:%s/%s:)"   \
-            "${_separator}"                       \
-            "${__name}"                           \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"
-        fi
-      done
-    } | {
-      _pandoc --browse || :
-    }
-  }
-
   # _browse_render_header()
   #
   # Usage:
@@ -13658,6 +13596,68 @@ _browse() {
         --no-color
     } | {
       _pandoc --browse
+    }
+  }
+
+  # _browse_render_notebooks()
+  #
+  # Usage:
+  #   _browse_render_notebooks [--terminal]
+  #
+  # Description:
+  #   Print an HTML page listing notebooks.
+  _browse_render_notebooks() {
+    local _notebook_names=()
+    _notebook_names=($(_notebooks --names --unarchived --no-color))
+    local _terminal_browser=0
+
+    if [[ "${1:-}" == "--terminal" ]]
+    then
+      _terminal_browser=1
+    fi
+
+    {
+      printf "%s\\n" "$(_browse --header)"
+
+      local _separator="<span class=\"dim\">·</span>"
+      local _test_line=
+
+      local __name=
+      for   __name in "${_notebook_names[@]:-}"
+      do
+        if [[ -z "${_test_line:-}" ]]
+        then
+          _test_line="${__name}"
+
+          printf --                               \
+            "[%s](http://localhost:%s/%s:)"       \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        elif ((_terminal_browser)) &&
+             [[ "${#_test_line}" -gt "$((_COLUMNS - 8))" ]]
+        then
+          printf "<br/>\\n"
+
+          _test_line="${__name}"
+          printf --                               \
+            "[%s](http://localhost:%s/%s:)"       \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        else
+          _test_line+=" ${_separator} ${__name}"
+
+          printf --                               \
+            " %s [%s](http://localhost:%s/%s:)"   \
+            "${_separator}"                       \
+            "${__name}"                           \
+            "${NB_SERVER_PORT}"                   \
+            "${__name}"
+        fi
+      done
+    } | {
+      _pandoc --browse || :
     }
   }
 
