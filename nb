@@ -13922,6 +13922,7 @@ _browse() {
   local _browse_notebooks=0
   local _browse_page=1
   local _browse_per_page=
+  local _open_gui=0
   local _print_browse_container=0
   local _print_browse_header=0
   local _print_browse_item=0
@@ -13936,16 +13937,7 @@ _browse() {
         _print_browse_container=1
         ;;
       --gui)
-        if _command_exists "xdg-open"
-        then
-          xdg-open "http://localhost:${NB_SERVER_PORT}"
-        elif [[ "${OSTYPE}" =~ ^darwin    ]]
-        then
-          open "http://localhost:${NB_SERVER_PORT}"
-        fi
-
-        _browse_serve --foreground
-        exit 0
+        _open_gui=1
         ;;
       --header)
         _print_browse_header=1
@@ -13985,6 +13977,20 @@ _browse() {
 
     shift
   done
+
+  if ((_open_gui))
+  then
+    if _command_exists "xdg-open"
+    then
+      xdg-open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+    elif [[ "${OSTYPE}" =~ ^darwin    ]]
+    then
+      open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+    fi
+
+    _browse_serve --foreground
+    exit 0
+  fi
 
   if ((_print_browse_header))
   then
