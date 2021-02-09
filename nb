@@ -8044,20 +8044,19 @@ _web_browser() {
   [[ -z "${_web_browser_command[*]:-}" ]] && return 1
   ((_check)) && return 0
 
-  if _interactive_input
+  if _interactive_input && [[ -z "${_url:-}" ]]
   then
-    if [[ -z "${_url:-}" ]]
-    then
-      return 0
-    else
-      "${_web_browser_command[@]:-}" "${_url:-}"
-      return 0
-    fi
+    return 0
   else
     if [[ "${_web_browser_command[*]:-}" =~ w3m ]]
     then
       _web_browser_command+=("-I" "UTF-8")
       _web_browser_command+=("-O" "UTF-8")
+
+      if [[ -n "${_url:-}" ]]
+      then
+        _web_browser_command+=("${_url:-}")
+      fi
 
       if ((_dump))
       then
@@ -8069,8 +8068,17 @@ _web_browser() {
       return 0
     elif [[ "${_web_browser_command[*]:-}" =~ lynx ]]
     then
-      _arguments+=("-stdin")
-      ((_dump)) && _arguments+=("--dump")
+      ((_dump)) && _arguments+=("-dump")
+
+      if [[ -n "${_url:-}" ]]
+      then
+        _arguments+=("${_url:-}")
+      else
+        _arguments+=("-stdin")
+      fi
+
+      _arguments+=("-nomargins")
+      _arguments+=("-notitle")
 
       "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
@@ -8078,8 +8086,19 @@ _web_browser() {
     then
       ((_dump)) && _arguments+=("-dump")
 
+      if [[ -n "${_url:-}" ]]
+      then
+        _arguments+=("${_url:-}")
+      fi
+
+
       "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
     else
+      if [[ -n "${_url:-}" ]]
+      then
+        _web_browser_command+=("${_url:-}")
+      fi
+
       "${_web_browser_command[@]}"
       return 0
     fi
