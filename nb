@@ -13942,7 +13942,7 @@ _browse() {
       --container)
         _print_browse_container=1
         ;;
-      --gui)
+      -g|--gui)
         _open_gui=1
         ;;
       --header)
