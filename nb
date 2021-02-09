@@ -12430,7 +12430,29 @@ _show() {
       then
         if [[ -n "${_selector:-}" ]]
         then
-          _links+=("[[[${_selector}]]](http://localhost:${NB_SERVER_PORT}/${_selector})")
+          local _notebook_name=
+          local _query_selector=
+          if [[ "${_selector:-}" =~ : ]]
+          then
+            _notebook_name="${_selector%%:*}"
+            _query_selector="${_selector}"
+          else
+            _notebook_name="${_notebook_path##*/}"
+            _query_selector="${_notebook_name}:${_selector}"
+          fi
+
+
+          local _selector_path=
+          _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
+
+          local _id_selector=
+          _id_selector="$(
+            _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
+          )"
+
+          _links+=(
+            "[[[${_selector}]]](http://localhost:${NB_SERVER_PORT}/${_id_selector})"
+          )
         else
           _links+=("${__match}")
         fi

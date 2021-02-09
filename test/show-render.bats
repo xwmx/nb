@@ -4,7 +4,48 @@ load test_helper
 
 # links #######################################################################
 
-@test "'show --browse' properly resolved duplicated wiki-style links." {
+@test "'show --browse' properly resolves titled wiki-style links." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"       \
+      --title     "Root Title One"    \
+      --content   "$(<<HEREDOC cat
+Example link one: [[Root Title Two]]
+
+More example [[Example Notebook:Example Folder/1]] content.
+HEREDOC
+)"
+
+    "${_NB}" add  "File Two.md"       \
+      --title     "Root Title Two"    \
+      --content   "Example content."
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example Folder/File One.md" \
+      --title     "Nested Title One"                            \
+      --content   "Nested content one."
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" use "Sample Notebook"
+  }
+
+  run "${_NB}" show home:1 --browse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+    '\[\[\[Root Title Two\]\]\](http://localhost:6789/home:2)'
+
+  printf "%s\\n" "${output}" | grep -q \
+    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)'
+}
+
+@test "'show --browse' properly resolves duplicated wiki-style links." {
   {
     "${_NB}" init
 
@@ -16,6 +57,8 @@ Example link one: [[Example Notebook:Example Folder/1]]
 More example [[Example Notebook:Example Folder/1]] content.
 HEREDOC
 )"
+
+    "${_NB}" notebooks add "Example Notebook"
 
     "${_NB}" add  "Example Notebook:Example Folder/File One.md" \
       --title     "Nested Title One"                            \
@@ -30,10 +73,10 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:Example Folder/1)'
+    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)'
 
   printf "%s\\n" "${output}" | grep -q -v\
-    '\[\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:Example Folder/1)\]'
+    '\[\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)\]'
 }
 
 @test "'show --browse' resolves wiki-style links." {
@@ -88,13 +131,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Sample Folder/Nested Title One\]\]\](http://localhost:6789/Sample Folder/Nested Title One)'
+    '\[\[\[Sample Folder/Nested Title One\]\]\](http://localhost:6789/home:3/1)'
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:File Two.md\]\]\](http://localhost:6789/Example Notebook:File Two.md)'
+    '\[\[\[Example Notebook:File Two.md\]\]\](http://localhost:6789/Example Notebook:2)'
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:Example Folder/1)'
+    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:3/1)'
 }
 
 # --render, --print, and --raw ################################################
@@ -114,7 +157,7 @@ Example content with [a link](https://example.test) and *formatting*."
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                   ]]
+  [[ "${status}"    -eq 0                                                  ]]
   [[ "${lines[0]}"  =~  \.*#.*\ .*Example\ Title.*                          ]]
   [[ "${lines[1]}"  =~  \
        Example\ content\ with\ .*\[.*a\ link.*\](.*https://example.test.*)  ]]
