@@ -7976,6 +7976,8 @@ blockquote  { border-left: 2px solid #4d4d4d; color: #606060;                   
 hr          { background-color: #4d4d4d;                                        }
 tbody       { border-top: 1px solid #4d4d4d; border-bottom: 1px solid #4d4d4d;  }
 th          { border-top: 1px solid #4d4d4d;                                    }
+.dim        { color: #626480;                                                   }
+.identifier { color: #6EB3D7;                                                   }
 </style>
 HEREDOC
 
@@ -13360,19 +13362,22 @@ _browse() {
 
       while read -r __list_item
       do
-        local _list_item_length="${#__list_item}"
-        local _list_item_visible_length=
-        _list_item_visible_length="$(_get_visible_length "${__list_item}")"
-
-        local _difference=
-        _difference="$((_list_item_visible_length - _list_item_length))"
-
-        local _adjusted_truncate_length=
-        _adjusted_truncate_length="$((_truncate_length - _difference))"
-
-        if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
+        if ((_terminal_browser))
         then
-          __list_item="${__list_item:0:$((_adjusted_truncate_length - 1))}…"
+          local _list_item_length="${#__list_item}"
+          local _list_item_visible_length=
+          _list_item_visible_length="$(_get_visible_length "${__list_item}")"
+
+          local _difference=
+          _difference="$((_list_item_visible_length - _list_item_length))"
+
+          local _adjusted_truncate_length=
+          _adjusted_truncate_length="$((_truncate_length - _difference))"
+
+          if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
+          then
+            __list_item="${__list_item:0:$((_adjusted_truncate_length - 1))}…"
+          fi
         fi
 
         if [[ "${__list_item:-}" =~ ^0\ items. ]]
@@ -13390,6 +13395,8 @@ _browse() {
 
         local _display_item="${__list_item//\\\ /&nbsp;}"
         _display_item="${_display_item//\ /&nbsp;}"
+        _display_item="${_display_item/\[/\<span\ class=\"dim\"\>\\\[\</span\>\<span\ class=\"identifier\"\>}"
+        _display_item="${_display_item/\]/\</span\>\<span\ class=\"dim\"\>\\\]\</span\>}"
 
         printf "%s\\n" \
           "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
@@ -13437,7 +13444,7 @@ _browse() {
 
       if ((_print_prev)) && ((_print_next))
       then
-        printf " · "
+        printf " <span class=\"dim\">·</span> "
       fi
 
       if ((_print_next))
@@ -13479,7 +13486,7 @@ _browse() {
     {
       printf "%s\\n" "$(_browse --header)"
 
-      local _separator="·"
+      local _separator="<span class=\"dim\">·</span>"
       local _test_line=
 
       local __name=
@@ -13529,7 +13536,7 @@ _browse() {
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
-    local _header_content="[nb](http://localhost:${NB_SERVER_PORT}/) ·"
+    local _header_content="[nb](http://localhost:${NB_SERVER_PORT}/) <span class=\"dim\">·</span>"
 
     local _selector="${1:-}"
 
@@ -13587,7 +13594,7 @@ _browse() {
       if [[ -n "${_relative_folder_path:-}"                    ]] &&
          [[ -d "${_notebook_path}/${_relative_folder_path}"    ]]
       then
-        _header_content+=" :"
+        _header_content+=" <span class=\"dim\">:</span>"
 
         local _selector_folders=()
         IFS='/' read -ra _selector_folders < <(
@@ -13614,7 +13621,7 @@ _browse() {
           _url_path+="${_selector_folder_ids[i]}/"
 
           _header_content+="\
- [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}) /"
+ [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}) <span class=\"dim\">/</a>"
         done
       fi
     fi
