@@ -13878,6 +13878,18 @@ _browse() {
       --container)
         _print_browse_container=1
         ;;
+      --gui)
+        if _command_exists "xdg-open"
+        then
+          xdg-open "http://localhost:${NB_SERVER_PORT}"
+        elif [[ "${OSTYPE}" =~ ^darwin    ]]
+        then
+          open "http://localhost:${NB_SERVER_PORT}"
+        fi
+
+        _browse_serve --foreground
+        exit 0
+        ;;
       --header)
         _print_browse_header=1
         ;;
