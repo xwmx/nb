@@ -13410,7 +13410,7 @@ _browse() {
         _display_item="${_display_item/\]/\</span\>\<span\ class=\"dim\"\>\\\]\</span\>}"
 
         printf "%s\\n" \
-          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector})<br/>"
+          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector}){.list-item}<br/>"
       done
     } | {
       local _list_count=
