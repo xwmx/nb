@@ -7972,6 +7972,7 @@ html {
   background-color: #1a1a1a;
   color: #e6e6e6;
   font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+  font-size: 16px;
 }
 a           { color: #e6e6e6; text-decoration: none;                            }
 a:hover     { color: #e6e6e6; text-decoration: underline;                       }
