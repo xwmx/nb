@@ -13662,6 +13662,11 @@ _browse() {
       local __name=
       for   __name in "${_notebook_names[@]:-}"
       do
+        if [[ -n "${_test_line:-}" ]]
+        then
+          _test_line+=" x ${__name}"
+        fi
+
         if [[ -z "${_test_line:-}" ]]
         then
           _test_line="${__name}"
@@ -13672,7 +13677,7 @@ _browse() {
             "${NB_SERVER_PORT}"                   \
             "${__name}"
         elif ((_terminal_browser)) &&
-             [[ "${#_test_line}" -gt "$((_COLUMNS - 8))" ]]
+             [[ "${#_test_line}" -gt "$((_COLUMNS - 1))" ]]
         then
           printf "<br/>\\n"
 
@@ -13683,8 +13688,6 @@ _browse() {
             "${NB_SERVER_PORT}"                   \
             "${__name}"
         else
-          _test_line+=" ${_separator} ${__name}"
-
           printf --                               \
             " %s [%s](http://localhost:%s/%s:)"   \
             "${_separator}"                       \
@@ -13843,9 +13846,11 @@ _browse() {
       local _http_header_line=
       read -r _http_header_line
 
+      # turn on case-insensitive matching
+      shopt -s nocasematch
       if [[ "${_http_header_line}"      =~ User-Agent       ]]
       then
-        if [[ ! "${_http_header_line}"  =~ lynx|w3m|elinks  ]]
+        if [[ ! "${_http_header_line}"  =~ Lynx|w3m|ELinks  ]]
         then
           _terminal_browser=0
           _looking_for_user_agent=0
@@ -13853,6 +13858,8 @@ _browse() {
 
         break
       fi
+      # turn off case-insensitive matching
+      shopt -u nocasematch
     done
 
     local _page_number=1
