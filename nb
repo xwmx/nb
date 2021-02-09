@@ -13746,11 +13746,11 @@ _browse() {
 
     # Request-Line HTTP RFC 2616 §5
     # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
-    local _line=
-    read -r _line || _browse_respond_with 400
+    local _request_line=
+    read -r _request_line || _browse_respond_with 400
 
     # strip trailing CR if it exists
-    _line="${_line%%$'\r'}"
+    _request_line="${_request_line%%$'\r'}"
 
     local _request_http_version=
     local _request_method=
@@ -13759,7 +13759,7 @@ _browse() {
     IFS=' ' read -r   \
       _request_method \
       _request_uri    \
-      _request_http_version <<<"${_line}"
+      _request_http_version <<< "${_request_line}"
 
     if [[ -z "${_request_method:-}"       ]] ||
        [[ -z "${_request_uri:-}"          ]] ||
