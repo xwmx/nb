@@ -7,6 +7,25 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# title #######################################################################
+
+@test "'browse' sets HTML title." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                    ]]
+
+  [[    "${output}"  =~  '<title>nb</title>'  ]]
+  [[ !  "${output}"  =~  'h1 class="title"'   ]]
+  [[ !  "${output}"  =~  'title-block-header' ]]
+}
+
 # css / styles ################################################################
 
 @test "'browse' includes application styles." {

@@ -7981,12 +7981,17 @@ th          { border-top: 1px solid #4d4d4d;                                    
 </style>
 HEREDOC
 
-  pandoc                                \
-    --include-in-header "${_temp_file}" \
-    --from markdown                     \
-    --to html                           \
-    --standalone                        \
-    2>/dev/null
+  {
+    pandoc                                \
+      --include-in-header "${_temp_file}" \
+      --from markdown                     \
+      --to html                           \
+      --standalone                        \
+      --metadata title="nb"               \
+      2>/dev/null
+    } | {
+      sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
+    }
 
   rm -f "${_temp_file:?}"
 }
