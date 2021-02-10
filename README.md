@@ -1714,7 +1714,7 @@ nb browse sample:123 --gui
 ```
 
 `nb browse` includes a search field that can be used for quick searches
-of the current notebook or folder when browsing. For full-features
+of the current notebook or folder when browsing. For full-featured
 search, use [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
