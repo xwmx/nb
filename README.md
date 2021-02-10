@@ -1610,9 +1610,9 @@ making `nb` a powerful terminal-first platform for
 [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and other
 link-based note-taking methods.
 
-To add a from note or bookmark to another in the same notebook, include
-the id, title, filename, and folder path for for the target item within
-double square brackets anywhere in the linking document:
+To add a link from a note or bookmark to another in the same notebook,
+include the id, title, filename, and folder path for for the target item
+within double square brackets anywhere in the linking document:
 
 ```text
 # link to item with id 123 in the root level of current notebook
@@ -1679,12 +1679,11 @@ search: [                    ]
 `nb browse` opens in the browser set in the `$BROWSER` environment
 variable, with [w3m](https://en.wikipedia.org/wiki/W3m) preferred.
 
-To open a specific item in browse, pass the [selector](#selector) to
-`nb browse`:
+To open a specific item in `nb browse`, pass the [selector](#selector)
+for the item, folder, or notebook:
 
 ```bash
-# open item titled "Example Title" in the folder named "Sample" in the
-# "example" notebook
+# open item titled "Example Title" in the folder named "Sample" in the "example" notebook
 > nb browse example:Sample/Example\ Title
 
 ❯nb · example : Sample /
@@ -1707,13 +1706,15 @@ To open `nb browse` in the system's primary web browse, use `nb browse
 --gui` / `nb browse -g`:
 
 ```bash
-# open item with id 123 in the "sample" notebook in the system's primary
-# GUI browser
+# open item with id 123 in the "sample" notebook in the system's primary GUI browser
 nb browse sample:123 --gui
 ```
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
-[`pandoc`](https://pandoc.org/).
+[`pandoc`](https://pandoc.org/). Only `pandoc` is available, the current
+note will be rendered and links go to unrendered linked files. If
+neither `pandoc` not `ncat` are available, `nb` falls back to
+[`nb show`](#show).
 
 For more information, see [`nb browse`](#browse).
 
