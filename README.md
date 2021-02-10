@@ -1723,7 +1723,7 @@ note will be rendered and links go to unrendered linked files. If
 neither `pandoc` not `ncat` are available, `nb` falls back to
 [`nb show`](#show).
 
-#### Shortcut Alias: `br`
+##### Shortcut Alias: `br`
 
 `nb browse` can also be used with the alias `br`:
 
