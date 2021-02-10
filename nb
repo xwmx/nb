@@ -8028,6 +8028,32 @@ tbody       { border-top: 1px solid #4d4d4d; border-bottom: 1px solid #4d4d4d;  
 th          { border-top: 1px solid #4d4d4d;                                    }
 .dim        { color: #626480;                                                   }
 .identifier { color: #6EB3D7;                                                   }
+
+#search {
+  position: relative;
+}
+
+#search	i {
+  animation-name: blink;
+  animation-duration: 3000ms;
+  animation-iteration-count: infinite;
+  background-color: #a6a659;
+  height: 80%;
+  left: 5px;
+  opacity: 0.5;
+  position: absolute;
+  top: 10%;
+  width: 1em;
+}
+
+#search input:focus + i {
+  display: none;
+}
+
+@keyframes blink {
+  from  { opacity: 1; }
+  to    { opacity: 0; }
+}
 </style>
 HEREDOC
 
@@ -13599,6 +13625,7 @@ _browse() {
       type="text"
       value="${_query:-}"
     >
+    <i></i>
   </form>
 </div>
 <p class="search-spacer"><br></p>
