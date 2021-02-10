@@ -11936,9 +11936,10 @@ _search() {
             # Use `sed` to remove color and 'matches' suffix from output.
             # https://unix.stackexchange.com/a/140255
             _path="$(
-              printf "%s\\n" "${_line_path_segment}"            \
-                | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g" \
-                | sed -e 's/ matches//g'
+              printf "%s\\n" "${_line_path_segment}"              \
+                | sed                                             \
+                    -e "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"  \
+                    -e 's/ matches//g'
             )"
           fi
 
