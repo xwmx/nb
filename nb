@@ -13474,12 +13474,13 @@ _browse() {
     [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
 
     {
-
       if [[ -n "${_query:-}" ]]
       then
         _search "${_target_path}"         \
           "${_query}"                     \
           --no-color                      \
+          --per-page  "${_per_page}"      \
+          --page      "${_current_page}"  \
           --list
       else
         _list "${_target_path}"           \
@@ -13577,25 +13578,25 @@ HEREDOC
 
       cat
 
-      if [[ -n "${_query:-}" ]]
-      then
-        _print_prev=0
-        _print_next=0
-      fi
-
       if ((_print_prev)) || ((_print_next))
       then
         printf "\\n"
       fi
 
+      local _params="--per-page=${_per_page}"
+
+      if [[ -n "${_query:-}" ]]
+      then
+        _params+="&--query=${_query}"
+      fi
+
       if ((_print_prev))
       then
-        printf                                                        \
-          "[❮ prev](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
-          "${NB_SERVER_PORT}"                                         \
-          "${_link_selector}"                                         \
-          "$((_current_page - 1))"                                    \
-          "${_per_page}"
+        printf                                                    \
+          "[❮ prev](http://localhost:%s/%s?--page=%s&${_params})" \
+          "${NB_SERVER_PORT}"                                     \
+          "${_link_selector}"                                     \
+          "$((_current_page - 1))"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -13605,12 +13606,11 @@ HEREDOC
 
       if ((_print_next))
       then
-        printf                                                        \
-          "[next ❯](http://localhost:%s/%s?--page=%s&--per-page=%s)"  \
-          "${NB_SERVER_PORT}"                                         \
-          "${_link_selector}"                                         \
-          "$((_current_page + 1))"                                    \
-          "${_per_page}"
+        printf                                                    \
+          "[next ❯](http://localhost:%s/%s?--page=%s&${_params})" \
+          "${NB_SERVER_PORT}"                                     \
+          "${_link_selector}"                                     \
+          "$((_current_page + 1))"
       fi
 
       if ((_print_prev)) || ((_print_next))
