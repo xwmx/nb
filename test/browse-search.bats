@@ -7,6 +7,35 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# no matches ##################################################################
+
+@test "'browse --container --query' with no match displays page with message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --title "Title One" --content "Content one."
+    "${_NB}" add "File Two.md" --title "Title Two" --content "Content abcde two."
+  }
+
+  run "${_NB}" browse --container --query "non-matching-query"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                               ]]
+
+  [[ !  "${output}"   =~ Not\ found:\ non-matching-query  ]]
+
+  [[ !  "${output}"   =~ Title\ One                       ]]
+
+  [[ !  "${output}"   =~  \
+    \<p\>\<a\ href=\"http://localhost:6789/2\"\ class=\"list-item\"\>                         ]]
+  [[ !  "${output}"   =~   \
+    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[ !  "${output}"   =~   \
+    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br/\>\</p\> ]]
+}
+
 # search form #################################################################
 
 @test "'browse' with container displays search form." {

@@ -13501,7 +13501,7 @@ _browse() {
           --no-color                      \
           --per-page  "${_per_page}"      \
           --page      "${_current_page}"  \
-          --list
+          --list || :
       else
         _list "${_target_path}"           \
           --no-color                      \
@@ -13523,6 +13523,7 @@ _browse() {
 
       while read -r __list_item
       do
+        _warn echo "${__list_item}"
         if ((_terminal_browser))
         then
           local _list_item_length="${#__list_item}"
@@ -13541,9 +13542,13 @@ _browse() {
           fi
         fi
 
-        if [[ "${__list_item:-}" =~ ^0\ items. ]]
+        if [[   "${__list_item:-}" =~ ^0\ items. ]]
         then
           printf "%s<br/>\\n" "${__list_item}"
+          break
+        elif [[ "${__list_item:-}" =~ Not\ found ]]
+        then
+          printf "%s<br/>\\n" "${__list_item//\ in*:/:}"
           break
         fi
 
