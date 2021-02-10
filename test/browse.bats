@@ -7,6 +7,24 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# 404 #########################################################################
+
+@test "'browse' renders 404 when not found." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" browse no-matching-selector --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                    ]]
+
+  [[    "${output}"  =~  '<title>nb</title>'  ]]
+  [[    "${output}"  =~  '404 Not Found'      ]]
+}
+
 # title #######################################################################
 
 @test "'browse' sets HTML title." {

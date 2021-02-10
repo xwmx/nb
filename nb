@@ -13902,7 +13902,7 @@ HEREDOC
     else
       _string="${2:-}"
 
-      _response_headers+=("Content-Type: text/plain")
+      _response_headers+=("Content-Type: text/html")
     fi
 
     printf "%s\\r\\n" \
@@ -13919,22 +13919,25 @@ HEREDOC
     if ! ((_only_headers))
     then
       printf "\\r\\n"
-
-      if [[ -n "${_string:-}"     ]]
-      then
-        printf "%s\\r\\n" "${_string}"
-      elif [[ "${_path:-}" =~ ^/  ]]
-      then
+      {
+        if [[ -n "${_string:-}"     ]]
+        then
+          printf "%s\\n" "${_string}"
+        elif [[ "${_path:-}" =~ ^/  ]]
+        then
+          cat "${_path}"
+        else
+          printf "%s\\n" \
+            "${_status_code} $(_browse_http_response_message "${_status_code}")" \
+            | _pandoc --browse
+        fi
+      } | {
         local __line=
-
         while read -r __line
         do
           printf "%s\\r\\n" "${__line}"
-        done < "${_path}"
-      else
-        printf "%s\\r\\n" \
-          "${_status_code} $(_browse_http_response_message "${_status_code}")"
-      fi
+        done
+      }
     fi
 
     if [[ "${1:-}" -eq 200 ]]
