@@ -1605,10 +1605,10 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 *Version 6.0.0-alpha*
 
-Markdown notes can link to other notes using [[wiki-style links]],
-making `nb` a powerful terminal-first platform for
-[Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and other
-link-based note-taking methods.
+Markdown notes and bookmarks can link to other items using
+[[wiki-style links]], making `nb` a powerful terminal-first platform
+for [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and
+other link-based note-taking methods.
 
 To add a link from a note or bookmark to another in the same notebook,
 include the id, title, filename, and folder path for for the target item
@@ -1679,7 +1679,7 @@ search: [                    ]
 
 Items are displayed using the same format as `nb` and `nb ls`, with
 each list item linked. `nb browse` is designed to make it easy to
-navigate using the only the keyboard within the terminal.
+navigate using only the keyboard within the terminal.
 
 `nb browse` opens in the browser set in the `$BROWSER` environment
 variable, with [w3m](https://en.wikipedia.org/wiki/W3m) preferred.
@@ -1706,7 +1706,7 @@ content is rendered in the web browser, and internal and external links
 are easily accessible directly in the terminal, providing a
 distraction-free approach for browsing collections of bookmarks.
 
-To open `nb browse` in the system's primary web browse, use `nb browse
+To open `nb browse` in the system's primary web browser, use `nb browse
 --gui` / `nb browse -g`:
 
 ```bash
@@ -1715,13 +1715,13 @@ nb browse sample:123 --gui
 ```
 
 `nb browse` includes a search field that can be used for quick searches
-of the current notebook or folder when browsing. For full-featured
-search, use [`nb search`](#search).
+in the current notebook or folder when browsing. For full-featured
+search, use [Search](#-search) and [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
-[`pandoc`](https://pandoc.org/). Only `pandoc` is available, the current
-note will be rendered and links go to unrendered linked files. If
-neither `pandoc` not `ncat` are available, `nb` falls back to
+[`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
+current note will be rendered and links go to unrendered, original files.
+If neither `pandoc` nor `ncat` are available, `nb` falls back to
 [`nb show`](#show).
 
 ##### Shortcut Alias: `br`
