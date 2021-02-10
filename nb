@@ -14222,7 +14222,8 @@ HEREDOC
 
     if [[ "${1:-}" == "--foreground" ]]
     then
-      printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}"
+      printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}i"
+      printf "Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       _browse_serve_run   || :
     else
       (_browse_serve_run  || :) &
