@@ -13602,8 +13602,9 @@ _browse() {
 
         local _display_item="${__list_item//\\\ /&nbsp;}"
         _display_item="${_display_item//\ /&nbsp;}"
-        _display_item="${_display_item/\[/\<span\ class=\"dim\"\>\\\[\</span\>\<span\ class=\"identifier\"\>}"
-        _display_item="${_display_item/\]/\</span\>\<span\ class=\"dim\"\>\\\]\</span\>}"
+        # shellcheck disable=SC2140
+        _display_item="${_display_item/\[/<span class="dim">\[</span><span class="identifier">}"
+        _display_item="${_display_item/\]/</span><span class="dim">\]</span>}"
 
         printf "%s\\n" \
           "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector}){.list-item}<br>"
