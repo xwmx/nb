@@ -24,7 +24,7 @@ export _S=" "
 
   [[    "${status}"  -eq  0                               ]]
 
-  [[ !  "${output}"   =~ Not\ found:\ non-matching-query  ]]
+  [[    "${output}"   =~ Not\ found:\ non-matching-query  ]]
 
   [[ !  "${output}"   =~ Title\ One                       ]]
 
