@@ -7971,8 +7971,12 @@ _pandoc() {
 html {
   background-color: #1a1a1a;
   color: #e6e6e6;
-  font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
   font-size: 16px;
+}
+
+html,
+input {
+  font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
 }
 
 body        { max-width: 45rem; hyphens: none;            }
@@ -7982,10 +7986,8 @@ a:hover     { color: #6EB3D7; text-decoration: underline; }
 a:visited   { color: #6EB3D7; text-decoration: none;      }
 
 .header-crumbs {
-  border-bottom: 1px solid #4d4d4d;
   font-size: 1.5rem;
   font-weight: normal;
-  padding-bottom: 0.8rem;
 }
 
 h1 a,
@@ -8006,6 +8008,24 @@ a.list-item:visited {
   white-space: nowrap;
   vertical-align: top;
 }
+
+label[for=search-input] {
+  display: none;
+}
+
+#search-input {
+  background-color: #1a1a1a;
+  border: none;
+  border-bottom: 1px solid #4d4d4d;
+  color: #e6e6e6;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+#search-input:focus { outline: 0; }
+
+.search-spacer { display: none; }
 
 blockquote  { border-left: 2px solid #4d4d4d; color: #606060;                   }
 hr          { background-color: #4d4d4d;                                        }
@@ -13568,12 +13588,21 @@ _browse() {
 
       # TODO
       cat <<HEREDOC
-<p>
-  <form accept-charset="UTF-8" action="/${_link_selector}" id="global-search" method="get">
+<div>
+  <form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
     <label for="search-input">search:</label>
-    <input autocapitalize="off" autocomplete="off" id="search-input" name="--query" placeholder="Search" type="text">
+    <input
+      autocapitalize="off"
+      autocomplete="off"
+      id="search-input"
+      name="--query"
+      placeholder="search"
+      type="text"
+      value="${_query:-}"
+    >
   </form>
-</p><br/>
+</div>
+<p class="search-spacer"><br></p>
 HEREDOC
 
       cat
