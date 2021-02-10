@@ -13520,7 +13520,6 @@ _browse() {
 
       while read -r __list_item
       do
-        _warn echo "${__list_item}"
         if ((_terminal_browser))
         then
           local _list_item_length="${#__list_item}"
