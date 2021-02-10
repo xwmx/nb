@@ -8082,9 +8082,9 @@ HEREDOC
       --standalone                        \
       --metadata title="nb"               \
       2>/dev/null
-    } | {
-      sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
-    }
+  } | {
+    sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
+  }
 
   rm -f "${_temp_file:?}"
 }
