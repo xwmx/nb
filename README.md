@@ -1676,6 +1676,10 @@ search: [                    ]
 [home:1]  📂 Example Folder
 ```
 
+Items are displayed using the same format as `nb` and `nb ls`, with
+each list item linked. `nb browse` is designed to make it easy to
+navigate using the only the keyboard within the terminal.
+
 `nb browse` opens in the browser set in the `$BROWSER` environment
 variable, with [w3m](https://en.wikipedia.org/wiki/W3m) preferred.
 
@@ -1683,7 +1687,7 @@ To open a specific item in `nb browse`, pass the [selector](#selector)
 for the item, folder, or notebook:
 
 ```bash
-# open item titled "Example Title" in the folder named "Sample" in the "example" notebook
+# open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
 > nb browse example:Sample/Example\ Title
 
 ❯nb · example : Sample /
@@ -1706,15 +1710,34 @@ To open `nb browse` in the system's primary web browse, use `nb browse
 --gui` / `nb browse -g`:
 
 ```bash
-# open item with id 123 in the "sample" notebook in the system's primary GUI browser
+# open the item with id 123 in the "sample" notebook in the system's primary GUI browser
 nb browse sample:123 --gui
 ```
+
+`nb browse` includes a search field that can be used for quick searches
+of the current notebook or folder when browsing. For full-features
+search, use [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). Only `pandoc` is available, the current
 note will be rendered and links go to unrendered linked files. If
 neither `pandoc` not `ncat` are available, `nb` falls back to
 [`nb show`](#show).
+
+#### Shortcut Alias: `br`
+
+`nb browse` can also be used with the alias `br`:
+
+```bash
+# open the current notebook in the terminal web browser
+nb br
+
+# open the item with id 123 in the "example" notebook using the terminal web browser
+nb br example:123
+
+# open the notebook named "sample" in the GUI web browser
+nb br sample: -g
+```
 
 For more information, see [`nb browse`](#browse).
 
