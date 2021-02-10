@@ -14230,6 +14230,11 @@ HEREDOC
 
   if ((_open_gui))
   then
+    if [[ -z "${_selector:-}" ]]
+    then
+      _selector="$(_notebooks current --name):"
+    fi
+
     if _command_exists "xdg-open"
     then
       xdg-open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
