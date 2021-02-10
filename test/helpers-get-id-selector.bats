@@ -110,7 +110,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"  -eq 0                   ]]
-  [[ "${output}"  ==  "2"                 ]]
+  [[ "${output}"  ==  "1"                 ]]
 
   run "${_NB}" helpers get_id_selector 1/
 

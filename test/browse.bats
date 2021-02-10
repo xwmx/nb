@@ -84,13 +84,13 @@ export _S=" "
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-      href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+      href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>        ]]
   [[ "${output}"  =~  \
-      \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>     ]]
+      \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>           ]]
   [[ "${output}"  =~  \
-      .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\        ]]
+      .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\> ]]
+      \<a\ href=\"http://localhost:6789/home:1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 
@@ -108,12 +108,12 @@ export _S=" "
   [[ "${output}"  =~  \
       .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\            ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/2/\"\>1\</a\>\ .*/.*\</h1\>                   ]]
+      \<a\ href=\"http://localhost:6789/home:2/\"\>1\</a\>\ .*/.*\</h1\>              ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:6789/2/1\"\ class=\"list-item\"\>.*\[.*1/1.*\].*  ]]
+      \<p\>\<a\ href=\"http://localhost:6789/home:2/1\"\ class=\"list-item\"\>.*\[.*1/1.*\].*   ]]
   [[ "${output}"  =~  \
-      class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br/\>\</p\>         ]]
+      class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br/\>\</p\>               ]]
 }
 
 # header crumbs ###############################################################
@@ -136,9 +136,9 @@ export _S=" "
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\         ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ .*/.*  ]]
-  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/1/1/\)\ .*/.* ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
+  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\)\ .*/.*  ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
@@ -159,8 +159,8 @@ export _S=" "
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\         ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\             ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.* ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>' displays header crumbs with folder." {
@@ -180,13 +180,13 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                                                ]]
+  [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\         ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ .*/.*  ]]
-  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/1/1/\)\ .*/.* ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
+  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\)\ .*/.*  ]]
 
   run "${_NB}" browse home:1/1/ --print
 
@@ -216,8 +216,8 @@ export _S=" "
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\         ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
 }
 
 @test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
@@ -238,8 +238,8 @@ export _S=" "
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\         ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/1/\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
 }
 
 # error handling ##############################################################
@@ -365,9 +365,9 @@ export _S=" "
   [[ "${output}"  =~  \
       \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-      .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\        ]]
+      .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\> ]]
+      \<a\ href=\"http://localhost:6789/home:1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -498,14 +498,14 @@ export _S=" "
   [[ "${output}"  =~  \
       .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\                ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\>         ]]
+      \<a\ href=\"http://localhost:6789/home:1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\>    ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:6789/1/2\"\ class=\"list-item\"\>                 ]]
+      \<p\>\<a\ href=\"http://localhost:6789/home:1/2\"\ class=\"list-item\"\>            ]]
   [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br/\>     ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/1\"\ class=\"list-item\"\>                      ]]
+      \<a\ href=\"http://localhost:6789/home:1/1\"\ class=\"list-item\"\>                 ]]
   [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br/\>     ]]
 }
 
@@ -532,17 +532,17 @@ export _S=" "
   [[ "${output}"  =~  \
       \<h1\ class=\"header-crumbs\"\>.*\<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-      .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\            ]]
+      .*·.*\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\>     ]]
+      \<a\ href=\"http://localhost:6789/home:1/\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
 
   [[ "${output}"  =~  \
-      \<p\>\<a\ href=\"http://localhost:6789/1/2\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br/\> ]]
+      \<p\>\<a\ href=\"http://localhost:6789/home:1/2\"\ class=\"list-item\"\>          ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br/\>   ]]
 
   [[ "${output}"  =~  \
-      \<a\ href=\"http://localhost:6789/1/1\"\ class=\"list-item\"\>                  ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br/\> ]]
+      \<a\ href=\"http://localhost:6789/home:1/1\"\ class=\"list-item\"\>               ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br/\>   ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {

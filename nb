@@ -1553,7 +1553,10 @@ _get_content() {
 # _get_id_selector()
 #
 # Usage:
-#   _get_id_selector <path> | <selector>
+#   _get_id_selector <path> | <selector> [--notebook]
+#
+# Options:
+#   --notebook  Always include the notebook name in the output.
 #
 # Description:
 #   Convert a <path> or <selector> to valid selector constructed with ids,
@@ -1569,6 +1572,13 @@ _get_id_selector() {
   local _trailing_slash=0
 
   [[ -z "${_selector:-}" ]] && return 0
+
+  local _always_include_notebook=0
+
+  if [[ "${2:-}" == "--notebook" ]]
+  then
+    _always_include_notebook=1
+  fi
 
   if [[ "${_selector:-}" =~ /$ ]]
   then
@@ -1602,6 +1612,11 @@ _get_id_selector() {
     _parent_folder_path="${NB_DIR}/${_notebook_name}"
   else
     _parent_folder_path="$(_notebooks current --path)"
+
+    if ((_always_include_notebook))
+    then
+      _id_selector+="${_parent_folder_path##*/}:"
+    fi
   fi
 
   local _id_path=
@@ -1619,7 +1634,8 @@ _get_id_selector() {
 
       if [[ "${i}" -eq "$((${#_selector_segments[@]} - 1))" ]]
       then
-        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$      ]]
+        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$      ]] &&
+           ! ((_trailing_slash))
         then
           _segment_id="${_selector_segments[i]:-}"
         fi
@@ -13577,7 +13593,7 @@ _browse() {
         _item_selector="${_item_selector//\\/}"
 
         local _target_selector=
-        _target_selector="$(_get_id_selector "${_item_selector}")"
+        _target_selector="$(_get_id_selector "${_item_selector}" --notebook)"
 
         local _display_item="${__list_item//\\\ /&nbsp;}"
         _display_item="${_display_item//\ /&nbsp;}"
@@ -13762,7 +13778,7 @@ HEREDOC
           printf "%s\\n" "${_folder_id_path}"
         )
 
-        local _url_path=
+        local _url_path="${_notebook_name}:"
 
         local i=
         for ((i=0; i < "${#_selector_folders[@]}"; i++))
