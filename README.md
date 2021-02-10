@@ -3293,7 +3293,8 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb browse [<notebook>:][<id> | <filename> | <title> | <path>] [--print]
+  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
+            [-g | --gui] [--notebooks] [--print]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
@@ -3720,9 +3721,10 @@ Shortcut Alias: `b`
 ```text
 Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [--notebooks] [--print]
+            [-g | --gui] [--notebooks] [--print]
 
 Options:
+  -g, --gui     Open in the system's primary GUI web browser.
   --notebooks   Browse notebooks.
   --print       Print to standard output.
 
@@ -3744,10 +3746,13 @@ Description:
     # link to the item titled "Example Title" in the "demo" notebook
     [[demo:Example Title]]
 
-  `browse` depends on `ncat` and `pandoc`:
+  `browse` supports `w3m` [1] (recommended) and `lynx` [2] and
+  depends on `ncat` [3] and `pandoc` [4]:
 
-    1. https://nmap.org/ncat/
-    2. https://pandoc.org/
+    1. https://en.wikipedia.org/wiki/W3m
+    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    3. https://nmap.org/ncat/
+    4. https://pandoc.org/
 
 Examples:
   nb browse
