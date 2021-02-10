@@ -13585,11 +13585,11 @@ _browse() {
 
         if [[   "${__list_item:-}" =~ ^0\ items. ]]
         then
-          printf "%s<br/>\\n" "${__list_item}"
+          printf "%s<br>\\n" "${__list_item}"
           break
         elif [[ "${__list_item:-}" =~ Not\ found ]]
         then
-          printf "%s<br/>\\n" "${__list_item//\ in*:/:}"
+          printf "%s<br>\\n" "${__list_item//\ in*:/:}"
           break
         fi
 
@@ -13606,7 +13606,7 @@ _browse() {
         _display_item="${_display_item/\]/\</span\>\<span\ class=\"dim\"\>\\\]\</span\>}"
 
         printf "%s\\n" \
-          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector}){.list-item}<br/>"
+          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector}){.list-item}<br>"
       done
     } | {
       local _list_count=
@@ -13863,7 +13863,7 @@ HEREDOC
         elif ((_terminal_browser)) &&
              [[ "${#_test_line}" -gt "$((_COLUMNS - 1))" ]]
         then
-          printf "<br/>\\n"
+          printf "<br>\\n"
 
           _test_line="${__name}"
           printf --                               \

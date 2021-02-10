@@ -113,7 +113,7 @@ export _S=" "
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/home:2/1\"\ class=\"list-item\"\>.*\[.*1/1.*\].*   ]]
   [[ "${output}"  =~  \
-      class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br/\>\</p\>               ]]
+      class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\>\</p\>                ]]
 }
 
 # header crumbs ###############################################################
@@ -462,15 +462,15 @@ export _S=" "
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/home:3\"\ class=\"list-item\"\>        ]]
-  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br/\> ]]
+  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>  ]]
 
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/home:2\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br/\>             ]]
+  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\>              ]]
 
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/home:1\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br/\>             ]]
+  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\>              ]]
 }
 
 @test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -502,11 +502,11 @@ export _S=" "
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/home:1/2\"\ class=\"list-item\"\>            ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br/\>     ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\>      ]]
 
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/home:1/1\"\ class=\"list-item\"\>                 ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br/\>     ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\>      ]]
 }
 
 @test "'browse <folder-selector>' (no slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -538,11 +538,11 @@ export _S=" "
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/home:1/2\"\ class=\"list-item\"\>          ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br/\>   ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\>    ]]
 
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/home:1/1\"\ class=\"list-item\"\>               ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br/\>   ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\>    ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
@@ -574,9 +574,9 @@ export _S=" "
 
   [[ "${output}"  =~  \
       \<p\>\<a\ href=\"http://localhost:6789/Example%20Notebook:2\"\ class=\"list-item\"\>  ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br/\>     ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\>      ]]
 
   [[ "${output}"  =~  \
       \<a\ href=\"http://localhost:6789/Example%20Notebook:1\"\ class=\"list-item\"\>       ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br/\>     ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\>      ]]
 }
