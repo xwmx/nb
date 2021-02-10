@@ -1583,7 +1583,6 @@ _get_id_selector() {
     if [[ "${_path_with_notebook:-}" =~ / ]]
     then
       _selector_relative_path="${_path_with_notebook#*/}"
-      _relative_path="${_selector_relative_path#*/}"
     fi
   else
     if [[ "${_selector:-}" =~ : ]]
@@ -1607,14 +1606,12 @@ _get_id_selector() {
 
   local _id_path=
 
-  if [[ -z "${_relative_path:-}"          ]] &&
-     [[ -n "${_selector_relative_path:-}" ]]
+
+  if [[ -n "${_selector_relative_path:-}" ]]
   then
     local _selector_segments=()
 
-    _selector_segments=($(
-      printf "%s\\n" "${_selector_relative_path:-}" | tr "/" "\n"
-    ))
+    IFS="/" read -ra _selector_segments <<< "${_selector_relative_path:-}"
 
     local i=
     for ((i=0; i < "${#_selector_segments[@]}"; i++))

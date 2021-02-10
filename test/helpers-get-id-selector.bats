@@ -2,6 +2,28 @@
 
 load test_helper
 
+@test "'helpers get_id_selector </full/path/to/file>' exits with 0 and prints id selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "one"                                                       \
+      --content   "Content one."
+  }
+
+  run "${_NB}" helpers  \
+    get_id_selector     \
+    "${NB_DIR}/home/Example Folder/Sample Folder/Demo Folder/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0         ]]
+  [[   "${#lines[@]}" ==  1         ]]
+
+  [[   "${lines[0]}"  ==  "home:1/1/1/1" ]]
+}
+
 @test "'helpers get_id_selector <not-valid/path>' exits with 1 and prints nothing." {
   {
     "${_NB}" init
