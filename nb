@@ -13451,8 +13451,8 @@ Options:
   --print       Print to standard output.
 
 Description:
-  Browse and view linked notes, notebooks, folders, and other items using
-  the terminal or GUI web brower.
+  Browse and view linked notes, bookmarks, notebooks, folders, and other
+  items using the terminal or GUI web brower.
 
   \`browse\` includes an embedded, terminal-first web application and server
   that renders [[wiki-style links]] as internal links, enabling you to

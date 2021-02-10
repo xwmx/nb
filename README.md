@@ -1649,7 +1649,8 @@ For more information about identifying items, see [Selectors](#selectors).
 *Version 6.0.0-alpha*
 
 Use [`nb browse`](#browse) to browse, view, and search linked notes,
-notebooks, folders, and other items using the terminal or GUI web brower.
+bookmarks, notebooks, folders, and other items using the terminal or
+GUI web brower.
 
 `nb browse` includes an embedded, terminal-first web application and server
 that renders [[wiki-style links]] as internal links, enabling you to browse
@@ -3870,8 +3871,8 @@ Options:
   --print       Print to standard output.
 
 Description:
-  Browse and view linked notes, notebooks, folders, and other items using
-  the terminal web brower.
+  Browse and view linked notes, bookmarks, notebooks, folders, and other
+  items using the terminal or GUI web brower.
 
   `browse` includes an embedded, terminal-first web application and server
   that renders [[wiki-style links]] as internal links, enabling you to
