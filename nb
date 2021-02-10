@@ -12596,7 +12596,7 @@ _show() {
 
       if [[ -n "${_escaped_match:-}"  ]] &&
          [[ -n "${_escaped_link:-}"   ]] &&
-         ! _contains "${_escaped_match}" "${_seen_matches[@]}"
+         ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
       then
         _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
         _seen_matches+=("${_escaped_match}")
