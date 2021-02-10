@@ -11942,6 +11942,13 @@ _search() {
             )"
           fi
 
+          if ((_only_list))                       &&
+             [[ "${_last_path}" == "${_path}" ]]  &&
+             [[ ! "${_path}" =~ .index$       ]]
+          then
+            continue
+          fi
+
           if [[ "${_path}" =~ \.pindex$ ]]
           then
             continue
