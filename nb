@@ -13519,6 +13519,7 @@ _browse() {
   #   Render a notebook or folder as an HTML page.
   _browse_render_container() {
     local _current_page=1
+    local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _target_path=
     local _terminal_browser=0
@@ -13528,10 +13529,12 @@ _browse() {
       case "${1:-}" in
         --page)
           _current_page="${2:?}"
+          _pagination_arguments+=("${1:-}" "${2:?}")
           shift
           ;;
         --per*)
           _per_page="${2:?}"
+          _pagination_arguments+=("${1:-}" "${2:?}")
           shift
           ;;
         --query)
@@ -13540,9 +13543,11 @@ _browse() {
           ;;
         --terminal)
           _terminal_browser=1
+          _pagination_arguments+=("${1:-}")
           ;;
         *)
-          [[ -z "${_target_path:-}" ]]  && _target_path="${1:-}"
+          _target_path="${1:-}"
+          _pagination_arguments+=("${1:-}")
           ;;
       esac
 
@@ -13618,17 +13623,24 @@ _browse() {
         _item_selector="${_item_selector#[}"
         _item_selector="${_item_selector//\\/}"
 
-        local _target_selector=
-        _target_selector="$(_get_id_selector "${_item_selector}" --notebook)"
-
         local _display_item="${__list_item//\\\ /&nbsp;}"
         _display_item="${_display_item//\ /&nbsp;}"
         # shellcheck disable=SC2140
         _display_item="${_display_item/\[/<span class="dim">\[</span><span class="identifier">}"
         _display_item="${_display_item/\]/</span><span class="dim">\]</span>}"
 
+
+        local _url_params=
+        _url_params="$(_get_id_selector "${_item_selector}" --notebook)"
+
+        if ((_terminal_browser))
+        then
+          _url_params+="?--page=${_current_page}&--per-page=${_per_page}"
+          _url_params+="&--terminal"
+        fi
+
         printf "%s\\n" \
-          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_target_selector}){.list-item}<br>"
+          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_url_params}){.list-item}<br>"
       done
     } | {
       local _list_count=
@@ -13652,9 +13664,8 @@ _browse() {
         _print_next=1
       fi
 
-      printf "%s\\n" "$(_browse --header "${_target_path}")"
+      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
-      # TODO
       cat <<HEREDOC
 <div>
   <form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
@@ -13728,9 +13739,31 @@ HEREDOC
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
+    local _current_page=1
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _selector=
+    local _terminal_browser=0
+_warn echo "${@:-}"
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)     _current_page="${2:?}"  && shift  ;;
+        --per*)     _per_page="${2:?}"      && shift  ;;
+        --terminal) _terminal_browser=1               ;;
+        *)          _selector="${1:-}"                ;;
+      esac
+
+      shift
+    done
+
     local _header_content="[<span class=\"dim\">❯</span>nb](http://localhost:${NB_SERVER_PORT}/) <span class=\"dim\">·</span>"
 
-    local _selector="${1:-}"
+    local _url_params=
+
+    if ((_terminal_browser))
+    then
+      _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
+    fi
 
     if [[ -z "${_selector:-}" ]]
     then
@@ -13754,7 +13787,7 @@ HEREDOC
       _notebooks select "${_notebook_path}"
 
       _header_content+="\
- [${_notebook_name}](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:)"
+ [${_notebook_name}](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_url_params:-})"
 
       local _relative_folder_path=
       local _selector_relative_folder_path=
@@ -13813,7 +13846,7 @@ HEREDOC
           _url_path+="${_selector_folder_ids[i]}/"
 
           _header_content+="\
- [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}) <span class=\"dim\">/</a>"
+ [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-}) <span class=\"dim\">/</a>"
         done
       fi
     fi
@@ -13829,13 +13862,28 @@ HEREDOC
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
-    local _path="${1:?}"
+    local _header_arguments=()
+    local _selector=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page|--per*)  _header_arguments+=("${1:?}" "${2:?}") && shift ;;
+        --terminal)     _header_arguments+=("--terminal")               ;;
+        *)
+          _selector="${1:-}"
+          _header_arguments+=("${_selector}")
+          ;;
+      esac
+
+      shift
+    done
 
     {
-      printf "%s\\n" "$(_browse --header "${_path}")"
+      printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
 
-      _show "${_path}"  \
-        --browse        \
+      _show "${_selector}"  \
+        --browse            \
         --no-color
     } | {
       _pandoc --browse
@@ -14119,20 +14167,22 @@ HEREDOC
       if [[   -z "${_selector_path:-}"  ]]
       then
         _browse_respond_with 404
-      elif [[ -d "${_selector_path:-}"  ]]
-      then
+      else
         _arguments+=("${_selector_path}")
         _arguments+=("--page"     "${_page_number}")
         _arguments+=("--per-page" "${_per_page}")
 
-        if [[ -n "${_query:-}" ]]
+        if [[ -d "${_selector_path:-}"  ]]
         then
-          _arguments+=("--query" "${_query}")
-        fi
+          if [[ -n "${_query:-}" ]]
+          then
+            _arguments+=("--query" "${_query}")
+          fi
 
-        _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
-      else
-        _browse_render_item       "${_selector_path:-}" >> "${_temp_file}"
+          _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
+        else
+          _browse_render_item       "${_arguments[@]:-}"  >> "${_temp_file}"
+        fi
       fi
     fi
 
@@ -14268,33 +14318,49 @@ HEREDOC
     exit 0
   fi
 
+  # configure pagination
+
+  if [[ -z "${_browse_per_page:-}" ]]
+  then # set per page based on terminal height
+    if [[ "${BROWSER:-}" =~ lynx ]]
+    then
+      _browse_per_page="$(($(tput lines) - 10))"
+    else
+      _browse_per_page="$(($(tput lines) - 8))"
+    fi
+  fi
+
+  local _arguments=("$(
+    _show "${_selector:-}" --path 2>/dev/null || :
+  )")
+
+  if [[ -n "${_browse_per_page:-}" ]]
+  then
+    _arguments+=("--page" "${_browse_page}" "--per-page" "${_browse_per_page}")
+    _arguments+=("--terminal")
+  fi
+
   if ((_print_browse_header))
   then
-    _browse_render_header "${_selector:-}"
+    _browse_render_header "${_arguments[@]:-}"
     exit 0
   fi
 
   if ((_print_browse_container))
   then
-    local _container_arguments=("$(
-      _show "${_selector:-}" --path 2>/dev/null || :
-    )")
-
     if [[ -n "${_search_query:-}" ]]
     then
-      _container_arguments+=("--query" "${_search_query}")
+      _arguments+=("--query" "${_search_query}")
     fi
 
-    _browse_render_container "${_container_arguments[@]:-}"
+    _browse_render_container "${_arguments[@]:-}"
 
     exit 0
   fi
 
   if ((_print_browse_item))
   then
-    _browse_render_item "$(
-      _show "${_selector:-}" --path 2>/dev/null || :
-    )"
+    _browse_render_item "${_arguments[@]:-}"
 
     exit 0
   fi
@@ -14306,18 +14372,6 @@ HEREDOC
 Install \`ncat\` for improved browsing and linking: https://nmap.org/ncat/
 HEREDOC
     exit 0
-  fi
-
-  # configure pagination
-
-  if [[ -z "${_browse_per_page:-}" ]]
-  then # set per page based on terminal height
-    if [[ "${BROWSER:-}" =~ lynx ]]
-    then
-      _browse_per_page="$(($(tput lines) - 10))"
-    else
-      _browse_per_page="$(($(tput lines) - 8))"
-    fi
   fi
 
   # start server

@@ -94,7 +94,7 @@ export _S=" "
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-    \<p\>\<a\ href=\"http://localhost:6789/home:2\"\ class=\"list-item\"\>                    ]]
+    \<p\>\<a\ href=\"http://localhost:6789/home:2\?--page=.*--per-page=.*--terminal\"\ class=\"list-item\"\> ]]
   [[    "${output}"   =~   \
     class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \

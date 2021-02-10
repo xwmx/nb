@@ -132,13 +132,13 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                                                ]]
+  [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
-  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\?--page=.*\)\ .*/.* ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
@@ -155,12 +155,12 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                                                ]]
+  [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\             ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.* ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>' displays header crumbs with folder." {
@@ -184,9 +184,9 @@ export _S=" "
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
-  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
+  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\?--page=.*\)\ .*/.* ]]
 
   run "${_NB}" browse home:1/1/ --print
 
@@ -207,17 +207,17 @@ export _S=" "
       --content   "Example content."
   }
 
-  run "${_NB}" browse "${NB_DIR}/home/Example Folder/Folder One.md" --header
+  run "${_NB}" browse "${NB_DIR}/home/Example Folder/File One.md" --header
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                                                ]]
+  [[ "${status}"    == 0  ]]
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
 }
 
 @test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
@@ -234,12 +234,12 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                                                ]]
+  [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\)\ .*:.*\               ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\)\ .*/.*   ]]
+  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
+  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
 }
 
 # error handling ##############################################################
