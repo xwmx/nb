@@ -1689,7 +1689,6 @@ for the item, folder, or notebook:
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
 > nb browse example:Sample/Example\ Title
-
 ❯nb · example : Sample /
 
 Example Title
