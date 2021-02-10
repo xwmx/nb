@@ -11942,6 +11942,11 @@ _search() {
             )"
           fi
 
+          if [[ "${_path}" =~ \.pindex$ ]]
+          then
+            continue
+          fi
+
           if [[ "${_last_path}" != "${_path}" ]]
           then
             if [[ -n "${_type:-}" ]]
