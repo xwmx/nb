@@ -14173,9 +14173,9 @@ HEREDOC
     if [[ "${1:-}" == "--foreground" ]]
     then
       printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}"
-      _browse_serve_run
+      _browse_serve_run   || :
     else
-      (_browse_serve_run) &
+      (_browse_serve_run  || :) &
 
       local _pid="${!}"
       # shellcheck disable=SC2064
