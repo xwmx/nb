@@ -301,6 +301,8 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#viewing-notes">Viewing</a> •
   <a href="#deleting-notes">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
+  <a href="#-linking">Linking</a> •
+  <a href="#-browsing">Browsing</a> •
   <a href="#-folders">Folders</a> •
   <a href="#-pinning">Pinning</a> •
   <a href="#-search">Search</a> •
@@ -1598,6 +1600,122 @@ Perform a full text search of bookmarks and archived page content:
 ```
 
 See [`bookmark help`](#bookmark-help) for more information.
+
+### 🔗 Linking
+
+*Version 6.0.0-alpha*
+
+Markdown notes can link to other notes using [[wiki-style links]],
+making `nb` a powerful terminal-first platform for
+[Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and other
+link-based note-taking methods.
+
+To add a from note or bookmark to another in the same notebook, include
+the id, title, filename, and folder path for for the target item within
+double square brackets anywhere in the linking document:
+
+```text
+# link to item with id 123 in the root level of current notebook
+[[123]]
+
+# link to item titled "Example Title" in the root level of the current notebook
+[[Example Title]]
+
+# link to item with id 456 in the folder named "Sample Folder"
+[[Sample Folder/456]]
+
+# link to item titled "Demo Title" in the folder named "Sample Folder"
+[[Sample Folder/Demo Title]]
+```
+
+To link to an item in another notebook, add the notebook name with a
+colon before the identifier:
+
+```text
+# link to item 123 in the "sample" folder in the "example" notebook
+[[example:sample/123]]
+
+# link to the item titled "Example Title" in the "demo" notebook
+[[demo:Example Title]]
+
+# link to the item with filename "Example File.md" in the "sample" notebook
+[[sample:Example File.md]]
+```
+
+For more information about identifying items, see [Selectors](#selectors).
+
+### 🌍 Browsing
+
+*Version 6.0.0-alpha*
+
+Use [`nb browse`](#browse) to browse, view, and search linked notes,
+notebooks, folders, and other items using the terminal or GUI web brower.
+
+`nb browse` includes an embedded, terminal-first web application and server
+that renders [[wiki-style links]] as internal links, enabling you to browse
+your notes and notebooks in web browsers, including seamlessly browsing to
+and from the offsite links in bookmarks and notes.
+
+```bash
+> nb browse
+❯nb · home
+
+search: [                    ]
+
+[home:12] Example Markdown Title
+[home:11] 🔒 example-encrypted.md.enc
+[home:10] 🔖 Example Bookmark (example.com)
+[home:9]  🔖 🔒 example-encrypted.bookmark.md.enc
+[home:8]  Example .org Title
+[home:7]  🌄 example-image.png
+[home:6]  📄 example.pdf
+[home:5]  🔉 example-audio.mp3
+[home:4]  Example LaTeX Title
+[home:3]  📹 example-video.mp4
+[home:2]  example.md
+[home:1]  📂 Example Folder
+```
+
+`nb browse` opens in the browser set in the `$BROWSER` environment
+variable, with [w3m](https://en.wikipedia.org/wiki/W3m) preferred.
+
+To open a specific item in browse, pass the [selector](#selector) to
+`nb browse`:
+
+```bash
+# open item titled "Example Title" in the folder named "Sample" in the
+# "example" notebook
+> nb browse example:Sample/Example\ Title
+
+❯nb · example : Sample /
+
+Example Title
+
+Example content.
+```
+
+The `nb browse` interface includes breadcrumbs that can be used to
+quickly navigate to back to parent folders, the current notebook, or
+jump to other notebooks.
+
+`nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
+content is rendered in the web browser, and internal and external links
+are easily accessible directly in the terminal, providing a
+distraction-free approach for browsing collections of bookmarks.
+
+To open `nb browse` in the system's primary web browse, use `nb browse
+--gui` / `nb browse -g`:
+
+```bash
+# open item with id 123 in the "sample" notebook in the system's primary
+# GUI browser
+nb browse sample:123 --gui
+```
+
+`nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
+[`pandoc`](https://pandoc.org/).
+
+For more information, see [`nb browse`](#browse).
 
 ### 📂 Folders
 

@@ -13452,7 +13452,7 @@ Options:
 
 Description:
   Browse and view linked notes, notebooks, folders, and other items using
-  the terminal web brower.
+  the terminal or GUI web brower.
 
   \`browse\` includes an embedded, terminal-first web application and server
   that renders [[wiki-style links]] as internal links, enabling you to
