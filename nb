@@ -11384,6 +11384,8 @@ _search() {
   local _max_depth=0
   local _only_list=0
   local _or_queries=()
+  local _page=1
+  local _per_page=0
   local _print_paths=0
   local _query=
   local _search_args=()
@@ -11420,9 +11422,18 @@ _search() {
         _or_queries+=("$(_option_get_value "--or" "${2:-}")")
         shift
         ;;
+      --page)
+        _page="$(_option_get_value "${__arg}" "${__val:-}")"
+        ((_page)) || _page=1
+        shift
+        ;;
       --path*)
         _print_paths=1
         _COLOR_ENABLED=0
+        ;;
+      --per*)
+        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        shift
         ;;
       -q|--query|-e)
         _and_queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
@@ -11914,6 +11925,10 @@ _search() {
           fi
         fi
       } | {
+        local _paginated_count=0
+        local _pagination_max="$((_page * _per_page))"
+        local _pagination_min="$(((_page * _per_page) - _per_page))"
+
         while read -r __line
         do
           local _content_line_with_hit=
@@ -12020,6 +12035,19 @@ _search() {
             if [[ ! -e "${_folder_path}/.index" ]]
             then # skip unindexed folders
               continue
+            fi
+
+            if ((_per_page))
+            then
+              _paginated_count=$((_paginated_count+1))
+
+              if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
+              then
+                continue
+              elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
+              then
+                break
+              fi
             fi
 
             if [[ -n "${_local_notebook_path:-}"                ]] &&
@@ -12272,9 +12300,14 @@ _search() {
           done
         fi
 
-        printf "Not found in %s: %s\\n"               \
-          "$(_color_primary "${_search_selector:-}")" \
-          "$(_color_primary "${_query_message:-}")"
+        if [[ "${_page:-0}" -gt 1 ]]
+        then
+          return 0
+        else
+          printf "Not found in %s: %s\\n"               \
+            "$(_color_primary "${_search_selector:-}")" \
+            "$(_color_primary "${_query_message:-}")"
+        fi
       fi
 
       return 1
