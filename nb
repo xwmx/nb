@@ -1606,7 +1606,6 @@ _get_id_selector() {
 
   local _id_path=
 
-
   if [[ -n "${_selector_relative_path:-}" ]]
   then
     local _selector_segments=()
@@ -1620,8 +1619,7 @@ _get_id_selector() {
 
       if [[ "${i}" -eq "$((${#_selector_segments[@]} - 1))" ]]
       then
-        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$                  ]] &&
-           [[ ! -d "${_parent_folder_path}/${_selector_segments[i]:-}"  ]]
+        if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$      ]]
         then
           _segment_id="${_selector_segments[i]:-}"
         fi
