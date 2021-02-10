@@ -14293,9 +14293,9 @@ HEREDOC
   then # set per page based on terminal height
     if [[ "${BROWSER:-}" =~ lynx ]]
     then
-      _browse_per_page="$(($(tput lines) - 8))"
+      _browse_per_page="$(($(tput lines) - 10))"
     else
-      _browse_per_page="$(($(tput lines) - 6))"
+      _browse_per_page="$(($(tput lines) - 8))"
     fi
   fi
 
