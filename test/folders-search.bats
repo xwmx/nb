@@ -12,20 +12,20 @@ _setup_folders_and_files() {
 
   # notebook root
 
-  "${_NB}" add  "File One.md"           \
-    --title     "${_title_prefix}One"   \
+  "${_NB}" add  "File One.md"                 \
+    --title     "${_title_prefix}Root One"    \
     --content   "example phrase"
 
-  "${_NB}" add  "File Two.md"           \
-    --title     "${_title_prefix}Two"   \
+  "${_NB}" add  "File Two.md"                 \
+    --title     "${_title_prefix}Root Two"    \
     --content   "sample phrase"
 
-  "${_NB}" add  "File Three.md"         \
-    --title     "${_title_prefix}Three" \
+  "${_NB}" add  "File Three.md"               \
+    --title     "${_title_prefix}Root Three"  \
     --content   "example phrase"
 
-  "${_NB}" add  "File Four.md"          \
-    --title     "${_title_prefix}Four"  \
+  "${_NB}" add  "File Four.md"                \
+    --title     "${_title_prefix}Root Four"   \
     --content   "demo phrase"
 
   # Example Folder /
@@ -65,6 +65,127 @@ _setup_folders_and_files() {
     --content   "sample phrase"
 }
 
+# <path> selectors ############################################################
+
+@test "'search /path/to/<filename>' (no slash, query) searches for <query> in <filename>." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "${NB_DIR}/home/File One.md" "example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                       ]]
+
+  [[ "${lines[0]}"  =~  .*[.*1.*].*\ Root\ One  ]]
+  [[ "${lines[1]}"  =~  ---                     ]]
+  [[ "${lines[2]}"  =~  3.*:.*example.*\ phrase ]]
+}
+
+@test "'search /path/to/<notebook>' (no slash, query) searches for <query> in <notebook> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "${NB_DIR}/home" "example"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0                       ]]
+  [[ "${#lines[@]}" -eq 37                      ]]
+
+  [[ "${output}"    =~  .*[.*1.*].*\ Root\ One  ]]
+  [[ "${output}"    =~  ---                     ]]
+  [[ "${output}"    =~  3.*:.*example.*\ phrase ]]
+
+  [[ "${output}"    =~  \
+      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  ---                     ]]
+  [[ "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four                  ]]
+}
+
+@test "'search /path/to/<notebook>/' (slash, query) searches for <query> in <notebook> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "${NB_DIR}/home/" "example"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0                       ]]
+  [[ "${#lines[@]}" -eq 37                      ]]
+
+  [[ "${output}"    =~  .*[.*1.*].*\ Root\ One  ]]
+  [[ "${output}"    =~  ---                     ]]
+  [[ "${output}"    =~  3.*:.*example.*\ phrase ]]
+
+  [[ "${output}"    =~  \
+      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  ---                     ]]
+  [[ "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four                  ]]
+}
+
+@test "'search /path/to/<folder>' (no slash, query) searches for <query> in <folder> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "${NB_DIR}/home/Example Folder" "example"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"    -eq 0                       ]]
+  [[    "${#lines[@]}" -eq 28                      ]]
+
+  [[ !  "${output}"    =~  .*[.*1.*].*\ Root\ One  ]]
+
+  [[    "${output}"    =~  \
+      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+  [[    "${output}"    =~  ---                     ]]
+  [[    "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four               ]]
+}
+
+@test "'search /path/to/<folder>/' (slash, query) searches for <query> in <folder> recursively." {
+  {
+    "${_NB}" init
+
+    _setup_folders_and_files
+  }
+
+  run "${_NB}" search "${NB_DIR}/home/Example Folder/" "example"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"    -eq 0                        ]]
+  [[    "${#lines[@]}" -eq 28                       ]]
+
+  [[ !  "${output}"    =~  .*[.*1.*].*\ Root\ One   ]]
+
+  [[    "${output}"    =~  \
+      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+  [[    "${output}"    =~  ---                      ]]
+  [[    "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four               ]]
+}
+
 # <filename> and <folder> selectors ###########################################
 
 @test "'search <filename>' (no slash, no query) searches for <filename> in current notebook recursively." {
@@ -81,7 +202,7 @@ _setup_folders_and_files() {
 
   [[ "${status}"    -eq 0                                 ]]
 
-  [[ "${output}"    =~  1.*File\ One.md.*\ ·\ One         ]]
+  [[ "${output}"    =~  1.*File\ One.md.*\ ·\ Root\ One   ]]
   [[ "${output}"    =~  ----------------                  ]]
   [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
@@ -110,7 +231,7 @@ _setup_folders_and_files() {
 
   [[ "${status}"    -eq 0                                 ]]
 
-  [[ "${output}"    =~  1.*File\ One.md.*\ ·\ One         ]]
+  [[ "${output}"    =~  1.*File\ One.md.*\ ·\ Root\ One   ]]
   [[ "${output}"    =~  ----------------                  ]]
   [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
@@ -397,15 +518,15 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   -eq 0                                 ]]
+  [[    "${status}"   -eq 0                                     ]]
 
-  [[    "${output}"   =~  home:1.*File\ One.md.*\ ·\ One    ]]
-  [[    "${output}"   =~  ---------------------             ]]
-  [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md  ]]
-  [[ -z "${lines[3]}"                                       ]]
+  [[    "${output}"   =~  home:1.*File\ One.md.*\ ·\ Root\ One  ]]
+  [[    "${output}"   =~  ---------------------                 ]]
+  [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md      ]]
+  [[ -z "${lines[3]}"                                           ]]
 
-  [[ !  "${output}"   =~  Example\\\ Folder                 ]]
-  [[ !  "${output}"   =~  Sample\\\ Folder                  ]]
+  [[ !  "${output}"   =~  Example\\\ Folder                     ]]
+  [[ !  "${output}"   =~  Sample\\\ Folder                      ]]
 }
 
 @test "'search <notebook>: <filename>' (no slash, space) searches for <filename> in <notebook> recursively." {
@@ -425,21 +546,21 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                 ]]
+  [[ "${status}"    -eq 0                                     ]]
 
-  [[ "${output}"    =~  home:1.*File\ One.md.*\ ·\ One    ]]
-  [[ "${output}"    =~  ---------------------             ]]
-  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ "${output}"    =~  home:1.*File\ One.md.*\ ·\ Root\ One  ]]
+  [[ "${output}"    =~  ---------------------                 ]]
+  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
       home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------             ]]
-  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ "${output}"    =~  ---------------------                 ]]
+  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
       home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------             ]]
-  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ "${output}"    =~  ---------------------                 ]]
+  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 }
 
 @test "'search <notebook>:<filename>/' (slash, no space) searches for <filename> in <notebook> root." {
@@ -459,15 +580,15 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   -eq 0                                 ]]
+  [[    "${status}"   -eq 0                                     ]]
 
-  [[    "${output}"   =~  home:1.*File\ One.md.*\ ·\ One    ]]
-  [[    "${output}"   =~  ---------------------             ]]
-  [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md  ]]
-  [[ -z "${lines[3]}"                                       ]]
+  [[    "${output}"   =~  home:1.*File\ One.md.*\ ·\ Root\ One  ]]
+  [[    "${output}"   =~  ---------------------                 ]]
+  [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md      ]]
+  [[ -z "${lines[3]}"                                           ]]
 
-  [[ !  "${output}"   =~  Example\\\ Folder                 ]]
-  [[ !  "${output}"   =~  Sample\\\ Folder                  ]]
+  [[ !  "${output}"   =~  Example\\\ Folder                     ]]
+  [[ !  "${output}"   =~  Sample\\\ Folder                      ]]
 }
 
 @test "'search <notebook>: <filename>/' (slash, space) searches for <filename> in <notebook> recursively." {
@@ -487,21 +608,21 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                 ]]
+  [[ "${status}"    -eq 0                                     ]]
 
-  [[ "${output}"    =~  home:1.*File\ One.md.*\ ·\ One    ]]
-  [[ "${output}"    =~  ---------------------             ]]
-  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ "${output}"    =~  home:1.*File\ One.md.*\ ·\ Root\ One  ]]
+  [[ "${output}"    =~  ---------------------                 ]]
+  [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
       home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------             ]]
-  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ "${output}"    =~  ---------------------                 ]]
+  [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
       home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
-  [[ "${output}"    =~  ---------------------             ]]
-  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
+  [[ "${output}"    =~  ---------------------                 ]]
+  [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 }
 
 # <query> selectors ###########################################################
@@ -543,11 +664,11 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                       ]]
+  [[ "${status}"    -eq 0                         ]]
 
-  [[ "${output}"    =~  home:1.*One             ]]
-  [[ "${output}"    =~  [^-]------------[^-]    ]]
-  [[ "${lines[2]}"  =~  example.*\ phrase       ]]
+  [[ "${output}"    =~  home:1.*Root\ One         ]]
+  [[ "${output}"    =~  [^-]-----------------[^-] ]]
+  [[ "${lines[2]}"  =~  example.*\ phrase         ]]
 }
 
 @test "'search <query> <notebook>:' searches within <notebook> subfolders." {

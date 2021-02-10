@@ -11387,7 +11387,6 @@ _search() {
   local _print_paths=0
   local _query=
   local _search_args=()
-  local _search_color_enabled="${_COLOR_ENABLED}"
   local _search_utility=
   local _selectors=()
   local _sort=0
@@ -11411,7 +11410,7 @@ _search() {
         _only_list=1
         ;;
       --no*color)
-        _search_color_enabled=0
+        _COLOR_ENABLED=0
         ;;
       --no*recur*)
         _max_depth=1
@@ -11423,7 +11422,7 @@ _search() {
         ;;
       --path*)
         _print_paths=1
-        _search_color_enabled=0
+        _COLOR_ENABLED=0
         ;;
       -q|--query|-e)
         _and_queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
@@ -11490,12 +11489,17 @@ _search() {
         _notebooks select "${_arguments[i]}"
       fi
     else
-      _maybe_path="$(
-        _selector_resolve_path "${_arguments[i]:-}" \
-          --full                                    \
-          --skip-titles                             \
-          2>/dev/null || :
-      )"
+      if [[ "${_arguments[i]}" =~ ^/ ]]
+      then
+        _maybe_path="${_arguments[i]%/}"
+      else
+        _maybe_path="$(
+          _selector_resolve_path "${_arguments[i]:-}" \
+            --full                                    \
+            --skip-titles                             \
+            2>/dev/null || :
+        )"
+      fi
     fi
 
     if [[ -z "${_maybe_path:-}"                     ]] ||
@@ -11598,7 +11602,7 @@ _search() {
             _search_args+=("--max-depth" "${_max_depth}")
           fi
 
-          if ((_search_color_enabled))
+          if ((_COLOR_ENABLED))
           then
             _search_args+=("--color" "always")
           else
@@ -11638,7 +11642,7 @@ _search() {
             _search_args+=("--norecurse")
           fi
 
-          if ((_search_color_enabled))
+          if ((_COLOR_ENABLED))
           then
             _search_args+=("--color")
             _search_args+=("--color-line-number"  "32")
@@ -11678,7 +11682,7 @@ _search() {
             _search_args+=("--no-recurse")
           fi
 
-          if ((_search_color_enabled))
+          if ((_COLOR_ENABLED))
           then
             _search_args+=("--color")
             _search_args+=("--color-lineno=bold green")
@@ -11710,7 +11714,7 @@ _search() {
               || return 0 # Don't fail out within a single scope.
         elif _should_search_with "grep" "${_search_utility:-}"
         then
-          if ((_search_color_enabled))
+          if ((_COLOR_ENABLED))
           then
             _search_args+=("--color=always")
           else
@@ -11773,7 +11777,7 @@ _search() {
             _search_args+=("--no-recursive")
           fi
 
-          if ((_search_color_enabled))
+          if ((_COLOR_ENABLED))
           then
             _search_args+=("--color=always")
           else
@@ -12128,9 +12132,9 @@ _search() {
 
             if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
             then # match is in a different file than the last match
-              _wrap off
+              ((_COLOR_ENABLED)) && _wrap off
               printf "%s" "${_info_line_color}"
-              _wrap on
+              ((_COLOR_ENABLED)) && _wrap on
               printf "\\n"
             fi
 
@@ -12142,7 +12146,7 @@ _search() {
 
             if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
             then # match is in a different file than the last match
-              _wrap off
+              ((_COLOR_ENABLED)) && _wrap off
 
               local _visible_line_length
               _visible_line_length="$(
@@ -12151,7 +12155,7 @@ _search() {
 
               _print_line "$(printf "%-${_visible_line_length}s" '.')"
 
-              _wrap on
+              ((_COLOR_ENABLED)) && _wrap on
             fi
 
             if ((_filename_hit))
@@ -13379,7 +13383,8 @@ _browse() {
   #
   # Usage:
   #   _browse_render_container <target-path> [--page <page-number>]
-  #                            [--per-page <number>] [--terminal]
+  #                            [--per-page <number>] [--query <query>]
+  #                            [--terminal]
   #
   # Description:
   #   Render a notebook or folder as an HTML page.
@@ -13392,10 +13397,24 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --page)     _current_page="${2:?}"        && shift                  ;;
-        --per*)     _per_page="${2:?}"            && shift                  ;;
-        --terminal) _terminal_browser=1                                     ;;
-        *)          [[ -z "${_target_path:-}" ]]  && _target_path="${1:-}"  ;;
+        --page)
+          _current_page="${2:?}"
+          shift
+          ;;
+        --per*)
+          _per_page="${2:?}"
+          shift
+          ;;
+        --query)
+          _query="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
+        --terminal)
+          _terminal_browser=1
+          ;;
+        *)
+          [[ -z "${_target_path:-}" ]]  && _target_path="${1:-}"
+          ;;
       esac
 
       shift
@@ -13409,11 +13428,20 @@ _browse() {
     [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
 
     {
-      _list "${_target_path}"           \
-        --no-color                      \
-        --per-page  "${_per_page}"      \
-        --page      "${_current_page}"  \
-        --with-pinned
+
+      if [[ -n "${_query:-}" ]]
+      then
+        _search "${_target_path}"         \
+          "${_query}"                     \
+          --no-color                      \
+          --list
+      else
+        _list "${_target_path}"           \
+          --no-color                      \
+          --per-page  "${_per_page}"      \
+          --page      "${_current_page}"  \
+          --with-pinned
+      fi
     } | {
       local _truncate_length=9999
 
@@ -13492,16 +13520,22 @@ _browse() {
       printf "%s\\n" "$(_browse --header "${_target_path}")"
 
       # TODO
-#       cat <<HEREDOC
-# <p>
-#   <form accept-charset="UTF-8" action="/search" id="global-search" method="get">
-#     <label for="search-input">search:</label>
-#     <input autocapitalize="off" autocomplete="off" id="search-input" name="q" placeholder="Search" type="text">
-#   </form>
-# </p><br/>
-# HEREDOC
+      cat <<HEREDOC
+<p>
+  <form accept-charset="UTF-8" action="/${_link_selector}" id="global-search" method="get">
+    <label for="search-input">search:</label>
+    <input autocapitalize="off" autocomplete="off" id="search-input" name="--query" placeholder="Search" type="text">
+  </form>
+</p><br/>
+HEREDOC
 
       cat
+
+      if [[ -n "${_query:-}" ]]
+      then
+        _print_prev=0
+        _print_next=0
+      fi
 
       if ((_print_prev)) || ((_print_next))
       then
@@ -13904,6 +13938,13 @@ _browse() {
       _per_page="${BASH_REMATCH[1]}"
     fi
 
+    local _query=
+
+    if [[ "${_request_uri}" =~ --query=(.*) ]]
+    then
+      _query="${BASH_REMATCH[1]}"
+    fi
+
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
 
     _temp_file="$(mktemp).html"
@@ -13926,21 +13967,25 @@ _browse() {
       _browse_render_notebooks "${_arguments[@]:-}" >> "${_temp_file}"
     else
       local _selector_path=
-      _selector_path="$(_show "${_target_selector}" --path 2>/dev/null || :)"
+      _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
 
       if [[   -z "${_selector_path:-}"  ]]
       then
         _browse_respond_with 404
       elif [[ -d "${_selector_path:-}"  ]]
       then
+        _arguments+=("${_selector_path}")
         _arguments+=("--page"     "${_page_number}")
         _arguments+=("--per-page" "${_per_page}")
 
-        _browse_render_container "${_selector_path:-}"  \
-          "${_arguments[@]:-}"                          \
-          >> "${_temp_file}"
+        if [[ -n "${_query:-}" ]]
+        then
+          _arguments+=("--query" "${_query}")
+        fi
+
+        _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
       else
-        _browse_render_item "${_selector_path:-}" >> "${_temp_file}"
+        _browse_render_item       "${_selector_path:-}" >> "${_temp_file}"
       fi
     fi
 
@@ -14002,6 +14047,7 @@ _browse() {
   local _print_browse_item=0
   local _print_headers=0
   local _print_output=0
+  local _search_query=
   local _selector=
 
   while ((${#}))
@@ -14040,6 +14086,10 @@ _browse() {
         _browse_respond
         exit 0
         ;;
+      --query)
+        _search_query="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
+        ;;
       --serve*)
         _browse_serve --foreground
         exit 0
@@ -14074,9 +14124,16 @@ _browse() {
 
   if ((_print_browse_container))
   then
-    _browse_render_container "$(
+    local _container_arguments=("$(
       _show "${_selector:-}" --path 2>/dev/null || :
-    )"
+    )")
+
+    if [[ -n "${_search_query:-}" ]]
+    then
+      _container_arguments+=("--query" "${_search_query}")
+    fi
+
+    _browse_render_container "${_container_arguments[@]:-}"
 
     exit 0
   fi
@@ -14122,18 +14179,23 @@ HEREDOC
     _selector="$(_notebooks current --name --no-color):"
   fi
 
-  local _rquest_url="http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}&--per-page=${_browse_per_page}"
+  local _request_url="http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}&--per-page=${_browse_per_page}"
+
+  if [[ -n "${_search_query:-}" ]]
+  then
+    _request_url+="&--query="${_search_query}
+  fi
 
   if ((_print_output))
   then
     if ((_print_headers))
     then
-      curl -s -I "${_rquest_url//\ /\%20}"
+      curl -s -I "${_request_url//\ /\%20}"
     else
-      _download_from "${_rquest_url//\ /\%20}"
+      _download_from "${_request_url//\ /\%20}"
     fi
   else
-    _web_browser "${_rquest_url}"
+    _web_browser "${_request_url}"
   fi
 
   # make a final request to clear any listening process
