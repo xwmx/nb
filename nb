@@ -14256,6 +14256,7 @@ HEREDOC
         _print_browse_container=1
         ;;
       -g|--gui)
+        printf "Under Construction 🚧 Exiting...\\n" && exit 0
         _open_gui=1
         ;;
       --header)
