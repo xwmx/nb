@@ -321,9 +321,14 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#tests">Tests</a>
 </p>
 
-*Some new features described below, including many related to folders,
-are currently available in the git repository and will be included in
-version 6.0.0. [Version 5.7.8 Documentation](https://github.com/xwmx/nb/tree/5.7.8#nb)*
+<p align="center">
+  <em>Some new features described below are currently available in the git
+repository and will be included in version 6.0.0.</em>
+</p>
+
+<p align="center">
+  <em><a href="https://github.com/xwmx/nb/tree/5.7.8#nb">Version 5.7.8 Documentation</a></em>
+</p>
 
 To get started, simply run:
 
