@@ -10214,13 +10214,14 @@ Please install %s manually. No .deb package available for %s."  \
       local _deb_packages=()
       local _dependencies=(
         bash-completion
+        bat
         curl
+        ncat
         pandoc
         python3-pygments
+        ripgrep
         tig
         w3m
-        ripgrep
-        bat
       )
 
       [[ "$(cat /etc/os-release)" =~ ubuntu|debian ]] || return 1
