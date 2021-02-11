@@ -25,6 +25,26 @@ export NB_SERVER_PORT=6789
 
 # 415 #########################################################################
 
+@test "'browse <file>' renders 415 with message when file is pdf." {
+  {
+    "${_NB}" init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                              ]]
+
+  [[    "${output}"   =~  html                          ]]
+  [[    "${output}"   =~  \<title\>nb\</title\>         ]]
+  [[    "${output}"   =~  415\ Unsupported\ Media\ Type ]]
+  [[ !  "${output}"   =~  encrypted                     ]]
+}
+
 @test "'browse <file>' renders 415 with message when file is encrypted." {
   {
     "${_NB}" init
