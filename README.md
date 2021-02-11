@@ -1607,8 +1607,9 @@ See [`bookmark help`](#bookmark-help) for more information.
 *Version 6.0.0-alpha*
 
 Markdown notes and bookmarks can link to other items using
-[[wiki-style links]], making `nb` a powerful terminal-first platform
-for [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and
+<a href="#-linking">[[wiki-style links]]</a>, making `nb` a
+powerful terminal-first platform for
+[Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and
 other link-based note-taking methods.
 
 To add a link from a note or bookmark to another in the same notebook,
@@ -1654,9 +1655,10 @@ bookmarks, notebooks, folders, and other items using the terminal or
 GUI web brower.
 
 `nb browse` includes an embedded, terminal-first web application and server
-that renders [[wiki-style links]] as internal links, enabling you to browse
-your notes and notebooks in web browsers, including seamlessly browsing to
-and from the offsite links in bookmarks and notes.
+that renders <a href="#-linking">[[wiki-style links]]</a>
+as internal links, enabling you to browse your notes and notebooks in web
+browsers, including seamlessly browsing to and from the offsite links in
+bookmarks and notes.
 
 ```bash
 > nb browse
@@ -1664,13 +1666,13 @@ and from the offsite links in bookmarks and notes.
 
 search: [                    ]
 
-[home:12] Example Markdown Title
-[home:11] 🔒 example-encrypted.md.enc
-[home:10] 🔖 Example Bookmark (example.com)
-[home:9]  🔖 🔒 example-encrypted.bookmark.md.enc
-[home:8]  Example .org Title
-[home:7]  🌄 example-image.png
-[home:6]  📄 example.pdf
+[home:6]  📌 Example Markdown Title
+[home:12] 🔒 example-encrypted.md.enc
+[home:11] 🔖 Example Bookmark (example.com)
+[home:10] 🔖 🔒 example-encrypted.bookmark.md.enc
+[home:9]  Example .org Title
+[home:8]  🌄 example-image.png
+[home:7]  📄 example.pdf
 [home:5]  🔉 example-audio.mp3
 [home:4]  Example LaTeX Title
 [home:3]  📹 example-video.mp4
@@ -1678,14 +1680,14 @@ search: [                    ]
 [home:1]  📂 Example Folder
 ```
 
-Items are displayed using the same format as `nb` and `nb ls`, with
-each list item linked. `nb browse` is designed to make it easy to
-navigate using only the keyboard within the terminal.
+Items are displayed using the same format as `nb` and `nb ls`, including
+pinned items, with each list item linked. `nb browse` is designed to make
+it easy to navigate using only the keyboard within the terminal.
 
 `nb browse` opens in the browser set in the `$BROWSER` environment
 variable, with [w3m](https://en.wikipedia.org/wiki/W3m) preferred.
 
-To open a specific item in `nb browse`, pass the [selector](#selector)
+To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook:
 
 ```bash
@@ -1705,7 +1707,8 @@ jump to other notebooks.
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
 content is rendered in the web browser, and internal and external links
 are easily accessible directly in the terminal, providing a
-distraction-free approach for browsing collections of bookmarks.
+convenient, distraction-free approach for browsing collections
+of bookmarks.
 
 To open `nb browse` in the system's primary web browser, use `nb browse
 --gui` / `nb browse -g`:
@@ -1715,14 +1718,14 @@ To open `nb browse` in the system's primary web browser, use `nb browse
 nb browse sample:123 --gui
 ```
 
-`nb browse` includes a search field that can be used for quick searches
+`nb browse` includes a search field that can be used for easy searches
 in the current notebook or folder when browsing. For full-featured
-search, use [Search](#-search) and [`nb search`](#search).
+search, see [Search](#-search) and [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
 current note will be rendered and links go to unrendered, original files.
-If neither `pandoc` nor `ncat` are available, `nb` falls back to
+If neither `pandoc` nor `ncat` is available, `nb` falls back to
 [`nb show`](#show).
 
 ##### Shortcut Alias: `br`
@@ -1835,7 +1838,8 @@ nb edit example:sample/demo/3
 
 *Version 6.0.0-alpha*
 
-Items can be pinned so they appear first in `nb` and `nb ls`:
+Items can be pinned so they appear first in `nb`, `nb ls`, and `nb
+browse`:
 
 ```bash
 > nb
