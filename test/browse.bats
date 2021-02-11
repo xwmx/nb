@@ -7,24 +7,6 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
-# 404 #########################################################################
-
-@test "'browse' renders 404 when not found." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" browse no-matching-selector --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"  -eq 0                    ]]
-
-  [[    "${output}"  =~  '<title>nb</title>'  ]]
-  [[    "${output}"  =~  '404 Not Found'      ]]
-}
-
 # title #######################################################################
 
 @test "'browse' sets HTML title." {
@@ -240,26 +222,6 @@ export _S=" "
         \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
-}
-
-# error handling ##############################################################
-
-@test "'browse <not-valid>' returns 404 Not Found." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add  "Example Folder/File One.md"  \
-      --title     "Example Title"               \
-      --content   "Example content."
-  }
-
-  run "${_NB}" browse not-valid --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    == 0                ]]
-  [[ "${output}"    =~ 404\ Not\ Found  ]]
 }
 
 # headers #######################################################################

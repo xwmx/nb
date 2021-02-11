@@ -13505,6 +13505,7 @@ _browse() {
       403) printf "Forbidden\\n"              ;;
       404) printf "Not Found\\n"              ;;
       405) printf "Method Not Allowed\\n"     ;;
+      415) printf "Unsupported Media Type\\n" ;;
       500) printf "Internal Server Error\\n"  ;;
     esac
   }
@@ -14035,7 +14036,7 @@ HEREDOC
       {
         if [[ -n "${_string:-}"     ]]
         then
-          printf "%s\\n" "${_string}"
+          printf "%s\\n" "${_string}" | _pandoc --browse
         elif [[ "${_path:-}" =~ ^/  ]]
         then
           cat "${_path}"
@@ -14175,14 +14176,24 @@ HEREDOC
 
         if [[ -d "${_selector_path:-}"  ]]
         then
-          if [[ -n "${_query:-}" ]]
+          if [[ -n "${_query:-}"        ]]
           then
             _arguments+=("--query" "${_query}")
           fi
 
           _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
         else
-          _browse_render_item       "${_arguments[@]:-}"  >> "${_temp_file}"
+          if _file_is_text "${_selector_path:-}" &&
+             [[ "${_selector_path:-}" =~ md$|markdown$ ]]
+          then
+            _browse_render_item     "${_arguments[@]:-}"  >> "${_temp_file}"
+          elif _file_is_encrypted "${_selector_path:-}"
+          then
+            _browse_respond_with 415 \
+              "415 $(_browse_http_response_message 415): File is encrypted."
+          else
+            _browse_respond_with 415
+          fi
         fi
       fi
     fi
