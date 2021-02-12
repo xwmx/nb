@@ -14234,7 +14234,7 @@ HEREDOC
 
     if [[ "${1:-}" == "--foreground" ]]
     then
-      printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}i"
+      printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}"
       printf "Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       _browse_serve_run   || :
     else
@@ -14251,6 +14251,7 @@ HEREDOC
   local _browse_notebooks=0
   local _browse_page=1
   local _browse_per_page=
+  local _only_serve=0
   local _open_gui=0
   local _print_browse_container=0
   local _print_browse_header=0
@@ -14267,7 +14268,6 @@ HEREDOC
         _print_browse_container=1
         ;;
       -g|--gui)
-        printf "Under Construction 🚧 Exiting...\\n" && exit 0
         _open_gui=1
         ;;
       --header)
@@ -14302,8 +14302,7 @@ HEREDOC
         shift
         ;;
       --serve*)
-        _browse_serve --foreground
-        exit 0
+        _only_serve=1
         ;;
       *)
         _selector="${1:-}"
@@ -14313,23 +14312,37 @@ HEREDOC
     shift
   done
 
-  if ((_open_gui))
+  # TODO: || [[ "${BROWSER}" =~ firefox|chrome ]] ?
+  if ((_open_gui))  || ((_only_serve))
   then
-    if [[ -z "${_selector:-}" ]]
+    _browse_serve   || :
+
+    printf "Listening: %s\\n" \
+      "$(_color_primary "http://localhost:${NB_SERVER_PORT}")"
+
+    if ((_open_gui))
     then
-      _selector="$(_notebooks current --name):"
+      if [[ -z "${_selector:-}" ]]
+      then
+        _selector="$(_notebooks current --name):"
+      fi
+
+      if _command_exists "xdg-open"
+      then
+        xdg-open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+      elif [[ "${OSTYPE}" =~ ^darwin    ]]
+      then
+        open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+      fi
     fi
 
-    if _command_exists "xdg-open"
-    then
-      xdg-open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
-    elif [[ "${OSTYPE}" =~ ^darwin    ]]
-    then
-      open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
-    fi
+    while true
+    do
+      read -n 1 -s -r -p "Press any key to quit."
 
-    _browse_serve --foreground
-    exit 0
+      printf "\\n"
+      exit 0
+    done
   fi
 
   # configure pagination
