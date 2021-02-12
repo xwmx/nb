@@ -8131,6 +8131,7 @@ HEREDOC
 _web_browser() {
   local _web_browser_command=()
   local _check=0
+  local _check_gui=0
   local _dump=0
   local _url=
 
@@ -8140,8 +8141,11 @@ _web_browser() {
       --check)
         _check=1
         ;;
-      --dump)
+      --dump|--print)
         _dump=1
+        ;;
+      --gui)
+        _check_gui=1
         ;;
       *)
         [[ -z "${_url:-}" ]] && _url="${__arg}"
@@ -8162,8 +8166,33 @@ _web_browser() {
     fi
   fi
 
-  [[ -z "${_web_browser_command[*]:-}" ]] && return 1
-  ((_check)) && return 0
+  # checks
+
+  if [[ -z "${_web_browser_command[*]:-}" ]]
+  then
+    return 1
+  fi
+
+  if ((_check_gui))
+  then
+    shopt -s nocasematch
+
+    if [[ "${_web_browser_command[*]}" =~ firefox|chrom|brave ]]
+    then
+      return 0
+    else
+      return 1
+    fi
+
+    shopt -u nocasematch
+  fi
+
+  if ((_check))
+  then
+    return 0
+  fi
+
+  # behaviors
 
   if _interactive_input && [[ -z "${_url:-}" ]]
   then
@@ -14310,27 +14339,47 @@ HEREDOC
     shift
   done
 
-  # TODO: || [[ "${BROWSER}" =~ firefox|chrome ]] ?
-  if ((_open_gui))  || ((_only_serve))
+  if [[ -z "${_selector:-}" ]] && ! ((_browse_notebooks))
   then
+    _selector="$(_notebooks current --name --no-color):"
+  fi
+
+  if ! _command_exists "ncat"
+  then
+    _show "${_selector:-}" --render
+    _warn cat <<HEREDOC
+Install \`ncat\` for improved browsing and linking: https://nmap.org/ncat/
+HEREDOC
+    exit 0
+  fi
+
+  local _request_url_base="http://localhost:${NB_SERVER_PORT}/"
+  local _request_url="http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+
+  if ((_open_gui))  || _web_browser --gui || ((_only_serve))
+  then
+    # start server with default pagination
     _browse_serve   || :
 
     printf "Listening: %s\\n" \
-      "$(_color_primary "http://localhost:${NB_SERVER_PORT}")"
+      "$(_color_primary "${_request_url_base}")"
 
-    if ((_open_gui))
+    if [[ -n "${_search_query:-}" ]]
     then
-      if [[ -z "${_selector:-}" ]]
-      then
-        _selector="$(_notebooks current --name):"
-      fi
+      _request_url+="?--query=${_search_query}"
+    fi
 
+    if _web_browser --gui
+    then
+      _web_browser "${_request_url:-}"
+    elif ((_open_gui))
+    then
       if _command_exists "xdg-open"
       then
-        xdg-open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+        xdg-open "${_request_url:-}"
       elif [[ "${OSTYPE}" =~ ^darwin    ]]
       then
-        open "http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+        open "${_request_url:-}"
       fi
     fi
 
@@ -14390,31 +14439,17 @@ HEREDOC
     exit 0
   fi
 
-  if ! hash "ncat" &>/dev/null
-  then
-    _show "${_selector:-}" --render
-    _warn cat <<HEREDOC
-Install \`ncat\` for improved browsing and linking: https://nmap.org/ncat/
-HEREDOC
-    exit 0
-  fi
-
   # start server
 
   _browse_serve || : # TODO: return status
 
   # request URL
 
-  if [[ -z "${_selector:-}" ]] && ! ((_browse_notebooks))
-  then
-    _selector="$(_notebooks current --name --no-color):"
-  fi
-
-  local _request_url="http://localhost:${NB_SERVER_PORT}/${_selector}?--page=${_browse_page}&--per-page=${_browse_per_page}"
+  _request_url+="?--page=${_browse_page}&--per-page=${_browse_per_page}"
 
   if [[ -n "${_search_query:-}" ]]
   then
-    _request_url+="&--query="${_search_query}
+    _request_url+="&--query=${_search_query}"
   fi
 
   if ((_print_output))
@@ -14432,7 +14467,7 @@ HEREDOC
   # make a final request to clear any listening process
 
   (
-    sleep 1 && _download_from "http://localhost:${NB_SERVER_PORT}" &>/dev/null
+    sleep 1 && _download_from "${_request_url_base}" &>/dev/null
   ) &
 }
 _alias_subcommand "browse" "br"
