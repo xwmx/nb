@@ -7975,8 +7975,8 @@ _pandoc() {
     return 0
   fi
 
-  local _temp_file=
-  _temp_file="$(mktemp)"
+  local _temp_file="${_NB_TEMP_DIRECTORY}/nb-inline-styles.html"
+  touch "${_temp_file}"
 
   cat <<HEREDOC > "${_temp_file}"
 <style>
@@ -12542,8 +12542,9 @@ _show() {
   #   URLs for the internal web server.
   _show_resolve_links() {
     local _for_browsing=0
+    local _links=()
     local _matches=()
-    local _path="${1:?}"
+    local _file_path="${1:?}"
 
     shift
 
@@ -12564,13 +12565,15 @@ _show() {
         --only-matching                       \
         --text                                \
         -e "\[\[[^\[]+\]\]"                   \
-        "${_path}"                            \
+        "${_file_path}"                       \
         || return 0
     ))
 
     local __match=
     for   __match in "${_matches[@]:-}"
     do
+      [[ -z "${__match:-}" ]] && continue
+
       local _selector="${__match#[[}"
       _selector="${_selector%]]}"
 
@@ -12589,7 +12592,6 @@ _show() {
             _query_selector="${_notebook_name}:${_selector}"
           fi
 
-
           local _selector_path=
           _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
 
@@ -12605,10 +12607,10 @@ _show() {
           _links+=("${__match}")
         fi
       else
-        local _path=
-        _path="$(_show "${_selector}" --path 2>/dev/null || :)"
+        local _link_path=
+        _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
 
-        if [[ -z "${_path:-}" ]]
+        if [[ -z "${_link_path:-}" ]]
         then
           _links+=("[[${_selector}]]")
         else
@@ -12622,7 +12624,7 @@ _show() {
             _label="${_selector:-}"
           fi
 
-          _links+=("[[[${_label:-}]]](file:${_path:-})")
+          _links+=("[[[${_label:-}]]](file:${_link_path:-})")
         fi
       fi
     done
@@ -12663,7 +12665,7 @@ _show() {
       fi
     done
 
-    sed "${_sed_arguments[@]:-}" "${_path}"
+    sed "${_sed_arguments[@]:-}" "${_file_path}"
   }
 
   local _check_type=0
@@ -13318,15 +13320,18 @@ Can't show archives. Export archive and expand to edit.\\n"
         _defer "_browse" "${_target_path}"
         return 0
       else
+        local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
+        touch "${_temp_file}"
+
+        {
         _show_resolve_links   \
           "${_target_path}"   \
-          "${_notebook_path}" \
-          | pandoc            \
-            --from markdown   \
-            --to html         \
-            --standalone      \
-            2>/dev/null       \
-          | _web_browser
+          "${_notebook_path}"
+        } | _pandoc --browse >> "${_temp_file:-}"
+
+        _web_browser "file://${_temp_file:-}"
+
+        rm -f "${_temp_file:?}"
       fi
     else # default
       if ((_print_output))
