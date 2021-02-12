@@ -1659,8 +1659,8 @@ Use [`nb browse`](#browse) to browse, view, and search linked notes,
 bookmarks, notebooks, folders, and other items using the terminal or
 GUI web brower.
 
-`nb browse` includes an embedded, terminal-first web application and server
-that renders <a href="#-linking">[[wiki-style links]]</a>
+`nb browse` includes an embedded, terminal-first web application that
+renders <a href="#-linking">[[wiki-style links]]</a>
 as internal links, enabling you to browse your notes and notebooks in web
 browsers, including seamlessly browsing to and from the offsite links in
 bookmarks and notes.
@@ -1689,8 +1689,9 @@ Items are displayed using the same format as `nb` and `nb ls`, including
 pinned items, with each list item linked. `nb browse` is designed to make
 it easy to navigate using only the keyboard within the terminal.
 
-`nb browse` opens in the browser set in the `$BROWSER` environment
-variable, with [w3m](https://en.wikipedia.org/wiki/W3m) preferred.
+`nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (recommended),
+[Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)), or in the
+browser set in the `$BROWSER` environment variable.
 
 To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook:
@@ -3884,9 +3885,9 @@ Description:
   Browse and view linked notes, bookmarks, notebooks, folders, and other
   items using the terminal or GUI web brower.
 
-  `browse` includes an embedded, terminal-first web application and server
-  that renders [[wiki-style links]] as internal links, enabling you to
-  browse your notes and notebooks in your terminal web browser, as well as
+  `browse` includes an embedded, terminal-first web application that
+  renders [[wiki-style links]] as internal links, enabling you to browse
+  your notes and notebooks in your terminal web browser, as well as
   seamlessly browse to and from the offsite links in bookmarks and notes.
 
   To link to a note or bookmark from another, include the selector for the
