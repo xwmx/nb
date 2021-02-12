@@ -13360,6 +13360,20 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         _web_browser "file://${_temp_file:-}"
 
+        if _web_browser --gui
+        then
+          printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
+
+          while true
+          do
+            read -n 1 -s -r -p "Press any key to quit..."
+
+            printf "\\n"
+            exit 0
+          done
+        fi
+
+
         rm -f "${_temp_file:?}"
       fi
     else # default
