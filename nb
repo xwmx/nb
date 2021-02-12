@@ -14232,20 +14232,13 @@ HEREDOC
       done
     }
 
-    if [[ "${1:-}" == "--foreground" ]]
-    then
-      printf "Listening: http://localhost:%s\\n" "${NB_SERVER_PORT}"
-      printf "Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
-      _browse_serve_run   || :
-    else
-      (_browse_serve_run  || :) &
+    (_browse_serve_run  || :) &
 
-      local _pid="${!}"
-      # shellcheck disable=SC2064
-      trap "kill ${_pid} 2> /dev/null" EXIT
+    local _pid="${!}"
+    # shellcheck disable=SC2064
+    trap "kill ${_pid} 2> /dev/null" EXIT
 
-      sleep 0.5
-    fi
+    sleep 0.5
   }
 
   local _browse_notebooks=0
