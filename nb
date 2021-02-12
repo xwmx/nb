@@ -13944,7 +13944,7 @@ HEREDOC
     fi
 
     {
-      printf "%s\\n" "$(_browse --header)"
+      printf "%s\\n" "$(_browse_render_header)"
 
       local _separator="<span class=\"dim\">·</span>"
       local _test_line=
@@ -14344,6 +14344,15 @@ HEREDOC
     _selector="$(_notebooks current --name --no-color):"
   fi
 
+  local _arguments=()
+
+  if ! ((_browse_notebooks))
+  then
+    _arguments+=("$(
+      _show "${_selector:-}" --path 2>/dev/null || :
+    )")
+  fi
+
   if ! _command_exists "ncat"
   then
     _show "${_selector:-}" --render
@@ -14356,62 +14365,43 @@ HEREDOC
   local _request_url_base="http://localhost:${NB_SERVER_PORT}/"
   local _request_url="http://localhost:${NB_SERVER_PORT}/${_selector:-}"
 
-  if ((_open_gui))  || _web_browser --gui || ((_only_serve))
+  if [[ -n "${_search_query:-}" ]]
   then
-    # start server with default pagination
-    _browse_serve   || :
-
-    printf "Listening: %s\\n" \
-      "$(_color_primary "${_request_url_base}")"
-
-    if [[ -n "${_search_query:-}" ]]
-    then
-      _request_url+="?--query=${_search_query}"
-    fi
-
-    if _web_browser --gui
-    then
-      _web_browser "${_request_url:-}"
-    elif ((_open_gui))
-    then
-      if _command_exists "xdg-open"
-      then
-        xdg-open "${_request_url:-}"
-      elif [[ "${OSTYPE}" =~ ^darwin    ]]
-      then
-        open "${_request_url:-}"
-      fi
-    fi
-
-    while true
-    do
-      read -n 1 -s -r -p "Press any key to quit."
-
-      printf "\\n"
-      exit 0
-    done
+    _arguments+=("--query" "${_search_query}")
+    _request_url+="?--query=${_search_query}"
   fi
 
   # configure pagination
 
-  if [[ -z "${_browse_per_page:-}" ]]
-  then # set per page based on terminal height
-    if [[ "${BROWSER:-}" =~ lynx ]]
-    then
-      _browse_per_page="$(($(tput lines) - 10))"
-    else
-      _browse_per_page="$(($(tput lines) - 8))"
-    fi
-  fi
-
-  local _arguments=("$(
-    _show "${_selector:-}" --path 2>/dev/null || :
-  )")
-
-  if [[ -n "${_browse_per_page:-}" ]]
+  if ! ((_browse_notebooks))  &&
+     ! ((_open_gui))          &&
+     ! _web_browser --gui     &&
+     ! ((_only_serve))
   then
-    _arguments+=("--page" "${_browse_page}" "--per-page" "${_browse_per_page}")
-    _arguments+=("--terminal")
+    if [[ -z "${_browse_per_page:-}" ]]
+    then # set per page based on terminal height
+      if [[ "${BROWSER:-}" =~ lynx ]]
+      then
+        _browse_per_page="$(($(tput lines) - 10))"
+      else
+        _browse_per_page="$(($(tput lines) - 8))"
+      fi
+    fi
+
+    if [[ -n "${_browse_per_page:-}" ]]
+    then
+      _arguments+=("--page" "${_browse_page}" "--per-page" "${_browse_per_page}")
+      _arguments+=("--terminal")
+
+      if [[ -n "${_search_query:-}" ]]
+      then
+        _request_url+="&"
+      else
+        _request_url+="?"
+      fi
+
+      _request_url+="--page=${_browse_page}&--per-page=${_browse_per_page}"
+    fi
   fi
 
   if ((_print_browse_header))
@@ -14422,11 +14412,6 @@ HEREDOC
 
   if ((_print_browse_container))
   then
-    if [[ -n "${_search_query:-}" ]]
-    then
-      _arguments+=("--query" "${_search_query}")
-    fi
-
     _browse_render_container "${_arguments[@]:-}"
 
     exit 0
@@ -14445,13 +14430,6 @@ HEREDOC
 
   # request URL
 
-  _request_url+="?--page=${_browse_page}&--per-page=${_browse_per_page}"
-
-  if [[ -n "${_search_query:-}" ]]
-  then
-    _request_url+="&--query=${_search_query}"
-  fi
-
   if ((_print_output))
   then
     if ((_print_headers))
@@ -14460,6 +14438,31 @@ HEREDOC
     else
       _download_from "${_request_url//\ /\%20}"
     fi
+  elif ((_open_gui))  || _web_browser --gui || ((_only_serve))
+  then
+    printf "Listening: %s\\n" "$(_color_primary "${_request_url_base}")"
+
+    if _web_browser --gui
+    then
+      _web_browser "${_request_url:-}"
+    elif ((_open_gui))
+    then
+      if _command_exists "xdg-open"
+      then
+        xdg-open "${_request_url:-}"
+      elif [[ "${OSTYPE}" =~ ^darwin ]]
+      then
+        open "${_request_url:-}"
+      fi
+    fi
+
+    while true
+    do
+      read -n 1 -s -r -p "Press any key to quit..."
+
+      printf "\\n"
+      exit 0
+    done
   else
     _web_browser "${_request_url}"
   fi
