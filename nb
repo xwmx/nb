@@ -1036,9 +1036,10 @@ _temp() {
       for   __arg in "${2:-}" "${3:-}"
       do
         case "${__arg}" in
-          --touch)        _touch=1                    ;;
+          "")       :                           ;;
+          --touch)  _touch=1                    ;;
           \.*)      _extension="${__arg:-}"     ;;
-          *)              _relative_path="${__arg:-}" ;;
+          *)        _relative_path="${__arg:-}" ;;
         esac
       done
 
