@@ -14411,7 +14411,7 @@ HEREDOC
       _arguments+=("--page" "${_browse_page}" "--per-page" "${_browse_per_page}")
       _arguments+=("--terminal")
 
-      if [[ -n "${_search_query:-}" ]]
+      if [[ "${_request_url:-}" =~ \?--query= ]]
       then
         _request_url+="&"
       else
