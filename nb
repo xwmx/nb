@@ -1000,13 +1000,13 @@ _temp() {
     file)
       [[ -z "${2:-}" ]] && return 1
 
+      if [[ "${2:-}" =~ /         ]]
+      then
+        mkdir -p "${_NB_TEMP_DIRECTORY}/${2%/*}"
+      fi
+
       if [[ "${3:-}" == "--touch" ]]
       then
-        if [[ "${3:-}" =~ / ]]
-        then
-          mkdir -p "${_NB_TEMP_DIRECTORY}/${3%/*}"
-        fi
-
         touch "${_NB_TEMP_DIRECTORY}/${3:-}"
       fi
 
