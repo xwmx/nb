@@ -1045,14 +1045,15 @@ _temp() {
 
       local _temp_file_path=
 
+      local _random_filename=
+      _random_filename="$(LC_ALL=C tr -dc 'a-f0-9' < /dev/urandom | head -c3)"
+
       if [[ -n "${_extension:-}"          ]]
       then
-        _temp_file_path="$(mktemp)" && rm -f "${_temp_file_path:?}"
-
-        _temp_file_path="${_temp_file_path}${_extension}"
+        _temp_file_path="${_NB_TEMP_DIRECTORY}/${_random_filename}${_extension}"
       elif [[ -z  "${_relative_path:-}"   ]]
       then
-        _temp_file_path="$(mktemp)" && rm -f "${_temp_file_path:?}"
+        _temp_file_path="${_NB_TEMP_DIRECTORY}/${_random_filename}"
       else
         _temp_file_path="${_NB_TEMP_DIRECTORY}/${_relative_path:-}"
       fi
