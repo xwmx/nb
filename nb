@@ -12676,6 +12676,7 @@ _show() {
         then
           local _notebook_name=
           local _query_selector=
+
           if [[ "${_selector:-}" =~ : ]]
           then
             _notebook_name="${_selector%%:*}"
