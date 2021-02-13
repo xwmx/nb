@@ -13407,11 +13407,11 @@ Can't show archives. Export archive and expand to edit.\\n"
     then # `show --render` with `pandoc` and browser available
       cd "${_CURRENT_WORKING_DIR}"
 
-      if _command_exists "ncat"
-      then
-        _defer "_browse" "${_target_path}"
-        return 0
-      else
+      # if _command_exists "ncat"
+      # then
+      #   _defer "_browse" "${_target_path}"
+      #   return 0
+      # else
         local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
         touch "${_temp_file}"
 
@@ -13438,7 +13438,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
 
         rm -f "${_temp_file:?}"
-      fi
+      # fi
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
