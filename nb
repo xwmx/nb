@@ -1034,10 +1034,10 @@ _temp() {
         esac
       done
 
-      local _temp_file_path=
-
       local _random_filename=
       _random_filename="$(LC_ALL=C tr -dc 'a-f0-9' < /dev/urandom | head -c3)"
+
+      local _temp_file_path=
 
       if [[ -n "${_extension:-}"          ]]
       then
