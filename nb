@@ -1037,17 +1037,11 @@ _temp() {
         esac
       done
 
-      local _random_filename=
-      _random_filename="${RANDOM}"
-
       local _temp_file_path=
 
-      if [[ -n "${_extension:-}"          ]]
+      if [[ -z  "${_relative_path:-}"   ]]
       then
-        _temp_file_path="${_NB_TEMP_DIRECTORY}/${_random_filename}${_extension}"
-      elif [[ -z  "${_relative_path:-}"   ]]
-      then
-        _temp_file_path="${_NB_TEMP_DIRECTORY}/${_random_filename}"
+        _temp_file_path="${_NB_TEMP_DIRECTORY}/${RANDOM}${_extension:-}"
       else
         _temp_file_path="${_NB_TEMP_DIRECTORY}/${_relative_path:-}"
       fi
