@@ -155,7 +155,8 @@ _contains() {
     return 1
   fi
 
-  for __element in "${@}"
+  local __element=
+  for   __element in "${@}"
   do
     [[ "${__element}" == "${_query}" ]] && return 0
   done
@@ -497,7 +498,8 @@ __set_editor() {
     then
       EDITOR="${VISUAL}"
     else
-      for __editor in "${_editors[@]}"
+      local __editor=
+      for   __editor in "${_editors[@]}"
       do
         if hash "${__editor}" 2>/dev/null
         then
@@ -703,7 +705,8 @@ __load_themes() {
   if [[ -d "${NB_DIR}/.plugins" ]]
   then
     set +f
-    for __file in "${NB_DIR}/.plugins"/*.nb-theme*
+    local __file=
+    for   __file in "${NB_DIR}/.plugins"/*.nb-theme*
     do
       if [[ -e "${__file}" ]]
       then
@@ -2025,6 +2028,7 @@ _list_files() {
   } | {
     if [[ -n "${_type:-}" ]]
     then
+      local __extension=
       local _grep_patterns=()
 
       case "${_type}" in
@@ -2251,7 +2255,8 @@ _selector_resolve_folders() {
   local _selector=
   local _notebook_path=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --build)
@@ -2380,7 +2385,8 @@ _selector_resolve_path() {
   local _selector=
   local _skip_titles=0
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
       --full)
@@ -2822,7 +2828,8 @@ _git() {
     local _show_spinner=0
     local _notebook_path=
 
-    for __arg in "${@:-}"
+    local __arg=
+    for   __arg in "${@:-}"
     do
       case "${__arg}" in
         --spinner)
@@ -3135,7 +3142,8 @@ HEREDOC
           _warn cat <<HEREDOC
 Files containing conflicts:
 
-$(for __file in "${_conflicted_text_files[@]}"
+$(local __file=
+for     __file in "${_conflicted_text_files[@]}"
 do
   printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
 done)
@@ -3150,7 +3158,8 @@ HEREDOC
           _warn cat <<HEREDOC
 Conflicted copies of binary files:
 
-$(for __file in "${_conflicted_binary_files[@]}"
+$(local __file=
+for     __file in "${_conflicted_binary_files[@]}"
 do
   printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
 done)
@@ -3237,7 +3246,8 @@ _help() {
   local _short=0
   local _use_pager=1
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --pager)
@@ -3869,7 +3879,8 @@ _index() {
             | uniq
         ))
 
-        for __item in "${_diff_in_index[@]:-}"
+        local __item=
+        for   __item in "${_diff_in_index[@]:-}"
         do
           if [[ -n "${__item}" ]]
           then
@@ -3888,7 +3899,8 @@ _index() {
             | uniq
         ))
 
-        for __item in "${_diff_in_file_list[@]:-}"
+        local __item=
+        for   __item in "${_diff_in_file_list[@]:-}"
         do
           if [[ -n "${__item}" ]]
           then
@@ -3942,7 +3954,8 @@ _index() {
         _valid=0
       fi
 
-      for __item in $(printf "%s\\n" "${_index_list[@]:-}" | uniq -c)
+      local __item=
+      for   __item in $(printf "%s\\n" "${_index_list[@]:-}" | uniq -c)
       do
         local _count
         _count="$(printf "%s\\n" "${__item}" | awk '{print $1}')"
@@ -5793,7 +5806,8 @@ _notebooks() {
       _notebook_list=($(ls -1 "${NB_DIR}"))
     fi
 
-    for __notebook_name in "${_notebook_list[@]:-}"
+    local __notebook_name=
+    for   __notebook_name in "${_notebook_list[@]:-}"
     do
       if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
          [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
@@ -5910,7 +5924,8 @@ _notebooks() {
     local _force=0
     local _name=
 
-    for __arg in "${@:-}"
+    local __arg=
+    for   __arg in "${@:-}"
     do
       case "${__arg}" in
         -f|--force)
@@ -5986,7 +6001,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       then
         _notebooks use "home"
       else
-        for __notebook in "${_notebook_names[@]:-}"
+        local __notebook=
+        for   __notebook in "${_notebook_names[@]:-}"
         do
           if [[ "${__notebook}" != "$(_notebooks current)" ]]
           then
@@ -6108,7 +6124,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     local _path=
     local _remote_url=
 
-    for __arg in "${@:-}"
+    local __arg=
+    for   __arg in "${@:-}"
     do
       if _string_is_url "${__arg}" && [[ -z "${_remote_url:-}" ]]
       then
@@ -6190,7 +6207,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     local _only_paths=0
     local _only_unarchived=0
 
-    for __arg in "${@:-}"
+    local __arg=
+    for   __arg in "${@:-}"
     do
       case "${__arg}" in
         --archived)
@@ -6245,7 +6263,8 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     else
       _notebooks_add_new
 
-      for __name in "${_query_names[@]}"
+      local __name=
+      for   __name in "${_query_names[@]}"
       do
         _notebook_names+=("${__name}")
 
@@ -6904,7 +6923,8 @@ __load_plugins() {
   if [[ -d "${NB_DIR}/.plugins" ]]
   then
     set +f
-    for __file in "${NB_DIR}/.plugins"/*.nb-plugin*
+    local __file=
+    for   __file in "${NB_DIR}/.plugins"/*.nb-plugin*
     do
       [[ -f "${__file}" ]] || continue
 
@@ -7679,7 +7699,8 @@ _edit_file() {
   local _file_path="${1:-}"
   local _wait=1
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --no-wait)
@@ -8210,7 +8231,8 @@ _web_browser() {
   local _dump=0
   local _url=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --check)
@@ -9465,7 +9487,8 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
 
-    for __related_url in "${_related_urls[@]:-}"
+    local __related_url=
+    for   __related_url in "${_related_urls[@]:-}"
     do
       _bookmark_content+="- <${__related_url}>${_NEWLINE}"
     done
@@ -9699,7 +9722,8 @@ _completions() {
       _exit_1 printf "Source Git repository not configured.\\n"
     fi
 
-    for __shell in bash zsh
+    local __shell=
+    for   __shell in bash zsh
     do
       local _completion_source="${_my_dir}/etc/${_ME}-completion.${__shell}"
 
@@ -9771,7 +9795,8 @@ HEREDOC
     local _completion_path=
     local _completion_target=
 
-    for __shell in bash zsh
+    local __shell=
+    for   __shell in bash zsh
     do
       if [[ "${__shell}" == "bash" ]]
       then
@@ -9861,7 +9886,8 @@ _delete() {
   local _selectors=()
   local _title=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       -f|--force)
@@ -10332,7 +10358,8 @@ Please install %s manually. No .deb package available for %s."  \
 
       apt-get update
 
-      for __package in "${_dependencies[@]}"
+      local __package=
+      for   __package in "${_dependencies[@]}"
       do
         if ! _command_exists "${__package}" &&
            apt-cache show "${__package}" | grep -q "Package: ^${__package}"
@@ -10351,7 +10378,8 @@ Please install %s manually. No .deb package available for %s."  \
       _command_exists "batcat"  ||
         _deb_packages+=("bat 0.16.0 sharkdp/bat")
 
-      for __package in "${_deb_packages[@]}"
+      local __package=
+      for   __package in "${_deb_packages[@]}"
       do
         local _arguments
         IFS=' ' read -ra _arguments <<< "${__package:-}"
@@ -10476,7 +10504,8 @@ _export() {
   local _selector=
   local _target_path=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       notebook*)
@@ -10628,7 +10657,8 @@ _history() {
   local _notebook_path=
   local _selector=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --*log*|--*git*)
@@ -10791,7 +10821,8 @@ _import() {
     IFS=$' \n' _paths+=($(cat))
   fi
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       copy|download|move)
@@ -10852,7 +10883,8 @@ _import() {
 
   case "${_subcommand}" in
     copy)
-      for __path in "${_paths[@]:-}"
+      local __path=
+      for   __path in "${_paths[@]:-}"
       do
         _import_validate_path "${__path:-}"
 
@@ -10940,7 +10972,8 @@ ${_url}
         "$(_color_primary "${_url}")"
       ;;
     move)
-      for __path in "${_paths[@]:-}"
+      local __path=
+      for   __path in "${_paths[@]:-}"
       do
         _import_validate_path "${__path:-}"
 
@@ -11376,7 +11409,8 @@ _pin() {
   local _selector=
   local _subcommand="pin"
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
       unpin)  _subcommand="unpin"     ;;
@@ -11770,7 +11804,8 @@ _search() {
   _query="$(_join "|" "${_queries[@]:-}")"
 
   {
-    for __target_path in "${_target_paths[@]:-}"
+    local __target_path=
+    for   __target_path in "${_target_paths[@]:-}"
     do
       if [[ -d "${__target_path}" ]]
       then
@@ -12652,7 +12687,8 @@ _show() {
 
     shift
 
-    for __arg in "${@:-}"
+    local __arg=
+    for   __arg in "${@:-}"
     do
       case "${__arg:-}" in
         --browse)   _for_browsing=1             ;;
@@ -14738,7 +14774,8 @@ _plugins() {
   local _subcommand=
   local _url=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --force)
@@ -14941,7 +14978,8 @@ _remote() {
   local _subcommand=
   local _url=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       -f|--force)
@@ -15510,7 +15548,7 @@ HEREDOC
     then
       if ! hash bat 2>/dev/null
       then
-        printf "\`bat\` required: https://github.com/sharkdp/bat\\n"
+        printf "bat required: https://github.com/sharkdp/bat\\n"
       else
         local _theme_list
         _theme_list=($(bat --list-themes --color never))
@@ -15578,7 +15616,8 @@ HEREDOC
 
      • Available themes:
 
-$(for __theme in "${_NB_COLOR_THEMES[@]}"
+$(local __theme=
+  for   __theme in "${_NB_COLOR_THEMES[@]}"
   do
     printf "         %s\\n" "$(_color_primary "${__theme}")"
   done)
@@ -15601,7 +15640,8 @@ $(for __theme in "${_NB_COLOR_THEMES[@]}"
 
      • Example Values:
 
-$(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
+$(local __editor=
+  for   __editor in atom code emacs macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then
@@ -15673,11 +15713,12 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
          printf "• Available themes:\\n"
          printf "\\n"
 
-         for __theme in $(bat --list-themes --color never)
-        do
-          printf "         %s\\n" "$(_color_primary "${__theme}")"
-        done
-      fi)
+         local __theme=
+         for  __theme in $(bat --list-themes --color never)
+         do
+           printf "         %s\\n" "$(_color_primary "${__theme}")"
+         done
+       fi)
 
      • Default Value: $(_color_primary 'base16')")
 
@@ -15708,7 +15749,8 @@ $(for __editor in atom code emacs macdown mate micro nano pico subl vi vim
         then
           local _counter=0
 
-          for __setting in "${_settings_list_items[@]}"
+          local __setting=
+          for   __setting in "${_settings_list_items[@]}"
           do
             ((_counter)) && printf "\\n"
             _counter="$((_counter+1))"
@@ -15831,7 +15873,8 @@ _shell() {
   local _prompt=
   _prompt="$(_color_primary "${_ME}")$(_color_secondary ">") "
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg}" in
       --clear-history)
@@ -15996,7 +16039,8 @@ _sync() {
   local _sync_started=0
   local _syncable_count=0
 
-  for __notebook in "${_notebooks[@]:-}"
+  local __notebook=
+  for   __notebook in "${_notebooks[@]:-}"
   do
     if [[ "${__notebook}" == "local"      ]] &&
        [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
