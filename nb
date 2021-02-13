@@ -983,10 +983,9 @@ export _NB_TEMP_PIDS=()
 # Description:
 #   Manage temp and cache files and directories.
 _temp() {
-  # Usage: _temp_validate_directory <path>
-  _temp_validate_directory() {
+  # Usage: _temp_validate_path <path>
+  _temp_validate_path() {
     [[ -n "${1:?}"          ]] &&
-    [[ -d "${1}"            ]] &&
     [[ "${1}" != "/"        ]] &&
     [[ "${1}" != "${HOME}"  ]] &&
     [[ "${1}" != "${PWD}"   ]]
@@ -998,7 +997,7 @@ _temp() {
     cache)
       if [[ "${2:-}" == "clear" ]]
       then
-        if _temp_validate_directory "${_NB_CACHE_PATH:?}"
+        if _temp_validate_path "${_NB_CACHE_PATH:?}"
         then
           rm -r "${_NB_CACHE_PATH:?}"
           mkdir -p "${_NB_CACHE_PATH}"
@@ -1008,7 +1007,7 @@ _temp() {
       fi
       ;;
     cleanup)
-      if _temp_validate_directory "${_NB_TEMP_DIRECTORY:?}"
+      if _temp_validate_path "${_NB_TEMP_DIRECTORY:?}"
       then
         rm -rf "${_NB_TEMP_DIRECTORY:?}"
       fi
