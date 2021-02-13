@@ -3809,7 +3809,7 @@ _index() {
         [[ -z "${_reconcile_index_path:-}" ]] && return 1
 
         local _temp_file
-        _temp_file="$(mktemp)"
+        _temp_file="$(_temp file)"
 
         exec 3> "${_temp_file}"
         exec 4< "${_temp_file}"
@@ -9707,7 +9707,7 @@ _completions() {
       then
         if [[ ! -f "${_completion_source}" ]]
         then
-          _completion_source="$(mktemp)"
+          _completion_source="$(_temp file)"
           local _completion_url="${_REPO_RAW_URL}/etc/${_ME}-completion.${__shell}"
 
           if ! _download_from "${_completion_url}" "${_completion_source}"
@@ -16185,7 +16185,7 @@ HEREDOC
     local _nb_url="${_REPO_RAW_URL}/nb"
 
     local _temp_file
-    _temp_file="$(mktemp)"
+    _temp_file="$(_temp file)"
 
     if ! _download_from "${_nb_url}" "${_temp_file}"
     then
