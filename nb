@@ -8028,12 +8028,25 @@ _option_get_tags() {
 # _pandoc()
 #
 # Usage:
-#   _pandoc [--browse] [<pandoc-option>...]
+#   _pandoc [<path>] [--browse] [<pandoc-option>...]
 #
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
 _pandoc() {
-  if [[ "${1:-}" != "--browse" ]]
+  local _pandoc_render_browse=0
+  local _source_path=
+
+  local __arg=
+  for   __arg in "${1:-}" "${2:-}"
+  do
+    case "${__arg:-}" in
+      "")       :                         ;;
+      --browse) _pandoc_render_browse=1   ;;
+      *)        _source_path="${__arg:-}" ;;
+    esac
+  done
+
+  if ! ((_pandoc_render_browse))
   then
     pandoc "${@:-}"
     return 0
@@ -8159,13 +8172,22 @@ label[for=search-input] {
 </style>
 HEREDOC
 
+  local _arguments=()
+
+  if [[ -n "${_source_path:-}" ]]
+  then
+    _arguments+=("${_source_path:-}")
+  else
+    _arguments+=("--from=markdown")
+  fi
+
   {
     pandoc                                \
       --include-in-header "${_temp_file}" \
-      --from markdown                     \
       --to html                           \
       --standalone                        \
       --metadata title="nb"               \
+      "${_arguments[@]:-}"                \
       2>/dev/null
   } | {
     sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
