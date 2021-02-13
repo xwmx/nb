@@ -7495,14 +7495,10 @@ _decrypt_file() {
     return 1
   fi
 
-  local _basename
-  _basename="$(basename "${_encrypted_path}")"
-
-  local _unencrypted_basename
-  _unencrypted_basename="$(printf "%s" "${_basename}" | sed 's/.enc$//')"
+  local _notebook_and_relative_path="${_encrypted_path#${NB_DIR}/}"
 
   local _unencrypted_path
-  _unencrypted_path="$(_temp file "${_unencrypted_basename}")"
+  _unencrypted_path="$(_temp file "${_notebook_and_relative_path%.enc}")"
 
   local _file_command_response
   _file_command_response="$(file "${_encrypted_path}")"
@@ -10123,7 +10119,7 @@ _edit() {
       if [[ "${_before}" != "${_after}" ]]
       then
         local _temp_encrypted_path=
-        _temp_encrypted_path="$(_temp file "${_basename}").tmp"
+        _temp_encrypted_path="$(_temp file "${_relative_path}").tmp"
 
         mv "${_encrypted_path}" "${_temp_encrypted_path}"
 
