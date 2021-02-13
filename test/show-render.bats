@@ -4,7 +4,7 @@ load test_helper
 
 # links #######################################################################
 
-@test "'show --browse' properly resolves titled wiki-style links." {
+@test "'show --for-browse' properly resolves titled wiki-style links." {
   {
     "${_NB}" init
 
@@ -31,7 +31,7 @@ HEREDOC
     "${_NB}" use "Sample Notebook"
   }
 
-  run "${_NB}" show home:1 --browse
+  run "${_NB}" show home:1 --for-browse
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -45,7 +45,7 @@ HEREDOC
     '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)'
 }
 
-@test "'show --browse' properly resolves duplicated wiki-style links." {
+@test "'show --for-browse' properly resolves duplicated wiki-style links." {
   {
     "${_NB}" init
 
@@ -65,7 +65,7 @@ HEREDOC
       --content   "Nested content one."
   }
 
-  run "${_NB}" show 1 --browse
+  run "${_NB}" show 1 --for-browse
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -79,7 +79,7 @@ HEREDOC
     '\[\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)\]'
 }
 
-@test "'show --browse' resolves wiki-style links." {
+@test "'show --for-browse' resolves wiki-style links." {
   {
     "${_NB}" init
 
@@ -123,7 +123,7 @@ HEREDOC
       --content   "Nested content two."
   }
 
-  run "${_NB}" show 1 --browse
+  run "${_NB}" show 1 --for-browse
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

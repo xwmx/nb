@@ -12801,16 +12801,16 @@ _show() {
         _print_added=1
         _skip_notebook_fallback=1
         ;;
-      --browse*)
-        _render_for_browsing=1
-        _skip_notebook_fallback=1
-        ;;
       --filename|--basename)
         _print_filename=1
         _skip_notebook_fallback=1
         ;;
       --folder-path)
         _print_folder_path=1
+        ;;
+      --for-browse)
+        _render_for_browsing=1
+        _skip_notebook_fallback=1
         ;;
       --id|--index)
         _print_id=1
@@ -13998,7 +13998,7 @@ HEREDOC
       printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
 
       _show "${_selector}"  \
-        --browse            \
+        --for-browse        \
         --no-color
     } | {
       _pandoc --browse
