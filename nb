@@ -1038,7 +1038,7 @@ _temp() {
       done
 
       local _random_filename=
-      _random_filename="$(LC_ALL=C tr -dc 'a-z0-9' < /dev/urandom | head -c 7)"
+      _random_filename="${RANDOM}"
 
       local _temp_file_path=
 
