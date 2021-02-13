@@ -958,15 +958,16 @@ _NB_TEMP_DIRECTORY="$(mktemp -d)"
 # Usage:
 #   _temp cache [clear]
 #   _temp directory
-#   _temp file <basename> | <relative-path> [--touch]
+#   _temp file [<basename> | <relative-path>] [--touch]
 #   _temp cleanup
 #
 # Subcommands:
 #   cache       Print the full path to the cache directory, or optionally clear
 #               the cache.
 #   directory   Print the full path the the temp directory.
-#   file        Print the full path for <basename> within the temp directory.
+#   file        Initialize a temporary file path.
 #   cleanup     Force delete the temp directory.
+#
 # Description:
 #   Manage temp and cache files and directories.
 _temp() {
@@ -998,19 +999,38 @@ _temp() {
       printf "%s\\n" "${_NB_TEMP_DIRECTORY:-}"
       ;;
     file)
-      [[ -z "${2:-}" ]] && return 1
+      local _relative_path=
+      local _touch=0
 
-      if [[ "${2:-}" =~ /         ]]
+      local __arg=
+      for   __arg in "${2:-}" "${3:-}"
+      do
+        case "${__arg}" in
+          --touch)  _touch=1                    ;;
+          *)        _relative_path="${__arg:-}" ;;
+        esac
+      done
+
+      local _temp_file_path=
+
+      if [[ -z  "${_relative_path:-}"     ]]
       then
-        mkdir -p "${_NB_TEMP_DIRECTORY}/${2%/*}"
+        _temp_file_path="$(mktemp)"
+      else
+        _temp_file_path="${_NB_TEMP_DIRECTORY}/${_relative_path:-}"
       fi
 
-      if [[ "${3:-}" == "--touch" ]]
+      if [[   "${_relative_path:-}" =~ /  ]]
       then
-        touch "${_NB_TEMP_DIRECTORY}/${2:-}"
+        mkdir -p "${_temp_file_path%/*}"
       fi
 
-      printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${2:-}"
+      if ((_touch))
+      then
+        touch "${_temp_file_path}"
+      fi
+
+      printf "%s\\n" "${_temp_file_path:-}"
       ;;
     cleanup)
       if _temp_validate_directory "${_NB_TEMP_DIRECTORY:?}"
