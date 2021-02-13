@@ -953,11 +953,6 @@ fi
 export _NB_TEMP_DIRECTORY
 _NB_TEMP_DIRECTORY="$(mktemp -d)"
 
-# $_NB_TEMP_PATHS
-#
-# A list of paths that should be deleted on exit.
-export _NB_TEMP_PATHS=("${_NB_TEMP_DIRECTORY}")
-
 # $_NB_TEMP_PIDS
 #
 # A list of PIDS that should be terminated on exit.
@@ -1007,14 +1002,10 @@ _temp() {
       fi
       ;;
     cleanup)
-      local __path=
-      for   __path in "${_NB_TEMP_PATHS[@]:-}"
-      do
-        if _temp_validate_path "${__path:?}"
-        then
-          rm -rf "${__path:?}"
-        fi
-      done
+      if _temp_validate_path "${_NB_TEMP_DIRECTORY:?}"
+      then
+        rm -rf "${_NB_TEMP_DIRECTORY:?}"
+      fi
 
       local __pid=
       for   __pid in "${_NB_TEMP_PIDS[@]:-}"
@@ -1067,8 +1058,6 @@ _temp() {
       then
         touch "${_temp_file_path}"
       fi
-
-      _NB_TEMP_PATHS+=("${_temp_file_path}")
 
       printf "%s\\n" "${_temp_file_path:-}"
       ;;
