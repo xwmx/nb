@@ -2,6 +2,66 @@
 
 load test_helper
 
+# <filename> ##################################################################
+
+@test "'edit folder/<filename>' with encrypted file edits properly without errors." {
+  {
+    "${_NB}" init 
+
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --content "<https://example.test>"                    \
+      --encrypt                                             \
+      --password password
+
+    declare _relative_path="Example Folder/Example File.bookmark.md.enc"
+
+    declare _original_hash=
+    _original_hash="$(
+      _get_hash "${NB_DIR}/home/${_relative_path}"
+    )"
+  }
+
+  run "${_NB}" edit "${_relative_path}" --password password
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  [[ "$(_get_hash "${NB_DIR}/home/${_relative_path}")" != "${_original_hash}" ]]
+
+
+  [[  "$(
+        "${_NB}" show "${_relative_path}" \
+          --print                         \
+          --no-color                      \
+          --password password
+      )" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                                          ]]
+  [[ "${output}" =~ Example\\\ Folder/1                               ]]
+  [[ "${output}" =~ 🔖\ 🔒                                            ]]
+  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md.enc ]]
+}
+
+# error handling ##############################################################
+
+
 @test "'edit folder/<filename>' with invalid filename returns with error and message." {
   {
     "${_NB}" init
