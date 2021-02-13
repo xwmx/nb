@@ -8667,7 +8667,7 @@ _add() {
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
-        read -r -s _password </dev/tty
+        IFS='' read -r -e -d $'\n' -s _password </dev/tty
         printf "\\n" # print newline to stop `read`
 
         if [[ -z "${_password:-}" ]]
@@ -8679,7 +8679,7 @@ _add() {
 
         # request password without displaying it
         printf "%s: " "$(_color_primary "Confirm Password")"
-        read -r -s _password_confirmation </dev/tty
+        IFS='' read -r -e -d $'\n' -s _password_confirmation </dev/tty
         printf "\\n" # print newline to stop `read`
 
         if [[ "${_password}" != "${_password_confirmation}" ]]
@@ -9182,7 +9182,7 @@ _bookmark() {
         then
           # request password without displaying it
           printf "%s: " "$(_color_primary "Password")"
-          read -r -s _password </dev/tty
+          IFS='' read -r -e -d $'\n' -s _password </dev/tty
           printf "\\n" # print newline to stop `read`
         fi
 
@@ -10103,7 +10103,7 @@ _edit() {
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
-        read -r -s _password </dev/tty
+        IFS='' read -r -e -d $'\n' -s _password </dev/tty
         printf "\\n" # print newline to stop `read`
       fi
 
@@ -13170,7 +13170,7 @@ _show() {
     then
       # request password without displaying it
       printf "%s: " "$(_color_primary "Password")"
-      read -r -s _password </dev/tty
+      IFS='' read -r -e -d $'\n' -s _password </dev/tty
       printf "\\n" # print newline to stop `read`
     fi
 
