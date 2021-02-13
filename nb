@@ -12658,6 +12658,7 @@ _show() {
         --text                                \
         -e "\[\[[^\[]+\]\]"                   \
         "${_file_path}"                       \
+        2>/dev/null                           \
         || return 0
     ))
 
