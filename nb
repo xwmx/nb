@@ -14599,7 +14599,7 @@ HEREDOC
       read -n 1 -s -r -p "Press any key to quit..."
 
       printf "\\n"
-      exit 0
+      break
     done
   else
     _web_browser "${_request_url}"
@@ -14610,6 +14610,8 @@ HEREDOC
   (
     sleep 1 && _download_from "${_request_url_base}" &>/dev/null
   ) &
+
+  exit 0
 }
 _alias_subcommand "browse" "br"
 _alias_subcommand "browse" "browser"
