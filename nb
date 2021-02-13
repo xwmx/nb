@@ -958,7 +958,7 @@ _NB_TEMP_DIRECTORY="$(mktemp -d)"
 # Usage:
 #   _temp cache [clear]
 #   _temp directory
-#   _temp file <basename>
+#   _temp file <basename> | <relative-path> [--touch]
 #   _temp cleanup
 #
 # Subcommands:
@@ -999,6 +999,17 @@ _temp() {
       ;;
     file)
       [[ -z "${2:-}" ]] && return 1
+
+      if [[ "${3:-}" == "--touch" ]]
+      then
+        if [[ "${3:-}" =~ / ]]
+        then
+          mkdir -p "${_NB_TEMP_DIRECTORY}/${3%/*}"
+        fi
+
+        touch "${_NB_TEMP_DIRECTORY}/${3:-}"
+      fi
+
       printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${2:-}"
       ;;
     cleanup)
