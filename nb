@@ -12011,7 +12011,7 @@ _search() {
                 do
                   [[ -n "${__and_query:-}" ]] || continue
 
-                  _this_pipe=$(mktemp -t pipe.XXXXXXXX) && {
+                  _this_pipe=$(_temp file --touch) && {
                     rm -f   "${_this_pipe}"
                     mkfifo  "${_this_pipe}"
                   }
