@@ -18,7 +18,7 @@ load test_helper
   [[ ${status} -eq 0 ]]
 
   # Creates new note with bookmark filename
-  [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${_filename}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
@@ -75,7 +75,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   [[ ${status} -eq 0 ]]
 
   # Creates new note with bookmark filename
-  [[ "${_filename}}" =~ [A-Za-z0-9]+.bookmark.md ]]
+  [[ "${_filename}" =~ [A-Za-z0-9]+.bookmark.md ]]
 
   # Creates new note file with content
   [[ "${#_files[@]}" -eq 1 ]]
