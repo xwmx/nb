@@ -8038,10 +8038,10 @@ _pandoc() {
     return 0
   fi
 
-  local _temp_file="${_NB_TEMP_DIRECTORY}/nb-inline-styles.html"
-  touch "${_temp_file}"
+  local _temp_file=
+  _temp_file="$(_temp file ".html" --touch)"
 
-  cat <<HEREDOC > "${_temp_file}"
+  cat <<HEREDOC >> "${_temp_file}"
 <style>
 html {
   background-color: #1a1a1a;
