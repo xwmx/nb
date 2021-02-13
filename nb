@@ -8219,7 +8219,7 @@ _web_browser() {
 
   if [[ -n "${BROWSER:-}" ]]
   then
-    IFS=' ' read -ra _web_browser_command <<< "${BROWSER}"
+    _web_browser_command=("${BROWSER}")
   else
     if _command_exists "w3m"
     then
@@ -13430,10 +13430,11 @@ Can't show archives. Export archive and expand to edit.\\n"
         "${_notebook_path}"
       } | _pandoc --browse >> "${_temp_file:-}"
 
-      _web_browser "file://${_temp_file:-}"
 
       if _web_browser --gui
       then
+        (_web_browser "file://${_temp_file:-}") &
+
         printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
 
         while true
@@ -13443,6 +13444,8 @@ Can't show archives. Export archive and expand to edit.\\n"
           printf "\\n"
           exit 0
         done
+      else
+        _web_browser "file://${_temp_file:-}"
       fi
 
       rm -f "${_temp_file:?}"
