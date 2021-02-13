@@ -1007,7 +1007,7 @@ _temp() {
 
       if [[ "${3:-}" == "--touch" ]]
       then
-        touch "${_NB_TEMP_DIRECTORY}/${3:-}"
+        touch "${_NB_TEMP_DIRECTORY}/${2:-}"
       fi
 
       printf "%s/%s" "${_NB_TEMP_DIRECTORY}" "${2:-}"
