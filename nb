@@ -12762,6 +12762,7 @@ _show() {
     sed "${_sed_arguments[@]:-}" "${_file_path}"
   }
 
+  local _browse=0
   local _check_type=0
   local _list_page=1
   local _unresolved_arguments=()
@@ -12800,6 +12801,9 @@ _show() {
       -a|--added*)
         _print_added=1
         _skip_notebook_fallback=1
+        ;;
+      --browse)
+        _browse=1
         ;;
       --filename|--basename)
         _print_filename=1
@@ -13382,11 +13386,18 @@ Can't show archives. Export archive and expand to edit.\\n"
        _command_exists "pandoc" &&
        _web_browser --check     &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
-    then
+    then # render for use by `browse`
       _show_resolve_links       \
         "${_target_path}"       \
         "${_notebook_path}"     \
         --browse
+    elif ((_browse)) &&
+         _command_exists "ncat"   &&
+         _command_exists "pandoc" &&
+         _web_browser --check
+    then
+      _defer "_browse" "${_target_path}"
+      return 0
     elif ((_render))                &&
          ((_print_output))          &&
          _command_exists "pandoc"   &&
@@ -13409,38 +13420,31 @@ Can't show archives. Export archive and expand to edit.\\n"
     then # `show --render` with `pandoc` and browser available
       cd "${_CURRENT_WORKING_DIR}"
 
-      # if _command_exists "ncat"
-      # then
-      #   _defer "_browse" "${_target_path}"
-      #   return 0
-      # else
-        local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
-        touch "${_temp_file}"
+      local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
+      touch "${_temp_file}"
 
-        {
-        _show_resolve_links   \
-          "${_target_path}"   \
-          "${_notebook_path}"
-        } | _pandoc --browse >> "${_temp_file:-}"
+      {
+      _show_resolve_links   \
+        "${_target_path}"   \
+        "${_notebook_path}"
+      } | _pandoc --browse >> "${_temp_file:-}"
 
-        _web_browser "file://${_temp_file:-}"
+      _web_browser "file://${_temp_file:-}"
 
-        if _web_browser --gui
-        then
-          printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
+      if _web_browser --gui
+      then
+        printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
 
-          while true
-          do
-            read -n 1 -s -r -p "Press any key to quit..."
+        while true
+        do
+          read -n 1 -s -r -p "Press any key to quit..."
 
-            printf "\\n"
-            exit 0
-          done
-        fi
+          printf "\\n"
+          exit 0
+        done
+      fi
 
-
-        rm -f "${_temp_file:?}"
-      # fi
+      rm -f "${_temp_file:?}"
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
