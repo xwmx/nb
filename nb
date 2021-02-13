@@ -1070,7 +1070,8 @@ _temp() {
   esac
 }
 
-trap "_temp cleanup" EXIT
+trap "_temp cleanup"  EXIT
+trap "exit"           INT
 
 ###############################################################################
 # Helpers: Group 1                                             Helpers: Group 1
@@ -14393,7 +14394,6 @@ HEREDOC
   _browse_serve() {
     # Usage: _browse_serve_run
     _browse_serve_run() {
-      trap "exit" INT
       while true
       do
         ncat                                    \
