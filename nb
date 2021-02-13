@@ -9286,7 +9286,7 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
   # `bookmark <url>`
 
   local _temp_file=
-  _temp_file="$(mktemp -t nb-bookmark-tempfile.XXXXXX)"
+  _temp_file="$(_temp file)"
 
   local _download_url="${_url}"
   _download_url="$(
@@ -10099,7 +10099,7 @@ _edit() {
         elif [[ "${_edit_type:-}" == "prepend" ]]
         then
           local _prepend_temp
-          _prepend_temp="$(mktemp)"
+          _prepend_temp="$(_temp file)"
 
           cat                       >   "${_prepend_temp:?}"
           printf "\\n"              >>  "${_prepend_temp:?}"
@@ -14219,6 +14219,7 @@ HEREDOC
 
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
 
+    # TODO: _temp_file="$(_temp file ".html" --touch)"
     _temp_file="$(mktemp).html"
     touch "${_temp_file}"
 
