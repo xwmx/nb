@@ -75,9 +75,6 @@ IFS=$'\n\t'
 # The most recent program version.
 _VERSION="6.0.0-alpha"
 
-# Prevents ls in OSX from being forced to use color.
-unset CLICOLOR_FORCE
-
 # $_ME
 #
 # This program's basename.
@@ -867,6 +864,9 @@ _color_secondary() {
 
   printf "%s%s%s\\n" "${_TPUT_COLOR_SECONDARY}" "${1:-}" "${_TPUT_SGR0}"
 }
+
+# Unset CLICOLOR_FORCE to avoid unexpected color output in `ls` et al.
+unset CLICOLOR_FORCE
 
 # Current Notebook ########################################### Current Notebook
 
