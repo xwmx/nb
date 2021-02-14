@@ -8512,8 +8512,7 @@ _add() {
 
     if [[ -n "${_arguments[i]:-}"         ]]
     then # argument is not blank
-      if ((i))                                &&
-         [[ -z "${_selector_content:-}"   ]]  &&
+      if [[ -z "${_selector_content:-}"   ]]  &&
          [[ -n "${_selector_filename:-}"  ]]
       then # argument #2 and the first argument was a selector with filename
         _argument_content+="${_arguments[i]:-}"
