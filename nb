@@ -13450,55 +13450,51 @@ Can't show archives. Export archive and expand to edit.\\n"
       _defer "_browse" "${_target_path}"
       return 0
     elif ((_render))                &&
-         ((_print_output))          &&
-         _command_exists "pandoc"   &&
-         _web_browser --check       &&
-         ! ((_COLOR_ENABLED))       &&
-         [[ "${_target_path}" =~ md$|markdown$ ]]
-    then # `show --render --print --raw` with `pandoc` and browser available
-      pandoc "${_target_path}" 2>/dev/null
-    elif ((_render))                &&
-         ((_print_output))          &&
          _command_exists "pandoc"   &&
          _web_browser --check       &&
          [[ "${_target_path}" =~ md$|markdown$ ]]
-    then # `show --render --print` with `pandoc` and browser available
-      pandoc "${_target_path}" 2>/dev/null | _web_browser --dump
-    elif ((_render))                &&
-         _command_exists "pandoc"   &&
-         _web_browser --check       &&
-         [[ "${_target_path}" =~ md$|markdown$ ]]
-    then # `show --render` with `pandoc` and browser available
-      cd "${_CURRENT_WORKING_DIR}"
-
-      local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
-      touch "${_temp_file}"
-
-      {
-        _show_resolve_links   \
-          "${_target_path}"   \
-          "${_notebook_path}"
-      } | _pandoc --browse >> "${_temp_file:-}"
-
-
-      if _web_browser --gui
+    then
+      if ((_print_output))
       then
-        (_web_browser "file://${_temp_file:-}") &
-
-        printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
-
-        while true
-        do
-          read -n 1 -s -r -p "Press any key to quit..."
-
-          printf "\\n"
-          exit 0
-        done
+        if ((_COLOR_ENABLED))
+        then
+          pandoc "${_target_path}" 2>/dev/null | _web_browser --dump
+        else
+          pandoc "${_target_path}" 2>/dev/null
+        fi
       else
-        _web_browser "file://${_temp_file:-}"
-      fi
+        cd "${_CURRENT_WORKING_DIR}"
 
-      rm -f "${_temp_file:?}"
+        local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
+        touch "${_temp_file}"
+
+        {
+          _show_resolve_links   \
+            "${_target_path}"   \
+            "${_notebook_path}"
+        } | _pandoc --browse >> "${_temp_file:-}"
+
+
+        if _web_browser --gui
+        then
+          (_web_browser "file://${_temp_file:-}") &
+
+          printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
+
+          while true
+          do
+            read -n 1 -s -r -p "Press any key to quit..."
+
+            printf "\\n"
+
+            exit 0
+          done
+        else
+          _web_browser "file://${_temp_file:-}"
+        fi
+
+        rm -f "${_temp_file:?}"
+      fi
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
