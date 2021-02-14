@@ -12774,7 +12774,6 @@ _show() {
             _label="${_selector:-}"
           fi
 
-          _links+=("[[[${_label:-}]]](file:${_link_path:-})")
           _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
         fi
       fi
