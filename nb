@@ -13485,8 +13485,8 @@ Can't show archives. Export archive and expand to edit.\\n"
       else
         cd "${_CURRENT_WORKING_DIR}"
 
-        local _temp_file="${_NB_TEMP_DIRECTORY}/${_target_path##*/}.html"
-        touch "${_temp_file}"
+        local _temp_file=
+        _temp_file="$(_temp file ".html" --touch)"
 
         {
           _show_resolve_links   \
