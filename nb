@@ -13475,9 +13475,9 @@ Can't show archives. Export archive and expand to edit.\\n"
       touch "${_temp_file}"
 
       {
-      _show_resolve_links   \
-        "${_target_path}"   \
-        "${_notebook_path}"
+        _show_resolve_links   \
+          "${_target_path}"   \
+          "${_notebook_path}"
       } | _pandoc --browse >> "${_temp_file:-}"
 
 
