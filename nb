@@ -13441,7 +13441,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         "${_target_path}"           \
         "${_notebook_path}"         \
         --browse
-    elif ((_browse)) &&
+    elif ((_browse))                &&
          _command_exists "ncat"     &&
          _command_exists "pandoc"   &&
          _web_browser --check
