@@ -13278,7 +13278,11 @@ Can't show archives. Export archive and expand to edit.\\n"
   # turn on case-insensitive matching
   shopt -s nocasematch
 
-  if ! _file_is_text "${_target_path}"
+  if ! _file_is_text "${_target_path}"    &&
+     ! {
+       ((_render))                        &&
+       [[ "${_target_path:-}" =~ \.docx$  ]]
+     }
   then
     if [[ -d "${_target_path}"        ]]  &&
        _command_exists "ncat"             &&
