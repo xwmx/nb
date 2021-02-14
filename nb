@@ -14397,8 +14397,8 @@ HEREDOC
 
           _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
         else
-          if _file_is_text "${_selector_path:-}" &&
-             [[ "${_selector_path:-}" =~ md$|markdown$ ]]
+          if _file_is_text "${_selector_path:-}" ||
+             [[ "${_selector_path:-}" =~ \.docx$ ]]
           then
             _browse_render_item     "${_arguments[@]:-}"  >> "${_temp_file}"
           elif _file_is_encrypted "${_selector_path:-}"
