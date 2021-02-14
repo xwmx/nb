@@ -12707,6 +12707,17 @@ _show() {
         || return 0
     ))
 
+    # _matches=($(
+    #   grep                  \
+    #     --color=never       \
+    #     -E                  \
+    #     --text              \
+    #     -e "\[\[[^\[]+\]\]" \
+    #     "${_file_path}"     \
+    #     2>/dev/null         \
+    #     || return 0
+    # ))
+
     local __match=
     for   __match in "${_matches[@]:-}"
     do
