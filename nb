@@ -8336,7 +8336,6 @@ _web_browser() {
         _arguments+=("${_url:-}")
       fi
 
-
       "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
     else
       if [[ -n "${_url:-}" ]]
@@ -13474,7 +13473,6 @@ Can't show archives. Export archive and expand to edit.\\n"
             "${_notebook_path}"
         } | _pandoc --browse >> "${_temp_file:-}"
 
-
         if _web_browser --gui
         then
           (_web_browser "file://${_temp_file:-}") &
@@ -14739,7 +14737,6 @@ _helpers() {
       ;;
   esac
 }
-
 
 # plugins ############################################################# plugins
 
