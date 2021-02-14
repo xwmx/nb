@@ -158,7 +158,7 @@ Example content with [a link](https://example.test) and *formatting*."
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                  ]]
+  [[ "${status}"    -eq 0                                                   ]]
   [[ "${lines[0]}"  =~  \.*#.*\ .*Example\ Title.*                          ]]
   [[ "${lines[1]}"  =~  \
        Example\ content\ with\ .*\[.*a\ link.*\](.*https://example.test.*)  ]]
