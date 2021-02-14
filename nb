@@ -8204,6 +8204,170 @@ HEREDOC
   rm -f "${_temp_file:?}"
 }
 
+# _resolve_links()
+#
+# Usage:
+#   _resolve_links <path> <notebook-path> [--browse]
+#
+# Description:
+#   Read the file at <path>, resolve all [[wiki-style links]], wrap each
+#   one in a link to the target item, then print the updated file contents.
+#
+#   By default, links are created with file:// URLs to the item on the
+#   local filesystem. With --browse, links are created with htt://
+#   URLs for the internal web server.
+_resolve_links() {
+  local _for_browsing=0
+  local _links=()
+  local _matches=()
+  local _file_path="${1:?}"
+
+  shift
+
+  local __arg=
+  for   __arg in "${@:-}"
+  do
+    case "${__arg:-}" in
+      --browse)   _for_browsing=1             ;;
+      *)          _notebook_path="${__arg:-}" ;;
+    esac
+  done
+
+  cd "${_file_path%/*}"
+
+  local _repo_path=
+  _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
+
+  if [[ -z "${_repo_path:-}"                        ]] &&
+     [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
+  then # initialize temp directory as git repo to enable `git grep`
+    _repo_path="${_NB_TEMP_DIRECTORY}"
+    cd "${_repo_path:-}"
+
+    git init &>/dev/null
+  fi
+
+  _matches=($(
+    cd "${_repo_path:-}" || return 0
+
+    GIT_PAGER='' git -C "${_repo_path:-}" \
+      grep                                \
+      --no-index                          \
+      --color=never                       \
+      --extended-regexp                   \
+      -h                                  \
+      --only-matching                     \
+      --text                              \
+      -e "\[\[[^\[]+\]\]"                 \
+      "${_file_path}"                     \
+      2>/dev/null || :
+  ))
+
+  local __match=
+  for   __match in "${_matches[@]:-}"
+  do
+    [[ -z "${__match:-}" ]] && continue
+
+    local _selector="${__match#[[}"
+    _selector="${_selector%]]}"
+
+    if ((_for_browsing))
+    then
+      if [[ -n "${_selector:-}" ]]
+      then
+        local _notebook_name=
+        local _query_selector=
+
+        if [[ "${_selector:-}" =~ : ]]
+        then
+          _notebook_name="${_selector%%:*}"
+          _query_selector="${_selector}"
+        else
+          _notebook_name="${_notebook_path##*/}"
+          _query_selector="${_notebook_name}:${_selector}"
+        fi
+
+        local _selector_path=
+        _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
+
+        local _id_selector=
+        _id_selector="$(
+          _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
+        )"
+
+        if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
+        then
+          _links+=("[[${_selector:-}]]")
+        else
+          _links+=(
+            "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
+          )
+        fi
+      else
+        _links+=("${__match}")
+      fi
+    else
+      local _link_path=
+      _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
+
+      if [[ -z "${_link_path:-}" ]]
+      then
+        _links+=("[[${_selector}]]")
+      else
+        local _title=
+        _title="$(_show "${_selector}" --title 2>/dev/null || :)"
+
+        local _label="${_title:-}"
+
+        if [[ -z "${_label:-}" ]]
+        then
+          _label="${_selector:-}"
+        fi
+
+        _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
+      fi
+    fi
+  done
+
+  # Usage: _resolve_links_escape_link_component <string>
+  _resolve_links_escape_link_component() {
+    printf "%s\\n" "${1:-}" \
+      | sed                 \
+        -e 's/\//\\\//g'    \
+        -e 's/\[/\\\[/g'    \
+        -e 's/\]/\\\]/g'    \
+        -e 's/(/\\(/g'      \
+        -e 's/)/\\)/g'
+  }
+
+  local _sed_arguments=()
+  local _seen_matches=()
+
+  local i=0
+  for ((i=0; i < "${#_links[@]}"; i++))
+  do
+    local _escaped_match=
+    _escaped_match="$(
+      _resolve_links_escape_link_component "${_matches[i]:-}"
+    )"
+
+    local _escaped_link=
+    _escaped_link="$(
+      _resolve_links_escape_link_component "${_links[i]:-}"
+    )"
+
+    if [[ -n "${_escaped_match:-}"  ]] &&
+       [[ -n "${_escaped_link:-}"   ]] &&
+       ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
+    then
+      _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
+      _seen_matches+=("${_escaped_match}")
+    fi
+  done
+
+  sed "${_sed_arguments[@]:-}" "${_file_path}"
+}
+
 # _web_browser()
 #
 # Usage:
@@ -12663,171 +12827,6 @@ _show() {
     printf "%s\\n" "${_indicators:-}"
   }
 
-  # _show_resolve_links()
-  #
-  # Usage:
-  #   _show_resolve_links <path> <notebook-path> [--browse]
-  #
-  # Description:
-  #   Read the file at <path>, resolve all [[wiki-style links]],
-  #   wrap each one in a Markdown link to the target item, then print
-  #   the updated file contents.
-  #
-  #   By default, links are created with file:// URLs to the item on the
-  #   local filesystem. With --browse, links are created with htt://
-  #   URLs for the internal web server.
-  _show_resolve_links() {
-    local _for_browsing=0
-    local _links=()
-    local _matches=()
-    local _file_path="${1:?}"
-
-    shift
-
-    local __arg=
-    for   __arg in "${@:-}"
-    do
-      case "${__arg:-}" in
-        --browse)   _for_browsing=1             ;;
-        *)          _notebook_path="${__arg:-}" ;;
-      esac
-    done
-
-    cd "${_file_path%/*}"
-
-    local _repo_path=
-    _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
-
-    if [[ -z "${_repo_path:-}"                        ]] &&
-       [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
-    then # initialize temp directory as git repo to enable `git grep`
-      _repo_path="${_NB_TEMP_DIRECTORY}"
-      cd "${_repo_path:-}"
-
-      git init &>/dev/null
-    fi
-
-    _matches=($(
-      cd "${_repo_path:-}" || return 0
-
-      GIT_PAGER='' git -C "${_repo_path:-}" \
-        grep                                \
-        --no-index                          \
-        --color=never                       \
-        --extended-regexp                   \
-        -h                                  \
-        --only-matching                     \
-        --text                              \
-        -e "\[\[[^\[]+\]\]"                 \
-        "${_file_path}"                     \
-        2>/dev/null || :
-    ))
-
-    local __match=
-    for   __match in "${_matches[@]:-}"
-    do
-      [[ -z "${__match:-}" ]] && continue
-
-      local _selector="${__match#[[}"
-      _selector="${_selector%]]}"
-
-      if ((_for_browsing))
-      then
-        if [[ -n "${_selector:-}" ]]
-        then
-          local _notebook_name=
-          local _query_selector=
-
-          if [[ "${_selector:-}" =~ : ]]
-          then
-            _notebook_name="${_selector%%:*}"
-            _query_selector="${_selector}"
-          else
-            _notebook_name="${_notebook_path##*/}"
-            _query_selector="${_notebook_name}:${_selector}"
-          fi
-
-          local _selector_path=
-          _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
-
-          local _id_selector=
-          _id_selector="$(
-            _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
-          )"
-
-          if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
-          then
-            _links+=("[[${_selector:-}]]")
-          else
-            _links+=(
-              "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
-            )
-          fi
-        else
-          _links+=("${__match}")
-        fi
-      else
-        local _link_path=
-        _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
-
-        if [[ -z "${_link_path:-}" ]]
-        then
-          _links+=("[[${_selector}]]")
-        else
-          local _title=
-          _title="$(_show "${_selector}" --title 2>/dev/null || :)"
-
-          local _label="${_title:-}"
-
-          if [[ -z "${_label:-}" ]]
-          then
-            _label="${_selector:-}"
-          fi
-
-          _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
-        fi
-      fi
-    done
-
-    # Usage: _show_escape_link_component
-    _show_escape_link_component() {
-      printf "%s\\n" "${1:-}" \
-        | sed                 \
-          -e 's/\//\\\//g'    \
-          -e 's/\[/\\\[/g'    \
-          -e 's/\]/\\\]/g'    \
-          -e 's/(/\\(/g'      \
-          -e 's/)/\\)/g'
-    }
-
-    local _sed_arguments=()
-    local _seen_matches=()
-
-    local i=0
-    for ((i=0; i < "${#_links[@]}"; i++))
-    do
-      local _escaped_match=
-      _escaped_match="$(
-        _show_escape_link_component "${_matches[i]:-}"
-      )"
-
-      local _escaped_link=
-      _escaped_link="$(
-        _show_escape_link_component "${_links[i]:-}"
-      )"
-
-      if [[ -n "${_escaped_match:-}"  ]] &&
-         [[ -n "${_escaped_link:-}"   ]] &&
-         ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
-      then
-        _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
-        _seen_matches+=("${_escaped_match}")
-      fi
-    done
-
-    sed "${_sed_arguments[@]:-}" "${_file_path}"
-  }
-
   local _browse=0
   local _check_type=0
   local _list_page=1
@@ -13458,7 +13457,7 @@ Can't show archives. Export archive and expand to edit.\\n"
        _web_browser --check         &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then # render for use by `browse`
-      _show_resolve_links           \
+      _resolve_links                \
         "${_target_path}"           \
         "${_notebook_path}"         \
         --browse
@@ -13492,7 +13491,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         local _temp_file=
         _temp_file="$(_temp file ".html" --touch)"
 
-        _show_resolve_links \
+        _resolve_links \
           "${_unlinked_temp_file}" "${_notebook_path}" >> "${_temp_file}"
 
         if _web_browser --gui
