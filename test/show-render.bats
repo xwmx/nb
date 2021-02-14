@@ -39,10 +39,10 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Root Title Two\]\]\](http://localhost:6789/home:2)'
+    '<a href="http://localhost:6789/home:2">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)'
+    '<a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 @test "'show --for-browse' properly resolves duplicated wiki-style links." {
@@ -73,10 +73,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)'
+    'link one: <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
+
 
   printf "%s\\n" "${output}" | grep -q -v\
-    '\[\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:1/1)\]'
+    'example <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 @test "'show --for-browse' resolves wiki-style links." {
@@ -131,13 +132,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Sample Folder/Nested Title One\]\]\](http://localhost:6789/home:3/1)'
+    '<a href="http://localhost:6789/home:3/1">\[\[Sample Folder/Nested Title One\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:File Two.md\]\]\](http://localhost:6789/Example Notebook:2)'
+    '<a href="http://localhost:6789/Example Notebook:2">\[\[Example Notebook:File Two.md\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '\[\[\[Example Notebook:Example Folder/1\]\]\](http://localhost:6789/Example Notebook:3/1)'
+    '<a href="http://localhost:6789/Example Notebook:3/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 # --render, --print, and --raw ################################################

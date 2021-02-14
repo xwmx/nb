@@ -12740,7 +12740,7 @@ _show() {
           )"
 
           _links+=(
-            "[[[${_selector}]]](http://localhost:${NB_SERVER_PORT}/${_id_selector})"
+            "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
           )
         else
           _links+=("${__match}")
@@ -12764,6 +12764,7 @@ _show() {
           fi
 
           _links+=("[[[${_label:-}]]](file:${_link_path:-})")
+          _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
         fi
       fi
     done
