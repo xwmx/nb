@@ -52,6 +52,53 @@ HEREDOC
     'content <a href="http://localhost:6789/home:3/1">\[\[3/1\]\]</a> here'
 }
 
+@test "'show --for-browse' properly resolves titled wiki-style links and skips links with non-resolving selectors." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"       \
+      --title     "Root Title One"    \
+      --content   "$(<<HEREDOC cat
+Example link one: [[Root Title Two]]
+
+More example [[Example Notebook:Example Folder/1]] content [[2/1]] here.
+HEREDOC
+)"
+
+    "${_NB}" add  "File Two.md"       \
+      --title     "Root Title Two"    \
+      --content   "Example content."
+
+    "${_NB}" add  "Sample Folder/File One.md"                   \
+      --title     "Sample Nested Title Two"                     \
+      --content   "Sample nested content one."
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example Folder/File One.md" \
+      --title     "Example Nested Title One"                    \
+      --content   "Example nested content one."
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" use "Sample Notebook"
+  }
+
+  run "${_NB}" show home:1 --for-browse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+    'one: <a href="http://localhost:6789/home:2">\[\[Root Title Two\]\]</a>'
+
+  printf "%s\\n" "${output}" | grep -q \
+    'example <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+
+  printf "%s\\n" "${output}" | grep -q 'content \[\[2/1\]\] here'
+}
+
 @test "'show --for-browse' properly resolves duplicated wiki-style links." {
   {
     "${_NB}" init

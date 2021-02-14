@@ -12754,9 +12754,14 @@ _show() {
             _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
           )"
 
-          _links+=(
-            "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
-          )
+          if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
+          then
+            _links+=("[[${_selector:-}]]")
+          else
+            _links+=(
+              "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
+            )
+          fi
         else
           _links+=("${__match}")
         fi
