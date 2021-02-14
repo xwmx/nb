@@ -13439,8 +13439,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif [[ "${_target_path}" =~ docx$ ]] &&
          _command_exists "pandoc"
     then
-      pandoc --from docx --to markdown "${_target_path}"  \
-        | _highlight_syntax_if_available                  \
+      pandoc --from docx --to markdown "${_target_path}"        \
+        | sed -E -e 's/\\\[\\\[/\[\[/g' -e 's/\\\]\\\]/\]\]/g'  \
+        | _highlight_syntax_if_available                        \
         | if ! ((_print_output))
           then
             _pager
