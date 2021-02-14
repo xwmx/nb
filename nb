@@ -8046,7 +8046,7 @@ _pandoc() {
   local _source_path=
 
   local __arg=
-  for   __arg in "${1:-}" "${2:-}"
+  for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
       "")         :                         ;;
