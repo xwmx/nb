@@ -1611,9 +1611,10 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 *Version 6.0.0-alpha*
 
-Markdown notes and bookmarks can link to other items using
-<a href="#-linking">[[wiki-style links]]</a>, making `nb` a
-powerful terminal-first platform for
+Notes, bookmarks, files in text-based formats, and Word documents can
+contain links to other items using
+<a href="#-linking">[[wiki-style links]]</a>,
+making `nb` a powerful terminal-first platform for
 [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and
 other link-based note-taking methods.
 
