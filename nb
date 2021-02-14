@@ -13419,11 +13419,14 @@ Can't show archives. Export archive and expand to edit.\\n"
          _command_exists "pandoc"         &&
          _web_browser --check
     then
-      pandoc -f epub -t html "${_target_path}" | _web_browser
+      pandoc        \
+        --from epub \
+        --to html   \
+        "${_target_path}" | _web_browser
     elif _command_exists "xdg-open"
     then
       xdg-open "${_target_path}"
-    elif [[ "${OSTYPE}" =~ ^darwin ]]
+    elif [[ "${OSTYPE}" =~ ^darwin  ]]
     then
       open "${_target_path}"
     fi
