@@ -12701,7 +12701,8 @@ _show() {
     if [[ -z "${_repo_path:-}"                        ]] &&
        [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
     then # initialize temp directory as git repo to enable `git grep`
-      _repo_path="${_file_path%/*}"
+      _repo_path="${_NB_TEMP_DIRECTORY}"
+      cd "${_repo_path:-}"
 
       git init &>/dev/null
     fi
