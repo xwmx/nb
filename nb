@@ -8036,25 +8036,25 @@ _option_get_tags() {
 # _pandoc()
 #
 # Usage:
-#   _pandoc [<path>] [--browse] [<pandoc-option>...]
+#   _pandoc [<path>] [--render-to-html] [<pandoc-option>...]
 #
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
 _pandoc() {
-  local _pandoc_render_browse=0
+  local _render_to_html=0
   local _source_path=
 
   local __arg=
   for   __arg in "${1:-}" "${2:-}"
   do
     case "${__arg:-}" in
-      "")       :                         ;;
-      --browse) _pandoc_render_browse=1   ;;
-      *)        _source_path="${__arg:-}" ;;
+      "")         :                         ;;
+      --render*)  _render_to_html=1         ;;
+      *)          _source_path="${__arg:-}" ;;
     esac
   done
 
-  if ! ((_pandoc_render_browse))
+  if ! ((_render_to_html))
   then
     pandoc "${@:-}"
     return 0
@@ -13473,7 +13473,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           _show_resolve_links   \
             "${_target_path}"   \
             "${_notebook_path}"
-        } | _pandoc --browse >> "${_temp_file:-}"
+        } | _pandoc --render-to-html >> "${_temp_file:-}"
 
         if _web_browser --gui
         then
@@ -13896,7 +13896,7 @@ HEREDOC
         printf "\\n"
       fi
     } | {
-      _pandoc --browse
+      _pandoc --render-to-html
     }
   }
 
@@ -14055,7 +14055,7 @@ HEREDOC
         --for-browse        \
         --no-color
     } | {
-      _pandoc --browse
+      _pandoc --render-to-html
     }
   }
 
@@ -14120,7 +14120,7 @@ HEREDOC
         fi
       done
     } | {
-      _pandoc --browse || :
+      _pandoc --render-to-html || :
     }
   }
 
@@ -14203,14 +14203,14 @@ HEREDOC
       {
         if [[ -n "${_string:-}"     ]]
         then
-          printf "%s\\n" "${_string}" | _pandoc --browse
+          printf "%s\\n" "${_string}" | _pandoc --render-to-html
         elif [[ "${_path:-}" =~ ^/  ]]
         then
           cat "${_path}"
         else
           printf "%s\\n" \
             "${_status_code} $(_browse_http_response_message "${_status_code}")" \
-            | _pandoc --browse
+            | _pandoc --render-to-html
         fi
       } | {
         local __line=
