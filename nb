@@ -8049,10 +8049,10 @@ _pandoc() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      "")         :                         ;;
-      --render*)  _render_to_html=1         ;;
+      "")         :                   ;;
+      --render*)  _render_to_html=1   ;;
       *)
-        if [[ -z "${_source_path:-}" ]]
+        if [[ -z "${_source_path:-}"  ]]
         then
           _source_path="${__arg:-}"
         else
