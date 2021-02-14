@@ -179,8 +179,8 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
 
-  # Returns status 1
-  [[ ${status} -eq 1 ]]
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
 
   # Creates new note with bookmark filename
   [[ "${_filename}" =~ [A-Za-z0-9]+.bookmark.md ]]
