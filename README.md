@@ -1619,7 +1619,7 @@ making `nb` a powerful terminal-first platform for
 other link-based note-taking methods.
 
 To add a link from a note or bookmark to another in the same notebook,
-include the id, title, filename, and folder path for the target item
+include the id, title, or relative path for the target item
 within double square brackets anywhere in the linking document:
 
 ```text
