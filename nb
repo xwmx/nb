@@ -8041,6 +8041,7 @@ _option_get_tags() {
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
 _pandoc() {
+  local _pandoc_arguments=()
   local _render_to_html=0
   local _source_path=
 
@@ -8050,13 +8051,22 @@ _pandoc() {
     case "${__arg:-}" in
       "")         :                         ;;
       --render*)  _render_to_html=1         ;;
-      *)          _source_path="${__arg:-}" ;;
+      *)
+        if [[ -z "${_source_path:-}" ]]
+        then
+          _source_path="${__arg:-}"
+        else
+          _pandoc_arguments+=("${__arg:-}")
+        fi
+        ;;
     esac
   done
 
   if ! ((_render_to_html))
   then
-    pandoc "${@:-}"
+    _pandoc_arguments+=("${_source_path:-}")
+
+    pandoc "${_pandoc_arguments[@]:-}"
     return 0
   fi
 
@@ -8180,13 +8190,11 @@ label[for=search-input] {
 </style>
 HEREDOC
 
-  local _arguments=()
-
   if [[ -n "${_source_path:-}" ]]
   then
-    _arguments+=("${_source_path:-}")
+    _pandoc_arguments+=("${_source_path:-}")
   else
-    _arguments+=("--from=markdown")
+    _pandoc_arguments+=("--from=markdown")
   fi
 
   {
@@ -8195,7 +8203,7 @@ HEREDOC
       --to html                           \
       --standalone                        \
       --metadata title="nb"               \
-      "${_arguments[@]:-}"                \
+      "${_pandoc_arguments[@]:-}"         \
       2>/dev/null
   } | {
     sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
@@ -13457,9 +13465,14 @@ Can't show archives. Export archive and expand to edit.\\n"
        _web_browser --check         &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then # render for use by `browse`
-      _resolve_links                \
-        "${_target_path}"           \
-        "${_notebook_path}"         \
+      local _unlinked_temp_file=
+      _unlinked_temp_file="$(_temp file ".html" --touch)"
+
+      _pandoc "${_target_path}" --render-to-html >> "${_unlinked_temp_file}"
+
+      _resolve_links              \
+        "${_unlinked_temp_file}"  \
+        "${_notebook_path}"       \
         --browse
     elif ((_browse))                &&
          _command_exists "ncat"     &&
@@ -14067,15 +14080,30 @@ HEREDOC
       shift
     done
 
-    {
-      printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
+    local _header_temp_path=
+    _header_temp_path="$(_temp file ".html" --touch)"
 
-      _show "${_selector}"  \
-        --for-browse        \
-        --no-color
-    } | {
-      _pandoc --render-to-html
-    }
+    _browse_render_header "${_header_arguments[@]:-}" \
+      | pandoc --from markdown --to html >> "${_header_temp_path}"
+
+    local _source_path=
+    _source_path="$(_show "${_selector:-}" --path)"
+
+    local _unlinked_temp_file=
+    _unlinked_temp_file="$(_temp file ".html" --touch)"
+
+    _pandoc "${_source_path}"                       \
+      --include-before-body="${_header_temp_path}"  \
+      --render-to-html                              \
+        >> "${_unlinked_temp_file}"
+
+    local _notebook_path=
+    _notebook_path="$(
+      _notebooks show "${_selector:-}" --path 2>/dev/null ||
+        _notebooks current --path
+    )"
+
+    _resolve_links "${_unlinked_temp_file}" "${_notebook_path}" --browse
   }
 
   # _browse_render_notebooks()
