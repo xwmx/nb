@@ -12693,30 +12693,34 @@ _show() {
       esac
     done
 
-    _matches=($(
-      GIT_PAGER='' git -C "${_notebook_path}" \
-        grep                                  \
-        --color=never                         \
-        --extended-regexp                     \
-        -h                                    \
-        --only-matching                       \
-        --text                                \
-        -e "\[\[[^\[]+\]\]"                   \
-        "${_file_path}"                       \
-        2>/dev/null                           \
-        || return 0
-    ))
+    cd "${_file_path%/*}"
 
-    # _matches=($(
-    #   grep                  \
-    #     --color=never       \
-    #     -E                  \
-    #     --text              \
-    #     -e "\[\[[^\[]+\]\]" \
-    #     "${_file_path}"     \
-    #     2>/dev/null         \
-    #     || return 0
-    # ))
+    local _repo_path=
+    _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
+
+    if [[ -z "${_repo_path:-}"                        ]] &&
+       [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
+    then # initialize temp directory as git repo to enable `git grep`
+      _repo_path="${_file_path%/*}"
+
+      git init &>/dev/null
+    fi
+
+    _matches=($(
+      cd "${_repo_path:-}" || return 0
+
+      GIT_PAGER='' git -C "${_repo_path:-}" \
+        grep                                \
+        --no-index                          \
+        --color=never                       \
+        --extended-regexp                   \
+        -h                                  \
+        --only-matching                     \
+        --text                              \
+        -e "\[\[[^\[]+\]\]"                 \
+        "${_file_path}"                     \
+        2>/dev/null || :
+    ))
 
     local __match=
     for   __match in "${_matches[@]:-}"
