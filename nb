@@ -13344,7 +13344,7 @@ Can't show archives. Export archive and expand to edit.\\n"
            [[ "${_tool}" == "icat"    ]]
          }
     then
-      kitty +kitten icat "${_target_path}" \
+      kitty +kitten icat "${_target_path}"  \
         | if _command_exists "less" && ! ((_print_output))
           then
             less -r --prompt="$(_less_prompt)"
@@ -13393,17 +13393,19 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[ -n "${KITTY_WINDOW_ID:-}" ]]
     then
       termpdf.py "${_target_path}"
-    elif _command_exists "pdftotext"  &&  [[ "${_target_path}" =~ pdf$ ]]
+    elif _command_exists "pdftotext"      &&
+         [[ "${_target_path}" =~ pdf$ ]]
     then
-      pdftotext "${_target_path}" - \
-        | tr -d '\014'              \
+      pdftotext "${_target_path}" -   \
+        | tr -d '\014'                \
         | if ! ((_print_output))
           then
             _pager
           else
             cat
           fi
-    elif [[ "${_target_path}" =~ docx$ ]] && _command_exists "pandoc"
+    elif [[ "${_target_path}" =~ docx$ ]] &&
+         _command_exists "pandoc"
     then
       pandoc --from docx --to markdown "${_target_path}"  \
         | _highlight_syntax_if_available                  \
@@ -13426,19 +13428,19 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   else # file is text
-    if ((_render_for_browsing)) &&
-       _command_exists "ncat"   &&
-       _command_exists "pandoc" &&
-       _web_browser --check     &&
+    if ((_render_for_browsing))     &&
+       _command_exists "ncat"       &&
+       _command_exists "pandoc"     &&
+       _web_browser --check         &&
        [[ "${_target_path}" =~ md$|markdown$ ]]
     then # render for use by `browse`
-      _show_resolve_links       \
-        "${_target_path}"       \
-        "${_notebook_path}"     \
+      _show_resolve_links           \
+        "${_target_path}"           \
+        "${_notebook_path}"         \
         --browse
     elif ((_browse)) &&
-         _command_exists "ncat"   &&
-         _command_exists "pandoc" &&
+         _command_exists "ncat"     &&
+         _command_exists "pandoc"   &&
          _web_browser --check
     then
       _defer "_browse" "${_target_path}"
