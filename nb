@@ -75,6 +75,9 @@ IFS=$'\n\t'
 # The most recent program version.
 _VERSION="6.0.0-alpha"
 
+# Prevents ls in OSX from being forced to use color.
+unset CLICOLOR_FORCE
+
 # $_ME
 #
 # This program's basename.
