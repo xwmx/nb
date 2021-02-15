@@ -1661,6 +1661,11 @@ colon before the identifier:
 [[sample:Example File.md]]
 ```
 
+<a href="#-linking">[[wiki-style links]]</a> cooperate well with
+[Org mode links](https://orgmode.org/guide/Hyperlinks.html), which have
+a similar syntax, enabling another option for linking collections of Org
+files.
+
 For more information about identifying items, see [Selectors](#selectors).
 
 ### 🌍 Browsing
