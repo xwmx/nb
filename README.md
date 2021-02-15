@@ -31,7 +31,7 @@ and more, all in a single portable, user-friendly script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
-[Emacs Org mode](https://orgmode.org/),
+[Org](https://orgmode.org/),
 and [LaTeX](https://www.latex-project.org/),
 can work with files in any format, can import and export notes to many
 document formats, and can create private, password-protected encrypted
@@ -473,7 +473,7 @@ extension in the filename, the extension by itself, or via
 the `--type <type>` option:
 
 ```bash
-# open a new org mode file in the editor
+# open a new Org file in the editor
 nb add example.org
 
 # open a new reStructuredText file in the editor
@@ -625,11 +625,11 @@ title: Ideas
 ---
 ```
 
-[Org mode](https://orgmode.org/) and [LaTeX](https://www.latex-project.org/)
+[Org](https://orgmode.org/) and [LaTeX](https://www.latex-project.org/)
 titles are recognized on `.org` and `.latex` files:
 
 ```org
-#+TITLE: Example Org Mode Title
+#+TITLE: Example Org Title
 ```
 
 ```latex
@@ -1662,9 +1662,9 @@ colon before the identifier:
 ```
 
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
-[Org mode links](https://orgmode.org/guide/Hyperlinks.html), which have
-a similar syntax, providing a convenient option for linking collections of
-Org files.
+[Org links](https://orgmode.org/guide/Hyperlinks.html), which have
+a similar syntax, providing a convenient option for linking collections
+of Org files.
 
 For more information about identifying items, see [Selectors](#selectors).
 
@@ -4079,7 +4079,7 @@ Description:
     1. https://pandoc.org/
 
 Examples:
-  # Export an Emacs Org mode note
+  # Export an Org note
   nb export example.org /path/to/example.org
 
   # Export a Markdown note to HTML and print to standard output
@@ -4813,8 +4813,8 @@ Alias: `set`
 ```text
 [5]  default_extension
      -----------------
-     The default extension to use for note files. Change to "org" for Emacs
-     Org mode files, "rst" for reStructuredText, "txt" for plain text, or
+     The default extension to use for note files. Change to "org" for
+     Org files, "rst" for reStructuredText, "txt" for plain text, or
      whatever you prefer.
 
      • Default Value: md
