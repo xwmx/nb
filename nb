@@ -1571,7 +1571,7 @@ _get_content() {
           fi
 
           if [[ ! "${__line}" =~ ^\#  ]] &&
-             [[ "${_counter}" -gt 5   ]]
+             [[ "${_counter}" -gt 10  ]]
           then
             break
           fi
