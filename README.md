@@ -625,6 +625,17 @@ title: Ideas
 ---
 ```
 
+[Org mode](https://orgmode.org/) and [LaTeX](https://www.latex-project.org/)
+titles are recognized on `.org` and `.latex` files:
+
+```org
+#+TITLE: Example Org Mode Title
+```
+
+```latex
+\title{Example LaTeX Title}
+```
+
 Once defined, titles will be displayed in place of the filename and first line
 in the output of `nb ls`:
 
