@@ -166,6 +166,7 @@ load test_helper
     _content+="Selector link two: [[Root Title One]] • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description]] • "
+    _content+="Internal Org mode link: [[#sample]] • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.org"  \
       --title     "Example Org Mode Title"                    \
@@ -201,6 +202,9 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Internal Org mode link: \[\[#sample\]\] •"
 }
 
 @test "'_resolve_links' resolves [[wiki-style links]] in .org files to .org links to local file URLs." {
@@ -212,6 +216,7 @@ load test_helper
     _content+="Selector link two: [[Root Title One]] • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description]] • "
+    _content+="Internal Org mode link: [[#sample]] • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.org"  \
       --title     "Example Org Mode Title"                    \
@@ -246,4 +251,7 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Internal Org mode link: \[\[#sample\]\] •"
 }
