@@ -606,7 +606,7 @@ modified. By default, each note is listed with its id, filename, and an
 excerpt from the first line of the note. When a note has a title, the
 title is displayed instead of the filename and first line.
 
-Titles can be defined within a note using
+Markdown titles can be defined within a note using
 [either Markdown `h1` style](https://daringfireball.net/projects/markdown/syntax#header)
 or [YAML front matter](https://jekyllrb.com/docs/front-matter/):
 
@@ -636,7 +636,7 @@ titles are recognized on `.org` and `.latex` files:
 \title{Example LaTeX Title}
 ```
 
-Once defined, titles will be displayed in place of the filename and first line
+Once defined, titles are displayed in place of the filename and first line
 in the output of `nb ls`:
 
 ```bash
@@ -1663,8 +1663,8 @@ colon before the identifier:
 
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
 [Org mode links](https://orgmode.org/guide/Hyperlinks.html), which have
-a similar syntax, enabling another option for linking collections of Org
-files.
+a similar syntax, providing a convenient option for linking collections of
+Org files.
 
 For more information about identifying items, see [Selectors](#selectors).
 
