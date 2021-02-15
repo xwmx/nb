@@ -14660,7 +14660,7 @@ HEREDOC
 
   # make a final request to clear any listening process
 
-  (_download_from "${_request_url_base}" &>/dev/null) &
+  (sleep 0.5 && _download_from "${_request_url_base}" &>/dev/null) &
 
   exit 0
 }
