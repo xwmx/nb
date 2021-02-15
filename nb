@@ -8310,9 +8310,14 @@ _resolve_links() {
         then
           _links+=("[[${_selector:-}]]")
         else
-          _links+=(
-            "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
-          )
+          if [[ "${_file_path:-}" =~ .html$ ]]
+          then
+            _links+=(
+              "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
+            )
+          else
+            _links+=("[[${_selector:-}]]")
+          fi
         fi
       else
         _links+=("${__match}")
@@ -8335,7 +8340,12 @@ _resolve_links() {
           _label="${_selector:-}"
         fi
 
-        _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
+        if [[ "${_file_path:-}" =~ .html$ ]]
+        then
+          _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
+        else
+          _links+=("[[${_selector:-}]]")
+        fi
       fi
     fi
   done
