@@ -8231,18 +8231,29 @@ _resolve_links() {
   local _for_browsing=0
   local _links=()
   local _matches=()
-  local _file_path="${1:?}"
-
-  shift
+  local _file_path=
 
   local __arg=
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      --browse)   _for_browsing=1             ;;
-      *)          _notebook_path="${__arg:-}" ;;
+      --browse)
+        _for_browsing=1
+        ;;
+      *)
+        if [[   -z "${_file_path:-}"      ]]
+        then
+          _file_path="${__arg:-}"
+        elif [[ -z "${_notebook_path:-}"  ]]
+        then
+          _notebook_path="${__arg:-}"
+        fi
+        ;;
     esac
   done
+
+  [[ ! -f "${_file_path:-}"     ]] && return 1
+  [[ ! -d "${_notebook_path:-}" ]] && return 1
 
   cd "${_file_path%/*}"
 
@@ -8310,14 +8321,19 @@ _resolve_links() {
         then
           _links+=("[[${_selector:-}]]")
         else
-          if [[ "${_file_path:-}" =~ .html$ ]]
-          then
-            _links+=(
-              "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
-            )
-          else
-            _links+=("[[${_selector:-}]]")
-          fi
+          case "${_file_path:-}" in
+            *\.html)
+              _links+=(
+                "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
+              )
+              ;;
+            *\.org)
+              _links+=("[[[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}][${_selector:-}]]]]")
+              ;;
+            *)
+              _links+=("[[${_selector:-}]]")
+              ;;
+          esac
         fi
       else
         _links+=("${__match}")
@@ -8340,12 +8356,17 @@ _resolve_links() {
           _label="${_selector:-}"
         fi
 
-        if [[ "${_file_path:-}" =~ .html$ ]]
-        then
-          _links+=("<a href=\"file:${_link_path:-}\">[[${_label:-}]]</a>")
-        else
-          _links+=("[[${_selector:-}]]")
-        fi
+        case "${_file_path:-}" in
+          *\.html)
+            _links+=("<a href=\"file://${_link_path:-}\">[[${_label:-}]]</a>")
+            ;;
+          *\.org)
+            _links+=("[[[[file://${_link_path:-}][${_label:-}]]]]")
+            ;;
+          *)
+            _links+=("[[${_selector:-}]]")
+            ;;
+        esac
       fi
     fi
   done
@@ -13514,22 +13535,35 @@ Can't show archives. Export archive and expand to edit.\\n"
       else
         cd "${_CURRENT_WORKING_DIR}"
 
-        local _unlinked_temp_file=
-        _unlinked_temp_file="$(_temp file ".html" --touch)"
+        local _rendered_temp_file_path=
+        _rendered_temp_file_path="$(_temp file ".html" --touch)"
 
-        _pandoc "${_target_path}" --render-to-html >> "${_unlinked_temp_file}"
+        if [[ "${_target_path}" =~ \.org ]]
+        then # resolve  org mode [[wiki-style links]] before rendering to HTML
+          local _linked_temp_file_path=
+          _linked_temp_file_path="$(_temp file ".org" --touch)"
 
-        local _temp_file=
-        _temp_file="$(_temp file ".html" --touch)"
+          _resolve_links                      \
+            "${_target_path}" "${_notebook_path}" >> "${_linked_temp_file_path}"
 
-        _resolve_links \
-          "${_unlinked_temp_file}" "${_notebook_path}" >> "${_temp_file}"
+          _pandoc "${_linked_temp_file_path}" \
+            --render-to-html >> "${_rendered_temp_file_path}"
+        else # render to HTML before resolving [[wiki-style links]]
+          local _unlinked_temp_file_path=
+          _unlinked_temp_file_path="$(_temp file ".html" --touch)"
+
+          _pandoc "${_target_path}"           \
+            --render-to-html >> "${_unlinked_temp_file_path}"
+
+          _resolve_links                      \
+            "${_unlinked_temp_file_path}" "${_notebook_path}" >> "${_rendered_temp_file_path}"
+        fi
 
         if _web_browser --gui
         then
-          (_web_browser "file://${_temp_file:-}") &
+          (_web_browser "file://${_rendered_temp_file_path:-}") &
 
-          printf "Serving: %s\\n" "$(_color_primary "${_temp_file}")"
+          printf "Serving: %s\\n" "$(_color_primary "${_rendered_temp_file_path}")"
 
           while true
           do
@@ -13540,10 +13574,10 @@ Can't show archives. Export archive and expand to edit.\\n"
             exit 0
           done
         else
-          _web_browser "file://${_temp_file:-}"
+          _web_browser "file://${_rendered_temp_file_path:-}"
         fi
 
-        rm -f "${_temp_file:?}"
+        rm -f "${_rendered_temp_file_path:?}"
       fi
     else # default
       if ((_print_output))
@@ -14104,24 +14138,38 @@ HEREDOC
     _browse_render_header "${_header_arguments[@]:-}" \
       | pandoc --from markdown --to html >> "${_header_temp_path}"
 
-    local _source_path=
-    _source_path="$(_show "${_selector:-}" --path)"
-
-    local _unlinked_temp_file=
-    _unlinked_temp_file="$(_temp file ".html" --touch)"
-
-    _pandoc "${_source_path}"                       \
-      --include-before-body="${_header_temp_path}"  \
-      --render-to-html                              \
-        >> "${_unlinked_temp_file}"
-
     local _notebook_path=
     _notebook_path="$(
       _notebooks show "${_selector:-}" --path 2>/dev/null ||
         _notebooks current --path
     )"
 
-    _resolve_links "${_unlinked_temp_file}" "${_notebook_path}" --browse
+    local _source_path=
+    _source_path="$(_show "${_selector:-}" --path)"
+
+    if [[ "${_source_path:-}" =~ \.org$ ]]
+    then # resolve org mode [[wiki-style links]] before rendering to HTML
+      local _linked_temp_file_path=
+      _linked_temp_file_path="$(_temp file ".org" --touch)"
+
+      _resolve_links "${_source_path}" "${_notebook_path}"  \
+        --browse >> "${_linked_temp_file_path}"
+
+      _pandoc "${_linked_temp_file_path}"                   \
+        --include-before-body="${_header_temp_path}"        \
+        --render-to-html
+    else # render before resolving [[wiki-style links]]
+      local _unlinked_temp_file_path=
+      _unlinked_temp_file_path="$(_temp file ".html" --touch)"
+
+      _pandoc "${_source_path}"                             \
+        --include-before-body="${_header_temp_path}"        \
+        --render-to-html >> "${_unlinked_temp_file_path}"
+
+      _resolve_links "${_unlinked_temp_file_path}" "${_notebook_path}" --browse
+    fi
+
+    return 0
   }
 
   # _browse_render_notebooks()
@@ -14781,6 +14829,9 @@ _helpers() {
       ;;
     *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
+      ;;
+    resolve*links)
+      _resolve_links                  "${_options[@]:-}"
       ;;
     *selector*folder*)
       _selector_resolve_folders       "${_options[@]:-}"
