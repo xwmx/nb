@@ -4450,43 +4450,46 @@ _list() {
   ((_reverse))          && _list_files_options+=("--reverse")
   ((_sort))             && _list_files_options+=("--sort")
 
-  # Search-Based Pinning
-  #
-  # Display pinned items first in the list by matching against a pattern
-  # like "#pinned". To enable, assign a tag or other pattern to the
-  # $NB_PINNED_PATTERN environment variable.
-  #
-  # Example:
-  #   # file: ~/.nbrc
-  #   export NB_PINNED_PATTERN="#pinned"
   local _pinned_basenames=()
 
-  if ((_with_pinned))                 &&
-     [[ "${NB_PINNED_PATTERN:-}"  ]]  &&
-     [[ -z "${_filter_pattern:-}" ]]
+  if ((_with_pinned))                     &&
+     [[ -z "${_filter_pattern:-}"     ]]  &&
+     [[ -z "${_type:-}"               ]]
   then
-    _pinned_basenames=($(
-      GIT_PAGER='' git -C "${_list_path}"     \
-        grep                                  \
-        --color=never                         \
-        --extended-regexp                     \
-        --files-with-matches                  \
-        --ignore-case                         \
-        --max-depth 0                         \
-        --text                                \
-        -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
-        "${_list_path}"
-    ))
-  fi
+    # Search-Based Pinning
+    #
+    # Display pinned items first in the list by matching against a pattern
+    # like "#pinned". To enable, assign a tag or other pattern to the
+    # $NB_PINNED_PATTERN environment variable.
+    #
+    # Example:
+    #   # file: ~/.nbrc
+    #   export NB_PINNED_PATTERN="#pinned"
+    if [[ "${NB_PINNED_PATTERN:-}"    ]]
+    then
+      _pinned_basenames=($(
+        GIT_PAGER='' git -C "${_list_path}"     \
+          grep                                  \
+          --color=never                         \
+          --extended-regexp                     \
+          --files-with-matches                  \
+          --ignore-case                         \
+          --max-depth 0                         \
+          --text                                \
+          -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
+          "${_list_path}"
+      ))
+    fi
 
-  if [[ -f "${_list_path}/.pindex" ]]
-  then
-    _pinned_basenames=($(
-      {
-        cat "${_list_path}/.pindex"
-        printf "%s\\n" "${_pinned_basenames[@]:-}"
-      } | awk '!NF || !seen[$0]++'
-    ))
+    if [[ -f "${_list_path}/.pindex"  ]]
+    then
+      _pinned_basenames=($(
+        {
+          cat "${_list_path}/.pindex"
+          printf "%s\\n" "${_pinned_basenames[@]:-}"
+        } | awk '!NF || !seen[$0]++'
+      ))
+    fi
   fi
 
   # TODO: External local variables used in pipeline.

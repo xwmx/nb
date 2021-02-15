@@ -6,6 +6,65 @@ export NB_PINNED_PATTERN="#pinned"
 
 # --with-pinned ###############################################################
 
+@test "'NB_PINNED_PATTERN list --with-pinned' only shows pins when type is blank." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"      \
+      --title     "root one"    \
+      --content   "Content one."
+    "${_NB}" add  "two.md"      \
+      --title     "root two"    \
+      --content   "Content two. #pinned"
+    "${_NB}" add  "two.md"      \
+      --title     "root three"  \
+      --content   "Content three. #pinned"
+
+    "${_NB}" add  "Example Folder/one.md"   \
+      --title     "nested one"              \
+      --content   "Content one. #pinned"
+    "${_NB}" add  "Example Folder/two.md"   \
+      --title     "nested two"              \
+      --content   "Content two."
+    "${_NB}" add  "Example Folder/three.md" \
+      --title     "nested three"            \
+      --content   "Content three. #pinned"
+
+    "${_NB}" add  "Example Folder/Sample Folder/one.md"   \
+      --title     "deep one"                              \
+      --content   "Content one. #pinned"
+    "${_NB}" add  "Example Folder/Sample Folder/two.md"   \
+      --title     "deep two"                              \
+      --content   "Content two. #pinned"
+    "${_NB}" add  "Example Folder/Sample Folder/three.md" \
+      --title     "deep three"                            \
+      --content   "Content three."
+  }
+
+  run "${_NB}" list --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                             ]]
+  [[    "${#lines[@]}"  -eq 4                             ]]
+
+  [[    "${lines[0]}"   =~  [.*3*].*\ 📌\ root\ three     ]]
+  [[    "${lines[1]}"   =~  [.*2*].*\ 📌\ root\ two       ]]
+  [[    "${lines[2]}"   =~  [.*4*].*\ 📂\ Example\ Folder ]]
+  [[    "${lines[3]}"   =~  [.*1*].*\ root\ one           ]]
+
+  run "${_NB}" list --with-pinned --type folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                             ]]
+  [[    "${#lines[@]}"  -eq 1                             ]]
+
+  [[    "${lines[0]}"   =~  [.*4*].*\ 📂\ Example\ Folder ]]
+}
+
 @test "'NB_PINNED_PATTERN list --with-pinned' doesn't show pins when single selector match is present." {
   {
     "${_NB}" init
