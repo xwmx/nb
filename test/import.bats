@@ -348,7 +348,7 @@ load test_helper
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 8                                    ]]
+  [[ "${#_files[@]}" -eq 9                                    ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
@@ -543,7 +543,7 @@ load test_helper
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 8                                      ]]
+  [[ "${#_files[@]}" -eq 9                                  ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
