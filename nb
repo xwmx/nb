@@ -1294,10 +1294,13 @@ _file_is_image() {
 # Resources:
 #   Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
+  bash
   bib
   css
+  go
   html
   js
+  json
   jsx
   latex
   markdown
@@ -1315,6 +1318,7 @@ export _TEXT_FILE_EXTENSIONS=(
   rst
   scss
   sh
+  sql
   tex
   text
   textile
@@ -8044,7 +8048,7 @@ _option_get_tags() {
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
 _pandoc() {
-  local _pandoc_arguments=()
+  local _pandoc_arguments=("--highlight-style=zenburn")
   local _render_to_html=0
   local _source_path=
 
@@ -8190,12 +8194,37 @@ label[for=search-input] {
   from  { opacity: 1; }
   to    { opacity: 0; }
 }
+
+div.sourceCode {
+  background-color: transparent;
+}
 </style>
 HEREDOC
 
   if [[ -n "${_source_path:-}" ]]
   then
-    _pandoc_arguments+=("${_source_path:-}")
+    local _code_extensions=()
+
+    _code_extensions+=(
+      $(pandoc --list-highlight-languages | sed -e "/latex/d" -e "/markdown/d")
+      bib hs haml js jsx py rb rs sass scss sh vim yml
+    )
+
+    if _contains "${_source_path##*\.}" "${_code_extensions[@]:-}"
+    then
+      local _code_block_temp_path=
+      _code_block_temp_path="$(_temp file ".md" --touch)"
+
+      printf "\`\`\`%s\\n%s\\n\`\`\`\\n"  \
+        "${_source_path##*\.}"            \
+        "$(cat "${_source_path:-}")" >> "${_code_block_temp_path:-}"
+
+      # \`"
+
+      _pandoc_arguments+=("${_code_block_temp_path:-}")
+    else
+      _pandoc_arguments+=("${_source_path:-}")
+    fi
   else
     _pandoc_arguments+=("--from=markdown")
   fi

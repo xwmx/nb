@@ -4,6 +4,60 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# code ########################################################################
+
+@test "'browse' with .bash file serves file in a code block." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.bash" --content "echo \"hello\""
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
+
+  [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
+  [[ "${output}"    =~  \
+      \<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>           ]]
+  [[ "${output}"    =~  \
+      \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>  ]]
+
+  [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
+  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\> ]]
+  [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
+}
+
+@test "'browse' with .js file serves file in a code block." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.js" --content "console.log(\"hello\");"
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
+
+  [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
+  [[ "${output}"    =~  \
+      \<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>           ]]
+  [[ "${output}"    =~  \
+      \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>  ]]
+
+  [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
+  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>   ]]
+  [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
+}
+
 # .odt ########################################################################
 
 @test "'browse' with .odt file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
