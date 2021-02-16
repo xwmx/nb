@@ -8082,10 +8082,10 @@ _pandoc() {
     return 0
   fi
 
-  local _temp_file=
-  _temp_file="$(_temp file ".html" --touch)"
+  local _app_styles_temp_path=
+  _app_styles_temp_path="$(_temp file ".html" --touch)"
 
-  cat <<HEREDOC >> "${_temp_file}"
+  cat <<HEREDOC >> "${_app_styles_temp_path}"
 <style>
 html {
   background-color: #1a1a1a;
@@ -8238,18 +8238,18 @@ HEREDOC
   fi
 
   {
-    pandoc                                \
-      --include-in-header "${_temp_file}" \
-      --to html                           \
-      --standalone                        \
-      --metadata title="nb"               \
-      "${_pandoc_arguments[@]:-}"         \
+    pandoc                                            \
+      --include-in-header="${_app_styles_temp_path}"  \
+      --to=html                                       \
+      --standalone                                    \
+      --metadata title="nb"                           \
+      "${_pandoc_arguments[@]:-}"                     \
       2>/dev/null
   } | {
     sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
   }
 
-  rm -f "${_temp_file:?}"
+  rm -f "${_app_styles_temp_path:?}"
 }
 
 # _resolve_links()
