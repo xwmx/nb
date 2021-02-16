@@ -21,7 +21,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
+        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ .*1.*                                                                   ]]
 }
@@ -43,7 +43,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
+        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
   [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\?--page=.*\)\ .*/.* ]]
@@ -67,7 +67,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
+        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
 }
@@ -92,7 +92,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
+        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
   [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\?--page=.*\)\ .*/.* ]]
@@ -124,7 +124,7 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
+        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
   [[ "${output}"    =~ \ .*/.*\ .*1.*                                                                   ]]
@@ -147,7 +147,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\)\ .*·.*\  ]]
+        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
   [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
   [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
 }

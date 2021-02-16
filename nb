@@ -14027,14 +14027,15 @@ HEREDOC
       shift
     done
 
-    local _header_content="[<span class=\"dim\">❯</span>nb](http://localhost:${NB_SERVER_PORT}/) <span class=\"dim\">·</span>"
-
     local _url_params=
 
     if ((_terminal_browser))
     then
       _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
     fi
+
+    local _header_content="[<span class=\"dim\">❯</span>nb](http://localhost:${NB_SERVER_PORT}/${_url_params:-})"
+    _header_content+=" <span class=\"dim\">·</span>"
 
     if [[ -z "${_selector:-}" ]]
     then
@@ -14220,14 +14221,43 @@ HEREDOC
   # Description:
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
-    local _notebook_names=()
-    _notebook_names=($(_notebooks --names --unarchived --no-color))
+    local _current_page=1
+    local _pagination_arguments=()
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _terminal_browser=0
 
-    if [[ "${1:-}" == "--terminal" ]]
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)
+          _current_page="${2:?}"
+          _pagination_arguments+=("${1:-}" "${2:?}")
+          shift
+          ;;
+        --per*)
+          _per_page="${2:?}"
+          _pagination_arguments+=("${1:-}" "${2:?}")
+          shift
+          ;;
+        --terminal)
+          _terminal_browser=1
+          _pagination_arguments+=("${1:-}")
+          ;;
+      esac
+
+      shift
+    done
+
+
+    local _url_params=
+
+    if ((_terminal_browser))
     then
-      _terminal_browser=1
+      _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
     fi
+
+    local _notebook_names=()
+    _notebook_names=($(_notebooks --names --unarchived --no-color))
 
     {
       printf "%s\\n" "$(_browse_render_header)"
@@ -14248,10 +14278,11 @@ HEREDOC
           _test_line="${__name}"
 
           printf --                               \
-            "[%s](http://localhost:%s/%s:)"       \
+            "[%s](http://localhost:%s/%s:%s)"     \
             "${__name}"                           \
             "${NB_SERVER_PORT}"                   \
-            "${__name}"
+            "${__name}"                           \
+            "${_url_params:-}"
         elif ((_terminal_browser)) &&
              [[ "${#_test_line}" -gt "$((_COLUMNS - 1))" ]]
         then
@@ -14259,17 +14290,19 @@ HEREDOC
 
           _test_line="${__name}"
           printf --                               \
-            "[%s](http://localhost:%s/%s:)"       \
+            "[%s](http://localhost:%s/%s:%s)"     \
             "${__name}"                           \
             "${NB_SERVER_PORT}"                   \
-            "${__name}"
+            "${__name}"                           \
+            "${_url_params:-}"
         else
           printf --                               \
-            " %s [%s](http://localhost:%s/%s:)"   \
+            " %s [%s](http://localhost:%s/%s:%s)" \
             "${_separator}"                       \
             "${__name}"                           \
             "${NB_SERVER_PORT}"                   \
-            "${__name}"
+            "${__name}"                           \
+            "${_url_params:-}"
         fi
       done
     } | {
@@ -14476,6 +14509,8 @@ HEREDOC
 
     if ((_terminal_browser))
     then
+      _arguments+=("--page"     "${_page_number}")
+      _arguments+=("--per-page" "${_per_page}")
       _arguments+=("--terminal")
     fi
 
