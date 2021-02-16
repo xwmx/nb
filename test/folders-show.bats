@@ -24,6 +24,23 @@ load test_helper
   [[   "${#lines[@]}" == 1              ]]
 }
 
+# show --id ###################################################################
+
+@test "'show <folder>/<filename> --id' exits with status 0 and prints note id." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/Example File.md"
+  }
+
+  run "${_NB}" show "Example Folder/Example File.md" --id
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0   ]]
+  [[ "${output}" ==   "1" ]]
+}
+
 # show --relative-path ########################################################
 
 @test "'show <selector> --relative-path' with numeric folder name gives precedence to ids." {

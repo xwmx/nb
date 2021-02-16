@@ -13172,7 +13172,7 @@ _show() {
   if ((_print_id))
   then
     printf "%s\\n" "$(
-      _index get_id "${_relative_path}" "${_folder_path}"
+      _index get_id "${_relative_path##*/}" "${_folder_path}"
     )"
     return 0
   fi
