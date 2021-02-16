@@ -8103,12 +8103,16 @@ body {
   max-width:  45rem;
 }
 
+h1 { font-size: 1.6rem;   }
+h2 { font-size: 1.3rem;   }
+h3 { font-size: 1.17rem;  }
+
 a           { color: #6EB3D7; text-decoration: none;      }
 a:hover     { color: #6EB3D7; text-decoration: underline; }
 a:visited   { color: #6EB3D7; text-decoration: none;      }
 
 .header-crumbs {
-  font-size:    1.5rem;
+  font-size:    1.4rem;
   font-weight:  normal;
 }
 
@@ -8183,6 +8187,7 @@ label[for=search-input] {
   animation-duration: 3000ms;
   animation-iteration-count: infinite;
   background-color:   #a6a659;
+  display: none;
   height:   80%;
   left:     5px;
   opacity:  0.5;
