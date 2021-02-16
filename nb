@@ -1879,18 +1879,6 @@ _highlight_syntax_if_available() {
   fi
 }
 
-# _interactive_input()
-#
-# Usage:
-#   _interactive_input
-#
-# Exit / Error Status:
-#   0 (success, true)  If the current input is interactive (eg, a shell).
-#   1 (error,  false)  If the current input is stdin / piped input.
-_interactive_input() {
-  [[ -t 0 ]]
-}
-
 # _join()
 #
 # Usage:
@@ -1943,6 +1931,18 @@ _less_prompt() {
   fi
 
   printf "%s\\n" "${_prompt}"
+}
+
+# _piped_input()
+#
+# Usage:
+#   _piped_input
+#
+# Exit / Error Status:
+#   0 (success, true)  If piped input is present.
+#   1 (error,  false)  If the current input is interactive (eg, a shell).
+_piped_input() {
+  [[ ! -t 0 ]]
 }
 
 # _wrap()
@@ -8550,7 +8550,7 @@ _web_browser() {
 
   # behaviors
 
-  if _interactive_input && [[ -z "${_url:-}" ]]
+  if ! _piped_input && [[ -z "${_url:-}" ]]
   then
     return 0
   else
@@ -9044,7 +9044,7 @@ _add() {
       _print_spacing=1
     fi
 
-    if ! _interactive_input
+    if _piped_input
     then # piped input
       ((_print_spacing)) &&
         printf "\\n"  >> "${_target_path}"
@@ -9054,7 +9054,7 @@ _add() {
 
     if ((_edit_before_commit))              ||
        {
-         _interactive_input                 &&
+         ! _piped_input                     &&
          [[ -z "${_selector_content:-}" ]]  &&
          [[ -z "${_option_content:-}"   ]]
        }
@@ -10412,8 +10412,7 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if [[ -n "${_content:-}" ]] ||
-       ! _interactive_input
+    if [[ -n "${_content:-}" ]] || _piped_input
     then
       {
         if [[ -n "${_content}" ]]
@@ -10421,8 +10420,8 @@ _edit() {
           printf "%s\\n" "${_content}"
         fi
 
-        if ! _interactive_input
-        then # piped input
+        if _piped_input
+        then
           cat
         fi
       } | {
@@ -10452,7 +10451,7 @@ _edit() {
     fi
 
     if ((_edit_before_commit)) || {
-       _interactive_input && [[ -z "${_content:-}" ]]
+       ! _piped_input && [[ -z "${_content:-}" ]]
     }
     then
       if [[ -n "${_local_editor}" ]]
@@ -11074,7 +11073,7 @@ _import() {
   local _selector_path=
   local _url=
 
-  if ! _interactive_input
+  if _piped_input
   then
     IFS=$' \n' _paths+=($(cat))
   fi
@@ -14897,9 +14896,6 @@ _helpers() {
     *highlight*|*syntax*)
       _highlight_syntax_if_available  "${_options[@]:-}"
       ;;
-    *interactive*|*input*)
-      _interactive_input              "${_options[@]:-}"
-      ;;
     join)
       _join                           "${_options[@]:-}"
       ;;
@@ -14923,6 +14919,9 @@ _helpers() {
       ;;
     *padding)
       _print_padding                  "${_options[@]:-}"
+      ;;
+    *piped*|*input*)
+      _piped_input                    "${_options[@]:-}"
       ;;
     *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
