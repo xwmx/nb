@@ -1624,7 +1624,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 Notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
-files can link to other items using
+files can reference other items using
 <a href="#-linking">[[wiki-style links]]</a>, making `nb` a powerful
 terminal-first platform for
 [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten)
