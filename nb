@@ -14163,6 +14163,11 @@ HEREDOC
       then
         local _relative_path="${_selector#${_notebook_path}/}"
 
+        if [[ "${_relative_path:-}" == "${_notebook_path:-}" ]]
+        then
+          _relative_path=
+        fi
+
         if [[ -d "${_selector}"   ]]
         then
           _relative_folder_path="${_relative_path:-}"
@@ -14220,7 +14225,7 @@ HEREDOC
     fi
 
     local _item_path=
-    _item_path="$(_show "${_selector:-}" --path)"
+    _item_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
     if [[ -f "${_item_path:-}" ]]
     then
