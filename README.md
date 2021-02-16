@@ -1622,14 +1622,13 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 *Version 6.0.0-alpha*
 
-Notes, bookmarks, files in text-based formats,
-[Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
-documents,
-and Word `.docx` documents can contain links to other items using
-<a href="#-linking">[[wiki-style links]]</a>,
-making `nb` a powerful terminal-first platform for
-[Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and
-other link-based note-taking methods.
+Notes, bookmarks, files in text-based formats, Word `.docx` documents,
+and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
+files can link to other items using
+<a href="#-linking">[[wiki-style links]]</a>, making `nb` a powerful
+terminal-first platform for
+[Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten)
+and other link-based note-taking methods.
 
 To add a link from a note or bookmark to another in the same notebook,
 include the id, title, or relative path for the target item
