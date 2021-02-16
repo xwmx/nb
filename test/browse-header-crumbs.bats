@@ -107,7 +107,7 @@ load test_helper
   [[ "${output}"    =~ \<h1\ class=\"header-crumbs\"\>  ]]
 }
 
-@test "'browse <notebook-path>/<folder>/file>' displays header crumbs with folder and id for file." {
+@test "'browse <notebook-path>/<folder>/<filename>' displays header crumbs with folder and id for file." {
   {
     "${_NB}" init
 
