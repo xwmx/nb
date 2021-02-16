@@ -12887,7 +12887,6 @@ _show() {
   local _print_selector_id=0
   local _print_updated=0
   local _render=0
-  local _render_for_browsing=0
   local _selector=
   local _skip_notebook_fallback=0
   local _print_indicators=0
@@ -12918,10 +12917,6 @@ _show() {
         ;;
       --folder-path)
         _print_folder_path=1
-        ;;
-      --for-browse)
-        _render_for_browsing=1
-        _skip_notebook_fallback=1
         ;;
       --id|--index)
         _print_id=1
@@ -13186,7 +13181,7 @@ _show() {
     fi
   fi
 
-  if ((_print_info)) || ((_render_for_browsing))
+  if ((_print_info))
   then
     local _id=
 
@@ -13498,22 +13493,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       open "${_target_path}"
     fi
   else # file is text
-    if ((_render_for_browsing))     &&
-       _command_exists "ncat"       &&
-       _command_exists "pandoc"     &&
-       _web_browser --check         &&
-       [[ "${_target_path}" =~ md$|markdown$ ]]
-    then # render for use by `browse`
-      local _unlinked_temp_file=
-      _unlinked_temp_file="$(_temp file ".html" --touch)"
-
-      _pandoc "${_target_path}" --render-to-html >> "${_unlinked_temp_file}"
-
-      _resolve_links              \
-        "${_unlinked_temp_file}"  \
-        "${_notebook_path}"       \
-        --browse
-    elif ((_browse))                &&
+    if ((_browse))                  &&
          _command_exists "ncat"     &&
          _command_exists "pandoc"   &&
          _web_browser --check
