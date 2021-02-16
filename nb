@@ -4157,6 +4157,7 @@ _list() {
   local _list_filenames=0
   local _list_paths=0
   local _no_id=0
+  local _only_pinned=0
   local _page=1
   local _per_page=0
   local _print_excerpt=0
@@ -4224,6 +4225,10 @@ _list() {
       --per*)
         _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
+        ;;
+      --pinned)
+        _only_pinned=1
+        _with_pinned=1
         ;;
       -s|--sort)
         _sort=1
@@ -4486,7 +4491,7 @@ _list() {
           --max-depth 0                         \
           --text                                \
           -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
-          "${_list_path}"
+          "${_list_path}" 2>/dev/null || :
       ))
     fi
 
@@ -4538,7 +4543,10 @@ _list() {
         printf "%s\\n" "${_pinned_basenames[@]:-}"
       fi
 
-      _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+      if ! ((_only_pinned))
+      then
+        _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+      fi
     fi
   } | {
     local _filenames_count=0
@@ -4910,6 +4918,16 @@ Import a file:
   $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left}")
 Help information:
   $(_color_primary "${_ME} help import")
+HEREDOC
+        elif ((_only_pinned))
+        then
+          cat <<HEREDOC
+0 pinned items.
+
+Pin an item:
+  $(_color_primary "${_ME} pin ${_maybe_id_path_context:-}<id>")
+Help information:
+  $(_color_primary "${_ME} help")
 HEREDOC
         else
           cat <<HEREDOC
